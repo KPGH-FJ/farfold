@@ -1,0 +1,51 @@
+{
+  "atUtc": "2026-10-03T03:21:43.749858+00:00",
+  "installed": "/Applications/Farfold.app",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "oldBinarySha256": "dbe261705ba4331470876f6cc3e605e7a1b021fd179092ed34e726c90af41279",
+  "binarySha256": "89edb3aae60a4cbc77c9a29236a92c1fbbee23b67a2c91898d35972f4977e4f3",
+  "files": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "89edb3aae60a4cbc77c9a29236a92c1fbbee23b67a2c91898d35972f4977e4f3",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "signature": {
+    "exitCode": 0,
+    "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+  },
+  "sourceManifestSha256": "55230f030fe0c6ccd82cf55707df43190bfca68b1b72b1e2412509bcc8e0f586",
+  "sourceInputCount": 538,
+  "sourceInputsUnchanged": true,
+  "dataBefore": {
+    "tableCounts": {
+      "sessions": 49,
+      "agents": 40,
+      "settings": 50,
+      "dismissed_sessions": 62
+    },
+    "databaseFiles": {
+      "farfold.sqlite3": "6db1761d1519ba39b2da11c922b653354a984d5cac3cddf8e28629aa6a444cdc",
+      "farfold.sqlite3-wal": "4373668a88142c2b3d435ff5b58058b9ce08d29aa08527000102f1aded6ba3da",
+      "farfold.sqlite3-shm": "97ed9a7cdf97c55cdc239ec8d6c5a292b97fe4a1e883ec37104afa3034afb74f"
+    }
+  },
+  "dataAfter": {
+    "tableCounts": {
+      "sessions": 49,
+      "agents": 40,
+      "settings": 50,
+      "dismissed_sessions": 62
+    },
+    "databaseFiles": {
+      "farfold.sqlite3": "6db1761d1519ba39b2da11c922b653354a984d5cac3cddf8e28629aa6a444cdc",
+      "farfold.sqlite3-wal": "4373668a88142c2b3d435ff5b58058b9ce08d29aa08527000102f1aded6ba3da",
+      "farfold.sqlite3-shm": "97ed9a7cdf97c55cdc239ec8d6c5a292b97fe4a1e883ec37104afa3034afb74f"
+    }
+  },
+  "dataBeforeAfterEqual": true,
+  "userConfirmedUpdate": true,
+  "processAbsentBeforeAndAfter": true,
+  "appLaunched": false,
+  "agentActions": []
+}

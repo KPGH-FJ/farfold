@@ -1,0 +1,16 @@
+export const METHOD_API_KEY_STRINGS = {
+  methodLabel: "密钥登录",
+  hint: "密钥安全保存，仅在验证时使用。",
+  savedKey: "选择已保存的密钥",
+  chooseKey: "选择密钥",
+  noKeys: "还没有这个提供方的密钥",
+  changed: "已选密钥发生变化，请重新选择后再登录。",
+  add: "添加 API Key",
+  label: "密钥名称",
+  labelHint: "例如：工作账号",
+  save: "保存密钥",
+  saved: "密钥已保存，等待验证。",
+  failed: "密钥保存未完成，请检查后重试。",
+  loadFailed: "密钥列表读取失败，请重试。",
+  required: "请先选择当前登录方式的密钥。",
+} as const;

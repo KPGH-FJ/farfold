@@ -1,0 +1,16 @@
+{
+  "atUtc": "2026-10-03T07:14:39Z",
+  "formalApplicationRunningCount": 0,
+  "preferredApplicationPath": "/Applications/Farfold.app",
+  "registeredApplicationPaths": [
+    "/Applications/Farfold.app"
+  ],
+  "checks": {
+    "onlyFormalApplicationPathRegistered": true,
+    "formalApplicationPathPreferred": true,
+    "formalApplicationNotRunning": true
+  },
+  "passed": true,
+  "scope": "Read-only own LaunchServices registration/preferred path and formal running-application count after root candidate unregistration; no icons, GUI/windows/AX, app launch/quit, user data or system mutation.",
+  "systemShellVisibleIconConfirmed": false
+}

@@ -1,0 +1,2618 @@
+{
+  "schemaVersion": 1,
+  "group": "core",
+  "reviewDateAsiaShanghai": "2026-10-06",
+  "scope": "首批33中的11项。按用户确认8条严格review，只新增本证据JSON，不改生产代码/契约/计划。",
+  "baseline": {
+    "head": "dc9412718cada6a45ef23f2aa86719a2bac8257d",
+    "workingTree": "dirty，以当前源码为准，保留既有工作",
+    "installedApp": "Farfold0.1.7 arm64 c97e9b23…，根代理本轮只读核对匹配回执",
+    "installedMetadata": "docs/evidence/2026-10-06-agent-standard-review/current-installed-metadata.json",
+    "priorResearch": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json",
+    "sharedFindings": "docs/evidence/2026-10-06-agent-standard-review/common-review.json",
+    "sharedChecks": "docs/evidence/2026-10-06-agent-standard-review/shared-checks.json"
+  },
+  "methodology": [
+    "不启动Agent/登录/模型/升级，不读秘密或真实用户历史。",
+    "精确版本源码、官方公开说明、协议声明、通用mock、旧安装样本和当前真实结果严格分开。",
+    "根代理6文件135个共用mock测试通过，不算任何Agent全条标准通过。",
+    "旧候选有限正证据保留且不拼成现候选全八条；本轮不是自动重测全部旧样本。",
+    "共同账号身份/状态缺口适用于OAuth/订阅账号管理；不要求API-only强制登录/退出，也不把未接通误说成Agent自己没有CLI/扩展。",
+    "不恢复撤销的六旅程或另一Mac要求；无固定模型等例外获批。"
+  ],
+  "standards": [
+    {
+      "id": 1,
+      "name": "准备流程完整"
+    },
+    {
+      "id": 2,
+      "name": "账号服务可靠"
+    },
+    {
+      "id": 3,
+      "name": "历史真正可用"
+    },
+    {
+      "id": 4,
+      "name": "模型选择生效"
+    },
+    {
+      "id": 5,
+      "name": "工作能力完整"
+    },
+    {
+      "id": 6,
+      "name": "多任务不串扰"
+    },
+    {
+      "id": 7,
+      "name": "停止恢复可信"
+    },
+    {
+      "id": 8,
+      "name": "体验统一反馈清楚"
+    }
+  ],
+  "statusLegend": {
+    "confirmed_client_gap": "源码确认客户端缺口，不表示本轮运行复现",
+    "confirmed_client_agent_incompatibility": "客户端与该Agent的精确实现组合冲突；运行影响另列",
+    "confirmed_agent_limit": "精确版本Agent实现限制",
+    "confirmed_agent_limit_with_risk": "能力限制明确，另有尚未复现的组合风险",
+    "partial_verified": "有限真实证据，整条标准仍未全部覆盖",
+    "partial_verified_with_limit": "有限实证与精确实现限制并存",
+    "insufficient_evidence": "缺完整证据/未知，不等于已测失败",
+    "source_risk_not_reproduced": "源码可见待核风险，实际用户结果未复现"
+  },
+  "summary": {
+    "agentCount": 11,
+    "matrixCells": 88,
+    "strictlyCompliantCount": 0,
+    "modelRoutes": {
+      "C": 9,
+      "L": 1,
+      "N": 1,
+      "U": 0
+    },
+    "conclusion": "0家可严格判定八条全部达标；有确定接入缺口，也有证据不足，不能说11家全实测失败。",
+    "positiveEvidence": "OpenCode有有限真实历史/模型/停止/并行；fast-agent有首答冷续答并行；Codex有登录和网页工具确认/取消；Pi当前一次短回复。"
+  },
+  "evidenceIndex": {
+    "latest": {
+      "file": "docs/evidence/2026-10-05-response-acceptance/README.md",
+      "line": 3,
+      "endLine": 17,
+      "note": "当前 c97e9b23 候选 Pi/OpenCode 各一次真实短回复；Cline 0 消息。未切模型/工具/停止/冷续答。"
+    },
+    "ocModel": {
+      "file": "docs/evidence/2026-10-02-model-switch-repair/README.md",
+      "line": 29,
+      "endLine": 35,
+      "note": "旧候选，同一 OpenCode 对话正文恢复、模型/思考切换、下一真实请求、冷恢复续答有限通过。"
+    },
+    "ocModelLimit": {
+      "file": "docs/evidence/2026-10-02-model-switch-repair/README.md",
+      "line": 64,
+      "note": "结合官方配置回执与同对话实际请求，不单由计数或模型自述证明供应商内部执行身份。"
+    },
+    "ocStop": {
+      "file": "docs/evidence/2026-10-01-opencode-stop-queue/README.md",
+      "line": 12,
+      "endLine": 17,
+      "note": "旧候选：真实命令停止、单条队列暂停、重启不自动发、明确续发一次。"
+    },
+    "parallel": {
+      "file": "docs/evidence/2026-10-01-agent-parallel/README.md",
+      "line": 9,
+      "endLine": 19,
+      "note": "旧候选：OpenCode/fast-agent 重叠运行、后台完成及命令输出；没有同 Agent 多会话/真实审批/文件 diff。"
+    },
+    "fastCold": {
+      "file": "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md",
+      "line": 17,
+      "endLine": 18,
+      "note": "旧候选 fast-agent 0.10.1 首答、同 ID 正文冷恢复、显式续答；模型值未知。"
+    },
+    "claudeOld": {
+      "file": "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md",
+      "line": 19,
+      "endLine": 21,
+      "note": "旧候选 Claude 0.81.2 连接/选项通过，一次真实请求 auth_required；不据此断言当前仍失败。"
+    },
+    "codexAuth": {
+      "file": "docs/evidence/2026-10-02-shared-access-facilities/README.md",
+      "line": 27,
+      "endLine": 30,
+      "note": "Codex CLI 0.155.1 / ACP 1.13.1，用户浏览器认证和真实回执有限通过；身份/权益/退出换号未核。"
+    },
+    "clinePrep": {
+      "file": "docs/evidence/2026-10-02-shared-access-facilities/README.md",
+      "line": 26,
+      "note": "Cline 3.0.65 连接/模型列表及官方设置命令预览；没有运行该命令或消息。"
+    },
+    "copilotPty": {
+      "file": "docs/evidence/2026-10-01-agent-copilot-login/README.md",
+      "line": 3,
+      "endLine": 5,
+      "note": "旧候选，同包登录 PTY 启动/返回同进程/取消通过；账号授权及首答未验。"
+    },
+    "qwenPrep": {
+      "file": "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md",
+      "line": 21,
+      "note": "Qwen 安装连接；模型读取需认证，官方设置可见但未执行。"
+    },
+    "vibePrep": {
+      "file": "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md",
+      "line": 17,
+      "note": "Vibe 安装连接；模型读取需认证，账号选项可见未执行。"
+    },
+    "codexWeb": {
+      "file": "docs/evidence/2026-10-05-installed-acceptance/README.md",
+      "line": 41,
+      "endLine": 44,
+      "note": "真实 Codex 网页工具请求与审批继续、返回正文。"
+    },
+    "codexCancel": {
+      "file": "docs/evidence/2026-10-05-installed-acceptance/README.md",
+      "line": 55,
+      "endLine": 57,
+      "note": "真实网页读取取消；不是运行中 Agent 停止。"
+    },
+    "fileGap": {
+      "file": "docs/evidence/2026-10-05-installed-acceptance/README.md",
+      "line": 65,
+      "note": "文件意见→Agent 修改→重读未测；其他入口组件测试不能替代实际 Agent 工作链。"
+    },
+    "account": {
+      "file": "src-tauri/src/auth.rs",
+      "line": 234,
+      "endLine": 239,
+      "note": "共同账号响应仅 methods/can_logout，无当前账号身份/状态。"
+    },
+    "logout": {
+      "file": "src-tauri/src/auth.rs",
+      "line": 270,
+      "endLine": 279,
+      "note": "标准 auth.logout 才产生退出控制；不是说 Agent 自身无 CLI/扩展退出。"
+    },
+    "accountUi": {
+      "file": "src/components/AgentAuthSection.tsx",
+      "line": 1449,
+      "note": "退出/换号控制依赖 canLogout；API-only 不强制额外 OAuth 登录或不可行退出。"
+    },
+    "model": {
+      "file": "src/runtime/sessions.ts",
+      "line": 728,
+      "endLine": 749,
+      "note": "只消费 configOptions，另合成 legacy modes；未映射 legacy models。"
+    },
+    "modelSet": {
+      "file": "src/runtime/session_configuration.ts",
+      "line": 138,
+      "endLine": 155,
+      "note": "走 session_set_config 并核对 configOptions/configCheck，无 legacy set_model。"
+    },
+    "history": {
+      "file": "src/runtime/sessions.ts",
+      "line": 663,
+      "endLine": 682,
+      "note": "等待本次 history_complete 并 requireReadableHistory；不能由 Agent 空成功推定客户端接受空白。"
+    },
+    "marker": {
+      "file": "src-tauri/src/acp_client/session_commands.rs",
+      "line": 119,
+      "endLine": 126,
+      "note": "load 返回后发 history_complete，依赖 Agent 先完整回放。"
+    },
+    "api": {
+      "file": "src-tauri/src/acp_client/api_key_auth.rs",
+      "line": 17,
+      "endLine": 24,
+      "note": "协议 API-key 交付仅支持 openai，不含 Google provider；复用已有配置另算。"
+    },
+    "piKey": {
+      "file": "src-tauri/src/acp_client/manager.rs",
+      "line": 120,
+      "endLine": 125,
+      "note": "连接键 Agent/cwd/candidate/service，无 conversation。"
+    },
+    "piOpen": {
+      "file": "src-tauri/src/acp_client/session.rs",
+      "line": 324,
+      "endLine": 326,
+      "note": "new/load connect_selected 复用连接，再发送 OpenSession（384）。"
+    },
+    "piNew": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/installed-pi/src/acp/agent.ts",
+      "line": 376,
+      "endLine": 381,
+      "note": "已安装 0.0.34 new 关闭其他活动 Pi 子进程。"
+    },
+    "piLoad": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/installed-pi/src/acp/agent.ts",
+      "line": 971,
+      "endLine": 973,
+      "note": "load 同样 closeAllExcept。"
+    },
+    "piDispose": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/installed-pi/src/acp/session.ts",
+      "line": 189,
+      "endLine": 204,
+      "note": "close 调 proc.dispose 并移除 session。"
+    },
+    "authConfirm": {
+      "file": "src/runtime/auth_activity.ts",
+      "line": 111,
+      "endLine": 124,
+      "note": "authenticate run 无错即 operationConfirmed=true，再重查。"
+    },
+    "authUi": {
+      "file": "src/components/AgentAuthSection.tsx",
+      "line": 561,
+      "endLine": 567,
+      "note": "operationConfirmed 导出 loginConfirmed，656–671 选择登录成功文案。"
+    },
+    "authText": {
+      "file": "src/runtime/auth_strings.ts",
+      "line": 4,
+      "endLine": 5,
+      "note": "登录成功 / 登录成功，正在检查连接。"
+    },
+    "authCheck": {
+      "file": "src-tauri/src/acp_client/auth_connection.rs",
+      "line": 58,
+      "note": "只 connect_launch/initialize，不是账号查询。"
+    },
+    "gooseNoop": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/goose/v1.52.0/crates/goose/src/acp/server/dispatch.rs",
+      "line": 38,
+      "endLine": 39,
+      "note": "不读取方法/凭据，直接响应；没有登录或核验账号。"
+    },
+    "fastNoop": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/fast-agent/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py",
+      "line": 382,
+      "endLine": 396,
+      "note": "只校验 method，返回静态说明；凭据需原 CLI/config 配置。"
+    },
+    "fastModel": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/fast-agent/v0.10.1/src/fast_agent/commands/handlers/model.py",
+      "line": 513,
+      "endLine": 537,
+      "note": "/model switch 新建/替换 session 并 clear histories；596 在 set_model 前调用。"
+    },
+    "geminiReplay": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/gemini/v0.62.0/packages/cli/src/acp/acpSessionManager.ts",
+      "line": 204,
+      "endLine": 210,
+      "note": "streamHistory 未 await 即返回，违反完整回放后响应要求；Farfold 后果未复现。"
+    },
+    "clineDefaults": {
+      "file": "output/acp-first-batch-research-2026-10-05/group-core-sources/cline/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts",
+      "line": 260,
+      "endLine": 268,
+      "note": "Agent 不持久每会话 provider/model，冷 load 用当前默认；客户端保存配置可能补足，不能说必然错误。"
+    },
+    "goosePrep": {
+      "file": "src-tauri/src/acp_client/recipes.rs",
+      "line": 173,
+      "endLine": 205,
+      "note": "当前 Goose configure/Cline auth 官方准备动作存在，不能把旧缺入口当当前状态。"
+    }
+  },
+  "findings": [
+    {
+      "id": "CORE-PI-SINGLE-LIVE-SESSION",
+      "classification": "confirmed_client_agent_incompatibility",
+      "agents": ["pi-acp"],
+      "standards": [6, 7],
+      "detail": "Farfold Agent/cwd/service 复用连接，Pi new/load closeAllExcept dispose前一会话子进程；源码组合冲突确定，实际运行中中断/数据损失未复现。",
+      "evidence": ["piKey", "piOpen", "piNew", "piLoad", "piDispose"],
+      "sourceURLs": [
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L376",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L971",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/session.ts#L189"
+      ]
+    },
+    {
+      "id": "CORE-NOOP-AUTH-CONFIRMATION",
+      "classification": "confirmed_semantic_gap_without_live_reproduction",
+      "agents": ["goose", "fast-agent"],
+      "standards": [2, 8],
+      "detail": "精确authenticate实现不登录、不核验账号，客户端run成功→operationConfirmed→登录成功，重查仅initialize。{}本身是合法协议成功，不是问题判据。",
+      "evidence": [
+        "gooseNoop",
+        "fastNoop",
+        "authConfirm",
+        "authUi",
+        "authText",
+        "authCheck"
+      ]
+    },
+    {
+      "id": "CORE-GEMINI-LEGACY-MODEL",
+      "classification": "confirmed_client_gap",
+      "agents": ["gemini"],
+      "standards": [1, 4],
+      "detail": "Agent旧模型L路线未接入当前客户端；不是Agent不支持切换。",
+      "evidence": ["model", "modelSet"]
+    },
+    {
+      "id": "CORE-GEMINI-REPLAY-ORDER",
+      "classification": "confirmed_agent_ordering_violation_with_unreproduced_client_risk",
+      "agents": ["gemini"],
+      "standards": [3, 7],
+      "detail": "load不await正文replay，不满足完整回放后响应要求；与Farfold完成标记有竞态风险，未认定实际失败/丢失/接受空白。",
+      "evidence": ["geminiReplay", "marker", "history"]
+    },
+    {
+      "id": "CORE-NO-HISTORY-LIST",
+      "classification": "confirmed_agent_interface_limit",
+      "agents": ["gemini", "cline"],
+      "standards": [3],
+      "detail": "精确安装版本无session/list，当前机制无法发现未登记外部历史；已知ID有效load另算，不推断所有历史失败。",
+      "evidence": ["history"]
+    },
+    {
+      "id": "CORE-FAST-MODEL-RESET",
+      "classification": "confirmed_agent_limit",
+      "agents": ["fast-agent"],
+      "standards": [1, 4],
+      "detail": "无标准模型选择路线；原/model switch新建/替换session并清历史，不满足保上下文同对话切换，无例外授权。",
+      "evidence": ["fastModel"]
+    },
+    {
+      "id": "CORE-CLINE-RESTORE-CONFIG",
+      "classification": "source_risk_not_reproduced",
+      "agents": ["cline"],
+      "standards": [3, 4, 7],
+      "detail": "冷load默认provider/model可能不同，客户端保存配置恢复可能补足；不得当当前已测配置失配。",
+      "evidence": ["clineDefaults", "modelSet"]
+    }
+  ],
+  "agents": [
+    {
+      "id": "codex-acp",
+      "name": "Codex ACP",
+      "installedVersion": "1.13.1",
+      "cachedHandshakeAgentVersion": "1.13.1",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v1.13.1",
+      "source": {
+        "maintainer": "agentclientprotocol (adapter); OpenAI (underlying Codex)",
+        "relationship": "third-party ACP adapter using official Codex app-server",
+        "repository": "https://github.com/agentclientprotocol/codex-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 791,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L791",
+            "claim": "load awaits thread history replay; resume is separate"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 857,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L857",
+            "claim": "session/list delegates to native Codex"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 1336,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L1336",
+            "claim": "configOptions model/reasoning mutate existing session"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 419,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L419",
+            "claim": "authentication/status and logout extensions"
+          },
+          {
+            "file": "src/CodexAppServerClient.ts",
+            "line": 592,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAppServerClient.ts#L592",
+            "claim": "native thread/resume,list,read"
+          },
+          {
+            "file": "src/CodexJsonRpcConnection.ts",
+            "line": 16,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexJsonRpcConnection.ts#L16",
+            "claim": "inherits process environment"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 839,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/src/CodexAcpServer.ts#L839",
+            "claim": "latest load still awaits replay and now closes on replay failure"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "2.1.1",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；真实认证与网页工具有限通过。当前账号身份/状态未接入，完整历史、模型、隔离和停止恢复未充分验证。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "安装/连接、用户浏览器认证有限通过；完整服务/API/取消返回/选模型组合未覆盖。",
+          "evidence": ["codexAuth"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "原 CLI 账号可复用；适配器有身份/状态扩展和标准 logout，当前不消费身份/状态，退出换号及其他任务保护未实测。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "精确版本 list/load/持久续答与 await 正文回放有实现；实际已有对话发现、冷恢复正文/上下文/配置后续答未完整覆盖。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C 模型/思考 setter 有实现；缺同对话改选→下一真实请求→重启保持整链证据。",
+          "evidence": ["modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "partial_verified",
+          "detail": "真实网页工具审批允许/取消通过；完整文件变化、交互问题、原工具/技能/配置未覆盖。",
+          "evidence": ["codexWeb", "codexCancel", "fileGap"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "缺 Codex 多对话并行中切模型/审批/停止互不影响的真实证据。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "网页工具取消不是运行中 Agent 停止；断线/重启保护全部草稿附件待发与真实续答未覆盖。",
+          "evidence": ["codexCancel", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "网页确认/取消有实际反馈；账号状态和完整异常下一步未覆盖。",
+          "evidence": ["codexWeb", "codexCancel", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：有官方 authentication/status、状态推送但客户端未呈现；真实退出/换号无验证。",
+        "S3/S4/S6/S7：源码能力不等于当前完整端到端通过。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "native thread/list，带cwd/cursor；要求可认证。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "load读取/恢复原thread，保留原sessionId。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await streamThreadHistory，load响应前完成通知；resume不回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Codex app-server thread/read + thread/resume读取原生持久线程，而非适配器内存Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复的SessionState及threadId供后续prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "configOptions model/reasoning；既有session设置影响后续请求。另保留旧models/set_model。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "启动官方Codex app-server沿用原环境/CODEX_HOME，account/read读取原账号；可选服务覆盖另算。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate含API key/ChatGPT/device code/gateway；标准logout与authentication/status/logout扩展；authStatus能力推送_auth/status_update。不是仅凭initialize推断登录。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L791",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L857",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L1336",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L419",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAppServerClient.ts#L592",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexJsonRpcConnection.ts#L16",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/src/CodexAcpServer.ts#L839",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/codex-acp/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "installedVersion": "1.18.31",
+      "cachedHandshakeAgentVersion": "1.18.31",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v1.18.31",
+      "source": {
+        "maintainer": "anomalyco / OpenCode",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/anomalyco/opencode",
+        "reviewedFiles": [
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 95,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L95",
+            "claim": "initialize list/load/resume and terminal auth"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 209,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L209",
+            "claim": "load uses durable SDK session.get/messages and replayMessages"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 250,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L250",
+            "claim": "native session listing with cursor"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 409,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L409",
+            "claim": "model/variant config update on same session"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 478,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L478",
+            "claim": "legacy setModel"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 1099,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L1099",
+            "claim": "restore model configuration from saved session/history"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "1.18.34",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；有限真实历史/切模型/停止/并行证据最多，当前短回复成功；账号状态与退出路径仍不完整，不能拼成全部八条通过。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "当前候选沿用已选 OpenRouter 来源可真实短回复；新准备/各登录/服务配置/取消返回整流程未覆盖。",
+          "evidence": ["latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "原 CLI 认证/terminal login 可复用；无当前身份/权益状态，缓存未声明标准 logout，无相应内置退出/换号；不推断 OpenCode 自身没有 CLI 退出。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "partial_verified",
+          "detail": "原生持久 list/load/replay 有实现；旧同 ID 正文、冷恢复与续答有限通过，外部历史发现全链未覆盖。",
+          "evidence": ["ocModel", "ocStop"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "partial_verified",
+          "detail": "旧同对话 Lightning→Space Bunny/Medium、下一请求及冷恢复续答通过；不扩大为全选项或供应商内部身份证明。当前短回复未切模型。",
+          "evidence": ["ocModel", "ocModelLimit", "latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "partial_verified",
+          "detail": "旧真实 Python 命令与输出、当前短回复通过；文件 diff/问题审批和原工具技能完整性未覆盖。",
+          "evidence": ["parallel", "latest", "fileGap"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "partial_verified",
+          "detail": "与 fast-agent 重叠运行有限通过；同 Agent 多对话及并发切模型/审批/停止未覆盖。",
+          "evidence": ["parallel"],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "partial_verified",
+          "detail": "真实停止、单队列暂停、冷重启不自动发、明确续发有限通过；全部附件/断线/异常恢复未覆盖。",
+          "evidence": ["ocStop"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "运行/停止/队列/模型反馈有真实正证据；账号状态及完整准备异常反馈未闭环。",
+          "evidence": ["ocStop", "ocModel", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：账号身份/状态未呈现，标准 logout 外官方退出路线未接通。",
+        "S1/S5/S6/S7/S8：有限实证不能覆盖完整准备、工作能力及所有隔离异常。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK session.list，cwd过滤，合并活动会话，cursor分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK session.get/messages后restoreSession。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "按保存消息yield replayMessages完成后返回；resume另一路不等同回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久SDK session服务提供记录；并非仅依赖ACP会话Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原sessionId及恢复模型/variant用于后续prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "configOptions model、reasoning variant；更新现有session，不清历史；旧set_model也支持。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原OpenCode服务与CLI配置/认证源；终端调用opencode auth login。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-auth执行登录；ACP authenticate校验methodId后return {}，不能证明凭据有效；此ACP服务未提供账号status/logout标准处理器。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L95",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L209",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L250",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L409",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L478",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L1099",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/opencode/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "pi-acp",
+      "name": "Pi ACP",
+      "installedVersion": "0.0.34",
+      "cachedHandshakeAgentVersion": "0.0.34",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v0.0.34",
+      "source": {
+        "maintainer": "svkozak (adapter); Pi project (underlying agent)",
+        "relationship": "third-party ACP adapter invoking Pi RPC subprocess",
+        "repository": "https://github.com/svkozak/pi-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/acp/agent.ts",
+            "line": 909,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L909",
+            "claim": "native JSONL session listing"
+          },
+          {
+            "file": "src/acp/agent.ts",
+            "line": 938,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L938",
+            "claim": "load restores Pi session then emits getMessages content"
+          },
+          {
+            "file": "src/acp/agent.ts",
+            "line": 1175,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L1175",
+            "claim": "model/thinking config mapped to Pi RPC"
+          },
+          {
+            "file": "src/acp/pi-sessions.ts",
+            "line": 19,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/pi-sessions.ts#L19",
+            "claim": "native ~/.pi/agent session storage root"
+          },
+          {
+            "file": "src/pi-rpc/process.ts",
+            "line": 155,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/pi-rpc/process.ts#L155",
+            "claim": "--session path and inherited env"
+          },
+          {
+            "file": "src/index.ts",
+            "line": 5,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/index.ts#L5",
+            "claim": "terminal-login invokes native Pi"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "0.0.34",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；当前一次回复成功。同 Agent/cwd/service 多对话复用连接，适配器 new/load 却关闭其他 Pi 子进程，存在确定组合冲突。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "当前既有 OpenRouter 来源和模型一次真实回复成功；首次准备/认证/服务变更/取消返回未覆盖。",
+          "evidence": ["latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "原 HOME/env 复用与 terminal login 有实现；未呈现当前账号/状态，缓存无标准 logout，内置退出/换号不完整。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "JSONL 持久 list/load/replay 和同文件续答有源码；实际历史发现/冷恢复配置后续答未完整验证，load 会关闭同连接其他会话。",
+          "evidence": ["piLoad", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C 映射 Pi set_model/set_thinking_level；单次当前模型回复不证明实际改选、后续请求、冷保持。",
+          "evidence": ["latest", "modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "partial_verified",
+          "detail": "当前短回复通过；工具/文件/问题审批和原技能配置未覆盖。",
+          "evidence": ["latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "confirmed_client_agent_incompatibility",
+          "detail": "同 Agent/cwd/service 共用连接，Pi new/load closeAllExcept→dispose 其他子进程。多活动对话保持与源码冲突；运行中实际中断/数据丢失未复现。",
+          "evidence": ["piKey", "piOpen", "piNew", "piLoad", "piDispose"],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "source_risk_not_reproduced",
+          "detail": "Pi 实际停止/断线/重启未验；打开另一同连接对话导致前进程关闭的恢复后果未复现。",
+          "evidence": ["piNew", "piLoad", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "当前回复/模型读取有 UI 正证据；账号状态与同连接对话被关闭的反馈未完整闭环。",
+          "evidence": ["latest", "account", "piNew"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S6：closeAllExcept 与客户端共享连接冲突；实际在途任务中断后果未新复现。",
+        "S2：账号身份/状态及退出路线未完整接通。",
+        "S3/S4/S7：冷恢复、真实切模型、停止恢复缺整链证据。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "listPiSessions递归原生session文件，cwd过滤及50条分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "findStoredSession后以--session原文件恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "getMessages后转换user/assistant/toolResult为ACP通知；load完成前逐条发送。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原Pi JSONL文件提供跨ACP进程恢复，不只内存索引。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "以同一sessionFile运行Pi RPC；new/load会closeAllExcept。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "setSessionConfigOption映射Pi set_model/set_thinking_level，同原session文件；类有unstable_setSessionModel但当前matrix旧wire method_not_found，因此不保证L。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "source-method-present-but-wire-not-found",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Pi进程继承env/原HOME；不生成私有账号存储。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-login启动Pi供用户登录；authenticate本身no-op。未见ACP账号状态/退出接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L909",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L938",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L1175",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/pi-sessions.ts#L19",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/pi-rpc/process.ts#L155",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/index.ts#L5",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/pi-acp/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "claude-acp",
+      "name": "Claude Agent ACP",
+      "installedVersion": "0.81.2",
+      "cachedHandshakeAgentVersion": "0.81.2",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v0.81.2",
+      "source": {
+        "maintainer": "agentclientprotocol (adapter); Anthropic (Agent SDK)",
+        "relationship": "third-party ACP adapter using official Anthropic Agent SDK",
+        "repository": "https://github.com/agentclientprotocol/claude-agent-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2429,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2429",
+            "claim": "load reads persisted session and awaits replay"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2448,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2448",
+            "claim": "SDK listSessions"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2478,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2478",
+            "claim": "authenticate normally no-op; gateway overrides optional"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2819,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2819",
+            "claim": "logout invokes claude auth logout"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 6889,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L6889",
+            "claim": "config model calls query.setModel"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2343,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2343",
+            "claim": "authStatus push extension"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2834,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.86.0/src/acp-agent.ts#L2834",
+            "claim": "new load/replay implementation and cursor pagination"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "0.86.0",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；旧一次真实请求 auth_required，不推成当前持续失败。账号状态推送未接入，未取得完整成功工作链证据。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "0.81.2 连接/默认选项/认证方法查看通过；旧真实请求 auth_required，完整登录服务模型流程未验。",
+          "evidence": ["claudeOld"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "可复用 Claude CLI/SDK，适配器有 authStatus 推送与标准 logout，当前 UI 不消费账号状态/身份；真实退出换号及保护未验。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "SDK 持久列表、load/await replay、恢复原上下文有源码，实际冷恢复正文配置和续答未验。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C model/effort 调官方 query.setModel；现场只读取默认选项，未改选后真实请求及冷保持。",
+          "evidence": ["claudeOld", "modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "旧实际请求认证失败，不是成功工作证据；当前工具/文件/审批/技能链未验证。",
+          "evidence": ["claudeOld"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "未见 Claude 多对话并行切模型/审批/停止隔离实证。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "认证错误提示曾看到，不等于运行中停止或断线/冷重启未发保护通过。",
+          "evidence": ["claudeOld", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "旧 auth_required 进入需要登录有反馈；完整取消/返回/账号状态/异常路径未覆盖。",
+          "evidence": ["claudeOld", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：已有官方状态推送未消费；退出/换号未实测。",
+        "旧 auth_required 是当时结果，成功工作、历史/模型/隔离恢复仍缺证据。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "官方Agent SDK listSessions({dir})；安装版未见cursor分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "readResumedSession/getOrCreateSession，SDK query使用resume。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await replaySessionHistory；resumeSession不回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK磁盘session及getSessionMessages/readResumedSession提供跨进程恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK恢复原session作为下一次query上下文。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model config实际调用query.setModel；effort配置也实现，不清历史。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "复用Claude CLI/官方SDK原配置与登录；兼容环境/API配置，gateway另有进程覆盖。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-auth真正登录；普通authenticate历史上no-op，仅特定gateway payload设置覆盖。标准logout调用claude auth logout；authStatus为推送，不是通用账号查询API。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2429",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2448",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2478",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2819",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L6889",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2343",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.86.0/src/acp-agent.ts#L2834",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/claude-acp/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "installedVersion": "0.62.0",
+      "cachedHandshakeAgentVersion": "0.62.0",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "L",
+      "reviewedSourceTag": "v0.62.0",
+      "source": {
+        "maintainer": "Google / google-gemini",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/google-gemini/gemini-cli",
+        "reviewedFiles": [
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 40,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L40",
+            "claim": "initialize has load but no list"
+          },
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 106,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L106",
+            "claim": "authenticate refreshes CLI auth"
+          },
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 224,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L224",
+            "claim": "legacy unstable_setSessionModel"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSessionManager.ts",
+            "line": 164,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L164",
+            "claim": "disk SessionSelector and resumeChat"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSessionManager.ts",
+            "line": 205,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L205",
+            "claim": "streamHistory called without await"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSession.ts",
+            "line": 236,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSession.ts#L236",
+            "claim": "model updates session config; history emitter"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "0.62.0",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "L；客户端旧模型通路缺失；Agent 无历史 list。load 不 await 正文回放，顺序违反协议且存在未实测竞态风险。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "confirmed_client_gap",
+          "detail": "已有 CLI 设置可复用，但模型旧路线缺失；Google 专用 API-key 不在当前仅 openai 的协议交付通道。",
+          "evidence": ["model", "modelSet", "api"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "CLI OAuth/API/Vertex 可复用；当前无身份/状态与内置退出，Google key 交付不完整。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "confirmed_agent_limit_with_risk",
+          "detail": "0.62.0 无 ACP session/list，现有机制无法发现未登记 CLI 历史；已知 ID 可持久 load，但 streamHistory 不 await，违反完整回放后返回要求。客户端实际空页/失败未复现。",
+          "evidence": ["geminiReplay", "marker", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "confirmed_client_gap",
+          "detail": "Agent 仅 L：models/session/set_model；客户端只接 configOptions/set_config，模型选择/同会话切换没有通路。",
+          "evidence": ["model", "modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "无本机 Gemini 正式安装版成功工作、工具/文件/问题审批、原技能配置完整性实证。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "无本机 Gemini 多任务模型/审批/停止隔离实证。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "source_risk_not_reproduced",
+          "detail": "真停止、断线未发保护未验；回放晚于响应与客户端完成标记存在竞态，未复现用户可见丢失/空页。",
+          "evidence": ["geminiReplay", "marker", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "confirmed_client_gap",
+          "detail": "缺模型通路和完整账号服务操作，隐藏入口不能视为同能力一致；实际异常反馈未充分覆盖。",
+          "evidence": ["model", "api", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S1/S4：旧 models/set_model 未接通。",
+        "S3：Agent 无历史列表；回放响应过早，客户端实际后果未复现。",
+        "S2：Google key 交付和账号状态/退出路线不完整。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "未声明/实现session/list，官方当日matrix为method_not_found；CLI列历史命令不等于ACP list。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionSelector解析持久session；convertSessionToClientHistory + await resumeChat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "存在streamHistory正文回放，但loadSession未await该promise就返回；不能保证客户端收到load响应时回放已完。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "用持久conversation及filePath恢复Gemini chat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复clientHistory后创建Session，后续prompt共享恢复chat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "new/load返回models.availableModels/currentModelId，legacy set_model调用session.config.setModel；未实现configOptions/set_config。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "L",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "loadSettings(cwd)读取原Gemini CLI selected auth并refreshAuth；原OAuth/API/Vertex配置可复用。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate支持登录/认证刷新，切认证类型可清缓存；未见ACP账号status/logout接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L40",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L106",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L224",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L164",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L205",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSession.ts#L236",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/gemini/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "installedVersion": "0.24.7",
+      "cachedHandshakeAgentVersion": "0.24.7",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v0.24.7",
+      "source": {
+        "maintainer": "QwenLM",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/QwenLM/qwen-code",
+        "reviewedFiles": [
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 1050,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L1050",
+            "claim": "load defaults full replay; resume none"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 5734,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5734",
+            "claim": "load restores durable transcript projection"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6205,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6205",
+            "claim": "standard load awaits replayHistory"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6569,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6569",
+            "claim": "SessionService native list"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6646,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6646",
+            "claim": "model/reasoning config"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 5469,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5469",
+            "claim": "authenticate refresh/OAuth event"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 15455,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L15455",
+            "claim": "reuse selected native auth"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6780,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.25.0/packages/cli/src/acp-integration/acpAgent.ts#L6780",
+            "claim": "latest still configOptions setter"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "0.25.0",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；历史/模型源码较齐，现场证据停在安装连接与认证需求；账号状态/退出及实际工作链未完成。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "0.24.7 安装连接通过，模型读取需认证，官方设置入口可见但未执行；完整取消返回未验。",
+          "evidence": ["qwenPrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "原 CLI selectedType/凭据复用有实现，官方终端兼容路线存在；无当前账号状态及标准退出/换号，OAuth 全链未验。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "标准 load await replay、持久 list/上下文恢复有实现；实际发现/冷恢复正文配置/原对话续答未验。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C model/reasoning_effort，实现不持久全局默认；同对话改选、真实后续请求与冷保持未验。",
+          "evidence": ["modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "未见本机成功回复、工具/文件/问题审批和原技能配置完整性实证。",
+          "evidence": ["qwenPrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "会话级源码状态不等于多任务切模型/审批/停止隔离已测。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "无真实停止/断线/重启完整未发恢复证据。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "安装/认证需求与官方设置入口有有限现场证据；完整等待/失败下一步和账号操作未覆盖。",
+          "evidence": ["qwenPrep", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：账号身份/状态与内置退出/换号不完整。",
+        "S1/S3–S8：源码完整度不能替代真实链路证据。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionService(cwd).listSessions，cursor分页，取原生记录。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复持久会话投影及工作区上下文；load/resume路径分离。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准load默认replay all并await replayHistory；只有请求专用bulk元数据才走分页/批量扩展。resume明确none。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionService持久记录恢复model/client/session上下文，非仅内存Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "加载Session加入live sessions并恢复原历史，后续prompt继续。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model config委托session.setModel({persistDefault:false})，reasoning_effort也支持；旧set_model仍实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "沿用CLI设置selectedType，ensureAuthenticated使用refreshAuth(initial=true)读原凭据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate可重新认证，Qwen OAuth用authenticate/update扩展给URL；未找到Agent账号status/logout标准入口，MCP auth状态不能混作账号状态。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L1050",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5734",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6205",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6569",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6646",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5469",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L15455",
+        "https://github.com/QwenLM/qwen-code/blob/v0.25.0/packages/cli/src/acp-integration/acpAgent.ts#L6780",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/qwen-code/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "cline",
+      "name": "Cline CLI",
+      "installedVersion": "3.0.65",
+      "cachedHandshakeAgentVersion": "3.0.65",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "cli-v3.0.65",
+      "source": {
+        "maintainer": "Cline",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/cline/cline",
+        "reviewedFiles": [
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 127,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L127",
+            "claim": "load declared, no list"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 246,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L246",
+            "claim": "load persisted messages; current provider defaults"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 435,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L435",
+            "claim": "legacy model switch"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 452,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L452",
+            "claim": "config model/provider switch"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 689,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L689",
+            "claim": "readMessages and continuation setup"
+          },
+          {
+            "file": "apps/cli/src/acp/auth.ts",
+            "line": 84,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/auth.ts#L84",
+            "claim": "existing provider credentials reused before OAuth"
+          },
+          {
+            "file": "apps/cli/src/acp/session-load.ts",
+            "line": 1,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/session-load.ts#L1",
+            "claim": "message replay conversion"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "3.0.68",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；当前连接/模型列表成功且零消息。无 ACP 历史 list；冷加载默认配置差异待验证客户端保存配置能否补足。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "连接/模型列表及官方 auth 命令预览通过；完整登录服务配置取消返回未验，10-05 仍0条消息。",
+          "evidence": ["clinePrep", "latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "已有 CLI provider key 可复用，OAuth authenticate 有实现；当前无账号身份/状态及标准退出控制，真实凭据交付/换号未验。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "confirmed_agent_limit_with_risk",
+          "detail": "3.0.65 无 session/list；已知 ID 有持久消息/load/replay。冷 load 先取当前 provider/model 默认，客户端保存配置可能补足；未测不能说必然错恢复。",
+          "evidence": ["clineDefaults", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "source_risk_not_reproduced",
+          "detail": "C model/provider/mode setter 保留消息；实际切换、下一请求、重启保持未验。冷加载默认差异需核客户端补偿。",
+          "evidence": ["clineDefaults", "modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "当前仅模型列表，0 消息；完整工具/文件/问题审批、原技能配置无真实工作证据。",
+          "evidence": ["latest"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "无多对话并行切 provider/model、审批/停止作用域实证。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "无真停止与断线/冷恢复未发内容整链；历史配置风险未复现。",
+          "evidence": ["clineDefaults", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "连接与模型列表有正证据；完整账号、历史发现与真实工作反馈未闭环。",
+          "evidence": ["clinePrep", "latest", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S3：无历史列表，未登记外部对话发现不完整。",
+        "S2：账号身份/状态及内置退出未完成。",
+        "S4/S7：cold load 默认差异是待核风险，不是已测错误；没有真实消息整链。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "未声明/实现session/list，官方3.0.68 matrix仍method_not_found。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ensureSessionManager(resume:true)读取同id持久messages，不存在则resource_not_found。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await replaySessionHistory后返回，正文按user/assistant转换；并非完整原生事件账本。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久messages可跨进程恢复；provider/model不按会话持久，冷load使用当时当前默认。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "createCliCore载入initialMessages并保留activeSessionId用于prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model/provider/mode config实现，provider切换重建manager但先保留messages；旧set_model也实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ProviderSettingsManager/getPersistedProviderApiKey先找CLI已有凭据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate已支持Cline/ClinePass/ChatGPT Subscription OAuth，可复用已存凭据或打开浏览器；少见交互要求无默认值会报错；未见账号status/logout ACP接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L127",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L246",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L435",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L452",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L689",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/auth.ts#L84",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/session-load.ts#L1",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/cline/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "github-copilot-cli",
+      "name": "GitHub Copilot CLI",
+      "installedVersion": "1.0.89",
+      "cachedHandshakeAgentVersion": "1.0.90",
+      "versionNote": "包登记1.0.89，缓存自报1.0.90；公开矩阵1.0.91不是安装版实测。本轮未重启或探测。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v1.0.89",
+      "source": {
+        "maintainer": "GitHub",
+        "relationship": "closed-source native ACP executable; public official docs/changelog",
+        "repository": "https://github.com/github/copilot-cli",
+        "reviewedFiles": [
+          {
+            "file": "changelog.md (retrieved 2026-10-05)",
+            "line": 2502,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L2502",
+            "claim": "0.0.410 supports loading existing sessions"
+          },
+          {
+            "file": "changelog.md",
+            "line": 2665,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L2665",
+            "claim": "0.0.400 supports changing model during session"
+          },
+          {
+            "file": "changelog.md",
+            "line": 1644,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L1644",
+            "claim": "1.0.37 ACP model configOptions"
+          },
+          {
+            "file": "changelog.md",
+            "line": 1502,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L1502",
+            "claim": "1.0.48 updated configOptions after model change"
+          },
+          {
+            "file": "changelog.md",
+            "line": 731,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L731",
+            "claim": "1.0.69 authenticate only succeeds when logged in"
+          },
+          {
+            "file": "official ACP server docs",
+            "line": null,
+            "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server",
+            "claim": "native ACP, BYOK reuse, session commands"
+          },
+          {
+            "file": "official auth docs",
+            "line": null,
+            "url": "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+            "claim": "original persisted login and env/gh fallback"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "1.0.91",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C 来自官方说明；包登记1.0.89、缓存自报1.0.90。PTY启动返回取消曾过，完整历史/模型效果未知，账号管理缺口仍在。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "同包 login PTY 启动/暂离返回/取消真实通过；账号授权、服务配置、全模型选择与成功首答未验。",
+          "evidence": ["copilotPty"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "官方说明 CLI OAuth/token/BYOK可复用，本机实际身份未核；客户端无身份/状态且缓存无标准 logout，无内置退出换号。不能由公开材料缺少接口推断 Agent 不支持。 API-only 不强制额外登录/退出，但仍须说明真实服务/凭据来源和状态。",
+          "evidence": ["account", "logout", "accountUi"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "缓存声明 list/load、官方说明加载已有会话；闭源完整正文回放时序、跨进程上下文/续答缺直接证据，非失败。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C依据官方1.0.37 configOptions、1.0.48通知和同会话切换说明；本机可用模型/推理列表、后续请求/冷保持未验。新版矩阵 placeholder invalid_params 只证明方法识别。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "无本机成功回复、工具/文件/问题审批及原技能配置完整性实证。",
+          "evidence": ["copilotPty"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "闭源实现的并行/模型/停止作用域没有本机真实验证，不能用共用测试代替。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "partial_verified",
+          "detail": "登录进程取消和原稿保持有限通过；不是模型任务停止、断线重启未发保护或历史续答。",
+          "evidence": ["copilotPty"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "登录准备启动/返回/取消有反馈；账号/模型/历史/实际工作异常链未完整验证。",
+          "evidence": ["copilotPty", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：客户端账号状态及内置退出/换号不完整，不推断闭源 Agent 本身无此能力。",
+        "S3/S4：历史完整回放/冷续答和真实模型效果缺证据，非已测失败。",
+        "包版本1.0.89、缓存自报1.0.90、公开矩阵1.0.91必须分开。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "official-matrix-newer-version",
+          "detail": "最新1.0.91官方matrix声明list且空账号环境list成功；安装版未新探测。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "official-release-docs-and-matrix",
+          "detail": "官方0.0.410发行日志已支持加载existing sessions；当前matrix宣告load。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "unknown",
+          "evidenceLevel": "not-established",
+          "detail": "闭源安装发行仅native可执行；官方文档及声明未精确说明load正文回放与完成时序，未读取用户历史/启动探测。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "unknown",
+          "evidenceLevel": "not-established",
+          "detail": "官方说明CLI有持久session store，但不能单由此保证ACP跨进程load；旧cross-process issue已关闭但未把用户旧报告当现版失败。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "partial",
+          "evidenceLevel": "official-release-docs",
+          "detail": "官方描述load existing sessions；跨进程恢复后续答未由本轮官方实现/实测直接验证。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "official-release-docs",
+          "detail": "官方1.0.37 model configOptions、1.0.48变化通知、0.0.400同session切换；本机1.0.89包含这些版本；未能查看闭源实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "recognized-by-latest-matrix",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "official-product-docs",
+          "detail": "官方CLI记住OAuth账号；可用COPILOT_GITHUB_TOKEN/GH_TOKEN/GITHUB_TOKEN、gh后备；ACP也复用BYOK配置。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "official-release-docs-and-matrix",
+          "detail": "terminal-auth走copilot login；官方1.0.69起authenticate要求实际已登录；未发现公开ACP账号status/logout接口，不把CLI login/logout当协议动作。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2502",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2665",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L1644",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L1502",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L731",
+        "https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/github-copilot-cli/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "installedVersion": "1.52.0",
+      "cachedHandshakeAgentVersion": "1.52.0",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v1.52.0",
+      "source": {
+        "maintainer": "Goose project / AAIF (repository moved from block/goose)",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/aaif-goose/goose",
+        "reviewedFiles": [
+          {
+            "file": "crates/goose/src/acp/server.rs",
+            "line": 1824,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1824",
+            "claim": "initialize native list/load"
+          },
+          {
+            "file": "crates/goose/src/acp/server/load_session.rs",
+            "line": 382,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L382",
+            "claim": "read persistent session replay and activate"
+          },
+          {
+            "file": "crates/goose/src/acp/server/load_session.rs",
+            "line": 24,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L24",
+            "claim": "only user-visible messages replay"
+          },
+          {
+            "file": "crates/goose/src/acp/server/list_sessions.rs",
+            "line": 1,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/list_sessions.rs#L1",
+            "claim": "persistent listing and cursor"
+          },
+          {
+            "file": "crates/goose/src/acp/server/dispatch.rs",
+            "line": 38,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L38",
+            "claim": "authenticate no-op"
+          },
+          {
+            "file": "crates/goose/src/acp/server/dispatch.rs",
+            "line": 149,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L149",
+            "claim": "standard config model/provider/thinking"
+          },
+          {
+            "file": "crates/goose/src/acp/server.rs",
+            "line": 2430,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L2430",
+            "claim": "same-session provider recreation with chosen model"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "1.53.0",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；原生历史/模型源码具备；authenticate 不登录/不验凭据却被 Farfold 显示登录成功，语义缺口确证未实测复现。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "insufficient_evidence",
+          "detail": "当前有官方 goose configure 准备动作，不需臆称只能拼命令；完整配置/返回/选模型/成功请求仍缺实证。",
+          "evidence": ["goosePrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "原 Config/provider secrets可复用；精确1.52 authenticate直接响应，不执行登录或检验凭据，却被确认登录并只重做initialize。API-only无需登录，但仍不能声称凭据已核验。",
+          "evidence": [
+            "gooseNoop",
+            "authConfirm",
+            "authUi",
+            "authText",
+            "authCheck",
+            "account"
+          ],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "持久 list/load、全部可见正文回放与 provider resume 有实现；本机历史发现/冷恢复正文上下文配置及续答未验。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C model/thinking/provider 可按目标会话替换 provider；实际可选项完整性、后续请求及重启保持未验。",
+          "evidence": ["modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "无本机完整回答/工具/文件/问题审批和原工具技能配置实证。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "会话级 provider setter 源码不证明实际并行切换/审批/停止互不影响。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "无真实停止、断线/错误/重启保护全部草稿附件队列整链。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "confirmed_client_gap",
+          "detail": "该具体 authenticate 只确认处理请求却展示登录成功；源码链确定，本轮未操作账号复现。",
+          "evidence": [
+            "gooseNoop",
+            "authConfirm",
+            "authUi",
+            "authText",
+            "authCheck"
+          ],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2/S8：具体 no-op authenticate 被解释为登录成功；并非因空响应本身报错。",
+        "其余能力源码未替代本机完整真实工作链，官方 configure 准备入口实际已存在。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "session manager持久记录、cursor过滤。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "get_session(...,true)读取conversation并激活原sessionId。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "replay_conversation_to_client；默认回放全部user-visible内容，隐藏内部消息不回放；支持可选replayTail扩展。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "session manager存储与原conversation恢复；resume_saved_provider_session提供provider恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复agent/会话并注册为活动session，后续prompt继续。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准set_config model调用recreate_provider_for_session，保留当前session设置；thinking/provider同通道。旧set_model未注册。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Config::global及provider原有secret/config；不另设ACP专用账号。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准authenticate直接返回空成功；提示goose configure。另有_goose provider配置/OAuth等私有接口，不能等同通用账号status/logout；FarFold不应靠空成功判断账号可用。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1824",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L382",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L24",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/list_sessions.rs#L1",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L38",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L149",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L2430",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/goose/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "installedVersion": "2.25.8",
+      "cachedHandshakeAgentVersion": "2.25.8",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "C",
+      "reviewedSourceTag": "v2.25.8",
+      "source": {
+        "maintainer": "Mistral AI",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/mistralai/mistral-vibe",
+        "reviewedFiles": [
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 452,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L452",
+            "claim": "initialize list/load and auth methods"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 556,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L556",
+            "claim": "resume native session load full history then replay updates"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 990,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L990",
+            "claim": "native saved sessions list"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 1023,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1023",
+            "claim": "standard config updates active_model and runtime"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 1127,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1127",
+            "claim": "auth/status and auth/signOut extension"
+          },
+          {
+            "file": "vibe/acp/auth.py",
+            "line": 149,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/auth.py#L149",
+            "claim": "browser authentication and original context credentials"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "2.25.8",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "C；官方 auth/status与auth/signOut未接入客户端。原生历史/模型有源码，现场只到认证要求，实际完整链未验。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "partial_verified",
+          "detail": "2.25.8 安装连接/账号选项可见，模型读取需认证；完整登录配置选模型与取消返回未验。",
+          "evidence": ["vibePrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "官方 auth/status返回authenticated/authState/signOutAvailable，auth/signOut按来源退出；当前均未消费，只认标准logout。env来源本可能不可退出，需如实说明；API-only不强制OAuth。",
+          "evidence": ["account", "logout", "accountUi", "vibePrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "insufficient_evidence",
+          "detail": "持久 list/load，await完整history/replay后返回有实现；本机已有历史发现、正文配置冷恢复与续答未验。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "insufficient_evidence",
+          "detail": "C model/thinking更新session resources/config并reload runtime；真实改选后请求及冷保持无实证。",
+          "evidence": ["modelSet"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "insufficient_evidence",
+          "detail": "现场停准备阶段，成功工作、工具/文件/问题审批与原技能配置无实证。",
+          "evidence": ["vibePrep"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "insufficient_evidence",
+          "detail": "无本机多任务模型/审批/停止隔离真实结果。",
+          "evidence": [],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "insufficient_evidence",
+          "detail": "无真实停止、断线/重启保护未发内容完整链证据。",
+          "evidence": ["history"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "partial_verified",
+          "detail": "准备与认证要求有有限反馈；官方账号状态/退出未映射，整体体验未闭环。",
+          "evidence": ["vibePrep", "account"],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S2：有官方身份状态/退出扩展未接通；环境凭据不可退出需按真实来源解释。",
+        "其他项：有限准备现场和源码能力不能变成真实工作通过。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "app-server host resources.list_sessions读取saved sessions；忽略cursor，未分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ResumeSessionIntent(sessionId)恢复原会话。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await _load_complete_history，再依次await replay_session_updates；完成后才返回。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "app-server原生保存会话恢复，不依赖ACP会话Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "同session app-server/resources保持恢复上下文。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "set_config model调用resources.config.update(active_model,reload_runtime=True)；同session，thinking也有接口。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "OnboardingContext.load、GLOBAL_ENV_FILE和原provider credentials；环境输入优先级由Agent负责。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "agent浏览器认证/委托浏览器认证、terminal --setup；扩展auth/status返回authenticated/authState/signOutAvailable，auth/signOut按原认证状态移除保存key；env来源可能不允许退出。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L452",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L556",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L990",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1023",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1127",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/auth.py#L149",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/mistral-vibe/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    },
+    {
+      "id": "fast-agent",
+      "name": "fast-agent",
+      "installedVersion": "0.10.1",
+      "cachedHandshakeAgentVersion": "0.10.1",
+      "versionNote": "本轮只读安装元数据与10-05精确版本研究一致；未执行程序。",
+      "modelRoute": "N",
+      "reviewedSourceTag": "v0.10.1",
+      "source": {
+        "maintainer": "evalstate / fast-agent project",
+        "relationship": "native first-party ACP facade in fast-agent Python package",
+        "repository": "https://github.com/evalstate/fast-agent",
+        "reviewedFiles": [
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 320,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L320",
+            "claim": "load/list/resume capabilities"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 316,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L316",
+            "claim": "persistent native SessionManager listing"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 377,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L377",
+            "claim": "load native persisted session and hydrate"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 233,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L233",
+            "claim": "only user/assistant message content replay"
+          },
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 382,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L382",
+            "claim": "authenticate acknowledge only"
+          },
+          {
+            "file": "src/fast_agent/commands/handlers/model.py",
+            "line": 513,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/commands/handlers/model.py#L513",
+            "claim": "slash model switch creates/replaces session and clears history"
+          },
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 598,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.42/src/fast_agent/acp/server/agent_acp_server.py#L598",
+            "claim": "latest explicitly rejects set_config_option"
+          }
+        ]
+      },
+      "publicLatestAt2026_10_05": "0.10.42",
+      "publicLatestNotUpdatedThisReview": true,
+      "summary": "N；真实首答/冷续答/跨 Agent 并行有限通过，但 /model switch 清历史且 no-op认证被确认登录，明确未达高标准。",
+      "strictlyCompliant": false,
+      "overall": "当前存在明确接入缺口，且部分必要能力证据不足；不能判全部八条达标。",
+      "standards": [
+        {
+          "standard": 1,
+          "name": "准备流程完整",
+          "status": "confirmed_agent_limit",
+          "detail": "旧候选可真实首答/恢复，但无ACP模型配置路线；要求中的选模型不能以隐藏入口完成，完整凭据设置链也未验。",
+          "evidence": ["fastCold", "fastModel"],
+          "strictPass": false
+        },
+        {
+          "standard": 2,
+          "name": "账号服务可靠",
+          "status": "confirmed_client_gap",
+          "detail": "配置/secrets/env/已有OAuth复用有源码；authenticate仅校验method并回静态说明，不登录/验凭据，却确认登录。API-only无需登录，仍不能给不存在的账号验证结论。",
+          "evidence": [
+            "fastNoop",
+            "authConfirm",
+            "authUi",
+            "authText",
+            "authCheck"
+          ],
+          "strictPass": false
+        },
+        {
+          "standard": 3,
+          "name": "历史真正可用",
+          "status": "partial_verified_with_limit",
+          "detail": "旧同ID正文冷恢复/显式续答成功；源码仅回放active agent的user/assistant，工具/子Agent完整历史未保证且发送异常被吞。完整历史配置仍未覆盖。",
+          "evidence": ["fastCold", "parallel", "history"],
+          "strictPass": false
+        },
+        {
+          "standard": 4,
+          "name": "模型选择生效",
+          "status": "confirmed_agent_limit",
+          "detail": "0.10.1无标准模型config/set_model；/model switch新建/替换会话并清history后才设模型，不满足同对话保上下文切换；没有批准固定模型例外。",
+          "evidence": ["fastModel"],
+          "strictPass": false
+        },
+        {
+          "standard": 5,
+          "name": "工作能力完整",
+          "status": "partial_verified",
+          "detail": "旧真实短答通过；完整工具、文件、问题审批及原工具技能配置未覆盖。",
+          "evidence": ["fastCold", "parallel"],
+          "strictPass": false
+        },
+        {
+          "standard": 6,
+          "name": "多任务不串扰",
+          "status": "partial_verified",
+          "detail": "旧与OpenCode重叠运行通过；同Agent多会话、并发模型/审批/停止未测。",
+          "evidence": ["parallel"],
+          "strictPass": false
+        },
+        {
+          "standard": 7,
+          "name": "停止恢复可信",
+          "status": "partial_verified",
+          "detail": "旧正常冷重启正文与显式续答、不自动重发有限通过；运行中停止、断线、附件/队列完整保护未验。",
+          "evidence": ["fastCold"],
+          "strictPass": false
+        },
+        {
+          "standard": 8,
+          "name": "体验统一反馈清楚",
+          "status": "confirmed_client_gap",
+          "detail": "如实隐藏无模型选项不补能力；该no-op认证还被显示登录成功。并行反馈有限通过不覆盖此缺口。",
+          "evidence": [
+            "fastModel",
+            "fastNoop",
+            "authConfirm",
+            "authUi",
+            "authText",
+            "parallel"
+          ],
+          "strictPass": false
+        }
+      ],
+      "principalBlockers": [
+        "S1/S4：无标准模型路线，/model switch新建/替换会话并清历史；无固定模型例外授权。",
+        "S2/S8：静态设置说明认证回执被显示为登录成功。",
+        "旧冷恢复/并行正证据保留；工具/子Agent历史、真实停止与完整隔离未证。"
+      ],
+      "nativeCapabilityEvidenceFromPriorResearch": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "按workspace/app scope SessionManager读取原生保存历史，cwd及cursor过滤。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久manager.load_session -> initialize state -> SessionHydrator。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await send_session_history_updates，重放当前active agent的user/assistant内容；并非所有子Agent/工具事件完整回放。发送异常被log后吞掉。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原生SessionManager持久存储及hydration；--no-home会关闭此能力，当前启动没有该参数。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "hydration将message history加载进Agent实例，后续prompt使用。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "无configOptions/model setter；/model switch先create/replace session并clear histories，不是保留同对话上下文切换。最新版0.10.42仍显式method_not_found。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "N",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": false
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "复用fast-agent config/secrets、环境与CLI已有OAuth配置；注册表默认FAST_AGENT_MODEL=codexplan仅是启动配置不是已登录证据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate只确认已知method并返回静态setup说明；不执行登录/检验账号，不提供ACP账号状态/退出。配置/CLI认证由fast-agent负责。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "nativeEvidenceScope": "原接口/源码/官方说明能力；其value=yes不等于Farfold端到端成功，以本报告standards严格结论为准。",
+      "evidenceURLs": [
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L320",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L316",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L377",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L233",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L382",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/commands/handlers/model.py#L513",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.42/src/fast_agent/acp/server/agent_acp_server.py#L598",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/fast-agent/agent.json"
+      ],
+      "limitations": [
+        "本轮未运行真实Agent/登录/模型；未读凭据或真实会话内容。",
+        "旧候选有限成功仍有效，只按原覆盖范围使用；没有要求无变化的旧成功全部重跑。",
+        "API-only不要求额外OAuth登录或不可行退出；仍须清楚服务/凭据来源和真实状态。",
+        "缺少官方能力仍待完善，不以隐藏入口算通过，未批准例外。"
+      ]
+    }
+  ]
+}

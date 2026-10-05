@@ -58,6 +58,7 @@ struct ParsedAuthMethod {
     env_names: Option<Vec<String>>,
     /// `_meta["api-key"]` object, if the method declares one.
     api_key_meta: Option<serde_json::Value>,
+    api_key_provider: Option<String>,
     /// Pre-standard terminal auth shape (`_meta["terminal-auth"]`):
     /// the declaration carries the full argv, not args appended to the
     /// agent launch command.
@@ -137,6 +138,11 @@ fn parse_auth_methods_with_proof(
                                 == Some("terminal"),
                         is_api_key: api_key_meta.is_some(),
                         api_key_meta,
+                        api_key_provider: (kind == "api-key")
+                            .then(|| {
+                                auth_route::protocol_api_key_provider(method).map(str::to_string)
+                            })
+                            .flatten(),
                         setup: invocation
                             .as_ref()
                             .is_some_and(|invocation| invocation.setup),
@@ -180,6 +186,19 @@ fn runnable_auth_method(
     }
     Ok(method)
 }
+
+fn auth_uses_terminal(
+    method: &ParsedAuthMethod,
+    via_terminal: Option<bool>,
+) -> Result<bool, String> {
+    // A fresh declaration must not turn an earlier protocol choice into a
+    // terminal child that its caller never explicitly requested or owns.
+    if method.is_terminal && via_terminal != Some(true) {
+        return Err("登录方式已变化，请重新选择".into());
+    }
+    Ok(method.is_terminal || via_terminal.unwrap_or(false))
+}
+
 fn api_key_env_name(method: &ParsedAuthMethod) -> Option<String> {
     method
         .api_key_meta
@@ -202,6 +221,8 @@ pub struct AuthMethodInfo {
     pub terminal_command: Option<Vec<String>>,
     /// Suggested env var name for `api-key` methods.
     pub env_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub api_key_provider: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub env_names: Option<Vec<String>>,
     pub purpose: &'static str,
@@ -236,6 +257,7 @@ fn auth_methods_with_proof(row: &AgentRow, proof: &ManagedTerminalProof) -> Auth
                 .then(|| api_key_env_name(method))
                 .flatten(),
             env_names: method.env_names.clone(),
+            api_key_provider: method.api_key_provider.clone(),
             purpose: if method.setup { "setup" } else { "login" },
             completion: if method.setup {
                 "return_and_verify"
@@ -491,6 +513,51 @@ pub async fn auth_methods(
     ))
 }
 
+/// Save only for a current method declaration. The Keychain reference belongs
+/// to the existing credential pool; this command does not start authentication.
+fn selected_key_provider(
+    row: &AgentRow,
+    method_id: &str,
+    expected_provider: &str,
+) -> Result<String, String> {
+    let provider = parse_auth_methods(row)
+        .into_iter()
+        .find(|method| method.id == method_id && method.unavailable_reason.is_none())
+        .and_then(|method| method.api_key_provider)
+        .ok_or("此登录方式已变化，请重新检查后再保存密钥")?;
+    if provider != expected_provider {
+        return Err("此登录方式已变化，请重新选择后再保存密钥".into());
+    }
+    Ok(provider)
+}
+
+#[tauri::command]
+#[allow(clippy::too_many_arguments)]
+pub async fn auth_key_save(
+    app: AppHandle,
+    agent_id: String,
+    method_id: String,
+    cwd: String,
+    source: Option<String>,
+    expected_provider: String,
+    label: String,
+    key: String,
+) -> Result<crate::credentials::View, String> {
+    attempts::require_existing_source(source.as_deref())?;
+    let cwd = crate::acp_client::manager::validate_cwd_async(&cwd).await?;
+    let configuration = crate::install_job::configuration_guard(&agent_id).await;
+    let row = crate::acp_client::manager::require_agent_row(&app, &agent_id).await?;
+    let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
+    let provider = selected_key_provider(&row, &method_id, &expected_provider)?;
+    let store = app.state::<MetaStore>().inner().clone();
+    store
+        .run(move |store| {
+            let _configuration = configuration;
+            crate::credentials::save_auth_key(store, &provider, &label, &key)
+        })
+        .await
+}
+
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AuthRunResult {
@@ -520,8 +587,8 @@ pub(crate) fn terminal_output(
 
 /// Run one auth method. `agent` methods go through `authenticate`;
 /// `terminal` methods spawn only the verified derived command
-/// on an embedded PTY. `api-key` methods bounce back so the UI collects the
-/// key first.
+/// on an embedded PTY. A verified method API Key uses an explicit saved
+/// reference and the same protocol ownership as other agent methods.
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
 pub async fn auth_run(
@@ -532,6 +599,8 @@ pub async fn auth_run(
     source: Option<String>,
     attempt_id: String,
     via_terminal: Option<bool>,
+    credential_id: Option<String>,
+    credential_revision: Option<String>,
     on_output: Channel<serde_json::Value>,
 ) -> Result<AuthRunResult, String> {
     attempts::require_existing_source(source.as_deref())?;
@@ -555,14 +624,19 @@ pub async fn auth_run(
     let method = runnable_auth_method(&row, &method_id, &proof)?;
     attempt.check()?;
 
-    if method.is_api_key {
-        return Ok(AuthRunResult {
-            kind: "api-key".to_string(),
-            pty_id: None,
-        });
+    if method.is_api_key && method.api_key_provider.is_none() {
+        return Err("此登录方式当前不能在这里使用密钥，请使用更多登录方式".into());
+    }
+    if method.api_key_provider.is_some() && via_terminal.unwrap_or(false) {
+        return Err("此登录方式需要通过选中的密钥登录".into());
+    }
+    if method.api_key_provider.is_none()
+        && (credential_id.is_some() || credential_revision.is_some())
+    {
+        return Err("此登录方式不接受密钥，请重新选择".into());
     }
 
-    if method.is_terminal || via_terminal.unwrap_or(false) {
+    if auth_uses_terminal(&method, via_terminal)? {
         let scope = app
             .state::<AcpManager>()
             .reserve_account_change(&agent_id)?;
@@ -624,17 +698,43 @@ pub async fn auth_run(
         return Err("Agent 程序设置已变化，请重新选择登录方式".into());
     }
     let current = live_auth_row(&manager, &current, &cwd)?;
-    if !parse_auth_methods(&current).iter().any(|method| {
-        method.id == method_id
-            && !method.is_terminal
-            && !method.is_api_key
-            && method.unavailable_reason.is_none()
-    }) {
+    let current_method = parse_auth_methods(&current)
+        .into_iter()
+        .find(|current_method| {
+            current_method.id == method_id
+                && !current_method.is_terminal
+                && current_method.api_key_provider == method.api_key_provider
+                && current_method.unavailable_reason.is_none()
+        });
+    if current_method.is_none() {
         return Err("此登录方式已变化，请重新选择".into());
     }
     attempt.check()?;
-    let scope = manager.reserve_account_change(&agent_id)?;
+    let scope = if method.api_key_provider.is_some() {
+        manager.reserve_preparation_change(&agent_id)?
+    } else {
+        manager.reserve_account_change(&agent_id)?
+    };
     attempt.protocol_directory(&cwd)?;
+    // Metadata and account/configuration ownership are verified before the
+    // first credential read. Saving a key never grants environment access.
+    let credential = if let Some(provider) = method.api_key_provider {
+        let id = credential_id.ok_or("请选择此登录方式使用的密钥")?;
+        let revision = credential_revision.ok_or("请重新选择此登录方式使用的密钥")?;
+        let store = store.inner().clone();
+        Some(
+            attempt
+                .setup(store.run(move |store| {
+                    crate::credentials::auth_key(store, &id, &revision, &provider).and_then(|key| {
+                        crate::acp_client::auth_route::ProtocolApiKey::new(provider, key)
+                    })
+                }))
+                .await?,
+        )
+    } else {
+        None
+    };
+    attempt.check()?;
     let app = app.clone();
     tauri::async_runtime::spawn(async move {
         let (_configuration, _scope) = (_configuration, scope);
@@ -643,9 +743,26 @@ pub async fn auth_run(
         let on_unknown = std::sync::Arc::new(move || {
             let _ = on_output.send(serde_json::json!({"authStatus":"unknown"}));
         });
-        app.state::<AcpManager>()
-            .authenticate(&agent_id, &cwd, &method_id, operation, on_unknown)
-            .await?;
+        let manager = app.state::<AcpManager>();
+        match credential {
+            Some(credential) => {
+                manager
+                    .authenticate_with_key(
+                        &agent_id,
+                        &cwd,
+                        &method_id,
+                        Some(credential),
+                        operation,
+                        on_unknown,
+                    )
+                    .await?
+            }
+            None => {
+                manager
+                    .authenticate(&agent_id, &cwd, &method_id, operation, on_unknown)
+                    .await?
+            }
+        }
         Ok(AuthRunResult {
             kind: "agent".into(),
             pty_id: None,
@@ -679,7 +796,7 @@ pub async fn agent_logout(
         .await?;
     let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
     if !auth_methods_for(&row).can_logout {
-        return Err(format!("agent {agent_id} does not support logout"));
+        return Err("此 Agent 当前不支持退出登录，请查看官方账号说明".into());
     }
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
@@ -834,6 +951,38 @@ mod tests {
             info.methods[0].terminal_command,
             Some(vec![row.command.clone(), "acp".to_string()])
         );
+    }
+
+    #[test]
+    fn provider_only_key_exposes_its_verified_delivery_without_guessing_environment() {
+        let row = row(
+            "example",
+            serde_json::json!({"authMethods":[{
+                "id":"api-key", "name":"API Key", "_meta":{"api-key":{"provider":"openai"}}
+            }]}),
+        );
+        let info = auth_methods_for(&row);
+        assert_eq!(info.methods[0].kind, "api-key");
+        assert_eq!(info.methods[0].api_key_provider.as_deref(), Some("openai"));
+        assert_eq!(info.methods[0].env_name, None);
+        assert_eq!(
+            selected_key_provider(&row, "api-key", "openai").unwrap(),
+            "openai"
+        );
+        assert!(selected_key_provider(&row, "api-key", "changed").is_err());
+        assert!(selected_key_provider(&row, "other-method", "openai").is_err());
+    }
+
+    #[test]
+    fn key_save_rejects_changed_removed_and_environment_only_declarations() {
+        for method in [
+            serde_json::json!({"id":"api-key", "name":"API Key"}),
+            serde_json::json!({"id":"api-key", "name":"API Key", "_meta":{"api-key":{"env":"TOKEN"}}}),
+            serde_json::json!({"id":"api-key", "name":"API Key", "_meta":{"api-key":{"provider":"unverified"}}}),
+        ] {
+            let row = row("example", serde_json::json!({"authMethods":[method]}));
+            assert!(selected_key_provider(&row, "api-key", "openai").is_err());
+        }
     }
 
     #[test]
@@ -1019,6 +1168,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore = "writes and removes one non-account test key in the local Keychain"]
     fn keychain_round_trip_stores_and_reads_back() {
         let millis = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -1062,3 +1212,6 @@ mod route_diagnostics_tests;
 
 #[cfg(test)]
 mod copilot_tests;
+
+#[cfg(test)]
+mod transport_selection_tests;

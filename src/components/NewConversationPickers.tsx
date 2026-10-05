@@ -117,7 +117,7 @@ export function NewConversationAgentDialog({
 }) {
   const [query, setQuery] = useState("");
   const search = useRef<HTMLInputElement>(null);
-  const visible = usableAgents(cards).filter((card) =>
+  const visible = usableAgents(cards, prepared).filter((card) =>
     card.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
   );
   return (
@@ -142,20 +142,14 @@ export function NewConversationAgentDialog({
             key={card.id}
             type="button"
             aria-pressed={card.id === picked}
-            onClick={() =>
-              prepared(card.id) ? onPick(card.id) : onPrepare(card.id)
-            }
+            onClick={() => {
+              if (prepared(card.id)) onPick(card.id);
+            }}
           >
             <AgentLogo card={card} />
             <span>
               <strong>{card.name}</strong>
-              <small>
-                {!prepared(card.id)
-                  ? S.continuePreparation
-                  : card.status === "connected"
-                    ? S.connected
-                    : S.continueConnection}
-              </small>
+              <small>{S.connected}</small>
             </span>
             {card.id === picked && <Check size={16} />}
           </button>

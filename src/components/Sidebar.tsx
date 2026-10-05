@@ -118,8 +118,18 @@ export function Sidebar({
   return (
     <aside className="sidebar product-sidebar">
       <div className="product-brand">
-        <img src="/brand/mark.svg" alt="" />
-        <img src="/brand/wordmark.svg" alt="Farfold" />
+        <span className="product-brand-lockup" role="img" aria-label="Farfold">
+          <img
+            className="brand-light"
+            src="/brand/farfold-horizontal-light.svg"
+            alt=""
+          />
+          <img
+            className="brand-dark"
+            src="/brand/farfold-horizontal-dark.svg"
+            alt=""
+          />
+        </span>
         <button
           type="button"
           className="icon-button"

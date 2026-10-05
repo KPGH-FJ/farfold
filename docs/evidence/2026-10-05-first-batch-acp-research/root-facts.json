@@ -1,0 +1,791 @@
+{
+  "queriedAt": "2026-10-05T15:10:27.641496+00:00",
+  "registryCommit": "8ed458f223534a602cc6b74d186c3898a8428b2d",
+  "scope": [
+    "amp-acp",
+    "antigravity-acp",
+    "auggie",
+    "autohand",
+    "claude-acp",
+    "cline",
+    "codebuddy-code",
+    "codex-acp",
+    "corust-agent",
+    "cursor",
+    "devin",
+    "dimcode",
+    "dirac",
+    "factory-droid",
+    "fast-agent",
+    "gemini",
+    "github-copilot-cli",
+    "goose",
+    "grok-build",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kimi",
+    "minimax-code",
+    "mistral-vibe",
+    "nova",
+    "opencode",
+    "pi-acp",
+    "poolside",
+    "qoder",
+    "qwen-code",
+    "sigit",
+    "stakpak"
+  ],
+  "installedSnapshotAt": "2026-10-05T15:02:11.220178+00:00",
+  "installedDeclarationSummary": {
+    "total": 33,
+    "loadDeclared": 31,
+    "listDeclared": 26,
+    "loadNotDeclared": [
+      "amp-acp",
+      "corust-agent"
+    ],
+    "listNotDeclared": [
+      "cline",
+      "amp-acp",
+      "gemini",
+      "codebuddy-code",
+      "dirac",
+      "corust-agent",
+      "stakpak"
+    ],
+    "logoutDeclared": [
+      "claude-acp",
+      "codex-acp",
+      "dirac",
+      "antigravity-acp",
+      "kimchi",
+      "poolside"
+    ]
+  },
+  "installedDeclarations": [
+    {
+      "id": "opencode",
+      "installedVersion": "1.18.31",
+      "agentInfo": {
+        "name": "OpenCode",
+        "version": "1.18.31"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "opencode-login",
+          "type": "agent",
+          "name": "Login with opencode"
+        }
+      ]
+    },
+    {
+      "id": "cline",
+      "installedVersion": "3.0.65",
+      "agentInfo": {
+        "name": "cline",
+        "version": "3.0.65"
+      },
+      "loadDeclared": true,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "cline",
+          "type": "agent",
+          "name": "Sign in with Cline"
+        },
+        {
+          "id": "cline-pass",
+          "type": "agent",
+          "name": "Sign in with ClinePass"
+        },
+        {
+          "id": "openai-codex",
+          "type": "agent",
+          "name": "Sign in with ChatGPT Subscription"
+        }
+      ]
+    },
+    {
+      "id": "claude-acp",
+      "installedVersion": "0.81.2",
+      "agentInfo": {
+        "name": "@agentclientprotocol/claude-agent-acp",
+        "title": "Claude Agent",
+        "version": "0.81.2"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": true,
+      "authMethods": [
+        {
+          "id": "claude-ai-login",
+          "type": "terminal",
+          "name": "Claude Subscription"
+        },
+        {
+          "id": "console-login",
+          "type": "terminal",
+          "name": "Anthropic Console"
+        }
+      ]
+    },
+    {
+      "id": "codex-acp",
+      "installedVersion": "1.13.1",
+      "agentInfo": {
+        "name": "@agentclientprotocol/codex-acp",
+        "title": "Codex",
+        "version": "1.13.1"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": true,
+      "authMethods": [
+        {
+          "id": "api-key",
+          "type": "agent",
+          "name": "API Key"
+        },
+        {
+          "id": "chat-gpt",
+          "type": "agent",
+          "name": "ChatGPT"
+        }
+      ]
+    },
+    {
+      "id": "pi-acp",
+      "installedVersion": "0.0.34",
+      "agentInfo": {
+        "name": "pi-acp",
+        "title": "pi ACP adapter",
+        "version": "0.0.34"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "pi_terminal_login",
+          "type": "terminal",
+          "name": "Launch pi in the terminal"
+        }
+      ]
+    },
+    {
+      "id": "amp-acp",
+      "installedVersion": "0.9.0",
+      "agentInfo": {
+        "name": "amp-acp",
+        "title": "Amp ACP Agent",
+        "version": "0.9.0"
+      },
+      "loadDeclared": false,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "setup",
+          "type": "agent",
+          "name": "Amp API Key Setup"
+        }
+      ]
+    },
+    {
+      "id": "goose",
+      "installedVersion": "1.52.0",
+      "agentInfo": {
+        "name": "goose",
+        "version": "1.52.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "goose-provider",
+          "type": "agent",
+          "name": "Configure Provider"
+        }
+      ]
+    },
+    {
+      "id": "kilo",
+      "installedVersion": "7.8.1",
+      "agentInfo": {
+        "name": "Kilo",
+        "version": "7.8.1"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "kilo-login",
+          "type": "agent",
+          "name": "Login with Kilo"
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "installedVersion": "0.62.0",
+      "agentInfo": {
+        "name": "gemini-cli",
+        "title": "Gemini CLI",
+        "version": "0.62.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "oauth-personal",
+          "type": "agent",
+          "name": "Log in with Google"
+        },
+        {
+          "id": "gemini-api-key",
+          "type": "agent",
+          "name": "Gemini API key"
+        },
+        {
+          "id": "vertex-ai",
+          "type": "agent",
+          "name": "Vertex AI"
+        },
+        {
+          "id": "gateway",
+          "type": "agent",
+          "name": "AI API Gateway"
+        }
+      ]
+    },
+    {
+      "id": "fast-agent",
+      "installedVersion": "0.10.1",
+      "agentInfo": {
+        "name": "fast-agent-acp",
+        "version": "0.10.1"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "fast-agent-ai-secrets",
+          "type": "agent",
+          "name": "Configure fast-agent"
+        }
+      ]
+    },
+    {
+      "id": "kimi",
+      "installedVersion": "1.52.0",
+      "agentInfo": {
+        "name": "Kimi Code CLI",
+        "version": "1.52.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "login",
+          "type": "agent",
+          "name": "Login with Kimi account"
+        }
+      ]
+    },
+    {
+      "id": "auggie",
+      "installedVersion": "0.36.0",
+      "agentInfo": {
+        "name": "auggie",
+        "title": "Auggie Agent",
+        "version": "0.36.0 (commit 7c61e5bb)"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "auggie-login",
+          "type": "agent",
+          "name": "Log in with Auggie"
+        }
+      ]
+    },
+    {
+      "id": "codebuddy-code",
+      "installedVersion": "2.160.0",
+      "agentInfo": null,
+      "loadDeclared": true,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "iOA",
+          "type": "agent",
+          "name": "Login with iOA"
+        },
+        {
+          "id": "external",
+          "type": "agent",
+          "name": "Login with Google/Github"
+        },
+        {
+          "id": "internal",
+          "type": "agent",
+          "name": "Login with WeChat"
+        },
+        {
+          "id": "selfhosted",
+          "type": "agent",
+          "name": "Login with Enterprise Domain"
+        }
+      ]
+    },
+    {
+      "id": "autohand",
+      "installedVersion": "0.2.1",
+      "agentInfo": {
+        "name": "@autohandai/autohand-acp",
+        "title": "Autohand CLI",
+        "version": "0.2.1"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "autohand-install",
+          "type": "agent",
+          "name": "Install Autohand CLI"
+        }
+      ]
+    },
+    {
+      "id": "dimcode",
+      "installedVersion": "0.5.16",
+      "agentInfo": {
+        "name": "dimcode",
+        "title": "DimAgent",
+        "version": "0.5.16"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "dimcode.terminal",
+          "type": "terminal",
+          "name": "DimAgent terminal auth"
+        }
+      ]
+    },
+    {
+      "id": "dirac",
+      "installedVersion": "0.5.17",
+      "agentInfo": {
+        "name": "dirac",
+        "version": "0.5.17"
+      },
+      "loadDeclared": true,
+      "listDeclared": false,
+      "logoutDeclared": true,
+      "authMethods": []
+    },
+    {
+      "id": "qoder",
+      "installedVersion": "0.2.14",
+      "agentInfo": {
+        "name": "qoder-cli",
+        "title": "Qoder CLI",
+        "version": "0.2.14"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "qodercli-login",
+          "type": "agent",
+          "name": "Use qodercli login"
+        },
+        {
+          "id": "qoder-personal-access-token",
+          "type": "env_var",
+          "name": "Use QODER_PERSONAL_ACCESS_TOKEN"
+        }
+      ]
+    },
+    {
+      "id": "qwen-code",
+      "installedVersion": "0.24.7",
+      "agentInfo": {
+        "name": "qwen-code",
+        "title": "Qwen Code",
+        "version": "0.24.7"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "openai",
+          "type": "agent",
+          "name": "Use OpenAI API key"
+        }
+      ]
+    },
+    {
+      "id": "minimax-code",
+      "installedVersion": "0.2.7",
+      "agentInfo": {
+        "name": "minimax-code",
+        "title": "MiniMax Code",
+        "version": "0.2.7"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "minimax-code-login",
+          "type": "terminal",
+          "name": "Sign in to MiniMax Code"
+        }
+      ]
+    },
+    {
+      "id": "nova",
+      "installedVersion": "1.1.49",
+      "agentInfo": {
+        "name": "kore-cli",
+        "version": "1.0.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "kore-terminal-auth",
+          "type": "terminal",
+          "name": "Nova Setup"
+        }
+      ]
+    },
+    {
+      "id": "sigit",
+      "installedVersion": "1.5.11",
+      "agentInfo": {
+        "name": "sigit",
+        "title": "siGit Code - AI Coding Agent",
+        "version": "1.5.11"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "sigit",
+          "type": "agent",
+          "name": "Sign in to siGit Code"
+        }
+      ]
+    },
+    {
+      "id": "github-copilot-cli",
+      "installedVersion": "1.0.89",
+      "agentInfo": {
+        "name": "Copilot",
+        "title": "Copilot",
+        "version": "1.0.90"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "copilot-login",
+          "type": "agent",
+          "name": "Log in with Copilot CLI"
+        }
+      ]
+    },
+    {
+      "id": "antigravity-acp",
+      "installedVersion": "1.2.1",
+      "agentInfo": {
+        "name": "antigravity-acp",
+        "title": "Google Antigravity",
+        "version": "1.2.1"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": true,
+      "authMethods": [
+        {
+          "id": "oauth-personal",
+          "type": "agent",
+          "name": "Log in with Google"
+        },
+        {
+          "id": "oauth-business",
+          "type": "agent",
+          "name": "Log in with Gemini Enterprise"
+        },
+        {
+          "id": "gemini-api-key",
+          "type": "agent",
+          "name": "Gemini API key"
+        },
+        {
+          "id": "agent-platform",
+          "type": "agent",
+          "name": "Gemini Enterprise Agent Platform"
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "installedVersion": "2026.09.28",
+      "agentInfo": null,
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "cursor_login",
+          "type": "agent",
+          "name": "Cursor Login"
+        }
+      ]
+    },
+    {
+      "id": "devin",
+      "installedVersion": "3000.11.3",
+      "agentInfo": {
+        "name": "affogato",
+        "title": "Devin Agent",
+        "version": "0.0.0-dev"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "devin-browser",
+          "type": "agent",
+          "name": "Log in with browser"
+        },
+        {
+          "id": "devin-terminal-login",
+          "type": "terminal",
+          "name": "Log in with terminal"
+        }
+      ]
+    },
+    {
+      "id": "corust-agent",
+      "installedVersion": "0.6.0",
+      "agentInfo": {
+        "name": "corust-acp",
+        "title": "Corust Agent",
+        "version": "0.1.0"
+      },
+      "loadDeclared": false,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "oauth_browser",
+          "type": "agent",
+          "name": "Login via browser"
+        }
+      ]
+    },
+    {
+      "id": "kimchi",
+      "installedVersion": "1.3.0",
+      "agentInfo": {
+        "name": "kimchi",
+        "version": "1.3.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": true,
+      "authMethods": [
+        {
+          "id": "kimchi-agent",
+          "type": "agent",
+          "name": "Kimchi Login"
+        },
+        {
+          "id": "kimchi-agent-us",
+          "type": "agent",
+          "name": "Kimchi Login (US)"
+        },
+        {
+          "id": "kimchi-terminal",
+          "type": "terminal",
+          "name": "Log in from terminal"
+        }
+      ]
+    },
+    {
+      "id": "mistral-vibe",
+      "installedVersion": "2.25.8",
+      "agentInfo": {
+        "name": "@mistralai/mistral-vibe",
+        "title": "Mistral Vibe",
+        "version": "2.25.8"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "browser-auth",
+          "type": "agent",
+          "name": "Sign in through Mistral AI Studio"
+        },
+        {
+          "id": "vibe-setup",
+          "type": "terminal",
+          "name": "Register your API Key"
+        }
+      ]
+    },
+    {
+      "id": "poolside",
+      "installedVersion": "1.0.16",
+      "agentInfo": {
+        "name": "pool-acp",
+        "title": "Poolside",
+        "version": "1.0.16"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": true,
+      "authMethods": [
+        {
+          "id": "pool-login",
+          "type": "agent",
+          "name": "Log in to Poolside"
+        }
+      ]
+    },
+    {
+      "id": "stakpak",
+      "installedVersion": "0.3.88",
+      "agentInfo": {
+        "name": "stakpak",
+        "title": "Stakpak Agent",
+        "version": "0.3.88"
+      },
+      "loadDeclared": true,
+      "listDeclared": false,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "stakpak",
+          "type": "agent",
+          "name": "Login to Stakpak"
+        }
+      ]
+    },
+    {
+      "id": "factory-droid",
+      "installedVersion": "0.230.0",
+      "agentInfo": {
+        "name": "@factory/cli",
+        "title": "Factory Droid (Daemon)",
+        "version": "0.230.0"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "device-pairing",
+          "type": "agent",
+          "name": "Login"
+        },
+        {
+          "id": "factory-api-key",
+          "type": "agent",
+          "name": "Factory API Key"
+        }
+      ]
+    },
+    {
+      "id": "grok-build",
+      "installedVersion": "1.0.46",
+      "agentInfo": null,
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "grok.com",
+          "type": "agent",
+          "name": "Grok"
+        }
+      ]
+    },
+    {
+      "id": "junie",
+      "installedVersion": "3419.24.0",
+      "agentInfo": {
+        "name": "@jetbrains/junie",
+        "title": "Junie",
+        "version": "26.9.22 (3419.24)"
+      },
+      "loadDeclared": true,
+      "listDeclared": true,
+      "logoutDeclared": false,
+      "authMethods": [
+        {
+          "id": "jetbrains-account",
+          "type": "agent",
+          "name": "Junie Account"
+        },
+        {
+          "id": "junie-cli",
+          "type": "terminal",
+          "name": "Junie CLI (interactive)"
+        }
+      ]
+    }
+  ],
+  "officialMatrix": {
+    "date": "2026-10-05",
+    "generatedAt": "2026-10-05T12:18:53+00:00",
+    "includedFirstBatch": 31,
+    "missingFirstBatch": [
+      "fast-agent",
+      "qoder"
+    ],
+    "limitations": [
+      "not a Farfold runtime check",
+      "no real credential/model invocation",
+      "does not probe session/load or session/set_config_option",
+      "set_model probes use placeholder matrix-model; invalid_params and resource_not_found count as implemented, not successful switching"
+    ]
+  },
+  "farfoldSourceAudit": {
+    "historyLoad": "session/load with event replay route; loadSession required",
+    "externalHistoryDiscovery": "session/list capability required; known Farfold index restore does not require list",
+    "modelSwitchModern": "session/set_config_option only",
+    "modelSwitchLegacy": "models returned from backend, not consumed by frontend; no session/set_model production request or current_model_update projection",
+    "authentication": "inherits normal environment/HOME; ACP authenticate and advertised terminal routes; logout gated by declaration",
+    "runtimeBoundary": "no Agent was launched, authenticated, switched, upgraded or tested through real model in this research"
+  }
+}

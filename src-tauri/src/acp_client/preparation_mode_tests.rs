@@ -7,6 +7,7 @@ use std::time::Duration;
 struct Observation {
     opened: Result<OpenedSession, String>,
     calls: Vec<(String, Value)>,
+    events: Vec<Value>,
 }
 
 async fn read(
@@ -36,6 +37,8 @@ async fn read(
     let modes = json!({"currentModeId":"high","availableModes":[{"id":"high","name":"High"},{"id":"off","name":"Off"}],"_meta":{"fixture":"keep"}});
     let calls = Arc::new(Mutex::new(Vec::new()));
     let peer_calls = calls.clone();
+    let events = Arc::new(Mutex::new(Vec::new()));
+    let observed_events = events.clone();
     let (entered, start) = oneshot::channel();
     let entered = Arc::new(Mutex::new(Some(entered)));
     let (release, released) = oneshot::channel();
@@ -142,7 +145,7 @@ async fn read(
                     verified_permission_option: false,
                 },
                 requested,
-                Arc::new(|_| {}),
+                Arc::new(move |event| observed_events.lock().unwrap().push(event)),
                 &sessions,
                 &pending,
                 SessionOps {
@@ -184,6 +187,7 @@ async fn read(
     Observation {
         opened: receive.await.unwrap(),
         calls: calls.lock().unwrap().clone(),
+        events: events.lock().unwrap().clone(),
     }
 }
 
@@ -324,11 +328,92 @@ async fn preparation_cancelled_mode_does_not_publish_late_success_or_following_c
     )
     .await;
     assert_eq!(changes(&result), ["session/set_mode"]);
-    let opened = result.opened.unwrap();
-    assert_eq!(opened.response["modes"]["currentModeId"], "high");
-    assert_eq!(
-        opened.config_options.unwrap()[0]["currentValue"],
-        "old-model"
+    assert!(result.opened.is_err());
+    assert!(
+        !result
+            .events
+            .iter()
+            .any(|event| { event["kind"] == "configCheck" && event["check"]["status"] == "ready" })
     );
-    assert_eq!(opened.warnings.len(), 1);
+}
+
+#[tokio::test]
+async fn preparation_cancelled_synthetic_mode_keeps_original_response() {
+    let (entered, start) = oneshot::channel();
+    let entered = Arc::new(Mutex::new(Some(entered)));
+    let (release, released) = oneshot::channel();
+    let released = Arc::new(Mutex::new(Some(released)));
+    let peer = Agent.builder().on_receive_dispatch(
+        async move |message: Dispatch, _cx| {
+            if let Dispatch::Request(request, responder) = message {
+                assert_eq!(request.method(), "session/set_mode");
+                assert_eq!(request.params()["modeId"], "off");
+                let entered = entered.lock().unwrap().take().unwrap();
+                let released = released.lock().unwrap().take().unwrap();
+                entered.send(()).unwrap();
+                released.await.unwrap();
+                responder.respond(json!({}))?;
+                return Ok(Handled::Yes);
+            }
+            Ok(Handled::No {
+                message,
+                retry: false,
+            })
+        },
+        agent_client_protocol::on_receive_dispatch!(),
+    );
+    let connection = Client
+        .builder()
+        .on_receive_dispatch(
+            async move |message: Dispatch, _cx| {
+                Ok(Handled::No {
+                    message,
+                    retry: false,
+                })
+            },
+            agent_client_protocol::on_receive_dispatch!(),
+        )
+        .connect_with(peer, async move |cx| {
+            let operation = Operation::new();
+            let original = json!({
+                "modes": {
+                    "currentModeId": "high",
+                    "availableModes": [
+                        {"id":"high", "name":"High"},
+                        {"id":"off", "name":"Off"}
+                    ],
+                    "_meta": {"fixture":"keep"}
+                },
+                "configOptions": [{"id":"model", "currentValue":"old-model"}]
+            });
+            let mut response = original.clone();
+            let modes = synthetic_mode_state(&response, response.get("configOptions")).unwrap();
+            let value = json!("off");
+            let result = {
+                let restore = restore_synthetic_mode(
+                    &cx,
+                    "mode-proof",
+                    &mut response,
+                    modes,
+                    &value,
+                    &operation,
+                );
+                tokio::pin!(restore);
+                tokio::select! {
+                    _ = start => {
+                        operation.abandon();
+                        release.send(()).unwrap();
+                    }
+                    _ = &mut restore => panic!("synthetic mode was never sent to session/set_mode"),
+                }
+                restore.await
+            };
+            assert!(result.is_err());
+            assert_eq!(response, original);
+            Ok(())
+        });
+    tokio::time::timeout(Duration::from_secs(5), connection)
+        .await
+        .unwrap()
+        .unwrap();
 }

@@ -1,0 +1,37 @@
+{
+  "atUtc": "2026-10-03T00:55:40.686745+00:00",
+  "scope": "PID, parent PID and executable basename only; no args/env/terminal",
+  "appPid": 77499,
+  "processes": [
+    {
+      "pid": 77499,
+      "ppid": 1,
+      "program": "farfold"
+    },
+    {
+      "pid": 77730,
+      "ppid": 77499,
+      "program": "devin"
+    },
+    {
+      "pid": 77739,
+      "ppid": 77730,
+      "program": "docker"
+    },
+    {
+      "pid": 77993,
+      "ppid": 77499,
+      "program": "node"
+    },
+    {
+      "pid": 78036,
+      "ppid": 77499,
+      "program": "node"
+    },
+    {
+      "pid": 78037,
+      "ppid": 78036,
+      "program": "pi"
+    }
+  ]
+}

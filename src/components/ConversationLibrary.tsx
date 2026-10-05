@@ -14,6 +14,7 @@ import {
   DotsThreeIcon,
 } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
+import { isAgentPresentable } from "../runtime/agent_directory";
 import {
   CollectionActionScope,
   collections,
@@ -132,8 +133,16 @@ export function ConversationLibrary({
   const snapshot = useThreadsSnapshot();
   const index = snapshot.index;
   const agentOptions = useMemo(() => {
+    const historyAgents = new Set(index.map((row) => row.agentId));
     const names = new Map(
-      agents.map((agent) => [agent.id, agent.name || agent.id]),
+      agents
+        .filter(
+          (agent) =>
+            isAgentPresentable(agent) ||
+            historyAgents.has(agent.id) ||
+            selection.agent === agent.id,
+        )
+        .map((agent) => [agent.id, agent.name || agent.id]),
     );
     for (const row of index)
       if (!names.has(row.agentId)) names.set(row.agentId, row.agentId);

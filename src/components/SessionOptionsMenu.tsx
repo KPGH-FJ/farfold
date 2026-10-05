@@ -1,13 +1,14 @@
 /**
  * 会话选项列表：渲染 Agent 声明的全部 configOptions——select 用分组
  * 下拉（复用 ModelPicker），boolean 用开关，未知类型只读。模型选项仍
- * 遵守创建时锁定：已建立会话中只读。一个组件覆盖所有 Agent，差异只
+ * 只在本轮工作结束、真实声明与恢复核对允许时修改。一个组件覆盖所有 Agent，差异只
  * 来自 configOptions 数据本身。
  */
 import { ModelPicker } from "./ModelPicker";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { isReasoningOption } from "./ReasoningControl";
-import { fixedConfigOption } from "../runtime/protected_config";
+import { configOptionChangeBlocked } from "../runtime/protected_config";
+import { useAuthenticationActivity } from "../runtime/authentication";
 import { STRINGS } from "../runtime/strings";
 import {
   configValueLabel,
@@ -32,18 +33,10 @@ function OptionRow({
   thread: ThreadState;
   option: ConfigOptionView;
 }) {
-  const disabled =
-    fixedConfigOption(thread, option.id) ||
-    thread.configuring ||
-    thread.running ||
-    thread.submitting ||
-    (thread.modelDrift &&
-      !(
-        thread.configCheck?.status === "confirmation_required" &&
-        option.category === "thought_level"
-      ));
+  useAuthenticationActivity(thread.agentId);
+  const disabled = configOptionChangeBlocked(thread, option.id);
   const change = (value: unknown) => {
-    if (fixedConfigOption(thread, option.id)) return;
+    if (configOptionChangeBlocked(thread, option.id)) return;
     if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
     void threads.setConfig(thread.key, option.id, value).catch(() => undefined);
   };
@@ -85,6 +78,19 @@ function OptionRow({
   );
 }
 
+export function sessionOptions(thread: ThreadState, composer = false) {
+  // The model option has its own row in the panel;
+  // everything else is listed here.
+  const modelId = modelConfigOption(thread.configOptions)?.id;
+  const reasoningId = thread.configOptions.find(isReasoningOption)?.id;
+  return thread.configOptions.filter(
+    (o) =>
+      o.id !== modelId &&
+      o.id !== thread.permissionConfigId &&
+      !(composer && o.id === reasoningId),
+  );
+}
+
 export function SessionOptionsList({
   thread,
   composer = false,
@@ -92,16 +98,7 @@ export function SessionOptionsList({
   thread: ThreadState;
   composer?: boolean;
 }) {
-  // The model option has its own row in the panel (draft-only editable);
-  // everything else is listed here.
-  const modelId = modelConfigOption(thread.configOptions)?.id;
-  const reasoningId = thread.configOptions.find(isReasoningOption)?.id;
-  const rest = thread.configOptions.filter(
-    (o) =>
-      o.id !== modelId &&
-      o.id !== thread.permissionConfigId &&
-      !(composer && o.id === reasoningId),
-  );
+  const rest = sessionOptions(thread, composer);
   return (
     <>
       {rest.map((option) => (

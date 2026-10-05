@@ -44,7 +44,7 @@ fn next(rx: &mpsc::Receiver<Value>, kind: &str, state: Option<&str>) -> Value {
     }
 }
 #[tokio::test(flavor = "multi_thread")]
-async fn permissions_gate_cold_load_failed_timeout_late_and_explicit_retry() {
+async fn configuration_change_permissions_gate_cold_load_failed_timeout_late_and_explicit_retry() {
     let dir = tempfile::tempdir().unwrap();
     let cwd = dir.path().canonicalize().unwrap();
     std::fs::write(cwd.join("peer.py"), PEER).unwrap();
@@ -184,7 +184,8 @@ async fn permissions_gate_cold_load_failed_timeout_late_and_explicit_retry() {
         )
         .await
         .unwrap();
-    assert_eq!(options[0]["currentValue"], "read-only");
+    assert_eq!(options["configOptions"][0]["currentValue"], "read-only");
+    assert_eq!(options["permissionState"], "ready");
     manager
         .session_prompt(&row.id, &cwd, &opened.session_id, blocks())
         .await

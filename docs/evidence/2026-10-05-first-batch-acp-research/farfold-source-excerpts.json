@@ -1,0 +1,85 @@
+{
+  "recordedAt": "2026-10-05T15:11:41.474723+00:00",
+  "head": "dc9412718cada6a45ef23f2aa86719a2bac8257d",
+  "worktreeDirty": true,
+  "note": "Local current source is dirty and may include work by another ongoing task. This report changes no implementation. File hashes identify excerpts, not Agent admission checks.",
+  "excerpts": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "start": 724,
+      "end": 750,
+      "sourceHash": "a9595397ac3e748b2fb0da362684fcc85d608e404f26585a82753972519de3dd",
+      "lines": "724:       // The saved Farfold name is authoritative before replay is delivered.\n725:       // Older rows do not distinguish generated names from explicit renames.\n726:       const savedTitle = this.indexRows.find((row) => row.id === key)?.title;\n727:       state.title = savedTitle?.trim() ? savedTitle : (existing?.title ?? null);\n728:       state.configOptions = normalizeConfigOptions(result.configOptions);\n729:       state.permissionConfigId = result.permissionConfigId;\n730:       state.permissionState = result.permissionConfigId\n731:         ? result.resumed\n732:           ? \"required\"\n733:           : (result.permissionState ?? \"unknown\")\n734:         : \"ready\";\n735:       if (state.permissionConfigId && state.permissionState !== \"ready\")\n736:         pauseQueue(state, state.uncertainPrompt ? \"uncertain\" : \"stopped\");\n737:       // Agents with a top-level `modes` object get a synthetic mode\n738:       // option; it routes to `session/set_mode`, not set_config_option.\n739:       const modeOption = synthesizeModeOption(result.modes);\n740:       if (\n741:         modeOption &&\n742:         !state.configOptions.some(\n743:           (o) => o.id === \"mode\" || o.category === \"mode\",\n744:         )\n745:       ) {\n746:         state.modesSeparate = true;\n747:         state.configOptions = [...state.configOptions, modeOption];\n748:         if (typeof modeOption.currentValue === \"string\")\n749:           state.currentModeId = modeOption.currentValue;\n750:       }"
+    },
+    {
+      "path": "src/runtime/session_configuration.ts",
+      "start": 122,
+      "end": 153,
+      "sourceHash": "8cb0b7fb4fcacab5080d23be51d4e4416fb71f6d0703f6b55974c28f156edab8",
+      "lines": "122:     const request = (async () => {\n123:       try {\n124:         if (configId === \"mode\" && s.modesSeparate) {\n125:           await invoke(\"session_set_mode\", {\n126:             agentId: s.agentId,\n127:             cwd: s.cwd,\n128:             sessionId: s.nativeSessionId,\n129:             modeId: String(value),\n130:           });\n131:           if (this.hooks.thread(key) !== s) return;\n132:           if (s.connectionLost || s.reconnecting)\n133:             throw new Error(STRINGS.repair.configFailed);\n134:           s.currentModeId = String(value);\n135:           for (const option of s.configOptions)\n136:             if (option.id === \"mode\") option.currentValue = s.currentModeId;\n137:         } else {\n138:           const updated = await invoke<ConfirmedConfigUpdate>(\n139:             \"session_set_config\",\n140:             {\n141:               agentId: s.agentId,\n142:               cwd: s.cwd,\n143:               sessionId: s.nativeSessionId,\n144:               configId,\n145:               value,\n146:             },\n147:           );\n148:           if (this.hooks.thread(key) !== s) return;\n149:           if (\n150:             !updated ||\n151:             Array.isArray(updated) ||\n152:             !Array.isArray(updated.configOptions) ||\n153:             !updated.configCheck"
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "start": 37,
+      "end": 47,
+      "sourceHash": "20a1686a52fcf41ebef30d0e548c8a7e5c6b68e5b00f081ffe15eaadac2de6ac",
+      "lines": "37: export async function discoverHistory(\n38:   agentId: string,\n39:   cursor?: string,\n40:   cwd?: string | null,\n41: ): Promise<DiscoveryPage> {\n42:   return invoke(\"session_discover\", {\n43:     agentId,\n44:     cursor: cursor ?? null,\n45:     ...(cwd ? { connectionCwd: cwd, cwd } : {}),\n46:   });\n47: }"
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "start": 80,
+      "end": 95,
+      "sourceHash": "20a1686a52fcf41ebef30d0e548c8a7e5c6b68e5b00f081ffe15eaadac2de6ac",
+      "lines": "80:         cwd: row.cwd,\n81:         sessionId: row.nativeSessionId,\n82:         channel,\n83:       },\n84:     );\n85:     state.cwd = result.cwd;\n86:     state.nativeSessionId = result.nativeSessionId;\n87:     state.resumed = true;\n88:     state.identity = \"established\";\n89:     state.service = result.service ?? undefined;\n90:     state.serviceContext = result.serviceContext ?? undefined;\n91:     if (!state.configOptions.length)\n92:       state.configOptions = normalizeConfigOptions(result.configOptions);\n93:     state.permissionConfigId = result.permissionConfigId;\n94:     state.permissionState = result.permissionConfigId ? \"required\" : \"ready\";\n95:     if (result.configCheck) applyConfigCheck(state, result.configCheck);"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "start": 1143,
+      "end": 1155,
+      "sourceHash": "c36bb2e1d654f3a69141b3244f7188c1a29d11d65a636873cdd740c4fde8339e",
+      "lines": "1143:                     let operation = Operation::new();\n1144:                     let (request_operation, request_cx, request_session, request_id) =\n1145:                         (operation.clone(), cx.clone(), session_id.clone(), config_id.clone());\n1146:                     if permission { permission_guard.begin(); events(permission_guard.event()); }\n1147:                     mutation = Some(Mutation::new(\n1148:                         MutationKind::Config { permission_value: permission.then_some(value), choice, prior_guard, config_store: candidate_store },\n1149:                         MutationReply::Config(result), operation, lease, deadline,\n1150:                         async move {\n1151:                             request_operation.request(&request_cx, request_cx.send_request_to(Agent,\n1152:                                 SetSessionConfigOptionRequest::new(request_session, request_id, option_value)))\n1153:                                 .await.map_err(describe_acp_error).and_then(|response|\n1154:                                     serde_json::to_value(response.config_options).map_err(|_| \"无法读取设置结果\".into()))\n1155:                         }));"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/open.rs",
+      "start": 111,
+      "end": 145,
+      "sourceHash": "7f612eb0af49263cc086038b849e190a4addca6a43fe0f4c96024888bc21c8c5",
+      "lines": "111:         Some(id) => {\n112:             // Register before `session/load` so replay notifications are\n113:             // claimed; anything arriving earlier was queued by the\n114:             // retry-on-sessionId fallback in the connection dispatcher.\n115:             let guard = cx\n116:                 .add_dynamic_handler(SessionRoute::new(\n117:                     &id,\n118:                     inbox_tx,\n119:                     operation.abandoned.clone(),\n120:                 ))\n121:                 .map_err(describe_open_error)?;\n122:             // Registration itself is queued by the protocol library. Wait for\n123:             // its incoming actor before publishing load, so replay cannot remain\n124:             // in the fallback queue while an empty pump announces readiness.\n125:             await_route_registration(cx, &operation).await?;\n126:             let params = super::super::transient_mcp::session_params(cwd, Some(&id), mcp.as_ref());\n127:             let request =\n128:                 UntypedMessage::new(\"session/load\", &params).map_err(describe_open_error)?;\n129:             match operation\n130:                 .request(cx, cx.send_request_to(Agent, request))\n131:                 .await\n132:             {\n133:                 Ok(response) => (id, response, guard, ops.life.session()?),\n134:                 Err(error) => {\n135:                     drop(guard);\n136:                     return Err(describe_open_error(error));\n137:                 }\n138:             }\n139:         }\n140:     };\n141: \n142:     let mut warnings = Vec::new();\n143:     let mut config_state = response.get(\"configOptions\").cloned();\n144:     let mut permission_guard = super::super::permission_guard::PermissionGuard::new(\n145:         config_store.verified_permission_option,"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "start": 82,
+      "end": 102,
+      "sourceHash": "eddde47f32a265840a0661177bc146084942b1855077c8536bee6599df63a204",
+      "lines": "82:     let preview = ImportPreview {\n83:         preview_token: token.clone(),\n84:         session: super::session::SessionOpenResult {\n85:             service: source.as_ref().map(|source| source.identity.clone()),\n86:             service_context: source.map(|source| source.revision),\n87:             native_session_id: opened.session_id,\n88:             cwd: cwd.to_string_lossy().into_owned(),\n89:             config_options: opened.config_options.unwrap_or(Value::Null),\n90:             config_check: opened.config_check,\n91:             permission_config_id: opened.permission_config_id,\n92:             permission_state: opened.permission_state,\n93:             modes: opened.response.get(\"modes\").cloned(),\n94:             models: opened.response.get(\"models\").cloned(),\n95:             meta: opened.response.get(\"_meta\").cloned(),\n96:             resumed: true,\n97:             warnings: opened.warnings,\n98:         },\n99:     };\n100:     // The pump has drained the load replay into this sink before returning.\n101:     // IPC invoke and Channel callbacks are independent; only an ordered\n102:     // marker on this same Channel proves the renderer consumed that replay."
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "start": 327,
+      "end": 337,
+      "sourceHash": "19d285c8b8a5f92a710072d1d7ba8788bcdd202bce1f3c23647c6d87f4ddec76",
+      "lines": "327:         if let Some(id) = &native_session_id {\n328:             if !command_tx\n329:                 .handshake\n330:                 .get()\n331:                 .is_some_and(|h| h.typed.agent_capabilities.load_session)\n332:             {\n333:                 return Err(\"该 Agent 不支持恢复历史\".into());\n334:             }\n335:             if let Some(previous) = self.session_owner(&agent.id, cwd, id)?\n336:                 && !std::sync::Arc::ptr_eq(&previous.state, &command_tx.state)\n337:             {"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "start": 612,
+      "end": 639,
+      "sourceHash": "19d285c8b8a5f92a710072d1d7ba8788bcdd202bce1f3c23647c6d87f4ddec76",
+      "lines": "612:     pub(crate) async fn discover_session_page(\n613:         &self,\n614:         agent_id: &str,\n615:         connection_cwd: &Path,\n616:         cwd: Option<&Path>,\n617:         cursor: Option<String>,\n618:     ) -> Result<Option<(Value, bool)>, String> {\n619:         let connection = self.live_connection(agent_id, connection_cwd)?;\n620:         let handshake = connection.handshake.get().ok_or(\"Agent 尚未连接，请重试\")?;\n621:         if handshake\n622:             .typed\n623:             .agent_capabilities\n624:             .session_capabilities\n625:             .list\n626:             .is_none()\n627:         {\n628:             return Ok(None);\n629:         }\n630:         let can_load = handshake.typed.agent_capabilities.load_session;\n631:         let (send, receive) = oneshot::channel();\n632:         connection.send(ManagerCommand::ListSessions {\n633:             cwd: cwd.map(Path::to_path_buf),\n634:             cursor,\n635:             all_pages: false,\n636:             result: send,\n637:         })?;\n638:         let response = super::wait::reply(\n639:             receive,"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "start": 173,
+      "end": 185,
+      "sourceHash": "717eb8aa551c39a9daeff14fafd5b5d497e11b106f355732219b68c338644818",
+      "lines": "173:     cwd: &Path,\n174:     control: &ProcessControl,\n175: ) -> Result<SpawnedProcess, agent_client_protocol::Error> {\n176:     // Mirror the locked SDK's process construction, adding only this connection's\n177:     // actual cwd. The SDK config has no cwd setter; ByteStreams and the existing\n178:     // exact Child owner below still handle the protocol and process lifetime.\n179:     let config = agent.config();\n180:     let mut command = std::process::Command::new(config.command());\n181:     command\n182:         .args(config.arguments())\n183:         .envs(config.environment())\n184:         .current_dir(cwd)\n185:         .process_group(0);"
+    },
+    {
+      "path": "src-tauri/src/acp_client/handshake.rs",
+      "start": 272,
+      "end": 282,
+      "sourceHash": "c3aee954b82131530374f800d9b551908b5e836099136c84abb4de47aa948293",
+      "lines": "272:     }\n273: \n274:     pub(crate) fn can_logout(&self) -> bool {\n275:         self.public_json()\n276:             .pointer(\"/agentCapabilities/auth/logout\")\n277:             .is_some_and(Value::is_object)\n278:     }\n279: }\n280: \n281: /// Old typed snapshots may already have lost the discriminator. They provide\n282: /// identity only, never evidence of a callable method, even at another cwd."
+    }
+  ]
+}

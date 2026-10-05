@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "collectedCount": 174,
+  "expectedCount": 174,
+  "outsideProject": [],
+  "missing": [],
+  "extra": [],
+  "researchCollectedBeforeFix": 1304,
+  "source": "Vitest filesOnly discovery; no test modules executed"
+}

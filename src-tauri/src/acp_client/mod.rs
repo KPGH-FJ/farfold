@@ -8,6 +8,7 @@
 //! - `session_index` — meta_store row ids and merge helpers.
 //! - `tap` — content-free protocol diagnostics for diagnostics.
 
+mod api_key_auth;
 pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;

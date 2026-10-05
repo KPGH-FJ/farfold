@@ -615,3 +615,53 @@ it("does not invent a version rule or an installation action for an undeclared p
   expect(button(nodes, S.install)).toBeUndefined();
   expect(ready).toHaveBeenLastCalledWith(true);
 });
+
+it("keeps ready diagnostics and optional installation out of the primary flow", async () => {
+  current = versionedProgram();
+  current.dependencies[0].detail = "Detailed official installation diagnostic";
+  const nodes = await settled();
+  const disclosure = nodes.find(
+    (node) => node.props.className === "program-check-details",
+  )!;
+  expect(disclosure.type).toBe("details");
+  expect(disclosure.props.open).not.toBe(true);
+  const diagnostics = elements(disclosure.props.children as ReactNode);
+  expect(
+    diagnostics.some((node) => node.props.children === S.installCandidate),
+  ).toBe(true);
+  const nested = diagnostics.find(
+    (node) => node.props.className === "program-dependency-details",
+  )!;
+  expect(nested.type).toBe("details");
+  expect(nested.props.open).not.toBe(true);
+  expect(
+    elements(nested.props.children as ReactNode).some(
+      (node) => node.props.children === current.dependencies[0].detail,
+    ),
+  ).toBe(true);
+  expect(nodes.some((node) => node.props.children === S.versionTry)).toBe(
+    false,
+  );
+  expect(h.invoke).toHaveBeenCalledOnce();
+});
+
+it("keeps missing program installation visible with diagnostic text collapsed", async () => {
+  current = preparation();
+  current.dependencies[0].detail = "Technical installation instructions";
+  const nodes = await settled();
+  expect(
+    nodes.some((node) => node.props.className === "program-check-details"),
+  ).toBe(false);
+  expect(installer(nodes, "uv")?.props.disabled).toBe(false);
+  const detail = nodes.find(
+    (node) => node.props.className === "program-dependency-details",
+  )!;
+  expect(detail.type).toBe("details");
+  expect(detail.props.open).not.toBe(true);
+  expect(
+    elements(detail.props.children as ReactNode).some(
+      (node) => node.props.children === current.dependencies[0].detail,
+    ),
+  ).toBe(true);
+  expect(before).not.toHaveBeenCalled();
+});

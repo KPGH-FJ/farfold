@@ -1,6 +1,6 @@
 export const NEW_CONVERSATION_PICKER_STRINGS = {
-  agentTitle: "和谁聊聊？",
-  agentSearch: "搜索已添加的 Agent",
+  agentTitle: "选择 Agent",
+  agentSearch: "搜索 Agent",
   agentSearchPlaceholder: "搜索你的 Agent",
   agentEmpty: "没有符合条件的 Agent",
   agentEmptyHint: "换一个搜索词，或添加其他 Agent。",

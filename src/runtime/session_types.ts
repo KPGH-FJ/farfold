@@ -225,18 +225,17 @@ export interface ThreadState {
   /** Agent exposes `modes` outside `configOptions` — the synthetic `mode`
    *  option routes to `session/set_mode` instead of `set_config_option`. */
   modesSeparate: boolean;
-  /** Resumed session's reported model differs from the one recorded at
-   *  creation — shown read-only; never re-sent (restored sessions are
-   *  read-only per contract). */
+  /** Restored choices differ from the latest confirmed configuration. */
   /** Derived from the backend config check, including reasoning and unknown values. */
   modelDrift: boolean;
   configCheck: import("./config_check").ConfigCheck | null;
   recordedModel?: string;
   connectionLost: boolean;
+  connectionCloseReason?: import("./connection_close").ConnectionCloseReason;
   /** Unconfirmed execution/admission, independent of the user-owned retry copy.
    * An idle disconnect alone has no unknown result. */
   connectionOutcomeUnknown: boolean;
-  /** First prompt sent — the agent/model choice is fixed from then on. */
+  /** The Agent restored this existing session, rather than creating a draft. */
   resumed: boolean;
   openError: string | null;
   /** App-owned replay admission failure; never inferred from remote text. */

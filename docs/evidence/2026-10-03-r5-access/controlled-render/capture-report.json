@@ -1,0 +1,1363 @@
+{
+  "kind": "isolated-headless-controlled-render",
+  "actualAppCapture": false,
+  "network": "file URLs only, DNS disabled, no user browser profile",
+  "captures": [
+    {
+      "file": "01-account-key.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 148.265625,
+          "width": 700,
+          "height": 523.46875,
+          "top": 148.265625,
+          "right": 990,
+          "bottom": 671.734375,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 603.734375,
+          "width": 698,
+          "height": 67,
+          "top": 603.734375,
+          "right": 989,
+          "bottom": 670.734375,
+          "left": 291
+        },
+        "radioCount": 2,
+        "headings": ["选择接入方式"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "手动配置登录",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "登录 ChatGPT 账号",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "02-terminal-api.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 133.765625,
+          "width": 700,
+          "height": 552.46875,
+          "top": 133.765625,
+          "right": 990,
+          "bottom": 686.234375,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 618.234375,
+          "width": 698,
+          "height": 67,
+          "top": 618.234375,
+          "right": 989,
+          "bottom": 685.234375,
+          "left": 291
+        },
+        "radioCount": 2,
+        "headings": ["选择接入方式"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "手动配置登录",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续终端设置",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "03-three-methods.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 111.0625,
+          "width": 700,
+          "height": 597.859375,
+          "top": 111.0625,
+          "right": 990,
+          "bottom": 708.921875,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 640.921875,
+          "width": 698,
+          "height": 67,
+          "top": 640.921875,
+          "right": 989,
+          "bottom": 707.921875,
+          "left": 291
+        },
+        "radioCount": 3,
+        "headings": ["选择接入方式"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "手动配置登录",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "登录 ChatGPT 账号",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "04-account-summary.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 197.90625,
+          "width": 700,
+          "height": 424.1875,
+          "top": 197.90625,
+          "right": 990,
+          "bottom": 622.09375,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 554.09375,
+          "width": 698,
+          "height": 67,
+          "top": 554.09375,
+          "right": 989,
+          "bottom": 621.09375,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["当前接入"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "手动配置登录",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "重新登录",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续选择模型",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "05-terminal-summary.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 197.90625,
+          "width": 700,
+          "height": 424.1875,
+          "top": 197.90625,
+          "right": 990,
+          "bottom": 622.09375,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 554.09375,
+          "width": 698,
+          "height": 67,
+          "top": 554.09375,
+          "right": 989,
+          "bottom": 621.09375,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["当前接入"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续选择模型",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "06-service-step.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 171.859375,
+          "width": 700,
+          "height": 476.28125,
+          "top": 171.859375,
+          "right": 990,
+          "bottom": 648.140625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 580.140625,
+          "width": 698,
+          "height": 67,
+          "top": 580.140625,
+          "right": 989,
+          "bottom": 647.140625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["模型 API 服务"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "前往 API 配置",
+            "disabled": false
+          },
+          {
+            "text": "返回接入方式",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "07-service-summary.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 173.109375,
+          "width": 700,
+          "height": 473.78125,
+          "top": 173.109375,
+          "right": 990,
+          "bottom": 646.890625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 578.890625,
+          "width": 698,
+          "height": 67,
+          "top": 578.890625,
+          "right": 989,
+          "bottom": 645.890625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["当前接入"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "更换服务",
+            "disabled": false
+          },
+          {
+            "text": "编辑服务",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续选择模型",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "08-model-step.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 79.828125,
+          "width": 700,
+          "height": 660.328125,
+          "top": 79.828125,
+          "right": 990,
+          "bottom": 740.15625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 672.15625,
+          "width": 698,
+          "height": 67,
+          "top": 672.15625,
+          "right": 989,
+          "bottom": 739.15625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["选择模型"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "读取模型选项",
+            "disabled": true
+          },
+          {
+            "text": "重新准备测试",
+            "disabled": true
+          },
+          {
+            "text": "返回账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "使用此 Agent",
+            "disabled": true
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "09-model-selected.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 79.828125,
+          "width": 700,
+          "height": 660.328125,
+          "top": 79.828125,
+          "right": 990,
+          "bottom": 740.15625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 672.15625,
+          "width": 698,
+          "height": 67,
+          "top": 672.15625,
+          "right": 989,
+          "bottom": 739.15625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["选择模型"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "重新读取模型",
+            "disabled": false
+          },
+          {
+            "text": "发送测试消息",
+            "disabled": false
+          },
+          {
+            "text": "返回账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "使用此 Agent",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "10-program-list.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 69.171875,
+          "width": 700,
+          "height": 681.640625,
+          "top": 69.171875,
+          "right": 990,
+          "bottom": 750.8125,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 682.8125,
+          "width": 698,
+          "height": 67,
+          "top": 682.8125,
+          "right": 989,
+          "bottom": 749.8125,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["程序与版本"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": true
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "刷新",
+            "disabled": false
+          },
+          {
+            "text": "使用这份程序",
+            "disabled": false
+          },
+          {
+            "text": "卸载这份安装",
+            "disabled": false
+          },
+          {
+            "text": "检查连接",
+            "disabled": false
+          },
+          {
+            "text": "重新下载 / 更新",
+            "disabled": false
+          },
+          {
+            "text": "从 Farfold 移除",
+            "disabled": false
+          },
+          {
+            "text": "保留当前程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "11-program-connected.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 43.171875,
+          "width": 700,
+          "height": 733.640625,
+          "top": 43.171875,
+          "right": 990,
+          "bottom": 776.8125,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 708.8125,
+          "width": 698,
+          "height": 67,
+          "top": 708.8125,
+          "right": 989,
+          "bottom": 775.8125,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["程序与版本"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "刷新",
+            "disabled": false
+          },
+          {
+            "text": "使用这份程序",
+            "disabled": true
+          },
+          {
+            "text": "卸载这份安装",
+            "disabled": true
+          },
+          {
+            "text": "断开连接后管理",
+            "disabled": false
+          },
+          {
+            "text": "重新下载 / 更新",
+            "disabled": true
+          },
+          {
+            "text": "从 Farfold 移除",
+            "disabled": true
+          },
+          {
+            "text": "保留当前程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "12-service-editing.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 171.859375,
+          "width": 700,
+          "height": 476.28125,
+          "top": 171.859375,
+          "right": 990,
+          "bottom": 648.140625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 580.140625,
+          "width": 698,
+          "height": 67,
+          "top": 580.140625,
+          "right": 989,
+          "bottom": 647.140625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["模型 API 服务"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "前往 API 配置",
+            "disabled": false
+          },
+          {
+            "text": "返回接入方式",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "reference-01-account-key.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 156.765625,
+          "width": 700,
+          "height": 458.46875,
+          "top": 156.765625,
+          "right": 990,
+          "bottom": 615.234375,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 547.234375,
+          "width": 698,
+          "height": 67,
+          "top": 547.234375,
+          "right": 989,
+          "bottom": 614.234375,
+          "left": 291
+        },
+        "radioCount": 2,
+        "headings": ["选择接入方式"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "登录 ChatGPT",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "reference-04-account-summary.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 176.5078125,
+          "width": 700,
+          "height": 418.984375,
+          "top": 176.5078125,
+          "right": 990,
+          "bottom": 595.4921875,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 527.4921875,
+          "width": 698,
+          "height": 67,
+          "top": 527.4921875,
+          "right": 989,
+          "bottom": 594.4921875,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["当前接入"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "换账号",
+            "disabled": false
+          },
+          {
+            "text": "退出账号",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续选择模型",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "reference-07-service-summary.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 163.7578125,
+          "width": 700,
+          "height": 444.484375,
+          "top": 163.7578125,
+          "right": 990,
+          "bottom": 608.2421875,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 540.2421875,
+          "width": 698,
+          "height": 67,
+          "top": 540.2421875,
+          "right": 989,
+          "bottom": 607.2421875,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["当前接入"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": false
+          },
+          {
+            "text": "更换服务",
+            "disabled": false
+          },
+          {
+            "text": "编辑服务",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "继续选择模型",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "reference-10-program-list.png",
+      "viewport": {
+        "width": 1280,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 290,
+          "y": 56.484375,
+          "width": 700,
+          "height": 659.03125,
+          "top": 56.484375,
+          "right": 990,
+          "bottom": 715.515625,
+          "left": 290
+        },
+        "footer": {
+          "x": 291,
+          "y": 647.515625,
+          "width": 698,
+          "height": 67,
+          "top": 647.515625,
+          "right": 989,
+          "bottom": 714.515625,
+          "left": 291
+        },
+        "radioCount": 0,
+        "headings": ["程序与版本"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": true
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "刷新",
+            "disabled": false
+          },
+          {
+            "text": "使用这份程序",
+            "disabled": false
+          },
+          {
+            "text": "卸载",
+            "disabled": false
+          },
+          {
+            "text": "管理外部安装",
+            "disabled": false
+          },
+          {
+            "text": "重新下载 / 更新",
+            "disabled": false
+          },
+          {
+            "text": "从 Farfold 移除此接入",
+            "disabled": false
+          },
+          {
+            "text": "保留当前程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "narrow-03-three-methods.png",
+      "viewport": {
+        "width": 420,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 17,
+          "y": 120.40625,
+          "width": 386,
+          "height": 579.171875,
+          "top": 120.40625,
+          "right": 403,
+          "bottom": 699.578125,
+          "left": 17
+        },
+        "footer": {
+          "x": 18,
+          "y": 627.578125,
+          "width": 384,
+          "height": 71,
+          "top": 627.578125,
+          "right": 402,
+          "bottom": 698.578125,
+          "left": 18
+        },
+        "radioCount": 3,
+        "headings": ["选择接入方式"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": false
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "手动配置登录",
+            "disabled": false
+          },
+          {
+            "text": "重新检查程序连接",
+            "disabled": false
+          },
+          {
+            "text": "更换接入方式",
+            "disabled": false
+          },
+          {
+            "text": "已有设置",
+            "disabled": false
+          },
+          {
+            "text": "返回程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          },
+          {
+            "text": "登录 ChatGPT 账号",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    },
+    {
+      "file": "narrow-10-program-list.png",
+      "viewport": {
+        "width": 420,
+        "height": 820
+      },
+      "geometry": {
+        "dialog": {
+          "x": 17,
+          "y": 32.515625,
+          "width": 386,
+          "height": 754.953125,
+          "top": 32.515625,
+          "right": 403,
+          "bottom": 787.46875,
+          "left": 17
+        },
+        "footer": {
+          "x": 18,
+          "y": 715.46875,
+          "width": 384,
+          "height": 71,
+          "top": 715.46875,
+          "right": 402,
+          "bottom": 786.46875,
+          "left": 18
+        },
+        "radioCount": 0,
+        "headings": ["程序与版本"],
+        "buttons": [
+          {
+            "text": "",
+            "disabled": false
+          },
+          {
+            "text": "程序",
+            "disabled": false
+          },
+          {
+            "text": "账号与服务",
+            "disabled": true
+          },
+          {
+            "text": "模型",
+            "disabled": true
+          },
+          {
+            "text": "刷新",
+            "disabled": false
+          },
+          {
+            "text": "使用这份程序",
+            "disabled": false
+          },
+          {
+            "text": "卸载这份安装",
+            "disabled": false
+          },
+          {
+            "text": "检查连接",
+            "disabled": false
+          },
+          {
+            "text": "重新下载 / 更新",
+            "disabled": false
+          },
+          {
+            "text": "从 Farfold 移除",
+            "disabled": false
+          },
+          {
+            "text": "保留当前程序",
+            "disabled": false
+          },
+          {
+            "text": "暂时返回",
+            "disabled": false
+          }
+        ],
+        "horizontalOverflow": false
+      }
+    }
+  ]
+}

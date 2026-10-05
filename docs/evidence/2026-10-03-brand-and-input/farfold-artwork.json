@@ -1,0 +1,50 @@
+[
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/01_Logo/SVG/farfold-horizontal-mono-ink.svg",
+    "destination": "public/brand/farfold-horizontal-light.svg",
+    "sha256": "315fe38148712b2e0dc9a00c837d68193efb0854179eb3bc183a0ae8caa713d6",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/01_Logo/SVG/farfold-horizontal-mono-paper.svg",
+    "destination": "public/brand/farfold-horizontal-dark.svg",
+    "sha256": "a2e0a699972ff5dd925e12add63a4ac62108f1de91e283d7fbe70da7e9b1d9a5",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light-32.png",
+    "destination": "src-tauri/icons/32x32.png",
+    "sha256": "9b4ea1f96415659fc627c181ec3060152c525f41b8ed1a2b320859fe2c105067",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light-64.png",
+    "destination": "src-tauri/icons/64x64.png",
+    "sha256": "00b4303207f08c844880cba776c56d109b195359d8a23cdf9d68b9b14fbd34b8",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light-128.png",
+    "destination": "src-tauri/icons/128x128.png",
+    "sha256": "e72e100f278e457d11ff3dee4323a6cd24839be60219f94e0d485456aca00909",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light-256.png",
+    "destination": "src-tauri/icons/128x128@2x.png",
+    "sha256": "56cf44004e044c156325a006677de9148550565fee5a91e10101033b38d6f30e",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light-1024.png",
+    "destination": "src-tauri/icons/icon.png",
+    "sha256": "1a0e2b46e4c180ef83039eff317c88706864331dd4f87ad70d51285aa1b0e988",
+    "exact_copy": true
+  },
+  {
+    "source": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Light/farfold-app-light.icns",
+    "destination": "src-tauri/icons/icon.icns",
+    "sha256": "987d15346cba954b96c20dd0945ff61070bb500dc5932227a2e4880967981770",
+    "exact_copy": true
+  }
+]

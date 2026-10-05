@@ -970,6 +970,7 @@ export function CredentialSettings({
       )}
       <div className="api-records">
         {filteredItems.map((item) => {
+          const authenticationKey = item.purpose === "authentication";
           const complete = item.complete;
           const compatible = capabilities
             ?.filter(({ capability }) =>
@@ -989,7 +990,9 @@ export function CredentialSettings({
                       item.provider === "other"
                         ? S.customProvider
                         : item.provider,
-                      formatName(item.apiType),
+                      authenticationKey
+                        ? S.authenticationKey
+                        : formatName(item.apiType),
                     ]
                       .filter(Boolean)
                       .join(" · ")}
@@ -998,19 +1001,25 @@ export function CredentialSettings({
                 <span className={`api-state ${item.deleting ? "failed" : ""}`}>
                   {item.deleting
                     ? S.deletePending
-                    : complete
+                    : authenticationKey || complete
                       ? S.saved
                       : S.needsSetup}
                 </span>
               </div>
-              <p className="api-base-url">{item.endpoint}</p>
-              <div className="api-model-tags">
-                {item.models.map((model) => (
-                  <span key={model}>{model}</span>
-                ))}
-              </div>
+              {!authenticationKey && (
+                <>
+                  <p className="api-base-url">{item.endpoint}</p>
+                  <div className="api-model-tags">
+                    {item.models.map((model) => (
+                      <span key={model}>{model}</span>
+                    ))}
+                  </div>
+                </>
+              )}
               <p className="api-compatibility">
-                {!complete ? (
+                {authenticationKey ? (
+                  S.authenticationKeyHint
+                ) : !complete ? (
                   S.incompleteHint
                 ) : compatible == null ? (
                   S.capabilityFailed
@@ -1029,30 +1038,34 @@ export function CredentialSettings({
                 )}
               </p>
               <div className="api-record-actions">
-                <button
-                  className="btn btn-ghost"
-                  disabled={item.deleting}
-                  onClick={(event) => {
-                    editorTrigger.current = event.currentTarget;
-                    setTestId(null);
-                    setEditor({ item });
-                  }}
-                >
-                  {S.edit}
-                </button>
-                <button
-                  className="btn btn-ghost"
-                  disabled={item.deleting || !complete}
-                  aria-expanded={testId === item.id}
-                  onClick={() =>
-                    setTestId((current) =>
-                      current === item.id ? null : item.id,
-                    )
-                  }
-                >
-                  {S.test}
-                  <CaretDown size={13} aria-hidden="true" />
-                </button>
+                {!authenticationKey && (
+                  <>
+                    <button
+                      className="btn btn-ghost"
+                      disabled={item.deleting}
+                      onClick={(event) => {
+                        editorTrigger.current = event.currentTarget;
+                        setTestId(null);
+                        setEditor({ item });
+                      }}
+                    >
+                      {S.edit}
+                    </button>
+                    <button
+                      className="btn btn-ghost"
+                      disabled={item.deleting || !complete}
+                      aria-expanded={testId === item.id}
+                      onClick={() =>
+                        setTestId((current) =>
+                          current === item.id ? null : item.id,
+                        )
+                      }
+                    >
+                      {S.test}
+                      <CaretDown size={13} aria-hidden="true" />
+                    </button>
+                  </>
+                )}
                 <button
                   className="btn btn-ghost api-delete"
                   onClick={(event) => {
@@ -1066,7 +1079,7 @@ export function CredentialSettings({
                 </button>
               </div>
               <LegacyGrants item={item} cards={cards} onChanged={load} />
-              {testId === item.id && (
+              {!authenticationKey && testId === item.id && (
                 <ApiTestPanel
                   source={{ kind: "saved", id: item.id }}
                   models={item.models}
@@ -1104,7 +1117,11 @@ export function CredentialSettings({
       {deleting && (
         <Dialog
           active={active}
-          title={S.confirmDelete}
+          title={
+            deleting.purpose === "authentication"
+              ? S.confirmDeleteAuthenticationKey
+              : S.confirmDelete
+          }
           busy={deleteBusy}
           returnFocusRef={deleteTrigger}
           fallbackFocusRef={addTrigger}
@@ -1112,7 +1129,11 @@ export function CredentialSettings({
         >
           <div className="api-dialog-body">
             <h3>{deleting.label}</h3>
-            <p className="api-muted">{S.deleteHint}</p>
+            <p className="api-muted">
+              {deleting.purpose === "authentication"
+                ? S.deleteAuthenticationKeyHint
+                : S.deleteHint}
+            </p>
             {!impact && !impactIndex.error && <p role="status">{I.loading}</p>}
             {impactIndex.error && (
               <div role="alert">

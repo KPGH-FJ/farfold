@@ -8,7 +8,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { beginAuthentication, beginPreparationAction } from "./auth_actions";
 import { preparationFor } from "./agent_preparation";
-import { threads } from "./sessions";
+import { applyUpdate, threads, type ThreadState } from "./sessions";
 import { invalidateAuthentication } from "./authentication";
 
 function deferred<T>() {
@@ -34,7 +34,10 @@ beforeEach(() => {
         configOptions: [],
         warnings: [],
       };
-    if (command === "auth_run") return { kind: "terminal", ptyId: "terminal" };
+    if (command === "auth_run")
+      return args.viaTerminal
+        ? { kind: "terminal", ptyId: "terminal" }
+        : { kind: "agent", ptyId: null };
     if (
       command === "auth_manual_run" ||
       command === "agent_preparation_action_run"
@@ -73,6 +76,227 @@ function start(
     onChanged: async () => {},
   });
 }
+
+function startup(state: ThreadState) {
+  applyUpdate(state, {
+    sessionUpdate: "agent_message_chunk",
+    content: { type: "text", text: "Startup information" },
+  });
+  applyUpdate(state, { sessionUpdate: "future_startup", payload: true });
+}
+
+it("closes an owned unprompted read with startup content before authenticating, retaining its records", async () => {
+  const original = h.invoke.getMockImplementation()!;
+  const unknown = { sessionUpdate: "future_startup", payload: { keep: true } };
+  let channel: { onmessage: (event: unknown) => void };
+  const initialize = (text: string) =>
+    channel.onmessage({
+      update: {
+        sessionUpdate: "agent_message_chunk",
+        content: { type: "text", text },
+      },
+    });
+  h.invoke.mockImplementation((command, args) => {
+    if (command === "session_open") {
+      channel = args.channel;
+      initialize("Startup information");
+      channel.onmessage({ update: unknown });
+    }
+    return original(command, args);
+  });
+  const f = await preview("startup-content");
+  const state = threads.thread(f.key)!;
+  expect(state.items.map((item) => item.kind)).toEqual(["agent", "raw"]);
+  const close = deferred<void>();
+  h.invoke.mockImplementation((command, args) =>
+    command === "session_close" ? close.promise : original(command, args),
+  );
+  const job = start(f.target);
+  expect(calls("session_close")).toHaveLength(1);
+  expect(calls("session_close")[0][1]).toEqual({
+    agentId: f.agentId,
+    cwd: f.target.cwd,
+    sessionId: state.nativeSessionId,
+    allowAlreadyClosed: true,
+  });
+  expect(calls("auth_run")).toHaveLength(0);
+  expect(f.controller.getSnapshot().threadKey).toBe(f.key);
+  initialize("More startup information");
+  close.resolve();
+  await vi.waitFor(() => expect(calls("auth_run")).toHaveLength(1));
+  expect(f.controller.getSnapshot().threadKey).toBeNull();
+  expect(threads.thread(f.key)).toBe(state);
+  expect(state).toMatchObject({
+    identity: "draft",
+    connectionLost: true,
+    connectionOutcomeUnknown: false,
+  });
+  expect(state.items.map((item) => item.kind)).toEqual([
+    "agent",
+    "raw",
+    "agent",
+  ]);
+  expect(state.items[1]).toMatchObject({ update: unknown });
+  expect(calls("session_dismiss")).toHaveLength(0);
+  channel!.onmessage({ update: { sessionUpdate: "late_future_startup" } });
+  expect(state.items.at(-1)).toMatchObject({
+    kind: "raw",
+    update: { sessionUpdate: "late_future_startup" },
+  });
+  await job.cancel();
+});
+
+it("retains startup records and their owner after a failed close, allowing an explicit retry", async () => {
+  const f = await preview("startup-close-failure");
+  const state = threads.thread(f.key)!;
+  startup(state);
+  const records = [...state.items];
+  const original = h.invoke.getMockImplementation()!;
+  let failed = true;
+  h.invoke.mockImplementation((command, args) =>
+    command === "session_close" && failed
+      ? Promise.reject(new Error("close not confirmed"))
+      : original(command, args),
+  );
+  const job = start(f.target);
+  await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed"));
+  expect(calls("auth_run")).toHaveLength(0);
+  expect(calls("session_dismiss")).toHaveLength(0);
+  expect(state.items).toEqual(records);
+  expect(state.connectionLost).toBe(false);
+  expect(f.controller.getSnapshot().threadKey).toBe(f.key);
+  failed = false;
+  const retry = start(f.target);
+  await vi.waitFor(() => expect(calls("auth_run")).toHaveLength(1));
+  expect(calls("session_close")).toHaveLength(2);
+  expect(threads.thread(f.key)).toBe(state);
+  expect(f.controller.getSnapshot().threadKey).toBeNull();
+  await retry.cancel();
+});
+
+it.each([
+  {
+    label: "user input in a rolled-back draft",
+    change: (s: ThreadState) =>
+      applyUpdate(s, {
+        sessionUpdate: "user_message_chunk",
+        content: { type: "text", text: "Keep my input" },
+      }),
+  },
+  {
+    label: "a rolled-back request marker",
+    change: (s: ThreadState) => (s.roundItemBase = s.items.length),
+  },
+  {
+    label: "active tool metadata without a tool card",
+    change: (s: ThreadState) => (s.activeToolCallIds = ["tool"]),
+  },
+  {
+    label: "an unknown connection outcome",
+    change: (s: ThreadState) => (s.connectionOutcomeUnknown = true),
+  },
+  {
+    label: "changing permissions",
+    change: (s: ThreadState) => (s.permissionState = "changing"),
+  },
+  {
+    label: "unconfirmed reasoning activity",
+    change: (s: ThreadState) =>
+      applyUpdate(s, {
+        sessionUpdate: "agent_thought_chunk",
+        content: { type: "text", text: "Thinking" },
+      }),
+  },
+  {
+    label: "an unconfirmed plan",
+    change: (s: ThreadState) =>
+      applyUpdate(s, { sessionUpdate: "plan", entries: [] }),
+  },
+])("cannot retire startup content with $label", async ({ label, change }) => {
+  const f = await preview(label);
+  const state = threads.thread(f.key)!;
+  startup(state);
+  change(state);
+  const records = [...state.items];
+  const job = start(f.target);
+  await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed"));
+  expect(calls("session_close")).toHaveLength(0);
+  expect(calls("auth_run")).toHaveLength(0);
+  expect(calls("session_dismiss")).toHaveLength(0);
+  expect(f.controller.getSnapshot().threadKey).toBe(f.key);
+  expect(threads.thread(f.key)).toBe(state);
+  expect(state.items).toEqual(records);
+});
+
+it.each([
+  {
+    label: "a late queued user request",
+    change: (s: ThreadState) =>
+      s.queued.push([{ type: "text", text: "Do not lose this request" }]),
+  },
+  {
+    label: "late tool activity",
+    change: (s: ThreadState) => (s.activeToolCallIds = ["tool"]),
+  },
+  {
+    label: "an ongoing configuration change",
+    change: (s: ThreadState) => (s.configuring = true),
+  },
+  {
+    label: "a newly unknown outcome",
+    change: (s: ThreadState) => (s.connectionOutcomeUnknown = true),
+  },
+])(
+  "keeps the owner and records when close overlaps $label",
+  async ({ label, change }) => {
+    const f = await preview(label);
+    const state = threads.thread(f.key)!;
+    startup(state);
+    const records = [...state.items];
+    const close = deferred<void>();
+    const original = h.invoke.getMockImplementation()!;
+    h.invoke.mockImplementation((command, args) =>
+      command === "session_close" ? close.promise : original(command, args),
+    );
+    const job = start(f.target);
+    expect(calls("session_close")).toHaveLength(1);
+    change(state);
+    close.resolve();
+    await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed"));
+    expect(calls("auth_run")).toHaveLength(0);
+    expect(calls("session_dismiss")).toHaveLength(0);
+    expect(f.controller.getSnapshot().threadKey).toBe(f.key);
+    expect(threads.thread(f.key)).toBe(state);
+    expect(state.connectionLost).toBe(false);
+    expect(state.items).toEqual(records);
+  },
+);
+
+it("does not release a newer preparation owner when an earlier read close is acknowledged", async () => {
+  const f = await preview("changed-owner");
+  const state = threads.thread(f.key)!;
+  startup(state);
+  const close = deferred<void>();
+  const original = h.invoke.getMockImplementation()!;
+  h.invoke.mockImplementation((command, args) =>
+    command === "session_close" ? close.promise : original(command, args),
+  );
+  const job = start(f.target);
+  expect(calls("session_close")).toHaveLength(1);
+  await f.controller.prepare(
+    { ...f.controller.getSnapshot().input!, program: "changed" },
+    true,
+  );
+  const currentKey = f.controller.getSnapshot().threadKey;
+  expect(currentKey).not.toBe(f.key);
+  close.resolve();
+  await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("failed"));
+  expect(calls("auth_run")).toHaveLength(0);
+  expect(calls("session_dismiss")).toHaveLength(0);
+  expect(f.controller.getSnapshot().threadKey).toBe(currentKey);
+  expect(threads.thread(f.key)).toBe(state);
+  expect(state.connectionLost).toBe(false);
+});
 
 it.each(["terminal", "agent", "manual", "logout", "configuration"])(
   "waits for the exact preparation close before %s dispatch",
@@ -147,6 +371,41 @@ it("retains the exact draft and failed owner for an explicit retry when close fa
   await vi.waitFor(() => expect(calls("auth_run")).toHaveLength(1));
   expect(calls("session_close")).toHaveLength(2);
   await retried.cancel();
+});
+
+it("keeps the selected Key reference frozen while waiting for preparation cleanup", async () => {
+  const f = await preview("method-key-selection");
+  const close = deferred<void>();
+  const original = h.invoke.getMockImplementation()!;
+  h.invoke.mockImplementation((command, args) =>
+    command === "session_close" ? close.promise : original(command, args),
+  );
+  const input = {
+    target: { ...f.target },
+    method: {
+      id: "key-login",
+      kind: "api-key",
+      apiKeyProvider: "selected-provider",
+    },
+    credentialId: "selected-key-ref",
+    credentialRevision: "selected-revision",
+    onChanged: async () => {},
+  };
+  const job = beginAuthentication(input);
+  expect(calls("auth_run")).toHaveLength(0);
+  input.target.cwd = "/later";
+  input.method.apiKeyProvider = "later-provider";
+  input.credentialId = "later-key-ref";
+  input.credentialRevision = "later-revision";
+  close.resolve();
+  await vi.waitFor(() => expect(calls("auth_run")).toHaveLength(1));
+  expect(calls("auth_run")[0][1]).toMatchObject({
+    cwd: f.target.cwd,
+    methodId: "key-login",
+    credentialId: "selected-key-ref",
+    credentialRevision: "selected-revision",
+  });
+  await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("completed"));
 });
 
 it("does not dispatch login after cancellation while its close acknowledgment is pending", async () => {

@@ -13,7 +13,9 @@ import type { PreparationAction } from "./preparation";
 import { preparationFor } from "./agent_preparation";
 import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
 import { STRINGS } from "./strings";
+import { AUTH_ACTIVITY_STRINGS as A } from "./auth_strings";
 import { authMethodUnavailable } from "./auth_method";
+import { METHOD_API_KEY_STRINGS } from "./method_api_key_strings";
 
 export async function recheckAuthentication(
   target: AuthTarget,
@@ -27,25 +29,52 @@ export async function recheckAuthentication(
 export function beginAuthentication(input: {
   target: AuthTarget;
   method: Pick<AuthMethodInfo, "id" | "kind"> &
-    Partial<Pick<AuthMethodInfo, "name" | "completion" | "unavailableReason">>;
+    Partial<
+      Pick<
+        AuthMethodInfo,
+        "name" | "completion" | "unavailableReason" | "apiKeyProvider"
+      >
+    >;
   manual?: boolean;
   logout?: boolean;
+  switchAccount?: boolean;
+  credentialId?: string;
+  credentialRevision?: string;
   onChanged: () => Promise<void>;
 }) {
   const target = { ...input.target },
-    method = { ...input.method };
+    method = { ...input.method },
+    credentialId = input.credentialId,
+    credentialRevision = input.credentialRevision;
   const unavailable = authMethodUnavailable(method);
   if (unavailable && !input.manual && !input.logout)
     throw new Error(unavailable);
+  if (
+    method.kind === "api-key" &&
+    !input.manual &&
+    !input.logout &&
+    (!method.apiKeyProvider || !credentialId || !credentialRevision)
+  )
+    throw new Error(METHOD_API_KEY_STRINGS.required);
   const activity = authenticationActivity(target.agentId);
   const attemptId = crypto.randomUUID();
+  const intent = input.logout
+    ? input.switchAccount
+      ? "switch_account"
+      : "logout"
+    : "login";
   activity.begin(
     target,
     {
       kind: "authentication",
       methodId: method.id,
-      title: method.name ?? STRINGS.agents.auth.heading,
+      title: input.logout
+        ? input.switchAccount
+          ? A.switchAccount
+          : STRINGS.agents.auth.logout
+        : (method.name ?? STRINGS.agents.auth.heading),
       completion: method.completion ?? "exit_code",
+      intent,
     },
     attemptId,
   );
@@ -76,7 +105,11 @@ export function beginAuthentication(input: {
               attemptId,
               viaTerminal: true,
               onOutput: channel,
-            }).then((result) => result.ptyId ?? "");
+            }).then((result) => {
+              if (result?.kind !== "terminal" || !result.ptyId)
+                throw new Error(A.methodChanged);
+              return result.ptyId;
+            });
       },
       wait: ptyAwait,
       close: ptyClose,
@@ -92,10 +125,25 @@ export function beginAuthentication(input: {
         channel.onmessage = (chunk) => {
           if (chunk.authStatus === "unknown") unknown();
         };
-        const options = { ...target, attemptId, onOutput: channel };
-        return input.logout
-          ? agentLogout(target.agentId, options)
-          : authRun(target.agentId, method.id, options);
+        const options = {
+          ...target,
+          attemptId,
+          onOutput: channel,
+          ...(method.kind === "api-key" && !input.logout
+            ? {
+                credentialId,
+                credentialRevision,
+              }
+            : {}),
+        };
+        if (input.logout) return agentLogout(target.agentId, options);
+        const result = await authRun(target.agentId, method.id, options);
+        // A terminal startup is not an authenticate success response. The
+        // backend rejects route drift before launch; retain this reply check
+        // so an unexpected result cannot be presented as confirmed login.
+        if (result?.kind !== "agent" || result.ptyId != null)
+          throw new Error(A.methodChanged);
+        return result;
       },
       cancel: () =>
         invoke("auth_cancel", { agentId: target.agentId, attemptId }),

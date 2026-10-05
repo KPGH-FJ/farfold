@@ -4,6 +4,8 @@
 
 This repository is the only writable checkout for Farfold.
 
+2026-10-06 用户已授权按活动计划持续完成接入补强、日常基础、资料成果、浏览器、搜索维护，再开发 Windows。新增交互由开发方自查自纠，不再等待原 D 用户评审；逐家真实账号/模型测试暂缓。完成可验收部分即提交，关键阶段独立复核；记录简短且可追溯。储存压力下可先核归属再清理可再生成文件。该授权覆盖下文旧 macOS-only 与待用户 UI 评审要求，其他产品、数据和凭据边界保持。
+
 ## Read Order
 
 1. `AGENTS.md` (this file)
@@ -17,12 +19,12 @@ This repository is the only writable checkout for Farfold.
 
 2026-10-03 16:11 UTC 用户新增授权共享网页阶段0与独立文件交付底座，执行范围见唯一活动计划首节；新交互先评审，保留既有接入A–E边界。原接入开发出口继续按活动计划中的 33 项接入一致性要求执行。首次读取相关入口后，仅重读与当前变更有关的段落；历史计划、历史验收和已完成的模型切换不作为反复阅读或重新执行的要求。用户已撤销整组六条旅程验收门槛，不移到“最终验收”或其他阶段自动恢复；未来只有用户新的明确指令才可增加。当前不要求另一台电脑或另一 Mac 的安装验证。
 
-本轮原型只作参考，不视为接入 UI/UX 已全部批准，不重新生成设计。先补通用设施，再对齐全部配置；参数特异验证留到用户 UI 评审后的 E，不能为补旧证据提前逐家启动或升级。
+本轮原型仍为体验参考，不代表真实能力；先补通用设施、再对齐配置并自查交互。逐家真实测试单列待用户，不为补旧证据提前启动或升级。
 
 ## Product Boundary
 
 - Farfold is an independent product: one desktop UI for multiple external Agents. It is not an
-  editor, not an Agent itself, and must not embed or imitate any Agent's own UI.
+  editor, not an Agent itself, and must not embed any Agent's own UI. Mature visual and interaction patterns may inform Farfold's own common UI.
 - Each Agent owns its Agent loop, auth, provider/model integration, tools, permissions, history,
   compaction, steering, abort, resume, skills, and native config. Never implement a second Agent
   loop in Farfold; never fork or patch an upstream Agent or adapter.
@@ -35,7 +37,7 @@ This repository is the only writable checkout for Farfold.
 - LifeModel belongs to the user and Farfold, not to any Agent. Content may enter canonical
   LifeModel only through source evidence, an atomic Proposal, and explicit user approval.
 
-## 阶段 6 纪律（对全部 Agent 生效，违反即打回）
+## 通用接入纪律（对全部 Agent 生效，违反即打回）
 
 1. Agent = `{id, command, args, env}`。兼容性 = ACP `initialize` 握手。**不得**校验二进制
    SHA、不得 pin 版本（registry 条目自带的下载归档 sha256 除外）、不得 `env_clear`、
@@ -55,16 +57,15 @@ This repository is the only writable checkout for Farfold.
    locator/generation 体系。
 6. 旧代码（阶段 1–5 的三个 adapter、runtime_registry、codex_installation、managed_provider、
    interaction_registry、三个 Panel 及其 runtime/* 模块）一律**彻底删除**，不留兼容层、
-   fail-closed 占位或注释墓碑；删代码时一并删其专属测试。删除总账见计划 00.6。
+   fail-closed 占位或注释墓碑；删代码时一并删其专属测试。历史删除总账见 docs/archive/plans/2026-10-06-before-product-development.md。
 7. 不新增 `env`/`VITE_*` 开关，不新增 QA/shadow 环境变量；测试钩子在测试文件内完成。
 8. 单片文件 ≤1.5k 行；超出即拆模块。新增依赖须存在 ≥7 天，禁止 floating `latest`/`>=`。
-9. 当前出口 = 活动计划首节 的 **33 项接入不漏、不多、不空、布局与行为一致**。
-   按活动计划 A核全33配置、B审查共用设施并用1–2代表覆盖、C对齐33配置、D暂停交用户UI/UX评审、E评审后安排逐家测试；不提前逐家验收。代表只证明所覆盖共用路径，真实结果单列，不用 mock 冒称认证。完成记录简记候选、证据及适用删除证明。
+9. 当前出口 = PRODUCT.md §3 的首批33项八项高标准；不漏、不多、不空、布局与行为一致是共用呈现要求，不是完整接入证明。先核官方配置与共用机制，补强后对齐33项并自行复核UI/UX；真实逐家测试待用户。代表与模拟结果仅证明实际覆盖路径，不冒称认证或全项通过。完成记录简记变更、提交、证据、未解决项和下一步。
 10. 计划与契约冲突时以 `PRODUCT.md` 为准；实现发现契约错误时先报告用户，不擅自改契约。
 
 ## Development Rules
 
-- macOS arm64 only（本阶段）。
+- 阶段1–5以macOS arm64为开发平台；完成后阶段6适配Windows，共用产品和数据保护规则不变。
 - 保留 Agent 原生事件与未知 envelope：协议事件原样进事件总线，UI 只做归一化投影。
 - 使用官方 `agent-client-protocol` Rust crate；仅执行 registry 条目或用户显式配置的命令；
   不从项目目录读取 Agent 启动配置。

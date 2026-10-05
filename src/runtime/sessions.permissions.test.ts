@@ -21,6 +21,13 @@ const option = (value = "ask") => [
     ],
   },
 ];
+const confirmed = (value = "ask") => ({
+  configOptions: option(value),
+  configCheck: { status: "ready", issues: [], current: {} },
+  permissionConfigId: "mode",
+  permissionState: "ready",
+  service: null,
+});
 beforeEach(() => {
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   h.invoke.mockImplementation(async () => []);
@@ -42,7 +49,7 @@ function seed(id: string) {
 it("keeps loaded permissions and queued messages blocked until an explicit matching receipt", async () => {
   const s = seed("permission-required");
   expect(canDrain(s)).toBe(false);
-  h.invoke.mockResolvedValue(option());
+  h.invoke.mockResolvedValue(confirmed());
   await threads.setConfig(s.key, "mode", "ask");
   expect(s.permissionState).toBe("ready");
   expect(s.queuePaused).toBe("stopped");
@@ -53,7 +60,7 @@ it("keeps loaded permissions and queued messages blocked until an explicit match
 });
 it("does not accept a mismatched result or late update as permission confirmation", async () => {
   const s = seed("permission-unknown");
-  h.invoke.mockResolvedValue(option("other"));
+  h.invoke.mockResolvedValue(confirmed("other"));
   await expect(threads.setConfig(s.key, "mode", "ask")).rejects.toBeTruthy();
   expect(s.permissionState).toBe("unknown");
   (
@@ -71,7 +78,7 @@ it("failed or lost replies retain unknown until a new explicit successful reques
   h.invoke.mockRejectedValue(new Error("timeout"));
   await expect(threads.setConfig(s.key, "mode", "ask")).rejects.toBeTruthy();
   expect(s.permissionState).toBe("unknown");
-  h.invoke.mockResolvedValue(option());
+  h.invoke.mockResolvedValue(confirmed());
   await threads.setConfig(s.key, "mode", "ask");
   expect(s.permissionState).toBe("ready");
   expect(s.queuePaused).toBe("stopped");
@@ -130,7 +137,7 @@ it("cannot resume the queue while permission confirmation is still outstanding",
   expect(s.permissionState).toBe("changing");
   await threads.continueQueue(s.key);
   expect(s.queuePaused).toBe("stopped");
-  finish(option());
+  finish(confirmed());
   await setting;
   expect(s.queuePaused).toBe("stopped");
 });
@@ -161,7 +168,7 @@ it("does not let an older successful setter overwrite a newer unknown event and 
   });
   expect(s.permissionState).toBe("unknown");
   expect(s.configOptions[0].currentValue).toBe("other");
-  finish(option("ask"));
+  finish(confirmed("ask"));
   await expect(setting).rejects.toBeTruthy();
   expect(s.permissionState).toBe("unknown");
   expect(s.configOptions[0].currentValue).toBe("other");

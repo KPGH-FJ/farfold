@@ -155,7 +155,10 @@ it("retains an unapplied explicit model choice as a read failure until an explic
         cwd: "/work",
         nativeSessionId: `choice-${sequence}`,
         resumed: false,
-        warnings: ["private upstream details must not become UI text"],
+        warnings:
+          sequence === 1
+            ? ["private upstream details must not become UI text"]
+            : [],
         configOptions: [
           {
             id: "model",
@@ -297,7 +300,13 @@ it("keeps a real category-less mode at initial open and routes its changes throu
         warnings: [],
       };
     if (command === "session_set_config")
-      return [{ ...option, currentValue: args.value }];
+      return {
+        configOptions: [{ ...option, currentValue: args.value }],
+        configCheck: { status: "ready", issues: [], current: {} },
+        permissionConfigId: null,
+        permissionState: "ready",
+        service: null,
+      };
     return localCommand(command, args);
   });
   const controller = new AgentPreparation(threads, () => "real-mode");

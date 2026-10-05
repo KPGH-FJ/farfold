@@ -140,3 +140,69 @@ fn auth_declaration_old_cache_is_not_proof_of_a_default_agent() {
     assert_eq!(cached["authMethods"][0]["type"], "unsupported");
     assert!(!cached.to_string().contains("not-public"));
 }
+
+#[test]
+fn provider_only_api_key_declaration_preserves_provider_without_secret_material() {
+    const SECRET: &str = "provider-key-declaration-canary";
+    let h = read(json!([{"id":"api-key","name":"API Key","_meta":{"api-key":{
+        "provider":"openai","apiKey":SECRET
+    }}}]));
+    let method = &h.execution_json()["authMethods"][0];
+    assert_ne!(method.get(INVALID), Some(&Value::Bool(true)));
+    assert_eq!(method["_meta"]["api-key"], json!({"provider":"openai"}));
+    assert!(!h.execution_json().to_string().contains(SECRET));
+    assert!(!h.public_json().to_string().contains(SECRET));
+    assert!(
+        !cached_json(Some(&h.public_json()))
+            .to_string()
+            .contains(SECRET)
+    );
+}
+
+#[test]
+fn provider_only_api_key_declarations_validate_shape_and_preserve_env_only_route() {
+    for key in [
+        json!(false),
+        json!([]),
+        json!({}),
+        json!({"provider":false}),
+        json!({"provider":""}),
+        json!({"provider":" openai"}),
+        json!({"provider":"openai\n"}),
+        json!({"provider":"openai","env":"OFFICIAL_KEY"}),
+        json!({"env":null}),
+    ] {
+        let h = read(json!([{"id":"key","name":"Key","_meta":{"api-key":key}}]));
+        assert_eq!(h.public_json()["authMethods"][0][INVALID], true);
+        assert!(h.protocol_api_key_provider("key").is_none());
+        assert!(!h.protocol_method("key"));
+    }
+    let h = read(json!([
+        {"id":"env","name":"Key","_meta":{"api-key":{"env":"OFFICIAL_KEY"}}},
+        {"id":"future","name":"Key","_meta":{"api-key":{"provider":"future-provider"}}},
+        {"id":"key","name":"Key","_meta":{"api-key":{"provider":"openai"}}}
+    ]));
+    assert_eq!(
+        h.execution_json()["authMethods"][0]["_meta"]["api-key"],
+        json!({"env":"OFFICIAL_KEY"})
+    );
+    assert_eq!(
+        h.execution_json()["authMethods"][1]["_meta"]["api-key"]["provider"],
+        "future-provider"
+    );
+    assert!(h.protocol_api_key_provider("env").is_none());
+    assert!(h.protocol_api_key_provider("future").is_none());
+    assert_eq!(h.protocol_api_key_provider("key"), Some("openai"));
+    for id in ["env", "future", "key"] {
+        assert!(!h.protocol_method(id));
+    }
+}
+
+#[test]
+fn duplicate_provider_key_identity_never_grants_protocol_key_authority() {
+    let h = read(json!([
+        {"id":"key","name":"Key","_meta":{"api-key":{"provider":"openai"}}},
+        {"id":"key","name":"Duplicate"}
+    ]));
+    assert!(h.protocol_api_key_provider("key").is_none());
+}

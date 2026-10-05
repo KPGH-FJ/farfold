@@ -4,7 +4,7 @@ use std::{path::Path, sync::atomic::Ordering};
 use tauri::{AppHandle, Manager as _};
 
 use super::manager::{
-    AcpManager, AgentConnectionStatus, ConnectionKey, STATE_READY, validate_cwd_async,
+    AcpManager, AgentConnectionStatus, CloseReason, ConnectionKey, STATE_READY, validate_cwd_async,
 };
 use crate::meta_store::MetaStore;
 
@@ -49,7 +49,9 @@ impl AcpManager {
                 None
             };
             if _idle.is_some() {
-                previous.life.close(false, None)?;
+                previous
+                    .life
+                    .close_for(false, None, CloseReason::Configuration)?;
             }
             previous.life.closed().await?;
         }
@@ -69,24 +71,7 @@ pub async fn auth_recheck(
     }
     let cwd = validate_cwd_async(&cwd).await?;
     let manager = app.state::<AcpManager>();
-    let result = manager
+    manager
         .recheck_authentication(&agent_id, &cwd, &app.state::<MetaStore>())
-        .await;
-    // Also refresh the precise status after a failed replacement. Never label
-    // a busy connection closed, or change another source's connection status.
-    let status = manager
-        .status(&agent_id)?
-        .into_iter()
-        .find(|status| status.cwd == cwd.to_string_lossy() && status.service_context.is_none())
-        .unwrap_or(AgentConnectionStatus {
-            agent_id,
-            cwd: cwd.to_string_lossy().into_owned(),
-            state: "closed".into(),
-            agent_name: None,
-            agent_version: None,
-            auth_methods: vec![],
-            service_context: None,
-        });
-    crate::ui_transport::emit_event(&app, "agent:status", &status);
-    result
+        .await
 }

@@ -63,6 +63,15 @@ export function authenticationRequired(
       );
 }
 
+/** Recheck at asynchronous action boundaries, before React has to render. */
+export function currentAuthenticationRequired(
+  agent: string,
+  cwd: string | null,
+  source?: string,
+) {
+  return authenticationRequired(required, agent, cwd, source);
+}
+
 const activities = new Map<string, AuthActivity>();
 export function authenticationActivity(agentId: string) {
   let activity = activities.get(agentId);

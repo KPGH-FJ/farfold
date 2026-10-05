@@ -130,29 +130,63 @@ pub(crate) fn previous_installation_parameter_declaration(
 }
 
 #[derive(Clone, Copy)]
+pub(crate) enum TerminalActionLaunch {
+    Native {
+        binary: &'static str,
+    },
+    Npm {
+        package: &'static str,
+        bin: &'static str,
+        manifest_entry: &'static str,
+        loader: &'static str,
+    },
+}
+
+#[derive(Clone, Copy)]
 pub(crate) struct TerminalActionDeclaration {
     pub id: &'static str,
     pub purpose: &'static str,
     pub agent_id: &'static str,
     pub version: &'static str,
-    pub binary: &'static str,
+    pub launch: TerminalActionLaunch,
     pub launch_args: &'static [&'static str],
     pub action_args: &'static [&'static str],
     pub source_url: &'static str,
 }
 
-const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[TerminalActionDeclaration {
-    id: "configure-model-service",
-    purpose: "service_configuration",
-    agent_id: "registry:goose",
-    version: "1.52.0",
-    binary: "goose",
-    launch_args: &["acp"],
-    action_args: &["configure"],
-    // Fixed official configure source checked 2026-09-30. This version scopes
-    // only this supplement; it is never a connection or installation gate.
-    source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
-}];
+const TERMINAL_ACTIONS: &[TerminalActionDeclaration] = &[
+    TerminalActionDeclaration {
+        id: "configure-model-service",
+        purpose: "service_configuration",
+        agent_id: "registry:goose",
+        version: "1.52.0",
+        launch: TerminalActionLaunch::Native { binary: "goose" },
+        launch_args: &["acp"],
+        action_args: &["configure"],
+        // Fixed official configure source checked 2026-09-30. This version scopes
+        // only this supplement; it is never a connection or installation gate.
+        source_url: "https://github.com/block/goose/blob/v1.52.0/crates/goose-cli/src/commands/configure.rs",
+    },
+    TerminalActionDeclaration {
+        id: "configure-model-service",
+        purpose: "service_configuration",
+        agent_id: "registry:cline",
+        version: "3.0.65",
+        launch: TerminalActionLaunch::Npm {
+            package: "cline",
+            bin: "cline",
+            manifest_entry: "./bin/cline",
+            loader: "bin/cline",
+        },
+        launch_args: &["--acp"],
+        action_args: &["auth"],
+        // Published cline 3.0.65 README documents this interactive setup; its
+        // CLI and protocol route share ProviderSettingsManager. The repository
+        // URL is a source pointer, not a claim about the current main version or
+        // support for arbitrary providers through the protocol.
+        source_url: "https://github.com/cline/cline/tree/main/apps/cli",
+    },
+];
 
 pub(crate) fn terminal_action_declaration(
     row: &AgentRow,
@@ -162,16 +196,31 @@ pub(crate) fn terminal_action_declaration(
             && row.source == "registry"
             && row.version.as_deref() == Some(declaration.version)
             && Path::new(&row.command).is_absolute()
-            && Path::new(&row.command)
-                .file_name()
-                .and_then(|name| name.to_str())
-                == Some(declaration.binary)
-            && row
-                .args
-                .iter()
-                .map(String::as_str)
-                .eq(declaration.launch_args.iter().copied())
             && row.env.is_empty()
+            && match declaration.launch {
+                TerminalActionLaunch::Native { binary } => {
+                    Path::new(&row.command)
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        == Some(binary)
+                        && row
+                            .args
+                            .iter()
+                            .map(String::as_str)
+                            .eq(declaration.launch_args.iter().copied())
+                }
+                TerminalActionLaunch::Npm { .. } => {
+                    Path::new(&row.command)
+                        .file_name()
+                        .is_some_and(|name| name == "node")
+                        && row.args.len() == declaration.launch_args.len() + 1
+                        && Path::new(&row.args[0]).is_absolute()
+                        && row.args[1..]
+                            .iter()
+                            .map(String::as_str)
+                            .eq(declaration.launch_args.iter().copied())
+                }
+            }
     })
 }
 

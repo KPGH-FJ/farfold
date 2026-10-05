@@ -76,6 +76,9 @@ function fixture() {
     discardDraft: vi.fn(async (key: string) => {
       states.delete(key);
     }),
+    retirePreparationDraft: vi.fn(async (key: string) => {
+      states.delete(key);
+    }),
     dequeue: vi.fn((key: string, index: number) => {
       states.get(key)!.queued.splice(index, 1);
     }),
@@ -309,6 +312,114 @@ describe("preparation result context", () => {
 });
 
 describe("real Agent preparation request ownership", () => {
+  it("reads options without applying retained choices and only admits a matching explicit choice", async () => {
+    const f = fixture();
+    const input = {
+      ...f.input,
+      config: { model: "saved", thought_level: "off" },
+      readOptionsOnly: true,
+    };
+    f.port.open.mockImplementationOnce(async (...args: unknown[]) => {
+      const requested = (args[0] as { configOptions?: Record<string, unknown> })
+        .configOptions;
+      const thread = freshThreadState("options", "agent", "/work", "options");
+      thread.configOptions = Object.entries({
+        model: "current",
+        thought_level: "high",
+        ...requested,
+      }).map(([id, currentValue]) => ({
+        id,
+        name: id,
+        type: "select",
+        currentValue,
+        options: [],
+      }));
+      f.states.set(thread.key, thread);
+      return thread;
+    });
+    await f.controller.prepare(input);
+    expect(f.port.open).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ configOptions: null, fresh: true }),
+    );
+    expect(f.controller.getSnapshot()).toMatchObject({
+      phase: "untested",
+      input,
+      config: { model: "current", thought_level: "high" },
+      readError: null,
+    });
+    await f.controller.start();
+    expect(f.port.send).not.toHaveBeenCalled();
+    await f.controller.prepare(input);
+    expect(f.port.open).toHaveBeenCalledOnce();
+    const chosen = {
+      ...input,
+      config: { model: "current", thought_level: "high" },
+    };
+    await f.controller.prepare(chosen);
+    expect(f.controller.getSnapshot().input).toEqual(chosen);
+    const sending = f.controller.start();
+    expect(f.port.send).toHaveBeenCalledOnce();
+    f.admission.resolve({ status: "rejected", reason: "failed" });
+    await sending;
+  });
+
+  it.each(["empty", "changed", "failed", "busy", "stale", "source"])(
+    "confirms only a healthy current options read (%s)",
+    async (condition) => {
+      const f = fixture();
+      const input = {
+        ...f.input,
+        config: { removed: "old" },
+        readOptionsOnly: true,
+      };
+      await f.controller.prepare(input);
+      if (condition === "changed")
+        f.state().configOptions = [
+          {
+            id: "new",
+            name: "New",
+            type: "select",
+            currentValue: "new",
+            options: [],
+          },
+        ];
+      if (condition === "failed") f.state().configError = "read failed";
+      if (condition === "busy") f.state().running = true;
+      if (condition === "stale") f.controller.invalidate(false);
+      if (condition === "source") f.state().sourceError = true;
+      expect(f.controller.confirmRead(input)).toEqual(
+        condition === "empty" ? {} : null,
+      );
+      expect(f.controller.getSnapshot().input?.config).toEqual(
+        condition === "empty" ? {} : { removed: "old" },
+      );
+      expect(f.port.open).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ configOptions: null }),
+      );
+      expect(f.port.send).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps the explicitly chosen service identity while reading without configuration replay", async () => {
+    const f = fixture();
+    const service = { id: "selected", revision: "r1", model: "chosen" };
+    await f.controller.prepare({
+      ...f.input,
+      service,
+      config: { thought_level: "old" },
+      readOptionsOnly: true,
+    });
+    expect(f.port.open).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        service,
+        serviceRevision: "r1",
+        configOptions: null,
+      }),
+    );
+    expect(f.controller.getSnapshot().input?.service).toEqual(service);
+    expect(f.port.send).not.toHaveBeenCalled();
+  });
+
   it("revokes only the relevant existing owner for authentication actions outside setup", () => {
     const changed = preparationFor("auth-changed");
     const other = preparationFor("auth-unrelated");

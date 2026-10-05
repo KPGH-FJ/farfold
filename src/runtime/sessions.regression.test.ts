@@ -33,7 +33,7 @@ function seed(id: string) {
   s.openError = null;
   return s;
 }
-it("locks an established conversation's reasoning without disabling unrelated options", async () => {
+it("keeps undeclared reasoning read-only without disabling declared unrelated options", async () => {
   const state = seed("locked-thought");
   state.identity = "established";
   state.configOptions = [
@@ -51,7 +51,7 @@ it("locks an established conversation's reasoning without disabling unrelated op
       category: "mode",
       type: "select",
       currentValue: "ask",
-      options: [],
+      options: [{ value: "plan", name: "Plan" }],
     },
   ];
   await expect(
@@ -60,6 +60,16 @@ it("locks an established conversation's reasoning without disabling unrelated op
   expect(
     h.invoke.mock.calls.some(([command]) => command === "session_set_config"),
   ).toBe(false);
+  h.invoke.mockResolvedValue({
+    configOptions: state.configOptions.map((option) => ({
+      ...option,
+      currentValue: option.id === "mode" ? "plan" : option.currentValue,
+    })),
+    configCheck: { status: "ready", issues: [], current: {} },
+    permissionConfigId: null,
+    permissionState: "ready",
+    service: null,
+  });
   await threads.setConfig(state.key, "mode", "plan");
   expect(
     h.invoke.mock.calls.some(([command]) => command === "session_set_config"),
@@ -355,7 +365,7 @@ it("withdraws only unsent local decisions when stopping, even if cancellation im
     }),
   );
 });
-it("restored sessions are established and cannot change model", async () => {
+it("restored sessions retain unknown-configuration protection before model changes", async () => {
   const options = [
     {
       id: "model",
@@ -654,6 +664,19 @@ it("does not consume queue until acknowledgement even if completion arrives firs
 it("configuration failure blocks draft submission until a successful selection", async () => {
   const s = seed("config");
   s.identity = "draft";
+  s.configOptions = [
+    {
+      id: "model",
+      name: "Model",
+      type: "select",
+      category: "model",
+      currentValue: "original",
+      options: [
+        { value: "x", name: "X" },
+        { value: "y", name: "Y" },
+      ],
+    },
+  ];
   h.invoke.mockRejectedValue(Error("bad config"));
   await expect(threads.setConfig(s.key, "model", "x")).rejects.toBeTruthy();
   await expect(
@@ -662,7 +685,13 @@ it("configuration failure blocks draft submission until a successful selection",
   expect(
     h.invoke.mock.calls.filter(([cmd]) => cmd === "session_prompt"),
   ).toHaveLength(0);
-  h.invoke.mockResolvedValue([]);
+  h.invoke.mockResolvedValue({
+    configOptions: [{ ...s.configOptions[0], currentValue: "y" }],
+    configCheck: { status: "ready", issues: [], current: {} },
+    permissionConfigId: null,
+    permissionState: "ready",
+    service: null,
+  });
   await threads.setConfig(s.key, "model", "y");
   expect(s.configError).toBeNull();
 });

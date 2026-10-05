@@ -1,0 +1,10 @@
+{
+  "formalFilesMatch": true,
+  "sourceInputsMatch": 501,
+  "actualScreenshotsMatch": 10,
+  "duplicateAbsent": true,
+  "sentPrompts": 0,
+  "sentAuthenticate": 0,
+  "setConfigRequests": 2,
+  "rejectedDiagnosticRecords": 0
+}

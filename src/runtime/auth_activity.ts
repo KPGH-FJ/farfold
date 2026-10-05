@@ -7,6 +7,7 @@ export type AuthOperation =
       methodId: string;
       title: string;
       completion: "exit_code" | "return_and_verify";
+      intent?: "login" | "logout" | "switch_account";
     }
   | {
       kind: "preparation";
@@ -42,7 +43,11 @@ export interface AuthActivitySnapshot {
     | { kind: "cancelled" }
     | { kind: "failed"; error: unknown }
     | null;
+  /** A successful flow response, distinct from a later connection recheck. */
+  operationConfirmed: boolean;
   checked: boolean;
+  /** The user chose to end this terminal and check, retained across close retries. */
+  finishRequested: boolean;
 }
 export const authActive = (value: AuthActivitySnapshot | null) =>
   !!value && !["completed", "cancelled", "failed"].includes(value.phase);
@@ -83,7 +88,9 @@ export class AuthActivity {
       error: null,
       terminal: null,
       terminalOutcome: null,
+      operationConfirmed: false,
       checked: false,
+      finishRequested: false,
     };
     this.finishIntent = false;
     this.startCancelled = false;
@@ -111,6 +118,7 @@ export class AuthActivity {
           this.update({ phase: "unknown" });
       });
       if (this.value?.attemptId !== id) return;
+      this.update({ operationConfirmed: true });
       // A late successful response after cancellation is still a real success,
       // never labelled as cancelled or as proven model availability.
       await this.check(ports.reconnect);
@@ -135,9 +143,20 @@ export class AuthActivity {
     const id = this.value?.attemptId;
     const terminal = new BufferedLoginTerminal({
       ...ports,
+      error: (error) => {
+        if (
+          this.value?.attemptId === id &&
+          authActive(this.value) &&
+          this.value?.phase !== "checking"
+        )
+          this.update({ phase: "unknown", error });
+      },
       exit: (code, cancelled) => {
         if (this.value?.attemptId !== id) return;
-        this.update({ terminalOutcome: { kind: "ended", code, cancelled } });
+        this.update({
+          terminalOutcome: { kind: "ended", code, cancelled },
+          operationConfirmed: code === 0,
+        });
         if (this.finishIntent || code === 0) void this.check(ports.reconnect);
         else
           this.update({
@@ -161,20 +180,28 @@ export class AuthActivity {
       const failed = results.find((result) => result.status === "rejected");
       if (failed?.status === "rejected") throw failed.reason;
     };
-    this.update({ terminal, phase: "waiting" });
-    void terminal.start().catch((error) => {
-      if (this.value?.attemptId === id) {
-        const cancelled =
-          String(error).replace(/^Error:\s*/, "") === "AUTH_CANCELLED";
-        this.update({
-          phase: cancelled ? "cancelled" : "failed",
-          error: cancelled ? null : error,
-          terminalOutcome: cancelled
-            ? { kind: "cancelled" }
-            : { kind: "failed", error },
-        });
-      }
-    });
+    this.update({ terminal, phase: "starting" });
+    void terminal.start().then(
+      () => {
+        // Readiness must notify the account view, but cannot undo a cancellation,
+        // unknown wait result, or an exit that overtook the startup response.
+        if (this.value?.attemptId === id && this.value?.phase === "starting")
+          this.update({ phase: "waiting" });
+      },
+      (error) => {
+        if (this.value?.attemptId === id) {
+          const cancelled =
+            String(error).replace(/^Error:\s*/, "") === "AUTH_CANCELLED";
+          this.update({
+            phase: cancelled ? "cancelled" : "failed",
+            error: cancelled ? null : error,
+            terminalOutcome: cancelled
+              ? { kind: "cancelled" }
+              : { kind: "failed", error },
+          });
+        }
+      },
+    );
   }
   private async check(reconnect: () => Promise<void>) {
     this.update({ phase: "checking" });
@@ -189,8 +216,12 @@ export class AuthActivity {
     if (!authActive(this.value) || this.value?.phase === "checking") return;
     const id = this.value?.attemptId;
     this.startCancelled = true;
-    this.finishIntent = verify;
-    this.update({ phase: "cancelling", error: null });
+    this.finishIntent ||= verify;
+    this.update({
+      phase: "cancelling",
+      error: null,
+      finishRequested: this.finishIntent,
+    });
     try {
       await this.cancelOperation?.();
     } catch (error) {
@@ -202,6 +233,20 @@ export class AuthActivity {
       )
         this.update({ phase: "unknown", error });
     }
+  }
+  async finishTerminal() {
+    const current = this.value;
+    const terminal = current?.terminal?.getSnapshot();
+    if (
+      !authActive(current) ||
+      current?.phase === "checking" ||
+      current?.phase === "cancelling" ||
+      !terminal?.id ||
+      terminal.exit !== null ||
+      terminal.closing
+    )
+      return;
+    await this.cancel(true);
   }
   async recheck(reconnect: () => Promise<void>) {
     if (authActive(this.value)) return;

@@ -48,7 +48,10 @@ function publish(change: Partial<State>) {
 }
 const object = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
-function parseSelection(value: unknown): AgentSetupSelection {
+function parseSelection(
+  value: unknown,
+  pendingService = false,
+): AgentSetupSelection {
   if (!object(value) || !object(value.config))
     throw new Error("Invalid selection");
   if (
@@ -65,9 +68,11 @@ function parseSelection(value: unknown): AgentSetupSelection {
   if (
     service !== null &&
     (!object(service) ||
-      ![service.id, service.model, service.revision].every(
+      ![service.id, service.revision].every(
         (v) => typeof v === "string" && v.length > 0,
-      ))
+      ) ||
+      typeof service.model !== "string" ||
+      (!pendingService && service.model.length === 0))
   )
     throw new Error("Invalid service");
   return {
@@ -112,6 +117,8 @@ function parseProgress(value: unknown): AgentSetupProgress {
   };
   if (typeof value.authMethodId === "string")
     result.authMethodId = value.authMethodId;
+  if (typeof value.preparationActionId === "string")
+    result.preparationActionId = value.preparationActionId;
   const registration = parseAccountRegistration(
     value.registration,
     result.authMethodId,
@@ -120,7 +127,7 @@ function parseProgress(value: unknown): AgentSetupProgress {
   if (["method", "account", "api"].includes(value.accessStage as string))
     result.accessStage = value.accessStage as AgentSetupProgress["accessStage"];
   if (value.selection !== undefined)
-    result.selection = parseSelection(value.selection);
+    result.selection = parseSelection(value.selection, true);
   const installationInput = parseInstallationInput(value.installationInput);
   if (installationInput) result.installationInput = installationInput;
   else if (

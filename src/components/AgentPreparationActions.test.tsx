@@ -62,8 +62,10 @@ vi.mock("../runtime/work_policy", () => ({
 }));
 import { AgentPreparationActions } from "./AgentPreparationActions";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
+import type { AgentAccessPrimary } from "../runtime/access_primary";
+import type { PreparationAction } from "../runtime/preparation";
 type Element = ReactElement<Record<string, unknown>>;
-const action = {
+const action: PreparationAction = {
   id: "configure",
   purpose: "service_configuration",
   transport: "terminal",
@@ -72,7 +74,7 @@ const action = {
   sourceUrl: "https://example.com/official",
 };
 let props: ComponentProps<typeof AgentPreparationActions>;
-function render() {
+function render(flushEffects = true) {
   h.cursor = 0;
   const nodes: Element[] = [];
   const visit = (node: ReactNode) =>
@@ -82,7 +84,7 @@ function render() {
       visit(child.props.children as ReactNode);
     });
   visit(AgentPreparationActions(props));
-  for (const effect of h.pending.splice(0)) effect();
+  if (flushEffects) for (const effect of h.pending.splice(0)) effect();
   return nodes;
 }
 async function settle() {
@@ -195,3 +197,105 @@ it("keeps a failed action lookup honest and allows one explicit retry", async ()
   expect(h.get).toHaveBeenCalledTimes(2);
   expect(h.run).not.toHaveBeenCalled();
 });
+
+function reviewedFooter() {
+  const receive = vi.fn();
+  props = {
+    ...props,
+    selectedId: action.id,
+    reviewSelected: true,
+    hideChoices: true,
+    data: { actions: [action], error: null, onRetry: vi.fn() },
+    onPrimaryChange: receive,
+  };
+  return receive;
+}
+
+it("reviews the shared selected terminal action and exposes its run only through one footer", async () => {
+  const receive = reviewedFooter();
+  const nodes = await settle();
+  expect(h.get).not.toHaveBeenCalled();
+  expect(button(nodes, S.review)).toBeUndefined();
+  expect(button(nodes, S.run)).toBeUndefined();
+  expect(nodes.find((node) => node.type === "pre")?.props.children).toBe(
+    JSON.stringify([action.command, ...action.args]),
+  );
+  const footer = receive.mock.calls.at(-1)![0] as AgentAccessPrimary;
+  expect(footer).toMatchObject({ label: S.run, disabled: false });
+  expect(h.run).not.toHaveBeenCalled();
+  footer.run();
+  expect(h.run).toHaveBeenCalledExactlyOnceWith(action, "/original");
+  await settle();
+  expect(receive.mock.calls.at(-1)![0]).toBeNull();
+  footer.run();
+  expect(h.run).toHaveBeenCalledOnce();
+});
+
+it("uses only the owner return and revokes the old footer when it leaves the review", async () => {
+  const receive = reviewedFooter();
+  const cancel = vi.fn();
+  Object.assign(props, { onCancelReview: cancel });
+  const nodes = await settle();
+  const footer = receive.mock.calls.at(-1)![0] as AgentAccessPrimary;
+  expect(button(nodes, S.cancelReview)).toBeUndefined();
+  props = { ...props, reviewSelected: false };
+  await settle();
+  expect(cancel).not.toHaveBeenCalled();
+  expect(props.selectedId).toBe(action.id);
+  expect(receive.mock.calls.at(-1)![0]).toBeNull();
+  footer.run();
+  expect(h.run).not.toHaveBeenCalled();
+});
+
+it("locks a reviewed old action when its shared data lookup fails before effect cleanup", async () => {
+  const receive = reviewedFooter();
+  await settle();
+  const footer = receive.mock.calls.at(-1)![0] as AgentAccessPrimary;
+  props = {
+    ...props,
+    data: { ...props.data!, error: S.loadFailed },
+  };
+  const nodes = render(false);
+  expect(nodes.some((node) => node.props.role === "alert")).toBe(true);
+  footer.run();
+  expect(h.run).not.toHaveBeenCalled();
+  await settle();
+  const current = receive.mock.calls.at(-1)![0] as AgentAccessPrimary | null;
+  expect(current === null || current.disabled).toBe(true);
+});
+
+it.each([
+  "agent",
+  "directory",
+  "source",
+  "program",
+  "changed-action",
+  "removed-action",
+])(
+  "rejects the previous reviewed footer when %s changes before effect cleanup",
+  async (cause) => {
+    const receive = reviewedFooter();
+    await settle();
+    const footer = receive.mock.calls.at(-1)![0] as AgentAccessPrimary;
+    if (cause === "agent") props = { ...props, agentId: "another" };
+    else if (cause === "directory") {
+      h.canonical = "/new-directory";
+      props = { ...props, cwd: h.canonical };
+    } else if (cause === "source") props = { ...props, source: "api-context" };
+    else if (cause === "program") props = { ...props, program: "program-b" };
+    else
+      props = {
+        ...props,
+        data: {
+          ...props.data!,
+          actions:
+            cause === "removed-action"
+              ? []
+              : [{ ...action, args: ["changed"] }],
+        },
+      };
+    render(false);
+    footer.run();
+    expect(h.run).not.toHaveBeenCalled();
+  },
+);

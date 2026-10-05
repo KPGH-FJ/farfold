@@ -1,15 +1,18 @@
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
+import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
 
 export function AgentSetupNavigation({
   step,
   connected,
   accountActive = false,
+  modelsAvailable = true,
   onStep,
 }: {
   step: number;
   connected: boolean;
   accountActive?: boolean;
+  modelsAvailable?: boolean;
   onStep: (step: number) => void;
 }) {
   return (
@@ -28,12 +31,19 @@ export function AgentSetupNavigation({
           aria-selected={step === tab.step}
           tabIndex={step === tab.step ? 0 : -1}
           disabled={
-            tab.step !== 0 && !connected && !(tab.step === 1 && accountActive)
+            (tab.step !== 0 &&
+              !connected &&
+              !(tab.step === 1 && accountActive)) ||
+            (tab.step === 2 && !modelsAvailable)
           }
           title={
-            tab.step !== 0 && !connected && !(tab.step === 1 && accountActive)
-              ? M.goProgram
-              : undefined
+            tab.step === 2 && !modelsAvailable
+              ? R.chooseAccessFirst
+              : tab.step !== 0 &&
+                  !connected &&
+                  !(tab.step === 1 && accountActive)
+                ? M.goProgram
+                : undefined
           }
           onClick={() => onStep(tab.step)}
           onKeyDown={(event) => {

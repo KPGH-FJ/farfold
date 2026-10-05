@@ -50,7 +50,14 @@ function permissionDraft(id: string) {
     },
   ]);
   mock.invoke.mockImplementation(async (command: string, args) => {
-    if (command === "session_set_config") return s.configOptions;
+    if (command === "session_set_config")
+      return {
+        configOptions: s.configOptions,
+        configCheck: { status: "ready", issues: [], current: {} },
+        permissionConfigId: "mode",
+        permissionState: "ready",
+        service: null,
+      };
     if (command === "session_prompt") return { status: "accepted" };
     return localCommand(command, args);
   });
@@ -106,8 +113,11 @@ it("does not resume existing queued or uncertain work when a new message is expl
     const s = permissionDraft(`retained-after-permission-${unknown}`);
     const previous: PromptBlock[] = [{ type: "text", text: "previous" }];
     s.queued = [previous];
-    if (unknown) s.uncertainPrompt = previous;
     await threads.setConfig(s.key, "mode", "ask");
+    if (unknown) {
+      s.uncertainPrompt = previous;
+      s.queuePaused = "uncertain";
+    }
     const next: PromptBlock[] = [{ type: "text", text: "new explicit input" }];
     await expect(sendNewConversation(s.key, next)).rejects.toThrow();
     expect(s.queued[0]).toBe(previous);

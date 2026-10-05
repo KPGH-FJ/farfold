@@ -25,6 +25,7 @@ use tokio::sync::{mpsc, oneshot};
 
 use super::handshake::Handshake;
 use super::initialization::{self, Failure as InitializeFailure};
+pub use super::lifecycle::CloseReason;
 use super::lifecycle::{CLOSING, ConnectionLife};
 pub(crate) use super::operations::Operation as AuthenticationOperation;
 pub(crate) type AccountScope = Vec<super::lifecycle::OperationLease>;
@@ -44,6 +45,9 @@ const IDLE_TIMEOUT: Duration = Duration::from_secs(30 * 60);
 /// Idle reaper tick.
 const REAPER_TICK: Duration = Duration::from_secs(60);
 
+#[path = "connection_retention.rs"]
+pub mod connection_retention;
+
 #[cfg(test)]
 #[path = "startup_cleanup_tests.rs"]
 mod startup_cleanup_tests;
@@ -51,6 +55,7 @@ mod startup_cleanup_tests;
 pub enum ManagerCommand {
     Authenticate {
         method_id: String,
+        key: Option<super::api_key_auth::ProtocolApiKey>,
         operation: AuthenticationOperation,
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
         result: oneshot::Sender<Result<(), String>>,
@@ -107,6 +112,8 @@ pub struct AgentConnectionStatus {
     pub agent_version: Option<String>,
     pub auth_methods: Vec<String>,
     pub service_context: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub close_reason: Option<CloseReason>,
 }
 
 #[derive(Hash, Eq, PartialEq, Clone)]
@@ -172,6 +179,7 @@ pub struct AcpManager {
     pub(crate) pending_permissions: PendingPermissions,
     /// requestId → responder for pending `elicitation/create` calls.
     pub(crate) pending_elicitations: PendingElicitations,
+    status_sink: Option<Arc<dyn Fn(AgentConnectionStatus) + Send + Sync>>,
 }
 
 /// Dropping a connect future must not leave its transport or reservation behind.
@@ -184,7 +192,7 @@ impl Drop for StartingConnection {
         if self.complete {
             return;
         }
-        let _ = self.life.close(true, None);
+        let _ = self.life.close_for(true, None, CloseReason::StartupFailed);
     }
 }
 
@@ -198,14 +206,26 @@ impl AcpManager {
             data_dir,
             pending_permissions: PendingPermissions::default(),
             pending_elicitations: PendingElicitations::default(),
+            status_sink: None,
         };
         manager.spawn_idle_reaper();
         manager
     }
 
+    /// The sink queues UI events synchronously; it must not call back into this
+    /// manager. Publishing under the map lock orders an old close before a new
+    /// connection can claim the same key, without a second identity ledger.
+    pub fn with_status_sink(
+        mut self,
+        sink: Arc<dyn Fn(AgentConnectionStatus) + Send + Sync>,
+    ) -> Self {
+        self.status_sink = Some(sink);
+        self
+    }
+
     /// Every minute, disconnect connections with no activity for
-    /// `IDLE_TIMEOUT` (no open session, or every session quiet). Session
-    /// state lives agent-side; a later open resumes via `session/load`.
+    /// `IDLE_TIMEOUT`, only when no view, conversation or work retains them.
+    /// `loadSession` alone is not a guarantee of lossless recovery.
     fn spawn_idle_reaper(&self) {
         let connections = Arc::downgrade(&self.connections);
         std::thread::Builder::new()
@@ -245,6 +265,7 @@ impl AcpManager {
             agent_version: handshake
                 .and_then(|h| h.typed.agent_info.as_ref().map(|i| i.version.clone())),
             auth_methods: handshake.map(|h| h.auth_ids()).unwrap_or_default(),
+            close_reason: connection.life.close_reason(),
         }
     }
 
@@ -319,7 +340,9 @@ impl AcpManager {
         };
         let connection = self.lock()?.get(&key).cloned();
         if let Some(connection) = connection {
-            connection.life.close(true, None)?;
+            connection
+                .life
+                .close_for(true, None, CloseReason::Configuration)?;
             if let Err(error) = connection.life.closed().await {
                 // A confirmed unexpected exit must not overwrite the startup
                 // result (or cancellation). Unknown termination and incomplete
@@ -495,6 +518,7 @@ impl AcpManager {
         let forms_for_cleanup = self.pending_elicitations.clone();
         let task_diagnostics = diagnostics.clone();
         let decode_diagnostics = diagnostics.clone();
+        let status_sink = self.status_sink.clone();
         runtime().spawn(async move {
             let result = Client
                 .builder()
@@ -579,20 +603,32 @@ impl AcpManager {
                     Ok(())
                 })
                 .await;
-            let requested = life_for_task.state.load(Ordering::SeqCst) == CLOSING;
-            let _ = life_for_task.close(true, None);
+            let previous_state = life_for_task.state.load(Ordering::SeqCst);
+            let requested = previous_state == CLOSING;
+            let fallback_reason = if previous_state == super::lifecycle::CONNECTING {
+                CloseReason::StartupFailed
+            } else {
+                CloseReason::Unexpected
+            };
+            let _ = life_for_task.close_for(true, None, fallback_reason);
+            let reason = life_for_task.close_reason().unwrap_or(CloseReason::Unexpected);
             process.stop();
             let process_result = process.closed().await;
             let outcome = process_result.and_then(|_| if requested { Ok(()) } else {
                 result.as_ref().map(|_| ()).map_err(|_| "Agent 连接已结束".to_string())
             });
             pump::clear_connection_interactions(&pending_for_cleanup, &forms_for_cleanup, &life_for_task);
-            pump::notify_connection_lost(&sessions_for_cleanup);
+            pump::notify_connection_lost(&sessions_for_cleanup, reason);
             // Completion includes removing this exact instance. A waiter must
             // not return from disconnect while status still exposes the owner.
             let outcome = match connections_for_cleanup.lock() {
                 Ok(mut map) => {
                     if map.get(&key_for_cleanup).is_some_and(|entry| Arc::ptr_eq(&entry.state, &state_for_cleanup)) {
+                        if !key_for_cleanup.candidate && let Some(sink) = &status_sink {
+                            let mut status = Self::status_of(&key_for_cleanup, map.get(&key_for_cleanup).unwrap());
+                            status.state = if outcome.is_ok() { "closed" } else { "failed" }.into();
+                            sink(status);
+                        }
                         map.remove(&key_for_cleanup);
                         task_diagnostics.removed();
                     }
@@ -603,7 +639,7 @@ impl AcpManager {
             life_for_task.finish(outcome);
             logging::info(
                 "acp_client",
-                format_args!("connection closed: {agent_label_for_task}"),
+                format_args!("connection closed: {agent_label_for_task} ({reason:?})"),
             );
             result
         });
@@ -625,7 +661,7 @@ impl AcpManager {
                     InitializeFailure::Ended => Outcome::Ended,
                     InitializeFailure::StartFailed => Outcome::StartFailed,
                 });
-                let _ = life.close(true, None);
+                let _ = life.close_for(true, None, CloseReason::StartupFailed);
                 logging::error(
                     "acp_client",
                     format_args!("connect failed: {agent_label}: {}", failure.code()),
@@ -653,6 +689,9 @@ impl AcpManager {
             .ok_or_else(|| "connection entry missing after initialize".to_string())?;
         connection.life.ready()?;
         let status = Self::status_of(&key, connection);
+        if !candidate && let Some(sink) = &self.status_sink {
+            sink(status.clone());
+        }
         let pid = connection.child_pid.load(Ordering::SeqCst);
         logging::info(
             "acp_client",
@@ -735,32 +774,8 @@ impl AcpManager {
         operation: AuthenticationOperation,
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
-        let selected = self.live_connection(agent_id, cwd)?;
-        let declared = selected
-            .handshake
-            .get()
-            .is_some_and(|handshake| handshake.protocol_method(method_id));
-        if !declared {
-            return Err("此目录的登录方式已变化，请重新检查后再登录".into());
-        }
-        let (result, reply) = oneshot::channel();
-        selected.send(ManagerCommand::Authenticate {
-            method_id: method_id.to_string(),
-            operation,
-            on_unknown,
-            result,
-        })?;
-        match reply.await {
-            Ok(Err(error)) if error == "AUTH_CONNECTION_CLOSED" => {
-                selected.life.terminated().await;
-                Err("登录连接已结束，请重新检查账号状态".into())
-            }
-            Ok(outcome) => outcome,
-            Err(_) => {
-                selected.life.terminated().await;
-                Err("登录连接已结束，请重新检查账号状态".into())
-            }
-        }
+        self.authenticate_with_key(agent_id, cwd, method_id, None, operation, on_unknown)
+            .await
     }
 
     pub(crate) async fn logout(
@@ -809,7 +824,7 @@ impl AcpManager {
             }
         };
         for life in &lives {
-            let _ = life.close(true, None);
+            let _ = life.close_for(true, None, CloseReason::Shutdown);
         }
         let (completed, receive) = std::sync::mpsc::channel();
         runtime().spawn(async move {
@@ -896,7 +911,6 @@ pub async fn agent_connect(
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
     let status = manager.connect(&row, &cwd, &store).await?;
-    crate::ui_transport::emit_event(&app, "agent:status", &status);
     Ok(status)
 }
 
@@ -917,15 +931,6 @@ pub async fn agent_disconnect(app: AppHandle, agent_id: String) -> Result<bool, 
             .await?
         {
             disconnected = true;
-            crate::ui_transport::emit_event(
-                &app,
-                "agent:status",
-                serde_json::json!({
-                    "agentId": agent_id,
-                    "cwd": status.cwd,
-                    "state": "closed",
-                }),
-            );
         }
     }
     Ok(disconnected)

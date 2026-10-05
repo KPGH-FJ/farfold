@@ -1,13 +1,10 @@
-import {
-  AGENT_BRANDS,
-  agentIdentity,
-  type AgentCardModel,
-} from "../runtime/agents";
+import { agentIdentity, type AgentCardModel } from "../runtime/agents";
+import { agentBrand } from "../runtime/agent_brands";
 import { useState } from "react";
 
 /** Brand artwork is presentation data; Agent behavior remains capability-driven. */
 export function AgentLogo({ card }: { card: AgentCardModel }) {
-  const brand = !card.custom ? AGENT_BRANDS[card.id] : undefined;
+  const brand = agentBrand(card);
   const identity = agentIdentity(card.id, card.name);
   const [failed, setFailed] = useState<string | null>(null);
   const catalogIcon = card.icon?.startsWith("https://") ? card.icon : null;

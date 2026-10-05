@@ -1,0 +1,152 @@
+/* Shared program status, actions, and optional installation details. */
+.agent-setup-dialog .agent-setup-management,
+.agent-setup-dialog .agent-setup-management .program-manager {
+  margin-top: 0;
+}
+.program-manager .program-manager-heading,
+.program-dependency-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 12px;
+}
+.agent-setup-dialog .program-manager .program-manager-heading h3,
+.agent-setup-dialog .program-dependency-heading h4 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.program-current,
+.program-installations {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+}
+.program-manager .program-row {
+  border-top: 0;
+  padding: 18px;
+}
+.program-manager .program-row + .program-row {
+  border-top: 1px solid var(--line);
+}
+.program-manager .program-row-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.program-row-summary {
+  min-width: 0;
+}
+.program-row-title,
+.program-dependency-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.program-manager .program-row-title strong {
+  font: 600 15px/1.5 var(--sans);
+}
+.program-not-selected {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.program-row-description {
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+.program-manager .ac-actions {
+  margin-left: 0;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.program-path,
+.program-dependency-details {
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.program-path > summary,
+.program-dependency-details > summary,
+.program-installation-management > summary,
+.program-check-details > summary,
+.program-remove-access > summary {
+  width: fit-content;
+  min-height: 36px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+.program-installation-management,
+.program-check-details {
+  margin-top: 16px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.program-installation-management[open] > summary,
+.program-check-details[open] > summary {
+  margin-bottom: 10px;
+}
+.program-manager .program-actions {
+  margin-top: 14px;
+}
+.program-disconnect {
+  margin-top: 14px;
+}
+.program-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ink-2);
+}
+.agent-setup-dialog .agent-preparation-dependencies {
+  margin-top: 18px;
+}
+.agent-setup-dialog .agent-preparation-dependencies .agent-setup-program {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  margin: 0 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.agent-setup-dialog
+  .agent-preparation-dependencies
+  .program-dependency-summary {
+  flex: 1 1 auto;
+}
+.program-dependency-details {
+  flex: 1 1 100%;
+}
+.program-candidate-action {
+  margin-top: 12px;
+}
+.agent-setup-dialog .program-remove-access {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin: 18px 0 0;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+.program-remove-access > .btn {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .program-manager .program-row-main,
+  .program-empty {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .program-manager .ac-actions {
+    flex-shrink: 1;
+  }
+}

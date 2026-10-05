@@ -1,0 +1,1672 @@
+{
+  "researchDate": "2026-10-05",
+  "scope": "11项；公开第一方文档/源码/发行程序静态读取，以及父任务安全筛选的既有initialize缓存。未启动Agent、未登录、未读用户配置或秘密、未升级、未执行模型调用。Devin只读公开资料。",
+  "modelTypeLegend": {
+    "C": "可确认configOptions/session/set_config_option模型或档位线路；可能同时支持旧L",
+    "L": "仅可确认旧models/session/set_model可达；C缺失或未注册",
+    "N": "未暴露底层模型选择或已确认固定；仍可单独记录C-mode-only档位配置",
+    "U": "公开证据不足，未知；不能由auth_required或invalid_params直接判支持或不支持"
+  },
+  "evidenceLevels": "source-implemented为静态实现，不是运行成功；declared/probe仅声明/方法门禁；unknown明确未核；本机版本和公开最新版分列。",
+  "farfoldCommonGap": "父任务静态确认：FarFold当前只normalizeConfigOptions并invoke session_set_config，后端只发SetSessionConfigOptionRequest；未接旧models/set_model/current_model_update。此映射不等于本轮真实安装版操作结果。",
+  "agents": [
+    {
+      "id": "amp-acp",
+      "name": "Amp",
+      "launch": {
+        "registry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/tao12345666333/amp-acp/releases/download/v0.9.0/amp-acp-darwin-aarch64.tar.gz",
+              "cmd": "./amp-acp",
+              "sha256": "240a1a464f2a400ae51e9613b7f52b2abb6e7a29759001e9185291325671ccf1"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/tao12345666333/amp-acp/releases/download/v0.9.0/amp-acp-darwin-x86_64.tar.gz",
+              "cmd": "./amp-acp",
+              "sha256": "0dc6d1ab8054e09b10ef49eea3e61afe363473d785bc9682ecb997480ec2f61f"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/tao12345666333/amp-acp/releases/download/v0.9.0/amp-acp-linux-aarch64.tar.gz",
+              "cmd": "./amp-acp",
+              "sha256": "b9e365221838b1a6e177c2fcd8f25a30086c3630e0330f1f6f74b25d2d4126c2"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/tao12345666333/amp-acp/releases/download/v0.9.0/amp-acp-linux-x86_64.tar.gz",
+              "cmd": "./amp-acp",
+              "sha256": "afaa50a152eb86a8ff21e354ded63fe2d21b730859692e3a60b2c4c9ef23df31"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/tao12345666333/amp-acp/releases/download/v0.9.0/amp-acp-windows-x86_64.zip",
+              "cmd": "amp-acp.exe",
+              "sha256": "3b2c3d14d703fcf9572da9733e4941703a7744bd37ec4aaa75421d6002c0157b"
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:amp-acp/install-Bti2m7/amp-acp",
+          "args": []
+        }
+      },
+      "version": {
+        "installed": "0.9.0",
+        "installedAgentInfo": {
+          "name": "amp-acp",
+          "title": "Amp ACP Agent",
+          "version": "0.9.0"
+        },
+        "registry": "0.9.0",
+        "publicLatestChecked": "0.9.0",
+        "sourceRevision": "tag v0.9.0"
+      },
+      "source": {
+        "kind": "community-adapter",
+        "repository": "https://github.com/tao12345666333/amp-acp",
+        "website": null,
+        "reviewedFiles": [
+          "amp-v0.9.0/amp-acp-0.9.0/src/server.ts:135-390",
+          "amp-v0.9.0/amp-acp-0.9.0/src/index.ts:111-178",
+          "amp-v0.9.0/amp-acp-0.9.0/src/amp-transport.ts:75-112"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "unsupported",
+          "detail": "0.9.0不声明也不实现session/list，官方probe method_not_found。"
+        },
+        "load": {
+          "level": "unsupported",
+          "detail": "0.9.0不声明loadSession；server只有进程内Map，无loadSession方法。"
+        },
+        "replay": {
+          "level": "unsupported",
+          "detail": "0.9.0没有ACP正文回放路径。"
+        },
+        "coldPersistence": {
+          "level": "unsupported-via-acp",
+          "detail": "底层Amp thread可保留，但ACP sessionId→threadId只在内存，adapter重启后不能按原ACP id加载。"
+        },
+        "continue": {
+          "level": "source-implemented-in-process",
+          "detail": "捕获第一条message.session_id；后续prompt传threads continue <threadId>，仅当前adapter存活期间。"
+        },
+        "modelSwitch": {
+          "type": "N",
+          "detail": "未暴露任意底层模型选择；0.9.0仅amp-mode档位low/medium/high/ultra与permission配置走configOptions/set_config，不应统计为底层模型可切。",
+          "set_config_option": "implemented",
+          "set_model": "method_not_found",
+          "scope": "当前内存session，下一次prompt映射--mode；不改变threadId。",
+          "configRoute": "C-mode-only"
+        },
+        "authReuse": {
+          "level": "mixed",
+          "detail": "默认transport启动原amp CLI并继承环境，故底层CLI可自行使用原登录；但adapter自己的--setup独立存amp-acp/credentials.json，并注入AMP_API_KEY，authenticate只检查该环境变量，不能把原amp login等同adapter认证检查通过。"
+        },
+        "authActions": {
+          "level": "partial",
+          "detail": "authMethods setup为终端--setup；authenticate不发起浏览器，只检查AMP_API_KEY。无ACP账号查询/logout；adapter独立API key与底层CLI账户退出不是同一存储操作。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": false,
+          "sessionCapabilities": {},
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "setup",
+            "type": "agent",
+            "name": "Amp API Key Setup"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.9.0",
+        "agentInfoVersion": "0.9.0",
+        "capabilities": {
+          "loadSession": false,
+          "sessionList": false,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "method_not_found",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "method_not_found"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/amp-acp/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/server.ts",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/index.ts",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/amp-transport.ts",
+        "https://github.com/tao12345666333/amp-acp"
+      ],
+      "limitations": [
+        "当前main README新增amp login复用、持久session映射及load声明，不能追溯覆盖已发布/已安装0.9.0。",
+        "本机缓存auth setup被兼容归一化为agent型，原声明terminal；需沿FarFold规范化后的实际认证路径核对。",
+        "未执行真实认证、续答或重启。"
+      ],
+      "farfoldMapping": [
+        "不能承诺该发行版冷恢复；UI应明确只能当前连接继续。",
+        "C档位可以走既有configOptions路径；不能命名为任意模型切换。",
+        "原CLI账号与adapter setup检查要分别呈现，不能以initialize成功当已登录。"
+      ]
+    },
+    {
+      "id": "antigravity-acp",
+      "name": "Google Antigravity",
+      "launch": {
+        "registry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-1.3.0-darwin-arm64.zip",
+              "cmd": "./agy_acp_server.par"
+            },
+            "darwin-x86_64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/macos/agy-acp-server-1.3.0-darwin-x86_64.zip",
+              "cmd": "./agy_acp_server.par"
+            },
+            "linux-x86_64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-1.3.0-linux-x86_64.zip",
+              "cmd": "./agy_acp_server.par",
+              "args": [
+                "--uid="
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/linux/agy-acp-server-1.3.0-linux-arm64.zip",
+              "cmd": "./agy_acp_server.par",
+              "args": [
+                "--uid="
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/windows/agy-acp-server-1.3.0-windows-x86_64.zip",
+              "cmd": "./agy_acp_server.exe"
+            },
+            "windows-aarch64": {
+              "archive": "https://dl.google.com/agy-extensions/releases/windows/agy-acp-server-1.3.0-windows-arm64.zip",
+              "cmd": "./agy_acp_server.exe"
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:antigravity-acp/install-E3Lwrl/agy_acp_server.par",
+          "args": []
+        }
+      },
+      "version": {
+        "installed": "1.2.1",
+        "installedAgentInfo": {
+          "name": "antigravity-acp",
+          "title": "Google Antigravity",
+          "version": "1.2.1"
+        },
+        "registry": "1.3.0",
+        "publicLatestChecked": "1.3.0",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-server-proprietary",
+        "repository": null,
+        "website": "https://antigravity.google/docs/ide/extensions",
+        "reviewedFiles": [
+          "antigravity-acp-registry.json",
+          "既有1.2.1公开程序包装检查：agy_acp_server.par非可直接读取ZIP；未运行/反编译"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "declared-and-public-probe",
+          "detail": "本机1.2.1声明list；公开1.3.0 session/list probe成功，未验证有历史条目。"
+        },
+        "load": {
+          "level": "declared",
+          "detail": "本机1.2.1与公开1.3.0 loadSession=true。"
+        },
+        "replay": {
+          "level": "unknown",
+          "detail": "官方IDE扩展/Zed文档没有给出ACP正文回放完整范围，未公开实现，不能由load声明代推。"
+        },
+        "coldPersistence": {
+          "level": "unknown",
+          "detail": "有load/list/resume声明，未发现公开ACP存储布局或跨进程成功证据。"
+        },
+        "continue": {
+          "level": "declared-not-tested",
+          "detail": "有session/resume声明且公开probe resource_not_found；有效旧会话续答未测试。"
+        },
+        "modelSwitch": {
+          "type": "U",
+          "detail": "官方模型/IDE说明不足以确认configOptions与set_config实施；set_model探测被auth_required拦住。",
+          "set_config_option": "unknown",
+          "set_model": "auth_required, not success",
+          "scope": "未知是否按会话/进程保存。"
+        },
+        "authReuse": {
+          "level": "documentation-partial",
+          "detail": "Google官方称CLI、desktop、IDE extensions采用统一认证系统与同一账号权益；不等于已证明共享本机凭据文件/登录免重复。"
+        },
+        "authActions": {
+          "level": "declared-and-documented",
+          "detail": "oauth-personal、oauth-business、gemini-api-key、agent-platform由authenticate触发官方认证；本机声明auth.logout。公开CLI/IDE文档未给出ACP账号查询及logout实现细节。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {}
+          },
+          "auth": {
+            "logout": {}
+          }
+        },
+        "authMethods": [
+          {
+            "id": "oauth-personal",
+            "type": "agent",
+            "name": "Log in with Google"
+          },
+          {
+            "id": "oauth-business",
+            "type": "agent",
+            "name": "Log in with Gemini Enterprise"
+          },
+          {
+            "id": "gemini-api-key",
+            "type": "agent",
+            "name": "Gemini API key"
+          },
+          {
+            "id": "agent-platform",
+            "type": "agent",
+            "name": "Gemini Enterprise Agent Platform"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "1.3.0",
+        "agentInfoVersion": "1.3.0",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "success",
+          "session/resume": "resource_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "auth_required"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/antigravity-acp/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://antigravity.google/docs/ide/extensions",
+        "https://antigravity.google/docs/ide/extensions/zed/"
+      ],
+      "limitations": [
+        "安装1.2.1与registry1.3.0不同，未升级。",
+        "闭源范围：核官方IDE扩展、Zed接入、registry发行入口与既有initialize；无公开ACP实施源码。",
+        "统一账号体系不能写成已验证复用本机CLI令牌。"
+      ],
+      "farfoldMapping": [
+        "恢复/模型/退出入口必须按真实协议响应驱动；当前证据只够声明层。",
+        "优先补可读官方协议说明或未来明确授权的真实会话验证。"
+      ]
+    },
+    {
+      "id": "auggie",
+      "name": "Auggie CLI",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "@augmentcode/auggie@0.36.0",
+            "args": [
+              "--acp"
+            ],
+            "env": {
+              "AUGMENT_DISABLE_AUTO_UPDATE": "1"
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:auggie/install-CUpRvu/node_modules/@augmentcode/auggie/augment.mjs",
+            "--acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "0.36.0",
+        "installedAgentInfo": {
+          "name": "auggie",
+          "title": "Auggie Agent",
+          "version": "0.36.0 (commit 7c61e5bb)"
+        },
+        "registry": "0.36.0",
+        "publicLatestChecked": "0.36.0",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary-readable-bundle",
+        "repository": "https://github.com/augmentcode/auggie",
+        "website": "https://www.augmentcode.com/",
+        "reviewedFiles": [
+          "auggie-npm/package/augment.mjs (0.36.0 commit7c61e5bb; minified byte13184836,13185675,13185982,13186297)",
+          "auggie-acp-snippets.txt"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "source-implemented",
+          "detail": "unstable_listSessions使用同一CLI cacheDir（默认~/.augment）本地session index，按workspace过滤。"
+        },
+        "load": {
+          "level": "source-implemented",
+          "detail": "loadSession检查保存的session file，载入chatHistory并以同一native id创建runtime。"
+        },
+        "replay": {
+          "level": "source-implemented",
+          "detail": "逐条回放user text、assistant text/thought summary、tool_call及tool_call_update；媒体/所有扩展事件完整性未保证。"
+        },
+        "coldPersistence": {
+          "level": "source-implemented",
+          "detail": "落地CLI session存储并由loadSession跨新进程读取；未做真实重启端到端。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "恢复出的agentRuntime保留历史，后续prompt进入同一session；未调用模型。"
+        },
+        "modelSwitch": {
+          "type": "L",
+          "detail": "server实际unstable_setSessionModel调用session.setModel→agentState.setModelId；无server setSessionConfigOption实现。",
+          "set_config_option": "absent-server-implementation",
+          "set_model": "implemented",
+          "scope": "同一会话runtime，历史保留；load返回模型来自当前root/config默认，未证明原session模型自动恢复。"
+        },
+        "authReuse": {
+          "level": "source-implemented",
+          "detail": "ACP与auggie共享rootSetup.auth，直接复用原auggie CLI登录/官方环境认证；无adapter独立账号。"
+        },
+        "authActions": {
+          "level": "source-and-docs",
+          "detail": "终端auggie login；ACP authenticate方法本身只记日志，不负责浏览器登录。CLI提供login/logout，ACP无账号状态查询/logout实现。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "auggie-login",
+            "type": "agent",
+            "name": "Log in with Auggie"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.36.0",
+        "agentInfoVersion": "0.36.0 (commit 7c61e5bb)",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "invalid_params"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/auggie/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.augmentcode.com/cli/acp/agent",
+        "https://docs.augmentcode.com/cli/reference",
+        "https://registry.npmjs.org/@augmentcode/auggie/0.36.0"
+      ],
+      "limitations": [
+        "公开probe setModelSignal=false不能否定实际旧set_model；其invalid_params只证明路由可达。",
+        "本机缓存auth被归一化agent型，发行声明是terminal。",
+        "源码静态支持不等于真实冷恢复、续答已测。"
+      ],
+      "farfoldMapping": [
+        "Farfold当前只有configOptions/set_config线路，会漏掉该旧models/set_model模型能力（源码明确）。",
+        "历史list/load共用链可接；保留恢复模型默认差异为待验证。"
+      ]
+    },
+    {
+      "id": "autohand",
+      "name": "Autohand Code",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "@autohandai/autohand-acp@0.2.1"
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:autohand/install-DmctEe/node_modules/@autohandai/autohand-acp/dist/index.js"
+          ]
+        }
+      },
+      "version": {
+        "installed": "0.2.1",
+        "installedAgentInfo": {
+          "name": "@autohandai/autohand-acp",
+          "title": "Autohand CLI",
+          "version": "0.2.1"
+        },
+        "registry": "0.2.1",
+        "publicLatestChecked": "0.2.1",
+        "sourceRevision": "tag v0.2.1"
+      },
+      "source": {
+        "kind": "first-party-adapter",
+        "repository": "https://github.com/autohandai/autohand-acp",
+        "website": "https://www.autohand.ai/cli/",
+        "reviewedFiles": [
+          "autohand-v0.2.1/autohand-acp-0.2.1/src/acp-agent.ts:405-521,687-739,1536-1700,3652-3670",
+          "autohand-installed-sdk-dispatch.txt (installed SDK0.12.0)"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "source-implemented",
+          "detail": "readSessionIndex(resolveAutohandHome())返回原Autohand CLI持久会话，支持cwd过滤；SDK实际注册unstable_listSessions。"
+        },
+        "load": {
+          "level": "source-implemented-with-defect",
+          "detail": "读取sessions/<id>/conversation.jsonl；但读取失败catch仍回放“Session ... loaded”并返回成功，不能将成功应答等同历史确实存在。"
+        },
+        "replay": {
+          "level": "partial-source-implemented",
+          "detail": "load回放user/assistant文字；并非完整工具/图片/所有envelope回放。"
+        },
+        "coldPersistence": {
+          "level": "source-implemented",
+          "detail": "读取原CLI本地session；模型与配置按当前默认重建，旧会话配置不保证保持。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "复用CLI --resume/同native session续答；未启动伴随CLI或发送模型请求。"
+        },
+        "modelSwitch": {
+          "type": "L",
+          "detail": "有旧unstable_setSessionModel→session.modelId，并在后续CLI调用传--model。虽然源码有unstable_setSessionConfigOption，所用SDK0.12.0并未注册session/set_config_option。",
+          "set_config_option": "unreachable-SDK0.12.0-dispatch-absent",
+          "set_model": "implemented",
+          "scope": "下一次CLI prompt同session；加载时以当前默认模型重建。"
+        },
+        "authReuse": {
+          "level": "source-implemented",
+          "detail": "同resolveAutohandHome/config.json auth.token/expiresAt，与原autohand CLI共用；不另建adapter凭据。"
+        },
+        "authActions": {
+          "level": "partial",
+          "detail": "未装CLI则terminal安装入口，已装后terminal autohand login；authenticate只检查已安装和现有token有效期，不直接浏览器登录。读取user info是内部函数；未见标准ACP账号查询/logout。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "autohand-install",
+            "type": "agent",
+            "name": "Install Autohand CLI"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.2.1",
+        "agentInfoVersion": "0.2.1",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "invalid_params",
+          "session/resume": "invalid_params",
+          "session/stop": "method_not_found",
+          "session/set_model": "invalid_params"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/autohand/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/autohandai/autohand-acp/blob/v0.2.1/src/acp-agent.ts",
+        "https://registry.npmjs.org/@autohandai/autohand-acp/0.2.1",
+        "https://registry.npmjs.org/@agentclientprotocol/sdk/0.12.0"
+      ],
+      "limitations": [
+        "发布包与tag均0.2.1；本机缓存缺fork声明但当日公开probe声明fork，客户端协商/环境差异需保留。",
+        "SDK0.12.0没有config setter路由是静态发现，未实际发送请求。",
+        "load失败伪成功与模型默认重建须另列，不应只记load=true。"
+      ],
+      "farfoldMapping": [
+        "当前FarFold将configOptions发set_config的路线会碰到SDK未注册；旧set_model路线缺失。",
+        "应在真实加载回放完成前避免将该Agent冷恢复标成已验收。"
+      ]
+    },
+    {
+      "id": "codebuddy-code",
+      "name": "Codebuddy Code",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "@tencent-ai/codebuddy-code@2.161.2",
+            "args": [
+              "--acp"
+            ]
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:codebuddy-code/install-8cDvfN/node_modules/@tencent-ai/codebuddy-code/bin/codebuddy",
+            "--acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "2.160.0",
+        "installedAgentInfo": null,
+        "registry": "2.161.2",
+        "publicLatestChecked": "npm2.161.3; registry2.161.2",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary-readable-bundle",
+        "repository": null,
+        "website": "https://www.codebuddy.cn/cli/",
+        "reviewedFiles": [
+          "codebuddy-installed-2.160.0-snippets.txt (dist/codebuddy.js byte6541548,6550196,6562437,6612557,6614599)",
+          "codebuddy-npm/package/dist/codebuddy.js (public npm2.161.3 same relevant handlers)"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "unsupported-via-acp",
+          "detail": "本机无list声明；registry2.161.2 probe method_not_found。CLI/HTTP另有历史枚举不能算标准ACP list。"
+        },
+        "load": {
+          "level": "source-implemented",
+          "detail": "initializeSession(type:load,sessionId)+replayHistory；有writer占用/接管处理，未知session会出错。"
+        },
+        "replay": {
+          "level": "source-implemented",
+          "detail": "历史转换为ACP updates再逐条发送；媒体、compaction前历史是否显示受capabilities与内部设置控制。"
+        },
+        "coldPersistence": {
+          "level": "source-and-docs",
+          "detail": "CLI保存transcript，load可读现存记录；官方--no-session-persistence可关闭写入，不因此删除旧历史。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "prompt使用getRuntimeSession，同load出的runtime继续；本轮未真实续答。"
+        },
+        "modelSwitch": {
+          "type": "C",
+          "detail": "本机2.160.0与公开2.161.3都有model configOptions/setSessionConfigOption及旧set_model；model更新requestOptions/options/override。",
+          "set_config_option": "implemented",
+          "set_model": "implemented",
+          "scope": "同会话生效；可能同步CLI settings或job respawn metadata；thought_level与context_window等部分override是进程内。"
+        },
+        "authReuse": {
+          "level": "source-implemented",
+          "detail": "原CodeBuddy CLI authManager共用，不是外部adapter凭据；支持官方不同登录域及CODEBUDDY_API_KEY。IDE插件凭据能否直接复用未证明。"
+        },
+        "authActions": {
+          "level": "source-implemented-partial",
+          "detail": "authenticate iOA/external/internal/selfhosted调用同authManager；已有登录会先logout后强制重新登录。扩展_codebuddy.ai/getUserInfo存在，但可返回token/accessToken，Farfold不能直接展示/日志化；标准ACP logout未声明。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {},
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "iOA",
+            "type": "agent",
+            "name": "Login with iOA"
+          },
+          {
+            "id": "external",
+            "type": "agent",
+            "name": "Login with Google/Github"
+          },
+          {
+            "id": "internal",
+            "type": "agent",
+            "name": "Login with WeChat"
+          },
+          {
+            "id": "selfhosted",
+            "type": "agent",
+            "name": "Login with Enterprise Domain"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "2.161.2",
+        "agentInfoVersion": null,
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": false,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "method_not_found",
+          "session/fork": "method_not_found",
+          "session/resume": "auth_required",
+          "session/stop": "method_not_found",
+          "session/set_model": "error"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/codebuddy-code/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://www.codebuddy.ai/docs/cli/acp",
+        "https://www.codebuddy.ai/docs/cli/cli-reference",
+        "https://www.codebuddy.ai/docs/cli/release-notes/v2.97.0",
+        "https://registry.npmjs.org/@tencent-ai/codebuddy-code/2.161.3"
+      ],
+      "limitations": [
+        "本机2.160.0、registry2.161.2、npm latest2.161.3分开；未升级。",
+        "当前set_model矩阵error不是“不支持”的证明，实际代码有C+L。",
+        "authenticate具有退出当前账号副作用；复用现登录不应自动重新authenticate。"
+      ],
+      "farfoldMapping": [
+        "C模型/推理可沿当前通用UI；标准ACP无法完整枚举原生历史。",
+        "账号查询扩展会带秘密，应只使用经安全筛选的身份字段。"
+      ]
+    },
+    {
+      "id": "corust-agent",
+      "name": "Corust Agent",
+      "launch": {
+        "registry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-darwin-arm64.tar.gz",
+              "cmd": "./corust-agent-acp"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-darwin-x64.tar.gz",
+              "cmd": "./corust-agent-acp"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-linux-x64.tar.gz",
+              "cmd": "./corust-agent-acp"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/Corust-ai/corust-agent-release/releases/download/v0.6.0/agent-windows-x64.zip",
+              "cmd": "./corust-agent-acp.exe"
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:corust-agent/install-Y6u6GV/corust-agent-acp",
+          "args": []
+        }
+      },
+      "version": {
+        "installed": "0.6.0",
+        "installedAgentInfo": {
+          "name": "corust-acp",
+          "title": "Corust Agent",
+          "version": "0.1.0"
+        },
+        "registry": "0.6.0",
+        "publicLatestChecked": "0.6.0",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-distributed-server-source-unavailable",
+        "repository": "https://github.com/Corust-ai/corust-agent-release",
+        "website": "https://corust.ai/",
+        "reviewedFiles": [
+          "corust-main/corust-agent-release-main/ (only extension manifest/icon/LICENSE, no implementation)",
+          "corust-agent-registry.json"
+        ],
+        "repositoryRedirect": "registry的https://github.com/Corust-ai/corust-agent-release当前由GitHub重定向至https://github.com/rustingai/corust-agent-release；本轮读取的是该同源发行仓库。"
+      },
+      "status": {
+        "list": {
+          "level": "unsupported",
+          "detail": "本机0.6.0与公开probe都不声明list；probe method_not_found。"
+        },
+        "load": {
+          "level": "unsupported",
+          "detail": "loadSession=false，本机与当日公开发行一致。"
+        },
+        "replay": {
+          "level": "unsupported-via-acp",
+          "detail": "无session/load入口，不能以CLI/其他产品历史替代。"
+        },
+        "coldPersistence": {
+          "level": "unknown-underlying-no-acp-restore",
+          "detail": "未公开服务存储/CLI历史实现；ACP无法冷恢复。"
+        },
+        "continue": {
+          "level": "in-process-only-unverified",
+          "detail": "普通session/prompt应有同进程上下文，但未认证与请求；无resume入口。"
+        },
+        "modelSwitch": {
+          "type": "U",
+          "detail": "公开源码仓库只有发行元数据；set_model被auth_required拦住，不能断言可成功切换。",
+          "set_config_option": "unknown",
+          "set_model": "auth_required",
+          "scope": "未知"
+        },
+        "authReuse": {
+          "level": "unknown",
+          "detail": "只见oauth_browser；未发现官方文档说明与独立CLI/IDE账号共用本机凭据。"
+        },
+        "authActions": {
+          "level": "declared",
+          "detail": "authenticate oauth_browser；标准query/logout未声明，公开repo无实现。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": false,
+          "sessionCapabilities": {},
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "oauth_browser",
+            "type": "agent",
+            "name": "Login via browser"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.6.0",
+        "agentInfoVersion": "0.1.0",
+        "capabilities": {
+          "loadSession": false,
+          "sessionList": false,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "method_not_found",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "auth_required"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/corust-agent/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/rustingai/corust-agent-release",
+        "https://github.com/rustingai/corust-agent-release/releases/tag/v0.6.0"
+      ],
+      "limitations": [
+        "发行标签v0.6.0 commit6222c2a；agentInfo内部0.1.0不能当包版本。",
+        "公开repo带GPL license不等于已提供实现源码；查了registry、release assets/说明、仓库内容与官网搜索，仍无方法/存储/凭据细节。"
+      ],
+      "farfoldMapping": [
+        "Amp之外另一项明确没有ACP历史恢复的发行。",
+        "模型/账号复用只能标未知，不能沿其他Rust/同品牌产品猜。"
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "launch": {
+        "registry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/darwin/arm64/agent-cli-package.tar.gz",
+              "cmd": "./dist-package/cursor-agent",
+              "args": [
+                "acp"
+              ]
+            },
+            "darwin-x86_64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/darwin/x64/agent-cli-package.tar.gz",
+              "cmd": "./dist-package/cursor-agent",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/linux/arm64/agent-cli-package.tar.gz",
+              "cmd": "./dist-package/cursor-agent",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-x86_64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/linux/x64/agent-cli-package.tar.gz",
+              "cmd": "./dist-package/cursor-agent",
+              "args": [
+                "acp"
+              ]
+            },
+            "windows-aarch64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/windows/arm64/agent-cli-package.zip",
+              "cmd": "./dist-package\\cursor-agent.cmd",
+              "args": [
+                "acp"
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://downloads.cursor.com/lab/2026.10.01-14929f9/windows/x64/agent-cli-package.zip",
+              "cmd": "./dist-package\\cursor-agent.cmd",
+              "args": [
+                "acp"
+              ]
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cursor/install-8Z7ZWI/dist-package/cursor-agent",
+          "args": [
+            "acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "2026.09.28",
+        "installedAgentInfo": null,
+        "registry": "2026.10.01",
+        "publicLatestChecked": "2026.10.01",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary-readable-bundle",
+        "repository": null,
+        "website": "https://cursor.com/docs/cli/acp",
+        "reviewedFiles": [
+          "cursor-installed-2026.09.28-snippets.txt",
+          "cursor-installed-2026.09.28-scope.txt",
+          "installed dist-package/3115.index.js line1 byte26322,29199,36382,37048,38907,40181"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "source-implemented",
+          "detail": "官方CLI本地历史列表与active sessions合并；cwd绝对路径过滤；拒绝非空pagination cursor。"
+        },
+        "load": {
+          "level": "source-implemented",
+          "detail": "resumeChatId=id读AgentStore，创建同id session并replayConversationHistory。"
+        },
+        "replay": {
+          "level": "source-implemented",
+          "detail": "loadSession明确调用正文回放；各块完整性未逐类核验/未真实回放。"
+        },
+        "coldPersistence": {
+          "level": "source-implemented",
+          "detail": "读取CLI持久agent store而非仅Map；源码支持新进程按id加载，真实冷恢复未测。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "后续prompt落到load出的session.handlePrompt。"
+        },
+        "modelSwitch": {
+          "type": "C",
+          "detail": "model configOptions+set_config已实现，旧set_model转调同setter。默认展示flatten variants；客户端parameterizedModelPicker元能力可显示参数。",
+          "set_config_option": "implemented",
+          "set_model": "implemented",
+          "scope": "关键：模型是同进程共享选择；set_config后syncSessionsToCurrentModel遍历sessions.values()更新所有已加载会话。Variant写acpConfigStore与shared configProvider。不是仅请求sessionId隔离。"
+        },
+        "authReuse": {
+          "level": "source-and-official-docs",
+          "detail": "ACP使用与agent login相同credentialManager，官方明确可预登录agent login、CURSOR_API_KEY或CURSOR_AUTH_TOKEN。Cursor IDE桌面凭据直接复用未证明。"
+        },
+        "authActions": {
+          "level": "source-and-docs",
+          "detail": "authenticate cursor_login先检查CLI现有登录，缺失才打开浏览器并保存同credentialManager。CLI有login/logout/status；该ACP类无标准logout/账号查询。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "cursor_login",
+            "type": "agent",
+            "name": "Cursor Login"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "2026.10.01",
+        "agentInfoVersion": null,
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "auth_required",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "invalid_params"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/cursor/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://cursor.com/docs/cli/acp",
+        "https://docs.cursor.com/en/cli/reference/parameters",
+        "https://downloads.cursor.com/lab/2026.10.01-14929f9/darwin/arm64/agent-cli-package.tar.gz"
+      ],
+      "limitations": [
+        "静态代码取本机2026.09.28；registry为2026.10.01-14929f9，未将新版声明覆盖旧版实现。",
+        "跨会话模型同步是源码事实，尚未运行多会话实验；不声称当前运行中的模型请求立刻改变。",
+        "load初始化也套共享当前model；不能默认保留历史会话最后模型。"
+      ],
+      "farfoldMapping": [
+        "C路线可用；FarFold会话级模型承诺需处理同Agent进程的共享model副作用，未验证前不得声称隔离。",
+        "恢复模型基线要显式确认，不能只保存每会话UI元数据。"
+      ]
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "launch": {
+        "registry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-apple-darwin.tar.gz",
+              "cmd": "./bin/devin",
+              "args": [
+                "acp"
+              ]
+            },
+            "darwin-x86_64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-apple-darwin.tar.gz",
+              "cmd": "./bin/devin",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-unknown-linux.tar.gz",
+              "cmd": "./bin/devin",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-x86_64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-unknown-linux.tar.gz",
+              "cmd": "./bin/devin",
+              "args": [
+                "acp"
+              ]
+            },
+            "windows-aarch64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-aarch64-pc-windows.zip",
+              "cmd": "./bin\\devin.exe",
+              "args": [
+                "acp"
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://static.devin.ai/cli/3000.11.3/devin-3000.11.3-x86_64-pc-windows.zip",
+              "cmd": "./bin\\devin.exe",
+              "args": [
+                "acp"
+              ]
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:devin/install-KtPXzS/bin/devin",
+          "args": [
+            "acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "3000.11.3",
+        "installedAgentInfo": {
+          "name": "affogato",
+          "title": "Devin Agent",
+          "version": "0.0.0-dev"
+        },
+        "registry": "3000.11.3",
+        "publicLatestChecked": "3000.11.3",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary",
+        "repository": "https://github.com/CognitionAI/devin-cli",
+        "website": "https://docs.devin.ai/cli",
+        "reviewedFiles": [
+          "devin-main/devin-cli-main/README.md (documentation-only repository)",
+          "公开registry与官方CLI/ACP文档；未读取或启动本机暂停程序"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "declared-and-public-probe",
+          "detail": "本机既有缓存声明list；公开3000.11.3 session/list成功。"
+        },
+        "load": {
+          "level": "declared",
+          "detail": "loadSession=true；官方CLI历史续用与ACP接入均有文档，但没有公开ACP实施源码。"
+        },
+        "replay": {
+          "level": "unknown",
+          "detail": "未公开session/load回放哪些正文/工具/附件内容，未测试。"
+        },
+        "coldPersistence": {
+          "level": "docs-partial",
+          "detail": "CLI有continue/resume/ls持久session；ACP相同id跨进程加载的边界未公开验证。"
+        },
+        "continue": {
+          "level": "declared-not-tested",
+          "detail": "ACP可加载旧会话声明，实际续答未测。"
+        },
+        "modelSwitch": {
+          "type": "U",
+          "detail": "官方Zed文档有模型选择，--model只指定新session默认；公开set_model probe无响应，无法确认C或L接口实现。",
+          "set_config_option": "unknown",
+          "set_model": "no_response",
+          "scope": "同会话切换与恢复后保持范围未知"
+        },
+        "authReuse": {
+          "level": "official-docs",
+          "detail": "devin acp读取WINDSURF_API_KEY，或复用devin auth login保存的CLI凭据；明确是CLI复用。"
+        },
+        "authActions": {
+          "level": "official-docs",
+          "detail": "browser/terminal两种authenticate；官方ACP命令/login、/logout、/status（或login-status），可被host认证能力门控；CLI auth logout移除本地凭据。标准协议logout未声明。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "delete": {},
+            "additionalDirectories": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "devin-browser",
+            "type": "agent",
+            "name": "Log in with browser"
+          },
+          {
+            "id": "devin-terminal-login",
+            "type": "terminal",
+            "name": "Log in with terminal"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "3000.11.3",
+        "agentInfoVersion": "0.0.0-dev",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent",
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "no_response",
+          "session/set_model": "no_response"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/devin/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.devin.ai/cli/acp/zed",
+        "https://docs.devin.ai/cli/reference/commands",
+        "https://docs.devin.ai/cli/enterprise/devin-auth",
+        "https://github.com/CognitionAI/devin-cli"
+      ],
+      "limitations": [
+        "仅公开资料，严格保留用户暂停边界；未操作本机Devin程序、账号、配置。",
+        "agentInfo 0.0.0-dev是内部标识，不覆盖包3000.11.3。",
+        "文档里的模型picker存在不能推出FarFold当前set_config兼容。"
+      ],
+      "farfoldMapping": [
+        "历史/模型能力保留声明与未知；未来只在新明确授权后逐家实测。",
+        "CLI账号复用有官方支持，不能据此声称IDE账户或账号切换已接通。"
+      ]
+    },
+    {
+      "id": "dimcode",
+      "name": "DimCode",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "dimcode@0.5.16",
+            "args": [
+              "acp"
+            ]
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dimcode/install-ZRn5lh/node_modules/dimcode/bin/dim.mjs",
+            "acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "0.5.16",
+        "installedAgentInfo": {
+          "name": "dimcode",
+          "title": "DimAgent",
+          "version": "0.5.16"
+        },
+        "registry": "0.5.16",
+        "publicLatestChecked": "0.5.16",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary-binary",
+        "repository": null,
+        "website": "https://dimcode.dev/docs/acp.html",
+        "reviewedFiles": [
+          "dimcode-npm/package/package.json and launcher/README (0.5.16)",
+          "dimcode-npm-meta.json"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "declared-and-public-probe",
+          "detail": "本机声明list，公开0.5.16 list成功。"
+        },
+        "load": {
+          "level": "declared",
+          "detail": "本机与公开0.5.16 loadSession=true。"
+        },
+        "replay": {
+          "level": "unknown",
+          "detail": "官网ACP页没有正文/工具回放契约；npm是二进制launcher，不含server实现。"
+        },
+        "coldPersistence": {
+          "level": "docs-partial",
+          "detail": "原CLI在~/.dimcode/v2保存项目会话并提供session list/show/export；ACP跨进程存储映射未公开。"
+        },
+        "continue": {
+          "level": "declared-not-tested",
+          "detail": "有resume/fork声明，公开probe被auth_required拦住；非真实续答。"
+        },
+        "modelSwitch": {
+          "type": "U",
+          "detail": "set_model probe resource_not_found提示路由存在，但缺有效session及实际实现；官网介绍模型/provider切换不能直接当ACP set_config支持。",
+          "set_config_option": "unknown",
+          "set_model": "resource_not_found-route-only",
+          "scope": "CLI显式说明resume传--provider/--model不会改写已有会话；ACP同会话setter范围仍未知。"
+        },
+        "authReuse": {
+          "level": "official-docs-inference",
+          "detail": "native dim acp使用同CLI provider配置/环境，官方终端认证dim auth login；可合理支持原CLI认证配置复用，但没有公开ACP存储层源码。"
+        },
+        "authActions": {
+          "level": "docs-and-declaration",
+          "detail": "terminal auth dimcode.terminal；CLI有auth login/logout/refresh/status；标准ACP账号查询/logout未声明，authenticate执行细节未公开。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "dimcode.terminal",
+            "type": "terminal",
+            "name": "DimAgent terminal auth"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.5.16",
+        "agentInfoVersion": "0.5.16",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "auth_required",
+          "session/resume": "auth_required",
+          "session/stop": "method_not_found",
+          "session/set_model": "resource_not_found"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dimcode/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://www.dimcode.dev/en/docs/acp/",
+        "https://www.dimcode.dev/en/docs/cli/",
+        "https://registry.npmjs.org/dimcode/0.5.16"
+      ],
+      "limitations": [
+        "本机/registry/npm均0.5.16；launcher只定位平台二进制，无法据此核正文回放。",
+        "ACP_STICKY_SESSION等官方环境说明不等于冷恢复证据，也未为FarFold添加环境开关。"
+      ],
+      "farfoldMapping": [
+        "历史可按协议声明接入，但正文恢复/模型线路需维持未知。",
+        "不能把CLI provider switch与FarFold会话内确认配置等同。"
+      ]
+    },
+    {
+      "id": "dirac",
+      "name": "Dirac",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "dirac-cli@0.5.17",
+            "args": [
+              "--acp"
+            ]
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+          "args": [
+            "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:dirac/install-vRKF11/node_modules/dirac-cli/dist/cli.mjs",
+            "--acp"
+          ]
+        }
+      },
+      "version": {
+        "installed": "0.5.17",
+        "installedAgentInfo": {
+          "name": "dirac",
+          "version": "0.5.17"
+        },
+        "registry": "0.5.17",
+        "publicLatestChecked": "0.5.17",
+        "sourceRevision": "tag v0.5.17"
+      },
+      "source": {
+        "kind": "first-party-native-open-source",
+        "repository": "https://github.com/dirac-run/dirac",
+        "website": "https://dirac.run",
+        "reviewedFiles": [
+          "dirac-v0.5.17/dirac-0.5.17/cli/src/acp/AcpAgent.ts:357-456",
+          "dirac-v0.5.17/dirac-0.5.17/cli/src/agent/DiracAgent.ts:1195,1346-1540,2246,2430",
+          "dirac-v0.5.17/dirac-0.5.17/cli/src/agent/AcpAuthenticationManager.ts:88-117"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "implementation-protocol-mismatch",
+          "detail": "源码有unstable_listSessions读持久历史，但initialize不声明list且官方精确0.5.17 probe method_not_found；不可算标准ACP已接通。"
+        },
+        "load": {
+          "level": "source-implemented",
+          "detail": "载入task-owned runtime config和task history；缺runtime snapshot的旧记录明确拒绝，cwd/worktree缺失会拒绝。"
+        },
+        "replay": {
+          "level": "source-implemented",
+          "detail": "AcpAgent.loadSession订阅后调用replayLoadedSessionHistory，读取ui_messages投影；非保证所有原始envelope完全还原。"
+        },
+        "coldPersistence": {
+          "level": "source-implemented-with-conditions",
+          "detail": "持久task history+runtime snapshot双条件；保留model/provider/mode/runtime，旧数据没有snapshot不能恢复。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "load出的task可继续prompt；单独session/resume虽声明且源码有方法，公开probe method_not_found，不能算线路成功。"
+        },
+        "modelSwitch": {
+          "type": "C",
+          "detail": "AcpAgent.setSessionConfigOption实际转入DiracAgent，支持model/provider/reasoning_effort/inference_speed/thinking_budget并commit runtime。",
+          "set_config_option": "implemented",
+          "set_model": "method_not_found",
+          "scope": "session runtime mutation serialized并持久化，下一prompt沿确认后的task配置。"
+        },
+        "authReuse": {
+          "level": "source-implemented",
+          "detail": "native CLI同provider配置与ChatGPT OAuth存储，非adapter账号；provider browser/ChatGPT OAuth/env_var/terminal依client capability生成。"
+        },
+        "authActions": {
+          "level": "source-implemented",
+          "detail": "authenticate委派provider setup/OAuth；标准logout及dev.dirac/auth.logout会取消流程并清ChatGPT OAuth credentials，不能理解为删除所有provider API设置；providers/list可查询provider连接状态。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "delete": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {
+            "logout": {}
+          }
+        },
+        "authMethods": []
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.5.17",
+        "agentInfoVersion": "0.5.17",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": false,
+          "sessionFork": false,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent",
+          "env_var",
+          "terminal"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "method_not_found",
+          "session/fork": "method_not_found",
+          "session/resume": "method_not_found",
+          "session/stop": "method_not_found",
+          "session/set_model": "method_not_found"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dirac/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/acp/AcpAgent.ts",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/agent/DiracAgent.ts",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/agent/AcpAuthenticationManager.ts"
+      ],
+      "limitations": [
+        "源码list/resume方法与当日发行协议结果冲突；可能SDK注册版本问题，尚未精确归因，不用源函数存在覆盖发行probe。",
+        "新模型源码路径明确，未真实model调用/账号操作。"
+      ],
+      "farfoldMapping": [
+        "C配置可接；标准list不应展示为已支持。",
+        "仅已知native id+完整runtime记录能load，不能承诺导入全部CLI旧历史。",
+        "logout scope须匹配OAuth，不能把退出当前认证等同清空所有服务。"
+      ]
+    },
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "launch": {
+        "registry": {
+          "npx": {
+            "package": "droid@0.233.0",
+            "args": [
+              "exec",
+              "--output-format",
+              "acp-daemon"
+            ],
+            "env": {
+              "DROID_DISABLE_AUTO_UPDATE": "true",
+              "FACTORY_DROID_AUTO_UPDATE_ENABLED": "false"
+            }
+          }
+        },
+        "installed": {
+          "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:factory-droid/install-EPGKAd/node_modules/droid/bin/droid",
+          "args": [
+            "exec",
+            "--output-format",
+            "acp-daemon"
+          ]
+        }
+      },
+      "version": {
+        "installed": "0.230.0",
+        "installedAgentInfo": {
+          "name": "@factory/cli",
+          "title": "Factory Droid (Daemon)",
+          "version": "0.230.0"
+        },
+        "registry": "0.233.0",
+        "publicLatestChecked": "0.233.0",
+        "sourceRevision": "发行包版本/构建号；无公开仓库commit可核"
+      },
+      "source": {
+        "kind": "first-party-native-cli-proprietary-readable-embedded-bundle",
+        "repository": null,
+        "website": "https://factory.ai/product/cli",
+        "reviewedFiles": [
+          "factory-installed-0.230.0-methods.txt (public executable embedded JS; byte155474732,155479011,155479700,155500392,155501595)",
+          "factory-installed-0.230.0-public-binary-snippets.txt",
+          "factory-npm/package launcher metadata0.233.0"
+        ]
+      },
+      "status": {
+        "list": {
+          "level": "source-implemented",
+          "detail": "getSessionListPage读取CLI持久列表，支持cwd/cursor分页；公开0.233.0 probe成功。"
+        },
+        "load": {
+          "level": "source-implemented",
+          "detail": "acp-daemon按sessionId启动/复用child，再发session/load；child sessionController读取本地保存session。"
+        },
+        "replay": {
+          "level": "source-implemented-partial",
+          "detail": "从getAllMessageEvents转换并回放user/assistant text、thinking、tool calls/results；跳过llm_only，单块发送失败catch日志，不能保证所有回放完整成功。"
+        },
+        "coldPersistence": {
+          "level": "source-implemented",
+          "detail": "sessionController从磁盘session与settings加载，恢复model/reasoning；缺记录拒绝。daemon每session child支持进程重建。"
+        },
+        "continue": {
+          "level": "source-implemented",
+          "detail": "daemon prompt路由对应child；resume可载入不回放，load回放。未真实续答。"
+        },
+        "modelSwitch": {
+          "type": "C",
+          "detail": "本机0.230.0 daemon转发set_config到对应child；child支持model/reasoning/autonomy并调用sessionController setter。精确静态证据：公开安装程序嵌入JS byte155482897的setSessionConfigOption模型分支执行 this.sessionController.setModel(t.value),L(),{}，即实际setter调用后返回空对象；摘录见group-commercial-sources/factory-installed-0.230.0-methods.txt。C入口存在，但当前FarFold不能由该响应确认并保存模型切换，不能称已可用。",
+          "set_config_option": "implemented",
+          "set_model": "implemented",
+          "scope": "registry启动acp-daemon给每会话独立child；不能把旧单controller acp路径与daemon混同。",
+          "farfoldCompatibility": "client-compatibility-gap: setter返回{}，当前typed响应/config_change确认路径要求响应含所请求模型；排队中的notification不能授权变化。未运行真实切换，模型是否已改变未知，须保护暂停。"
+        },
+        "authReuse": {
+          "level": "source-and-official-docs",
+          "detail": "native Droid从同CLI认证解析器读取现有令牌/FACTORY_API_KEY，已有可用认证会直接使用；未见adapter独立凭据。IDE插件账户存储不单独推断。"
+        },
+        "authActions": {
+          "level": "source-and-docs",
+          "detail": "authenticate device-pairing/API key；device flow必要时打开浏览器，已有凭据直接复用。CLI /login /logout /status；ACP标准logout未声明。"
+        }
+      },
+      "installedEvidence": {
+        "kind": "既有缓存 initialize + 本轮程序静态只读，未重新启动",
+        "capabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "device-pairing",
+            "type": "agent",
+            "name": "Login"
+          },
+          {
+            "id": "factory-api-key",
+            "type": "agent",
+            "name": "Factory API Key"
+          }
+        ]
+      },
+      "publicProtocolProbe": {
+        "registryVersion": "0.233.0",
+        "agentInfoVersion": "0.233.0",
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "authMethodTypes": [
+          "agent"
+        ],
+        "setModelSignal": false,
+        "methodResults": {
+          "session/list": "success",
+          "session/fork": "method_not_found",
+          "session/resume": "auth_required",
+          "session/stop": "method_not_found",
+          "session/set_model": "invalid_params"
+        },
+        "limitations": "官方隔离probe；虚构session/未认证/invalid_params只说明路由或门禁，不能证明有效会话恢复、正文完整或模型调用成功"
+      },
+      "evidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/factory-droid/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.factory.com/ide-integrations",
+        "https://docs.factory.ai/changelog/release-notes",
+        "https://docs.factory.com/cli/reference",
+        "https://registry.npmjs.org/droid/0.233.0"
+      ],
+      "limitations": [
+        "源码核本机0.230.0 public binary里的嵌入JS，只读提取，未执行；latest npm/registry0.233.0只核入口与官方probe。",
+        "官网示例output-format acp与registry acp-daemon不同；结论按实际daemon及其child链。",
+        "子进程setSessionConfigOption调用setModel后返回{}；当前FarFold不能据此确认保存，也不能由排队notification授权变化。实际模型是否已改变未测试，须保留保护暂停。"
+      ],
+      "farfoldMapping": [
+        "C入口存在，但当前FarFold不能由setter返回的空对象确认并保存模型切换；属于客户端兼容缺口，不能称已可用。当前typed响应/config_change要求响应含所请求模型，排队中的notification不能授权变化。未运行真实切换，模型是否实际已改变结果未知，须保护暂停。",
+        "按官方列表/加载可接历史，但真实重启、回放失败处理仍未验。"
+      ]
+    }
+  ]
+}

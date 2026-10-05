@@ -135,7 +135,7 @@ fn installation_ignores_explicit_uv_config_but_keeps_home_and_existing_environme
         "install",
         "--python",
         "/owned/agent/venv/bin/python",
-        "minion-code==0.1.44",
+        "example-agent==0.1.44",
     ]);
     let changes = command
         .get_envs()
@@ -164,7 +164,7 @@ fn installation_ignores_explicit_uv_config_but_keeps_home_and_existing_environme
             "install",
             "--python",
             "/owned/agent/venv/bin/python",
-            "minion-code==0.1.44"
+            "example-agent==0.1.44"
         ]
     );
     assert_eq!(env["UV_CONFIG_FILE"], "/users/existing/redirect.toml");
@@ -287,29 +287,31 @@ fn unrelated_large_metadata_and_target_description_do_not_block_official_console
 fn wrong_version_or_undeclared_console_script_cannot_become_selected_launch_target() {
     let data = tempfile::tempdir().unwrap();
     let venv = data.path().join("venv");
-    package_fixture(&venv, "minion-code", "0.1.43");
+    package_fixture(&venv, "example-agent", "0.1.43");
     let job = lease("uv-agent-console-version");
     assert!(
         console_script(
             &venv,
-            &UvxPackage::parse("minion-code@0.1.44").unwrap(),
+            &UvxPackage::parse("example-agent@0.1.44").unwrap(),
             &job.job
         )
         .is_err()
     );
-    let script = package_fixture(&venv, "minion-code", "0.1.44");
-    let info = venv.join("lib/python3.12/site-packages/minion_code-0.1.44.dist-info");
+    let script = package_fixture(&venv, "example-agent", "0.1.44");
+    let info = venv.join("lib/python3.12/site-packages/example_agent-0.1.44.dist-info");
     std::fs::write(
         info.join("entry_points.txt"),
         "[console_scripts]\nother = package.cli:run\n",
     )
     .unwrap();
-    std::fs::remove_dir_all(venv.join("lib/python3.12/site-packages/minion_code-0.1.43.dist-info"))
-        .unwrap();
+    std::fs::remove_dir_all(
+        venv.join("lib/python3.12/site-packages/example_agent-0.1.43.dist-info"),
+    )
+    .unwrap();
     assert!(
         console_script(
             &venv,
-            &UvxPackage::parse("minion-code@0.1.44").unwrap(),
+            &UvxPackage::parse("example-agent@0.1.44").unwrap(),
             &job.job
         )
         .is_err()
@@ -321,9 +323,9 @@ fn wrong_version_or_undeclared_console_script_cannot_become_selected_launch_targ
 fn console_script_cannot_escape_venv_or_launch_without_executable_permissions() {
     let data = tempfile::tempdir().unwrap();
     let venv = data.path().join("venv");
-    let script = package_fixture(&venv, "minion-code", "0.1.44");
+    let script = package_fixture(&venv, "example-agent", "0.1.44");
     let job = lease("uv-agent-console-boundary");
-    let package = UvxPackage::parse("minion-code@0.1.44").unwrap();
+    let package = UvxPackage::parse("example-agent@0.1.44").unwrap();
     std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o644)).unwrap();
     assert!(console_script(&venv, &package, &job.job).is_err());
     std::fs::remove_file(&script).unwrap();

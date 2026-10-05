@@ -1,0 +1,59 @@
+{
+  "startup": {
+    "windowStart": 1790992260523,
+    "windowEnd": 1790992388773,
+    "outgoingTotal": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "outgoingSincePreviousCheckpoint": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "rejectedRecords": 0
+  },
+  "connected": {
+    "windowStart": 1790992260523,
+    "windowEnd": 1790992509313,
+    "outgoingTotal": {
+      "initialize": 2,
+      "session/new": 1
+    },
+    "outgoingSincePreviousCheckpoint": {
+      "initialize": 1
+    },
+    "rejectedRecords": 0
+  },
+  "first-read": {
+    "windowStart": 1790992260523,
+    "windowEnd": 1790992635676,
+    "outgoingTotal": {
+      "initialize": 2,
+      "session/new": 2
+    },
+    "outgoingSincePreviousCheckpoint": {
+      "session/new": 1
+    },
+    "rejectedRecords": 0
+  },
+  "reread": {
+    "windowStart": 1790992260523,
+    "windowEnd": 1790992754069,
+    "outgoingTotal": {
+      "initialize": 2,
+      "session/new": 3
+    },
+    "outgoingSincePreviousCheckpoint": {
+      "session/new": 1
+    },
+    "rejectedRecords": 0
+  },
+  "readingVerification": {
+    "firstReadNewDrafts": 1,
+    "rereadNewDrafts": 1,
+    "setConfigRequests": 0,
+    "sentPrompts": 0,
+    "sentAuthenticate": 0,
+    "noModelSelectionOrAcceptCurrentOrSaveOrTestClicked": true
+  }
+}

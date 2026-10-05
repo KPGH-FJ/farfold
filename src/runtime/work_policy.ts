@@ -33,79 +33,111 @@ export function startWorkEvents(): () => void {
   };
 }
 export function useWorkPolicy(cwd: string | null) {
-  const [state, setState] = useState<WorkSnapshot | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const path = useRef(cwd);
-  path.current = cwd;
-  const canonical = useRef<string | null>(null);
   const [revision, setRevision] = useState(0);
+  type Owner = { requestedCwd: string | null; revision: number };
+  const owner = useRef<Owner>({ requestedCwd: cwd, revision });
+  if (owner.current.requestedCwd !== cwd || owner.current.revision !== revision)
+    owner.current = { requestedCwd: cwd, revision };
+  const currentOwner = owner.current;
+  const [snapshot, setSnapshot] = useState<{
+    owner: Owner;
+    value: WorkSnapshot;
+  } | null>(null);
+  const [failure, setFailure] = useState<{
+    owner: Owner;
+    message: string;
+  } | null>(null);
+  const [savingFor, setSavingFor] = useState<Owner | null>(null);
+  const canonical = useRef<{ owner: Owner; cwd: string } | null>(null);
   useEffect(() => {
     let active = true;
+    const current = () => active && owner.current === currentOwner;
     const readSequence = changeSequence;
-    setState(null);
-    setError(null);
+    setSnapshot(null);
+    setFailure(null);
     canonical.current = null;
     const receive = (value: WorkSnapshot) => {
-      if (active && value.cwd === canonical.current) setState(value);
+      if (
+        current() &&
+        canonical.current?.owner === currentOwner &&
+        value.cwd === canonical.current.cwd
+      )
+        setSnapshot({ owner: currentOwner, value });
     };
     subscribers.add(receive);
     if (cwd)
       void invoke<WorkSnapshot>("agent_work_get", { cwd })
         .then((value) => {
-          if (active) {
-            canonical.current = value.cwd;
-            const newer = changes.get(value.cwd);
-            const current =
-              newer && newer.sequence > readSequence ? newer.value : value;
-            setState(current);
-            publish(current);
-          }
+          if (!current()) return;
+          canonical.current = { owner: currentOwner, cwd: value.cwd };
+          const newer = changes.get(value.cwd);
+          const latest =
+            newer && newer.sequence > readSequence ? newer.value : value;
+          setSnapshot({ owner: currentOwner, value: latest });
+          publish(latest);
         })
         .catch(() => {
-          if (active) setError(STRINGS.repair.workLoadFailed);
+          if (current())
+            setFailure({
+              owner: currentOwner,
+              message: STRINGS.repair.workLoadFailed,
+            });
         });
     return () => {
       active = false;
       subscribers.delete(receive);
     };
-  }, [cwd, revision]);
-  const pending = useRef(false);
+  }, [currentOwner]);
+  const pending = useRef<Owner | null>(null);
   const set = async (agentId: string | null, enabled: boolean) => {
-    if (!cwd || pending.current) return false;
-    const requested = cwd;
-    pending.current = true;
-    setSaving(true);
-    setError(null);
+    if (!cwd || pending.current || owner.current !== currentOwner) return false;
+    pending.current = currentOwner;
+    setSavingFor(currentOwner);
+    setFailure(null);
     try {
       const next = await invoke<WorkSnapshot>("agent_work_set", {
         agentId,
         cwd,
         enabled,
       });
+      // A saved rule still updates its real location, even after navigation.
       changed(next);
-      if (path.current === requested) setState(next);
+      if (owner.current === currentOwner) {
+        canonical.current = { owner: currentOwner, cwd: next.cwd };
+        setSnapshot({ owner: currentOwner, value: next });
+      }
       return true;
     } catch {
-      if (path.current === requested) setError(STRINGS.repair.workSaveFailed);
+      if (owner.current === currentOwner)
+        setFailure({
+          owner: currentOwner,
+          message: STRINGS.repair.workSaveFailed,
+        });
       return false;
     } finally {
-      pending.current = false;
-      setSaving(false);
+      pending.current = null;
+      setSavingFor((value) => (value === currentOwner ? null : value));
     }
   };
+  // React effects run after render. A new input must never expose the old
+  // location's canonical path or sending policy during that first render.
+  const state = snapshot?.owner === currentOwner ? snapshot.value : null;
   return {
     ready: state !== null,
-    error,
-    saving,
+    error: failure?.owner === currentOwner ? failure.message : null,
+    saving: savingFor === currentOwner,
     cwd: state?.cwd,
     locationEnabled: state?.locationEnabled ?? undefined,
     legacyPaused:
       state !== null && Object.values(state.enabled).some((value) => !value),
     enabled: (id: string) =>
-      state !== null && (state.locationEnabled ?? state.enabled[id] ?? true),
+      owner.current === currentOwner &&
+      state !== null &&
+      (state.locationEnabled ?? state.enabled[id] ?? true),
     set,
     setLocation: (enabled: boolean) => set(null, enabled),
-    retry: () => setRevision((v) => v + 1),
+    retry: () => {
+      if (owner.current === currentOwner) setRevision((v) => v + 1);
+    },
   };
 }

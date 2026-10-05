@@ -35,8 +35,16 @@ const h = vi.hoisted(() => ({
   >(),
   open: vi.fn(),
   clearDraft: vi.fn(),
-  index: [] as { agentId: string }[],
   reconnect: vi.fn(),
+  index: [] as { agentId: string }[],
+  prepared: new Set(["A", "B"]),
+  selections: new Map<
+    string,
+    {
+      service: null | { id: string; model: string; revision: string };
+      config: Record<string, unknown>;
+    }
+  >(),
   cards: ["A", "B"].map((id) => ({ id, name: id, status: "connected" })),
 }));
 vi.mock("react", async (original) => ({
@@ -87,6 +95,16 @@ vi.mock("./runtime/agents", () => ({
 vi.mock("./runtime/theme", () => ({
   useThemePreference: () => ["system", vi.fn(), "light"],
 }));
+vi.mock("./runtime/setup_storage", () => ({
+  useSetupStorage: () => ({}),
+  setupStorage: {
+    completed: (id: string) => h.prepared.has(id),
+    confirmedSelection: (id: string) =>
+      h.prepared.has(id)
+        ? (h.selections.get(id) ?? { service: null, config: {} })
+        : undefined,
+  },
+}));
 vi.mock("./runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 vi.mock("./runtime/drafts", () => ({
   composerDrafts: { read: () => h.draft, clear: h.clearDraft },
@@ -98,6 +116,8 @@ vi.mock("./runtime/collections", async (original) => ({
 }));
 vi.mock("./runtime/sessions", () => ({
   threads: {
+    subscribe: () => () => {},
+    getSnapshot: () => ({ index: h.index }),
     thread: (key: string) => h.threads.get(key),
     refreshIndex: vi.fn(async () => {}),
     open: h.open,
@@ -165,8 +185,14 @@ import { observeAuthentication } from "./runtime/authentication";
 import { freshThreadState } from "./runtime/session_projection";
 import { threads } from "./runtime/sessions";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
+import { LIBRARY } from "./runtime/library_strings";
 import { preparationFor } from "./runtime/agent_preparation";
 import { requireReadableHistory } from "./runtime/session_recovery";
+import {
+  allowAutomaticConnection,
+  isAutomaticConnectionAllowed,
+  pauseAutomaticConnection,
+} from "./runtime/connection_intent";
 
 type Element = ReactElement<Record<string, unknown>>;
 function render() {
@@ -222,13 +248,18 @@ function call(name: string, event: string, ...args: unknown[]) {
   (component(name)[event] as (...args: unknown[]) => void)(...args);
 }
 beforeEach(async () => {
+  allowAutomaticConnection("A");
+  allowAutomaticConnection("B");
+  h.prepared = new Set(["A", "B"]);
+  h.selections.clear();
+  h.cards = ["A", "B"].map((id) => ({ id, name: id, status: "connected" }));
   h.slots = [];
   h.effects = [];
   h.pending = [];
   h.open.mockReset();
   h.clearDraft.mockReset();
-  h.index = [];
   h.reconnect.mockReset();
+  h.index = [];
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
   Object.assign(h.choice, {
@@ -323,6 +354,95 @@ function pendingHistory(outcome: "success" | "empty") {
     },
   };
 }
+
+it("keeps saved offline Agents in the sidebar and admits history independently of new-conversation readiness", () => {
+  h.prepared.delete("A");
+  expect(component("Sidebar").agents).toEqual([h.cards[1]]);
+  expect(component("ConversationLibrary").agents).toEqual(h.cards);
+  h.cards[1].status = "installed";
+  expect(component("Sidebar").agents).toEqual([h.cards[1]]);
+  h.index = [{ agentId: "A" }];
+  expect(component("Sidebar").agents).toEqual(h.cards);
+  call("Sidebar", "onExplore");
+  expect((component("AgentHub").agents as { cards: unknown[] }).cards).toEqual(
+    h.cards,
+  );
+});
+
+it("does not replace a draft with an Agent whose setup is no longer complete", () => {
+  const original = structuredClone(h.choice);
+  call("Sidebar", "onExplore");
+  const start = component("AgentHub").onStart as (id: string) => void;
+  h.prepared.delete("B");
+  render();
+  start("B");
+  expect(h.choice).toEqual(original);
+  expect(h.clearDraft).not.toHaveBeenCalled();
+  expect(component("EmptyState").initialAgentId).not.toBe("B");
+});
+
+it("keeps saved Agent navigation visible during an authentication blocker", () => {
+  const service = { id: "source", model: "one", revision: "r1" };
+  h.selections.set("A", { service, config: { model: "one" } });
+  observeAuthentication("A", "/check", "AUTH_REQUIRED");
+  expect(component("Sidebar").agents).toEqual(h.cards);
+  observeAuthentication("A", "/check", undefined);
+  observeAuthentication(
+    "A",
+    "/check",
+    "AUTH_REQUIRED",
+    JSON.stringify(service),
+  );
+  expect(component("Sidebar").agents).toEqual(h.cards);
+  expect(component("ConversationLibrary").agents).toEqual(h.cards);
+  observeAuthentication("A", "/check", undefined, JSON.stringify(service));
+  expect(component("Sidebar").agents).toEqual(h.cards);
+});
+
+it("allows an explicit history open after manual disconnect and requests the original conversation identity", async () => {
+  pauseAutomaticConnection("A");
+  const history = pendingHistory("success");
+  history.open();
+  expect(isAutomaticConnectionAllowed("A")).toBe(true);
+  expect(h.open).toHaveBeenCalledWith({
+    agentId: "A",
+    cwd: "/alias",
+    nativeSessionId: "history",
+  });
+  await history.complete();
+  expect(component("ThreadPage").viewKey).toBe(history.canonical);
+  expect(h.draft.text).toBe("OWN-ORIGINAL-DRAFT");
+});
+
+it("removes a retired directory entry from the sidebar while keeping its historical conversation accessible", async () => {
+  const retired = Object.assign(h.cards[0], {
+    source: "registry",
+    firstBatchVisible: false,
+  });
+  const custom = Object.assign(
+    { id: "custom", name: "Custom", status: "connected" },
+    { source: "custom", custom: true, firstBatchVisible: false },
+  );
+  const discovered = Object.assign(
+    { id: "local", name: "Local", status: "connected" },
+    { source: "discovered", firstBatchVisible: false },
+  );
+  h.cards.push(custom, discovered);
+  h.prepared.add("custom");
+  h.prepared.add("local");
+  expect(component("Sidebar").agents).toEqual([h.cards[1], custom, discovered]);
+  expect(component("ConversationLibrary").agents).toContain(retired);
+  const originalDraft = h.draft;
+  const originalChoice = structuredClone(h.choice);
+  const history = pendingHistory("success");
+  history.open();
+  await history.complete();
+  expect(component("ThreadPage").viewKey).toBe(history.canonical);
+  expect(component("ThreadPage").active).toBe(true);
+  expect(h.draft).toBe(originalDraft);
+  expect(h.choice).toEqual(originalChoice);
+  expect(h.cards).toContain(retired);
+});
 
 it.each(["success", "empty"] as const)(
   "follows the exact canonical key from a cold history open with %s outcome",
@@ -670,6 +790,71 @@ it("opens My Agents from settings and returns to the exact settings tab without 
   expect(h.open).not.toHaveBeenCalled();
 });
 
+it.each(["explore", "added"])(
+  "preserves the %s list and local management entry across an API settings round trip",
+  (origin) => {
+    const originalDraft = h.draft;
+    const originalChoice = structuredClone(h.choice);
+    call("Sidebar", "onSettings");
+    call("SettingsPage", "onTabChange", "keys");
+    if (origin === "explore") call("Sidebar", "onExplore");
+    else call("SettingsPage", "onOpenAgents");
+    expect(component("AgentHub").initialAgentId).toBe(null);
+    // A directory's outer origin must not make its local settings close the directory.
+    expect(component("AgentHub").returnAfterPreparation).toBeFalsy();
+    const surface = {
+      selected: "A",
+      detail: null,
+      view: origin === "explore" ? "discover" : "added",
+      query: "A",
+      source: "all",
+      availability: "all",
+      intent: "manage",
+    };
+    const context = component("AgentHub").preparationContext;
+    call("AgentHub", "onStateChange", surface);
+    call("AgentHub", "onOpenApi");
+    expect(component("SettingsPage").active).toBe(true);
+    call("SettingsPage", "onReturn");
+    expect(component("AgentHub").active).toBe(true);
+    expect(component("AgentHub").initialAgentId).toBe(null);
+    expect(component("AgentHub").restoredState).toEqual(surface);
+    expect(component("AgentHub").preparationContext).toEqual(context);
+    expect(component("AgentHub").returnAfterPreparation).toBeFalsy();
+    // Only the directory's own back action consumes its outer settings origin.
+    call("AgentHub", "onReturn");
+    expect(component("SettingsPage").active).toBe(true);
+    expect(component("SettingsPage").tab).toBe("keys");
+    expect(h.draft).toBe(originalDraft);
+    expect(h.choice).toEqual(originalChoice);
+    expect(h.open).not.toHaveBeenCalled();
+  },
+);
+
+it("keeps a direct Agent settings entry distinct from a directory selection across API settings", () => {
+  call("Sidebar", "onSettings");
+  call("SettingsPage", "onTabChange", "general");
+  call("SettingsPage", "onManageAgent", "A");
+  const surface = {
+    selected: "A",
+    detail: null,
+    view: "added",
+    query: "",
+    source: "all",
+    availability: "all",
+    intent: "manage",
+  };
+  call("AgentHub", "onStateChange", surface);
+  call("AgentHub", "onOpenApi");
+  call("SettingsPage", "onReturn");
+  expect(component("AgentHub").initialAgentId).toBe("A");
+  expect(component("AgentHub").initialIntent).toBe("manage");
+  expect(component("AgentHub").restoredState).toEqual(surface);
+  call("AgentHub", "onReturn");
+  expect(component("SettingsPage").active).toBe(true);
+  expect(component("SettingsPage").tab).toBe("general");
+});
+
 it("opens custom preparation in the directory without detouring through settings", () => {
   call("Sidebar", "onExplore");
   call("AgentHub", "onCustom");
@@ -865,6 +1050,41 @@ it("keeps a separate unsent draft behind confirmation when discovery explicitly 
   expect(h.choice.agentId).toBe("A");
   expect(h.threads.get("old-A")).toEqual(original);
 });
+
+it.each(["before-start", "before-confirm"] as const)(
+  "preserves the user's draft if a requested Agent leaves the current directory %s",
+  (stage) => {
+    const originalDraft = h.draft;
+    const originalChoice = structuredClone(h.choice);
+    call("Sidebar", "onLibrary", { kind: "all" });
+    call("ConversationLibrary", "onOpen", {
+      id: "old-A",
+      agentId: "A",
+      cwd: "/old-A",
+      nativeSessionId: "old-A",
+    });
+    call("Sidebar", "onExplore");
+    const start = component("AgentHub").onStart as (...args: unknown[]) => void;
+    const args = ["B", { service: null, config: {} }, "new-conversation"];
+    let confirm: (() => void) | undefined;
+    if (stage === "before-confirm") {
+      start(...args);
+      confirm = render().find(
+        (node) =>
+          node.type === "button" && node.props.children === LIBRARY.clearDraft,
+      )!.props.onClick as () => void;
+    }
+    Object.assign(h.cards[1], { source: "registry", firstBatchVisible: false });
+    render();
+    if (confirm) confirm();
+    else start(...args);
+    expect(h.clearDraft).not.toHaveBeenCalled();
+    expect(h.draft).toBe(originalDraft);
+    expect(h.choice).toEqual(originalChoice);
+    expect(component("EmptyState").initialAgentId).not.toBe("B");
+    expect(h.open).not.toHaveBeenCalled();
+  },
+);
 
 it.each([
   ["authentication", "account"],

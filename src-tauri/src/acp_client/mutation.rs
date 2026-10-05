@@ -7,19 +7,40 @@ use tokio::sync::oneshot;
 use super::{lifecycle::OperationLease, operations::Operation};
 
 pub(crate) enum Kind {
-    Config { permission_value: Option<Value> },
+    Restore {
+        plan: Box<super::pump::restore_config::Plan>,
+    },
+    Config {
+        permission_value: Option<Value>,
+        choice: Option<super::model_guard::Choice>,
+        prior_guard: Option<Box<super::model_guard::ModelGuard>>,
+        config_store: Option<Box<super::model_guard::ConfigStore>>,
+    },
     Mode,
     Close,
     Delete,
 }
 
 pub(crate) enum Reply {
+    Open(oneshot::Sender<Result<super::pump::restore_config::OpenState, String>>),
     Config(oneshot::Sender<Result<Value, String>>),
     Unit(oneshot::Sender<Result<(), String>>),
 }
 impl Reply {
+    fn is_closed(&self) -> bool {
+        match self {
+            Self::Open(reply) => reply.is_closed(),
+            Self::Config(reply) => reply.is_closed(),
+            Self::Unit(reply) => reply.is_closed(),
+        }
+    }
     pub fn send(self, value: Result<Value, String>) {
         match self {
+            Self::Open(reply) => {
+                let _ = reply.send(Err(value
+                    .err()
+                    .unwrap_or_else(|| "恢复结果尚未确认，请重新检查此对话".into())));
+            }
             Self::Config(reply) => {
                 let _ = reply.send(value);
             }
@@ -30,6 +51,7 @@ impl Reply {
     }
     async fn closed(&mut self) {
         match self {
+            Self::Open(reply) => reply.closed().await,
             Self::Config(reply) => reply.closed().await,
             Self::Unit(reply) => reply.closed().await,
         }
@@ -46,6 +68,14 @@ pub(crate) struct Mutation {
     started: bool,
 }
 impl Mutation {
+    pub(crate) fn awaiting_reply(&self) -> bool {
+        self.operation.interested()
+            && tokio::time::Instant::now() < self.deadline
+            && self.reply.as_ref().is_some_and(|reply| !reply.is_closed())
+    }
+    pub(crate) fn started(&self) -> bool {
+        self.started
+    }
     pub(crate) fn finish(mut self, outcome: Result<Value, String>) {
         let reply = self.reply.take();
         // A waiting caller may immediately request an account operation.
@@ -54,6 +84,24 @@ impl Mutation {
         if let Some(reply) = reply {
             reply.send(outcome);
         }
+    }
+    pub(crate) fn finish_open(
+        mut self,
+        outcome: Result<super::pump::restore_config::OpenState, String>,
+    ) {
+        let reply = self.reply.take();
+        drop(self);
+        if let Some(Reply::Open(reply)) = reply {
+            let _ = reply.send(outcome);
+        }
+    }
+    pub(crate) fn continue_request(
+        mut self,
+        request: impl Future<Output = Result<Value, String>> + Send + 'static,
+    ) -> Self {
+        self.request = Box::pin(request);
+        self.started = false;
+        self
     }
     pub fn new(
         kind: Kind,
@@ -79,11 +127,20 @@ impl Mutation {
         let Some(reply) = &mut self.reply else {
             return Some(self.request.as_mut().await);
         };
-        tokio::select! {
-            biased;
-            _ = reply.closed() => {}
-            _ = tokio::time::sleep_until(self.deadline) => {}
-            result = std::future::poll_fn(|cx| { self.started = true; self.request.as_mut().poll(cx) }) => return Some(result),
+        let operation = self.operation.clone();
+        // A newly registered timer can initially return Pending even when its
+        // deadline has passed. Never give a fresh request its first poll then.
+        if !reply.is_closed()
+            && operation.interested()
+            && tokio::time::Instant::now() < self.deadline
+        {
+            tokio::select! {
+                biased;
+                _ = reply.closed() => {}
+                _ = operation.cancelled() => {}
+                _ = tokio::time::sleep_until(self.deadline) => {}
+                result = std::future::poll_fn(|cx| { self.started = true; self.request.as_mut().poll(cx) }) => return Some(result),
+            }
         }
         if !self.started {
             return Some(Err("操作未发送，请重试".into()));
@@ -98,6 +155,8 @@ impl Mutation {
     }
 }
 
+#[cfg(test)]
+mod restore_tests;
 #[cfg(test)]
 mod tests;
 

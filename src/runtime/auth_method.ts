@@ -1,5 +1,6 @@
 import type { AuthMethodInfo } from "./agents";
 import { AUTH_ACTIVITY_STRINGS as S } from "./auth_strings";
+import { METHOD_API_KEY_STRINGS as K } from "./method_api_key_strings";
 
 type DeclaredMethod = Pick<AuthMethodInfo, "kind"> &
   Partial<Pick<AuthMethodInfo, "unavailableReason">>;
@@ -21,7 +22,7 @@ export function authMethodUnavailable(method: DeclaredMethod) {
 }
 
 type NamedMethod = Pick<AuthMethodInfo, "id" | "name" | "kind"> &
-  Partial<Pick<AuthMethodInfo, "purpose">>;
+  Partial<Pick<AuthMethodInfo, "purpose" | "apiKeyProvider">>;
 const visibleName = (name: string) => name.trim().replace(/\s+/g, " ");
 
 /** A display label never selects a route or changes the public method ID. */
@@ -41,7 +42,9 @@ export function authMethodLabel(
           ? S.methodSetup
           : S.methodTerminal
         : method.kind === "api-key"
-          ? S.methodApi
+          ? method.apiKeyProvider
+            ? K.methodLabel
+            : S.methodApi
           : method.kind === "environment"
             ? S.methodEnvironment
             : S.methodUnsupported;

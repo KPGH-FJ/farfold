@@ -1,0 +1,14 @@
+{
+  "atUtc": "2026-10-03T06:27:41.381317+00:00",
+  "formalFilesMatch": true,
+  "formalFileCount": 5,
+  "sourceInputsUnchanged": true,
+  "sourceInputCount": 542,
+  "signatureValid": true,
+  "iconMatchesUserArtwork": true,
+  "duplicateBundleRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalAppPreserved": true,
+  "dataPreservedDuringReplacement": true,
+  "excludedHistoryCleanupExecuted": false,
+  "appLaunchedByTask": false
+}

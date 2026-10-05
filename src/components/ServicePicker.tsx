@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   listCredentials,
   getServiceCapabilities,
@@ -9,6 +9,8 @@ import {
 } from "../runtime/credentials";
 import { STRINGS } from "../runtime/strings";
 import { AGENT_SETUP_STRINGS as S } from "../runtime/agent_setup_strings";
+import { apiConfigurationState } from "../runtime/service_capability";
+import { R5_SERVICE_STRINGS as R } from "../runtime/r5_service_strings";
 
 export type ServiceChoice = ServiceSelection & { revision: string };
 export interface ServicePickerData {
@@ -16,6 +18,20 @@ export interface ServicePickerData {
   capability: ServiceCapability | null;
   error: boolean;
   onRetry: () => void;
+}
+
+export function availableServices(
+  items: Credential[],
+  capability: ServiceCapability | null,
+): Credential[] {
+  return items.filter(
+    (item) =>
+      !item.deleting &&
+      item.complete &&
+      !!item.revision &&
+      (capability?.apiTypes ?? []).includes(item.apiType) &&
+      item.models.length > 0,
+  );
 }
 
 /** Select before creating a draft. Model services never reconfigure a live task. */
@@ -26,6 +42,7 @@ export function ServicePicker({
   data,
   disabled = false,
   emptyLabel = STRINGS.service.existing,
+  mode = "model",
 }: {
   agentId: string;
   value: ServiceChoice | null;
@@ -33,19 +50,25 @@ export function ServicePicker({
   data?: ServicePickerData;
   disabled?: boolean;
   emptyLabel?: string;
+  /** The service step confirms identity only; the model step completes it. */
+  mode?: "service" | "model";
 }) {
   const selectId = useId();
   const [loadedItems, setItems] = useState<Credential[]>([]);
-  const [loadedFormats, setFormats] = useState<string[]>([]);
+  const [loadedCapability, setCapability] = useState<{
+    agentId: string;
+    value: ServiceCapability;
+  } | null>(null);
   const [loadError, setError] = useState(false);
-  const [loadedReason, setUnavailableReason] = useState<string | null>(null);
   const [revision, refresh] = useState(0);
   const items = data?.items ?? loadedItems;
-  const formats = data ? (data.capability?.apiTypes ?? []) : loadedFormats;
+  const capability = data
+    ? data.capability
+    : loadedCapability?.agentId === agentId
+      ? loadedCapability.value
+      : null;
+  const apiState = apiConfigurationState(capability);
   const error = data?.error ?? loadError;
-  const unavailableReason = data
-    ? data.capability?.unavailableReason
-    : loadedReason;
   useEffect(
     () =>
       data
@@ -58,14 +81,12 @@ export function ServicePicker({
     let active = true;
     setError(false);
     setItems([]);
-    setFormats([]);
-    setUnavailableReason(null);
+    setCapability(null);
     void Promise.all([listCredentials(), getServiceCapabilities(agentId)])
       .then(([records, capability]) => {
         if (!active) return;
         setItems(records);
-        setFormats(capability.apiTypes);
-        setUnavailableReason(capability.unavailableReason);
+        setCapability({ agentId, value: capability });
       })
       .catch(() => {
         if (active) setError(true);
@@ -74,14 +95,11 @@ export function ServicePicker({
       active = false;
     };
   }, [agentId, revision, !!data]);
-  const choices = items.filter(
-    (item) =>
-      !item.deleting &&
-      item.complete &&
-      formats.includes(item.apiType) &&
-      item.models.length > 0,
-  );
-  const key = (id: string, model: string) => JSON.stringify([id, model]);
+  const choices = availableServices(items, capability);
+  const key = (item: Credential, model: string) =>
+    mode === "service"
+      ? JSON.stringify(["service", item.id, item.revision])
+      : JSON.stringify([item.id, model]);
   const current = value && items.find((item) => item.id === value.id);
   const changed = !!current && current.revision !== value?.revision;
   const selectable =
@@ -90,13 +108,24 @@ export function ServicePicker({
       (item) =>
         item.id === value.id &&
         item.revision === value.revision &&
-        item.models.includes(value.model),
+        (mode === "service" || item.models.includes(value.model)),
     );
   const selected = value
     ? selectable
-      ? key(value.id, value.model)
+      ? key(current!, value.model)
       : JSON.stringify(["unavailable", value.id, value.model, value.revision])
     : "";
+  const blocked = disabled || error || apiState !== "supported";
+  const context = JSON.stringify([
+    agentId,
+    mode,
+    blocked,
+    value,
+    choices.map((item) => [item.id, item.revision, item.models]),
+  ]);
+  const currentContext = useRef(context);
+  currentContext.current = context;
+  if (apiState === "unsupported") return null;
   return (
     <div className="service-picker">
       <label className="pick-label" htmlFor={selectId}>
@@ -106,35 +135,48 @@ export function ServicePicker({
         id={selectId}
         className="custom-input"
         value={selected}
-        disabled={disabled}
+        disabled={blocked}
         onChange={(event) => {
+          if (blocked || currentContext.current !== context) return;
           if (!event.target.value) {
             onChange(null);
             return;
           }
           const item = choices.find((c) =>
-            c.models.some((m) => key(c.id, m) === event.target.value),
+            mode === "service"
+              ? key(c, "") === event.target.value
+              : c.models.some((m) => key(c, m) === event.target.value),
           );
-          const model = item?.models.find(
-            (m) => key(item.id, m) === event.target.value,
-          );
+          if (item && mode === "service") {
+            onChange({ id: item.id, model: "", revision: item.revision });
+            return;
+          }
+          const model = item
+            ? item.models.find((m) => key(item, m) === event.target.value)
+            : undefined;
           if (item && model)
             onChange({ id: item.id, model, revision: item.revision });
         }}
       >
         <option value="">{emptyLabel}</option>
-        {choices.map((item) => (
-          <optgroup key={item.id} label={item.label}>
-            {item.models.map((model) => (
-              <option key={model} value={key(item.id, model)}>
-                {model}
-              </option>
-            ))}
-          </optgroup>
-        ))}
+        {choices.map((item) =>
+          mode === "service" ? (
+            <option key={item.id} value={key(item, "")}>
+              {item.label}
+            </option>
+          ) : (
+            <optgroup key={item.id} label={item.label}>
+              {item.models.map((model) => (
+                <option key={model} value={key(item, model)}>
+                  {model}
+                </option>
+              ))}
+            </optgroup>
+          ),
+        )}
         {value && !selectable && (
           <option value={selected} disabled>
-            {value.model} ·{" "}
+            {mode === "service" ? (current?.label ?? R.method) : value.model} ·{" "}
             {changed ? S.serviceChangedOption : STRINGS.service.unavailable}
           </option>
         )}
@@ -144,7 +186,11 @@ export function ServicePicker({
           {S.serviceChanged}
         </p>
       )}
-      {unavailableReason && <p className="auth-note">{unavailableReason}</p>}
+      {apiState === "unknown" && !error && (
+        <p role="status" className="auth-note">
+          {STRINGS.common.loading}
+        </p>
+      )}
       {error && (
         <div role="alert">
           {STRINGS.service.loadFailed}{" "}

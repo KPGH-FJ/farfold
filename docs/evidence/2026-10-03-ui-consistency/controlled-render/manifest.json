@@ -1,0 +1,243 @@
+{
+  "kind": "controlled-production-SSR",
+  "viewport": {
+    "width": 1280,
+    "height": 820
+  },
+  "source": "real AgentSetup and child components; test-only transport/hook snapshots",
+  "limitations": [
+    "All methods, services, receipts and program records are synthetic.",
+    "No browser screenshot, interaction, Tauri execution, real authentication or 33-Agent parameter validation.",
+    "Only showModal mounting is added to static HTML; component HTML, CSS and SVG assets are production outputs."
+  ],
+  "css": [
+    "node_modules/.pnpm/@xterm+xterm@6.0.0/node_modules/@xterm/xterm/css/xterm.css",
+    "r5-agent-access.css",
+    "r5-program-access.css",
+    "agent-setup-presentation.css",
+    "command-palette.css",
+    "new-conversation-pickers.css",
+    "attachment-review.css",
+    "general-settings.css",
+    "api-settings.css",
+    "lifemodel-settings.css",
+    "message-attachments.css",
+    "agent-hub.css",
+    "library-dialogs.css",
+    "styles.css",
+    "styles-settings.css",
+    "styles-content.css",
+    "styles-thread.css",
+    "styles-artifact.css",
+    "product-shell.css",
+    "conversation-workspace.css",
+    "history-import.css"
+  ],
+  "cssSha256": "a52724a4b58bf59d86f8ffc0b36e4b7f80a8b5dc695bd38a3f844138348eb2a7",
+  "reference": {
+    "path": "/Users/tw/Desktop/farfold/PRODUCT.md",
+    "sha256": "afc15c51a947538ec7689188608c76fc59177fa629270abb84de2e03a1f9351c"
+  },
+  "sourceHashes": [
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "sha256": "7b171a6e2f8038a1d6c9d7017970ccfa9ca7923d0c9e326176cf8d071627d6ed"
+    },
+    {
+      "path": "src/components/AgentSetupProgram.tsx",
+      "sha256": "0aff822be620a7eac01313bdd2c32d9140580d38736766b97c6d36296c84665d"
+    },
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "8a55b5818218bf22b661ef24a3e4d31c73a40ef281c98514dbbc24ddb97a439d"
+    },
+    {
+      "path": "src/components/AgentConnectionPicker.tsx",
+      "sha256": "ef0db49e0cec6154bc328b6993635ec310d26e5d58978313812b63bc193c6e6b"
+    },
+    {
+      "path": "src/components/AgentServiceSection.tsx",
+      "sha256": "fcedd9f6ea35fd86eff01aafffe76ca871f9b49add832014646faf227948a46d"
+    },
+    {
+      "path": "src/components/ServicePicker.tsx",
+      "sha256": "15e75471095c9ca9e5fb5fa864aaa3d0a0c7e10cb646abf24ba78567c532a89a"
+    },
+    {
+      "path": "src/components/ServiceModelPicker.tsx",
+      "sha256": "b55e9e76c820486115a47edfde05716b378ad7f21508339496ca449e11c9a515"
+    },
+    {
+      "path": "src/components/ProgramManager.tsx",
+      "sha256": "2631b011f0557448e06264250e35a435fdad22b493fcded504f909a064c05751"
+    },
+    {
+      "path": "src/components/AgentPrerequisites.tsx",
+      "sha256": "cdcf6dc2d8c7a4a679f63c395e71159b9c0ad703ecba51dfd405097fad451c6f"
+    },
+    {
+      "path": "src/components/AgentSetup.r5-render.test.tsx",
+      "sha256": "1c37b5be05eac35a85201b2f09bdda89f95f7c4a308f652ae87953c46ecff210"
+    }
+  ],
+  "fixtureModelReadCount": 1,
+  "interceptedMetadataReads": [
+    "app_default_working_directory",
+    "auth_manual_get"
+  ],
+  "rows": [
+    {
+      "id": "13-single-terminal",
+      "label": "单一终端方式也从选择页开始",
+      "referenceState": "service-source",
+      "file": "13-single-terminal.html",
+      "sha256": "ec306748eaebe1efc7eada0211613fb82d8a7faa7732d2b16f3bbdbf9d44e98d",
+      "radioCount": 1,
+      "fixture": true
+    },
+    {
+      "id": "14-key-detail",
+      "label": "密钥方式的独立设置页",
+      "referenceState": "account-methods",
+      "file": "14-key-detail.html",
+      "sha256": "500a5e11228d87f3877c33e948febf6b08ed039d17db6d4dd79f56f2c23b19e4",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "15-api-old-auth",
+      "label": "无可选服务时不显示旧账号成功",
+      "referenceState": "service-select",
+      "file": "15-api-old-auth.html",
+      "sha256": "e095a0ae3b8965f8b6aa43c426b9ccc9113ffc987a69f55d5515775f58af8a3b",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "16-program-ready",
+      "label": "已连接程序及折叠检查详情",
+      "referenceState": "program-manager-connected",
+      "file": "16-program-ready.html",
+      "sha256": "bf45199ff87a8774c88d95a7fded82c0d30e7b903cd507bd4be49a8220578b51",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "17-program-missing",
+      "label": "缺少程序时显示安装入口",
+      "referenceState": "program-candidate",
+      "file": "17-program-missing.html",
+      "sha256": "f13078591135a9d4ff675f015f150121ea44987d870b7efbd8ed6eb67f591c35",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "01-account-key",
+      "label": "账号与指定密钥两种方式",
+      "referenceState": "account-methods",
+      "file": "01-account-key.html",
+      "sha256": "80591a93d68d1868c562b3e3482a51141398571b5f7d6f561e71c3001931b4ce",
+      "radioCount": 2,
+      "fixture": true
+    },
+    {
+      "id": "02-terminal-api",
+      "label": "终端与模型 API 两种方式",
+      "referenceState": "service-source",
+      "file": "02-terminal-api.html",
+      "sha256": "92c495f844734706841624a542a4f634b812b42b71428adef95ff350fb3fd096",
+      "radioCount": 2,
+      "fixture": true
+    },
+    {
+      "id": "03-three-methods",
+      "label": "账号、终端和模型 API 三种方式",
+      "referenceState": "connection-three-methods",
+      "file": "03-three-methods.html",
+      "sha256": "50772458ed5099f74d287bf2c3b75fff9655d802a83c448c7cab6bf92308ee24",
+      "radioCount": 3,
+      "fixture": true
+    },
+    {
+      "id": "04-account-summary",
+      "label": "账号完成摘要",
+      "referenceState": "chatgpt-success",
+      "file": "04-account-summary.html",
+      "sha256": "59cfd41fbe834567957d954bc0f5118df740c25fb72e1cd6b76043f286d80968",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "05-terminal-summary",
+      "label": "终端设置检查完成摘要",
+      "referenceState": "terminal-checked",
+      "file": "05-terminal-summary.html",
+      "sha256": "d8b7ac33639a6939365b854ba6f018ee73868d095d5b8a0182113f7a00b8302a",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "06-service-step",
+      "label": "第二步只选择服务身份",
+      "referenceState": "service-select",
+      "file": "06-service-step.html",
+      "sha256": "6091dc37ae1de6e1eea2ba360bd899551fae7d21703fc6eca916c40fb30f9d38",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "07-service-summary",
+      "label": "模型服务已选择摘要",
+      "referenceState": "service-ready",
+      "file": "07-service-summary.html",
+      "sha256": "695d487643730ed50f387f95e2b36bc31dfd84a0252f0d21e60e9721dd991064",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "08-model-step",
+      "label": "第三步明确选择本次模型",
+      "referenceState": "models-ready",
+      "file": "08-model-step.html",
+      "sha256": "2421021a9b4c3cd8113a8d9f21ef7c7a7ad5449cb8e3bc13ecce00d5ed2d6a03",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "09-model-selected",
+      "label": "本次模型已选择，读取结果固定",
+      "referenceState": "models-ready",
+      "file": "09-model-selected.html",
+      "sha256": "96da3042f17d1b324f4ef51b53c946912db84e79eea8719efadd923c07b453ae",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "10-program-list",
+      "label": "已断开后的程序清单",
+      "referenceState": "program-candidate",
+      "file": "10-program-list.html",
+      "sha256": "7d2623c636acc5fb3f19ee692921de064c1aa2d6f33e888a0db9d7aa3b41cf09",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "11-program-connected",
+      "label": "已连接先断开后管理",
+      "referenceState": "program-manager-connected",
+      "file": "11-program-connected.html",
+      "sha256": "2bb46793591f3b344bb504b6be1dada19150dbc7472b553ccea36f67228f2a55",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "12-service-editing",
+      "label": "更换服务时再次显示服务选择",
+      "referenceState": "service-select",
+      "file": "12-service-editing.html",
+      "sha256": "060d6607b4684c15181e54b826cea773a7667621b357ffadc3a7653056247280",
+      "radioCount": 0,
+      "fixture": true
+    }
+  ]
+}

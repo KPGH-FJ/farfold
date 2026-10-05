@@ -14,6 +14,13 @@ import { hasPendingRequests } from "./session_types";
 import { STRINGS } from "./strings";
 import { setupStorage } from "./setup_storage";
 import type { InstallationInput } from "./installation_input";
+import type { Credential } from "./credentials";
+import { agentBrand } from "./agent_brands";
+import {
+  allowAutomaticConnection,
+  pauseAutomaticConnection,
+} from "./connection_intent";
+export { AGENT_BRANDS } from "./agent_brands";
 
 // ---------------------------------------------------------------------------
 // Wire types (serde camelCase)
@@ -86,6 +93,7 @@ export interface AgentConnectionStatus {
   serviceContext?: string;
   /** `connecting` | `ready` | `closed` | `failed` */
   state: string;
+  closeReason?: import("./connection_close").ConnectionCloseReason;
   agentName: string | null;
   agentVersion: string | null;
   authMethods: string[];
@@ -151,15 +159,26 @@ export function agentInstall(
   });
 }
 
-export function agentConnect(
+export async function agentConnect(
   agentId: string,
   cwd: string,
 ): Promise<AgentConnectionStatus> {
-  return invoke("agent_connect", { agentId, cwd });
+  allowAutomaticConnection(agentId);
+  const status = await invoke<AgentConnectionStatus>("agent_connect", {
+    agentId,
+    cwd,
+  });
+  return status;
 }
 
-export function agentDisconnect(agentId: string): Promise<boolean> {
-  return invoke("agent_disconnect", { agentId });
+export async function agentDisconnect(agentId: string): Promise<boolean> {
+  const rollback = pauseAutomaticConnection(agentId);
+  try {
+    return await invoke("agent_disconnect", { agentId });
+  } catch (error) {
+    rollback();
+    throw error;
+  }
 }
 
 export function agentRemove(agentId: string): Promise<boolean> {
@@ -184,6 +203,8 @@ export interface AuthMethodInfo {
   terminalCommand: string[] | null;
   /** Suggested env var name for `api-key` methods. */
   envName: string | null;
+  /** Provider-only protocol key route validated for this live declaration. */
+  apiKeyProvider?: string;
   /** Validated public variable names; never environment values. */
   envNames?: string[];
   purpose?: "login" | "setup";
@@ -231,6 +252,8 @@ export function authRun(
     source?: string;
     attemptId: string;
     viaTerminal?: boolean;
+    credentialId?: string;
+    credentialRevision?: string;
     onOutput: Channel<PtyChunk>;
   },
 ): Promise<AuthRunResult> {
@@ -241,8 +264,27 @@ export function authRun(
     source: options.source ?? null,
     attemptId: options.attemptId,
     viaTerminal: options.viaTerminal ?? null,
+    credentialId: options.credentialId ?? null,
+    credentialRevision: options.credentialRevision ?? null,
     onOutput: options.onOutput,
   });
+}
+
+export async function authKeySave(input: {
+  agentId: string;
+  methodId: string;
+  cwd: string;
+  source?: string;
+  expectedProvider: string;
+  label: string;
+  key: string;
+}): Promise<Credential> {
+  const result = await invoke<Credential>("auth_key_save", {
+    ...input,
+    source: input.source ?? null,
+  });
+  window.dispatchEvent(new Event("credentials-changed"));
+  return result;
 }
 
 export function agentLogout(
@@ -301,6 +343,8 @@ export interface AgentCardModel {
   description: string;
   presentation?: DirectoryPresentation | null;
   status: AgentCardStatus;
+  /** A known process/start failure, independent of saved preparation. */
+  connectionFailed?: boolean;
   /** Best-known version: live agent info > installed row > discovered probe. */
   version: string | null;
   /** A discovered executable's version, separate from connection/package info. */
@@ -360,9 +404,13 @@ export function toAgentCard(
   return {
     id: entry.agentId,
     name: entry.displayName,
-    description: catalogDescription(entry.description),
+    description:
+      agentBrand({ id: entry.agentId, registryId: entry.registryId })
+        ?.description ?? catalogDescription(entry.description),
     presentation: entry.presentation,
     status,
+    connectionFailed:
+      !connected && !!statuses?.some((item) => item.state === "failed"),
     version:
       live?.agentVersion ??
       discoveredRegisteredVersion ??
@@ -440,6 +488,9 @@ export function customAgentCard(
         ? STRINGS.agents.custom.title
         : STRINGS.agents.catalogDescription,
     status: live?.state === "ready" ? "connected" : "installed",
+    connectionFailed:
+      live?.state !== "ready" &&
+      !!statuses?.some((item) => item.state === "failed"),
     version: live?.agentVersion ?? row.version,
     authMethods:
       liveConnection(statuses?.filter((status) => !status.serviceContext))
@@ -512,22 +563,16 @@ export function mergeConnectionStatus(
   return status.state === "closed" ? remaining : [...remaining, status];
 }
 
-export const AGENT_BRANDS: Record<
-  string,
-  { logo: string; description: string; monochrome?: boolean }
-> = {
-  opencode: {
-    logo: "/agents/opencode.svg",
-    monochrome: true,
-    description: STRINGS.agents.brands.opencode,
-  },
-  codex: {
-    logo: "/agents/codex.svg",
-    monochrome: true,
-    description: STRINGS.agents.brands.codex,
-  },
-  pi: { logo: "/agents/pi-color.svg", description: STRINGS.agents.brands.pi },
-};
+/** Connection events received during a catalog refresh are newer than its snapshot. */
+export function mergeConnectionSnapshots(
+  current: Record<string, AgentConnectionStatus[]>,
+  snapshot: Record<string, AgentConnectionStatus[]>,
+  changed: Set<string>,
+): Record<string, AgentConnectionStatus[]> {
+  const result = { ...snapshot };
+  for (const id of changed) result[id] = current[id] ?? [];
+  return result;
+}
 
 /** Identity block class + letter, derived from the agent id — one code
  *  path for every agent, custom ones included (no per-agent branches). */
@@ -587,6 +632,7 @@ export interface AgentsState {
 }
 
 export function useAgents(): AgentsState {
+  const statusRevisions = useRef(new Map<string, number>());
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [entries, setEntries] = useState<CatalogEntry[]>([]);
@@ -618,16 +664,47 @@ export function useAgents(): AgentsState {
         .map((row) => row.id),
     ];
     const uniqueIds = [...new Set(ids)];
+    const before = new Map(statusRevisions.current);
     const statusPairs = await Promise.all(
       uniqueIds.map(async (id) => [id, await agentStatus(id)] as const),
     );
-    setStatuses(Object.fromEntries(statusPairs));
+    setStatuses((current) =>
+      mergeConnectionSnapshots(
+        current,
+        Object.fromEntries(statusPairs),
+        new Set(
+          [...statusRevisions.current]
+            .filter(([id, revision]) => before.get(id) !== revision)
+            .map(([id]) => id),
+        ),
+      ),
+    );
     setLoadError(null);
   }, []);
 
   useEffect(() => {
     let cancelled = false;
-    refresh()
+    const unlistenCatalog = listen("catalog:updated", () => {
+      void refresh();
+    });
+    const unlisten = listen<AgentConnectionStatus>("agent:status", (event) => {
+      const status = event.payload;
+      if (!status?.agentId) return;
+      statusRevisions.current.set(
+        status.agentId,
+        (statusRevisions.current.get(status.agentId) ?? 0) + 1,
+      );
+      setStatuses((prev) => {
+        const existing = prev[status.agentId] ?? [];
+        const next = mergeConnectionStatus(existing, status);
+        return { ...prev, [status.agentId]: next };
+      });
+    });
+    // Subscribe before reading status so an idle close cannot fall in between.
+    void unlisten
+      .then(() => {
+        if (!cancelled) return refresh();
+      })
       .catch((reason) => {
         if (!cancelled)
           setLoadError(uiError(reason, STRINGS.repair.requestFailed));
@@ -635,18 +712,6 @@ export function useAgents(): AgentsState {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-    const unlistenCatalog = listen("catalog:updated", () => {
-      void refresh();
-    });
-    const unlisten = listen<AgentConnectionStatus>("agent:status", (event) => {
-      const status = event.payload;
-      if (!status?.agentId) return;
-      setStatuses((prev) => {
-        const existing = prev[status.agentId] ?? [];
-        const next = mergeConnectionStatus(existing, status);
-        return { ...prev, [status.agentId]: next };
-      });
-    });
     return () => {
       cancelled = true;
       void unlisten.then((off) => off());

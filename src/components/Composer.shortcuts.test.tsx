@@ -174,15 +174,18 @@ it("exposes project-file lookup through the add menu and keeps existing input", 
   expect(threads.send).not.toHaveBeenCalled();
 });
 
-it("uses a new-draft add dialog with only real Agent commands and preserves input on cancellation", () => {
+it("uses an anchored new-draft add menu with only real Agent commands and preserves input on cancellation", () => {
   props.thread!.identity = "draft";
   const tree = openAdd();
   expect(
     tree.some(
       (node) =>
-        node.type === WorkspaceDialog && node.props.title === "添加到这段对话",
+        node.type === WorkspaceActionMenu &&
+        node.props.title === "添加到这段对话",
     ),
   ).toBe(true);
+  expect(tree.some((node) => node.type === WorkspaceDialog)).toBe(false);
+  expect(buttonNamed("选择文件夹")).toBeUndefined();
   expect(plusFocus).toHaveBeenCalled();
   const commands = buttonNamed("Agent 命令");
   expect(commands).toBeDefined();
@@ -201,7 +204,7 @@ it("uses a new-draft add dialog with only real Agent commands and preserves inpu
   (command!.props.onClick as () => void)();
   expect(composerDrafts.read("session:shortcut-a").text).toBe("/official ");
   expect(threads.send).not.toHaveBeenCalled();
-  const reopened = openAdd().find((node) => node.type === WorkspaceDialog)!;
+  const reopened = openAdd().find((node) => node.type === WorkspaceActionMenu)!;
   (reopened.props.onClose as () => void)();
   expect(render().some((node) => node.type === WorkspaceDialog)).toBe(false);
   expect(composerDrafts.read("session:shortcut-a").text).toBe("/official ");

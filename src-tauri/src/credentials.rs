@@ -23,6 +23,8 @@ struct Credential {
     id: String,
     label: String,
     provider: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    purpose: Option<String>,
     endpoint: String,
     api_type: String,
     #[serde(default)]
@@ -38,6 +40,8 @@ pub struct View {
     id: String,
     label: String,
     provider: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    purpose: Option<String>,
     endpoint: String,
     api_type: String,
     models: Vec<String>,
@@ -52,10 +56,15 @@ impl From<&Credential> for View {
             id: c.id.clone(),
             label: c.label.clone(),
             provider: c.provider.clone(),
+            purpose: c.purpose.clone(),
             endpoint: c.endpoint.clone(),
             api_type: c.api_type.clone(),
             models: c.models.clone(),
-            revision: service_revision(&c.endpoint, &c.api_type, &c.models, &c.secret_ref),
+            revision: if method_key(c) {
+                digest(&("method-key", &c.provider, &c.secret_ref))
+            } else {
+                service_revision(&c.endpoint, &c.api_type, &c.models, &c.secret_ref)
+            },
             complete: complete_service(c),
             grants: c.grants.clone(),
             deleting: c.deleting,
@@ -114,6 +123,14 @@ fn write(store: &MetaStore, pool: &[Credential]) -> Result<(), String> {
         SETTING,
         &serde_json::to_value(pool).map_err(|_| "无法保存密钥设置")?,
     )
+}
+
+fn method_key(item: &Credential) -> bool {
+    item.purpose.as_deref() == Some("authentication")
+        && item.endpoint.is_empty()
+        && item.api_type.is_empty()
+        && item.models.is_empty()
+        && item.grants.is_empty()
 }
 
 pub(crate) fn validate_endpoint(value: &str) -> Result<String, String> {
@@ -356,6 +373,95 @@ pub(crate) fn api_configuration(
     let _lock = MUTATION.lock().map_err(|_| "API 配置暂时不可用")?;
     api_configuration_with(store, saved_id, draft, &Keychain)
 }
+
+// A method credential has no service address, models or environment grant.
+// Saving it never authorizes a request; the selected live method consumes an
+// explicit reference only after a separate user action.
+fn save_auth_key_with(
+    store: &MetaStore,
+    vault: &dyn Vault,
+    provider: &str,
+    label: &str,
+    key: &str,
+) -> Result<View, String> {
+    if label.trim().is_empty()
+        || label.len() > 300
+        || label.chars().any(char::is_control)
+        || provider.is_empty()
+        || provider.len() > 256
+        || provider.chars().any(char::is_control)
+    {
+        return Err("请填写简短的密钥用途说明".into());
+    }
+    validate_secret(key)?;
+    let mut pool = read(store)?;
+    let reference = unique();
+    vault.put(&reference, key)?;
+    let item = Credential {
+        id: unique(),
+        label: label.trim().into(),
+        provider: provider.into(),
+        purpose: Some("authentication".into()),
+        endpoint: String::new(),
+        api_type: String::new(),
+        models: vec![],
+        secret_ref: reference.clone(),
+        retired: vec![],
+        grants: vec![],
+        deleting: false,
+    };
+    pool.push(item.clone());
+    if let Err(error) = write(store, &pool) {
+        let _ = vault.delete(&reference);
+        return Err(error);
+    }
+    Ok(View::from(&item))
+}
+
+pub(crate) fn save_auth_key(
+    store: &MetaStore,
+    provider: &str,
+    label: &str,
+    key: &str,
+) -> Result<View, String> {
+    let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+    save_auth_key_with(store, &Keychain, provider, label, key)
+}
+
+fn auth_key_with(
+    store: &MetaStore,
+    vault: &dyn Vault,
+    id: &str,
+    revision: &str,
+    provider: &str,
+) -> Result<String, String> {
+    let item = read(store)?
+        .into_iter()
+        .find(|item| item.id == id && !item.deleting)
+        .ok_or("此密钥已移除，请重新选择")?;
+    if item.provider != provider || !method_key(&item) || View::from(&item).revision != revision {
+        return Err("此密钥不适用于当前登录方式或已改变，请重新选择".into());
+    }
+    let key = vault
+        .get(&item.secret_ref)
+        .ok_or("无法读取 API Key，请检查系统钥匙串后重试")?;
+    validate_secret(&key)?;
+    Ok(key)
+}
+
+pub(crate) fn auth_key(
+    store: &MetaStore,
+    id: &str,
+    revision: &str,
+    provider: &str,
+) -> Result<String, String> {
+    let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
+    auth_key_with(store, &Keychain, id, revision, provider)
+}
+
+#[cfg(test)]
+mod auth_key_tests;
+
 fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<View, String> {
     if input.label.trim().is_empty()
         || [
@@ -380,6 +486,9 @@ fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<Vi
         None
     };
     let previous = index.map(|i| &pool[i]);
+    if previous.is_some_and(|previous| previous.purpose.as_deref() == Some("authentication")) {
+        return Err("请在对应登录方式中管理此密钥，模型服务需单独保存".into());
+    }
     // Old credentials may have only a label/Key and an existing env grant.
     // Keep that exact metadata for a Key rotation or description edit; this
     // never upgrades the record into a selectable model service.
@@ -433,6 +542,7 @@ fn save(store: &MetaStore, vault: &dyn Vault, mut input: SaveInput) -> Result<Vi
             id: unique(),
             label: String::new(),
             provider: String::new(),
+            purpose: None,
             endpoint: String::new(),
             api_type: String::new(),
             models: vec![],

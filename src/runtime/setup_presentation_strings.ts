@@ -7,8 +7,7 @@ export const SETUP_PRESENTATION = {
   nextAccount: "继续设置账号与服务",
   nextModel: "继续选择模型",
   connectionRequired: "当前程序未连接",
-  connectionRequiredHint:
-    "准备进度和选择已保留。请先连接程序，再继续设置账号或模型。",
+  connectionRequiredHint: "请先连接程序。",
   apiChoice: "使用 API 配置",
   apiChoiceHint: "选择已保存的服务，或添加一个新服务",
   localSource: "本机配置",

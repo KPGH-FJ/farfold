@@ -1,0 +1,31 @@
+{
+  "targetedTestFiles": 12,
+  "targetedTestsPassed": 265,
+  "targetedTestsFailed": 0,
+  "typecheckExitCode": 0,
+  "scopeFormatExitCode": 0,
+  "gitDiffCheckExitCode": 0,
+  "frontendBuildExitCode": 0,
+  "frontendBuildWarning": "Existing large chunk warning retained; no dependency or bundling configuration changes.",
+  "sourceFileLineLimit": 1500,
+  "sourceFilesExceedingLineLimit": {},
+  "changedSourceLineCounts": {
+    "src/components/AgentSetup.repair.test.tsx": 1392,
+    "src/components/AgentSetup.selection.test.tsx": 1190,
+    "src/components/AgentSetup.tsx": 1492,
+    "src/runtime/agent_preparation.test.ts": 624,
+    "src/runtime/agent_preparation.ts": 711,
+    "src/runtime/agent_setup_strings.ts": 24,
+    "src/components/AgentModelReadNotice.tsx": 21
+  },
+  "rustInputChanges": [],
+  "sourceInputsMatchBeforeAfter": true,
+  "formalApplicationUnchanged": true,
+  "formalMatchesInstalledCandidate": true,
+  "formalSignatureExitCode": 0,
+  "independentReadOnlyReview": "Both reported boundaries resolved; no remaining blocker reported.",
+  "realAgentOrApplicationOperations": false,
+  "secretOrUserConfigRead": false,
+  "appPackagingOrInstallation": false,
+  "controlledTestsAreRealAuthOrModelProof": false
+}

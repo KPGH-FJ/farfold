@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   ArrowRight,
   CheckCircle,
@@ -13,6 +13,8 @@ import {
   agentDirectorySource,
   agentDirectoryCategories,
   matchesAgentDirectory,
+  isAgentPresentable,
+  presentableAgents,
   type DirectoryCategory,
 } from "../runtime/agent_directory";
 import {
@@ -21,6 +23,12 @@ import {
   useAuthentication,
 } from "../runtime/authentication";
 import { authActive } from "../runtime/auth_activity";
+import {
+  allowAutomaticConnection,
+  isAutomaticConnectionAllowed,
+  subscribeConnectionIntent,
+} from "../runtime/connection_intent";
+import { useConnectionHold } from "../runtime/connection_hold";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import {
   ACCESS_STRINGS as S,
@@ -107,7 +115,6 @@ export interface AgentHubProps {
   preparationContext?: AgentPreparationContext;
   agents: AgentsState;
   onReturn: () => void;
-  returnAfterPreparation?: boolean;
   onResumeDraft?: () => void;
   onStart: (
     agentId: string,
@@ -139,7 +146,6 @@ export function agentSourceLabel(card: AgentCardModel) {
 export function AgentHub({
   agents,
   onReturn,
-  returnAfterPreparation = false,
   onResumeDraft,
   onStart,
   onOpenApi,
@@ -176,6 +182,12 @@ export function AgentHub({
   const seenEntry = useRef<string | null>(null);
   const navigationRevision = useRef(0);
   const liveEntry = useRef({ active, entry: "" });
+  const currentCards = useRef(agents.cards);
+  currentCards.current = agents.cards;
+  const isCurrentCandidate = (id: string) =>
+    currentCards.current.some(
+      (card) => card.id === id && isAgentPresentable(card),
+    );
   const [, showAccountProgress] = useState(0);
   const accountIds = agents.cards
     .map((card) => card.id)
@@ -210,6 +222,15 @@ export function AgentHub({
   }, [active, selected, detail, intent, view, query, category, onStateChange]);
   usePreparationChanges();
   const authentication = useAuthentication();
+  useSyncExternalStore(
+    subscribeConnectionIntent,
+    () =>
+      agents.cards
+        .filter((card) => !isAutomaticConnectionAllowed(card.id))
+        .map((card) => card.id)
+        .join("\n"),
+    () => "",
+  );
   const added = (card: AgentCardModel) =>
     card.status === "installed" || card.status === "connected";
   const entryKey = JSON.stringify([
@@ -238,6 +259,11 @@ export function AgentHub({
       (seenEntry.current === entryKey
         ? detail
         : (restoredState?.detail ?? null)),
+  );
+  useConnectionHold(
+    active && (selectedCard || detailCard)
+      ? { agentId: (selectedCard ?? detailCard)!.id }
+      : null,
   );
   const conversationFor = (agentId: string) =>
     effectiveIntent === "manage" && preparationContext?.agentId === agentId
@@ -344,10 +370,16 @@ export function AgentHub({
   }, [active, setup.ready, entryKey, agents.cards]);
   liveEntry.current = { active, entry: entryKey };
   const prepare = (agentId: string, nextIntent: "use" | "manage" = "use") => {
+    if (!isCurrentCandidate(agentId)) return;
     navigationRevision.current++;
     setDetail(null);
     setIntent(nextIntent);
     setSelected(agentId);
+  };
+  const closePreparation = (agentId: string) => {
+    navigationRevision.current++;
+    setSelected(null);
+    if (initialAgentId === agentId && initialIntent === "manage") onReturn();
   };
   const viewProgress = (card: AgentCardModel, step: number) => {
     navigationRevision.current++;
@@ -370,16 +402,19 @@ export function AgentHub({
       service: newSelection(card.id)?.service,
     });
   const canStart = (card: AgentCardModel) =>
+    isAgentPresentable(card) &&
     setupStorage.completed(card.id) &&
     !!newSelection(card.id) &&
     !readRequired(card) &&
-    card.status === "connected" &&
+    (card.status === "connected" || card.status === "installed") &&
     !authenticationRequired(authentication, card.id, null) &&
     !agents.busy[card.id] &&
     !accountInProgress(card);
   const startOrPrepare = (card: AgentCardModel) => {
+    if (!isCurrentCandidate(card.id)) return;
     if (accountInProgress(card)) viewProgress(card, 1);
     else if (canStart(card)) {
+      allowAutomaticConnection(card.id);
       setDetail(null);
       setSelected(null);
       onStart(card.id, newSelection(card.id), "new-conversation");
@@ -435,14 +470,10 @@ export function AgentHub({
       off();
     };
   }, [agents.cards]);
-  const visible = agents.cards.filter(
+  const directoryCards = presentableAgents(agents.cards);
+  const visible = directoryCards.filter(
     (card) =>
       (view === "discover" || added(card) || !!agents.busy[card.id]) &&
-      (view !== "discover" ||
-        card.custom ||
-        card.source === "discovered" ||
-        card.status === "discovered" ||
-        card.firstBatchVisible !== false) &&
       matchesAgentDirectory(card, query, category),
   );
   useEffect(() => {
@@ -476,7 +507,13 @@ export function AgentHub({
               ? S.connected
               : S.connectedUnfinished
             : card.status === "installed"
-              ? S.registered
+              ? setupStorage.completed(card.id) && newSelection(card.id)
+                ? card.connectionFailed
+                  ? S.connectionFailed
+                  : !isAutomaticConnectionAllowed(card.id)
+                    ? S.disconnected
+                    : S.standby
+                : S.registered
               : card.status === "discovered"
                 ? S.discovered
                 : !card.installable && !card.registerable
@@ -526,7 +563,7 @@ export function AgentHub({
                 >
                   {value === "added" ? S.myAgents : S.discover}
                   {value === "added" && (
-                    <span>{agents.cards.filter(added).length}</span>
+                    <span>{directoryCards.filter(added).length}</span>
                   )}
                 </button>
               ))}
@@ -697,12 +734,12 @@ export function AgentHub({
           {!agents.loading && visible.length === 0 && (
             <div className="agent-hub-empty">
               <h2>
-                {view === "added" && !agents.cards.some(added)
+                {view === "added" && !directoryCards.some(added)
                   ? S.noAdded
                   : S.noMatches}
               </h2>
               <p>
-                {view === "added" && !agents.cards.some(added)
+                {view === "added" && !directoryCards.some(added)
                   ? S.noAddedHint
                   : S.noMatchesHint}
               </p>
@@ -714,7 +751,7 @@ export function AgentHub({
                   setCategory("全部");
                 }}
               >
-                {view === "added" && !agents.cards.some(added)
+                {view === "added" && !directoryCards.some(added)
                   ? S.discover
                   : S.resetSearch}
               </button>
@@ -780,26 +817,24 @@ export function AgentHub({
               }));
             else setupStorage.remember(selectedCard.id, scope, progress);
           }}
-          onClose={() => {
-            navigationRevision.current++;
-            setSelected(null);
-            if (
-              returnAfterPreparation ||
-              (initialAgentId === selectedCard.id && initialIntent === "manage")
-            )
-              onReturn();
-          }}
+          onClose={() => closePreparation(selectedCard.id)}
           onStart={async (agentId, selection) => {
             if (conversationFor(agentId) || setupIntent(agentId) === "manage") {
-              onReturn();
+              closePreparation(agentId);
               return;
             }
-            if (selectedCard.status !== "connected" || !selection) return;
+            if (
+              !isCurrentCandidate(agentId) ||
+              selectedCard.status !== "connected" ||
+              !selection
+            )
+              return;
             const owner = navigationRevision.current;
             const entry = entryKey;
             const saved = await setupStorage.complete(agentId, selection);
             if (
               !saved ||
+              !isCurrentCandidate(agentId) ||
               !liveEntry.current.active ||
               liveEntry.current.entry !== entry ||
               navigationRevision.current !== owner

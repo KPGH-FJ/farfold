@@ -426,6 +426,123 @@ const searchInput = (nodes: Element[]) =>
   )!;
 const records = (nodes: Element[]) =>
   nodes.filter((node) => node.type === "article");
+const loginKey: Credential = {
+  ...saved,
+  id: "own-login-key",
+  label: "Own login key",
+  provider: "openai",
+  purpose: "authentication",
+  endpoint: "",
+  apiType: "",
+  models: [],
+  complete: false,
+};
+it("shows login keys as saved without service setup or service actions and preserves older records", async () => {
+  const legacy: Credential = {
+    ...saved,
+    id: "legacy-key",
+    label: "Legacy key",
+    endpoint: "",
+    apiType: "",
+    models: [],
+    complete: false,
+  };
+  h.items = [loginKey, saved, legacy];
+  rootView();
+  flush();
+  await settle();
+  const rows = records(rootView());
+  const row = (id: string) => elements(rows.find((node) => node.key === id)!);
+  const keyNodes = row(loginKey.id);
+  expect(
+    keyNodes.some(
+      (node) =>
+        node.props.children === `${loginKey.provider} · ${S.authenticationKey}`,
+    ),
+  ).toBe(true);
+  expect(keyNodes.some((node) => node.props.children === S.saved)).toBe(true);
+  expect(
+    keyNodes.some((node) => node.props.children === S.authenticationKeyHint),
+  ).toBe(true);
+  expect(
+    keyNodes.some(
+      (node) =>
+        node.props.className === "api-base-url" ||
+        node.props.className === "api-model-tags" ||
+        node.props.children === S.needsSetup ||
+        node.props.children === S.incompleteHint,
+    ),
+  ).toBe(false);
+  expect(button(keyNodes, S.edit)).toBeUndefined();
+  expect(button(keyNodes, S.test)).toBeUndefined();
+  expect(button(keyNodes, S.delete)).toBeDefined();
+  expect(byComponent(keyNodes, "ApiTestPanel")).toBeUndefined();
+  expect(byComponent(rootView(), "Editor")).toBeUndefined();
+  expect(button(row(legacy.id), S.edit).props.disabled).toBe(false);
+  expect(button(row(legacy.id), S.test).props.disabled).toBe(true);
+  expect(
+    row(legacy.id).some((node) => node.props.children === S.incompleteHint),
+  ).toBe(true);
+  const serviceNodes = row(saved.id);
+  expect(
+    serviceNodes.some((node) => node.props.children === saved.endpoint),
+  ).toBe(true);
+  expect(button(serviceNodes, S.test).props.disabled).toBe(false);
+  click(button(serviceNodes, S.test));
+  expect(byComponent(rootView(), "ApiTestPanel").props.source).toEqual({
+    kind: "saved",
+    id: saved.id,
+  });
+  click(button(row(legacy.id), S.edit));
+  expect(byComponent(rootView(), "Editor").props.item).toBe(legacy);
+  expect(h.fetchModels).not.toHaveBeenCalled();
+  expect(h.test).not.toHaveBeenCalled();
+  expect(h.save).not.toHaveBeenCalled();
+});
+
+it.each([false, true])(
+  "keeps login-key deletion and cancellation available when cleanup is pending: %s",
+  async (deleting) => {
+    h.items = [{ ...loginKey, deleting }];
+    rootView();
+    flush();
+    await settle();
+    const removeLabel = deleting ? S.retry : S.delete;
+    if (deleting)
+      expect(
+        rootView().some((node) => node.props.children === S.deletePending),
+      ).toBe(true);
+    click(button(rootView(), removeLabel));
+    rootView();
+    flush();
+    await settle();
+    let modal = byComponent(rootView(), "Dialog");
+    expect(modal.props.title).toBe(S.confirmDeleteAuthenticationKey);
+    let dialog = child("delete-dialog", modal);
+    expect(
+      dialog.some(
+        (node) => node.props.children === S.deleteAuthenticationKeyHint,
+      ),
+    ).toBe(true);
+    click(button(dialog, S.cancel));
+    expect(h.remove).not.toHaveBeenCalled();
+    click(button(rootView(), removeLabel));
+    rootView();
+    flush();
+    await settle();
+    modal = byComponent(rootView(), "Dialog");
+    dialog = child("delete-dialog", modal);
+    expect(button(dialog, S.delete).props.disabled).toBe(false);
+    click(button(dialog, S.delete));
+    await settle();
+    expect(h.remove).toHaveBeenCalledExactlyOnceWith(loginKey.id);
+    expect(records(rootView())).toHaveLength(0);
+    expect(h.save).not.toHaveBeenCalled();
+    expect(h.fetchModels).not.toHaveBeenCalled();
+    expect(h.test).not.toHaveBeenCalled();
+  },
+);
+
 async function loadSearchItems() {
   h.items = [
     saved,

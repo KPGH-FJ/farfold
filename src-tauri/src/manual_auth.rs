@@ -23,18 +23,14 @@ fn setting_key(agent: &str, method: &str) -> String {
     format!("auth.manual.v1.{}", serde_json::json!([agent, method]))
 }
 fn validate(config: &ManualAuth) -> Result<(), String> {
-    if !config.command.is_empty() {
-        let path = Path::new(&config.command);
-        if !path.is_absolute()
-            || !path.is_file()
-            || !path
-                .metadata()
-                .is_ok_and(|m| m.permissions().mode() & 0o111 != 0)
-        {
-            return Err("请选择可执行文件的完整路径".into());
-        }
-    } else if !config.args.is_empty() || config.env_name.is_none() {
-        return Err("请填写执行文件或密钥变量名".into());
+    let path = Path::new(&config.command);
+    if !path.is_absolute()
+        || !path.is_file()
+        || !path
+            .metadata()
+            .is_ok_and(|m| m.permissions().mode() & 0o111 != 0)
+    {
+        return Err("请选择可执行文件的完整路径".into());
     }
     if config.args.iter().any(|arg| arg.contains('\0')) {
         return Err("登录参数无效".into());
@@ -117,9 +113,6 @@ pub async fn auth_manual_run(
         let row = store.get_agent(&agent_id)?.ok_or("请先连接 Agent")?;
         let config = read(&store, &agent_id, &method_id)?.ok_or("请先保存登录配置")?;
         validate(&config)?;
-        if config.command.is_empty() {
-            return Err("请先填写登录执行文件".into());
-        }
         auth::terminal::run(
             &app.state::<pty::PtyManager>(),
             &config.command,
@@ -148,6 +141,45 @@ fn run_error(error: String) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn rejects_new_environment_only_or_empty_command_configuration() {
+        for env_name in [None, Some("LEGACY_KEY".into())] {
+            let config = ManualAuth {
+                command: String::new(),
+                args: vec![],
+                env_name,
+            };
+            assert_eq!(validate(&config), Err("请选择可执行文件的完整路径".into()));
+        }
+    }
+
+    #[test]
+    fn legacy_environment_only_settings_remain_readable_and_repairable() {
+        let directory = tempfile::tempdir().unwrap();
+        let store = MetaStore::open(&directory.path().join("meta.db")).unwrap();
+        let key = setting_key("legacy-agent", "login");
+        let original = serde_json::json!({
+            "command": "",
+            "args": [],
+            "envName": "LEGACY_KEY"
+        });
+        store.set_setting(&key, &original).unwrap();
+        let mut config = read(&store, "legacy-agent", "login").unwrap().unwrap();
+        assert!(validate(&config).is_err());
+        assert_eq!(store.get_setting(&key).unwrap(), Some(original));
+
+        config.command = "/bin/echo".into();
+        config.args = vec!["login".into()];
+        validate(&config).unwrap();
+        store
+            .set_setting(&key, &serde_json::to_value(&config).unwrap())
+            .unwrap();
+        let restored = read(&store, "legacy-agent", "login").unwrap().unwrap();
+        assert_eq!(restored.command, "/bin/echo");
+        assert_eq!(restored.args, ["login"]);
+        assert_eq!(restored.env_name.as_deref(), Some("LEGACY_KEY"));
+    }
+
     #[test]
     fn validates_explicit_arguments_without_shell_interpretation() {
         let cfg = ManualAuth {

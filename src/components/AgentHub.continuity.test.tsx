@@ -14,7 +14,9 @@ const h = vi.hoisted(() => ({
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   effects: [] as (() => void)[],
   invoke: vi.fn(),
+  hold: vi.fn(),
 }));
+vi.mock("../runtime/connection_hold", () => ({ useConnectionHold: h.hold }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
@@ -106,7 +108,79 @@ function closeSetup() {
   (setup().props.onClose as () => void)();
 }
 
-it("keeps a deferred Agent manageable after a directory refresh and preserves its original selection and history entry", async () => {
+it("offers a saved offline Agent as standby and starts with the same confirmed choice", async () => {
+  await storage.complete("A", progress.selection);
+  props.agents.cards[0] = { ...props.agents.cards[0], status: "installed" };
+  const card = render().find(
+    (node) => node.type === "article" && node.key === "A",
+  )!;
+  const text = nodes(card)
+    .flatMap((node) => Children.toArray(node.props.children as ReactNode))
+    .filter((child) => typeof child === "string")
+    .join(" ");
+  expect(text).toContain("待命");
+  expect(text).toContain("开始新对话");
+  expect(text).not.toContain("继续准备");
+  expect(props.onStart).not.toHaveBeenCalled();
+  clickEntry("A");
+  expect(props.onStart).toHaveBeenCalledWith(
+    "A",
+    progress.selection,
+    "new-conversation",
+  );
+  expect(storage.completed("A")).toBe(true);
+  expect(storage.confirmedSelection("A")).toEqual(progress.selection);
+});
+
+it.each(["manual", "failure"])(
+  "keeps saved preparation and exposes the actual disconnected state (%s)",
+  async (reason) => {
+    const { pauseAutomaticConnection, isAutomaticConnectionAllowed } =
+      await import("../runtime/connection_intent");
+    await storage.complete("A", progress.selection);
+    props.agents.cards[0] = {
+      ...props.agents.cards[0],
+      status: "installed",
+      connectionFailed: reason === "failure",
+    };
+    if (reason === "manual") pauseAutomaticConnection("A");
+    const card = render().find(
+      (node) => node.type === "article" && node.key === "A",
+    )!;
+    const text = nodes(card)
+      .flatMap((node) => Children.toArray(node.props.children as ReactNode))
+      .filter((child) => typeof child === "string")
+      .join(" ");
+    expect(text).toContain(reason === "manual" ? "已断开" : "连接异常");
+    expect(text).toContain("开始新对话");
+    expect(text).not.toContain("待命");
+    expect(text).not.toContain("继续准备");
+    clickEntry("A");
+    expect(isAutomaticConnectionAllowed("A")).toBe(true);
+    expect(props.onStart).toHaveBeenCalledWith(
+      "A",
+      progress.selection,
+      "new-conversation",
+    );
+    expect(storage.confirmedSelection("A")).toEqual(progress.selection);
+  },
+);
+
+it("holds the selected preparation only while its page is visible without starting a connection", () => {
+  render();
+  expect(h.hold).toHaveBeenLastCalledWith(null);
+  clickEntry("A", true);
+  render();
+  expect(h.hold).toHaveBeenLastCalledWith({ agentId: "A" });
+  props.active = false;
+  render();
+  expect(h.hold).toHaveBeenLastCalledWith(null);
+  expect(h.invoke.mock.calls.some(([name]) => name === "agent_connect")).toBe(
+    false,
+  );
+});
+
+it("keeps a retired registration out of daily lists after refresh without deleting its selection or history entry", async () => {
   const hidden = { ...props.agents.cards[0], firstBatchVisible: false };
   props.agents = {
     ...props.agents,
@@ -129,22 +203,14 @@ it("keeps a deferred Agent manageable after a directory refresh and preserves it
   expect(mine).toBeDefined();
   (mine!.props.onClick as () => void)();
   await storage.complete("A", progress.selection);
-  props.onImport = vi.fn();
-  clickEntry("A", true);
-  expect(setup().props.card).toBe(props.agents.cards[0]);
-  expect(setup().props.intent).toBe("manage");
-  expect(setup().props.progress).toMatchObject({
-    selection: progress.selection,
-  });
-  (setup().props.onImport as (agentId: string) => void)("A");
-  expect(props.onImport).toHaveBeenCalledExactlyOnceWith("A", undefined);
+  expect(
+    render().some((node) => node.type === "article" && node.key === "A"),
+  ).toBe(false);
+  expect(storage.confirmedSelection("A")).toEqual(progress.selection);
+  expect(props.agents.cards).toEqual([hidden]);
   expect(props.agents.remove).not.toHaveBeenCalled();
   expect(props.agents.install).not.toHaveBeenCalled();
   expect(props.onStart).not.toHaveBeenCalled();
-  closeSetup();
-  expect(
-    render().some((node) => node.type === "article" && node.key === "A"),
-  ).toBe(true);
 });
 
 it("allows an existing deferred Agent's direct management entry without reclassifying its configuration", async () => {
@@ -240,11 +306,74 @@ it.each(["same-directory", "no-directory", "other-directory", "api-source"])(
   },
 );
 
-it("returns directly to the originating settings after managing a directory choice", () => {
-  props = { ...props, initialIntent: "manage", returnAfterPreparation: true };
+it.each(["discover", "added"] as const)(
+  "closes a directory management page back to the same %s list and search",
+  (view) => {
+    props = {
+      ...props,
+      initialIntent: "manage",
+      initialView: view,
+      restoredState: {
+        selected: null,
+        detail: null,
+        intent: "manage",
+        view,
+        query: "A",
+        source: "all",
+        availability: "all",
+      },
+      onStateChange: vi.fn(),
+    };
+    clickEntry("A", true);
+    setProgress();
+    closeSetup();
+    const list = render();
+    expect(list.some((node) => node.type === Setup)).toBe(false);
+    expect(props.onStateChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ selected: null, view, query: "A" }),
+    );
+    expect(
+      list.some((node) => node.type === "article" && node.key === "A"),
+    ).toBe(true);
+    expect(
+      list.some((node) => node.type === "article" && node.key === "B"),
+    ).toBe(false);
+    expect(props.onReturn).not.toHaveBeenCalled();
+    expect(props.onStart).not.toHaveBeenCalled();
+    clickEntry("A", true);
+    expect(setup().props.progress).toEqual(progress);
+  },
+);
+
+it("returns a completed directory management page to its list without leaving the hub", async () => {
+  await storage.complete("A", progress.selection);
   clickEntry("A", true);
+  expect(setup().props.intent).toBe("manage");
+  await finishSetup();
+  expect(render().some((node) => node.type === Setup)).toBe(false);
+  expect(props.onReturn).not.toHaveBeenCalled();
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("closes a directory preparation restored from API settings back to its original list", () => {
+  props = { ...props, onStateChange: vi.fn() };
+  clickEntry("A", true);
+  setProgress();
+  const surface = vi.mocked(props.onStateChange!).mock.calls.at(-1)![0];
+  (setup().props.onOpenApi as () => void)();
+  props = { ...props, active: false };
+  render();
+  props = {
+    ...props,
+    active: true,
+    requestRevision: 1,
+    restoredState: surface,
+  };
+  expect(setup().props.progress).toEqual(progress);
   closeSetup();
-  expect(props.onReturn).toHaveBeenCalledOnce();
+  expect(render().some((node) => node.type === Setup)).toBe(false);
+  expect(props.onReturn).not.toHaveBeenCalled();
+  expect(props.onOpenApi).toHaveBeenCalledOnce();
 });
 
 it("keeps an unfinished Agent's separate conversation preparation in management and returns to that origin", async () => {
@@ -315,6 +444,7 @@ beforeEach(async () => {
   h.slots = [];
   h.effects = [];
   h.invoke.mockReset().mockResolvedValue(null);
+  h.hold.mockClear();
   const cards: AgentCardModel[] = ["A", "B"].map((id) => ({
     id,
     name: id,
@@ -399,6 +529,37 @@ it("does not navigate after a delayed completion when its page is hidden", async
   await finishing;
   expect(storage.completed("A")).toBe(true);
   expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("preserves an open preparation when its entry leaves the catalog and does not start from its delayed completion", async () => {
+  clickEntry("A");
+  setProgress();
+  await storage.flush();
+  const scope = setup().key;
+  const completeWrite = slowWrite();
+  const finishing = finishSetup();
+  await vi.waitFor(() => expect(storage.snapshot().saving).toBe(true));
+  props.agents = {
+    ...props.agents,
+    cards: props.agents.cards.map((card) =>
+      card.id === "A"
+        ? { ...card, source: "registry", firstBatchVisible: false }
+        : card,
+    ),
+  };
+  expect(setup().key).toBe(scope);
+  expect(setup().props.progress).toEqual(progress);
+  completeWrite();
+  await finishing;
+  expect(storage.confirmedSelection("A")).toEqual(progress.selection);
+  expect(props.onStart).not.toHaveBeenCalled();
+  expect(setup().key).toBe(scope);
+  await finishSetup();
+  expect(props.onStart).not.toHaveBeenCalled();
+  closeSetup();
+  expect(
+    render().some((node) => node.type === "article" && node.key === "A"),
+  ).toBe(false);
 });
 
 it("restores the ordinary-folder scope after restart instead of adopting a later draft's folder or source", async () => {

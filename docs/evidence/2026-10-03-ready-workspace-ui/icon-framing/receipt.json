@@ -1,0 +1,416 @@
+{
+  "atUtc": "2026-10-03T07:46:31.543651+00:00",
+  "scope": "Programmatic framing of existing user-supplied artwork; no app install or system changes",
+  "authorization": "使用原始素材，仅程序化调整圆角和留白（推荐）",
+  "source": {
+    "path": "/Users/tw/Desktop/视觉/Farfold/Farfold_Visual_Identity_v0.1/02_App_Icons/Previews/farfold-app-rounded-light.png",
+    "sha256": "16d88b0f948be4ceac218b10bbd57460dbdad8f711c44e222082418e46419aec",
+    "size": [
+      1024,
+      1024
+    ],
+    "mode": "RGBA",
+    "pixelSha256": "056d6dd4e6c590b13d3c0530369199a459917589bd6575c03f374f6675419976",
+    "alphaRange": [
+      0,
+      255
+    ],
+    "alphaBBox": [
+      0,
+      0,
+      1024,
+      1024
+    ],
+    "cornerAlpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "outerEdgesFullyTransparent": false
+  },
+  "transform": {
+    "canvas": [
+      1024,
+      1024
+    ],
+    "artworkSize": [
+      824,
+      824
+    ],
+    "offset": [
+      100,
+      100
+    ],
+    "scale": 0.8046875,
+    "transparentMargin": 100,
+    "filter": "Pillow LANCZOS",
+    "scaledMarginClipsResamplingRinging": true,
+    "pillowVersion": "11.3.0",
+    "logoPathsColorsAndGradientsEdited": false,
+    "roundedBackgroundPreservedFromSource": true
+  },
+  "productionBefore": {
+    "32x32.png": "9b4ea1f96415659fc627c181ec3060152c525f41b8ed1a2b320859fe2c105067",
+    "64x64.png": "00b4303207f08c844880cba776c56d109b195359d8a23cdf9d68b9b14fbd34b8",
+    "128x128.png": "e72e100f278e457d11ff3dee4323a6cd24839be60219f94e0d485456aca00909",
+    "128x128@2x.png": "56cf44004e044c156325a006677de9148550565fee5a91e10101033b38d6f30e",
+    "icon.png": "1a0e2b46e4c180ef83039eff317c88706864331dd4f87ad70d51285aa1b0e988",
+    "icon.icns": "987d15346cba954b96c20dd0945ff61070bb500dc5932227a2e4880967981770"
+  },
+  "productionBeforeSource": "docs/evidence/2026-10-03-visible-removal-icon/source-after-build.json",
+  "productionAfter": {
+    "32x32.png": {
+      "sha256": "b96ad102de3894bc3a9e3724728df3d76d6f5cbc4cb5c1ad8bae34fbccef192d",
+      "size": [
+        32,
+        32
+      ],
+      "mode": "RGBA",
+      "pixelSha256": "61e2f01970808e1328adb5483ea0d56dde04a9586b7c1ead137f9bd863c398dd",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        3,
+        3,
+        29,
+        29
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "outerEdgesFullyTransparent": true
+    },
+    "64x64.png": {
+      "sha256": "21d3323aa5ed058531b0dadd6062df43216eebcf2d71b730c4697188acf0e04d",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "pixelSha256": "e363445d590894ec796f89c571b64f853272a136276bd8d213e4e8a16661cafa",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        6,
+        6,
+        58,
+        58
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "outerEdgesFullyTransparent": true
+    },
+    "128x128.png": {
+      "sha256": "ec0939e18cbdce3c7341eb6ddaa14363c57f16bff0c612e681ff46f734ee69c2",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "pixelSha256": "45cd43805cf2302f906f3f3f9e8181e7b4f49d67df9a33f8ffcc6f110fa67ab4",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        12,
+        12,
+        116,
+        116
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "outerEdgesFullyTransparent": true
+    },
+    "128x128@2x.png": {
+      "sha256": "abf455b239b414cbe9cf5effe1145c9d2128d66318607b55cd6b838475402376",
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "pixelSha256": "65062b069098ab3ade9216f3b54e3d62730dffe5a0b57f1dcdb2e2d724765bdf",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        25,
+        25,
+        231,
+        231
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "outerEdgesFullyTransparent": true
+    },
+    "icon.png": {
+      "sha256": "c4c187ab9841c490d18aef3193125e7556af7fd47cee008c7c64ee52c521011b",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "pixelSha256": "a161ea2ddbce0bd21bc96492b1bbb814b57f550107c3f7f26e44c5c8c338814c",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        100,
+        100,
+        924,
+        924
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "outerEdgesFullyTransparent": true
+    }
+  },
+  "icns": {
+    "sha256": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "representationCount": 8,
+    "representations": {
+      "ic07": {
+        "sha256": "ec0939e18cbdce3c7341eb6ddaa14363c57f16bff0c612e681ff46f734ee69c2",
+        "size": [
+          128,
+          128
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "45cd43805cf2302f906f3f3f9e8181e7b4f49d67df9a33f8ffcc6f110fa67ab4",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          12,
+          12,
+          116,
+          116
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic08": {
+        "sha256": "abf455b239b414cbe9cf5effe1145c9d2128d66318607b55cd6b838475402376",
+        "size": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "65062b069098ab3ade9216f3b54e3d62730dffe5a0b57f1dcdb2e2d724765bdf",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          25,
+          25,
+          231,
+          231
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic09": {
+        "sha256": "8fd3d6433dc284fc7e2373b12a0d4cc7aacdc987f805bb12608542c4271c5077",
+        "size": [
+          512,
+          512
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "d7577cb00bb529f1d283801f281c15395c604972af7e9d163884ce4ca832645c",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          50,
+          50,
+          462,
+          462
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic10": {
+        "sha256": "c4c187ab9841c490d18aef3193125e7556af7fd47cee008c7c64ee52c521011b",
+        "size": [
+          1024,
+          1024
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "a161ea2ddbce0bd21bc96492b1bbb814b57f550107c3f7f26e44c5c8c338814c",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          100,
+          100,
+          924,
+          924
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic11": {
+        "sha256": "b96ad102de3894bc3a9e3724728df3d76d6f5cbc4cb5c1ad8bae34fbccef192d",
+        "size": [
+          32,
+          32
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "61e2f01970808e1328adb5483ea0d56dde04a9586b7c1ead137f9bd863c398dd",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          3,
+          3,
+          29,
+          29
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic12": {
+        "sha256": "21d3323aa5ed058531b0dadd6062df43216eebcf2d71b730c4697188acf0e04d",
+        "size": [
+          64,
+          64
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "e363445d590894ec796f89c571b64f853272a136276bd8d213e4e8a16661cafa",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          6,
+          6,
+          58,
+          58
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic13": {
+        "sha256": "abf455b239b414cbe9cf5effe1145c9d2128d66318607b55cd6b838475402376",
+        "size": [
+          256,
+          256
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "65062b069098ab3ade9216f3b54e3d62730dffe5a0b57f1dcdb2e2d724765bdf",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          25,
+          25,
+          231,
+          231
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      },
+      "ic14": {
+        "sha256": "8fd3d6433dc284fc7e2373b12a0d4cc7aacdc987f805bb12608542c4271c5077",
+        "size": [
+          512,
+          512
+        ],
+        "mode": "RGBA",
+        "pixelSha256": "d7577cb00bb529f1d283801f281c15395c604972af7e9d163884ce4ca832645c",
+        "alphaRange": [
+          0,
+          255
+        ],
+        "alphaBBox": [
+          50,
+          50,
+          462,
+          462
+        ],
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "outerEdgesFullyTransparent": true
+      }
+    }
+  },
+  "preview": {
+    "file": "preview.png",
+    "sha256": "c4c187ab9841c490d18aef3193125e7556af7fd47cee008c7c64ee52c521011b"
+  },
+  "sourceUnchanged": true,
+  "publicBrandAssetsEdited": false,
+  "applicationBuiltOrInstalled": false,
+  "systemIconRegistrationChanged": false
+}

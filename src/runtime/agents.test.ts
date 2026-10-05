@@ -1,13 +1,28 @@
 import { describe, expect, it } from "vitest";
+import { AGENT_BRANDS } from "./agent_brands";
+import { presentableAgents } from "./agent_directory";
 import {
   customAgentCard,
   mergeAgentCards,
   mergeConnectionStatus,
+  mergeConnectionSnapshots,
   toAgentCard,
   type AgentConnectionStatus,
   type AgentRow,
   type CatalogEntry,
 } from "./agents";
+
+it("does not let a delayed refresh resurrect a closed connection or erase a new one", () => {
+  const stale = readyStatus();
+  const newer = readyStatus({ cwd: "/new" });
+  expect(
+    mergeConnectionSnapshots(
+      { codex: [], later: [newer] },
+      { codex: [stale], untouched: [stale] },
+      new Set(["codex", "later"]),
+    ),
+  ).toEqual({ codex: [], untouched: [stale], later: [newer] });
+});
 
 function catalogEntry(overrides: Partial<CatalogEntry> = {}): CatalogEntry {
   return {
@@ -59,11 +74,36 @@ function readyStatus(
 }
 
 describe("toAgentCard", () => {
+  it("retains retired registrations for history while catalog failure keeps custom and discovered choices usable", () => {
+    const retired = agentRow({ id: "registry:old-entry", source: "registry" });
+    const custom = agentRow({ id: "custom-example", source: "custom" });
+    const local = agentRow({ id: "local-example", source: "discovered" });
+    const rows = [retired, custom, local];
+    const cards = mergeAgentCards([], rows, {
+      [retired.id]: [readyStatus({ agentId: retired.id })],
+    });
+    expect(cards.map((card) => card.id)).toEqual(rows.map((row) => row.id));
+    expect(cards[0]).toMatchObject({
+      id: retired.id,
+      source: "registry",
+      status: "connected",
+      firstBatchVisible: false,
+      handshake: retired.handshake,
+    });
+    expect(presentableAgents(cards).map((card) => card.id)).toEqual([
+      custom.id,
+      local.id,
+    ]);
+  });
+
   it("preserves first-release visibility without removing a registered program or its handshake", () => {
-    const row = agentRow({ id: "registry:glm-acp-agent", source: "registry" });
+    const row = agentRow({
+      id: "registry:unlisted-example",
+      source: "registry",
+    });
     const hidden = catalogEntry({
       agentId: row.id,
-      registryId: "glm-acp-agent",
+      registryId: "unlisted-example",
       registered: row,
       firstBatchVisible: false,
     } as Partial<CatalogEntry>);
@@ -72,7 +112,7 @@ describe("toAgentCard", () => {
       firstBatchVisible: false,
       status: "installed",
       source: "registry",
-      registryId: "glm-acp-agent",
+      registryId: "unlisted-example",
       installable: true,
       programPath: row.command,
     });
@@ -201,9 +241,24 @@ describe("toAgentCard", () => {
       ],
     ]) {
       expect(
-        toAgentCard(catalogEntry({ description }), undefined).description,
+        toAgentCard(
+          catalogEntry({
+            agentId: "example",
+            registryId: "example",
+            description,
+          }),
+          undefined,
+        ).description,
       ).toBe(expected);
     }
+  });
+  it("uses the reviewed Chinese catalog introduction without claiming readiness", () => {
+    const card = toAgentCard(
+      catalogEntry({ description: "Unreviewed external prose" }),
+      undefined,
+    );
+    expect(card.description).toBe(AGENT_BRANDS["codex-acp"].description);
+    expect(card.status).toBe("none");
   });
   it("maps the four status tiers", () => {
     expect(toAgentCard(catalogEntry(), undefined).status).toBe("none");

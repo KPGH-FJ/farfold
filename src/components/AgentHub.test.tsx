@@ -4,7 +4,11 @@ import { AgentHub, agentSourceLabel, preparationProgressKey } from "./AgentHub";
 import { AgentSetup, initialAgentSetupProgress } from "./AgentSetup";
 import { AgentDetails } from "./AgentDetails";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
-import { ACCESS_STRINGS } from "../runtime/access_strings";
+import {
+  ACCESS_STRINGS,
+  installationUnavailableLabel,
+} from "../runtime/access_strings";
+import { R5_PROGRAM_STRINGS } from "../runtime/r5_program_strings";
 
 const card: AgentCardModel = {
   id: "registry:example",
@@ -47,10 +51,10 @@ function state(cards: AgentCardModel[]): AgentsState {
 }
 
 describe("Agent discovery and preparation", () => {
-  it("hides deferred and unreviewed directory entries only from discovery, including installed entries", () => {
+  it("hides retired catalog entries from discovery and added lists while preserving custom and local choices", () => {
     const deferred = {
       ...card,
-      id: "registry:glm-acp-agent",
+      id: "registry:unlisted-example",
       name: "Deferred",
       status: "installed" as const,
       firstBatchVisible: false,
@@ -69,15 +73,17 @@ describe("Agent discovery and preparation", () => {
       {
         ...card,
         id: "custom",
-        name: "Deferred",
+        name: "Custom",
         custom: true,
+        status: "installed",
         firstBatchVisible: false,
       },
       {
         ...card,
         id: "local",
         name: "Local",
-        status: "discovered" as const,
+        source: "discovered",
+        status: "installed",
         firstBatchVisible: false,
       },
     ]);
@@ -89,14 +95,19 @@ describe("Agent discovery and preparation", () => {
     };
     const discover = renderToStaticMarkup(<AgentHub {...props} />);
     expect(discover).not.toContain("管理 Agent · Unreviewed");
-    expect(discover.match(/管理 Agent · Deferred/g)).toHaveLength(1);
+    expect(discover).not.toContain("管理 Agent · Deferred");
+    expect(discover).toContain("管理 Agent · Custom");
     expect(discover).toContain("管理 Agent · Auggie");
     expect(discover).toContain("管理 Agent · Fast");
     expect(discover).toContain("管理 Agent · Local");
     const added = renderToStaticMarkup(
       <AgentHub {...props} initialView="added" />,
     );
-    expect(added).toContain("管理 Agent · Deferred");
+    expect(added).not.toContain("管理 Agent · Deferred");
+    expect(added).not.toContain("管理 Agent · Unreviewed");
+    expect(added).toContain("管理 Agent · Custom");
+    expect(added).toContain("管理 Agent · Local");
+    expect(agents.cards).toContain(deferred);
     expect(agents.install).not.toHaveBeenCalled();
     expect(agents.remove).not.toHaveBeenCalled();
   });
@@ -203,7 +214,7 @@ describe("Agent discovery and preparation", () => {
     expect(html).toContain("agent-hub-category active");
     expect(agents.connect).not.toHaveBeenCalled();
   });
-  it("keeps unsupported platform entries discoverable and their install action disabled", () => {
+  it("keeps unsupported platforms discoverable without offering an installation action", () => {
     const unsupported = {
       ...card,
       installable: false,
@@ -230,8 +241,8 @@ describe("Agent discovery and preparation", () => {
         onProgress={() => {}}
       />,
     );
-    expect(setup).toContain('disabled=""');
-    expect(setup).toContain("官方目录未提供适用于此设备的安装方式");
+    expect(setup).toContain(installationUnavailableLabel(false));
+    expect(setup).not.toMatch(/<button[^>]*>安装程序<\/button>/);
     expect(agents.connect).not.toHaveBeenCalled();
   });
   it.each([true, null, undefined])(
@@ -275,13 +286,18 @@ describe("Agent discovery and preparation", () => {
         />,
       );
       for (const html of [hub, detail, setup]) {
-        expect(html).toContain("当前尚不能在此安装");
+        expect(html).toContain(installationUnavailableLabel(platformAvailable));
         expect(html).not.toContain("暂不支持此设备");
         expect(html).not.toContain("官方未提供此设备");
       }
       expect(detail).toContain("官方说明");
-      expect(setup).toContain("在设置中添加已安装的程序");
-      expect(setup).toMatch(/<button[^>]*disabled=""[^>]*>安装程序<\/button>/);
+      expect(setup).toContain(R5_PROGRAM_STRINGS.officialGuide);
+      expect(setup).toMatch(
+        new RegExp(
+          `<button(?![^>]*disabled)[^>]*>${R5_PROGRAM_STRINGS.officialGuide}</button>`,
+        ),
+      );
+      expect(setup).not.toMatch(/<button[^>]*>安装程序<\/button>/);
       expect(agents.install).not.toHaveBeenCalled();
       expect(agents.connect).not.toHaveBeenCalled();
     },
@@ -316,6 +332,7 @@ describe("Agent discovery and preparation", () => {
       step: 2,
       choice: "existing",
       selection,
+      accessStage: "method",
     });
     const context = { agentId: card.id, cwd: "/draft-folder", selection };
     expect(preparationProgressKey(card.id, context)).not.toBe(
@@ -335,6 +352,7 @@ describe("Agent discovery and preparation", () => {
       step: 2,
       choice: "api",
       selection: api,
+      accessStage: "api",
     });
     expect(
       preparationProgressKey(card.id, { ...context, selection: api }),
@@ -366,7 +384,7 @@ describe("Agent discovery and preparation", () => {
     expect(html).not.toContain("确认使用");
     expect(html).toContain("/draft-folder");
     expect(html).toContain("发送一条短消息测试（可选）");
-    expect(html).toContain("当前选择尚无成功回复");
+    expect(html).toContain(ACCESS_STRINGS.testNotRun);
     expect(html).toContain("返回原草稿");
     expect(html).not.toContain("准备完成，可以开始对话");
     expect(html).not.toContain("短消息测试通过");

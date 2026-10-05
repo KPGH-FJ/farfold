@@ -5,6 +5,7 @@ docs/evidence/2026-10-05-local-html/command-check/workflow.js
 docs/evidence/2026-10-05-local-html/command-check/fixture/controlled.html
 # Frozen design baseline and historical/raw evidence are verified by their own hashes.
 # Do not rewrite them as part of production formatting.
+docs/evidence/2026-10-03-r5-access/controlled-render/*.html
 .design/2026-09-26-agent-access-redesign/
 docs/evidence/2026-09-26-agent-onboarding-audit/README.md
 docs/evidence/2026-09-26-product-logic-review/
@@ -139,6 +140,27 @@ docs/evidence/2026-10-01-archive-directory-identity/draft-after-exit.json
 docs/evidence/2026-10-01-archive-directory-identity/initial-processes.json
 docs/evidence/2026-10-01-archive-directory-identity/restored.json
 
+# Signed source manifests and installed observations retain their recorded bytes.
+docs/evidence/2026-10-03-r5-access/options-read-repair/*.json
+docs/evidence/2026-10-03-r5-access/options-read-repair/installed/*.json
+docs/evidence/2026-10-03-r5-access/default-choice-repair/installed/*.json
+# Current controlled renders preserve exported HTML bytes for screenshot attribution.
+docs/evidence/2026-10-03-ui-consistency/controlled-render/*.html
+
+# Generated visual evidence and metadata receipts retain their recorded bytes.
+docs/evidence/2026-10-03-brand-and-input/composer-html/*.html
+docs/evidence/2026-10-03-brand-and-input/*.json
+docs/evidence/2026-10-03-brand-and-input/composer-captures/*.json
+docs/evidence/2026-10-03-brand-and-input/account-html/*.html
+docs/evidence/2026-10-03-brand-and-input/account-captures/*.json
+
+# System-icon and signed application receipts retain captured bytes.
+docs/evidence/2026-10-03-visible-removal-icon/*.json
+
+# Preserve captured receipts and controlled browser outputs byte-for-byte.
+docs/evidence/2026-10-03-ready-workspace-ui/**/*.json
+docs/evidence/2026-10-03-ready-workspace-ui/**/*.html
+
 # Controlled native browser probe receipts retain their captured bytes and manifest hashes.
 docs/evidence/2026-10-03-workbench-delivery/browser-probe/
 
@@ -171,3 +193,11 @@ docs/evidence/2026-10-04-desktop-browser-ui/visibility-probe/
 docs/evidence/2026-10-04-desktop-browser-ui/visual/
 docs/evidence/2026-10-04-desktop-browser-ui/visual-selected/
 docs/evidence/2026-10-05-mcp-file-feedback/official-merge/
+
+# Downloaded research and generated media are not maintained source.
+/output/
+/generated_images/
+
+# Frozen research and real-response receipts retain captured bytes.
+docs/evidence/2026-10-05-first-batch-acp-research/*.json
+docs/evidence/2026-10-05-response-acceptance/*.json

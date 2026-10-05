@@ -1,0 +1,198 @@
+{
+  "kind": "controlled-production-SSR",
+  "viewport": {
+    "width": 1280,
+    "height": 820
+  },
+  "source": "real AgentSetup and child components; test-only transport/hook snapshots",
+  "limitations": [
+    "All methods, services, receipts and program records are synthetic.",
+    "No browser screenshot, interaction, Tauri execution, real authentication or 33-Agent parameter validation.",
+    "Only showModal mounting is added to static HTML; component HTML, CSS and SVG assets are production outputs."
+  ],
+  "css": [
+    "node_modules/.pnpm/@xterm+xterm@6.0.0/node_modules/@xterm/xterm/css/xterm.css",
+    "r5-agent-access.css",
+    "r5-program-access.css",
+    "agent-setup-presentation.css",
+    "command-palette.css",
+    "new-conversation-pickers.css",
+    "attachment-review.css",
+    "general-settings.css",
+    "api-settings.css",
+    "lifemodel-settings.css",
+    "message-attachments.css",
+    "agent-hub.css",
+    "library-dialogs.css",
+    "styles.css",
+    "styles-settings.css",
+    "styles-content.css",
+    "styles-thread.css",
+    "styles-artifact.css",
+    "product-shell.css",
+    "conversation-workspace.css",
+    "history-import.css"
+  ],
+  "cssSha256": "5c920a818abc1eabc7772b8d690ce4b979d6d1ffed83e72934d0ee4b583276c7",
+  "reference": {
+    "path": "/Users/tw/Documents/Codex/2026-10-02/task-3/refined-prototype/Farfold-R5.html",
+    "sha256": "51fd75c36280cd71ce3223cefff30e7ab31c754068a2e7c80d868226d6f0433b"
+  },
+  "sourceHashes": [
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "sha256": "1eb2821b0849e77699231ad337f2730e467fb5fe63b10d1aed0f34a6793d4157"
+    },
+    {
+      "path": "src/components/AgentSetupProgram.tsx",
+      "sha256": "65dce331f62300a8681ec037252ef668047f3ee962fb67659caf17f2eb2c63df"
+    },
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "b09480626e69d8ed449cd74b4464eba29f04a0c194de64b814ded051a6e80131"
+    },
+    {
+      "path": "src/components/AgentConnectionPicker.tsx",
+      "sha256": "ef0db49e0cec6154bc328b6993635ec310d26e5d58978313812b63bc193c6e6b"
+    },
+    {
+      "path": "src/components/AgentServiceSection.tsx",
+      "sha256": "e6d030e1289691b777c5770b3e174548993b988652e83c770dd007d6ccfab1cc"
+    },
+    {
+      "path": "src/components/ServicePicker.tsx",
+      "sha256": "15e75471095c9ca9e5fb5fa864aaa3d0a0c7e10cb646abf24ba78567c532a89a"
+    },
+    {
+      "path": "src/components/ServiceModelPicker.tsx",
+      "sha256": "b55e9e76c820486115a47edfde05716b378ad7f21508339496ca449e11c9a515"
+    },
+    {
+      "path": "src/components/ProgramManager.tsx",
+      "sha256": "9d8d2639dcf6276c0dbbd4f045b3187d7961edd1298b12d6f54c5610af1742b0"
+    },
+    {
+      "path": "src/components/AgentPrerequisites.tsx",
+      "sha256": "763aa47101cffd29c08c6a4a33da099557f6ae842e0baa69b660377c45090654"
+    },
+    {
+      "path": "src/components/AgentSetup.r5-render.test.tsx",
+      "sha256": "efab36883cfd439d61308d36c6e5241ed10c620678fed3608714170766a7fc41"
+    }
+  ],
+  "fixtureModelReadCount": 1,
+  "interceptedMetadataReads": [
+    "app_default_working_directory",
+    "auth_manual_get"
+  ],
+  "rows": [
+    {
+      "id": "01-account-key",
+      "label": "账号与指定密钥两种方式",
+      "referenceState": "account-methods",
+      "file": "01-account-key.html",
+      "sha256": "4f2ab2168f0f9964c20950ac8efc79a50d3733ab19efd6701c9da878066a4819",
+      "radioCount": 2,
+      "fixture": true
+    },
+    {
+      "id": "02-terminal-api",
+      "label": "终端与模型 API 两种方式",
+      "referenceState": "service-source",
+      "file": "02-terminal-api.html",
+      "sha256": "380f6b7964a22e03bcc2e4bbccba331b17e2ec80355e0f91f6896b933ca3ab63",
+      "radioCount": 2,
+      "fixture": true
+    },
+    {
+      "id": "03-three-methods",
+      "label": "账号、终端和模型 API 三种方式",
+      "referenceState": "connection-three-methods",
+      "file": "03-three-methods.html",
+      "sha256": "ebf05fcec9a6c9f8e1f698bca75f62315ee65771236be59c6af6864162602d38",
+      "radioCount": 3,
+      "fixture": true
+    },
+    {
+      "id": "04-account-summary",
+      "label": "账号完成摘要",
+      "referenceState": "chatgpt-success",
+      "file": "04-account-summary.html",
+      "sha256": "ce85f2402a51737a1bdc9e5c6e18b8fc75b2276059417286e22bf165eb7e846c",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "05-terminal-summary",
+      "label": "终端设置检查完成摘要",
+      "referenceState": "terminal-checked",
+      "file": "05-terminal-summary.html",
+      "sha256": "1fcd0a09262c891dfa0fc72725d537a67daf10ecc174a71f6d3fa333f7f28b9c",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "06-service-step",
+      "label": "第二步只选择服务身份",
+      "referenceState": "service-select",
+      "file": "06-service-step.html",
+      "sha256": "290d2b4d6f28cd60a513d05dd7845cfa09d018bbaf5e6b7352cedcb361a0fb90",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "07-service-summary",
+      "label": "模型服务已选择摘要",
+      "referenceState": "service-ready",
+      "file": "07-service-summary.html",
+      "sha256": "f6a82adfc62875177098a291b9a42356f113faeec612029b7a2ee7e8f0c19761",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "08-model-step",
+      "label": "第三步明确选择本次模型",
+      "referenceState": "models-ready",
+      "file": "08-model-step.html",
+      "sha256": "d35f42122804502f9b8992d650065ddb360d5421c222edcde2cc788fc2157bb4",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "09-model-selected",
+      "label": "本次模型已选择，读取结果固定",
+      "referenceState": "models-ready",
+      "file": "09-model-selected.html",
+      "sha256": "de6b6c0493a119d825a28682a4009198a9fd605823cbb4009a7af8396082958c",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "10-program-list",
+      "label": "已断开后的程序清单",
+      "referenceState": "program-candidate",
+      "file": "10-program-list.html",
+      "sha256": "1000a2fa2048bdc7d0c8adcd9654b98ef4fbfcd4d9955d63cc1b7a3962cb0af9",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "11-program-connected",
+      "label": "已连接先断开后管理",
+      "referenceState": "program-manager-connected",
+      "file": "11-program-connected.html",
+      "sha256": "67d4d5d74c85ff98039f9a637725c6e31f6edf681a73911f3fe1468c5c679e14",
+      "radioCount": 0,
+      "fixture": true
+    },
+    {
+      "id": "12-service-editing",
+      "label": "更换服务时再次显示服务选择",
+      "referenceState": "service-select",
+      "file": "12-service-editing.html",
+      "sha256": "f8daa6199f63d6cc69ebb9d107a4a722e8f4bbb750b45881187e2eb9893592b7",
+      "radioCount": 0,
+      "fixture": true
+    }
+  ]
+}

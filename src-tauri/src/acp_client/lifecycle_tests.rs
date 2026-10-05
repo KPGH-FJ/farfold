@@ -47,6 +47,9 @@ mod protocol_error_tests;
 #[path = "open_delivery_tests.rs"]
 mod open_delivery_tests;
 
+#[path = "retention_tests.rs"]
+mod retention_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,

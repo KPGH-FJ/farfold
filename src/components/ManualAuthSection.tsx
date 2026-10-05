@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { STRINGS } from "../runtime/strings";
+import { PREPARATION_STRINGS } from "../runtime/preparation_strings";
 interface Config {
   command: string;
   args: string[];
@@ -9,7 +10,6 @@ interface Config {
 export function ManualAuthSection({
   agentId,
   methodId,
-  declaredEnv,
   disabled = false,
   onAcquire,
   onInvalidate,
@@ -26,31 +26,59 @@ export function ManualAuthSection({
   const [expanded, setExpanded] = useState(false);
   const [command, setCommand] = useState("");
   const [args, setArgs] = useState("");
-  const [env, setEnv] = useState("");
   const [saved, setSaved] = useState<Config | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  const [readFailed, setReadFailed] = useState(false);
+  const [reload, setReload] = useState(0);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const attempt = useRef(0);
   useEffect(() => {
     let active = true;
+    setLoaded(false);
+    setReadFailed(false);
+    setSaved(null);
+    setCommand("");
+    setArgs("");
+    setNote(null);
     void invoke<Config | null>("auth_manual_get", { agentId, methodId })
       .then((value) => {
         if (active) {
           setSaved(value);
           setCommand(value?.command ?? "");
           setArgs(value?.args.join("\n") ?? "");
-          setEnv(value?.envName ?? "");
+          setLoaded(true);
+          if (value && !value.command.trim())
+            setNote(STRINGS.repair.executableRequired);
         }
       })
       .catch(() => {
-        if (active) setNote(STRINGS.repair.authFailed);
+        if (active) {
+          setReadFailed(true);
+          setNote(STRINGS.repair.authFailed);
+        }
       });
     return () => {
       active = false;
       attempt.current++;
     };
-  }, [agentId, methodId]);
+  }, [agentId, methodId, reload]);
+  const unavailable = disabled || busy || !loaded;
+  const normalizedCommand = command.trim();
+  const normalizedArgs = args.split("\n").filter((arg) => arg.length > 0);
+  const runnable =
+    !unavailable &&
+    !!normalizedCommand &&
+    !!saved &&
+    normalizedCommand === saved.command &&
+    normalizedArgs.length === saved.args.length &&
+    normalizedArgs.every((arg, index) => arg === saved.args[index]);
   const save = async (clear = false) => {
+    if (unavailable) return;
+    if (!clear && !normalizedCommand) {
+      setNote(STRINGS.repair.executableRequired);
+      return;
+    }
     const release = onAcquire();
     if (!release) return;
     const ticket = ++attempt.current;
@@ -60,9 +88,9 @@ export function ManualAuthSection({
     const config: Config | null = clear
       ? null
       : {
-          command: command.trim(),
-          args: args.split("\n").filter((arg) => arg.length > 0),
-          envName: declaredEnv || env.trim() || null,
+          command: normalizedCommand,
+          args: normalizedArgs,
+          envName: saved?.envName ?? null,
         };
     try {
       await invoke("auth_manual_set", { agentId, methodId, config });
@@ -71,7 +99,6 @@ export function ManualAuthSection({
       if (clear) {
         setCommand("");
         setArgs("");
-        setEnv("");
       }
       setNote(STRINGS.repair.manualSaved);
     } catch {
@@ -81,7 +108,6 @@ export function ManualAuthSection({
       if (ticket === attempt.current) setBusy(false);
     }
   };
-  const unavailable = disabled || busy;
   return (
     <div className="auth">
       <button
@@ -98,6 +124,7 @@ export function ManualAuthSection({
             <input
               className="custom-input"
               value={command}
+              placeholder={STRINGS.repair.executableRequired}
               onChange={(e) => setCommand(e.target.value)}
               disabled={unavailable}
             />
@@ -111,21 +138,11 @@ export function ManualAuthSection({
               disabled={unavailable}
             />
           </label>
-          <label className="auth-note">
-            {STRINGS.repair.envName}
-            <input
-              className="custom-input"
-              value={declaredEnv || env}
-              readOnly={!!declaredEnv}
-              onChange={(e) => setEnv(e.target.value)}
-              disabled={unavailable}
-            />
-          </label>
           <div className="auth-actions">
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={unavailable}
+              disabled={unavailable || !normalizedCommand}
               onClick={() => void save()}
             >
               {STRINGS.repair.save}
@@ -141,8 +158,10 @@ export function ManualAuthSection({
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={unavailable || !saved?.command}
-              onClick={onRun}
+              disabled={!runnable}
+              onClick={() => {
+                if (runnable) onRun();
+              }}
             >
               {STRINGS.repair.run}
             </button>
@@ -153,6 +172,20 @@ export function ManualAuthSection({
         <div className="auth-note" role="status">
           {note}
         </div>
+      )}
+      {readFailed && (
+        <button
+          type="button"
+          className="btn btn-text"
+          disabled={busy}
+          onClick={() => {
+            if (busy) return;
+            setReadFailed(false);
+            setReload((value) => value + 1);
+          }}
+        >
+          {PREPARATION_STRINGS.retry}
+        </button>
       )}
     </div>
   );

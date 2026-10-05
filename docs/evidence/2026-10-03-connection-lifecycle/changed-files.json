@@ -1,0 +1,232 @@
+[
+  {
+    "file": "src/App.tsx",
+    "new": false,
+    "lines": 1122
+  },
+  {
+    "file": "src/App.navigation.test.tsx",
+    "new": false,
+    "lines": 1179
+  },
+  {
+    "file": "src/runtime/agents.test.ts",
+    "new": false,
+    "lines": 408
+  },
+  {
+    "file": "src/runtime/strings.ts",
+    "new": false,
+    "lines": 701
+  },
+  {
+    "file": "src/runtime/session_types.ts",
+    "new": false,
+    "lines": 278
+  },
+  {
+    "file": "src/runtime/agent_directory.test.ts",
+    "new": false,
+    "lines": 177
+  },
+  {
+    "file": "src/runtime/connection_intent.ts",
+    "new": true,
+    "lines": 51
+  },
+  {
+    "file": "src/runtime/agent_readiness.test.ts",
+    "new": false,
+    "lines": 228
+  },
+  {
+    "file": "src/runtime/agents.ts",
+    "new": false,
+    "lines": 999
+  },
+  {
+    "file": "src/runtime/connection_hold.test.ts",
+    "new": true,
+    "lines": 212
+  },
+  {
+    "file": "src/runtime/agents.connection-intent.test.ts",
+    "new": true,
+    "lines": 53
+  },
+  {
+    "file": "src/runtime/access_strings.ts",
+    "new": false,
+    "lines": 207
+  },
+  {
+    "file": "src/runtime/connection_intent.test.ts",
+    "new": true,
+    "lines": 48
+  },
+  {
+    "file": "src/runtime/connection_close.ts",
+    "new": true,
+    "lines": 21
+  },
+  {
+    "file": "src/runtime/agent_directory.ts",
+    "new": false,
+    "lines": 82
+  },
+  {
+    "file": "src/runtime/connection_hold.ts",
+    "new": true,
+    "lines": 89
+  },
+  {
+    "file": "src/runtime/agent_readiness.ts",
+    "new": false,
+    "lines": 70
+  },
+  {
+    "file": "src/runtime/sessions.connection-lifecycle.test.ts",
+    "new": true,
+    "lines": 97
+  },
+  {
+    "file": "src/runtime/sessions.ts",
+    "new": false,
+    "lines": 1497
+  },
+  {
+    "file": "src/runtime/session_projection.ts",
+    "new": false,
+    "lines": 755
+  },
+  {
+    "file": "src/components/AgentHub.continuity.test.tsx",
+    "new": false,
+    "lines": 828
+  },
+  {
+    "file": "src/components/AgentPick.tsx",
+    "new": false,
+    "lines": 55
+  },
+  {
+    "file": "src/components/EmptyState.selection.test.tsx",
+    "new": false,
+    "lines": 1141
+  },
+  {
+    "file": "src/components/NewConversationPickers.test.tsx",
+    "new": false,
+    "lines": 498
+  },
+  {
+    "file": "src/components/EmptyState.tsx",
+    "new": false,
+    "lines": 1071
+  },
+  {
+    "file": "src/components/AgentHub.tsx",
+    "new": false,
+    "lines": 885
+  },
+  {
+    "file": "src/components/ThreadView.tsx",
+    "new": false,
+    "lines": 1027
+  },
+  {
+    "file": "src-tauri/src/lib.rs",
+    "new": false,
+    "lines": 267
+  },
+  {
+    "file": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+    "new": false,
+    "lines": 417
+  },
+  {
+    "file": "src-tauri/src/acp_client/session_commands.rs",
+    "new": false,
+    "lines": 565
+  },
+  {
+    "file": "src-tauri/src/acp_client/open_delivery_tests.rs",
+    "new": false,
+    "lines": 334
+  },
+  {
+    "file": "src-tauri/src/acp_client/pump.rs",
+    "new": false,
+    "lines": 1332
+  },
+  {
+    "file": "src-tauri/src/acp_client/category_guard_tests.rs",
+    "new": false,
+    "lines": 507
+  },
+  {
+    "file": "src-tauri/src/acp_client/manager.rs",
+    "new": false,
+    "lines": 1453
+  },
+  {
+    "file": "src-tauri/src/acp_client/config_guard_tests.rs",
+    "new": false,
+    "lines": 291
+  },
+  {
+    "file": "src-tauri/src/acp_client/retention_tests.rs",
+    "new": true,
+    "lines": 204
+  },
+  {
+    "file": "src-tauri/src/acp_client/auth_connection.rs",
+    "new": false,
+    "lines": 77
+  },
+  {
+    "file": "src-tauri/src/acp_client/lifecycle_tests.rs",
+    "new": false,
+    "lines": 1134
+  },
+  {
+    "file": "src-tauri/src/acp_client/lifecycle.rs",
+    "new": false,
+    "lines": 505
+  },
+  {
+    "file": "src-tauri/src/acp_client/connection_retention.rs",
+    "new": true,
+    "lines": 62
+  },
+  {
+    "file": "src-tauri/src/acp_client/session_discovery.rs",
+    "new": false,
+    "lines": 408
+  },
+  {
+    "file": "src-tauri/src/acp_client/operations.rs",
+    "new": false,
+    "lines": 472
+  },
+  {
+    "file": "src-tauri/src/acp_client/lifecycle/retention_tests.rs",
+    "new": true,
+    "lines": 115
+  },
+  {
+    "file": "src-tauri/src/acp_client/operations/open_result.rs",
+    "new": false,
+    "lines": 98
+  },
+  {
+    "file": "src-tauri/src/acp_client/operations/auth_result_tests.rs",
+    "new": true,
+    "lines": 123
+  },
+  {
+    "file": "src-tauri/src/acp_client/pump/open.rs",
+    "new": false,
+    "lines": 306
+  }
+]

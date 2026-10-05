@@ -24,7 +24,6 @@ import {
   ArrowUpIcon,
   CommandIcon,
   FileTextIcon,
-  FolderSimpleIcon,
   PaperclipIcon,
   PlusIcon,
 } from "@phosphor-icons/react";
@@ -92,7 +91,6 @@ export function Composer({
   errorContextKey,
   controls,
   attachmentControls,
-  onChooseFolder,
   editableWhenDisabled = false,
   prepareAction,
   placeholder,
@@ -129,7 +127,6 @@ export function Composer({
   errorContextKey?: string;
   controls?: ReactNode;
   attachmentControls?: ReactNode;
-  onChooseFolder?: () => void;
   editableWhenDisabled?: boolean;
   prepareAction?: () => void;
   placeholder?: string;
@@ -277,7 +274,7 @@ export function Composer({
     const el = areaRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
   };
 
   // Slash popup: whole input is a single `/token` and the agent declared
@@ -765,25 +762,8 @@ export function Composer({
             <PaperclipIcon size={19} />
             <span>
               <strong>{STRINGS.composer.addFile}</strong>
-              <small>{C.addFileHint}</small>
             </span>
           </button>
-          {onChooseFolder && (
-            <button
-              type="button"
-              onClick={() => {
-                if (!ownsAddMenu()) return;
-                setPlusOpen(false);
-                onChooseFolder();
-              }}
-            >
-              <FolderSimpleIcon size={19} />
-              <span>
-                <strong>{C.choose}</strong>
-                <small>{C.chooseFolderHint}</small>
-              </span>
-            </button>
-          )}
           {thread?.identity === "established" && (
             <button type="button" disabled={!cwd} onClick={findProjectFile}>
               <FileTextIcon size={19} />
@@ -803,7 +783,6 @@ export function Composer({
               <CommandIcon size={19} />
               <span>
                 <strong>{C.agentCommands}</strong>
-                <small>{C.agentCommandsHint}</small>
               </span>
             </button>
           )}
@@ -1331,6 +1310,7 @@ export function Composer({
               title={STRINGS.composer.addTitle}
               aria-label={STRINGS.composer.addTitle}
               aria-expanded={plusOpen}
+              aria-haspopup="dialog"
               disabled={inputDisabled}
               onClick={() => {
                 plusAnchor.current?.focus();
@@ -1432,24 +1412,16 @@ export function Composer({
                 : W.keyboardSend}
         </span>
       </div>
-      {active &&
-        plusOpen &&
-        (!thread || thread.identity === "draft" ? (
-          <WorkspaceDialog
-            title={agentCommandsOpen ? C.agentCommands : C.addTitle}
-            onClose={() => setPlusOpen(false)}
-          >
-            {addContents}
-          </WorkspaceDialog>
-        ) : (
-          <WorkspaceActionMenu
-            anchor={plusAnchor.current}
-            title={C.addTitle}
-            onClose={() => setPlusOpen(false)}
-          >
-            {addContents}
-          </WorkspaceActionMenu>
-        ))}
+      {active && plusOpen && (
+        <WorkspaceActionMenu
+          key={agentCommandsOpen ? "commands" : "add"}
+          anchor={plusAnchor.current}
+          title={agentCommandsOpen ? C.agentCommands : C.addTitle}
+          onClose={() => setPlusOpen(false)}
+        >
+          {addContents}
+        </WorkspaceActionMenu>
+      )}
     </div>
   );
 }

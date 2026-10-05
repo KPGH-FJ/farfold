@@ -5,13 +5,16 @@ use serde_json::{Value, json};
 use std::sync::{Arc, mpsc};
 use std::time::Duration;
 const PEER: &str = r#"
-import sys,json
+import sys,json,os
 options=[{'id':'model','name':'Model','category':'model','type':'select','currentValue':'m','options':[{'value':'m','name':'M'}]}, {'id':'reasoning_effort','name':'Reasoning','category':'thought_level','type':'select','currentValue':'high','options':[{'value':'low','name':'Low'},{'value':'high','name':'High'}]}]
 def send(x): print(json.dumps(dict(jsonrpc='2.0',**x)),flush=True)
 for line in sys.stdin:
  m=json.loads(line); p=m.get('params',{}); method=m.get('method'); result={}
  if method=='initialize': result={'protocolVersion':1,'agentCapabilities':{'loadSession':True},'authMethods':[]}
- elif method in ('session/new','session/load'): result=dict(configOptions=options,**({'sessionId':'proof'} if method=='session/new' else {}))
+ elif method in ('session/new','session/load'):
+  if method=='session/load' and os.path.exists(sys.argv[1]):
+   options[1]['options']=[{'value':'high','name':'High'}]
+  result=dict(configOptions=options,**({'sessionId':'proof'} if method=='session/new' else {}))
  elif method=='session/set_config_option':
   for o in options:
    if o['id']==p['configId']: o['currentValue']=p['value']
@@ -68,10 +71,11 @@ fn wait_for_open_cleanup(manager: &AcpManager, agent_id: &str, cwd: &std::path::
     }
 }
 #[tokio::test(flavor = "multi_thread")]
-async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explicit() {
+async fn configuration_change_persisted_effort_and_legacy_confirmation_are_guarded() {
     let dir = tempfile::tempdir().unwrap();
     std::fs::write(dir.path().join("peer.py"), PEER).unwrap();
     let cwd = dir.path().canonicalize().unwrap();
+    let unavailable_choice = cwd.join("unavailable-choice");
     let db = cwd.join("meta.db");
     let store = MetaStore::open(&db).unwrap();
     let manager = Arc::new(AcpManager::new(cwd.join("logs"), cwd.clone()));
@@ -81,7 +85,11 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
         name: "Fixture".into(),
         source: "custom".into(),
         command: "/usr/bin/python3".into(),
-        args: vec!["-u".into(), cwd.join("peer.py").to_string_lossy().into()],
+        args: vec![
+            "-u".into(),
+            cwd.join("peer.py").to_string_lossy().into(),
+            unavailable_choice.to_string_lossy().into(),
+        ],
         env: vec![],
         version: None,
         handshake: None,
@@ -98,11 +106,29 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
         .await
         .unwrap();
     assert_eq!(first.config_check.status, "ready");
-    manager
+    let initial = next(&rx, "configCheck");
+    assert_eq!(initial["check"]["status"], "ready");
+    assert_eq!(
+        initial["check"]["current"],
+        json!({"choices":[
+            {"id":"model","category":"model","type":"select","value":"m"},
+            {"id":"reasoning_effort","category":"thought_level","type":"select","value":"high"}
+        ]})
+    );
+    let configured = manager
         .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("low"))
         .await
         .unwrap();
-    assert_eq!(next(&rx, "configCheck")["check"]["status"], "ready");
+    let changed = next(&rx, "configCheck");
+    assert_eq!(changed["check"]["status"], "ready");
+    assert_eq!(
+        changed["check"]["current"],
+        json!({"choices":[
+            {"id":"model","category":"model","type":"select","value":"m"},
+            {"id":"reasoning_effort","category":"thought_level","type":"select","value":"low"}
+        ]})
+    );
+    assert_eq!(changed["check"], configured["configCheck"]);
     let blocks = || serde_json::from_value(json!([{"type":"text","text":"proof"}])).unwrap();
     // Source/configuration storage must succeed before the first prompt is admitted.
     let sql = rusqlite::Connection::open(&db).unwrap();
@@ -131,13 +157,20 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
     next(&rx, "turnEnd");
     let id = super::session_index::session_row_id(&row.id, &cwd.to_string_lossy(), "proof");
     assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
-    assert!(
-        manager
-            .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("high"))
-            .await
-            .is_err()
-    );
+    let changed = manager
+        .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("high"))
+        .await
+        .unwrap();
+    assert_eq!(changed["configCheck"]["status"], "ready");
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "high");
+    manager
+        .session_set_config(&row.id, &cwd, "proof", "reasoning_effort", json!("low"))
+        .await
+        .unwrap();
     assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
+    // A load default can be restored when the saved choice is still offered.
+    // This negative fixture instead removes that choice from the next load.
+    std::fs::write(&unavailable_choice, "").unwrap();
     manager.disconnect(&row.id, &cwd).await.unwrap();
     assert_eq!(
         manager
@@ -180,7 +213,9 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .await
             .is_err()
     );
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
     manager.disconnect(&row.id, &cwd).await.unwrap();
+    std::fs::remove_file(unavailable_choice).unwrap();
     touch_session_row(
         &store,
         &row.id,
@@ -252,5 +287,5 @@ async fn persisted_effort_blocks_real_dispatch_and_legacy_confirmation_is_explic
             .unwrap()["status"],
         "ready"
     );
-    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "high");
+    assert_eq!(stored_choice(&store, &id, "reasoning_effort"), "low");
 }

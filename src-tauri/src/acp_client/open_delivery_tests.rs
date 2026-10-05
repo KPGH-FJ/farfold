@@ -213,11 +213,13 @@ async fn open_delivery_buffered_success_is_owned_until_consumed_or_dropped() {
     drop(receive); // Sender finished, but no manager caller accepted this result.
     let after = available(&f, &connection, "restored");
     let orphan_gone = !connection.sessions.lock().unwrap().contains_key("restored");
+    let unconfirmed_retained = !connection.life.close(false, Some(Duration::ZERO)).unwrap();
     finish(&f, &connection).await;
     assert_eq!(before, (false, false));
     assert!(had_route);
     assert_eq!(after, (true, true));
     assert!(orphan_gone);
+    assert!(unconfirmed_retained);
 }
 
 fn gated_peer(f: &Fixture) {
@@ -271,6 +273,7 @@ async fn abandoned_open(timeout: bool) {
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
     until(|| available(&f, &connection, "restored") == (true, true)).await;
     let orphan_gone = !connection.sessions.lock().unwrap().contains_key("restored");
+    let unconfirmed_retained = !connection.life.close(false, Some(Duration::ZERO)).unwrap();
     // Retry through the public entry, not a fake channel-only implementation.
     let retry = f
         .manager
@@ -290,6 +293,7 @@ async fn abandoned_open(timeout: bool) {
     assert_eq!(pending, (false, false));
     assert_eq!(other, (true, true));
     assert!(orphan_gone);
+    assert!(unconfirmed_retained);
     assert!(retried);
 }
 

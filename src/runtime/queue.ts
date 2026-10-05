@@ -4,6 +4,7 @@ import {
   type ThreadState,
 } from "./session_types";
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
+import { forgetConfigurationPause } from "./configuration_pause";
 export type QueuePause =
   | "work_disabled"
   | "unavailable"
@@ -25,6 +26,7 @@ export interface PromptAdmission {
     | "service_unavailable";
 }
 export function pauseQueue(s: ThreadState, reason: QueuePause): void {
+  forgetConfigurationPause(s);
   s.queuePaused = reason;
 }
 function canAdmit(s: ThreadState): boolean {

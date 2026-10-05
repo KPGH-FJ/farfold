@@ -1,0 +1,34 @@
+{
+  "sessions": {
+    "beforeCount": 48,
+    "afterCount": 48,
+    "added": 0,
+    "removed": 0,
+    "changed": 0,
+    "equal": true
+  },
+  "agents": {
+    "beforeCount": 40,
+    "afterCount": 40,
+    "added": 0,
+    "removed": 0,
+    "changed": 3,
+    "equal": false
+  },
+  "settings": {
+    "beforeCount": 49,
+    "afterCount": 49,
+    "added": 0,
+    "removed": 0,
+    "changed": 1,
+    "equal": false
+  },
+  "dismissed_sessions": {
+    "beforeCount": 62,
+    "afterCount": 62,
+    "added": 0,
+    "removed": 0,
+    "changed": 0,
+    "equal": true
+  }
+}

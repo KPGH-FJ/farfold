@@ -12,6 +12,92 @@ const progress = {
   selection: { service: null, config: { model: "chosen", reasoning: "ultra" } },
 };
 
+it("restores a selected service without a model as unfinished progress and rejects completion", async () => {
+  const selection = {
+    service: { id: "service", revision: "revision", model: "" },
+    config: {},
+  };
+  const pending = {
+    step: 2,
+    choice: "api" as const,
+    accessStage: "api" as const,
+    selection,
+  };
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  store.remember("a", "scope", pending);
+  await store.flush();
+  const saved = structuredClone(
+    mock.invoke.mock.calls
+      .filter(([name]) => name === "settings_set")
+      .at(-1)![1].value,
+  );
+  vi.resetModules();
+  mock.invoke.mockResolvedValue(saved);
+  const { setupStorage: restored } = await import("./setup_storage");
+  await restored.load();
+  expect(restored.snapshot().progress.scope).toEqual(pending);
+  expect(restored.completed("a")).toBe(false);
+  const writes = mock.invoke.mock.calls.filter(
+    ([name]) => name === "settings_set",
+  ).length;
+  await expect(restored.complete("a", selection)).rejects.toThrow(
+    "Invalid service",
+  );
+  expect(restored.confirmedSelection("a")).toBeUndefined();
+  expect(
+    mock.invoke.mock.calls.filter(([name]) => name === "settings_set"),
+  ).toHaveLength(writes);
+});
+
+it("does not accept an empty model in confirmed selections or overwrite that record", async () => {
+  mock.invoke.mockResolvedValue({
+    version: 1,
+    completed: ["a"],
+    pending: {},
+    progress: {},
+    selections: {
+      a: {
+        service: { id: "service", revision: "revision", model: "" },
+        config: {},
+      },
+    },
+  });
+  const { setupStorage: store } = await import("./setup_storage");
+  await expect(store.load()).rejects.toThrow();
+  expect(store.snapshot().ready).toBe(false);
+  expect(mock.invoke.mock.calls.some(([name]) => name === "settings_set")).toBe(
+    false,
+  );
+});
+
+it("retains a reviewed official preparation action separately from an authentication method", async () => {
+  const pending = {
+    ...progress,
+    authMethodId: undefined,
+    preparationActionId: "configure-service",
+    accessStage: "account" as const,
+  };
+  const { setupStorage: store } = await import("./setup_storage");
+  await store.load();
+  store.remember("a", "scope", pending);
+  await store.flush();
+  const saved = structuredClone(
+    mock.invoke.mock.calls
+      .filter(([name]) => name === "settings_set")
+      .at(-1)![1].value,
+  );
+  vi.resetModules();
+  mock.invoke.mockResolvedValue(saved);
+  const { setupStorage: restored } = await import("./setup_storage");
+  await restored.load();
+  expect(restored.snapshot().progress.scope.preparationActionId).toBe(
+    "configure-service",
+  );
+  expect(restored.snapshot().progress.scope.authMethodId).toBeUndefined();
+  expect(restored.completed("a")).toBe(false);
+});
+
 it("retains public installation choices separately from conversation models across save and return", async () => {
   const installationInput = {
     declarationId: "fixture-model-v1",

@@ -1,0 +1,2243 @@
+{
+  "reviewDateAsiaShanghai": "2026-10-06",
+  "reviewedHead": "dc9412718cada6a45ef23f2aa86719a2bac8257d",
+  "worktreeState": "dirty-existing; current working tree source read, no production edits",
+  "scope": "11项commercial组；仅审查材料输出。旧六条旅程不恢复，无新计划/契约修改。",
+  "userStandards": {
+    "1_preparation": "安装/复用程序/登录/配置服务/选模型完整路径，取消返回可继续，不需自己拼命令补流程。",
+    "2_account": "复用已有登录，清楚当前账号/服务/付费来源；退出换号真实结果，不影响其他任务不泄密。",
+    "3_history": "找到带入已有对话，重启真实正文/上下文/继续原对话，标题空页不算。",
+    "4_model": "模型推理可选项完整，同对话切换保历史，下一请求实际使用并重启保持。",
+    "5_capabilities": "回答工具执行文件变化问题审批正确呈现操作，已有工具技能配置不漏。",
+    "6_multitasking": "多个Agent/对话同时工作，切模型/审批/停止正确作用不改其他对话。",
+    "7_stop_recovery": "停止结果明，断线报错重启不丢草稿附件待发，不重发擅重试或空对话假恢复。",
+    "8_unified_ux": "同能力同操作，点击反馈等待状态失败下一步，用户不需研究接入差异。"
+  },
+  "exceptionPolicy": "官方缺口仍待完善；隐藏入口不算完成；固定模型等不适用例外本轮没有获准。",
+  "statusLegend": {
+    "confirmed-gap": "已确认至少一个能力/客户端通路缺口；可由当前源码和精确发行接口证明，不一定是实测失败。",
+    "risk-unreproduced": "源码存在风险/明确副作用，但真实影响场景未复现，不能声称已发生串台/伪恢复。",
+    "evidence-insufficient": "有部分实现/历史通过或声明，但不足以判断整条标准满足；不是失败。",
+    "verified": "本条完整范围的真实证据充分；本组没有此状态。"
+  },
+  "evidenceBoundary": "源码、controlled tests、initialize/协议probe、历史正式候选操作、当前正式应用实测分别计；本轮未进行任何Agent运行。",
+  "summary": {
+    "agentCount": 11,
+    "allEightVerified": 0,
+    "withConfirmedGap": 11,
+    "notEquivalentToAllFailed": true,
+    "coreFindings": [
+      {
+        "id": "commercial-model-legacy",
+        "priority": 1,
+        "agents": ["auggie", "autohand"],
+        "detail": "当前Farfold仍缺旧models/set_model；Autohand另有发布SDK未注册新setter。",
+        "refs": ["model_ui", "model_route", "auggie_legacy", "autohand_sdk"]
+      },
+      {
+        "id": "commercial-factory-empty",
+        "priority": 1,
+        "agents": ["factory-droid"],
+        "detail": "当前0.230.0 setter返回{}，Farfold不能确认并保存；实际模型结果未知必须暂停。",
+        "refs": [
+          "factory_empty",
+          "model_typed",
+          "model_confirm",
+          "model_unknown"
+        ]
+      },
+      {
+        "id": "commercial-cursor-global",
+        "priority": 1,
+        "agents": ["cursor"],
+        "detail": "源码确定setter同步同进程所有session模型；当前客户端没有跨session配置保护；真实请求串台未复现。",
+        "refs": [
+          "cursor_setter",
+          "cursor_sync",
+          "process_sharing",
+          "model_typed"
+        ]
+      },
+      {
+        "id": "commercial-account-management",
+        "priority": 1,
+        "agents": [
+          "amp-acp",
+          "antigravity-acp",
+          "auggie",
+          "autohand",
+          "codebuddy-code",
+          "corust-agent",
+          "cursor",
+          "devin",
+          "dimcode",
+          "dirac",
+          "factory-droid"
+        ],
+        "detail": "全部缺真实当前账号/权益归属查询显示证据及通路；本组只有Antigravity/Dirac声明标准logout，其余9无共用退出换号入口。API免登录部分不要求强制logout，但不消除其他账号方式管理缺口。",
+        "refs": [
+          "auth_shape",
+          "auth_result",
+          "auth_gate",
+          "auth_ui_hide",
+          "current_metadata"
+        ]
+      },
+      {
+        "id": "commercial-history-gaps",
+        "priority": 1,
+        "agents": ["amp-acp", "corust-agent", "codebuddy-code", "dirac"],
+        "detail": "Amp/Corust无load/list；CodeBuddy/Dirac缺标准list；Dirac旧真实样本失败；这些不等于全部历史方法均失败。",
+        "refs": [
+          "current_metadata",
+          "history_discovery",
+          "amp_surface",
+          "dirac_history_real"
+        ]
+      },
+      {
+        "id": "commercial-autohand-synthetic-body",
+        "priority": 2,
+        "agents": ["autohand"],
+        "detail": "文件读取失败会发loaded合成助手消息，客户端可读正文判断可能误认该消息；静态风险，未复现。",
+        "refs": ["autohand_restore", "autohand_notice", "readable_message"]
+      }
+    ],
+    "criterionReviewStateCounts": {
+      "known_gap": 30,
+      "risk": 5,
+      "partial": 46,
+      "unknown": 7
+    },
+    "countsSemantics": "88格中known_gap仅具体缺口；risk仅未复现风险；partial/unknown均非失败。11项整体有账号/其他明确通路缺口，不代表11项全部功能失败。0可宣布8条全达标。"
+  },
+  "sources": {
+    "current_metadata": {
+      "path": "docs/evidence/2026-10-06-agent-standard-review/current-installed-metadata.json",
+      "lines": [1, 537],
+      "level": "current-safe-metadata",
+      "detail": "2026-10-06 00:19 Asia/Shanghai 安全读取33项version/握手字段；本组11项版本与load/list/logout缓存均匹配昨日。缓存不是本轮连接或认证。"
+    },
+    "contract": {
+      "path": "PRODUCT.md",
+      "lines": [34, 53],
+      "level": "contract-context",
+      "detail": "33范围及旧六旅程撤销；本次直接用用户新确认8条，不修改契约。"
+    },
+    "model_ui": {
+      "path": "src/runtime/sessions.ts",
+      "lines": [728, 749],
+      "level": "current-source",
+      "detail": "只normalizeConfigOptions，旧modes有合成，旧models没有；全生产源搜索set_session_model/set_model/availableModels/currentModelId/current_model_update无实现。"
+    },
+    "model_route": {
+      "path": "src/runtime/session_configuration.ts",
+      "lines": [124, 178],
+      "level": "current-source",
+      "detail": "mode之外全走session_set_config，必须返回configOptions/configCheck及请求值与ready状态。"
+    },
+    "model_typed": {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [1089, 1155],
+      "level": "current-source",
+      "detail": "只发SetSessionConfigOptionRequest并读取typed response.config_options；忙/审批保护以当前session_id为范围。"
+    },
+    "model_confirm": {
+      "path": "src-tauri/src/acp_client/model_guard.rs",
+      "lines": [128, 157],
+      "level": "current-source",
+      "detail": "显式setter响应必须含requested choice；普通通知不能授权模型更改。"
+    },
+    "model_unknown": {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [887, 920],
+      "level": "current-source",
+      "detail": "setter错误使change_unknown；只有响应确认成功后才处理通知，不能用通知救回空响应。"
+    },
+    "model_save": {
+      "path": "src-tauri/src/acp_client/config_change.rs",
+      "lines": [6, 50],
+      "level": "current-source",
+      "detail": "确认和存储成功才能改变基线；失败保留unknown/record_failed。"
+    },
+    "process_sharing": {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "lines": [395, 414],
+      "level": "current-source",
+      "detail": "同agent/cwd/candidate/service key复用ready连接；同连接可以有多个native sessions。"
+    },
+    "session_target": {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "lines": [152, 164],
+      "level": "current-source",
+      "detail": "通过当前native session_id取得control channel；仅证明客户端路由，不证明Agent不会改共享配置。"
+    },
+    "auth_shape": {
+      "path": "src/runtime/agents.ts",
+      "lines": [216, 224],
+      "level": "current-source",
+      "detail": "auth方法响应仅methods/canLogout，auth结果仅kind/ptyId；无实际账号身份或付费归属查询字段。"
+    },
+    "auth_result": {
+      "path": "src-tauri/src/auth.rs",
+      "lines": [737, 769],
+      "level": "current-source",
+      "detail": "认证结束仅返回kind=agent/pty_id；不交付上游身份meta给界面。"
+    },
+    "auth_gate": {
+      "path": "src-tauri/src/acp_client/handshake.rs",
+      "lines": [274, 277],
+      "level": "current-source",
+      "detail": "只标准agentCapabilities.auth.logout对象开启退出能力。"
+    },
+    "auth_ui": {
+      "path": "src/components/AgentAuthSection.tsx",
+      "lines": [357, 394],
+      "level": "current-source",
+      "detail": "退出及换号依赖canLogout并保护当前工作；没有声明则不存在这条共用管理通路。"
+    },
+    "auth_ui_hide": {
+      "path": "src/components/AgentAuthSection.tsx",
+      "lines": [1449, 1466],
+      "level": "current-source",
+      "detail": "仅info.canLogout呈现退出/换号；不把隐藏入口当能力完成。"
+    },
+    "history_discovery": {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "lines": [610, 630],
+      "level": "current-source",
+      "detail": "外部发现要求标准session.list能力；无声明返回None；load另判，不能由已有索引替代原CLI历史枚举。"
+    },
+    "history_body": {
+      "path": "src/runtime/history_import.ts",
+      "lines": [116, 141],
+      "level": "current-source",
+      "detail": "回放完成且有可读消息才有正文；正文与继续能力分别判。"
+    },
+    "history_commit": {
+      "path": "src/runtime/history_import.ts",
+      "lines": [151, 164],
+      "level": "current-source",
+      "detail": "缺回放标记或空正文拒绝带入。"
+    },
+    "readable_message": {
+      "path": "src/runtime/message_attachments.ts",
+      "lines": [59, 69],
+      "level": "current-source",
+      "detail": "任意非空user/agent消息可满足可读正文，不辨识Agent发出的合成加载成功提示。"
+    },
+    "events": {
+      "path": "src/runtime/session_projection.ts",
+      "lines": [484, 525],
+      "level": "current-source",
+      "detail": "共用回答、思考、工具、计划、命令事件投影；不等于逐Agent原配置/工具已保全。"
+    },
+    "approval": {
+      "path": "src/runtime/session_projection.ts",
+      "lines": [669, 739],
+      "level": "current-source",
+      "detail": "共用审批与结构化问题接收，保留声明选项。"
+    },
+    "inherit_environment": {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "lines": [171, 193],
+      "level": "current-source",
+      "detail": "按所选命令参数、环境和cwd启动且无env_clear；支持继承原配置的底座，不证明各Agent工具技能全覆盖。"
+    },
+    "queue": {
+      "path": "src/runtime/sessions.ts",
+      "lines": [333, 342],
+      "level": "current-source",
+      "detail": "恢复队列保持暂停，标记恢复附件，未知请求不自动续发。"
+    },
+    "stop": {
+      "path": "src/runtime/sessions.ts",
+      "lines": [1186, 1225],
+      "level": "current-source",
+      "detail": "先暂停队列，只向目标发取消；等待turnEnd，失败标stopUnconfirmed。"
+    },
+    "disconnect": {
+      "path": "src/runtime/session_projection.ts",
+      "lines": [622, 654],
+      "level": "current-source",
+      "detail": "断线保留未知结果，不写完成。"
+    },
+    "recovery": {
+      "path": "src/runtime/session_recovery.ts",
+      "lines": [84, 117],
+      "level": "current-source",
+      "detail": "恢复失败保留正文队列和guard，不能创建空对话冒成功。"
+    },
+    "onboarding_real": {
+      "path": "docs/evidence/2026-10-02-agent-onboarding-consistency/installed.md",
+      "lines": [13, 29],
+      "level": "historical-installed",
+      "detail": "b751575真实33发现/40管理；Auggie与Amp终端启动取消，零prompt、零完成登录。"
+    },
+    "autohand_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [24, 24],
+      "level": "historical-installed",
+      "detail": "组件initialize成功；缺伴随CLI正确阻断并返回原稿；未安装CLI/未认证/未请求。"
+    },
+    "dirac_history_real": {
+      "path": "docs/evidence/2026-10-01-agent-history-retry/installed.md",
+      "lines": [3, 26],
+      "level": "historical-installed",
+      "detail": "a95aaaf Dirac旧测试历史冷打开/一次重试/再入均未返回正文；准确失败出口成功；零prompt；失败原因未归因。"
+    },
+    "dirac_options_real": {
+      "path": "docs/evidence/2026-10-01-agent-config-categories/README.md",
+      "lines": [3, 11],
+      "level": "historical-installed",
+      "detail": "0a725e0 Dirac原模型、Medium与Thinking Budget Off读取/显式重读通过；没有真实模型请求。"
+    },
+    "common_tests": {
+      "path": "docs/evidence/2026-10-06-agent-standard-review/shared-checks.json",
+      "lines": [1, 9],
+      "level": "current-controlled",
+      "detail": "父任务6文件135单元/回归通过；mock验证共用路径，不是本组11真实Agent成功。"
+    },
+    "factory_empty": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/factory-installed-0.230.0-methods.txt",
+      "lines": [1, 5],
+      "level": "installed-public-program-static-rechecked",
+      "detail": "当前0.230.0公开程序byte155482897：setModel后返回{}；本轮直接只读同程序该片段，未运行。"
+    },
+    "cursor_sync": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/cursor-installed-2026.09.28-scope.txt",
+      "lines": [1, 6],
+      "level": "installed-public-program-static-rechecked",
+      "detail": "当前公开bundle line1 byte37048循环所有session.setCurrentModel；byte38907加载会话也套共享模型，本轮直接只读确认。"
+    },
+    "cursor_setter": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/cursor-installed-2026.09.28-snippets.txt",
+      "lines": [5, 6],
+      "level": "installed-public-program-static-rechecked",
+      "detail": "当前bundle line1 byte29193 config模型setter调用syncSessionsToCurrentModel；模式分支仅当前session；真实请求影响未复现。"
+    },
+    "auggie_legacy": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/auggie-npm/package/augment.mjs",
+      "byteOffsets": [13185675, 13185982, 13186297],
+      "level": "released-and-installed-program-static-rechecked",
+      "detail": "0.36.0 commit7c61e5bb实际server旧set_model/list/load；本轮同版本本机augment.mjs重读关键位置。"
+    },
+    "autohand_sdk": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/autohand-installed-sdk-dispatch.txt",
+      "lines": [1, 75],
+      "level": "installed-public-program-static-rechecked",
+      "detail": "0.2.1安装树SDK0.12.0的acp.js第87行只注册旧set_model，全文件无新config setter token；本轮直接只读同文件确认。"
+    },
+    "autohand_restore": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/autohand-v0.2.1/autohand-acp-0.2.1/src/acp-agent.ts",
+      "lines": [1565, 1700],
+      "level": "versioned-source",
+      "detail": "恢复按当前默认模型新建内存对象；只回放用户/助手文字；读失败发Session loaded后成功返回{}。"
+    },
+    "autohand_notice": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/autohand-v0.2.1/autohand-acp-0.2.1/src/acp-agent.ts",
+      "lines": [2873, 2890],
+      "level": "versioned-source",
+      "detail": "queueTextUpdate把上述提示发为agent_message_chunk，可能满足客户端可读正文门槛；未制造真实失败。"
+    },
+    "amp_surface": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/amp-v0.9.0/amp-acp-0.9.0/src/server.ts",
+      "lines": [135, 192],
+      "level": "versioned-source",
+      "detail": "0.9.0只有内存会话映射；未声明/实现load/list；mode档位不可等同模型选择。"
+    },
+    "amp_mode": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/amp-v0.9.0/amp-acp-0.9.0/src/server.ts",
+      "lines": [343, 390],
+      "level": "versioned-source",
+      "detail": "amp-mode档位及permission，未暴露任意底层模型。"
+    },
+    "codebuddy_auth": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/codebuddy-installed-2.160.0-snippets.txt",
+      "lines": [5, 6],
+      "level": "installed-public-program-static",
+      "detail": "authenticate会先logout已有登录；getUserInfo存在但含token/accessToken字段；不能直接透传，当前Farfold没有该查询消费。"
+    },
+    "dirac_runtime": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/dirac-v0.5.17/dirac-0.5.17/cli/src/agent/DiracAgent.ts",
+      "lines": [1346, 1416],
+      "level": "versioned-source",
+      "detail": "旧任务缺task-owned runtime配置则拒load；这说明实现边界，不用于推断既有失败的根因。"
+    },
+    "dimcode_docs": {
+      "url": "https://www.dimcode.dev/en/docs/acp/",
+      "webLines": [36, 44],
+      "checkedAt": "2026-10-06 Asia/Shanghai",
+      "level": "first-party-doc",
+      "detail": "当前官方文档明确ACP共用TUI本机providers/models、MCP及credentials；未读这些用户文件。文档不证明已安装0.5.16冷恢复或换号实际效果。"
+    },
+    "antigravity_docs": {
+      "url": "https://antigravity.google/docs/ide/extensions/zed/",
+      "webLines": [180, 227],
+      "checkedAt": "2026-10-06 Asia/Shanghai",
+      "level": "first-party-doc",
+      "detail": "四种认证/服务方式及Enterprise预览说明；没有1.2.1模型setter/历史回放实施详情。"
+    },
+    "devin_docs": {
+      "url": "https://docs.devin.ai/cli/acp/zed",
+      "webLines": [91, 117],
+      "checkedAt": "2026-10-06 Asia/Shanghai",
+      "level": "first-party-doc",
+      "detail": "官方说明浏览器认证及Zed底部选模型，部分丰富交互只在CLI；不能推出Farfold当前C/L接口接通或已安装版本全能力。"
+    },
+    "amp-acp_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [14, 166],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "amp-acp_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [21, 21],
+      "level": "historical-installed",
+      "detail": "安装/连接、Medium读取、登录终端开/取消、准备草稿返回及正常退出保留；真实短请求AUTH_REQUIRED，无成功回复。"
+    },
+    "antigravity-acp_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [169, 341],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "antigravity-acp_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [22, 22],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；四方式可见，模型读要求认证；无账号或请求。"
+    },
+    "auggie_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [344, 479],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "auggie_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [23, 23],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；登录终端启动/取消回收成功；无认证和请求。"
+    },
+    "autohand_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [482, 611],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "codebuddy-code_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [614, 756],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "codebuddy-code_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [27, 27],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；四方式可见，模型读要求认证；未账号/请求/恢复。"
+    },
+    "corust-agent_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [759, 897],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "corust-agent_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [30, 30],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；浏览器OAuth可见，模型要求认证；未账号/请求。"
+    },
+    "cursor_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [900, 1066],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "cursor_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [32, 32],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；登录入口可见，模型要求认证；未账号/请求/恢复。"
+    },
+    "devin_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [1069, 1247],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "devin_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [34, 34],
+      "level": "historical-installed",
+      "detail": "历史安装initialize成功；无可选模型；唯一短测AuthRequired；当前暂停只看公开资料/既有证据。"
+    },
+    "dimcode_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [1250, 1383],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "dimcode_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [35, 35],
+      "level": "historical-installed",
+      "detail": "安装initialize成功；声明终端启动/取消及父子回收通过；未认证/模型读取/请求。"
+    },
+    "dirac_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [1386, 1518],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "dirac_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [36, 36],
+      "level": "historical-installed",
+      "detail": "原程序连接、模型和两项思考读取重读通过；旧历史指定样本多次失败；零真实请求。 此早期目录表的未发送说明已被dirac_request_real超越，实际请求失败与审批局部通过单列。"
+    },
+    "factory-droid_research": {
+      "path": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json",
+      "lines": [1521, 1670],
+      "level": "dated-2026-10-05-research",
+      "detail": "精确发行版本公开源/安装公开程序静态读取、官方文档、缓存及registry probe分列；未登录未模型调用。"
+    },
+    "factory-droid_real": {
+      "path": "docs/evidence/2026-10-01-agent-access-directory-batch7/coverage.md",
+      "lines": [37, 37],
+      "level": "historical-installed",
+      "detail": "4277a2a正式候选新安装initialize成功（旧入口失败保留）；模型要求认证；零认证请求load。"
+    },
+    "amp_preservation_real": {
+      "path": "docs/evidence/2026-10-01-setup-option-preservation/installed.md",
+      "lines": [3, 25],
+      "level": "historical-installed",
+      "detail": "ae23da5: Amp/Medium/已有设置的自有输入暂返和正常退出冷保留通过；0 prompt/authenticate，4 set_config_option但参数未记录，不是主动改选或真实请求。"
+    },
+    "autohand_layout_real": {
+      "path": "docs/evidence/2026-10-01-companion-actions-layout/installed.md",
+      "lines": [3, 20],
+      "level": "historical-installed",
+      "detail": "0152e39:伴随程序两个按钮及约901x621点窗口滚动实际通过，先前断字缺陷已修；未安装CLI/认证/请求。"
+    },
+    "dirac_request_real": {
+      "path": "docs/evidence/2026-10-01-agent-download-progress/installed.md",
+      "lines": [3, 18],
+      "level": "historical-installed",
+      "detail": "7a23471: Dirac0.5.17实际1 prompt，Agent API重试后提出失败处理请求，单次拒绝交付并结束，无成功回复；同native session冷恢复失败，原因未知。"
+    }
+  },
+  "agents": [
+    {
+      "id": "amp-acp",
+      "name": "Amp",
+      "installedVersion": "0.9.0",
+      "installedAgentInfo": {
+        "name": "amp-acp",
+        "title": "Amp ACP Agent",
+        "version": "0.9.0"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "community-adapter",
+      "modelRoute": "N",
+      "actualEvidenceSummary": "安装/连接、Medium读取、登录终端开/取消、准备草稿返回及正常退出保留；真实短请求AUTH_REQUIRED，无成功回复。",
+      "actualEvidenceRefs": [
+        "amp-acp_real",
+        "onboarding_real",
+        "amp_preservation_real"
+      ],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": [
+          "2_account",
+          "3_history",
+          "4_model",
+          "8_unified_ux"
+        ],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "程序复用、设置终端、Medium读取及取消/暂返已有真实有限通过；完整登录与服务交付未闭合，不能称准备完成。",
+          "evidenceRefs": [
+            "onboarding_real",
+            "amp-acp_real",
+            "amp_preservation_real"
+          ],
+          "realCoverage": "b751575终端启动/取消；ae23da5准备草稿冷保留；无认证成功",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+Agent限制",
+          "summary": "底层amp CLI可复用其登录，但0.9.0 adapter setup是另一份API Key；无标准退出/换号，界面无真实当前账号/付费归属查询。",
+          "evidenceRefs": [
+            "amp-acp_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "未输入Key；既有请求AUTH_REQUIRED",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent实现限制",
+          "summary": "0.9.0无ACP list/load，native thread映射只在进程内；无法完成外部历史带入和重启原对话。",
+          "evidenceRefs": [
+            "amp_surface",
+            "amp-acp_research",
+            "history_discovery"
+          ],
+          "realCoverage": "未实际执行冷恢复；限制由版本化源码和握手确认",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent实现限制",
+          "summary": "只提供low/medium/high/ultra档位，不暴露任意底层模型；本轮无固定模型例外，不能算模型/推理全选项标准达标。",
+          "evidenceRefs": ["amp_mode", "amp-acp_research"],
+          "realCoverage": "Medium读取通过；底层模型选择和请求身份未验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共用投影/审批存在，但本组Amp没有成功回复或真实工具、文件、技能保全证据。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "amp-acp_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "客户端按对话路由；0.9.0进程内多会话存在不等于真实并行、审批及停止隔离通过。",
+          "evidenceRefs": ["session_target", "model_typed", "amp-acp_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足+Agent恢复限制",
+          "summary": "草稿暂返和正常退出保留有有限样本；真实运行停止/断线/附件队列未验，且Agent无冷恢复能力。",
+          "evidenceRefs": [
+            "queue",
+            "stop",
+            "disconnect",
+            "recovery",
+            "amp-acp_real",
+            "amp_preservation_real"
+          ],
+          "realCoverage": "准备草稿标记冷保留通过；不等于正在执行的恢复",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+Agent限制",
+          "summary": "共用终端布局与取消反馈已见；账号与历史路线缺失、档位不等于模型，当前不能完成统一全流程。",
+          "evidenceRefs": [
+            "onboarding_real",
+            "auth_ui_hide",
+            "history_discovery",
+            "amp_mode"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/amp-acp/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/server.ts",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/index.ts",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/amp-transport.ts",
+        "https://github.com/tao12345666333/amp-acp"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "antigravity-acp",
+      "name": "Google Antigravity",
+      "installedVersion": "1.2.1",
+      "installedAgentInfo": {
+        "name": "antigravity-acp",
+        "title": "Google Antigravity",
+        "version": "1.2.1"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-server-proprietary",
+      "modelRoute": "U",
+      "actualEvidenceSummary": "安装initialize成功；四方式可见，模型读要求认证；无账号或请求。",
+      "actualEvidenceRefs": ["antigravity-acp_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "1.2.1安装连接与四种认证入口有证据；模型读取要求认证，未覆盖登录、服务字段交付、取消返回和选模型全链。",
+          "evidenceRefs": ["antigravity-acp_real", "antigravity_docs"],
+          "realCoverage": "0a725e0安装initialize；未选择认证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+证据不足",
+          "summary": "有标准logout声明，但账号身份/权益来源未查询显示；官方统一账号体系不能替代本机免登录和退出换号效果。",
+          "evidenceRefs": [
+            "auth_shape",
+            "auth_result",
+            "antigravity-acp_research",
+            "auth_ui"
+          ],
+          "realCoverage": "入口声明，零账号操作",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "本机声明list/load，公开新版probe只说明路由；1.2.1正文完整回放、跨进程上下文和续答均未知。",
+          "evidenceRefs": [
+            "antigravity-acp_research",
+            "history_body",
+            "current_metadata"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "闭源1.2.1的C/L接口、同会话作用范围和持久化未知；官方Zed说明不证明当前客户端兼容。",
+          "evidenceRefs": [
+            "antigravity-acp_research",
+            "antigravity_docs",
+            "model_route"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共用事件与审批代码存在；该发行真实回答/工具/文件/问题/原技能配置未覆盖。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "antigravity-acp_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共享客户端路由可核，Agent内部隔离及多任务同时工作未测试。",
+          "evidenceRefs": [
+            "session_target",
+            "model_typed",
+            "antigravity-acp_research"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "客户端有停止未知和草稿保留保护；未有本Agent真实停止、断线、重启或待发附件覆盖。",
+          "evidenceRefs": [
+            "queue",
+            "stop",
+            "disconnect",
+            "recovery",
+            "antigravity-acp_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共用准备/账号UI可到达，认证后功能、失败下一步及全链一致性没有真实覆盖。",
+          "evidenceRefs": [
+            "antigravity-acp_real",
+            "antigravity_docs",
+            "auth_ui"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/antigravity-acp/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://antigravity.google/docs/ide/extensions",
+        "https://antigravity.google/docs/ide/extensions/zed/"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "auggie",
+      "name": "Auggie CLI",
+      "installedVersion": "0.36.0",
+      "installedAgentInfo": {
+        "name": "auggie",
+        "title": "Auggie Agent",
+        "version": "0.36.0 (commit 7c61e5bb)"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary-readable-bundle",
+      "modelRoute": "L",
+      "actualEvidenceSummary": "安装initialize成功；登录终端启动/取消回收成功；无认证和请求。",
+      "actualEvidenceRefs": ["auggie_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": [
+          "1_preparation",
+          "2_account",
+          "4_model",
+          "8_unified_ux"
+        ],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "安装、复用及官方登录终端启动取消通过；实际server只旧models/set_model，当前选模型闭环缺失。",
+          "evidenceRefs": [
+            "onboarding_real",
+            "auggie_legacy",
+            "model_ui",
+            "model_route"
+          ],
+          "realCoverage": "b751575终端开始浏览器授权后取消，未完成登录",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "复用原CLI登录在实现中成立；CLI logout/status没有共用客户端路线，且未展示真实账号/付费来源。",
+          "evidenceRefs": [
+            "auggie_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "账号登录/退出/换号未执行",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "0.36.0实际list/load读取持久session并回放；原模型可能按当前默认重建，真实旧对话导入/冷继续未测。",
+          "evidenceRefs": ["auggie_legacy", "auggie_research", "history_body"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "实际server有旧set_model，FarFold仅新configOptions/set_config；底层可选模型被漏接，不是固定模型例外。",
+          "evidenceRefs": ["auggie_legacy", "model_ui", "model_route"],
+          "realCoverage": "认证前未读出模型；未执行切换",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "没有成功真实请求及工具/审批/文件/技能覆盖，共用设施不能替代本Agent效果。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "auggie_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "session按ID管理仅为静态实现；真实并行与跨对话无影响未验。",
+          "evidenceRefs": ["session_target", "auggie_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "登录终端取消已通过，不能替代模型请求停止或断线冷恢复；草稿附件队列均缺本Agent端到端覆盖。",
+          "evidenceRefs": [
+            "onboarding_real",
+            "queue",
+            "stop",
+            "disconnect",
+            "recovery"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "共享终端顺序和反馈有真实样本；旧模型能力未映射及退出路线缺失，仍需用户研究Agent差异。",
+          "evidenceRefs": ["onboarding_real", "model_ui", "auth_ui_hide"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/auggie/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.augmentcode.com/cli/acp/agent",
+        "https://docs.augmentcode.com/cli/reference",
+        "https://registry.npmjs.org/@augmentcode/auggie/0.36.0"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "autohand",
+      "name": "Autohand Code",
+      "installedVersion": "0.2.1",
+      "installedAgentInfo": {
+        "name": "@autohandai/autohand-acp",
+        "title": "Autohand CLI",
+        "version": "0.2.1"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-adapter",
+      "modelRoute": "L",
+      "actualEvidenceSummary": "组件initialize成功；缺伴随CLI正确阻断并返回原稿；未安装CLI/未认证/未请求。",
+      "actualEvidenceRefs": [
+        "autohand_real",
+        "autohand_real",
+        "autohand_layout_real"
+      ],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": [
+          "1_preparation",
+          "2_account",
+          "4_model",
+          "8_unified_ux"
+        ],
+        "riskStandards": ["3_history", "7_stop_recovery"],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端兼容缺口+证据不足",
+          "summary": "0.2.1组件接通和缺CLI出口通过，伴随CLI未安装验证；新config setter未注册且旧set_model未接，选模型闭环有确定缺口。",
+          "evidenceRefs": ["autohand_real", "autohand_sdk", "model_ui"],
+          "realCoverage": "d76e7bb准确阻断及暂返；未运行CLI安装",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "adapter与CLI配置共用可核，但当前握手只有安装方法；无标准logout/客户端身份查询，未完成账号管理闭环。",
+          "evidenceRefs": [
+            "autohand_research",
+            "auth_shape",
+            "auth_gate",
+            "autohand_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "risk-unreproduced",
+          "causeCategory": "Agent实现风险未复现+证据不足",
+          "summary": "源码读取CLI历史，但读失败会发loaded消息后成功返回，且模型按当前默认重建；不能把load声明当真实正文恢复。",
+          "evidenceRefs": [
+            "autohand_restore",
+            "autohand_notice",
+            "readable_message",
+            "history_body"
+          ],
+          "realCoverage": "未安装伴随CLI，未制造真实历史失败",
+          "reviewState": "risk",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+Agent接口限制",
+          "summary": "发布SDK0.12.0未注册set_config_option；旧set_model真实注册但Farfold未接，不能由C函数存在记可用。",
+          "evidenceRefs": [
+            "autohand_sdk",
+            "autohand_research",
+            "model_ui",
+            "model_route"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "真实工具/审批/文件/技能交付未验；恢复实现只回放用户/助手文本，不保证原工具过程完整。",
+          "evidenceRefs": [
+            "autohand_restore",
+            "events",
+            "approval",
+            "inherit_environment"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "adapter虽有session Map及队列，CLI缺失状态下没有真实多任务隔离证据。",
+          "evidenceRefs": [
+            "autohand_research",
+            "session_target",
+            "autohand_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "risk-unreproduced",
+          "causeCategory": "Agent实现风险未复现",
+          "summary": "load失败的合成agent消息可满足客户端非空正文门槛；尚不能宣布无空对话伪恢复。客户端停发保留保护是正面底座。",
+          "evidenceRefs": [
+            "autohand_restore",
+            "autohand_notice",
+            "readable_message",
+            "queue",
+            "recovery"
+          ],
+          "realCoverage": "仅静态组合风险，未确认已发生伪正文或错误续答",
+          "reviewState": "risk",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+证据不足",
+          "summary": "缺程序出口/返回草稿真实可用，但组件/CLI两步尚未闭合且模型协议兼容缺口使同操作不能完成。 后续0152e39已经实测修正按钮断字/窄窗布局，不保留旧布局缺陷为当前问题。",
+          "evidenceRefs": [
+            "autohand_real",
+            "autohand_sdk",
+            "model_route",
+            "autohand_layout_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/autohand/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/autohandai/autohand-acp/blob/v0.2.1/src/acp-agent.ts",
+        "https://registry.npmjs.org/@autohandai/autohand-acp/0.2.1",
+        "https://registry.npmjs.org/@agentclientprotocol/sdk/0.12.0"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "codebuddy-code",
+      "name": "Codebuddy Code",
+      "installedVersion": "2.160.0",
+      "installedAgentInfo": null,
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary-readable-bundle",
+      "modelRoute": "C",
+      "actualEvidenceSummary": "安装initialize成功；四方式可见，模型读要求认证；未账号/请求/恢复。",
+      "actualEvidenceRefs": ["codebuddy-code_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account", "3_history", "8_unified_ux"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "2.160.0安装连接通过，四种认证入口可见；认证、服务配置、模型完整准备路径未完成。",
+          "evidenceRefs": ["codebuddy-code_real", "codebuddy-code_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+操作风险未复现",
+          "summary": "共享原CLI authManager，但重新authenticate会先退出当前账号；无标准logout共用入口，getUserInfo未接且含敏感token字段不能直传。",
+          "evidenceRefs": [
+            "codebuddy_auth",
+            "auth_shape",
+            "auth_result",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "未执行重新认证；未发现已发生账号影响或泄密",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent接口限制",
+          "summary": "2.160.0发行实际load/replay存在，但未声明且不支持标准session/list；客户端不能发现完整外部历史，已知ID可load不能抵完整带入。",
+          "evidenceRefs": [
+            "codebuddy-code_research",
+            "history_discovery",
+            "current_metadata"
+          ],
+          "realCoverage": "安装模型读取auth_required；未load/续答",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "安装2.160.0实际C+L，C会更新指定session模型/推理；客户端C路径存在，但下一请求与重启保持未实测。",
+          "evidenceRefs": [
+            "codebuddy-code_research",
+            "model_route",
+            "model_save"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "真实回答/工具/文件/审批/原配置未覆盖；新旧公开版本实现相似不能替代该安装版本效果。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "codebuddy-code_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "静态模型setter按session更新，另有CLI设置落盘；是否影响其他活动对话尚无实测，不据共享配置名推定串台。",
+          "evidenceRefs": ["codebuddy-code_research", "session_target"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共用停止/未知保护已实现；本Agent真实停止、错误后冷续及草稿附件队列未覆盖。",
+          "evidenceRefs": [
+            "stop",
+            "disconnect",
+            "queue",
+            "recovery",
+            "codebuddy-code_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+Agent接口限制",
+          "summary": "共用基本UI存在，但账号管理/外部历史发现不能完成；真实C模型、审批反馈一致性未验。",
+          "evidenceRefs": [
+            "auth_ui_hide",
+            "history_discovery",
+            "codebuddy-code_research"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/codebuddy-code/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://www.codebuddy.ai/docs/cli/acp",
+        "https://www.codebuddy.ai/docs/cli/cli-reference",
+        "https://www.codebuddy.ai/docs/cli/release-notes/v2.97.0",
+        "https://registry.npmjs.org/@tencent-ai/codebuddy-code/2.161.3"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "corust-agent",
+      "name": "Corust Agent",
+      "installedVersion": "0.6.0",
+      "installedAgentInfo": {
+        "name": "corust-acp",
+        "title": "Corust Agent",
+        "version": "0.1.0"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-distributed-server-source-unavailable",
+      "modelRoute": "U",
+      "actualEvidenceSummary": "安装initialize成功；浏览器OAuth可见，模型要求认证；未账号/请求。",
+      "actualEvidenceRefs": ["corust-agent_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account", "3_history", "8_unified_ux"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "0.6.0安装连接及浏览器登录入口通过到达；认证前模型读取受阻，完整准备未知。",
+          "evidenceRefs": ["corust-agent_real", "corust-agent_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+证据不足",
+          "summary": "只声明oauth_browser；复用原CLI/IDE账号没有公开实施证据，无标准logout及当前账号/付费来源查询。",
+          "evidenceRefs": [
+            "corust-agent_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent实现限制",
+          "summary": "当前0.6.0明确load=false/list=false；ACP不能外部带入和冷恢复原对话。",
+          "evidenceRefs": [
+            "corust-agent_research",
+            "current_metadata",
+            "history_discovery"
+          ],
+          "realCoverage": "不是已测恢复失败；是协议能力明确缺失",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "发布仓库只发行元数据没有实现；set_model被认证拦住，C/L和会话作用范围未知，不判固定模型。",
+          "evidenceRefs": ["corust-agent_research", "model_route"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "无本Agent成功回答、工具/审批/文件/技能保全证据；公开实现未提供。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "corust-agent_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "客户端通用按ID路由可核，Agent内部多会话和隔离均未知。",
+          "evidenceRefs": ["session_target", "corust-agent_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足+Agent恢复限制",
+          "summary": "无冷恢复能力是已知边界；正在执行停止、断线草稿附件待发保护缺本Agent实测。",
+          "evidenceRefs": [
+            "corust-agent_research",
+            "stop",
+            "queue",
+            "recovery"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent接口限制+客户端缺口",
+          "summary": "共用页面不能补足历史/账号通路缺口；隐藏缺失入口并不达到统一操作标准。",
+          "evidenceRefs": [
+            "history_discovery",
+            "auth_ui_hide",
+            "corust-agent_research"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/corust-agent/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/rustingai/corust-agent-release",
+        "https://github.com/rustingai/corust-agent-release/releases/tag/v0.6.0"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "installedVersion": "2026.09.28",
+      "installedAgentInfo": null,
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary-readable-bundle",
+      "modelRoute": "C",
+      "actualEvidenceSummary": "安装initialize成功；登录入口可见，模型要求认证；未账号/请求/恢复。",
+      "actualEvidenceRefs": ["cursor_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account", "8_unified_ux"],
+        "riskStandards": ["3_history", "4_model", "6_multitasking"],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "2026.09.28安装连接通过，Cursor Login可见；尚无认证/模型读取及取消返回全链成功。",
+          "evidenceRefs": ["cursor_real", "cursor_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "源码复用原Cursor CLI credentialManager；不是IDE账号等同证明。无标准logout及真实身份/付费来源查询，退出换号未闭合。",
+          "evidenceRefs": [
+            "cursor_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "risk-unreproduced",
+          "causeCategory": "Agent共享模型风险未复现+证据不足",
+          "summary": "list/load恢复AgentStore并回放有实现，但load还将共享当前model套到所恢复会话；正文/上下文及续答未实测。",
+          "evidenceRefs": ["cursor_research", "cursor_sync", "history_body"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "risk",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "risk-unreproduced",
+          "causeCategory": "Agent作用域风险+客户端保护缺口",
+          "summary": "C选项真实存在，setter会同步同进程所有会话的模型并保存共享配置；Farfold仅保护当前会话，无法据此保证每会话选择及重启原值。",
+          "evidenceRefs": [
+            "cursor_setter",
+            "cursor_sync",
+            "model_typed",
+            "process_sharing"
+          ],
+          "realCoverage": "本轮重读当前安装bundle；未发实际模型切换或并发请求",
+          "reviewState": "risk",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "已有工具/技能/配置继承与真实渲染未验；通用事件代码存在不是能力完整证明。",
+          "evidenceRefs": [
+            "events",
+            "approval",
+            "inherit_environment",
+            "cursor_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "risk-unreproduced",
+          "causeCategory": "Agent作用域风险+客户端保护缺口",
+          "summary": "同Agent/cwd复用进程；syncSessionsToCurrentModel明确更新所有内存会话，当前没有跨会话配置保护，存在改到其他对话的源码风险。",
+          "evidenceRefs": [
+            "cursor_sync",
+            "cursor_setter",
+            "process_sharing",
+            "model_typed"
+          ],
+          "realCoverage": "明确源码副作用，真实正在运行请求串台未复现",
+          "reviewState": "risk",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "客户端停止与不自动重发保护存在；Cursor实际停止/断线/重启附件队列未验，恢复模型还受共享配置影响。",
+          "evidenceRefs": [
+            "stop",
+            "queue",
+            "disconnect",
+            "recovery",
+            "cursor_sync"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+隔离风险",
+          "summary": "基本共用UI有实现；账号退出/身份通路缺失，同样的模型操作作用范围不一致，不能称统一全流程。",
+          "evidenceRefs": [
+            "auth_ui_hide",
+            "cursor_setter",
+            "process_sharing",
+            "model_route"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/cursor/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://cursor.com/docs/cli/acp",
+        "https://docs.cursor.com/en/cli/reference/parameters",
+        "https://downloads.cursor.com/lab/2026.10.01-14929f9/darwin/arm64/agent-cli-package.tar.gz"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "installedVersion": "3000.11.3",
+      "installedAgentInfo": {
+        "name": "affogato",
+        "title": "Devin Agent",
+        "version": "0.0.0-dev"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary",
+      "modelRoute": "U",
+      "actualEvidenceSummary": "历史安装initialize成功；无可选模型；唯一短测AuthRequired；当前暂停只看公开资料/既有证据。",
+      "actualEvidenceRefs": ["devin_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "3000.11.3已有安装连接；浏览器/终端认证可见，唯一短测AuthRequired，无完整准备。当前暂停程序未操作。",
+          "evidenceRefs": ["devin_real", "devin_research", "devin_docs"],
+          "realCoverage": "只复用历史证据与公开资料；本轮未读本机程序",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+证据不足",
+          "summary": "官方CLI凭据复用有文档；ACP slash /status、/logout不等于共用账号管理接通，无标准logout及实际身份/付费显示。",
+          "evidenceRefs": [
+            "devin_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "原生slash路径未在Farfold执行，不能认定完全无Agent退出方法",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "list/load声明及CLI持久历史文档存在，未公开ACP正文/工具回放完整边界和冷续实测。",
+          "evidenceRefs": ["devin_research", "history_body"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "官方Zed支持模型选择，当前发行C/L setter尚未核实；准备无选项不能被当固定模型获例外。",
+          "evidenceRefs": ["devin_docs", "devin_research", "model_route"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "官方说明部分丰富交互只在CLI，FarFold回答/工具/问题/技能完整性需精确对齐；本轮无实际请求。",
+          "evidenceRefs": ["devin_docs", "devin_real", "events", "approval"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "暂停边界内仅公开资料，实际多任务/跨对话操作隔离未测。",
+          "evidenceRefs": ["devin_research", "session_target"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "共用保护代码存在，不能覆盖该Agent真正停止/重启/上下文恢复与待发内容。",
+          "evidenceRefs": [
+            "stop",
+            "queue",
+            "disconnect",
+            "recovery",
+            "devin_real"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足+客户端账号通路缺口",
+          "summary": "统一准备页和认证声明可见，真实反馈及其slash账号管理如何统一未验证；不能由Zed文档判FarFold达标。",
+          "evidenceRefs": ["devin_real", "devin_docs", "auth_ui_hide"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/devin/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.devin.ai/cli/acp/zed",
+        "https://docs.devin.ai/cli/reference/commands",
+        "https://docs.devin.ai/cli/enterprise/devin-auth",
+        "https://github.com/CognitionAI/devin-cli"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "dimcode",
+      "name": "DimCode",
+      "installedVersion": "0.5.16",
+      "installedAgentInfo": {
+        "name": "dimcode",
+        "title": "DimAgent",
+        "version": "0.5.16"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary-binary",
+      "modelRoute": "U",
+      "actualEvidenceSummary": "安装initialize成功；声明终端启动/取消及父子回收通过；未认证/模型读取/请求。",
+      "actualEvidenceRefs": ["dimcode_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "0.5.16安装连接、按官方声明启动终端及取消通过；实际认证/服务配置/模型选择全链未闭合。",
+          "evidenceRefs": ["dimcode_real", "dimcode_research"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "当前官方明确ACP共用TUI providers/models、MCP及credentials，可支持原配置复用；FarFold未接官方CLI状态/退出为统一管理，也不显示真实身份/付费来源。",
+          "evidenceRefs": [
+            "dimcode_docs",
+            "dimcode_research",
+            "auth_shape",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "登录终端仅启动/取消，未实测复用和换号",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "list/load声明与CLI持久化说明存在；ACP映射、正文范围与跨进程继续未公开验证。",
+          "evidenceRefs": ["dimcode_research", "history_body"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "set_model probe仅资源不存在，非成功；C/L setter和同对话持久范围未知，不能以CLI --model代替。",
+          "evidenceRefs": ["dimcode_research", "model_route"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "unknown",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "官方明确复用MCP配置，但FarFold真实工具、文件/问题/审批与全部技能效果未测。",
+          "evidenceRefs": [
+            "dimcode_docs",
+            "events",
+            "approval",
+            "inherit_environment"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "官方sticky session提示不构成多会话隔离证明；本轮不加环境开关、不运行实验。",
+          "evidenceRefs": [
+            "dimcode_docs",
+            "dimcode_research",
+            "session_target"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "终端取消只证明登录程序生命周期；模型请求停止及断线/重启草稿附件队列未验证。",
+          "evidenceRefs": [
+            "dimcode_real",
+            "stop",
+            "queue",
+            "disconnect",
+            "recovery"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足+客户端账号通路缺口",
+          "summary": "通用终端存在，但官方追加acp --auth-setup实际出现重复acp；已有启动/取消成功，不能推断认证有效或判它当前错误。",
+          "evidenceRefs": ["dimcode_real", "dimcode_research", "auth_ui_hide"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dimcode/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://www.dimcode.dev/en/docs/acp/",
+        "https://www.dimcode.dev/en/docs/cli/",
+        "https://registry.npmjs.org/dimcode/0.5.16"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "dirac",
+      "name": "Dirac",
+      "installedVersion": "0.5.17",
+      "installedAgentInfo": {
+        "name": "dirac",
+        "version": "0.5.17"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-open-source",
+      "modelRoute": "C",
+      "actualEvidenceSummary": "原程序连接、模型和两项思考读取重读通过；7a23471实际1条短请求API失败，单次拒绝已交付并结束，无成功回复；同一失败测试历史冷恢复及后续重试仍失败。",
+      "actualEvidenceRefs": [
+        "dirac_real",
+        "dirac_request_real",
+        "dirac_history_real",
+        "dirac_options_real"
+      ],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": ["2_account", "3_history", "8_unified_ux"],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "0.5.17原程序复用、原模型及两项思考读取/重读成功；明确短请求API失败且拒绝交付，完整认证/服务配置与成功请求未完成。",
+          "evidenceRefs": [
+            "dirac_options_real",
+            "dirac_real",
+            "dirac_request_real"
+          ],
+          "realCoverage": "0a725e0原模型/Medium/Off读取；7a23471一次真实prompt失败，单次拒绝结束。",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口+证据不足",
+          "summary": "有标准logout声明，源码仅清ChatGPT OAuth不等于退出所有API来源；当前实际账号/付费查询缺失，退出换号效果未验。",
+          "evidenceRefs": [
+            "dirac_research",
+            "auth_shape",
+            "auth_result",
+            "auth_ui"
+          ],
+          "realCoverage": "当前缓存authMethods为空与旧四入口证据分开，不能把旧入口当当前登录方法",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent接口/历史实现限制+旧样本失败",
+          "summary": "当前未声明标准list，公开probe与源码有list函数相冲突；旧任务缺runtime可拒load。既有真实旧历史未返回正文，不是全部历史皆失败。",
+          "evidenceRefs": [
+            "dirac_research",
+            "dirac_runtime",
+            "history_discovery",
+            "dirac_history_real",
+            "dirac_request_real"
+          ],
+          "realCoverage": "a95aaaf指定旧测试对话3次读取仍失败；根因未知",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "C model/provider及多推理项实现存在，原选项读取通过；完整切换后实际请求和冷保持没有证据。",
+          "evidenceRefs": [
+            "dirac_research",
+            "dirac_options_real",
+            "model_route",
+            "model_save",
+            "dirac_request_real"
+          ],
+          "realCoverage": "原选项读取通过，原模型下一次显式短请求API失败；没有主动模型切换+下一请求身份或冷保持证明。",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "已有真实API失败处理请求、单次拒绝正确交付并结束的局部通过；无成功回答、实际工具文件变更、全部问题或技能配置完整覆盖。",
+          "evidenceRefs": [
+            "dirac_real",
+            "events",
+            "approval",
+            "inherit_environment",
+            "dirac_request_real"
+          ],
+          "realCoverage": "7a23471单条请求失败；失败处理审批单次拒绝成功，不能扩大为所有工具/权限操作通过。",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "源码按session runtime配置有隔离设计，但真正并行和修改/审批/停止不串目标未测试。",
+          "evidenceRefs": ["dirac_runtime", "dirac_research", "session_target"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "旧历史失败时保留失败说明/重试/独立新稿出口是实测正面项；真实运行停止、断线与附件队列冷保留未覆盖。",
+          "evidenceRefs": [
+            "dirac_history_real",
+            "stop",
+            "queue",
+            "recovery",
+            "dirac_request_real"
+          ],
+          "realCoverage": "7a23471冷恢复无自动重发；a95aaaf重试窗口零prompt。单次拒绝结束不是通用停止按钮实测。",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "Agent接口限制+客户端缺口",
+          "summary": "多思考字段共享UI读取已有成功，历史发现/正文及当前账号身份仍存在缺口；不能整体统一可用。",
+          "evidenceRefs": [
+            "dirac_options_real",
+            "dirac_history_real",
+            "auth_shape",
+            "history_discovery"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dirac/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/acp/AcpAgent.ts",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/agent/DiracAgent.ts",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/agent/AcpAuthenticationManager.ts"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    },
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "installedVersion": "0.230.0",
+      "installedAgentInfo": {
+        "name": "@factory/cli",
+        "title": "Factory Droid (Daemon)",
+        "version": "0.230.0"
+      },
+      "versionFreshness": {
+        "matchedCurrentSafeMetadata": true,
+        "capabilitiesMatched": true,
+        "reference": "current_metadata",
+        "note": "登记版本与缓存能力匹配，不是今天重新启动的initialize；不将registry较新版覆盖已安装版本。"
+      },
+      "sourceKind": "first-party-native-cli-proprietary-readable-embedded-bundle",
+      "modelRoute": "C",
+      "actualEvidenceSummary": "4277a2a正式候选新安装initialize成功（旧入口失败保留）；模型要求认证；零认证请求load。",
+      "actualEvidenceRefs": ["factory-droid_real"],
+      "overall": {
+        "status": "confirmed-gap",
+        "summary": "至少账号身份/管理完整性已有客户端通路缺口，不能宣布8条全部达标；其他未覆盖项保持未知，绝不等同8条均已测失败。",
+        "confirmedGapStandards": [
+          "1_preparation",
+          "2_account",
+          "4_model",
+          "8_unified_ux"
+        ],
+        "riskStandards": [],
+        "fullyVerifiedStandardCount": 0
+      },
+      "criteria": {
+        "1_preparation": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端兼容缺口+证据不足",
+          "summary": "0.230.0直接Mach-O安装连接已补验成功；认证未完成，模型setter空响应使当前选模型确认保存链无法闭合。",
+          "evidenceRefs": [
+            "factory-droid_real",
+            "factory_empty",
+            "model_typed",
+            "model_confirm"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "2_account": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端缺口",
+          "summary": "同CLI token/API Key认证实现存在；无标准logout及当前真实账号/付费来源显示，未形成统一退出换号闭环。",
+          "evidenceRefs": [
+            "factory-droid_research",
+            "auth_shape",
+            "auth_gate",
+            "auth_ui_hide"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "3_history": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "daemon按id启动/复用child，child持久load/list与正文事件回放源码存在；真实冷恢复/正文完整性/继续未验证。",
+          "evidenceRefs": ["factory-droid_research", "history_body"],
+          "realCoverage": "安装补验0 prompt/authenticate/load；其list调用不等于有正文恢复",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "4_model": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端兼容缺口",
+          "summary": "C入口实际setModel或setReasoningEffort后返回{}；当前typed config_options及显式响应确认无法接受。通知不能补授权，模型可能已改但结果未知，必须保护暂停。",
+          "evidenceRefs": [
+            "factory_empty",
+            "model_typed",
+            "model_confirm",
+            "model_unknown",
+            "model_save"
+          ],
+          "realCoverage": "只读当前0.230.0字节片段；没有实际切换请求，不称模型已改或已回滚",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "5_capabilities": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "真实回复工具文件审批及自定义工具/技能完整性未验；child源码有能力不能代替FarFold呈现效果。",
+          "evidenceRefs": [
+            "factory-droid_research",
+            "events",
+            "approval",
+            "inherit_environment"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "6_multitasking": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足",
+          "summary": "实际daemon为每session维护child，不能误判单child sessionController为全局串台；真实多任务并行与操作隔离仍未验。",
+          "evidenceRefs": ["factory-droid_research", "session_target"],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "7_stop_recovery": {
+          "status": "evidence-insufficient",
+          "causeCategory": "证据不足+已保护模型未知",
+          "summary": "共用停止/队列/恢复保护存在；空setter响应会触发未知保护，这是安全行为，不能算切换或任务恢复成功。",
+          "evidenceRefs": [
+            "model_unknown",
+            "stop",
+            "queue",
+            "disconnect",
+            "recovery"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "partial",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        },
+        "8_unified_ux": {
+          "status": "confirmed-gap",
+          "causeCategory": "客户端兼容缺口",
+          "summary": "程序安装入口补验通过，但同一模型选择UI无法确认保存Factory的合法实际响应形态；当前需要兼容修复，不能靠隐藏入口算完成。",
+          "evidenceRefs": [
+            "factory-droid_real",
+            "factory_empty",
+            "model_route",
+            "model_confirm"
+          ],
+          "realCoverage": "未完成本项真实端到端验证",
+          "reviewState": "known_gap",
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false
+        }
+      },
+      "firstPartyEvidenceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/factory-droid/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://docs.factory.com/ide-integrations",
+        "https://docs.factory.ai/changelog/release-notes",
+        "https://docs.factory.com/cli/reference",
+        "https://registry.npmjs.org/droid/0.233.0"
+      ],
+      "boundaries": [
+        "本轮不启动Agent/不登录/不发模型请求/不升级/不读用户配置秘密或会话正文。",
+        "既有安装候选范围逐项保留；当前源码静态和当前正式应用不能与过去候选操作拼成全流程通过。"
+      ],
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "overallState": "known_gaps"
+    }
+  ],
+  "newPublicDocumentChecks": {
+    "successful": [
+      "https://antigravity.google/docs/ide/extensions/zed/",
+      "https://docs.devin.ai/cli/acp/zed",
+      "https://www.dimcode.dev/en/docs/acp/"
+    ],
+    "failed": [
+      {
+        "url": "https://www.codebuddy.ai/docs/cli/acp",
+        "result": "web fetch timeout; 未据此判功能缺失，使用已安装2.160.0公开源码与昨日证据。"
+      }
+    ]
+  },
+  "verificationPerformed": [
+    "只读核当前Farfold生产代码与既有真实证据。",
+    "只读重核Cursor/Auggie/Autohand SDK/Factory安装公开程序关键方法；未执行程序。",
+    "读父任务新安全版本/缓存摘要及共享135项测试收据；本子任务不运行测试。",
+    "JSON结构与引用范围保存后检查。",
+    "深层证据纠正早期目录表：Dirac有一次API失败请求和拒绝交付成功，未抹掉局部真实结果。"
+  ],
+  "schemaVersion": 1,
+  "group": "commercial",
+  "legend": {
+    "known_gap": "当前源码/精确发行已确认具体功能或通路缺口，不自动等同实机失败。",
+    "risk": "有具体源码风险或副作用，实际影响未复现。",
+    "partial": "有部分实现或有限真实通过，但整条标准尚未证实。",
+    "unknown": "精确接口或关键真实效果不足，不能推为不支持。"
+  }
+}

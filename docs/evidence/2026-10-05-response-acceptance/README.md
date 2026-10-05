@@ -2,11 +2,11 @@
 
 2026-10-05 14:31 UTC 用户明确授权两家各最多 1 条无工具短消息。当前正式应用 c97e9b23…，未改源码、未重装、未切换账号/模型。两条均已发送并正常结束；本次预算已用完，无自动重试。Cline 没有消息授权，也未发送。
 
-| Agent | 核实后保持的来源 / 模型 | 实际结果（UTC） |
-| --- | --- | --- |
-| Pi | 已有 OpenRouter；`nvidia/nemotron-3-ultra-550b-a55b:free` | 14:39:53 单次发送，14:40:09 观察到独立 `FARFOLD_PI_OK_20261005`，已完成、输入空；1 prompt、23 update、1 非错误 response |
-| OpenCode | `bunny / Openrouter`；`stealth/space-bunny-alpha` | 14:42:27 单次发送，14:42:47 观察到独立 `FARFOLD_OPENCODE_OK_20261005`，已完成、输入空；1 prompt、2 update、1 非错误 response |
-| Cline | 前片已核 Space Bunny Alpha 模型选项 | 只通过连接与模型列表检查，本片 0 条，不宣称真实回复通过 |
+| Agent    | 核实后保持的来源 / 模型                                   | 实际结果（UTC）                                                                                                              |
+| -------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Pi       | 已有 OpenRouter；`nvidia/nemotron-3-ultra-550b-a55b:free` | 14:39:53 单次发送，14:40:09 观察到独立 `FARFOLD_PI_OK_20261005`，已完成、输入空；1 prompt、23 update、1 非错误 response      |
+| OpenCode | `bunny / Openrouter`；`stealth/space-bunny-alpha`         | 14:42:27 单次发送，14:42:47 观察到独立 `FARFOLD_OPENCODE_OK_20261005`，已完成、输入空；1 prompt、2 update、1 非错误 response |
+| Cline    | 前片已核 Space Bunny Alpha 模型选项                       | 只通过连接与模型列表检查，本片 0 条，不宣称真实回复通过                                                                      |
 
 发送前两家均无标记，发送后完整用户消息各为 1 个节点，另有可见的独立精确回复标记；界面无忙态或待处理网页确认。结论使用上述 UI、单一在途请求和非错误结束回执组合，未将输入框内容当回复。原 Agent 名称检查按整段文本匹配而未命中；没有取得独立 assistant 角色上下文，不把空匹配宣称为回复失败或身份的额外证明。
 

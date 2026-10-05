@@ -57,9 +57,11 @@ import { AgentSetup } from "./AgentSetup";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentPrerequisites } from "./AgentPrerequisites";
+import { ProgramManager } from "./ProgramManager";
 import { preparationProgram } from "../runtime/agent_preparation";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
+import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
 const card: AgentCardModel = {
   id: "setup-contract",
@@ -139,7 +141,7 @@ it("refreshes an installed candidate's list without applying a choice or invalid
   expect(onProgress).not.toHaveBeenCalled();
   expect(view.onStart).not.toHaveBeenCalled();
 });
-it("does not describe a failed short test as never tested", () => {
+it("keeps model tests optional after an unrelated earlier failure", () => {
   h.snapshot = {
     phase: "failed",
     input: null,
@@ -150,8 +152,8 @@ it("does not describe a failed short test as never tested", () => {
     error: "AUTH_REQUIRED",
   };
   const view = render();
-  expect(view.html).toContain("当前选择尚无成功回复");
-  expect(view.html).not.toContain("尚未测试实际回复");
+  expect(view.html).toContain(S.untestedReturnHint);
+  expect(view.html).not.toContain("AUTH_REQUIRED");
 });
 it("still refreshes the local candidate list when a catalog refresh fails", async () => {
   const refresh = vi.fn(async () => {
@@ -182,6 +184,8 @@ it("completes management by closing without applying a choice or starting a conv
 
 it("keeps daily model controls direct while preserving the first-use review", () => {
   const managed = render({ intent: "manage" });
+  expect(managed.html).toContain(R.management);
+  expect(render({ intent: "use" }).html).toContain(R.step(2));
   expect(managed.html).not.toContain('class="agent-setup-review"');
   expect(managed.html).toContain("不改变已有对话");
   expect(render({ intent: "use" }).html).toContain(
@@ -208,38 +212,23 @@ it("does not close the Agent setup when a nested dialog receives Escape", () => 
   expect(stopPropagation).toHaveBeenCalledOnce();
 });
 
-it("puts daily disconnect before advanced program controls without first-use instructions", () => {
-  const disconnect = vi.fn(),
-    onImport = vi.fn();
+it("delegates guarded daily program management without duplicate headings or first-use instructions", () => {
+  const disconnect = vi.fn();
   const managed = render({
     intent: "manage",
     agents: { ...agents, disconnect },
     progress: { step: 0, choice: "existing" },
-    onImport,
   });
   expect(managed.html).not.toContain(P.programHint);
   expect(managed.html).not.toContain(S.connectedHint);
-  const stop = managed.elements.find(
-    (node) => node.type === "button" && node.props.children === "断开",
+  const manager = managed.elements.find(
+    (node) => node.type === ProgramManager,
   )!;
-  expect(stop).toBeDefined();
-  expect(managed.elements.indexOf(stop)).toBeLessThan(
-    managed.elements.findIndex((node) => node.type === "details"),
-  );
-  (stop.props.onClick as () => void)();
-  expect(disconnect).toHaveBeenCalledExactlyOnceWith(card.id);
-  const importButton = render({ intent: "manage", onImport }).elements.find(
-    (node) =>
-      node.type === "button" && node.props.children === S.importConversations,
-  )!;
-  const opener = {} as HTMLElement;
-  (
-    importButton.props.onClick as (event: {
-      currentTarget: HTMLElement;
-    }) => void
-  )({ currentTarget: opener });
-  expect(onImport).toHaveBeenCalledExactlyOnceWith(card.id, opener);
+  expect(manager.props.showHeading).toBeUndefined();
+  expect(manager.props.onDisconnect).toBeTypeOf("function");
+  expect(disconnect).not.toHaveBeenCalled();
 });
+
 it("shows model-read failure and retry outside the optional message test", () => {
   h.locationReady = true;
   h.snapshot = {
@@ -289,7 +278,8 @@ it("routes unknown login capability to the program step while retaining manageme
     (node) => node.type === AgentSetupNavigation,
   )!;
   expect(navigation.props.step).toBe(0);
-  expect(view.html).toContain("准备进度和选择已保留");
+  expect(view.html).toContain("当前程序");
+  expect(view.html).not.toContain("准备进度和选择已保留");
   expect(onProgress).not.toHaveBeenCalled();
   expect(connect).not.toHaveBeenCalled();
   expect(view.onStart).not.toHaveBeenCalled();
@@ -307,7 +297,13 @@ it.each([false, true])(
     });
     expect(
       view.elements.filter((node) => node.props.role === "radio"),
-    ).toHaveLength(2);
+    ).toHaveLength(0);
+    const account = view.elements.find(
+      (node) => node.type === AgentAuthSection,
+    )!;
+    expect(account.props.connection).toEqual(
+      expect.objectContaining({ choice: "existing", stage: "method" }),
+    );
     expect(view.elements.some((node) => node.type === AgentAuthSection)).toBe(
       true,
     );
@@ -337,7 +333,8 @@ it.each([
     progress,
     onProgress,
   });
-  expect(view.html).toContain("准备进度和选择已保留");
+  expect(view.html).toContain("当前程序");
+  expect(view.html).not.toContain("准备进度和选择已保留");
   expect(
     view.elements.find((node) => node.type === AgentSetupNavigation)?.props
       .step,

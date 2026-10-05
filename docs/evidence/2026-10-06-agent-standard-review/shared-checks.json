@@ -1,0 +1,9 @@
+{
+  "reviewDateAsiaShanghai": "2026-10-06",
+  "command": "corepack pnpm exec vitest run src/runtime/auth_activity.test.ts src/runtime/sessions.config-categories.test.ts src/runtime/sessions.regression.test.ts src/components/ThreadView.history-recovery.test.tsx src/runtime/sessions.connection-lifecycle.test.ts src/runtime/agents.auth-methods.test.ts",
+  "exitCode": 0,
+  "testFilesPassed": 6,
+  "testsPassed": 135,
+  "durationSeconds": 1.51,
+  "scope": "Current frontend unit/regression tests of shared authentication activity, declarations, configuration categories, session protections, history recovery and connection lifecycle. Tests use mocks; no real Agent/account/model/process was launched. Passing does not establish any Agent meets all 8 product standards."
+}

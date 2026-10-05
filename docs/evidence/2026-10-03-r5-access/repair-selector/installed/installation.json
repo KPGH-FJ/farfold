@@ -1,0 +1,22 @@
+{
+  "atUtc": "2026-10-03T00:24:36.189821+00:00",
+  "atLocal": "2026-10-03T08:24:36.189919+08:00",
+  "installed": "/Applications/Farfold.app",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "oldBinarySha256": "85e113575af91a95f2a4e39ab1f1b5d1f7b199f85a69e51ce7e5542b2b964e15",
+  "binarySha256": "89addd72be7e4ee437e9e60909dfeecc14de0271d0151af51043866de392c2f0",
+  "sourceManifestSha256": "2addc4664df254aaa58390cd64058bb461be236d80e2b6a65e7cf6e983ed788e",
+  "files": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "89addd72be7e4ee437e9e60909dfeecc14de0271d0151af51043866de392c2f0",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "dataBeforeAfterEqual": true,
+  "signature": {
+    "exitCode": 0,
+    "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+  },
+  "appNotStartedYet": true,
+  "userSafeUpdateConfirmed": true
+}

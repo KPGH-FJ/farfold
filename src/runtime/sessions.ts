@@ -1,7 +1,21 @@
 import { observeAuthentication } from "./authentication";
-import { discardEmptyDraft } from "./session_draft_cleanup";
-import { applyConfigCheck, type ConfigCheck } from "./config_check";
-import { fixedConfigOption } from "./protected_config";
+import {
+  discardEmptyDraft,
+  retirePreparationRead,
+} from "./session_draft_cleanup";
+import {
+  applyConfigCheck,
+  releaseConfigurationPause,
+  sameConfigurationSnapshot,
+  type ConfigCheck,
+} from "./config_check";
+import {
+  ConfigurationRecheck,
+  recheckConfiguration,
+  hasConfigurationRecheckRecovery,
+} from "./session_config_recheck";
+import { SessionConfiguration } from "./session_configuration";
+import { configChangeBusy } from "./protected_config";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
@@ -111,7 +125,7 @@ import type {
   ThreadItem,
   ThreadState,
 } from "./session_types";
-import { hasActiveTools, hasPendingRequests } from "./session_types";
+import { hasPendingRequests } from "./session_types";
 export * from "./session_types";
 export {
   freshThreadState,
@@ -128,7 +142,6 @@ export {
 } from "./session_projection";
 import {
   freshThreadState,
-  replaceConfigOptions,
   applyElicitation,
   clearPendingRequests,
   expirePendingRequest,
@@ -222,7 +235,12 @@ class ThreadsStore {
     (key) => this.thread(key),
     (key) => this.emit(key),
   );
-  private configRequests = new Map<string, Promise<void>>();
+  private configurations = new SessionConfiguration({
+    thread: (key) => this.thread(key),
+    emit: () => this.emit(),
+    finish: (thread) => this.finishArchiveActivity(thread),
+    permissionRevision: (key) => this.permissionRevisions.get(key) ?? 0,
+  });
   private recordedEndings = new WeakSet<ThreadItem>();
   decidePermission = (
     key: string,
@@ -389,7 +407,8 @@ class ThreadsStore {
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
     if (e.kind === "configCheck") {
-      applyConfigCheck(s, e.check as ConfigCheck);
+      if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
+        applyConfigCheck(s, e.check as ConfigCheck);
     } else if (e.kind === "toolActivity" && Array.isArray(e.toolCallIds)) {
       // Process exit ends local activity, but is not a successful tool result.
       if (e.reason === "process_ended" && s.activeToolCallIds.length > 0)
@@ -466,7 +485,7 @@ class ThreadsStore {
       pauseQueue(s, "unavailable");
     } else if (e.kind === "connectionLost") {
       this.stopConfirmation.clear(key);
-      applyConnectionLost(s);
+      applyConnectionLost(s, e.closeReason);
       this.channels.delete(key);
       pauseQueue(s, s.uncertainPrompt ? "uncertain" : "unavailable");
     } else if (e.kind === "interactionsCancelled") {
@@ -483,6 +502,12 @@ class ThreadsStore {
     } else if (e.kind === "notification") {
       pushRaw(s, { method: e.method, params: e.params }, "notification");
     } else if (e.update !== undefined) {
+      if (
+        this.configurations.changing(s) &&
+        (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
+          "config_option_update"
+      )
+        return;
       applyUpdate(s, e.update);
       if (live) conversationReadState.receiveUpdate(key, e.update);
       if (
@@ -534,12 +559,20 @@ class ThreadsStore {
     return this.openTarget(input);
   }
 
-  private openTarget(input: OpenInput): Promise<ThreadState> {
+  private openTarget(
+    input: OpenInput,
+    recheck?: ConfigurationRecheck,
+  ): Promise<ThreadState> {
     let retryState: ThreadState | undefined;
     if (input.nativeSessionId) {
       const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
       const existing = this.threads.get(key);
-      if (existing && !existing.openError && !existing.connectionLost) {
+      if (
+        existing &&
+        !recheck &&
+        !existing.openError &&
+        !existing.connectionLost
+      ) {
         return Promise.resolve(existing);
       }
       if (existing) {
@@ -565,8 +598,10 @@ class ThreadsStore {
 
     let opened: OpenResult | undefined;
     let routePrepared = false;
+    let abandonRecheck: (() => void) | undefined;
     const promise = (async (): Promise<ThreadState> => {
-      if (retryState?.historyUnavailable || retryState?.sourceError)
+      if (recheck) await recheck.detach();
+      else if (retryState?.historyUnavailable || retryState?.sourceError)
         await closeRecoveryRoute(retryState);
       if (retryState && this.thread(retryState.key) !== retryState)
         throw new Error(STRINGS.repair.reconnectFailed);
@@ -580,7 +615,14 @@ class ThreadsStore {
       let replayDelivered: (() => void) | null = null;
       let boundKey: string | null = null;
       let historyFailed = false;
+      let recheckObserver = recheck;
+      if (recheck)
+        abandonRecheck = () => {
+          channel.onmessage = () => {};
+          recheckObserver = undefined;
+        };
       channel.onmessage = (event) => {
+        recheckObserver?.observe(event);
         const received = event as {
           kind?: unknown;
           openToken?: unknown;
@@ -616,6 +658,7 @@ class ThreadsStore {
         channel,
       });
       opened = result;
+      recheck?.validateResult(result);
       if (result.resumed) {
         // The command response and Channel can be delivered independently.
         // Only this operation's ordered marker proves replay was consumed.
@@ -657,6 +700,7 @@ class ThreadsStore {
         () => null,
       );
       if (rows) this.indexRows = rows;
+      recheck?.validateResult(result);
       const existing = this.threads.get(key);
       const state = freshThreadState(
         key,
@@ -674,6 +718,7 @@ class ThreadsStore {
         state.queuePaused = existing.queuePaused ?? "unavailable";
         state.uncertainPrompt = existing.uncertainPrompt;
         state.stopUnconfirmed = existing.stopUnconfirmed;
+        state.connectionOutcomeUnknown = existing.connectionOutcomeUnknown;
         state.workEnabled = existing.workEnabled;
       } else this.restoreQueue(state);
       // The saved Farfold name is authoritative before replay is delivered.
@@ -704,6 +749,8 @@ class ThreadsStore {
           state.currentModeId = modeOption.currentValue;
       }
       if (result.configCheck) applyConfigCheck(state, result.configCheck);
+      if (result.warnings?.length && result.configCheck?.status !== "ready")
+        state.configError = STRINGS.repair.recheckConfigFailed;
       observeAuthentication(
         input.agentId,
         input.cwd,
@@ -719,6 +766,8 @@ class ThreadsStore {
       for (const event of buffered.splice(0)) {
         this.applyChannelEvent(key, event, false);
       }
+      recheck?.finish(state, result);
+      recheckObserver = undefined;
       // Replay carries no original timestamps in the supported update shapes.
       // Do not pass the load time off as the time the message was authored.
       if (result.resumed)
@@ -734,6 +783,10 @@ class ThreadsStore {
       return state;
     })()
       .catch((error: unknown) => {
+        if (recheck && this.thread(recheck.original.key) !== recheck.original) {
+          abandonRecheck?.();
+          throw error;
+        }
         if (!routePrepared && retryState) {
           retryState.reconnecting = false;
           this.emit();
@@ -769,7 +822,7 @@ class ThreadsStore {
             old.key = key;
             old.cwd = target.cwd;
           }
-          retainRecoveryFailure(old, error, opened);
+          retainRecoveryFailure(old, error, recheck ? undefined : opened);
           this.threads.set(key, old);
           this.emit();
         }
@@ -844,7 +897,7 @@ class ThreadsStore {
     const s = this.thread(key);
     if (!s || !blocks.length)
       return { status: "rejected", reason: "unavailable" };
-    if (s.configuring) await this.configRequests.get(key);
+    if (s.configuring) await this.configurations.requests.get(key);
     if (s.configError) throw new Error(STRINGS.repair.configFailed);
     // Explicit new input can start after permission/work is restored for an
     // empty queue. Never resume existing or uncertain queued input.
@@ -1235,89 +1288,12 @@ class ThreadsStore {
     configId: string,
     value: unknown,
   ): Promise<void> {
-    const s = this.thread(key);
-    if (!s) return;
-    if (fixedConfigOption(s, configId))
-      throw new Error(STRINGS.repair.modelLocked);
-    const permission = s.permissionConfigId === configId;
-    const permissionRevision = this.permissionRevisions.get(key) ?? 0;
-    if (
-      s.submitting ||
-      s.configuring ||
-      (permission &&
-        (s.running ||
-          hasActiveTools(s) ||
-          s.reconnecting ||
-          s.stopping ||
-          s.stopUnconfirmed ||
-          s.connectionLost ||
-          hasPendingRequests(s)))
-    )
-      throw new Error(STRINGS.repair.configFailed);
-    if (permission) {
-      s.permissionState = "changing";
-      pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
-    }
-    s.configuring = true;
-    s.configError = null;
-    this.emit();
-    // A mode synthesized from top-level `modes` goes to set_mode; real
-    // configOptions go to set_config_option. The synthesized option must
-    // survive a set_config refresh of the option list.
-    const request = (async () => {
-      try {
-        if (configId === "mode" && s.modesSeparate) {
-          await invoke("session_set_mode", {
-            agentId: s.agentId,
-            cwd: s.cwd,
-            sessionId: s.nativeSessionId,
-            modeId: String(value),
-          });
-          s.currentModeId = String(value);
-          for (const option of s.configOptions) {
-            if (option.id === "mode") option.currentValue = s.currentModeId;
-          }
-        } else {
-          const updated = await invoke<unknown>("session_set_config", {
-            agentId: s.agentId,
-            cwd: s.cwd,
-            sessionId: s.nativeSessionId,
-            configId,
-            value,
-          });
-          const updatedOptions = normalizeConfigOptions(updated);
-          if (permission) {
-            const actual = updatedOptions.find((o) => o.id === configId);
-            if (
-              (this.permissionRevisions.get(key) ?? 0) !== permissionRevision ||
-              this.thread(key) !== s ||
-              s.connectionLost ||
-              s.reconnecting ||
-              actual?.currentValue !== value
-            )
-              throw new Error(STRINGS.repair.configFailed);
-            s.permissionState = "ready";
-          }
-          replaceConfigOptions(s, updatedOptions);
-        }
-      } catch {
-        if (permission) s.permissionState = "unknown";
-        s.configError = STRINGS.repair.configFailed;
-        throw new Error(s.configError);
-      } finally {
-        s.configuring = false;
-        this.configRequests.delete(key);
-        this.emit();
-        this.finishArchiveActivity(s);
-      }
-    })();
-    this.configRequests.set(key, request);
-    return request;
+    return this.configurations.set(key, configId, value);
   }
 
   async confirmConfig(key: string): Promise<void> {
     const s = this.thread(key);
-    if (!s?.configCheck || s.configuring || s.submitting || s.running) return;
+    if (!s?.configCheck || configChangeBusy(s)) return;
     s.configuring = true;
     s.configError = null;
     const displayed = s.configCheck.current;
@@ -1334,6 +1310,11 @@ class ThreadsStore {
       // a newer configuration notification and must not overwrite its guard.
       if (check.status !== "ready")
         throw new Error(STRINGS.repair.confirmConfigFailed);
+      if (
+        s.configCheck?.status === "ready" &&
+        sameConfigurationSnapshot(s.configCheck.current, check.current)
+      )
+        releaseConfigurationPause(s);
       await this.refreshIndex();
     } catch {
       s.configError = STRINGS.repair.confirmConfigFailed;
@@ -1343,10 +1324,22 @@ class ThreadsStore {
     }
   }
 
+  recheckConfig(key: string): Promise<ThreadState> {
+    return recheckConfiguration(
+      this.thread(key),
+      () => this.thread(key),
+      () => this.permissionRevisions.get(key) ?? 0,
+      (input, owner) => this.openTarget(input, owner),
+      () => this.emit(key),
+    );
+  }
+
   async reconnect(key: string): Promise<ThreadState | undefined> {
     const s = this.thread(key);
     if (!s || s.unrecoverable) return;
     try {
+      if (hasConfigurationRecheckRecovery(s))
+        return await this.recheckConfig(key);
       return await this.open({
         agentId: s.agentId,
         cwd: s.cwd,
@@ -1426,6 +1419,22 @@ class ThreadsStore {
       },
       strict,
     );
+  }
+
+  async retirePreparationDraft(
+    key: string,
+    owns: () => boolean,
+  ): Promise<void> {
+    await retirePreparationRead(this.threads.get(key), owns, (s, retain) => {
+      if (retain) applyConnectionLost(s);
+      else {
+        this.threads.delete(key);
+        this.channels.delete(key);
+      }
+      if (this.drafts.get(s.draftGroup ?? "") === key)
+        this.drafts.delete(s.draftGroup ?? "");
+      this.emit(key);
+    });
   }
 
   /** Delete a session — agent-side `session/delete` when supported, index

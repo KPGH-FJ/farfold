@@ -1,6 +1,7 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { AgentCardModel } from "../runtime/agents";
+import { agentBrand } from "../runtime/agent_brands";
 import type { LibraryFilter } from "../runtime/collections";
 import type { SidebarRow } from "../runtime/sidebar";
 import { LIBRARY } from "../runtime/library_strings";
@@ -63,10 +64,13 @@ const row = (
   live: status !== "idle",
   source: "meta",
 });
-const renderLibrary = (filter: LibraryFilter = { kind: "all" }) =>
+const renderLibrary = (
+  filter: LibraryFilter = { kind: "all" },
+  cards: AgentCardModel[] = [agent],
+) =>
   renderToStaticMarkup(
     <ConversationLibrary
-      agents={[agent]}
+      agents={cards}
       filter={filter}
       onFilter={vi.fn()}
       onOpen={vi.fn()}
@@ -253,7 +257,7 @@ it("starts in browsing mode with Agent artwork and explicit organize and new-con
   expect(html).toContain(`>${LIBRARY.organize}</button>`);
   expect(html).toContain(LIBRARY.newChat);
   expect(html).toContain(LIBRARY.import);
-  expect(html).toContain('src="/agents/codex.svg"');
+  expect(html).toContain(`src="${agentBrand(agent)!.logo}"`);
   expect(html).not.toContain('type="checkbox"');
   expect(html).not.toContain(`>${LIBRARY.archive}</button>`);
   expect(html).toContain(`aria-label="${LIBRARY.query}"`);
@@ -320,6 +324,43 @@ it("keeps removed custom Agents available for filtering retained and archived co
   );
   expect(archived).toContain("archived-custom conversation");
   expect(archived).not.toContain("old-custom conversation");
+});
+
+it("keeps retired directory names only when needed to access history or the current filter", () => {
+  const retired = (id: string): AgentCardModel => ({
+    ...agent,
+    id,
+    name: `Saved ${id}`,
+    firstBatchVisible: false,
+  });
+  const kept = retired("retired-with-history");
+  const empty = retired("retired-without-history");
+  const cards = [agent, kept, empty];
+  rows.push({
+    ...row("saved-old", "idle"),
+    agentId: kept.id,
+    archived: true,
+  });
+  const html = renderLibrary({ kind: "all" }, cards);
+  expect(html).toContain(`value="${kept.id}">${kept.name}</option>`);
+  expect(html).not.toContain(`value="${empty.id}"`);
+  const archived = renderLibrary(
+    {
+      kind: "selection",
+      agent: kept.id,
+      state: "archived",
+      favorites: false,
+      group: "",
+      query: "",
+    },
+    cards,
+  );
+  expect(archived).toContain("saved-old conversation");
+  const selected = renderLibrary({ kind: "agent", id: empty.id }, cards);
+  expect(selected).toContain(
+    `value="${empty.id}" selected="">${empty.name}</option>`,
+  );
+  expect(rows.some((row) => row.agentId === kept.id)).toBe(true);
 });
 
 it.each([

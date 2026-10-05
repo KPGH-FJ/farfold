@@ -16,11 +16,13 @@ const h = vi.hoisted(() => ({
   open: vi.fn(),
   setConfig: vi.fn(),
   discardDraft: vi.fn(),
+  hold: vi.fn(),
   credentials: vi.fn(),
   credentialListeners: new Set<() => void>(),
   live: null as ThreadState | null,
   enabled: false,
   canonical: null as string | null,
+  chooseDirectory: vi.fn(),
   portalTargets: [] as unknown[],
 }));
 vi.mock("react-dom", () => ({
@@ -29,6 +31,8 @@ vi.mock("react-dom", () => ({
     return children;
   },
 }));
+vi.mock("../runtime/dialogs", () => ({ chooseDirectory: h.chooseDirectory }));
+vi.mock("../runtime/connection_hold", () => ({ useConnectionHold: h.hold }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
@@ -102,7 +106,14 @@ import { composerDrafts, newConversationChoice } from "../runtime/drafts";
 import type { AgentCardModel } from "../runtime/agents";
 import { freshThreadState } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { preparationFor } from "../runtime/agent_preparation";
+import { observeAuthentication } from "../runtime/authentication";
+import {
+  allowAutomaticConnection,
+  isAutomaticConnectionAllowed,
+  pauseAutomaticConnection,
+} from "../runtime/connection_intent";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof EmptyState>;
@@ -152,11 +163,14 @@ function modelPicker() {
   return render().find((node) => node.type === NewConversationModelDialog)!;
 }
 beforeEach(() => {
+  allowAutomaticConnection("A");
+  allowAutomaticConnection("B");
   h.slots = [];
   h.effects = [];
   h.open.mockReset();
   h.setConfig.mockReset();
   h.discardDraft.mockReset();
+  h.hold.mockClear();
   h.credentials.mockReset().mockResolvedValue([]);
   h.credentialListeners.clear();
   h.live = null;
@@ -164,6 +178,11 @@ beforeEach(() => {
   h.enabled = false;
   h.canonical = null;
   h.selections.clear();
+  h.selections.set("A", {
+    service: null,
+    config: { model: "current-A", reasoning: "ultra" },
+  });
+  h.chooseDirectory.mockReset().mockResolvedValue(null);
   newConversationChoice.agentId = "A";
   newConversationChoice.cwd = "/work";
   newConversationChoice.service = null;
@@ -184,11 +203,161 @@ beforeEach(() => {
   };
 });
 afterEach(() => {
+  allowAutomaticConnection("A");
+  allowAutomaticConnection("B");
   for (const slot of h.slots) slot.cleanup?.();
   vi.useRealTimers();
   vi.unstubAllGlobals();
   composerDrafts.clear("new");
 });
+
+function folderButton() {
+  return render().find(
+    (node) =>
+      node.type === "button" &&
+      [W.folder, W.changeFolder].includes(
+        node.props["aria-label"] as typeof W.folder,
+      ),
+  )!;
+}
+
+it("requires an explicit working folder before opening or sending and preserves the unsent draft", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  const view = composer();
+  expect(folderButton().props["aria-label"]).toBe(W.folder);
+  expect(view.props.disabled).toBe(true);
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).not.toHaveBeenCalled();
+  await expect(
+    (view.props.onSend as Function)(
+      [{ type: "text", text: "test" }],
+      composerDrafts.read("new"),
+    ),
+  ).rejects.toThrow();
+  expect(h.open).not.toHaveBeenCalled();
+  expect(newConversationChoice.cwd).toBeNull();
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+});
+
+it("opens only the explicitly chosen folder, never the application preparation directory", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  h.chooseDirectory.mockResolvedValue("/chosen-project");
+  h.open.mockResolvedValue(
+    freshThreadState("chosen", "A", "/chosen-project", "native"),
+  );
+  (folderButton().props.onClick as Function)();
+  await Promise.resolve();
+  composer();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(newConversationChoice.cwd).toBe("/chosen-project");
+  expect(h.open).toHaveBeenCalledWith(
+    expect.objectContaining({ agentId: "A", cwd: "/chosen-project" }),
+  );
+  expect(h.open.mock.calls.some(([input]) => input.cwd === "/ordinary")).toBe(
+    false,
+  );
+});
+
+it("canceling folder choice leaves the new conversation unopened", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  (folderButton().props.onClick as Function)();
+  await Promise.resolve();
+  composer();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(newConversationChoice.cwd).toBeNull();
+  expect(h.open).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+});
+
+it("rejects a stale send after the working folder is cleared without falling back to the default", async () => {
+  h.canonical = "/work";
+  const view = composer();
+  const clear = render().find(
+    (node) => node.props["aria-label"] === W.clearFolder,
+  )!;
+  (clear.props.onClick as Function)();
+  expect(composer().props.disabled).toBe(true);
+  await expect(
+    (view.props.onSend as Function)(
+      [{ type: "text", text: "test" }],
+      composerDrafts.read("new"),
+    ),
+  ).rejects.toThrow();
+  expect(newConversationChoice.cwd).toBeNull();
+  expect(h.open).not.toHaveBeenCalled();
+});
+
+it("ignores a folder picker result after leaving the new-conversation page", async () => {
+  let finish!: (path: string) => void;
+  h.chooseDirectory.mockImplementation(
+    () =>
+      new Promise<string>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  (folderButton().props.onClick as Function)();
+  props.active = false;
+  composer();
+  finish("/late-folder");
+  await Promise.resolve();
+  composer();
+  expect(newConversationChoice.cwd).toBe("/work");
+  expect(h.open).not.toHaveBeenCalled();
+});
+
+it.each(["saved-source-auth", "saved-source-read", "current-source-auth"])(
+  "checks the current draft source independently from the selectable saved source (%s)",
+  async (reason) => {
+    vi.useFakeTimers();
+    const cwd = `/source-isolation-${reason}`;
+    const saved = { id: "saved-source", model: "saved-model", revision: "one" };
+    const current = {
+      id: "current-source",
+      model: "current-model",
+      revision: "two",
+    };
+    h.selections.set("A", { service: saved, config: {} });
+    newConversationChoice.cwd = cwd;
+    newConversationChoice.service = current;
+    newConversationChoice.config = {};
+    h.live = freshThreadState("source-draft", "A", cwd, "native");
+    h.live.identity = "draft";
+    h.live.service = { ...current, fingerprint: "fixture-current-source" };
+    h.live.serviceContext = JSON.stringify(current);
+    h.open.mockResolvedValue(h.live);
+    h.enabled = true;
+    const failedSource = JSON.stringify(
+      reason === "current-source-auth" ? current : saved,
+    );
+    if (reason === "saved-source-read")
+      preparationFor("A").requireExplicitRead({
+        agentId: "A",
+        cwd,
+        source: JSON.stringify(saved),
+      });
+    else
+      observeAuthentication("A", cwd, "AUTH_REQUIRED", failedSource, "request");
+    try {
+      composer();
+      await vi.advanceTimersByTimeAsync(300);
+      const view = composer();
+      expect(view.props.disabled).toBe(reason === "current-source-auth");
+      expect(newConversationChoice.service).toEqual(current);
+      expect(composerDrafts.read("new").text).toBe("Keep my draft");
+      if (reason === "current-source-auth")
+        expect(h.open).not.toHaveBeenCalled();
+      else expect(h.open).toHaveBeenCalledOnce();
+    } finally {
+      observeAuthentication("A", cwd, undefined, failedSource, "request");
+    }
+  },
+);
 
 it.each([
   ["选择 Agent", picker],
@@ -318,6 +487,76 @@ it("keeps the current same-Agent draft choice instead of replacing it with its s
   expect(props.onGoSettings).not.toHaveBeenCalled();
 });
 
+it("opens a saved offline Agent on selection without changing its source or sending the draft", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  props.agents[1] = { ...props.agents[1], status: "installed" };
+  h.selections.set("B", { service: null, config: {} });
+  h.live = freshThreadState("new-B", "B", "/work", "native-B");
+  h.live.identity = "draft";
+  h.open.mockResolvedValue(h.live);
+  (picker().props.onPick as (id: string) => void)("B");
+  composer();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).toHaveBeenCalledOnce();
+  expect(h.open).toHaveBeenCalledWith({
+    agentId: "B",
+    cwd: "/work",
+    service: null,
+    serviceRevision: undefined,
+    fresh: false,
+  });
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(props.onStarted).not.toHaveBeenCalled();
+  expect(props.onGoSettings).not.toHaveBeenCalled();
+});
+
+it("does not reopen a manually disconnected Agent on refresh or return, and an explicit same-Agent choice resumes it", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.agentId = "B";
+  h.selections.set("B", { service: null, config: {} });
+  pauseAutomaticConnection("B");
+  props.agents[1] = { ...props.agents[1], status: "installed" };
+  composer();
+  props.active = false;
+  composer();
+  props.active = true;
+  composer();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(composer().props.disabled).toBe(true);
+  h.live = freshThreadState("new-B", "B", "/work", "native-B");
+  h.live.identity = "draft";
+  h.live.configOptions = [
+    configOption("model", "current-A", ["current-A"]),
+    configOption("reasoning", "ultra", ["ultra"]),
+  ];
+  h.open.mockResolvedValue(h.live);
+  (picker().props.onPick as (id: string) => void)("B");
+  expect(isAutomaticConnectionAllowed("B")).toBe(true);
+  composer();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).toHaveBeenCalledOnce();
+  expect(newConversationChoice.config).toEqual({
+    model: "current-A",
+    reasoning: "ultra",
+  });
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it("checks manual disconnect again before a previously scheduled pre-open can run", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  composer();
+  pauseAutomaticConnection("A");
+  // No render between the explicit disconnect and this old timer.
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+});
+
 it("restores the selected Agent's confirmed source revision, model and reasoning", () => {
   const selection = {
     service: { id: "api-B", model: "Nemotron", revision: "confirmed-revision" },
@@ -331,9 +570,9 @@ it("restores the selected Agent's confirmed source revision, model and reasoning
   expect(h.open).not.toHaveBeenCalled();
 });
 
-it("opens preparation when a different Agent has no confirmed choice and preserves the current draft", () => {
+it("ignores a stale picker choice when an Agent has no confirmed preparation and preserves the draft", () => {
   (picker().props.onPick as (id: string) => void)("B");
-  expect(props.onGoSettings).toHaveBeenCalledWith("B");
+  expect(props.onGoSettings).not.toHaveBeenCalled();
   expect(picker().props.picked).toBe("A");
   expect(newConversationChoice.config).toEqual({
     model: "current-A",
@@ -354,11 +593,19 @@ const configOption = (
   currentValue,
   options: options.map((value) => ({ value, name: value })),
 });
-async function startEditableDraft(cwd = "/work") {
+async function startEditableDraft(cwd = "/work", serviceContext?: string) {
   vi.useFakeTimers();
   newConversationChoice.cwd = cwd;
   h.live = freshThreadState("new-A", "A", cwd, "native");
   h.live.identity = "draft";
+  if (newConversationChoice.service) {
+    h.live.service = {
+      ...newConversationChoice.service,
+      fingerprint: "fixture-api",
+    };
+    h.live.serviceContext =
+      serviceContext ?? JSON.stringify(newConversationChoice.service);
+  }
   h.live.configOptions = [
     configOption("model", "current-A", ["current-A", "other"]),
     configOption("reasoning", "ultra", ["low", "ultra"]),
@@ -370,6 +617,218 @@ async function startEditableDraft(cwd = "/work") {
   expect(composer().props.disabled).toBe(false);
   expect(h.setConfig).not.toHaveBeenCalled();
 }
+
+it("holds only the visible draft's exact connection and releases that view when hidden", async () => {
+  newConversationChoice.service = {
+    id: "draft-source",
+    model: "current-A",
+    revision: "r1",
+  };
+  await startEditableDraft("/visible-draft", "actual-connection-source");
+  expect(h.hold).toHaveBeenLastCalledWith({
+    agentId: "A",
+    cwd: "/visible-draft",
+    serviceContext: "actual-connection-source",
+  });
+  props.active = false;
+  composer();
+  expect(h.hold).toHaveBeenLastCalledWith(null);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+});
+
+it("rejects an old send callback after manual disconnect without reopening or clearing its draft", async () => {
+  await startEditableDraft();
+  const send = composer().props.onSend as (
+    blocks: unknown[],
+    draft: unknown,
+  ) => Promise<void>;
+  pauseAutomaticConnection("A");
+  await expect(send([], composerDrafts.read("new"))).rejects.toThrow(
+    STRINGS.repair.sendFailed,
+  );
+  expect(h.open).toHaveBeenCalledOnce();
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+function retireAgent(id = "A") {
+  props.agents = props.agents.map((agent) =>
+    agent.id === id
+      ? { ...agent, source: "registry", firstBatchVisible: false }
+      : agent,
+  );
+}
+
+it("retains a restored retired choice and its unsent text without opening or automatically switching Agents", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  retireAgent();
+  const before = structuredClone(newConversationChoice.config);
+  const view = composer();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(view.props.disabled).toBe(true);
+  (view.props.prepareAction as () => void)();
+  const choose = picker();
+  expect(choose.props.picked).toBe("A");
+  (choose.props.onPick as (id: string) => void)("A");
+  (choose.props.onPrepare as (id: string) => void)("A");
+  expect(newConversationChoice.agentId).toBe("A");
+  expect(newConversationChoice.config).toEqual(before);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.discardDraft).not.toHaveBeenCalled();
+  expect(props.onGoSettings).not.toHaveBeenCalled();
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it("freezes a prepared new draft when its Agent leaves the catalog without discarding it or accepting stale actions", async () => {
+  await startEditableDraft("/retired-draft");
+  const send = composer().props.onSend as (...args: unknown[]) => Promise<void>;
+  const apply = modelPicker().props.onApply as (
+    value: unknown,
+  ) => Promise<void>;
+  const before = structuredClone(newConversationChoice.config);
+  retireAgent();
+  expect(composer().props.disabled).toBe(true);
+  await expect(send([], composerDrafts.read("new"))).rejects.toThrow(
+    STRINGS.repair.sendFailed,
+  );
+  await expect(apply({ service: null, modelValue: "other" })).rejects.toThrow(
+    STRINGS.repair.configFailed,
+  );
+  h.live!.configOptions = [configOption("model", "other", ["other"])];
+  props.initialAgentId = "A";
+  props.initialAgentRevision = 2;
+  props.initialSelection = { service: null, config: { model: "late-choice" } };
+  render();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(newConversationChoice.agentId).toBe("A");
+  expect(newConversationChoice.config).toEqual(before);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(h.open).toHaveBeenCalledTimes(1);
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.discardDraft).not.toHaveBeenCalled();
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it("does not apply configuration or send when an opening draft leaves the catalog before its response", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  let finish!: (state: ThreadState) => void;
+  h.open.mockImplementation(
+    () =>
+      new Promise<ThreadState>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  composer();
+  await vi.advanceTimersByTimeAsync(251);
+  expect(h.open).toHaveBeenCalledOnce();
+  retireAgent();
+  composer();
+  h.live = freshThreadState("late-A", "A", "/work", "native");
+  h.live.identity = "draft";
+  h.live.configOptions = [
+    configOption("model", "other", ["current-A", "other"]),
+  ];
+  finish(h.live);
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(composer().props.disabled).toBe(true);
+  expect(newConversationChoice.config).toEqual({
+    model: "current-A",
+    reasoning: "ultra",
+  });
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.discardDraft).not.toHaveBeenCalled();
+  expect(props.onStarted).not.toHaveBeenCalled();
+});
+
+it("rechecks directory admission after preserving a pending target and keeps rejected input intact", async () => {
+  await startEditableDraft("/retired-before-first-send");
+  const { draftPersistence } = await import("../runtime/drafts");
+  const sending = await import("../runtime/new_conversation");
+  let finish!: () => void;
+  const flush = vi.spyOn(draftPersistence, "flush").mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const dispatch = vi.spyOn(sending, "sendNewConversation").mockResolvedValue();
+  try {
+    composerDrafts.update("new", (draft) => ({ ...draft, sendPending: true }));
+    const sent = (
+      composer().props.onSend as (...args: unknown[]) => Promise<void>
+    )([], composerDrafts.read("new"));
+    const rejected = expect(sent).rejects.toThrow(STRINGS.repair.sendFailed);
+    expect(composerDrafts.read("new").pendingConversation?.agentId).toBe("A");
+    retireAgent();
+    render();
+    finish();
+    await rejected;
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(composerDrafts.read("new").text).toBe("Keep my draft");
+    expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+    expect(newConversationChoice.agentId).toBe("A");
+    expect(h.discardDraft).not.toHaveBeenCalled();
+    expect(props.onStarted).not.toHaveBeenCalled();
+  } finally {
+    flush.mockRestore();
+    dispatch.mockRestore();
+  }
+});
+
+it.each(["existing", "api"])(
+  "rechecks current %s authentication after draft persistence before React renders",
+  async (source) => {
+    const cwd = `/auth-before-first-send-${source}`;
+    const context =
+      source === "api" ? "fixture-current-service-context" : undefined;
+    if (source === "api") {
+      const choice = { id: "current-api", model: "current-A", revision: "r1" };
+      newConversationChoice.service = choice;
+    }
+    await startEditableDraft(cwd, context);
+    const { draftPersistence } = await import("../runtime/drafts");
+    const sending = await import("../runtime/new_conversation");
+    let finish!: () => void;
+    const flush = vi.spyOn(draftPersistence, "flush").mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const dispatch = vi
+      .spyOn(sending, "sendNewConversation")
+      .mockResolvedValue();
+    try {
+      composerDrafts.update("new", (draft) => ({
+        ...draft,
+        sendPending: true,
+      }));
+      const sent = (
+        composer().props.onSend as (...args: unknown[]) => Promise<void>
+      )([], composerDrafts.read("new"));
+      const rejected = expect(sent).rejects.toThrow(STRINGS.repair.sendFailed);
+      expect(composerDrafts.read("new").pendingConversation?.agentId).toBe("A");
+      observeAuthentication("A", cwd, "AUTH_REQUIRED", context, "request");
+      // No render: the action must read the latest authentication observation itself.
+      finish();
+      await rejected;
+      expect(dispatch).not.toHaveBeenCalled();
+      expect(composerDrafts.read("new").text).toBe("Keep my draft");
+      expect(composerDrafts.read("new").pendingConversation).toBeUndefined();
+      expect(props.onStarted).not.toHaveBeenCalled();
+      expect(h.discardDraft).not.toHaveBeenCalled();
+    } finally {
+      observeAuthentication("A", cwd, undefined, context, "request");
+      flush.mockRestore();
+      dispatch.mockRestore();
+    }
+  },
+);
 
 it("does not reopen a completed Agent's new draft after a configuration operation requires explicit reading", async () => {
   vi.useFakeTimers();

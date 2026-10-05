@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-10-03T02:10:06.582415+00:00",
+  "sourceInputsChecked": 502,
+  "sourceMismatches": [],
+  "sourceManifestSha256": "0152edc274c7bcedc1be45f79e6577c17fa644dae4eeef49751d6a78ebe33344",
+  "formalFilesMatchInstallationAndCandidate": true,
+  "binarySha256": "dbe261705ba4331470876f6cc3e605e7a1b021fd179092ed34e726c90af41279",
+  "actualScreenshotsMatch": true,
+  "duplicateBundleAbsent": true,
+  "firstReadNewDrafts": 1,
+  "rereadNewDrafts": 1,
+  "setConfigRequests": 0,
+  "sentPrompts": 0,
+  "sentAuthenticate": 0,
+  "noModelSelectionOrAcceptCurrentOrSaveOrTestClicked": true,
+  "rejectedDiagnosticRecords": 0,
+  "pausedProcessNamesObserved": [
+    "devin",
+    "docker"
+  ],
+  "furtherApplicationOperationsStopped": true,
+  "modifiedTrackedPaths": 95,
+  "untrackedPathEntries": 44,
+  "stagedPaths": 0,
+  "committedPushedOrPublished": false
+}

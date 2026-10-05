@@ -10,11 +10,26 @@ use std::{
 };
 use tokio::sync::watch;
 
+#[cfg(test)]
+#[path = "lifecycle/retention_tests.rs"]
+mod retention_tests;
+
 pub(crate) const CONNECTING: u8 = 0;
 pub(crate) const READY: u8 = 1;
 pub(crate) const CLOSED: u8 = 2;
 pub(crate) const FAILED: u8 = 3;
 pub(crate) const CLOSING: u8 = 4;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CloseReason {
+    Idle,
+    User,
+    Shutdown,
+    Configuration,
+    StartupFailed,
+    Unexpected,
+}
 
 /// One transient restore owner across every service revision of an Agent.
 /// The lease moves with the existing operation, including an abandoned caller.
@@ -57,6 +72,9 @@ impl Drop for OpenReservation {
 struct Activity {
     last: Instant,
     operations: HashSet<String>,
+    views: HashSet<(String, String)>,
+    sessions: usize,
+    close_reason: Option<CloseReason>,
     closing_opens: Vec<OpenReservation>,
     closing_admissions: Vec<crate::managed_update::ActivityPermit>,
     starting_admission: Option<crate::managed_update::ActivityPermit>,
@@ -77,6 +95,9 @@ impl ConnectionLife {
             activity: Mutex::new(Activity {
                 last: Instant::now(),
                 operations: HashSet::new(),
+                views: HashSet::new(),
+                sessions: 0,
+                close_reason: None,
                 closing_opens: Vec::new(),
                 closing_admissions: Vec::new(),
                 starting_admission: None,
@@ -93,6 +114,55 @@ impl ConnectionLife {
         if let Ok(mut state) = self.activity.lock() {
             state.last = Instant::now();
         }
+    }
+    /// A view holds this exact process without starting work or extending a timer.
+    pub fn hold_view(&self, window: &str, owner: &str, retain: bool) -> Result<bool, String> {
+        if owner.is_empty() || owner.len() > 128 {
+            return Err("无法识别当前页面，请重新打开".into());
+        }
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        let key = (window.to_owned(), owner.to_owned());
+        if retain {
+            if self.state.load(Ordering::SeqCst) != READY {
+                return Ok(false);
+            }
+            activity.views.insert(key);
+        } else if activity.views.remove(&key) {
+            activity.last = Instant::now();
+        }
+        Ok(true)
+    }
+    pub fn release_views(&self, window: &str) -> Result<(), String> {
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        let before = activity.views.len();
+        activity
+            .views
+            .retain(|(owner_window, _)| owner_window != window);
+        if activity.views.len() != before {
+            activity.last = Instant::now();
+        }
+        Ok(())
+    }
+    /// Recovery capability alone cannot prove this conversation is safe to evict.
+    /// An open which fails after the Agent created its conversation keeps this
+    /// retention until process termination; only a registered route can release it.
+    pub fn session(self: &Arc<Self>) -> Result<SessionRetention, String> {
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        if self.state.load(Ordering::SeqCst) != READY {
+            return Err("连接正在关闭，请稍后重试".into());
+        }
+        activity.sessions += 1;
+        activity.last = Instant::now();
+        Ok(SessionRetention {
+            life: self.clone(),
+            registered: false,
+        })
+    }
+    pub fn close_reason(&self) -> Option<CloseReason> {
+        self.activity
+            .lock()
+            .ok()
+            .and_then(|activity| activity.close_reason)
     }
     pub fn ready(&self) -> Result<(), String> {
         let mut guard = self.activity.lock().map_err(|_| "无法读取连接状态")?;
@@ -155,7 +225,23 @@ impl ConnectionLife {
     }
     /// Check and mark under the same lock used by admission; never remove a stale key.
     pub fn close(&self, force: bool, idle: Option<Duration>) -> Result<bool, String> {
-        let state = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        self.close_for(
+            force,
+            idle,
+            if idle.is_some() {
+                CloseReason::Idle
+            } else {
+                CloseReason::User
+            },
+        )
+    }
+    pub fn close_for(
+        &self,
+        force: bool,
+        idle: Option<Duration>,
+        reason: CloseReason,
+    ) -> Result<bool, String> {
+        let mut state = self.activity.lock().map_err(|_| "无法读取连接状态")?;
         if self.state.load(Ordering::SeqCst) >= CLOSED {
             return Ok(false);
         }
@@ -168,11 +254,14 @@ impl ConnectionLife {
         }
         if let Some(idle) = idle
             && (!state.operations.is_empty()
+                || !state.views.is_empty()
+                || state.sessions != 0
                 || state.last.elapsed() < idle
                 || self.state.load(Ordering::SeqCst) != READY)
         {
             return Ok(false);
         }
+        state.close_reason = Some(reason);
         self.state.store(CLOSING, Ordering::SeqCst);
         self.stop.send_replace(true);
         Ok(true)
@@ -221,6 +310,30 @@ impl ConnectionLife {
             if done.changed().await.is_err() {
                 break;
             }
+        }
+    }
+}
+pub(crate) struct SessionRetention {
+    life: Arc<ConnectionLife>,
+    registered: bool,
+}
+impl SessionRetention {
+    pub fn registered(mut self) -> Self {
+        self.registered = true;
+        self
+    }
+    pub fn retain_until_terminated(mut self) {
+        // Dropping a local route does not confirm remote close or recoverability.
+        self.registered = false;
+    }
+}
+impl Drop for SessionRetention {
+    fn drop(&mut self) {
+        if self.registered
+            && let Ok(mut activity) = self.life.activity.lock()
+        {
+            activity.sessions -= 1;
+            activity.last = Instant::now();
         }
     }
 }

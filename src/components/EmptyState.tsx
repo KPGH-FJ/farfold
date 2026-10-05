@@ -7,7 +7,6 @@ import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
 import { uiError } from "../runtime/ui_error";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
 import {
   listCredentials,
@@ -21,6 +20,18 @@ import {
 import { Composer } from "./Composer";
 import type { AgentCardModel } from "../runtime/agents";
 import { promptCapabilities } from "../runtime/agents";
+import {
+  isAgentPresentable,
+  isAgentReadyForConversation,
+} from "../runtime/agent_directory";
+import { useConversationAgentReadiness } from "../runtime/agent_readiness";
+import {
+  allowAutomaticConnection,
+  isAutomaticConnectionAllowed,
+  useAutomaticConnectionAllowed,
+} from "../runtime/connection_intent";
+import { useConnectionHold } from "../runtime/connection_hold";
+import { ACCESS_STRINGS as A } from "../runtime/access_strings";
 import {
   basename,
   modelConfigOption,
@@ -46,7 +57,7 @@ import {
   type PendingAttempt,
 } from "../runtime/pending_conversation";
 import { WorkspacePopover } from "./WorkspacePopover";
-import { SessionOptionsList } from "./SessionOptionsMenu";
+import { SessionOptionsList, sessionOptions } from "./SessionOptionsMenu";
 import { AgentLogo } from "./AgentLogo";
 import { ReasoningControl } from "./ReasoningControl";
 import { PermissionControl } from "./PermissionControl";
@@ -58,8 +69,11 @@ import {
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import {
   authenticationRequired,
+  currentAuthenticationRequired,
+  authenticationActivity,
   useAuthentication,
 } from "../runtime/authentication";
+import { authActive } from "../runtime/auth_activity";
 import {
   agentRepairPanel,
   type AgentRepairRequest,
@@ -79,7 +93,6 @@ const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
 
 export function EmptyState({
   agents,
-  defaultCwd,
   initialAgentId = null,
   initialAgentRevision = 0,
   initialSelection,
@@ -113,16 +126,38 @@ export function EmptyState({
   const [folder, setFolder] = useState<string | null>(
     newConversationChoice.cwd,
   );
-  const cwd = folder ?? defaultCwd;
+  // A new conversation starts only in a folder explicitly chosen by the user.
+  // The application's preparation directory remains available to global setup.
+  const cwd = folder;
   useEffect(() => {
     newConversationChoice.cwd = folder;
   }, [folder]);
   const work = useWorkPolicy(cwd);
-  const requestCwd = work.cwd ?? cwd;
+  const requestCwd = cwd ? (work.cwd ?? cwd) : null;
+  const preparedForConversation = useConversationAgentReadiness(agents);
+  const currentReadiness = useRef(preparedForConversation);
+  currentReadiness.current = preparedForConversation;
   useEffect(() => onProjectChange(cwd), [cwd, onProjectChange]);
   const [agentId, setAgentId] = useState<string | null>(
     newConversationChoice.agentId,
   );
+  const connectionAllowed = useAutomaticConnectionAllowed(agentId);
+  const currentAgents = useRef(agents);
+  currentAgents.current = agents;
+  const isCurrentCandidate = (id: string | null) =>
+    currentAgents.current.some(
+      (card) =>
+        card.id === id &&
+        isAgentReadyForConversation(
+          card,
+          setupStorage.completed(card.id) &&
+            !!setupStorage.confirmedSelection(card.id) &&
+            !authActive(authenticationActivity(card.id).getSnapshot()),
+        ),
+    );
+  const currentAgent = agents.find((agent) => agent.id === agentId);
+  const candidateSelected = isCurrentCandidate(agentId);
+  const initialCandidatePresentable = isCurrentCandidate(initialAgentId);
   const [service, setService] = useState<ServiceChoice | null>(
     newConversationChoice.service,
   );
@@ -175,6 +210,15 @@ export function EmptyState({
     if (!active) setChoiceDialog(null);
   }, [active]);
   const draft = useThread(draftKey);
+  useConnectionHold(
+    active && draft && !draft.connectionLost && !draft.openError
+      ? {
+          agentId: draft.agentId,
+          cwd: draft.cwd,
+          serviceContext: draft.serviceContext,
+        }
+      : null,
+  );
   const unsent = useComposerDraft("new");
   useSetupStorage();
   usePreparationChanges();
@@ -216,7 +260,7 @@ export function EmptyState({
       mounted.current = false;
     };
   }, []);
-  const pair = `${agentId}|${requestCwd}|${JSON.stringify(service)}`;
+  const pair = `${agentId}|${cwd}|${requestCwd}|${JSON.stringify(service)}`;
   const handedOffKeys = useRef(new Set<string>());
   const currentPair = useRef(pair);
   currentPair.current = pair;
@@ -227,6 +271,7 @@ export function EmptyState({
   useEffect(() => {
     if (
       !initialAgentId ||
+      !initialCandidatePresentable ||
       (requestedAgent.current.id === initialAgentId &&
         requestedAgent.current.revision === initialAgentRevision)
     )
@@ -250,7 +295,12 @@ export function EmptyState({
     failedPairRef.current = null;
     setDraftError(null);
     setDraftRevision((value) => value + 1);
-  }, [initialAgentId, initialAgentRevision, initialSelection]);
+  }, [
+    initialAgentId,
+    initialAgentRevision,
+    initialSelection,
+    initialCandidatePresentable,
+  ]);
   // Opening a search/settings page keeps the prepared draft. Returning only
   // opens when there is no draft and no request already in flight.
   useEffect(() => {
@@ -262,10 +312,15 @@ export function EmptyState({
       setOpening(false);
       return;
     }
+    if (!candidateSelected || !connectionAllowed) {
+      setOpening(false);
+      return;
+    }
     if (
       !active ||
       !agentId ||
       !preparationComplete ||
+      needsAuthentication ||
       !cwd ||
       !work.enabled(agentId)
     ) {
@@ -283,7 +338,11 @@ export function EmptyState({
     setDraftKey(null);
     setOpening(true);
     const timer = setTimeout(() => {
-      if (readRequired()) {
+      if (
+        !isCurrentCandidate(agentId) ||
+        !isAutomaticConnectionAllowed(agentId) ||
+        readRequired()
+      ) {
         setOpening(false);
         return;
       }
@@ -299,6 +358,11 @@ export function EmptyState({
         })
         .then(async (state) => {
           openedKey = state.key;
+          if (
+            !isCurrentCandidate(agentId) ||
+            !isAutomaticConnectionAllowed(agentId)
+          )
+            return;
           if (cancelled) {
             // A later effect can be awaiting the same store-deduplicated open.
             if (!mounted.current || currentPair.current !== pair)
@@ -310,7 +374,13 @@ export function EmptyState({
             ([a], [b]) => Number(b === modelId) - Number(a === modelId),
           );
           for (const [id, value] of choices) {
-            if (cancelled || readRequired()) return;
+            if (
+              cancelled ||
+              !isCurrentCandidate(agentId) ||
+              !isAutomaticConnectionAllowed(agentId) ||
+              readRequired()
+            )
+              return;
             const option = threads
               .thread(state.key)
               ?.configOptions.find((item) => item.id === id);
@@ -363,13 +433,21 @@ export function EmptyState({
     return () => {
       cancelled = true;
       clearTimeout(timer);
-      if (openedKey && !handedOffKeys.current.has(openedKey))
+      if (
+        openedKey &&
+        isAutomaticConnectionAllowed(agentId) &&
+        isCurrentCandidate(agentId) &&
+        !handedOffKeys.current.has(openedKey)
+      )
         void threads.discardDraft(openedKey);
     };
   }, [
     draftRevision,
     agentId,
+    candidateSelected,
+    connectionAllowed,
     preparationComplete,
+    needsAuthentication,
     requestCwd,
     service,
     work.ready,
@@ -383,6 +461,7 @@ export function EmptyState({
   const imageOk = caps.image;
   useEffect(() => {
     if (
+      !candidateSelected ||
       explicitReadRequired ||
       !draft ||
       draft.agentId !== agentId ||
@@ -402,6 +481,7 @@ export function EmptyState({
     );
   }, [
     agentId,
+    candidateSelected,
     requestCwd,
     service,
     explicitReadRequired,
@@ -413,21 +493,67 @@ export function EmptyState({
   ]);
 
   const pickProject = async () => {
-    if (picking) return;
+    if (
+      picking ||
+      unsent.pendingConversation ||
+      draft?.submitting ||
+      draft?.running
+    )
+      return;
+    const selection = pair;
     setPicking(true);
     try {
       const picked = await chooseDirectory(cwd ?? undefined);
-      if (picked) setFolder(picked);
+      if (
+        picked &&
+        mounted.current &&
+        activeRef.current &&
+        currentPair.current === selection
+      ) {
+        setDraftError(null);
+        failedPairRef.current = null;
+        setFolder(picked);
+      }
     } catch {
-      setDraftError(STRINGS.repair.directoryFailed);
+      if (
+        mounted.current &&
+        activeRef.current &&
+        currentPair.current === selection
+      )
+        setDraftError(STRINGS.repair.directoryFailed);
     } finally {
       setPicking(false);
     }
   };
 
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    const authenticationBlocked = (key = draftKey) => {
+      if (!agentId) return true;
+      const context =
+        (key ? threads.thread(key)?.serviceContext : undefined) ??
+        sourceContext;
+      return (
+        currentAuthenticationRequired(agentId, requestCwd, context) ||
+        (!!service &&
+          currentAuthenticationRequired(
+            agentId,
+            requestCwd,
+            JSON.stringify(service),
+          ))
+      );
+    };
+    if (!mounted.current || !activeRef.current || currentPair.current !== pair)
+      throw new Error(STRINGS.repair.sendFailed);
     if (readRequired()) throw new Error(C.readRequired);
-    if (!agentId || !requestCwd || !setupStorage.completed(agentId))
+    if (
+      !agentId ||
+      !isAutomaticConnectionAllowed(agentId) ||
+      !isCurrentCandidate(agentId) ||
+      !requestCwd ||
+      needsAuthentication ||
+      authenticationBlocked() ||
+      !setupStorage.completed(agentId)
+    )
       throw new Error(STRINGS.repair.sendFailed);
     if (submittedDraft.pendingConversation)
       throw new Error(STRINGS.repair.sendFailed);
@@ -462,12 +588,26 @@ export function EmptyState({
     try {
       const target = threads.thread(key);
       if (!target) throw new Error(STRINGS.repair.sendFailed);
+      if (
+        !isCurrentCandidate(agentId) ||
+        !isAutomaticConnectionAllowed(agentId) ||
+        currentPair.current !== sentPair ||
+        authenticationBlocked(key)
+      )
+        throw new Error(STRINGS.repair.sendFailed);
       if (readRequired()) throw new Error(C.readRequired);
       pending = await rememberPendingConversation(
         "new",
         submittedDraft,
         target,
       );
+      if (
+        !isCurrentCandidate(agentId) ||
+        !isAutomaticConnectionAllowed(agentId) ||
+        currentPair.current !== sentPair ||
+        authenticationBlocked(key)
+      )
+        throw new Error(STRINGS.repair.sendFailed);
       if (readRequired()) throw new Error(C.readRequired);
       await sendNewConversation(key, blocks);
       finishPendingConversation(
@@ -501,7 +641,10 @@ export function EmptyState({
   };
 
   const ready =
+    candidateSelected &&
+    connectionAllowed &&
     preparationComplete &&
+    !needsAuthentication &&
     agentId !== null &&
     cwd !== null &&
     work.enabled(agentId) &&
@@ -554,6 +697,7 @@ export function EmptyState({
   );
   const note =
     (explicitReadRequired ? C.readRequired : null) ??
+    (!connectionAllowed ? A.disconnectedHint : null) ??
     work.error ??
     (sendingPaused ? STRINGS.repair.workOff : null) ??
     draft?.configError ??
@@ -569,16 +713,21 @@ export function EmptyState({
             ? `${STRINGS.empty.openFailed}：${draftError}`
             : null);
 
-  const currentAgent = agents.find((agent) => agent.id === agentId);
   // Sending policy never changes whether the selected program is prepared.
-  const available = usableAgents(agents);
   const needsPreparation =
-    !preparationComplete ||
-    !currentAgent ||
-    !available.some((agent) => agent.id === agentId);
+    !preparationComplete || !currentAgent || !candidateSelected;
   const pickAgent = (id: string) => {
+    if (!isCurrentCandidate(id) || !currentReadiness.current(id)) return;
     setChoiceDialog(null);
-    if (id === agentId) return;
+    allowAutomaticConnection(id);
+    if (id === agentId) {
+      if (!connectionAllowed || draft?.connectionLost || draftError) {
+        failedPairRef.current = null;
+        setDraftError(null);
+        setDraftRevision((value) => value + 1);
+      }
+      return;
+    }
     const selection = setupStorage.confirmedSelection(id);
     if (!setupStorage.completed(id) || !selection) {
       onGoSettings(id);
@@ -592,15 +741,28 @@ export function EmptyState({
     newConversationChoice.config = { ...selection.config };
   };
   const prepareFromChoice = (id?: string) => {
+    if (
+      id &&
+      !currentAgents.current.some(
+        (card) => card.id === id && isAgentPresentable(card),
+      )
+    )
+      return;
     setChoiceDialog(null);
     onGoSettings(id);
   };
   const applyModel = async (choice: NewConversationModelChoice) => {
-    if (!activeRef.current || currentPair.current !== pair || !agentId)
+    if (
+      !activeRef.current ||
+      currentPair.current !== pair ||
+      !agentId ||
+      !isCurrentCandidate(agentId)
+    )
       throw new Error(STRINGS.repair.configFailed);
     const request = requestedAgent.current;
     const ownsApplication = () =>
       mounted.current &&
+      isCurrentCandidate(agentId) &&
       !readRequired() &&
       currentPair.current === pair &&
       requestedAgent.current === request;
@@ -713,8 +875,14 @@ export function EmptyState({
         onClick={() => setChoiceDialog("agent")}
       >
         <span className="workspace-agent-label">
-          {currentAgent && <AgentLogo card={currentAgent} />}
-          <span>{currentAgent?.name ?? W.agentChoice}</span>
+          {candidateSelected && currentAgent && (
+            <AgentLogo card={currentAgent} />
+          )}
+          <span>
+            {candidateSelected
+              ? (currentAgent?.name ?? W.agentChoice)
+              : W.agentChoice}
+          </span>
         </span>
         <CaretDownIcon size={10} />
       </button>
@@ -742,31 +910,17 @@ export function EmptyState({
         </span>
         <CaretDownIcon size={10} />
       </button>
-      {draft && <ReasoningControl thread={draft} />}
-      {draft && <PermissionControl thread={draft} />}
-      <WorkspacePopover
-        label={<SlidersHorizontalIcon size={17} />}
-        title={W.options}
-        iconOnly
-      >
-        {(close) => (
-          <>
-            {draft && <SessionOptionsList thread={draft} composer />}
-            <button
-              type="button"
-              className="workspace-folder-choice"
-              disabled={picking}
-              onClick={() => {
-                close();
-                void pickProject();
-              }}
-            >
-              {folder ? basename(folder) : W.folder}
-            </button>
-            <p className="workspace-control-note">{W.folderHint}</p>
-          </>
-        )}
-      </WorkspacePopover>
+      {candidateSelected && draft && <ReasoningControl thread={draft} />}
+      {candidateSelected && draft && <PermissionControl thread={draft} />}
+      {candidateSelected && draft && sessionOptions(draft, true).length > 0 && (
+        <WorkspacePopover
+          label={<SlidersHorizontalIcon size={17} />}
+          title={W.options}
+          iconOnly
+        >
+          <SessionOptionsList thread={draft} composer />
+        </WorkspacePopover>
+      )}
     </>
   ) : null;
 
@@ -775,6 +929,42 @@ export function EmptyState({
       <div className="workspace-start-intro" hidden={!!composerTarget}>
         <h1>{W.startTitle}</h1>
         <p>{W.startSubtitle}</p>
+      </div>
+      <div className="workspace-folder-bar">
+        <span className="workspace-folder-label">{W.workingFolder}</span>
+        <button
+          type="button"
+          className={`workspace-folder-button${folder ? " selected" : ""}`}
+          aria-label={folder ? W.changeFolder : W.folder}
+          title={folder ?? undefined}
+          disabled={
+            picking ||
+            !!unsent.pendingConversation ||
+            draft?.submitting ||
+            draft?.running
+          }
+          onClick={() => void pickProject()}
+        >
+          <FolderSimpleIcon size={18} />
+          <span>{folder ? basename(folder) : W.folder}</span>
+          <CaretDownIcon size={12} />
+        </button>
+        {folder && (
+          <button
+            type="button"
+            className="workspace-folder-clear icon-btn"
+            aria-label={W.clearFolder}
+            disabled={
+              picking ||
+              !!unsent.pendingConversation ||
+              draft?.submitting ||
+              draft?.running
+            }
+            onClick={() => setFolder(null)}
+          >
+            <XIcon size={14} />
+          </button>
+        )}
       </div>
       <Composer
         thread={draft}
@@ -800,47 +990,37 @@ export function EmptyState({
         disabled={!ready || draftError !== null || needsPreparation}
         editableWhenDisabled
         prepareAction={
-          needsPreparation
-            ? explicitReadRequired
+          folder && needsPreparation
+            ? explicitReadRequired || needsAuthentication
               ? openRepair
-              : () => onGoSettings(agentId ?? undefined)
+              : !candidateSelected
+                ? () => setChoiceDialog("agent")
+                : () => onGoSettings(agentId ?? undefined)
             : undefined
         }
         placeholder={W.startPlaceholder}
         controls={controls}
-        contextChips={
-          folder && (
-            <div className="workspace-folder-chip" title={folder}>
-              <FolderSimpleIcon size={14} />
-              <span>{basename(folder)}</span>
-              <button
-                type="button"
-                aria-label={W.clearFolder}
-                onClick={() => setFolder(null)}
-              >
-                <XIcon size={12} />
-              </button>
-            </div>
-          )
-        }
         caption={
-          needsPreparation
-            ? W.prepareHint
-            : service
-              ? `${serviceLabel?.id === service.id ? serviceLabel.label : W.savedSource} · ${W.selectedSource}`
-              : `${currentAgent?.name ?? "Agent"} · ${W.existingSource}`
+          !needsPreparation && service
+            ? serviceLabel?.id === service.id
+              ? serviceLabel.label
+              : W.savedSource
+            : undefined
         }
-        onChooseFolder={() => void pickProject()}
         note={note}
         noteAction={draftError !== null}
         autofocus={active}
         fit
       />
-      {(draftError || draft?.connectionLost || draft?.sourceError) && (
+      {(draftError ||
+        draft?.connectionLost ||
+        draft?.sourceError ||
+        !connectionAllowed) && (
         <button
           type="button"
           className="btn btn-ghost"
           onClick={() => {
+            if (agentId) allowAutomaticConnection(agentId);
             failedPairRef.current = null;
             setDraftError(null);
             setDraftRevision((value) => value + 1);
@@ -882,39 +1062,42 @@ export function EmptyState({
           returnFocusRef={agentChoiceTrigger}
           cards={agents}
           picked={agentId}
-          prepared={setupStorage.completed}
+          prepared={preparedForConversation}
           onPick={pickAgent}
           onPrepare={prepareFromChoice}
           onClose={() => setChoiceDialog(null)}
         />
       )}
-      {active && choiceDialog === "model" && currentAgent && (
-        <NewConversationModelDialog
-          returnFocusRef={modelChoiceTrigger}
-          key={pair}
-          agent={currentAgent}
-          value={{
-            service,
-            modelValue:
-              !service && typeof modelOption?.currentValue === "string"
-                ? modelOption.currentValue
-                : null,
-          }}
-          existingOption={service ? null : modelOption}
-          readingModels={opening || !!draft?.configuring}
-          onApply={applyModel}
-          onPrepare={() => prepareFromChoice(agentId ?? undefined)}
-          onManageServices={
-            onManageServices
-              ? () => {
-                  setChoiceDialog(null);
-                  onManageServices();
-                }
-              : undefined
-          }
-          onClose={() => setChoiceDialog(null)}
-        />
-      )}
+      {active &&
+        candidateSelected &&
+        choiceDialog === "model" &&
+        currentAgent && (
+          <NewConversationModelDialog
+            returnFocusRef={modelChoiceTrigger}
+            key={pair}
+            agent={currentAgent}
+            value={{
+              service,
+              modelValue:
+                !service && typeof modelOption?.currentValue === "string"
+                  ? modelOption.currentValue
+                  : null,
+            }}
+            existingOption={service ? null : modelOption}
+            readingModels={opening || !!draft?.configuring}
+            onApply={applyModel}
+            onPrepare={() => prepareFromChoice(agentId ?? undefined)}
+            onManageServices={
+              onManageServices
+                ? () => {
+                    setChoiceDialog(null);
+                    onManageServices();
+                  }
+                : undefined
+            }
+            onClose={() => setChoiceDialog(null)}
+          />
+        )}
     </>
   );
   return (

@@ -1,0 +1,2129 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-06",
+  "group": "remaining",
+  "workspaceHead": "dc94127",
+  "authority": "用户新确认的8项高标准；本报告只读核查，不修改契约/计划，不恢复已撤销的六旅程门槛。",
+  "scope": "当前安装入口的11个Agent。精确版本优先；公开新版本/main仅辅助，不能替代当前。",
+  "standards": {
+    "1_preparation": "安装/复用程序/登录/配置服务/选模型完整路径，取消返回可继续，不要求用户拼命令补流程。",
+    "2_account": "复用已有登录，当前账号/服务/付费来源清晰，退出换号真实结果且不影响其他任务、不泄密。",
+    "3_history": "找到带入已有对话，重启后正文/上下文与继续原对话；标题和空页不算。",
+    "4_model": "选项完整，同对话切换保历史，下一请求实际使用并重启保持。",
+    "5_capability": "回答/工具/文件/提问/审批正确呈现操作，已有工具技能配置不漏。",
+    "6_multitask": "多个Agent/对话同时工作，模型/审批/停止准确归属，不改其他对话。",
+    "7_stop_recovery": "停止结果明确，断线/错误/重启不丢草稿附件待发、不重发、不擅自重试、不空对话假恢复。",
+    "8_unified_ux": "同能力同操作，点击有反馈、等待有状态、失败有下一步，用户不研究接入差异。"
+  },
+  "legend": {
+    "known_gap": "当前客户端或精确版本Agent源码已见与标准不符的具体路径；不是新实机失败。",
+    "risk": "存在具体实现风险或未测的恢复/隔离条件；未复现不能记为已测失败。",
+    "partial": "已有实现/有限历史实机证据，完整标准未证实。",
+    "unknown": "关键精确实现或真实证据不足，不能当成不支持。",
+    "exception": "本轮没有用户确认的不适用例外；隐藏入口/固定模型不自动豁免。"
+  },
+  "method": {
+    "readOnly": true,
+    "agentLaunched": false,
+    "credentialsOrUserHistoryRead": false,
+    "modelRequests": 0,
+    "testsRun": false,
+    "sourceModified": false,
+    "onlyOutputWritten": "docs/evidence/2026-10-06-agent-standard-review/remaining-review.json",
+    "cachedSnapshot": "output/acp-first-batch-research-2026-10-05/installed-public-launch-and-capabilities.json",
+    "cachedSnapshotTime": "2026-10-05T15:02:11.220178+00:00",
+    "publicVersionBinding": "Kilo v7.8.1 commit4089197545a01bbc9fa8041c1305b3fb0b0f8e66; Kimchi v1.3.0 commit24313af634e043b6542011107baee9f4d5eb8c3a; siGit v1.5.11 commitd79ae86be1b13b8793cef522fdbc6c0273518a38；本轮重读这些来源。Grok main不能绑定安装1.0.46。",
+    "webReopenedExactTags": [
+      "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs",
+      "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts",
+      "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs"
+    ]
+  },
+  "summary": {
+    "agents": 11,
+    "fullyVerifiedToAllEight": 0,
+    "thisReviewActualTestFailures": 0,
+    "knownGapsDoNotMeanAllFunctionsFail": true,
+    "criticalFindings": [
+      "Kimi/Nova/Qoder/Stakpak的L模型通路未接FarFold，属当前明确客户端缺口。",
+      "Stakpak无历史列表且load无正文回放；同进程消息/model/取消均共享，标准3/6/7有精确版本实现缺口。",
+      "Kimchi/siGit/Nova特定缺失历史空建属Agent错误分支，FarFold拒空补偿已有；标准3记风险，不把无效输入当有效历史核心缺失。",
+      "Nova/Qoder回放可能迟于响应，与现有prefix marker有竞态风险，未做真实复现。",
+      "Kimi仅直接切目标LLM，但修改全局默认；不能误称所有已打开LLM立即一起变化。",
+      "本组只有Kimchi/Poolside声明标准logout；其余9个缺统一退出换号路径。Kimchi专有auth_status未消费；CLI退出命令不等于产品账号管理。",
+      "所有11家的能力链、多任务和完整停止恢复缺少当前精确版本实证；不得用fixture/声明/旧候选局部成功补齐。",
+      "Poolside账号路线也受当前账号身份/订阅归属未呈现这一共用源码缺口影响；其历史/模型仍是证据不足，不改成已测失败。"
+    ],
+    "knownGapAgentCount": 11,
+    "insufficientEvidenceOnlyAgentCount": 0,
+    "countingSemantics": "knownGapAgentCount是每个唯一Agent至少一个与8标准不符的确定产品/集成缺口，含共用账号身份/退出通路；不是实机失败数。标准3的特定缺失历史错误有客户端补偿时只记风险。跨组统计必须统一common finding适用路线和严重性后按id去重，不直接相加异构字段。"
+  },
+  "commonEvidence": {
+    "legacyModel": [
+      "src/runtime/sessions.ts:728",
+      "src/runtime/sessions.ts:737",
+      "src/runtime/session_configuration.ts:138",
+      "src-tauri/src/acp_client/pump.rs:1152"
+    ],
+    "historyGuard": [
+      "src/runtime/sessions.ts:630",
+      "src/runtime/sessions.ts:662",
+      "src/runtime/sessions.ts:686",
+      "src/runtime/session_recovery.ts:33",
+      "src/runtime/session_recovery.ts:53",
+      "src-tauri/src/acp_client/pump.rs:727",
+      "src-tauri/src/acp_client/session_discovery.rs:100"
+    ],
+    "authExit": [
+      "src-tauri/src/acp_client/handshake.rs:274",
+      "src/components/AgentAuthSection.tsx:357",
+      "src/components/AgentAuthSection.tsx:1449"
+    ],
+    "modelConfirm": [
+      "src/runtime/session_configuration.ts:149",
+      "src/runtime/session_configuration.ts:168",
+      "src-tauri/src/acp_client/config_change.rs:22",
+      "src-tauri/src/acp_client/model_guard.rs:128"
+    ],
+    "processSharing": [
+      "src-tauri/src/acp_client/manager.rs:120",
+      "src-tauri/src/acp_client/manager.rs:168"
+    ],
+    "contract": [
+      "PRODUCT.md:49",
+      "PRODUCT.md:62",
+      "PRODUCT.md:63",
+      "PRODUCT.md:72",
+      "PRODUCT.md:115",
+      "PRODUCT.md:128",
+      "PRODUCT.md:145"
+    ],
+    "currentEvidence": [
+      "docs/status.md:3",
+      "docs/status.md:9",
+      "plans/agent-access.md:448"
+    ],
+    "sharedUX": [
+      "src/components/AgentSetup.tsx:1",
+      "src/components/AgentAuthSection.tsx:1",
+      "src/components/ThreadView.tsx:1",
+      "src/runtime/sessions.ts:1"
+    ]
+  },
+  "agents": [
+    {
+      "id": "grok-build",
+      "name": "Grok Build",
+      "installedVersion": "1.0.46",
+      "sourceVersion": {
+        "registry": "1.0.49",
+        "installed": "1.0.46",
+        "implementationInspected": "公开 main 快照；未证明与1.0.49/1.0.46发行二进制一致",
+        "commit": "2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8",
+        "installedHandshakeAgentInfo": null,
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.0.46",
+        "npmLatestURL": "https://registry.npmjs.org/@xai-official%2fgrok/latest"
+      },
+      "agentSurface": "官方原生 ACP server（Rust；非第三方 adapter）",
+      "modelRoute": "U",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.0.46安装、直接arm64入口与initialize历史实机通过，读取模型要求认证；Grok登录入口未执行。旧1.0.45启动失败不能作为1.0.46当前失败。",
+          "evidence": [
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方CLI文档说明复用既有Grok认证/API路径；1.0.46具体实现未绑定。 本机authMethods含grok.com agent；专有状态/退出为main源码结论，不倒推已装版本。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "3_history": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "已装1.0.46仅load/list声明；公开main有持久与回放实现但不能绑定本版本。真实正文、冷恢复与继续均未知。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "4_model": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.0.46精确new/load配置与setter实现未知；main级C不能认定为当前。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "unknown",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-npm-native-entry/installed.md:10"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/acp_agent.rs#L635",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L923",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/session.rs#L281",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/config_option.rs#L7",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/model_switch.rs#L241",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/session/storage/jsonl/mod.rs#L1596",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/extensions/auth.rs#L14",
+        "https://docs.x.ai/build/cli/headless-scripting",
+        "https://docs.x.ai/build/enterprise",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "junie",
+      "name": "Junie",
+      "installedVersion": "3419.24.0",
+      "sourceVersion": {
+        "registry": "3419.24.0",
+        "installed": "3419.24.0",
+        "implementationInspected": "registry stable3419.24.0 + 同版本旧握手；官方当前文档",
+        "commit": "ca9e56b07a71bc0bd3a22afe749046acb6e60ef5",
+        "installedHandshakeAgentInfo": {
+          "name": "@jetbrains/junie",
+          "title": "Junie",
+          "version": "26.9.22 (3419.24)"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "agentSurface": "JetBrains官方原生 ACP server；公开仓库为发行/说明，运行实现闭源",
+      "modelRoute": "U",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "3419.24.0新受管目录安装和连接通过；两种账号方式可见，模型读取要求认证。没有完成登录、选模型、请求及取消返回的完整路径。",
+          "evidence": [
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方说明jetbrains-account走Junie CLI保存凭据/浏览器登录。IDE gateway授权与独立CLI授权有不同入口；不能承诺自动继承任意JetBrains IDE账号或许可证。 本机authMethods有jetbrains-account(agent)与junie-cli(terminal)。官方KB说明可复用CLI凭据、打开浏览器。缓存未声明auth.logout；ACP账号状态/退出未知。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "3_history": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方CLI恢复文档及list/load声明存在；闭源3419.24.0 ACP正文回放、冷恢复与继续均未证实。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "4_model": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "CLI /model、--model和假session旧接口错误不证明ACP同会话切换；精确C/L及执行未知。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "unknown",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:18",
+            "docs/evidence/2026-10-01-managed-installation-paths/installed.md:19"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/JetBrains/junie-acp-release/releases/tag/3419.24",
+        "https://junie.jetbrains.com/docs/junie-cli-acp.html",
+        "https://junie.jetbrains.com/docs/parameters.html",
+        "https://junie.jetbrains.com/docs/slash-commands.html",
+        "https://youtrack.jetbrains.com/articles/JUNIE-A-4/ACP-CLI-Authentication-with-AI-Assistant",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/junie/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo",
+      "installedVersion": "7.8.1",
+      "sourceVersion": {
+        "registry": "7.8.3",
+        "installed": "7.8.1",
+        "implementationInspected": "v7.8.3源码",
+        "commit": "59f1428abb5fe782ee7bd4d258e72a08b74aadb4",
+        "installedHandshakeAgentInfo": {
+          "name": "Kilo",
+          "version": "7.8.1"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v7.8.1",
+        "installedSourceCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66"
+      },
+      "agentSurface": "Kilo官方CLI内置原生 ACP server；CLI本身为官方OpenCode派生项目，不是社区adapter",
+      "modelRoute": "C",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "7.8.1安装、模型读取及注册的kilo auth login首次启动/取消有历史安装版证据；未填凭据、未实际登录。旧错误opencode终端元数据已有窄修正，不能再报为当前错误目标。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "同一CLI正常Auth存储(Global.Path.data/auth.json)及KILO_AUTH_CONTENT支持；复用CLI provider/OAuth设置，不需要FarFold另写配置。 authenticate匹配kilo-login后仅返回空对象，并不执行登录；需官方kilo auth login。旧terminal-auth元数据误写opencode auth login，FarFold已有窄接入修正。CLI auth remove/logout存在；本机无标准auth.logout声明。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:143",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:402",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:679"
+          ]
+        },
+        "3_history": {
+          "reviewState": "risk",
+          "categories": ["agent_implementation_limit", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "SQLite持久记录及正常list/load/正文回放有精确tag实现；单条replay异常被catch吞掉，部分正文丢失可能仍响应成功。不能泛化成正常历史全失败，也未做安装版冷恢复续答。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:143",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:402",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:679"
+          ]
+        },
+        "4_model": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "7.8.1 C返回完整model/effort选项并按sessionId写model/variant，prompt传当前值；缺少真实切换、下次请求与重启保持证据。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:143",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:402",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:679"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:143",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:402",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:679"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "unknown",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 历史登录终端普通取消成功仅限认证进程，不等于模型/工具取消成功。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:143",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:402",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:679"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:15",
+            "docs/evidence/2026-10-01-agent-access-auth-sequencing/installed.md:22"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L94",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L143",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L213",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L402",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L679",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/session/session.ts#L594",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/storage/db.ts#L35",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/auth/index.ts#L11",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kilo/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L94",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L143",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L213",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L402",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L679",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/session/session.ts#L594",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/storage/db.ts#L35",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/auth/index.ts#L11"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "kimchi",
+      "name": "Kimchi",
+      "installedVersion": "1.3.0",
+      "sourceVersion": {
+        "registry": "1.5.1",
+        "installed": "1.3.0",
+        "implementationInspected": "v1.5.1源码",
+        "commit": "66c56747f92285f6bc6865e40e2c1e78c63cc51b",
+        "installedHandshakeAgentInfo": {
+          "name": "kimchi",
+          "version": "1.3.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v1.3.0",
+        "installedSourceCommit": "24313af634e043b6542011107baee9f4d5eb8c3a"
+      },
+      "agentSurface": "官方原生ACP server；内部用Pi harness，非Pi账号共享承诺",
+      "modelRoute": "C",
+      "cachedAuthLogout": true,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.3.0安装连接通过，普通/US/终端三种登录方式及退出入口可见；模型读取要求认证，未运行登录。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "复用Kimchi正常config及harness/Pi auth存储；不是读取用户独立Pi home。新登录刷新当前会话的认证/model registry。 authenticate实际执行region-aware浏览器授权；unstable_logout清Kimchi key及对应Pi auth；专有auth_status扩展每次重读凭据存储，标准auth.logout有声明。 标准退出入口有基础，但Kimchi auth_status专有扩展未见FarFold生产消费；当前账号身份/权益与安全换号未完整接通或实测。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:545",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:721",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:788",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1084",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2501",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2619"
+          ]
+        },
+        "3_history": {
+          "reviewState": "risk",
+          "categories": [
+            "agent_protocol_error_path",
+            "client_compensation_present",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "有cwd且文件存在时有正常加载、回放与继续实现。无cwd listAll不使用Kimchi agentDir可能漏列；找不到文件时创建同ID空会话是确定的Agent协议错误分支，但当前FarFold拒空保护已补偿，不能据不存在/已删除历史推定有效历史恢复不达标。该错误路径的界面反馈、正常历史完整性和冷继续仍需有界真实验证。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:545",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:721",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:788",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1084",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2501",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2619"
+          ],
+          "defectScope": "Agent-specific invalid/missing-history handling; not evidence that every valid persisted conversation fails"
+        },
+        "4_model": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.3.0 C/L调用目标session.setModel({persist:true})，保持历史；认证和返回选项有验证逻辑，尚无FarFold实际换模/重启证据。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:545",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:721",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:788",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1084",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2501",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2619"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:545",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:721",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:788",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1084",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2501",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2619"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 第3项列出的特定回放/缺失历史限制同样影响恢复判断；不能说所有恢复已失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:545",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:721",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:788",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1084",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2501",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:2619"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch6/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:490"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L430",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L492",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L547",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L681",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L792",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L1085",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L2574",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L2655",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/config.ts#L23",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimchi/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L430",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L462",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L490",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L545",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L677",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L686",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L788",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L1083",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2504",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2592",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/config.ts#L23"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi CLI",
+      "installedVersion": "1.52.0",
+      "sourceVersion": {
+        "registry": "1.52.0",
+        "installed": "1.52.0",
+        "implementationInspected": "tag1.52.0源码；与本机/registry版本相同",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "Kimi Code CLI",
+          "version": "1.52.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "agentSurface": "Moonshot官方原生ACP server（Python）",
+      "modelRoute": "L",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.52.0安装连接、kimi login启动与普通取消通过，登录未完成；旧模型接口未接使全准备链仍缺模型呈现/选择能力。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "读取Kimi默认配置与已保存Kimi OAuth token；ACP _check_auth要求Kimi Code OAuth，不能因通用provider/API配置存在就认定ACP已登录。 login方法authenticate只检查已存在token；缺失时要求kimi login终端登录，不自己发起浏览器。终端auth元数据提供login命令；标准logout/账号状态接口未见。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:256",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:303",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:327",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:364",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:250",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:298"
+          ]
+        },
+        "3_history": {
+          "reviewState": "known_gap",
+          "categories": ["agent_implementation_limit"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "正常冷load查context/wire并回放；同进程ID已在sessions时load直接return无回放，cwd缺省list为空，回放异常仅log。不能因此否认有cwd且文件正常的冷恢复实现。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:256",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:303",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:327",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:364",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:250",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:298"
+          ]
+        },
+        "4_model": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "agent_implementation_limit"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "仅L；FarFold无旧models/set_model通路，模型/思考组合不可完整选择确认。setter换目标LLM后保存全局default_model/default_thinking，恢复初始化取该默认；不能声称每条会话模型重启隔离。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:256",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:303",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:327",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:364",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:250",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:298",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "risk",
+          "categories": ["agent_implementation_limit", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "set_model只直接更换目标会话LLM，不能说立即改了所有正在打开的LLM；但写全局默认会影响之后新建/恢复所取基线。FarFold又未接L，无法保证每条对话选择重启隔离；并行审批/停止实测缺失。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:303",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:327",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:364",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:250",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:298"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 历史登录终端普通取消成功仅限认证进程，不等于模型/工具取消成功。 第3项列出的特定回放/缺失历史限制同样影响恢复判断；不能说所有恢复已失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:256",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:303",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:327",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-server.py:364",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:250",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimi-acp-session.py:298"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk", "client_gap"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。现有旧模型接口缺失使统一控件不完整，隐藏选择不能算能力达标。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:22",
+            "docs/evidence/2026-10-01-agent-access-directory-continuation/README.md:23"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L42",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L115",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L214",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L256",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L303",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L327",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L374",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/session.py#L250",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/session.py#L52",
+        "https://github.com/MoonshotAI/kimi-cli",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimi/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "minimax-code",
+      "name": "MiniMax Code",
+      "installedVersion": "0.2.7",
+      "sourceVersion": {
+        "registry": "0.2.7",
+        "installed": "0.2.7",
+        "implementationInspected": "已安装npm0.2.7公开JS + 官方source preview0.4.12 commit；npm latest0.6.3实现未完整取得",
+        "commit": "185277170817c50e9dd5339c2893e850d610fa1e",
+        "installedHandshakeAgentInfo": {
+          "name": "minimax-code",
+          "title": "MiniMax Code",
+          "version": "0.2.7"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "0.6.3",
+        "npmLatestURL": "https://registry.npmjs.org/@minimax-ai%2fcode/latest"
+      },
+      "agentSurface": "MiniMax官方原生ACP server（npm JS发行）；另有官方公开source preview",
+      "modelRoute": "C",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.2.7安装连接通过，mcode login终端入口可见未执行，模型读取要求认证；后续完整准备与取消恢复未测。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "ACP与普通mcode启动共用prepareDataDir/runtime；复用mcode login与provider配置。当前官方文档支持BYOK无需MiniMax登录，但不能把该当前文档无差别倒推0.2.7认证。 terminal auth启动mcode login；authenticate仅assertAuthenticated，不自行浏览器登录。官方CLI /status、logout可用；0.2.7没有agent logout request注册或auth.logout广告。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:11"
+          ]
+        },
+        "3_history": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "已装0.2.7查询runtime持久会话，检查cwd/忙碌并分页读正文，load等待回放，resume不回放；可见完整实现路径，但未做真实账号下正文/上下文/重启续答验证。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:11"
+          ]
+        },
+        "4_model": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.2.7 C model/thinkingEffort委托runtime.selectSessionModel(sessionId)，返回/通知配置；还没有真实下次请求和重启验证。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:11"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:11"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "unknown",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:11"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/minimax-code-installed-critical-excerpts.txt:2"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": {
+        "list": "line79 offset424516",
+        "load": "line79 offset426981",
+        "setConfig": "line79 offset430053",
+        "history": "line79 offset442392"
+      },
+      "evidenceURLs": [
+        "https://registry.npmjs.org/@minimax-ai/code/0.2.7",
+        "https://registry.npmjs.org/@minimax-ai/code/latest",
+        "https://github.com/MiniMax-AI/minimax-code",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L438",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L625",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L763",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L956",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L1772",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/control-state.ts#L13",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/local-runtime/src/sessions/ledger/file-session-ledger-store.ts#L1",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/minimax-code/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "nova",
+      "name": "Nova",
+      "installedVersion": "1.1.49",
+      "sourceVersion": {
+        "registry": "1.1.49",
+        "installed": "1.1.49",
+        "implementationInspected": "已装npm1.1.49公开JS；npm latest1.1.50实现未完整取得",
+        "commit": "4c53e2f04333e3c0f5cbb070b0935c5b9ed37b39",
+        "installedHandshakeAgentInfo": {
+          "name": "kore-cli",
+          "version": "1.0.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.1.50",
+        "npmLatestURL": "https://registry.npmjs.org/@compass-ai%2fnova/latest"
+      },
+      "agentSurface": "Compass官方原生ACP server；公开GitHub主要说明，已发行JS可静态检查",
+      "modelRoute": "L",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "npm1.1.49安装连接通过，自报kore-cli1.0.0另记；Nova Setup可见未执行，读取要求认证。旧模型接口未接。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方要求nova setup先配API与偏好，ACP创建正常配置/runtime，复用同CLI keys/provider配置；非保证Compass浏览器账号自动转CLI。 terminal auth方法kore-terminal-auth显示Nova Setup；没有标准logout能力。本机agentInfo版本1.0.0与包1.1.49不同，不能据握手标题推安装版本；账号状态扩展未能完全核清。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-wire-model-excerpts.txt:1"
+          ]
+        },
+        "3_history": {
+          "reviewState": "risk",
+          "categories": [
+            "agent_protocol_error_path",
+            "client_compensation_present",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "正常JSON快照包含正文/model。load多数错误回退同ID空create（ACP_SESSION_PRUNED除外）是确定的Agent错误处理路径；FarFold拒空保护已有，不能从缺失历史推出有效历史全部失败。正常回放setImmediate安排在响应之后，与FarFold已收前缀marker存在时序风险，尚未复现实际丢失/提前判空；保留风险而非已测失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-wire-model-excerpts.txt:1"
+          ],
+          "defectScope": "Agent-specific invalid/missing-history handling; not evidence that every valid persisted conversation fails"
+        },
+        "4_model": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.1.49 wire实际注册session/set_model且按sessionId保存JSON；只暴露legacy models，FarFold未接。矩阵-32601文字是Session not found，不能误说上游没有setter。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-wire-model-excerpts.txt:1",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-wire-model-excerpts.txt:1"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 第3项列出的特定回放/缺失历史限制同样影响恢复判断；不能说所有恢复已失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-critical-excerpts.txt:5",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-wire-model-excerpts.txt:1"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk", "client_gap"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。现有旧模型接口缺失使统一控件不完整，隐藏选择不能算能力达标。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:20",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/nova-installed-ACP-tail.txt:1"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": {
+        "manager": "line13 offset14477271",
+        "diskLoad": "line13 offset14484300",
+        "model": "line13 offset14488773",
+        "loadSessionFallback": "line79 offset27371900",
+        "modelHandler": "line79 offset27403000",
+        "promptModel": "line79 offset27395828",
+        "setModelWire": "line79 offset27447048"
+      },
+      "evidenceURLs": [
+        "https://github.com/Compass-Agentic-Platform/nova",
+        "https://registry.npmjs.org/@compass-ai/nova/1.1.49",
+        "https://registry.npmjs.org/@compass-ai/nova/latest",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/nova/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "installedVersion": "1.0.16",
+      "sourceVersion": {
+        "registry": "1.0.16",
+        "installed": "1.0.16",
+        "implementationInspected": "registry/已装1.0.16 + 官方当前README/文档",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "pool-acp",
+          "title": "Poolside",
+          "version": "1.0.16"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "agentSurface": "Poolside官方原生ACP server；公开repo为说明/发行，核心实现闭源",
+      "modelRoute": "C",
+      "cachedAuthLogout": true,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.0.16安装连接通过，pool login入口可见未执行，读取要求认证；完整准备链未测。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "insufficient_evidence",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "pool login存正常~/.config/poolside/credentials.json与settings.yaml，自动化可POOLSIDE_API_KEY；相同官方pool acp复用。 本机pool-login agent登录、auth.logout声明；官方矩阵支持terminal auth，受client能力协商影响。状态/退出实际语义源码不可核。 标准退出声明只支持显示入口；账号身份/权益/退出后结果及跨任务影响尚无可核实证，不认定已达标。 补充共用源码复核：AuthMethodsResponse仅methods/canLogout，沿用已有设置区仅通用来源标签，未呈现Poolside当前账号身份或订阅归属。对本项已提供的账号登录路线，这是用户标准2的共用客户端缺口；并非认定上游无账号信息接口或退出失败。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:293",
+            "src/runtime/agents.ts:216",
+            "src/components/AgentAuthSection.tsx:1059",
+            "docs/evidence/2026-10-06-agent-standard-review/common-review.json:1"
+          ]
+        },
+        "3_history": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方文档支持list/load及持久/resume，但闭源实现与真实非空正文、上下文续答未证实。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:293"
+          ]
+        },
+        "4_model": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "C为官方文档级支持，缺少1.0.16同会话执行、返回确认与持久行为的可核实现/实测。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:293"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:293"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "unknown",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:293"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:18",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/poolside-README.md:147"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/poolsideai/pool",
+        "https://docs.poolside.ai/cli/pool",
+        "https://docs.poolside.ai/get-started/log-in",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/poolside/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://downloads.poolside.ai/pool/v1.0.16/pool-darwin-arm64.tar.gz"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder CLI",
+      "installedVersion": "0.2.14",
+      "sourceVersion": {
+        "registry": "0.2.14",
+        "installed": "0.2.14",
+        "implementationInspected": "已装npm0.2.14公开JS；npm latest1.1.65实现未完整取得",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "qoder-cli",
+          "title": "Qoder CLI",
+          "version": "0.2.14"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.1.65",
+        "npmLatestURL": "https://registry.npmjs.org/@qoder-ai%2fqodercli/latest"
+      },
+      "agentSurface": "Qoder官方原生ACP server（闭源/混淆npm JS发行）；非社区adapter",
+      "modelRoute": "L",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.2.14安装连接通过，login/PAT两方式可见未执行，读取要求认证；初始仅legacy models，现UI无法发现选项。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "官方ACP文档明确共享普通CLI登录；已有CLI登录无需重新登，PAT环境变量也可。发行代码refreshAuth并验证官方AuthManager。 qodercli-login实际执行device-flow浏览器登录，PAT方法验证token；没有标准auth.logout广告。官方CLI login/status/logout与ACP面板支持范围必须分开。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:12"
+          ]
+        },
+        "3_history": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "项目JSONL、原ID恢复QueryEngine和正文回放有包源码；缺ID报错。load调用async streamHistory未await，存在回放晚于响应风险；FarFold可能在正文到达前判空，不等于已复现或所有历史失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:12"
+          ]
+        },
+        "4_model": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "insufficient_evidence"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.2.14 new/load仅legacy models；虽有set_config handler但初始不暴露configOptions且无相应更新，当前FarFold无法发现模型。setter进入下一QueryEngine请求的全链亦未透核。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:12",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:12"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 第3项列出的特定回放/缺失历史限制同样影响恢复判断；不能说所有恢复已失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:2",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-critical-excerpts.txt:12"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk", "client_gap"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。现有旧模型接口缺失使统一控件不完整，隐藏选择不能算能力达标。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch3/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/qoder-installed-source-excerpts.txt:3"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": {
+        "listDisk": "line2897 offset30845630",
+        "load": "line4006 offset38241048",
+        "list": "line4006 offset38247645",
+        "configSetter": "line4006 offset38255286",
+        "replay": "line4006 offset38256864",
+        "auth": "line4006 offset38243033"
+      },
+      "evidenceURLs": [
+        "https://docs.qoder.com/cli/acp",
+        "https://docs.qoder.com/cli/authentication",
+        "https://registry.npmjs.org/@qoder-ai/qodercli/0.2.14",
+        "https://registry.npmjs.org/@qoder-ai/qodercli/latest",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/qoder/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "sigit",
+      "name": "siGit Code",
+      "installedVersion": "1.5.11",
+      "sourceVersion": {
+        "registry": "1.6.0",
+        "installed": "1.5.11",
+        "implementationInspected": "v1.6.0源码",
+        "commit": "4fb26dda1ba179c6ae424b6b883c696b05c9d913",
+        "installedHandshakeAgentInfo": {
+          "name": "sigit",
+          "title": "siGit Code - AI Coding Agent",
+          "version": "1.5.11"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v1.5.11",
+        "installedSourceCommit": "d79ae86be1b13b8793cef522fdbc6c0273518a38"
+      },
+      "agentSurface": "siGit官方原生ACP server（Rust）；非社区adapter",
+      "modelRoute": "C",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.5.11二进制安装连接及Qwen 2.5 3B选项读取通过，未手选/发送/登录；npx路线未验，列表不等于本地模型可用。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "复用普通siGit账户凭据；authenticate先verify_session，已有有效登录直接通过，否则浏览器loopback登录。 authenticate有真实认证；/whoami和/logout作为Agent公开slash命令，CLI whoami/logout也有；标准auth.logout能力未广告，不能自动映射设置页按钮。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1831",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1839",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:2803",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/session_store.rs:134"
+          ]
+        },
+        "3_history": {
+          "reviewState": "risk",
+          "categories": [
+            "agent_protocol_error_path",
+            "client_compensation_present",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.5.11有保存JSONL时恢复正文和原conversation。缺失历史仍open同ID空会话，但FarFold明确拒空；这不构成有效历史不能恢复的证据。通知发送错误.ok()忽略会使部分回放完整性存风险；无cwd旧记录不列出的适用范围需分开。不能用1.6.0新行为回填当前，也不把缺失历史样本当全产品恢复失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1831",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1839",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:2803",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/session_store.rs:134"
+          ],
+          "defectScope": "Agent-specific invalid/missing-history handling; not evidence that every valid persisted conversation fails"
+        },
+        "4_model": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "1.5.11 C先activate目标会话、携conversation换backend；云模型认证失败可能返回旧选项，FarFold确会核currentValue，不应将此当已知误确认缺陷。真实执行/重启未测。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1831",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1839",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:2803",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/session_store.rs:134"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold按连接/会话路由请求是源码基础，未有此版本多个真实对话并行、模型/审批/停止互不影响的实测。不从Agent的Map、声明或共享组件自动推定达标。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1831",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1839",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:2803",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/session_store.rs:134"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "risk",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "FarFold已有未知结果暂停、草稿/附件/待发恢复和拒空保护；没有该精确版本真实运行中停止、断线报错与冷恢复的完整证据。 第3项列出的特定回放/缺失历史限制同样影响恢复判断；不能说所有恢复已失败。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1831",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1839",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:2803",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/session_store.rs:134"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。共享布局或能力显隐不能代替真实流程完整。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch4/README.md:21",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/sigit-installed-tag/src/main.rs:1798"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1570",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1605",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1898",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1934",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L3016",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/session_store.rs#L1",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1326",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L4835",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/sigit/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1438",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1472",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1762",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1798",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1836",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2803",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2940",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4420",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/session_store.rs#L134"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    },
+    {
+      "id": "stakpak",
+      "name": "Stakpak",
+      "installedVersion": "0.3.88",
+      "sourceVersion": {
+        "registry": "0.3.88",
+        "installed": "0.3.88",
+        "implementationInspected": "v0.3.88源码；与registry/本机相同",
+        "commit": "d3eba6f502a79b993b826ef3ab4065eec9e38dfa",
+        "installedHandshakeAgentInfo": {
+          "name": "stakpak",
+          "title": "Stakpak Agent",
+          "version": "0.3.88"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "agentSurface": "Stakpak官方原生ACP server（Rust）；非第三方adapter",
+      "modelRoute": "L",
+      "cachedAuthLogout": false,
+      "overall": "known_gaps",
+      "allEightVerified": false,
+      "hasKnownGap": true,
+      "criteria": {
+        "1_preparation": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.3.88安装连接通过，浏览器登录入口未点击，读取要求认证；旧模型接口未接且实际历史/多会话限制未解决。",
+          "evidence": [
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "2_account": {
+          "reviewState": "known_gap",
+          "categories": [
+            "client_gap",
+            "agent_interface_limit",
+            "unverified_risk"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "读取正常AppConfig、STAKPAK_API_KEY/所配providers；用户原Stakpak配置可复用。 authenticate(stakpak)执行浏览器流程、校验key并由Agent保存正常config/重建client；无标准logout或账号状态广告；缺凭据时才广告login。 当前缓存没有标准auth.logout，现FarFold共用账号页不提供退出/换号；已有CLI命令或专有扩展不等于接通。身份、付费来源和不影响其他任务的真实结果未验证。",
+          "evidence": [
+            "src-tauri/src/acp_client/handshake.rs:274",
+            "src/components/AgentAuthSection.tsx:357",
+            "src/components/AgentAuthSection.tsx:1449",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1779",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2113",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2165"
+          ]
+        },
+        "3_history": {
+          "reviewState": "known_gap",
+          "categories": ["agent_implementation_limit"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "0.3.88没有list；load只解析UUID、写current_session_id并返回models，既不读历史也不回放正文。云端是否另补上下文未知，不影响其没有向FarFold恢复正文的明确缺口。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1779",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2113",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2165"
+          ]
+        },
+        "4_model": {
+          "reviewState": "known_gap",
+          "categories": ["client_gap", "agent_implementation_limit"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "仅L，FarFold未接；上游忽略请求sessionId，直接写共享self.model，无每对话隔离。",
+          "evidence": [
+            "src/runtime/session_configuration.ts:149",
+            "src/runtime/session_configuration.ts:168",
+            "src-tauri/src/acp_client/config_change.rs:22",
+            "src-tauri/src/acp_client/model_guard.rs:128",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1779",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2113",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2165",
+            "src/runtime/sessions.ts:728",
+            "src/runtime/sessions.ts:737",
+            "src/runtime/session_configuration.ts:138",
+            "src-tauri/src/acp_client/pump.rs:1152"
+          ]
+        },
+        "5_capability": {
+          "reviewState": "unknown",
+          "categories": ["insufficient_evidence", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "共用事件/工具/审批界面及该Agent能力声明不能证明实际回答、工具、文件变化、提问、审批和既有技能/工具配置完整保留。本组未找到该精确安装入口的真实任务链成功证据；不据此判上游不支持。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19"
+          ]
+        },
+        "6_multitask": {
+          "reviewState": "known_gap",
+          "categories": [
+            "agent_implementation_limit",
+            "client_integration_gap"
+          ],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "同Agent/cwd/服务复用一个进程。0.3.88 newSession清共享messages、load改共享current_session_id、set_model写共享model、cancel向共享流/工具广播并清全部active_tool_calls，不能保证同进程多对话互不影响。源码明确缺口；没有运行真实破坏性实验。",
+          "evidence": [
+            "src-tauri/src/acp_client/manager.rs:120",
+            "src-tauri/src/acp_client/manager.rs:168",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1779",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2113",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2165"
+          ]
+        },
+        "7_stop_recovery": {
+          "reviewState": "known_gap",
+          "categories": ["agent_implementation_limit", "unverified_risk"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "cancel忽略目标会话而广播共享取消，load不恢复正文；因此完整停止/恢复标准存在明确缺口。FarFold保留草稿、未知结果与拒空保护不能补出Agent历史；当前未跑停止/断线/重启实验。",
+          "evidence": [
+            "src/runtime/sessions.ts:630",
+            "src/runtime/sessions.ts:662",
+            "src/runtime/sessions.ts:686",
+            "src/runtime/session_recovery.ts:33",
+            "src/runtime/session_recovery.ts:53",
+            "src-tauri/src/acp_client/pump.rs:727",
+            "src-tauri/src/acp_client/session_discovery.rs:100",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1779",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2113",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:2165"
+          ]
+        },
+        "8_unified_ux": {
+          "reviewState": "partial",
+          "categories": ["unverified_risk", "client_gap"],
+          "meetsFullStandard": false,
+          "testedFailureThisReview": false,
+          "detail": "程序、账号、模型、对话使用共用组件，旧安装证据仅覆盖各自连接/入口/少量取消；缺少同一当前候选完整点击、等待、错误下一步和取消返回的逐家观察。现有旧模型接口缺失使统一控件不完整，隐藏选择不能算能力达标。",
+          "evidence": [
+            "src/components/AgentSetup.tsx:1",
+            "src/components/AgentAuthSection.tsx:1",
+            "src/components/ThreadView.tsx:1",
+            "src/runtime/sessions.ts:1",
+            "docs/evidence/2026-10-01-agent-access-directory-batch7/README.md:19",
+            "output/acp-first-batch-research-2026-10-05/group-remaining-sources/stakpak/cli/src/commands/acp/server.rs:1722"
+          ]
+        }
+      },
+      "researchArtifact": "output/acp-first-batch-research-2026-10-05/group-remaining.json",
+      "sourceAnchors": null,
+      "evidenceURLs": [
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1570",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1601",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1690",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1779",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1802",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1831",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L2165",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/stakpak/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "priorEvidenceLimit": "2026-09-30/10-01的有限安装成功按当时版本/候选保留；相关程序与代码未变时可作为有限支持，不要求为本次review全部重跑。不得将不同候选局部成功拼成当前8项全通过。本次未启动程序或做真实操作。"
+    }
+  ],
+  "independentChallenge": {
+    "date": "2026-10-06",
+    "reviewed": "common-review.json + own criteria + current history/auth source",
+    "changedHistoryCriteria": ["kimchi", "sigit", "nova"],
+    "authenticateSemantics": "{}是标准成功形状，只有具体no-op且不验证认证的实现才有语义疑点。MiniMax assertAuthenticated与Kimi检查已有token不是仅因不打开浏览器就失败。Kilo no-op与现已修正终端路线/有限安装取消成功分开。",
+    "carryForward": "保留旧候选对应的真实有限成功；根据精确版本/相关代码变化确定需补证据，不额外增加全Agent同当前应用全量重跑门槛。"
+  }
+}

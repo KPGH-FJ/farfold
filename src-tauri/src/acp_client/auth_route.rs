@@ -12,6 +12,8 @@ use crate::{
 
 mod copilot;
 
+pub(crate) use super::api_key_auth::ProtocolApiKey;
+
 #[cfg(test)]
 mod legacy_env_tests;
 
@@ -46,6 +48,7 @@ pub(crate) enum UnavailableReason {
     LaunchUnsupported,
     ProgramMismatch,
     ScriptMismatch,
+    ApiKeyProviderUnsupported,
     Unverified,
 }
 
@@ -63,6 +66,9 @@ impl UnavailableReason {
             }
             Self::ProgramMismatch => "此登录方式的程序与当前程序不一致，请在更多登录方式中明确配置",
             Self::ScriptMismatch => "此登录方式的脚本与当前程序不一致，请在更多登录方式中明确配置",
+            Self::ApiKeyProviderUnsupported => {
+                "此登录方式的服务尚不能直接使用密钥，请使用其他登录方式"
+            }
             Self::Unverified => UNAVAILABLE,
         }
     }
@@ -100,6 +106,29 @@ pub(crate) fn protocol_method(method: &Value) -> bool {
         && !method
             .pointer("/_meta/api-key")
             .is_some_and(Value::is_object)
+}
+
+/// Provider-only protocol keys use a verified wire contract, not guessed env.
+/// Unknown providers remain declarations, but do not gain execution authority.
+pub(crate) fn protocol_api_key_provider(method: &Value) -> Option<&str> {
+    if method.get("_farfoldInvalid") == Some(&Value::Bool(true))
+        || !matches!(method.get("type"), None | Some(Value::String(_)))
+        || method
+            .get("type")
+            .and_then(Value::as_str)
+            .is_some_and(|kind| kind != "agent")
+        || method.pointer("/_meta/terminal-auth").is_some()
+        || method.pointer("/_meta/type").and_then(Value::as_str) == Some("terminal")
+    {
+        return None;
+    }
+    let key = method.pointer("/_meta/api-key")?.as_object()?;
+    if key.contains_key("env") {
+        return None;
+    }
+    key.get("provider")
+        .and_then(Value::as_str)
+        .filter(|provider| *provider == "openai")
 }
 
 fn strings(value: Option<&Value>) -> Option<Vec<String>> {
@@ -419,6 +448,9 @@ pub(crate) fn route(row: &AgentRow, method: &Value, proof: &ManagedTerminalProof
         .pointer("/_meta/api-key")
         .filter(|meta| meta.is_object())
     {
+        if meta.get("provider").is_some() && protocol_api_key_provider(method).is_none() {
+            return Route::Unavailable(UnavailableReason::ApiKeyProviderUnsupported);
+        }
         return Route::ApiKey(meta.clone());
     }
     if protocol_method(method) {

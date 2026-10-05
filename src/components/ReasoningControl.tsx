@@ -1,10 +1,10 @@
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
+import { useAuthenticationActivity } from "../runtime/authentication";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import {
-  fixedConfigOption,
+  configOptionChangeBlocked,
   isThoughtConfigOption,
 } from "../runtime/protected_config";
-import { LockSimpleIcon } from "@phosphor-icons/react";
 import {
   threads,
   configValueLabel,
@@ -15,19 +15,43 @@ export const isReasoningOption = isThoughtConfigOption;
 
 /** The same capability-driven control sits beside the model in both composers. */
 export function ReasoningControl({ thread }: { thread: ThreadState }) {
+  useAuthenticationActivity(thread.agentId);
   const option = thread.configOptions.find(isReasoningOption);
   if (!option) return null;
-  const fixed = thread.identity === "established" || thread.resumed;
-  if (fixed || option.type !== "select" || !option.options.length)
+  if (option.type === "boolean") {
+    const enabled =
+      option.currentValue === true || option.currentValue === "true";
+    return (
+      <label className="composer-reasoning">
+        <span>{C.thinking}</span>
+        <button
+          type="button"
+          role="switch"
+          aria-label={C.reasoning}
+          aria-checked={enabled}
+          className="so-toggle"
+          disabled={configOptionChangeBlocked(thread, option.id)}
+          onClick={() => {
+            if (configOptionChangeBlocked(thread, option.id)) return;
+            if (thread.identity === "draft" && pendingPreparationRead(thread))
+              return;
+            void threads
+              .setConfig(thread.key, option.id, !enabled)
+              .catch(() => undefined);
+          }}
+        />
+      </label>
+    );
+  }
+  if (option.type !== "select" || !option.options.length)
     return (
       <span
         className="composer-reasoning fixed"
-        title={fixed ? C.reasoningFixed : option.description}
+        title={option.description}
         aria-label={`${C.reasoning}：${configValueLabel(option)}`}
       >
         <span>{C.thinking}</span>
         <span>{configValueLabel(option)}</span>
-        {fixed && <LockSimpleIcon size={12} />}
       </span>
     );
   return (
@@ -37,15 +61,9 @@ export function ReasoningControl({ thread }: { thread: ThreadState }) {
         aria-label={C.reasoning}
         title={option.description}
         value={String(option.currentValue ?? "")}
-        disabled={
-          thread.configuring ||
-          thread.running ||
-          thread.submitting ||
-          thread.connectionLost ||
-          thread.reconnecting
-        }
+        disabled={configOptionChangeBlocked(thread, option.id)}
         onChange={(event) => {
-          if (fixedConfigOption(thread, option.id)) return;
+          if (configOptionChangeBlocked(thread, option.id)) return;
           if (thread.identity === "draft" && pendingPreparationRead(thread))
             return;
           void threads

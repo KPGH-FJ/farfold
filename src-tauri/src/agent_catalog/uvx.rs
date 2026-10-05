@@ -99,9 +99,9 @@ mod tests {
 
     #[test]
     fn official_exact_tool_syntax_becomes_an_install_requirement() {
-        let minion = UvxPackage::parse("minion-code@0.1.44").unwrap();
-        assert_eq!(minion.requirement, "minion-code==0.1.44");
-        assert_eq!(minion.script, "minion-code");
+        let sample = UvxPackage::parse("example-agent@1.2.3").unwrap();
+        assert_eq!(sample.requirement, "example-agent==1.2.3");
+        assert_eq!(sample.script, "example-agent");
         let fast = UvxPackage::parse("fast-agent-acp==0.10.1").unwrap();
         assert_eq!(fast.requirement, "fast-agent-acp==0.10.1");
         assert_eq!(fast.script, "fast-agent-acp");

@@ -1,0 +1,158 @@
+{
+  "reviewDateAsiaShanghai": "2026-10-06",
+  "reviewMode": "Current-source review, safe installed metadata comparison, existing evidence read, 6 frontend regression files; no new live Agent/account/model test.",
+  "findings": [
+    {
+      "id": "COMMON-ACCOUNT-IDENTITY",
+      "standards": [2, 8],
+      "classification": "confirmed_client_gap",
+      "statement": "Current common account response carries methods and canLogout only. Native current-account/status extensions are not normalized into the account UI. Existing-method/source labels do not establish current account identity or subscription/billing ownership.",
+      "references": [
+        {
+          "file": "src/runtime/agents.ts",
+          "line": 216
+        },
+        {
+          "file": "src/components/AgentAuthSection.tsx",
+          "line": 1059
+        },
+        {
+          "file": "src/runtime/sessions.ts",
+          "line": 502
+        }
+      ],
+      "scope": "OAuth/subscription account-management requirements; an API service label is not asserted to identify the API owner. Whether a particular Agent has an official status route remains per-Agent."
+    },
+    {
+      "id": "COMMON-ACCOUNT-EXIT",
+      "standards": [2],
+      "classification": "confirmed_client_or_agent_route_gap",
+      "statement": "Logout/switch-account controls require standard auth.logout capability. Only 6 of the 33 current cached handshakes advertise it; 27 have no corresponding built-in exit/switch control. Native CLI/status/sign-out alternatives are not automatically represented by this gate.",
+      "references": [
+        {
+          "file": "src/components/AgentAuthSection.tsx",
+          "line": 357
+        },
+        {
+          "file": "src/components/AgentAuthSection.tsx",
+          "line": 1449
+        },
+        {
+          "file": "src-tauri/src/acp_client/handshake.rs",
+          "line": 274
+        }
+      ],
+      "scope": "Does not prove the Agent itself has no logout, and does not require forced login/logout for an API-only path. No real logout was run."
+    },
+    {
+      "id": "COMMON-LEGACY-MODEL",
+      "standards": [4],
+      "classification": "confirmed_client_gap",
+      "statement": "Production frontend consumes configOptions and a separate legacy modes path, but not models/current_model_update, and sends no session/set_model. Existing legacy-model Agents cannot have their model choice fully represented or changed through this path.",
+      "references": [
+        {
+          "file": "src/runtime/sessions.ts",
+          "line": 728
+        },
+        {
+          "file": "src/runtime/session_projection.ts",
+          "line": 533
+        },
+        {
+          "file": "src-tauri/src/acp_client/session_commands.rs",
+          "line": 138
+        }
+      ],
+      "affected": [
+        "gemini",
+        "auggie",
+        "autohand",
+        "kimi",
+        "nova",
+        "qoder",
+        "stakpak"
+      ]
+    },
+    {
+      "id": "COMMON-SHARED-PROCESS",
+      "standards": [6, 7],
+      "classification": "per_agent_incompatibility",
+      "statement": "Connections are keyed by Agent/cwd/service rather than conversation. SetConfig busy/approval protection examines the target conversation. Agents with a single active conversation or process-wide model/cancel state need additional proven isolation.",
+      "references": [
+        {
+          "file": "src-tauri/src/acp_client/manager.rs",
+          "line": 120
+        },
+        {
+          "file": "src-tauri/src/acp_client/manager.rs",
+          "line": 404
+        },
+        {
+          "file": "src-tauri/src/acp_client/pump.rs",
+          "line": 1089
+        }
+      ],
+      "affected": ["pi-acp", "cursor", "stakpak"],
+      "scope": "Exact Agent-side behavior is in per-Agent evidence. Runtime cross-talk has not been newly reproduced."
+    },
+    {
+      "id": "COMMON-HISTORY-COMPLETION",
+      "standards": [3, 7],
+      "classification": "boundary_and_timing_risk",
+      "statement": "Current history recovery rejects absent complete marker and unreadable/empty replay. Agent-side empty-success or post-response replay paths do not prove Farfold has accepted an empty history; they can prevent reliable import/restore and need bounded real verification.",
+      "references": [
+        {
+          "file": "src/runtime/session_recovery.ts",
+          "line": 42
+        },
+        {
+          "file": "src/runtime/session_recovery.ts",
+          "line": 53
+        }
+      ],
+      "scope": "Do not extrapolate a missing-session path to failure of every valid history."
+    },
+    {
+      "id": "COMMON-LOGIN-CONFIRMATION",
+      "standards": [2, 8],
+      "classification": "confirmed_semantic_gap_without_live_reproduction",
+      "statement": "A successful agent authenticate is marked operationConfirmed; the UI can describe login success. Goose/fast-agent installed-source authenticate paths perform no login and do not independently establish current account validity. Recheck restarts/initializes the connection, which is not an account-status query.",
+      "references": [
+        {
+          "file": "src/runtime/auth_actions.ts",
+          "line": 140
+        },
+        {
+          "file": "src/runtime/auth_activity.ts",
+          "line": 121
+        },
+        {
+          "file": "src/components/AgentAuthSection.tsx",
+          "line": 656
+        },
+        {
+          "file": "src/runtime/auth_strings.ts",
+          "line": 4
+        },
+        {
+          "file": "src-tauri/src/acp_client/auth_connection.rs",
+          "line": 58
+        }
+      ],
+      "affected": ["goose", "fast-agent"],
+      "scope": "An empty authenticate response is standard success, not inherently invalid; this finding depends on those concrete no-op implementations. No account was changed."
+    }
+  ],
+  "primaryProtocolSources": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/authentication",
+      "checked": "2026-10-06 Asia/Shanghai",
+      "note": "logout must be advertised; {} is normal authenticate success; active-session effects after logout are not guaranteed"
+    },
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/session-setup",
+      "checked": "2026-10-06 Asia/Shanghai",
+      "note": "load must replay complete conversation before response; capability declaration itself is not successful restoration evidence"
+    }
+  ]
+}

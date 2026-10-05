@@ -10,13 +10,15 @@ export const AGENT_SETUP_STRINGS = {
   modelReading: "正在读取模型选项…",
   modelFailed: "模型选项读取失败，原选择已保留。",
   modelReady: "已读取当前模型选项",
+  modelMismatch:
+    "当前设置与原选择不一致。原选择已保留，请重新选择后再保存或测试。",
+  modelAcceptCurrent: "沿用当前设置",
   modelUnprovided: "Agent 未提供可选模型，将沿用它自己的设置。",
   modelPending: "读取选项后可确认模型，也可以保留已有选择稍后尝试。",
   modelReadHint: "读取选项不会发送模型请求。",
   modelConnect: "请先连接程序，再读取模型选项。",
   loginConnect: "请先连接程序，再读取登录方式。",
   goProgram: "前往连接程序",
-  apiUnavailable: "此处暂不支持配置新的 API 服务，可沿用已有设置。",
   serviceChanged: "此服务的配置已改变，请重新选择服务和模型后再使用。",
   serviceChangedOption: "配置已改变，请重新选择",
 } as const;

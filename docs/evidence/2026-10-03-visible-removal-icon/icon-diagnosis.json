@@ -1,0 +1,61 @@
+{
+  "atUtc": "2026-10-03T06:53:37.689004+00:00",
+  "status": "system icon metadata correct; user-visible shell icon remains unverified",
+  "formalFilesEqualInstallationReceipt": true,
+  "formalBinarySha256": "a15ff361966fe8d7a25d7511f4531c1e5a07fe40acf4619580737b54add461d6",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "bundleVersion": "0.1.7",
+  "iconFile": "icon.icns",
+  "iconSha256": "987d15346cba954b96c20dd0945ff61070bb500dc5932227a2e4880967981770",
+  "icnsEntryTypes": [
+    "TOC ",
+    "ic07",
+    "ic08",
+    "ic09",
+    "ic10",
+    "ic11",
+    "ic12",
+    "ic13",
+    "ic14"
+  ],
+  "icnsLengthValid": true,
+  "registeredApplicationPaths": [
+    "/Applications/Farfold.app"
+  ],
+  "preferredApplicationPath": "/Applications/Farfold.app",
+  "workspaceEqualsResourcePixels": true,
+  "workspaceDiffersFromGenericPixels": true,
+  "runningApplicationIconsEqualResourcePixels": true,
+  "runningApplicationCount": 1,
+  "correctIconPixelSha256": "70e8f3b864c3b7fc418b2ce76ec39ef4256987e128f7d61a83c6391b1472551c",
+  "applicationDirectoryMtimeUtc": "2026-09-27T19:04:51.235291+00:00",
+  "hypothesis": "A same-version in-place ditto update without explicit registration may leave an existing shell client displaying cached icon metadata. This is a possible trigger, not a demonstrated root cause; current LaunchServices, NSWorkspace and running-application icon queries are correct.",
+  "nextRootAction": {
+    "command": "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f -v /Applications/Farfold.app",
+    "reason": "Force-read only this installed application metadata even if modification time is unchanged, as documented by the installed lsregister help. Root executes and records it; diagnostic agent has not executed it."
+  },
+  "optionalRootAction": {
+    "command": "touch -c /Applications/Farfold.app",
+    "reason": "Only update the existing outer application directory modification time to trigger automatic registration; no content/signature change. Use only if root decides this further targeted metadata refresh is necessary."
+  },
+  "expectedPostActionObservation": [
+    "Registration command successful and limited to the formal application path",
+    "Registration/preferred path and all three app icon pixel hashes remain correct",
+    "Formal five file hashes and strict signature remain valid",
+    "User confirms visible macOS shell icon; metadata checks cannot establish this"
+  ],
+  "officialSources": [
+    {
+      "title": "Apple Launch Services Concepts, Application Registration",
+      "url": "https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/LaunchServicesConcepts/LSCConcepts/LSCConcepts.html",
+      "supports": "Explicit forced re-registration or updating application modification time after significant metadata changes; ordinary update depends on a newer modification time."
+    },
+    {
+      "title": "Apple Core Foundation Keys, CFBundleIconFile",
+      "url": "https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html",
+      "supports": "The icon filename may include its extension and must identify the icon in the main resources directory."
+    }
+  ],
+  "scope": "Application bundle bytes/plist/ICNS and its own public registration/running icon metadata only. Isolated icons exported to /tmp. No app launch/quit, windows/AX/screenshots, secrets/user configuration/history, global cache or other app access.",
+  "sandboxQueryExcludedFromDiagnosis": "Initial sandboxed system-service queries produced blank rendered images and no registration result; the escalated harmless read succeeded. The initial result is not evidence of missing application registration."
+}

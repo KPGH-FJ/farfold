@@ -109,11 +109,29 @@ fn metadata(raw: &Value, method: &mut Value) -> bool {
         }
     }
     if let Some(key) = raw.get("api-key") {
-        let Some(name) = text(key.get("env"), 256).filter(|s| crate::manual_auth::valid_env(s))
-        else {
+        let Some(key) = key.as_object() else {
             return false;
         };
-        meta.insert("api-key".into(), json!({"env":name}));
+        let kept = if key.contains_key("env") {
+            if key.contains_key("provider") {
+                return false;
+            }
+            let Some(name) = text(key.get("env"), 256).filter(|s| crate::manual_auth::valid_env(s))
+            else {
+                return false;
+            };
+            json!({"env":name})
+        } else {
+            let Some(provider) =
+                text(key.get("provider"), 256).filter(|provider| provider.trim() == *provider)
+            else {
+                return false;
+            };
+            // Only declaration identity survives; payloads never become cache
+            // or execution configuration. Unknown providers remain unusable.
+            json!({"provider":provider})
+        };
+        meta.insert("api-key".into(), kept);
     }
     if !meta.is_empty() {
         method["_meta"] = meta.into();
@@ -225,6 +243,14 @@ impl Handshake {
         self.auth
             .iter()
             .any(|m| m["id"] == id && super::auth_route::protocol_method(m))
+    }
+
+    pub(crate) fn protocol_api_key_provider(&self, id: &str) -> Option<&str> {
+        self.auth.iter().find_map(|method| {
+            (method["id"] == id)
+                .then(|| super::auth_route::protocol_api_key_provider(method))
+                .flatten()
+        })
     }
 
     fn json_with_auth(&self, methods: Vec<Value>) -> Value {

@@ -1,0 +1,8 @@
+{
+  "atUtc": "2026-10-03T01:02:14.295510+00:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateAbsent": true,
+  "formalFilesStillMatch": true,
+  "binarySha256": "72e1539d77b10d668691e37451f68c0abad04be621eb5dda5d8a561d2486719d",
+  "scope": "Only exact installed-and-verified build bundle removed; no target sweep, backup, formal app, history or Agent config removed"
+}

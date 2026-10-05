@@ -42,17 +42,7 @@ pub async fn session_import_preview(
     let token = NEXT_PREVIEW.fetch_add(1, Ordering::Relaxed).to_string();
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
-    let preview =
-        open_import_preview(&manager, &store, &row, &cwd, session_id, token, channel).await?;
-    if let Ok(statuses) = manager.status(&agent_id) {
-        for status in statuses
-            .into_iter()
-            .filter(|status| super::session_index::same_dir(&status.cwd, &cwd))
-        {
-            crate::ui_transport::emit_event(&app, "agent:status", &status);
-        }
-    }
-    Ok(preview)
+    open_import_preview(&manager, &store, &row, &cwd, session_id, token, channel).await
 }
 
 pub(crate) async fn open_import_preview(
@@ -290,8 +280,7 @@ pub async fn session_discover(
     }
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
-    let status = manager.connect(&row, &connection_cwd, &store).await?;
-    crate::ui_transport::emit_event(&app, "agent:status", &status);
+    manager.connect(&row, &connection_cwd, &store).await?;
     let response = manager
         .discover_session_page(
             &agent_id,

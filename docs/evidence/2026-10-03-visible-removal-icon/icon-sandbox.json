@@ -1,0 +1,314 @@
+{
+  "applicationPath" : "\/Applications\/Farfold.app",
+  "genericIcon" : {
+    "path" : "\/tmp\/farfold-application-icon-before-generic.png",
+    "pixelSha256" : "c6fe1f8531930e9db9882e9f3498a7666695c7b986705276ee0ece50d89a5516",
+    "representations" : [
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 64,
+        "pixelsWide" : 64
+      },
+      {
+        "pixelsHigh" : 64,
+        "pixelsWide" : 64
+      },
+      {
+        "pixelsHigh" : 16,
+        "pixelsWide" : 16
+      },
+      {
+        "pixelsHigh" : 16,
+        "pixelsWide" : 16
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 18,
+        "pixelsWide" : 18
+      },
+      {
+        "pixelsHigh" : 18,
+        "pixelsWide" : 18
+      },
+      {
+        "pixelsHigh" : 36,
+        "pixelsWide" : 36
+      },
+      {
+        "pixelsHigh" : 36,
+        "pixelsWide" : 36
+      },
+      {
+        "pixelsHigh" : 24,
+        "pixelsWide" : 24
+      },
+      {
+        "pixelsHigh" : 24,
+        "pixelsWide" : 24
+      },
+      {
+        "pixelsHigh" : 48,
+        "pixelsWide" : 48
+      },
+      {
+        "pixelsHigh" : 48,
+        "pixelsWide" : 48
+      },
+      {
+        "pixelsHigh" : 128,
+        "pixelsWide" : 128
+      },
+      {
+        "pixelsHigh" : 128,
+        "pixelsWide" : 128
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 2048,
+        "pixelsWide" : 2048
+      },
+      {
+        "pixelsHigh" : 2048,
+        "pixelsWide" : 2048
+      }
+    ]
+  },
+  "preferredApplicationPath" : null,
+  "registeredApplicationPaths" : [
+
+  ],
+  "resourceIcon" : {
+    "path" : "\/tmp\/farfold-application-icon-before-resource.png",
+    "pixelSha256" : "70e8f3b864c3b7fc418b2ce76ec39ef4256987e128f7d61a83c6391b1472551c",
+    "representations" : [
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 128,
+        "pixelsWide" : 128
+      },
+      {
+        "pixelsHigh" : 64,
+        "pixelsWide" : 64
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      }
+    ]
+  },
+  "scope" : "Public application metadata and isolated application icons only; no app launch, windows, accessibility, accounts or environment reads.",
+  "workspaceIcon" : {
+    "path" : "\/tmp\/farfold-application-icon-before-workspace.png",
+    "pixelSha256" : "a28c40781265cf7894d38a788d291f518b564e2658df058f09f4525d3649b482",
+    "representations" : [
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 64,
+        "pixelsWide" : 64
+      },
+      {
+        "pixelsHigh" : 64,
+        "pixelsWide" : 64
+      },
+      {
+        "pixelsHigh" : 16,
+        "pixelsWide" : 16
+      },
+      {
+        "pixelsHigh" : 16,
+        "pixelsWide" : 16
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 32,
+        "pixelsWide" : 32
+      },
+      {
+        "pixelsHigh" : 18,
+        "pixelsWide" : 18
+      },
+      {
+        "pixelsHigh" : 18,
+        "pixelsWide" : 18
+      },
+      {
+        "pixelsHigh" : 36,
+        "pixelsWide" : 36
+      },
+      {
+        "pixelsHigh" : 36,
+        "pixelsWide" : 36
+      },
+      {
+        "pixelsHigh" : 24,
+        "pixelsWide" : 24
+      },
+      {
+        "pixelsHigh" : 24,
+        "pixelsWide" : 24
+      },
+      {
+        "pixelsHigh" : 48,
+        "pixelsWide" : 48
+      },
+      {
+        "pixelsHigh" : 48,
+        "pixelsWide" : 48
+      },
+      {
+        "pixelsHigh" : 128,
+        "pixelsWide" : 128
+      },
+      {
+        "pixelsHigh" : 128,
+        "pixelsWide" : 128
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 256,
+        "pixelsWide" : 256
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 512,
+        "pixelsWide" : 512
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 1024,
+        "pixelsWide" : 1024
+      },
+      {
+        "pixelsHigh" : 2048,
+        "pixelsWide" : 2048
+      },
+      {
+        "pixelsHigh" : 2048,
+        "pixelsWide" : 2048
+      }
+    ]
+  }
+}

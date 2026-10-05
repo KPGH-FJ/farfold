@@ -130,6 +130,8 @@ import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
+import { preparationProgram } from "../runtime/agent_preparation";
+import { freshThreadState } from "../runtime/session_projection";
 const card: AgentCardModel = {
   id: "repair",
   name: "Example",
@@ -209,8 +211,7 @@ it("labels the app-owned default location as an ordinary conversation and retain
     nodes.some(
       (node) =>
         node.type === "span" &&
-        node.props.title === WORKSPACE_STRINGS.normalConversation &&
-        node.props.children === WORKSPACE_STRINGS.normalConversation,
+        node.props.title === WORKSPACE_STRINGS.normalConversation,
     ),
   ).toBe(true);
   expect(nodes.some((node) => node.props.title === h.defaultCwd)).toBe(false);
@@ -220,13 +221,59 @@ it("labels the app-owned default location as an ordinary conversation and retain
   nodes = render();
   expect(
     nodes.some(
-      (node) =>
-        node.type === "span" &&
-        node.props.title === "/my-project" &&
-        node.props.children === "/my-project",
+      (node) => node.type === "span" && node.props.title === "/my-project",
     ),
   ).toBe(true);
 });
+function confirmModelRead() {
+  const selection = props.progress.selection!;
+  const cwd = h.canonical ?? props.cwd ?? h.defaultCwd;
+  const thread = freshThreadState(
+    "confirmed-setup-read",
+    props.card.id,
+    cwd,
+    "Read options",
+  );
+  thread.identity = "draft";
+  thread.configOptions = Object.entries(selection.config).map(
+    ([id, currentValue]) => ({
+      id,
+      name: id,
+      type: "select",
+      currentValue,
+      options: [],
+    }),
+  );
+  h.thread = thread;
+  h.preparation = {
+    phase: "untested",
+    input: {
+      agentId: props.card.id,
+      agentName: props.card.name,
+      cwd,
+      program: preparationProgram(props.card),
+      service: selection.service,
+      config: selection.config,
+    },
+    threadKey: thread.key,
+    config: selection.config,
+    prompt: "",
+    reply: "",
+    error: null,
+    readError: null,
+  };
+}
+
+function programConnect(nodes: Element[]) {
+  const manager = nodes.find((node) => node.type === ProgramManager)!;
+  return {
+    props: {
+      disabled: manager.props.connectDisabled,
+      onClick: manager.props.onConnect,
+    },
+  };
+}
+
 beforeEach(() => {
   h.cursor = 0;
   h.slots = [];
@@ -375,10 +422,11 @@ it("allows the selected registered program to connect when an installation draft
     installationInputInvalid: true,
   };
   props.agents.connect = vi.fn(async () => {});
-  const nodes = render();
-  const connect = nodes.find(
-    (node) => node.type === "button" && node.props.children === S.connect,
-  )!;
+  let nodes = render();
+  const prerequisites = nodes.find((node) => node.type === AgentPrerequisites)!;
+  (prerequisites.props.onChange as (ready: boolean) => void)(true);
+  nodes = render();
+  const connect = programConnect(nodes);
   expect(connect.props.disabled).toBe(false);
   (connect.props.onClick as () => void)();
   await Promise.resolve();
@@ -410,6 +458,14 @@ it("reads models for a connected first-use entry and returns its choice without 
     }),
   );
   expect(props.onStart).not.toHaveBeenCalled();
+  expect(
+    nodes.find(
+      (node) =>
+        node.type === "button" && node.props.children === S.useSelection,
+    )!.props.disabled,
+  ).toBe(true);
+  confirmModelRead();
+  nodes = render();
   const finish = nodes.find(
     (node) => node.type === "button" && node.props.children === S.useSelection,
   )!;
@@ -809,7 +865,7 @@ it("selects login for an explicit existing-settings requirement while retaining 
   expect(props.onProgress).toHaveBeenCalledWith({
     ...props.progress,
     choice: "login",
-    accessStage: "account",
+    accessStage: "method",
   });
   expect(props.progress.selection?.config).toEqual({
     model: "chosen",
@@ -832,7 +888,13 @@ it("does not switch a draft API source to login after the Agent requests authent
   h.required = true;
   const result = render();
   expect(props.onProgress).not.toHaveBeenCalled();
-  expect(result.some((node) => node.type === AgentAuthSection)).toBe(false);
+  const account = result.find((node) => node.type === AgentAuthSection)!;
+  expect(account.props.source).toBe("original-draft-api");
+  expect(account.props.connection).toEqual(
+    expect.objectContaining({ choice: "api", stage: "api" }),
+  );
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(h.invalidate).not.toHaveBeenCalled();
   expect(props.progress.choice).toBe("api");
   expect(props.progress.selection?.service?.id).toBe("api");
 });
@@ -862,6 +924,8 @@ it("saves ordinary management only through Done, then closes after the saved con
     },
   };
   props.onConfirmManagement = vi.fn(async () => true);
+  expect(managementDone().props.disabled).toBe(true);
+  confirmModelRead();
   const done = managementDone();
   expect(done.props.disabled).toBe(false);
   await (done.props.onClick as () => Promise<void>)();
@@ -887,6 +951,8 @@ it("keeps management open after save failure and lets Done retry the same select
     )
     .mockResolvedValue(true);
   props.onConfirmManagement = save;
+  confirmModelRead();
+  expect(managementDone().props.disabled).toBe(false);
   await (managementDone().props.onClick as () => Promise<void>)();
   expect(props.onClose).not.toHaveBeenCalled();
   expect(render().some((node) => node.props.role === "alert")).toBe(true);
@@ -920,13 +986,10 @@ it("does not close a later entry when its management confirmation is no longer c
   expect(props.onClose).not.toHaveBeenCalled();
 });
 
-it("opens account actions directly and permits returning to the model without a mandatory login", () => {
+it("opens shared account choices and explicitly reuses existing settings without a mandatory login", () => {
   props.intent = "use";
   props.conversation = undefined;
-  props.card = {
-    ...card,
-    authMethods: ["official"],
-  };
+  props.card = { ...card, authMethods: ["official"] };
   props.progress = {
     step: 1,
     choice: "existing",
@@ -937,14 +1000,21 @@ it("opens account actions directly and permits returning to the model without a 
     },
   };
   let nodes = render();
-  expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
-  expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(2);
+  const account = nodes.find((node) => node.type === AgentAuthSection)!;
+  expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(0);
+  expect(account.props.connection).toEqual(
+    expect.objectContaining({ choice: "existing", stage: "method" }),
+  );
+  expect(h.prepare).not.toHaveBeenCalled();
+  (account.props.connection as { onUseExisting: () => void }).onUseExisting();
+  nodes = render();
   const navigation = nodes.find((node) => node.type === AgentSetupNavigation)!;
+  expect(navigation.props.modelsAvailable).toBe(true);
   (navigation.props.onStep as (step: number) => void)(2);
   expect(props.progress).toMatchObject({
     step: 2,
     choice: "existing",
-    accessStage: "method",
+    accessStage: "account",
     selection: { config: { model: "chosen", reasoning: "ultra" } },
   });
   const prerequisites = render().find(
@@ -960,7 +1030,7 @@ it("opens account actions directly and permits returning to the model without a 
   expect(props.onStart).not.toHaveBeenCalled();
 });
 
-it("exposes account management for an existing source without requiring a source change", () => {
+it("exposes shared account management without changing the existing source", () => {
   props.conversation = undefined;
   props.progress = {
     step: 1,
@@ -968,23 +1038,33 @@ it("exposes account management for an existing source without requiring a source
     selection: { service: null, config: { model: "chosen" } },
   };
   const nodes = render();
-  expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(2);
-  expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
+  const account = nodes.find((node) => node.type === AgentAuthSection)!;
+  expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(0);
+  expect(account.props.connection).toEqual(
+    expect.objectContaining({ choice: "existing", stage: "method" }),
+  );
+  expect(account.props.onMethodChange).toBeTypeOf("function");
   expect(props.onProgress).not.toHaveBeenCalled();
+  expect(h.prepare).not.toHaveBeenCalled();
 });
 
 it.each(["login", "api"] as const)(
-  "restores old %s preparation directly to its focused content",
+  "restores old %s preparation inside the shared account control",
   (choice) => {
     props.intent = "use";
     props.conversation = undefined;
     props.progress = { step: 1, choice };
     const nodes = render();
-    expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(2);
-    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(
-      choice === "login",
+    expect(nodes.filter((node) => node.props.role === "radio")).toHaveLength(0);
+    const account = nodes.find((node) => node.type === AgentAuthSection)!;
+    expect(account.props.connection).toEqual(
+      expect.objectContaining({
+        choice,
+        stage: choice === "api" ? "api" : "method",
+      }),
     );
     expect(props.onProgress).not.toHaveBeenCalled();
+    expect(h.prepare).not.toHaveBeenCalled();
   },
 );
 
@@ -1002,7 +1082,7 @@ it("focuses a newly reported login requirement while preserving access to the ot
   };
   h.required = true;
   render();
-  expect(props.progress.accessStage).toBe("account");
+  expect(props.progress.accessStage).toBe("method");
   const navigation = render().find(
     (node) => node.type === AgentSetupNavigation,
   )!;
@@ -1020,7 +1100,7 @@ it("focuses a newly reported login requirement while preserving access to the ot
 });
 
 it.each(["method", "account", "api", undefined] as const)(
-  "restores disconnected %s progress through an explicit connection without changing its choices",
+  "retains disconnected %s choices while requiring the explicit account next action",
   async (accessStage) => {
     props.intent = "use";
     props.conversation = undefined;
@@ -1055,9 +1135,7 @@ it.each(["method", "account", "api", undefined] as const)(
       (node) => node.type === AgentPrerequisites,
     )!;
     (prerequisites.props.onChange as (ready: boolean) => void)(true);
-    const connectButton = render().find(
-      (node) => node.type === "button" && node.props.children === S.connect,
-    )!;
+    const connectButton = programConnect(render());
     expect(connectButton.props.disabled).toBe(false);
     (connectButton.props.onClick as () => void)();
     await Promise.resolve();
@@ -1065,13 +1143,26 @@ it.each(["method", "account", "api", undefined] as const)(
     props.card = { ...props.card, status: "connected" };
     render();
     nodes = render();
-    expect(props.progress).toEqual(saved);
+    expect(props.progress).toEqual({
+      ...saved,
+      step: 0,
+      accessStage: "method",
+    });
+    const next = nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextAccount,
+    )!;
+    expect(next.props.disabled).toBe(false);
+    await (next.props.onClick as () => Promise<void>)();
+    nodes = render();
+    expect(props.progress).toEqual({
+      ...saved,
+      step: 1,
+      accessStage: "method",
+    });
     expect(
       nodes.some((node) => node.props.children === P.connectionRequired),
     ).toBe(false);
-    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(
-      !saved.selection?.service,
-    );
+    expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
     expect(h.prepare).not.toHaveBeenCalled();
     expect(props.onStart).not.toHaveBeenCalled();
   },
@@ -1127,9 +1218,7 @@ it("does not require installation tools again to connect an installed program", 
   )!;
   (prerequisites.props.onChange as (ready: boolean) => void)(true);
   (prerequisites.props.onInstallReadyChange as (ready: boolean) => void)(false);
-  const connectButton = render().find(
-    (node) => node.type === "button" && node.props.children === S.connect,
-  )!;
+  const connectButton = programConnect(render());
   expect(connectButton.props.disabled).toBe(false);
   (connectButton.props.onClick as () => void)();
   await Promise.resolve();
@@ -1175,9 +1264,7 @@ it.each([
         .onChange as (ready: boolean) => void
     )(true);
     nodes = render();
-    const button = nodes.find(
-      (node) => node.type === "button" && node.props.children === S.connect,
-    )!;
+    const button = programConnect(nodes);
     (button.props.onClick as () => void)();
     await Promise.resolve();
     expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
@@ -1185,9 +1272,18 @@ it.each([
     props.card = { ...props.card, status: "connected" };
     render();
     nodes = render();
+    expect(props.progress.step).toBe(0);
+    const nextAccount = nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextAccount,
+    )!;
+    await (nextAccount.props.onClick as () => Promise<void>)();
+    nodes = render();
     expect(props.progress.step).toBe(1);
     expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
     expect(h.prepare).not.toHaveBeenCalled();
+    const account = nodes.find((node) => node.type === AgentAuthSection)!;
+    (account.props.connection as { onUseExisting: () => void }).onUseExisting();
+    nodes = render();
     const next = nodes.find(
       (node) =>
         node.type === "button" && node.props.children === "继续选择模型",
@@ -1220,9 +1316,7 @@ it.each(["required", "active"])(
       (node) =>
         node.type === "button" && node.props.children === "继续选择模型",
     )!;
-    expect(next).toBeDefined();
-    expect(next.props.disabled).toBe(true);
-    await (next.props.onClick as () => Promise<void>)();
+    expect(next).toBeUndefined();
     render();
     expect(props.progress.step).toBe(1);
     expect(h.prepare).not.toHaveBeenCalled();
@@ -1249,7 +1343,12 @@ it("continues a ready program to account review without saving or sending", asyn
   expect(next).toBeDefined();
   expect(next.props.disabled).toBe(false);
   await (next.props.onClick as () => Promise<void>)();
-  expect(props.progress).toEqual({ step: 1, choice: "existing", selection });
+  expect(props.progress).toEqual({
+    step: 1,
+    choice: "existing",
+    accessStage: "method",
+    selection,
+  });
   expect(props.onStart).not.toHaveBeenCalled();
   expect(h.prepare).not.toHaveBeenCalled();
 });
@@ -1271,12 +1370,19 @@ it("lets an unselected API source reach its account step before requiring a serv
   expect(account.props.disabled).toBe(false);
   await (account.props.onClick as () => Promise<void>)();
   nodes = render();
-  expect(props.progress).toEqual({ step: 1, choice: "api" });
+  expect(props.progress).toEqual({
+    step: 1,
+    choice: "api",
+    accessStage: "method",
+  });
   const model = nodes.find(
     (node) => node.type === "button" && node.props.children === P.nextModel,
   )!;
-  expect(model.props.disabled).toBe(true);
-  await (model.props.onClick as () => Promise<void>)();
+  expect(model).toBeUndefined();
+  expect(
+    nodes.find((node) => node.type === AgentSetupNavigation)!.props
+      .modelsAvailable,
+  ).toBe(false);
   expect(props.progress.step).toBe(1);
   expect(h.prepare).not.toHaveBeenCalled();
   expect(props.onStart).not.toHaveBeenCalled();
@@ -1302,9 +1408,7 @@ it("resumes a saved model step after reconnect without resetting its source or c
       ready: boolean,
     ) => void
   )(true);
-  const connect = render().find(
-    (node) => node.type === "button" && node.props.children === S.connect,
-  )!;
+  const connect = programConnect(render());
   (connect.props.onClick as () => void)();
   await Promise.resolve();
   props.card = { ...props.card, status: "connected" };
@@ -1318,4 +1422,30 @@ it("resumes a saved model step after reconnect without resetting its source or c
     expect.objectContaining({ config: saved.selection!.config }),
   );
   expect(props.onStart).not.toHaveBeenCalled();
+});
+
+it("keeps an unselected API page through an API settings round trip despite an already focused login requirement", () => {
+  props.conversation = undefined;
+  h.required = true;
+  render();
+  props.progress = { step: 1, choice: "api", accessStage: "api" };
+  props.active = false;
+  render();
+  vi.mocked(props.onProgress).mockClear();
+  props.active = true;
+  render();
+  expect(props.progress).toEqual({
+    step: 1,
+    choice: "api",
+    accessStage: "api",
+  });
+  expect(props.onProgress).not.toHaveBeenCalled();
+  h.required = false;
+  render();
+  h.required = true;
+  render();
+  expect(props.progress).toMatchObject({
+    choice: "login",
+    accessStage: "method",
+  });
 });

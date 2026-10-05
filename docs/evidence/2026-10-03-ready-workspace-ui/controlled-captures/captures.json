@@ -1,0 +1,62 @@
+[
+  {
+    "case": "01-start-light",
+    "viewport": [1280, 820],
+    "file": "01-start-light-1280.png",
+    "sha256": "980195beb00b2daea6cf910e54428adb022453fe51ab1ec726ddfb577711c70b",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/01-start-light.html",
+    "sourceSha256": "18c4c763b6c15c600fe4b53ee4cdac3ec30af124dbebd93f21c37cc987e3df72",
+    "synthetic": true,
+    "realAgentExecution": false
+  },
+  {
+    "case": "01-start-light",
+    "viewport": [900, 820],
+    "file": "01-start-light-900.png",
+    "sha256": "15b519b236f41b912df4b7d8f95fb6211adcccbdf0da742c8fcb22ed73eb8020",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/01-start-light.html",
+    "sourceSha256": "18c4c763b6c15c600fe4b53ee4cdac3ec30af124dbebd93f21c37cc987e3df72",
+    "synthetic": true,
+    "realAgentExecution": false
+  },
+  {
+    "case": "02-start-dark",
+    "viewport": [1280, 820],
+    "file": "02-start-dark-1280.png",
+    "sha256": "d5956c815a47c6e822359a9fced644ee517cf18e1f07a9028651e81469c8c460",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/02-start-dark.html",
+    "sourceSha256": "eee7677c80c7df017709564818fa8bdcfbfc8e909522c3d046447631aeaeadcf",
+    "synthetic": true,
+    "realAgentExecution": false
+  },
+  {
+    "case": "02-start-dark",
+    "viewport": [900, 820],
+    "file": "02-start-dark-900.png",
+    "sha256": "9c86ee9188abae309a57aae75cd538d2144cd9d7b9324087b1aad78800406349",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/02-start-dark.html",
+    "sourceSha256": "eee7677c80c7df017709564818fa8bdcfbfc8e909522c3d046447631aeaeadcf",
+    "synthetic": true,
+    "realAgentExecution": false
+  },
+  {
+    "case": "03-thread-light",
+    "viewport": [1280, 820],
+    "file": "03-thread-light-1280.png",
+    "sha256": "c2f2594515157e4740d81bc762347c95ed0c4d270fe97c6fed70857b700775c7",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/03-thread-light.html",
+    "sourceSha256": "386e205d5576060336306324c47c4275888393198c5647f997643a97cb026937",
+    "synthetic": true,
+    "realAgentExecution": false
+  },
+  {
+    "case": "03-thread-light",
+    "viewport": [900, 820],
+    "file": "03-thread-light-900.png",
+    "sha256": "e8b45bc68a28a15911df501b143298ec2850dc905721d69b430cfbb291125a5a",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/03-thread-light.html",
+    "sourceSha256": "386e205d5576060336306324c47c4275888393198c5647f997643a97cb026937",
+    "synthetic": true,
+    "realAgentExecution": false
+  }
+]

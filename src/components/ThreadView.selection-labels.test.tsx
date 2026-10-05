@@ -43,6 +43,7 @@ import { Composer } from "./Composer";
 import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
 import { SessionOptionsList } from "./SessionOptionsMenu";
+import { ReasoningControl } from "./ReasoningControl";
 import {
   threads,
   freshThreadState,
@@ -295,6 +296,10 @@ it("keeps verified history and editable draft guidance distinct without changing
   expect(text(popup(ready).props.children as ReactNode)).toContain(
     W.settingsFixed,
   );
+  const readyPicker = nodes(popup(ready).props.children as ReactNode).find(
+    (node) => node.type === ModelPicker,
+  )!;
+  expect(readyPicker.props.disabled).toBe(false);
   const draft = seed("ready");
   draft.identity = "draft";
   draft.resumed = false;
@@ -307,5 +312,36 @@ it("keeps verified history and editable draft guidance distinct without changing
   );
   expect(draft.configOptions[0].currentValue).toBe("current-model");
   expect(draft.service).toEqual(ready.service);
+  noActionRequests();
+});
+
+it("disables idle-looking model and reasoning controls while tools or unknown work remain", () => {
+  const thread = seed("ready");
+  thread.activeToolCallIds = ["unfinished-tool"];
+  thread.configOptions.push({
+    id: "effort",
+    name: "Effort",
+    category: "thought_level",
+    type: "select",
+    currentValue: "low",
+    options: [{ value: "low", name: "Low" }],
+  });
+  const model = nodes(popup(thread).props.children as ReactNode).find(
+    (node) => node.type === ModelPicker,
+  )!;
+  expect(model.props.disabled).toBe(true);
+  const reasoning = nodes(ReasoningControl({ thread })).find(
+    (node) => node.type === "select",
+  )!;
+  expect(reasoning.props.disabled).toBe(true);
+  const update = vi.spyOn(threads, "setConfig");
+  (model.props.onPick as (value: string) => void)("current-model");
+  expect(update).not.toHaveBeenCalled();
+  thread.activeToolCallIds = [];
+  thread.connectionOutcomeUnknown = true;
+  expect(
+    nodes(ReasoningControl({ thread })).find((node) => node.type === "select")!
+      .props.disabled,
+  ).toBe(true);
   noActionRequests();
 });

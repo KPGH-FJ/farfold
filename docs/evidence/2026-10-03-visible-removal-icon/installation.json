@@ -1,0 +1,61 @@
+{
+  "atUtc": "2026-10-03T07:10:18.788978+00:00",
+  "installed": "/Applications/Farfold.app",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "oldBinarySha256": "a15ff361966fe8d7a25d7511f4531c1e5a07fe40acf4619580737b54add461d6",
+  "binarySha256": "4ef04df0b890340009e362cfd089ddd78570d5ebdcad8ee487c0a627044b71da",
+  "files": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/MacOS/farfold": "4ef04df0b890340009e362cfd089ddd78570d5ebdcad8ee487c0a627044b71da",
+    "Contents/Resources/icon.icns": "987d15346cba954b96c20dd0945ff61070bb500dc5932227a2e4880967981770",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "31376a9ae224a8f3ad1c090e578f339fcc13b46ad0266355d52ea61087e0e696"
+  },
+  "signature": {
+    "exitCode": 0,
+    "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+  },
+  "sourceManifestSha256": "6abb1ed12805c81dbdab6c0c8e61788cc3e6f5f32e7846c14e0a59d7c12f0e0a",
+  "sourceInputCount": 542,
+  "sourceInputsUnchanged": true,
+  "dataBefore": {
+    "tableCounts": {
+      "sessions": 50,
+      "agents": 40,
+      "settings": 50,
+      "dismissed_sessions": 62
+    },
+    "databaseFiles": {
+      "farfold.sqlite3": "9728cf4926fc8a5d5b1ecbaf7370fa97c719dd27b36c992e73a66798d834abc4",
+      "farfold.sqlite3-wal": "4955669a8595fde2273f65ac0e65fc9763d235f24cacbacf6838eb98babd09c4",
+      "farfold.sqlite3-shm": "dec2abaf07452042ed0315bc8a89df87f3d9f8cf8d06a4f73f0ae187505d0b14"
+    }
+  },
+  "dataAfter": {
+    "tableCounts": {
+      "sessions": 50,
+      "agents": 40,
+      "settings": 50,
+      "dismissed_sessions": 62
+    },
+    "databaseFiles": {
+      "farfold.sqlite3": "9728cf4926fc8a5d5b1ecbaf7370fa97c719dd27b36c992e73a66798d834abc4",
+      "farfold.sqlite3-wal": "4955669a8595fde2273f65ac0e65fc9763d235f24cacbacf6838eb98babd09c4",
+      "farfold.sqlite3-shm": "dec2abaf07452042ed0315bc8a89df87f3d9f8cf8d06a4f73f0ae187505d0b14"
+    }
+  },
+  "dataBeforeAfterEqual": true,
+  "userConfirmedUpdate": true,
+  "processAbsentBeforeAndAfter": true,
+  "appLaunched": false,
+  "agentActions": [],
+  "iconFile": "icon.icns",
+  "userArtworkPreserved": true,
+  "bundleDirectoryMtime": 1791011418.719611,
+  "registrationRefresh": {
+    "exitCode": 0,
+    "output": "",
+    "error": ""
+  },
+  "systemShellVisibleIconConfirmed": false
+}

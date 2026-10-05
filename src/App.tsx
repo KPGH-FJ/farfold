@@ -9,7 +9,7 @@ import {
   useVisibleConversation,
 } from "./runtime/conversation_read_state";
 import { invoke } from "@tauri-apps/api/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
@@ -35,6 +35,12 @@ import { WorkspaceDialog } from "./components/WorkspaceDialog";
 import { WorkspaceActionMenu } from "./components/WorkspaceActionMenu";
 import { ImportConversations } from "./components/ImportConversations";
 import { useAgents } from "./runtime/agents";
+import {
+  hasSavedAgentPreparation,
+  useConversationAgentReadiness,
+} from "./runtime/agent_readiness";
+import { isAgentPresentable } from "./runtime/agent_directory";
+import { allowAutomaticConnection } from "./runtime/connection_intent";
 import {
   CollectionActionScope,
   normalizeLibraryFilter,
@@ -452,6 +458,20 @@ function ThreadPage({
 export default function App() {
   const [themeMode, setThemeMode, themeStatus] = useThemePreference();
   const agents = useAgents();
+  const readyForConversation = useConversationAgentReadiness(agents.cards);
+  const index = useSyncExternalStore(
+    threads.subscribe,
+    () => threads.getSnapshot().index,
+  );
+  const historyAgents = new Set(index.map((row) => row.agentId));
+  const currentReadiness = useRef(readyForConversation);
+  currentReadiness.current = readyForConversation;
+  const currentAgentCards = useRef(agents.cards);
+  currentAgentCards.current = agents.cards;
+  const unreadyCandidate = (id: string) =>
+    currentAgentCards.current.some(
+      (card) => card.id === id && !currentReadiness.current(id),
+    );
   const authentication = useAuthentication();
   useEffect(startWorkEvents, []);
   useEffect(startAutoArchive, []);
@@ -793,6 +813,8 @@ export default function App() {
       currentView.current.key !== key
     )
       return;
+    const target = threads.thread(key);
+    if (target) allowAutomaticConnection(target.agentId);
     const request = ++historyOpen.current;
     try {
       const state = await threads.reconnect(key);
@@ -802,6 +824,7 @@ export default function App() {
     }
   };
   const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
+    allowAutomaticConnection(row.agentId);
     const request = ++historyOpen.current;
     routeHistory.current = [];
     setPaletteOpen(false);
@@ -846,6 +869,7 @@ export default function App() {
         returnToOrigin();
         return;
       }
+      if (unreadyCandidate(agentId)) return;
       const draft = composerDrafts.read("new");
       if (
         (draft.text.trim() || draft.attachments.length) &&
@@ -855,6 +879,7 @@ export default function App() {
         setPendingAgent({ id: agentId, selection });
         return;
       }
+      allowAutomaticConnection(agentId);
       setNewAgent(agentId);
       setPreparedSelection(selection);
       setAgentRequest((n) => n + 1);
@@ -912,7 +937,10 @@ export default function App() {
         {sidebarOpen && (
           <Sidebar
             agents={agents.cards.filter(
-              (a) => a.status === "installed" || a.status === "connected",
+              (card) =>
+                isAgentPresentable(card) &&
+                (hasSavedAgentPreparation(card.id) ||
+                  historyAgents.has(card.id)),
             )}
             active={view.kind}
             filter={filter}
@@ -1085,9 +1113,6 @@ export default function App() {
                       : ACCESS_STRINGS.returnConversation
               }
               preparationContext={hubContext}
-              returnAfterPreparation={
-                routeHistory.current.at(-1)?.kind === "settings"
-              }
               onReturn={returnToOrigin}
               onStart={useAgent}
               onOpenConversation={(key) => {
@@ -1224,7 +1249,14 @@ export default function App() {
             <button
               type="button"
               className="btn btn-primary"
+              disabled={unreadyCandidate(pendingAgent.id)}
               onClick={() => {
+                if (unreadyCandidate(pendingAgent.id)) {
+                  setPendingAgent(null);
+                  goNew();
+                  return;
+                }
+                allowAutomaticConnection(pendingAgent.id);
                 composerDrafts.clear("new");
                 setNewAgent(pendingAgent.id);
                 setPreparedSelection(pendingAgent.selection);

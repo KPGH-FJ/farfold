@@ -59,12 +59,15 @@ fn issue(
     }
 }
 
+#[derive(Clone)]
 pub(crate) struct ModelGuard {
     current: Snapshot,
     expected: Snapshot,
     model_known: bool,
     locked: bool,
     pending: Option<Snapshot>,
+    authorized_change: Option<Snapshot>,
+    change_unknown: bool,
     invalid: Vec<ConfigIssue>,
     record_invalid: bool,
     declared_ids: BTreeSet<String>,
@@ -90,6 +93,8 @@ impl ModelGuard {
             model_known: baseline.model_known,
             locked: restored,
             pending: None,
+            authorized_change: None,
+            change_unknown: false,
             invalid,
             record_invalid: baseline.invalid,
             declared_ids,
@@ -98,6 +103,92 @@ impl ModelGuard {
     }
     pub(crate) fn observe(&mut self, options: &Value) {
         (self.current, self.invalid, self.declared_ids) = format::observe(options, &self.expected);
+    }
+    pub(crate) fn is_established(&self) -> bool {
+        self.locked
+    }
+    pub(crate) fn choice_request(&self, id: &str, value: &Value) -> Result<Option<Choice>, String> {
+        if !self.may_set(id) {
+            return Err("当前模型或思考选择尚未确认，请检查后重试".into());
+        }
+        let Some(current) = self.current.choices.iter().find(|choice| choice.id == id) else {
+            if self.protected_ids().iter().any(|saved| saved == id)
+                || matches!(id, "model" | "thought_level" | "reasoning_effort")
+            {
+                return Err("无法读取当前模型或思考选择，请检查后重试".into());
+            }
+            return Ok(None);
+        };
+        let value = value.as_str().ok_or("模型或思考选项的值无效，请重新选择")?;
+        Ok(Some(Choice {
+            value: value.to_owned(),
+            ..current.clone()
+        }))
+    }
+    /// A successful explicit setting reply can propose a new baseline. Ordinary
+    /// option notifications cannot authorize either the change or a failed-save retry.
+    pub(crate) fn confirmed_change(
+        &self,
+        requested: &Choice,
+        options: &Value,
+    ) -> Result<Self, String> {
+        let error = "Agent 未确认所选模型或思考深度，请检查后重试";
+        if self.record_invalid || self.change_unknown || self.pending.is_some() {
+            return Err(error.into());
+        }
+        let baseline = if self.locked {
+            &self.expected
+        } else {
+            &self.current
+        };
+        if !baseline.choices.iter().any(|choice| {
+            choice.id == requested.id
+                && choice.category == requested.category
+                && choice.kind == requested.kind
+        }) {
+            return Err(error.into());
+        }
+        let mut candidate = self.clone();
+        candidate.observe(options);
+        if candidate.record_invalid
+            || !candidate.invalid.is_empty()
+            || !candidate.current.choices.contains(requested)
+        {
+            return Err(error.into());
+        }
+        let mut expected_models = baseline
+            .choices
+            .iter()
+            .filter(|choice| choice.category == "model")
+            .cloned()
+            .collect::<Vec<_>>();
+        if requested.category == "model" {
+            let Some(model) = expected_models
+                .iter_mut()
+                .find(|choice| choice.id == requested.id)
+            else {
+                return Err(error.into());
+            };
+            *model = requested.clone();
+        }
+        let actual_models = candidate
+            .current
+            .choices
+            .iter()
+            .filter(|choice| choice.category == "model")
+            .cloned()
+            .collect::<Vec<_>>();
+        if actual_models != expected_models {
+            return Err(error.into());
+        }
+        candidate.pending = None;
+        candidate.authorized_change = Some(candidate.current.clone());
+        Ok(candidate)
+    }
+    pub(crate) fn change_unknown(&mut self) {
+        self.change_unknown = true;
+        self.pending = None;
+        self.authorized_change = None;
     }
     pub(crate) fn protected_ids(&self) -> Vec<String> {
         self.declared_ids
@@ -160,7 +251,10 @@ impl ModelGuard {
                 issues.push(issue("model", None, "unrecorded", None, None));
             }
         }
-        let status = if self.record_invalid || !self.invalid.is_empty() {
+        if self.change_unknown {
+            issues.push(issue("model", None, "unknown", None, None));
+        }
+        let status = if self.change_unknown || self.record_invalid || !self.invalid.is_empty() {
             "blocked"
         } else if self.pending.is_some() {
             "record_failed"
@@ -197,30 +291,47 @@ impl ModelGuard {
         self.model_known = true;
         self.locked = true;
         self.pending = None;
+        self.authorized_change = None;
+        self.change_unknown = false;
     }
     pub(crate) fn record_failed(&mut self) {
         self.pending = Some(self.current.clone());
+        self.authorized_change = None;
+    }
+    pub(crate) fn record_failed_change(&mut self) {
+        if !self.change_unknown
+            && !self.record_invalid
+            && self.invalid.is_empty()
+            && self.authorized_change.as_ref() == Some(&self.current)
+        {
+            self.pending = Some(self.current.clone());
+        } else {
+            self.change_unknown();
+        }
     }
     pub(crate) fn confirmable(&self, displayed: &Value) -> bool {
-        if displayed != &self.current_value() || self.record_invalid || !self.invalid.is_empty() {
+        if self.change_unknown
+            || displayed != &self.current_value()
+            || self.record_invalid
+            || !self.invalid.is_empty()
+        {
             return false;
         }
         let check = self.check();
         check.status == "confirmation_required"
             || (self.pending.as_ref() == Some(&self.current)
-                && check
-                    .issues
-                    .iter()
-                    .all(|i| i.category == "thought_level" && i.reason == "unrecorded"))
+                && (self.authorized_change.as_ref() == Some(&self.current)
+                    || check
+                        .issues
+                        .iter()
+                        .all(|i| i.category == "thought_level" && i.reason == "unrecorded")))
     }
-    pub(crate) fn may_set(&self, id: &str) -> bool {
+    pub(crate) fn may_set(&self, _id: &str) -> bool {
+        if self.change_unknown {
+            return false;
+        }
         if !self.locked {
             return true;
-        }
-        if self.protected_ids().iter().any(|saved| saved == id)
-            || matches!(id, "model" | "thought_level" | "reasoning_effort")
-        {
-            return false;
         }
         self.admissible()
     }
@@ -241,6 +352,31 @@ pub(crate) struct ConfigStore {
     pub verified_permission_option: bool,
 }
 impl ConfigStore {
+    pub(crate) async fn for_choice(&self, choice: Option<&Choice>) -> Result<Self, String> {
+        let mut candidate = self.clone();
+        let Some(choice) = choice.filter(|choice| choice.category == "model") else {
+            return Ok(candidate);
+        };
+        let Some(super::service_connection::ServiceRecord::Configured { identity }) =
+            &mut candidate.service_record
+        else {
+            return Ok(candidate);
+        };
+        let error = "请选择此对话当前 API 服务中的模型";
+        let expected = self.expected_model.as_deref().ok_or(error)?;
+        if identity.model.is_empty() || choice.kind != "select" {
+            return Err(error.into());
+        }
+        let prefix = expected.strip_suffix(&identity.model).ok_or(error)?;
+        let model = choice.value.strip_prefix(prefix).ok_or(error)?;
+        if model.trim().is_empty() {
+            return Err(error.into());
+        }
+        identity.model = model.to_owned();
+        candidate.expected_model = Some(choice.value.clone());
+        candidate.validate_service().await?;
+        Ok(candidate)
+    }
     pub(crate) async fn validate_service(&self) -> Result<(), String> {
         if let Some(super::service_connection::ServiceRecord::Configured { identity }) =
             &self.service_record
@@ -277,6 +413,12 @@ impl ConfigStore {
 }
 
 #[cfg(test)]
+mod change_tests;
+
+#[cfg(test)]
+mod switch_transport_tests;
+
+#[cfg(test)]
 mod tests {
     use super::*;
     fn options(model: &str, effort: &str) -> Value {
@@ -296,7 +438,7 @@ mod tests {
         assert!(!guard.admissible());
     }
     #[test]
-    fn legacy_requires_explicit_confirmation_only_when_model_matches() {
+    fn configuration_change_legacy_requires_explicit_confirmation_only_when_model_matches() {
         let mut guard = ModelGuard::new(&options("m", "high"), Some(&json!({"model":"m"})), true);
         assert_eq!(guard.check().status, "confirmation_required");
         let displayed = guard.current_value();
@@ -320,12 +462,13 @@ mod tests {
         assert!(!guard.may_set("reasoning_effort"));
     }
     #[test]
-    fn established_and_legacy_choices_cannot_change_reasoning() {
+    fn configuration_change_ready_established_choices_can_change_but_legacy_requires_confirmation()
+    {
         let mut guard = ModelGuard::new(&options("m", "high"), None, false);
         assert!(guard.may_set("reasoning_effort"));
         guard.lock();
-        assert!(!guard.may_set("model"));
-        assert!(!guard.may_set("reasoning_effort"));
+        assert!(guard.may_set("model"));
+        assert!(guard.may_set("reasoning_effort"));
         assert!(guard.may_set("mode"));
         let legacy = ModelGuard::new(&options("m", "high"), Some(&json!({"model":"m"})), true);
         assert!(!legacy.may_set("reasoning_effort"));

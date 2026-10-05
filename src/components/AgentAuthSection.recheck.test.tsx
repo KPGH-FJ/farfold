@@ -74,15 +74,22 @@ vi.mock("../runtime/sessions", () => ({
   useThreadsSnapshot: () => ({ threads: new Map() }),
   threads: { getSnapshot: () => ({ threads: new Map() }) },
 }));
+vi.mock("../runtime/preparation", () => ({
+  getAgentPreparation: vi.fn(async () => ({ actions: [] })),
+}));
 vi.mock("./ManualAuthSection", () => ({ ManualAuthSection: () => null }));
 vi.mock("./InlineTerminal", () => ({ InlineTerminal: () => null }));
 vi.mock("./AgentAccountLinks", () => ({ AgentAccountLinks: () => null }));
 
 import { AgentAuthSection } from "./AgentAuthSection";
+import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
+import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
+import { STRINGS } from "../runtime/strings";
+import { beginAuthentication } from "../runtime/auth_actions";
 
 type Element = ReactElement<Record<string, unknown>>;
-function render(source?: string) {
+function render(source?: string, cwd = "/original") {
   h.cursor = 0;
   const nodes: Element[] = [];
   const visit = (node: ReactNode) =>
@@ -94,7 +101,7 @@ function render(source?: string) {
   visit(
     AgentAuthSection({
       agentId: "account-check",
-      cwd: "/original",
+      cwd,
       source,
       onConfigureKey() {},
       onChanged: h.changed,
@@ -104,18 +111,18 @@ function render(source?: string) {
   for (const effect of h.pending.splice(0)) effect();
   return nodes;
 }
-async function settled(source?: string) {
+async function settled(source?: string, cwd = "/original") {
   let nodes: Element[] = [];
   // Flush both async action callbacks and the effects they schedule.
   for (let round = 0; round < 6; round++) {
-    nodes = render(source);
+    nodes = render(source, cwd);
     await Promise.resolve();
   }
   return nodes;
 }
 function check(nodes: Element[]) {
   const button = nodes.find(
-    (node) => node.type === "button" && node.props.children === S.check,
+    (node) => node.type === "button" && node.props.children === R.connection,
   )!;
   expect(button.props.disabled).toBe(false);
   (button.props.onClick as () => void)();
@@ -125,6 +132,14 @@ function alerts(nodes: Element[]) {
     .filter((node) => node.props.role === "alert")
     .flatMap((node) => Children.toArray(node.props.children as ReactNode))
     .filter((node) => typeof node === "string");
+}
+function deferred() {
+  let resolve!: () => void, reject!: (error: Error) => void;
+  const promise = new Promise<void>((yes, no) => {
+    resolve = yes;
+    reject = no;
+  });
+  return { promise, resolve, reject };
 }
 beforeEach(() => {
   h.slots = [];
@@ -170,3 +185,57 @@ it("keeps API rechecking on its selected service and preserves a failed result",
   expect(h.reconnect).toHaveBeenCalledTimes(2);
   expect(h.recheck).not.toHaveBeenCalled();
 });
+
+it.each([undefined, "selected-service"])(
+  "shows connection-only progress and completion without authentication for %s",
+  async (source) => {
+    const pending = deferred();
+    if (source) h.reconnect.mockReturnValueOnce(pending.promise);
+    else h.changed.mockReturnValueOnce(pending.promise);
+    check(await settled(source));
+    let nodes = await settled(source);
+    expect(
+      nodes.some((node) => node.props.children === S.accountChecking),
+    ).toBe(true);
+    expect(nodes.some((node) => node.props.children === S.loginSucceeded)).toBe(
+      false,
+    );
+    pending.resolve();
+    nodes = await settled(source);
+    expect(
+      nodes.some(
+        (node) => node.props.children === STRINGS.agents.auth.connectionChecked,
+      ),
+    ).toBe(true);
+    expect(nodes.some((node) => node.props.children === S.loginSucceeded)).toBe(
+      false,
+    );
+    expect(beginAuthentication).not.toHaveBeenCalled();
+  },
+);
+
+it.each(["completed", "failed"])(
+  "keeps a late connection-only %s result on its original target",
+  async (outcome) => {
+    const pending = deferred();
+    h.changed.mockReturnValueOnce(pending.promise);
+    const original = await settled();
+    check(original);
+    await settled(undefined, "/elsewhere");
+    if (outcome === "failed")
+      pending.reject(new Error("Original target check failed"));
+    else pending.resolve();
+    const nodes = await settled(undefined, "/elsewhere");
+    expect(alerts(nodes)).toEqual([]);
+    expect(
+      nodes.some(
+        (node) =>
+          node.props.children === S.accountChecking ||
+          node.props.children === STRINGS.agents.auth.connectionChecked,
+      ),
+    ).toBe(false);
+    check(original);
+    expect(h.recheck).toHaveBeenCalledOnce();
+    expect(beginAuthentication).not.toHaveBeenCalled();
+  },
+);

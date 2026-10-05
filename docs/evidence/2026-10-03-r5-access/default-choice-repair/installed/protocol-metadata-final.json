@@ -1,0 +1,3294 @@
+{
+  "at": "2026-10-03T09:07:17.681980+08:00",
+  "windowSource": "installation.json",
+  "windowStart": 1790988685784,
+  "windowEnd": 1790989637677,
+  "files": [
+    {
+      "file": "protocol-v1-1790988704254-0.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790988704256,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988704256,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988704256,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704320,
+          "dir": "err",
+          "event": "other",
+          "bytes": 87,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704321,
+          "dir": "err",
+          "event": "other",
+          "bytes": 142,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704322,
+          "dir": "err",
+          "event": "other",
+          "bytes": 116,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704323,
+          "dir": "err",
+          "event": "other",
+          "bytes": 133,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704324,
+          "dir": "err",
+          "event": "other",
+          "bytes": 109,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704327,
+          "dir": "err",
+          "event": "other",
+          "bytes": 304,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704327,
+          "dir": "err",
+          "event": "other",
+          "bytes": 153,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704327,
+          "dir": "err",
+          "event": "other",
+          "bytes": 106,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704328,
+          "dir": "err",
+          "event": "other",
+          "bytes": 92,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704333,
+          "dir": "err",
+          "event": "other",
+          "bytes": 134,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704335,
+          "dir": "err",
+          "event": "other",
+          "bytes": 115,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704339,
+          "dir": "err",
+          "event": "other",
+          "bytes": 81,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704340,
+          "dir": "err",
+          "event": "other",
+          "bytes": 182,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704341,
+          "dir": "err",
+          "event": "other",
+          "bytes": 239,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704354,
+          "dir": "err",
+          "event": "other",
+          "bytes": 369,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704362,
+          "dir": "err",
+          "event": "other",
+          "bytes": 166,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704364,
+          "dir": "err",
+          "event": "other",
+          "bytes": 144,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704371,
+          "dir": "err",
+          "event": "other",
+          "bytes": 160,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704376,
+          "dir": "err",
+          "event": "other",
+          "bytes": 165,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704377,
+          "dir": "err",
+          "event": "other",
+          "bytes": 162,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704378,
+          "dir": "err",
+          "event": "other",
+          "bytes": 123,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704381,
+          "dir": "err",
+          "event": "other",
+          "bytes": 147,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704381,
+          "dir": "err",
+          "event": "other",
+          "bytes": 126,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704381,
+          "dir": "err",
+          "event": "other",
+          "bytes": 113,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704389,
+          "dir": "err",
+          "event": "other",
+          "bytes": 115,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 762,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 197,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 129,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 307,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 173,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 167,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 153,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 229,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 223,
+          "error": "stderr"
+        },
+        {
+          "version": 2,
+          "ts": 1790988704403,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1451,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988704403,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 383,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 182,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 236,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 230,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988704403,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 183,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "in",
+          "event": "other",
+          "bytes": 214,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704403,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 125,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704405,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704405,
+          "dir": "in",
+          "event": "other",
+          "bytes": 154,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 147,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 132,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 177,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 529,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 217,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 203,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704406,
+          "dir": "in",
+          "event": "other",
+          "bytes": 208,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704410,
+          "dir": "err",
+          "event": "other",
+          "bytes": 247,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 269,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 276,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 522,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 503,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 250,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704411,
+          "dir": "err",
+          "event": "other",
+          "bytes": 218,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704413,
+          "dir": "err",
+          "event": "other",
+          "bytes": 260,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704413,
+          "dir": "err",
+          "event": "other",
+          "bytes": 223,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704414,
+          "dir": "err",
+          "event": "other",
+          "bytes": 251,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704415,
+          "dir": "err",
+          "event": "other",
+          "bytes": 217,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704422,
+          "dir": "err",
+          "event": "other",
+          "bytes": 255,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704424,
+          "dir": "err",
+          "event": "other",
+          "bytes": 234,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704428,
+          "dir": "err",
+          "event": "other",
+          "bytes": 216,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704428,
+          "dir": "err",
+          "event": "other",
+          "bytes": 254,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704429,
+          "dir": "err",
+          "event": "other",
+          "bytes": 219,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704429,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704429,
+          "dir": "err",
+          "event": "other",
+          "bytes": 235,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704429,
+          "dir": "err",
+          "event": "other",
+          "bytes": 215,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704429,
+          "dir": "err",
+          "event": "other",
+          "bytes": 223,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704430,
+          "dir": "err",
+          "event": "other",
+          "bytes": 218,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704487,
+          "dir": "err",
+          "event": "other",
+          "bytes": 264,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704492,
+          "dir": "err",
+          "event": "other",
+          "bytes": 582,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704508,
+          "dir": "err",
+          "event": "other",
+          "bytes": 1043,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704508,
+          "dir": "err",
+          "event": "other",
+          "bytes": 758,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704518,
+          "dir": "err",
+          "event": "other",
+          "bytes": 525,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704527,
+          "dir": "err",
+          "event": "other",
+          "bytes": 250,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704527,
+          "dir": "err",
+          "event": "other",
+          "bytes": 330,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704534,
+          "dir": "err",
+          "event": "other",
+          "bytes": 377,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704534,
+          "dir": "err",
+          "event": "other",
+          "bytes": 253,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704536,
+          "dir": "err",
+          "event": "other",
+          "bytes": 494,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704544,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704546,
+          "dir": "err",
+          "event": "other",
+          "bytes": 558,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704547,
+          "dir": "err",
+          "event": "other",
+          "bytes": 230,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704568,
+          "dir": "err",
+          "event": "other",
+          "bytes": 269,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704568,
+          "dir": "err",
+          "event": "other",
+          "bytes": 299,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704568,
+          "dir": "err",
+          "event": "other",
+          "bytes": 275,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704568,
+          "dir": "err",
+          "event": "other",
+          "bytes": 278,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704568,
+          "dir": "err",
+          "event": "other",
+          "bytes": 526,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704572,
+          "dir": "err",
+          "event": "other",
+          "bytes": 237,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704572,
+          "dir": "err",
+          "event": "other",
+          "bytes": 200,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704572,
+          "dir": "err",
+          "event": "other",
+          "bytes": 198,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704572,
+          "dir": "err",
+          "event": "other",
+          "bytes": 206,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704573,
+          "dir": "err",
+          "event": "other",
+          "bytes": 220,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704573,
+          "dir": "err",
+          "event": "other",
+          "bytes": 450,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704573,
+          "dir": "err",
+          "event": "other",
+          "bytes": 230,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704573,
+          "dir": "err",
+          "event": "other",
+          "bytes": 215,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704578,
+          "dir": "err",
+          "event": "other",
+          "bytes": 196,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704579,
+          "dir": "err",
+          "event": "other",
+          "bytes": 127,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704579,
+          "dir": "err",
+          "event": "other",
+          "bytes": 127,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704583,
+          "dir": "err",
+          "event": "other",
+          "bytes": 218,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704600,
+          "dir": "err",
+          "event": "other",
+          "bytes": 218,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704601,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 15427,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704601,
+          "dir": "err",
+          "event": "other",
+          "bytes": 509,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704602,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 158,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704602,
+          "dir": "err",
+          "event": "other",
+          "bytes": 203,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704619,
+          "dir": "err",
+          "event": "other",
+          "bytes": 370,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704619,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704620,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 9297,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988704620,
+          "dir": "in",
+          "event": "response",
+          "bytes": 15693,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705246,
+          "dir": "err",
+          "event": "other",
+          "bytes": 136,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705422,
+          "dir": "err",
+          "event": "other",
+          "bytes": 549,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705422,
+          "dir": "err",
+          "event": "other",
+          "bytes": 121,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705423,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705423,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988705423,
+          "dir": "in",
+          "event": "other",
+          "bytes": 172,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706374,
+          "dir": "err",
+          "event": "other",
+          "bytes": 176,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706384,
+          "dir": "err",
+          "event": "other",
+          "bytes": 159,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706417,
+          "dir": "err",
+          "event": "other",
+          "bytes": 176,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706419,
+          "dir": "err",
+          "event": "other",
+          "bytes": 159,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706676,
+          "dir": "err",
+          "event": "other",
+          "bytes": 372,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706676,
+          "dir": "err",
+          "event": "other",
+          "bytes": 531,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 476,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 588,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 283,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 293,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 181,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 206,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 200,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 161,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "err",
+          "event": "other",
+          "bytes": 192,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 227,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706677,
+          "dir": "in",
+          "event": "other",
+          "bytes": 221,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706678,
+          "dir": "in",
+          "event": "other",
+          "bytes": 182,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706678,
+          "dir": "in",
+          "event": "other",
+          "bytes": 213,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988706682,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707303,
+          "dir": "err",
+          "event": "other",
+          "bytes": 220,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707452,
+          "dir": "err",
+          "event": "other",
+          "bytes": 176,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707452,
+          "dir": "err",
+          "event": "other",
+          "bytes": 176,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707606,
+          "dir": "err",
+          "event": "other",
+          "bytes": 171,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707609,
+          "dir": "err",
+          "event": "other",
+          "bytes": 176,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707609,
+          "dir": "err",
+          "event": "other",
+          "bytes": 181,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988707863,
+          "dir": "err",
+          "event": "other",
+          "bytes": 181,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708024,
+          "dir": "err",
+          "event": "other",
+          "bytes": 171,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708035,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708035,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708036,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 15427,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708036,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 158,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708171,
+          "dir": "err",
+          "event": "other",
+          "bytes": 149,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708299,
+          "dir": "err",
+          "event": "other",
+          "bytes": 265,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708299,
+          "dir": "err",
+          "event": "other",
+          "bytes": 405,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708300,
+          "dir": "err",
+          "event": "other",
+          "bytes": 238,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708300,
+          "dir": "in",
+          "event": "other",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708300,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708300,
+          "dir": "in",
+          "event": "other",
+          "bytes": 458,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708300,
+          "dir": "in",
+          "event": "other",
+          "bytes": 275,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708703,
+          "dir": "err",
+          "event": "other",
+          "bytes": 178,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708709,
+          "dir": "err",
+          "event": "other",
+          "bytes": 178,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708741,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 15427,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988708741,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 158,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790988714678,
+          "dir": "err",
+          "event": "other",
+          "bytes": 194,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988719392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988719395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988734391,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988734393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988749392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988749394,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988764390,
+          "dir": "err",
+          "event": "other",
+          "bytes": 130,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988764391,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988764392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988764393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 130,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988764394,
+          "dir": "err",
+          "event": "other",
+          "bytes": 130,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988774542,
+          "dir": "err",
+          "event": "other",
+          "bytes": 212,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988779392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988779395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988794393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988794395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988809392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988809395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988824393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988824395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988839392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988839393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988854393,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988854395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988869394,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988869396,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988884394,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988884396,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988899394,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988899396,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988914395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988914397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988929395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988929398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988944395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988944397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988959395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988959398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988974395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988974397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988989396,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790988989398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989004397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989004399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989019397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989019399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989034397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989034399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989049397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989049399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989064398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989064400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989079397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989079399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989094397,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989094399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989109398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989109401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989124399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989124401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989139398,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989139401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989154400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989154402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989169400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989169401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989184400,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989184401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989199399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989199402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989214399,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989214402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989229401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989229403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989244401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989244402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989259401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989259404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989274401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989274403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989289401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989289403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989304401,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989304404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989319402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989319405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989334402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989334404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989349402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989349405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989364403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989364405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989379403,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989379405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989394402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989394404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989409402,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989409404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989424404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989424406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989439404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989439406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989454404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989454406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989469405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989469408,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989484405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989484407,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989499405,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989499407,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989514404,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989514406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989529406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989529408,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989544406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989544408,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989559406,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989559409,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989574407,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989574408,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989589392,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989589395,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989604386,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989604389,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989619386,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989619388,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989634386,
+          "dir": "err",
+          "event": "other",
+          "bytes": 131,
+          "error": "stderr"
+        },
+        {
+          "version": 1,
+          "ts": 1790989634388,
+          "dir": "err",
+          "event": "other",
+          "bytes": 422,
+          "error": "stderr"
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790988742234-1.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790988742235,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988742236,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988742236,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988742324,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988742324,
+          "dir": "in",
+          "event": "response",
+          "bytes": 841,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988742324,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988742324,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988950986,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988951013,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": 0,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988951013,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": 0,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": true
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790988951014-2.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790988951015,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988951015,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988951015,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988951095,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790988951095,
+          "dir": "in",
+          "event": "response",
+          "bytes": 841,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790988951095,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790988951095,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989015836,
+          "dir": "out",
+          "event": "session/new",
+          "bytes": 190,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017959,
+          "dir": "in",
+          "event": "response",
+          "bytes": 94716,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017960,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 443,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017960,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 171,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017960,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 2022,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017960,
+          "dir": "out",
+          "event": "other",
+          "bytes": 166,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017963,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 176,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017964,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 47013,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017964,
+          "dir": "in",
+          "event": "response",
+          "bytes": 73,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017965,
+          "dir": "out",
+          "event": "session/set_config_option",
+          "bytes": 212,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017968,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 176,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017969,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 47141,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017969,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 170,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017970,
+          "dir": "in",
+          "event": "response",
+          "bytes": 47058,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017971,
+          "dir": "out",
+          "event": "session/set_config_option",
+          "bytes": 201,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017973,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 176,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017975,
+          "dir": "in",
+          "event": "session/update",
+          "bytes": 47141,
+          "error": "none"
+        },
+        {
+          "version": 1,
+          "ts": 1790989017975,
+          "dir": "in",
+          "event": "response",
+          "bytes": 47058,
+          "error": "none"
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790989104118-3.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790989104119,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989104119,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989104119,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790989104454,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989104454,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1023,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790989104454,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989104455,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989104524,
+          "dir": "in",
+          "event": "other",
+          "bytes": 178,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790989130135,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989130161,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989130189,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989130189,
+          "event": "startup",
+          "phase": "cleanup",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": 15,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": true,
+          "waitFailed": false,
+          "termRequested": true,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": true,
+          "connectionRemoved": true
+        }
+      ],
+      "rejectedRecords": 0
+    },
+    {
+      "file": "protocol-v1-1790989130189-4.jsonl",
+      "events": [
+        {
+          "version": 2,
+          "ts": 1790989130190,
+          "event": "startup",
+          "phase": "registration",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989130190,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "not_observed",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989130190,
+          "dir": "out",
+          "event": "initialize",
+          "bytes": 404,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790989130302,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": false,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989130302,
+          "dir": "in",
+          "event": "response",
+          "bytes": 1023,
+          "error": "none"
+        },
+        {
+          "version": 2,
+          "ts": 1790989130302,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "unknown",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 2,
+          "ts": 1790989130302,
+          "event": "startup",
+          "phase": "initialize",
+          "failurePhase": null,
+          "startupOutcome": "success",
+          "initializeResponse": "matched_result",
+          "candidateCleanup": "not_applicable",
+          "exitCode": null,
+          "exitSignal": null,
+          "initializeAccepted": true,
+          "childStarted": true,
+          "childReaped": false,
+          "waitFailed": false,
+          "termRequested": false,
+          "killRequested": false,
+          "exitObservedBeforeTerm": false,
+          "groupEnded": false,
+          "connectionRemoved": false
+        },
+        {
+          "version": 1,
+          "ts": 1790989130325,
+          "dir": "in",
+          "event": "other",
+          "bytes": 178,
+          "error": "none"
+        }
+      ],
+      "rejectedRecords": 0
+    }
+  ]
+}

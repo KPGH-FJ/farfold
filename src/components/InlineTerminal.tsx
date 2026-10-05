@@ -16,11 +16,15 @@ function decodeChunk(base64: string): Uint8Array {
 export function InlineTerminal({
   session,
   purpose = "authentication",
+  getFinishRequested,
 }: {
   session: BufferedLoginTerminal;
   purpose?: "authentication" | "service_configuration";
+  getFinishRequested?: () => boolean;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
+  const finishRequested = useRef(getFinishRequested);
+  finishRequested.current = getFinishRequested;
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const host = hostRef.current;
@@ -77,17 +81,19 @@ export function InlineTerminal({
           showedExit = true;
           term.writeln(
             `\r\n${
-              purpose === "service_configuration"
-                ? value.exit === 0
-                  ? C.ended
-                  : value.cancelled
-                    ? C.cancelled
-                    : C.exitFailed(value.exit)
-                : value.exit === 0
-                  ? STRINGS.agents.auth.terminalDone
-                  : value.cancelled
-                    ? AUTH_ACTIVITY_STRINGS.cancelled
-                    : STRINGS.agents.auth.terminalFailed(value.exit)
+              finishRequested.current?.()
+                ? AUTH_ACTIVITY_STRINGS.finishEnded
+                : purpose === "service_configuration"
+                  ? value.exit === 0
+                    ? C.ended
+                    : value.cancelled
+                      ? C.cancelled
+                      : C.exitFailed(value.exit)
+                  : value.exit === 0
+                    ? STRINGS.agents.auth.terminalDone
+                    : value.cancelled
+                      ? AUTH_ACTIVITY_STRINGS.cancelled
+                      : STRINGS.agents.auth.terminalFailed(value.exit)
             }`,
           );
         }

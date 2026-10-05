@@ -217,3 +217,28 @@ it("dismisses a missing or hidden anchor without taking focus", () => {
   expect(close).toHaveBeenCalledOnce();
   expect(first.focus).not.toHaveBeenCalled();
 });
+
+it("repositions a growing command list without moving the user's current focus", () => {
+  let resize = () => {};
+  const disconnect = vi.fn();
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      constructor(callback: () => void) {
+        resize = callback;
+      }
+      observe() {}
+      disconnect = disconnect;
+    },
+  );
+  anchor.rect = { ...anchor.rect, top: 430, bottom: 460 };
+  render();
+  expect(render().props.style).toEqual({ top: 468, left: 76 });
+  last.focus();
+  panel.rect.height = 300;
+  resize();
+  expect(render().props.style).toEqual({ top: 122, left: 76 });
+  expect(doc.activeElement).toBe(last);
+  unmount();
+  expect(disconnect).toHaveBeenCalled();
+});

@@ -1,0 +1,92 @@
+{
+  "targets": [
+    "registry:agoragentic-acp",
+    "registry:cortex-code",
+    "registry:crow-cli",
+    "registry:deepagents",
+    "registry:glm-acp-agent",
+    "registry:harn",
+    "registry:minion-code",
+    "registry:vtcode"
+  ],
+  "presentAgentIds": [
+    "registry:agoragentic-acp",
+    "registry:cortex-code",
+    "registry:crow-cli",
+    "registry:deepagents",
+    "registry:glm-acp-agent",
+    "registry:harn",
+    "registry:vtcode"
+  ],
+  "sessionCount": 4,
+  "dismissedCount": 2,
+  "settingKeysRemoved": [
+    "installPrevious.registry:agoragentic-acp",
+    "installPrevious.registry:cortex-code",
+    "installPrevious.registry:crow-cli",
+    "installPrevious.registry:deepagents",
+    "installPrevious.registry:glm-acp-agent",
+    "installPrevious.registry:harn",
+    "installPrevious.registry:vtcode"
+  ],
+  "settingKeysUpdated": [
+    "agentSetup.v1",
+    "conversationReadState.v1",
+    "unsentWork.v1"
+  ],
+  "installationReceiptsRemoved": 7,
+  "grantsRevoked": 0,
+  "managedRoots": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:deepagents/install-yU32hG",
+      "agentId": "registry:deepagents",
+      "exists": true,
+      "inode": 66101114
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:agoragentic-acp/install-xYin0Z",
+      "agentId": "registry:agoragentic-acp",
+      "exists": true,
+      "inode": 66112382
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:glm-acp-agent/install-4Svtv0",
+      "agentId": "registry:glm-acp-agent",
+      "exists": true,
+      "inode": 66167780
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cortex-code/install-5mxPQh",
+      "agentId": "registry:cortex-code",
+      "exists": true,
+      "inode": 66222089
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:crow-cli/install-vptM8N",
+      "agentId": "registry:crow-cli",
+      "exists": true,
+      "inode": 66242366
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:harn/install-tVNYzZ",
+      "agentId": "registry:harn",
+      "exists": true,
+      "inode": 66249418
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:vtcode/install-4ujdqW",
+      "agentId": "registry:vtcode",
+      "exists": true,
+      "inode": 66261911
+    }
+  ],
+  "metadataFingerprint": "a21062feea2c510a09c912a76380b56ebd4ab2c4a2ffb66c4f24f5054706d8ac",
+  "patchHashes": {
+    "conversationReadState.v1": "3f34b1303da11f975e80efd84d5a3acd130ac550671bbe270f7e3e36a852691c",
+    "agentSetup.v1": "2f109d2b656f7ff443c279aa69fd720a94697463dc437b852a138b31c7e138ee",
+    "unsentWork.v1": "bf2b305b0e0ef169e3030b44a67e456b9a0d4b50e3fb164145308df3c9ea6a82"
+  },
+  "externalInstallationsDeleted": false,
+  "nativeDataAccessed": false,
+  "fingerprint": "967ef19d281e409886f6b81026d4d020deae184ebaa9bc9d892c1a7286a99a7e"
+}

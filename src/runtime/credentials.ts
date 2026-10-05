@@ -10,6 +10,7 @@ export interface Credential {
   id: string;
   label: string;
   provider: string;
+  purpose?: "authentication";
   endpoint: string;
   apiType: string;
   models: string[];

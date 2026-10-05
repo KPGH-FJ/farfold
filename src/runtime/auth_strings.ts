@@ -1,12 +1,32 @@
 export const AUTH_ACTIVITY_STRINGS = {
   waiting: "请按提示完成账号设置，可暂时离开此页面",
+  loginWaiting: "等待授权，请按 Agent 的提示完成登录",
+  loginSucceeded: "登录成功",
+  loginConfirmedChecking: "登录成功，正在检查连接…",
+  loginConfirmedCheckFailed: "登录成功，但连接检查未完成。请重新检查连接。",
+  loginAgain: "重新登录",
+  methodChanged: "登录方式已变化，请重新选择后重试。",
   unknown: "结果尚未确认，等待 Agent 返回或取消操作",
   cancelling: "已请求取消，正在等待确认…",
+  finish: "已保存设置，结束终端并检查连接",
+  finishHint:
+    "请只在终端完成账号或服务设置。确认已保存后，可结束仍在运行的终端并检查连接；不会自动确认登录或模型可用。",
+  finishConfirmHint:
+    "请确认已在终端保存所需设置。继续会结束仍在运行的终端，然后检查原位置的连接。如还有未保存设置或未完成内容，请继续在终端操作。",
+  finishConfirm: "确认已保存，结束终端并检查连接",
+  finishBack: "继续在终端操作",
+  finishClosing: "正在结束终端，确认结束后才会检查连接…",
+  finishUnknown: "尚未确认终端已结束，请重试关闭；确认结束后才会检查连接。",
+  finishChecking: "终端已结束，正在检查连接；账号设置是否已保存仍由你确认。",
+  finishEnded: "终端已由你结束，账号或服务设置是否可用仍需检查。",
+  finishChecked:
+    "终端已结束，连接已重新检查。请继续选择模型，确认账号或模型是否可用。",
+  models: "继续选择模型",
   hide: "暂时收起",
   show: "继续登录",
   records: "查看终端记录",
   source: "此次账号或服务设置的资料文件夹",
-  otherTarget: "此 Agent 还有一次账号或服务设置，以下显示它的原位置和进度",
+  otherTarget: "此操作始于其他位置或使用方式，结果适用于原选择",
   check: "重新检查连接",
   endConnection: "结束登录连接",
   cancelled: "已取消此次操作，账号设置是否改变仍需检查",
@@ -37,4 +57,22 @@ export const AUTH_ACTIVITY_STRINGS = {
   methodApi: "API 配置",
   methodEnvironment: "环境变量说明，暂不能在此配置",
   methodUnsupported: "方式说明，暂不能自动执行",
+  switchAccount: "切换账号",
+  logoutHint:
+    "将由 Agent 退出当前账号。已有对话、API 配置和保存在 Farfold 的密钥仍会保留。",
+  switchHint:
+    "先退出当前账号并重新检查连接，再由你选择登录方式。不会自动登录其他账号或发送消息。",
+  confirmLogout: "确认退出",
+  switchConfirm: "退出并继续换账号",
+  logoutWaiting: "正在等待 Agent 确认退出，请勿重复操作",
+  logoutChecking: "Agent 已确认退出，正在重新检查连接…",
+  logoutChecked:
+    "Agent 已确认退出，连接已重新检查。需要使用账号时，请重新登录。",
+  switchReady:
+    "Agent 已确认退出，连接已重新检查。请选择登录方式，登录另一个账号。",
+  logoutCheckFailed: "Agent 已确认退出，连接检查尚未完成。请重新检查后再继续。",
+  accountChecking: "正在重新检查连接，账号状态仍需确认…",
+  logoutNotConfirmed:
+    "连接已重新检查，退出结果仍未确认。请按官方方式确认账号后重试。",
+  logoutFailed: "退出未完成，请检查账号状态后重试",
 } as const;

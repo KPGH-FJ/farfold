@@ -276,7 +276,7 @@ it("keeps an apply failure visible and prevents duplicate confirmation while sav
   expect(button("使用这个模型").props.disabled).toBe(false);
 });
 
-it("searches only added Agents and sends an unfinished choice to preparation", () => {
+it("keeps unprepared Agents out of choices and keeps adding in the discovery entry", () => {
   const pick = vi.fn(),
     prepare = vi.fn();
   const renderAgents = () =>
@@ -286,6 +286,28 @@ it("searches only added Agents and sends an unfinished choice to preparation", (
           agent,
           { ...agent, id: "B", name: "Second", status: "installed" },
           { ...agent, id: "C", name: "Catalog only", status: "none" },
+          {
+            ...agent,
+            id: "retired",
+            name: "Retired",
+            source: "registry",
+            firstBatchVisible: false,
+          },
+          {
+            ...agent,
+            id: "custom",
+            name: "Custom",
+            source: "custom",
+            custom: true,
+            firstBatchVisible: false,
+          },
+          {
+            ...agent,
+            id: "local",
+            name: "Local",
+            source: "discovered",
+            firstBatchVisible: false,
+          },
         ],
         picked: "A",
         prepared: (id) => id === "A",
@@ -295,16 +317,69 @@ it("searches only added Agents and sends an unfinished choice to preparation", (
       }),
     );
   let tree = renderAgents();
+  expect(tree.some((node) => node.key === "A")).toBe(true);
+  expect(tree.some((node) => node.key === "B")).toBe(false);
   expect(tree.some((node) => node.key === "C")).toBe(false);
+  expect(tree.some((node) => node.key === "retired")).toBe(false);
+  expect(tree.some((node) => node.key === "custom")).toBe(false);
+  expect(tree.some((node) => node.key === "local")).toBe(false);
+  (tree.find((node) => node.key === "A")!.props.onClick as () => void)();
+  expect(pick).toHaveBeenCalledWith("A");
   const search = tree.find((node) => node.type === "input")!;
   (search.props.onChange as (event: unknown) => void)({
     target: { value: "sec" },
   });
   tree = renderAgents();
   expect(tree.some((node) => node.key === "A")).toBe(false);
-  (tree.find((node) => node.key === "B")!.props.onClick as () => void)();
-  expect(prepare).toHaveBeenCalledWith("B");
+  expect(tree.some((node) => node.key === "B")).toBe(false);
+  (
+    tree.find((node) => node.props.className === "new-agent-discover")!.props
+      .onClick as () => void
+  )();
+  expect(prepare).toHaveBeenCalledWith();
+});
+
+it("offers a prepared offline Agent through the same selection dialog", () => {
+  const pick = vi.fn();
+  const prepare = vi.fn();
+  const tree = render(() =>
+    NewConversationAgentDialog({
+      cards: [{ ...agent, status: "installed" }],
+      picked: null,
+      prepared: () => true,
+      onPick: pick,
+      onPrepare: prepare,
+      onClose: vi.fn(),
+    }),
+  );
+  const row = tree.find((node) => node.key === "A");
+  expect(row).toBeDefined();
   expect(pick).not.toHaveBeenCalled();
+  (row!.props.onClick as () => void)();
+  expect(pick).toHaveBeenCalledWith("A");
+  expect(prepare).not.toHaveBeenCalled();
+});
+
+it("rechecks preparation before selecting a row that just became unavailable", () => {
+  let ready = true;
+  const pick = vi.fn();
+  const prepare = vi.fn();
+  const tree = render(() =>
+    NewConversationAgentDialog({
+      cards: [agent],
+      picked: null,
+      prepared: () => ready,
+      onPick: pick,
+      onPrepare: prepare,
+      onClose: vi.fn(),
+    }),
+  );
+  const select = tree.find((node) => node.key === "A")!.props
+    .onClick as () => void;
+  ready = false;
+  select();
+  expect(pick).not.toHaveBeenCalled();
+  expect(prepare).not.toHaveBeenCalled();
 });
 
 it("filters a large real model list without changing its order, selection or draft application", async () => {

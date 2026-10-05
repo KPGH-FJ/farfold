@@ -16,8 +16,12 @@ const h = vi.hoisted(() => ({
   prepare: vi.fn(),
   start: vi.fn(),
   setConfig: vi.fn(),
+  confirmRead: vi.fn(),
   needsAuth: false,
+  authJob: null as unknown,
   refresh: vi.fn(async () => {}),
+  getCapabilities: vi.fn(),
+  listCredentials: vi.fn(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -63,6 +67,7 @@ vi.mock("../runtime/agent_preparation", async (original) => {
     verified: () => false,
     invalidate: vi.fn(),
     prepare: h.prepare,
+    confirmRead: h.confirmRead,
     start: h.start,
   };
   return {
@@ -79,7 +84,7 @@ vi.mock("../runtime/sessions", () => ({
 vi.mock("../runtime/authentication", () => ({
   useAuthentication: () => new Set(),
   authenticationRequired: () => h.needsAuth,
-  useAuthenticationActivity: () => null,
+  useAuthenticationActivity: () => h.authJob,
   subscribeAuthenticationChanges: () => () => {},
 }));
 vi.mock("../runtime/work_policy", () => ({
@@ -87,8 +92,8 @@ vi.mock("../runtime/work_policy", () => ({
 }));
 vi.mock("../runtime/credentials", () => ({
   subscribeCredentialChanges: () => () => {},
-  listCredentials: async () => [],
-  getServiceCapabilities: async () => ({ apiTypes: [], validatedApiTypes: [] }),
+  listCredentials: h.listCredentials,
+  getServiceCapabilities: h.getCapabilities,
 }));
 vi.mock("./ProgramManager", () => ({
   useProgramInventory: () => ({}),
@@ -104,8 +109,16 @@ import {
 } from "../runtime/agent_preparation";
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
+import { AgentModelReadNotice } from "./AgentModelReadNotice";
 import { AgentAuthSection } from "./AgentAuthSection";
+import { AgentServiceSection } from "./AgentServiceSection";
+import { ServiceModelPicker } from "./ServiceModelPicker";
+import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
+import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
 import { ACCESS_STRINGS } from "../runtime/access_strings";
+import { STRINGS } from "../runtime/strings";
+import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
+import type { Credential, ServiceCapability } from "../runtime/credentials";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
 const card: AgentCardModel = {
   id: "selection-owner",
@@ -135,6 +148,9 @@ function render(active = true) {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       nodes.push(child);
       visit(child.props.children as ReactNode);
+      const connection = child.props.connection as
+        { apiContent?: ReactNode } | undefined;
+      if (connection) visit(connection.apiContent);
     });
   visit(
     AgentSetup({
@@ -184,8 +200,17 @@ beforeEach(() => {
   h.prepare.mockReset();
   h.start.mockReset();
   h.setConfig.mockReset();
+  h.confirmRead.mockReset();
   h.needsAuth = false;
+  h.authJob = null;
   h.refresh.mockClear();
+  h.getCapabilities.mockReset().mockResolvedValue({
+    apiTypes: [],
+    validatedApiTypes: [],
+    selectionScope: "connection",
+    unavailableReason: null,
+  });
+  h.listCredentials.mockReset().mockResolvedValue([]);
   changed.mockClear();
   progress = {
     step: 2,
@@ -224,6 +249,130 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+it.each(["confirmed", "failed"])(
+  "retains mismatched read choices until an explicit model change is %s",
+  async (outcome) => {
+    returnedModel("B");
+    h.snapshot = {
+      ...(h.snapshot as PreparationSnapshot),
+      input: {
+        ...(h.snapshot as PreparationSnapshot).input!,
+        readOptionsOnly: true,
+      },
+    };
+    const nodes = render();
+    const picker = nodes.find((node) => node.type === ModelPicker)!;
+    expect(picker).toBeDefined();
+    expect(picker.props.option).toMatchObject({ currentValue: "B" });
+    expect(picker.props.disabled).toBeFalsy();
+    expect(progress.selection?.config).toEqual({ model: "A" });
+    expect(
+      nodes.find((node) => node.type === AgentModelReadNotice)?.props.mismatch,
+    ).toBe(true);
+    const action = (items: Element[], label: string) =>
+      items.find(
+        (node) => node.type === "button" && node.props.children === label,
+      )!;
+    expect(action(nodes, ACCESS_STRINGS.useSelection).props.disabled).toBe(
+      true,
+    );
+    expect(
+      action(nodes, ACCESS_STRINGS.testInConversation).props.disabled,
+    ).toBe(true);
+    expect(h.prepare).not.toHaveBeenCalled();
+    (action(nodes, M.modelRetry).props.onClick as () => void)();
+    expect(h.prepare).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        config: { model: "A" },
+        readOptionsOnly: true,
+      }),
+      true,
+    );
+    expect(h.setConfig).not.toHaveBeenCalled();
+    if (outcome === "failed")
+      h.setConfig.mockRejectedValueOnce(new Error("selection failed"));
+    else h.setConfig.mockImplementation(async () => returnedModel("C"));
+    (picker.props.onPick as ComponentProps<typeof ModelPicker>["onPick"])("C");
+    await Promise.resolve();
+    await Promise.resolve();
+    const next = render();
+    expect(h.setConfig).toHaveBeenCalledExactlyOnceWith(
+      "owned-preparation",
+      "model",
+      "C",
+    );
+    expect(progress.selection?.config).toEqual({
+      model: outcome === "confirmed" ? "C" : "A",
+    });
+    expect(action(next, ACCESS_STRINGS.useSelection).props.disabled).toBe(
+      outcome !== "confirmed",
+    );
+    expect(action(next, ACCESS_STRINGS.testInConversation).props.disabled).toBe(
+      outcome !== "confirmed",
+    );
+  },
+);
+
+it.each(["current", "stale", "closed", "step", "method", "blocked"])(
+  "only confirms empty returned options for a %s read without applying settings",
+  (state) => {
+    returnedModel("B");
+    h.thread = { ...(h.thread as object), configOptions: [] };
+    h.snapshot = {
+      ...(h.snapshot as PreparationSnapshot),
+      input: {
+        ...(h.snapshot as PreparationSnapshot).input!,
+        readOptionsOnly: true,
+      },
+      config: {},
+    };
+    h.confirmRead.mockReturnValue({});
+    const nodes = render();
+    const notice = nodes.find((node) => node.type === AgentModelReadNotice)!;
+    expect(notice.props.mismatch).toBe(true);
+    expect(notice.props.disabled).toBe(false);
+    expect(progress.selection?.config).toEqual({ model: "A" });
+    if (state === "stale") {
+      progress = {
+        ...progress,
+        selection: { service: null, config: { model: "C" } },
+      };
+      render();
+    } else if (state === "closed") {
+      render(false);
+    } else if (state === "step") {
+      progress = { ...progress, step: 1 };
+      render();
+    } else if (state === "method") {
+      progress = { ...progress, authMethodId: "other-method" };
+      render();
+    } else if (state === "blocked") {
+      h.authJob = { phase: "running" };
+      render();
+    }
+    (notice.props.onConfirm as () => void)();
+    expect(progress.selection?.config).toEqual(
+      state === "current" ? {} : { model: state === "stale" ? "C" : "A" },
+    );
+    expect(h.confirmRead).toHaveBeenCalledTimes(state === "current" ? 1 : 0);
+    expect(h.setConfig).not.toHaveBeenCalled();
+    expect(h.start).not.toHaveBeenCalled();
+    if (state === "current") {
+      const next = render();
+      expect(
+        next.find((node) => node.type === AgentModelReadNotice)?.props.mismatch,
+      ).toBe(false);
+      expect(
+        next.find(
+          (node) =>
+            node.type === "button" &&
+            node.props.children === ACCESS_STRINGS.useSelection,
+        )?.props.disabled,
+      ).toBeFalsy();
+    }
+  },
+);
+
 it("does not copy preparation A into a newly selected B when the container reopens", () => {
   progress = {
     ...progress,
@@ -247,6 +396,61 @@ it("keeps the caller's choices when model reading finishes while an account acti
   render();
   expect(progress.selection?.config).toEqual({ model: "A" });
   expect(changed).not.toHaveBeenCalled();
+});
+it("shares the model navigation gate and rechecks a stale account callback while retaining the latest confirmed account choice", () => {
+  progress = { ...progress, step: 1 };
+  const initial = render().find((node) => node.type === AgentAuthSection)!;
+  expect(initial.props.canOpenModels).toBe(false);
+  (initial.props.connection as { onUseExisting: () => void }).onUseExisting();
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  expect(account.props.canOpenModels).toBe(true);
+  const open = account.props.onOpenModels as () => void;
+  h.needsAuth = true;
+  const blocked = render().find((node) => node.type === AgentAuthSection)!;
+  expect(blocked.props.canOpenModels).toBe(false);
+  open();
+  expect(progress.step).toBe(1);
+  h.needsAuth = false;
+  progress = {
+    ...progress,
+    accessStage: "account",
+    authMethodId: "user-selected-account",
+  };
+  render();
+  open();
+  expect(progress.step).toBe(1);
+  h.authJob = {
+    phase: "completed",
+    checked: true,
+    target: { agentId: card.id, cwd: "/own" },
+    operation: {
+      kind: "authentication",
+      methodId: "user-selected-account",
+      completion: "exit_code",
+      intent: "login",
+    },
+  };
+  render();
+  open();
+  expect(progress).toMatchObject({
+    step: 2,
+    authMethodId: "user-selected-account",
+    selection: { service: null, config: { model: "A" } },
+  });
+});
+
+it("does not use an account navigation callback after the requested model selection has changed", () => {
+  progress = { ...progress, step: 1 };
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  const open = account.props.onOpenModels as () => void;
+  progress = {
+    ...progress,
+    selection: { service: null, config: { model: "B" } },
+  };
+  render();
+  open();
+  expect(progress.step).toBe(1);
+  expect(progress.selection?.config).toEqual({ model: "B" });
 });
 it("cannot apply a late model change to a different caller selection", async () => {
   let finish!: () => void;
@@ -305,6 +509,7 @@ it("keeps a failed automatic model read visible across renders and navigation un
     send: vi.fn(),
     cancel: vi.fn(),
     discardDraft: vi.fn(),
+    retirePreparationDraft: vi.fn(),
     dequeue: vi.fn(),
     rename: vi.fn(),
   };
@@ -348,21 +553,282 @@ it("keeps a failed automatic model read visible across renders and navigation un
   expect(port.send).not.toHaveBeenCalled();
 });
 
-it("describes unavailable API delivery as this entry's configuration limit", async () => {
+it("hides confirmed unsupported API while retaining unknown, failed and supported capability entries", async () => {
   progress = { ...progress, step: 1 };
-  await Promise.resolve();
-  await Promise.resolve();
-  const api = render().find(
-    (node) => node.props.role === "radio" && node.key === "api",
-  )!;
-  const small = Children.toArray(api.props.children as ReactNode)
-    .filter(isValidElement<{ children?: ReactNode }>)
-    .flatMap((node) => Children.toArray(node.props.children))
-    .find((node) => isValidElement(node) && node.type === "small") as Element;
-  expect(api.props.disabled).toBe(true);
-  expect(small.props.children).toBe(
-    "此处暂不支持配置新的 API 服务，可沿用已有设置。",
-  );
+  for (let round = 0; round < 6; round++) await Promise.resolve();
+  const apiAvailable = (nodes: Element[]) =>
+    (
+      nodes.find((node) => node.type === AgentAuthSection)!.props
+        .connection as { apiAvailable: boolean }
+    ).apiAvailable;
+  expect(apiAvailable(render())).toBe(false);
+  const change = vi.fn();
+  const retry = vi.fn();
+  const saved = {
+    id: "saved-service",
+    model: "saved-model",
+    revision: "saved",
+  };
+  const section = (capability: ServiceCapability | null, error: boolean) =>
+    AgentServiceSection({
+      agentId: card.id,
+      capability,
+      error,
+      items: [],
+      value: saved,
+      onChange: change,
+      onRetry: retry,
+      onOpenApi: vi.fn(),
+      disabled: false,
+      readonly: true,
+    });
+  expect(
+    section(
+      {
+        apiTypes: [],
+        validatedApiTypes: [],
+        selectionScope: "connection",
+        unavailableReason: null,
+      },
+      false,
+    ),
+  ).toBeNull();
+  const loading = section(null, false)!;
+  expect(
+    Children.toArray(loading.props.children)
+      .filter(isValidElement<{ children?: ReactNode }>)
+      .some((node) => node.props.children === STRINGS.common.loading),
+  ).toBe(true);
+  const failedSection = section(null, true)!;
+  const retryButton = Children.toArray(failedSection.props.children)
+    .filter(isValidElement<{ children?: ReactNode; onClick?: () => void }>)
+    .find(
+      (node) =>
+        node.type === "button" && node.props.children === ACCESS_STRINGS.retry,
+    )!;
+  expect(retryButton).toBeDefined();
+  retryButton.props.onClick!();
+  expect(retry).toHaveBeenCalledOnce();
+  expect(change).not.toHaveBeenCalled();
+  const originalAgent = card.id;
+  const originalSelection = progress.selection;
+  try {
+    h.getCapabilities.mockRejectedValueOnce(
+      new Error("temporary lookup failure"),
+    );
+    card.id = "unknown-api-capability";
+    expect(apiAvailable(render())).toBe(false);
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const failed = render();
+    expect(apiAvailable(failed)).toBe(false);
+    expect(
+      failed.some((node) => node.props.children === ACCESS_STRINGS.retry),
+    ).toBe(true);
+    h.getCapabilities.mockResolvedValue({
+      apiTypes: ["responses"],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+    });
+    card.id = "supported-api-capability";
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    expect(apiAvailable(render())).toBe(true);
+    expect(progress.selection).toBe(originalSelection);
+    expect(changed).not.toHaveBeenCalled();
+  } finally {
+    card.id = originalAgent;
+  }
+});
+
+it("keeps confirmed unsupported API hidden when the service list fails", async () => {
+  const originalAgent = card.id;
+  const originalSelection = progress.selection;
+  try {
+    progress = { ...progress, step: 1, choice: "api" };
+    h.listCredentials.mockRejectedValueOnce(new Error("list unavailable"));
+    card.id = "unsupported-with-list-failure";
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const nodes = render();
+    expect(
+      nodes.find((node) => node.props.role === "radio" && node.key === "api"),
+    ).toBeUndefined();
+    const section = nodes.find((node) => node.type === AgentServiceSection)!;
+    expect(section.props.capability).toEqual({
+      apiTypes: [],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+    });
+    expect(section.props.error).toBe(true);
+    expect(
+      AgentServiceSection(
+        section.props as ComponentProps<typeof AgentServiceSection>,
+      ),
+    ).toBeNull();
+    expect(progress.selection).toBe(originalSelection);
+    expect(changed).not.toHaveBeenCalled();
+  } finally {
+    card.id = originalAgent;
+  }
+});
+
+it("retains the loaded service list and retry when the capability lookup fails", async () => {
+  const originalAgent = card.id;
+  const originalSelection = progress.selection;
+  const records: Credential[] = [
+    {
+      id: "saved-service",
+      label: "Saved service",
+      provider: "example",
+      endpoint: "https://example.test",
+      apiType: "responses",
+      models: ["saved-model"],
+      revision: "saved",
+      complete: true,
+      deleting: false,
+      grants: [],
+    },
+  ];
+  try {
+    progress = { ...progress, step: 1, choice: "api" };
+    h.getCapabilities.mockRejectedValueOnce(new Error("lookup unavailable"));
+    h.listCredentials.mockResolvedValue(records);
+    card.id = "unknown-with-loaded-services";
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const nodes = render();
+    expect(
+      (
+        nodes.find((node) => node.type === AgentAuthSection)!.props
+          .connection as { apiAvailable: boolean }
+      ).apiAvailable,
+    ).toBe(false);
+    const section = nodes.find((node) => node.type === AgentServiceSection)!;
+    expect(section.props.capability).toBeNull();
+    expect(section.props.items).toEqual(records);
+    expect(section.props.error).toBe(true);
+    expect(
+      AgentServiceSection(
+        section.props as ComponentProps<typeof AgentServiceSection>,
+      ),
+    ).not.toBeNull();
+    h.getCapabilities.mockResolvedValue({
+      apiTypes: ["responses"],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+    });
+    (section.props.onRetry as () => void)();
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const recovered = render().find(
+      (node) => node.type === AgentServiceSection,
+    )!;
+    expect(recovered.props.items).toEqual(records);
+    expect(recovered.props.error).toBe(false);
+    expect(progress.selection).toBe(originalSelection);
+    expect(changed).not.toHaveBeenCalled();
+  } finally {
+    card.id = originalAgent;
+  }
+});
+
+it("retains supported capability and retry without a stale service list after list failure", async () => {
+  const originalAgent = card.id;
+  const capability: ServiceCapability = {
+    apiTypes: ["responses"],
+    validatedApiTypes: [],
+    selectionScope: "connection",
+    unavailableReason: null,
+  };
+  const records: Credential[] = [
+    {
+      id: "previous-service",
+      label: "Previous service",
+      provider: "example",
+      endpoint: "https://example.test",
+      apiType: "responses",
+      models: ["previous-model"],
+      revision: "previous",
+      complete: true,
+      deleting: false,
+      grants: [],
+    },
+  ];
+  try {
+    progress = { ...progress, step: 1, choice: "api" };
+    h.getCapabilities.mockResolvedValue(capability);
+    h.listCredentials.mockResolvedValue(records);
+    card.id = "supported-with-list-failure";
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const previous = render().find(
+      (node) => node.type === AgentServiceSection,
+    )!;
+    expect(previous.props.items).toEqual(records);
+    h.listCredentials.mockRejectedValueOnce(new Error("list unavailable"));
+    (previous.props.onRetry as () => void)();
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const failed = render().find((node) => node.type === AgentServiceSection)!;
+    expect(failed.props.capability).toEqual(capability);
+    expect(failed.props.items).toEqual([]);
+    expect(failed.props.error).toBe(true);
+    const section = AgentServiceSection(
+      failed.props as ComponentProps<typeof AgentServiceSection>,
+    )!;
+    expect(
+      Children.toArray(section.props.children)
+        .filter(isValidElement<{ children?: ReactNode }>)
+        .some((node) => node.props.children === ACCESS_STRINGS.retry),
+    ).toBe(true);
+  } finally {
+    card.id = originalAgent;
+  }
+});
+
+it("ignores late service data and failures from the previous Agent", async () => {
+  const originalAgent = card.id;
+  let finishCapability!: (capability: ServiceCapability) => void;
+  let failList!: (reason: Error) => void;
+  const pendingCapability = new Promise<ServiceCapability>((resolve) => {
+    finishCapability = resolve;
+  });
+  const pendingList = new Promise<Credential[]>((_resolve, reject) => {
+    failList = reject;
+  });
+  const currentCapability: ServiceCapability = {
+    apiTypes: ["responses"],
+    validatedApiTypes: [],
+    selectionScope: "connection",
+    unavailableReason: null,
+  };
+  try {
+    progress = { ...progress, step: 1, choice: "api" };
+    h.getCapabilities.mockReturnValueOnce(pendingCapability);
+    h.listCredentials.mockReturnValueOnce(pendingList);
+    card.id = "previous-pending-agent";
+    render();
+    h.getCapabilities.mockResolvedValue(currentCapability);
+    card.id = "current-loaded-agent";
+    render();
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const loaded = render().find((node) => node.type === AgentServiceSection)!;
+    expect(loaded.props.capability).toEqual(currentCapability);
+    expect(loaded.props.error).toBe(false);
+    finishCapability({ ...currentCapability, apiTypes: [] });
+    failList(new Error("previous list unavailable"));
+    for (let round = 0; round < 6; round++) await Promise.resolve();
+    const current = render().find((node) => node.type === AgentServiceSection)!;
+    expect(current.props.capability).toEqual(currentCapability);
+    expect(current.props.items).toEqual([]);
+    expect(current.props.error).toBe(false);
+    expect(changed).not.toHaveBeenCalled();
+  } finally {
+    card.id = originalAgent;
+  }
 });
 
 it("allows an explicit model read after login while automatic reads and return still require real authentication evidence", async () => {
@@ -529,3 +995,238 @@ it("lets a new draft reach every model and reasoning choice while retaining the 
   });
   expect(h.start).not.toHaveBeenCalled();
 });
+
+it("selects a real method atomically without executing it or borrowing the API source", () => {
+  progress = {
+    step: 1,
+    choice: "api",
+    accessStage: "api",
+    preparationActionId: "old-action",
+    selection: {
+      service: { id: "saved", model: "saved-model", revision: "saved" },
+      config: { model: "saved-model" },
+    },
+  };
+  h.prepare.mockClear();
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  const connection = account.props.connection as {
+    onChoice: (
+      choice: "existing" | "login" | "api",
+      methodId?: string,
+      actionId?: string,
+    ) => void;
+  };
+  connection.onChoice("login", "declared-method");
+  expect(progress).toEqual(
+    expect.objectContaining({
+      choice: "login",
+      accessStage: "method",
+      authMethodId: "declared-method",
+      preparationActionId: undefined,
+      selection: { service: null, config: {} },
+    }),
+  );
+  connection.onChoice("existing", undefined, "declared-action");
+  expect(progress.authMethodId).toBeUndefined();
+  expect(progress.preparationActionId).toBe("declared-action");
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(h.start).not.toHaveBeenCalled();
+});
+
+it("keeps pure method selection out of the model step and explicitly resumes existing settings", async () => {
+  progress = {
+    step: 1,
+    choice: "existing",
+    accessStage: "method",
+    selection: { service: null, config: { model: "A" } },
+  };
+  h.prepare.mockClear();
+  let nodes = render();
+  expect(
+    nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextModel,
+    ),
+  ).toBeUndefined();
+  const connection = nodes.find((node) => node.type === AgentAuthSection)!.props
+    .connection as { onUseExisting: () => void };
+  connection.onUseExisting();
+  expect(progress).toEqual(
+    expect.objectContaining({
+      choice: "existing",
+      accessStage: "account",
+      selection: { service: null, config: { model: "A" } },
+    }),
+  );
+  nodes = render();
+  const next = nodes.find(
+    (node) => node.type === "button" && node.props.children === P.nextModel,
+  )!;
+  expect(next.props.disabled).toBe(false);
+  await (next.props.onClick as () => Promise<void>)();
+  expect(progress.step).toBe(2);
+  expect(h.start).not.toHaveBeenCalled();
+});
+
+it("puts the account action in the footer once and preserves choices on step return", () => {
+  progress = {
+    step: 1,
+    choice: "login",
+    accessStage: "method",
+    authMethodId: "official",
+    selection: { service: null, config: { model: "A" } },
+  };
+  const account = render().find((node) => node.type === AgentAuthSection)!;
+  const primary = {
+    id: "official-login",
+    label: "继续官方登录",
+    disabled: false,
+    run: vi.fn(),
+  };
+  (
+    account.props.connection as {
+      onPrimaryChange: (value: typeof primary) => void;
+    }
+  ).onPrimaryChange(primary);
+  const nodes = render();
+  const buttons = nodes.filter(
+    (node) => node.type === "button" && node.props.children === primary.label,
+  );
+  expect(buttons).toHaveLength(1);
+  (buttons[0].props.onClick as () => void)();
+  expect(primary.run).toHaveBeenCalledOnce();
+  expect(
+    nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextModel,
+    ),
+  ).toBeUndefined();
+  const back = nodes.find(
+    (node) => node.type === "button" && node.props.children === R.backProgram,
+  )!;
+  (back.props.onClick as () => void)();
+  expect(progress).toEqual(
+    expect.objectContaining({
+      step: 0,
+      authMethodId: "official",
+      selection: { service: null, config: { model: "A" } },
+    }),
+  );
+});
+
+it("continues from a compatible service to explicit model selection without an implicit read or completion", async () => {
+  const originalAgent = card.id;
+  const service: Credential = {
+    id: "service",
+    label: "Selected service",
+    provider: "example",
+    endpoint: "https://example.test",
+    apiType: "responses",
+    models: ["first", "selected"],
+    revision: "current",
+    complete: true,
+    deleting: false,
+    grants: [],
+  };
+  try {
+    card.id = "r5-service-model";
+    progress = {
+      step: 1,
+      choice: "api",
+      accessStage: "api",
+      selection: {
+        service: { id: service.id, revision: service.revision, model: "" },
+        config: {},
+      },
+    };
+    h.getCapabilities.mockResolvedValue({
+      apiTypes: ["responses"],
+      validatedApiTypes: [],
+      selectionScope: "connection",
+      unavailableReason: null,
+    });
+    h.listCredentials.mockResolvedValue([service]);
+    h.prepare.mockClear();
+    render();
+    for (let i = 0; i < 6; i++) await Promise.resolve();
+    let nodes = render();
+    const next = nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextModel,
+    )!;
+    expect(next.props.disabled).toBe(false);
+    await (next.props.onClick as () => Promise<void>)();
+    nodes = render();
+    expect(progress.step).toBe(2);
+    expect(progress.selection?.service?.model).toBe("");
+    expect(h.prepare).not.toHaveBeenCalled();
+    const finish = nodes.find(
+      (node) =>
+        node.type === "button" &&
+        node.props.children === ACCESS_STRINGS.useSelection,
+    )!;
+    expect(finish.props.disabled).toBe(true);
+    const models = nodes.find((node) => node.type === ServiceModelPicker)!;
+    (
+      models.props.onChange as (
+        value: NonNullable<AgentSetupProgress["selection"]>["service"],
+      ) => void
+    )({ id: service.id, revision: service.revision, model: "selected" });
+    nodes = render();
+    expect(progress.selection?.service?.model).toBe("selected");
+    expect(h.prepare).toHaveBeenCalledWith(
+      expect.objectContaining({
+        service: {
+          id: service.id,
+          revision: service.revision,
+          model: "selected",
+        },
+      }),
+    );
+    expect(
+      nodes.find(
+        (node) =>
+          node.type === "button" &&
+          node.props.children === ACCESS_STRINGS.useSelection,
+      )?.props.disabled,
+    ).toBe(true);
+    expect(h.start).not.toHaveBeenCalled();
+  } finally {
+    card.id = originalAgent;
+  }
+});
+
+it.each([
+  { choice: "api", accessStage: "api", method: "official", allow: false },
+  { choice: "login", accessStage: "method", method: "official", allow: false },
+  { choice: "login", accessStage: "account", method: "other", allow: false },
+  { choice: "login", accessStage: "account", method: undefined, allow: false },
+  { choice: "login", accessStage: "account", method: "official", allow: true },
+] as const)(
+  "isolates the model gate from prior receipts for $choice/$accessStage/$method",
+  ({ choice, accessStage, method, allow }) => {
+    progress = {
+      step: 1,
+      choice,
+      accessStage,
+      authMethodId: method,
+      selection: { service: null, config: {} },
+    };
+    h.authJob = {
+      phase: "completed",
+      checked: true,
+      target: { agentId: card.id, cwd: "/own" },
+      operation: {
+        kind: "authentication",
+        methodId: "official",
+        intent: "login",
+      },
+    };
+    const nodes = render();
+    const account = nodes.find((node) => node.type === AgentAuthSection)!;
+    expect(account.props.canOpenModels).toBe(allow);
+    const next = nodes.find(
+      (node) => node.type === "button" && node.props.children === P.nextModel,
+    );
+    expect(next?.props.disabled === false).toBe(allow);
+    expect(h.prepare).not.toHaveBeenCalled();
+    expect(h.start).not.toHaveBeenCalled();
+  },
+);

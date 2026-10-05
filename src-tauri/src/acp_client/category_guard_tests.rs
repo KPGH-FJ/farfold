@@ -93,26 +93,39 @@ fn category_guard_protects_saved_ids_after_category_or_type_changes() {
         let guard = ModelGuard::new(&data, Some(&saved), true);
         assert_eq!(guard.check().status, "ready");
         assert!(guard.protected_ids().contains(&"thinking_budget".into()));
-        assert!(!guard.may_set("thinking_budget"));
+        // A ready conversation permits an explicit choice. A relabeled option
+        // still retains its saved role, and merely requesting never rewrites it.
+        assert!(guard.may_set("thinking_budget"));
+        let requested = guard
+            .choice_request("thinking_budget", &json!("1024"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(requested.category, "thought_level");
+        assert_eq!(guard.record(), saved);
         assert!(!guard.confirmable(&guard.current_value()));
         data[2]["currentValue"] = json!("1024");
         let changed = ModelGuard::new(&data, Some(&saved), true);
         assert_eq!(changed.check().status, "blocked");
         assert!(!changed.may_set("thinking_budget"));
+        assert!(
+            changed
+                .choice_request("thinking_budget", &json!("0"))
+                .is_err()
+        );
     }
     for value in [json!(false), json!(2), json!({"value":"0"}), Value::Null] {
         let mut data = options();
         data[2]["currentValue"] = value;
         let guard = ModelGuard::new(&data, Some(&saved), true);
         assert_eq!(guard.check().status, "blocked");
+        assert!(!guard.may_set("thinking_budget"));
         assert!(!guard.confirmable(&guard.current_value()));
     }
     let mut data = options();
     data[2]["type"] = json!("boolean");
-    assert_eq!(
-        ModelGuard::new(&data, Some(&saved), true).check().status,
-        "blocked"
-    );
+    let guard = ModelGuard::new(&data, Some(&saved), true);
+    assert_eq!(guard.check().status, "blocked");
+    assert!(!guard.may_set("thinking_budget"));
 }
 
 #[test]
@@ -142,8 +155,23 @@ fn category_guard_legacy_records_do_not_guess_new_models_or_rewrite_choices() {
         true,
     );
     assert!(guard.admissible());
-    assert!(!guard.may_set("thinking_budget"));
-    assert!(!guard.may_set("model"));
+    let recorded = guard.record();
+    for (id, value) in [("thinking_budget", "1024"), ("model", "other")] {
+        assert!(guard.may_set(id));
+        assert!(guard.choice_request(id, &json!(value)).unwrap().is_some());
+        assert_eq!(guard.record(), recorded);
+        let mut drifted = options();
+        drifted
+            .as_array_mut()
+            .unwrap()
+            .iter_mut()
+            .find(|option| option["id"] == id)
+            .unwrap()["currentValue"] = json!(value);
+        let restored = ModelGuard::new(&drifted, Some(&recorded), true);
+        assert_eq!(restored.check().status, "blocked");
+        assert!(!restored.may_set(id));
+        assert!(!restored.confirmable(&restored.current_value()));
+    }
 }
 
 #[test]
@@ -397,21 +425,14 @@ for line in sys.stdin:
         .await
         .unwrap();
     assert_eq!(restored.config_check.status, "ready");
-    assert!(
-        manager
-            .session_set_config(
-                &row.id,
-                &cwd,
-                "saved-choices",
-                "thinking_budget",
-                json!("1024")
-            )
-            .await
-            .is_err()
+    assert_eq!(
+        store.get_session(&id).unwrap().unwrap().config_options,
+        Some(saved.clone())
     );
     manager.disconnect(&row.id, &cwd).await.unwrap();
     let mut changed = options();
-    changed[2]["currentValue"] = json!("1024");
+    // The saved choice is no longer offered, so recovery cannot reapply it.
+    changed[2] = option("thinking_budget", "thought_level", "1024");
     std::fs::write(&values, changed.to_string()).unwrap();
     let restored = manager
         .open_session(
@@ -428,6 +449,21 @@ for line in sys.stdin:
     assert_eq!(
         restored.config_check.issues[0].id.as_deref(),
         Some("thinking_budget")
+    );
+    // An explicit change is allowed only from a confirmed baseline. It cannot
+    // repair unsolicited restore drift or silently adopt a different choice.
+    assert_eq!(
+        manager
+            .session_set_config(
+                &row.id,
+                &cwd,
+                "saved-choices",
+                "thinking_budget",
+                json!("0")
+            )
+            .await
+            .unwrap_err(),
+        "当前无法修改此设置，请等待已发出的请求结束"
     );
     assert!(
         manager

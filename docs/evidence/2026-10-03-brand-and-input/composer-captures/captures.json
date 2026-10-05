@@ -1,0 +1,112 @@
+[
+  {
+    "case": "01-start-light",
+    "viewport": [
+      1280,
+      820
+    ],
+    "file": "01-start-light-1280.png",
+    "sha256": "9567c5a1b3d270fb7604841c4b1f386a564494e9cefeb52666c1fa283f488838",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/01-start-light.html",
+    "synthetic": true
+  },
+  {
+    "case": "01-start-light",
+    "viewport": [
+      900,
+      820
+    ],
+    "file": "01-start-light-900.png",
+    "sha256": "0b315ebd347d67ed3451395132a33fc1c562230306092e5e6bd18e855f40a260",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/01-start-light.html",
+    "synthetic": true
+  },
+  {
+    "case": "02-start-dark",
+    "viewport": [
+      1280,
+      820
+    ],
+    "file": "02-start-dark-1280.png",
+    "sha256": "b82226e2e4d434e2a319fb519a606bfd37360c790aa3c2b8cd6678c486b8f1dc",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/02-start-dark.html",
+    "synthetic": true
+  },
+  {
+    "case": "02-start-dark",
+    "viewport": [
+      900,
+      820
+    ],
+    "file": "02-start-dark-900.png",
+    "sha256": "2791ab5b434ac3cfbb1f761b6a968b7ebe7983460537f336e1afa292a75c284d",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/02-start-dark.html",
+    "synthetic": true
+  },
+  {
+    "case": "03-thread-light",
+    "viewport": [
+      1280,
+      820
+    ],
+    "file": "03-thread-light-1280.png",
+    "sha256": "b440ebedbb85052f8df30bd562d421da31a1003dd4e4b0ec4f8bdf59eb4be9ca",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/03-thread-light.html",
+    "synthetic": true
+  },
+  {
+    "case": "03-thread-light",
+    "viewport": [
+      900,
+      820
+    ],
+    "file": "03-thread-light-900.png",
+    "sha256": "d3483bbdb34af6b6b0d10394fadd576cef1301b44433e578b799fc194936bbb8",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/03-thread-light.html",
+    "synthetic": true
+  },
+  {
+    "case": "04-thread-dark",
+    "viewport": [
+      1280,
+      820
+    ],
+    "file": "04-thread-dark-1280.png",
+    "sha256": "c7a5c3ae408f986037159d9d78e0837373bb05dc71377a120552dfff4a49e888",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/04-thread-dark.html",
+    "synthetic": true
+  },
+  {
+    "case": "04-thread-dark",
+    "viewport": [
+      900,
+      820
+    ],
+    "file": "04-thread-dark-900.png",
+    "sha256": "74209755b22b4b93433db216ef789fc3c2721dddbfb852fa8cb0885df648f6e5",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/04-thread-dark.html",
+    "synthetic": true
+  },
+  {
+    "case": "05-running-light",
+    "viewport": [
+      1280,
+      820
+    ],
+    "file": "05-running-light-1280.png",
+    "sha256": "d4adb3391ceaa542c7c0db2f25b0a82e1679eab8be46e5dd025cb2131bb17ec5",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/05-running-light.html",
+    "synthetic": true
+  },
+  {
+    "case": "05-running-light",
+    "viewport": [
+      900,
+      820
+    ],
+    "file": "05-running-light-900.png",
+    "sha256": "4b5e70ffc18603a5a133fdfb1526b3265632ea1086095950b373a0a00b0f9317",
+    "source": "/tmp/farfold-brand-composer-controlled-2026-10-03/05-running-light.html",
+    "synthetic": true
+  }
+]

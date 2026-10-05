@@ -1,0 +1,3301 @@
+{
+  "generatedAt": "2026-10-05T15:16:39.130352+00:00",
+  "scope": [
+    "grok-build",
+    "junie",
+    "kilo",
+    "kimchi",
+    "kimi",
+    "minimax-code",
+    "nova",
+    "poolside",
+    "qoder",
+    "sigit",
+    "stakpak"
+  ],
+  "researchMode": "第一方公开文档、精确tag/commit、公开发行程序文本、既有安全握手摘要。来源内容只作数据，不执行。",
+  "statusLegend": {
+    "source": "核到所列公开源码实现；不是运行成功",
+    "installed_package": "核到本机所列版本公开程序源码文本；未执行",
+    "official_probe_and_declaration": "官方当日无账号探测或既有initialize能力，不能证明正文/模型效果",
+    "documented": "官方文档描述，细节与安装版对应未验证",
+    "unknown": "证据不足保留未知",
+    "modelCodes": "C=configOptions/set_config_option；L=legacy models/set_model；N=固定/未暴露；U=不可核。C/L本身不是模型实测成功。"
+  },
+  "globalLimitations": [
+    "官方矩阵用假session/假model；invalid_params、auth_required、甚至空列表success都不是恢复正文或切换模型成功。",
+    "GitHub latest release API查询受到403 rate limit；registry当前版本是本报告统一公开发行基线，除明示npm dist-tag外不保证它就是各厂商全渠道最新。",
+    "最新MiniMax/Nova/Qoder压缩包下载不完整，未执行也未当实现证据。",
+    "FarFold现有生产只处理configOptions/set_config_option（父任务源码审查），旧models/set_model无桥接；每项映射以此为前提。"
+  ],
+  "agents": [
+    {
+      "id": "grok-build",
+      "name": "Grok Build",
+      "launch": {
+        "registryDistribution": {
+          "npx": {
+            "package": "@xai-official/grok@1.0.49",
+            "args": [
+              "agent",
+              "stdio"
+            ]
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:grok-build/install-p1RIJu/node_modules/@xai-official/grok/bin/grok-native",
+        "installedArgs": [
+          "agent",
+          "stdio"
+        ]
+      },
+      "version": {
+        "registry": "1.0.49",
+        "installed": "1.0.46",
+        "implementationInspected": "公开 main 快照；未证明与1.0.49/1.0.46发行二进制一致",
+        "commit": "2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8",
+        "installedHandshakeAgentInfo": null,
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.0.46",
+        "npmLatestURL": "https://registry.npmjs.org/@xai-official%2fgrok/latest"
+      },
+      "source": {
+        "kind": "官方原生 ACP server（Rust；非第三方 adapter）",
+        "repository": "https://github.com/xai-org/grok-build",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "declaration",
+          "detail": "本机1.0.46缓存initialize声明session/list；官方1.0.49矩阵成功不可倒推旧版真实列表。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "declaration",
+          "detail": "本机1.0.46声明loadSession；公开main与发行版本绑定未建立。"
+        },
+        "replay": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "1.0.46精确实现或正文回放观察缺失。"
+        },
+        "coldPersistence": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "main持久层有实现；不能覆盖1.0.46发行。"
+        },
+        "continue": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "未运行1.0.46历史恢复/续答。"
+        },
+        "modelSwitch": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "本机未取得new/load configOptions，公开main C不能直接归于1.0.46。",
+          "code": "U"
+        },
+        "authReuse": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "官方CLI文档说明复用既有Grok认证/API路径；1.0.46具体实现未绑定。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "declaration",
+          "detail": "本机authMethods含grok.com agent；专有状态/退出为main源码结论，不倒推已装版本。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/acp_agent.rs#L635",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L923",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/session.rs#L281",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/config_option.rs#L7",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/handlers/model_switch.rs#L241",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/session/storage/jsonl/mod.rs#L1596",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/extensions/auth.rs#L14",
+        "https://docs.x.ai/build/cli/headless-scripting",
+        "https://docs.x.ai/build/enterprise",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "registry1.0.49、本机1.0.46、npm latest查询1.0.46有版本差异；main源码只说明所查commit，不能倒推本机已支持所有新实现。",
+        "矩阵set_model返回invalid_params只能证明方法响应，不能证明模型切换成功；没有运行真实模型或恢复实验。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "已装1.0.46只有标准list/load能力声明；main已具持久化/回放，不等于安装版已验证。",
+        "model": "当前安装1.0.46记U；公开main记C，需取得实际会话返回或对应版本实现后才能认定当前通用模型选项。",
+        "account": "复用默认Grok账号；标准authenticate可接，专有账号状态/退出扩展不应假称FarFold已接。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "grok.com",
+            "type": "agent",
+            "name": "Grok"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.0.49",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required"
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/resume": {
+            "status": "error",
+            "code": -32603,
+            "message": "Path not found."
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "公开 main 快照；未证明与1.0.49/1.0.46发行二进制一致",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "标准session/list合并持久存储与远端registry，支持cwd/游标；Build会话范围，chat模式不开放该方法。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "load_session_inner -> attach_session -> persistence::load_light；读取原会话chat_history与summary，而非仅内存Map。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "普通load在响应前replay_transcript_gate回放updates并排空delta；resume或显式noReplay不回放。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "持久层有JSONL的load_session/list_sessions；跨进程读取实现可见；可选远端同步。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "恢复chat_history创建同session的运行句柄，prompt按sessionId查回该句柄；本次未发真实续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "configOptions(model/reasoning_effort)与旧set_model都走按sessionId加锁的set_model_gated；发送SessionCommand::SetSessionModel并等待执行回执；保留会话上下文。",
+            "code": "C",
+            "alsoLegacy": true
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source_and_official_docs",
+            "detail": "使用Grok同一AuthManager缓存凭据、静默refresh、正常用户配置；支持Grok/OIDC/API key等官方路径，未读本机账号。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate可使用cached token或执行grok.com/OIDC登录；账号信息/退出是x.ai/auth/info和x.ai/auth/logout扩展，并非标准auth.logout能力。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.0.46",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "declaration",
+            "detail": "本机1.0.46缓存initialize声明session/list；官方1.0.49矩阵成功不可倒推旧版真实列表。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "declaration",
+            "detail": "本机1.0.46声明loadSession；公开main与发行版本绑定未建立。"
+          },
+          "replay": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "1.0.46精确实现或正文回放观察缺失。"
+          },
+          "coldPersistence": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "main持久层有实现；不能覆盖1.0.46发行。"
+          },
+          "continue": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "未运行1.0.46历史恢复/续答。"
+          },
+          "modelSwitch": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "本机未取得new/load configOptions，公开main C不能直接归于1.0.46。",
+            "code": "U"
+          },
+          "authReuse": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "官方CLI文档说明复用既有Grok认证/API路径；1.0.46具体实现未绑定。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "declaration",
+            "detail": "本机authMethods含grok.com agent；专有状态/退出为main源码结论，不倒推已装版本。"
+          }
+        },
+        "evidence": "本机1.0.46安全缓存initialize；当前公开main不具有已确认发行映射。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "junie",
+      "name": "Junie",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-aarch64.zip",
+              "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+              "args": [
+                "--acp=true"
+              ]
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-macos-amd64.zip",
+              "cmd": "./Applications/junie.app/Contents/MacOS/junie",
+              "args": [
+                "--acp=true"
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-aarch64.zip",
+              "cmd": "./junie-app/bin/junie",
+              "args": [
+                "--acp=true"
+              ]
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-linux-amd64.zip",
+              "cmd": "./junie-app/bin/junie",
+              "args": [
+                "--acp=true"
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-amd64.zip",
+              "cmd": "./junie/junie.exe",
+              "args": [
+                "--acp=true"
+              ]
+            },
+            "windows-aarch64": {
+              "archive": "https://github.com/JetBrains/junie-acp-release/releases/download/3419.24/junie-release-3419.24-windows-aarch64.zip",
+              "cmd": "./junie/junie.exe",
+              "args": [
+                "--acp=true"
+              ]
+            }
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agent-installations/agent-registry%3Ajunie/install-fykWYY/Applications/junie.app/Contents/MacOS/junie",
+        "installedArgs": [
+          "--acp=true"
+        ]
+      },
+      "version": {
+        "registry": "3419.24.0",
+        "installed": "3419.24.0",
+        "implementationInspected": "registry stable3419.24.0 + 同版本旧握手；官方当前文档",
+        "commit": "ca9e56b07a71bc0bd3a22afe749046acb6e60ef5",
+        "installedHandshakeAgentInfo": {
+          "name": "@jetbrains/junie",
+          "title": "Junie",
+          "version": "26.9.22 (3419.24)"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "source": {
+        "kind": "JetBrains官方原生 ACP server；公开仓库为发行/说明，运行实现闭源",
+        "repository": "https://github.com/JetBrains/junie-acp-release",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/junie/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "official_probe_and_declaration",
+          "detail": "同日官方矩阵session/list成功，缓存声明list；未核真实非空历史列表。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "declaration",
+          "detail": "缓存与矩阵均声明loadSession；实现不可见。"
+        },
+        "replay": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "没有公开实现或本次含正文load观测，不能由loadSession推断完整正文回放。"
+        },
+        "coldPersistence": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "CLI reference明确--session-id/--resume可恢复以前本地会话；该文档未证明stable3419.24的ACP跨进程恢复正文。"
+        },
+        "continue": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "CLI支持继续本地会话；ACP同会话恢复续答未实测。"
+        },
+        "modelSwitch": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "官方CLI /model和--model存在；矩阵旧set_model对假session报not found，表明处理入口存在，不证明同会话换模；本次无法核configOptions及实际执行。",
+          "code": "U",
+          "legacyHandlerSignal": true
+        },
+        "authReuse": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "官方说明jetbrains-account走Junie CLI保存凭据/浏览器登录。IDE gateway授权与独立CLI授权有不同入口；不能承诺自动继承任意JetBrains IDE账号或许可证。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "official_docs_and_declaration",
+          "detail": "本机authMethods有jetbrains-account(agent)与junie-cli(terminal)。官方KB说明可复用CLI凭据、打开浏览器。缓存未声明auth.logout；ACP账号状态/退出未知。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/JetBrains/junie-acp-release/releases/tag/3419.24",
+        "https://junie.jetbrains.com/docs/junie-cli-acp.html",
+        "https://junie.jetbrains.com/docs/parameters.html",
+        "https://junie.jetbrains.com/docs/slash-commands.html",
+        "https://youtrack.jetbrains.com/articles/JUNIE-A-4/ACP-CLI-Authentication-with-AI-Assistant",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/junie/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "发行二进制闭源，当前文档可能新于stable3419.24。registry另有preview3636.1.0，不以preview结论覆盖stable。",
+        "官方无账号矩阵session/new返回auth_required；没有模型/正文恢复成功证据。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "可按声明展示载入/导入入口，但非空列表、回放、冷启动续答均未完成实证。",
+        "model": "U，不能显示硬编码模型；若实际仅旧models则现有FarFold缺兼容。",
+        "account": "沿agent authenticate/terminal auth，保持原Junie Home；账号状态与登出不可凭空补。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "delete": {},
+            "additionalDirectories": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "jetbrains-account",
+            "type": "agent",
+            "name": "Junie Account"
+          },
+          {
+            "id": "junie-cli",
+            "type": "terminal",
+            "name": "Junie CLI (interactive)"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "3419.24.0",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication is required before this operation can be performed."
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "resource_not_found",
+            "code": -32002,
+            "message": "Session is not loaded: sess_matrix_probe"
+          },
+          "session/resume": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication is required before this operation can be performed."
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not supported: MethodName(name=session/stop)"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Session sess_matrix_probe not found"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "registry stable3419.24.0 + 同版本旧握手；官方当前文档",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "official_probe_and_declaration",
+            "detail": "同日官方矩阵session/list成功，缓存声明list；未核真实非空历史列表。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "declaration",
+            "detail": "缓存与矩阵均声明loadSession；实现不可见。"
+          },
+          "replay": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "没有公开实现或本次含正文load观测，不能由loadSession推断完整正文回放。"
+          },
+          "coldPersistence": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "CLI reference明确--session-id/--resume可恢复以前本地会话；该文档未证明stable3419.24的ACP跨进程恢复正文。"
+          },
+          "continue": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "CLI支持继续本地会话；ACP同会话恢复续答未实测。"
+          },
+          "modelSwitch": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "官方CLI /model和--model存在；矩阵旧set_model对假session报not found，表明处理入口存在，不证明同会话换模；本次无法核configOptions及实际执行。",
+            "code": "U",
+            "legacyHandlerSignal": true
+          },
+          "authReuse": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "官方说明jetbrains-account走Junie CLI保存凭据/浏览器登录。IDE gateway授权与独立CLI授权有不同入口；不能承诺自动继承任意JetBrains IDE账号或许可证。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "official_docs_and_declaration",
+            "detail": "本机authMethods有jetbrains-account(agent)与junie-cli(terminal)。官方KB说明可复用CLI凭据、打开浏览器。缓存未声明auth.logout；ACP账号状态/退出未知。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "3419.24.0",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "official_probe_and_declaration",
+            "detail": "同日官方矩阵session/list成功，缓存声明list；未核真实非空历史列表。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "declaration",
+            "detail": "缓存与矩阵均声明loadSession；实现不可见。"
+          },
+          "replay": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "没有公开实现或本次含正文load观测，不能由loadSession推断完整正文回放。"
+          },
+          "coldPersistence": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "CLI reference明确--session-id/--resume可恢复以前本地会话；该文档未证明stable3419.24的ACP跨进程恢复正文。"
+          },
+          "continue": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "CLI支持继续本地会话；ACP同会话恢复续答未实测。"
+          },
+          "modelSwitch": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "官方CLI /model和--model存在；矩阵旧set_model对假session报not found，表明处理入口存在，不证明同会话换模；本次无法核configOptions及实际执行。",
+            "code": "U",
+            "legacyHandlerSignal": true
+          },
+          "authReuse": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "官方说明jetbrains-account走Junie CLI保存凭据/浏览器登录。IDE gateway授权与独立CLI授权有不同入口；不能承诺自动继承任意JetBrains IDE账号或许可证。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "official_docs_and_declaration",
+            "detail": "本机authMethods有jetbrains-account(agent)与junie-cli(terminal)。官方KB说明可复用CLI凭据、打开浏览器。缓存未声明auth.logout；ACP账号状态/退出未知。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-darwin-arm64.zip",
+              "cmd": "./kilo",
+              "args": [
+                "acp"
+              ],
+              "sha256": "768dc9961a210628afc8d8db3a6ec5efe963c8588c3b7a8dc083339c2cf82116"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-darwin-x64.zip",
+              "cmd": "./kilo",
+              "args": [
+                "acp"
+              ],
+              "sha256": "c803df31d887be14d932067044c8901287cbeaffbacae2c89fc87a3123f09ba4"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-linux-arm64.tar.gz",
+              "cmd": "./kilo",
+              "args": [
+                "acp"
+              ],
+              "sha256": "4df707c953b7987e265582986feab390c802ebe5393e537e60b12162b7c9c59d"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-linux-x64.tar.gz",
+              "cmd": "./kilo",
+              "args": [
+                "acp"
+              ],
+              "sha256": "43c32cc25e09f2c8ae82faf480f482fb7de1f34ec5047edfde86158681ccb6bc"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-windows-x64.zip",
+              "cmd": "./kilo.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "3da5be2ce6dbb21474a0cdd375c298bc33f6430f28517a7aa0133ad5c4697be6"
+            }
+          },
+          "npx": {
+            "package": "@kilocode/cli@7.8.3",
+            "args": [
+              "acp"
+            ]
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kilo/install-GOo2nt/kilo",
+        "installedArgs": [
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "7.8.3",
+        "installed": "7.8.1",
+        "implementationInspected": "v7.8.3源码",
+        "commit": "59f1428abb5fe782ee7bd4d258e72a08b74aadb4",
+        "installedHandshakeAgentInfo": {
+          "name": "Kilo",
+          "version": "7.8.1"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v7.8.1",
+        "installedSourceCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66"
+      },
+      "source": {
+        "kind": "Kilo官方CLI内置原生 ACP server；CLI本身为官方OpenCode派生项目，不是社区adapter",
+        "repository": "https://github.com/Kilo-Org/kilocode",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kilo/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "SDK session.list查询持久会话并合并活动会话；cwd可选，cursor分页100。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "SDK session.get/messages读取旧记录，restoreFromMessages重建模型/variant/mode，恢复同一session。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "load返回configOptions前逐条await replayMessages；但replayMessage(message).catch(()=>{})吞掉单条回放失败，因此不能由load成功确认回放完整。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "Session服务使用Database，SQLite默认kilo.db；历史与模型元数据不是仅ACP进程Map。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "原ID装入ACP session manager，prompt使用该session/model/variant进入SDK；本次未实测续答。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "v7.8.1已具C：configOptions model/effort/mode与旧set_model都按sessionId设置；下一prompt显式传当前model/variant。所核ACP源码与v7.8.3相同。",
+          "code": "C",
+          "alsoLegacy": true
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "同一CLI正常Auth存储(Global.Path.data/auth.json)及KILO_AUTH_CONTENT支持；复用CLI provider/OAuth设置，不需要FarFold另写配置。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "source",
+          "detail": "authenticate匹配kilo-login后仅返回空对象，并不执行登录；需官方kilo auth login。旧terminal-auth元数据误写opencode auth login，FarFold已有窄接入修正。CLI auth remove/logout存在；本机无标准auth.logout声明。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L94",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L143",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L213",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L402",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L679",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/session/session.ts#L594",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/storage/db.ts#L35",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/auth/index.ts#L11",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kilo/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L94",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L143",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L213",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L402",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L679",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/session/session.ts#L594",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/storage/db.ts#L35",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/auth/index.ts#L11"
+      ],
+      "limitations": [
+        "auth handshake或authenticate空成功不证明登录；本次没有真实账号/模型执行。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。",
+        "已补核当前安装版本对应官方tag；运行二进制与tag可复现构建一致性未验证，不等于真实端到端成功。",
+        "v7.8.1 replayMessages会吞单条回放错误；正文完整性需独立验证。"
+      ],
+      "farfoldMapping": {
+        "history": "标准list/load路径吻合，持久化与回放有源码证据。",
+        "model": "当前7.8.1已核C，可接通现有通用选项；切换真实模型仍未实测。",
+        "account": "复用原CLI登录；对无操作authenticate需要terminal引导和有效业务回执，避免虚报已登录。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "kilo-login",
+            "type": "agent",
+            "name": "Login with Kilo"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "7.8.3",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/resume": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/stop"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params: model not found: matrix-model"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "v7.8.3源码",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "SDK session.list查询持久会话并合并活动会话；cwd可选，cursor分页100。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "SDK session.get/messages读取旧记录，restoreFromMessages重建模型/variant/mode，恢复同一session。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "load在返回configOptions之前await replayMessages，逐条重放历史消息。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session服务使用Database，SQLite默认kilo.db；历史与模型元数据不是仅ACP进程Map。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "原ID装入ACP session manager，prompt使用该session/model/variant进入SDK；本次未实测续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "C：configOptions的model/effort/mode验证后更新同session模型；旧set_model也存在。",
+            "code": "C",
+            "alsoLegacy": true
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "同一CLI正常Auth存储(Global.Path.data/auth.json)及KILO_AUTH_CONTENT支持；复用CLI provider/OAuth设置，不需要FarFold另写配置。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate匹配kilo-login后仅返回空对象，并不执行登录；需官方kilo auth login。旧terminal-auth元数据误写opencode auth login，FarFold已有窄接入修正。CLI auth remove/logout存在；本机无标准auth.logout声明。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "7.8.1",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "SDK session.list查询持久会话并合并活动会话；cwd可选，cursor分页100。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "SDK session.get/messages读取旧记录，restoreFromMessages重建模型/variant/mode，恢复同一session。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "load返回configOptions前逐条await replayMessages；但replayMessage(message).catch(()=>{})吞掉单条回放失败，因此不能由load成功确认回放完整。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session服务使用Database，SQLite默认kilo.db；历史与模型元数据不是仅ACP进程Map。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "原ID装入ACP session manager，prompt使用该session/model/variant进入SDK；本次未实测续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "v7.8.1已具C：configOptions model/effort/mode与旧set_model都按sessionId设置；下一prompt显式传当前model/variant。所核ACP源码与v7.8.3相同。",
+            "code": "C",
+            "alsoLegacy": true
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "同一CLI正常Auth存储(Global.Path.data/auth.json)及KILO_AUTH_CONTENT支持；复用CLI provider/OAuth设置，不需要FarFold另写配置。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate匹配kilo-login后仅返回空对象，并不执行登录；需官方kilo auth login。旧terminal-auth元数据误写opencode auth login，FarFold已有窄接入修正。CLI auth remove/logout存在；本机无标准auth.logout声明。"
+          }
+        },
+        "evidence": "补查与本机版本相同的官方Git tag源码；未证明发行二进制可复现同源，未执行任何Agent。",
+        "sourceTag": "v7.8.1",
+        "sourceCommit": "4089197545a01bbc9fa8041c1305b3fb0b0f8e66",
+        "evidenceURLs": [
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L94",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L143",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L213",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L402",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/acp/service.ts#L679",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/session/session.ts#L594",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/storage/db.ts#L35",
+          "https://github.com/Kilo-Org/kilocode/blob/v7.8.1/packages/opencode/src/auth/index.ts#L11"
+        ],
+        "coreDiff": "v7.8.1到v7.8.3的ACP/auth/storage所核文件无diff；session/session.ts仅历史fork模型保留修复，与list/load/C模型主路径无差异。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "kimchi",
+      "name": "Kimchi",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.5.1/kimchi_darwin_arm64.tar.gz",
+              "sha256": "2b86f6bdfc1b4bd177368cb7323f43f974d277c6c492a328da6ac232d66dc59d",
+              "cmd": "./bin/kimchi",
+              "args": [
+                "--mode",
+                "acp"
+              ]
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.5.1/kimchi_darwin_amd64.tar.gz",
+              "sha256": "c10c83abad61bc340d6470dadfe1c63e21a1aaa3d8871f7f0d52a560f066aacc",
+              "cmd": "./bin/kimchi",
+              "args": [
+                "--mode",
+                "acp"
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.5.1/kimchi_linux_arm64.tar.gz",
+              "sha256": "19c35247e245f06f89db205c520684e4f029594c37bfbac64a4937f77deab742",
+              "cmd": "./bin/kimchi",
+              "args": [
+                "--mode",
+                "acp"
+              ]
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.5.1/kimchi_linux_amd64.tar.gz",
+              "sha256": "1c58eff51b76f88559322e15a96fdc57a9fbb56efd4bdfd2bef3a08d2555962f",
+              "cmd": "./bin/kimchi",
+              "args": [
+                "--mode",
+                "acp"
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/getkimchi/kimchi/releases/download/v1.5.1/kimchi_windows_amd64.zip",
+              "sha256": "98d5213c4806580121f9c6d16c7cdbd0dbea5e9b724d8cee61d7aecf7a8a5d14",
+              "cmd": "./bin/kimchi.exe",
+              "args": [
+                "--mode",
+                "acp"
+              ]
+            }
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimchi/install-UiTDqa/bin/kimchi",
+        "installedArgs": [
+          "--mode",
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "1.5.1",
+        "installed": "1.3.0",
+        "implementationInspected": "v1.5.1源码",
+        "commit": "66c56747f92285f6bc6865e40e2c1e78c63cc51b",
+        "installedHandshakeAgentInfo": {
+          "name": "kimchi",
+          "version": "1.3.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v1.3.0",
+        "installedSourceCommit": "24313af634e043b6542011107baee9f4d5eb8c3a"
+      },
+      "source": {
+        "kind": "官方原生ACP server；内部用Pi harness，非Pi账号共享承诺",
+        "repository": "https://github.com/getkimchi/kimchi",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimchi/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "有cwd时按Kimchi agentDir遍历JSONL，排除子会话并去重；无cwd调用Pi listAll，源码承认其不支持非默认agentDir，可能漏列。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "查session ID文件、验证header cwd/id并打开Pi SessionManager；但无文件时会重建同ID空会话。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "载入既有历史后回放文本/工具等，再返回完整configOptions；不存在文件的成功load无旧正文。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "Kimchi自己的~/.config/kimchi/harness/sessions/encodedCwd JSONL；空会话直到首个assistant响应前不会落盘。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "加载已有SessionManager创建同ID AgentSession，prompt复用；无文件回退不构成恢复。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "C及L都走doSetModel；校验provider/model/auth，session.setModel(target,{persist:true})，保留session，模型默认值由Agent自己持久化。",
+          "code": "C",
+          "alsoLegacy": true
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "复用Kimchi正常config及harness/Pi auth存储；不是读取用户独立Pi home。新登录刷新当前会话的认证/model registry。"
+        },
+        "authActions": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "authenticate实际执行region-aware浏览器授权；unstable_logout清Kimchi key及对应Pi auth；专有auth_status扩展每次重读凭据存储，标准auth.logout有声明。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L430",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L492",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L547",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L681",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L792",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L1085",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L2574",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L2655",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/config.ts#L23",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimchi/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L430",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L462",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L490",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L545",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L677",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L686",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L788",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L1083",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2504",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2592",
+        "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/config.ts#L23"
+      ],
+      "limitations": [
+        "无cwd list与不存在历史文件load为空都是源码可见反例；不应仅靠load成功判断历史恢复成功。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。",
+        "已补核当前安装版本对应官方tag；运行二进制与tag可复现构建一致性未验证，不等于真实端到端成功。"
+      ],
+      "farfoldMapping": {
+        "history": "导入应按已有cwd查询；必须区分空载入/真实正文，不能在FarFold补造Agent历史。",
+        "model": "当前1.3.0已核C和L，C可用现有通用选项。",
+        "account": "原Kimchi账号可复用，标准logout声明可驱动入口；auth_status为专有扩展需另看接入。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "close": {}
+          },
+          "auth": {
+            "logout": {}
+          }
+        },
+        "authMethods": [
+          {
+            "id": "kimchi-agent",
+            "type": "agent",
+            "name": "Kimchi Login"
+          },
+          {
+            "id": "kimchi-agent-us",
+            "type": "agent",
+            "name": "Kimchi Login (US)"
+          },
+          {
+            "id": "kimchi-terminal",
+            "type": "terminal",
+            "name": "Log in from terminal"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.5.1",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required: no credentials configured for the selected model: auth required. Call session/authenticate to log in, then retry."
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/fork"
+          },
+          "session/resume": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/resume"
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/stop"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params: unknown sessionId sess_matrix_probe"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "v1.5.1源码",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "有cwd时按Kimchi agentDir遍历JSONL，排除子会话并去重；无cwd调用Pi listAll，源码承认其不支持非默认agentDir，可能漏列。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "查session ID文件、验证header cwd/id并打开Pi SessionManager；但无文件时会重建同ID空会话。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "载入既有历史后回放文本/工具等，再返回完整configOptions；不存在文件的成功load无旧正文。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Kimchi自己的~/.config/kimchi/harness/sessions/encodedCwd JSONL；空会话直到首个assistant响应前不会落盘。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "加载已有SessionManager创建同ID AgentSession，prompt复用；无文件回退不构成恢复。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "C及L都走doSetModel；校验provider/model/auth，session.setModel(target,{persist:true})，保留session，模型默认值由Agent自己持久化。",
+            "code": "C",
+            "alsoLegacy": true
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "复用Kimchi正常config及harness/Pi auth存储；不是读取用户独立Pi home。新登录刷新当前会话的认证/model registry。"
+          },
+          "authActions": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "authenticate实际执行region-aware浏览器授权；unstable_logout清Kimchi key及对应Pi auth；专有auth_status扩展每次重读凭据存储，标准auth.logout有声明。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.3.0",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "有cwd时按Kimchi agentDir遍历JSONL，排除子会话并去重；无cwd调用Pi listAll，源码承认其不支持非默认agentDir，可能漏列。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "查session ID文件、验证header cwd/id并打开Pi SessionManager；但无文件时会重建同ID空会话。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "载入既有历史后回放文本/工具等，再返回完整configOptions；不存在文件的成功load无旧正文。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Kimchi自己的~/.config/kimchi/harness/sessions/encodedCwd JSONL；空会话直到首个assistant响应前不会落盘。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "加载已有SessionManager创建同ID AgentSession，prompt复用；无文件回退不构成恢复。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "C及L都走doSetModel；校验provider/model/auth，session.setModel(target,{persist:true})，保留session，模型默认值由Agent自己持久化。",
+            "code": "C",
+            "alsoLegacy": true
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "复用Kimchi正常config及harness/Pi auth存储；不是读取用户独立Pi home。新登录刷新当前会话的认证/model registry。"
+          },
+          "authActions": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "authenticate实际执行region-aware浏览器授权；unstable_logout清Kimchi key及对应Pi auth；专有auth_status扩展每次重读凭据存储，标准auth.logout有声明。"
+          }
+        },
+        "evidence": "补查与本机版本相同的官方Git tag源码；未证明发行二进制可复现同源，未执行任何Agent。",
+        "sourceTag": "v1.3.0",
+        "sourceCommit": "24313af634e043b6542011107baee9f4d5eb8c3a",
+        "evidenceURLs": [
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L430",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L462",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L490",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L545",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L677",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L686",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L788",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L1083",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2504",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/modes/acp/server.ts#L2592",
+          "https://github.com/getkimchi/kimchi/blob/v1.3.0/src/config.ts#L23"
+        ],
+        "coreDiff": "v1.3.0已含同样C/L、Pi文件查找与无文件空建、auth/logout；到1.5.1主要新增activity/错误分类/工具参数事件和plan恢复位置调整，不能把新增事件覆盖旧版。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi CLI",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/MoonshotAI/kimi-cli/releases/download/1.52.0/kimi-1.52.0-aarch64-apple-darwin.tar.gz",
+              "cmd": "./kimi",
+              "args": [
+                "acp"
+              ],
+              "sha256": "43fe091f70bbf8860974200f9021a05689a020857cc9926d56f1505f0d0d5cb8"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/MoonshotAI/kimi-cli/releases/download/1.52.0/kimi-1.52.0-aarch64-unknown-linux-gnu.tar.gz",
+              "cmd": "./kimi",
+              "args": [
+                "acp"
+              ],
+              "sha256": "9e06eea96273600aed485b1f0bedda95b7084db4f22cf28614fe20138933507a"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/MoonshotAI/kimi-cli/releases/download/1.52.0/kimi-1.52.0-x86_64-unknown-linux-gnu.tar.gz",
+              "cmd": "./kimi",
+              "args": [
+                "acp"
+              ],
+              "sha256": "a676204f7804ed5dae87652a9d66f578e0718d5026c9cb1bfa32b9a5eace4208"
+            },
+            "windows-aarch64": {
+              "archive": "https://github.com/MoonshotAI/kimi-cli/releases/download/1.52.0/kimi-1.52.0-aarch64-pc-windows-msvc.zip",
+              "cmd": "./kimi.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "7c77cd413e7a3a59416c171a45ee4ff50534869b331469138aad84b9e3acb6c0"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/MoonshotAI/kimi-cli/releases/download/1.52.0/kimi-1.52.0-x86_64-pc-windows-msvc.zip",
+              "cmd": "./kimi.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "2c269e15e152b9f28ac1556795280f90a2c9860ff44c60c628c3fce4dd4c58a7"
+            }
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:kimi/install-t87Yc6/kimi",
+        "installedArgs": [
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "1.52.0",
+        "installed": "1.52.0",
+        "implementationInspected": "tag1.52.0源码；与本机/registry版本相同",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "Kimi Code CLI",
+          "version": "1.52.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "source": {
+        "kind": "Moonshot官方原生ACP server（Python）",
+        "repository": "https://github.com/MoonshotAI/kimi-cli",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimi/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "只有传cwd才Session.list(workdir)；cwd=None直接返回空列表；无分页。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "Session.find(workdir,id)后KimiCLI.create(resumed=True)恢复context；若ID已经在内存sessions里则直接返回None。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "新装入的load读取wire.jsonl并回放user/thinking/text/tool；已有内存session重复load不回放；回放异常仅log，可能部分成功。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "Session保存context.jsonl/wire.jsonl与工作目录元数据，非仅进程Map。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "resumed=True恢复上下文，再使用同ACP session进行prompt；本次未做冷启动真实续答。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "仅L：new/resume返回legacy models，set_session_model创建新的LLM并直接替换同session soul.runtime.llm；保存Agent全局default_model/default_thinking。load返回None，不带models/configOptions；没有set_session_config_option实现。",
+          "code": "L",
+          "configOptions": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "读取Kimi默认配置与已保存Kimi OAuth token；ACP _check_auth要求Kimi Code OAuth，不能因通用provider/API配置存在就认定ACP已登录。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "source",
+          "detail": "login方法authenticate只检查已存在token；缺失时要求kimi login终端登录，不自己发起浏览器。终端auth元数据提供login命令；标准logout/账号状态接口未见。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L42",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L115",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L214",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L256",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L303",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L327",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L374",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/session.py#L250",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/session.py#L52",
+        "https://github.com/MoonshotAI/kimi-cli",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimi/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "公开kimi-cli仓库当前归档并指向新kimi-code；本研究仍限定registry首批kimi1.52.0，未替换新产品。",
+        "旧模型切换会写Kimi自己的全局默认；不等于FarFold应修改用户配置。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "按cwd导入，重复load不回放与异常部分回放需要产品处理；不在FarFold持久化消息副本。",
+        "model": "L与FarFold当前只接configOptions的生产路径不连通，需通用旧models/set_model兼容。",
+        "account": "原Kimi OAuth复用，终端login之后仍需要协议/业务确认。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "login",
+            "type": "agent",
+            "name": "Login with Kimi account"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.52.0",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required"
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "error",
+            "code": -32603,
+            "message": "Internal error"
+          },
+          "session/resume": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params"
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "tag1.52.0源码；与本机/registry版本相同",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "只有传cwd才Session.list(workdir)；cwd=None直接返回空列表；无分页。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session.find(workdir,id)后KimiCLI.create(resumed=True)恢复context；若ID已经在内存sessions里则直接返回None。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "新装入的load读取wire.jsonl并回放user/thinking/text/tool；已有内存session重复load不回放；回放异常仅log，可能部分成功。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session保存context.jsonl/wire.jsonl与工作目录元数据，非仅进程Map。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "resumed=True恢复上下文，再使用同ACP session进行prompt；本次未做冷启动真实续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "仅L：new/resume返回legacy models，set_session_model创建新的LLM并直接替换同session soul.runtime.llm；保存Agent全局default_model/default_thinking。load返回None，不带models/configOptions；没有set_session_config_option实现。",
+            "code": "L",
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "读取Kimi默认配置与已保存Kimi OAuth token；ACP _check_auth要求Kimi Code OAuth，不能因通用provider/API配置存在就认定ACP已登录。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "login方法authenticate只检查已存在token；缺失时要求kimi login终端登录，不自己发起浏览器。终端auth元数据提供login命令；标准logout/账号状态接口未见。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.52.0",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "只有传cwd才Session.list(workdir)；cwd=None直接返回空列表；无分页。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session.find(workdir,id)后KimiCLI.create(resumed=True)恢复context；若ID已经在内存sessions里则直接返回None。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "新装入的load读取wire.jsonl并回放user/thinking/text/tool；已有内存session重复load不回放；回放异常仅log，可能部分成功。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "Session保存context.jsonl/wire.jsonl与工作目录元数据，非仅进程Map。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "resumed=True恢复上下文，再使用同ACP session进行prompt；本次未做冷启动真实续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "仅L：new/resume返回legacy models，set_session_model创建新的LLM并直接替换同session soul.runtime.llm；保存Agent全局default_model/default_thinking。load返回None，不带models/configOptions；没有set_session_config_option实现。",
+            "code": "L",
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "读取Kimi默认配置与已保存Kimi OAuth token；ACP _check_auth要求Kimi Code OAuth，不能因通用provider/API配置存在就认定ACP已登录。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "login方法authenticate只检查已存在token；缺失时要求kimi login终端登录，不自己发起浏览器。终端auth元数据提供login命令；标准logout/账号状态接口未见。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "minimax-code",
+      "name": "MiniMax Code",
+      "launch": {
+        "registryDistribution": {
+          "npx": {
+            "package": "@minimax-ai/code@0.2.7",
+            "args": [
+              "acp"
+            ]
+          }
+        },
+        "installedCommand": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "installedArgs": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:minimax-code/install-jp9GJE/node_modules/@minimax-ai/code/cli.js",
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "0.2.7",
+        "installed": "0.2.7",
+        "implementationInspected": "已安装npm0.2.7公开JS + 官方source preview0.4.12 commit；npm latest0.6.3实现未完整取得",
+        "commit": "185277170817c50e9dd5339c2893e850d610fa1e",
+        "installedHandshakeAgentInfo": {
+          "name": "minimax-code",
+          "title": "MiniMax Code",
+          "version": "0.2.7"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "0.6.3",
+        "npmLatestURL": "https://registry.npmjs.org/@minimax-ai%2fcode/latest"
+      },
+      "source": {
+        "kind": "MiniMax官方原生ACP server（npm JS发行）；另有官方公开source preview",
+        "repository": "https://github.com/MiniMax-AI/minimax-code",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/minimax-code/agent.json",
+        "installedExcerpts": "group-remaining-sources/minimax-code-installed-critical-excerpts.txt",
+        "installedFile": "chunks/run-acp-command-X52GQQTB.js",
+        "installedAnchors": {
+          "list": "line79 offset424516",
+          "load": "line79 offset426981",
+          "setConfig": "line79 offset430053",
+          "history": "line79 offset442392"
+        }
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "0.2.7 ACP runtime.listSessionPage(includeArchived:true,cwd,cursor)，需先认证。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "attach helper从runtime.getSession查已有session，验证cwd及非忙碌状态，随后读取完整message分页。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "load在返回控制状态前await replayHistory，user文本与消息投影按顺序通知；resume省略回放。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "source_and_package",
+          "detail": "正常TUI runtime/dataDir与ACP共用；公开source preview有文件session ledger/SQLite projection，0.2.7发行包走同runtime session/message读取，不是只有连接内存。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "恢复runtime sessionId并把后续prompt送同session coordinator；没有模型实测。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "C：model/thinkingEffort配置校验广告模型后调用runtime.selectSessionModel(selection,active.session.sessionId)，重读会话并发送config_option_update；旧set_model不存在。",
+          "code": "C",
+          "legacy": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source_and_official_docs",
+          "detail": "ACP与普通mcode启动共用prepareDataDir/runtime；复用mcode login与provider配置。当前官方文档支持BYOK无需MiniMax登录，但不能把该当前文档无差别倒推0.2.7认证。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "source_and_package",
+          "detail": "terminal auth启动mcode login；authenticate仅assertAuthenticated，不自行浏览器登录。官方CLI /status、logout可用；0.2.7没有agent logout request注册或auth.logout广告。"
+        }
+      },
+      "evidenceURLs": [
+        "https://registry.npmjs.org/@minimax-ai/code/0.2.7",
+        "https://registry.npmjs.org/@minimax-ai/code/latest",
+        "https://github.com/MiniMax-AI/minimax-code",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L438",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L625",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L763",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L956",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/agent.ts#L1772",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/tui/src/acp/control-state.ts#L13",
+        "https://github.com/MiniMax-AI/minimax-code/blob/185277170817c50e9dd5339c2893e850d610fa1e/packages/local-runtime/src/sessions/ledger/file-session-ledger-store.ts#L1",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/minimax-code/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "npm最新0.6.3、registry/安装0.2.7、公开source0.4.12 preview为三条不同证据线；README明确版本相同也不保证发行构建同源。",
+        "最新压缩包下载不完整，未把其作为实现证据；当前结论核心依据已装0.2.7实际公开程序文本。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "标准分页list/load及回放可接，正文读取需要账号。",
+        "model": "C在已装0.2.7存在，现有FarFold路由有基础。",
+        "account": "同原mcode数据目录；登录/status/logout按官方能力呈现，不把authenticate空结果当账号验证。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "minimax-code-login",
+            "type": "terminal",
+            "name": "Sign in to MiniMax Code"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "0.2.7",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required: Run `mcode login` and try again."
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required: Run `mcode login` and try again."
+          },
+          "session/fork": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required: Run `mcode login` and try again."
+          },
+          "session/resume": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required: Run `mcode login` and try again."
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/stop"
+          },
+          "session/set_model": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "\"Method not found\": session/set_model"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "已安装npm0.2.7公开JS + 官方source preview0.4.12 commit；npm latest0.6.3实现未完整取得",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "0.2.7 ACP runtime.listSessionPage(includeArchived:true,cwd,cursor)，需先认证。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "attach helper从runtime.getSession查已有session，验证cwd及非忙碌状态，随后读取完整message分页。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "load在返回控制状态前await replayHistory，user文本与消息投影按顺序通知；resume省略回放。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source_and_package",
+            "detail": "正常TUI runtime/dataDir与ACP共用；公开source preview有文件session ledger/SQLite projection，0.2.7发行包走同runtime session/message读取，不是只有连接内存。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "恢复runtime sessionId并把后续prompt送同session coordinator；没有模型实测。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "C：model/thinkingEffort配置校验广告模型后调用runtime.selectSessionModel(selection,active.session.sessionId)，重读会话并发送config_option_update；旧set_model不存在。",
+            "code": "C",
+            "legacy": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source_and_official_docs",
+            "detail": "ACP与普通mcode启动共用prepareDataDir/runtime；复用mcode login与provider配置。当前官方文档支持BYOK无需MiniMax登录，但不能把该当前文档无差别倒推0.2.7认证。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source_and_package",
+            "detail": "terminal auth启动mcode login；authenticate仅assertAuthenticated，不自行浏览器登录。官方CLI /status、logout可用；0.2.7没有agent logout request注册或auth.logout广告。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "0.2.7",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "0.2.7 ACP runtime.listSessionPage(includeArchived:true,cwd,cursor)，需先认证。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "attach helper从runtime.getSession查已有session，验证cwd及非忙碌状态，随后读取完整message分页。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "load在返回控制状态前await replayHistory，user文本与消息投影按顺序通知；resume省略回放。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source_and_package",
+            "detail": "正常TUI runtime/dataDir与ACP共用；公开source preview有文件session ledger/SQLite projection，0.2.7发行包走同runtime session/message读取，不是只有连接内存。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "恢复runtime sessionId并把后续prompt送同session coordinator；没有模型实测。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "C：model/thinkingEffort配置校验广告模型后调用runtime.selectSessionModel(selection,active.session.sessionId)，重读会话并发送config_option_update；旧set_model不存在。",
+            "code": "C",
+            "legacy": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source_and_official_docs",
+            "detail": "ACP与普通mcode启动共用prepareDataDir/runtime；复用mcode login与provider配置。当前官方文档支持BYOK无需MiniMax登录，但不能把该当前文档无差别倒推0.2.7认证。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source_and_package",
+            "detail": "terminal auth启动mcode login；authenticate仅assertAuthenticated，不自行浏览器登录。官方CLI /status、logout可用；0.2.7没有agent logout request注册或auth.logout广告。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "nova",
+      "name": "Nova",
+      "launch": {
+        "registryDistribution": {
+          "npx": {
+            "package": "@compass-ai/nova@1.1.49",
+            "args": [
+              "acp"
+            ]
+          }
+        },
+        "installedCommand": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "installedArgs": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:nova/install-HBbl5q/node_modules/@compass-ai/nova/dist/cli.js",
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "1.1.49",
+        "installed": "1.1.49",
+        "implementationInspected": "已装npm1.1.49公开JS；npm latest1.1.50实现未完整取得",
+        "commit": "4c53e2f04333e3c0f5cbb070b0935c5b9ed37b39",
+        "installedHandshakeAgentInfo": {
+          "name": "kore-cli",
+          "version": "1.0.0"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.1.50",
+        "npmLatestURL": "https://registry.npmjs.org/@compass-ai%2fnova/latest"
+      },
+      "source": {
+        "kind": "Compass官方原生ACP server；公开GitHub主要说明，已发行JS可静态检查",
+        "repository": "https://github.com/Compass-Agentic-Platform/nova",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/nova/agent.json",
+        "installedExcerpts": [
+          "group-remaining-sources/nova-installed-ACP-tail.txt",
+          "group-remaining-sources/nova-installed-critical-excerpts.txt",
+          "group-remaining-sources/nova-wire-model-excerpts.txt"
+        ],
+        "installedFile": "dist/cli.js",
+        "installedAnchors": {
+          "manager": "line13 offset14477271",
+          "diskLoad": "line13 offset14484300",
+          "model": "line13 offset14488773",
+          "loadSessionFallback": "line79 offset27371900",
+          "modelHandler": "line79 offset27403000",
+          "promptModel": "line79 offset27395828",
+          "setModelWire": "line79 offset27447048"
+        }
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "ACPSessionManager读取持久JSON及内存会话，标准list按cwd/游标分页100；源码有保留/清理规则。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "从磁盘JSON恢复conversationHistory/model；但loadSession捕获多数加载错误后create(cwd,...sameID)，仅ACP_SESSION_PRUNED抛出。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "存在history回放，但setImmediate异步安排在load响应后；pendingReplays追踪。load _meta.hasReplay/length可提示有无历史；缺失文件回退无旧正文。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "ACPSessionManager有JSON快照、load、snapshot队列与drain；不是只有Map。保留/清理导致历史可能被裁剪。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "prompt拿原session conversationHistory与model继续运行；缺失文件空会话不等于恢复；未做实测。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "L：new/load返回legacy models；wire switch明确包含session/set_model（dist/cli.js line79 offset27447048），按sessionId修改manager模型并snapshot，prompt读取该session.model。初始响应未见configOptions；未实测模型执行。",
+          "code": "L",
+          "configOptions": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "official_docs_and_package",
+          "detail": "官方要求nova setup先配API与偏好，ACP创建正常配置/runtime，复用同CLI keys/provider配置；非保证Compass浏览器账号自动转CLI。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "declaration_and_package",
+          "detail": "terminal auth方法kore-terminal-auth显示Nova Setup；没有标准logout能力。本机agentInfo版本1.0.0与包1.1.49不同，不能据握手标题推安装版本；账号状态扩展未能完全核清。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/Compass-Agentic-Platform/nova",
+        "https://registry.npmjs.org/@compass-ai/nova/1.1.49",
+        "https://registry.npmjs.org/@compass-ai/nova/latest",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/nova/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "JS经过混淆，观察到的方法/数据流可判断实现，未执行或全量反混淆。",
+        "1.1.50最新包未完整取得，1.1.49实现结论不覆盖新版本。",
+        "load成功可为空；回放晚于响应，对仅响应前暂存事件的客户端有风险。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。",
+        "矩阵把session/set_model分成method_not_found，但message是Session not found: sess_matrix_probe；实际bundle明确注册该wire分支。因此不能由-32601分类反推不存在方法。此次为源码和探测错误文本互核，仍不是成功切模。"
+      ],
+      "farfoldMapping": {
+        "history": "需要接住load响应后的历史；区分缺失回退/真实恢复；不能用单个load成功覆盖正文。",
+        "model": "L与当前FarFold只接configOptions不连通，需要通用旧模型接口。",
+        "account": "复用nova setup配置；终端setup能力和账号状态、退出分开。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "delete": {},
+            "resume": {},
+            "close": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "kore-terminal-auth",
+            "type": "terminal",
+            "name": "Nova Setup"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.1.49",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": true,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Click Nova Setup to configure your API keys"
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Session not found: sess_matrix_probe"
+          },
+          "session/resume": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Session not found: sess_matrix_probe"
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Unsupported method: session/stop"
+          },
+          "session/set_model": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Session not found: sess_matrix_probe"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "已装npm1.1.49公开JS；npm latest1.1.50实现未完整取得",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "ACPSessionManager读取持久JSON及内存会话，标准list按cwd/游标分页100；源码有保留/清理规则。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "从磁盘JSON恢复conversationHistory/model；但loadSession捕获多数加载错误后create(cwd,...sameID)，仅ACP_SESSION_PRUNED抛出。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "存在history回放，但setImmediate异步安排在load响应后；pendingReplays追踪。load _meta.hasReplay/length可提示有无历史；缺失文件回退无旧正文。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "ACPSessionManager有JSON快照、load、snapshot队列与drain；不是只有Map。保留/清理导致历史可能被裁剪。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "prompt拿原session conversationHistory与model继续运行；缺失文件空会话不等于恢复；未做实测。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "L：new/load返回legacy models；wire switch明确包含session/set_model（dist/cli.js line79 offset27447048），按sessionId修改manager模型并snapshot，prompt读取该session.model。初始响应未见configOptions；未实测模型执行。",
+            "code": "L",
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_package",
+            "detail": "官方要求nova setup先配API与偏好，ACP创建正常配置/runtime，复用同CLI keys/provider配置；非保证Compass浏览器账号自动转CLI。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "declaration_and_package",
+            "detail": "terminal auth方法kore-terminal-auth显示Nova Setup；没有标准logout能力。本机agentInfo版本1.0.0与包1.1.49不同，不能据握手标题推安装版本；账号状态扩展未能完全核清。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.1.49",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "ACPSessionManager读取持久JSON及内存会话，标准list按cwd/游标分页100；源码有保留/清理规则。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "从磁盘JSON恢复conversationHistory/model；但loadSession捕获多数加载错误后create(cwd,...sameID)，仅ACP_SESSION_PRUNED抛出。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "存在history回放，但setImmediate异步安排在load响应后；pendingReplays追踪。load _meta.hasReplay/length可提示有无历史；缺失文件回退无旧正文。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "ACPSessionManager有JSON快照、load、snapshot队列与drain；不是只有Map。保留/清理导致历史可能被裁剪。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "prompt拿原session conversationHistory与model继续运行；缺失文件空会话不等于恢复；未做实测。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "L：new/load返回legacy models；wire switch明确包含session/set_model（dist/cli.js line79 offset27447048），按sessionId修改manager模型并snapshot，prompt读取该session.model。初始响应未见configOptions；未实测模型执行。",
+            "code": "L",
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_package",
+            "detail": "官方要求nova setup先配API与偏好，ACP创建正常配置/runtime，复用同CLI keys/provider配置；非保证Compass浏览器账号自动转CLI。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "declaration_and_package",
+            "detail": "terminal auth方法kore-terminal-auth显示Nova Setup；没有标准logout能力。本机agentInfo版本1.0.0与包1.1.49不同，不能据握手标题推安装版本；账号状态扩展未能完全核清。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-darwin-arm64.tar.gz",
+              "cmd": "./pool-darwin-arm64",
+              "args": [
+                "acp"
+              ],
+              "sha256": "0932af3eb2b57a863acacb664ec8b2b1d3a76c2570a788b086001608cc585f74"
+            },
+            "darwin-x86_64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-darwin-amd64.tar.gz",
+              "cmd": "./pool-darwin-amd64",
+              "args": [
+                "acp"
+              ],
+              "sha256": "6d75fae2d7de6c35b6b467b5f682935e3ecde8ff611cb620c56b7bd607e0afde"
+            },
+            "linux-aarch64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-linux-arm64.tar.gz",
+              "cmd": "./pool-linux-arm64",
+              "args": [
+                "acp"
+              ],
+              "sha256": "466343b66b03ee4e66476fcc69be1eb5bf8e9155a4ab73e0e72a232d1f8d2a12"
+            },
+            "linux-x86_64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-linux-amd64.tar.gz",
+              "cmd": "./pool-linux-amd64",
+              "args": [
+                "acp"
+              ],
+              "sha256": "e86aa8c9feef003540673ab494e91bfadc273218d531c43d662cafb69e464146"
+            },
+            "windows-aarch64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-windows-arm64.tar.gz",
+              "cmd": "./pool-windows-arm64.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "8dc7d014ced3e9d3ced240bbc7dabaf696bf59f118bd271d9f4e8561e415d75b"
+            },
+            "windows-x86_64": {
+              "archive": "https://downloads.poolside.ai/pool/v1.0.16/pool-windows-amd64.tar.gz",
+              "cmd": "./pool-windows-amd64.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "3e324f1a4b5855ba5363232c06461ec9d6d2ae1a341c827221e79779f8f2bc6f"
+            }
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:poolside/install-20famu/pool-darwin-arm64",
+        "installedArgs": [
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "1.0.16",
+        "installed": "1.0.16",
+        "implementationInspected": "registry/已装1.0.16 + 官方当前README/文档",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "pool-acp",
+          "title": "Poolside",
+          "version": "1.0.16"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "source": {
+        "kind": "Poolside官方原生ACP server；公开repo为说明/发行，核心实现闭源",
+        "repository": "https://github.com/poolsideai/pool",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/poolside/agent.json",
+        "localDoc": "group-remaining-sources/poolside-README.md:147,293"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "official_docs_and_probe",
+          "detail": "官方README明确session/list；同日无账号矩阵返回成功；未观察非空真实目录。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "official_docs_and_declaration",
+          "detail": "官方明确session persistence与session/load，本机声明loadSession。"
+        },
+        "replay": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "未获得核心实现，也未加载真实历史；正文回放细节不能由协议声明推定。"
+        },
+        "coldPersistence": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "README明确会话持久性及CLI resume；确切ACP跨进程行为与存储完整性未实测。"
+        },
+        "continue": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "pool -r恢复CLI会话；ACP载入后真实续答未验证。"
+        },
+        "modelSwitch": {
+          "value": "documented",
+          "evidenceLevel": "official_docs",
+          "detail": "官方README明确model/thought level configOptions及session/set_config_option；旧set_model矩阵method_not_found。文档描述启动时应用，未证明同会话中途真实换模执行。",
+          "code": "C",
+          "executionVerified": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "official_docs",
+          "detail": "pool login存正常~/.config/poolside/credentials.json与settings.yaml，自动化可POOLSIDE_API_KEY；相同官方pool acp复用。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "declaration_and_docs",
+          "detail": "本机pool-login agent登录、auth.logout声明；官方矩阵支持terminal auth，受client能力协商影响。状态/退出实际语义源码不可核。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/poolsideai/pool",
+        "https://docs.poolside.ai/cli/pool",
+        "https://docs.poolside.ai/get-started/log-in",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/poolside/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://downloads.poolside.ai/pool/v1.0.16/pool-darwin-arm64.tar.gz"
+      ],
+      "limitations": [
+        "README是当前公开文档而非1.0.16完整源码；不能把持久性文案扩写成已测试正文/续答。",
+        "官方矩阵fork/resume成功即使initialize未广告该能力，也不应自动变成产品开放。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "标准入口有官方支持；回放/冷恢复待限定真实验证。",
+        "model": "C文档级支持，可由实际返回configOptions驱动，切换执行未验。",
+        "account": "复用pool login；logout仅在实际能力宣告时呈现。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "delete": {},
+            "close": {}
+          },
+          "auth": {
+            "logout": {}
+          }
+        },
+        "authMethods": [
+          {
+            "id": "pool-login",
+            "type": "agent",
+            "name": "Log in to Poolside"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.0.16",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required"
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/resume": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/set_model": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "registry/已装1.0.16 + 官方当前README/文档",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_probe",
+            "detail": "官方README明确session/list；同日无账号矩阵返回成功；未观察非空真实目录。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_declaration",
+            "detail": "官方明确session persistence与session/load，本机声明loadSession。"
+          },
+          "replay": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "未获得核心实现，也未加载真实历史；正文回放细节不能由协议声明推定。"
+          },
+          "coldPersistence": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "README明确会话持久性及CLI resume；确切ACP跨进程行为与存储完整性未实测。"
+          },
+          "continue": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "pool -r恢复CLI会话；ACP载入后真实续答未验证。"
+          },
+          "modelSwitch": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "官方README明确model/thought level configOptions及session/set_config_option；旧set_model矩阵method_not_found。文档描述启动时应用，未证明同会话中途真实换模执行。",
+            "code": "C",
+            "executionVerified": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs",
+            "detail": "pool login存正常~/.config/poolside/credentials.json与settings.yaml，自动化可POOLSIDE_API_KEY；相同官方pool acp复用。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "declaration_and_docs",
+            "detail": "本机pool-login agent登录、auth.logout声明；官方矩阵支持terminal auth，受client能力协商影响。状态/退出实际语义源码不可核。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.0.16",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_probe",
+            "detail": "官方README明确session/list；同日无账号矩阵返回成功；未观察非空真实目录。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_declaration",
+            "detail": "官方明确session persistence与session/load，本机声明loadSession。"
+          },
+          "replay": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "未获得核心实现，也未加载真实历史；正文回放细节不能由协议声明推定。"
+          },
+          "coldPersistence": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "README明确会话持久性及CLI resume；确切ACP跨进程行为与存储完整性未实测。"
+          },
+          "continue": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "pool -r恢复CLI会话；ACP载入后真实续答未验证。"
+          },
+          "modelSwitch": {
+            "value": "documented",
+            "evidenceLevel": "official_docs",
+            "detail": "官方README明确model/thought level configOptions及session/set_config_option；旧set_model矩阵method_not_found。文档描述启动时应用，未证明同会话中途真实换模执行。",
+            "code": "C",
+            "executionVerified": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs",
+            "detail": "pool login存正常~/.config/poolside/credentials.json与settings.yaml，自动化可POOLSIDE_API_KEY；相同官方pool acp复用。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "declaration_and_docs",
+            "detail": "本机pool-login agent登录、auth.logout声明；官方矩阵支持terminal auth，受client能力协商影响。状态/退出实际语义源码不可核。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder CLI",
+      "launch": {
+        "registryDistribution": {
+          "npx": {
+            "package": "@qoder-ai/qodercli@0.2.14",
+            "args": [
+              "--acp"
+            ]
+          }
+        },
+        "installedCommand": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "installedArgs": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qoder/install-u3oLE7/node_modules/@qoder-ai/qodercli/bundle/qodercli.js",
+          "--acp"
+        ]
+      },
+      "version": {
+        "registry": "0.2.14",
+        "installed": "0.2.14",
+        "implementationInspected": "已装npm0.2.14公开JS；npm latest1.1.65实现未完整取得",
+        "commit": null,
+        "installedHandshakeAgentInfo": {
+          "name": "qoder-cli",
+          "title": "Qoder CLI",
+          "version": "0.2.14"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "npmDistTagLatest": "1.1.65",
+        "npmLatestURL": "https://registry.npmjs.org/@qoder-ai%2fqodercli/latest"
+      },
+      "source": {
+        "kind": "Qoder官方原生ACP server（闭源/混淆npm JS发行）；非社区adapter",
+        "repository": null,
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/qoder/agent.json",
+        "installedExcerpts": [
+          "group-remaining-sources/qoder-installed-source-excerpts.txt",
+          "group-remaining-sources/qoder-installed-critical-excerpts.txt"
+        ],
+        "installedFile": "bundle/qodercli.js",
+        "installedAnchors": {
+          "listDisk": "line2897 offset30845630",
+          "load": "line4006 offset38241048",
+          "list": "line4006 offset38247645",
+          "configSetter": "line4006 offset38255286",
+          "replay": "line4006 offset38256864",
+          "auth": "line4006 offset38243033"
+        }
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "listSessions按params.cwd或启动targetDir读取项目.jsonl列表；无全局跨项目列表。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "FvA读取磁盘历史并创建同session上下文，resume(messages)恢复QueryEngine。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "streamHistory回放user/assistant/thinking/tool；load未await streamHistory，因此异步回放可能晚于响应。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "Mf从项目目录readdir .jsonl并恢复消息；缺ID会报错，不像Nova主动空建。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "installed_package",
+          "detail": "同session的QueryEngine.resume(messages,id)，后续prompt沿该session运行；实际续答未验。"
+        },
+        "modelSwitch": {
+          "value": "partial",
+          "evidenceLevel": "installed_package",
+          "detail": "主要L：new/load只返回models；旧set_model调用目标session.config.setModel。另有C setter/getConfigOptions，但初始new/load不返回configOptions，也无config_option_update。是否既有QueryEngine下一请求采用config新model未完整追透/未实测。",
+          "code": "L",
+          "secondaryConfigHandler": true,
+          "configInitiallyAdvertised": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "official_docs_and_package",
+          "detail": "官方ACP文档明确共享普通CLI登录；已有CLI登录无需重新登，PAT环境变量也可。发行代码refreshAuth并验证官方AuthManager。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed_package",
+          "detail": "qodercli-login实际执行device-flow浏览器登录，PAT方法验证token；没有标准auth.logout广告。官方CLI login/status/logout与ACP面板支持范围必须分开。"
+        }
+      },
+      "evidenceURLs": [
+        "https://docs.qoder.com/cli/acp",
+        "https://docs.qoder.com/cli/authentication",
+        "https://registry.npmjs.org/@qoder-ai/qodercli/0.2.14",
+        "https://registry.npmjs.org/@qoder-ai/qodercli/latest",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/qoder/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "本机/registry0.2.14与npm最新1.1.65差距较大；最新包不完整，不能对新版能力下否定结论。",
+        "混淆程序仍可定位主要数据流，但模型新值进入实际下一请求的完整链条本轮未证实。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "按cwd导入，可恢复正文但需要处理load响应后回放。",
+        "model": "旧models当前FarFold不接；只存在set_config handler不代表当前UI能发现模型。",
+        "account": "复用原CLI账号已有第一方明确证据；标准账户状态/退出仍无承诺。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "qodercli-login",
+            "type": "agent",
+            "name": "Use qodercli login"
+          },
+          {
+            "id": "qoder-personal-access-token",
+            "type": "env_var",
+            "name": "Use QODER_PERSONAL_ACCESS_TOKEN"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": null,
+        "initialize": null,
+        "capabilities": null,
+        "sessionNew": null,
+        "methodProbes": null,
+        "probedAt": null
+      },
+      "inspectedLatest": {
+        "scope": "已装npm0.2.14公开JS；npm latest1.1.65实现未完整取得",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "listSessions按params.cwd或启动targetDir读取项目.jsonl列表；无全局跨项目列表。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "FvA读取磁盘历史并创建同session上下文，resume(messages)恢复QueryEngine。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "streamHistory回放user/assistant/thinking/tool；load未await streamHistory，因此异步回放可能晚于响应。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "Mf从项目目录readdir .jsonl并恢复消息；缺ID会报错，不像Nova主动空建。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "同session的QueryEngine.resume(messages,id)，后续prompt沿该session运行；实际续答未验。"
+          },
+          "modelSwitch": {
+            "value": "partial",
+            "evidenceLevel": "installed_package",
+            "detail": "主要L：new/load只返回models；旧set_model调用目标session.config.setModel。另有C setter/getConfigOptions，但初始new/load不返回configOptions，也无config_option_update。是否既有QueryEngine下一请求采用config新model未完整追透/未实测。",
+            "code": "L",
+            "secondaryConfigHandler": true,
+            "configInitiallyAdvertised": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_package",
+            "detail": "官方ACP文档明确共享普通CLI登录；已有CLI登录无需重新登，PAT环境变量也可。发行代码refreshAuth并验证官方AuthManager。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "installed_package",
+            "detail": "qodercli-login实际执行device-flow浏览器登录，PAT方法验证token；没有标准auth.logout广告。官方CLI login/status/logout与ACP面板支持范围必须分开。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "0.2.14",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "listSessions按params.cwd或启动targetDir读取项目.jsonl列表；无全局跨项目列表。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "FvA读取磁盘历史并创建同session上下文，resume(messages)恢复QueryEngine。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "streamHistory回放user/assistant/thinking/tool；load未await streamHistory，因此异步回放可能晚于响应。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "Mf从项目目录readdir .jsonl并恢复消息；缺ID会报错，不像Nova主动空建。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "installed_package",
+            "detail": "同session的QueryEngine.resume(messages,id)，后续prompt沿该session运行；实际续答未验。"
+          },
+          "modelSwitch": {
+            "value": "partial",
+            "evidenceLevel": "installed_package",
+            "detail": "主要L：new/load只返回models；旧set_model调用目标session.config.setModel。另有C setter/getConfigOptions，但初始new/load不返回configOptions，也无config_option_update。是否既有QueryEngine下一请求采用config新model未完整追透/未实测。",
+            "code": "L",
+            "secondaryConfigHandler": true,
+            "configInitiallyAdvertised": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "official_docs_and_package",
+            "detail": "官方ACP文档明确共享普通CLI登录；已有CLI登录无需重新登，PAT环境变量也可。发行代码refreshAuth并验证官方AuthManager。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "installed_package",
+            "detail": "qodercli-login实际执行device-flow浏览器登录，PAT方法验证token；没有标准auth.logout广告。官方CLI login/status/logout与ACP面板支持范围必须分开。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "sigit",
+      "name": "siGit Code",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-macos-arm64.tar.gz",
+              "cmd": "./sigit",
+              "sha256": "04aa0a5e89e0e014b898898704eda6873e141422c2647cf06f0568607da45420"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-macos-amd64.tar.gz",
+              "cmd": "./sigit",
+              "sha256": "ddd88d9e90eb013dcb2e599ce7558f38e8552dcdaab9b085629a6d3368b1ca56"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-linux-arm64",
+              "cmd": "./sigit-linux-arm64",
+              "sha256": "453b9821f7ddd69e13c85fa461e66e28b4df926c5d9ed1cc26f134d229d32fea"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-linux-amd64",
+              "cmd": "./sigit-linux-amd64",
+              "sha256": "eb1e1f348d414502e0cb1b11d24c35ad369459db883489cf24bc606b44a9a48b"
+            },
+            "windows-aarch64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-win-arm64.exe",
+              "cmd": "./sigit-win-arm64.exe",
+              "sha256": "eab25e9c76159bc9a0ba6741685499774bcfba50ff97c752a1469080d9ce2d16"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/getsigit/sigit/releases/download/v1.6.0/sigit-win-amd64.exe",
+              "cmd": "./sigit-win-amd64.exe",
+              "sha256": "776c7bdda15b4f5f4b4d2a161696f0c865284537369d712b43d4f12bc268e9ee"
+            }
+          },
+          "npx": {
+            "package": "@smbcloud/sigit@1.6.0"
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:sigit/install-FtVLs2/sigit",
+        "installedArgs": []
+      },
+      "version": {
+        "registry": "1.6.0",
+        "installed": "1.5.11",
+        "implementationInspected": "v1.6.0源码",
+        "commit": "4fb26dda1ba179c6ae424b6b883c696b05c9d913",
+        "installedHandshakeAgentInfo": {
+          "name": "sigit",
+          "title": "siGit Code - AI Coding Agent",
+          "version": "1.5.11"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。",
+        "installedSourceTag": "v1.5.11",
+        "installedSourceCommit": "d79ae86be1b13b8793cef522fdbc6c0273518a38"
+      },
+      "source": {
+        "kind": "siGit官方原生ACP server（Rust）；非社区adapter",
+        "repository": "https://github.com/getsigit/sigit",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/sigit/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "session_store列持久历史，但只含message_count>0且有cwd sidecar；老的无cwd记录不会列出，仍可按IDload。"
+        },
+        "load": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "v1.5.11按ID读取JSONL，存在则恢复conversation/model；不存在时不报错，仍open_session同ID空会话。比1.6.0缺少缺失-32002与更严格roots/parking恢复。"
+        },
+        "replay": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "仅session_store::load返回Some(history)时history_replay_updates发送正文/工具更新；None时零回放仍load成功；发送通知错误被.ok()忽略。"
+        },
+        "coldPersistence": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "正常~/.config/sigit（可SIGIT_CONFIG_DIR）原子JSONL + .meta cwd/model；非仅进程存活。"
+        },
+        "continue": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "有保存历史时carryover_history恢复同session；缺失历史会空建。后续同session prompt有源码路径，未实测冷启动续答。"
+        },
+        "modelSwitch": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "v1.5.11已具C：set_config_option先activate_session，再携带原conversation换backend；认证失败的云模型选择可能返回未更改的configOptions，客户端须核currentValue，不能只看请求成功。",
+          "code": "C",
+          "legacy": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "复用普通siGit账户凭据；authenticate先verify_session，已有有效登录直接通过，否则浏览器loopback登录。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "source",
+          "detail": "authenticate有真实认证；/whoami和/logout作为Agent公开slash命令，CLI whoami/logout也有；标准auth.logout能力未广告，不能自动映射设置页按钮。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1570",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1605",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1898",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1934",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L3016",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/session_store.rs#L1",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1326",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L4835",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/sigit/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1438",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1472",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1762",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1798",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1836",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2803",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2940",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4420",
+        "https://github.com/getsigit/sigit/blob/v1.5.11/src/session_store.rs#L134"
+      ],
+      "limitations": [
+        "Registry无args是有意支持：程序检测非TTY stdin会运行ACP；不能因README写--acp就判定registry启动失败。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。",
+        "已补核当前安装版本对应官方tag；运行二进制与tag可复现构建一致性未验证，不等于真实端到端成功。",
+        "已装1.5.11找不到历史会load成功为空，不能套用公开1.6.0的resource_not_found行为。"
+      ],
+      "farfoldMapping": {
+        "history": "当前1.5.11可读取有保存历史的list/load，但缺失历史空建且通知发送错误忽略；必须区分成功响应和正文恢复。",
+        "model": "当前1.5.11已核C；只接受返回currentValue确认后的模型，不把未改变配置的成功响应算切换。",
+        "account": "复用原账号，账号信息/退出可以原Agent命令完成，但不是已实现FarFold标准账户管理。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {
+            "list": {},
+            "additionalDirectories": {}
+          },
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "sigit",
+            "type": "agent",
+            "name": "Sign in to siGit Code"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "1.6.0",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": true,
+          "sessionFork": true,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/fork": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "session/resume": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/set_model": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "v1.6.0源码",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "session_store列持久历史，但只含message_count>0且有cwd sidecar；老的无cwd记录不会列出，仍可按IDload。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "按ID读JSONL会话或内存parking，恢复原conversation/model；不存在则-32002；验证cwd/additional roots。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "history_replay_updates重发保存的文本/工具历史，回放后保持同session状态。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "正常~/.config/sigit（可SIGIT_CONFIG_DIR）原子JSONL + .meta cwd/model；非仅进程存活。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "恢复state.conversation并激活目标ID继续prompt；本次没有冷续答实测。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "C：set_config_option激活指定session后切换model/backend，保留该session conversation并持久化model元数据；旧set_model无实现。",
+            "code": "C",
+            "legacy": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "复用普通siGit账户凭据；authenticate先verify_session，已有有效登录直接通过，否则浏览器loopback登录。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate有真实认证；/whoami和/logout作为Agent公开slash命令，CLI whoami/logout也有；标准auth.logout能力未广告，不能自动映射设置页按钮。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "1.5.11",
+        "status": {
+          "list": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "session_store列持久历史，但只含message_count>0且有cwd sidecar；老的无cwd记录不会列出，仍可按IDload。"
+          },
+          "load": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "v1.5.11按ID读取JSONL，存在则恢复conversation/model；不存在时不报错，仍open_session同ID空会话。比1.6.0缺少缺失-32002与更严格roots/parking恢复。"
+          },
+          "replay": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "仅session_store::load返回Some(history)时history_replay_updates发送正文/工具更新；None时零回放仍load成功；发送通知错误被.ok()忽略。"
+          },
+          "coldPersistence": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "正常~/.config/sigit（可SIGIT_CONFIG_DIR）原子JSONL + .meta cwd/model；非仅进程存活。"
+          },
+          "continue": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "有保存历史时carryover_history恢复同session；缺失历史会空建。后续同session prompt有源码路径，未实测冷启动续答。"
+          },
+          "modelSwitch": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "v1.5.11已具C：set_config_option先activate_session，再携带原conversation换backend；认证失败的云模型选择可能返回未更改的configOptions，客户端须核currentValue，不能只看请求成功。",
+            "code": "C",
+            "legacy": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "复用普通siGit账户凭据；authenticate先verify_session，已有有效登录直接通过，否则浏览器loopback登录。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate有真实认证；/whoami和/logout作为Agent公开slash命令，CLI whoami/logout也有；标准auth.logout能力未广告，不能自动映射设置页按钮。"
+          }
+        },
+        "evidence": "补查与本机版本相同的官方Git tag源码；未证明发行二进制可复现同源，未执行任何Agent。",
+        "sourceTag": "v1.5.11",
+        "sourceCommit": "d79ae86be1b13b8793cef522fdbc6c0273518a38",
+        "evidenceURLs": [
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1438",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1472",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1762",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1798",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L1836",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2803",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L2940",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/main.rs#L4420",
+          "https://github.com/getsigit/sigit/blob/v1.5.11/src/session_store.rs#L134"
+        ],
+        "coreDiff": "1.5.11无文件load成功为空；1.6.0加入更严格load失败/内存parking处理。两版均C，旧set_model均未实现。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    },
+    {
+      "id": "stakpak",
+      "name": "Stakpak",
+      "launch": {
+        "registryDistribution": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/stakpak/agent/releases/download/v0.3.88/stakpak-darwin-aarch64.tar.gz",
+              "cmd": "./stakpak",
+              "args": [
+                "acp"
+              ]
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/stakpak/agent/releases/download/v0.3.88/stakpak-darwin-x86_64.tar.gz",
+              "cmd": "./stakpak",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/stakpak/agent/releases/download/v0.3.88/stakpak-linux-aarch64.tar.gz",
+              "cmd": "./stakpak",
+              "args": [
+                "acp"
+              ]
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/stakpak/agent/releases/download/v0.3.88/stakpak-linux-x86_64.tar.gz",
+              "cmd": "./stakpak",
+              "args": [
+                "acp"
+              ]
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/stakpak/agent/releases/download/v0.3.88/stakpak-windows-x86_64.zip",
+              "cmd": "./stakpak.exe",
+              "args": [
+                "acp"
+              ]
+            }
+          }
+        },
+        "installedCommand": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:stakpak/install-htLCVx/stakpak",
+        "installedArgs": [
+          "acp"
+        ]
+      },
+      "version": {
+        "registry": "0.3.88",
+        "installed": "0.3.88",
+        "implementationInspected": "v0.3.88源码；与registry/本机相同",
+        "commit": "d3eba6f502a79b993b826ef3ab4065eec9e38dfa",
+        "installedHandshakeAgentInfo": {
+          "name": "stakpak",
+          "title": "Stakpak Agent",
+          "version": "0.3.88"
+        },
+        "note": "本次未启动程序。当前缓存握手不是本次模型/账号/历史恢复实测。"
+      },
+      "source": {
+        "kind": "Stakpak官方原生ACP server（Rust）；非第三方adapter",
+        "repository": "https://github.com/stakpak/agent",
+        "registryURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/main/stakpak/agent.json"
+      },
+      "status": {
+        "list": {
+          "value": false,
+          "evidenceLevel": "source_and_official_probe",
+          "detail": "没有session/list实现或声明，官方矩阵method_not_found。"
+        },
+        "load": {
+          "value": "incomplete",
+          "evidenceLevel": "source",
+          "detail": "1779起实现仅解析UUID并current_session_id.set；返回models。未查该会话是否存在，未取历史，未恢复messages。"
+        },
+        "replay": {
+          "value": false,
+          "evidenceLevel": "source",
+          "detail": "load中无session/update或历史回放路径。loadSession:true声明不能兑现正文恢复。"
+        },
+        "coldPersistence": {
+          "value": null,
+          "evidenceLevel": "unknown",
+          "detail": "new创建云session，但ACP load未取其messages；云服务是否自行补上下文不可从本机源码确定。"
+        },
+        "continue": {
+          "value": "unverified",
+          "evidenceLevel": "source",
+          "detail": "prompt使用进程self.messages和current_session_id；仅设UUID能否让云端继续记忆未验证，不能承诺。"
+        },
+        "modelSwitch": {
+          "value": "partial",
+          "evidenceLevel": "source",
+          "detail": "仅L：set_session_model验证model后写进程全局self.model，完全忽略args.session_id；prompt使用该共享model。单会话可变更模型实现，多个session不能认为隔离。",
+          "code": "L",
+          "sessionScoped": false,
+          "configOptions": false
+        },
+        "authReuse": {
+          "value": true,
+          "evidenceLevel": "source",
+          "detail": "读取正常AppConfig、STAKPAK_API_KEY/所配providers；用户原Stakpak配置可复用。"
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "source",
+          "detail": "authenticate(stakpak)执行浏览器流程、校验key并由Agent保存正常config/重建client；无标准logout或账号状态广告；缺凭据时才广告login。"
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1570",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1601",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1690",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1779",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1802",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L1831",
+        "https://github.com/stakpak/agent/blob/v0.3.88/cli/src/commands/acp/server.rs#L2165",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/stakpak/agent.json",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/.protocol-matrix/latest.json"
+      ],
+      "limitations": [
+        "这不是本次真实失败实验，是精确发行源码可见的能力缺口。不能把上游云会话持久性猜成完整ACP恢复。",
+        "模型全局状态与current_session_id设计使并行多会话语义存疑，需限制产品承诺。",
+        "本次全程静态只读：没有启动Agent、登录、升级、模型请求、恢复真实会话、读用户配置或凭据。"
+      ],
+      "farfoldMapping": {
+        "history": "可按已知ID调用声明的load，但不能呈现为已恢复正文；无法导入list；不能在FarFold重建替代事件账本。",
+        "model": "FarFold缺旧L桥接；即便补齐仍须处理上游模型非会话隔离的约束。",
+        "account": "复用正常配置与authenticate，标准状态/退出未知。"
+      },
+      "historicalInitialize": {
+        "agentCapabilities": {
+          "loadSession": true,
+          "sessionCapabilities": {},
+          "auth": {}
+        },
+        "authMethods": [
+          {
+            "id": "stakpak",
+            "type": "agent",
+            "name": "Login to Stakpak"
+          }
+        ]
+      },
+      "officialMatrix20261005": {
+        "registryVersion": "0.3.88",
+        "initialize": {
+          "status": "success",
+          "code": null,
+          "message": null
+        },
+        "capabilities": {
+          "loadSession": true,
+          "sessionList": false,
+          "sessionFork": false,
+          "sessionResume": false,
+          "sessionStop": false,
+          "setModel": false
+        },
+        "sessionNew": {
+          "status": "auth_required",
+          "code": -32000,
+          "message": "Authentication required"
+        },
+        "methodProbes": {
+          "session/list": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/fork": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/resume": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/stop": {
+            "status": "method_not_found",
+            "code": -32601,
+            "message": "Method not found"
+          },
+          "session/set_model": {
+            "status": "invalid_params",
+            "code": -32602,
+            "message": "Invalid params"
+          }
+        },
+        "probedAt": "2026-10-05T12:18:53+00:00"
+      },
+      "inspectedLatest": {
+        "scope": "v0.3.88源码；与registry/本机相同",
+        "status": {
+          "list": {
+            "value": false,
+            "evidenceLevel": "source_and_official_probe",
+            "detail": "没有session/list实现或声明，官方矩阵method_not_found。"
+          },
+          "load": {
+            "value": "incomplete",
+            "evidenceLevel": "source",
+            "detail": "1779起实现仅解析UUID并current_session_id.set；返回models。未查该会话是否存在，未取历史，未恢复messages。"
+          },
+          "replay": {
+            "value": false,
+            "evidenceLevel": "source",
+            "detail": "load中无session/update或历史回放路径。loadSession:true声明不能兑现正文恢复。"
+          },
+          "coldPersistence": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "new创建云session，但ACP load未取其messages；云服务是否自行补上下文不可从本机源码确定。"
+          },
+          "continue": {
+            "value": "unverified",
+            "evidenceLevel": "source",
+            "detail": "prompt使用进程self.messages和current_session_id；仅设UUID能否让云端继续记忆未验证，不能承诺。"
+          },
+          "modelSwitch": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "仅L：set_session_model验证model后写进程全局self.model，完全忽略args.session_id；prompt使用该共享model。单会话可变更模型实现，多个session不能认为隔离。",
+            "code": "L",
+            "sessionScoped": false,
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "读取正常AppConfig、STAKPAK_API_KEY/所配providers；用户原Stakpak配置可复用。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate(stakpak)执行浏览器流程、校验key并由Agent保存正常config/重建client；无标准logout或账号状态广告；缺凭据时才广告login。"
+          }
+        },
+        "note": "这是已核公开参考实现，并非所有条目都等于厂商全渠道latest；不得覆盖不同安装版本。"
+      },
+      "currentInstalled": {
+        "version": "0.3.88",
+        "status": {
+          "list": {
+            "value": false,
+            "evidenceLevel": "source_and_official_probe",
+            "detail": "没有session/list实现或声明，官方矩阵method_not_found。"
+          },
+          "load": {
+            "value": "incomplete",
+            "evidenceLevel": "source",
+            "detail": "1779起实现仅解析UUID并current_session_id.set；返回models。未查该会话是否存在，未取历史，未恢复messages。"
+          },
+          "replay": {
+            "value": false,
+            "evidenceLevel": "source",
+            "detail": "load中无session/update或历史回放路径。loadSession:true声明不能兑现正文恢复。"
+          },
+          "coldPersistence": {
+            "value": null,
+            "evidenceLevel": "unknown",
+            "detail": "new创建云session，但ACP load未取其messages；云服务是否自行补上下文不可从本机源码确定。"
+          },
+          "continue": {
+            "value": "unverified",
+            "evidenceLevel": "source",
+            "detail": "prompt使用进程self.messages和current_session_id；仅设UUID能否让云端继续记忆未验证，不能承诺。"
+          },
+          "modelSwitch": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "仅L：set_session_model验证model后写进程全局self.model，完全忽略args.session_id；prompt使用该共享model。单会话可变更模型实现，多个session不能认为隔离。",
+            "code": "L",
+            "sessionScoped": false,
+            "configOptions": false
+          },
+          "authReuse": {
+            "value": true,
+            "evidenceLevel": "source",
+            "detail": "读取正常AppConfig、STAKPAK_API_KEY/所配providers；用户原Stakpak配置可复用。"
+          },
+          "authActions": {
+            "value": "partial",
+            "evidenceLevel": "source",
+            "detail": "authenticate(stakpak)执行浏览器流程、校验key并由Agent保存正常config/重建client；无标准logout或账号状态广告；缺凭据时才广告login。"
+          }
+        },
+        "evidence": "同版本公开tag/本机公开发行程序文本/闭源官方文档与缓存握手，见各项evidenceLevel。"
+      },
+      "statusScope": "currentInstalled；不同版本实现保留于inspectedLatest，不自动推导。"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "case": "01-account-key",
+    "viewport": [1280, 820],
+    "file": "01-account-key-1280.png",
+    "sha256": "edc9431c7a81d647de348fc506e52b5059573b92c3593889f37e7e95db27bae6",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/01-account-key.html",
+    "synthetic": true
+  },
+  {
+    "case": "13-single-terminal",
+    "viewport": [1280, 820],
+    "file": "13-single-terminal-1280.png",
+    "sha256": "6d1c96c05454ff62c305c84e7f51d3bc80a6f0ee84ba1aa7ceb03b5d54d0d740",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/13-single-terminal.html",
+    "synthetic": true
+  },
+  {
+    "case": "14-key-detail",
+    "viewport": [1280, 820],
+    "file": "14-key-detail-1280.png",
+    "sha256": "ceabcfb5368cb83401b65794c5f54b711e3000352b32e8e099426cde4ab598f8",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/14-key-detail.html",
+    "synthetic": true
+  },
+  {
+    "case": "15-api-old-auth",
+    "viewport": [1280, 820],
+    "file": "15-api-old-auth-1280.png",
+    "sha256": "8c081bf8d25e8cb4351d3862d46d9c9ee829563c76b0f223621149928606f4ef",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/15-api-old-auth.html",
+    "synthetic": true
+  },
+  {
+    "case": "16-program-ready",
+    "viewport": [1280, 820],
+    "file": "16-program-ready-1280.png",
+    "sha256": "343b18f917f83d137e19c5ead10df247ae74a1e404db4d7cc274dd3d7b6390ab",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/16-program-ready.html",
+    "synthetic": true
+  },
+  {
+    "case": "17-program-missing",
+    "viewport": [1280, 820],
+    "file": "17-program-missing-1280.png",
+    "sha256": "9c21bbec500e30eecf15c57d418e5af7758b2da6f4d473991c3a9c21d6f19e21",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/17-program-missing.html",
+    "synthetic": true
+  },
+  {
+    "case": "14-key-detail",
+    "viewport": [520, 780],
+    "file": "14-key-detail-520.png",
+    "sha256": "9ee38514896c46aa6f8bb21961dbbfd93baea28125d4d397249559b5db6ac1f1",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/14-key-detail.html",
+    "synthetic": true
+  },
+  {
+    "case": "16-program-ready",
+    "viewport": [520, 780],
+    "file": "16-program-ready-520.png",
+    "sha256": "064d67e4ec0c09ff5111890a30df2a16293c7055339cc77718af8c4de91665ad",
+    "source": "/tmp/farfold-ui-consistency-html-2026-10-03/16-program-ready.html",
+    "synthetic": true
+  }
+]

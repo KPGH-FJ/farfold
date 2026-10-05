@@ -1,11 +1,12 @@
 //! Explicit official configuration actions, separate from protocol authentication.
 //! No credential lookup, output persistence, hidden model checks or prompt dispatch.
-use std::{path::Path, sync::atomic::Ordering};
+use std::{io::Read as _, os::unix::fs::OpenOptionsExt as _, path::Path, sync::atomic::Ordering};
 
 use serde::Serialize;
 use tauri::{AppHandle, Manager as _, ipc::Channel};
 
 use super::manager::{AcpManager, validate_cwd_async};
+use super::recipes::{TerminalActionDeclaration, TerminalActionLaunch};
 use crate::{
     auth::{self, attempts},
     installations::Installation,
@@ -59,6 +60,92 @@ fn matching_registry_installation(row: &AgentRow, item: &Installation, data: &Pa
         && crate::agent_discovery::validate_executable_path(&row.command).is_ok()
 }
 
+fn exact_file(path: &Path) -> bool {
+    path.symlink_metadata()
+        .is_ok_and(|metadata| metadata.is_file())
+        && path.canonicalize().ok().as_deref() == Some(path)
+}
+
+/// The ordinary npm receipt owns the loader, not the selected shared Node.
+/// Reading its public manifest must not run a version command or prepare Node.
+fn matching_npm_installation(
+    row: &AgentRow,
+    item: &Installation,
+    data: &Path,
+    declaration: &TerminalActionDeclaration,
+) -> bool {
+    let TerminalActionLaunch::Npm {
+        package,
+        bin,
+        manifest_entry,
+        loader,
+    } = declaration.launch
+    else {
+        return false;
+    };
+    if item.agent_id != row.id
+        || item.command != row.command
+        || item.args != row.args
+        || item.source != "managed"
+        || item.program_only
+        || item.version != row.version
+        || crate::agent_discovery::validate_executable_path(&row.command).is_err()
+    {
+        return false;
+    }
+    let Some(root) = item.managed_root.as_deref().map(Path::new) else {
+        return false;
+    };
+    if crate::managed_paths::recorded_root(
+        data,
+        &row.id,
+        root,
+        crate::managed_paths::Layout::Agent,
+        false,
+    )
+    .is_none()
+        || Some(item.path.as_str()) != root.to_str()
+        || item.id != format!("{}:{}", row.id, root.display())
+    {
+        return false;
+    }
+    let package_dir = root.join("node_modules").join(package);
+    let loader = package_dir.join(loader);
+    if Some(row.args[0].as_str()) != loader.to_str() || !exact_file(&loader) {
+        return false;
+    }
+    let manifest_path = package_dir.join("package.json");
+    if !exact_file(&manifest_path) {
+        return false;
+    }
+    let Ok(file) = std::fs::File::options()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+        .open(&manifest_path)
+    else {
+        return false;
+    };
+    if !file.metadata().is_ok_and(|metadata| metadata.is_file()) {
+        return false;
+    }
+    const MAX_MANIFEST_BYTES: u64 = 64 * 1024;
+    let mut raw = Vec::new();
+    if file
+        .take(MAX_MANIFEST_BYTES + 1)
+        .read_to_end(&mut raw)
+        .is_err()
+        || raw.len() > MAX_MANIFEST_BYTES as usize
+    {
+        return false;
+    }
+    let Ok(manifest) = serde_json::from_slice::<serde_json::Value>(&raw) else {
+        return false;
+    };
+    manifest["name"].as_str() == Some(package)
+        && manifest["version"].as_str() == Some(declaration.version)
+        && manifest["bin"][bin].as_str() == Some(manifest_entry)
+}
+
 pub(crate) fn actions_for(
     store: &MetaStore,
     row: &AgentRow,
@@ -74,22 +161,37 @@ pub(crate) fn actions_for(
         .transpose()
         .map_err(|_| "无法核对配置程序来源，请重新查看")?
         .unwrap_or_default();
-    if !items
-        .iter()
-        .any(|item| matching_registry_installation(row, item, data))
-    {
-        return Ok(vec![]);
-    }
+    let mut args = match declaration.launch {
+        TerminalActionLaunch::Native { .. } => {
+            if !items
+                .iter()
+                .any(|item| matching_registry_installation(row, item, data))
+            {
+                return Ok(vec![]);
+            }
+            vec![]
+        }
+        TerminalActionLaunch::Npm { .. } => {
+            let mut selected = items.iter().filter(|item| {
+                item.agent_id == row.id && item.command == row.command && item.args == row.args
+            });
+            let Some(item) = selected.next() else {
+                return Ok(vec![]);
+            };
+            if selected.next().is_some() || !matching_npm_installation(row, item, data, declaration)
+            {
+                return Ok(vec![]);
+            }
+            vec![row.args[0].clone()]
+        }
+    };
+    args.extend(declaration.action_args.iter().map(|arg| (*arg).into()));
     Ok(vec![PreparationAction {
         id: declaration.id.into(),
         purpose: declaration.purpose,
         transport: "terminal",
         command: row.command.clone(),
-        args: declaration
-            .action_args
-            .iter()
-            .map(|arg| (*arg).into())
-            .collect(),
+        args,
         source_url: declaration.source_url.into(),
     }])
 }

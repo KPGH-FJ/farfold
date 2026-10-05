@@ -1,0 +1,15 @@
+{
+  "scope": "Farfold non-secret setup pages only; no terminal buffers, keys or inputs; actual installed render, not controlled mocks",
+  "files": {
+    "codex-program.png": "9882a9f8a7daeb7490bb788be5d0700771f5dddd591eedf6831cbb1230779355",
+    "codex-account.png": "98947720422c74f45790136303f24da5d03cab27d70aa591213365ae6ca91a1b",
+    "codex-account-repaired.png": "9490544c7041536fdfa33aa9d304e81e683e6f60901ff1c3724484f75f7b0b7a",
+    "codex-check-only.png": "a28d2147d3026f04118c085456f3cd392bdaa5f2cd48e053e1636a8f16b2d39f",
+    "pi-account.png": "d48922c0a364a2bc4f042a1950ded441a5ae0ae338dcf199161b2a6355cd69d7",
+    "pi-terminal-step.png": "1127fd33eebf8b57a8a5755eab3c7e2dc5bdf0cfe1441fafcffd3bdf0dfd81bf",
+    "pi-preview-final.png": "d5159299eea65d6133d72f954dc5dfe53300cefe0dd4e00bbe7184d2e7ff2dee",
+    "pi-finished-final.png": "c3f1a2039023956e8ce2937075fab6a54cc9f0b6e0ddded403944d94c1576c91",
+    "pi-model-final.png": "af9029b0f76a866583af8114f1492081da6dae49a358b95a6126dd35c36daf88",
+    "codex-check-only-final.png": "23883a94d341c0c53963a25f51f1293df6edeb6f45e7e06baba4d5171ec57544"
+  }
+}

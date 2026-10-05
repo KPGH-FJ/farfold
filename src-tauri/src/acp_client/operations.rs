@@ -17,6 +17,8 @@ use std::{
 use tokio::sync::{oneshot, watch};
 
 #[cfg(test)]
+mod auth_result_tests;
+#[cfg(test)]
 mod list_result_tests;
 mod open_result;
 pub(crate) use open_result::OpenDelivery;
@@ -42,6 +44,7 @@ mod tests {
         let task_life = life.clone();
         let task = tokio::spawn(async move {
             let _account = account;
+            let lease = task_life.operation("authentication".into()).unwrap();
             authentication_result(
                 reply,
                 task_life,
@@ -49,6 +52,7 @@ mod tests {
                 Arc::new(move || {
                     let _ = unknown.send(());
                 }),
+                lease,
                 async { result.await.map_err(|_| "fixture".into()) },
             )
             .await;
@@ -59,6 +63,7 @@ mod tests {
             .unwrap();
         assert!(receive.try_recv().is_err());
         assert!(life.work().is_err());
+        assert!(life.operation("authentication".into()).is_err());
         finish.send(()).unwrap();
         receive.await.unwrap().unwrap();
         task.await.unwrap();
@@ -287,10 +292,12 @@ async fn authentication_result(
     life: Arc<ConnectionLife>,
     deadline: tokio::time::Instant,
     on_unknown: Arc<dyn Fn() + Send + Sync>,
+    lease: OperationLease,
     future: impl std::future::Future<Output = Result<(), String>>,
 ) {
     let mut stop = life.stop_receiver();
     if *stop.borrow() || tokio::time::Instant::now() >= deadline {
+        drop(lease);
         let _ = reply.send(Err("账号操作未开始，请重试".into()));
         return;
     }
@@ -308,6 +315,9 @@ async fn authentication_result(
             }
         }
     };
+    // The receiver may immediately retry on another executor. Unknown outcomes
+    // keep this lease through the final wait; closing transfers it to process reap.
+    drop(lease);
     let _ = reply.send(outcome);
 }
 
@@ -328,21 +338,34 @@ pub(crate) async fn run(
     match command {
         ManagerCommand::Authenticate {
             method_id,
+            key,
             operation,
             on_unknown,
             result,
         } => {
             if !operation.interested() {
+                drop(_lease);
                 let _ = result.send(Err("AUTH_CANCELLED".into()));
                 return;
             }
-            authentication_result(result, ops.life.clone(), deadline, on_unknown, async {
-                operation
-                    .request(&cx, cx.send_request(AuthenticateRequest::new(method_id)))
-                    .await
-                    .map(|_| ())
-                    .map_err(authentication_error)
-            })
+            authentication_result(
+                result,
+                ops.life.clone(),
+                deadline,
+                on_unknown,
+                _lease,
+                async move {
+                    let request = match key {
+                        Some(key) => key.into_request(method_id),
+                        None => AuthenticateRequest::new(method_id),
+                    };
+                    operation
+                        .request(&cx, cx.send_request(request))
+                        .await
+                        .map(|_| ())
+                        .map_err(authentication_error)
+                },
+            )
             .await;
         }
         ManagerCommand::Logout {
@@ -351,16 +374,24 @@ pub(crate) async fn run(
             result,
         } => {
             if !operation.interested() {
+                drop(_lease);
                 let _ = result.send(Err("AUTH_CANCELLED".into()));
                 return;
             }
-            authentication_result(result, ops.life.clone(), deadline, on_unknown, async {
-                operation
-                    .request(&cx, cx.send_request(LogoutRequest::new()))
-                    .await
-                    .map(|_| ())
-                    .map_err(authentication_error)
-            })
+            authentication_result(
+                result,
+                ops.life.clone(),
+                deadline,
+                on_unknown,
+                _lease,
+                async {
+                    operation
+                        .request(&cx, cx.send_request(LogoutRequest::new()))
+                        .await
+                        .map(|_| ())
+                        .map_err(authentication_error)
+                },
+            )
             .await;
         }
         ManagerCommand::ListSessions {

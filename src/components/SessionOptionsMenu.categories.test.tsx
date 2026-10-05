@@ -15,6 +15,13 @@ import {
   type ConfigOptionView,
 } from "../runtime/sessions";
 
+// rows() invokes OptionRow directly to inspect its callbacks. Read the real
+// authentication snapshot without requiring a mounted React dispatcher here.
+vi.mock("react", async (original) => ({
+  ...(await original<typeof import("react")>()),
+  useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
+}));
+
 const option = (id: string, category: string): ConfigOptionView => ({
   id,
   name: id,

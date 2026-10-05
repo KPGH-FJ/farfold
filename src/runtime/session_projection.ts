@@ -7,6 +7,8 @@ import {
 } from "./completion";
 import { hasAgentReply, roundResult, type RoundResult } from "./round_result";
 import { pauseQueue } from "./queue";
+import { forgetConfigurationPause } from "./configuration_pause";
+import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
 import { normalizeMessageAttachment } from "./message_attachments";
 import type {
@@ -618,7 +620,8 @@ export function applyTurnEnd(
 }
 
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
-export function applyConnectionLost(s: ThreadState): void {
+export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
+  forgetConfigurationPause(s);
   s.connectionOutcomeUnknown = Boolean(
     s.connectionOutcomeUnknown ||
     s.running ||
@@ -633,6 +636,7 @@ export function applyConnectionLost(s: ThreadState): void {
   );
   s.connectionLost = true;
   s.browserReadRequestId = null;
+  s.connectionCloseReason = connectionCloseReason(reason);
   s.stopping = false;
   s.stopUnconfirmed = false;
   if (s.submitting && s.queued[0]) {

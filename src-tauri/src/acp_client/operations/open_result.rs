@@ -2,7 +2,7 @@
 use super::{Operation, execute};
 use crate::acp_client::{
     lifecycle::{ConnectionLife, OperationLease},
-    pump::{OpenedSession, SessionControl, SessionMap},
+    pump::{OpenedSession, SessionMap},
 };
 use std::sync::Arc;
 use tokio::sync::oneshot;
@@ -35,7 +35,7 @@ impl Drop for OpenDelivery {
                 .ok()
                 .and_then(|mut entries| entries.remove(&opened.session_id));
             if let Some(entry) = entry {
-                let _ = entry.control.send(SessionControl::Shutdown);
+                entry.abandon();
             }
         }
         // OperationLease retains its existing CLOSING transfer until process reap.

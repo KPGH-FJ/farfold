@@ -1,4 +1,3 @@
-import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { BROWSER_WORKSPACE_STRINGS } from "./browser_workspace_strings";
 import { describe, expect, it } from "vitest";
 import { COMPOSER_CONTROLS } from "./composer_strings";
@@ -8,6 +7,7 @@ import { LIBRARY } from "./library_strings";
 import { ACCESS_STRINGS } from "./access_strings";
 import { IMPORT_STRINGS } from "./import_strings";
 import { STRINGS } from "./strings";
+import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { WORKSPACE_STRINGS } from "./workspace_strings";
 import { PREPARATION_STRINGS } from "./preparation_strings";
 import { PREPARATION_ACTION_STRINGS } from "./preparation_action_strings";
@@ -20,6 +20,11 @@ import { CUSTOM_AGENT } from "./custom_agent_strings";
 import { SETUP_PRESENTATION } from "./setup_presentation_strings";
 import { SETTINGS_PRESENTATION } from "./settings_presentation_strings";
 import { NEW_CONVERSATION_PICKER_STRINGS } from "./new_conversation_picker_strings";
+import { METHOD_API_KEY_STRINGS } from "./method_api_key_strings";
+import { CONNECTION_STRINGS } from "./r5_auth_strings";
+import { R5_SERVICE_STRINGS } from "./r5_service_strings";
+import { R5_PROGRAM_STRINGS } from "./r5_program_strings";
+import { R5_SETUP_STRINGS } from "./r5_setup_strings";
 
 // PRODUCT.md §5 禁用词：不得出现在任何用户可见字符串中。
 const FORBIDDEN =
@@ -68,6 +73,11 @@ describe("strings", () => {
       SETUP_PRESENTATION,
       SETTINGS_PRESENTATION,
       NEW_CONVERSATION_PICKER_STRINGS,
+      METHOD_API_KEY_STRINGS,
+      CONNECTION_STRINGS,
+      R5_SERVICE_STRINGS,
+      R5_PROGRAM_STRINGS,
+      R5_SETUP_STRINGS,
     },
     [],
   );

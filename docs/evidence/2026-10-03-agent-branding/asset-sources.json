@@ -1,0 +1,234 @@
+[
+  {
+    "id": "amp-acp",
+    "path": "public/agents/amp-acp.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/amp-acp/icon.svg",
+    "gitBlob": "314881aff83c38515067b6e635ab559f32f2ea40",
+    "unchangedSvg": true
+  },
+  {
+    "id": "antigravity-acp",
+    "path": "public/agents/antigravity-acp.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/antigravity-acp/icon.svg",
+    "gitBlob": "02f65dab751044bd705c816989ba7422d0cf869d",
+    "unchangedSvg": true
+  },
+  {
+    "id": "auggie",
+    "path": "public/agents/auggie.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/auggie/icon.svg",
+    "gitBlob": "215107744a793e6e87fab47d1e9328ec22c32bcf",
+    "unchangedSvg": true
+  },
+  {
+    "id": "autohand",
+    "path": "public/agents/autohand.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/autohand/icon.svg",
+    "gitBlob": "f3bc983c4d92de13f10d035c8922480edc629f7a",
+    "unchangedSvg": true
+  },
+  {
+    "id": "claude-acp",
+    "path": "public/agents/claude-acp.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/claude-acp/icon.svg",
+    "gitBlob": "98dd82db1b3104550cc568fdbd351241ccf16bab",
+    "unchangedSvg": true
+  },
+  {
+    "id": "cline",
+    "path": "public/agents/cline.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/cline/icon.svg",
+    "gitBlob": "aeeafbc61e7c9357dbf45e5e87871c43bc035c7d",
+    "unchangedSvg": true
+  },
+  {
+    "id": "codebuddy-code",
+    "path": "public/agents/codebuddy-code.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/codebuddy-code/icon.svg",
+    "gitBlob": "735fd352aacfe6850c8acea7ac4d33e8829bafcc",
+    "unchangedSvg": true
+  },
+  {
+    "id": "codex-acp",
+    "path": "public/agents/codex-acp.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/codex-acp/icon.svg",
+    "gitBlob": "42c78a06cc4d8af65ba944ba330cfdde0a90344e",
+    "unchangedSvg": true
+  },
+  {
+    "id": "corust-agent",
+    "path": "public/agents/corust-agent.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/corust-agent/icon.svg",
+    "gitBlob": "9f30636cb00302f75cd9a28cb2d328e4c4c85c41",
+    "unchangedSvg": true
+  },
+  {
+    "id": "cursor",
+    "path": "public/agents/cursor.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/cursor/icon.svg",
+    "gitBlob": "4ca0c2501bd113708892078339b31ed392458de1",
+    "unchangedSvg": true
+  },
+  {
+    "id": "devin",
+    "path": "public/agents/devin.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/devin/icon.svg",
+    "gitBlob": "43170056ac64887f46e0c579b03018674f9280c8",
+    "unchangedSvg": true
+  },
+  {
+    "id": "dimcode",
+    "path": "public/agents/dimcode.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/dimcode/icon.svg",
+    "gitBlob": "1fa31ce884b593925338a776b45f2fcfa08f9636",
+    "unchangedSvg": true
+  },
+  {
+    "id": "dirac",
+    "path": "public/agents/dirac.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/dirac/icon.svg",
+    "gitBlob": "4fbb06ceeaa23efb809ea81c62c97b58ba31ebf6",
+    "unchangedSvg": true
+  },
+  {
+    "id": "factory-droid",
+    "path": "public/agents/factory-droid.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/factory-droid/icon.svg",
+    "gitBlob": "5c6fb8d1ff01115301c34a5a2917310db7030d13",
+    "unchangedSvg": true
+  },
+  {
+    "id": "fast-agent",
+    "path": "public/agents/fast-agent.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/fast-agent/icon.svg",
+    "gitBlob": "a07fab2886c517b9837fcd9d440359df66e3f191",
+    "unchangedSvg": true
+  },
+  {
+    "id": "gemini",
+    "path": "public/agents/gemini.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/gemini/icon.svg",
+    "gitBlob": "588d89c52ab4effa25092b5face6c04ba8a3a979",
+    "unchangedSvg": true
+  },
+  {
+    "id": "github-copilot-cli",
+    "path": "public/agents/github-copilot-cli.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/github-copilot-cli/icon.svg",
+    "gitBlob": "626d33badc48ab7d0cc886b811a7695664463ee8",
+    "unchangedSvg": true
+  },
+  {
+    "id": "goose",
+    "path": "public/agents/goose.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/goose/icon.svg",
+    "gitBlob": "c4928854263e6ae6bdda78d880be1c823f80121d",
+    "unchangedSvg": true
+  },
+  {
+    "id": "grok-build",
+    "path": "public/agents/grok-build.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/grok-build/icon.svg",
+    "gitBlob": "69f573cba9f4d3084a875573ca2f22c69b900ab5",
+    "unchangedSvg": true
+  },
+  {
+    "id": "junie",
+    "path": "public/agents/junie.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/junie/icon.svg",
+    "gitBlob": "63b60e8f3a986b26e5d1391e33442c74e2d14d71",
+    "unchangedSvg": true
+  },
+  {
+    "id": "kilo",
+    "path": "public/agents/kilo.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/kilo/icon.svg",
+    "gitBlob": "8af6e96f34d2f4216a69ed2f7eb89d2244251ab7",
+    "unchangedSvg": true
+  },
+  {
+    "id": "kimchi",
+    "path": "public/agents/kimchi.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/kimchi/icon.svg",
+    "gitBlob": "081af70548b56596e7efac4e54b89aea5ece31bb",
+    "unchangedSvg": true
+  },
+  {
+    "id": "kimi",
+    "path": "public/agents/kimi.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/kimi/icon.svg",
+    "gitBlob": "4f7547cf79f8cf01af399b4e39eb1cdb6132d75b",
+    "unchangedSvg": true
+  },
+  {
+    "id": "minimax-code",
+    "path": "public/agents/minimax-code.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/minimax-code/icon.svg",
+    "gitBlob": "8b33c7709e2b627000425b4c5527f1a5fea0b6a8",
+    "unchangedSvg": true
+  },
+  {
+    "id": "mistral-vibe",
+    "path": "public/agents/mistral-vibe.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/mistral-vibe/icon.svg",
+    "gitBlob": "b13631b96d92a554899f17e674ce9796974fd1d3",
+    "unchangedSvg": true
+  },
+  {
+    "id": "nova",
+    "path": "public/agents/nova.svg",
+    "source": "https://github.com/Compass-Agentic-Platform/nova/blob/main/assets/nova.svg",
+    "gitBlob": "6f535716611b2efad7d62fccc159c0a564fae6dc",
+    "unchangedSvg": false,
+    "encodingNormalization": "Original Latin-1 bytes converted to valid UTF-8; only three degree symbols in comments change byte encoding. SVG geometry, colors and visible content unchanged."
+  },
+  {
+    "id": "opencode",
+    "path": "public/agents/opencode.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/opencode/icon.svg",
+    "gitBlob": "a38d4cf5a96938585022f99f64d051c76572ebcb",
+    "unchangedSvg": true
+  },
+  {
+    "id": "pi-acp",
+    "path": "public/agents/pi-acp.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/pi-acp/icon.svg",
+    "gitBlob": "68ea8fd7f713842f4971e6a2b0627b36b4f5c3f5",
+    "unchangedSvg": true
+  },
+  {
+    "id": "poolside",
+    "path": "public/agents/poolside.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/poolside/icon.svg",
+    "gitBlob": "91de4c46d408a80cde5d1c67093694e6e01b9e5b",
+    "unchangedSvg": true
+  },
+  {
+    "id": "qoder",
+    "path": "public/agents/qoder.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/qoder/icon.svg",
+    "gitBlob": "417d83693dd80b015be94b0058e998e74639afd6",
+    "unchangedSvg": true
+  },
+  {
+    "id": "qwen-code",
+    "path": "public/agents/qwen-code.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/qwen-code/icon.svg",
+    "gitBlob": "78f88f2831cd84645125caf73cd2369362fe4592",
+    "unchangedSvg": true
+  },
+  {
+    "id": "sigit",
+    "path": "public/agents/sigit.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/sigit/icon.svg",
+    "gitBlob": "334fc95cbabc5fde4a3d41bca5f6f3f713bcd494",
+    "unchangedSvg": true
+  },
+  {
+    "id": "stakpak",
+    "path": "public/agents/stakpak.svg",
+    "source": "https://github.com/agentclientprotocol/registry/blob/main/stakpak/icon.svg",
+    "gitBlob": "64425076ed1841880cabb855a8f0c645a57a9023",
+    "unchangedSvg": true
+  }
+]

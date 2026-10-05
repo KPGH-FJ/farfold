@@ -1,0 +1,21 @@
+{
+  "atUtc": "2026-10-03T01:49:21.081386+00:00",
+  "processes": {
+    "scope": "PID, parent PID and executable basename only; no args/env/terminal",
+    "appPids": [
+      77499
+    ],
+    "descendants": [
+      {
+        "pid": 77499,
+        "ppid": 1,
+        "program": "farfold"
+      }
+    ]
+  },
+  "persistedUnsentStateKnown": true,
+  "persistedSendPendingCount": 0,
+  "persistedUnsentStateSha256": "1454a551dc221bc5780ae9364af7048d7d337267378edb49b2859cc54d41572d",
+  "normalExitWaitsForLatestUnsentSave": true,
+  "safeToRequestNormalExit": true
+}

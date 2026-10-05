@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { CheckCircle, ComputerTower, Plugs, X } from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
-import {
-  ACCESS_STRINGS as S,
-  installationUnavailableHint,
-  installationUnavailableLabel,
-} from "../runtime/access_strings";
+import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import { programProgress } from "../runtime/program_progress";
 import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
@@ -24,15 +20,17 @@ import {
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { AgentAuthSection } from "./AgentAuthSection";
-import {
-  ProgramManager,
-  programSummary,
-  useProgramInventory,
-} from "./ProgramManager";
+import { useSetupAuthFocus } from "./useSetupAuthFocus";
+import { useProgramInventory } from "./ProgramManager";
+import { agentSetupProgram } from "./AgentSetupProgram";
 import { AgentLogo } from "./AgentLogo";
-import { ServicePicker, type ServiceChoice } from "./ServicePicker";
+import type { ServiceChoice } from "./ServicePicker";
+import { AgentServiceSection } from "./AgentServiceSection";
+import { ServiceModelPicker } from "./ServiceModelPicker";
+import { apiConfigurationState } from "../runtime/service_capability";
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
+import { AgentModelReadNotice } from "./AgentModelReadNotice";
 import { additionalModelRows } from "./ModelConfigRows";
 import { protectedConfigOptions } from "../runtime/protected_config";
 import {
@@ -48,23 +46,25 @@ import {
   preparationMatches,
   preparationContextMatches,
   preparationRequestMatches,
+  preparationReadMatches,
   preparationNeedsExplicitRead,
+  preparationPhaseLabel,
   testInProgress,
   usePreparation,
 } from "../runtime/agent_preparation";
 import { useWorkPolicy } from "../runtime/work_policy";
 import { authActive } from "../runtime/auth_activity";
+import { authenticationWorkBlockers } from "../runtime/auth_blockers";
 import { SETUP_PRESENTATION as P } from "../runtime/setup_presentation_strings";
+import { R5_SETUP_STRINGS as R } from "../runtime/r5_setup_strings";
+import type { AgentAccessPrimary } from "../runtime/access_primary";
 import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { SENDING_STRINGS } from "../runtime/sending_strings";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import type { AccountRegistrationProgress } from "../runtime/account_registration";
 import type { InstallationInput } from "../runtime/installation_input";
-import {
-  AgentInstallOptions,
-  useInstallationReview,
-} from "./AgentInstallOptions";
+import { useInstallationReview } from "./AgentInstallOptions";
 import "../agent-setup-presentation.css";
 
 export interface AgentSetupSelection {
@@ -80,6 +80,7 @@ export interface AgentSetupProgress {
   accessStage?: "method" | "account" | "api";
   selection?: AgentSetupSelection;
   authMethodId?: string;
+  preparationActionId?: string;
   registration?: AccountRegistrationProgress;
   installationInput?: InstallationInput;
   /** A rejected persisted installation field must not become implicit omission. */
@@ -95,6 +96,7 @@ export const initialAgentSetupProgress = (
       ? 2
       : 1,
   choice: selection?.service ? "api" : "existing",
+  accessStage: selection?.service ? "api" : "method",
   selection,
 });
 
@@ -147,17 +149,29 @@ export function AgentSetup({
   const choice = conversation?.sourceContext ? "api" : setupProgress.choice;
   const connected = card.status === "connected";
   const setStep = (value: number) =>
-    onProgress({ ...setupProgress, step: value });
+    updateAccess({
+      step: value,
+      ...(value === 1 && step === 0 && !conversation && !authBusy
+        ? { accessStage: "method" as const }
+        : {}),
+    });
   const selection = setupProgress.selection ?? EMPTY_SELECTION;
   const installation = useInstallationReview(setupProgress, onProgress);
-  const setChoice = (value: AccessChoice) => {
-    if (conversation) return;
+  const setChoice = (
+    value: AccessChoice,
+    authMethodId?: string,
+    preparationActionId?: string,
+  ) => {
+    if (conversation || authBusy || operationPending) return;
+    setServiceEditing(false);
     if (value !== choice && (value === "api" || choice === "api"))
       controller.invalidate();
-    onProgress({
-      ...setupProgress,
+    updateAccess({
       choice: value,
-      accessStage: value === "api" ? "api" : "account",
+      accessStage: "method",
+      authMethodId,
+      preparationActionId,
+      registration: undefined,
       selection:
         value === "api" || !selection.service
           ? selection
@@ -165,25 +179,42 @@ export function AgentSetup({
     });
   };
   const setService = (service: ServiceChoice | null) => {
-    if (conversation) return;
+    if (conversation || authBusy || operationPending) return;
+    setServiceEditing(false);
     controller.invalidate();
-    onProgress({ ...setupProgress, selection: { service, config: {} } });
+    updateAccess({ selection: { service, config: {} } });
   };
   const [error, setError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [modelChanging, setModelChanging] = useState(false);
   const [removeConfirm, setRemoveConfirm] = useState(false);
+  const [serviceEditing, setServiceEditing] = useState(false);
+  useEffect(() => setServiceEditing(false), [card.id]);
   const modelChange = useRef(0);
   const latestEntry = useRef("");
+  const modelReadConfirmation = useRef(false);
   const latestProgress = useRef(setupProgress);
+  const modelNavigation = useRef(false);
   latestProgress.current = setupProgress;
+  const updateAccess = (change: Partial<AgentSetupProgress>) => {
+    const next = { ...latestProgress.current, ...change };
+    latestProgress.current = next;
+    onProgress(next);
+  };
   const [reportedAuthBusy, setAuthBusy] = useState(false);
+  const [accountPrimary, setAccountPrimary] =
+    useState<AgentAccessPrimary | null>(null);
   const authJob = useAuthenticationActivity(card.id);
   const authBusy = reportedAuthBusy || authActive(authJob);
   const step =
     connected || authJob || authBusy ? Math.min(setupProgress.step, 2) : 0;
-  const [capability, setCapability] = useState<ServiceCapability | null>(null);
+  const [loadedCapability, setCapability] = useState<{
+    agentId: string;
+    value: ServiceCapability;
+  } | null>(null);
+  const capability =
+    loadedCapability?.agentId === card.id ? loadedCapability.value : null;
   const [capabilityError, setCapabilityError] = useState(false);
   const [revision, setRevision] = useState(0);
   const [services, setServices] = useState<Credential[]>([]);
@@ -194,7 +225,6 @@ export function AgentSetup({
       ? WORKSPACE_STRINGS.normalConversation
       : (locationLabel ?? cwd);
   const [directoryRevision, retryDirectory] = useState(0);
-  const connectingFromProgram = useRef(false);
   const [prerequisitesReady, setPrerequisitesReady] = useState(false);
   const [installPrerequisitesReady, setInstallPrerequisitesReady] =
     useState(false);
@@ -221,7 +251,7 @@ export function AgentSetup({
   const selectedService = services.find(
     (item) => item.id === (conversation?.service?.id ?? selection.service?.id),
   );
-  const serviceValid =
+  const sourceValid =
     choice !== "api" ||
     !!(
       selection.service &&
@@ -229,8 +259,15 @@ export function AgentSetup({
       !selectedService.deleting &&
       selectedService.revision === selection.service.revision &&
       capability?.apiTypes.includes(selectedService.apiType) &&
-      selectedService.models.includes(selection.service.model)
+      selectedService.models.length
     );
+  const modelValid =
+    sourceValid &&
+    (choice !== "api" ||
+      !!(
+        selection.service?.model &&
+        selectedService?.models.includes(selection.service.model)
+      ));
 
   useEffect(() => {
     let current = true;
@@ -259,7 +296,7 @@ export function AgentSetup({
       controller.invalidate();
   }, [program, connected, controller, conversation]);
   const currentInput =
-    targetCwd && !conversation
+    targetCwd && !conversation && modelValid
       ? {
           agentId: card.id,
           agentName: card.name,
@@ -267,6 +304,7 @@ export function AgentSetup({
           program,
           service: selection.service,
           config: selection.config,
+          readOptionsOnly: true,
         }
       : null;
   const entryKey = JSON.stringify(currentInput);
@@ -274,7 +312,15 @@ export function AgentSetup({
   const sameSource =
     !!currentInput &&
     (preparationMatches(test, currentInput) ||
+      preparationReadMatches(test, currentInput) ||
       (modelChanging && preparationContextMatches(test, currentInput)));
+  const selectionMismatch =
+    sameSource &&
+    !!testThread &&
+    !test.readError &&
+    !modelChanging &&
+    !!currentInput &&
+    !preparationMatches(test, currentInput);
   const explicitReadRequired =
     !!currentInput && preparationNeedsExplicitRead(test, currentInput);
   const modelReadFailed =
@@ -305,36 +351,68 @@ export function AgentSetup({
     (!!targetCwd &&
       targetCwd !== cwd &&
       authenticationRequired(authentication, card.id, targetCwd, source));
-  useEffect(() => {
-    if (
-      active &&
-      connected &&
-      needsAuth &&
-      !source &&
-      (step !== 1 ||
-        choice !== "login" ||
-        setupProgress.accessStage !== "account")
-    )
-      onProgress({
-        ...setupProgress,
-        step: 1,
-        choice: "login",
-        accessStage: "account",
-      });
-    // Focus each newly reported requirement once. Tabs remain accessible so
-    // users can inspect their model, program or another supported source.
-  }, [active, connected, needsAuth, source, card.id, cwd]);
-  const apiAvailable = !!capability?.apiTypes.length;
+  useSetupAuthFocus({
+    active,
+    connected,
+    required: needsAuth,
+    agentId: card.id,
+    cwd,
+    source,
+    progress: setupProgress,
+    onProgress,
+  });
+  const apiState = apiConfigurationState(capability);
+  const apiAvailable = apiState === "supported";
+  const accountStage =
+    setupProgress.accessStage ??
+    (choice === "api"
+      ? "api"
+      : setupProgress.authMethodId || setupProgress.preparationActionId
+        ? "account"
+        : "method");
+  const accountChecked =
+    choice !== "api" &&
+    accountStage === "account" &&
+    authJob?.phase === "completed" &&
+    authJob.checked &&
+    authJob.target.agentId === card.id &&
+    (authJob.target.cwd === cwd || authJob.target.cwd === targetCwd) &&
+    (authJob.target.source ?? null) === (source ?? null) &&
+    (authJob.operation.kind !== "authentication" ||
+      !["logout", "switch_account"].includes(
+        authJob.operation.intent ?? "login",
+      )) &&
+    ((choice === "login" &&
+      authJob.operation.kind === "authentication" &&
+      authJob.operation.methodId === setupProgress.authMethodId) ||
+      (choice === "existing" &&
+        authJob.operation.kind === "preparation" &&
+        authJob.operation.actionId === setupProgress.preparationActionId));
+  const canContinueModel =
+    (choice === "api" &&
+      accountStage === "api" &&
+      sourceValid &&
+      !serviceEditing) ||
+    accountChecked ||
+    (choice === "existing" &&
+      accountStage === "account" &&
+      !setupProgress.authMethodId &&
+      !setupProgress.preparationActionId &&
+      !needsAuth);
   const returnBlocked =
     busy ||
     modelReadFailed ||
+    selectionMismatch ||
     explicitReadRequired ||
     modelChanging ||
     authBusy ||
     !cwd ||
     !connected ||
     !prerequisitesReady ||
-    !serviceValid ||
+    !modelValid ||
+    (!conversation &&
+      step === 2 &&
+      (!sameSource || !testThread || !!test.readError)) ||
     needsAuth ||
     operationPending ||
     (sameSource &&
@@ -342,29 +420,22 @@ export function AgentSetup({
         !!testThread?.sourceError ||
         !!testThread?.configError ||
         !!testThread?.configuring));
-  const nextStep = intent === "use" && step < 2 ? step + 1 : null;
+  const nextStep =
+    step === 0 || (!conversation && step === 1) ? step + 1 : null;
   const nextBlocked =
     busy ||
     authBusy ||
     operationPending ||
     !connected ||
     !prerequisitesReady ||
-    (step === 1 && (!serviceValid || needsAuth));
-  useEffect(() => {
-    if (
-      connectingFromProgram.current &&
-      connected &&
-      prerequisitesReady &&
-      !busy
-    ) {
-      connectingFromProgram.current = false;
-      if (intent === "use" && !needsAuth && setupProgress.step === 0)
-        setStep(1);
-    }
-  }, [connected, prerequisitesReady, busy, needsAuth, step]);
+    (step === 1 && (!sourceValid || needsAuth));
+  const canOpenModels =
+    canContinueModel && !nextBlocked && !!cwd && sourceValid && !needsAuth;
+  modelNavigation.current = canOpenModels;
   useEffect(() => {
     if (
       sameSource &&
+      !selectionMismatch &&
       !modelReadFailed &&
       !test.readError &&
       !modelChanging &&
@@ -378,6 +449,7 @@ export function AgentSetup({
       });
   }, [
     sameSource,
+    selectionMismatch,
     modelReadFailed,
     modelChanging,
     authBusy,
@@ -398,7 +470,7 @@ export function AgentSetup({
       step !== 2 ||
       !connected ||
       !prerequisitesReady ||
-      !serviceValid ||
+      !modelValid ||
       !cwd ||
       !work.enabled(card.id)
     )
@@ -416,7 +488,7 @@ export function AgentSetup({
     step,
     connected,
     prerequisitesReady,
-    serviceValid,
+    modelValid,
     targetCwd,
     cwd,
     work.ready,
@@ -427,9 +499,9 @@ export function AgentSetup({
     controller,
   ]);
   useEffect(() => {
-    if (sameSource && choice === "api" && capability !== null && !serviceValid)
+    if (sameSource && choice === "api" && capability !== null && !modelValid)
       controller.invalidate();
-  }, [sameSource, choice, capability, serviceValid, controller]);
+  }, [sameSource, choice, capability, modelValid, controller]);
 
   useEffect(() => {
     const element = dialog.current;
@@ -449,24 +521,29 @@ export function AgentSetup({
   }, [active]);
   useEffect(() => {
     let active = true;
+    const agentId = card.id;
     setCapabilityError(false);
     setCapability(null);
-    void Promise.all([getServiceCapabilities(card.id), listCredentials()])
-      .then(([result, records]) => {
-        if (active) {
-          setCapability(result);
-          setServices(records);
-        }
-      })
-      .catch(() => {
-        if (active) setCapabilityError(true);
-      });
+    setServices([]);
+    void Promise.allSettled([
+      getServiceCapabilities(agentId),
+      listCredentials(),
+    ]).then(([result, records]) => {
+      if (!active) return;
+      if (result.status === "fulfilled")
+        setCapability({ agentId, value: result.value });
+      if (records.status === "fulfilled") setServices(records.value);
+      setCapabilityError(
+        result.status === "rejected" || records.status === "rejected",
+      );
+    });
     return () => {
       active = false;
     };
   }, [card.id, card.status, revision]);
 
   const connect = async (reconnect = false) => {
+    if (!reconnect && (busy || authBusy || operationPending)) return;
     const installInput = needsProgramInstall ? installation.read() : undefined;
     if (
       !reconnect &&
@@ -474,6 +551,8 @@ export function AgentSetup({
       (!installPrerequisitesReady || installInput === null)
     )
       return;
+    if (!reconnect && step === 0 && setupProgress.step === 1 && !conversation)
+      updateAccess({ step: 0, accessStage: "method" });
     setConnecting(true);
     setError(null);
     try {
@@ -483,7 +562,6 @@ export function AgentSetup({
         (await invoke<string>("app_default_working_directory"));
       if (reconnect) await agents.reconnect(card, target);
       else {
-        connectingFromProgram.current = step === 0;
         if (needsProgramInstall && installInput)
           await agents.connect(card, target, installInput ?? undefined);
         else await agents.connect(card, target);
@@ -496,9 +574,35 @@ export function AgentSetup({
     }
   };
   const openApi = () => {
+    if (apiState === "unsupported") return;
     // A modal must leave the top layer before the settings page can be used.
     dialog.current?.close();
     onOpenApi(card.id);
+  };
+  const disconnect = async (): Promise<boolean> => {
+    if (busy || authBusy || operationPending) return false;
+    setConnecting(true);
+    setError(null);
+    try {
+      if (
+        authenticationWorkBlockers(
+          card.id,
+          threads.getSnapshot().threads.values(),
+        ).length
+      )
+        throw new Error(STRINGS.credentials.activeTasks);
+      const disconnected = await invoke<boolean>("agent_disconnect", {
+        agentId: card.id,
+      });
+      await agents.refresh();
+      if (disconnected) controller.invalidate();
+      return disconnected;
+    } catch (reason) {
+      setError(uiError(reason, STRINGS.repair.requestFailed));
+      return false;
+    } finally {
+      setConnecting(false);
+    }
   };
   const close = onClose;
   const prepareAgain = () => {
@@ -562,22 +666,11 @@ export function AgentSetup({
     !operationPending &&
     connected &&
     prerequisitesReady &&
-    serviceValid &&
+    modelValid &&
     !!targetCwd &&
     work.enabled(card.id);
-  const testLabel = {
-    untested: S.testNotRun,
-    opening: S.testPreparing,
-    submitting: S.testSending,
-    running: S.testRunning,
-    needs_action: S.testNeedsAction,
-    stopping: S.testStopping,
-    passed: S.testPassed,
-    failed: S.testFailed,
-    cancelled: S.testCancelled,
-    unknown: S.testUnknown,
-    stale: S.testStale,
-  }[test.phase];
+  modelReadConfirmation.current = active && step === 2 && canReadModels;
+  const testLabel = preparationPhaseLabel(test.phase);
   const importControl = onImport && (
     <button
       className="btn btn-text"
@@ -611,17 +704,18 @@ export function AgentSetup({
       </header>
       <div className="agent-setup-context">
         <span title={displayLocation ?? ""}>
-          {displayLocation ?? S.defaultDirectoryError}
+          {intent === "manage" ? R.management : R.step(step)}
         </span>
         <span className={`agent-setup-status ${connected ? "ready" : ""}`}>
           <i aria-hidden="true" />
-          {connected ? S.connected : M.goProgram}
+          {connected ? R.connected : M.goProgram}
         </span>
       </div>
       <AgentSetupNavigation
         step={step}
         connected={connected}
         accountActive={!!authJob || authBusy}
+        modelsAvailable={!!conversation || step === 2 || canContinueModel}
         onStep={setStep}
       />
       <div
@@ -676,6 +770,30 @@ export function AgentSetup({
             </button>
           </div>
         )}
+        {step === 0 &&
+          agentSetupProgram({
+            card,
+            agents,
+            inventory,
+            installation,
+            setupStep: setupProgress.step,
+            connected,
+            registered,
+            needsProgramInstall,
+            prerequisitesReady,
+            installPrerequisitesReady,
+            busy,
+            authBusy,
+            operationPending,
+            progress,
+            intent,
+            removeConfirm,
+            onRemoveConfirm: setRemoveConfirm,
+            onConnect: () => connect(),
+            onDisconnect: disconnect,
+            onClose: close,
+            importControl,
+          })}
         <fieldset
           className="agent-setup-program-guard"
           hidden={step !== 0}
@@ -700,255 +818,12 @@ export function AgentSetup({
             }}
           />
         </fieldset>
-        {step === 0 && (
-          <>
-            {!connected && setupProgress.step !== 0 && (
-              <p className="agent-setup-notice" role="status">
-                {P.connectionRequiredHint}
-              </p>
-            )}
-            <h3>{intent === "use" ? P.program(card.name) : M.program}</h3>
-            {intent === "use" && (
-              <p className="agent-setup-subtitle">{P.programHint}</p>
-            )}
-            {card.installable && (
-              <AgentInstallOptions
-                {...installation.fieldProps}
-                disabled={busy || authBusy || operationPending}
-              />
-            )}
-            <div className="agent-setup-program">
-              <div>
-                <strong>{card.name}</strong>
-                <p>
-                  {connected
-                    ? S.connected
-                    : registered
-                      ? S.registered
-                      : card.status === "discovered"
-                        ? S.discovered
-                        : !card.installable && !card.registerable
-                          ? installationUnavailableLabel(card.platformAvailable)
-                          : S.notInstalled}
-                </p>
-                <small>
-                  {STRINGS.access.program} · {programSummary(card, inventory)}
-                </small>
-                {card.programEnv && card.version && (
-                  <small>
-                    {STRINGS.access.component} · {card.version}
-                  </small>
-                )}
-              </div>
-              {connected ? (
-                intent === "manage" ? (
-                  <button
-                    className="btn btn-ghost"
-                    disabled={busy || authBusy || operationPending}
-                    onClick={() => void agents.disconnect(card.id)}
-                  >
-                    {STRINGS.agents.disconnect}
-                  </button>
-                ) : (
-                  <CheckCircle size={25} className="agent-hub-ready" />
-                )
-              ) : (
-                <button
-                  className="btn btn-primary"
-                  disabled={
-                    busy ||
-                    authBusy ||
-                    operationPending ||
-                    (needsProgramInstall &&
-                      (!installPrerequisitesReady || !installation.ready)) ||
-                    (!registered && !card.registerable && !card.installable)
-                  }
-                  onClick={() => void connect().catch(() => undefined)}
-                >
-                  {busy
-                    ? STRINGS.common.loading
-                    : registered || card.registerable
-                      ? S.connect
-                      : S.install}
-                </button>
-              )}
-            </div>
-            {needsProgramInstall &&
-              card.installable &&
-              !installPrerequisitesReady && (
-                <p className="auth-note">{S.installPrerequisitesRequired}</p>
-              )}
-            {progress && (
-              <div className="agent-setup-progress" role="status">
-                <span>{progress.label}</span>
-                {progress.canCancelInstall && (
-                  <button
-                    className="btn btn-text"
-                    onClick={() => void agents.cancelInstall(card.id)}
-                  >
-                    {STRINGS.access.cancelOperation}
-                  </button>
-                )}
-              </div>
-            )}
-            {!registered && !card.registerable && !card.installable && (
-              <p className="auth-note">
-                {installationUnavailableHint(card.platformAvailable)}
-              </p>
-            )}
-            {intent === "use" && (
-              <p className="agent-setup-note">
-                {connected ? S.connectedHint : S.connectionScope}
-              </p>
-            )}
-            <details className="agent-setup-management">
-              <summary>{S.advanced}</summary>
-              <fieldset
-                className="agent-setup-program-guard"
-                disabled={authBusy || operationPending}
-              >
-                <ProgramManager
-                  card={card}
-                  agents={agents}
-                  inventory={inventory}
-                  installDisabled={
-                    !installation.ready ||
-                    !installPrerequisitesReady ||
-                    busy ||
-                    authBusy ||
-                    operationPending
-                  }
-                  onInstall={async () => {
-                    const input = installation.read();
-                    if (
-                      input === null ||
-                      !installPrerequisitesReady ||
-                      busy ||
-                      authBusy ||
-                      operationPending
-                    )
-                      return false;
-                    return agents.install(card, input);
-                  }}
-                />
-              </fieldset>
-              {connected && intent === "use" && (
-                <button
-                  className="btn btn-ghost"
-                  disabled={busy || authBusy || operationPending}
-                  onClick={() => void agents.disconnect(card.id)}
-                >
-                  {STRINGS.agents.disconnect}
-                </button>
-              )}
-              {intent === "manage" && registered && (
-                <div className="agent-manage-actions">
-                  <button
-                    className="btn btn-text"
-                    disabled={busy || authBusy || operationPending || connected}
-                    onClick={() => setRemoveConfirm(true)}
-                  >
-                    {STRINGS.access.remove}
-                  </button>
-                  {removeConfirm && (
-                    <div className="access-confirm" role="alert">
-                      <p>{STRINGS.access.removeHint}</p>
-                      <button
-                        className="btn btn-ghost"
-                        disabled={
-                          busy || authBusy || operationPending || connected
-                        }
-                        onClick={() =>
-                          void agents.remove(card.id).then((ok) => {
-                            if (ok) close();
-                          })
-                        }
-                      >
-                        {STRINGS.access.confirmRemove}
-                      </button>
-                      <button
-                        className="btn btn-text"
-                        onClick={() => setRemoveConfirm(false)}
-                      >
-                        {STRINGS.access.cancel}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </details>
-            {intent === "manage" && importControl}
-          </>
-        )}
         {step === 1 && (
           <>
             {needsAuth && (
               <p className="agent-setup-notice">
                 {choice === "api" ? S.apiAuthRequired : S.authRequired}
               </p>
-            )}
-            {!conversation && (
-              <div
-                className="agent-access-choices agent-source-choices"
-                role="radiogroup"
-                aria-label={P.source}
-              >
-                {(["existing", "api"] as const).map((value) => {
-                  const Icon = value === "existing" ? ComputerTower : Plugs;
-                  const selected =
-                    value === choice ||
-                    (value === "existing" && choice === "login");
-                  return (
-                    <button
-                      type="button"
-                      key={value}
-                      role="radio"
-                      aria-checked={selected}
-                      disabled={
-                        authBusy ||
-                        operationPending ||
-                        (value === "api" && !apiAvailable)
-                      }
-                      className={selected ? "selected" : ""}
-                      onClick={() => setChoice(value)}
-                    >
-                      <Icon size={22} aria-hidden="true" />
-                      <span>
-                        <strong>
-                          {value === "existing" ? P.localSource : P.apiChoice}
-                        </strong>
-                        <small>
-                          {value === "api" && !apiAvailable
-                            ? capabilityError
-                              ? S.loadFailed
-                              : capability === null
-                                ? STRINGS.common.loading
-                                : M.apiUnavailable
-                            : value === "existing"
-                              ? P.localSourceHint
-                              : P.apiChoiceHint}
-                        </small>
-                      </span>
-                      {selected && <CheckCircle size={20} aria-hidden="true" />}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-            {!conversation && choice !== "api" && (
-              <div className="agent-current-summary">
-                <strong>{P.summary}</strong>
-                <small>{P.accountUnknown}</small>
-                <small>
-                  {!connected
-                    ? M.loginConnect
-                    : needsAuth
-                      ? S.authRequired
-                      : passed
-                        ? S.testPassed
-                        : P.accountUnchecked}
-                </small>
-              </div>
             )}
             {conversation && (
               <div className="agent-setup-review">
@@ -978,14 +853,90 @@ export function AgentSetup({
                 {S.retry}
               </button>
             )}
-            {(authJob ||
-              authBusy ||
-              (connected && (conversation || choice !== "api"))) && (
+            {(authJob || authBusy || connected) && (
               <AgentAuthSection
+                connection={
+                  conversation
+                    ? undefined
+                    : {
+                        choice,
+                        stage: accountStage,
+                        apiAvailable,
+                        onChoice: setChoice,
+                        onPrimaryChange: setAccountPrimary,
+                        onUseExisting: () => {
+                          if (authBusy || operationPending) return;
+                          if (choice === "api") controller.invalidate();
+                          updateAccess({
+                            choice: "existing",
+                            accessStage: "account",
+                            authMethodId: undefined,
+                            preparationActionId: undefined,
+                            registration: undefined,
+                            selection: selection.service
+                              ? { service: null, config: {} }
+                              : selection,
+                          });
+                        },
+                        onStageChange: (accessStage) =>
+                          updateAccess({ accessStage }),
+                        actionId: setupProgress.preparationActionId ?? null,
+                        onActionChange: (id) =>
+                          updateAccess({
+                            preparationActionId: id ?? undefined,
+                            authMethodId: undefined,
+                            registration: undefined,
+                          }),
+                        apiContent: (
+                          <AgentServiceSection
+                            agentId={card.id}
+                            capability={capability}
+                            error={capabilityError}
+                            items={services}
+                            value={selection.service}
+                            onChange={setService}
+                            onRetry={() => setRevision((v) => v + 1)}
+                            onOpenApi={openApi}
+                            disabled={operationPending || authBusy}
+                            readonly={false}
+                          />
+                        ),
+                        apiSummary:
+                          sourceValid &&
+                          selection.service &&
+                          !serviceEditing ? (
+                            <AgentServiceSection
+                              agentId={card.id}
+                              capability={capability}
+                              error={capabilityError}
+                              items={services}
+                              value={selection.service}
+                              onChange={setService}
+                              onRetry={() => setRevision((v) => v + 1)}
+                              onOpenApi={openApi}
+                              disabled={operationPending || authBusy}
+                              readonly={false}
+                              editing={false}
+                              onChangeService={() => setServiceEditing(true)}
+                              onEditService={openApi}
+                              onChangeMethod={() =>
+                                updateAccess({ accessStage: "method" })
+                              }
+                            />
+                          ) : undefined,
+                      }
+                }
                 active={active}
                 agentId={card.id}
                 program={program}
-                onOpenModels={() => setStep(2)}
+                canOpenModels={canOpenModels}
+                onOpenModels={() => {
+                  if (
+                    modelNavigation.current &&
+                    latestEntry.current === entryKey
+                  )
+                    onProgress({ ...latestProgress.current, step: 2 });
+                }}
                 focused={intent === "use"}
                 methodId={setupProgress.authMethodId ?? null}
                 registration={setupProgress.registration}
@@ -999,14 +950,15 @@ export function AgentSetup({
                   })
                 }
                 onMethodChange={(authMethodId) =>
-                  onProgress({
-                    ...setupProgress,
+                  updateAccess({
                     authMethodId,
+                    preparationActionId: undefined,
                     registration: undefined,
                   })
                 }
                 cwd={cwd}
                 source={source}
+                apiState={apiState}
                 onChanged={async () => {
                   await agents.refresh();
                 }}
@@ -1024,53 +976,6 @@ export function AgentSetup({
                     : undefined
                 }
               />
-            )}
-            {choice === "api" && (
-              <div className="agent-setup-api">
-                {apiAvailable && !conversation && (
-                  <ServicePicker
-                    agentId={card.id}
-                    value={selection.service}
-                    onChange={setService}
-                    emptyLabel={S.chooseService}
-                    disabled={operationPending || authBusy}
-                    data={{
-                      items: services,
-                      capability,
-                      error: capabilityError,
-                      onRetry: () => setRevision((v) => v + 1),
-                    }}
-                  />
-                )}
-                <p>
-                  {capabilityError
-                    ? S.loadFailed
-                    : capability === null
-                      ? STRINGS.common.loading
-                      : capability.apiTypes.length
-                        ? S.apiReturnHint
-                        : M.apiUnavailable}
-                </p>
-                {capabilityError ? (
-                  <button
-                    className="btn btn-ghost"
-                    onClick={() => setRevision((v) => v + 1)}
-                  >
-                    {S.retry}
-                  </button>
-                ) : (
-                  ((capability && capability.apiTypes.length > 0) ||
-                    conversation) && (
-                    <button
-                      className="btn btn-ghost"
-                      disabled={authBusy || operationPending}
-                      onClick={openApi}
-                    >
-                      {S.openApi}
-                    </button>
-                  )
-                )}
-              </div>
             )}
           </>
         )}
@@ -1117,31 +1022,47 @@ export function AgentSetup({
         )}
         {step === 2 && !conversation && (
           <section className="agent-setup-selection">
-            <h3>{M.model}</h3>
-            <p className="agent-setup-subtitle">{M.managementHint}</p>
-            {intent === "use" && (
-              <dl className="agent-setup-review">
-                <div>
-                  <dt>{S.title}</dt>
-                  <dd>{card.name}</dd>
-                </div>
-                <div>
-                  <dt>{S.source}</dt>
-                  <dd>
-                    {choice === "api"
-                      ? (selectedService?.label ?? S.chooseService)
-                      : S.existing}
-                  </dd>
-                </div>
-                <div>
-                  <dt>{S.workFolder}</dt>
-                  <dd title={displayLocation ?? ""}>
-                    {displayLocation ?? S.defaultDirectoryError}
-                  </dd>
-                </div>
-              </dl>
+            <h3>{R.chooseModel}</h3>
+            <p className="agent-setup-subtitle">
+              {choice === "api" ? R.serviceModelHint : M.managementHint}
+            </p>
+            {choice === "api" && (
+              <ServiceModelPicker
+                value={selection.service}
+                items={services}
+                capability={capability}
+                error={capabilityError}
+                onChange={setService}
+                onRetry={() => setRevision((v) => v + 1)}
+                disabled={busy || authBusy || operationPending || modelChanging}
+              />
             )}
-            {!serviceValid && (
+            {intent === "use" && (
+              <details className="journey-details">
+                <summary>{R.currentSelection}</summary>
+                <dl className="agent-setup-review">
+                  <div>
+                    <dt>{S.title}</dt>
+                    <dd>{card.name}</dd>
+                  </div>
+                  <div>
+                    <dt>{S.source}</dt>
+                    <dd>
+                      {choice === "api"
+                        ? (selectedService?.label ?? S.chooseService)
+                        : S.existing}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{S.workFolder}</dt>
+                    <dd title={displayLocation ?? ""}>
+                      {displayLocation ?? S.defaultDirectoryError}
+                    </dd>
+                  </div>
+                </dl>
+              </details>
+            )}
+            {!sourceValid && (
               <div role="alert" className="agent-setup-notice">
                 <p>{S.chooseCompatibleApi}</p>
                 <button className="btn btn-ghost" onClick={() => setStep(1)}>
@@ -1149,7 +1070,7 @@ export function AgentSetup({
                 </button>
               </div>
             )}
-            {needsAuth && (
+            {needsAuth && (choice !== "api" || apiState !== "unsupported") && (
               <div role="alert" className="agent-setup-notice">
                 <p>{choice === "api" ? S.apiAuthRequired : S.authRequired}</p>
                 <button
@@ -1199,89 +1120,97 @@ export function AgentSetup({
                 </button>
               </div>
             )}
-            {testThread && sameSource && (
-              <fieldset
-                className="agent-setup-options"
-                disabled={
-                  testThread.identity !== "draft" ||
-                  testing ||
-                  modelReadFailed ||
-                  explicitReadRequired
-                }
-              >
-                {model ? (
-                  <div className="so-row">
-                    <span className="so-name">{S.model}</span>
-                    <ModelPicker
-                      option={model}
-                      disabled={
-                        testing ||
-                        modelChanging ||
-                        testThread.identity !== "draft" ||
-                        testThread.configuring
-                      }
-                      onPick={(value) => void pickOption(model.id, value)}
-                    />
-                  </div>
-                ) : (
-                  <p className="auth-note">{S.testModelUnspecified}</p>
-                )}
-                {additionalModelRows({
-                  options: testThread.configOptions,
-                  primaryId: model?.id,
-                  disabled:
-                    testing ||
-                    modelChanging ||
+            {testThread &&
+              sameSource &&
+              (choice !== "api" ||
+                testThread.configOptions.some(
+                  (option) =>
+                    (option.category === "model" && option.id !== model?.id) ||
+                    isReasoningOption(option),
+                )) && (
+                <fieldset
+                  className="agent-setup-options"
+                  disabled={
                     testThread.identity !== "draft" ||
-                    testThread.configuring,
-                  onPick: (id, value) => void pickOption(id, value),
-                })}
-                {testThread.configOptions
-                  .filter(isReasoningOption)
-                  .map((option) => (
-                    <label
-                      className="so-row agent-setup-reasoning"
-                      key={option.id}
-                    >
-                      <span className="so-name">{option.name}</span>
-                      {option.type === "select" && option.options.length ? (
-                        <select
-                          aria-label={option.name}
-                          title={option.description}
-                          value={String(option.currentValue ?? "")}
+                    testing ||
+                    modelReadFailed ||
+                    explicitReadRequired
+                  }
+                >
+                  {choice !== "api" &&
+                    (model ? (
+                      <div className="so-row">
+                        <span className="so-name">{S.model}</span>
+                        <ModelPicker
+                          option={model}
                           disabled={
                             testing ||
                             modelChanging ||
                             testThread.identity !== "draft" ||
                             testThread.configuring
                           }
-                          onChange={(event) =>
-                            void pickOption(option.id, event.target.value)
-                          }
-                        >
-                          {!option.options.some(
-                            (item) => item.value === option.currentValue,
-                          ) && (
-                            <option
-                              value={String(option.currentValue ?? "")}
-                              disabled
-                            >
-                              {configValueLabel(option)}
-                            </option>
-                          )}
-                          {option.options.map((item) => (
-                            <option key={item.value} value={item.value}>
-                              {item.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span>{configValueLabel(option)}</span>
-                      )}
-                    </label>
-                  ))}
-              </fieldset>
-            )}
+                          onPick={(value) => void pickOption(model.id, value)}
+                        />
+                      </div>
+                    ) : (
+                      <p className="auth-note">{S.testModelUnspecified}</p>
+                    ))}
+                  {additionalModelRows({
+                    options: testThread.configOptions,
+                    primaryId: model?.id,
+                    disabled:
+                      testing ||
+                      modelChanging ||
+                      testThread.identity !== "draft" ||
+                      testThread.configuring,
+                    onPick: (id, value) => void pickOption(id, value),
+                  })}
+                  {testThread.configOptions
+                    .filter(isReasoningOption)
+                    .map((option) => (
+                      <label
+                        className="so-row agent-setup-reasoning"
+                        key={option.id}
+                      >
+                        <span className="so-name">{option.name}</span>
+                        {option.type === "select" && option.options.length ? (
+                          <select
+                            aria-label={option.name}
+                            title={option.description}
+                            value={String(option.currentValue ?? "")}
+                            disabled={
+                              testing ||
+                              modelChanging ||
+                              testThread.identity !== "draft" ||
+                              testThread.configuring
+                            }
+                            onChange={(event) =>
+                              void pickOption(option.id, event.target.value)
+                            }
+                          >
+                            {!option.options.some(
+                              (item) => item.value === option.currentValue,
+                            ) && (
+                              <option
+                                value={String(option.currentValue ?? "")}
+                                disabled
+                              >
+                                {configValueLabel(option)}
+                              </option>
+                            )}
+                            {option.options.map((item) => (
+                              <option key={item.value} value={item.value}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span>{configValueLabel(option)}</span>
+                        )}
+                      </label>
+                    ))}
+                </fieldset>
+              )}
             <div className="agent-model-reading">
               <p role="status">
                 {!connected
@@ -1300,6 +1229,24 @@ export function AgentSetup({
               {explicitReadRequired && (
                 <p className="auth-note">{C.readRequired}</p>
               )}
+              <AgentModelReadNotice
+                mismatch={selectionMismatch}
+                disabled={!canReadModels}
+                onConfirm={() => {
+                  if (
+                    !modelReadConfirmation.current ||
+                    latestProgress.current !== setupProgress ||
+                    latestEntry.current !== entryKey ||
+                    !currentInput
+                  )
+                    return;
+                  const config = controller.confirmRead(currentInput);
+                  if (config)
+                    updateAccess({
+                      selection: { service: selection.service, config },
+                    });
+                }}
+              />
               {modelReadFailed && test.error && (
                 <p role="alert" className="ac-error">
                   {test.error}
@@ -1370,11 +1317,12 @@ export function AgentSetup({
                     className="btn btn-primary"
                     disabled={
                       busy ||
+                      selectionMismatch ||
                       modelChanging ||
                       authBusy ||
                       !connected ||
                       !prerequisitesReady ||
-                      !serviceValid ||
+                      !modelValid ||
                       !work.enabled(card.id) ||
                       testThread.configuring ||
                       !!testThread.configError
@@ -1392,7 +1340,7 @@ export function AgentSetup({
                         authBusy ||
                         !connected ||
                         !prerequisitesReady ||
-                        !serviceValid ||
+                        !modelValid ||
                         !work.enabled(card.id) ||
                         !controller.canPrepare()
                       }
@@ -1428,70 +1376,95 @@ export function AgentSetup({
               {sameSource && test.phase === "opening" && (
                 <p className="agent-setup-note">{S.testModelLoading}</p>
               )}
+              <p className="agent-setup-note">
+                {passed ? S.readyScope : S.untestedReturnHint}
+              </p>
             </details>
-            <p className="agent-setup-note">
-              {passed ? S.readyScope : S.untestedReturnHint}
-            </p>
             {importControl}
           </section>
         )}
       </div>
       <footer className="agent-setup-footer">
-        <div />
+        <div>
+          {step > 0 && (
+            <button
+              className="btn btn-ghost"
+              disabled={busy || authBusy || operationPending}
+              onClick={() => {
+                if (!busy && !authBusy && !operationPending) setStep(step - 1);
+              }}
+            >
+              {step === 1 ? R.backProgram : R.backAccount}
+            </button>
+          )}
+        </div>
         <div>
           <button className="btn btn-ghost" onClick={close}>
             {authBusy || operationPending ? S.leaveAndKeep : S.pauseSetup}
           </button>
-          <button
-            className="btn btn-primary"
-            disabled={
-              nextStep !== null
-                ? nextBlocked
-                : intent === "manage"
-                  ? !!onConfirmManagement && !conversation && returnBlocked
-                  : returnBlocked
-            }
-            onClick={async () => {
-              if (nextStep !== null) {
-                if (!nextBlocked) setStep(nextStep);
-                return;
-              }
-              if (intent === "manage") {
-                if (conversation || !onConfirmManagement) close();
-                else {
-                  setFinishing(true);
-                  setError(null);
-                  try {
-                    if (await onConfirmManagement(card.id, selection)) close();
-                  } catch (reason) {
-                    setError(uiError(reason, S.loadFailed));
-                  } finally {
-                    setFinishing(false);
+          {step === 1 && accountPrimary ? (
+            <button
+              className="btn btn-primary"
+              disabled={accountPrimary.disabled}
+              onClick={accountPrimary.run}
+            >
+              {accountPrimary.label}
+            </button>
+          ) : (
+            (step !== 1 || conversation || canContinueModel) && (
+              <button
+                className="btn btn-primary"
+                disabled={
+                  nextStep !== null
+                    ? nextBlocked
+                    : intent === "manage"
+                      ? !!onConfirmManagement && !conversation && returnBlocked
+                      : returnBlocked
+                }
+                onClick={async () => {
+                  if (nextStep !== null) {
+                    if (!nextBlocked) setStep(nextStep);
+                    return;
                   }
-                }
-              } else {
-                setFinishing(true);
-                setError(null);
-                try {
-                  await onStart(card.id, selection);
-                } catch (reason) {
-                  setError(uiError(reason, S.loadFailed));
-                } finally {
-                  setFinishing(false);
-                }
-              }
-            }}
-          >
-            {nextStep !== null
-              ? step === 0
-                ? P.nextAccount
-                : P.nextModel
-              : intent === "manage"
-                ? conversation
-                  ? P.returnConversation
-                  : P.save
-                : returnLabel}
-          </button>
+                  if (intent === "manage") {
+                    if (conversation || !onConfirmManagement) close();
+                    else {
+                      setFinishing(true);
+                      setError(null);
+                      try {
+                        if (await onConfirmManagement(card.id, selection))
+                          close();
+                      } catch (reason) {
+                        setError(uiError(reason, S.loadFailed));
+                      } finally {
+                        setFinishing(false);
+                      }
+                    }
+                  } else {
+                    setFinishing(true);
+                    setError(null);
+                    try {
+                      await onStart(card.id, selection);
+                    } catch (reason) {
+                      setError(uiError(reason, S.loadFailed));
+                    } finally {
+                      setFinishing(false);
+                    }
+                  }
+                }}
+              >
+                {nextStep !== null
+                  ? step === 0
+                    ? P.nextAccount
+                    : P.nextModel
+                  : intent === "manage"
+                    ? conversation
+                      ? P.returnConversation
+                      : P.save
+                    : returnLabel}
+              </button>
+            )
+          )}
         </div>
       </footer>
     </dialog>

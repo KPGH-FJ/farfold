@@ -386,6 +386,7 @@ impl AgentCatalog {
     pub(crate) fn cached_entry(&self, agent_id: &str) -> Option<RegistryAgent> {
         self.agents_cached()?
             .into_iter()
+            .filter(|entry| crate::acp_client::first_release::first_batch_visible(&entry.id))
             .find(|entry| registry_agent_id(entry).as_deref() == Some(agent_id))
     }
 
@@ -456,6 +457,15 @@ impl AgentCatalog {
         &self,
         agent_id: &str,
     ) -> Result<(RegistryAgent, AgentLaunch), String> {
+        let registry_id = def_for(agent_id)
+            .map(|def| def.registry_id.to_string())
+            .or_else(|| agent_id.strip_prefix("registry:").map(str::to_string));
+        if registry_id
+            .as_deref()
+            .is_none_or(|id| !crate::acp_client::first_release::first_batch_visible(id))
+        {
+            return Err("此 Agent 未包含在当前目录中，已有程序和对话仍保留".into());
+        }
         let entry = self
             .agents()
             .ok_or("暂时无法读取 Agent 目录，请重试")?
@@ -590,6 +600,19 @@ fn catalog_entries(
     entries
 }
 
+fn current_catalog_entries(
+    registered: &[AgentRow],
+    discovered: &[DiscoveredBinary],
+    registry: &[RegistryAgent],
+) -> Vec<CatalogEntry> {
+    let current = registry
+        .iter()
+        .filter(|entry| crate::acp_client::first_release::first_batch_visible(&entry.id))
+        .cloned()
+        .collect::<Vec<_>>();
+    catalog_entries(registered, discovered, &current)
+}
+
 /// Probe binaries and refresh the registry cache in the background, then
 /// tell the UI to re-read `catalog_list`. This is the only path that
 /// touches the filesystem or the network.
@@ -620,7 +643,7 @@ pub async fn catalog_list(app: AppHandle) -> Result<Vec<CatalogEntry>, String> {
         let registered = store.list_agents()?;
         let discovered = catalog.discovered_cached().unwrap_or_default();
         let registry = catalog.agents_cached().unwrap_or_default();
-        let mut entries = catalog_entries(&registered, &discovered, &registry);
+        let mut entries = current_catalog_entries(&registered, &discovered, &registry);
         for entry in &mut entries {
             entry.rollback_available = store
                 .get_setting(&format!("installPrevious.{}", entry.agent_id))?
@@ -637,62 +660,61 @@ mod tests {
     use super::*;
 
     #[test]
-    fn first_release_directory_visibility_preserves_full_catalog_and_registered_launches() {
-        let registry = vec![
-            "auggie",
-            "fast-agent",
-            "glm-acp-agent",
-            "minion-code",
-            "unreviewed",
-        ]
-        .into_iter()
-        .map(|id| RegistryAgent {
-            id: id.into(),
-            name: "Same display name".into(),
-            version: "future-version".into(),
-            distribution: RegistryDistribution {
-                npx: Some(RegistryNpx {
-                    package: "example-package".into(),
-                    args: vec!["acp".into()],
-                    env: std::collections::BTreeMap::new(),
-                }),
+    fn current_directory_filters_entries_without_changing_registered_data() {
+        let registry = ["auggie", "fast-agent", "retired-agent", "unreviewed"]
+            .into_iter()
+            .map(|id| RegistryAgent {
+                id: id.into(),
+                name: "Same display name".into(),
+                version: "future-version".into(),
+                distribution: RegistryDistribution {
+                    npx: Some(RegistryNpx {
+                        package: "example-package".into(),
+                        args: vec!["acp".into()],
+                        env: std::collections::BTreeMap::new(),
+                    }),
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
-        })
-        .collect::<Vec<_>>();
+            })
+            .collect::<Vec<_>>();
         let registered: AgentRow = serde_json::from_value(serde_json::json!({
-            "id":"registry:glm-acp-agent", "name":"Original", "source":"registry",
+            "id":"registry:retired-agent", "name":"Original", "source":"registry",
             "command":"/original/program", "args":["keep"], "env":[["PUBLIC_CONFIG","keep"]],
             "version":"old", "handshake":{"authMethods":[]}, "createdAt":1,"updatedAt":2
         }))
         .unwrap();
-        let entries = catalog_entries(std::slice::from_ref(&registered), &[], &registry);
-        assert_eq!(entries.len(), builtin_defs().len() + registry.len());
-        for (id, visible) in [
-            ("auggie", true),
-            ("fast-agent", true),
-            ("glm-acp-agent", false),
-            ("minion-code", false),
-            ("unreviewed", false),
-        ] {
-            let item = entries.iter().find(|item| item.registry_id == id).unwrap();
-            assert_eq!(
-                serde_json::to_value(item).unwrap()["firstBatchVisible"],
-                visible,
-                "{id}"
-            );
-            assert!(item.installable);
-            assert_eq!(item.registry_version.as_deref(), Some("future-version"));
-        }
-        let old = entries
-            .iter()
-            .find(|item| item.registry_id == "glm-acp-agent")
-            .unwrap();
-        assert_eq!(
-            serde_json::to_value(old.registered.as_ref().unwrap()).unwrap(),
-            serde_json::to_value(registered).unwrap()
+        let original = serde_json::to_value(&registered).unwrap();
+        let entries = current_catalog_entries(std::slice::from_ref(&registered), &[], &registry);
+        assert_eq!(entries.len(), builtin_defs().len() + 2);
+        assert!(entries.iter().all(|entry| entry.first_batch_visible));
+        assert!(
+            entries
+                .iter()
+                .all(|entry| !matches!(entry.registry_id.as_str(), "retired-agent" | "unreviewed"))
         );
+        assert_eq!(serde_json::to_value(&registered).unwrap(), original);
+        assert_eq!(registry.len(), 4);
+    }
+
+    #[test]
+    fn out_of_scope_installation_does_not_refresh_or_delete_saved_data() {
+        let root = tempfile::tempdir().unwrap();
+        let registry = vec![RegistryAgent {
+            id: "retired-agent".into(),
+            ..Default::default()
+        }];
+        write_registry_cache(root.path(), &registry);
+        let original = std::fs::read(cache_path(root.path())).unwrap();
+        let catalog = AgentCatalog::new(root.path().into());
+        assert!(
+            catalog
+                .installation_entry("registry:retired-agent")
+                .is_err()
+        );
+        assert!(catalog.cached_entry("registry:retired-agent").is_none());
+        assert_eq!(std::fs::read(cache_path(root.path())).unwrap(), original);
+        assert_eq!(catalog.agents_cached(), Some(registry));
     }
 
     #[test]
@@ -839,9 +861,7 @@ mod tests {
         // evidence of a live fetch, package installation or actual response.
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
             {"id":"fast-agent","version":"0.10.1","distribution":{"uvx":{
-                "package":"fast-agent-acp==0.10.1","args":["-x"],"env":{"FAST_AGENT_MODEL":"fixture-declared-model"}}}},
-            {"id":"minion-code","version":"0.1.44","distribution":{"uvx":{
-                "package":"minion-code@0.1.44","args":["acp"]}}}
+                "package":"fast-agent-acp==0.10.1","args":["-x"],"env":{"FAST_AGENT_MODEL":"fixture-declared-model"}}}}
         ])).unwrap();
         let root = tempfile::tempdir().unwrap();
         write_registry_cache(root.path(), &registry);
@@ -876,21 +896,19 @@ mod tests {
     fn unsupported_platform_and_unknown_catalog_have_different_install_reasons() {
         let root = tempfile::tempdir().unwrap();
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"windows-only","distribution":{"binary":{"windows-x86_64":{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
-            {"id":"uvx-example","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
+            {"id":"poolside","distribution":{"binary":{"windows-x86_64":{"archive":"https://example.test/agent.zip","cmd":"agent.exe"}}}},
+            {"id":"fast-agent","distribution":{"uvx":{"package":"example @ https://example.test/tool.whl"}}},
             {"id":"unknown","distribution":{}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
         let catalog = AgentCatalog::new(root.path().into());
         assert_eq!(
-            catalog
-                .installation_entry("registry:windows-only")
-                .unwrap_err(),
+            catalog.installation_entry("registry:poolside").unwrap_err(),
             "官方目录未提供适用于此设备的安装方式，请查看官方说明"
         );
         assert_eq!(
             catalog
-                .installation_entry("registry:uvx-example")
+                .installation_entry("registry:fast-agent")
                 .unwrap_err(),
             "Farfold 当前尚不能安装此条目，请查看官方说明或添加已安装的程序"
         );
@@ -946,12 +964,12 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let catalog = AgentCatalog::new(root.path().into());
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"example","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
-            {"id":"private-home","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
+            {"id":"auggie","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
+            {"id":"nova","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
-        let (entry, launch) = catalog.installation_entry("registry:example").unwrap();
-        assert_eq!(entry.id, "example");
+        let (entry, launch) = catalog.installation_entry("registry:auggie").unwrap();
+        assert_eq!(entry.id, "auggie");
         assert_eq!(
             launch,
             AgentLaunch::Npx {
@@ -959,9 +977,9 @@ mod tests {
                 args: vec!["--agent".into()]
             }
         );
-        assert!(catalog.installation_entry("example").is_err());
+        assert!(catalog.installation_entry("auggie").is_err());
         assert!(catalog.installation_entry("registry:unknown").is_err());
-        assert!(catalog.installation_entry("registry:private-home").is_err());
+        assert!(catalog.installation_entry("registry:nova").is_err());
     }
 
     fn fixture_registry(version: &str) -> Vec<RegistryAgent> {

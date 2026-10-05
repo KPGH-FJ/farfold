@@ -27,7 +27,6 @@ export const COMPOSER_CONTROLS = {
   stopSendingPaused: "发送已暂停",
   reasoning: "思考深度",
   thinking: "思考",
-  reasoningFixed: "这条对话保持创建时的思考深度",
   permission: "对话权限",
   permissionShort: "权限",
   permissionRequired: "待确认",

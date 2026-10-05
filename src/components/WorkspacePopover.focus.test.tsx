@@ -50,6 +50,19 @@ vi.mock("react", async (original) => ({
       slot.deps = deps;
     }
   },
+  useLayoutEffect: (effect: () => void | (() => void), deps: unknown[]) => {
+    const slot = (h.slots[h.cursor++] ??= {});
+    if (
+      !slot.deps ||
+      deps.some((value, i) => !Object.is(value, slot.deps?.[i]))
+    ) {
+      h.effects.push(() => {
+        slot.cleanup?.();
+        slot.cleanup = effect() || undefined;
+      });
+      slot.deps = deps;
+    }
+  },
 }));
 vi.mock("react-dom", async (original) => ({
   ...(await original<typeof import("react-dom")>()),
@@ -108,8 +121,10 @@ class Host {
   getClientRects() {
     return [{}];
   }
+  rect = { top: 100, bottom: 130, left: 100, width: 34, height: 30 };
+  scrollHeight = 120;
   getBoundingClientRect() {
-    return { top: 100, bottom: 130, left: 100 };
+    return this.rect;
   }
   querySelector() {
     return this.child;
@@ -123,11 +138,17 @@ const hostDocument = { body, activeElement: body };
 let listeners: Map<string, (event: unknown) => void>;
 const click = (element: Element) => (element.props.onClick as () => void)();
 
-function popup(props: ComponentProps<typeof WorkspacePopover>) {
+function popup(
+  props: ComponentProps<typeof WorkspacePopover>,
+  geometry?: { trigger?: Partial<Host["rect"]>; panel?: Partial<Host["rect"]> },
+) {
   const view = instance(WorkspacePopover);
   const trigger = new Host();
   const option = new Host();
   const panel = new Host();
+  trigger.rect = { ...trigger.rect, ...geometry?.trigger };
+  panel.rect = { ...panel.rect, width: 344, height: 120, ...geometry?.panel };
+  panel.scrollHeight = panel.rect.height;
   panel.child = option;
   let previouslyOpen = false;
   const render = () =>
@@ -251,7 +272,7 @@ it("hands permission selection back to its trigger before the confirmation dialo
   menu.unmount();
 });
 
-it.each(["mousedown", "resize"])(
+it.each(["mousedown", "resize", "focusin"])(
   "does not take focus from the current target on %s dismissal",
   (kind) => {
     const menu = popup({ title: "Options", label: "Options", children: null });
@@ -296,4 +317,57 @@ it("keeps Escape restoring the trigger without a later focus task", () => {
   expect(hostDocument.activeElement === menu.trigger).toBe(true);
   menu.unmount();
   expect(hostDocument.activeElement === menu.trigger).toBe(true);
+});
+
+function position(menu: ReturnType<typeof popup>) {
+  return menu.render().find((node) => node.props.role === "dialog")!.props
+    .style;
+}
+
+it("places a short panel directly above a low trigger using its actual height", () => {
+  const menu = popup(
+    { title: "Options", label: "Options", children: null },
+    { trigger: { top: 700, bottom: 734 }, panel: { height: 112 } },
+  );
+  expect(position(menu)).toEqual({ top: 580, left: 100, maxHeight: 360 });
+  menu.unmount();
+});
+
+it("places a short panel below its trigger when it fits, including in the lower half", () => {
+  const menu = popup(
+    { title: "Options", label: "Options", children: null },
+    { trigger: { top: 460, bottom: 494 } },
+  );
+  expect(position(menu)).toEqual({ top: 502, left: 100, maxHeight: 286 });
+  menu.unmount();
+});
+
+it("keeps tall content within a short viewport and clamps the right edge", () => {
+  window.innerHeight = 320;
+  const menu = popup(
+    { title: "Options", label: "Options", children: null },
+    { trigger: { top: 170, bottom: 204, left: 960 }, panel: { height: 600 } },
+  );
+  expect(position(menu)).toEqual({ top: 12, left: 644, maxHeight: 150 });
+  menu.unmount();
+});
+
+it("keeps scrolling inside the options open and dismisses when the underlying page moves", () => {
+  const menu = popup({ title: "Options", label: "Options", children: null });
+  listeners.get("scroll")!({ target: menu.panel });
+  expect(menu.render().some((node) => node.props.role === "dialog")).toBe(true);
+  listeners.get("scroll")!({ target: body });
+  expect(menu.render().some((node) => node.props.role === "dialog")).toBe(
+    false,
+  );
+  menu.unmount();
+});
+
+it("does not dismiss an in-progress input composition on Escape", () => {
+  const menu = popup({ title: "Options", label: "Options", children: null });
+  const event = { key: "Escape", isComposing: true, preventDefault: vi.fn() };
+  listeners.get("keydown")!(event);
+  expect(menu.render().some((node) => node.props.role === "dialog")).toBe(true);
+  expect(event.preventDefault).not.toHaveBeenCalled();
+  menu.unmount();
 });

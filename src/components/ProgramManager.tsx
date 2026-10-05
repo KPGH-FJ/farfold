@@ -6,6 +6,9 @@ import type { AgentCardModel, AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
 import { installProgressLabel } from "../runtime/program_progress";
+import { ACCESS_STRINGS } from "../runtime/access_strings";
+import { R5_PROGRAM_STRINGS as R } from "../runtime/r5_program_strings";
+import "../r5-program-access.css";
 export interface Installation {
   id: string;
   source: string;
@@ -82,25 +85,56 @@ export function ProgramManager({
   inventory,
   onInstall,
   installDisabled = false,
+  showHeading = true,
+  onConnect,
+  connectDisabled = false,
+  prerequisitesReady = true,
+  onDisconnect,
+  disconnectDisabled = false,
 }: {
   card: AgentCardModel;
   agents: AgentsState;
   inventory: ProgramInventory;
   onInstall?: () => Promise<unknown>;
   installDisabled?: boolean;
+  showHeading?: boolean;
+  onConnect?: () => Promise<void>;
+  connectDisabled?: boolean;
+  prerequisitesReady?: boolean;
+  onDisconnect?: () => Promise<boolean>;
+  disconnectDisabled?: boolean;
 }) {
   const S = STRINGS.access;
   const { items, refresh } = inventory;
-  const [busy, setBusy] = useState<"check" | "remove" | null>(null);
+  const [busy, setBusy] = useState<
+    "check" | "remove" | "connect" | "disconnect" | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<string | null>(null);
-  const act = async (kind: "check" | "remove", fn: () => Promise<unknown>) => {
+  const [disconnectConfirm, setDisconnectConfirm] = useState(false);
+  const operationBusy = !!busy || !!agents.busy[card.id];
+  const locked =
+    operationBusy ||
+    card.status === "connected" ||
+    inventory.loading ||
+    !!inventory.error;
+  const act = async (
+    kind: "check" | "remove" | "connect",
+    fn: () => Promise<unknown>,
+  ) => {
+    if (
+      locked ||
+      (kind === "connect" && (connectDisabled || !prerequisitesReady))
+    )
+      return;
     setBusy(kind);
     setError(null);
     try {
-      await fn();
+      const result = await fn();
+      if (result === false) return;
       await agents.refresh();
-      setConfirm(null);
+      // Connection display follows the refreshed card, including failed checks.
+      if (kind !== "connect") setConfirm(null);
     } catch (e) {
       setError(uiError(e, S.failure));
     } finally {
@@ -108,13 +142,192 @@ export function ProgramManager({
       setBusy(null);
     }
   };
-  const locked =
-    !!busy || !!agents.busy[card.id] || card.status === "connected";
+  const disconnect = async () => {
+    if (
+      operationBusy ||
+      disconnectDisabled ||
+      card.status !== "connected" ||
+      !onDisconnect
+    )
+      return;
+    setBusy("disconnect");
+    setError(null);
+    try {
+      if ((await onDisconnect()) === true) setDisconnectConfirm(false);
+    } catch (reason) {
+      setError(uiError(reason, S.failure));
+    } finally {
+      await refresh();
+      setBusy(null);
+    }
+  };
   const progress = agents.installProgress[card.id];
+  const current =
+    items.find(
+      (item) => item.selected && (item.programOnly || !card.programEnv),
+    ) ?? items.find((item) => item.selected);
+  const ready = card.status === "connected" || prerequisitesReady;
+  const currentStatus =
+    card.status === "connected"
+      ? S.connected
+      : prerequisitesReady
+        ? S.prepared
+        : R.preparationRequired;
+  const otherItems = items.filter((item) => item.id !== current?.id);
+  const externalSetup =
+    card.status === "none" && !card.installable && !card.registerable;
+  const officialUrl =
+    card.installGuide ?? card.presentation?.sourceUrl ?? card.sourceUrl;
+  const officialGuide = officialUrl && (
+    <button
+      className="btn btn-ghost"
+      onClick={() =>
+        void openUrl(officialUrl).catch((e) => setError(uiError(e, S.failure)))
+      }
+    >
+      {R.officialGuide}
+    </button>
+  );
+  const renderInstallation = (item: Installation, primary = false) => (
+    <div className="program-row" data-selected={item.selected} key={item.id}>
+      <div className="program-row-main">
+        <div className="program-row-summary">
+          <div className="program-row-title">
+            <strong>
+              {primary ? card.name : (item.version ?? S.unknownVersion)}
+            </strong>
+            <span
+              className={
+                item.selected && (!primary || ready)
+                  ? "program-selected"
+                  : "program-not-selected"
+              }
+            >
+              {primary
+                ? currentStatus
+                : item.selected
+                  ? item.inUse
+                    ? S.inUse
+                    : S.selected
+                  : S.notSelected}
+            </span>
+          </div>
+          {!primary && (
+            <p className="program-row-description">
+              {item.programOnly || !card.programEnv ? S.program : S.component}
+              {" · "}
+              {item.managedRoot ? S.managed : R.external}
+            </p>
+          )}
+          <details className="program-path">
+            <summary>{R.installationDetails}</summary>
+            {primary && (
+              <p>
+                {item.programOnly || !card.programEnv ? S.program : S.component}{" "}
+                · {item.version ?? S.unknownVersion}
+              </p>
+            )}
+            <p>
+              {item.managedRoot
+                ? S.managed
+                : item.source === "unverified"
+                  ? S.unverifiedInstall
+                  : S.external}
+            </p>
+            <p className="installation-path">{item.path}</p>
+          </details>
+        </div>
+        <div className="ac-actions">
+          {primary && card.status === "installed" && onConnect && (
+            <button
+              className={
+                prerequisitesReady ? "btn btn-primary" : "btn btn-ghost"
+              }
+              disabled={locked || connectDisabled || !prerequisitesReady}
+              onClick={() => void act("connect", onConnect)}
+            >
+              {ACCESS_STRINGS.connect}
+            </button>
+          )}
+          {primary &&
+            card.status === "connected" &&
+            onDisconnect &&
+            !disconnectConfirm && (
+              <button
+                className="btn btn-ghost"
+                disabled={operationBusy || disconnectDisabled}
+                onClick={() => {
+                  if (!operationBusy && !disconnectDisabled)
+                    setDisconnectConfirm(true);
+                }}
+              >
+                {R.disconnectForManagement}
+              </button>
+            )}
+          {!item.selected && (
+            <button
+              className="btn btn-primary"
+              disabled={
+                locked || card.status === "none" || card.status === "discovered"
+              }
+              onClick={() =>
+                void act("check", () =>
+                  agents.selectInstallation(card.id, item.id),
+                )
+              }
+            >
+              {S.select}
+            </button>
+          )}
+          {item.managedRoot &&
+            item.canUninstall &&
+            card.status !== "connected" && (
+              <button
+                className="btn btn-ghost"
+                disabled={locked}
+                onClick={() => {
+                  if (!locked && item.canUninstall) setConfirm(item.id);
+                }}
+              >
+                {S.uninstall}
+              </button>
+            )}
+        </div>
+      </div>
+      {confirm === item.id && (
+        <div className="access-confirm" role="alert">
+          <p>{S.uninstallHint}</p>
+          <p className="installation-path">{item.path}</p>
+          <button
+            className="btn btn-ghost"
+            disabled={locked || !item.canUninstall}
+            onClick={() => {
+              if (!item.canUninstall) return;
+              void act("remove", () =>
+                invoke("agent_installation_uninstall", {
+                  agentId: card.id,
+                  installationId: item.id,
+                }),
+              );
+            }}
+          >
+            {S.uninstallConfirm}
+          </button>
+          <button
+            className="btn btn-text"
+            disabled={!!busy}
+            onClick={() => setConfirm(null)}
+          >
+            {S.cancel}
+          </button>
+        </div>
+      )}
+    </div>
+  );
   return (
     <section className="program-manager" aria-label={S.manage}>
-      <div className="s-head-row">
-        <h3 className="s-h">{S.manage}</h3>
+      <div className="program-manager-heading s-head-row">
+        {showHeading && <h3 className="s-h">{R.currentProgram}</h3>}
         <button
           className="btn btn-text"
           disabled={!!busy || inventory.loading}
@@ -123,29 +336,32 @@ export function ProgramManager({
           {S.retry}
         </button>
       </div>
-      <p className="auth-note">
-        {card.status === "connected" ? S.disconnected : S.programReady}
-      </p>
       {(error || inventory.error || agents.errors[card.id]) && (
         <div role="alert" className="ac-error">
           {error ?? inventory.error ?? agents.errors[card.id]}
         </div>
       )}
-      {(busy === "check" || agents.busy[card.id] === "install") && (
+      {(busy === "connect" ||
+        busy === "check" ||
+        agents.busy[card.id] === "install") && (
         <p role="status">
-          {busy === "check"
-            ? S.checking
-            : installProgressLabel(
-                progress,
-                STRINGS.install.stages[progress?.stage ?? "prepare"] ??
-                  STRINGS.common.loading,
-              )}
-          <button
-            className="btn btn-text"
-            onClick={() => void agents.cancelInstall(card.id)}
-          >
-            {S.cancelOperation}
-          </button>
+          {busy === "connect"
+            ? STRINGS.agents.connecting
+            : busy === "check"
+              ? S.checking
+              : installProgressLabel(
+                  progress,
+                  STRINGS.install.stages[progress?.stage ?? "prepare"] ??
+                    STRINGS.common.loading,
+                )}
+          {busy !== "connect" && (
+            <button
+              className="btn btn-text"
+              onClick={() => void agents.cancelInstall(card.id)}
+            >
+              {S.cancelOperation}
+            </button>
+          )}
         </p>
       )}
       {inventory.loading && (
@@ -153,156 +369,134 @@ export function ProgramManager({
           {S.loading}
         </p>
       )}
-      {!inventory.loading && !inventory.error && !items.length && (
-        <p className="auth-note">{S.installationsEmpty}</p>
-      )}
-      {items.map((item) => (
-        <div className="program-row" key={item.id}>
-          <div className="program-row-main">
-            <div>
-              <strong>{item.version ?? S.unknownVersion}</strong>
-              <span className="program-kind">
-                {item.programOnly || !card.programEnv ? S.program : S.component}
+      {!current &&
+        (card.status === "installed" || card.status === "connected") && (
+          <div className="program-empty">
+            <div className="program-row-title">
+              <strong>{card.name}</strong>
+              <span
+                className={ready ? "program-selected" : "program-not-selected"}
+              >
+                {currentStatus}
               </span>
-              <p className="auth-note">
-                {item.managedRoot
-                  ? S.managed
-                  : item.source === "unverified"
-                    ? S.unverifiedInstall
-                    : S.external}
-              </p>
-              {item.programOnly && !item.selected && (
-                <p className="auth-note">{S.notSelected}</p>
-              )}
             </div>
-            <div className="ac-actions">
-              {item.selected ? (
-                <span className="program-selected">
-                  {item.inUse ? S.inUse : S.selected}
-                </span>
-              ) : (
+            {card.status === "installed" && onConnect && (
+              <button
+                className={
+                  prerequisitesReady ? "btn btn-primary" : "btn btn-ghost"
+                }
+                disabled={locked || connectDisabled || !prerequisitesReady}
+                onClick={() => void act("connect", onConnect)}
+              >
+                {ACCESS_STRINGS.connect}
+              </button>
+            )}
+            {card.status === "connected" &&
+              onDisconnect &&
+              !disconnectConfirm && (
                 <button
                   className="btn btn-ghost"
-                  disabled={
-                    locked ||
-                    card.status === "none" ||
-                    card.status === "discovered"
-                  }
-                  onClick={() =>
-                    void act("check", () =>
-                      agents.selectInstallation(card.id, item.id),
-                    )
-                  }
+                  disabled={operationBusy || disconnectDisabled}
+                  onClick={() => {
+                    if (!operationBusy && !disconnectDisabled)
+                      setDisconnectConfirm(true);
+                  }}
                 >
-                  {S.select}
+                  {R.disconnectForManagement}
                 </button>
               )}
-              {item.managedRoot && (
-                <button
-                  className="btn btn-text"
-                  disabled={locked || !item.canUninstall}
-                  onClick={() => setConfirm(item.id)}
-                >
-                  {S.uninstall}
-                </button>
-              )}
-            </div>
           </div>
-          <details className="program-path">
-            <summary>{S.pathDetails}</summary>
-            <p className="installation-path">{item.path}</p>
-          </details>
-          {confirm === item.id && (
-            <div className="access-confirm" role="alert">
-              <p>{S.uninstallHint}</p>
-              <p className="installation-path">{item.path}</p>
+        )}
+      {!current &&
+        card.status !== "installed" &&
+        card.status !== "connected" &&
+        !inventory.loading &&
+        !inventory.error && <p className="auth-note">{S.installationsEmpty}</p>}
+      {current && (
+        <div className="program-current">
+          {renderInstallation(current, true)}
+        </div>
+      )}
+      {card.status === "connected" && onDisconnect && disconnectConfirm && (
+        <div className="access-confirm program-disconnect" role="alert">
+          <p>{R.disconnectHint}</p>
+          <button
+            className="btn btn-primary"
+            disabled={operationBusy || disconnectDisabled}
+            onClick={() => void disconnect()}
+          >
+            {busy === "disconnect"
+              ? STRINGS.common.loading
+              : STRINGS.agents.disconnect}
+          </button>
+          <button
+            className="btn btn-ghost"
+            disabled={operationBusy}
+            onClick={() => setDisconnectConfirm(false)}
+          >
+            {R.keepConnection}
+          </button>
+        </div>
+      )}
+      {externalSetup && officialGuide}
+      {(!externalSetup || otherItems.length > 0 || card.programEnv) && (
+        <details className="program-installation-management">
+          <summary>{R.manageInstallations}</summary>
+          {!!otherItems.length && (
+            <div className="program-installations">
+              {otherItems.map((item) => renderInstallation(item))}
+            </div>
+          )}
+          <div className="ac-actions program-actions">
+            {card.installable && (
+              <button
+                className="btn btn-ghost"
+                disabled={locked || installDisabled || !onInstall}
+                onClick={() => {
+                  if (!locked && !installDisabled) void onInstall?.();
+                }}
+              >
+                {card.programEnv ? S.componentUpdate : STRINGS.install.update}
+              </button>
+            )}
+            {!externalSetup && officialGuide}
+            {card.programEnv && (
               <button
                 className="btn btn-ghost"
                 disabled={locked}
                 onClick={() =>
-                  void act("remove", () =>
-                    invoke("agent_installation_uninstall", {
-                      agentId: card.id,
-                      installationId: item.id,
-                    }),
-                  )
+                  void (async () => {
+                    if (locked) return;
+                    try {
+                      const path = await open({
+                        directory: false,
+                        multiple: false,
+                      });
+                      if (typeof path === "string")
+                        await act("check", () =>
+                          agents.selectProgram(card.id, path),
+                        );
+                    } catch (e) {
+                      setError(uiError(e, S.failure));
+                    }
+                  })()
                 }
               >
-                {S.uninstallConfirm}
+                {STRINGS.install.chooseProgram}
               </button>
+            )}
+            {card.programEnv && card.bundledProgram && card.programPath && (
               <button
                 className="btn btn-text"
-                disabled={!!busy}
-                onClick={() => setConfirm(null)}
-              >
-                {S.cancel}
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
-      <div className="ac-actions program-actions">
-        {card.installable && (
-          <button
-            className="btn btn-ghost"
-            disabled={locked || installDisabled || !onInstall}
-            onClick={() => {
-              if (!locked && !installDisabled) void onInstall?.();
-            }}
-          >
-            {card.programEnv ? S.componentUpdate : STRINGS.install.update}
-          </button>
-        )}
-        {card.installGuide && (
-          <button
-            className="btn btn-text"
-            onClick={() =>
-              void openUrl(card.installGuide!).catch((e) =>
-                setError(uiError(e, S.failure)),
-              )
-            }
-          >
-            {S.guide}
-          </button>
-        )}
-      </div>
-      {card.programEnv && (
-        <details className="program-advanced">
-          <summary>{S.advanced}</summary>
-          <p className="auth-note">{S.installLocation}</p>
-          <button
-            className="btn btn-ghost"
-            disabled={locked}
-            onClick={() =>
-              void (async () => {
-                try {
-                  const path = await open({
-                    directory: false,
-                    multiple: false,
-                  });
-                  if (typeof path === "string")
-                    await act("check", () =>
-                      agents.selectProgram(card.id, path),
-                    );
-                } catch (e) {
-                  setError(uiError(e, S.failure));
+                disabled={locked}
+                onClick={() =>
+                  void act("check", () => agents.selectProgram(card.id, null))
                 }
-              })()
-            }
-          >
-            {STRINGS.install.chooseProgram}
-          </button>
-          {card.bundledProgram && card.programPath && (
-            <button
-              className="btn btn-text"
-              disabled={locked}
-              onClick={() =>
-                void act("check", () => agents.selectProgram(card.id, null))
-              }
-            >
-              {STRINGS.install.bundled}
-            </button>
-          )}
+              >
+                {STRINGS.install.bundled}
+              </button>
+            )}
+          </div>
         </details>
       )}
     </section>

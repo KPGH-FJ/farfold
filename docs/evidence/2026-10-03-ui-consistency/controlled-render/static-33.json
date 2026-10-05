@@ -1,0 +1,293 @@
+{
+  "authority": "plans/agent-access.md §0.2/§0.4 → §4.3",
+  "idsSource": "src-tauri/src/acp_client/first_release.rs INCLUDED",
+  "count": 33,
+  "missing": [],
+  "extra": [],
+  "identicalOrder": true,
+  "limitation": "No Agent-specific configuration, capability read, execution or authentication. Devin is string identity only.",
+  "sourceHashes": [
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "f0d9deb961fd814085c9e0e35fd0a8166a79dff25a85f9154955facb134c174b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/first_release.rs",
+      "sha256": "0b096cd9ead66f3e45949f1be233b42772e98ae00760eab9c13b82bfa293e995"
+    },
+    {
+      "path": "src-tauri/src/agent_catalog.rs",
+      "sha256": "d77b676086ae2dff94b8d77a1885df46f679debc2ae3d1661f5f39f4f00b5a03"
+    },
+    {
+      "path": "src/components/AgentHub.tsx",
+      "sha256": "7a67ea4bd68022048313a547cc12fb5944913551e315adf1e13ebccdd1427e67"
+    }
+  ],
+  "rows": [
+    {
+      "name": "Amp",
+      "registryId": "amp-acp",
+      "cardId": "registry:amp-acp",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Antigravity",
+      "registryId": "antigravity-acp",
+      "cardId": "registry:antigravity-acp",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Auggie",
+      "registryId": "auggie",
+      "cardId": "registry:auggie",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Autohand",
+      "registryId": "autohand",
+      "cardId": "registry:autohand",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Claude",
+      "registryId": "claude-acp",
+      "cardId": "registry:claude-acp",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Cline",
+      "registryId": "cline",
+      "cardId": "registry:cline",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "CodeBuddy",
+      "registryId": "codebuddy-code",
+      "cardId": "registry:codebuddy-code",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Codex",
+      "registryId": "codex-acp",
+      "cardId": "codex",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Corust",
+      "registryId": "corust-agent",
+      "cardId": "registry:corust-agent",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Cursor",
+      "registryId": "cursor",
+      "cardId": "registry:cursor",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Devin",
+      "registryId": "devin",
+      "cardId": "registry:devin",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": true
+    },
+    {
+      "name": "DimCode",
+      "registryId": "dimcode",
+      "cardId": "registry:dimcode",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Dirac",
+      "registryId": "dirac",
+      "cardId": "registry:dirac",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Factory Droid",
+      "registryId": "factory-droid",
+      "cardId": "registry:factory-droid",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "fast-agent",
+      "registryId": "fast-agent",
+      "cardId": "registry:fast-agent",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Gemini",
+      "registryId": "gemini",
+      "cardId": "registry:gemini",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "GitHub Copilot",
+      "registryId": "github-copilot-cli",
+      "cardId": "registry:github-copilot-cli",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Goose",
+      "registryId": "goose",
+      "cardId": "registry:goose",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Grok Build",
+      "registryId": "grok-build",
+      "cardId": "registry:grok-build",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Junie",
+      "registryId": "junie",
+      "cardId": "registry:junie",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Kilo",
+      "registryId": "kilo",
+      "cardId": "registry:kilo",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Kimchi",
+      "registryId": "kimchi",
+      "cardId": "registry:kimchi",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Kimi",
+      "registryId": "kimi",
+      "cardId": "registry:kimi",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "MiniMax",
+      "registryId": "minimax-code",
+      "cardId": "registry:minimax-code",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Mistral Vibe",
+      "registryId": "mistral-vibe",
+      "cardId": "registry:mistral-vibe",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Nova",
+      "registryId": "nova",
+      "cardId": "registry:nova",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "OpenCode",
+      "registryId": "opencode",
+      "cardId": "opencode",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Pi",
+      "registryId": "pi-acp",
+      "cardId": "pi",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Poolside",
+      "registryId": "poolside",
+      "cardId": "registry:poolside",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Qoder",
+      "registryId": "qoder",
+      "cardId": "registry:qoder",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Qwen",
+      "registryId": "qwen-code",
+      "cardId": "registry:qwen-code",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "siGit",
+      "registryId": "sigit",
+      "cardId": "registry:sigit",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    },
+    {
+      "name": "Stakpak",
+      "registryId": "stakpak",
+      "cardId": "registry:stakpak",
+      "route": "AgentHub selectedCard → shared AgentSetup",
+      "verification": "static source identity and route only",
+      "paused": false
+    }
+  ]
+}

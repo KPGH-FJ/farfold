@@ -1,0 +1,1 @@
+{"scope": "PID, parent PID and executable basename only; no args/env/terminal", "appPids": [81264], "descendants": [{"pid": 81264, "ppid": 1, "program": "farfold"}, {"pid": 81491, "ppid": 81264, "program": "devin"}, {"pid": 81500, "ppid": 81491, "program": "docker"}, {"pid": 81887, "ppid": 81264, "program": "node"}, {"pid": 82021, "ppid": 81887, "program": "pi"}]}

@@ -1,11 +1,41 @@
 import type { AgentCardModel } from "./agents";
 import { ACCESS_STRINGS as S } from "./access_strings";
+import { agentBrand } from "./agent_brands";
 
 export type DirectoryCategory = (typeof S.categories)[number];
+
+/** Daily entry points exclude retired catalog rows; historical callers keep all cards. */
+export function isAgentPresentable(card: AgentCardModel): boolean {
+  return (
+    card.custom ||
+    card.source === "custom" ||
+    card.source === "discovered" ||
+    card.status === "discovered" ||
+    card.firstBatchVisible !== false
+  );
+}
+
+export function presentableAgents(cards: AgentCardModel[]): AgentCardModel[] {
+  return cards.filter(isAgentPresentable);
+}
+
+/** Admits a new-conversation choice; never represents a successful model request. */
+export function isAgentReadyForConversation(
+  card: AgentCardModel,
+  prepared: boolean,
+): boolean {
+  return (
+    isAgentPresentable(card) &&
+    (card.status === "connected" || card.status === "installed") &&
+    prepared
+  );
+}
 
 /** Only reviewed presentation metadata supplies localized descriptions and tags. */
 export function agentDirectoryDescription(card: AgentCardModel): string {
   if (card.custom) return S.directoryCustomDescription;
+  const brand = agentBrand(card);
+  if (brand) return brand.description;
   if (card.presentation) return card.presentation.description;
   if (card.status === "connected" || card.status === "installed")
     return S.directoryInstalledDescription;

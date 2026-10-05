@@ -18,7 +18,10 @@ vi.mock("../runtime/work_policy", () => ({
 }));
 vi.mock("../runtime/setup_storage", () => ({
   useSetupStorage: () => ({}),
-  setupStorage: { completed: () => true },
+  setupStorage: {
+    completed: () => true,
+    confirmedSelection: () => ({ service: null, config: {} }),
+  },
 }));
 import { EmptyState } from "./EmptyState";
 import { composerDrafts, newConversationChoice } from "../runtime/drafts";

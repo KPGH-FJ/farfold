@@ -1,0 +1,11 @@
+{
+  "atUtc": "2026-10-03T02:03:51.509262+00:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateAbsent": true,
+  "formalFilesMatch": true,
+  "formalSignature": {
+    "exitCode": 0,
+    "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+  },
+  "targetOtherwiseUntouched": true
+}

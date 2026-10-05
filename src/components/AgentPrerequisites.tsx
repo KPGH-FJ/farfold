@@ -195,18 +195,48 @@ export function AgentPrerequisites({
   };
 
   if (info?.dependencies.length === 0 && !error) return null;
-  return (
-    <section
-      className="agent-preparation-dependencies"
-      aria-label={S.dependencies}
-    >
-      <h4>{S.dependencies}</h4>
+  const prepared = !!info?.dependencies.every(
+    (item) => item.status === "ready",
+  );
+  const content = (
+    <>
+      <div className="program-dependency-heading">
+        {!prepared && <h4>{S.dependencies}</h4>}
+        {!busy && (error || info?.dependencies.length) && (
+          <button
+            className="btn btn-text"
+            onClick={() => setReload((value) => value + 1)}
+          >
+            {S.retry}
+          </button>
+        )}
+      </div>
       {!info && !error && <p role="status">{S.loading}</p>}
       {info?.dependencies.map((item) => (
         <div className="agent-setup-program" key={item.id}>
-          <div>
+          <div className="program-dependency-summary">
             <strong>{item.name}</strong>
-            <p>{S[item.status]}</p>
+            <span
+              className={
+                item.status === "ready"
+                  ? "program-selected"
+                  : "program-not-selected"
+              }
+            >
+              {S[item.status]}
+            </span>
+          </div>
+          {item.status !== "ready" && item.installable && (
+            <button
+              className="btn btn-primary"
+              disabled={busy}
+              onClick={() => void install(item.id)}
+            >
+              {busy ? S.installing : S.install}
+            </button>
+          )}
+          <details className="program-dependency-details">
+            <summary>{S.details}</summary>
             {item.detail && <p>{item.detail}</p>}
             {(item.programVersion != null ||
               item.componentVersion != null ||
@@ -244,9 +274,14 @@ export function AgentPrerequisites({
                 ) : (
                   <p>{S.requirementUnknown}</p>
                 )}
-                {item.status === "ready" && <p>{S.versionTry}</p>}
               </>
             )}
+            <p>
+              {S.location}：{item.managedLocation}
+            </p>
+            <p>
+              {S.command}：{item.checkCommand}
+            </p>
             {officialLink(item.sourceUrl) && (
               <button
                 className="btn btn-text"
@@ -256,45 +291,39 @@ export function AgentPrerequisites({
                   )
                 }
               >
-                {S.source} · {new URL(item.sourceUrl).hostname}
+                {S.source}
               </button>
             )}
-            {item.status !== "ready" && (
-              <details>
-                <summary>{S.details}</summary>
-                <p>
-                  {S.location}：{item.managedLocation}
-                </p>
-                <p>
-                  {S.command}：{item.checkCommand}
-                </p>
-                <p>{S.scope}</p>
-              </details>
-            )}
             {item.canInstallCandidate && (
-              <p className="auth-note">{S.candidateScope}</p>
+              <div className="program-candidate-action">
+                <button
+                  className="btn btn-ghost"
+                  disabled={busy}
+                  onClick={() => void install(item.id, "prepare_candidate")}
+                >
+                  {S.installCandidate}
+                </button>
+                <p className="auth-note">{S.candidateScope}</p>
+              </div>
             )}
-          </div>
-          {item.status !== "ready" && item.installable && (
-            <button
-              className="btn btn-primary"
-              disabled={busy}
-              onClick={() => void install(item.id)}
-            >
-              {busy ? S.installing : S.install}
-            </button>
-          )}
-          {item.canInstallCandidate && (
-            <button
-              className="btn btn-ghost"
-              disabled={busy}
-              onClick={() => void install(item.id, "prepare_candidate")}
-            >
-              {S.installCandidate}
-            </button>
-          )}
+          </details>
         </div>
       ))}
+    </>
+  );
+  return (
+    <section
+      className="agent-preparation-dependencies"
+      aria-label={S.dependencies}
+    >
+      {prepared ? (
+        <details className="program-check-details">
+          <summary>{S.checkDetails}</summary>
+          {content}
+        </details>
+      ) : (
+        content
+      )}
       {busy && (
         <div className="agent-setup-progress" role="status">
           <span>{stage ?? S.installing}</span>
@@ -316,14 +345,6 @@ export function AgentPrerequisites({
         <p className="auth-note" role="status">
           {notice}
         </p>
-      )}
-      {!busy && (error || info?.dependencies.length) && (
-        <button
-          className="btn btn-ghost"
-          onClick={() => setReload((value) => value + 1)}
-        >
-          {S.retry}
-        </button>
       )}
     </section>
   );

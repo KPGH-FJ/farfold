@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-02T19:38:47.237193+00:00",
+  "summary": {
+    "files": 4,
+    "manifestSha256": "f34313ea0772c64f89d00d15c1de822a7249759f64c82d58503939409bdc948f"
+  },
+  "files": {
+    "Contents/Info.plist": "a55489940ee68382bb34f05c15030dcc2b9205835303e504809a041219bb2695",
+    "Contents/MacOS/farfold": "85e113575af91a95f2a4e39ab1f1b5d1f7b199f85a69e51ce7e5542b2b964e15",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "dca26908750aeab4325313cb8e73c05e226f3af7d2aa7db42619d7393c2ebe1c"
+  },
+  "path": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "signature": {
+    "exitCode": 0,
+    "output": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement"
+  },
+  "installedBinarySha256": "9e0c1ac2954e6bfa3e7eb5b79eb4bd4b6179136f9f342461121b39b7b96804a7",
+  "installedApplicationChanged": false
+}

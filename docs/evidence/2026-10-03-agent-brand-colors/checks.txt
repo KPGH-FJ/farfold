@@ -1,0 +1,11 @@
+2026-10-03 branding presentation checks
+
+PASS: corepack pnpm test src/runtime/agent_brands.test.ts src/runtime/agents.test.ts src/runtime/agent_directory.test.ts src/components/ConversationLibrary.test.tsx
+4 test files; 38 tests passed at 12:05:59 local execution timestamp.
+
+PASS: targeted prettier --check for brand module/tests and current evidence Markdown/JSON.
+PASS: git diff --check for owned changes.
+PASS: 33/33 official asset size and SHA-256 values match asset-sources.json; 27 SVGs XML-parsed, 5 PNGs and 1 JPEG fully decoded.
+
+Coverage: exact 33 catalog identities; distinct Chinese descriptions, 21–35 characters; official colors retained (20 color, 1 near-monochrome, 12 monochrome).
+No app/Agent launch, installation, account access or runtime configuration changes performed.

@@ -77,7 +77,7 @@ fn fixture(dir: &std::path::Path) -> (MetaStore, Arc<AcpManager>, AgentRow) {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn tool_tail_retains_work_after_stop_without_blocking_later_prompts() {
+async fn configuration_change_tool_tail_retains_work_after_stop_without_blocking_later_prompts() {
     let dir = tempfile::tempdir().unwrap();
     let cwd = dir.path().canonicalize().unwrap();
     let (store, manager, row) = fixture(&cwd);
@@ -132,7 +132,11 @@ async fn tool_tail_retains_work_after_stop_without_blocking_later_prompts() {
         control
             .send(match variant {
                 0 => SessionControl::Detach { deadline, result },
-                1 => SessionControl::Close { deadline, result },
+                1 => SessionControl::Close {
+                    deadline,
+                    result,
+                    require_idle_interactions: false,
+                },
                 _ => SessionControl::Delete { deadline, result },
             })
             .unwrap();

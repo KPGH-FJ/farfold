@@ -1,0 +1,36 @@
+{
+  "scope": "Deterministic review artifact and local source-anchor checks; not real-Agent acceptance. Upstream repository-relative file anchors are public URL references and not misidentified as Farfold local files.",
+  "checks": {
+    "33_unique_ids": true,
+    "scope_exact": true,
+    "264_unique_standard_cells": true,
+    "zero_full_passes": true,
+    "33_with_known_gap": true,
+    "all_account_gaps_have_explanation": true,
+    "version_metadata_matches": true,
+    "cached_versions_preserved": true,
+    "current_install_receipt_matches": true,
+    "no_live_tests_claimed": true,
+    "criterion_counts_match": true,
+    "all_33_matrix_rows_present": true,
+    "no_placeholder_in_readme": true,
+    "compensated_missing_history_remains_risk": true,
+    "all_local_evidence_paths_and_lines_valid": true
+  },
+  "passed": true,
+  "localAnchorOccurrencesChecked": 1958,
+  "uniqueLocalFilesChecked": 84,
+  "upstreamURLAnchorOccurrences": 54,
+  "upstreamURLRecheckedByThisValidator": false,
+  "artifactSha256": {
+    "core-review.json": "83ff9e7dec9fae731ec486e83346cd8b66bcdc67ced8c754fc459accc75494fc",
+    "remaining-review.json": "8225d3877341b47f27dce9b5352106125124801339d073fc07eede8ca14cef90",
+    "README.md": "1c06bf8e8419bcaec9b83779ee41c8ec878c122990543ecc9a57a735345c3cc2",
+    "shared-checks.json": "28e3ed13e9661ee2ad250e6e86ba101f9e3c0e57f8020e947be56f6037adfe37",
+    "all-33-review.json": "e28e403c24d6cf6c8a767e38df71672993eae61dba4cb1766e372cb578d55c8f",
+    "commercial-review.json": "d64996f8eb8e0d51038dcf2bba73baacaee30dc9b94fc982b84e7bf0e5bc8181",
+    "current-installed-metadata.json": "a0ea6a82e76d965bc4d2715c60af4eb33b0d1245008d7b09fcce0c535471a1da",
+    "common-review.json": "94b76c262bff7d615f24ba92ac2a87af6e61be422bb9bfffeadb2fa5a9bda39d"
+  },
+  "issues": []
+}

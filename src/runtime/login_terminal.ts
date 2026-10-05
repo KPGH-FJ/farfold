@@ -115,6 +115,7 @@ export class BufferedLoginTerminal {
     wait: (id: string) => Promise<number>;
     close: (id: string) => Promise<number | null>;
     exit: (code: number, cancelled: boolean) => void;
+    error?: (reason: unknown) => void;
   }) {
     this.owner = new LoginTerminal({
       start: () =>
@@ -136,7 +137,10 @@ export class BufferedLoginTerminal {
         this.update({ exit, cancelled, closing: false });
         ports.exit(exit, cancelled);
       },
-      error: (error) => this.update({ error }),
+      error: (error) => {
+        this.update({ error });
+        ports.error?.(error);
+      },
     });
   }
   start() {

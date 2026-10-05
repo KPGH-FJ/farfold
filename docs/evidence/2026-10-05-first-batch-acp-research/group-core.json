@@ -1,0 +1,2511 @@
+{
+  "schemaVersion": 1,
+  "group": "core",
+  "asOf": "2026-10-05T15:22:09.875381+00:00",
+  "scope": {
+    "agentCount": 11,
+    "allowed": "public official source/docs/packages; installed public program files; FarFold launch metadata only",
+    "notPerformed": [
+      "No Agent processes started",
+      "No model/API calls",
+      "No credential/config/user-session reads",
+      "No installation/upgrades",
+      "No production source or documentation changes"
+    ]
+  },
+  "legend": {
+    "C": "configOptions + session/set_config_option",
+    "L": "legacy models + session/set_model only (or additionally present)",
+    "N": "no standard same-session model switch exposed",
+    "U": "not established",
+    "sourceSupport": "Implementation evidence, not live execution or installed-user acceptance"
+  },
+  "methodology": [
+    "Installed exact version from FarFold selected launch metadata; corresponding release-tag implementation read. Pi additionally read installed sourcemap.",
+    "Latest public npm/PyPI or GitHub release compared independently; current registry/matrix versions not assumed identical.",
+    "Official registry matrix probes may be authless and use nonexistent session/model; never counted as cold restore, replay, or actual switch.",
+    "Public source archives had transfer-tail errors; cited extracted files were checked for completed endings. Extra cited raw sources fetched with curl.",
+    "No account contents, user historical conversation bodies, or credentials were read."
+  ],
+  "farfoldSourceBaseline": {
+    "head": "dc94127",
+    "workingTree": "dirty; current source, not only HEAD",
+    "modelGap": "src/runtime/sessions.ts:728 consumes configOptions but not legacy models; session_configuration.ts:142 and pump.rs:1152 use session/set_config_option only."
+  },
+  "agents": [
+    {
+      "id": "codex-acp",
+      "name": "Codex ACP",
+      "summary": "安装1.13.1：C路线，list/load/冷恢复/正文回放与续答均有实现；复用Codex账号，另有账号状态/退出接口。不是OpenAI自身维护的ACP适配器。",
+      "launch": {
+        "farfoldId": "codex",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "@agentclientprotocol/codex-acp@2.1.1"
+          }
+        }
+      },
+      "version": {
+        "installed": "1.13.1",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v1.13.1",
+        "registry": "2.1.1",
+        "publicLatest": "2.1.1",
+        "publicLatestBasis": "https://registry.npmjs.org/@agentclientprotocol/codex-acp/latest",
+        "matrix": "2.1.1",
+        "latestSourceNotes": "已读2.1.1核心：仍C与list/load；load新增失败清理及回放完成后等待标题任务。"
+      },
+      "source": {
+        "maintainer": "agentclientprotocol (adapter); OpenAI (underlying Codex)",
+        "relationship": "third-party ACP adapter using official Codex app-server",
+        "repository": "https://github.com/agentclientprotocol/codex-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 791,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L791",
+            "claim": "load awaits thread history replay; resume is separate"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 857,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L857",
+            "claim": "session/list delegates to native Codex"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 1336,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L1336",
+            "claim": "configOptions model/reasoning mutate existing session"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 419,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L419",
+            "claim": "authentication/status and logout extensions"
+          },
+          {
+            "file": "src/CodexAppServerClient.ts",
+            "line": 592,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAppServerClient.ts#L592",
+            "claim": "native thread/resume,list,read"
+          },
+          {
+            "file": "src/CodexJsonRpcConnection.ts",
+            "line": 16,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexJsonRpcConnection.ts#L16",
+            "claim": "inherits process environment"
+          },
+          {
+            "file": "src/CodexAcpServer.ts",
+            "line": 839,
+            "url": "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/src/CodexAcpServer.ts#L839",
+            "claim": "latest load still awaits replay and now closes on replay failure"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "native thread/list，带cwd/cursor；要求可认证。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "load读取/恢复原thread，保留原sessionId。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await streamThreadHistory，load响应前完成通知；resume不回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Codex app-server thread/read + thread/resume读取原生持久线程，而非适配器内存Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复的SessionState及threadId供后续prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "configOptions model/reasoning；既有session设置影响后续请求。另保留旧models/set_model。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "启动官方Codex app-server沿用原环境/CODEX_HOME，account/read读取原账号；可选服务覆盖另算。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate含API key/ChatGPT/device code/gateway；标准logout与authentication/status/logout扩展；authStatus能力推送_auth/status_update。不是仅凭initialize推断登录。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L791",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L857",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L1336",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L419",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAppServerClient.ts#L592",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexJsonRpcConnection.ts#L16",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/src/CodexAcpServer.ts#L839",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/codex-acp/agent.json"
+      ],
+      "limitations": [
+        "未进行本机历史冷恢复、真实模型切换或续答。",
+        "本机适配器1.13.1与公开2.1.1不同；不得把旧zed Rust适配器源码当本版实现。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "codex-acp",
+          "name": "Codex",
+          "registryVersion": "2.1.1",
+          "repository": "https://github.com/agentclientprotocol/codex-acp",
+          "website": null,
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "2.1.1",
+          "authMethods": [
+            "agent"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": true,
+            "sessionResume": true,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required"
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "auth_required",
+              "code": -32000,
+              "message": "Authentication required"
+            },
+            "session/fork": {
+              "status": "auth_required",
+              "code": -32000,
+              "message": "Authentication required"
+            },
+            "session/resume": {
+              "status": "auth_required",
+              "code": -32000,
+              "message": "Authentication required"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "error",
+              "code": -32603,
+              "message": "Internal error"
+            }
+          },
+          "stderrTail": null,
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/codex-acp --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/codex-acp/workspace",
+          "durationSeconds": 9.188,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "summary": "安装1.18.31：C+L，支持持久会话list/load/正文回放/续答；账号由原OpenCode管理，authenticate自身只是确认方法，登录在终端。",
+      "launch": {
+        "farfoldId": "opencode",
+        "command": "/Users/tw/.opencode/bin/opencode",
+        "args": [
+          "acp"
+        ],
+        "publicEntry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-darwin-arm64.zip",
+              "cmd": "./opencode",
+              "args": [
+                "acp"
+              ],
+              "sha256": "8522b70f545184b3a8d97c5ca4f814093b2476d72aebfda8c48bcd072ec31d1b"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-darwin-x64.zip",
+              "cmd": "./opencode",
+              "args": [
+                "acp"
+              ],
+              "sha256": "66bf0638cffad3b65bd6648cc3947619e1dd71f4bfeee0a81e087ac036bb1088"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-linux-arm64.tar.gz",
+              "cmd": "./opencode",
+              "args": [
+                "acp"
+              ],
+              "sha256": "bbdb3f00c2c51e42e315525233151309724226a8776da8e9145e3b0fa3d5310f"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-linux-x64.tar.gz",
+              "cmd": "./opencode",
+              "args": [
+                "acp"
+              ],
+              "sha256": "0f22479647226d1d2dd99595d20082ee7bda3870b62dc6a90b41efc1a71d7e9a"
+            },
+            "windows-aarch64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-windows-arm64.zip",
+              "cmd": "./opencode",
+              "args": [
+                "acp"
+              ],
+              "sha256": "b738ae4e823c862eaba6d6bd6e1d35e01b46851d7160882c7bdb189f33a16447"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/anomalyco/opencode/releases/download/v1.18.34/opencode-windows-x64.zip",
+              "cmd": "./opencode.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "8ec42ed1ad8db108052394b83ab69d0331398f761fbfff5fe50f91d65bdd3548"
+            }
+          }
+        }
+      },
+      "version": {
+        "installed": "1.18.31",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v1.18.31",
+        "registry": "1.18.34",
+        "publicLatest": "1.18.34",
+        "publicLatestBasis": "https://github.com/anomalyco/opencode/releases/latest",
+        "matrix": "1.18.34",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "anomalyco / OpenCode",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/anomalyco/opencode",
+        "reviewedFiles": [
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 95,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L95",
+            "claim": "initialize list/load/resume and terminal auth"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 209,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L209",
+            "claim": "load uses durable SDK session.get/messages and replayMessages"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 250,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L250",
+            "claim": "native session listing with cursor"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 409,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L409",
+            "claim": "model/variant config update on same session"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 478,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L478",
+            "claim": "legacy setModel"
+          },
+          {
+            "file": "packages/opencode/src/acp/service.ts",
+            "line": 1099,
+            "url": "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L1099",
+            "claim": "restore model configuration from saved session/history"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK session.list，cwd过滤，合并活动会话，cursor分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK session.get/messages后restoreSession。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "按保存消息yield replayMessages完成后返回；resume另一路不等同回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久SDK session服务提供记录；并非仅依赖ACP会话Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原sessionId及恢复模型/variant用于后续prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "configOptions model、reasoning variant；更新现有session，不清历史；旧set_model也支持。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原OpenCode服务与CLI配置/认证源；终端调用opencode auth login。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-auth执行登录；ACP authenticate校验methodId后return {}，不能证明凭据有效；此ACP服务未提供账号status/logout标准处理器。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L95",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L209",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L250",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L409",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L478",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L1099",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/opencode/agent.json"
+      ],
+      "limitations": [
+        "未读用户认证配置；账号实际有效性未知。",
+        "公开最新1.18.34；当前源码主证据为安装对应1.18.31。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "opencode",
+          "name": "OpenCode",
+          "registryVersion": "1.18.34",
+          "repository": "https://github.com/anomalyco/opencode",
+          "website": "https://opencode.ai",
+          "distribution": "binary",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "1.18.34",
+          "authMethods": [
+            "terminal"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": true,
+            "sessionResume": true,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/resume": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "invalid_params",
+              "code": -32602,
+              "message": "Invalid params: model not found: matrix-model"
+            }
+          },
+          "stderrTail": "Error handling request { jsonrpc: \"2.0\", id: 6, method: \"session/stop\", params: { sessionId: \"ses_ef3fb2c69ffeCFbH9J5X7rY0n5\", }, } { code: -32601, message: \"\\\"Method not found\\\": session/stop\", data: { method: \"session/stop\", }, } Error handling request { jsonrpc: \"2.0\", id: 7, method: \"session/set_model\", params: { sessionId: \"ses_ef3fb2c69ffeCFbH9J5X7rY0n5\", modelId: \"matrix-model\", }, } { code: -32602, message: \"Invalid params: model not found: matrix-model\", data: { providerId: \"matrix-model\", modelId: \"matrix-model\", }, }",
+          "commandPreview": "/home/runner/work/_temp/matrix-sandbox/binary/opencode/extracted/opencode acp",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/binary/opencode/workspace",
+          "durationSeconds": 5.731,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "pi-acp",
+      "name": "Pi ACP",
+      "summary": "安装及最新0.0.34：C，适配器从Pi原生JSONL找历史并启动对应session，能回放/续答；账号复用原Pi。每连接只保留一个Pi活动进程。",
+      "launch": {
+        "farfoldId": "pi",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/dist/index.js"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "pi-acp@0.0.34"
+          }
+        }
+      },
+      "version": {
+        "installed": "0.0.34",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v0.0.34",
+        "registry": "0.0.34",
+        "publicLatest": "0.0.34",
+        "publicLatestBasis": "https://registry.npmjs.org/pi-acp/latest",
+        "matrix": "0.0.34",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "svkozak (adapter); Pi project (underlying agent)",
+        "relationship": "third-party ACP adapter invoking Pi RPC subprocess",
+        "repository": "https://github.com/svkozak/pi-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/acp/agent.ts",
+            "line": 909,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L909",
+            "claim": "native JSONL session listing"
+          },
+          {
+            "file": "src/acp/agent.ts",
+            "line": 938,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L938",
+            "claim": "load restores Pi session then emits getMessages content"
+          },
+          {
+            "file": "src/acp/agent.ts",
+            "line": 1175,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L1175",
+            "claim": "model/thinking config mapped to Pi RPC"
+          },
+          {
+            "file": "src/acp/pi-sessions.ts",
+            "line": 19,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/pi-sessions.ts#L19",
+            "claim": "native ~/.pi/agent session storage root"
+          },
+          {
+            "file": "src/pi-rpc/process.ts",
+            "line": 155,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/pi-rpc/process.ts#L155",
+            "claim": "--session path and inherited env"
+          },
+          {
+            "file": "src/index.ts",
+            "line": 5,
+            "url": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/index.ts#L5",
+            "claim": "terminal-login invokes native Pi"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "listPiSessions递归原生session文件，cwd过滤及50条分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "findStoredSession后以--session原文件恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "getMessages后转换user/assistant/toolResult为ACP通知；load完成前逐条发送。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原Pi JSONL文件提供跨ACP进程恢复，不只内存索引。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "以同一sessionFile运行Pi RPC；new/load会closeAllExcept。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "setSessionConfigOption映射Pi set_model/set_thinking_level，同原session文件；类有unstable_setSessionModel但当前matrix旧wire method_not_found，因此不保证L。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "source-method-present-but-wire-not-found",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Pi进程继承env/原HOME；不生成私有账号存储。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-login启动Pi供用户登录；authenticate本身no-op。未见ACP账号状态/退出接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L909",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L938",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L1175",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/pi-sessions.ts#L19",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/pi-rpc/process.ts#L155",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/index.ts#L5",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/pi-acp/agent.json"
+      ],
+      "limitations": [
+        "源码还直接由本机dist/index.js.map的sourcesContent提取，保存在installed-pi，版本相符。",
+        "底层Pi可执行依赖需另安装/配置；官方matrix因pi缺失session/new失败不代表本机失败。",
+        "一次ACP连接new/load会关闭其它Pi会话进程；本轮未实测并发/恢复。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "pi-acp",
+          "name": "pi ACP",
+          "registryVersion": "0.0.34",
+          "repository": "https://github.com/svkozak/pi-acp",
+          "website": null,
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "0.0.34",
+          "authMethods": [
+            "terminal"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": false,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "error",
+            "code": -32603,
+            "message": "Internal error: Could not start pi: executable not found (command: pi). Pi needs to be installed before it can run in ACP clients. Install it via `npm install -g @earendil-works/pi-coding-agent` or ensure `pi` is on y..."
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/fork"
+            },
+            "session/resume": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/resume"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/set_model"
+            }
+          },
+          "stderrTail": "H. Then try again.', data: { code: 'ENOENT' } } Error handling request { jsonrpc: '2.0', id: 4, method: 'session/fork', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/pi-acp/workspace', mcpServers: [] } } { code: -32601, message: '\"Method not found\": session/fork', data: { method: 'session/fork' } } Error handling request { jsonrpc: '2.0', id: 5, method: 'session/resume', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/pi-acp/workspace', mcpServers: [] } } { code: -32601, message: '\"Method not found\": session/resume', data: { method: 'session/resume' } } Error handling request { jsonrpc: '2.0', id: 6, method: 'session/stop', params: { sessionId: 'sess_matrix_probe' } } { code: -32601, message: '\"Method not found\": session/stop', data: { method: 'session/stop' } } Error handling request { jsonrpc: '2.0', id: 7, method: 'session/set_model', params: { sessionId: 'sess_matrix_probe', modelId: 'matrix-model' } } { code: -32601, message: '\"Method not found\": session/set_model', data: { method: 'session/set_model' } }",
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/pi-acp --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/pi-acp/workspace",
+          "durationSeconds": 1.539,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "claude-acp",
+      "name": "Claude Agent ACP",
+      "summary": "安装0.81.2：C，无旧set_model；SDK负责持久历史和续答，load回放正文；复用Claude CLI认证，可推送账号状态并退出。",
+      "launch": {
+        "farfoldId": "registry:claude-acp",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/index.js"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "@agentclientprotocol/claude-agent-acp@0.86.0"
+          }
+        }
+      },
+      "version": {
+        "installed": "0.81.2",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v0.81.2",
+        "registry": "0.86.0",
+        "publicLatest": "0.86.0",
+        "publicLatestBasis": "https://registry.npmjs.org/@agentclientprotocol/claude-agent-acp/latest",
+        "matrix": "0.85.1",
+        "latestSourceNotes": "已读0.86.0：仍C；list新增分页；冷load可与建session并发准备但仍await历史回放。"
+      },
+      "source": {
+        "maintainer": "agentclientprotocol (adapter); Anthropic (Agent SDK)",
+        "relationship": "third-party ACP adapter using official Anthropic Agent SDK",
+        "repository": "https://github.com/agentclientprotocol/claude-agent-acp",
+        "reviewedFiles": [
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2429,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2429",
+            "claim": "load reads persisted session and awaits replay"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2448,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2448",
+            "claim": "SDK listSessions"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2478,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2478",
+            "claim": "authenticate normally no-op; gateway overrides optional"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2819,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2819",
+            "claim": "logout invokes claude auth logout"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 6889,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L6889",
+            "claim": "config model calls query.setModel"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2343,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2343",
+            "claim": "authStatus push extension"
+          },
+          {
+            "file": "src/acp-agent.ts",
+            "line": 2834,
+            "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.86.0/src/acp-agent.ts#L2834",
+            "claim": "new load/replay implementation and cursor pagination"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "官方Agent SDK listSessions({dir})；安装版未见cursor分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "readResumedSession/getOrCreateSession，SDK query使用resume。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await replaySessionHistory；resumeSession不回放。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK磁盘session及getSessionMessages/readResumedSession提供跨进程恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SDK恢复原session作为下一次query上下文。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model config实际调用query.setModel；effort配置也实现，不清历史。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "复用Claude CLI/官方SDK原配置与登录；兼容环境/API配置，gateway另有进程覆盖。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "terminal-auth真正登录；普通authenticate历史上no-op，仅特定gateway payload设置覆盖。标准logout调用claude auth logout；authStatus为推送，不是通用账号查询API。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2429",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2448",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2478",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2819",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L6889",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2343",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.86.0/src/acp-agent.ts#L2834",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/claude-acp/agent.json"
+      ],
+      "limitations": [
+        "适配器不是Anthropic原生ACP实现。",
+        "authenticate成功不能等同已登录；环境密钥/credential helper在logout后仍可能提供认证。",
+        "本机0.81.2、matrix0.85.1、公开最新0.86.0分开。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "claude-acp",
+          "name": "Claude Agent",
+          "registryVersion": "0.85.1",
+          "repository": "https://github.com/agentclientprotocol/claude-agent-acp",
+          "website": null,
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "0.85.1",
+          "authMethods": [
+            "terminal"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": true,
+            "sessionResume": true,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "error",
+              "code": -32603,
+              "message": "Internal error"
+            },
+            "session/resume": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/set_model"
+            }
+          },
+          "stderrTail": "[session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=validate-cwd durationMs=3 totalMs=3 [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=settings durationMs=4 totalMs=7 [session/query] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 resume=none apiType=native baseUrl=native [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=prepare-query durationMs=21 totalMs=28 [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=sdk-initialize durationMs=1806 totalMs=1835 [authStatus] session account carries no identity signal; keeping probe [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=models durationMs=2 totalMs=1836 [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=modes durationMs=1 totalMs=1837 [session/create] sessionId=97b56713-fa14-4825-acc7-d483d3967be7 phase=register durationMs=2 totalMs=1839",
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/claude-acp --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/claude-acp/workspace",
+          "durationSeconds": 11.592,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "summary": "安装/公开0.62.0：L路线，load可恢复及回放、没有ACP list；Farfold当前不消费其旧models/set_model，因此不能宣称已有通用模型切换。",
+      "launch": {
+        "farfoldId": "registry:gemini",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/bundle/gemini.js",
+          "--acp"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "@google/gemini-cli@0.62.0",
+            "args": [
+              "--acp"
+            ]
+          }
+        }
+      },
+      "version": {
+        "installed": "0.62.0",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v0.62.0",
+        "registry": "0.62.0",
+        "publicLatest": "0.62.0",
+        "publicLatestBasis": "https://registry.npmjs.org/@google/gemini-cli/latest",
+        "matrix": "0.62.0",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "Google / google-gemini",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/google-gemini/gemini-cli",
+        "reviewedFiles": [
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 40,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L40",
+            "claim": "initialize has load but no list"
+          },
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 106,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L106",
+            "claim": "authenticate refreshes CLI auth"
+          },
+          {
+            "file": "packages/cli/src/acp/acpRpcDispatcher.ts",
+            "line": 224,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L224",
+            "claim": "legacy unstable_setSessionModel"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSessionManager.ts",
+            "line": 164,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L164",
+            "claim": "disk SessionSelector and resumeChat"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSessionManager.ts",
+            "line": 205,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L205",
+            "claim": "streamHistory called without await"
+          },
+          {
+            "file": "packages/cli/src/acp/acpSession.ts",
+            "line": 236,
+            "url": "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSession.ts#L236",
+            "claim": "model updates session config; history emitter"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "未声明/实现session/list，官方当日matrix为method_not_found；CLI列历史命令不等于ACP list。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionSelector解析持久session；convertSessionToClientHistory + await resumeChat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "存在streamHistory正文回放，但loadSession未await该promise就返回；不能保证客户端收到load响应时回放已完。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "用持久conversation及filePath恢复Gemini chat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复clientHistory后创建Session，后续prompt共享恢复chat。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "new/load返回models.availableModels/currentModelId，legacy set_model调用session.config.setModel；未实现configOptions/set_config。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "L",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "loadSettings(cwd)读取原Gemini CLI selected auth并refreshAuth；原OAuth/API/Vertex配置可复用。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate支持登录/认证刷新，切认证类型可清缓存；未见ACP账号status/logout接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L40",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L106",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L224",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L164",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSessionManager.ts#L205",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpSession.ts#L236",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/gemini/agent.json"
+      ],
+      "limitations": [
+        "无list时只能使用FarFold已知native_session_id或其他合法来源，不可伪造全量历史发现。",
+        "未await回放与Farfold replay-complete标记可能冲突，属于源码可见兼容风险，未在本机复现。",
+        "旧issue的无记忆结论不能套到现有resumeChat实现。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "L",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "gemini",
+          "name": "Gemini CLI",
+          "registryVersion": "0.62.0",
+          "repository": "https://github.com/google-gemini/gemini-cli",
+          "website": "https://geminicli.com",
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "0.62.0",
+          "authMethods": [
+            "agent"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": false,
+            "sessionFork": false,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Gemini API key is missing or not configured."
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/list"
+            },
+            "session/fork": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/fork"
+            },
+            "session/resume": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/resume"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "invalid_params",
+              "code": -32602,
+              "message": "Session not found: sess_matrix_probe"
+            }
+          },
+          "stderrTail": "'\"Method not found\": session/list', data: { method: 'session/list' } } Error handling request { jsonrpc: '2.0', id: 4, method: 'session/fork', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/gemini/workspace', mcpServers: [] } } { code: -32601, message: '\"Method not found\": session/fork', data: { method: 'session/fork' } } Error handling request { jsonrpc: '2.0', id: 5, method: 'session/resume', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/gemini/workspace', mcpServers: [] } } { code: -32601, message: '\"Method not found\": session/resume', data: { method: 'session/resume' } } Error handling request { jsonrpc: '2.0', id: 6, method: 'session/stop', params: { sessionId: 'sess_matrix_probe' } } { code: -32601, message: '\"Method not found\": session/stop', data: { method: 'session/stop' } } Error handling request { jsonrpc: '2.0', id: 7, method: 'session/set_model', params: { sessionId: 'sess_matrix_probe', modelId: 'matrix-model' } } { code: -32602, message: 'Session not found: sess_matrix_probe', data: undefined }",
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/gemini --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/gemini/workspace",
+          "durationSeconds": 15.812,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "summary": "安装0.24.7：C+L，原生持久list/load/全量标准回放和续答；账号复用CLI。npm最新0.25.0，不能与安装/矩阵0.24.7混用。",
+      "launch": {
+        "farfoldId": "registry:qwen-code",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:qwen-code/install-2DuVcV/node_modules/@qwen-code/qwen-code/cli-entry.js",
+          "--acp",
+          "--experimental-skills"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "@qwen-code/qwen-code@0.24.7",
+            "args": [
+              "--acp",
+              "--experimental-skills"
+            ]
+          }
+        }
+      },
+      "version": {
+        "installed": "0.24.7",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v0.24.7",
+        "registry": "0.24.7",
+        "publicLatest": "0.25.0",
+        "publicLatestBasis": "https://registry.npmjs.org/@qwen-code/qwen-code/latest",
+        "matrix": "0.24.7",
+        "latestSourceNotes": "已读0.25.0核心：仍有list/load/分离resume/双模型路线，未逐条验证新增内部恢复路径。"
+      },
+      "source": {
+        "maintainer": "QwenLM",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/QwenLM/qwen-code",
+        "reviewedFiles": [
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 1050,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L1050",
+            "claim": "load defaults full replay; resume none"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 5734,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5734",
+            "claim": "load restores durable transcript projection"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6205,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6205",
+            "claim": "standard load awaits replayHistory"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6569,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6569",
+            "claim": "SessionService native list"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6646,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6646",
+            "claim": "model/reasoning config"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 5469,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5469",
+            "claim": "authenticate refresh/OAuth event"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 15455,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L15455",
+            "claim": "reuse selected native auth"
+          },
+          {
+            "file": "packages/cli/src/acp-integration/acpAgent.ts",
+            "line": 6780,
+            "url": "https://github.com/QwenLM/qwen-code/blob/v0.25.0/packages/cli/src/acp-integration/acpAgent.ts#L6780",
+            "claim": "latest still configOptions setter"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionService(cwd).listSessions，cursor分页，取原生记录。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复持久会话投影及工作区上下文；load/resume路径分离。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准load默认replay all并await replayHistory；只有请求专用bulk元数据才走分页/批量扩展。resume明确none。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "SessionService持久记录恢复model/client/session上下文，非仅内存Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "加载Session加入live sessions并恢复原历史，后续prompt继续。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model config委托session.setModel({persistDefault:false})，reasoning_effort也支持；旧set_model仍实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "沿用CLI设置selectedType，ensureAuthenticated使用refreshAuth(initial=true)读原凭据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate可重新认证，Qwen OAuth用authenticate/update扩展给URL；未找到Agent账号status/logout标准入口，MCP auth状态不能混作账号状态。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L1050",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5734",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6205",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6569",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L6646",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5469",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L15455",
+        "https://github.com/QwenLM/qwen-code/blob/v0.25.0/packages/cli/src/acp-integration/acpAgent.ts#L6780",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/qwen-code/agent.json"
+      ],
+      "limitations": [
+        "有很多私有daemon/批量历史扩展；本结论仅标准ACP路径，不要求FarFold实现全部扩展。",
+        "当日registry和matrix为0.24.7，npm latest为0.25.0。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "qwen-code",
+          "name": "Qwen Code",
+          "registryVersion": "0.24.7",
+          "repository": "https://github.com/QwenLM/qwen-code",
+          "website": "https://qwenlm.github.io/qwen-code-docs/en/users/overview",
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "0.24.7",
+          "authMethods": [
+            "agent"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": false,
+            "sessionResume": true,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required: Use Qwen Code CLI to authenticate first."
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/fork"
+            },
+            "session/resume": {
+              "status": "resource_not_found",
+              "code": -32002,
+              "message": "Resource not found: session:sess_matrix_probe"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "invalid_params",
+              "code": -32602,
+              "message": "Invalid params: Session not found for id: sess_matrix_probe"
+            }
+          },
+          "stderrTail": "ethods: [ [Object] ] } } Error handling request { jsonrpc: '2.0', id: 4, method: 'session/fork', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/qwen-code/workspace', mcpServers: [] } } { code: -32601, message: '\"Method not found\": session/fork', data: { method: 'session/fork' } } Error handling request { jsonrpc: '2.0', id: 5, method: 'session/resume', params: { sessionId: 'sess_matrix_probe', cwd: '/home/runner/work/_temp/matrix-sandbox/npx/qwen-code/workspace', mcpServers: [] } } { code: -32002, message: 'Resource not found: session:sess_matrix_probe', data: { uri: 'session:sess_matrix_probe' } } Error handling request { jsonrpc: '2.0', id: 6, method: 'session/stop', params: { sessionId: 'sess_matrix_probe' } } { code: -32601, message: '\"Method not found\": session/stop', data: { method: 'session/stop' } } Error handling request { jsonrpc: '2.0', id: 7, method: 'session/set_model', params: { sessionId: 'sess_matrix_probe', modelId: 'matrix-model' } } { code: -32602, message: 'Invalid params: Session not found for id: sess_matrix_probe', data: undefined }",
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/qwen-code --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/qwen-code/workspace",
+          "durationSeconds": 7.782,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "cline",
+      "name": "Cline CLI",
+      "summary": "安装3.0.65：C+L，有load/持久正文回放/续答，无ACP list；账号可复用CLI。冷恢复不保存每会话provider/model，按当前默认重建。",
+      "launch": {
+        "farfoldId": "registry:cline",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:cline/install-so8oyQ/node_modules/cline/bin/cline",
+          "--acp"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "cline@3.0.68",
+            "args": [
+              "--acp"
+            ]
+          }
+        }
+      },
+      "version": {
+        "installed": "3.0.65",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "cli-v3.0.65",
+        "registry": "3.0.68",
+        "publicLatest": "3.0.68",
+        "publicLatestBasis": "https://registry.npmjs.org/cline/latest",
+        "matrix": "3.0.68",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "Cline",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/cline/cline",
+        "reviewedFiles": [
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 127,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L127",
+            "claim": "load declared, no list"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 246,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L246",
+            "claim": "load persisted messages; current provider defaults"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 435,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L435",
+            "claim": "legacy model switch"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 452,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L452",
+            "claim": "config model/provider switch"
+          },
+          {
+            "file": "apps/cli/src/acp/acpAgent.ts",
+            "line": 689,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L689",
+            "claim": "readMessages and continuation setup"
+          },
+          {
+            "file": "apps/cli/src/acp/auth.ts",
+            "line": 84,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/auth.ts#L84",
+            "claim": "existing provider credentials reused before OAuth"
+          },
+          {
+            "file": "apps/cli/src/acp/session-load.ts",
+            "line": 1,
+            "url": "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/session-load.ts#L1",
+            "claim": "message replay conversion"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "未声明/实现session/list，官方3.0.68 matrix仍method_not_found。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ensureSessionManager(resume:true)读取同id持久messages，不存在则resource_not_found。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await replaySessionHistory后返回，正文按user/assistant转换；并非完整原生事件账本。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久messages可跨进程恢复；provider/model不按会话持久，冷load使用当时当前默认。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "createCliCore载入initialMessages并保留activeSessionId用于prompt。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "model/provider/mode config实现，provider切换重建manager但先保留messages；旧set_model也实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "yes",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ProviderSettingsManager/getPersistedProviderApiKey先找CLI已有凭据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate已支持Cline/ClinePass/ChatGPT Subscription OAuth，可复用已存凭据或打开浏览器；少见交互要求无默认值会报错；未见账号status/logout ACP接口。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L127",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L246",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L435",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L452",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L689",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/auth.ts#L84",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/session-load.ts#L1",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/cline/agent.json"
+      ],
+      "limitations": [
+        "冷恢复原模型/服务来源不是Agent自身保证，FarFold必须按已确认保存配置处理并披露不能恢复。",
+        "没有ACP list不等于不能加载已知历史。",
+        "公开最新3.0.68，本机3.0.65未升级。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "cline",
+          "name": "Cline",
+          "registryVersion": "3.0.68",
+          "repository": "https://github.com/cline/cline",
+          "website": "https://cline.bot/cli",
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "3.0.68",
+          "authMethods": [
+            "agent"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": false,
+            "sessionFork": false,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required: Call authenticate before starting a session"
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/list"
+            },
+            "session/fork": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/fork"
+            },
+            "session/resume": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/resume"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "error",
+              "code": -32603,
+              "message": "Internal error"
+            }
+          },
+          "stderrTail": "handling request { jsonrpc: \"2.0\", id: 4, method: \"session/fork\", params: { sessionId: \"sess_matrix_probe\", cwd: \"/home/runner/work/_temp/matrix-sandbox/npx/cline/workspace\", mcpServers: [], }, } { code: -32601, message: \"\\\"Method not found\\\": session/fork\", data: { method: \"session/fork\", }, } Error handling request { jsonrpc: \"2.0\", id: 5, method: \"session/resume\", params: { sessionId: \"sess_matrix_probe\", cwd: \"/home/runner/work/_temp/matrix-sandbox/npx/cline/workspace\", mcpServers: [], }, } { code: -32601, message: \"\\\"Method not found\\\": session/resume\", data: { method: \"session/resume\", }, } Error handling request { jsonrpc: \"2.0\", id: 6, method: \"session/stop\", params: { sessionId: \"sess_matrix_probe\", }, } { code: -32601, message: \"\\\"Method not found\\\": session/stop\", data: { method: \"session/stop\", }, } Error handling request { jsonrpc: \"2.0\", id: 7, method: \"session/set_model\", params: { sessionId: \"sess_matrix_probe\", modelId: \"matrix-model\", }, } { code: -32603, message: \"Internal error\", data: { details: \"unknown session: sess_matrix_probe\", }, }",
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/cline --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/cline/workspace",
+          "durationSeconds": 29.527,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "github-copilot-cli",
+      "name": "GitHub Copilot CLI",
+      "summary": "安装1.0.89：C由官方版本日志可证，L方法存在由公开矩阵可证；list/load声明与官方说明可证，冷恢复正文完整性缺实现/实测证据，不能直接判已覆盖。",
+      "launch": {
+        "farfoldId": "registry:github-copilot-cli",
+        "command": "/Users/tw/.nvm/versions/node/v22.22.3/bin/node",
+        "args": [
+          "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:github-copilot-cli/install-UPmD8l/node_modules/@github/copilot/npm-loader.js",
+          "--acp"
+        ],
+        "publicEntry": {
+          "npx": {
+            "package": "@github/copilot@1.0.91",
+            "args": [
+              "--acp"
+            ]
+          }
+        }
+      },
+      "version": {
+        "installed": "1.0.89",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v1.0.89",
+        "registry": "1.0.91",
+        "publicLatest": "1.0.91",
+        "publicLatestBasis": "https://registry.npmjs.org/@github/copilot/latest",
+        "matrix": "1.0.91",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "GitHub",
+        "relationship": "closed-source native ACP executable; public official docs/changelog",
+        "repository": "https://github.com/github/copilot-cli",
+        "reviewedFiles": [
+          {
+            "file": "changelog.md (retrieved 2026-10-05)",
+            "line": 2502,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L2502",
+            "claim": "0.0.410 supports loading existing sessions"
+          },
+          {
+            "file": "changelog.md",
+            "line": 2665,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L2665",
+            "claim": "0.0.400 supports changing model during session"
+          },
+          {
+            "file": "changelog.md",
+            "line": 1644,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L1644",
+            "claim": "1.0.37 ACP model configOptions"
+          },
+          {
+            "file": "changelog.md",
+            "line": 1502,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L1502",
+            "claim": "1.0.48 updated configOptions after model change"
+          },
+          {
+            "file": "changelog.md",
+            "line": 731,
+            "url": "https://github.com/github/copilot-cli/blob/main/changelog.md#L731",
+            "claim": "1.0.69 authenticate only succeeds when logged in"
+          },
+          {
+            "file": "official ACP server docs",
+            "line": null,
+            "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server",
+            "claim": "native ACP, BYOK reuse, session commands"
+          },
+          {
+            "file": "official auth docs",
+            "line": null,
+            "url": "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+            "claim": "original persisted login and env/gh fallback"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "official-matrix-newer-version",
+          "detail": "最新1.0.91官方matrix声明list且空账号环境list成功；安装版未新探测。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "official-release-docs-and-matrix",
+          "detail": "官方0.0.410发行日志已支持加载existing sessions；当前matrix宣告load。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "unknown",
+          "evidenceLevel": "not-established",
+          "detail": "闭源安装发行仅native可执行；官方文档及声明未精确说明load正文回放与完成时序，未读取用户历史/启动探测。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "unknown",
+          "evidenceLevel": "not-established",
+          "detail": "官方说明CLI有持久session store，但不能单由此保证ACP跨进程load；旧cross-process issue已关闭但未把用户旧报告当现版失败。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "partial",
+          "evidenceLevel": "official-release-docs",
+          "detail": "官方描述load existing sessions；跨进程恢复后续答未由本轮官方实现/实测直接验证。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "official-release-docs",
+          "detail": "官方1.0.37 model configOptions、1.0.48变化通知、0.0.400同session切换；本机1.0.89包含这些版本；未能查看闭源实现。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "recognized-by-latest-matrix",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "official-product-docs",
+          "detail": "官方CLI记住OAuth账号；可用COPILOT_GITHUB_TOKEN/GH_TOKEN/GITHUB_TOKEN、gh后备；ACP也复用BYOK配置。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "official-release-docs-and-matrix",
+          "detail": "terminal-auth走copilot login；官方1.0.69起authenticate要求实际已登录；未发现公开ACP账号status/logout接口，不把CLI login/logout当协议动作。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2502",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2665",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L1644",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L1502",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L731",
+        "https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server",
+        "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/github-copilot-cli/agent.json"
+      ],
+      "limitations": [
+        "公开源码仓库只含文档/发行信息，安装包主体为native可执行，不伪造实现行号。",
+        "C是发行说明级别；真实configOptions内容和本机账户下选项未测。",
+        "matrix占位set_model错误只能证明方法识别，不能证明选项列表/切换成功。",
+        "冷恢复、正文回放、续答属于此组最大的证据缺口。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "github-copilot-cli",
+          "name": "GitHub Copilot",
+          "registryVersion": "1.0.91",
+          "repository": "https://github.com/github/copilot-cli",
+          "website": "https://github.com/features/copilot/cli/",
+          "distribution": "npx",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "1.0.91",
+          "authMethods": [
+            "terminal"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": false,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Authentication required"
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/fork"
+            },
+            "session/resume": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/resume"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "\"Method not found\": session/stop"
+            },
+            "session/set_model": {
+              "status": "resource_not_found",
+              "code": -32002,
+              "message": "Resource not found: Session sess_matrix_probe not found"
+            }
+          },
+          "stderrTail": null,
+          "commandPreview": "npx --prefix /home/runner/work/_temp/matrix-sandbox/npx/github-copilot-cli --yes",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/npx/github-copilot-cli/workspace",
+          "durationSeconds": 6.14,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "summary": "安装1.52.0：C，原生持久list/load/可见正文回放/续答；共享Goose配置与provider凭据。authenticate本身空成功，不能用它判断已登录。",
+      "launch": {
+        "farfoldId": "registry:goose",
+        "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:goose/install-CZRnMj/goose",
+        "args": [
+          "acp"
+        ],
+        "publicEntry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/block/goose/releases/download/v1.53.0/goose-aarch64-apple-darwin.tar.bz2",
+              "cmd": "./goose",
+              "args": [
+                "acp"
+              ],
+              "sha256": "49cf9cfd6195f558d0d9f39ccd691213004bccb2c626e2b40b244059ff9dbdba"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/block/goose/releases/download/v1.53.0/goose-x86_64-apple-darwin.tar.bz2",
+              "cmd": "./goose",
+              "args": [
+                "acp"
+              ],
+              "sha256": "5d96ae149294fbeda930e693144bf333bbc9c1121d949f1ed77f176eb6a35f49"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/block/goose/releases/download/v1.53.0/goose-aarch64-unknown-linux-gnu.tar.bz2",
+              "cmd": "./goose",
+              "args": [
+                "acp"
+              ],
+              "sha256": "e156799760a174bfbc5d14443aacef064ce7592f9099dc9ce04c3db74e72224b"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/block/goose/releases/download/v1.53.0/goose-x86_64-unknown-linux-gnu.tar.bz2",
+              "cmd": "./goose",
+              "args": [
+                "acp"
+              ],
+              "sha256": "2d010c66dfd4348bb437b3a94001882468a5db1aa556858920481522f57752d7"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/block/goose/releases/download/v1.53.0/goose-x86_64-pc-windows-msvc.zip",
+              "cmd": "./goose-package\\goose.exe",
+              "args": [
+                "acp"
+              ],
+              "sha256": "3a951c661f12415f7947daac2bb4651af1a7b41532f34d7c2f05ea6636eadaa9"
+            }
+          }
+        }
+      },
+      "version": {
+        "installed": "1.52.0",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v1.52.0",
+        "registry": "1.53.0",
+        "publicLatest": "1.53.0",
+        "publicLatestBasis": "https://github.com/aaif-goose/goose/releases/latest",
+        "matrix": "1.53.0",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "Goose project / AAIF (repository moved from block/goose)",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/aaif-goose/goose",
+        "reviewedFiles": [
+          {
+            "file": "crates/goose/src/acp/server.rs",
+            "line": 1824,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1824",
+            "claim": "initialize native list/load"
+          },
+          {
+            "file": "crates/goose/src/acp/server/load_session.rs",
+            "line": 382,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L382",
+            "claim": "read persistent session replay and activate"
+          },
+          {
+            "file": "crates/goose/src/acp/server/load_session.rs",
+            "line": 24,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L24",
+            "claim": "only user-visible messages replay"
+          },
+          {
+            "file": "crates/goose/src/acp/server/list_sessions.rs",
+            "line": 1,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/list_sessions.rs#L1",
+            "claim": "persistent listing and cursor"
+          },
+          {
+            "file": "crates/goose/src/acp/server/dispatch.rs",
+            "line": 38,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L38",
+            "claim": "authenticate no-op"
+          },
+          {
+            "file": "crates/goose/src/acp/server/dispatch.rs",
+            "line": 149,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L149",
+            "claim": "standard config model/provider/thinking"
+          },
+          {
+            "file": "crates/goose/src/acp/server.rs",
+            "line": 2430,
+            "url": "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L2430",
+            "claim": "same-session provider recreation with chosen model"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "session manager持久记录、cursor过滤。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "get_session(...,true)读取conversation并激活原sessionId。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "replay_conversation_to_client；默认回放全部user-visible内容，隐藏内部消息不回放；支持可选replayTail扩展。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "session manager存储与原conversation恢复；resume_saved_provider_session提供provider恢复。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "恢复agent/会话并注册为活动session，后续prompt继续。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准set_config model调用recreate_provider_for_session，保留当前session设置；thinking/provider同通道。旧set_model未注册。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "Config::global及provider原有secret/config；不另设ACP专用账号。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "标准authenticate直接返回空成功；提示goose configure。另有_goose provider配置/OAuth等私有接口，不能等同通用账号status/logout；FarFold不应靠空成功判断账号可用。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1824",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L382",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L24",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/list_sessions.rs#L1",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L38",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/dispatch.rs#L149",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L2430",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/goose/agent.json"
+      ],
+      "limitations": [
+        "正文投影不包含隐藏内部事件，不应称逐字完整原生事件回放。",
+        "公开最新1.53.0；当前本机1.52.0。",
+        "仓库当前官方地址已由block/goose重定向aaif-goose/goose。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "goose",
+          "name": "goose",
+          "registryVersion": "1.53.0",
+          "repository": "https://github.com/block/goose",
+          "website": "https://block.github.io/goose/",
+          "distribution": "binary",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "1.53.0",
+          "authMethods": [
+            "agent"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": false,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "error",
+            "code": -32603,
+            "message": "Internal error"
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "error",
+              "code": -32603,
+              "message": "Internal error"
+            },
+            "session/resume": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "Method not found"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "Method not found"
+            },
+            "session/set_model": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "Method not found"
+            }
+          },
+          "stderrTail": null,
+          "commandPreview": "/home/runner/work/_temp/matrix-sandbox/binary/goose/extracted/goose acp",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/binary/goose/workspace",
+          "durationSeconds": 22.491,
+          "processExitCode": -15,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "summary": "安装及公开2.25.8：C，持久list/load/正文回放/续答；复用原Vibe认证。另有auth/status、auth/signOut自有扩展，FarFold需明确适配才能使用。",
+      "launch": {
+        "farfoldId": "registry:mistral-vibe",
+        "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:mistral-vibe/install-PUTVka/vibe-acp",
+        "args": [],
+        "publicEntry": {
+          "binary": {
+            "darwin-aarch64": {
+              "archive": "https://github.com/mistralai/mistral-vibe/releases/download/v2.25.8/vibe-acp-darwin-aarch64-2.25.8.tar.gz",
+              "cmd": "./vibe-acp",
+              "sha256": "357305c3c728883eec26232763f4e414fcec51aafdcc75d04e2f78755f7917ce"
+            },
+            "darwin-x86_64": {
+              "archive": "https://github.com/mistralai/mistral-vibe/releases/download/v2.25.8/vibe-acp-darwin-x86_64-2.25.8.tar.gz",
+              "cmd": "./vibe-acp",
+              "sha256": "5f1731d76d8c3f8031c2cfd7990cd79c9c4b234d2595e78b10b7b91b469fd6dc"
+            },
+            "linux-aarch64": {
+              "archive": "https://github.com/mistralai/mistral-vibe/releases/download/v2.25.8/vibe-acp-linux-aarch64-2.25.8.tar.gz",
+              "cmd": "./vibe-acp",
+              "sha256": "09913291476fd2f8fc5c2b330602d6afded3ae6c016e197d9dcf805922bf82e8"
+            },
+            "linux-x86_64": {
+              "archive": "https://github.com/mistralai/mistral-vibe/releases/download/v2.25.8/vibe-acp-linux-x86_64-2.25.8.tar.gz",
+              "cmd": "./vibe-acp",
+              "sha256": "dbe693ee66f29fdfcf9029dcbf3b2d4da138554b193e432b089840148ecf08b3"
+            },
+            "windows-x86_64": {
+              "archive": "https://github.com/mistralai/mistral-vibe/releases/download/v2.25.8/vibe-acp-windows-x86_64-2.25.8.zip",
+              "cmd": "./vibe-acp.exe",
+              "sha256": "4eb3099bd06b034f62582f7b5ed701febbce3cf013ef95490aca9c79e82c4bd1"
+            }
+          }
+        }
+      },
+      "version": {
+        "installed": "2.25.8",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v2.25.8",
+        "registry": "2.25.8",
+        "publicLatest": "2.25.8",
+        "publicLatestBasis": "https://github.com/mistralai/mistral-vibe/releases/latest",
+        "matrix": "2.25.8",
+        "latestSourceNotes": ""
+      },
+      "source": {
+        "maintainer": "Mistral AI",
+        "relationship": "native first-party ACP server",
+        "repository": "https://github.com/mistralai/mistral-vibe",
+        "reviewedFiles": [
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 452,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L452",
+            "claim": "initialize list/load and auth methods"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 556,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L556",
+            "claim": "resume native session load full history then replay updates"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 990,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L990",
+            "claim": "native saved sessions list"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 1023,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1023",
+            "claim": "standard config updates active_model and runtime"
+          },
+          {
+            "file": "vibe/acp/agent.py",
+            "line": 1127,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1127",
+            "claim": "auth/status and auth/signOut extension"
+          },
+          {
+            "file": "vibe/acp/auth.py",
+            "line": 149,
+            "url": "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/auth.py#L149",
+            "claim": "browser authentication and original context credentials"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "app-server host resources.list_sessions读取saved sessions；忽略cursor，未分页。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "ResumeSessionIntent(sessionId)恢复原会话。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await _load_complete_history，再依次await replay_session_updates；完成后才返回。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "app-server原生保存会话恢复，不依赖ACP会话Map。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "同session app-server/resources保持恢复上下文。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "set_config model调用resources.config.update(active_model,reload_runtime=True)；同session，thinking也有接口。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "C",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": true
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "OnboardingContext.load、GLOBAL_ENV_FILE和原provider credentials；环境输入优先级由Agent负责。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "agent浏览器认证/委托浏览器认证、terminal --setup；扩展auth/status返回authenticated/authState/signOutAvailable，auth/signOut按原认证状态移除保存key；env来源可能不允许退出。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L452",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L556",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L990",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1023",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L1127",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/auth.py#L149",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/mistral-vibe/agent.json"
+      ],
+      "limitations": [
+        "auth/status、auth/signOut是专用extension，不是所有ACP Agent共用接口。",
+        "signOutAvailable为false时不能声称FarFold可以退出该账号。",
+        "恢复/模型/认证均未真实调用。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "C",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "generatedAt": "2026-10-05T12:18:53+00:00",
+        "evidenceLevel": "official-registry-synthetic-protocol-probe",
+        "data": {
+          "id": "mistral-vibe",
+          "name": "Mistral Vibe",
+          "registryVersion": "2.25.8",
+          "repository": "https://github.com/mistralai/mistral-vibe",
+          "website": "https://mistral.ai/products/vibe",
+          "distribution": "binary",
+          "initialize": {
+            "status": "success",
+            "code": null,
+            "message": null
+          },
+          "protocolVersion": 1,
+          "agentInfoVersion": "2.25.8",
+          "authMethods": [
+            "agent",
+            "terminal"
+          ],
+          "setModelSignal": false,
+          "capabilities": {
+            "loadSession": true,
+            "sessionList": true,
+            "sessionFork": true,
+            "sessionResume": false,
+            "sessionStop": false,
+            "setModel": false
+          },
+          "sessionNew": {
+            "status": "auth_required",
+            "code": -32000,
+            "message": "Missing API key for mistral provider."
+          },
+          "methodProbes": {
+            "session/list": {
+              "status": "success",
+              "code": null,
+              "message": null
+            },
+            "session/fork": {
+              "status": "invalid_params",
+              "code": -32602,
+              "message": "Session not found: sess_matrix_probe"
+            },
+            "session/resume": {
+              "status": "invalid_params",
+              "code": -32602,
+              "message": "Session not found: sess_matrix_probe"
+            },
+            "session/stop": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "Method not found"
+            },
+            "session/set_model": {
+              "status": "method_not_found",
+              "code": -32601,
+              "message": "Method not found"
+            }
+          },
+          "stderrTail": "ile \"vibe/app_server/session.py\", line 258, in open File \"vibe/app_server/client.py\", line 142, in request vibe.app_server.protocol.AppServerResponseError: Session not found: sess_matrix_probe The above exception was the direct cause of the following exception: Traceback (most recent call last): File \"acp/task/supervisor.py\", line 51, in _on_done File \"acp/task/dispatcher.py\", line 81, in runner File \"acp/connection.py\", line 234, in _run_request File \"acp/router.py\", line 184, in __call__ File \"acp/router.py\", line 73, in handle File \"acp/router.py\", line 107, in wrapper File \"vibe/acp/agent.py\", line 1114, in resume_session File \"vibe/acp/agent.py\", line 625, in _create_session vibe.acp.exceptions.SessionNotFoundError: Session not found: sess_matrix_probe ERROR:root:Background task failed Traceback (most recent call last): File \"acp/task/supervisor.py\", line 51, in _on_done File \"acp/task/dispatcher.py\", line 81, in runner File \"acp/connection.py\", line 234, in _run_request File \"acp/router.py\", line 182, in __call__ acp.exceptions.RequestError: Method not found Sentry is attempting to send 5 pending events Waiting up to 2 seconds Press Ctrl-C to quit",
+          "commandPreview": "/home/runner/work/_temp/matrix-sandbox/binary/mistral-vibe/extracted/vibe-acp",
+          "workspaceCwd": "/home/runner/work/_temp/matrix-sandbox/binary/mistral-vibe/workspace",
+          "durationSeconds": 6.052,
+          "processExitCode": 0,
+          "probedAt": "2026-10-05T12:18:53+00:00",
+          "reusedFromPrevious": false
+        },
+        "limitation": "公开探测使用占位session/model等参数；非本机真实会话，不证明正文回放、冷恢复、同会话切模型或账号可用。"
+      }
+    },
+    {
+      "id": "fast-agent",
+      "name": "fast-agent",
+      "summary": "安装0.10.1：N路线（标准模型配置未暴露），有持久list/load/正文回放和续答；/model switch会重建并清历史，不满足同对话保留上下文切模型。",
+      "launch": {
+        "farfoldId": "registry:fast-agent",
+        "command": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:fast-agent/install-ELJ1DF/venv/bin/fast-agent-acp",
+        "args": [
+          "-x"
+        ],
+        "publicEntry": {
+          "uvx": {
+            "package": "fast-agent-acp==0.10.1",
+            "args": [
+              "-x"
+            ],
+            "env": {
+              "FAST_AGENT_MODEL": "codexplan"
+            }
+          }
+        }
+      },
+      "version": {
+        "installed": "0.10.1",
+        "installedVersionBasis": "FarFold agent metadata; Node package version also checked where applicable; binary not executed",
+        "reviewedSourceTag": "v0.10.1",
+        "registry": "0.10.1",
+        "publicLatest": "0.10.42",
+        "publicLatestBasis": "https://pypi.org/pypi/fast-agent-acp/json",
+        "matrix": null,
+        "latestSourceNotes": "已读0.10.42核心，标准set_config_option明确不支持，load/list仍委托session store；未泛化其所有最新历史/认证内部行为。"
+      },
+      "source": {
+        "maintainer": "evalstate / fast-agent project",
+        "relationship": "native first-party ACP facade in fast-agent Python package",
+        "repository": "https://github.com/evalstate/fast-agent",
+        "reviewedFiles": [
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 320,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L320",
+            "claim": "load/list/resume capabilities"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 316,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L316",
+            "claim": "persistent native SessionManager listing"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 377,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L377",
+            "claim": "load native persisted session and hydrate"
+          },
+          {
+            "file": "src/fast_agent/acp/server/session_store.py",
+            "line": 233,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L233",
+            "claim": "only user/assistant message content replay"
+          },
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 382,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L382",
+            "claim": "authenticate acknowledge only"
+          },
+          {
+            "file": "src/fast_agent/commands/handlers/model.py",
+            "line": 513,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/commands/handlers/model.py#L513",
+            "claim": "slash model switch creates/replaces session and clears history"
+          },
+          {
+            "file": "src/fast_agent/acp/server/agent_acp_server.py",
+            "line": 598,
+            "url": "https://github.com/evalstate/fast-agent/blob/v0.10.42/src/fast_agent/acp/server/agent_acp_server.py#L598",
+            "claim": "latest explicitly rejects set_config_option"
+          }
+        ]
+      },
+      "status": {
+        "list": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "按workspace/app scope SessionManager读取原生保存历史，cwd及cursor过滤。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "load": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "持久manager.load_session -> initialize state -> SessionHydrator。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "replay": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "await send_session_history_updates，重放当前active agent的user/assistant内容；并非所有子Agent/工具事件完整回放。发送异常被log后吞掉。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "coldPersistence": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "原生SessionManager持久存储及hydration；--no-home会关闭此能力，当前启动没有该参数。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "continue": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "hydration将message history加载进Agent实例，后续prompt使用。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "modelSwitch": {
+          "value": "no",
+          "evidenceLevel": "installed-version-source",
+          "detail": "无configOptions/model setter；/model switch先create/replace session并clear histories，不是保留同对话上下文切换。最新版0.10.42仍显式method_not_found。",
+          "realAgentVerifiedThisResearch": false,
+          "route": "N",
+          "legacySetModel": "no",
+          "sameSessionPreservesHistory": false
+        },
+        "authReuse": {
+          "value": "yes",
+          "evidenceLevel": "installed-version-source",
+          "detail": "复用fast-agent config/secrets、环境与CLI已有OAuth配置；注册表默认FAST_AGENT_MODEL=codexplan仅是启动配置不是已登录证据。",
+          "realAgentVerifiedThisResearch": false
+        },
+        "authActions": {
+          "value": "partial",
+          "evidenceLevel": "installed-version-source",
+          "detail": "authenticate只确认已知method并返回静态setup说明；不执行登录/检验账号，不提供ACP账号状态/退出。配置/CLI认证由fast-agent负责。",
+          "realAgentVerifiedThisResearch": false
+        }
+      },
+      "evidenceURLs": [
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L320",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L316",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L377",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L233",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L382",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/commands/handlers/model.py#L513",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.42/src/fast_agent/acp/server/agent_acp_server.py#L598",
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/8ed458f223534a602cc6b74d186c3898a8428b2d/fast-agent/agent.json"
+      ],
+      "limitations": [
+        "registry及安装仍0.10.1，PyPI最新已0.10.42；没有升级。",
+        "标准load回放与完整多Agent/工具记录不同。",
+        "不可用/model switch冒充FarFold要求的同会话历史保留切模型。"
+      ],
+      "farfoldMapping": {
+        "modelRoute": "N",
+        "history": "Farfold现有list/load可对接此类标准协议；源码支持不代表本机账号、历史正文或真实续答已测成功。",
+        "model": "C可接入现有configOptions/set_config通道，仍需具体账号返回选项并确认；L当前Farfold未消费models/set_model；N不合成伪选项；U维持未知。",
+        "auth": "继承原CLI账号与配置是一种认证来源，不等于Farfold已读到账号状态；authenticate成功也不能一概解释成已登录。标准/扩展能力须另行协商。"
+      },
+      "publicMatrixEvidence": {
+        "evidenceLevel": "not-present",
+        "limitation": "当日公开矩阵无此Agent记录。"
+      }
+    }
+  ]
+}

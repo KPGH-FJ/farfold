@@ -113,6 +113,26 @@ it("keeps the disconnected target's retry beside the input before any retry fail
   );
 });
 
+it.each([false, true])(
+  "offers a safe same-conversation configuration recheck (blocked: %s)",
+  (blocked) => {
+    const state = prior(`config-recheck-exit-${blocked}`);
+    state.openError = null;
+    state.modelDrift = blocked;
+    state.configCheck = {
+      status: blocked ? "blocked" : "ready",
+      issues: [],
+      current: {},
+    };
+    state.configError = STRINGS.repair.configFailed;
+    const html = render(state);
+    expect(html).toMatch(/>重新检查<\/button>/);
+    expect(html).toContain("无法确认已保存选择，请重新检查");
+    expect(html).not.toContain("Private official diagnostic");
+    if (!blocked) expect(html).not.toContain(STRINGS.repair.newDraftHint);
+  },
+);
+
 it("keeps source and unknown-execution facts with the single failed-recovery action", () => {
   const state = prior("source-unknown-recovery-notice");
   state.openError = STRINGS.repair.reconnectFailed;

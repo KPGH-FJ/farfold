@@ -94,7 +94,9 @@ pub struct PreparationInfo {
 // Sources: code.claude.com/docs/en/authentication;
 // docs.cline.bot/getting-started/authorizing-with-cline and /clinepass;
 // github.com/cline/cline/blob/main/apps/cli/src/acp/auth.ts;
-// opencode.ai/docs/providers; developers.openai.com/codex/auth.
+// opencode.ai/docs/providers; developers.openai.com/codex/auth;
+// docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli
+// (Copilot public guidance rechecked 2026-10-02; no registration capability).
 fn links(agent_id: &str) -> Vec<PreparationLink> {
     let link = |label: &'static str,
                 url: &'static str,
@@ -190,6 +192,13 @@ fn links(agent_id: &str) -> Vec<PreparationLink> {
             "documentation",
             &[],
             "ChatGPT 账号与 API 服务的使用方式、权益和费用分别确认。",
+        )],
+        "registry:github-copilot-cli" => vec![link(
+            "查看账号登录说明",
+            "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/authenticate-copilot-cli",
+            "documentation",
+            &["copilot-login"],
+            "",
         )],
         _ => vec![],
     }
@@ -587,7 +596,7 @@ mod tests {
     fn installed_uvx_agent_remains_usable_without_registry_cache() {
         let data = tempfile::tempdir().unwrap();
         let catalog = crate::agent_catalog::AgentCatalog::new(data.path().into());
-        let installed = row("registry:minion-code");
+        let installed = row("registry:fast-agent");
         let info = preparation_with_catalog(&installed.id, Some(&installed), data.path(), &catalog)
             .unwrap();
         assert!(info.dependencies.is_empty());
@@ -600,12 +609,12 @@ mod tests {
         let data = tempfile::tempdir().unwrap();
         std::fs::write(data.path().join("registry-cache.json"), serde_json::to_vec(&serde_json::json!({
             "fetchedAt":0,"source":crate::agent_catalog::REGISTRY_URL,"agents":[{
-                "id":"minion-code","distribution":{"uvx":{"package":"minion-code@0.1.44","args":["acp"]}}
+                "id":"fast-agent","distribution":{"uvx":{"package":"fast-agent-acp==0.10.1","args":["acp"]}}
             }]
         })).unwrap()).unwrap();
         let catalog = crate::agent_catalog::AgentCatalog::new(data.path().into());
         let info =
-            preparation_with_catalog("registry:minion-code", None, data.path(), &catalog).unwrap();
+            preparation_with_catalog("registry:fast-agent", None, data.path(), &catalog).unwrap();
         assert_eq!(info.dependencies.len(), 2);
         assert!(
             info.dependencies

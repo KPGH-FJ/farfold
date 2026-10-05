@@ -26,6 +26,7 @@ import {
 } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
 import { promptCapabilities } from "../runtime/agents";
+import { useConnectionHold } from "../runtime/connection_hold";
 import { AgentLogo } from "./AgentLogo";
 import {
   threads,
@@ -40,6 +41,8 @@ import {
 } from "../runtime/sessions";
 import { configCheckMessage } from "../runtime/config_check";
 import { ConfigCheckReview } from "./ConfigCheckReview";
+import { configRecheckBusy } from "../runtime/session_config_recheck";
+import { useComposerDraft } from "../runtime/drafts";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -56,6 +59,11 @@ import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
 import { SessionOptionsList } from "./SessionOptionsMenu";
 import { ReasoningControl } from "./ReasoningControl";
+import {
+  configChangeBusy,
+  configOptionChangeBlocked,
+} from "../runtime/protected_config";
+import { useAuthenticationActivity } from "../runtime/authentication";
 import { PermissionControl } from "./PermissionControl";
 import { listCredentials } from "../runtime/credentials";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -278,7 +286,19 @@ export function ThreadView({
     threads.openArtifactPane(thread.key);
   };
   const localArtifactReturnFocus = useRef<HTMLElement | null>(null);
+  useConnectionHold(
+    active && !thread.connectionLost
+      ? {
+          agentId: thread.agentId,
+          cwd: thread.cwd,
+          serviceContext: thread.serviceContext,
+        }
+      : null,
+  );
   usePreparationChanges();
+  useAuthenticationActivity(thread.agentId);
+  useComposerDraft(`session:${thread.key}`);
+  useComposerDraft(`queue-edit:${thread.key}`);
   const readRequired = pendingPreparationRead(thread);
   const draftReadRequired = thread.identity === "draft" && readRequired;
   const artifactReturnFocus =
@@ -563,9 +583,15 @@ export function ThreadView({
               </div>
             )}
             {(thread.modelDrift ||
+              thread.configError ||
               thread.unrecoverable ||
               thread.historyUnavailable) && (
               <div className="banner config-guard" role="status">
+                {thread.configError && (
+                  <span className="config-guard-message">
+                    {STRINGS.repair.recheckConfigFailed}
+                  </span>
+                )}
                 {thread.modelDrift && (
                   <span className="config-guard-message">
                     {configCheckMessage(
@@ -586,7 +612,7 @@ export function ThreadView({
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={thread.configuring || thread.running}
+                      disabled={configChangeBusy(thread)}
                       onClick={() => void threads.confirmConfig(thread.key)}
                     >
                       {thread.configuring
@@ -596,47 +622,73 @@ export function ThreadView({
                           : STRINGS.repair.confirmConfig}
                     </button>
                   )}
-                <span className="config-guard-message">
-                  {readRequired ? C.readRequired : STRINGS.repair.newDraftHint}
-                </span>
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  disabled={creating || reconnecting}
-                  onClick={() => {
-                    if (creating || reconnecting) return;
-                    if (pendingPreparationRead(thread)) {
-                      onGoSettings();
-                      return;
-                    }
-                    const key = thread.key;
-                    const request = ++recoveryRequest.current;
-                    const ownsAction = () =>
-                      mounted.current &&
-                      recoveryKey.current === key &&
-                      recoveryRequest.current === request;
-                    setCreating(true);
-                    setCreateError(null);
-                    void threads
-                      .newAfterRecoveryFailure(key)
-                      .then((draft) => {
-                        if (ownsAction() && activeRef.current)
-                          onOpened(draft.key);
-                      })
-                      .catch(() => {
-                        if (ownsAction() && activeRef.current)
-                          setCreateError(STRINGS.repair.newDraftFailed);
-                      })
-                      .finally(() => {
-                        if (ownsAction()) setCreating(false);
-                      });
-                  }}
-                >
-                  {creating
-                    ? STRINGS.repair.newDraftBusy
-                    : STRINGS.repair.newDraft}
-                </button>
-                {createError && <span role="alert">{createError}</span>}
+                {(thread.modelDrift || thread.configError) &&
+                  !thread.unrecoverable &&
+                  !thread.historyUnavailable && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={configRecheckBusy(thread)}
+                      onClick={() =>
+                        void threads
+                          .recheckConfig(thread.key)
+                          .catch(() => undefined)
+                      }
+                    >
+                      {thread.reconnecting
+                        ? STRINGS.repair.recheckingConfig
+                        : STRINGS.repair.recheckConfig}
+                    </button>
+                  )}
+                {(thread.modelDrift ||
+                  thread.unrecoverable ||
+                  thread.historyUnavailable) && (
+                  <>
+                    <span className="config-guard-message">
+                      {readRequired
+                        ? C.readRequired
+                        : STRINGS.repair.newDraftHint}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={creating || reconnecting}
+                      onClick={() => {
+                        if (creating || reconnecting) return;
+                        if (pendingPreparationRead(thread)) {
+                          onGoSettings();
+                          return;
+                        }
+                        const key = thread.key;
+                        const request = ++recoveryRequest.current;
+                        const ownsAction = () =>
+                          mounted.current &&
+                          recoveryKey.current === key &&
+                          recoveryRequest.current === request;
+                        setCreating(true);
+                        setCreateError(null);
+                        void threads
+                          .newAfterRecoveryFailure(key)
+                          .then((draft) => {
+                            if (ownsAction() && activeRef.current)
+                              onOpened(draft.key);
+                          })
+                          .catch(() => {
+                            if (ownsAction() && activeRef.current)
+                              setCreateError(STRINGS.repair.newDraftFailed);
+                          })
+                          .finally(() => {
+                            if (ownsAction()) setCreating(false);
+                          });
+                      }}
+                    >
+                      {creating
+                        ? STRINGS.repair.newDraftBusy
+                        : STRINGS.repair.newDraft}
+                    </button>
+                    {createError && <span role="alert">{createError}</span>}
+                  </>
+                )}
               </div>
             )}
             {!thread.running && hasActiveTools(thread) && (
@@ -930,7 +982,13 @@ export function ThreadView({
               ) : thread.connectionOutcomeUnknown || thread.sourceError ? (
                 <span className="b-tag">{STRINGS.thread.needYou}</span>
               ) : (
-                <span>{STRINGS.thread.connectionIdle}</span>
+                <span>
+                  {thread.connectionCloseReason === "idle"
+                    ? STRINGS.thread.connectionStandby
+                    : thread.connectionCloseReason === "user"
+                      ? STRINGS.thread.connectionDisconnected
+                      : STRINGS.thread.connectionIdle}
+                </span>
               )}
               {recoveryDetails}
               <span className="b-act">
@@ -1024,14 +1082,23 @@ export function ThreadView({
                         <dd>{modelLabel}</dd>
                       </dl>
                       {!draftReadRequired &&
-                        thread.identity === "draft" &&
-                        !thread.resumed &&
+                        !choicesUnchecked &&
                         modelOption && (
                           <ModelPicker
                             option={modelOption}
-                            disabled={thread.configuring || thread.running}
+                            disabled={configOptionChangeBlocked(
+                              thread,
+                              modelOption.id,
+                            )}
                             onPick={(value) => {
                               if (pendingPreparationRead(thread)) return;
+                              if (
+                                configOptionChangeBlocked(
+                                  thread,
+                                  modelOption.id,
+                                )
+                              )
+                                return;
                               void threads
                                 .setConfig(thread.key, modelOption.id, value)
                                 .catch(() => undefined);

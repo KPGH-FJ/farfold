@@ -505,7 +505,8 @@ impl AcpManager {
         .await?
     }
 
-    /// `session/set_config_option`; returns the session's full configOptions.
+    /// `session/set_config_option`; returns full options and the confirmed local
+    /// configuration check together, after any selected-choice record is saved.
     pub(crate) async fn session_set_config(
         &self,
         agent_id: &str,
@@ -660,7 +661,35 @@ impl AcpManager {
         cwd: &Path,
         session_id: &str,
     ) -> Result<(), String> {
-        self.close_session_with_policy(agent_id, cwd, session_id, None, true)
+        self.close_session_with_policy(agent_id, cwd, session_id, None, true, false)
+            .await
+    }
+
+    /// A configuration recheck only releases this idle local route. The
+    /// following load keeps the Agent's saved conversation and its identity.
+    pub(crate) async fn detach_session_for_config_check(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        allow_already_detached: bool,
+    ) -> Result<(), String> {
+        let _opening = self.opening_sessions.reserve(agent_id, cwd, session_id)?;
+        let Some(connection) = self.session_owner(agent_id, cwd, session_id)? else {
+            return if allow_already_detached {
+                self.confirmed_session_absence(agent_id, cwd, session_id)
+            } else {
+                Err("对话已断开，请重新连接后重试".into())
+            };
+        };
+        if !connection
+            .handshake
+            .get()
+            .is_some_and(|handshake| handshake.typed.agent_capabilities.load_session)
+        {
+            return Err("此 Agent 不支持重新读取已有对话，原内容仍保留".into());
+        }
+        self.close_session_with_policy(agent_id, cwd, session_id, None, false, true)
             .await
     }
 
@@ -671,7 +700,7 @@ impl AcpManager {
         session_id: &str,
         preview_token: Option<&str>,
     ) -> Result<(), String> {
-        self.close_session_with_policy(agent_id, cwd, session_id, preview_token, false)
+        self.close_session_with_policy(agent_id, cwd, session_id, preview_token, false, false)
             .await
     }
 
@@ -682,6 +711,7 @@ impl AcpManager {
         session_id: &str,
         preview_token: Option<&str>,
         allow_absent: bool,
+        local_only: bool,
     ) -> Result<(), String> {
         let _opening = preview_token
             .map(|_| self.opening_sessions.reserve(agent_id, cwd, session_id))
@@ -698,14 +728,15 @@ impl AcpManager {
                 Err("会话已断开，请重新连接".into())
             };
         };
-        let remote_close = connection.handshake.get().is_some_and(|handshake| {
-            handshake
-                .typed
-                .agent_capabilities
-                .session_capabilities
-                .close
-                .is_some()
-        });
+        let remote_close = !local_only
+            && connection.handshake.get().is_some_and(|handshake| {
+                handshake
+                    .typed
+                    .agent_capabilities
+                    .session_capabilities
+                    .close
+                    .is_some()
+            });
         let control = {
             let sessions = connection
                 .sessions
@@ -733,6 +764,9 @@ impl AcpManager {
             let (result_tx, result_rx) = oneshot::channel();
             control
                 .send(SessionControl::Close {
+                    // The confirmed-absence retry belongs to automatic read
+                    // cleanup; an explicit user close keeps its own semantics.
+                    require_idle_interactions: allow_absent,
                     result: result_tx,
                     deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(15),
                 })
@@ -953,6 +987,10 @@ impl AcpManager {
 #[cfg(test)]
 #[path = "session/close_tests.rs"]
 mod close_tests;
+
+#[cfg(test)]
+#[path = "session/recheck_tests.rs"]
+mod recheck_tests;
 
 // ---------------------------------------------------------------------------
 // Wire types

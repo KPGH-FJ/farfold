@@ -91,17 +91,6 @@ pub async fn session_open(
     } else {
         crate::work_policy::admit(&store, &agent_id, &cwd, open).await
     };
-    // Opening a conversation may establish the connection without going
-    // through the settings command. Publish that same connection state,
-    // even when the following history load failed.
-    if let Ok(statuses) = manager.status(&agent_id) {
-        for status in statuses
-            .into_iter()
-            .filter(|status| same_dir(&status.cwd, &cwd))
-        {
-            crate::ui_transport::emit_event(&app, "agent:status", &status);
-        }
-    }
     let opened = match outcome {
         Ok(opened) => opened,
         Err(error) => {
@@ -278,7 +267,7 @@ pub async fn session_cancel(
         .await
 }
 
-/// `session/set_config_option`; returns the session's full configOptions.
+/// `session/set_config_option`; returns full options and their confirmed check.
 #[tauri::command]
 pub async fn session_set_config(
     app: AppHandle,
@@ -439,6 +428,27 @@ pub async fn session_close(
     } else {
         manager.close_session(&agent_id, &cwd, &session_id).await
     }
+}
+
+/// Explicitly recheck a configuration without closing or deleting the Agent's
+/// conversation. The pump must confirm this route is idle before detaching.
+#[tauri::command]
+pub async fn session_detach_for_config_check(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    allow_already_detached: Option<bool>,
+) -> Result<(), String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .detach_session_for_config_check(
+            &agent_id,
+            &cwd,
+            &session_id,
+            allow_already_detached.unwrap_or(false),
+        )
+        .await
 }
 
 /// Upsert the session index row (called after open/prompt; `title` may be

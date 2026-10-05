@@ -1,0 +1,14 @@
+{
+  "atUtc": "2026-10-03T03:23:38.413830+00:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "candidateAbsent": true,
+  "formalFilesUnchanged": true,
+  "formalSignatureExitCode": 0,
+  "independentInstalledVerification": {
+    "files": 4,
+    "sourceInputCount": 538,
+    "sourceManifestSha256": "55230f030fe0c6ccd82cf55707df43190bfca68b1b72b1e2412509bcc8e0f586",
+    "binarySha256": "89edb3aae60a4cbc77c9a29236a92c1fbbee23b67a2c91898d35972f4977e4f3",
+    "strictSignaturePassed": true
+  }
+}

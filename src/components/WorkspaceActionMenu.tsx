@@ -49,27 +49,37 @@ export function WorkspaceActionMenu({
       return;
     }
     if (!panel.current) return;
-    const rect = anchor.getBoundingClientRect();
-    const bounds = panel.current.getBoundingClientRect();
-    setPosition({
-      left: Math.max(
-        12,
-        Math.min(
-          rect.right - bounds.width,
-          window.innerWidth - bounds.width - 12,
+    const element = panel.current;
+    const positionPanel = () => {
+      const rect = anchor.getBoundingClientRect();
+      const bounds = element.getBoundingClientRect();
+      setPosition({
+        left: Math.max(
+          12,
+          Math.min(
+            rect.right - bounds.width,
+            window.innerWidth - bounds.width - 12,
+          ),
         ),
-      ),
-      top: Math.max(
-        12,
-        Math.min(
-          window.innerHeight - bounds.height - 12,
-          rect.bottom + 8 + bounds.height > window.innerHeight - 12
-            ? rect.top - bounds.height - 8
-            : rect.bottom + 8,
+        top: Math.max(
+          12,
+          Math.min(
+            window.innerHeight - bounds.height - 12,
+            rect.bottom + 8 + bounds.height > window.innerHeight - 12
+              ? rect.top - bounds.height - 8
+              : rect.bottom + 8,
+          ),
         ),
-      ),
-    });
-    (controls(panel.current)[0] ?? panel.current).focus();
+      });
+    };
+    positionPanel();
+    (controls(element)[0] ?? element).focus();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(positionPanel);
+    observer?.observe(element);
+    return () => observer?.disconnect();
   }, [anchor, browserReady]);
   useEffect(() => {
     if (!browserReady) return;

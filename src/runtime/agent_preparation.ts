@@ -20,6 +20,8 @@ export interface PreparationInput {
   program: string;
   service: (ServiceSelection & { revision: string }) | null;
   config?: Record<string, unknown>;
+  /** Retain expected choices without applying them while reading options. */
+  readOptionsOnly?: boolean;
 }
 export type PreparationPhase =
   | "untested"
@@ -33,6 +35,21 @@ export type PreparationPhase =
   | "cancelled"
   | "unknown"
   | "stale";
+export function preparationPhaseLabel(phase: PreparationPhase): string {
+  return {
+    untested: S.testNotRun,
+    opening: S.testPreparing,
+    submitting: S.testSending,
+    running: S.testRunning,
+    needs_action: S.testNeedsAction,
+    stopping: S.testStopping,
+    passed: S.testPassed,
+    failed: S.testFailed,
+    cancelled: S.testCancelled,
+    unknown: S.testUnknown,
+    stale: S.testStale,
+  }[phase];
+}
 export interface PreparationSnapshot {
   phase: PreparationPhase;
   input: PreparationInput | null;
@@ -53,6 +70,7 @@ type Port = Pick<
   | "send"
   | "cancel"
   | "discardDraft"
+  | "retirePreparationDraft"
   | "dequeue"
   | "rename"
 >;
@@ -138,6 +156,17 @@ export function preparationRequestMatches(
     configKey(snapshot.input?.config ?? {}) === configKey(input.config ?? {})
   );
 }
+/** A successful options read can expose a mismatch for explicit reselection. */
+export function preparationReadMatches(
+  snapshot: PreparationSnapshot,
+  input: PreparationInput,
+): boolean {
+  return (
+    !!input.readOptionsOnly &&
+    !!snapshot.input?.readOptionsOnly &&
+    preparationRequestMatches(snapshot, input)
+  );
+}
 function selectedConfig(thread: ThreadState): Record<string, unknown> {
   return Object.fromEntries(
     thread.configOptions.map((option) => [option.id, option.currentValue]),
@@ -217,8 +246,8 @@ export class AgentPreparation {
       ],
     });
   }
-  /** Account ownership is already acquired by AuthActivity. Only retire its
-   * own empty preview, keeping failed closes attached for an explicit retry. */
+  /** Account ownership is already acquired by AuthActivity. Retire only its
+   * own never-prompted read, keeping failed closes attached for a retry. */
   prepareForAccount(target: AuthTarget): Promise<void> | undefined {
     const own =
       this.snapshot.input?.agentId === target.agentId &&
@@ -233,14 +262,30 @@ export class AgentPreparation {
       });
     }
     const thread = this.currentThread();
-    if (this.attempt?.sending || outstanding(thread))
+    if (
+      this.attempt?.sending ||
+      outstanding(thread) ||
+      (own && thread?.identity === "draft" && this.attempt)
+    )
       return Promise.reject(new Error(A.workHint));
     this.invalidate(false);
     if (!own || thread?.identity !== "draft") return;
-    return this.port.discardDraft(thread.key, true).then(() => {
-      if (this.snapshot.threadKey === thread.key)
-        this.publish({ threadKey: null });
-    });
+    const input = this.snapshot.input;
+    return this.port
+      .retirePreparationDraft(
+        thread.key,
+        () =>
+          this.snapshot.input === input &&
+          this.snapshot.threadKey === thread.key &&
+          this.currentThread() === thread &&
+          thread.agentId === target.agentId &&
+          thread.cwd === target.cwd &&
+          !this.attempt,
+      )
+      .then(() => {
+        if (this.snapshot.threadKey === thread.key)
+          this.publish({ threadKey: null });
+      });
   }
   verified(program: string): boolean {
     const thread = this.currentThread();
@@ -259,7 +304,10 @@ export class AgentPreparation {
   prepare(input: PreparationInput, fresh = false): Promise<void> {
     if (!fresh && preparationNeedsExplicitRead(this.snapshot, input))
       return Promise.resolve();
-    const same = preparationMatches(this.snapshot, input);
+    const same =
+      (preparationMatches(this.snapshot, input) ||
+        preparationReadMatches(this.snapshot, input)) &&
+      !!this.snapshot.input?.readOptionsOnly === !!input.readOptionsOnly;
     if (!fresh && same && this.snapshot.phase === "opening")
       return this.opening ?? Promise.resolve();
     // Automatic reads and navigation retain this input's failure. Only the
@@ -278,8 +326,14 @@ export class AgentPreparation {
       !existing.connectionLost &&
       !existing.openError &&
       (existing.identity === "draft" || this.snapshot.phase === "passed")
-    )
+    ) {
+      if (
+        input.readOptionsOnly &&
+        !preparationRequestMatches(this.snapshot, input)
+      )
+        this.publish({ input });
       return Promise.resolve();
+    }
     if (this.attempt?.sending || outstanding(existing))
       return Promise.resolve();
     const ticket = ++this.revision;
@@ -308,7 +362,7 @@ export class AgentPreparation {
           cwd: input.cwd,
           service: input.service,
           serviceRevision: input.service?.revision,
-          configOptions: input.config ?? null,
+          configOptions: input.readOptionsOnly ? null : (input.config ?? null),
           fresh: true,
           draftScope: `preparation:${input.agentId}:${ticket}:${this.id()}`,
         });
@@ -323,7 +377,7 @@ export class AgentPreparation {
         // An open can resolve after buffered failure events were applied.
         // Empty requested choices must not make that failed read successful.
         const confirmed =
-          applied &&
+          (input.readOptionsOnly || applied) &&
           !thread.openError &&
           !thread.modelDrift &&
           !thread.configError &&
@@ -332,7 +386,7 @@ export class AgentPreparation {
           !thread.configuring;
         const readError = confirmed
           ? null
-          : applied
+          : applied || input.readOptionsOnly
             ? S.testPrepareFailed
             : S.testSelectionNotApplied;
         this.publish({
@@ -376,6 +430,33 @@ export class AgentPreparation {
     return request;
   }
 
+  confirmRead(input: PreparationInput): Record<string, unknown> | null {
+    const thread = this.currentThread();
+    if (
+      !input.readOptionsOnly ||
+      !this.snapshot.input?.readOptionsOnly ||
+      !preparationContextMatches(this.snapshot, input) ||
+      (!preparationReadMatches(this.snapshot, input) &&
+        !preparationMatches(this.snapshot, input)) ||
+      this.snapshot.phase !== "untested" ||
+      !thread ||
+      thread.identity !== "draft" ||
+      outstanding(thread) ||
+      thread.configuring ||
+      thread.configError ||
+      thread.modelDrift ||
+      thread.connectionLost ||
+      thread.openError ||
+      thread.sourceError ||
+      !thread.workEnabled
+    )
+      return null;
+    const config = selectedConfig(thread);
+    if (configKey(config) !== configKey(this.snapshot.config)) return null;
+    this.publish({ input: { ...input, config } });
+    return config;
+  }
+
   async start(): Promise<void> {
     const thread = this.currentThread();
     if (
@@ -388,6 +469,8 @@ export class AgentPreparation {
       thread.connectionLost ||
       thread.openError ||
       !thread.workEnabled ||
+      (this.snapshot.input?.readOptionsOnly &&
+        !preparationMatches(this.snapshot, this.snapshot.input)) ||
       this.snapshot.phase !== "untested"
     )
       return;

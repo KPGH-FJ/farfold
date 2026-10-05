@@ -90,10 +90,16 @@ pub fn run() {
             // Reap registered agent processes left behind by a crash or
             // force-quit before any connection work begins.
             supervisor::startup_cleanup(&app_data_dir);
-            if !app.manage(acp_client::manager::AcpManager::new(
-                logging::default_log_dir(),
-                app_data_dir.clone(),
-            )) {
+            let connection_events = app.handle().clone();
+            if !app.manage(
+                acp_client::manager::AcpManager::new(
+                    logging::default_log_dir(),
+                    app_data_dir.clone(),
+                )
+                .with_status_sink(std::sync::Arc::new(move |status| {
+                    ui_transport::emit_event(&connection_events, "agent:status", status);
+                })),
+            ) {
                 return Err(std::io::Error::other("acp manager is already initialized").into());
             }
             if !app.manage(meta_store::MetaStore::open(
@@ -150,6 +156,7 @@ pub fn run() {
                 acp_client::manager::agent_connect,
                 acp_client::manager::agent_disconnect,
                 acp_client::manager::agent_status,
+                acp_client::manager::connection_retention::agent_connection_hold,
                 acp_client::session_commands::session_open,
                 acp_client::session_commands::session_prompt,
                 acp_client::session_commands::session_cancel,
@@ -164,6 +171,7 @@ pub fn run() {
                 acp_client::session_discovery::session_import_commit,
                 acp_client::session_discovery::session_import_close,
                 acp_client::session_commands::session_close,
+                acp_client::session_commands::session_detach_for_config_check,
                 acp_client::session_commands::session_touch,
                 acp_client::session_commands::session_meta_rename,
                 acp_client::session_commands::session_meta_pin,
@@ -183,6 +191,7 @@ pub fn run() {
                 credentials::credential_revoke,
                 credentials::credential_delete,
                 auth::auth_methods,
+                auth::auth_key_save,
                 auth::auth_run,
                 acp_client::auth_connection::auth_recheck,
                 auth::auth_cancel,
@@ -225,6 +234,16 @@ pub fn run() {
         .run(|app, event| {
             browser_workspace::handle_run_event(app, &event);
             draft_exit::handle(app, &event);
+            if let tauri::RunEvent::WindowEvent {
+                label,
+                event: tauri::WindowEvent::Destroyed,
+                ..
+            } = &event
+            {
+                let _ = app
+                    .state::<acp_client::manager::AcpManager>()
+                    .release_window_holds(label);
+            }
             if should_stop_agents(&event) {
                 app.state::<acp_client::manager::AcpManager>()
                     .stop_for_shutdown();
