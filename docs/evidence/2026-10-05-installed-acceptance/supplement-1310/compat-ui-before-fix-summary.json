@@ -1,0 +1,32 @@
+{
+  "scope": "installed 5423cfac... self-owned empty draft, no sends; labels are returned UI values, not proof of model request success",
+  "agents": [
+    {
+      "agent": "opencode",
+      "beforeRestart": true,
+      "controlCount": 8,
+      "modelChoiceCount": 4,
+      "selectedLabels": ["stealth/space-bunny-alpha"],
+      "realModelMessagesSent": 0,
+      "providerEvidence": "bunny / Openrouter saved service"
+    },
+    {
+      "agent": "pi",
+      "beforeRestart": true,
+      "controlCount": 423,
+      "modelChoiceCount": 419,
+      "selectedLabels": ["openrouter/NVIDIA: Nemotron 3 Ultra (free)"],
+      "realModelMessagesSent": 0,
+      "providerEvidence": "OpenRouter model prefix"
+    },
+    {
+      "agent": "cline",
+      "beforeRestart": true,
+      "controlCount": 7,
+      "modelChoiceCount": 3,
+      "selectedLabels": ["Cline Usage-Billing"],
+      "realModelMessagesSent": 0,
+      "providerEvidence": "Cline Usage-Billing in original provider selector; concrete model not verified"
+    }
+  ]
+}

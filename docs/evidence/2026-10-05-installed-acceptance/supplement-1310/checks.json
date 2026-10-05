@@ -1,0 +1,43 @@
+{
+  "scope": "Merged workspace and exact selected source are reported separately. Backend unchanged in this supplement; prior Rust results are not reruns.",
+  "mergedWorkspace": {
+    "fullFrontend": {
+      "files": 176,
+      "passed": 2008
+    },
+    "targeted": {
+      "files": 6,
+      "passed": 133
+    },
+    "finalRegression": {
+      "files": 1,
+      "passed": 9
+    },
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "selectedSource": {
+    "base": "98c33035076611a1e6e3a871436bdf09afa4c059",
+    "files": [
+      "src/runtime/session_projection.ts",
+      "src/runtime/model_config_option.test.tsx"
+    ],
+    "targeted": {
+      "files": 4,
+      "passed": 71
+    },
+    "typecheck": "passed"
+  },
+  "extraCallbackCandidates": {
+    "passed": 62,
+    "scope": "Isolated merged source verification only; candidate component tests not added to repository because they depend on other pending development."
+  },
+  "logSha256": {
+    "frontend-full.log": "6f6b45a3159a99d54c96038704dc246bd72bfd54254e514bc19b3492bf946dce",
+    "projection-targeted.log": "53e53bbd0c8e095f2f0ff7df875773d677889283de2cd1948d4d8a6a9cbfcfb3",
+    "projection-final.log": "304af5fbf230a619da447f05436804d34ebab815503f5d46ae2435e19db555af",
+    "selected-targeted.log": "3e57a27a712ed4fd713ade13462044618147529a3cb2a276e450cd39de384c88",
+    "selected-typecheck.log": "a78c3dfbc5d4594beaea96ac93a16ed429fe41f839c813d060d012bb1b7d2b56",
+    "typecheck.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+  }
+}

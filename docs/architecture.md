@@ -1,5 +1,9 @@
 # 当前源码架构
 
+## 共用模型主控件识别补正（2026-10-05）
+
+部分官方接口把 provider 与具体 model 同时声明为 model 类别。`modelConfigOption` 不再按数组第一项决定主模型：单项保留原能力兼容，多项时仅选择唯一明确的 model 标识或名称，歧义保持未确认。其他配置继续由原 `SessionOptionsList` 显示；所有同类配置仍由原保护与恢复链处理，不替 Agent 选择提供方、不改账号或引入品牌分支。安装实测触发与受影响验证见[取消补验与代表兼容核查](evidence/2026-10-05-installed-acceptance/supplement-1310/README.md)。
+
 ## 安装实测后的浏览器与文件修正（2026-10-05）
 
 `EmptyState` 的原 `new` Composer 通过稳定 portal 宿主进入已预开草稿的 `ThreadPage`，保持一个输入实例、原附件及 remember/send/finish 首发链；不另开模型请求、不提前写历史索引。`ThreadView` 可凭实际 nativeSessionId 观察网页工具准备状态，仍由真实请求和用户许可决定读取。App 最多保留当前任务、准备中的新草稿及唯一页面拥有者三个界面壳；隐藏任务不接受新动作，分享 controller 继续观察原请求，首发不卸载原网页。

@@ -1,0 +1,51 @@
+{
+  "review": "readonly candidate and installed bundle; no launch/GUI/account/model/live database read",
+  "input_count": 615,
+  "inputs_equal": true,
+  "manifest_sha_raw": "be1870b2cc707908eb3e33d4d05798306b7a881c351093a0becce3fa90f760f0",
+  "manifest_sha_sorted": "8e2a7a5cddaa53db8b25c9266d884804fc6351007a80c987a7ed0a340da25a41",
+  "manifest_sha_compact": "b54b080552d6c2e2533d3f175bd17ac0969f03a6112bc6abd2e0ce01d005841c",
+  "candidate_manifest_sha": "be1870b2cc707908eb3e33d4d05798306b7a881c351093a0becce3fa90f760f0",
+  "archive_sha_match": true,
+  "archive_file_count": 5,
+  "archive_files_match": true,
+  "installed_file_count": 5,
+  "installed_files_match": true,
+  "installed_binary_sha": "c97e9b234de738df590db3fe97f180027c7737ad6facaeec34a8e155c2973545",
+  "candidate_binary_match": true,
+  "bundle_id": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "executable": "farfold",
+  "signature_rc": 0,
+  "signature_result": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+  "signature_metadata": [
+    "Identifier=ai.farfold.desktop",
+    "Format=app bundle with Mach-O thin (arm64)",
+    "Signature=adhoc",
+    "TeamIdentifier=not set"
+  ],
+  "architecture": "arm64",
+  "data_receipts_equal": true,
+  "data_counts": {
+    "sessions": 67,
+    "agents": 40,
+    "settings": 50,
+    "dismissed_sessions": 101
+  },
+  "data_scope": "recorded receipt only; live data not read",
+  "source_scope": "current merged working tree, preserves existing uncommitted development",
+  "app_started": false,
+  "tests_repeated": false,
+  "archive_total_nondirectory_entries": 14,
+  "archive_metadata_entries_excluded": [
+    "__MACOSX/Farfold.app/Contents/_CodeSignature/._CodeResources",
+    "__MACOSX/Farfold.app/Contents/.__CodeSignature",
+    "__MACOSX/Farfold.app/Contents/MacOS/._farfold",
+    "__MACOSX/Farfold.app/Contents/._MacOS",
+    "__MACOSX/Farfold.app/Contents/Resources/._icon.icns",
+    "__MACOSX/Farfold.app/Contents/Resources/._release-manifest.json",
+    "__MACOSX/Farfold.app/Contents/._Resources",
+    "__MACOSX/Farfold.app/Contents/._Info.plist",
+    "__MACOSX/Farfold.app/._Contents"
+  ]
+}

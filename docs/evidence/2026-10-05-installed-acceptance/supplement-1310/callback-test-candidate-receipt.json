@@ -1,0 +1,31 @@
+{
+  "scope": "3 callback regression tests added only in workspace candidates; no repo writes or GUI/models",
+  "files": [
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "baselineSha256": "3d24e72e5ef2e09dee2c6fd61b8696064af94979a6f4cc7902ba9ab17e824278",
+      "candidateSha256": "1e89647491b1d8890c009b24fcc248a21535707cdaebdd91d9ca6cb473b9cf19",
+      "baselineLines": 1277,
+      "firstAddedLine": 1278,
+      "appendedLines": 38,
+      "onlyAppend": true
+    },
+    {
+      "path": "src/components/ThreadView.selection-labels.test.tsx",
+      "baselineSha256": "7afe1fcdbf9ea5a9d632b8295c4402fe7f6913a1b8713f6ef2308837dd811e0e",
+      "candidateSha256": "d927356835faec5ddfb4890d38b7b7cfe04ce8102080f9b945273409bce6ff15",
+      "baselineLines": 347,
+      "firstAddedLine": 348,
+      "appendedLines": 57,
+      "onlyAppend": true
+    }
+  ],
+  "checks": {
+    "isolatedRoot": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-model-callback-kz3h1e5y",
+    "filesPassed": 2,
+    "testsPassed": 62,
+    "durationSeconds": 1.86,
+    "initialInfrastructureAttempt": "Vite tried writing .vite-temp through dependency symlink and got EPERM; owned temporary node_modules layout adjusted; no repository write performed",
+    "format": "Both candidate files formatted with repository Prettier"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "active": true,
+  "composer": {
+    "count": 1,
+    "empty": true,
+    "equalsFixedSupplementMessage": false
+  },
+  "cwdLabelAlsoPresent": false,
+  "evidenceLimit": "AX paths and JSON hashes identify displayed blocks, not native call IDs. Root must correlate a newly expanded third tool step with pre-send baseline and cancellation action. Old\/quoted JSON alone is not a fresh receipt.",
+  "exactSyntheticHeader": true,
+  "nativePageSubtreesSkipped": 1,
+  "observedAt": "2026-10-05T13:24:47Z",
+  "ok": true,
+  "pid": 33710,
+  "toolJSONSummaries": [
+    {
+      "axPath": [0, 0, 0, 0, 0, 3, 0, 79, 7, 0],
+      "containsCancellationText": true,
+      "containsIsErrorTrue": false,
+      "containsSnapshotName": false,
+      "jsonLength": 181,
+      "matches": [
+        {
+          "kind": "actualCodexCancellationResult",
+          "receipt": {
+            "error": null,
+            "result": {
+              "_meta": null,
+              "content": [{ "text": "用户取消了本次网页读取", "type": "text" }],
+              "structuredContent": null
+            }
+          }
+        }
+      ],
+      "rawJSONSha256": "365db4ebab04c774cfe4ac455b8316f62b18854cf2a31c2d4150ed7c4cab6543",
+      "topLevelKeys": ["error", "result"],
+      "visible": true
+    }
+  ],
+  "unknownTextExported": false,
+  "visibleBusyStopButtons": 0,
+  "visibleCancel": false,
+  "visibleFixedStates": {
+    "尚未允许读取": 1,
+    "已停止共享。": 0,
+    "已允许读取本页": 0,
+    "已取消本次网页读取。": 0,
+    "用户取消了本次网页读取": 0,
+    "网页读取已取消": 0,
+    "需要读取这张网页": 0
+  },
+  "visibleSendButtons": 0,
+  "visibleStopSharingButtons": 0
+}

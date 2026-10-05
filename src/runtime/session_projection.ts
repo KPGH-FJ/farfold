@@ -370,12 +370,24 @@ export function normalizeConfigOptions(raw: unknown): ConfigOptionView[] {
 export function modelConfigOption(
   options: ConfigOptionView[],
 ): ConfigOptionView | null {
+  const declared = options.filter((option) => option.category === "model");
+  if (declared.length === 1) return declared[0]!;
+  if (declared.length > 1) {
+    // A category can contain both the provider and the concrete model. Preserve
+    // every option; choose the main model control only when it is unambiguous.
+    const byId = declared.filter(
+      (option) => option.id.toLowerCase() === "model",
+    );
+    if (byId.length) return byId.length === 1 ? byId[0]! : null;
+    const byName = declared.filter(
+      (option) => option.name.toLowerCase() === "model",
+    );
+    return byName.length === 1 ? byName[0]! : null;
+  }
   return (
-    options.find((o) => o.category === "model") ??
     options.find(
       (o) => o.type === "select" && /model/i.test(`${o.id} ${o.name}`),
-    ) ??
-    null
+    ) ?? null
   );
 }
 

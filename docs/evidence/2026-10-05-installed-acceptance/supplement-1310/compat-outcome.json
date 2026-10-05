@@ -1,0 +1,98 @@
+{
+  "reviewedAt": "2026-10-05T14:07:35.819577+00:00",
+  "scope": "Read-only evidence synthesis; no GUI, model messages or repository edits by this subtask.",
+  "installedBinary": "c97e9b234de738df590db3fe97f180027c7737ad6facaeec34a8e155c2973545",
+  "priorBinary": "5423cfacd4f85198a6e8ccb0e6980badbe63db278f510e240e3aceeb5306ee35",
+  "codexCancellation": {
+    "status": "passed_on_prior_binary",
+    "supplementalMessagesUsed": 1,
+    "newToolReceipt": "用户取消了本次网页读取",
+    "newPageSnapshotDelivered": false,
+    "endedUnshared": true,
+    "evidence": "outcome.json"
+  },
+  "compatibility": [
+    {
+      "agent": "OpenCode",
+      "source": "bunny / Openrouter",
+      "model": "stealth/space-bunny-alpha",
+      "priorBinaryNoMessageDraftAndModelOptions": "passed",
+      "currentBinary": "draft_connection_check_timed_out_initial_attempt",
+      "modelMessagesSent": 0,
+      "currentBinaryRetryCount": 0,
+      "failureMessage": "等待连接检查超时，请稍后重试",
+      "failureEvidence": [
+        "root runtime observation",
+        "opencode-after-update-settled-controls.json",
+        "compat-opencode-after-update.png (local app-only screenshot)"
+      ]
+    },
+    {
+      "agent": "Pi",
+      "source": "existing OpenRouter settings",
+      "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "priorBinaryNoMessageDraftAndModelOptions": "passed",
+      "currentBinary": "preopened_own_empty_draft_and_returned_model_options",
+      "modelMessagesSent": 0,
+      "modelChoiceCount": 419,
+      "selectedLabel": "openrouter/NVIDIA: Nemotron 3 Ultra (free)",
+      "evidence": [
+        "pi-after-update-controls.json",
+        "pi-after-update-model-options.json (full catalog retained locally only)"
+      ]
+    },
+    {
+      "agent": "Cline",
+      "source": "existing settings; prior UI exposed Cline Usage-Billing provider, not a verified model",
+      "priorBinary": "draft_opened_but_provider_misidentified_as_model",
+      "sharedProjectionFix": "implemented_tested_and_installed",
+      "currentBinary": "cold_connection_timed_out_initial_plus_one_retry",
+      "currentBinaryActualModelOptionsVerified": false,
+      "modelMessagesSent": 0,
+      "failureEvidence": "root runtime observation; cline-model-options-fixed-settled.json; cline-retry-settled-controls.json"
+    }
+  ],
+  "proposedAdditionalMessages": {
+    "authorized": false,
+    "OpenCode": 1,
+    "Pi": 1,
+    "Cline": 0,
+    "purpose": "one short no-tool reply per Agent on unchanged account/source/model; after success, same-session no-message return/load inspection",
+    "noAutomaticRetry": true,
+    "freeLabelDoesNotGuaranteeNoCharge": true,
+    "prerequisites": [
+      "current installed app connects successfully for that exact Agent",
+      "official returned source/model match preserved selection",
+      "joint user approval before any model message"
+    ],
+    "blockedAgentsAreNotSentProbeMessages": true
+  },
+  "notTested": [
+    "OpenCode/Pi real model replies on this candidate",
+    "non-Codex running-turn cancellation",
+    "actual follow-up after recovery",
+    "Cline actual model selection after fix"
+  ],
+  "browserBoundary": "Farfold dedicated public-page MCP currently admits reviewed Codex launch sources only. Ordinary Agent conversations/files and Agent-owned MCP are separate; no conclusion that other Agents are globally unusable or lack MCP.",
+  "evidence": [
+    "compat-ui-before-fix-summary.json",
+    "cline-model-projection-review.md",
+    "installation/installation.json",
+    "final-install-review.md"
+  ],
+  "connectionFailureCause": "unknown; observed on current OpenCode and Cline; not attributed solely to Cline or to the model-projection fix",
+  "finalState": {
+    "agent": "Codex",
+    "ownEmptyDraftPreopened": true,
+    "composerEmpty": true,
+    "activeRequests": false,
+    "pendingConfirmation": false,
+    "pageOpen": false,
+    "automaticRetry": false,
+    "evidence": [
+      "final-empty-codex-controls.json",
+      "final-empty-codex-matches.json"
+    ]
+  },
+  "connectionFailureScope": "AGENT_INITIALIZE_TIMEOUT is the 60-second wait for connection initialization completion, including spawn/transport/initialize/decode. Receipt does not establish which inner step failed. No model request was sent."
+}
