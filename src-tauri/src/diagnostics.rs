@@ -6,7 +6,7 @@
 //! Agent launch configuration, environment and conversation metadata are omitted.
 
 use std::io::{Read as _, Write as _};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
@@ -16,6 +16,7 @@ use tauri::{AppHandle, Manager};
 
 use crate::logging;
 use crate::meta_store::MetaStore;
+mod log_file;
 
 /// Entry in the zip being assembled.
 #[derive(Clone)]
@@ -214,7 +215,7 @@ fn safe_logs(log_dir: &Path) -> Vec<ZipEntry> {
     paths.sort();
     let mut logs = Vec::new();
     for path in paths.into_iter().rev().take(MAX_LOG_FILES) {
-        let Ok(mut file) = std::fs::File::open(path) else {
+        let Ok(mut file) = log_file::open_log(&path) else {
             continue;
         };
         let Ok(metadata) = file.metadata() else {
@@ -445,10 +446,10 @@ pub fn diagnostics_preview(app: AppHandle, note: String) -> Result<DiagnosticPre
 /// Only the currently reviewed snapshot can be written. Never recollect on export.
 #[tauri::command]
 pub fn export_diagnostics(app: AppHandle, preview_id: String) -> Result<String, String> {
-    let desktop = std::env::var_os("HOME")
-        .map(PathBuf::from)
-        .ok_or("无法找到诊断保存位置")?
-        .join("Desktop");
+    let desktop = app
+        .path()
+        .desktop_dir()
+        .map_err(|_| "无法找到诊断保存位置")?;
     app.state::<DiagnosticsState>()
         .export(&preview_id, &desktop)
 }

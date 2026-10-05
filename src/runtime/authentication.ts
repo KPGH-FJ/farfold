@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { AuthActivity } from "./auth_activity";
+import { authActive } from "./auth_activity";
 // Only explicit protocol authentication errors establish a requirement. Never infer from methods.
 type AuthenticationStage = "session" | "request";
 let required: ReadonlyMap<string, AuthenticationStage> = new Map();
@@ -73,6 +74,12 @@ export function currentAuthenticationRequired(
 }
 
 const activities = new Map<string, AuthActivity>();
+/** Include account actions even when their settings view is no longer mounted. */
+export function hasActiveAuthentication() {
+  return [...activities.values()].some((activity) =>
+    authActive(activity.getSnapshot()),
+  );
+}
 export function authenticationActivity(agentId: string) {
   let activity = activities.get(agentId);
   if (!activity) {

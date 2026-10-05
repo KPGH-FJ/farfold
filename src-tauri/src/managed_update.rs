@@ -29,13 +29,13 @@ const MAX_RELEASE_NOTES_CHARS: usize = 4_000;
 #[derive(Default)]
 pub(crate) struct UpdateAdmission(Arc<tokio::sync::RwLock<()>>);
 pub(crate) type ActivityPermit = tokio::sync::OwnedRwLockReadGuard<()>;
-type UpdatePermit = tokio::sync::OwnedRwLockWriteGuard<()>;
+pub(crate) type UpdatePermit = tokio::sync::OwnedRwLockWriteGuard<()>;
 impl UpdateAdmission {
     pub(crate) fn activity(&self) -> Result<ActivityPermit, String> {
         self.0
             .clone()
             .try_read_owned()
-            .map_err(|_| "正在更新应用，请等待重新打开后再开始操作".into())
+            .map_err(|_| "应用正在退出或更新，请等待重新打开后再开始操作".into())
     }
     pub(crate) fn update(&self) -> Result<UpdatePermit, String> {
         self.0.clone().try_write_owned().map_err(|_| {
@@ -49,6 +49,14 @@ fn admission() -> &'static UpdateAdmission {
 }
 pub(crate) fn activity() -> Result<ActivityPermit, String> {
     admission().activity()
+}
+
+/// A quiet normal exit retains the same admission as installation until the
+/// process exits. A busy exit requires a separate explicit user acknowledgement.
+pub(crate) fn quiet_exit() -> Result<UpdatePermit, String> {
+    admission()
+        .update()
+        .map_err(|_| "EXIT_CONFIRMATION_REQUIRED".into())
 }
 
 #[derive(Default)]

@@ -228,6 +228,7 @@ pub fn run() {
                 draft_attachment::draft_attachment_check,
                 draft_exit::app_drafts_ready,
                 draft_exit::app_exit_after_save,
+                draft_exit::app_exit_cancel,
                 ui_transport::app_initial_snapshot,
                 diagnostics::diagnostics_preview,
                 diagnostics::export_diagnostics,

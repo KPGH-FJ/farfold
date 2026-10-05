@@ -1,4 +1,5 @@
 import { beforeEach, expect, it, vi } from "vitest";
+import { isValidElement, type ReactNode } from "react";
 
 const h = vi.hoisted(() => ({
   states: [] as unknown[],
@@ -9,13 +10,18 @@ const h = vi.hoisted(() => ({
   setupFlush: vi.fn(),
   readFlush: vi.fn(),
   lock: vi.fn(),
+  active: false,
+  stateCursor: 0,
+  refCursor: 0,
+  refs: [] as { current: unknown }[],
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
-  useRef: (current: unknown) => ({ current }),
+  useRef: (current: unknown) => (h.refs[h.refCursor++] ??= { current }),
   useState: (initial: unknown) => {
-    const index = h.states.push(initial) - 1;
-    return [initial, (value: unknown) => (h.states[index] = value)];
+    const index = h.stateCursor++;
+    if (index >= h.states.length) h.states.push(initial);
+    return [h.states[index], (value: unknown) => (h.states[index] = value)];
   },
   useEffect: (effect: () => unknown) => h.effects.push(effect),
 }));
@@ -41,8 +47,21 @@ vi.mock("../runtime/draft_storage", () => ({
   useDraftSaveStatus: () => ({ ready: true, error: null }),
 }));
 vi.mock("../runtime/sessions", () => ({
-  threads: { pauseQueuesForExit: vi.fn() },
+  threads: {
+    pauseQueuesForExit: vi.fn(),
+    getSnapshot: () => ({
+      threads: new Map(h.active ? [["a", { running: true }]] : []),
+    }),
+  },
 }));
+vi.mock("../runtime/authentication", () => ({
+  hasActiveAuthentication: () => false,
+}));
+vi.mock("../runtime/update_impact", () => ({
+  updateConversationBlocker: (thread: { running: boolean }) =>
+    thread.running ? "仍在执行" : null,
+}));
+vi.mock("./WorkspaceDialog", () => ({ WorkspaceDialog: () => null }));
 vi.mock("../runtime/setup_storage", () => ({
   setupStorage: { load: async () => undefined, flush: h.setupFlush },
   useSetupStorage: () => ({ ready: true, error: null }),
@@ -55,6 +74,26 @@ vi.mock("../runtime/conversation_read_state", () => ({
   },
 }));
 import { DraftStartup } from "./DraftStartup";
+import { EXIT_IMPACT } from "../runtime/exit_impact";
+
+function render() {
+  h.stateCursor = 0;
+  h.refCursor = 0;
+  return DraftStartup({ children: "editable" });
+}
+function click(text: string) {
+  const find = (node: ReactNode): (() => void) | undefined => {
+    if (Array.isArray(node)) return node.map(find).find(Boolean);
+    if (!isValidElement<{ children?: ReactNode; onClick?: () => void }>(node))
+      return;
+    if (node.type === "button" && node.props.children === text)
+      return node.props.onClick;
+    return find(node.props.children);
+  };
+  const callback = find(render());
+  expect(callback).toBeDefined();
+  callback!();
+}
 
 function deferred() {
   let resolve!: () => void;
@@ -67,6 +106,7 @@ function deferred() {
 }
 beforeEach(async () => {
   h.states.length = 0;
+  h.refs.length = 0;
   h.effects.length = 0;
   h.listeners.clear();
   h.invoke.mockReset().mockResolvedValue(undefined);
@@ -74,11 +114,93 @@ beforeEach(async () => {
   h.setupFlush.mockReset().mockResolvedValue(undefined);
   h.readFlush.mockReset().mockResolvedValue(undefined);
   h.lock.mockReset();
-  DraftStartup({ children: "editable" });
+  h.active = false;
+  render();
   h.effects[0]();
   await vi.waitFor(() =>
     expect(h.listeners.has("app:exit-deferred")).toBe(true),
   );
+});
+
+it("does not acknowledge normal quit while known work is still running", async () => {
+  h.active = true;
+  h.listeners.get("app:save-before-exit")!({ payload: 50 });
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 50,
+  });
+  expect(h.flush).not.toHaveBeenCalled();
+});
+
+it("requires review when backend activity starts after the renderer save began", async () => {
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_after_save"
+      ? Promise.reject("EXIT_CONFIRMATION_REQUIRED")
+      : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 51 });
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 51 }),
+  );
+  expect(h.states[1]).toBe(false);
+  expect(h.states).toContain(51);
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+});
+
+it("only an explicit confirm saves and acknowledges active work", async () => {
+  h.active = true;
+  h.listeners.get("app:save-before-exit")!({ payload: 60 });
+  expect(h.flush).not.toHaveBeenCalled();
+  click(EXIT_IMPACT.exit);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+      token: 60,
+      confirmActivity: true,
+    }),
+  );
+});
+
+it("staying invalidates the save owner and a late flush cannot close the app", async () => {
+  const oldSave = deferred();
+  h.flush.mockReturnValueOnce(oldSave.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 61 });
+  h.active = true;
+  h.listeners.get("app:save-before-exit")!({ payload: 61 });
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_cancel", { token: 61 }),
+  );
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+  oldSave.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  expect(
+    h.invoke.mock.calls.some(([name]) => name === "app_exit_after_save"),
+  ).toBe(false);
+});
+
+it("an already installed restart uses its backend admission despite stale frontend work", async () => {
+  h.active = true;
+  h.listeners.get("app:save-before-restart")!({ payload: 62 });
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 62 }),
+  );
+});
+
+it("keeps an unconfirmed cancel visible and permits an explicit retry", async () => {
+  h.active = true;
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_cancel" ? Promise.reject("temporary") : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 63 });
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.states.at(-1)).toBe(true));
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  h.invoke.mockResolvedValue(undefined);
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+  expect(h.flush).not.toHaveBeenCalled();
 });
 
 it("ignores an old exit save failure while a newer restart is saving", async () => {
@@ -92,7 +214,7 @@ it("ignores an old exit save failure while a newer restart is saving", async () 
   oldSave.reject(new Error("late disk failure"));
   await Promise.resolve();
   await Promise.resolve();
-  expect(h.lock).not.toHaveBeenCalled();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
   expect(h.states[1]).toBe(false);
   restartSave.resolve();
   await vi.waitFor(() =>
@@ -121,7 +243,7 @@ it("ignores a late command rejection and a deferred old exit after a new owner s
   h.listeners.get("app:exit-deferred")!({ payload: 20 });
   await Promise.resolve();
   await Promise.resolve();
-  expect(h.lock).not.toHaveBeenCalled();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
   expect(h.states[2]).toBe(21);
   h.listeners.get("app:exit-deferred")!({ payload: 21 });
   expect(h.states[2]).toBe(null);

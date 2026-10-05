@@ -11,6 +11,7 @@ pub struct DraftExit {
     ready: AtomicBool,
     serial: AtomicU64,
     pending: Mutex<Option<(u64, i32, bool)>>,
+    exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
 impl DraftExit {
     fn request(&self, code: i32) -> Result<u64, String> {
@@ -24,15 +25,44 @@ impl DraftExit {
             .get_or_insert_with(|| (self.serial.fetch_add(1, Ordering::SeqCst) + 1, code, false));
         Ok(token)
     }
-    fn complete(&self, token: u64, installing: bool) -> Result<i32, String> {
+    fn complete(
+        &self,
+        token: u64,
+        installing: bool,
+        admit: impl FnOnce() -> Result<Option<crate::managed_update::UpdatePermit>, String>,
+    ) -> Result<i32, String> {
         let mut pending = self.pending.lock().map_err(|_| "暂时无法关闭，请重试")?;
         match *pending {
             Some((current, code, false)) if current == token => {
                 if installing {
                     return Err("更新正在安装，请稍后再试".into());
                 }
+                // Verify the exact save owner before taking admission. Restart
+                // already owns it through ManagedUpdateAuthority.
+                if code != tauri::RESTART_EXIT_CODE {
+                    *self
+                        .exit_admission
+                        .lock()
+                        .map_err(|_| "暂时无法关闭，请重试")? = admit()?;
+                }
                 *pending = Some((current, code, true));
                 Ok(code)
+            }
+            _ => Err("关闭请求已失效".into()),
+        }
+    }
+
+    fn cancel(&self, token: u64) -> Result<(), String> {
+        let mut pending = self
+            .pending
+            .lock()
+            .map_err(|_| "暂时无法取消退出，请重试")?;
+        match *pending {
+            Some((current, code, false))
+                if current == token && code != tauri::RESTART_EXIT_CODE =>
+            {
+                *pending = None;
+                Ok(())
             }
             _ => Err("关闭请求已失效".into()),
         }
@@ -114,7 +144,7 @@ pub fn request_restart_after_save(app: &AppHandle) -> Result<(), String> {
         return Err("更新已安装，请在未发送内容保存后重新打开应用".into());
     }
     let token = state.request(tauri::RESTART_EXIT_CODE)?;
-    app.emit("app:save-before-exit", token)
+    app.emit("app:save-before-restart", token)
         .map_err(|_| "更新已安装，未能确认保存，请稍后重新打开应用".into())
 }
 
@@ -123,11 +153,21 @@ pub fn app_drafts_ready(app: AppHandle) {
     app.state::<DraftExit>().ready.store(true, Ordering::SeqCst);
 }
 #[tauri::command]
-pub fn app_exit_after_save(app: AppHandle, token: u64) -> Result<(), String> {
+pub fn app_exit_after_save(
+    app: AppHandle,
+    token: u64,
+    confirm_activity: Option<bool>,
+) -> Result<(), String> {
     let installing = app
         .state::<crate::managed_update::ManagedUpdateAuthority>()
         .is_installing();
-    let code = app.state::<DraftExit>().complete(token, installing)?;
+    let code = app.state::<DraftExit>().complete(token, installing, || {
+        match crate::managed_update::quiet_exit() {
+            Ok(permit) => Ok(Some(permit)),
+            Err(_) if confirm_activity == Some(true) => Ok(None),
+            Err(error) => Err(error),
+        }
+    })?;
     if code == tauri::RESTART_EXIT_CODE {
         app.request_restart();
     } else {
@@ -136,18 +176,81 @@ pub fn app_exit_after_save(app: AppHandle, token: u64) -> Result<(), String> {
     Ok(())
 }
 
+#[tauri::command]
+pub fn app_exit_cancel(app: AppHandle, token: u64) -> Result<(), String> {
+    app.state::<DraftExit>().cancel(token)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn quiet_exit_keeps_new_activity_out_after_save() {
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let state = DraftExit::default();
+        let token = state.request(0).unwrap();
+        assert_eq!(
+            state
+                .complete(token, false, || gate.update().map(Some))
+                .unwrap(),
+            0
+        );
+        assert!(gate.activity().is_err());
+        assert_eq!(state.take_allowed(false), (true, None));
+        assert!(gate.activity().is_err());
+        drop(state);
+        assert!(gate.activity().is_ok());
+    }
+
+    #[test]
+    fn active_work_requires_acknowledgement_and_can_still_cancel() {
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let _work = gate.activity().unwrap();
+        let state = DraftExit::default();
+        let token = state.request(0).unwrap();
+        assert!(
+            state
+                .complete(token, false, || gate.update().map(Some))
+                .is_err()
+        );
+        assert_eq!(state.take_allowed(false), (false, None));
+        assert!(state.cancel(token + 1).is_err());
+        assert!(state.cancel(token).is_ok());
+        assert!(
+            state
+                .complete(token, false, || panic!(
+                    "stale token cannot acquire admission"
+                ))
+                .is_err()
+        );
+        let next = state.request(0).unwrap();
+        assert_ne!(next, token);
+        // Represents the separately confirmed user decision, not a stop receipt.
+        assert_eq!(state.complete(next, false, || Ok(None)).unwrap(), 0);
+        assert!(state.cancel(next).is_err());
+    }
+
+    #[test]
+    fn installed_restart_keeps_its_own_admission_and_cannot_be_cancelled() {
+        let state = DraftExit::default();
+        let token = state.request(tauri::RESTART_EXIT_CODE).unwrap();
+        assert!(state.cancel(token).is_err());
+        assert_eq!(
+            state
+                .complete(token, false, || panic!("restart admission already held"))
+                .unwrap(),
+            tauri::RESTART_EXIT_CODE
+        );
+    }
     #[test]
     fn repeated_exit_keeps_one_owner_and_stale_save_cannot_authorize_exit() {
         let state = DraftExit::default();
         let token = state.request(9).unwrap();
         assert_eq!(state.request(0).unwrap(), token);
-        assert!(state.complete(token + 1, false).is_err());
+        assert!(state.complete(token + 1, false, || Ok(None)).is_err());
         assert_eq!(state.take_allowed(false), (false, None));
-        assert_eq!(state.complete(token, false).unwrap(), 9);
-        assert!(state.complete(token, false).is_err());
+        assert_eq!(state.complete(token, false, || Ok(None)).unwrap(), 9);
+        assert!(state.complete(token, false, || Ok(None)).is_err());
         assert_eq!(state.take_allowed(false), (true, None));
     }
 
@@ -157,9 +260,9 @@ mod tests {
         let closing = state.request(0).unwrap();
         let restart = state.request(tauri::RESTART_EXIT_CODE).unwrap();
         assert_ne!(closing, restart);
-        assert!(state.complete(closing, false).is_err());
+        assert!(state.complete(closing, false, || Ok(None)).is_err());
         assert_eq!(
-            state.complete(restart, false).unwrap(),
+            state.complete(restart, false, || Ok(None)).unwrap(),
             tauri::RESTART_EXIT_CODE
         );
     }
@@ -168,16 +271,16 @@ mod tests {
     fn installation_rejects_old_save_and_rechecks_an_already_queued_exit() {
         let state = DraftExit::default();
         let closing = state.request(0).unwrap();
-        assert!(state.complete(closing, true).is_err());
+        assert!(state.complete(closing, true, || Ok(None)).is_err());
         assert_eq!(state.take_allowed(true), (false, None));
         assert_eq!(state.request(0).unwrap(), closing);
-        assert_eq!(state.complete(closing, false).unwrap(), 0);
+        assert_eq!(state.complete(closing, false, || Ok(None)).unwrap(), 0);
         assert_eq!(state.take_allowed(true), (false, Some(closing)));
         assert_eq!(state.take_allowed(false), (false, None));
         let restart = state.request(tauri::RESTART_EXIT_CODE).unwrap();
-        assert!(state.complete(closing, false).is_err());
+        assert!(state.complete(closing, false, || Ok(None)).is_err());
         assert_eq!(
-            state.complete(restart, false).unwrap(),
+            state.complete(restart, false, || Ok(None)).unwrap(),
             tauri::RESTART_EXIT_CODE
         );
         assert_eq!(state.take_allowed(false), (true, None));

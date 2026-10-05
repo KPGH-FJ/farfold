@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-06",
+  "changes": [
+    "退出前检查活动、未知结果和账号操作；准确取消保存请求，保存失败不退出",
+    "静默退出持有维护许可直到进程结束，阻止新工作竞态",
+    "更新重启保留独立保存屏障",
+    "诊断使用系统桌面，日志按句柄拒绝链接、管道及非普通文件"
+  ],
+  "review": "root逐行复核退出token/cancel/late-save/quiet-admission链，无新增确证阻断；历史仍沿官方分页/元数据搜索与正文预览后的加入",
+  "checks": {
+    "DraftStartup": 10,
+    "exitImpact": 8,
+    "rustDraftExit": 6,
+    "rustDiagnostics": 46,
+    "full": "同five-stage-checks.json七项通过"
+  },
+  "notVerified": [
+    "正式应用实际退出",
+    "真实Agent恢复",
+    "实际诊断导出",
+    "更新安装或发布渠道"
+  ]
+}
