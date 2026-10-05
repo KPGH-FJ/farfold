@@ -7,6 +7,9 @@ const labels: Record<AccountIdentity["kind"], string> = {
   gateway: "自定义模型服务",
   external: "其他认证方式",
   none: "未登录",
+  credential: "已检测到登录资料",
+  missing_credential: "未检测到登录资料",
+  not_required: "当前服务不要求登录",
 };
 
 /** Common account presentation; a connection report never proves request availability. */
@@ -38,10 +41,15 @@ export function ConnectionAccount({
     >
       <strong>{account ? labels[account.kind] : "账号状态未报告"}</strong>
       {account?.email && <span>{account.email}</span>}
+      {account?.displayName && <span>{account.displayName}</span>}
       {account?.plan && <span>{`账号方案：${account.plan}`}</span>}
       <span className="auth-note">
         {account
-          ? "由 Agent 报告；实际服务与模型以当前选择为准。"
+          ? ["credential", "missing_credential", "not_required"].includes(
+              account.kind,
+            )
+            ? "由 Agent 检查本地设置；尚未验证服务是否可用。"
+            : "由 Agent 报告；实际服务与模型以当前选择为准。"
           : "连接检查不代表已登录。"}
       </span>
     </div>

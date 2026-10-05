@@ -88,9 +88,18 @@ export interface CatalogEntry {
 }
 
 export interface AccountIdentity {
-  kind: "account" | "api_key" | "gateway" | "external" | "none";
+  kind:
+    | "account"
+    | "api_key"
+    | "gateway"
+    | "external"
+    | "none"
+    | "credential"
+    | "missing_credential"
+    | "not_required";
   email?: string;
   plan?: string;
+  displayName?: string;
 }
 
 export interface AgentConnectionStatus {

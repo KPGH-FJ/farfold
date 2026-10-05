@@ -104,8 +104,10 @@ pub(crate) struct ConnectionKey {
 
 #[derive(Clone)]
 pub(crate) struct ManagedConnection {
+    pub(crate) launch_identity: Option<LaunchIdentity>,
     pub(crate) connection_id: String,
     pub(crate) account: Arc<Mutex<Option<crate::acp_client::account_status::AccountIdentity>>>,
+    pub(crate) account_query: Option<crate::acp_client::account_query::AccountQuery>,
     pub(crate) command_tx: mpsc::UnboundedSender<crate::acp_client::operations::QueuedCommand>,
     pub(crate) state: Arc<AtomicU8>,
     /// Filled once `initialize` succeeds — a CONNECTING entry inserted before

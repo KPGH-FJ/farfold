@@ -53,6 +53,15 @@ mod retention_tests;
 #[path = "account_status_tests.rs"]
 mod account_status_tests;
 
+#[path = "account_query_wire_tests.rs"]
+mod account_query_wire_tests;
+
+#[path = "account_logout_tests.rs"]
+mod account_logout_tests;
+
+#[path = "account_scope_tests.rs"]
+mod account_scope_tests;
+
 #[path = "connection_isolation_tests.rs"]
 mod connection_isolation_tests;
 

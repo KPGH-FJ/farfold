@@ -11,7 +11,7 @@ async fn owner(agent: &str) -> Ownership {
     Ownership {
         output: Channel::new(|_| Ok(())),
         configuration,
-        scope: vec![],
+        scope: crate::acp_client::manager::AccountScope::empty_for_test(),
         attempt,
     }
 }

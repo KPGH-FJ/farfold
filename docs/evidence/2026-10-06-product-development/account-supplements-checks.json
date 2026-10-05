@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-06",
+  "scope": "Account scope, declared queries and official supplements; synthetic peers only",
+  "verified": {
+    "account_tests": "43 passed, 0 failed",
+    "frontend": "178 files, 2048 passed; format/typecheck/build exit 0",
+    "challenge": "Early undeclared push and stale initialization identity races fixed with regressions; Vibe fresh-status/logout independently reviewed"
+  },
+  "limits": [
+    "No actual Agent login, logout, credential query or paid model calls",
+    "Local credential presence does not prove remote login or entitlement",
+    "Each new conversation process still requires the official program to share persisted authentication",
+    "Unknown launch wrappers cannot be grouped by guessed identity"
+  ]
+}

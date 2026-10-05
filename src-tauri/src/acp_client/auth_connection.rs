@@ -9,6 +9,56 @@ use super::manager::{
 use crate::meta_store::MetaStore;
 
 impl AcpManager {
+    /// Check the process which accepted protocol authentication. Restarting it
+    /// here would discard valid connection-local authentication state.
+    pub(crate) async fn refresh_authentication(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+    ) -> Result<AgentConnectionStatus, String> {
+        let _configuration = crate::install_job::configuration_guard(agent_id).await;
+        let _scope = self.reserve_account_change(agent_id)?;
+        let selected = self.live_connection(agent_id, cwd)?;
+        let query = selected.handshake.get().and_then(|h| {
+            super::account_query::AccountQuery::declared(&h.public_json(), selected.account_query)
+        });
+        if let Some(query) = query {
+            let (result, reply) = tokio::sync::oneshot::channel();
+            selected.send(super::manager::ManagerCommand::AccountStatus { query, result })?;
+            let identity = reply.await.map_err(|_| "账号连接已结束，请重新检查")??;
+            *selected.account.lock().map_err(|_| "账号状态尚未确认")? = identity;
+        }
+        let connections = self.lock()?;
+        let (key, connection) = connections
+            .iter()
+            .find(|(_, c)| {
+                c.connection_id == selected.connection_id
+                    && c.state.load(Ordering::SeqCst) == STATE_READY
+            })
+            .ok_or("账号连接已结束，请重新检查")?;
+        let status = Self::status_of(key, connection);
+        self.publish_status(status.clone());
+        Ok(status)
+    }
+}
+
+#[tauri::command]
+pub async fn auth_refresh(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    source: Option<String>,
+) -> Result<AgentConnectionStatus, String> {
+    if source.is_some_and(|value| !value.is_empty()) {
+        return Err("当前使用 API 配置，请返回 API 设置检查此服务".into());
+    }
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .refresh_authentication(&agent_id, &cwd)
+        .await
+}
+
+impl AcpManager {
     pub(crate) async fn recheck_authentication(
         &self,
         agent_id: &str,

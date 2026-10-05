@@ -238,7 +238,7 @@ fn run_terminal(
     if manager.candidate_pending(&row.id)? {
         return Err("程序检查尚未确认结束，请稍后重试".into());
     }
-    let scope = manager.reserve_preparation_change(&row.id)?;
+    let scope = manager.reserve_preparation_action(row, &action.command, &action.args)?;
     // Only normal shell/process environment. Do not resolve Agent placeholders,
     // call credentials::apply or load the selected service's Farfold Keychain.
     let env: Vec<_> = crate::shell_env::command_env().into_iter().collect();

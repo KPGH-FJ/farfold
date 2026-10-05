@@ -12,8 +12,10 @@ fn register(manager: &AcpManager, key: ConnectionKey, state: u8) -> ManagedConne
     life.state.store(state, Ordering::SeqCst);
     let (command_tx, _receive) = mpsc::unbounded_channel();
     let connection = ManagedConnection {
+        launch_identity: None,
         connection_id: "fixture-connection".into(),
         account: Default::default(),
+        account_query: None,
         command_tx,
         state: life.state.clone(),
         handshake: Arc::new(OnceLock::new()),

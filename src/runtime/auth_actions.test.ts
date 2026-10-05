@@ -122,7 +122,7 @@ it("checks only the original account connection after login, without disconnecti
   await vi.waitFor(() =>
     expect(activity.getSnapshot()?.phase).toBe("completed"),
   );
-  expect(ports.invoke).toHaveBeenCalledExactlyOnceWith("auth_recheck", {
+  expect(ports.invoke).toHaveBeenCalledExactlyOnceWith("auth_refresh", {
     agentId: "auth-scope-success",
     cwd: "/original",
   });

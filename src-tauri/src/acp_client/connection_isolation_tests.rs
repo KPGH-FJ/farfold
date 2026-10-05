@@ -346,6 +346,11 @@ async fn failed_new_validation_keeps_known_identity_until_exact_process_reaping(
             .unwrap()
             .is_none()
     );
+    let mut alias = f.row.clone();
+    alias.id = "failed-open-alias".into();
+    f.store.insert_agent(&alias).unwrap();
+    f.manager.connect(&alias, &f.cwd, &f.store).await.unwrap();
+    assert!(f.manager.reserve_account_change(&alias.id).is_err());
     let before = f.manager.status(&f.row.id).unwrap();
     assert_eq!(before.len(), 1);
     assert!(
@@ -366,6 +371,7 @@ async fn failed_new_validation_keeps_known_identity_until_exact_process_reaping(
         .disconnect_selected(&f.row.id, None, Some(&before[0].connection_id))
         .await
         .unwrap();
+    assert!(f.manager.reserve_account_change(&alias.id).is_ok());
     let restored = f
         .manager
         .open_session(

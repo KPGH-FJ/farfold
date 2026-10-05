@@ -1,0 +1,57 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-b41d4102f38ac8cb)
+
+running 43 tests
+test acp_client::account_query::tests::unknown_or_contradictory_vibe_state_is_unknown ... ok
+test acp_client::account_query::tests::credential_presence_is_distinct_from_verified_login ... ok
+test acp_client::account_query::tests::declaration_is_exact_and_push_prevents_query_override ... ok
+test acp_client::account_launch::tests::unbounded_or_outside_package_metadata_is_not_inspected ... ok
+test acp_client::account_launch::tests::official_registry_standalone_vibe_entry_is_supported_without_guessing_custom_names ... ok
+test acp_client::account_query::tests::vibe_logout_permission_requires_exact_owned_source_and_boolean_opt_in ... ok
+test acp_client::account_status::tests::declaration_and_method_must_match ... ok
+test acp_client::account_status::tests::invalid_identity_fields_are_not_forwarded ... ok
+test acp_client::account_status::tests::discards_secret_and_arbitrary_fields ... ok
+test acp_client::account_status::tests::non_account_status_never_keeps_previous_identity ... ok
+test acp_client::account_launch::tests::reviewed_package_entry_is_required_without_a_wire_declaration ... ok
+test acp_client::account_query::tests::codebuddy_secrets_and_arbitrary_fields_never_leave_parser ... ok
+test acp_client::account_launch::tests::python_console_entry_uses_only_public_metadata_and_no_version_gate ... ok
+test acp_client::lifecycle::tests::account_change_and_work_are_mutually_exclusive ... ok
+test acp_client::account_observer::tests::a_post_handshake_unknown_or_logout_supersedes_the_buffered_identity ... ok
+test acp_client::dependency_environment::tests::cwd_namesake_cannot_trigger_the_components_stub_account_bypass ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::query_declaration_does_not_authorize_an_early_undeclared_account_push ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::same_process_authentication_check_preserves_memory_and_keeps_new_child_distinct ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::undeclared_query_never_runs_and_malformed_query_never_becomes_login ... ok
+test acp_client::lifecycle_tests::account_recheck_preserves_an_unfinished_effectful_operation ... ok
+test acp_client::lifecycle_tests::account_recheck_keeps_other_directories_and_api_work_connected ... ok
+test acp_client::lifecycle_tests::account_recheck_refuses_work_in_its_exact_connection_without_closing_it ... ok
+test acp_client::lifecycle_tests::account_scope_tests::aliases_share_account_admission_and_busy_api_work_blocks_changes ... ok
+test acp_client::lifecycle_tests::account_scope_tests::alias_candidate_in_flight_prevents_account_change ... ok
+test acp_client::lifecycle_tests::account_scope_tests::explicit_login_entry_also_protects_a_registered_companion ... ok
+test acp_client::lifecycle_tests::account_scope_tests::different_python_scripts_remain_independent_during_account_change ... ok
+test acp_client::lifecycle_tests::account_scope_tests::authentication_unknown_result_keeps_alias_launches_reserved_until_reply ... ok
+test acp_client::manager::account_scope::identity_tests::resolved_scripts_group_aliases_without_grouping_their_interpreter ... ok
+test acp_client::manager::account_scope::identity_tests::setup_without_live_connection_reserves_the_companion_entry ... ok
+test acp_client::manager::account_scope::identity_tests::unknown_package_runners_do_not_group_every_agent_by_runtime ... ok
+test acp_client::manager::authentication_tests::a_busy_directory_blocks_account_change_and_rolls_back_other_reservations ... ok
+test acp_client::preparation::tests::official_account_routes_are_scoped_to_the_declared_method ... ok
+test acp_client::preparation::tests::unknown_agents_remain_unrestricted_and_account_links_are_public ... ok
+test auth::attempts::tests::selected_api_never_dispatches_shared_account_authentication ... ok
+test acp_client::lifecycle_tests::account_status_tests::undeclared_notifications_never_become_a_reported_identity ... ok
+test acp_client::lifecycle_tests::account_status_tests::immediate_identity_push_logout_unknown_and_connection_scope_are_real_wire_events ... ok
+test acp_client::lifecycle_tests::account_logout_tests::a_custom_program_name_does_not_authorize_an_official_supplement ... ok
+test acp_client::lifecycle_tests::account_logout_tests::standard_declaration_keeps_the_standard_logout_route ... ok
+test acp_client::lifecycle_tests::account_logout_tests::late_logout_keeps_shared_scope_until_real_reply_and_never_retries ... ok
+test acp_client::lifecycle_tests::account_logout_tests::cancelled_fresh_check_never_starts_a_late_logout ... ok
+test acp_client::lifecycle_tests::account_logout_tests::empty_ack_or_remote_error_does_not_invent_a_signed_out_state ... ok
+test acp_client::lifecycle_tests::account_logout_tests::official_logout_uses_fresh_status_and_confirms_local_credential_removal ... ok
+test acp_client::lifecycle_tests::account_logout_tests::stale_permission_cannot_logout_an_external_or_unconfirmed_credential ... ok
+
+test result: ok. 43 passed; 0 failed; 0 ignored; 0 measured; 849 filtered out; finished in 5.72s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-20496d3dbe174456)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

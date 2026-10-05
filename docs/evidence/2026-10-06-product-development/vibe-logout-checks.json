@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-06",
+  "scope": "Vibe official logout supplement; synthetic stdio only",
+  "implementation": "The reviewed official entry queries _auth/status immediately before _auth/signOut. Only authenticated os_keyring or vibe_home_env_file with boolean signOutAvailable=true is permitted. An empty action acknowledgement is followed by a separate local status query. Standard ACP logout keeps its declared route.",
+  "verified": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked account_logout",
+    "result": "7 passed, 0 failed",
+    "rawOutput": "/tmp/farfold-vibe-logout-tests.log",
+    "covered": [
+      "both owned credential sources and confirmed local removal",
+      "fresh status rejects stale UI permission and external or malformed sources",
+      "cancellation during status check prevents late logout",
+      "empty acknowledgement or remote error does not invent signed-out state",
+      "late logout retains shared account scope and blocks an alias connection",
+      "custom program name alone does not authorize supplement",
+      "standard declaration keeps standard logout route",
+      "cancellation after send preserves ownership until late real reply"
+    ],
+    "independentReview": "quality_release_audit inspected route, parsing, scope and cancellation; no confirmed blocker; outdated generic comment corrected",
+    "otherChecks": [
+      "account_query: 8 passed",
+      "auth: 70 passed, 1 existing ignored",
+      "cargo clippy --locked -- -D warnings: exit 0",
+      "cargo fmt: exit 0"
+    ],
+    "otherRawOutputs": [
+      "/tmp/farfold-vibe-account-query-tests.log",
+      "/tmp/farfold-vibe-auth-tests.log",
+      "/tmp/farfold-vibe-logout-clippy.log"
+    ]
+  },
+  "pending": [
+    "No actual Vibe process, login, credential deletion, model request or installed-app test was performed. Local credential presence is not remote account validity."
+  ]
+}

@@ -219,8 +219,10 @@ fn api_connection(
             service: Some("service-fixture".into()),
         },
         super::super::manager::ManagedConnection {
+            launch_identity: None,
             connection_id: "fixture-connection".into(),
             account: Default::default(),
+            account_query: None,
             command_tx,
             state: life.state.clone(),
             handshake: Arc::new(OnceLock::new()),

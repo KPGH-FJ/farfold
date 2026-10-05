@@ -28,7 +28,8 @@ use super::initialization::{self, Failure as InitializeFailure};
 pub use super::lifecycle::CloseReason;
 use super::lifecycle::{CLOSING, ConnectionLife};
 pub(crate) use super::operations::Operation as AuthenticationOperation;
-pub(crate) type AccountScope = Vec<super::lifecycle::OperationLease>;
+#[path = "account_scope.rs"]
+mod account_scope;
 use super::process::{ProcessControl, ProcessTransport};
 use super::startup_diagnostics::{Diagnostics, Outcome};
 use crate::acp_client::pump::{
@@ -36,6 +37,8 @@ use crate::acp_client::pump::{
 };
 use crate::logging;
 use crate::meta_store::{AgentRow, MetaStore};
+use account_scope::AccountAdmission;
+pub(crate) use account_scope::{AccountScope, LaunchIdentity};
 
 /// How long `connect` waits for `initialize` before giving up.
 const INITIALIZE_TIMEOUT: Duration = Duration::from_secs(60);
@@ -64,6 +67,8 @@ pub enum ManagerCommand {
         result: oneshot::Sender<Result<(), String>>,
     },
     Logout {
+        route: super::account_logout::LogoutRoute,
+        account: Arc<Mutex<Option<super::account_status::AccountIdentity>>>,
         operation: AuthenticationOperation,
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
         result: oneshot::Sender<Result<(), String>>,
@@ -78,6 +83,10 @@ pub enum ManagerCommand {
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         events: pump::SessionSink,
         result: oneshot::Sender<Result<super::operations::OpenDelivery, String>>,
+    },
+    AccountStatus {
+        query: super::account_query::AccountQuery,
+        result: oneshot::Sender<Result<Option<super::account_status::AccountIdentity>, String>>,
     },
     ListSessions {
         cwd: Option<PathBuf>,
@@ -99,6 +108,7 @@ impl std::fmt::Debug for ManagerCommand {
             Self::Logout { .. } => "Logout",
             Self::OpenSession { .. } => "OpenSession",
             Self::ListSessions { .. } => "ListSessions",
+            Self::AccountStatus { .. } => "AccountStatus",
             Self::DeleteSession { .. } => "DeleteSession",
         })
     }
@@ -138,6 +148,7 @@ pub struct AcpManager {
     pub(crate) shutting_down: AtomicBool,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
     connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
+    account_admission: AccountAdmission,
     log_dir: PathBuf,
     /// App data dir — home of `pids.json` for process supervision.
     data_dir: PathBuf,
@@ -170,6 +181,7 @@ impl AcpManager {
             shutting_down: AtomicBool::new(false),
             opening_sessions: super::lifecycle::OpenReservations::default(),
             connections: Arc::new(Mutex::new(HashMap::new())),
+            account_admission: AccountAdmission::default(),
             log_dir,
             data_dir,
             pending_permissions: PendingPermissions::default(),
@@ -222,7 +234,10 @@ impl AcpManager {
             .map_err(|_| "ACP manager lock poisoned".to_string())
     }
 
-    fn status_of(key: &ConnectionKey, connection: &ManagedConnection) -> AgentConnectionStatus {
+    pub(crate) fn status_of(
+        key: &ConnectionKey,
+        connection: &ManagedConnection,
+    ) -> AgentConnectionStatus {
         let handshake = connection.handshake.get();
         AgentConnectionStatus {
             connection_id: connection.connection_id.clone(),
@@ -240,7 +255,14 @@ impl AcpManager {
                 .and_then(|h| h.typed.agent_info.as_ref().map(|i| i.version.clone())),
             auth_methods: handshake.map(|h| h.auth_ids()).unwrap_or_default(),
             account: handshake
-                .filter(|h| super::account_status::accepts(&h.public_json(), "_auth/status_update"))
+                .filter(|h| {
+                    super::account_status::accepts(&h.public_json(), "_auth/status_update")
+                        || super::account_query::AccountQuery::declared(
+                            &h.public_json(),
+                            connection.account_query,
+                        )
+                        .is_some()
+                })
                 .and_then(|_| connection.account.lock().ok().and_then(|a| a.clone())),
             close_reason: connection.life.close_reason(),
         }
@@ -254,6 +276,12 @@ impl AcpManager {
             .filter(|(key, _)| key.agent_id == agent_id && !key.candidate)
             .map(|(key, connection)| Self::status_of(key, connection))
             .collect())
+    }
+
+    pub(crate) fn publish_status(&self, status: AgentConnectionStatus) {
+        if let Some(sink) = &self.status_sink {
+            sink(status);
+        }
     }
 
     /// Spawn `{command, args}` in `cwd` (login-shell env + row env overrides),
@@ -380,6 +408,7 @@ impl AcpManager {
         diagnostics: Option<Arc<Diagnostics>>,
     ) -> Result<AgentConnectionStatus, String> {
         let admission = crate::managed_update::activity()?;
+        let launch_identity = LaunchIdentity::from_launch(&agent.command, &agent.args);
         let service = prepared.as_ref().map(|p| p.context.clone());
         let key = ConnectionKey {
             agent_id: agent.id.clone(),
@@ -458,6 +487,7 @@ impl AcpManager {
         let agent_label_for_task = agent_label.clone();
         let handshake = Arc::new(std::sync::OnceLock::<Handshake>::new());
         let account = Arc::new(Mutex::new(None));
+        let account_query = super::account_launch::reviewed(agent);
 
         // Reserve the key before spawning: a concurrent connect() waits on
         // this CONNECTING entry instead of starting a duplicate process.
@@ -467,11 +497,15 @@ impl AcpManager {
             if self.shutting_down.load(Ordering::SeqCst) {
                 return Err("应用正在退出，请稍后重试".into());
             }
+            self.account_admission
+                .check(&agent.id, launch_identity.as_ref())?;
             connections.insert(
                 key.clone(),
                 ManagedConnection {
+                    launch_identity,
                     connection_id,
                     account: account.clone(),
+                    account_query,
                     command_tx: command_tx.clone(),
                     state: state.clone(),
                     handshake: handshake.clone(),
@@ -507,35 +541,22 @@ impl AcpManager {
         let task_diagnostics = diagnostics.clone();
         let decode_diagnostics = diagnostics.clone();
         let status_sink = self.status_sink.clone();
-        let account_handshake = handshake.clone();
-        let account_connections = self.connections.clone();
-        let account_key = key.clone();
-        let account_sink = self.status_sink.clone();
+        let observer = super::account_observer::AccountObserver::new(
+            account,
+            handshake.clone(),
+            self.connections.clone(),
+            key.clone(),
+            self.status_sink.clone(),
+        );
+        let receive_observer = observer.clone();
+        let published_observer = observer.clone();
         runtime().spawn(async move {
             let result = Client
                 .builder()
                 .name("farfold")
                 .on_receive_dispatch(
                     async move |dispatch: Dispatch<UntypedMessage, UntypedMessage>, _cx| {
-                        if let Dispatch::Notification(message) = &dispatch
-                            && message.method() == "_auth/status_update"
-                            && account_handshake.get().is_none_or(|h| super::account_status::accepts(&h.public_json(), message.method()))
-                        {
-                            // A notification may arrive immediately behind initialize,
-                            // before its caller publishes the accepted handshake. Buffer
-                            // only the bounded projection; status_of gates publication.
-                            let identity = super::account_status::parse(message.params());
-                            if let Ok(mut current) = account.lock() {
-                                // A malformed/new kind invalidates the older identity.
-                                *current = identity;
-                            }
-                            if !account_key.candidate
-                                && let Some(sink) = &account_sink
-                                && let Ok(connections) = account_connections.lock()
-                                && let Some(connection) = connections.get(&account_key)
-                            {
-                                sink(Self::status_of(&account_key, connection));
-                            }
+                        if receive_observer.observe(&dispatch) {
                             return Ok(Handled::Yes);
                         }
                         // Session-scoped traffic can arrive before the
@@ -594,7 +615,12 @@ impl AcpManager {
                             return Err(error);
                         }
                     };
+                    let query = (!candidate).then(|| super::account_query::AccountQuery::declared(&init_response.public_json(), account_query)).flatten();
                     let _ = init_tx.send(Ok(init_response));
+                    // Compatibility completes before this bounded read. Run it
+                    // before queued commands so an old startup result cannot
+                    // overwrite a later authenticate/refresh on this process.
+                    if let Some(query) = query { observer.query(&cx, query).await; }
                     let cwd = cwd_for_task;
 
                     let mut stop = ops.life.stop_receiver();
@@ -696,6 +722,7 @@ impl AcpManager {
         if handshake.set(init_response).is_err() {
             return Err("handshake cell already filled (duplicate connect)".to_string());
         }
+        published_observer.handshake_published();
         let connections = self.lock()?;
         let connection = connections
             .get(&key)
@@ -715,38 +742,6 @@ impl AcpManager {
             diagnostics.outcome(Outcome::Success);
         }
         Ok(status)
-    }
-
-    /// The configuration guard prevents new connections while every existing
-    /// settings connection acquires this same admission gate. Rollback on any
-    /// busy member occurs before an account-changing request can be sent.
-    pub(crate) fn reserve_account_change(&self, agent_id: &str) -> Result<AccountScope, String> {
-        self.reserve_configuration_scope(agent_id)
-    }
-
-    /// Official configuration can change shared settings used by any service.
-    /// The caller holds configuration_guard to prevent a new connection while
-    /// every current source acquires its atomic idle admission reservation.
-    pub(crate) fn reserve_preparation_change(
-        &self,
-        agent_id: &str,
-    ) -> Result<AccountScope, String> {
-        self.reserve_configuration_scope(agent_id)
-    }
-
-    fn reserve_configuration_scope(&self, agent_id: &str) -> Result<AccountScope, String> {
-        self.lock()?
-            .iter()
-            .filter(|(key, connection)| {
-                key.agent_id == agent_id
-                    && !key.candidate
-                    && !matches!(
-                        connection.state.load(Ordering::SeqCst),
-                        STATE_CLOSED | STATE_FAILED
-                    )
-            })
-            .map(|(_, connection)| connection.life.operation("account_change".into()))
-            .collect()
     }
 
     /// Route the user action to its original directory. The caller owns the
@@ -771,17 +766,17 @@ impl AcpManager {
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
         let selected = self.live_connection(agent_id, cwd)?;
-        let supported = selected.handshake.get().is_some_and(Handshake::can_logout);
-        if !supported {
-            return Err("此目录的 Agent 未提供退出登录，请使用账号设置".into());
-        }
+        let route = super::account_logout::LogoutRoute::for_connection(&selected)
+            .ok_or("此目录的 Agent 未提供退出登录，请使用账号设置")?;
         let (result, reply) = oneshot::channel();
         selected.send(ManagerCommand::Logout {
+            route,
+            account: selected.account.clone(),
             operation,
             on_unknown,
             result,
         })?;
-        match reply.await {
+        let outcome = match reply.await {
             Ok(Err(error)) if error == "AUTH_CONNECTION_CLOSED" => {
                 selected.life.terminated().await;
                 Err("账号连接已结束，请重新检查账号状态".into())
@@ -791,7 +786,15 @@ impl AcpManager {
                 selected.life.terminated().await;
                 Err("账号连接已结束，请重新检查账号状态".into())
             }
+        };
+        if let Ok(connections) = self.lock()
+            && let Some((key, connection)) = connections
+                .iter()
+                .find(|(_, c)| c.connection_id == selected.connection_id)
+        {
+            self.publish_status(Self::status_of(key, connection));
         }
+        outcome
     }
 
     /// App exit uses the same exact owners as disconnect, with one total budget.
@@ -981,8 +984,10 @@ mod authentication_tests {
                 service: service.map(str::to_string),
             },
             ManagedConnection {
+                launch_identity: None,
                 connection_id: "fixture-connection".into(),
                 account: Default::default(),
+                account_query: None,
                 command_tx,
                 state: life.state.clone(),
                 handshake: Arc::new(handshake),

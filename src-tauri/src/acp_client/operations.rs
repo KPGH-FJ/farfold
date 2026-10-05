@@ -4,7 +4,7 @@ use super::{
     manager::ManagerCommand,
     pump::{self, PendingPermissions, SessionMap, SessionOps},
 };
-use agent_client_protocol::schema::v1::{AuthenticateRequest, DeleteSessionRequest, LogoutRequest};
+use agent_client_protocol::schema::v1::{AuthenticateRequest, DeleteSessionRequest};
 use agent_client_protocol::{Agent, ConnectionTo, SentRequest};
 use std::{
     path::PathBuf,
@@ -197,11 +197,14 @@ impl ManagerCommand {
             Self::Authenticate { .. } | Self::Logout { .. } => 60,
             Self::OpenSession { .. } => 120,
             Self::ListSessions { .. } | Self::DeleteSession { .. } => 30,
+            Self::AccountStatus { .. } => 5,
         })
     }
     pub(crate) fn operation_key(&self) -> String {
         match self {
-            Self::Authenticate { .. } | Self::Logout { .. } => "authentication".into(),
+            Self::Authenticate { .. } | Self::Logout { .. } | Self::AccountStatus { .. } => {
+                "authentication".into()
+            }
             Self::ListSessions { .. } => "list".into(),
             Self::OpenSession {
                 native_session_id, ..
@@ -276,7 +279,7 @@ async fn execute_list<T>(
     execute(reply, life, operation, deadline, false, settled).await
 }
 
-fn authentication_error(error: agent_client_protocol::Error) -> String {
+pub(crate) fn authentication_error(error: agent_client_protocol::Error) -> String {
     // Keep arbitrary provider data and possible credentials out of the auth UI.
     if error.code == agent_client_protocol::schema::v1::ErrorCode::AuthRequired {
         "AUTH_REQUIRED".into()
@@ -336,6 +339,17 @@ pub(crate) async fn run(
     } = queued;
     let operation = Operation::new();
     match command {
+        ManagerCommand::AccountStatus { query, result } => {
+            execute(
+                result,
+                ops.life.clone(),
+                operation,
+                deadline,
+                false,
+                async { Ok(query.read(&cx).await) },
+            )
+            .await;
+        }
         ManagerCommand::Authenticate {
             method_id,
             key,
@@ -369,6 +383,8 @@ pub(crate) async fn run(
             .await;
         }
         ManagerCommand::Logout {
+            route,
+            account,
             operation,
             on_unknown,
             result,
@@ -384,13 +400,7 @@ pub(crate) async fn run(
                 deadline,
                 on_unknown,
                 _lease,
-                async {
-                    operation
-                        .request(&cx, cx.send_request(LogoutRequest::new()))
-                        .await
-                        .map(|_| ())
-                        .map_err(authentication_error)
-                },
+                route.execute(&cx, &operation, &account),
             )
             .await;
         }

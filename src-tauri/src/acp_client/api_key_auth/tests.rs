@@ -116,8 +116,10 @@ fn register(
             service: None,
         },
         ManagedConnection {
+            launch_identity: None,
             connection_id: "fixture-connection".into(),
             account: Default::default(),
+            account_query: None,
             command_tx,
             state: Arc::new(AtomicU8::new(STATE_READY)),
             handshake: Arc::new(handshake),

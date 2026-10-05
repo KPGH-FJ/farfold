@@ -171,7 +171,7 @@ const loginSuccess = (nodes: Element[]) =>
       R.keyConfirmed,
       A.loginConfirmedChecking,
       A.loginConfirmedCheckFailed,
-    ].includes(String(node.props.children)),
+    ].some((text) => text === String(node.props.children)),
   );
 beforeEach(() => {
   h.slots = [];

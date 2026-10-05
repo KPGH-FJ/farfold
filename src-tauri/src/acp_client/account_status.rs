@@ -11,16 +11,37 @@ pub enum AccountKind {
     Gateway,
     External,
     None,
+    Credential,
+    MissingCredential,
+    NotRequired,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct AccountIdentity {
+    /// Local execution permission from a reviewed status query, not identity.
+    /// Never persisted or serialized; auth_methods exposes the generic action.
+    #[serde(skip)]
+    pub(crate) logout_available: bool,
     pub(crate) kind: AccountKind,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) email: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub(crate) plan: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub(crate) display_name: Option<String>,
+}
+
+impl AccountIdentity {
+    pub(crate) fn kind(kind: AccountKind) -> Self {
+        Self {
+            logout_available: false,
+            kind,
+            email: None,
+            plan: None,
+            display_name: None,
+        }
+    }
 }
 
 /// The capability is a declaration, not an identity. Unknown notifications and
@@ -76,7 +97,13 @@ pub(crate) fn parse(params: &Value) -> Option<AccountIdentity> {
                     .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'_' | b'-' | b' '))
         })
         .map(str::to_owned);
-    Some(AccountIdentity { kind, email, plan })
+    Some(AccountIdentity {
+        logout_available: false,
+        kind,
+        email,
+        plan,
+        display_name: None,
+    })
 }
 
 #[cfg(test)]

@@ -194,6 +194,7 @@ pub fn run() {
                 auth::auth_key_save,
                 auth::auth_run,
                 acp_client::auth_connection::auth_recheck,
+                acp_client::auth_connection::auth_refresh,
                 auth::auth_cancel,
                 auth::auth_end,
                 auth::agent_logout,

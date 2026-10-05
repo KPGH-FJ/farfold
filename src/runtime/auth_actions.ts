@@ -148,7 +148,13 @@ export function beginAuthentication(input: {
       cancel: () =>
         invoke("auth_cancel", { agentId: target.agentId, attemptId }),
       end: () => invoke("auth_end", { agentId: target.agentId, attemptId }),
-      reconnect,
+      reconnect: async () => {
+        if (input.logout) return reconnect();
+        // Preserve the connection that accepted authentication. Terminal
+        // configuration and logout still use their explicit replacement check.
+        await invoke("auth_refresh", { ...target });
+        await input.onChanged();
+      },
     });
   }
   return activity;

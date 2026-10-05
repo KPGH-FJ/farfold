@@ -459,7 +459,11 @@ fn methods_for_target(
         None
     };
     let mut info = match current {
-        Some(current) => auth_methods_with_proof(&current, proof),
+        Some(current) => {
+            let mut info = auth_methods_with_proof(&current, proof);
+            info.can_logout = cwd.is_some_and(|cwd| manager.can_logout(&row.id, cwd));
+            info
+        }
         None => {
             let mut cached = row.clone();
             cached.handshake = Some(crate::acp_client::handshake::cached_json(
@@ -637,12 +641,16 @@ pub async fn auth_run(
     }
 
     if auth_uses_terminal(&method, via_terminal)? {
+        let invocation = derive_terminal_invocation(&row, &method)?;
+        let (command, args) = invocation
+            .argv
+            .split_first()
+            .ok_or_else(|| "derived auth command is empty".to_string())?;
         let scope = app
             .state::<AcpManager>()
-            .reserve_account_change(&agent_id)?;
+            .reserve_authentication_terminal(&agent_id, command, args)?;
         return tauri::async_runtime::spawn_blocking(move || {
             attempt.check()?;
-            let invocation = derive_terminal_invocation(&row, &method)?;
             let (command, args) = invocation
                 .argv
                 .split_first()
@@ -772,8 +780,8 @@ pub async fn auth_run(
     .map_err(|_| "登录操作未完成".to_string())?
 }
 
-/// `logout` on the agent's live connections (capability-gated by the
-/// handshake's `agentCapabilities.auth.logout`).
+/// Exit through the exact live connection's standard capability or reviewed
+/// official action. Shared-account scope and fresh route checks still apply.
 #[tauri::command]
 pub async fn agent_logout(
     app: AppHandle,
@@ -813,8 +821,8 @@ pub async fn agent_logout(
     if current.command != row.command || current.args != row.args || current.env != row.env {
         return Err("Agent 程序设置已变化，请重新操作".into());
     }
-    let current = live_auth_row(&manager, &current, &cwd)?;
-    if !auth_methods_for(&current).can_logout {
+    live_auth_row(&manager, &current, &cwd)?;
+    if !manager.can_logout(&agent_id, &cwd) {
         return Err("此 Agent 当前不支持退出登录".into());
     }
     attempt.check()?;
@@ -860,7 +868,12 @@ mod tests {
     async fn login_child_keeps_program_reserved_until_exit() {
         let agent = "login-reservation-fixture";
         let reservation = crate::install_job::configuration_guard(agent).await;
-        let sink = terminal_output(Channel::new(|_| Ok(())), reservation, vec![], None);
+        let sink = terminal_output(
+            Channel::new(|_| Ok(())),
+            reservation,
+            crate::acp_client::manager::AccountScope::empty_for_test(),
+            None,
+        );
         let manager = std::sync::Arc::new(PtyManager::new());
         let id = manager
             .spawn(

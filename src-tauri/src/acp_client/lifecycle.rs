@@ -278,7 +278,9 @@ impl ConnectionLife {
             return Err("连接正在关闭，请稍后重试".into());
         }
         if (key == "account_change"
-            && (self.work.load(Ordering::SeqCst) != 0 || !state.operations.is_empty()))
+            && (self.work.load(Ordering::SeqCst) != 0
+                || !state.operations.is_empty()
+                || !state.closing_opens.is_empty()))
             || (key != "authentication" && state.operations.contains("account_change"))
         {
             return Err("请先完成此 Agent 的任务、待处理事项及账号操作".into());
