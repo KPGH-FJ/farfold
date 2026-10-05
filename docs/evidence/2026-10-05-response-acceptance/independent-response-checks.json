@@ -1,0 +1,94 @@
+{
+  "reviewedAt": "2026-10-05T14:50:08.197942+00:00",
+  "scope": "independent read-only checks of supplied evidence; no GUI/model/file changes outside review artifacts",
+  "results": [
+    {
+      "agent": "Pi",
+      "checks": {
+        "budgetMaxOneReservedOne": true,
+        "fixedMessageHashMatches": true,
+        "singleSuccessfulSend": true,
+        "oneProtocolPrompt": true,
+        "oneNonerrorResponse": true,
+        "noProtocolErrorRecords": true,
+        "noOtherOutgoingEvent": true,
+        "markerAbsentBeforePresentOnceAfter": true,
+        "completeUserMessagePresentOnce": true,
+        "completedEmptyNoBusy": true,
+        "uiProcessGroupsZero": true,
+        "sameApplicationPid": true
+      },
+      "allListedChecksPassed": true,
+      "promptCount": 1,
+      "updateCount": 23,
+      "nonerrorResponseCount": 1,
+      "limits": [
+        "request IDs and update subtype unavailable in safe protocol metadata",
+        "assistant block role context was not additionally exported; response attribution uses the listed combined evidence",
+        "zero UI tool groups is not complete Agent-internal tool trace"
+      ],
+      "outcome": "actual_short_reply_passed_on_combined_evidence",
+      "responseEvidenceBasis": [
+        "one prompt in bounded serial window",
+        "marker absent before sending",
+        "one new separate exact marker node after sending",
+        "complete user message remains a different full-message node",
+        "empty composer and completed UI",
+        "one nonerror response in same window"
+      ]
+    },
+    {
+      "agent": "OpenCode",
+      "checks": {
+        "budgetMaxOneReservedOne": true,
+        "fixedMessageHashMatches": true,
+        "singleSuccessfulSend": true,
+        "oneProtocolPrompt": true,
+        "oneNonerrorResponse": true,
+        "noProtocolErrorRecords": true,
+        "noOtherOutgoingEvent": true,
+        "markerAbsentBeforePresentOnceAfter": true,
+        "completeUserMessagePresentOnce": true,
+        "completedEmptyNoBusy": true,
+        "uiProcessGroupsZero": true,
+        "sameApplicationPid": true
+      },
+      "allListedChecksPassed": true,
+      "promptCount": 1,
+      "updateCount": 2,
+      "nonerrorResponseCount": 1,
+      "limits": [
+        "request IDs and update subtype unavailable in safe protocol metadata",
+        "assistant block role context was not additionally exported; response attribution uses the listed combined evidence",
+        "zero UI tool groups is not complete Agent-internal tool trace"
+      ],
+      "outcome": "actual_short_reply_passed_on_combined_evidence",
+      "responseEvidenceBasis": [
+        "one prompt in bounded serial window",
+        "marker absent before sending",
+        "one new separate exact marker node after sending",
+        "complete user message remains a different full-message node",
+        "empty composer and completed UI",
+        "one nonerror response in same window"
+      ]
+    }
+  ],
+  "outcome": "actual_short_replies_passed_on_combined_evidence",
+  "guiStop": {
+    "observedAt": "2026-10-05T14:48:57Z",
+    "samePid": 45930,
+    "applicationActive": false,
+    "windowCount": 2,
+    "additionalWindowSubrole": "AXDialog",
+    "additionalWindowSize": [
+      52,
+      20
+    ],
+    "titlesOrContentsRead": false,
+    "mutations": false,
+    "furtherGuiVerificationStopped": true,
+    "receipt": "window-metadata-final.json",
+    "meaning": "limits further UI inspection; does not overturn earlier successful response receipts"
+  },
+  "additionalModelMessagesRequiredForThisReview": false
+}

@@ -1,0 +1,515 @@
+{
+  "recordedAt": "2026-10-05T14:50:42.872604+00:00",
+  "application": {
+    "path": "/Applications/Farfold.app",
+    "version": "0.1.7",
+    "binarySHA256": "c97e9b234de738df590db3fe97f180027c7737ad6facaeec34a8e155c2973545",
+    "sourceBaseline": "5c115a6dff6a29402437a4e8f90d0e73acf460d4",
+    "sourceOrInstallChangedThisSlice": false
+  },
+  "authorization": {
+    "authorizedAt": "2026-10-05T14:31:00Z",
+    "sourceThread": "01a0f0fd-edc8-77da-ab79-695a950c4039",
+    "approvalReference": "Sentinel_664a57724e448191861d02ce9d5d6921",
+    "answer": "可以",
+    "scope": {
+      "Pi": {
+        "provider": "OpenRouter existing settings",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "maximumModelMessages": 1
+      },
+      "OpenCode": {
+        "service": "bunny / Openrouter",
+        "model": "stealth/space-bunny-alpha",
+        "maximumModelMessages": 1
+      },
+      "Cline": {
+        "maximumModelMessages": 0
+      }
+    },
+    "rules": [
+      "verify existing source/model",
+      "no automatic retry",
+      "no tools/files/web/terminal requests",
+      "no account or model switching to make the test pass"
+    ],
+    "createdAt": "2026-10-05T14:33:37.562710+00:00"
+  },
+  "results": [
+    {
+      "agent": "Pi",
+      "source": "existing OpenRouter settings",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "selectionPreserved": true,
+      "verdict": "actual short reply passed using combined synthetic UI and protocol evidence",
+      "budget": {
+        "agent": "Pi",
+        "automaticRetry": false,
+        "maximumMessages": 1,
+        "messageSHA256": "666f22861532bd2f923acc4259f536c691d77cb309ddcb0715f54446645928e5",
+        "pid": 45930,
+        "reservedAt": "2026-10-05T14:39:53Z",
+        "reservedAttempts": 1,
+        "scope": "/Users/tw/Documents/Codex/2026-10-03/task-3/handoff-20261004/acceptance-workspace"
+      },
+      "send": {
+        "agent": "Pi",
+        "automaticRetry": false,
+        "budgetReserved": true,
+        "observedAt": "2026-10-05T14:39:53Z",
+        "ok": true,
+        "pressResult": 0,
+        "singlePress": true
+      },
+      "beforeUI": {
+        "active": false,
+        "agent": "Pi",
+        "busyStopCount": 0,
+        "completedLabel": false,
+        "composerCount": 1,
+        "composerEmpty": true,
+        "composerEqualsFixedMessage": false,
+        "exactResponseMarkerNodes": [],
+        "exactUserMessageNodes": 0,
+        "expectedAgentHeadingNodes": [],
+        "knownErrorCategories": [],
+        "observedAt": "2026-10-05T14:39:30Z",
+        "ok": true,
+        "pendingBrowserCardCount": 0,
+        "pid": 45930,
+        "scope": "own synthetic draft folder or unique test header only; no native page",
+        "sendEnabledCount": 0,
+        "toolProcessGroupCount": 0,
+        "unknownTextExported": false
+      },
+      "afterUI": {
+        "active": true,
+        "agent": "Pi",
+        "busyStopCount": 0,
+        "completedLabel": true,
+        "composerCount": 1,
+        "composerEmpty": true,
+        "composerEqualsFixedMessage": false,
+        "exactResponseMarkerNodes": [
+          {
+            "path": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              0,
+              26,
+              0
+            ],
+            "text": "FARFOLD_PI_OK_20261005",
+            "visible": true
+          }
+        ],
+        "exactUserMessageNodes": 1,
+        "expectedAgentHeadingNodes": [],
+        "knownErrorCategories": [],
+        "observedAt": "2026-10-05T14:40:09Z",
+        "ok": true,
+        "pendingBrowserCardCount": 0,
+        "pid": 45930,
+        "scope": "own synthetic draft folder or unique test header only; no native page",
+        "sendEnabledCount": 0,
+        "toolProcessGroupCount": 0,
+        "unknownTextExported": false
+      },
+      "protocol": {
+        "agent": "pi",
+        "observedAt": "2026-10-05T14:40:09.716290+00:00",
+        "delta": [
+          {
+            "ts": 1791211193062,
+            "dir": "out",
+            "event": "session/prompt",
+            "error": "none",
+            "bytes": 347
+          },
+          {
+            "ts": 1791211193065,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 204
+          },
+          {
+            "ts": 1791211195567,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 193
+          },
+          {
+            "ts": 1791211196684,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 208
+          },
+          {
+            "ts": 1791211196685,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 206
+          },
+          {
+            "ts": 1791211196685,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 210
+          },
+          {
+            "ts": 1791211196686,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 199
+          },
+          {
+            "ts": 1791211196686,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 196
+          },
+          {
+            "ts": 1791211196686,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 194
+          },
+          {
+            "ts": 1791211196687,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 198
+          },
+          {
+            "ts": 1791211196687,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 205
+          },
+          {
+            "ts": 1791211196688,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 197
+          },
+          {
+            "ts": 1791211196689,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 201
+          },
+          {
+            "ts": 1791211196689,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 217
+          },
+          {
+            "ts": 1791211196689,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 191
+          },
+          {
+            "ts": 1791211196689,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 208
+          },
+          {
+            "ts": 1791211196690,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 191
+          },
+          {
+            "ts": 1791211196691,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 193
+          },
+          {
+            "ts": 1791211196692,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 200
+          },
+          {
+            "ts": 1791211196692,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 194
+          },
+          {
+            "ts": 1791211196692,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 194
+          },
+          {
+            "ts": 1791211196694,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 191
+          },
+          {
+            "ts": 1791211197317,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 174
+          },
+          {
+            "ts": 1791211197317,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 205
+          },
+          {
+            "ts": 1791211197317,
+            "dir": "in",
+            "event": "response",
+            "error": "none",
+            "bytes": 96
+          }
+        ],
+        "counts": [
+          {
+            "dir": "out",
+            "event": "session/prompt",
+            "error": "none",
+            "count": 1
+          },
+          {
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "count": 23
+          },
+          {
+            "dir": "in",
+            "event": "response",
+            "error": "none",
+            "count": 1
+          }
+        ],
+        "bodyOrRequestIdsReadOrStored": false,
+        "limit": "Fixed schema records have no request IDs or session/update subtype. Correlate with one outstanding request, exact synthetic UI reply and settled state; absent request_permission alone is not proof of no tools."
+      }
+    },
+    {
+      "agent": "OpenCode",
+      "source": "bunny / Openrouter",
+      "model": "stealth/space-bunny-alpha",
+      "selectionPreserved": true,
+      "verdict": "actual short reply passed using combined synthetic UI and protocol evidence",
+      "budget": {
+        "agent": "OpenCode",
+        "automaticRetry": false,
+        "maximumMessages": 1,
+        "messageSHA256": "4b953dc60ba4b1ca54dafcb6494556010bed44b7c91bc61d9a5f21ed99cd63cc",
+        "pid": 45930,
+        "reservedAt": "2026-10-05T14:42:27Z",
+        "reservedAttempts": 1,
+        "scope": "/Users/tw/Documents/Codex/2026-10-03/task-3/handoff-20261004/acceptance-workspace"
+      },
+      "send": {
+        "agent": "OpenCode",
+        "automaticRetry": false,
+        "budgetReserved": true,
+        "observedAt": "2026-10-05T14:42:27Z",
+        "ok": true,
+        "pressResult": 0,
+        "singlePress": true
+      },
+      "beforeUI": {
+        "active": true,
+        "agent": "OpenCode",
+        "busyStopCount": 0,
+        "completedLabel": false,
+        "composerCount": 1,
+        "composerEmpty": true,
+        "composerEqualsFixedMessage": false,
+        "exactResponseMarkerNodes": [],
+        "exactUserMessageNodes": 0,
+        "expectedAgentHeadingNodes": [],
+        "knownErrorCategories": [],
+        "observedAt": "2026-10-05T14:42:08Z",
+        "ok": true,
+        "pendingBrowserCardCount": 0,
+        "pid": 45930,
+        "scope": "own synthetic draft folder or unique test header only; no native page",
+        "sendEnabledCount": 0,
+        "toolProcessGroupCount": 0,
+        "unknownTextExported": false
+      },
+      "afterUI": {
+        "active": false,
+        "agent": "OpenCode",
+        "busyStopCount": 0,
+        "completedLabel": true,
+        "composerCount": 1,
+        "composerEmpty": true,
+        "composerEqualsFixedMessage": false,
+        "exactResponseMarkerNodes": [
+          {
+            "path": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              0,
+              18,
+              0
+            ],
+            "text": "FARFOLD_OPENCODE_OK_20261005",
+            "visible": true
+          }
+        ],
+        "exactUserMessageNodes": 1,
+        "expectedAgentHeadingNodes": [],
+        "knownErrorCategories": [],
+        "observedAt": "2026-10-05T14:42:47Z",
+        "ok": true,
+        "pendingBrowserCardCount": 0,
+        "pid": 45930,
+        "scope": "own synthetic draft folder or unique test header only; no native page",
+        "sendEnabledCount": 0,
+        "toolProcessGroupCount": 0,
+        "unknownTextExported": false
+      },
+      "protocol": {
+        "agent": "opencode",
+        "observedAt": "2026-10-05T14:42:47.578236+00:00",
+        "delta": [
+          {
+            "ts": 1791211347698,
+            "dir": "out",
+            "event": "session/prompt",
+            "error": "none",
+            "bytes": 353
+          },
+          {
+            "ts": 1791211351586,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 252
+          },
+          {
+            "ts": 1791211351590,
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "bytes": 234
+          },
+          {
+            "ts": 1791211351638,
+            "dir": "in",
+            "event": "response",
+            "error": "none",
+            "bytes": 197
+          }
+        ],
+        "counts": [
+          {
+            "dir": "out",
+            "event": "session/prompt",
+            "error": "none",
+            "count": 1
+          },
+          {
+            "dir": "in",
+            "event": "session/update",
+            "error": "none",
+            "count": 2
+          },
+          {
+            "dir": "in",
+            "event": "response",
+            "error": "none",
+            "count": 1
+          }
+        ],
+        "bodyOrRequestIdsReadOrStored": false,
+        "limit": "Fixed schema records have no request IDs or session/update subtype. Correlate with one outstanding request, exact synthetic UI reply and settled state; absent request_permission alone is not proof of no tools."
+      }
+    }
+  ],
+  "Cline": {
+    "messagesAuthorized": 0,
+    "messagesSent": 0,
+    "result": "connection and actual model-list recovery only; no real reply claimed"
+  },
+  "limits": [
+    "Only two authorized user messages, one per Agent, no host retry; supplier-internal retry count and actual supplier model execution identity are not observable here.",
+    "No UI tool process group or permission event observed; safe protocol metadata omits session/update subtype and request IDs, so it does not prove complete tool-call count zero.",
+    "Expected Agent heading matcher did not match split AX labels. No explicit assistant-role context was exported. Reply attribution uses absent-before/new-exact-marker, separate complete user message, empty composer, one in-flight prompt, nonerror response and settled UI together.",
+    "Later window guard stopped on two AX windows including a small AXDialog. No unknown dialog contents read or controls clicked; no new screenshot, navigation/restore or additional message.",
+    "No stop-during-generation, cold restoration plus continued reply, Cline real reply or other Agent-specific webpage-tool support demonstrated.",
+    "Earlier connection timeout cause remains unresolved; subsequent success is not a demonstrated source fix."
+  ],
+  "finalWindowMetadata": {
+    "active": false,
+    "applicationCount": 1,
+    "mutations": false,
+    "observedAt": "2026-10-05T14:48:57Z",
+    "pid": 45930,
+    "titlesOrContentsRead": false,
+    "windowCount": 2,
+    "windows": [
+      {
+        "frame": {
+          "height": 20,
+          "width": 52,
+          "x": 103,
+          "y": 54
+        },
+        "main": false,
+        "minimized": false,
+        "role": "AXWindow",
+        "subrole": "AXDialog"
+      },
+      {
+        "frame": {
+          "height": 820,
+          "width": 1280,
+          "x": 95,
+          "y": 50
+        },
+        "main": true,
+        "minimized": false,
+        "role": "AXWindow",
+        "subrole": "AXStandardWindow"
+      }
+    ]
+  }
+}

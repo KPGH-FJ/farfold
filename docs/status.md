@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## 最新真实回复：Pi 与 OpenCode 各 1 条通过（2026-10-05 14:49UTC）
+
+14:31UTC 用户批准后，沿原来源与模型分别发送一条无工具短消息：Pi 为已有 OpenRouter / Nemotron 3 Ultra free，OpenCode 为 bunny / Openrouter / stealth/space-bunny-alpha。分别收到精确标记 FARFOLD_PI_OK_20261005 与 FARFOLD_OPENCODE_OK_20261005，界面结束、输入为空；每家仅一次出站 prompt 和一次非错误 response，未自动重试。两条预算均已用完。Cline 本片仍为 0 条，只保留连接和实际模型列表通过。
+
+组合 UI 与协议证据支持基础短回复通过；未见工具步骤或审批，不宣称完整工具追踪证明为零。后续只读检查发现未知小对话框，保持停止，未强关/截图或再操作，没有把界面恢复到 Codex。应用仍为 c97e9b23…，本片无源码或安装变更；旧连接超时原因仍未查明。见[回复收据与独立复核](evidence/2026-10-05-response-acceptance/README.md)。以下“未发消息/待确认”为各历史时点，不覆盖本节结果。
+
 ## 最新连接诊断：OpenCode与Cline恢复（2026-10-05 14:26UTC）
 
 同一c97e9b23安装版未改程序/账号/模型，经过无模型诊断，两家各一次观察启动已恢复：Cline约0.59秒、OpenCode约0.62秒握手成功、空草稿可预开；当前分别Space Bunny Alpha与stealth/space-bunny-alpha。Cline实际模型列表已确认不再误显提供方。Pi前述无消息结果保持，三家模型消息仍为0，原两条联合提案待用户确认。
