@@ -1,0 +1,269 @@
+{
+  "observedAt": "2026-10-05T14:27:43.741896+00:00",
+  "installedBinary": "c97e9b234de738df590db3fe97f180027c7737ad6facaeec34a8e155c2973545",
+  "baselineCommit": "8ed33eb5cefee10a4bbe8b84edb3544a59ca1ba6",
+  "scope": "No model messages, authentication, configuration editing, source edits, installation or app restart. Source-informed readonly version and initialize diagnostics, one app retry with observations for each failed representative.",
+  "historicalFailures": [
+    {
+      "attempt": "Cline first",
+      "createdUTC": "2026-10-05T13:51:15.489000+00:00",
+      "elapsedMs": 60033,
+      "startup": {
+        "ts": 1791208335522,
+        "phase": "cleanup",
+        "failurePhase": "initialize",
+        "startupOutcome": "timeout",
+        "initializeResponse": "not_observed",
+        "candidateCleanup": "not_applicable",
+        "initializeAccepted": false,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "termRequested": true,
+        "killRequested": false,
+        "exitObservedBeforeTerm": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitCode": null,
+        "exitSignal": 15
+      },
+      "outgoingInitializeCount": 1,
+      "incomingTypedMessageCount": 0,
+      "stderrChunkCount": 0,
+      "modelMessageCount": 0
+    },
+    {
+      "attempt": "Cline retry",
+      "createdUTC": "2026-10-05T13:54:36.913000+00:00",
+      "elapsedMs": 60035,
+      "startup": {
+        "ts": 1791208536948,
+        "phase": "cleanup",
+        "failurePhase": "initialize",
+        "startupOutcome": "timeout",
+        "initializeResponse": "not_observed",
+        "candidateCleanup": "not_applicable",
+        "initializeAccepted": false,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "termRequested": true,
+        "killRequested": false,
+        "exitObservedBeforeTerm": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitCode": null,
+        "exitSignal": 15
+      },
+      "outgoingInitializeCount": 1,
+      "incomingTypedMessageCount": 0,
+      "stderrChunkCount": 0,
+      "modelMessageCount": 0
+    },
+    {
+      "attempt": "OpenCode first",
+      "createdUTC": "2026-10-05T13:57:20.141000+00:00",
+      "elapsedMs": 60032,
+      "startup": {
+        "ts": 1791208700173,
+        "phase": "cleanup",
+        "failurePhase": "initialize",
+        "startupOutcome": "timeout",
+        "initializeResponse": "not_observed",
+        "candidateCleanup": "not_applicable",
+        "initializeAccepted": false,
+        "childStarted": true,
+        "childReaped": true,
+        "waitFailed": false,
+        "termRequested": true,
+        "killRequested": false,
+        "exitObservedBeforeTerm": false,
+        "groupEnded": true,
+        "connectionRemoved": true,
+        "exitCode": null,
+        "exitSignal": 15
+      },
+      "outgoingInitializeCount": 1,
+      "incomingTypedMessageCount": 0,
+      "stderrChunkCount": 0,
+      "modelMessageCount": 0
+    }
+  ],
+  "laterInstalledAttempts": [
+    {
+      "attempt": "Cline observed diagnostic",
+      "createdUTC": "2026-10-05T14:24:02.608000+00:00",
+      "elapsedMs": 590,
+      "startup": {
+        "ts": 1791210243198,
+        "phase": "initialize",
+        "failurePhase": null,
+        "startupOutcome": "success",
+        "initializeResponse": "matched_result",
+        "candidateCleanup": "not_applicable",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": false,
+        "waitFailed": false,
+        "termRequested": false,
+        "killRequested": false,
+        "exitObservedBeforeTerm": false,
+        "groupEnded": false,
+        "connectionRemoved": false,
+        "exitCode": null,
+        "exitSignal": null
+      },
+      "outgoingInitializeCount": 1,
+      "incomingTypedMessageCount": 4,
+      "stderrChunkCount": 1,
+      "modelMessageCount": 0
+    },
+    {
+      "attempt": "OpenCode observed diagnostic",
+      "createdUTC": "2026-10-05T14:25:04.413000+00:00",
+      "elapsedMs": 618,
+      "startup": {
+        "ts": 1791210305031,
+        "phase": "initialize",
+        "failurePhase": null,
+        "startupOutcome": "success",
+        "initializeResponse": "matched_result",
+        "candidateCleanup": "not_applicable",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": false,
+        "waitFailed": false,
+        "termRequested": false,
+        "killRequested": false,
+        "exitObservedBeforeTerm": false,
+        "groupEnded": false,
+        "connectionRemoved": false,
+        "exitCode": null,
+        "exitSignal": null
+      },
+      "outgoingInitializeCount": 1,
+      "incomingTypedMessageCount": 3,
+      "stderrChunkCount": 0,
+      "modelMessageCount": 0
+    }
+  ],
+  "selectedModels": {
+    "Cline": {
+      "currentDisplayedModel": "Space Bunny Alpha",
+      "modelOptionCount": 318,
+      "providerWronglyShownAsModel": false
+    },
+    "OpenCode": {
+      "currentDisplayedModel": "stealth/space-bunny-alpha",
+      "modelOptionCount": 4
+    }
+  },
+  "blockingPipeControls": [
+    {
+      "agent": "OpenCode",
+      "transport": "Python blocking stdin pipe, matching initialize frame, ordinary inherited environment; no Farfold saved service injection",
+      "requestBytes": 233,
+      "writtenBytes": 233,
+      "flushCompleted": true,
+      "result": {
+        "kind": "result",
+        "protocolVersion": 1,
+        "agentName": "OpenCode",
+        "authMethodCount": 1
+      },
+      "secondsToResultOrDeadline": 0.549,
+      "capturedByteCounts": {
+        "out": 543,
+        "err": 0
+      },
+      "exitAfterCleanup": -15,
+      "modelMessages": 0,
+      "sessionRequests": 0,
+      "authenticationRequests": 0,
+      "rawOutputRetained": false
+    },
+    {
+      "agent": "Cline",
+      "transport": "Python blocking stdin pipe, matching initialize frame, ordinary inherited environment; no Farfold saved service injection",
+      "requestBytes": 233,
+      "writtenBytes": 233,
+      "flushCompleted": true,
+      "result": {
+        "kind": "result",
+        "protocolVersion": 1,
+        "agentName": "cline",
+        "authMethodCount": 3
+      },
+      "secondsToResultOrDeadline": 0.506,
+      "capturedByteCounts": {
+        "out": 395,
+        "err": 38
+      },
+      "exitAfterCleanup": -15,
+      "modelMessages": 0,
+      "sessionRequests": 0,
+      "authenticationRequests": 0,
+      "rawOutputRetained": false
+    }
+  ],
+  "versionControls": [
+    {
+      "agent": "OpenCode",
+      "operation": "--version with closed stdin; no ACP/model request",
+      "timeout": false,
+      "seconds": 0.57,
+      "exit": 0,
+      "stdoutBytes": 8,
+      "stderrBytes": 0,
+      "publicVersion": "1.18.31",
+      "rawOutputRetained": false
+    },
+    {
+      "agent": "Cline",
+      "operation": "--version with closed stdin; no ACP/model request",
+      "timeout": false,
+      "seconds": 2.0,
+      "exit": 0,
+      "stdoutBytes": 7,
+      "stderrBytes": 0,
+      "publicVersion": "3.0.65",
+      "rawOutputRetained": false
+    }
+  ],
+  "productionPipeFixture": {
+    "test": "acp_client::process::cwd_tests::candidate_check_uses_app_data_and_keeps_selected_row_and_handshake",
+    "passed": 1,
+    "failed": 0,
+    "receivedMethods": ["initialize"],
+    "realAgents": false,
+    "data": "temporary MetaStore only",
+    "processReaped": true
+  },
+  "findings": [
+    "Original failures passed child spawn and registration; the bridge observed one outgoing initialize but no typed incoming reply or stderr chunk. All three timed-out process groups were terminated and removed.",
+    "Bridge observation precedes physical write; source implements newline/write_all/flush and the isolated production fixture confirms actual peer receipt and response. Historical observations do not prove the physical write completed for the failed launches.",
+    "Official installed CLIs respond to --version and bare initialize in blocking-pipe controls; these controls inherit executor environment and omit the Farfold selected-service injection, so they are not environment-equivalence proof.",
+    "Without changing the installed app or account/model settings, subsequent single instrumented draft startup succeeded for both. Cline model selection fix is now observed live.",
+    "The model-option frontend function operates after initialize/session creation, not in startup or transport. No causal link or reproducible shared-host fault was found."
+  ],
+  "rootCause": "Historical internal wait is unresolved; dead processes cannot be sampled retrospectively. Later success after probes does not prove cache warming, network recovery or any specific cause.",
+  "messageBudget": {
+    "OpenCodeUsed": 0,
+    "PiUsed": 0,
+    "ClineUsed": 0,
+    "pendingProposalNotConsumed": true
+  },
+  "finalState": {
+    "agent": "Codex",
+    "ownEmptyDraft": true,
+    "composerEmpty": true,
+    "pendingOrActive": false,
+    "terminal": false
+  },
+  "originalGitStatus": {
+    "beforeEntries": 248,
+    "afterEntries": 248,
+    "exact": true
+  },
+  "nextStep": "Keep earlier failures, do not blind-retry or raise timeout. After parent relays explicit approval, existing OpenCode/Pi one-message proposal can proceed only if connection and exact source/model remain ready. Cline model messages remain outside proposal."
+}
