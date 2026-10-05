@@ -35,6 +35,11 @@ import {
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { SETTINGS_PRESENTATION as P } from "../runtime/settings_presentation_strings";
 import { SENDING_STRINGS } from "../runtime/sending_strings";
+import {
+  NOTIFICATION_STRINGS as N,
+  useDesktopNotifications,
+  notificationPermissionLabel,
+} from "../runtime/desktop_notifications";
 
 interface GeneralSettingsProps {
   onOpenConversation?: (key: string) => void;
@@ -73,6 +78,7 @@ export function GeneralSettings({
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const diagnostics = useDiagnosticsReview();
   const autoArchive = useAutoArchive();
+  const notifications = useDesktopNotifications();
 
   useEffect(() => {
     let cancelled = false;
@@ -312,17 +318,74 @@ export function GeneralSettings({
               <BellIcon size={16} aria-hidden="true" />
               {P.notification}
             </strong>
-            <p>{P.notificationHint}</p>
+            <p id="desktop-notification-hint">{N.hint}</p>
           </div>
-          <span className="general-unavailable">{P.unavailable}</span>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            role="switch"
+            aria-label={P.notification}
+            aria-checked={notifications.enabled}
+            aria-describedby="desktop-notification-hint desktop-notification-system"
+            disabled={!notifications.ready || notifications.saving}
+            onClick={() =>
+              void notifications.setEnabled(!notifications.enabled)
+            }
+          >
+            {notifications.saving
+              ? N.saving
+              : !notifications.ready && !notifications.error
+                ? N.reading
+                : notifications.enabled
+                  ? N.enabled
+                  : N.disabled}
+          </button>
         </div>
+        <p id="desktop-notification-system" className="auth-note">
+          {notificationPermissionLabel(notifications)} {N.systemHint}
+        </p>
+        {notifications.enabled && !notifications.systemAlert && (
+          <p className="auth-note">{N.alertsDisabled}</p>
+        )}
+        <button
+          type="button"
+          className="btn btn-text"
+          disabled={notifications.saving}
+          onClick={() => void notifications.retry()}
+        >
+          {N.retry}
+        </button>
+        <p className="auth-note">{N.navigationHint}</p>
+        {notifications.error && (
+          <div className="ac-error" role="alert">
+            {notifications.error}
+          </div>
+        )}
+        {notifications.submissionError && (
+          <p className="ac-error" role="status">
+            {notifications.submissionError}
+          </p>
+        )}
         <div className="general-setting-row">
           <div>
             <strong>{P.sound}</strong>
-            <p>{P.soundHint}</p>
+            <p>{N.soundHint}</p>
           </div>
-          <span className="general-unavailable">{P.unavailable}</span>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            role="switch"
+            aria-label={P.sound}
+            aria-checked={notifications.sound}
+            disabled={!notifications.ready || notifications.saving}
+            onClick={() => void notifications.setSound(!notifications.sound)}
+          >
+            {notifications.sound ? N.enabled : N.disabled}
+          </button>
         </div>
+        {notifications.sound && !notifications.systemSound && (
+          <p className="auth-note">{N.systemSoundDisabled}</p>
+        )}
       </section>
       <section className="general-section" aria-labelledby="general-shortcuts">
         <div className="general-section-title">

@@ -47,12 +47,15 @@ it("only exposes supported settings and documents the actual keyboard actions", 
   expect(html).not.toContain(STRINGS.general.proposal);
   expect(html).toContain("需要你时提醒");
   expect(html).toContain("提醒声音");
-  expect(html.match(/尚未提供/g)).toHaveLength(2);
+  expect(html).not.toContain("尚未提供");
   expect(html).toContain("暂停消息发送");
   expect(html).toContain("查看快捷键");
   expect(html).toContain("你的数据如何保存");
   expect(html.indexOf("更新与诊断")).toBeLessThan(html.indexOf("暂停消息发送"));
-  expect(html).not.toContain('role="switch"');
+  expect(html.match(/role="switch"/g)).toHaveLength(2);
+  expect(html).toContain('aria-checked="false"');
+  expect(html).toContain("系统通知许可尚未确认");
+  expect(html).toContain("仅在系统允许声音时播放");
   expect(html).not.toContain("自定义");
   expect(html).toContain("⌘ ,");
   expect(html).not.toContain("零配置");

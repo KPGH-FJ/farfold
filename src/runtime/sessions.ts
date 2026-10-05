@@ -30,6 +30,7 @@ import { configChangeBusy } from "./protected_config";
  * inside this runtime module only (AGENTS.md vocabulary rule).
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
+import { observeDesktopNotification } from "./desktop_notifications";
 import { useCallback, useSyncExternalStore } from "react";
 import { paneCards, appendToolOutput } from "./artifacts";
 import { artifactPaneCards } from "./artifact_view";
@@ -393,6 +394,7 @@ class ThreadsStore {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
+    observeDesktopNotification(s, e, live);
     if (e.kind === "configOptions") {
       if (!this.configurations.changing(s))
         replaceConfigOptions(s, normalizeConfigOptions(e.options));

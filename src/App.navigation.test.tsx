@@ -36,7 +36,13 @@ const h = vi.hoisted(() => ({
   open: vi.fn(),
   clearDraft: vi.fn(),
   reconnect: vi.fn(),
-  index: [] as { agentId: string }[],
+  index: [] as {
+    agentId: string;
+    id?: string;
+    cwd?: string;
+    nativeSessionId?: string | null;
+  }[],
+  notification: null as ((key: string) => void | Promise<void>) | null,
   prepared: new Set(["A", "B"]),
   selections: new Map<
     string,
@@ -89,6 +95,16 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 vi.mock("./runtime/work_policy", () => ({ startWorkEvents: () => () => {} }));
 vi.mock("./runtime/auto_archive", () => ({ startAutoArchive: () => () => {} }));
+vi.mock("./runtime/notification_navigation", () => ({
+  notificationNavigation: async (
+    select: (key: string) => void | Promise<void>,
+  ) => {
+    h.notification = select;
+    return () => {
+      h.notification = null;
+    };
+  },
+}));
 vi.mock("./runtime/agents", () => ({
   useAgents: () => ({ cards: h.cards, loading: false, refresh: vi.fn() }),
 }));
@@ -260,6 +276,7 @@ beforeEach(async () => {
   h.clearDraft.mockReset();
   h.reconnect.mockReset();
   h.index = [];
+  h.notification = null;
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
   Object.assign(h.choice, {
@@ -1455,4 +1472,56 @@ it("ignores an old prepared draft's page callback after a new draft became curre
       )
       .map((node) => node.props.viewKey),
   ).toEqual(["draft-B"]);
+});
+
+it("notification clicks select live content without connecting, sending or changing disconnect intent", async () => {
+  h.index = [
+    { id: "old-A", agentId: "A", cwd: "/old-A", nativeSessionId: "old-A" },
+  ];
+  pauseAutomaticConnection("A");
+  await h.notification!("old-A");
+  expect(component("ThreadPage")).toMatchObject({
+    viewKey: "old-A",
+    active: true,
+  });
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.reconnect).not.toHaveBeenCalled();
+  expect(isAutomaticConnectionAllowed("A")).toBe(false);
+  expect(h.draft.text).toBe("OWN-ORIGINAL-DRAFT");
+});
+
+it("cold notification navigation waits for an explicit history-open click", async () => {
+  h.index = [
+    {
+      id: "cold-A",
+      agentId: "A",
+      cwd: "/cold-A",
+      nativeSessionId: "native-cold",
+    },
+  ];
+  pauseAutomaticConnection("A");
+  await h.notification!("cold-A");
+  const page = component("ThreadPage");
+  expect(page.viewKey).toBe("cold-A");
+  expect(page.onManualOpen).toBeTypeOf("function");
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.reconnect).not.toHaveBeenCalled();
+  expect(isAutomaticConnectionAllowed("A")).toBe(false);
+  h.open.mockResolvedValueOnce({ key: "cold-A" });
+  (page.onManualOpen as () => void)();
+  expect(h.open).toHaveBeenCalledExactlyOnceWith({
+    agentId: "A",
+    cwd: "/cold-A",
+    nativeSessionId: "native-cold",
+  });
+  expect(h.draft.text).toBe("OWN-ORIGINAL-DRAFT");
+});
+
+it("a notification for a removed conversation cannot recreate it", async () => {
+  await h.notification!("deleted-key");
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.reconnect).not.toHaveBeenCalled();
+  expect(render().some((node) => node.props.viewKey === "deleted-key")).toBe(
+    false,
+  );
 });

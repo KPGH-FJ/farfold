@@ -10,6 +10,7 @@ mod browser_workspace;
 mod conversation_directory;
 mod credentials;
 mod dependency_install;
+mod desktop_notifications;
 mod diagnostics;
 mod draft_attachment;
 mod draft_exit;
@@ -73,6 +74,7 @@ pub fn run() {
         .manage(browser_sharing::BrowserSharing::default())
         .manage(pty::PtyManager::default())
         .manage(draft_exit::DraftExit::default())
+        .manage(desktop_notifications::DesktopNotifications::default())
         .manage(diagnostics::DiagnosticsState::default())
         .manage(managed_update::ManagedUpdateAuthority::default())
         .setup(move |app| {
@@ -107,6 +109,7 @@ pub fn run() {
             )?) {
                 return Err(std::io::Error::other("meta store is already initialized").into());
             }
+            desktop_notifications::initialize(app.handle());
             lifemodel::ensure_defaults(app.state::<meta_store::MetaStore>().inner())?;
             if !app.manage(agent_catalog::AgentCatalog::new(app_data_dir.clone())) {
                 return Err(std::io::Error::other("agent catalog is already initialized").into());
@@ -202,6 +205,10 @@ pub fn run() {
                 work_policy::agent_work_set,
                 auth::settings_get,
                 auth::settings_set,
+                desktop_notifications::desktop_notifications_get,
+                desktop_notifications::desktop_notifications_set,
+                desktop_notifications::desktop_notification_submit,
+                desktop_notifications::desktop_notification_take_pending,
                 pty::pty_spawn,
                 pty::pty_write,
                 pty::pty_resize,

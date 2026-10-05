@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-06",
+  "scope": "macOS notification permission, content-free reminders, sound choice and safe click navigation",
+  "implemented": [
+    "UNUserNotificationCenter settings query and explicit user-enable authorization; the prior desktop plugin that returned Granted unconditionally was removed.",
+    "Defaults remain disabled and silent. Known system permission and sound/banner settings are displayed separately from Farfold preferences. Unknown or denied permission does not authorize submission.",
+    "Final submission holds the settings mutation gate and rechecks revision, preference, actual window focus and existing index. Late receipts after preference changes withdraw that exact notification; missing receipts never auto-retry.",
+    "OS payload contains generic Farfold wording and SHA256 of the existing metadata row ID. It contains no path, native session ID, title, draft or message. No extra persistent mapping or transcript ledger was added.",
+    "Default click queues an in-memory target, rechecks the existing metadata before consuming it, and focuses the app. Existing UI state is only selected. A cold index requires a second explicit history-open click and never automatically connects, recovers, approves or sends.",
+    "In-memory deduplication includes a random renderer nonce so WebView reload does not reuse earlier sequence keys."
+  ],
+  "verification": {
+    "rust": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked desktop_notifications",
+      "passed": 7,
+      "failed": 0,
+      "log": "desktop-notification-checks/rust.log"
+    },
+    "frontend": {
+      "files": [
+        "src/App.navigation.test.tsx",
+        "src/runtime/notification_navigation.test.ts",
+        "src/runtime/desktop_notifications.test.ts",
+        "src/components/GeneralSettings.test.tsx"
+      ],
+      "passed": 85,
+      "failed": 0,
+      "log": "desktop-notification-checks/frontend.log"
+    },
+    "native": {
+      "source": "src-tauri/native/tests/DesktopNotificationsTests.m",
+      "command": "xcrun --sdk macosx clang -arch arm64 -fobjc-arc -mmacosx-version-min=11.0 -Wall -Wextra -Werror -Wno-unused-parameter -framework AppKit -framework UserNotifications src-tauri/native/tests/DesktopNotificationsTests.m -o /tmp/farfold-notification-bridge-tests && /tmp/farfold-notification-bridge-tests",
+      "result": "passed with a synthetic notification center; did not create the OS notification center or request real permission or send a system notification",
+      "log": "desktop-notification-checks/native-synthetic.log"
+    },
+    "typecheck": "passed",
+    "cargoFmtCheck": "passed",
+    "targetedPrettierCheck": "passed",
+    "clippyWarningsDenied": "passed",
+    "gitDiffCheck": "passed"
+  },
+  "independentReview": {
+    "reviewer": "quality_release_audit",
+    "foundAndFixed": "Frontend sequence numbers restarted at zero while Rust deduplication survived WebView reload. Added per-renderer opaque nonce and matching tests.",
+    "finalResult": "No remaining confirmed blocker in the reviewed FFI, cancellation/late receipt, permission, settings/submit gate and safe navigation paths."
+  },
+  "notVerified": [
+    "Real OS authorization dialog, delivery under system settings/Focus, sound and cold application launch from a notification were not invoked or tested.",
+    "Visual screenshot self-check was attempted: CUA iab unavailable, no browser surfaces, and native Safari interface timed out. Temporary Vite server on 127.0.0.1:1431 was stopped. Component/route tests do not replace visual or installed-app validation.",
+    "No real Agent, login, credential read, model invocation or formal application replacement was performed. Windows notification implementation remains outside this macOS module."
+  ],
+  "browserAttention": {
+    "tests": 69,
+    "files": 4,
+    "rawLog": "/tmp/farfold-browser-attention-notifications-tests.log",
+    "boundary": "真实待处理网页审批投影；提交前重查请求与连接，不模拟ACP事件"
+  },
+  "visual": {
+    "surface": "生产GeneralSettings合成IPC",
+    "width": 800,
+    "scrollWidth": 800,
+    "controlOverflow": [],
+    "switch": "关闭至开启，仅合成许可",
+    "notVerified": ["系统授权", "系统提醒送达", "声音", "正式冷启动点击"]
+  }
+}

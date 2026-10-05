@@ -21,41 +21,51 @@ fn compile_browser_workspace() {
     );
     let root = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("Cargo manifest directory"));
     let output = PathBuf::from(env::var_os("OUT_DIR").expect("Cargo build output directory"));
-    let source = root.join("native/BrowserWorkspace.m");
-    let object = output.join("BrowserWorkspace.o");
+    for name in ["BrowserWorkspace", "DesktopNotifications"] {
+        let source = root.join(format!("native/{name}.m"));
+        let object = output.join(format!("{name}.o"));
+        run_xcrun(
+            "clang",
+            &[
+                OsStr::new("-arch"),
+                OsStr::new("arm64"),
+                OsStr::new("-fobjc-arc"),
+                // WKContentWorld/evaluateJavaScript(inContentWorld:) require 11.0.
+                OsStr::new("-mmacosx-version-min=11.0"),
+                OsStr::new("-Wall"),
+                OsStr::new("-Wextra"),
+                OsStr::new("-Werror"),
+                OsStr::new("-Wno-unused-parameter"),
+                OsStr::new("-c"),
+                source.as_os_str(),
+                OsStr::new("-o"),
+                object.as_os_str(),
+            ],
+        );
+    }
     let archive = output.join("libfarfold_browser_workspace.a");
     run_xcrun(
-        "clang",
-        &[
-            OsStr::new("-arch"),
-            OsStr::new("arm64"),
-            OsStr::new("-fobjc-arc"),
-            // WKContentWorld/evaluateJavaScript(inContentWorld:) require 11.0.
-            OsStr::new("-mmacosx-version-min=11.0"),
-            OsStr::new("-Wall"),
-            OsStr::new("-Wextra"),
-            OsStr::new("-Werror"),
-            OsStr::new("-Wno-unused-parameter"),
-            OsStr::new("-c"),
-            source.as_os_str(),
-            OsStr::new("-o"),
-            object.as_os_str(),
-        ],
-    );
-    run_xcrun(
         "ar",
-        &[OsStr::new("rcs"), archive.as_os_str(), object.as_os_str()],
+        &[
+            OsStr::new("rcs"),
+            archive.as_os_str(),
+            output.join("BrowserWorkspace.o").as_os_str(),
+            output.join("DesktopNotifications.o").as_os_str(),
+        ],
     );
     println!("cargo:rustc-link-search=native={}", output.display());
     println!("cargo:rustc-link-lib=static=farfold_browser_workspace");
     println!("cargo:rustc-link-lib=framework=AppKit");
     println!("cargo:rustc-link-lib=framework=WebKit");
+    println!("cargo:rustc-link-lib=framework=UserNotifications");
 }
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=native/BrowserWorkspace.h");
     println!("cargo:rerun-if-changed=native/BrowserWorkspace.m");
+    println!("cargo:rerun-if-changed=native/DesktopNotifications.h");
+    println!("cargo:rerun-if-changed=native/DesktopNotifications.m");
     compile_browser_workspace();
     tauri_build::build();
 }

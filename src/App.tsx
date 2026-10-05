@@ -4,6 +4,8 @@ import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
 import { replacesDraftChoice } from "./runtime/draft_choice";
 import { startWorkEvents } from "./runtime/work_policy";
 import { startAutoArchive } from "./runtime/auto_archive";
+import { notificationNavigation } from "./runtime/notification_navigation";
+import { NOTIFICATION_STRINGS as NOTICES } from "./runtime/desktop_notifications";
 import {
   canMarkConversationRead,
   useVisibleConversation,
@@ -108,6 +110,7 @@ function afterBrowserClose<Args extends unknown[]>(
     browserSurfaceGuard.runLatest(() => action(...args));
 }
 function ThreadPage({
+  onManualOpen,
   viewKey,
   active,
   agents,
@@ -121,6 +124,7 @@ function ThreadPage({
   onBrowserStateChange,
   draftComposerRef,
 }: {
+  onManualOpen?: () => void;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   onBrowserStateChange?: (
     taskKey: string,
@@ -344,7 +348,22 @@ function ThreadPage({
       ) : (
         <>
           {header}
-          <div className="library-empty">{STRINGS.common.loading}</div>
+          <div className="library-empty">
+            {onManualOpen ? (
+              <>
+                <p>{NOTICES.coldConversation}</p>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={onManualOpen}
+                >
+                  {NOTICES.openConversation}
+                </button>
+              </>
+            ) : (
+              STRINGS.common.loading
+            )}
+          </div>
         </>
       )}
       {active && menu && (
@@ -488,6 +507,9 @@ export default function App() {
   };
   const routeHistory = useRef<View[]>([]);
   const [threadKey, setThreadKey] = useState<string | null>(null);
+  const [notificationOnlyKey, setNotificationOnlyKey] = useState<string | null>(
+    null,
+  );
   const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
   const currentPreparedDraftKey = useRef(preparedDraftKey);
   currentPreparedDraftKey.current = preparedDraftKey;
@@ -824,6 +846,7 @@ export default function App() {
     }
   };
   const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
+    setNotificationOnlyKey(null);
     allowAutomaticConnection(row.agentId);
     const request = ++historyOpen.current;
     routeHistory.current = [];
@@ -855,6 +878,36 @@ export default function App() {
         (error) => followRecovery(key, request, historyFailureKey(error)),
       );
   });
+  const notificationSelection = useRef<(key: string) => void>(() => {});
+  notificationSelection.current = (key) => {
+    // A click is a navigation request, never permission to recover or send.
+    if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
+    browserSurfaceGuard.runLatest(() => {
+      if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(threads.thread(key) ? null : key);
+      opened(key);
+    });
+  };
+  useEffect(() => {
+    let disposed = false;
+    let stop: (() => void) | undefined;
+    void notificationNavigation(async (key) => {
+      await threads.refreshIndex();
+      if (!disposed) notificationSelection.current(key);
+    })
+      .then((off) => {
+        if (disposed) off();
+        else stop = off;
+      })
+      .catch(() => {});
+    return () => {
+      disposed = true;
+      stop?.();
+    };
+  }, []);
   const useAgent = afterBrowserClose(
     (
       agentId: string,
@@ -1048,6 +1101,16 @@ export default function App() {
           >
             <ThreadPage
               viewKey={pageKey}
+              onManualOpen={
+                notificationOnlyKey === pageKey
+                  ? () => {
+                      const row = threads
+                        .getSnapshot()
+                        .index.find((item) => item.id === pageKey);
+                      if (row) openRow(row);
+                    }
+                  : undefined
+              }
               active={pageKey === visiblePageKey && !paletteOpen && !importOpen}
               onBrowserStateChange={observeBrowserPage}
               draftComposerRef={
