@@ -183,6 +183,32 @@ it("looks up and adds a file in an editable unconnected draft's selected folder 
   noAgentRequests();
 });
 
+it("dismisses file suggestions with Escape without deleting typed text or accepting a stale selection", async () => {
+  typeMention("Keep @no");
+  await settle();
+  const before = composerDrafts.read("project-new-a");
+  const stale = options()[0]!;
+  expect(stale).toBeDefined();
+  const area = render().find((node) => node.type === "textarea")!;
+  const event = {
+    key: "Escape",
+    nativeEvent: { isComposing: false, keyCode: 27 },
+    preventDefault: vi.fn(),
+  };
+  (area.props.onKeyDown as (event: unknown) => void)(event);
+  expect(event.preventDefault).toHaveBeenCalledOnce();
+  expect(render().some((node) => node.props.role === "listbox")).toBe(false);
+  pick(stale);
+  expect(composerDrafts.read("project-new-a")).toBe(before);
+  typeMention("Keep @not");
+  await settle();
+  expect(options()).toHaveLength(1);
+  expect(composerDrafts.read("project-new-a").attachments).toBe(
+    before.attachments,
+  );
+  noAgentRequests();
+});
+
 it("prefers the established conversation folder to a different selected work context", async () => {
   const thread = freshThreadState(
     "file-established",

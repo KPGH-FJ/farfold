@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState, type MouseEventHandler } from "react";
 import { CopyIcon } from "@phosphor-icons/react";
 import {
+  MessageAttachments,
   MessageFileLink,
   MessageResultLink,
   type OpenMessageFile,
@@ -266,11 +267,13 @@ function ToolDetail({
             </pre>
           );
         }
-        if (c.type === "image") {
+        if (c.type === "attachment") {
           return (
-            <pre key={i} className="step-text">
-              {STRINGS.thread.imageBlock(c.mimeType)}
-            </pre>
+            <MessageAttachments
+              key={i}
+              attachments={[c.attachment]}
+              onOpenFile={onOpenFile}
+            />
           );
         }
         return (

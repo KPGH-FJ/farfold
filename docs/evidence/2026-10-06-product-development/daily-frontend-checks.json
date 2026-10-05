@@ -1,0 +1,22 @@
+[
+  {
+    "check": "daily-format",
+    "exitCode": 0,
+    "seconds": 13.16
+  },
+  {
+    "check": "daily-typecheck",
+    "exitCode": 0,
+    "seconds": 4.88
+  },
+  {
+    "check": "daily-test",
+    "exitCode": 0,
+    "seconds": 19.61
+  },
+  {
+    "check": "daily-build",
+    "exitCode": 0,
+    "seconds": 5.23
+  }
+]

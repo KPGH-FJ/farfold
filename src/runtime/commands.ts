@@ -7,6 +7,16 @@
 export interface CommandEntry {
   name: string;
   description?: string;
+  input?: { hint: string };
+}
+
+/** Official free-text hint only; never insert it into the user's draft. */
+export function commandInputHint(
+  commands: readonly CommandEntry[],
+  text: string,
+): string | undefined {
+  const command = /^\/(\S+)\s*$/.exec(text)?.[1];
+  return commands.find((entry) => entry.name === command)?.input?.hint;
 }
 
 /** Slash query: the whole input must be a single `/token` (command is

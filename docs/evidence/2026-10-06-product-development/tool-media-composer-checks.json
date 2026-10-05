@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-06",
+  "scope": "Uncommitted source components; synthetic checks only; no real Agent, account, model request or installed-app replacement.",
+  "composer": {
+    "changes": [
+      "Agent command selection prefixes the command and preserves exact previous draft text, attachments and queue.",
+      "Escape dismisses slash/file suggestions without deleting typed content; editing reopens them.",
+      "Unmatched slash tokens preserve native Tab focus and ordinary Enter dispatch."
+    ],
+    "redEvidence": "3 original menu assertions failed before correction; separate no-match Tab/Enter case failed before its correction.",
+    "finalTargeted": {
+      "command": "corepack pnpm test src/components/Composer.shortcuts.test.tsx src/components/Composer.ime.test.tsx src/components/Composer.project-files.test.tsx src/components/Composer.work.test.tsx",
+      "files": 4,
+      "passed": 39
+    }
+  },
+  "toolContent": {
+    "changes": [
+      "Declared images, audio and embedded resources use the existing safe, memory-only attachment presentation.",
+      "Malformed text, media/resource/link envelopes remain raw.",
+      "Explicit resource links retain the existing disk-verification candidate path.",
+      "Tool content is not user/assistant history and is never appended to drafts or persisted.",
+      "Official AvailableCommand.input.hint appears only for a matching command with no argument and is never inserted or executed."
+    ],
+    "redEvidence": "10 initial assertions failed before the media/hint implementation.",
+    "lastAffectedProjectionCheck": {
+      "command": "corepack pnpm test src/runtime/tool_content.test.ts src/runtime/sessions.test.ts src/runtime/sessions.history.test.tsx src/runtime/round_result.test.ts src/runtime/file_delivery.test.ts src/components/thread-items.file-links.test.tsx",
+      "files": 6,
+      "passed": 81
+    },
+    "earlierExtendedCheck": {
+      "files": 9,
+      "passed": 107,
+      "note": "Earlier snapshot, before adding malformed text/link and no-match keyboard checks. Counts overlap and must not be added."
+    }
+  },
+  "finalStaticChecks": [
+    "corepack pnpm typecheck passed",
+    "Prettier affected files passed",
+    "git diff --check passed"
+  ],
+  "visibleSyntheticReview": {
+    "verifier": "root agent via its CUA browser surface; this subagent had no available browser surface",
+    "source": "Actual production React components with official Tauri mockIPC; synthetic payloads only; native IPC actions blocked.",
+    "passed": [
+      "Expanded tool image visibly shows the synthetic blue grid PNG.",
+      "Audio has controls; zero-duration fixture was not played.",
+      "Text resource displays its body and literal <script> as text.",
+      "PDF says preview unavailable; remote image remains an explicit link and was not clicked.",
+      "/review hint appears, disappears for /review notes.md, and reappears after clearing arguments; original draft attachment remains."
+    ],
+    "notTested": [
+      "Actual audio playback",
+      "Real Agent media output or native tool/skill completeness",
+      "Installed macOS app rendering"
+    ],
+    "cleanup": "Root closed its temporary browser tab; server session 10387 stopped and exact /tmp/farfold-tool-media-ui-2026-10-06 fixture directory removed, dependency symlink not followed."
+  },
+  "sourceSha256": {
+    "src/components/Composer.tsx": "1e40db694bc50a97679c8240c2e408c7116458f9afe8ad6b049551a37df8a82e",
+    "src/components/Composer.shortcuts.test.tsx": "3b78990e14da78d456cdb964ca18d756e1ffb58124c63dad8b5c3d661200353b",
+    "src/components/Composer.project-files.test.tsx": "ebd52f6a61460ead6db6173d1316929d121b1b6f8a6e3e8ba51d3eb39926a7ef",
+    "src/runtime/session_types.ts": "3a068b06b0dbe57f93ff31493e8d564ce27712d840a64b63e150b2865e0943c3",
+    "src/runtime/session_projection.ts": "8b1cb0ccae915e9febb0ca904aff1c68e920cbbfb8cb9003e41176a39c7f59b2",
+    "src/runtime/tool_content.test.ts": "719c75d22d235453b39e881596e6f34ba36247a2d55fcc6088dddd734327ab29",
+    "src/runtime/commands.ts": "d1ba4b4e7197ed167489c34b5a78999020aeee3add5d45bc2284eff004e79073",
+    "src/runtime/round_result.ts": "474da74683c44f6fbe203c1225b88ee74ed2658634f21b9c4e360cd8b39210d0",
+    "src/components/thread-items.tsx": "024ed7d408767ba98ac90b5fed45746b40143ec3625dfb4696b00939bcf8f056",
+    "src/components/thread-items.file-links.test.tsx": "e8f1e6a0285b49375a527657f4aa1887cb1e4c8df1b6a785224968bb6e880ce2",
+    "src/conversation-workspace.css": "a1958d1e6cb1bfdfe61d1e6fcb4a86a77589694057a2796e572cd9f26f212341"
+  }
+}

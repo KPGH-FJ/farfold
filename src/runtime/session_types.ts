@@ -2,6 +2,7 @@
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
  */
+import type { CommandEntry } from "./commands";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -18,7 +19,7 @@ export interface Attachment {
   uri?: string;
   mimeType?: string;
   kind?: "image" | "audio" | "resource" | "resource_link";
-  /** Actual message content from the Agent; memory only, never a local transcript. */
+  /** Declared message or tool content; memory only, never a local transcript. */
   data?: string;
   text?: string;
 }
@@ -38,7 +39,7 @@ export type ToolContent =
   | { type: "text"; text: string }
   | { type: "diff"; path: string; oldText: string | null; newText: string }
   | { type: "terminal"; terminalId: string }
-  | { type: "image"; data: string; mimeType: string }
+  | { type: "attachment"; attachment: Attachment }
   | { type: "link"; name: string; uri: string }
   | { type: "raw"; value: unknown };
 
@@ -173,10 +174,7 @@ export interface PendingPermission extends PendingRequest {
   } | null;
 }
 
-export interface AvailableCommand {
-  name: string;
-  description?: string;
-}
+export type AvailableCommand = CommandEntry;
 
 export interface ThreadState {
   /** `<agentId>:<cwd>:<nativeSessionId>` — also the index row id. */

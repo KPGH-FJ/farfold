@@ -31,8 +31,12 @@ export function hasToolResult(call: ToolCallView): boolean {
         return content.text.trim().length > 0;
       case "diff":
         return content.path.trim().length > 0;
-      case "image":
-        return Boolean(content.data && content.mimeType);
+      case "attachment":
+        return Boolean(
+          content.attachment.data ||
+          content.attachment.text?.trim() ||
+          content.attachment.uri,
+        );
       case "link":
         return Boolean(content.uri && content.name);
       default:

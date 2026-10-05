@@ -22,6 +22,7 @@ import { MessageFileLink } from "./MessageContent";
 import type { ToolCallView } from "../runtime/session_types";
 import { STRINGS } from "../runtime/strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
+import { applyUpdate, freshThreadState } from "../runtime/session_projection";
 
 const call: ToolCallView = {
   toolCallId: "fixture",
@@ -90,4 +91,53 @@ it("retains inert file locations when no file navigation callback is supplied", 
   const html = renderToStaticMarkup(<ToolStep call={call} />);
   expect(html).not.toContain("message-file-button");
   expect(html).toContain("/work/game.html");
+});
+
+it("renders declared tool media and resources safely without reading files or loading remote images", () => {
+  const state = freshThreadState("media", "fixture", "/work", "one");
+  applyUpdate(state, {
+    sessionUpdate: "tool_call",
+    toolCallId: "media",
+    title: "Media result",
+    status: "completed",
+    content: [
+      { type: "image", data: "aW1hZ2U=", mimeType: "image/png" },
+      { type: "audio", data: "YXVkaW8=", mimeType: "audio/wav" },
+      {
+        type: "resource",
+        resource: { uri: "file:///notes.md", text: "<script>escaped</script>" },
+      },
+      {
+        type: "resource",
+        resource: {
+          uri: "memory:///unsafe.svg",
+          blob: "eA==",
+          mimeType: "image/svg+xml",
+        },
+      },
+      {
+        type: "resource_link",
+        name: "Remote image",
+        uri: "https://example.com/image.png",
+      },
+    ].map((content) => ({ type: "content", content })),
+    rawOutput: { data: "eA==", mimeType: "image/png", text: "Opaque output" },
+  });
+  const item = state.items[0]!;
+  if (item.kind !== "tool") throw new Error("Expected tool output");
+  const onOpenFile = vi.fn();
+  h.open = true;
+  const html = renderToStaticMarkup(
+    <ToolStep call={item.call} onOpenFile={onOpenFile} />,
+  );
+  expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
+  expect(html).toContain('<audio controls="" preload="none"');
+  expect(html).toContain("&lt;script&gt;escaped&lt;/script&gt;");
+  expect(html).toContain("此附件暂不支持预览");
+  expect(html).toContain('href="https://example.com/image.png"');
+  expect(html).not.toContain('src="https:');
+  expect(html).not.toContain("data:image/svg");
+  expect(html).not.toContain('src="data:image/png;base64,eA=="');
+  expect(html).not.toContain("<script>");
+  expect(onOpenFile).not.toHaveBeenCalled();
 });

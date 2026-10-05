@@ -28,6 +28,7 @@ import {
   PlusIcon,
 } from "@phosphor-icons/react";
 import {
+  commandInputHint,
   filterCommands,
   filterFiles,
   mentionAnchor,
@@ -184,6 +185,10 @@ export function Composer({
   // `@` mention picker: anchor = index of the triggering `@` in `text`;
   // query is the text after it (closes on whitespace or deletion).
   const [mentionAt, setMentionAt] = useState(-1);
+  const [dismissedSuggestion, setDismissedSuggestion] = useState<{
+    key: string;
+    text: string;
+  } | null>(null);
   const [pickIndex, setPickIndex] = useState(0);
   const [files, setFiles] = useState<{
     key: string;
@@ -202,6 +207,7 @@ export function Composer({
     setUncertainReview(null);
     setUncertainError(null);
     setMentionAt(-1);
+    setDismissedSuggestion(null);
     setFiles(null);
     if (!composerDrafts.read(storageKey).sendPending) busy.current = false;
     setQueueEditOpen(
@@ -280,13 +286,22 @@ export function Composer({
   // Slash popup: whole input is a single `/token` and the agent declared
   // commands. Mention popup: live query after the `@` anchor.
   const commands = thread?.availableCommands ?? [];
+  const inputHint = commandInputHint(commands, text);
   const liveCommands = useRef(commands);
   liveCommands.current = commands;
+  const suggestionsDismissed =
+    dismissedSuggestion?.key === storageKey &&
+    dismissedSuggestion.text === text;
   const slashQ = slashQuery(text);
-  const slashOpen = !shortcutOpen && slashQ !== null && commands.length > 0;
+  const slashOpen =
+    !shortcutOpen &&
+    !suggestionsDismissed &&
+    slashQ !== null &&
+    commands.length > 0;
   const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
-  const mentionOpen = !shortcutOpen && mentionQ !== null;
+  const mentionOpen =
+    !shortcutOpen && !suggestionsDismissed && mentionQ !== null;
   const browserSuggestionsReady = useBrowserSurfaceBarrier(
     active && ((slashOpen && slashList.length > 0) || mentionOpen),
   );
@@ -617,6 +632,7 @@ export function Composer({
     // 子串做模糊匹配；选中后整段 `@query` 从文本中移除换成 chip）。
     const at = mentionAnchor(value);
     if (at >= 0) setMentionAt(at);
+    setDismissedSuggestion(null);
     setText(value);
     autogrow();
   };
@@ -625,7 +641,7 @@ export function Composer({
     // Legacy WebKit can dispatch compositionend before its confirming keydown;
     // that key still reports 229 even though isComposing has already cleared.
     if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
-    if (slashOpen || mentionOpen) {
+    if ((slashOpen && slashList.length > 0) || mentionOpen) {
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         setPickIndex(
@@ -645,11 +661,8 @@ export function Composer({
       }
       if (e.key === "Escape") {
         e.preventDefault();
-        if (mentionOpen) {
-          setText((prev) => prev.slice(0, mentionAt));
-          setMentionAt(-1);
-          requestAnimationFrame(autogrow);
-        }
+        setDismissedSuggestion({ key: storageKey, text });
+        setMentionAt(-1);
         return;
       }
     }
@@ -731,7 +744,7 @@ export function Composer({
                   )
                 )
                   return;
-                setText(`/${command.name} `);
+                setText((previous) => `/${command.name} ${previous}`);
                 setPlusOpen(false);
                 setMentionAt(-1);
                 areaRef.current?.focus();
@@ -1278,6 +1291,7 @@ export function Composer({
           ref={areaRef}
           className="c-input"
           aria-label={W.inputLabel}
+          aria-description={inputHint}
           placeholder={
             placeholder ??
             (running
@@ -1296,6 +1310,7 @@ export function Composer({
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
         />
+        {inputHint && <p className="composer-command-hint">{inputHint}</p>}
         <div
           className="c-row"
           onKeyDown={(event) => {

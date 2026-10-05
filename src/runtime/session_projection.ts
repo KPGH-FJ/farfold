@@ -218,30 +218,18 @@ function normalizeToolContent(raw: unknown): ToolContent {
       return { type: "terminal", terminalId: String(c.terminalId ?? "") };
     case "content": {
       const inner = c.content as Record<string, unknown> | null;
-      if (inner?.type === "text") {
-        return { type: "text", text: String(inner.text ?? "") };
+      if (inner?.type === "text" && typeof inner.text === "string") {
+        return { type: "text", text: inner.text };
       }
-      if (inner?.type === "image") {
-        return {
-          type: "image",
-          data: String(inner.data ?? ""),
-          mimeType: String(inner.mimeType ?? ""),
-        };
-      }
-      if (inner?.type === "resource_link") {
+      const attachment = normalizeMessageAttachment(inner);
+      if (attachment?.kind === "resource_link" && attachment.uri) {
         return {
           type: "link",
-          name: String(inner.name ?? inner.uri ?? ""),
-          uri: String(inner.uri ?? ""),
+          name: attachment.name,
+          uri: attachment.uri,
         };
       }
-      if (inner?.type === "resource") {
-        const res = inner.resource as Record<string, unknown> | null;
-        return {
-          type: "text",
-          text: String(res?.text ?? res?.uri ?? ""),
-        };
-      }
+      if (attachment) return { type: "attachment", attachment };
       return { type: "raw", value: inner };
     }
     default:
@@ -517,11 +505,20 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
     }
     case "available_commands_update":
       s.availableCommands = Array.isArray(u?.availableCommands)
-        ? (u!.availableCommands as Record<string, unknown>[]).map((c) => ({
-            name: String(c?.name ?? ""),
-            description:
-              typeof c?.description === "string" ? c.description : undefined,
-          }))
+        ? (u!.availableCommands as Record<string, unknown>[]).map((c) => {
+            const input = c?.input as { hint?: unknown } | null;
+            return {
+              name: String(c?.name ?? ""),
+              description:
+                typeof c?.description === "string" ? c.description : undefined,
+              ...(input &&
+              !Array.isArray(input) &&
+              typeof input.hint === "string" &&
+              input.hint.trim()
+                ? { input: { hint: input.hint } }
+                : {}),
+            };
+          })
         : [];
       return;
     case "usage_update":

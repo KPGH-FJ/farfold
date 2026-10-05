@@ -57,7 +57,8 @@ import { Composer } from "./Composer";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { composerDrafts } from "../runtime/drafts";
-import { freshThreadState } from "../runtime/session_projection";
+import { draftPersistence } from "../runtime/draft_storage";
+import { applyUpdate, freshThreadState } from "../runtime/session_projection";
 import { threads } from "../runtime/sessions";
 
 type Element = ReactElement<Record<string, unknown>>;
@@ -174,7 +175,9 @@ it("exposes project-file lookup through the add menu and keeps existing input", 
   expect(threads.send).not.toHaveBeenCalled();
 });
 
-it("uses an anchored new-draft add menu with only real Agent commands and preserves input on cancellation", () => {
+it("inserts only real Agent commands before the existing draft and preserves input on cancellation", () => {
+  const before = composerDrafts.read("session:shortcut-a");
+  const queued = props.thread!.queued;
   props.thread!.identity = "draft";
   const tree = openAdd();
   expect(
@@ -202,12 +205,20 @@ it("uses an anchored new-draft add menu with only real Agent commands and preser
   const command = buttonNamed("/official");
   expect(command).toBeDefined();
   (command!.props.onClick as () => void)();
-  expect(composerDrafts.read("session:shortcut-a").text).toBe("/official ");
+  expect(composerDrafts.read("session:shortcut-a").text).toBe(
+    `/official ${before.text}`,
+  );
+  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+    before.attachments,
+  );
+  expect(props.thread!.queued).toBe(queued);
   expect(threads.send).not.toHaveBeenCalled();
   const reopened = openAdd().find((node) => node.type === WorkspaceActionMenu)!;
   (reopened.props.onClose as () => void)();
   expect(render().some((node) => node.type === WorkspaceDialog)).toBe(false);
-  expect(composerDrafts.read("session:shortcut-a").text).toBe("/official ");
+  expect(composerDrafts.read("session:shortcut-a").text).toBe(
+    `/official ${before.text}`,
+  );
 });
 afterEach(() => {
   h.slots.forEach((slot) => slot.cleanup?.());
@@ -255,6 +266,100 @@ it("keeps native Agent slash commands available after canceling the local menu",
   expect(render().some((node) => node.props.role === "option")).toBe(true);
   expect(composerDrafts.read("session:shortcut-a").text).toBe("/off");
   expect(threads.send).not.toHaveBeenCalled();
+});
+
+it("dismisses slash suggestions with Escape without changing the draft and reopens them after editing", () => {
+  props.thread!.availableCommands = [
+    { name: "official", description: "Official command" },
+  ];
+  composerDrafts.update("session:shortcut-a", (draft) => ({
+    ...draft,
+    text: "/off",
+  }));
+  const before = composerDrafts.read("session:shortcut-a");
+  const queued = props.thread!.queued;
+  const tree = render();
+  expect(tree.some((node) => node.props.role === "option")).toBe(true);
+  const event = {
+    key: "Escape",
+    nativeEvent: { isComposing: false, keyCode: 27 },
+    preventDefault: vi.fn(),
+  };
+  const area = tree.find((node) => node.type === "textarea")!;
+  (area.props.onKeyDown as (event: unknown) => void)(event);
+  expect(event.preventDefault).toHaveBeenCalledOnce();
+  expect(render().some((node) => node.props.role === "listbox")).toBe(false);
+  expect(composerDrafts.read("session:shortcut-a")).toBe(before);
+  expect(props.thread!.queued).toBe(queued);
+  expect(threads.send).not.toHaveBeenCalled();
+  (area.props.onChange as (event: unknown) => void)({
+    target: { value: "/offi" },
+  });
+  expect(render().some((node) => node.props.role === "option")).toBe(true);
+  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+    before.attachments,
+  );
+});
+
+it("keeps Tab navigation and normal Enter dispatch when a slash token has no visible match", async () => {
+  vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  props.thread!.availableCommands = [{ name: "official" }];
+  composerDrafts.update("session:shortcut-a", (draft) => ({
+    ...draft,
+    text: "/unlisted",
+  }));
+  const before = composerDrafts.read("session:shortcut-a");
+  const tree = render();
+  expect(tree.some((node) => node.props.role === "listbox")).toBe(false);
+  const area = tree.find((node) => node.type === "textarea")!;
+  const key = (value: string) => ({
+    key: value,
+    nativeEvent: { isComposing: false, keyCode: value === "Enter" ? 13 : 9 },
+    preventDefault: vi.fn(),
+  });
+  const tab = key("Tab");
+  (area.props.onKeyDown as (event: unknown) => void)(tab);
+  expect(tab.preventDefault).not.toHaveBeenCalled();
+  expect(composerDrafts.read("session:shortcut-a")).toBe(before);
+  expect(threads.send).not.toHaveBeenCalled();
+  const enter = key("Enter");
+  (area.props.onKeyDown as (event: unknown) => void)(enter);
+  await vi.waitFor(() => expect(threads.send).toHaveBeenCalledOnce());
+  expect(enter.preventDefault).toHaveBeenCalledOnce();
+  expect(threads.send).toHaveBeenCalledWith("shortcut-a", [
+    { type: "text", text: "/unlisted" },
+    { type: "resource_link", name: "notes.md", uri: "file:///p/notes.md" },
+  ]);
+});
+
+it("shows the declared command input hint only while its argument is empty, without inserting or sending it", () => {
+  const hint = "Describe the files to review";
+  applyUpdate(props.thread!, {
+    sessionUpdate: "available_commands_update",
+    availableCommands: [
+      { name: "official", description: "Review", input: { hint } },
+    ],
+  });
+  composerDrafts.update("session:shortcut-a", (draft) => ({
+    ...draft,
+    text: "/official ",
+  }));
+  const before = composerDrafts.read("session:shortcut-a");
+  const tree = render();
+  const area = tree.find((node) => node.type === "textarea")!;
+  expect(area.props["aria-description"]).toBe(hint);
+  expect(
+    tree.some((node) => node.type === "p" && node.props.children === hint),
+  ).toBe(true);
+  expect(composerDrafts.read("session:shortcut-a")).toBe(before);
+  expect(threads.send).not.toHaveBeenCalled();
+  (area.props.onChange as (event: unknown) => void)({
+    target: { value: "/official notes.md" },
+  });
+  expect(render().some((node) => node.props.children === hint)).toBe(false);
+  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+    before.attachments,
+  );
 });
 
 it("closes on navigation and rejects an old menu action after changing conversations", () => {
