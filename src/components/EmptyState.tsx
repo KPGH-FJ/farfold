@@ -3,6 +3,7 @@
  * 消息栏。Agent 选定后预开草稿会话以拿到模型选项；发送即把草稿变成
  * 真会话并切到会话页。
  */
+import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
 import { uiError } from "../runtime/ui_error";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -88,7 +89,11 @@ export function EmptyState({
   onStarted,
   header,
   active = true,
+  onPreparedKey,
+  composerTarget,
 }: {
+  onPreparedKey?: (key: string | null) => void;
+  composerTarget?: HTMLElement | null;
   header?: ReactNode;
   active?: boolean;
   agents: AgentCardModel[];
@@ -478,6 +483,7 @@ export function EmptyState({
       const failed = threads.thread(key);
       if (
         failed?.identity === "draft" &&
+        !failed.uncertainPrompt &&
         !failed.items.length &&
         !failed.queued.length
       ) {
@@ -512,6 +518,37 @@ export function EmptyState({
     !draft.sourceError &&
     !draft.openError &&
     !draft.configuring;
+  // Keep the original editor and its in-flight attachment/send state mounted.
+  // Only its DOM host moves; the draft remains in the existing `new` slot.
+  const [editorRoot] = useState(() =>
+    typeof document === "undefined" ? null : document.createElement("div"),
+  );
+  const editorHome = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const destination = composerTarget ?? editorHome.current;
+    if (!editorRoot || !destination) return;
+    const focused = editorRoot.contains(document.activeElement)
+      ? (document.activeElement as HTMLElement)
+      : null;
+    editorRoot.className = "empty-col";
+    destination.appendChild(editorRoot);
+    if (activeRef.current) focused?.focus({ preventScroll: true });
+  }, [editorRoot, composerTarget]);
+  useEffect(() => () => editorRoot?.remove(), [editorRoot]);
+  const presentedDraft = useRef<string | null>(null);
+  const workspaceKey =
+    draftKey &&
+    (ready ||
+      handedOffKeys.current.has(draftKey) ||
+      presentedDraft.current === draftKey)
+      ? draftKey
+      : null;
+  useEffect(() => {
+    presentedDraft.current = workspaceKey;
+    onPreparedKey?.(workspaceKey);
+  }, [onPreparedKey, workspaceKey]);
+  useEffect(() => () => onPreparedKey?.(null), [onPreparedKey]);
+
   const sendingPaused = Boolean(
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
@@ -733,117 +770,112 @@ export function EmptyState({
     </>
   ) : null;
 
-  return (
-    <main className="main workspace-start">
-      {header ?? (
-        <div className="topbar">
-          <div className="title">{STRINGS.topbar.newChatTitle}</div>
-        </div>
+  const editor = (
+    <>
+      <div className="workspace-start-intro" hidden={!!composerTarget}>
+        <h1>{W.startTitle}</h1>
+        <p>{W.startSubtitle}</p>
+      </div>
+      <Composer
+        thread={draft}
+        workContext={
+          agentId && requestCwd ? { agentId, cwd: requestCwd } : undefined
+        }
+        active={active}
+        draftKey="new"
+        errorContextKey={pair}
+        imageEnabled={imageOk}
+        embedContext={caps.embeddedContext}
+        onGoSettings={openRepair}
+        onSend={send}
+        onRecoverPending={async (target) => {
+          const key = await recoverPendingConversation(target);
+          handedOffKeys.current.add(key);
+          if (mounted.current && activeRef.current) {
+            setDraftKey(null);
+            setDraftRevision((value) => value + 1);
+            onStarted(key);
+          }
+        }}
+        disabled={!ready || draftError !== null || needsPreparation}
+        editableWhenDisabled
+        prepareAction={
+          needsPreparation
+            ? explicitReadRequired
+              ? openRepair
+              : () => onGoSettings(agentId ?? undefined)
+            : undefined
+        }
+        placeholder={W.startPlaceholder}
+        controls={controls}
+        contextChips={
+          folder && (
+            <div className="workspace-folder-chip" title={folder}>
+              <FolderSimpleIcon size={14} />
+              <span>{basename(folder)}</span>
+              <button
+                type="button"
+                aria-label={W.clearFolder}
+                onClick={() => setFolder(null)}
+              >
+                <XIcon size={12} />
+              </button>
+            </div>
+          )
+        }
+        caption={
+          needsPreparation
+            ? W.prepareHint
+            : service
+              ? `${serviceLabel?.id === service.id ? serviceLabel.label : W.savedSource} · ${W.selectedSource}`
+              : `${currentAgent?.name ?? "Agent"} · ${W.existingSource}`
+        }
+        onChooseFolder={() => void pickProject()}
+        note={note}
+        noteAction={draftError !== null}
+        autofocus={active}
+        fit
+      />
+      {(draftError || draft?.connectionLost || draft?.sourceError) && (
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={() => {
+            failedPairRef.current = null;
+            setDraftError(null);
+            setDraftRevision((value) => value + 1);
+          }}
+        >
+          {STRINGS.service.retry}
+        </button>
       )}
-      <div className="empty-wrap">
-        <div className="empty-col">
-          <div className="workspace-start-intro">
-            <h1>{W.startTitle}</h1>
-            <p>{W.startSubtitle}</p>
-          </div>
-          <Composer
-            thread={draft}
-            workContext={
-              agentId && requestCwd ? { agentId, cwd: requestCwd } : undefined
-            }
-            active={active}
-            draftKey="new"
-            errorContextKey={pair}
-            imageEnabled={imageOk}
-            embedContext={caps.embeddedContext}
-            onGoSettings={openRepair}
-            onSend={send}
-            onRecoverPending={async (target) => {
-              const key = await recoverPendingConversation(target);
-              handedOffKeys.current.add(key);
-              if (mounted.current && activeRef.current) onStarted(key);
-            }}
-            disabled={!ready || draftError !== null || needsPreparation}
-            editableWhenDisabled
-            prepareAction={
-              needsPreparation
-                ? explicitReadRequired
-                  ? openRepair
-                  : () => onGoSettings(agentId ?? undefined)
-                : undefined
-            }
-            placeholder={W.startPlaceholder}
-            controls={controls}
-            contextChips={
-              folder && (
-                <div className="workspace-folder-chip" title={folder}>
-                  <FolderSimpleIcon size={14} />
-                  <span>{basename(folder)}</span>
-                  <button
-                    type="button"
-                    aria-label={W.clearFolder}
-                    onClick={() => setFolder(null)}
-                  >
-                    <XIcon size={12} />
-                  </button>
-                </div>
-              )
-            }
-            caption={
-              needsPreparation
-                ? W.prepareHint
-                : service
-                  ? `${serviceLabel?.id === service.id ? serviceLabel.label : W.savedSource} · ${W.selectedSource}`
-                  : `${currentAgent?.name ?? "Agent"} · ${W.existingSource}`
-            }
-            onChooseFolder={() => void pickProject()}
-            note={note}
-            noteAction={draftError !== null}
-            autofocus={active}
-            fit
-          />
-          {(draftError || draft?.connectionLost || draft?.sourceError) && (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => {
-                failedPairRef.current = null;
-                setDraftError(null);
-                setDraftRevision((value) => value + 1);
-              }}
-            >
-              {STRINGS.service.retry}
-            </button>
-          )}
-          <div className="workspace-suggestions">
-            {!unsent.text &&
-              !unsent.attachments.length &&
-              W.suggestions.map((item, index) => {
-                const Icon = suggestionIcons[index];
-                return (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={() => {
-                      composerDrafts.update("new", (draft) => ({
-                        ...draft,
-                        text: draft.text
-                          ? `${draft.text}\n${item.text}`
-                          : item.text,
-                      }));
-                    }}
-                  >
-                    <Icon size={16} />
-                    {item.label}
-                  </button>
-                );
-              })}
-            <button type="button" onClick={() => onGoSettings()}>
-              <CompassIcon size={16} />
-              {W.discover}
-            </button>
-          </div>
-        </div>
+      <div className="workspace-suggestions" hidden={!!composerTarget}>
+        {!unsent.text &&
+          !unsent.attachments.length &&
+          W.suggestions.map((item, index) => {
+            const Icon = suggestionIcons[index];
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => {
+                  composerDrafts.update("new", (draft) => ({
+                    ...draft,
+                    text: draft.text
+                      ? `${draft.text}\n${item.text}`
+                      : item.text,
+                  }));
+                }}
+              >
+                <Icon size={16} />
+                {item.label}
+              </button>
+            );
+          })}
+        <button type="button" onClick={() => onGoSettings()}>
+          <CompassIcon size={16} />
+          {W.discover}
+        </button>
       </div>
       {active && choiceDialog === "agent" && (
         <NewConversationAgentDialog
@@ -883,6 +915,19 @@ export function EmptyState({
           onClose={() => setChoiceDialog(null)}
         />
       )}
+    </>
+  );
+  return (
+    <main className="main workspace-start">
+      {header ?? (
+        <div className="topbar">
+          <div className="title">{STRINGS.topbar.newChatTitle}</div>
+        </div>
+      )}
+      <div className="empty-wrap" ref={editorHome}>
+        {!editorRoot && <div className="empty-col">{editor}</div>}
+      </div>
+      {editorRoot && createPortal(editor, editorRoot)}
     </main>
   );
 }

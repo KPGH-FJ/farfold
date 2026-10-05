@@ -1,4 +1,4 @@
-use super::{Bounds, BrowserWorkspace, FixedPageReadScope, publish};
+use super::{Bounds, BrowserWorkspace, FixedPageReadScope, local_html::StoragePartition, publish};
 use std::ffi::{CStr, CString, c_char, c_void};
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
@@ -22,6 +22,25 @@ unsafe extern "C" {
         policy: Policy,
         status: Status,
         release: Release,
+    ) -> bool;
+    fn ff_browser_create_html(
+        id: u64,
+        parent: *mut c_void,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        context: *mut c_void,
+        policy: Policy,
+        status: Status,
+        release: Release,
+        storage_identifier: *const c_char,
+    ) -> bool;
+    fn ff_browser_persistent_html_supported() -> bool;
+    fn ff_browser_clear_html_storage(
+        identifier: *const c_char,
+        context: *mut c_void,
+        callback: Read,
     ) -> bool;
     fn ff_browser_navigate(id: u64, navigation: u64, url: *const c_char) -> bool;
     fn ff_browser_load_html(
@@ -141,7 +160,7 @@ pub(super) async fn create_html(
     state: BrowserWorkspace,
     id: u64,
     bounds: Bounds,
-    base_url: String,
+    storage: StoragePartition,
     document: String,
 ) -> Result<(), String> {
     create_content(
@@ -149,14 +168,17 @@ pub(super) async fn create_html(
         state,
         id,
         bounds,
-        InitialContent::Html { base_url, document },
+        InitialContent::Html { storage, document },
     )
     .await
 }
 
 enum InitialContent {
     Public(String),
-    Html { base_url: String, document: String },
+    Html {
+        storage: StoragePartition,
+        document: String,
+    },
 }
 
 async fn create_content(
@@ -184,19 +206,43 @@ async fn create_content(
             // Tauri's official PlatformWebview.inner() is the current WKWebView.
             // Only its NSView parent is used. The new WKWebView is not registered
             // with Tauri and does not reuse the parent's configuration/controller.
-            let success = unsafe {
-                ff_browser_create(
-                    id,
-                    platform.inner(),
-                    bounds.x,
-                    bounds.y,
-                    bounds.width,
-                    bounds.height,
-                    context,
-                    policy,
-                    status,
-                    release,
-                )
+            let storage_id = match &content {
+                InitialContent::Html { storage, .. } => {
+                    Some(CString::new(storage.identifier.clone()).expect("generated UUID"))
+                }
+                _ => None,
+            };
+            let success = if let Some(storage_id) = storage_id {
+                unsafe {
+                    ff_browser_create_html(
+                        id,
+                        platform.inner(),
+                        bounds.x,
+                        bounds.y,
+                        bounds.width,
+                        bounds.height,
+                        context,
+                        policy,
+                        status,
+                        release,
+                        storage_id.as_ptr(),
+                    )
+                }
+            } else {
+                unsafe {
+                    ff_browser_create(
+                        id,
+                        platform.inner(),
+                        bounds.x,
+                        bounds.y,
+                        bounds.width,
+                        bounds.height,
+                        context,
+                        policy,
+                        status,
+                        release,
+                    )
+                }
             };
             if !success {
                 unsafe {
@@ -210,8 +256,9 @@ async fn create_content(
                     let target = CString::new(url).expect("validated URL has no NUL");
                     unsafe { ff_browser_navigate(id, 1, target.as_ptr()) }
                 }
-                InitialContent::Html { base_url, document } => {
-                    let base = CString::new(base_url).expect("generated origin has no NUL");
+                InitialContent::Html { storage, document } => {
+                    let base = CString::new(storage.origin.to_string())
+                        .expect("generated origin has no NUL");
                     match CString::new(document) {
                         Ok(html) => unsafe {
                             ff_browser_load_html(id, 1, html.as_ptr(), base.as_ptr())
@@ -237,6 +284,32 @@ async fn create_content(
         })
         .map_err(|_| "无法打开内嵌网页")?;
     await_ack(receiver, ACK_WAIT).await
+}
+
+pub(super) fn persistent_html_supported() -> bool {
+    // Availability only; no store, file, user configuration or page is read.
+    unsafe { ff_browser_persistent_html_supported() }
+}
+
+pub(super) async fn clear_html_storage(
+    app: &AppHandle,
+    storage: StoragePartition,
+) -> Result<(), String> {
+    let identifier = CString::new(storage.identifier).expect("generated UUID");
+    let (sender, receiver) = oneshot::channel::<Result<String, String>>();
+    main(app, move || {
+        let context = Box::into_raw(Box::new(sender)).cast();
+        if unsafe { ff_browser_clear_html_storage(identifier.as_ptr(), context, read_result) } {
+            Ok(())
+        } else {
+            drop(unsafe {
+                Box::from_raw(context.cast::<oneshot::Sender<Result<String, String>>>())
+            });
+            Err("网页存档未能清除，请重新打开后再试".into())
+        }
+    })
+    .await?;
+    await_ack(receiver, ACK_WAIT).await.map(|_| ())
 }
 
 pub(super) async fn navigate(

@@ -1,3 +1,4 @@
+import type { BrowserWorkspaceState } from "./runtime/browser_workspace";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
 import { replacesDraftChoice } from "./runtime/draft_choice";
@@ -111,7 +112,14 @@ function ThreadPage({
   onNew,
   navToggle,
   defaultCwd,
+  onBrowserStateChange,
+  draftComposerRef,
 }: {
+  draftComposerRef?: React.Ref<HTMLDivElement>;
+  onBrowserStateChange?: (
+    taskKey: string,
+    page: BrowserWorkspaceState | null,
+  ) => void;
   viewKey: string;
   active: boolean;
   agents: ReturnType<typeof useAgents>;
@@ -124,6 +132,11 @@ function ThreadPage({
   defaultCwd?: string | null;
 }) {
   const thread = useThread(viewKey);
+  useEffect(() => {
+    // A discarded empty draft no longer needs a retained render slot. Its
+    // native close still belongs to the existing guard, including retries.
+    if (!thread) onBrowserStateChange?.(viewKey, null);
+  }, [thread, viewKey, onBrowserStateChange]);
   useVisibleConversation(
     active && thread ? viewKey : null,
     canMarkConversationRead(thread),
@@ -319,6 +332,8 @@ function ThreadPage({
           onNew={onNew}
           header={header}
           artifactReturnFocusRef={artifactReturnFocus}
+          onBrowserStateChange={onBrowserStateChange}
+          draftComposerRef={draftComposerRef}
         />
       ) : (
         <>
@@ -453,6 +468,48 @@ export default function App() {
   };
   const routeHistory = useRef<View[]>([]);
   const [threadKey, setThreadKey] = useState<string | null>(null);
+  const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
+  const currentPreparedDraftKey = useRef(preparedDraftKey);
+  currentPreparedDraftKey.current = preparedDraftKey;
+  const [draftComposerTarget, setDraftComposerTarget] =
+    useState<HTMLDivElement | null>(null);
+  const visiblePageKey =
+    view.kind === "thread"
+      ? threadKey
+      : view.kind === "start"
+        ? preparedDraftKey
+        : null;
+  // One native page exists. Keep only its existing conversation mounted while
+  // visiting another task so real permission/timeout receipts remain observed.
+  const [browserOwner, setBrowserOwner] = useState<{
+    taskKey: string;
+    label: string;
+  } | null>(null);
+  const observeBrowserPage = (
+    taskKey: string,
+    page: BrowserWorkspaceState | null,
+  ) => {
+    setBrowserOwner((previous) => {
+      if (!page || page.phase === "closed")
+        return previous?.taskKey === taskKey &&
+          (!page || previous.label === page.label)
+          ? null
+          : previous;
+      if (
+        page.taskKey !== taskKey ||
+        (previous &&
+          previous.taskKey !== taskKey &&
+          (currentView.current.kind === "thread"
+            ? currentView.current.key !== taskKey
+            : currentView.current.kind !== "start" ||
+              currentPreparedDraftKey.current !== taskKey))
+      )
+        return previous;
+      return previous?.taskKey === taskKey && previous.label === page.label
+        ? previous
+        : { taskKey, label: page.label };
+    });
+  };
   const pendingCanonical = useRef<string | null>(null);
   useEffect(() => {
     let mounted = true;
@@ -876,7 +933,10 @@ export default function App() {
           (view.kind === "agents" || view.kind === "settings") && (
             <div className="collapsed-nav">{navToggle}</div>
           )}
-        <div className="workspace-route" hidden={view.kind !== "start"}>
+        <div
+          className="workspace-route"
+          hidden={view.kind !== "start" || !!preparedDraftKey}
+        >
           {cwdError ? (
             <main className="main">
               <header className="workspace-topbar">{navToggle}</header>
@@ -915,7 +975,9 @@ export default function App() {
               initialAgentId={newAgent}
               initialAgentRevision={agentRequest}
               initialSelection={preparedSelection}
-              active={view.kind === "start" && !paletteOpen}
+              active={view.kind === "start" && !paletteOpen && !importOpen}
+              onPreparedKey={setPreparedDraftKey}
+              composerTarget={draftComposerTarget}
               header={
                 <header className="workspace-topbar start-context">
                   {navToggle}
@@ -944,16 +1006,31 @@ export default function App() {
             header={navToggle}
           />
         </div>
-        {threadKey && (
-          <div className="workspace-route" hidden={view.kind !== "thread"}>
+        {[
+          ...new Set(
+            [threadKey, preparedDraftKey, browserOwner?.taskKey].filter(
+              (key): key is string => !!key,
+            ),
+          ),
+        ].map((pageKey) => (
+          <div
+            key={pageKey}
+            className="workspace-route"
+            hidden={pageKey !== visiblePageKey}
+          >
             <ThreadPage
-              key={threadKey}
-              viewKey={threadKey}
-              active={view.kind === "thread" && !paletteOpen && !importOpen}
+              viewKey={pageKey}
+              active={pageKey === visiblePageKey && !paletteOpen && !importOpen}
+              onBrowserStateChange={observeBrowserPage}
+              draftComposerRef={
+                pageKey === preparedDraftKey
+                  ? setDraftComposerTarget
+                  : undefined
+              }
               agents={agents}
               onNew={goNew}
               onGoSettings={() => {
-                const current = threads.thread(threadKey);
+                const current = threads.thread(pageKey);
                 const sourceContext = current
                   ? conversationRepairContext(current).sourceContext
                   : undefined;
@@ -984,7 +1061,7 @@ export default function App() {
               defaultCwd={defaultCwd}
             />
           </div>
-        )}
+        ))}
         {hubMounted && (
           <div className="workspace-route" hidden={view.kind !== "agents"}>
             <AgentHub

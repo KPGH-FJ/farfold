@@ -14,6 +14,17 @@ bool ff_browser_create(uint64_t id, void *parent_wk_view, double x, double y,
                        double width, double height, void *context,
                        FFBrowserPolicy policy, FFBrowserStatus status,
                        FFBrowserRelease release);
+// Offline HTML only. The caller supplies a stable, opaque project/file UUID.
+// macOS 14+ persists in that dedicated store; older systems remain temporary.
+bool ff_browser_create_html(uint64_t id, void *parent_wk_view, double x, double y,
+                       double width, double height, void *context,
+                       FFBrowserPolicy policy, FFBrowserStatus status,
+                       FFBrowserRelease release, const char *storage_identifier);
+bool ff_browser_persistent_html_supported(void);
+// Requires every view for this exact store to be closed; callback acknowledges
+// clearing its page data. Reopening is blocked until completion, including after
+// a caller timeout. Never enumerate or clear other stores.
+bool ff_browser_clear_html_storage(const char *storage_identifier, void *context, FFBrowserRead callback);
 bool ff_browser_navigate(uint64_t id, uint64_t navigation, const char *url);
 // A self-contained, verified document with a generated isolated HTTPS origin.
 // Loads bytes only; never passes a file URL or read-access directory to WebKit.

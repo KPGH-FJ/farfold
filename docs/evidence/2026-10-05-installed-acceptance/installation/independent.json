@@ -1,0 +1,128 @@
+{
+  "checkedAtUTC": "2026-10-05T05:28:12.022447+00:00",
+  "scope": "Independent read-only candidate/source-input/installed-five-file/signature/receipt checks. No app launch/quit, no process control, no UI operation, no Agent/model, no user database reads or data-directory enumeration. Historical installation data preservation is confirmed by comparing root-authored receipts only; current live data is not inspected.",
+  "binarySha256": "5423cfacd4f85198a6e8ccb0e6980badbe63db278f510e240e3aceeb5306ee35",
+  "candidateReceiptIsPreInstallSnapshot": true,
+  "installationReceiptIsPostInstallResult": true,
+  "checks": [
+    {
+      "name": "candidate-is-pre-install-snapshot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate-identity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "source-inputs-before-after-identical",
+      "passed": true,
+      "detail": 614
+    },
+    {
+      "name": "source-input-manifest-digest",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded-source-inputs-current-match",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "installed-file-set-recorded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-sha256:Contents/Info.plist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-sha256:Contents/MacOS/farfold",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-sha256:Contents/Resources/icon.icns",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-sha256:Contents/Resources/release-manifest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-sha256:Contents/_CodeSignature/CodeResources",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-binary-matches-candidate-receipt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-bundle-identity-version",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installed-architecture",
+      "passed": true,
+      "detail": "arm64"
+    },
+    {
+      "name": "installed-strict-signature",
+      "passed": true,
+      "detail": {
+        "exitCode": 0,
+        "message": ""
+      }
+    },
+    {
+      "name": "installed-release-manifest-readable",
+      "passed": true,
+      "detail": {
+        "topLevelKeys": ["generatedAt", "version"]
+      }
+    },
+    {
+      "name": "archive-sha256-and-length",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "archive-five-files-match-installed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "target-build-bundle-removed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact-install-staging-directory-removed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installation-data-receipts-identical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "installation-data-summary-consistent",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "passed": 22,
+  "failed": 0,
+  "notFunctionalAcceptance": true,
+  "notarized": false
+}

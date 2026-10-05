@@ -34,6 +34,8 @@ const h = vi.hoisted(() => ({
     }
   >(),
   open: vi.fn(),
+  clearDraft: vi.fn(),
+  index: [] as { agentId: string }[],
   reconnect: vi.fn(),
   cards: ["A", "B"].map((id) => ({ id, name: id, status: "connected" })),
 }));
@@ -87,7 +89,7 @@ vi.mock("./runtime/theme", () => ({
 }));
 vi.mock("./runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 vi.mock("./runtime/drafts", () => ({
-  composerDrafts: { read: () => h.draft },
+  composerDrafts: { read: () => h.draft, clear: h.clearDraft },
   newConversationChoice: h.choice,
 }));
 vi.mock("./runtime/collections", async (original) => ({
@@ -110,7 +112,7 @@ vi.mock("./runtime/sessions", () => ({
   basename: (path: string) => path.split("/").at(-1) ?? path,
   hasActiveTools: () => false,
   useThread: (key: string) => h.threads.get(key),
-  useThreadsSnapshot: () => ({ index: [] }),
+  useThreadsSnapshot: () => ({ index: h.index }),
 }));
 vi.mock("./components/CommandPalette", () => ({
   CommandPalette: function CommandPalette() {
@@ -224,6 +226,8 @@ beforeEach(async () => {
   h.effects = [];
   h.pending = [];
   h.open.mockReset();
+  h.clearDraft.mockReset();
+  h.index = [];
   h.reconnect.mockReset();
   h.threads.clear();
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
@@ -986,7 +990,7 @@ it.each(["success", "empty"] as const)(
       expect(component("ThreadPage").active).toBe(true);
     } finally {
       acknowledge();
-      release();
+      release.release();
       await closed;
     }
   },
@@ -1014,7 +1018,7 @@ it("repairs the return identity while settings waits for native close", async ()
     expect(component("ThreadPage").active).toBe(true);
   } finally {
     acknowledge();
-    release();
+    release.release();
     await closed;
   }
 });
@@ -1055,7 +1059,180 @@ it("keeps a pending layout action and then follows the repaired history key", as
     expect(component("ThreadPage").active).toBe(true);
   } finally {
     acknowledge();
-    release();
+    release.release();
     await closed;
   }
+});
+
+it("parks only the page-owning conversation across task switches and keeps exact ownership", () => {
+  const pages = () =>
+    render()
+      .filter(
+        (node) =>
+          typeof node.type === "function" && node.type.name === "ThreadPage",
+      )
+      .map((node) => node.props);
+  const open = (key: string) =>
+    call("ConversationLibrary", "onOpen", {
+      id: key,
+      agentId: key === "old-A" ? "A" : "B",
+      cwd: `/${key}`,
+      nativeSessionId: key,
+    });
+  open("old-A");
+  const notifyA = component("ThreadPage").onBrowserStateChange as (
+    key: string,
+    state: unknown,
+  ) => void;
+  notifyA("old-A", {
+    taskKey: "old-A",
+    label: "page-a",
+    phase: "ready",
+    revision: 1,
+    url: "https://example.com/",
+  });
+  call("Sidebar", "onLibrary", { kind: "state", value: "attention" });
+  expect(pages()).toMatchObject([{ viewKey: "old-A", active: false }]);
+  open("test-B");
+  expect(pages()).toMatchObject([
+    { viewKey: "test-B", active: true },
+    { viewKey: "old-A", active: false },
+  ]);
+  // A task with no page cannot clear the parked owner's identity.
+  call("ThreadPage", "onBrowserStateChange", "test-B", null);
+  expect(pages()).toHaveLength(2);
+  open("old-A");
+  expect(pages()).toMatchObject([{ viewKey: "old-A", active: true }]);
+  open("test-B");
+  call("ThreadPage", "onBrowserStateChange", "test-B", {
+    taskKey: "test-B",
+    label: "page-b",
+    phase: "ready",
+    revision: 1,
+    url: "https://example.org/",
+  });
+  // An old close/loading callback cannot release or replace the new page.
+  notifyA("old-A", {
+    taskKey: "old-A",
+    label: "page-a",
+    phase: "closed",
+    revision: 2,
+    url: "https://example.com/",
+  });
+  notifyA("old-A", {
+    taskKey: "old-A",
+    label: "page-a",
+    phase: "loading",
+    revision: 1,
+    url: "https://example.com/",
+  });
+  expect(pages()).toMatchObject([{ viewKey: "test-B", active: true }]);
+  open("old-A");
+  expect(pages()).toMatchObject([
+    { viewKey: "old-A", active: true },
+    { viewKey: "test-B", active: false },
+  ]);
+  notifyA("test-B", {
+    taskKey: "test-B",
+    label: "page-b",
+    phase: "closed",
+    revision: 2,
+    url: "https://example.org/",
+  });
+  expect(pages()).toMatchObject([{ viewKey: "old-A", active: true }]);
+  expect(h.open).not.toHaveBeenCalled();
+});
+
+it("keeps the prepared new draft reachable without starting or indexing it", () => {
+  const original = structuredClone(h.draft);
+  call("EmptyState", "onPreparedKey", "prepared-A");
+  const first = render().find(
+    (node) =>
+      typeof node.type === "function" && node.type.name === "ThreadPage",
+  )!;
+  expect(first.key).toBeNull(); // the stable keyed route owns this page
+  expect(first.props).toMatchObject({ viewKey: "prepared-A", active: true });
+  expect(first.props.draftComposerRef).toBeTypeOf("function");
+  call("Sidebar", "onLibrary", { kind: "all" });
+  expect(component("ThreadPage")).toMatchObject({
+    viewKey: "prepared-A",
+    active: false,
+  });
+  call("Sidebar", "onNew");
+  expect(component("ThreadPage")).toMatchObject({
+    viewKey: "prepared-A",
+    active: true,
+  });
+  expect(h.draft).toEqual(original);
+  expect(h.open).not.toHaveBeenCalled();
+  expect(h.clearDraft).not.toHaveBeenCalled();
+  expect(h.index).toEqual([]);
+});
+
+it("keeps the same page key through first-message admission and waits only for native hide", async () => {
+  call("EmptyState", "onPreparedKey", "prepared-A");
+  call("ThreadPage", "onBrowserStateChange", "prepared-A", {
+    taskKey: "prepared-A",
+    label: "draft-page",
+    phase: "ready",
+    revision: 1,
+    url: "https://example.com/",
+  });
+  const pageRoutes = () =>
+    render().filter((node) => node.type === "div" && node.key === "prepared-A");
+  const close = vi.fn(async () => {});
+  let finishHide!: () => void;
+  const hide = vi.fn(
+    () =>
+      new Promise<void>((resolve) => {
+        finishHide = resolve;
+      }),
+  );
+  const registration = browserSurfaceGuard.register(close, hide);
+  try {
+    call("EmptyState", "onPreparedKey", null);
+    call("EmptyState", "onStarted", "prepared-A");
+    expect(pageRoutes()).toHaveLength(1);
+    expect(close).not.toHaveBeenCalled();
+    expect(hide).toHaveBeenCalledOnce();
+    finishHide();
+    await vi.waitFor(() =>
+      expect(component("ThreadPage")).toMatchObject({
+        viewKey: "prepared-A",
+        active: true,
+      }),
+    );
+    expect(pageRoutes()).toHaveLength(1);
+    expect(component("ThreadPage").draftComposerRef).toBeUndefined();
+    expect(close).not.toHaveBeenCalled();
+  } finally {
+    registration.release();
+  }
+});
+
+it("ignores an old prepared draft's page callback after a new draft became current", () => {
+  call("EmptyState", "onPreparedKey", "draft-A");
+  const stale = component("ThreadPage").onBrowserStateChange as Function;
+  call("EmptyState", "onPreparedKey", "draft-B");
+  call("ThreadPage", "onBrowserStateChange", "draft-B", {
+    taskKey: "draft-B",
+    label: "page-b",
+    phase: "ready",
+    revision: 1,
+    url: "https://example.com/",
+  });
+  stale("draft-A", {
+    taskKey: "draft-A",
+    label: "page-a",
+    phase: "loading",
+    revision: 1,
+  });
+  expect(
+    render()
+      .filter(
+        (node) =>
+          typeof node.type === "function" && node.type.name === "ThreadPage",
+      )
+      .map((node) => node.props.viewKey),
+  ).toEqual(["draft-B"]);
 });

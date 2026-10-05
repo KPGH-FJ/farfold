@@ -30,6 +30,7 @@ fn fixture() -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope) {
         label: "page-a".into(),
         url: "https://example.com/public".into(),
         local_file_name: None,
+        local_storage_persistent: None,
         phase: "ready".into(),
         revision: 3,
         error: None,

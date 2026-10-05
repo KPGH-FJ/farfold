@@ -1,0 +1,257 @@
+{
+  "activityCounters": [],
+  "fixtureFolderMatch": false,
+  "knownControls": [
+    {
+      "enabled": true,
+      "frame": { "height": 36, "width": 195, "x": 105, "y": 134 },
+      "label": "新对话",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 206 },
+      "label": "所有对话",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 280 },
+      "label": "探索 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 20, "width": 81, "x": 111, "y": 338 },
+      "label": "我的 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 22, "width": 22, "x": 272, "y": 337 },
+      "label": "探索 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 804 },
+      "label": "设置",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 33, "width": 32, "x": 329, "y": 89 },
+      "label": "返回",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 33, "width": 90, "x": 677, "y": 89 },
+      "label": "收起对话内容",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 33, "width": 32, "x": 775, "y": 89 },
+      "label": "浏览器",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1887 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1784 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1595 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1492 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -1389 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -1286 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1183 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -1080 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -977 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -874 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -771 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -633 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -530 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -392 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": -179 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 141, "x": 339, "y": -76 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": 62 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 142, "x": 339, "y": 275 },
+      "label": "查看处理过程",
+      "role": "AXDisclosureTriangle"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 24, "width": 293, "x": 392, "y": 359 },
+      "label": "目标HTML文件",
+      "role": "AXButton"
+    },
+    {
+      "enabled": false,
+      "frame": { "height": 36, "width": 36, "x": 790, "y": 783 },
+      "label": "发送",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 78, "x": 876, "y": 85 },
+      "label": "文件与输出",
+      "role": "AXCheckBox"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 28, "x": 1302, "y": 83 },
+      "label": "放大内容",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 28, "x": 1337, "y": 83 },
+      "label": "收起对话内容",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 30, "x": 878, "y": 126 },
+      "label": "重新载入文件",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 98, "x": 1231, "y": 126 },
+      "label": "在浏览器打开",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 30, "x": 1333, "y": 126 },
+      "label": "关闭页面",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 89, "x": 1203, "y": 163 },
+      "label": "打开 HTML…",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 65, "x": 1298, "y": 163 },
+      "label": "打开网址",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 23, "width": 101, "x": 878, "y": 201 },
+      "label": "清除本文件存档…",
+      "role": "AXButton"
+    }
+  ],
+  "pid": 33710,
+  "readsTextOrInputValues": false,
+  "roleCounts": {
+    "AXButton": 59,
+    "AXCheckBox": 2,
+    "AXDisclosureTriangle": 32,
+    "AXGroup": 73,
+    "AXHeading": 1,
+    "AXImage": 1,
+    "AXList": 1,
+    "AXListMarker": 4,
+    "AXPopUpButton": 4,
+    "AXScrollArea": 1,
+    "AXSplitter": 1,
+    "AXStaticText": 122,
+    "AXTextArea": 1,
+    "AXWebArea": 1,
+    "AXWindow": 1
+  },
+  "scrollAreas": [{ "height": 792, "width": 1280, "x": 95, "y": 78 }],
+  "terminalInputCount": 0,
+  "visitedRoles": 304,
+  "webAreas": [{ "height": 792, "width": 1280, "x": 95, "y": 78 }]
+}

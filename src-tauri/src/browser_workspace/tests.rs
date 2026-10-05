@@ -390,8 +390,10 @@ fn permission_metadata_requires_exact_ready_task_and_no_shutdown() {
 #[test]
 fn local_html_is_owned_but_cannot_be_shared_read_or_navigated() {
     let state = BrowserWorkspace::default();
-    let (id, _, initial) = state.reserve_html("a", "game.html".into()).unwrap();
-    let url = local_html::origin(id);
+    let (id, _, initial) = state
+        .reserve_html("a", "game.html".into(), html_storage("a"))
+        .unwrap();
+    let url = html_storage("a").origin;
     assert!(state.policy(id, url.as_str()));
     assert!(!state.policy(id, "https://example.com/"));
     let ready = state.event(id, 1, 1, url.as_str()).unwrap();
@@ -425,28 +427,78 @@ fn local_html_is_owned_but_cannot_be_shared_read_or_navigated() {
     assert!(state.with_read_ticket(&forged_ticket, |_| Ok(())).is_err());
     assert!(state.can_operate(id, None), "hide/show remains available");
     state.close("a", &initial.label).unwrap();
-    assert!(state.reserve_html("b", "new.html".into()).is_err());
+    assert!(
+        state
+            .reserve_html("b", "new.html".into(), html_storage("b"))
+            .is_err()
+    );
     state.close_failed(id);
-    assert!(state.reserve_html("b", "new.html".into()).is_err());
+    assert!(
+        state
+            .reserve_html("b", "new.html".into(), html_storage("b"))
+            .is_err()
+    );
     state.close("a", &initial.label).unwrap();
     state.acknowledge_close(id);
-    let (new_id, _, _) = state.reserve_html("b", "new.html".into()).unwrap();
-    assert_ne!(local_html::origin(new_id), url);
+    let (new_id, _, _) = state
+        .reserve_html("b", "new.html".into(), html_storage("b"))
+        .unwrap();
+    assert_ne!(new_id, id);
+    assert_ne!(html_storage("b").origin, url);
     assert!(state.event(id, 1, 1, url.as_str()).is_none());
 }
 
 #[test]
 fn local_html_unexpected_navigation_cannot_become_ready() {
     let state = BrowserWorkspace::default();
-    let (id, _, _) = state.reserve_html("a", "game.html".into()).unwrap();
+    let (id, _, _) = state
+        .reserve_html("a", "game.html".into(), html_storage("a"))
+        .unwrap();
     assert_eq!(
         state.event(id, 1, 1, "https://example.com/").unwrap().phase,
         "blocked"
     );
     assert!(
         state
-            .event(id, 1, 1, local_html::origin(id).as_str())
+            .event(id, 1, 1, html_storage("a").origin.as_str())
             .is_none()
     );
     assert!(state.permission_page("a").is_err());
+}
+
+fn html_storage(name: &str) -> local_html::StoragePartition {
+    local_html::StoragePartition {
+        identifier: "bb96ceef-5927-8d53-b974-c5ad6f7a1108".into(),
+        origin: Url::parse(&format!("https://file-{name}.invalid/")).unwrap(),
+    }
+}
+
+#[test]
+fn only_exact_active_local_page_can_select_its_storage_for_explicit_clear() {
+    let state = BrowserWorkspace::default();
+    let (id, _, _) = state
+        .reserve("public", Url::parse("https://example.com/").unwrap())
+        .unwrap();
+    let public = state.info(id).unwrap();
+    assert_eq!(public.local_storage_persistent, None);
+    assert!(state.local_storage("public", &public.label).is_err());
+    state.close("public", &public.label).unwrap();
+    state.acknowledge_close(id);
+    let (id, _, local) = state
+        .reserve_html("a", "game.html".into(), html_storage("a"))
+        .unwrap();
+    assert_eq!(
+        state.local_storage("a", &local.label).unwrap(),
+        html_storage("a")
+    );
+    assert_eq!(
+        local.local_storage_persistent,
+        Some(native::persistent_html_supported())
+    );
+    assert!(state.local_storage("b", &local.label).is_err());
+    assert!(state.local_storage("a", "old-page").is_err());
+    state.close("a", &local.label).unwrap();
+    assert!(state.local_storage("a", &local.label).is_err());
+    state.acknowledge_close(id);
+    assert!(state.local_storage("a", &local.label).is_err());
 }

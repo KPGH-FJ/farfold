@@ -16,10 +16,10 @@ export function BrowserSurfaceNotice() {
       className="browser-surface-notice"
       role={state.failed ? "alert" : "status"}
     >
-      <span>{state.failed ? S.transitionFailed : S.closing}</span>
+      <span>{state.failed ? S.transitionFailed : S.transitioning}</span>
       {state.failed && (
         <button type="button" onClick={() => browserSurfaceGuard.retry()}>
-          {S.retryClose}
+          {S.transitionRetryClose}
         </button>
       )}
     </div>

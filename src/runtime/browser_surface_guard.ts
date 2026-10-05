@@ -10,8 +10,18 @@ export interface BrowserSurfaceHold {
   release(): void;
 }
 
+export interface BrowserSurfaceRegistration {
+  release(): void;
+  /** Reserve the native footprint before showing; false while a transition holds it. */
+  reveal(): boolean;
+  requestClose(): void;
+}
+
 interface Surface {
   close: () => Promise<void>;
+  hide?: () => Promise<void>;
+  hidden: boolean;
+  closeRequested: boolean;
   failed: boolean;
 }
 
@@ -21,10 +31,11 @@ interface Hold {
 }
 
 /**
- * Coordinates UI transitions with the actual native close acknowledgement.
+ * Coordinates UI transitions with actual native hide/close acknowledgements.
  * It does not own native pages, permissions, or navigation history.
- * Register before starting an open; the close callback must await that open if
- * necessary. A failed close stays registered even after its UI unmounts.
+ * Register before starting an open; callbacks await that open if necessary.
+ * Navigation hides a retained page; explicit close retires only its owner.
+ * Failed operations stay registered for a user-triggered retry.
  */
 export class BrowserSurfaceGuard {
   private readonly surfaces = new Set<Surface>();
@@ -60,17 +71,38 @@ export class BrowserSurfaceGuard {
     return this.surfaces.size > 0;
   }
 
-  register(close: () => Promise<void>): () => void {
-    const surface: Surface = { close, failed: false };
+  register(
+    close: () => Promise<void>,
+    hide?: () => Promise<void>,
+  ): BrowserSurfaceRegistration {
+    const surface: Surface = {
+      close,
+      hide,
+      hidden: false,
+      closeRequested: false,
+      failed: false,
+    };
     this.surfaces.add(surface);
     for (const hold of this.holds) hold.ready = false;
     this.publish(true);
     this.advance();
-    return () => {
-      if (!this.surfaces.delete(surface)) return;
-      this.failed = [...this.surfaces].some((owner) => owner.failed);
-      this.publish(true);
-      this.advance();
+    return {
+      release: () => {
+        if (!this.surfaces.delete(surface)) return;
+        this.failed = [...this.surfaces].some((owner) => owner.failed);
+        this.publish(true);
+        this.advance();
+      },
+      reveal: () => {
+        if (!this.surfaces.has(surface) || !this.canOpen) return false;
+        surface.hidden = false;
+        return true;
+      },
+      requestClose: () => {
+        if (!this.surfaces.has(surface)) return;
+        surface.closeRequested = true;
+        this.advance();
+      },
     };
   }
 
@@ -109,8 +141,10 @@ export class BrowserSurfaceGuard {
   retry(): void {
     if (this.closing || !this.failed) return;
     this.failed = false;
-    // A departed view's failed cleanup still needs retry without a live hold.
-    this.closeRequested = true;
+    // A failed hide cannot safely resume. Retry closes the exact failed owners.
+    for (const owner of this.surfaces) {
+      if (owner.failed) owner.closeRequested = true;
+    }
     this.advance();
   }
 
@@ -119,11 +153,15 @@ export class BrowserSurfaceGuard {
       this.publish();
       return;
     }
-    const requested =
-      this.closeRequested || this.navigation !== null || this.holds.size > 0;
-    if (this.surfaces.size > 0) {
-      if (requested) this.startClose();
-      else this.publish();
+    const hideRequested = this.navigation !== null || this.holds.size > 0;
+    const owners = [...this.surfaces].filter(
+      (owner) =>
+        this.closeRequested ||
+        owner.closeRequested ||
+        (hideRequested && !owner.hidden),
+    );
+    if (owners.length > 0) {
+      this.startTransition(owners);
       return;
     }
 
@@ -141,22 +179,24 @@ export class BrowserSurfaceGuard {
     if (navigation?.sequence === this.navigationSequence) navigation.action();
   }
 
-  private startClose(): void {
-    const owners = [...this.surfaces];
+  private startTransition(owners: Surface[]): void {
+    const closeAll = this.closeRequested;
     this.closing = true;
     this.failed = false;
     for (const owner of owners) owner.failed = false;
     this.publish();
     const pending = owners.map((owner) => {
+      const closing = closeAll || owner.closeRequested || !owner.hide;
       let operation: Promise<void>;
       try {
-        operation = owner.close();
+        operation = closing ? owner.close() : owner.hide!();
       } catch {
         operation = Promise.reject();
       }
       return Promise.resolve(operation).then(
         () => {
-          this.surfaces.delete(owner);
+          if (closing) this.surfaces.delete(owner);
+          else owner.hidden = true;
         },
         () => {
           // A component may already have confirmed and released this owner.
@@ -180,6 +220,7 @@ export class BrowserSurfaceGuard {
         this.closing ||
         this.failed ||
         this.closeRequested ||
+        [...this.surfaces].some((owner) => owner.closeRequested) ||
         this.navigation !== null ||
         this.holds.size > 0,
     };

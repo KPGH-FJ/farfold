@@ -86,7 +86,7 @@ it("keeps the content footprint until native hide acknowledges without closing t
   const browser = render().find((node) => node.type === BrowserWorkspace)!;
   browser.props.onVisibilityChange(true);
   const closeNative = vi.fn(async () => {});
-  const unregister = guard.register(closeNative);
+  const { release: unregister } = guard.register(closeNative);
   render()
     .find((node) => node.props["aria-label"] === W.hideContent)!
     .props.onClick();

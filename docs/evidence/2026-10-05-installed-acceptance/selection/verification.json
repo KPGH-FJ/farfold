@@ -1,0 +1,96 @@
+{
+  "changes": [],
+  "index_empty": true,
+  "frontend": [
+    {
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/App.navigation.test.tsx",
+        "src/App.tsx",
+        "src/components/ArtifactPane.browser.test.tsx",
+        "src/components/ArtifactPane.tsx",
+        "src/components/BrowserSurfaceNotice.tsx",
+        "src/components/BrowserWorkspace.test.tsx",
+        "src/components/BrowserWorkspace.tsx",
+        "src/components/EmptyState.selection.test.tsx",
+        "src/components/EmptyState.tsx",
+        "src/components/FileDeliveryActions.test.tsx",
+        "src/components/FileDeliveryActions.tsx",
+        "src/components/ThreadView.preparation-return.test.tsx",
+        "src/components/ThreadView.tsx",
+        "src/runtime/browser_surface.ts",
+        "src/runtime/browser_surface_guard.test.ts",
+        "src/runtime/browser_surface_guard.ts",
+        "src/runtime/browser_workspace.test.ts",
+        "src/runtime/browser_workspace.ts",
+        "src/runtime/browser_workspace_strings.ts"
+      ],
+      "exit": 0,
+      "seconds": 0.74,
+      "log": "frontend-0.log"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "seconds": 4.17,
+      "log": "frontend-1.log"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exit": 0,
+      "seconds": 18.37,
+      "log": "frontend-2.log"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exit": 0,
+      "seconds": 4.64,
+      "log": "frontend-3.log"
+    }
+  ],
+  "backend": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exit": 0,
+      "seconds": 0.58,
+      "log": "backend-0.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 8.8,
+      "log": "backend-1.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exit": 0,
+      "seconds": 47.0,
+      "log": "backend-2.log"
+    }
+  ]
+}

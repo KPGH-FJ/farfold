@@ -1,5 +1,17 @@
 # 当前源码架构
 
+## 安装实测后的浏览器与文件修正（2026-10-05）
+
+`EmptyState` 的原 `new` Composer 通过稳定 portal 宿主进入已预开草稿的 `ThreadPage`，保持一个输入实例、原附件及 remember/send/finish 首发链；不另开模型请求、不提前写历史索引。`ThreadView` 可凭实际 nativeSessionId 观察网页工具准备状态，仍由真实请求和用户许可决定读取。App 最多保留当前任务、准备中的新草稿及唯一页面拥有者三个界面壳；隐藏任务不接受新动作，分享 controller 继续观察原请求，首发不卸载原网页。
+
+`browser_surface_guard` 的普通导航先等待真实隐藏回执，页面和待确认请求保持；明确关闭、替换页面、网页跳转或连接结束仍沿原失效链。隐藏失败的“关闭网页并继续”是用户明确选择的关闭，会取消原请求。BrowserWorkspace 卸载只定向关闭自身仍登记的 scope，覆盖替换后 owner，旧回调不抢回新任务；不维护第二个请求账本或重建 Agent 循环。
+
+本地 HTML 的 `projectDirectory` 来自当前任务 cwd，独立于文件核实回执的 root；后端规范化项目与文件路径，派生稳定 HTTPS 来源及专用 WebKit UUID 分区。macOS 14+使用官方持久分区，旧系统返回 `localStoragePersistent=false` 并使用临时分区，公开网页仍临时。文件内容继续经完整 VerifiedFile 回执读入内存，领先 CSP、无应用桥和禁止联网/嵌套内容保持；未扩大目录读取权限。分区不随文件内容更新改变，路径迁移不自动迁移存档。
+
+`browser_workspace_clear_html_storage` 只接受当前 task/label，从精确页面取分区，串行关闭后仅清该分区的数据。UI 先确认项目/文件；原生层的分区在途保护持续到官方回调，Rust 等待超时不提前开放重建，避免迟到清理影响新写入。存档由页面主动写入，不恢复JavaScript内存或Agent许可。文件交付“打开”统一分派到HTML或实际磁盘内容栏，再沿原重读/意见链；缺内部查看回调时才使用系统打开。
+
+工程与安装证据见[本轮安装验收](evidence/2026-10-05-installed-acceptance/README.md)。真实安装版、受控WK与源码核查分别记结果，不能互相替代。以下日期小节保留各次实现的历史边界；涉及任务导航和临时存档时以上文当前行为为准。
+
 ## 官方 Node 工具接入与共享反馈（2026-10-05）
 
 `acp_client/browser_capability.rs` 核 registry Codex 的直接入口或官方 npm 单入口公开 manifest，来源核定不替代 ACP 握手，也无版本/SHA准入。实际 Node 进程在 `process.rs` 按 Command 覆盖/继承语义固定 APP_SERVER_LOGS 与 CODEX_CONFIG 的有效值及缺省，只保存日志布尔和内联 MCP 三态；成功 spawn 后才公布到该连接。READY复用沿原事实，直接二进制不套 Node 条件。`session.rs` 在本次 new/load 入队前拒绝并撤销不安全offer；原因随现有 SessionEntry 保存到路由结束，BrowserSharing状态只返回受限原因，不保存秘密或新账本。

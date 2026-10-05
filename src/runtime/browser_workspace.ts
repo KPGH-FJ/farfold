@@ -17,6 +17,8 @@ export interface BrowserWorkspaceState extends BrowserWorkspaceIdentity {
   url: string;
   /** Present only for an isolated local HTML document; never a public share target. */
   localFileName?: string;
+  /** Local document store support confirmed by the native page receipt. */
+  localStoragePersistent?: boolean;
   phase: "loading" | "ready" | "blocked" | "error" | "closed";
   revision: number;
   /** Diagnostic only. Do not render arbitrary backend errors or page content as UI. */
@@ -40,6 +42,7 @@ export interface BrowserWorkspaceClient {
   openHtml(input: {
     taskKey: string;
     file: VerifiedFile;
+    projectDirectory: string;
     bounds: BrowserWorkspaceBounds;
   }): Promise<BrowserWorkspaceState>;
   navigate(
@@ -56,6 +59,7 @@ export interface BrowserWorkspaceClient {
   ): Promise<void>;
   snapshot(input: BrowserWorkspaceIdentity): Promise<BrowserWorkspaceSnapshot>;
   close(input: BrowserWorkspaceIdentity): Promise<unknown>;
+  clearHtmlStorage(input: BrowserWorkspaceIdentity): Promise<void>;
   /** Subscribe only to the trusted main webview's browser-workspace:state event. */
   listenState(
     listener: (state: BrowserWorkspaceState) => void,
@@ -81,6 +85,8 @@ export function createBrowserWorkspaceClient(
       invoke("browser_workspace_set_visible", { ...input }),
     snapshot: (input) => invoke("browser_workspace_snapshot", { ...input }),
     close: (input) => invoke("browser_workspace_close", { ...input }),
+    clearHtmlStorage: (input) =>
+      invoke("browser_workspace_clear_html_storage", { ...input }),
     listenState,
   };
 }
@@ -97,6 +103,7 @@ export class BrowserWorkspaceScope {
   private opening: Promise<BrowserWorkspaceState> | null = null;
   private closing: Promise<void> | null = null;
   private retired = false;
+  private clearing: Promise<void> | null = null;
   private visibility: Promise<void> = Promise.resolve();
   private readonly pendingStates = new Map<string, BrowserWorkspaceState>();
 
@@ -154,9 +161,18 @@ export class BrowserWorkspaceScope {
     );
   }
 
-  openHtml(file: VerifiedFile, bounds: BrowserWorkspaceBounds) {
+  openHtml(
+    file: VerifiedFile,
+    bounds: BrowserWorkspaceBounds,
+    projectDirectory: string,
+  ) {
     return this.openWith(() =>
-      this.client.openHtml({ taskKey: this.taskKey, file, bounds }),
+      this.client.openHtml({
+        taskKey: this.taskKey,
+        file,
+        bounds,
+        projectDirectory,
+      }),
     );
   }
 
@@ -206,6 +222,10 @@ export class BrowserWorkspaceScope {
     const opening = this.opening;
     const operation = this.visibility.then(async () => {
       await opening;
+      if (this.clearing) {
+        await this.clearing;
+        return;
+      }
       if (this.retired) throw new BrowserWorkspaceRetiredError();
       if (!this.state || this.state.phase === "closed") return;
       if (visible && (!bounds || !browserWorkspaceBounds(bounds))) {
@@ -217,7 +237,7 @@ export class BrowserWorkspaceScope {
         visible,
         ...(bounds ? { bounds } : {}),
       });
-      this.identity();
+      if (!this.clearing) this.identity();
     });
     // An unconfirmed hide/show is unsafe to recover by a later show. Closing the
     // same owner remains available and is coordinated by the application guard.
@@ -252,6 +272,30 @@ export class BrowserWorkspaceScope {
     return result;
   }
 
+  /** The backend closes and clears only this exact local page's own store. */
+  clearHtmlStorage(): Promise<void> {
+    if (this.clearing) return this.clearing;
+    const identity = this.identity();
+    if (
+      this.state?.localFileName === undefined ||
+      this.state.localStoragePersistent !== true
+    )
+      throw new BrowserWorkspaceRetiredError();
+    // No new read/show/navigation may race a destructive action on this owner.
+    this.retired = true;
+    const clearing = Promise.resolve().then(async () => {
+      await this.client.clearHtmlStorage(identity);
+      this.state = null;
+    });
+    this.clearing = clearing;
+    void clearing
+      .finally(() => {
+        if (this.clearing === clearing) this.clearing = null;
+      })
+      .catch(() => {});
+    return clearing;
+  }
+
   close(): Promise<void> {
     this.retired = true;
     if (this.closing) return this.closing;
@@ -267,6 +311,11 @@ export class BrowserWorkspaceScope {
         await this.visibility;
       } catch {
         // Failed visibility still retains its exact owner for real close ACK.
+      }
+      try {
+        await this.clearing;
+      } catch {
+        // Failed clear may already have closed the page; confirm its exact owner.
       }
       const state = this.state;
       if (state) {

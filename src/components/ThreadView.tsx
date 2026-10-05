@@ -225,7 +225,14 @@ export function ThreadView({
   artifactReturnFocusRef,
   contentMode,
   onContentModeChange,
+  onBrowserStateChange,
+  draftComposerRef,
 }: {
+  draftComposerRef?: React.Ref<HTMLDivElement>;
+  onBrowserStateChange?: (
+    taskKey: string,
+    page: BrowserWorkspaceState | null,
+  ) => void;
   contentMode?: "files" | "browser";
   onContentModeChange?: (mode: "files" | "browser") => void;
   header?: ReactNode;
@@ -245,8 +252,11 @@ export function ThreadView({
   const [browserPage, setBrowserPage] = useState<BrowserWorkspaceState | null>(
     null,
   );
+  useEffect(() => {
+    onBrowserStateChange?.(thread.key, browserPage);
+  }, [thread.key, browserPage, onBrowserStateChange]);
   const sharing = useBrowserSharing(
-    thread.identity === "established" && thread.nativeSessionId
+    thread.nativeSessionId
       ? {
           taskKey: thread.key,
           target: {
@@ -321,7 +331,7 @@ export function ThreadView({
   }, []);
   const [reconnecting, setReconnecting] = useState(false);
   const recover = () => {
-    if (reconnecting || creating) return;
+    if (!activeRef.current || reconnecting || creating) return;
     const key = thread.key;
     const request = ++recoveryRequest.current;
     setReconnecting(true);
@@ -937,121 +947,129 @@ export function ThreadView({
               </span>
             </div>
           )}
-          <Composer
-            contextChips={
-              browserPage?.taskKey === thread.key &&
-              browserPage.phase === "ready" ? (
-                <button
-                  type="button"
-                  className="desktop-page-chip"
-                  title={browserPage.url}
-                  onClick={viewBrowser}
-                >
-                  {browserPage.localFileName ? (
-                    <FileHtmlIcon size={14} aria-hidden="true" />
-                  ) : (
-                    <GlobeIcon size={14} aria-hidden="true" />
-                  )}
-                  {browserPage.localFileName ?? W.currentWebpage}
-                </button>
-              ) : null
-            }
-            thread={thread}
-            active={active}
-            editableWhenDisabled
-            autofocus={active}
-            draftKey={`session:${thread.key}`}
-            imageEnabled={imageOk}
-            embedContext={embedContext}
-            onGoSettings={onGoSettings}
-            suppressThreadOpenError={Boolean(thread.openError)}
-            disabled={draftReadRequired}
-            note={draftReadRequired ? C.readRequired : undefined}
-            prepareAction={draftReadRequired ? onGoSettings : undefined}
-            onSend={
-              thread.identity === "draft"
-                ? async (blocks) => {
-                    // Composer calls after attachments and draft persistence settle.
-                    if (
-                      thread.identity === "draft" &&
-                      pendingPreparationRead(thread)
-                    )
-                      throw new Error(C.readRequired);
-                    await threads.send(thread.key, blocks);
-                  }
-                : undefined
-            }
-            controls={
-              active ? (
-                <>
-                  <WorkspacePopover
-                    title={W.modelChoice}
-                    label={
-                      <>
-                        {agent && <AgentLogo card={agent} />}
-                        <span>{agent?.name ?? thread.agentId}</span>
-                        <span className="workspace-identity-model">
-                          {modelLabel}
-                        </span>
-                      </>
-                    }
+          {draftComposerRef ? (
+            <div ref={draftComposerRef} />
+          ) : (
+            <Composer
+              contextChips={
+                browserPage?.taskKey === thread.key &&
+                browserPage.phase === "ready" ? (
+                  <button
+                    type="button"
+                    className="desktop-page-chip"
+                    title={browserPage.url}
+                    onClick={viewBrowser}
                   >
-                    <dl className="workspace-identity">
-                      <dt>{STRINGS.empty.agentLabel}</dt>
-                      <dd>{agent?.name ?? thread.agentId}</dd>
-                      <dt>{STRINGS.service.source}</dt>
-                      <dd>{thread.service ? sourceLabel : W.existingSource}</dd>
-                      <dt>
-                        {choicesUnchecked
-                          ? W.returnedModel
-                          : STRINGS.switcher.modelLabel}
-                      </dt>
-                      <dd>{modelLabel}</dd>
-                    </dl>
-                    {!draftReadRequired &&
-                      thread.identity === "draft" &&
-                      !thread.resumed &&
-                      modelOption && (
-                        <ModelPicker
-                          option={modelOption}
-                          disabled={thread.configuring || thread.running}
-                          onPick={(value) => {
-                            if (pendingPreparationRead(thread)) return;
-                            void threads
-                              .setConfig(thread.key, modelOption.id, value)
-                              .catch(() => undefined);
-                          }}
-                        />
+                    {browserPage.localFileName ? (
+                      <FileHtmlIcon size={14} aria-hidden="true" />
+                    ) : (
+                      <GlobeIcon size={14} aria-hidden="true" />
+                    )}
+                    {browserPage.localFileName ?? W.currentWebpage}
+                  </button>
+                ) : null
+              }
+              thread={thread}
+              active={active}
+              editableWhenDisabled
+              autofocus={active}
+              draftKey={`session:${thread.key}`}
+              imageEnabled={imageOk}
+              embedContext={embedContext}
+              onGoSettings={onGoSettings}
+              suppressThreadOpenError={Boolean(thread.openError)}
+              disabled={draftReadRequired}
+              note={draftReadRequired ? C.readRequired : undefined}
+              prepareAction={draftReadRequired ? onGoSettings : undefined}
+              onSend={
+                thread.identity === "draft"
+                  ? async (blocks) => {
+                      // Composer calls after attachments and draft persistence settle.
+                      if (
+                        thread.identity === "draft" &&
+                        pendingPreparationRead(thread)
+                      )
+                        throw new Error(C.readRequired);
+                      await threads.send(thread.key, blocks);
+                    }
+                  : undefined
+              }
+              controls={
+                active ? (
+                  <>
+                    <WorkspacePopover
+                      title={W.modelChoice}
+                      label={
+                        <>
+                          {agent && <AgentLogo card={agent} />}
+                          <span>{agent?.name ?? thread.agentId}</span>
+                          <span className="workspace-identity-model">
+                            {modelLabel}
+                          </span>
+                        </>
+                      }
+                    >
+                      <dl className="workspace-identity">
+                        <dt>{STRINGS.empty.agentLabel}</dt>
+                        <dd>{agent?.name ?? thread.agentId}</dd>
+                        <dt>{STRINGS.service.source}</dt>
+                        <dd>
+                          {thread.service ? sourceLabel : W.existingSource}
+                        </dd>
+                        <dt>
+                          {choicesUnchecked
+                            ? W.returnedModel
+                            : STRINGS.switcher.modelLabel}
+                        </dt>
+                        <dd>{modelLabel}</dd>
+                      </dl>
+                      {!draftReadRequired &&
+                        thread.identity === "draft" &&
+                        !thread.resumed &&
+                        modelOption && (
+                          <ModelPicker
+                            option={modelOption}
+                            disabled={thread.configuring || thread.running}
+                            onPick={(value) => {
+                              if (pendingPreparationRead(thread)) return;
+                              void threads
+                                .setConfig(thread.key, modelOption.id, value)
+                                .catch(() => undefined);
+                            }}
+                          />
+                        )}
+                      {!draftReadRequired && (
+                        <SessionOptionsList thread={thread} composer />
                       )}
+                      <p className="workspace-control-note">
+                        {choicesUnchecked
+                          ? (configCheckMessage(
+                              thread.configCheck,
+                              thread.configOptions,
+                            ) ?? W.settingsUnchecked)
+                          : draftChoices
+                            ? W.settingsDraft
+                            : W.settingsFixed}
+                      </p>
+                      {onNew && (
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          onClick={onNew}
+                        >
+                          {W.newWithOtherSettings}
+                        </button>
+                      )}
+                    </WorkspacePopover>
+                    {!draftReadRequired && <ReasoningControl thread={thread} />}
                     {!draftReadRequired && (
-                      <SessionOptionsList thread={thread} composer />
+                      <PermissionControl thread={thread} />
                     )}
-                    <p className="workspace-control-note">
-                      {choicesUnchecked
-                        ? (configCheckMessage(
-                            thread.configCheck,
-                            thread.configOptions,
-                          ) ?? W.settingsUnchecked)
-                        : draftChoices
-                          ? W.settingsDraft
-                          : W.settingsFixed}
-                    </p>
-                    {onNew && (
-                      <button
-                        type="button"
-                        className="btn btn-ghost"
-                        onClick={onNew}
-                      >
-                        {W.newWithOtherSettings}
-                      </button>
-                    )}
-                  </WorkspacePopover>
-                  {!draftReadRequired && <ReasoningControl thread={thread} />}
-                  {!draftReadRequired && <PermissionControl thread={thread} />}
-                </>
-              ) : null
-            }
-          />
+                  </>
+                ) : null
+              }
+            />
+          )}
         </div>
       </div>
       <ArtifactPane

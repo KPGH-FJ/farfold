@@ -98,6 +98,7 @@ function client(): BrowserWorkspaceClient {
       observedAtMs: 1,
     })),
     close: vi.fn(async () => {}),
+    clearHtmlStorage: vi.fn(async () => {}),
     listenState: vi.fn(async () => () => {}),
   };
 }
@@ -165,6 +166,7 @@ it("does not open or read a page on mount, and renders the unshared boundary", a
 it("suppresses old address and snapshot on the first render of a different task", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -204,35 +206,37 @@ it("suppresses old address and snapshot on the first render of a different task"
   );
 });
 
-it("reports a failed hidden-pane closure with an exact-owner retry", async () => {
+it("hides an inactive task without closing its page, then restores the same owner", async () => {
   const backend = client();
   const guard = new BrowserSurfaceGuard();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
     guard,
   };
-  render(props);
-  await Promise.resolve();
-  let view = render(props);
-  find(view.tree, (node) => node.type === "input").props.onChange({
-    target: { value: "https://example.com/" },
-  });
-  view = render(props);
-  find(view.tree, (node) => node.type === "form").props.onSubmit({
-    preventDefault() {},
-  });
-  await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
-  vi.mocked(backend.close).mockRejectedValueOnce(new Error("close failed"));
+  await openedView(props);
   expect(render({ ...props, active: false }).html).toBe("");
-  await vi.waitFor(() => expect(guard.getSnapshot().failed).toBe(true));
-  guard.retry();
-  await vi.waitFor(() => expect(guard.getSnapshot().failed).toBe(false));
-  expect(backend.close).toHaveBeenLastCalledWith({
-    taskKey: "task-a",
-    label: "page-a",
-  });
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+      visible: false,
+    }),
+  );
+  expect(backend.close).not.toHaveBeenCalled();
+  expect(backend.listenState).toHaveBeenCalledOnce();
+  render(props);
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenLastCalledWith({
+      taskKey: "task-a",
+      label: "page-a",
+      visible: true,
+      bounds: { x: 600, y: 200, width: 400, height: 500 },
+    }),
+  );
+  expect(backend.open).toHaveBeenCalledOnce();
 });
 
 function deferred<T>() {
@@ -243,15 +247,21 @@ function deferred<T>() {
   return { promise, resolve };
 }
 
-it("registers an in-flight open before navigation and waits for its exact close ACK", async () => {
+it("registers an in-flight open before navigation and waits for its exact hide ACK", async () => {
   const backend = client();
   const guard = new BrowserSurfaceGuard();
   const opened =
     deferred<Awaited<ReturnType<BrowserWorkspaceClient["open"]>>>();
-  const closed = deferred<void>();
+  const hidden = deferred<void>();
   vi.mocked(backend.open).mockReturnValue(opened.promise);
-  vi.mocked(backend.close).mockReturnValue(closed.promise);
-  const props = { taskKey: "task-a", active: true, client: backend, guard };
+  vi.mocked(backend.setVisible).mockReturnValue(hidden.promise);
+  const props = {
+    projectDirectory: "/fixture-project",
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard,
+  };
   render(props);
   await Promise.resolve();
   let view = render(props);
@@ -274,20 +284,28 @@ it("registers an in-flight open before navigation and waits for its exact close 
     url: "https://example.com/",
   });
   await vi.waitFor(() =>
-    expect(backend.close).toHaveBeenCalledWith({
+    expect(backend.setVisible).toHaveBeenCalledWith({
       taskKey: "task-a",
       label: "late-page",
+      visible: false,
     }),
   );
   expect(navigate).not.toHaveBeenCalled();
-  closed.resolve();
+  hidden.resolve();
   await vi.waitFor(() => expect(navigate).toHaveBeenCalledOnce());
+  expect(backend.close).not.toHaveBeenCalled();
 });
 
-it("keeps a covering panel pending on close failure, then blocks a new open while it is shown", async () => {
+it("keeps a covering panel pending on hide failure, then explicitly retries closure before showing it", async () => {
   const backend = client();
   const guard = new BrowserSurfaceGuard();
-  const props = { taskKey: "task-a", active: true, client: backend, guard };
+  const props = {
+    projectDirectory: "/fixture-project",
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard,
+  };
   render(props);
   await Promise.resolve();
   let view = render(props);
@@ -299,8 +317,8 @@ it("keeps a covering panel pending on close failure, then blocks a new open whil
     preventDefault() {},
   });
   await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
-  vi.mocked(backend.close).mockRejectedValueOnce(
-    new Error("fixture close failure"),
+  vi.mocked(backend.setVisible).mockRejectedValueOnce(
+    new Error("fixture hide failure"),
   );
   const cover = guard.hold();
   await vi.waitFor(() => expect(guard.getSnapshot().failed).toBe(true));
@@ -318,7 +336,13 @@ it("keeps a covering panel pending on close failure, then blocks a new open whil
 it("offers a working local close retry after the first close fails", async () => {
   const backend = client();
   const guard = new BrowserSurfaceGuard();
-  const props = { taskKey: "task-a", active: true, client: backend, guard };
+  const props = {
+    projectDirectory: "/fixture-project",
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard,
+  };
   render(props);
   await Promise.resolve();
   let view = render(props);
@@ -368,6 +392,7 @@ it("keeps the exact page alive when collapsed and reports only actual hide ACK",
   const onVisibilityChange = vi.fn();
   const onStateChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -415,6 +440,7 @@ it("keeps the pane footprint after failed hide until a retried close really conf
   const guard = new BrowserSurfaceGuard();
   const onVisibilityChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -442,6 +468,7 @@ it("keeps the pane footprint after failed hide until a retried close really conf
 it("reloads through navigation even for the same URL and clears an earlier snapshot", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -482,6 +509,7 @@ it("holds the pane from open start until a collapsed late page really hides", as
   vi.mocked(backend.setVisible).mockReturnValueOnce(hidden.promise);
   const onVisibilityChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -529,6 +557,7 @@ it("holds a restoring page even when collapsed again before the show ACK", async
   const backend = client();
   const onVisibilityChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -572,6 +601,7 @@ it("releases held layout after an unreserved open is rejected and retains its er
   );
   const onVisibilityChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -620,6 +650,7 @@ it("opens a picked, verified local HTML without sharing controls or a public sna
   const backend = client();
   const onStateChange = vi.fn();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -632,6 +663,7 @@ it("opens a picked, verified local HTML without sharing controls or a public sna
   expect(backend.openHtml).toHaveBeenCalledWith({
     taskKey: "task-a",
     file: htmlFile,
+    projectDirectory: "/fixture-project",
     bounds: { x: 600, y: 200, width: 400, height: 500 },
   });
   const view = render(props);
@@ -653,6 +685,7 @@ it.each(["cancel", "hidden", "task"])(
     const picked = deferred<string | null>();
     h.chooseFile.mockReturnValueOnce(picked.promise);
     const props = {
+      projectDirectory: "/fixture-project",
       taskKey: "task-a",
       active: true,
       visible: true,
@@ -680,6 +713,7 @@ it("does not open after file verification completes for a hidden pane", async ()
   h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
   h.inspectSelected.mockReturnValueOnce(checked.promise);
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     visible: true,
@@ -699,6 +733,7 @@ it("does not open after file verification completes for a hidden pane", async ()
 it("rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -734,6 +769,7 @@ it("rechecks the same local file on explicit reload and waits for old-page closu
 it("keeps a local page visible when rechecking its changed source fails", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -751,6 +787,7 @@ it("keeps a local page visible when rechecking its changed source fails", async 
 it("releases local HTML before showing the public URL entry, without navigating the local owner", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -781,6 +818,7 @@ it("consumes a verified-file request once for the same visible task without reop
   const consumed = vi.fn();
   const request = { taskKey: "task-a", file: htmlFile };
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -802,6 +840,7 @@ it("consumes a verified-file request once for the same visible task without reop
 it("clears a closed old local page when the replacement open fails, and permits explicit reselection", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -834,6 +873,7 @@ it.each(["hidden", "other-task"])(
     const consumed = vi.fn();
     const request = { taskKey: "task-a", file: htmlFile };
     const props = {
+      projectDirectory: "/fixture-project",
       taskKey: kind === "other-task" ? "task-b" : "task-a",
       active: true,
       visible: kind !== "hidden",
@@ -858,6 +898,7 @@ it("does not let a late HTML verification clear a newer picker after leaving and
   h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
   h.inspectSelected.mockReturnValueOnce(oldCheck.promise);
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -901,6 +942,7 @@ it("does not let a late HTML verification clear a newer picker after leaving and
 it("opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -941,6 +983,7 @@ it("opens only the exact displayed local file receipt in the browser without reo
 it("keeps the embedded document and reports a failed browser open without substituting a new file", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -964,6 +1007,7 @@ it("keeps the embedded document and reports a failed browser open without substi
 it("a hidden local page cannot launch the external browser", async () => {
   const backend = client();
   const props = {
+    projectDirectory: "/fixture-project",
     taskKey: "task-a",
     active: true,
     client: backend,
@@ -978,4 +1022,305 @@ it("a hidden local page cannot launch the external browser", async () => {
   expect(button.props.disabled).toBe(true);
   button.props.onClick();
   expect(h.openFile).not.toHaveBeenCalled();
+});
+
+it("restores the same page after a sidebar layout transition without navigation or reopening", async () => {
+  const backend = client();
+  const guard = new BrowserSurfaceGuard();
+  const props = {
+    projectDirectory: "/fixture-project",
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard,
+  };
+  await openedView(props);
+  const layout = vi.fn();
+  guard.runLatest(layout);
+  await vi.waitFor(() => expect(layout).toHaveBeenCalledOnce());
+  render(props);
+  await vi.waitFor(() =>
+    expect(backend.setVisible).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        taskKey: "task-a",
+        label: "page-a",
+        visible: true,
+      }),
+    ),
+  );
+  expect(backend.open).toHaveBeenCalledOnce();
+  expect(backend.close).not.toHaveBeenCalled();
+});
+
+it("observes a real close while inactive and never restores that departed page", async () => {
+  const backend = client();
+  const guard = new BrowserSurfaceGuard();
+  let publish!: Parameters<BrowserWorkspaceClient["listenState"]>[0];
+  vi.mocked(backend.listenState).mockImplementation(async (listener) => {
+    publish = listener;
+    return () => {};
+  });
+  const props = {
+    projectDirectory: "/fixture-project",
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard,
+  };
+  await openedView(props);
+  render({ ...props, active: false });
+  publish({
+    taskKey: "task-a",
+    label: "page-a",
+    phase: "closed",
+    revision: 2,
+    url: "https://example.com/",
+  });
+  render({ ...props, active: false });
+  expect(guard.hasSurfaces).toBe(false);
+  vi.mocked(backend.setVisible).mockClear();
+  render(props);
+  await Promise.resolve();
+  expect(backend.setVisible).not.toHaveBeenCalledWith(
+    expect.objectContaining({ visible: true }),
+  );
+});
+
+function storageClient(persistent: boolean | undefined = true) {
+  const backend = client();
+  vi.mocked(backend.openHtml).mockResolvedValue({
+    taskKey: "task-a",
+    label: "local-a",
+    revision: 1,
+    phase: "ready",
+    url: "about:blank",
+    localFileName: "game.html",
+    ...(persistent === undefined ? {} : { localStoragePersistent: persistent }),
+  });
+  return backend;
+}
+
+it.each([true, false, "unknown"] as const)(
+  "uses the actual %s storage receipt for local hints",
+  async (kind) => {
+    const backend = storageClient(kind === "unknown" ? undefined : kind);
+    // Passing undefined uses the helper default; remove it explicitly here.
+    if (kind === "unknown")
+      vi.mocked(backend.openHtml).mockResolvedValue({
+        taskKey: "task-a",
+        label: "local-a",
+        revision: 1,
+        phase: "ready",
+        url: "about:blank",
+        localFileName: "game.html",
+      });
+    const props = {
+      taskKey: "task-a",
+      projectDirectory: "/fixture-project",
+      active: true,
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+    };
+    await localView(props);
+    const html = render(props).html;
+    expect(html).toContain(
+      kind === true
+        ? "本文件的页面存档会保留"
+        : kind === false
+          ? "当前系统使用临时页面存档"
+          : "尚未确认是否能保留页面存档",
+    );
+    expect(html.includes("清除本文件存档")).toBe(kind === true);
+  },
+);
+
+it("asks about this file before clearing, supports keeping it, and reports success only after the real receipt", async () => {
+  const backend = storageClient();
+  const props = {
+    taskKey: "task-a",
+    projectDirectory: "/fixture-project",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  clickLabel(render(props).tree, "清除本文件存档…");
+  expect(render(props).html).toContain(
+    "原 HTML 文件、其他文件及外部浏览器存档不受影响",
+  );
+  expect(backend.clearHtmlStorage).not.toHaveBeenCalled();
+  clickLabel(render(props).tree, "保留存档");
+  expect(render(props).html).not.toContain("关闭并清除存档");
+  clickLabel(render(props).tree, "清除本文件存档…");
+  const pending = deferred<void>();
+  vi.mocked(backend.clearHtmlStorage).mockReturnValueOnce(pending.promise);
+  const confirm = find(
+    render(props).tree,
+    (node) =>
+      node.type === "button" && node.props.children === "关闭并清除存档",
+  ).props.onClick;
+  confirm();
+  confirm();
+  await vi.waitFor(() =>
+    expect(backend.clearHtmlStorage).toHaveBeenCalledExactlyOnceWith({
+      taskKey: "task-a",
+      label: "local-a",
+    }),
+  );
+  expect(render(props).html).toContain("正在关闭页面并清除存档");
+  expect(render(props).html).not.toContain("本文件存档已清除");
+  pending.resolve();
+  await vi.waitFor(() =>
+    expect(render(props).html).toContain("本文件存档已清除"),
+  );
+  expect(backend.openHtml).toHaveBeenCalledOnce();
+  expect(props.guard.hasSurfaces).toBe(false);
+});
+
+it("does not report deletion success when closing succeeds but clearing fails", async () => {
+  const backend = storageClient();
+  const props = {
+    taskKey: "task-a",
+    projectDirectory: "/fixture-project",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  vi.mocked(backend.clearHtmlStorage).mockRejectedValueOnce(
+    new Error("deletion failed"),
+  );
+  clickLabel(render(props).tree, "清除本文件存档…");
+  clickLabel(render(props).tree, "关闭并清除存档");
+  await vi.waitFor(() =>
+    expect(render(props).html).toContain("未能确认存档已清除"),
+  );
+  expect(render(props).html).not.toContain("本文件存档已清除");
+  expect(backend.close).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task-a",
+    label: "local-a",
+  });
+});
+
+it.each(["hide", "inactive", "project", "task"])(
+  "invalidates a clear confirmation after %s and ignores its stale action",
+  async (kind) => {
+    const backend = storageClient();
+    const props = {
+      taskKey: "task-a",
+      projectDirectory: "/fixture-project",
+      active: true,
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+    };
+    await localView(props);
+    clickLabel(render(props).tree, "清除本文件存档…");
+    const confirm = find(
+      render(props).tree,
+      (node) =>
+        node.type === "button" && node.props.children === "关闭并清除存档",
+    ).props.onClick;
+    render({
+      ...props,
+      ...(kind === "hide"
+        ? { visible: false }
+        : kind === "inactive"
+          ? { active: false }
+          : kind === "project"
+            ? { projectDirectory: "/other-project" }
+            : { taskKey: "task-b" }),
+    });
+    confirm();
+    await Promise.resolve();
+    expect(backend.clearHtmlStorage).not.toHaveBeenCalled();
+  },
+);
+
+it("a late clear receipt cannot show success or clear state for another task", async () => {
+  const backend = storageClient();
+  const props = {
+    taskKey: "task-a",
+    projectDirectory: "/fixture-project",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await localView(props);
+  const pending = deferred<void>();
+  vi.mocked(backend.clearHtmlStorage).mockReturnValueOnce(pending.promise);
+  clickLabel(render(props).tree, "清除本文件存档…");
+  clickLabel(render(props).tree, "关闭并清除存档");
+  await vi.waitFor(() =>
+    expect(backend.clearHtmlStorage).toHaveBeenCalledOnce(),
+  );
+  const next = {
+    ...props,
+    taskKey: "task-b",
+    projectDirectory: "/other-project",
+  };
+  render(next);
+  pending.resolve();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(render(next).html).not.toContain("本文件存档已清除");
+  expect(render(next).html).not.toContain("game.html");
+  expect(backend.clearHtmlStorage).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task-a",
+    label: "local-a",
+  });
+});
+
+it("requires the task project for HTML instead of using the file access root", async () => {
+  const backend = storageClient();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+    htmlRequest: { taskKey: "task-a", file: htmlFile },
+  };
+  render(props);
+  await Promise.resolve();
+  render(props);
+  await vi.waitFor(() =>
+    expect(render(props).html).toContain("请先为当前对话选择工作文件夹"),
+  );
+  expect(backend.openHtml).not.toHaveBeenCalled();
+});
+
+it("never offers clear for public pages", async () => {
+  const backend = client();
+  const props = {
+    taskKey: "task-a",
+    active: true,
+    client: backend,
+    guard: new BrowserSurfaceGuard(),
+  };
+  await openedView(props);
+  expect(render(props).html).not.toContain("清除本文件存档");
+});
+
+it("closes the current HTML owner on unmount after replacing an earlier page", async () => {
+  const backend = client();
+  const guard = new BrowserSurfaceGuard();
+  const props = {
+    taskKey: "task-a",
+    projectDirectory: "/fixture-project",
+    active: true,
+    client: backend,
+    guard,
+  };
+  await openedView(props);
+  await localView(props);
+  expect(backend.close).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+  });
+  for (const effect of h.effects) effect.cleanup?.();
+  await vi.waitFor(() =>
+    expect(backend.close).toHaveBeenCalledWith({
+      taskKey: "task-a",
+      label: "local-a",
+    }),
+  );
+  await vi.waitFor(() => expect(guard.hasSurfaces).toBe(false));
 });

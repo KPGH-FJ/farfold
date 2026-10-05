@@ -6,6 +6,7 @@
 static BOOL shutdownStarted;
 static BOOL closingAll;
 static NSUInteger closeDepth;
+static NSMutableSet<NSUUID *> *clearingHTMLStores;
 
 @interface FFReadRequest : NSObject
 @property(nonatomic) void *context;
@@ -251,22 +252,34 @@ static BOOL resize(FFPublicBrowser *browser, double x, double y, double width, d
     return YES;
 }
 
-bool ff_browser_create(uint64_t browserID, void *parent_wk_view, double x, double y,
+static bool createBrowser(uint64_t browserID, void *parent_wk_view, double x, double y,
                        double width, double height, void *context,
                        FFBrowserPolicy policy, FFBrowserStatus status,
-                       FFBrowserRelease release) {
+                       FFBrowserRelease release, NSString *storageIdentifier) {
     if (![NSThread isMainThread] || shutdownStarted || closeDepth || !parent_wk_view || !boundsValid(x,y,width,height)) return false;
     WKWebView *parent = (__bridge WKWebView *)parent_wk_view;
     if (![parent isKindOfClass:WKWebView.class] || !parent.superview) return false;
     if (!registry) registry = [NSMutableDictionary new];
     if (registry[@(browserID)]) return false;
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-    configuration.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+    if (storageIdentifier) {
+        NSUUID *identifier = [[NSUUID alloc] initWithUUIDString:storageIdentifier];
+        if (!identifier || [identifier.UUIDString isEqualToString:@"00000000-0000-0000-0000-000000000000"] ||
+            [clearingHTMLStores containsObject:identifier]) return false;
+        if (@available(macOS 14.0, *)) {
+            configuration.websiteDataStore = [WKWebsiteDataStore dataStoreForIdentifier:identifier];
+        } else {
+            configuration.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+        }
+    } else {
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+    }
     configuration.userContentController = [WKUserContentController new];
     configuration.preferences.javaScriptCanOpenWindowsAutomatically = NO;
     FFPublicBrowser *browser = [FFPublicBrowser new];
     browser.navigationTokens = [NSMapTable strongToStrongObjectsMapTable];
     browser.parent = parent;
+    browser.localHTML = storageIdentifier != nil;
     browser.view = [[WKWebView alloc] initWithFrame:NSZeroRect configuration:configuration];
     browser.view.navigationDelegate = browser;
     browser.view.UIDelegate = browser;
@@ -283,6 +296,57 @@ bool ff_browser_create(uint64_t browserID, void *parent_wk_view, double x, doubl
     [parent.superview addSubview:browser.view positioned:NSWindowAbove relativeTo:parent];
     [browser observeGeometry];
     return true;
+}
+
+bool ff_browser_create(uint64_t browserID, void *parent_wk_view, double x, double y,
+                       double width, double height, void *context,
+                       FFBrowserPolicy policy, FFBrowserStatus status,
+                       FFBrowserRelease release) {
+    return createBrowser(browserID,parent_wk_view,x,y,width,height,context,policy,status,release,nil);
+}
+
+bool ff_browser_create_html(uint64_t browserID, void *parent_wk_view, double x, double y,
+                       double width, double height, void *context,
+                       FFBrowserPolicy policy, FFBrowserStatus status,
+                       FFBrowserRelease release, const char *storage_identifier) {
+    NSString *identifier = storage_identifier ? [NSString stringWithUTF8String:storage_identifier] : nil;
+    return identifier && createBrowser(browserID,parent_wk_view,x,y,width,height,context,policy,status,release,identifier);
+}
+
+bool ff_browser_persistent_html_supported(void) {
+    if (@available(macOS 14.0, *)) return true;
+    return false;
+}
+
+bool ff_browser_clear_html_storage(const char *storage_identifier, void *context, FFBrowserRead callback) {
+    if (![NSThread isMainThread] || shutdownStarted || closeDepth || !storage_identifier || !callback) return false;
+    NSString *text = [NSString stringWithUTF8String:storage_identifier];
+    NSUUID *identifier = text ? [[NSUUID alloc] initWithUUIDString:text] : nil;
+    if (!identifier || [identifier.UUIDString isEqualToString:@"00000000-0000-0000-0000-000000000000"]) return false;
+    if (@available(macOS 14.0, *)) {
+        if ([clearingHTMLStores containsObject:identifier]) return false;
+        for (FFPublicBrowser *browser in registry.allValues) {
+            if ([browser.view.configuration.websiteDataStore.identifier isEqual:identifier]) return false;
+        }
+        // WebKit can retain the closed view's store while finishing its own
+        // asynchronous work. Removing the whole store then reports "in use".
+        // Clear data through this exact dedicated store instead; keeping the
+        // opaque store identity does not preserve the file's page storage.
+        WKWebsiteDataStore *store = [WKWebsiteDataStore dataStoreForIdentifier:identifier];
+        if (!clearingHTMLStores) clearingHTMLStores = [NSMutableSet new];
+        [clearingHTMLStores addObject:identifier];
+        [store removeDataOfTypes:WKWebsiteDataStore.allWebsiteDataTypes
+                  modifiedSince:NSDate.distantPast completionHandler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Keep this gate even if the Rust caller's wait timed out: a
+                // late clear must never remove a newly opened page's writes.
+                [clearingHTMLStores removeObject:identifier];
+                callback(context, "{}", NULL);
+            });
+        }];
+        return true;
+    }
+    return false;
 }
 
 bool ff_browser_navigate(uint64_t browserID, uint64_t navigation, const char *url) {

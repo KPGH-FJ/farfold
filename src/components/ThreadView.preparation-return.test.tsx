@@ -6,6 +6,8 @@ import {
   type ReactNode,
 } from "react";
 
+const observedSharing = vi.hoisted(() => vi.fn());
+
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useRef: (initial: unknown) => ({ current: initial }),
@@ -32,7 +34,13 @@ vi.mock("../runtime/browser_sharing", async (original) => {
     stop: noop,
     respond: noop,
   };
-  return { ...actual, useBrowserSharing: () => empty };
+  return {
+    ...actual,
+    useBrowserSharing: (...args: unknown[]) => {
+      observedSharing(...args);
+      return empty;
+    },
+  };
 });
 vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue(null),
@@ -158,3 +166,43 @@ it.each(["existing-conversation", "other-directory", "api-source"])(
     }
   },
 );
+
+it("observes the actual prepared target while reserving the sole editor for the original first-send path", () => {
+  const thread = freshThreadState(
+    "prepared-browser",
+    "fixture-agent",
+    "/fixture",
+    "real-draft-id",
+  );
+  thread.identity = "draft";
+  const editor = vi.fn();
+  const tree = nodes(
+    ThreadView({
+      thread,
+      active: true,
+      agents: [],
+      onGoSettings: vi.fn(),
+      onOpened: vi.fn(),
+      draftComposerRef: editor,
+    }),
+  );
+  expect(observedSharing).toHaveBeenLastCalledWith(
+    {
+      taskKey: thread.key,
+      target: {
+        agentId: thread.agentId,
+        cwd: thread.cwd,
+        nativeSessionId: thread.nativeSessionId,
+      },
+    },
+    null,
+    true,
+    expect.anything(),
+    false,
+  );
+  expect(tree.some((node) => node.type === Composer)).toBe(false);
+  expect(
+    tree.some((node) => node.type === "div" && node.props.ref === editor),
+  ).toBe(true);
+  expect(thread.identity).toBe("draft");
+});

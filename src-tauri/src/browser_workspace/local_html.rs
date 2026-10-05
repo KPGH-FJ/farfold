@@ -1,16 +1,72 @@
 //! Executable previews of one verified UTF-8 HTML file. No directory/file grant
 //! is given to WebKit; CSP precedes every byte of the user document.
 use crate::file_delivery::{self, VerifiedFile};
+use sha2::{Digest, Sha256};
 use std::path::Path;
 use tauri::Url;
 
 pub(super) const CSP: &str = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; media-src data: blob:; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'";
 
-pub(super) fn origin(id: u64) -> Url {
-    Url::parse(&format!("https://preview-{id}.invalid/")).expect("generated HTTPS origin")
+/// Each verified file gets a separate WebKit data store inside its project
+/// scope. No directory permission, file bytes, path or login state is copied in.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(super) struct StoragePartition {
+    pub identifier: String,
+    pub origin: Url,
 }
 
-pub(super) fn read_document(file: &VerifiedFile) -> Result<(String, String), String> {
+impl StoragePartition {
+    fn for_file(project_directory: &str, file: &VerifiedFile) -> Self {
+        let mut digest = Sha256::new();
+        digest.update(b"farfold-offline-html-storage-v1\0");
+        // Length delimiters keep even unusual canonical paths unambiguous.
+        for path in [project_directory, &file.resolved_path] {
+            digest.update((path.len() as u64).to_be_bytes());
+            digest.update(path.as_bytes());
+        }
+        let hash = digest.finalize();
+        let mut bytes: [u8; 16] = hash[..16].try_into().expect("digest length");
+        // RFC 9562 version 8: application-defined, never the forbidden nil UUID.
+        bytes[6] = (bytes[6] & 0x0f) | 0x80;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        let hex = bytes.iter().map(|v| format!("{v:02x}")).collect::<String>();
+        let identifier = format!(
+            "{}-{}-{}-{}-{}",
+            &hex[..8],
+            &hex[8..12],
+            &hex[12..16],
+            &hex[16..20],
+            &hex[20..]
+        );
+        let origin = Url::parse(&format!("https://file-{hex}.invalid/")).expect("generated origin");
+        Self { identifier, origin }
+    }
+}
+
+pub(super) struct Document {
+    pub name: String,
+    pub html: String,
+    pub storage: StoragePartition,
+}
+
+pub(super) fn read_document(
+    project_directory: &Path,
+    file: &VerifiedFile,
+) -> Result<Document, String> {
+    // The trusted main UI supplies the current task's work folder. It names a
+    // storage partition only; it is never used to read this file or grant WK a
+    // directory. A file receipt's root differs between explicit file picks and
+    // project-relative delivery, so it cannot be used as the project identity.
+    if !project_directory.is_absolute() {
+        return Err("工作文件夹位置无效，请重新选择".into());
+    }
+    let project = project_directory
+        .canonicalize()
+        .map_err(|_| "工作文件夹已无法访问，请重新选择")?;
+    if !project.is_dir() {
+        return Err("工作文件夹已无法访问，请重新选择".into());
+    }
+    let project = project.to_str().ok_or("工作文件夹位置无效，请重新选择")?;
     if !matches!(
         Path::new(&file.resolved_path)
             .extension()
@@ -27,7 +83,12 @@ pub(super) fn read_document(file: &VerifiedFile) -> Result<(String, String), Str
     if preview.text.contains('\0') {
         return Err("网页文件含有不支持的文字，请检查文件编码".into());
     }
-    Ok((preview.file.name, document(&preview.text)))
+    let storage = StoragePartition::for_file(project, &preview.file);
+    Ok(Document {
+        name: preview.file.name,
+        html: document(&preview.text),
+        storage,
+    })
 }
 
 fn document(html: &str) -> String {
@@ -51,8 +112,9 @@ mod tests {
         let input = "<!doctype html><html lang='zh'><head><title>fixture</title></head><body><script>localStorage.setItem('fixture','ok')</script><svg></svg></body></html>";
         fs::write(&path, input).unwrap();
         let file = file_delivery::inspect(dir.path(), &path).unwrap();
-        let (name, result) = read_document(&file).unwrap();
-        assert_eq!(name, "game.HTML");
+        let result = read_document(dir.path(), &file).unwrap();
+        assert_eq!(result.name, "game.HTML");
+        let result = result.html;
         assert!(result.starts_with("<!doctype html><html><head><meta charset="));
         assert!(result.find(CSP).unwrap() < result.find("<script>").unwrap());
         assert!(result.contains(input));
@@ -66,16 +128,22 @@ mod tests {
         fs::write(&path, "<h1>old</h1>").unwrap();
         let file = file_delivery::inspect(dir.path(), &path).unwrap();
         fs::write(&path, "<h1>new</h1>").unwrap();
-        assert!(read_document(&file).is_err());
+        assert!(read_document(dir.path(), &file).is_err());
         let file = file_delivery::inspect(dir.path(), &path).unwrap();
         let mut spoofed = file.clone();
         spoofed.name = "another.htm".into();
-        assert!(read_document(&spoofed).is_err());
+        assert!(read_document(dir.path(), &spoofed).is_err());
         fs::remove_file(&path).unwrap();
-        assert!(read_document(&file).is_err());
+        assert!(read_document(dir.path(), &file).is_err());
         let text = dir.path().join("source.txt");
         fs::write(&text, "<h1>source</h1>").unwrap();
-        assert!(read_document(&file_delivery::inspect(dir.path(), &text).unwrap()).is_err());
+        assert!(
+            read_document(
+                dir.path(),
+                &file_delivery::inspect(dir.path(), &text).unwrap()
+            )
+            .is_err()
+        );
     }
 
     #[test]
@@ -89,13 +157,118 @@ mod tests {
         ] {
             fs::write(&path, bytes).unwrap();
             let file = file_delivery::inspect(dir.path(), &path).unwrap();
-            assert!(read_document(&file).is_err());
+            assert!(read_document(dir.path(), &file).is_err());
         }
     }
 
     #[test]
-    fn origins_are_unique_and_never_admitted_as_public_pages() {
-        assert_ne!(origin(1), origin(2));
-        assert!(super::super::policy::validate_public_url(origin(1).as_str()).is_err());
+    fn storage_survives_file_updates_but_isolated_by_project_and_canonical_file() {
+        let dir = tempfile::tempdir().unwrap();
+        let first = dir.path().join("game.html");
+        let second = dir.path().join("other.html");
+        fs::write(&first, "<p>first</p>").unwrap();
+        fs::write(&second, "<p>second</p>").unwrap();
+        let original = read_document(
+            dir.path(),
+            &file_delivery::inspect(dir.path(), &first).unwrap(),
+        )
+        .unwrap()
+        .storage;
+        fs::write(&first, "<p>updated</p>").unwrap();
+        assert_eq!(
+            original,
+            read_document(
+                dir.path(),
+                &file_delivery::inspect(dir.path(), &first).unwrap()
+            )
+            .unwrap()
+            .storage
+        );
+        assert_ne!(
+            original,
+            read_document(
+                dir.path(),
+                &file_delivery::inspect(dir.path(), &second).unwrap()
+            )
+            .unwrap()
+            .storage
+        );
+        let other_root = tempfile::tempdir().unwrap();
+        let other_file = other_root.path().join("game.html");
+        fs::write(&other_file, "<p>first</p>").unwrap();
+        assert_ne!(
+            original,
+            read_document(
+                other_root.path(),
+                &file_delivery::inspect(other_root.path(), &other_file).unwrap()
+            )
+            .unwrap()
+            .storage
+        );
+        assert!(super::super::policy::validate_public_url(original.origin.as_str()).is_err());
+        assert!(
+            !original
+                .origin
+                .as_str()
+                .contains(dir.path().to_str().unwrap())
+        );
+        assert_eq!(original.identifier.len(), 36);
+        assert!(original.origin.host_str().unwrap().len() < 64);
+    }
+
+    #[test]
+    fn storage_project_is_independent_of_file_receipt_root_and_path_alias() {
+        use std::os::unix::fs::symlink;
+        let dir = tempfile::tempdir().unwrap();
+        let folder = dir.path().join("nested");
+        fs::create_dir(&folder).unwrap();
+        let file = folder.join("game.html");
+        let alias = folder.join("alias.html");
+        fs::write(&file, "<p>file</p>").unwrap();
+        symlink(&file, &alias).unwrap();
+        let project_receipt = file_delivery::inspect(dir.path(), &file).unwrap();
+        let explicit_file_receipt = file_delivery::inspect(&folder, &file).unwrap();
+        assert_ne!(project_receipt.root, explicit_file_receipt.root);
+        let storage = read_document(dir.path(), &project_receipt).unwrap().storage;
+        assert_eq!(
+            storage,
+            read_document(dir.path(), &explicit_file_receipt)
+                .unwrap()
+                .storage
+        );
+        let file_alias = file_delivery::inspect(dir.path(), &alias).unwrap();
+        assert_eq!(
+            storage,
+            read_document(dir.path(), &file_alias).unwrap().storage
+        );
+        let project_alias = dir.path().join("project-alias");
+        symlink(dir.path(), &project_alias).unwrap();
+        assert_eq!(
+            storage,
+            read_document(&project_alias, &explicit_file_receipt)
+                .unwrap()
+                .storage
+        );
+        let other_project = tempfile::tempdir().unwrap();
+        assert_ne!(
+            storage,
+            read_document(other_project.path(), &explicit_file_receipt)
+                .unwrap()
+                .storage
+        );
+        assert_ne!(
+            storage,
+            read_document(&folder, &explicit_file_receipt)
+                .unwrap()
+                .storage
+        );
+        let escape = folder.join("escape.html");
+        let target = other_project.path().join("outside.html");
+        fs::write(&target, "<p>outside</p>").unwrap();
+        symlink(&target, &escape).unwrap();
+        assert!(file_delivery::inspect(dir.path(), &escape).is_err());
+        assert!(read_document(Path::new("relative"), &project_receipt).is_err());
+        assert!(read_document(&file, &project_receipt).is_err());
+        assert!(read_document(&dir.path().join("missing"), &project_receipt).is_err());
     }
 }

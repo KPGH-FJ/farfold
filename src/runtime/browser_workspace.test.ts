@@ -54,6 +54,7 @@ function fakeClient() {
       observedAtMs: 1,
     })),
     close: vi.fn(async () => {}),
+    clearHtmlStorage: vi.fn(async () => {}),
     listenState: vi.fn(async () => () => {}),
   } satisfies BrowserWorkspaceClient;
 }
@@ -363,10 +364,16 @@ const verifiedHtml = {
 it("passes the exact verified HTML receipt to the isolated native command", async () => {
   const invoke = vi.fn(async () => ({ ...page(), localFileName: "game.html" }));
   const client = createBrowserWorkspaceClient(invoke as any, vi.fn());
-  await client.openHtml({ taskKey: "task-a", file: verifiedHtml, bounds });
+  await client.openHtml({
+    taskKey: "task-a",
+    file: verifiedHtml,
+    bounds,
+    projectDirectory: "/project",
+  });
   expect(invoke).toHaveBeenCalledWith("browser_workspace_open_html", {
     taskKey: "task-a",
     file: verifiedHtml,
+    projectDirectory: "/project",
     bounds,
   });
 });
@@ -378,7 +385,7 @@ it("waits for public close acknowledgement before opening a local document", asy
   const closed = deferred<void>();
   client.close.mockReturnValueOnce(closed.promise);
   const next = new BrowserWorkspaceScope(client, "task-a", old);
-  const opening = next.openHtml(verifiedHtml, bounds);
+  const opening = next.openHtml(verifiedHtml, bounds, "/project");
   await vi.waitFor(() => expect(client.close).toHaveBeenCalledOnce());
   expect(client.openHtml).not.toHaveBeenCalled();
   closed.resolve();
@@ -386,6 +393,7 @@ it("waits for public close acknowledgement before opening a local document", asy
   expect(client.openHtml).toHaveBeenCalledWith({
     taskKey: "task-a",
     file: verifiedHtml,
+    projectDirectory: "/project",
     bounds,
   });
   await expect(next.snapshot()).rejects.toBeInstanceOf(
@@ -399,7 +407,7 @@ it("closes a late local creation and does not give its successor a public naviga
   const opened = deferred<Awaited<ReturnType<typeof client.openHtml>>>();
   client.openHtml.mockReturnValueOnce(opened.promise);
   const old = new BrowserWorkspaceScope(client, "task-a");
-  const opening = old.openHtml(verifiedHtml, bounds);
+  const opening = old.openHtml(verifiedHtml, bounds, "/project");
   const rejection = expect(opening).rejects.toBeInstanceOf(
     BrowserWorkspaceRetiredError,
   );
@@ -413,4 +421,114 @@ it("closes a late local creation and does not give its successor a public naviga
   expect(client.close).toHaveBeenCalledOnce();
   expect(client.navigate).not.toHaveBeenCalled();
   expect(client.open).toHaveBeenCalledOnce();
+});
+
+it("clears only the exact persistent local owner once and makes cleanup await its receipt", async () => {
+  const client = fakeClient();
+  client.openHtml.mockResolvedValueOnce({
+    ...page(),
+    url: "about:blank",
+    localFileName: "game.html",
+    localStoragePersistent: true,
+  });
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  await owner.openHtml(verifiedHtml, bounds, "/project");
+  const cleared = deferred<void>();
+  client.clearHtmlStorage.mockReturnValue(cleared.promise);
+  const first = owner.clearHtmlStorage();
+  expect(owner.clearHtmlStorage()).toBe(first);
+  const closing = owner.close();
+  await vi.waitFor(() =>
+    expect(client.clearHtmlStorage).toHaveBeenCalledOnce(),
+  );
+  expect(client.clearHtmlStorage).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+  });
+  expect(client.close).not.toHaveBeenCalled();
+  await expect(owner.navigate("https://example.com/")).rejects.toBeInstanceOf(
+    BrowserWorkspaceRetiredError,
+  );
+  cleared.resolve();
+  await Promise.all([first, closing]);
+  expect(owner.current).toBeNull();
+  expect(client.close).not.toHaveBeenCalled();
+});
+
+it.each([false, undefined])(
+  "cannot clear a local store without a true persistence receipt (%s)",
+  async (persistent) => {
+    const client = fakeClient();
+    client.openHtml.mockResolvedValueOnce({
+      ...page(),
+      localFileName: "game.html",
+      localStoragePersistent: persistent,
+    });
+    const owner = new BrowserWorkspaceScope(client, "task-a");
+    await owner.openHtml(verifiedHtml, bounds, "/project");
+    expect(() => owner.clearHtmlStorage()).toThrow(
+      BrowserWorkspaceRetiredError,
+    );
+    expect(client.clearHtmlStorage).not.toHaveBeenCalled();
+  },
+);
+
+it("does not clear public-page data and retains exact closure after a failed local deletion", async () => {
+  const client = fakeClient();
+  const publicPage = new BrowserWorkspaceScope(client, "task-a");
+  await publicPage.open("https://example.com/", bounds);
+  expect(() => publicPage.clearHtmlStorage()).toThrow(
+    BrowserWorkspaceRetiredError,
+  );
+  client.openHtml.mockResolvedValueOnce({
+    ...page(),
+    localFileName: "game.html",
+    localStoragePersistent: true,
+  });
+  const local = new BrowserWorkspaceScope(client, "task-a", publicPage);
+  await local.openHtml(verifiedHtml, bounds, "/project");
+  client.clearHtmlStorage.mockRejectedValueOnce(new Error("delete failed"));
+  await expect(local.clearHtmlStorage()).rejects.toThrow("delete failed");
+  expect(local.isRetired).toBe(true);
+  expect(local.current?.label).toBe("page-a");
+  await local.close();
+  expect(local.current).toBeNull();
+  expect(client.clearHtmlStorage).toHaveBeenCalledOnce();
+});
+
+it("maps an explicit clear to the identity-only trusted command", async () => {
+  const invoke = vi.fn(async () => undefined);
+  const client = createBrowserWorkspaceClient(invoke as any, vi.fn());
+  await client.clearHtmlStorage({ taskKey: "task-a", label: "local-a" });
+  expect(invoke).toHaveBeenCalledExactlyOnceWith(
+    "browser_workspace_clear_html_storage",
+    { taskKey: "task-a", label: "local-a" },
+  );
+});
+
+it("orders a clear with an already showing page and a later hide without treating it as a new page", async () => {
+  const client = fakeClient();
+  client.openHtml.mockResolvedValueOnce({
+    ...page(),
+    localFileName: "game.html",
+    localStoragePersistent: true,
+  });
+  const owner = new BrowserWorkspaceScope(client, "task-a");
+  await owner.openHtml(verifiedHtml, bounds, "/project");
+  const shown = deferred<void>();
+  const cleared = deferred<void>();
+  client.setVisible.mockReturnValueOnce(shown.promise);
+  client.clearHtmlStorage.mockReturnValueOnce(cleared.promise);
+  const showing = owner.setVisible(true, bounds);
+  await vi.waitFor(() => expect(client.setVisible).toHaveBeenCalledOnce());
+  const clearing = owner.clearHtmlStorage();
+  const hiding = owner.setVisible(false);
+  shown.resolve();
+  await showing;
+  expect(client.setVisible).toHaveBeenCalledOnce();
+  cleared.resolve();
+  await Promise.all([clearing, hiding]);
+  expect(owner.current).toBeNull();
+  expect(client.close).not.toHaveBeenCalled();
+  expect(client.openHtml).toHaveBeenCalledOnce();
 });

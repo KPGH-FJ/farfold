@@ -1,0 +1,12 @@
+
+> farfold@0.1.7 test /Users/tw/Documents/Codex/2026-10-03/task-3/acceptance-20261005/selection/source
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Documents/Codex/2026-10-03/task-3/acceptance-20261005/selection/source
+
+
+ Test Files  154 passed (154)
+      Tests  1606 passed (1606)
+   Start at  13:32:40
+   Duration  18.08s (transform 4.08s, setup 0ms, import 115.24s, tests 23.23s, environment 11ms)

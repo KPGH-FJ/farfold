@@ -1,0 +1,11 @@
+{
+  "scope": "Actual expanded read_page_snapshot tool detail in the exact synthetic conversation; source record retained locally only",
+  "title": "Example Domain",
+  "url": "https://example.com/",
+  "nonemptyPageTextObserved": true,
+  "matchingRenderedRepresentations": 2,
+  "fullPageTextIncluded": false,
+  "taskAndPageIdentifiersIncluded": false,
+  "sourceReceiptSha256": "aeb32e59e736952e5378d34e59cfcc12eb296e7324cce6f2553db0e36f0bcc63",
+  "notDerivedFromAssistantAnswer": true
+}

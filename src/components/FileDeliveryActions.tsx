@@ -234,14 +234,15 @@ export function FileDeliveryControls({
               className="btn btn-ghost"
               disabled={disabled}
               onClick={() => {
-                if (htmlFile && onOpenHtml && file) {
-                  if (
-                    mounted.current &&
-                    activeRef.current &&
-                    busy.current === null
-                  )
-                    onOpenHtml(file);
-                } else void actOnFile(fileDelivery.open, S.opened);
+                if (
+                  !mounted.current ||
+                  !activeRef.current ||
+                  busy.current !== null
+                )
+                  return;
+                if (htmlFile && onOpenHtml) onOpenHtml(file);
+                else if (onOpenFile) onOpenFile(file.resolvedPath);
+                else void actOnFile(fileDelivery.open, S.opened);
               }}
             >
               {htmlFile && onOpenHtml ? S.openHtml : S.open}

@@ -1,0 +1,82 @@
+{
+  "activityCounters": [],
+  "fixtureFolderMatch": false,
+  "knownControls": [
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 78, "x": 106, "y": 85 },
+      "label": "文件与输出",
+      "role": "AXCheckBox"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 29, "width": 28, "x": 1107, "y": 83 },
+      "label": "收起对话内容",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 30, "x": 108, "y": 126 },
+      "label": "重新载入文件",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 98, "x": 1001, "y": 126 },
+      "label": "在浏览器打开",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 32, "width": 30, "x": 1103, "y": 126 },
+      "label": "关闭页面",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 89, "x": 973, "y": 163 },
+      "label": "打开 HTML…",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 25, "width": 65, "x": 1068, "y": 163 },
+      "label": "打开网址",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 23, "width": 101, "x": 108, "y": 201 },
+      "label": "清除本文件存档…",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 42, "width": 129, "x": 380, "y": 448 },
+      "label": "写入验收存档",
+      "role": "AXButton"
+    }
+  ],
+  "pid": 33710,
+  "readsTextOrInputValues": false,
+  "roleCounts": {
+    "AXButton": 11,
+    "AXCheckBox": 2,
+    "AXGroup": 22,
+    "AXHeading": 1,
+    "AXScrollArea": 2,
+    "AXStaticText": 9,
+    "AXWebArea": 2,
+    "AXWindow": 1
+  },
+  "scrollAreas": [
+    { "height": 692, "width": 1050, "x": 95, "y": 78 },
+    { "height": 539, "width": 1049, "x": 96, "y": 231 }
+  ],
+  "terminalInputCount": 0,
+  "visitedRoles": 50,
+  "webAreas": [
+    { "height": 692, "width": 1050, "x": 95, "y": 78 },
+    { "height": 539, "width": 1049, "x": 96, "y": 231 }
+  ]
+}

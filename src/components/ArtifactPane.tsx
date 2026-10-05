@@ -446,6 +446,7 @@ export function ArtifactPane({
       <div className="artifact-browser-body" hidden={!showingBrowser}>
         <BrowserWorkspace
           taskKey={thread.key}
+          projectDirectory={thread.cwd}
           active={active}
           client={browserWorkspaceClient}
           visible={active && open && contentMode === "browser"}

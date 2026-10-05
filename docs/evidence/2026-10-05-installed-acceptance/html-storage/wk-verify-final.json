@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "detail": null,
+      "name": "persistent-api-supported",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-7",
+      "passed": true
+    },
+    {
+      "detail": {
+        "before": "42",
+        "score": "42",
+        "version": 3
+      },
+      "name": "separate-process-restores-file-a",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-7",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "clear-in-flight-refuses-same-store-reopen",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "clear-in-flight-refuses-duplicate-clear",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "explicit-clear-file-a",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-8",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "cleared-file-a-is-empty",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-8",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-9",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "clear-a-preserves-other-project-b",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-9",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-10",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "clear-a-preserves-other-file-c",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-10",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "cleanup-only-synthetic-store-a",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "cleanup-only-synthetic-store-b",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "cleanup-only-synthetic-store-c",
+      "passed": true
+    }
+  ],
+  "failures": 0,
+  "phase": "verify",
+  "scope": "Production native bridge and real WK. Synthetic offline bytes only; no installed Farfold, user content, actual model, global input, app profile or desktop capture. Exact synthetic store UUIDs only, no data-store enumeration. Origin is observed from page script, not inferred from URL."
+}

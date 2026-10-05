@@ -1,0 +1,21 @@
+{
+  "scope": "Installed candidate 5423cfac, second of the two originally authorized model messages",
+  "requestObserved": true,
+  "requestObservationSource": "Root's actual UI observation; local-only fixture-example-live.png",
+  "sharingStateObservedAfterward": "allowed",
+  "cancellationAcknowledgementObserved": false,
+  "userClarification": {
+    "source": "User statement relayed by parent task",
+    "timeUTC": "2026-10-05 05:45",
+    "meaning": "User accidentally clicked allow; this explains the allowed state."
+  },
+  "classification": "User action; not an application automatic-authorization bug.",
+  "followup": "Sharing stopped again. Real cancellation remains unverified.",
+  "modelBudget": {
+    "originalAuthorized": 2,
+    "used": 2,
+    "additionalRequested": 1,
+    "additionalAuthorized": false
+  },
+  "privateScreenshotIncluded": false
+}

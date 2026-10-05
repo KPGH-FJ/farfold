@@ -1,0 +1,217 @@
+{
+  "files": [
+    {
+      "path": "src-tauri/native/BrowserWorkspace.h",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission_tests.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/local_html.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "matches_independent_merge": true
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "matches_independent_merge": false,
+      "additional_test_harness_review": "Only clearDraft/index observable mock fields, reset and existing mock wiring; needed by new assertions. No readiness/production behavior imported.",
+      "additional_test_harness_accepted": true
+    },
+    {
+      "path": "src/App.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "matches_independent_merge": true
+    },
+    {
+      "path": "src/components/ArtifactPane.browser.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/BrowserSurfaceNotice.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "manual_review": "HEAD structure retained; round semantic additions only",
+      "no_new_useConnectionHold": true,
+      "no_new_configOptionChangeBlocked": true,
+      "no_new_candidateSelected": true,
+      "no_new_isAutomaticConnectionAllowed": true
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "manual_review": "HEAD structure retained; round semantic additions only",
+      "no_new_useConnectionHold": true,
+      "no_new_configOptionChangeBlocked": true,
+      "no_new_candidateSelected": true,
+      "no_new_isAutomaticConnectionAllowed": true
+    },
+    {
+      "path": "src/components/FileDeliveryActions.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/FileDeliveryActions.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/ThreadView.preparation-return.test.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "manual_review": "HEAD structure retained; round semantic additions only",
+      "composer_text_whitespace_only": true,
+      "no_new_useConnectionHold": true,
+      "no_new_configOptionChangeBlocked": true,
+      "no_new_candidateSelected": true,
+      "no_new_isAutomaticConnectionAllowed": true
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.test.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "manifest_match": true,
+      "export_match": true,
+      "working_still_matches_manifest": true,
+      "whole_equals_current": true
+    }
+  ],
+  "index_changed_paths": [],
+  "performed": "read only; no tests, app or index changes"
+}

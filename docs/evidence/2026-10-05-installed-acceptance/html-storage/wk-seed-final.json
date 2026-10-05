@@ -1,0 +1,188 @@
+{
+  "checks": [
+    {
+      "detail": null,
+      "name": "persistent-api-supported",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "reset-fixture-a",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "reset-fixture-b",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "reset-fixture-c",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-1",
+      "passed": true
+    },
+    {
+      "detail": {
+        "bridge": "undefined",
+        "origin": "https:\/\/file-acceptance-a.invalid",
+        "score": "41",
+        "version": 1
+      },
+      "name": "actual-loadHTMLString-origin-and-localStorage",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "clear-refuses-open-view",
+      "passed": true
+    },
+    {
+      "detail": {
+        "bridge": "undefined",
+        "frameURL": "about:blank",
+        "networkBlocked": true,
+        "violations": ["connect-src", "frame-src"]
+      },
+      "name": "network-frame-and-bridge-stay-blocked",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "persistent-page-rejects-public-navigation",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-1",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-2",
+      "passed": true
+    },
+    {
+      "detail": {
+        "before": "41",
+        "score": "42",
+        "version": 2
+      },
+      "name": "close-reopen-updated-html-restores-same-file",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-2",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-3",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "same-origin-different-project-store-isolated",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-3",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": true
+      },
+      "name": "open-4",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "same-project-other-file-isolated",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-4",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": false
+      },
+      "name": "open-5",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "public-entry-keeps-nonpersistent-store",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-5",
+      "passed": true
+    },
+    {
+      "detail": {
+        "created": true,
+        "loaded": true,
+        "persistent": false
+      },
+      "name": "open-6",
+      "passed": true
+    },
+    {
+      "detail": null,
+      "name": "public-entry-close-discards-storage",
+      "passed": true
+    },
+    {
+      "detail": {
+        "closed": true,
+        "released": 1
+      },
+      "name": "close-6",
+      "passed": true
+    }
+  ],
+  "failures": 0,
+  "phase": "seed",
+  "scope": "Production native bridge and real WK. Synthetic offline bytes only; no installed Farfold, user content, actual model, global input, app profile or desktop capture. Exact synthetic store UUIDs only, no data-store enumeration. Origin is observed from page script, not inferred from URL."
+}

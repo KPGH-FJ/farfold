@@ -21,6 +21,13 @@ const h = vi.hoisted(() => ({
   live: null as ThreadState | null,
   enabled: false,
   canonical: null as string | null,
+  portalTargets: [] as unknown[],
+}));
+vi.mock("react-dom", () => ({
+  createPortal: (children: ReactNode, target: unknown) => {
+    h.portalTargets.push(target);
+    return children;
+  },
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -153,6 +160,7 @@ beforeEach(() => {
   h.credentials.mockReset().mockResolvedValue([]);
   h.credentialListeners.clear();
   h.live = null;
+  h.portalTargets = [];
   h.enabled = false;
   h.canonical = null;
   h.selections.clear();
@@ -178,6 +186,7 @@ beforeEach(() => {
 afterEach(() => {
   for (const slot of h.slots) slot.cleanup?.();
   vi.useRealTimers();
+  vi.unstubAllGlobals();
   composerDrafts.clear("new");
 });
 
@@ -680,3 +689,130 @@ it.each([
     expect(view.props.note).toContain(STRINGS.repair.configFailed);
   },
 );
+
+it("exposes only a prepared real draft and keeps its original input and attachment slot on return", async () => {
+  props.onPreparedKey = vi.fn();
+  const attachment = {
+    id: "fixture",
+    kind: "file" as const,
+    name: "fixture.txt",
+    uri: "file:///fixture.txt",
+  };
+  composerDrafts.update("new", (draft) => ({
+    ...draft,
+    attachments: [attachment],
+  }));
+  const original = composerDrafts.read("new");
+  await startEditableDraft();
+  expect(props.onPreparedKey).toHaveBeenLastCalledWith("new-A");
+  expect(h.live!.identity).toBe("draft");
+  expect(composer().props.draftKey).toBe("new");
+  props.active = false;
+  render();
+  props.active = true;
+  render();
+  expect(props.onPreparedKey).toHaveBeenLastCalledWith("new-A");
+  expect(h.open).toHaveBeenCalledOnce();
+  expect(h.discardDraft).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(original);
+  expect(props.onStarted).not.toHaveBeenCalled();
+  h.live!.configuring = true;
+  render();
+  expect(props.onPreparedKey).toHaveBeenLastCalledWith("new-A");
+  expect(composer().props.disabled).toBe(true);
+});
+
+it.each(["rejected", "unknown"])(
+  "uses the original first-send protection from the prepared workspace (%s)",
+  async (outcome) => {
+    props.onPreparedKey = vi.fn();
+    await startEditableDraft();
+    const { draftPersistence } = await import("../runtime/drafts");
+    const sending = await import("../runtime/new_conversation");
+    const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+    const dispatch = vi
+      .spyOn(sending, "sendNewConversation")
+      .mockImplementation(async () => {
+        if (outcome === "unknown")
+          h.live!.uncertainPrompt = [{ type: "text", text: "Keep my draft" }];
+        throw new Error("controlled rejection");
+      });
+    try {
+      composerDrafts.update("new", (draft) => ({
+        ...draft,
+        sendPending: true,
+      }));
+      const blocks = [{ type: "text", text: "Keep my draft" }];
+      await expect(
+        (composer().props.onSend as Function)(
+          blocks,
+          composerDrafts.read("new"),
+        ),
+      ).rejects.toThrow("controlled rejection");
+      expect(dispatch).toHaveBeenCalledWith("new-A", blocks);
+      expect(composerDrafts.read("new").text).toBe("Keep my draft");
+      expect(!!composerDrafts.read("new").pendingConversation).toBe(
+        outcome === "unknown",
+      );
+      expect(composer().props.onRecoverPending).toBeTypeOf("function");
+      expect(props.onStarted).not.toHaveBeenCalled();
+      expect(h.discardDraft).not.toHaveBeenCalled();
+    } finally {
+      flush.mockRestore();
+      dispatch.mockRestore();
+    }
+  },
+);
+
+it("keeps a single portal host and original input while moving the prepared editor, restoring its focus", async () => {
+  const focused = { focus: vi.fn() };
+  const root = {
+    className: "",
+    contains: vi.fn((value) => value === focused),
+    remove: vi.fn(),
+  };
+  const createElement = vi.fn(() => root);
+  vi.stubGlobal("document", { createElement, activeElement: focused });
+  props.onPreparedKey = vi.fn();
+  await startEditableDraft();
+  const original = composerDrafts.read("new");
+  const first = { appendChild: vi.fn() };
+  props.composerTarget = first as unknown as HTMLElement;
+  render();
+  expect(first.appendChild).toHaveBeenCalledWith(root);
+  expect(focused.focus).toHaveBeenCalledWith({ preventScroll: true });
+  const second = { appendChild: vi.fn() };
+  props.composerTarget = second as unknown as HTMLElement;
+  render();
+  expect(second.appendChild).toHaveBeenCalledWith(root);
+  expect(createElement).toHaveBeenCalledOnce();
+  expect(new Set(h.portalTargets)).toEqual(new Set([root]));
+  expect(root.remove).not.toHaveBeenCalled();
+  expect(composer().props.draftKey).toBe("new");
+  expect(composerDrafts.read("new")).toBe(original);
+});
+
+it("releases the prepared editor after recovering the original pending target without resending", async () => {
+  props.onPreparedKey = vi.fn();
+  await startEditableDraft();
+  const recovery = await import("../runtime/pending_conversation");
+  const recover = vi
+    .spyOn(recovery, "recoverPendingConversation")
+    .mockResolvedValue("new-A");
+  try {
+    const original = composerDrafts.read("new");
+    await (composer().props.onRecoverPending as Function)({
+      agentId: "A",
+      cwd: "/work",
+      nativeSessionId: "native",
+    });
+    render();
+    expect(props.onPreparedKey).toHaveBeenLastCalledWith(null);
+    expect(props.onStarted).toHaveBeenCalledWith("new-A");
+    expect(composerDrafts.read("new")).toBe(original);
+    expect(h.discardDraft).not.toHaveBeenCalled();
+    expect(h.open).toHaveBeenCalledOnce();
+  } finally {
+    recover.mockRestore();
+  }
+});

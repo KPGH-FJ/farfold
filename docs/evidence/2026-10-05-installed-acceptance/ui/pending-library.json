@@ -1,0 +1,92 @@
+{
+  "activityCounters": ["1 等你回应"],
+  "fixtureFolderMatch": false,
+  "knownControls": [
+    {
+      "enabled": true,
+      "frame": { "height": 36, "width": 195, "x": 105, "y": 134 },
+      "label": "新对话",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 206 },
+      "label": "所有对话",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 280 },
+      "label": "探索 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 20, "width": 81, "x": 111, "y": 338 },
+      "label": "我的 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 22, "width": 22, "x": 272, "y": 337 },
+      "label": "探索 Agent",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 195, "x": 105, "y": 804 },
+      "label": "设置",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 35, "width": 83, "x": 1250, "y": 173 },
+      "label": "新对话",
+      "role": "AXButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 38, "width": 25, "x": 353, "y": 298 },
+      "label": "全部",
+      "role": "AXRadioButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 38, "width": 49, "x": 400, "y": 298 },
+      "label": "等你回应",
+      "role": "AXRadioButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 38, "width": 37, "x": 470, "y": 298 },
+      "label": "进行中",
+      "role": "AXRadioButton"
+    },
+    {
+      "enabled": true,
+      "frame": { "height": 41, "width": 824, "x": 358, "y": 429 },
+      "label": "目标钓鱼对话",
+      "role": "AXButton"
+    }
+  ],
+  "pid": 33710,
+  "readsTextOrInputValues": false,
+  "roleCounts": {
+    "AXButton": 170,
+    "AXCheckBox": 1,
+    "AXGroup": 81,
+    "AXHeading": 1,
+    "AXImage": 1,
+    "AXPopUpButton": 68,
+    "AXRadioButton": 5,
+    "AXScrollArea": 1,
+    "AXStaticText": 76,
+    "AXTabGroup": 1,
+    "AXTextField": 1,
+    "AXWebArea": 1,
+    "AXWindow": 1
+  },
+  "terminalInputCount": 0,
+  "visitedRoles": 408,
+  "webAreas": [{ "height": 792, "width": 1280, "x": 95, "y": 78 }]
+}

@@ -1,5 +1,6 @@
 //! Public pages and verified local HTML share one independent WK view without a Tauri bridge.
-//! It owns only temporary browser state; tools receive a fixed, revocable read scope.
+//! Public pages stay temporary; offline HTML has isolated, per-project/file storage.
+//! Tools receive only a fixed, revocable public-page read scope.
 #[path = "browser_workspace/local_html.rs"]
 mod local_html;
 #[path = "browser_workspace/native.rs"]
@@ -38,6 +39,7 @@ struct Active {
     id: u64,
     info: BrowserInfo,
     origin: Url,
+    local_storage: Option<local_html::StoragePartition>,
     navigation: u64,
     closing: bool,
 }
@@ -51,6 +53,8 @@ pub struct BrowserInfo {
     /// Present only for a verified, offline local HTML document. Never shareable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub local_file_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub local_storage_persistent: Option<bool>,
     pub phase: String,
     pub revision: u64,
     pub error: Option<String>,
@@ -89,22 +93,24 @@ struct NativeSnapshot {
 
 impl BrowserWorkspace {
     fn reserve(&self, task: &str, url: Url) -> Result<(u64, Option<u64>, BrowserInfo), String> {
-        self.reserve_page(task, Some(url), None)
+        self.reserve_page(task, url, None, None)
     }
 
     fn reserve_html(
         &self,
         task: &str,
         name: String,
+        storage: local_html::StoragePartition,
     ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
-        self.reserve_page(task, None, Some(name))
+        self.reserve_page(task, storage.origin.clone(), Some(name), Some(storage))
     }
 
     fn reserve_page(
         &self,
         task: &str,
-        public_url: Option<Url>,
+        url: Url,
         local_file_name: Option<String>,
+        local_storage: Option<local_html::StoragePartition>,
     ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
         policy::validate_task_key(task)?;
         let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
@@ -117,7 +123,6 @@ impl BrowserWorkspace {
         store.next = store.next.checked_add(1).ok_or("请重开应用后再试")?;
         let id = store.next;
         let old = None;
-        let url = public_url.unwrap_or_else(|| local_html::origin(id));
         let info = BrowserInfo {
             task_key: task.into(),
             label: if local_file_name.is_some() {
@@ -126,6 +131,9 @@ impl BrowserWorkspace {
                 format!("public-page-{id}")
             },
             url: local_file_name.clone().unwrap_or_else(|| url.to_string()),
+            local_storage_persistent: local_storage
+                .as_ref()
+                .map(|_| native::persistent_html_supported()),
             local_file_name,
             phase: "loading".into(),
             revision: 1,
@@ -135,6 +143,7 @@ impl BrowserWorkspace {
             id,
             info: info.clone(),
             origin: url,
+            local_storage,
             navigation: 1,
             closing: false,
         });
@@ -176,6 +185,20 @@ impl BrowserWorkspace {
             return Err("网页已关闭或已更换，请重新打开".into());
         }
         Ok(active.id)
+    }
+
+    fn local_storage(
+        &self,
+        task: &str,
+        label: &str,
+    ) -> Result<local_html::StoragePartition, String> {
+        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+        store
+            .active
+            .as_ref()
+            .filter(|a| !a.closing && a.info.task_key == task && a.info.label == label)
+            .and_then(|a| a.local_storage.clone())
+            .ok_or_else(|| "请先打开要清除存档的本地网页".into())
     }
 
     fn navigate(&self, id: u64, url: Url) -> Result<BrowserInfo, String> {
@@ -540,29 +563,31 @@ pub async fn browser_workspace_open_html(
     app: AppHandle,
     state: State<'_, BrowserWorkspace>,
     task_key: String,
+    project_directory: String,
     file: crate::file_delivery::VerifiedFile,
     bounds: Bounds,
 ) -> Result<BrowserInfo, String> {
     require_main(&webview)?;
     bounds.validate()?;
     policy::validate_task_key(&task_key)?;
-    let (name, document) =
-        tauri::async_runtime::spawn_blocking(move || local_html::read_document(&file))
-            .await
-            .map_err(|_| "无法读取本地网页，请重新核实文件")??;
+    let document = tauri::async_runtime::spawn_blocking(move || {
+        local_html::read_document(std::path::Path::new(&project_directory), &file)
+    })
+    .await
+    .map_err(|_| "无法读取本地网页，请重新核实文件")??;
     let _operation = state.1.lock().await;
     if let Some(old) = state.active_info()? {
         close_owned(&app, &state, &old.task_key, &old.label).await?;
     }
-    let (id, _, _) = state.reserve_html(&task_key, name)?;
+    let (id, _, _) = state.reserve_html(&task_key, document.name, document.storage.clone())?;
     let shared = state.inner().clone();
     let creation = native::create_html(
         &app,
         shared.clone(),
         id,
         bounds,
-        local_html::origin(id).to_string(),
-        document,
+        document.storage,
+        document.html,
     )
     .await;
     if creation.is_err() {
@@ -679,6 +704,26 @@ pub async fn browser_workspace_close(
     require_main(&webview)?;
     let _operation = state.1.lock().await;
     close_owned(&app, &state, &task_key, &label).await
+}
+
+/// Explicit user action. Close this exact page before clearing only the data
+/// in its dedicated offline store. No other project's or file's data is enumerated.
+#[tauri::command]
+pub async fn browser_workspace_clear_html_storage(
+    webview: Webview,
+    app: AppHandle,
+    state: State<'_, BrowserWorkspace>,
+    task_key: String,
+    label: String,
+) -> Result<(), String> {
+    require_main(&webview)?;
+    let _operation = state.1.lock().await;
+    let storage = state.local_storage(&task_key, &label)?;
+    if !native::persistent_html_supported() {
+        return Err("此系统中的本地网页使用临时存档，关闭网页即可清除".into());
+    }
+    close_owned(&app, &state, &task_key, &label).await?;
+    native::clear_html_storage(&app, storage).await
 }
 
 async fn close_owned(

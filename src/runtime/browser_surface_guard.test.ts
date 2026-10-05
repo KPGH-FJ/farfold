@@ -263,7 +263,7 @@ describe("BrowserSurfaceGuard", () => {
     const initial = guard.getSnapshot();
     const observed: boolean[] = [];
     const unsubscribe = guard.subscribe(() => observed.push(guard.hasSurfaces));
-    const release = guard.register(vi.fn());
+    const { release } = guard.register(vi.fn());
     expect(guard.getSnapshot()).toBe(initial);
     release();
     release();
@@ -287,5 +287,51 @@ describe("BrowserSurfaceGuard", () => {
     guard.retry();
     await settle();
     expect(guard.canOpen).toBe(true);
+  });
+});
+
+describe("retained browser surface navigation", () => {
+  it("waits for hide, retains ownership, and requires a fresh reveal after the hold", async () => {
+    const guard = new BrowserSurfaceGuard();
+    const hidden = deferred();
+    const close = vi.fn(async () => {});
+    const hide = vi.fn(() => hidden.promise);
+    const page = guard.register(close, hide);
+    const hold = guard.hold();
+    expect(hold.ready).toBe(false);
+    expect(page.reveal()).toBe(false);
+    hidden.resolve();
+    await settle();
+    expect(hold.ready).toBe(true);
+    expect(guard.hasSurfaces).toBe(true);
+    expect(close).not.toHaveBeenCalled();
+    expect(page.reveal()).toBe(false);
+    hold.release();
+    expect(page.reveal()).toBe(true);
+    const navigation = vi.fn();
+    guard.runLatest(navigation);
+    await settle();
+    expect(hide).toHaveBeenCalledTimes(2);
+    expect(navigation).toHaveBeenCalledOnce();
+    page.requestClose();
+    await settle();
+    expect(close).toHaveBeenCalledOnce();
+    expect(guard.hasSurfaces).toBe(false);
+  });
+
+  it("owner cleanup cannot close another task's retained page", async () => {
+    const guard = new BrowserSurfaceGuard();
+    const closeA = vi.fn(async () => {});
+    const closeB = vi.fn(async () => {});
+    const a = guard.register(closeA, async () => {});
+    guard.runLatest(() => {});
+    await settle();
+    const b = guard.register(closeB, async () => {});
+    a.requestClose();
+    await settle();
+    expect(closeA).toHaveBeenCalledOnce();
+    expect(closeB).not.toHaveBeenCalled();
+    expect(b.reveal()).toBe(true);
+    b.release();
   });
 });

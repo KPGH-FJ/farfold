@@ -147,7 +147,7 @@ function deferred<T>() {
 }
 async function checkFile(value = card) {
   click(S.inspect, value);
-  await vi.waitFor(() => expect(button(S.open, value)).toBeDefined());
+  await vi.waitFor(() => expect(button(S.inspectAgain, value)).toBeDefined());
 }
 
 beforeEach(() => {
@@ -209,6 +209,50 @@ it("waits for a verified receipt and uses its exact version for open, reveal and
     expect(text()).toContain(S.copied("/delivery/copy.md")),
   );
   expect(h.copy).toHaveBeenCalledWith(verified, "/delivery/copy.md");
+});
+
+it("opens a verified reported file in the existing file view using its resolved path", async () => {
+  h.onOpenFile = vi.fn();
+  await checkFile();
+  click(S.open);
+  expect(h.onOpenFile).toHaveBeenCalledExactlyOnceWith(verified.resolvedPath);
+  expect(h.openFile).not.toHaveBeenCalled();
+  expect(card.newText).toBe("AGENT FRAGMENT");
+});
+
+it("opens a verified chosen file in the existing file view without using the reported path", async () => {
+  h.onOpenFile = vi.fn();
+  h.open.mockResolvedValue("/outside/chosen.md");
+  click(S.choose);
+  await vi.waitFor(() => expect(button(S.inspectAgain)).toBeDefined());
+  click(S.open);
+  expect(h.onOpenFile).toHaveBeenCalledExactlyOnceWith("/outside/chosen.md");
+  expect(h.openFile).not.toHaveBeenCalled();
+  expect(h.inspect).not.toHaveBeenCalled();
+});
+
+it("blocks a saved in-app open callback while rechecking, inactive or unmounted", async () => {
+  h.onOpenFile = vi.fn();
+  await checkFile();
+  const action = button(S.open)!;
+  const invoke = action.props.onClick as () => void;
+  const inspection = deferred<typeof verified>();
+  h.inspect.mockReturnValue(inspection.promise);
+  click(S.inspectAgain);
+  invoke();
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  inspection.resolve(verified);
+  await vi.waitFor(() => expect(button(S.inspectAgain)).toBeDefined());
+  h.active = false;
+  render();
+  invoke();
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  h.active = true;
+  render();
+  unmount();
+  invoke();
+  expect(h.onOpenFile).not.toHaveBeenCalled();
+  expect(h.openFile).not.toHaveBeenCalled();
 });
 
 it("never derives a folder grant from a chosen external file", async () => {
@@ -470,6 +514,7 @@ it("hands only a verified HTML file to the in-app owner and never opens it with 
   };
   const html = { ...card, path: "game.html", newText: "REPORTED FRAGMENT" };
   h.onOpenHtml = vi.fn();
+  h.onOpenFile = vi.fn();
   h.inspect.mockResolvedValue(file);
   expect(button(S.openHtml, html)).toBeUndefined();
   click(S.inspect, html);
@@ -477,6 +522,7 @@ it("hands only a verified HTML file to the in-app owner and never opens it with 
   const action = button(S.openHtml, html)!;
   (action.props.onClick as () => void)();
   expect(h.onOpenHtml).toHaveBeenCalledWith(file);
+  expect(h.onOpenFile).not.toHaveBeenCalled();
   expect(h.openFile).not.toHaveBeenCalled();
   h.active = false;
   render(html);

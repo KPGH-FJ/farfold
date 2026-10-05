@@ -1,7 +1,10 @@
 import { open as chooseFile } from "@tauri-apps/plugin-dialog";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
-import type { BrowserSurfaceGuard } from "../runtime/browser_surface_guard";
+import type {
+  BrowserSurfaceGuard,
+  BrowserSurfaceRegistration,
+} from "../runtime/browser_surface_guard";
 import {
   useEffect,
   useId,
@@ -36,6 +39,8 @@ import "../browser-workspace.css";
 export interface BrowserWorkspaceProps {
   /** Trusted current conversation key, never a key supplied by a remote page. */
   taskKey: string;
+  /** Current task work folder; never infer the project from a file access root. */
+  projectDirectory?: string;
   /** False only when leaving this task/route or showing a covering overlay. */
   active: boolean;
   /** Collapse only hides the page; the owner and its permission stay alive. */
@@ -55,7 +60,14 @@ export interface BrowserWorkspaceProps {
 }
 
 type Operation =
-  "open" | "navigate" | "snapshot" | "close" | "choose" | "external" | null;
+  | "open"
+  | "navigate"
+  | "snapshot"
+  | "close"
+  | "choose"
+  | "external"
+  | "clear"
+  | null;
 
 function phaseText(state: BrowserWorkspaceState | null): string {
   if (
@@ -91,6 +103,7 @@ function sameBounds(a: BrowserWorkspaceBounds, b: BrowserWorkspaceBounds) {
 /** A content-pane body, not a new route or navigation shell. */
 export function BrowserWorkspace({
   taskKey,
+  projectDirectory,
   active,
   visible = true,
   onStateChange,
@@ -113,8 +126,11 @@ export function BrowserWorkspace({
   available.current = { taskKey, active, visible };
   const localFile = useRef<VerifiedFile | null>(null);
   const choiceOwner = useRef<object | null>(null);
+  const clearChoice = useRef<BrowserWorkspaceScope | null>(null);
   const consumedHtml = useRef<BrowserWorkspaceProps["htmlRequest"]>(null);
-  const registrations = useRef(new Map<BrowserWorkspaceScope, () => void>());
+  const registrations = useRef(
+    new Map<BrowserWorkspaceScope, BrowserSurfaceRegistration>(),
+  );
   const callbacks = useRef({ onStateChange, onVisibilityChange });
   callbacks.current = { onStateChange, onVisibilityChange };
   const [address, setAddress] = useState("");
@@ -125,12 +141,26 @@ export function BrowserWorkspace({
   const [operation, setOperation] = useState<Operation>(null);
   const [error, setError] = useState("");
   const [addressError, setAddressError] = useState(false);
+  const [clearConfirmation, setClearConfirmation] =
+    useState<BrowserWorkspaceScope | null>(null);
+  const [storageNotice, setStorageNotice] = useState("");
   const [listening, setListening] = useState(false);
   const [blocked, setBlocked] = useState(guard.getSnapshot().blocked);
+  const [guardRevision, setGuardRevision] = useState(0);
   useEffect(
-    () => guard.subscribe(() => setBlocked(guard.getSnapshot().blocked)),
+    () =>
+      guard.subscribe(() => {
+        setBlocked(guard.getSnapshot().blocked);
+        // A completed layout/overlay transition can leave active/visible unchanged.
+        setGuardRevision((value) => value + 1);
+      }),
     [guard],
   );
+
+  function setClearPrompt(owner: BrowserWorkspaceScope | null) {
+    clearChoice.current = owner;
+    setClearConfirmation(owner);
+  }
 
   async function closeOwner(owner: BrowserWorkspaceScope) {
     const isCurrent = () => mounted.current && scope.current === owner;
@@ -143,7 +173,7 @@ export function BrowserWorkspace({
     }
     try {
       await owner.close();
-      registrations.current.get(owner)?.();
+      registrations.current.get(owner)?.release();
       registrations.current.delete(owner);
       if (isCurrent()) {
         setState(null);
@@ -164,8 +194,20 @@ export function BrowserWorkspace({
     if (!registrations.current.has(owner))
       registrations.current.set(
         owner,
-        guard.register(() => closeOwner(owner)),
+        guard.register(
+          () => closeOwner(owner),
+          async () => {
+            await owner.setVisible(false);
+            if (mounted.current && scope.current === owner)
+              callbacks.current.onVisibilityChange?.(false);
+          },
+        ),
       );
+    return registrations.current.get(owner)!;
+  }
+
+  function requestOwnerClose(owner = scope.current) {
+    if (owner) registrations.current.get(owner)?.requestClose();
   }
 
   useLayoutEffect(() => {
@@ -185,14 +227,22 @@ export function BrowserWorkspace({
     setOperation(null);
     setError("");
     setAddressError(false);
+    setClearPrompt(null);
+    setStorageNotice("");
     setListening(false);
 
-    if (active) {
+    {
+      // Inactive tasks still observe the real page and cancellation receipts.
       void client
         .listenState((next) => {
           const current = scope.current;
           if (!live || !current || !current.accept(next)) return;
           setState(current.current);
+          if (next.phase === "closed") {
+            registrations.current.get(current)?.release();
+            registrations.current.delete(current);
+            callbacks.current.onVisibilityChange?.(false);
+          }
           setAddress(next.localFileName !== undefined ? "" : next.url);
           setSnapshot((previous) =>
             previous?.label === next.label &&
@@ -224,9 +274,10 @@ export function BrowserWorkspace({
       mounted.current = false;
       // Registered owners include in-flight open and remain available for the
       // global retry if this pane is unmounted before its close acknowledges.
-      guard.requestClose();
+      for (const registration of [...registrations.current.values()])
+        registration.requestClose();
     };
-  }, [taskKey, active, client, guard]);
+  }, [taskKey, projectDirectory, client, guard]);
 
   function publish(owner: BrowserWorkspaceScope) {
     if (scope.current === owner && !owner.isRetired) setState(owner.current);
@@ -258,6 +309,10 @@ export function BrowserWorkspace({
     )
       return;
     const html = "file" in target ? target.file : null;
+    if (html && !projectDirectory) {
+      setError(S.htmlProjectMissing);
+      return;
+    }
     if (html && !/\.html?$/i.test(html.name)) {
       setError(S.htmlFailed);
       return;
@@ -287,9 +342,11 @@ export function BrowserWorkspace({
     setOperation(nextOperation);
     setAddressError(false);
     setError("");
+    setClearPrompt(null);
+    setStorageNotice("");
     setSnapshot(null);
     try {
-      if (html) await nextOwner.openHtml(html, bounds);
+      if (html) await nextOwner.openHtml(html, bounds, projectDirectory!);
       else if ("url" in target) {
         if (hasPage && !replacePage && !owner.isRetired)
           await nextOwner.navigate(target.url);
@@ -297,7 +354,7 @@ export function BrowserWorkspace({
       }
       if (request === sequence.current && scope.current === nextOwner) {
         if (nextOwner !== owner) {
-          registrations.current.get(owner)?.();
+          registrations.current.get(owner)?.release();
           registrations.current.delete(owner);
         }
         localFile.current = html;
@@ -315,7 +372,7 @@ export function BrowserWorkspace({
             try {
               await closeOwner(nextOwner);
             } catch {
-              guard.requestClose();
+              requestOwnerClose();
               return;
             }
           }
@@ -334,7 +391,8 @@ export function BrowserWorkspace({
   // A native picker is not permission to finish opening after a hide or task switch.
   useLayoutEffect(() => {
     if (!visible && busy.current === "choose") ++sequence.current;
-  }, [visible]);
+    if (!active || !visible) setClearPrompt(null);
+  }, [active, visible]);
 
   async function selectHtml(reload = false) {
     if (!active || !visible || !listening || !guard.canOpen || busy.current)
@@ -443,6 +501,68 @@ export function BrowserWorkspace({
     }
   }
 
+  async function clearHtmlStorage() {
+    const owner = scope.current;
+    if (
+      !owner ||
+      clearChoice.current !== owner ||
+      owner.isRetired ||
+      !available.current.active ||
+      !available.current.visible ||
+      available.current.taskKey !== taskKey ||
+      !guard.canOpen ||
+      busy.current ||
+      owner.current?.localFileName === undefined ||
+      owner.current.localStoragePersistent !== true
+    )
+      return;
+    const request = ++sequence.current;
+    const current = () =>
+      mounted.current &&
+      scope.current === owner &&
+      available.current.taskKey === taskKey &&
+      request === sequence.current;
+    const present = () =>
+      current() && available.current.active && available.current.visible;
+    busy.current = "clear";
+    setOperation("clear");
+    setClearPrompt(null);
+    setStorageNotice("");
+    setError("");
+    try {
+      await owner.clearHtmlStorage();
+      registrations.current.get(owner)?.release();
+      registrations.current.delete(owner);
+      if (current()) {
+        setState(null);
+        localFile.current = null;
+        callbacks.current.onVisibilityChange?.(false);
+        if (present()) setStorageNotice(S.storageCleared);
+      }
+    } catch {
+      // A failed deletion may have already closed the page. Confirm closure
+      // independently; never turn a close receipt into a clear-success message.
+      try {
+        await owner.close();
+        registrations.current.get(owner)?.release();
+        registrations.current.delete(owner);
+        if (current()) {
+          setState(null);
+          localFile.current = null;
+          callbacks.current.onVisibilityChange?.(false);
+        }
+      } catch {
+        requestOwnerClose(owner);
+      }
+      if (present()) setError(S.clearStorageFailed);
+    } finally {
+      if (current()) {
+        busy.current = null;
+        setOperation(null);
+      }
+    }
+  }
+
   async function readSnapshot() {
     const owner = scope.current;
     if (
@@ -489,9 +609,9 @@ export function BrowserWorkspace({
   }
 
   function closePage() {
-    if (busy.current === "close") return;
+    if (busy.current === "close" || busy.current === "clear") return;
     if (guard.getSnapshot().failed) guard.retry();
-    else guard.requestClose();
+    else requestOwnerClose();
   }
 
   // The first render of another task must never display the previous task's data.
@@ -515,7 +635,15 @@ export function BrowserWorkspace({
             phase: visibleState.phase,
             revision: visibleState.revision,
             ...(visibleState.localFileName !== undefined
-              ? { localFileName: visibleState.localFileName }
+              ? {
+                  localFileName: visibleState.localFileName,
+                  ...(visibleState.localStoragePersistent !== undefined
+                    ? {
+                        localStoragePersistent:
+                          visibleState.localStoragePersistent,
+                      }
+                    : {}),
+                }
               : {}),
           }
         : null,
@@ -524,39 +652,49 @@ export function BrowserWorkspace({
 
   useLayoutEffect(() => {
     const owner = scope.current;
-    if (!active || !owner || owner.isRetired) return;
+    if (!owner || owner.isRetired || (active && visible && blocked)) return;
     let cancelled = false;
-    if (visible && (owner.current || busy.current === "open")) {
+    const showing = active && visible;
+    if (showing && (owner.current || busy.current === "open")) {
+      if (!trackOwner(owner).reveal()) return;
       // Showing can succeed before IPC returns; reserve layout before sending.
       callbacks.current.onVisibilityChange?.(true);
     }
     const bounds =
-      visible && surface.current
+      showing && surface.current
         ? browserWorkspaceBounds(surface.current.getBoundingClientRect())
         : null;
-    void owner.setVisible(visible, bounds ?? undefined).then(
+    void owner.setVisible(showing, bounds ?? undefined).then(
       () => {
         if (!cancelled && scope.current === owner && !owner.isRetired) {
           // A mount-time no-page check must not release a later in-flight open.
           if (owner.current || busy.current !== "open") {
-            callbacks.current.onVisibilityChange?.(visible && !!owner.current);
+            callbacks.current.onVisibilityChange?.(showing && !!owner.current);
           }
         }
       },
       () => {
-        if (scope.current !== owner) return;
+        if (scope.current !== owner || busy.current === "clear") return;
         if (mounted.current) setError(S.visibilityFailed);
         // Retain the owner and the old footprint until actual close confirms.
-        guard.requestClose();
+        requestOwnerClose();
       },
     );
     return () => {
       cancelled = true;
     };
-  }, [active, visible, hasPage, visibleState?.label, guard]);
+  }, [
+    active,
+    visible,
+    hasPage,
+    visibleState?.label,
+    guard,
+    blocked,
+    guardRevision,
+  ]);
 
   useEffect(() => {
-    if (!active || !visible || !hasPage) return;
+    if (!active || !visible || !hasPage || blocked) return;
     const owner = scope.current;
     if (!owner || owner.isRetired) return;
     let cancelled = false;
@@ -579,7 +717,7 @@ export function BrowserWorkspace({
           },
           () => {
             if (!cancelled && scope.current === owner) setError(S.closeFailed);
-            guard.requestClose();
+            requestOwnerClose();
           },
         );
         return;
@@ -606,7 +744,7 @@ export function BrowserWorkspace({
                 () => {
                   if (!cancelled && scope.current === owner)
                     setError(S.closeFailed);
-                  guard.requestClose();
+                  requestOwnerClose();
                 },
               );
             },
@@ -622,7 +760,7 @@ export function BrowserWorkspace({
       cancelled = true;
       cancelAnimationFrame(frame);
     };
-  }, [active, visible, hasPage, visibleState?.label]);
+  }, [active, visible, hasPage, visibleState?.label, blocked]);
 
   if (!active) return null;
 
@@ -666,7 +804,7 @@ export function BrowserWorkspace({
               aria-label={
                 guard.getSnapshot().failed ? S.retryClose : S.closeHtml
               }
-              disabled={operation === "close"}
+              disabled={operation === "close" || operation === "clear"}
               onClick={closePage}
             >
               <XIcon size={17} aria-hidden="true" />
@@ -810,7 +948,52 @@ export function BrowserWorkspace({
             )}
           </div>
         </div>
-        {isLocal && <p className="browser-workspace-hint">{S.localHint}</p>}
+        {isLocal && (
+          <p className="browser-workspace-hint">
+            {S.localHint}{" "}
+            {visibleState.localStoragePersistent === true
+              ? S.localPersistent
+              : visibleState.localStoragePersistent === false
+                ? S.localTemporary
+                : S.localStorageUnknown}
+          </p>
+        )}
+        {isLocal && hasPage && visibleState.localStoragePersistent === true && (
+          <div className="browser-workspace-help">
+            <button
+              type="button"
+              aria-expanded={clearConfirmation === scope.current}
+              onClick={() => setClearPrompt(scope.current)}
+              disabled={operation !== null || blocked || !visible}
+            >
+              {S.clearStorage}
+            </button>
+            {clearConfirmation === scope.current && (
+              <div>
+                <p>{S.clearStorageConfirm(visibleState.localFileName!)}</p>
+                <button
+                  type="button"
+                  onClick={() => void clearHtmlStorage()}
+                  disabled={operation !== null || blocked || !visible}
+                >
+                  {S.clearStorageAction}
+                </button>{" "}
+                <button type="button" onClick={() => setClearPrompt(null)}>
+                  {S.clearStorageCancel}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        {(operation === "clear" || storageNotice) && (
+          <p
+            className="browser-workspace-status"
+            role="status"
+            aria-live="polite"
+          >
+            {operation === "clear" ? S.clearingStorage : storageNotice}
+          </p>
+        )}
         {operation === "choose" && (
           <p className="browser-workspace-status" role="status">
             {S.choosingHtml}

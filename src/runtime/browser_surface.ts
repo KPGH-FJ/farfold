@@ -20,7 +20,7 @@ export const browserWorkspaceClient = createBrowserWorkspaceClient(
     ),
 );
 
-/** Keep covering DOM hidden until the exact native surface has acknowledged close. */
+/** Keep covering DOM hidden until the exact native surface has acknowledged hide. */
 export function useBrowserSurfaceBarrier(requested: boolean): boolean {
   const hold = useRef<BrowserSurfaceHold | null>(null);
   const [, refresh] = useState(0);
