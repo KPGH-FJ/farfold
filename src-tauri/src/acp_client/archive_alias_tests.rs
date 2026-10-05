@@ -33,7 +33,7 @@ impl Fixture {
             id: "archive-alias-fixture".into(),
             name: "Fixture".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: crate::platform_tests::python(),
             args: vec!["-u".into(), root.join("peer.py").to_string_lossy().into()],
             env: vec![],
             version: None,
@@ -55,8 +55,18 @@ impl Fixture {
     fn location(&self, name: &str) -> (PathBuf, PathBuf) {
         let canonical = self.root.join(format!("real-{name}"));
         std::fs::create_dir(&canonical).unwrap();
+        #[cfg(unix)]
         let raw = self.root.join(format!("alias-{name}"));
+        #[cfg(unix)]
         std::os::unix::fs::symlink(&canonical, &raw).unwrap();
+        #[cfg(windows)]
+        let raw = {
+            // Keep dot components in an ordinary Win32 path. A verbatim path
+            // deliberately disables that normalization at the OS boundary.
+            let parent = self._dir.path().join(format!("alias-parent-{name}"));
+            std::fs::create_dir(&parent).unwrap();
+            parent.join("..").join(format!("real-{name}"))
+        };
         assert_ne!(raw, canonical);
         assert_eq!(raw.canonicalize().unwrap(), canonical);
         (raw, canonical)
@@ -306,6 +316,7 @@ async fn canonical_open_reservation_blocks_alias_and_failed_admission_releases_r
 }
 
 #[tokio::test]
+#[cfg(unix)]
 async fn unverified_directory_blocks_archive_but_does_not_block_restore() {
     let f = Fixture::new();
     let missing = f.root.join("missing");
@@ -376,6 +387,7 @@ async fn different_live_owners_under_raw_and_canonical_paths_are_ambiguous() {
 }
 
 #[test]
+#[cfg(unix)]
 fn archive_commit_rejects_an_alias_retargeted_after_directory_review() {
     let f = Fixture::new();
     let (raw, captured) = f.location("captured");
@@ -531,6 +543,7 @@ async fn abandoned_archive_keeps_both_reservations_until_the_owned_command_finis
 }
 
 #[tokio::test]
+#[cfg(unix)]
 async fn reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore() {
     let f = Fixture::new();
     let (raw, reviewed) = f.location("frontend-reviewed");

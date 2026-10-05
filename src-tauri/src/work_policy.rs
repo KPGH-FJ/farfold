@@ -188,8 +188,16 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let project = dir.path().join("project");
         std::fs::create_dir(&project).unwrap();
-        let alias = dir.path().join("alias");
-        std::os::unix::fs::symlink(&project, &alias).unwrap();
+        #[cfg(unix)]
+        let alias = {
+            let alias = dir.path().join("alias");
+            std::os::unix::fs::symlink(&project, &alias).unwrap();
+            alias
+        };
+        // Windows keeps the same admission race with a lexical directory alias;
+        // this does not claim coverage of privileged symlink creation.
+        #[cfg(windows)]
+        let alias = project.join(".");
         let canonical = validate_cwd(project.to_str().unwrap()).unwrap();
         assert_eq!(canonical, validate_cwd(alias.to_str().unwrap()).unwrap());
         let store = Arc::new(MetaStore::open(&dir.path().join("meta.db")).unwrap());

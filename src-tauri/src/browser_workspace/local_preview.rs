@@ -12,6 +12,8 @@ mod policy;
 mod tests;
 
 pub(crate) use directory::DirectoryPreview;
+#[cfg(windows)]
+pub(crate) use directory::Resource;
 pub(crate) use policy::DevServerOrigin;
 
 use sha2::{Digest, Sha256};

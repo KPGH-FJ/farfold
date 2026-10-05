@@ -16,12 +16,54 @@ pub(crate) struct NodeLaunch {
     pub node_version: String,
 }
 
+#[cfg(unix)]
 fn quoted(path: &Path) -> Result<String, String> {
     let text = path.to_str().ok_or("程序位置无法识别")?;
     if !path.is_absolute() || text.contains(['\n', '\r', '\0']) {
         return Err("程序位置无效".into());
     }
     Ok(format!("'{}'", text.replace('\'', "'\\''")))
+}
+
+const LAUNCHER_NAME: &str = if cfg!(windows) {
+    "launch-program.exe"
+} else {
+    "launch-program"
+};
+fn launcher_bytes(node: &Path, entry: &Path) -> Result<Vec<u8>, String> {
+    #[cfg(unix)]
+    {
+        Ok(format!(
+            "#!/bin/sh\nexec {} {} \"$@\"\n",
+            quoted(node)?,
+            quoted(entry)?
+        )
+        .into_bytes())
+    }
+    #[cfg(windows)]
+    {
+        let paths = [node, entry].map(|path| {
+            let text = path.to_str().ok_or("程序位置无法识别")?;
+            if !path.is_absolute()
+                || text.is_empty()
+                || text.len() > 32768
+                || text.contains(['\n', '\r', '\0'])
+            {
+                return Err("程序位置无效");
+            }
+            Ok(text.as_bytes())
+        });
+        let node = paths[0].as_ref().map_err(|error| error.to_string())?;
+        let entry = paths[1].as_ref().map_err(|error| error.to_string())?;
+        let mut bytes =
+            include_bytes!(concat!(env!("OUT_DIR"), "/launch-program-template.exe")).to_vec();
+        bytes.extend_from_slice(node);
+        bytes.extend_from_slice(entry);
+        bytes.extend_from_slice(&(node.len() as u32).to_le_bytes());
+        bytes.extend_from_slice(&(entry.len() as u32).to_le_bytes());
+        bytes.extend_from_slice(b"FFNODE01");
+        Ok(bytes)
+    }
 }
 
 pub(crate) fn create(
@@ -36,24 +78,17 @@ pub(crate) fn create(
     {
         return Err("程序入口不在本次安装目录中".into());
     }
-    let launcher = root.join("launch-program");
+    let launcher = root.join(LAUNCHER_NAME);
     use std::io::Write;
     let mut file = std::fs::OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(&launcher)
         .map_err(|_| "无法创建程序启动文件")?;
-    write!(
-        file,
-        "#!/bin/sh\nexec {} {} \"$@\"\n",
-        quoted(&node)?,
-        quoted(&entry)?
-    )
-    .map_err(|_| "无法保存程序启动文件")?;
+    file.write_all(&launcher_bytes(&node, &entry)?)
+        .map_err(|_| "无法保存程序启动文件")?;
     file.sync_all().map_err(|_| "无法完成程序保存")?;
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::set_permissions(&launcher, std::fs::Permissions::from_mode(0o755))
-        .map_err(|_| "无法设置程序执行权限")?;
+    crate::process_platform::set_executable(&launcher).map_err(|_| "无法设置程序执行权限")?;
     Ok((
         launcher,
         NodeLaunch {
@@ -75,7 +110,7 @@ pub(crate) fn validate(
     let root = root.canonicalize().map_err(|_| "无法确认安装位置")?;
     let launcher =
         crate::agent_discovery::validate_executable_path(&launcher.display().to_string())?;
-    if launcher != root.join("launch-program") || !launcher.starts_with(&root) {
+    if launcher != root.join(LAUNCHER_NAME) || !launcher.starts_with(&root) {
         return Err("程序启动位置已改变，原选择保持不变".into());
     }
     let node = crate::agent_discovery::validate_executable_path(&launch.node)?;
@@ -110,13 +145,8 @@ pub(crate) fn validate(
     {
         return Err("程序安装内容已变化，请重新检查；原选择保持不变".into());
     }
-    let expected = format!(
-        "#!/bin/sh\nexec {} {} \"$@\"\n",
-        quoted(&node)?,
-        quoted(&entry)?
-    );
-    if std::fs::read_to_string(&launcher).map_err(|_| "无法读取程序启动文件")? != expected
-    {
+    let expected = launcher_bytes(&node, &entry)?;
+    if std::fs::read(&launcher).map_err(|_| "无法读取程序启动文件")? != expected {
         return Err("程序启动文件已变化，请重新安装；原选择保持不变".into());
     }
     let actual_node = fresh_program_version(&node, &check)?;
@@ -134,7 +164,10 @@ pub(crate) fn validate(
     Ok(actual)
 }
 
-#[cfg(test)]
+#[cfg(all(test, windows))]
+mod windows_tests;
+
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     #[test]

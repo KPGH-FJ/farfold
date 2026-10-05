@@ -1,0 +1,283 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this boolean expression can be simplified
+  --> src/archive_zip.rs:11:5
+   |
+11 | /     !name.is_empty()
+12 | |         && !(name.chars().any(|ch| {
+13 | |             ch.is_control() || ['<', '>', ':', '"', '/', '\\', '|', '?', '*'].contains(&ch)
+14 | |         }) || name.ends_with(['.', ' '])
+...  |
+24 | |                 }))
+   | |___________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#nonminimal_bool
+   = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+help: try
+   |
+11 ~     !(name.is_empty() || name.chars().any(|ch| {
+12 +             ch.is_control() || ['<', '>', ':', '"', '/', '\\', '|', '?', '*'].contains(&ch)
+13 +         }) || name.ends_with(['.', ' ']) || ["CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$"].contains(&stem.as_str()) || stem
+14 +                 .strip_prefix("COM")
+15 +                 .or_else(|| stem.strip_prefix("LPT"))
+16 +                 .is_some_and(|suffix| {
+17 +                     matches!(
+18 +                         suffix,
+19 ~                         "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "¹" | "²" | "³"
+20 +                     )
+21 +                 }))
+   |
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/browser_workspace/browser_tools.rs:185:61
+    |
+185 |                     let value: Value = serde_json::from_str(&raw).map_err(|_| "网页操作结果未确认，请重新观察；不要自动重试")?;
+    |                                                             ^^^^ help: change this to: `raw`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#needless_borrow
+    = note: `-D clippy::needless-borrow` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: this `if` statement can be collapsed
+  --> src/browser_workspace/windows/observation.rs:54:17
+   |
+54 | /                 if let Ok(message) = serde_json::from_str::<Value>(&raw) {
+55 | |                     if message["name"] == BINDING
+56 | |                         && message["executionContextId"].as_i64() == view.context.get()
+...  |
+68 | |                 }
+   | |_________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+   = note: `-D clippy::collapsible-if` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+   |
+54 ~                 if let Ok(message) = serde_json::from_str::<Value>(&raw)
+55 ~                     && message["name"] == BINDING
+56 |                         && message["executionContextId"].as_i64() == view.context.get()
+...
+66 |                         }
+67 ~                     }
+   |
+
+error: this `if` statement can be collapsed
+  --> src/browser_workspace/windows/observation.rs:55:21
+   |
+55 | /                     if message["name"] == BINDING
+56 | |                         && message["executionContextId"].as_i64() == view.context.get()
+57 | |                     {
+58 | |                         if let Some(revision) = message["payload"]
+...  |
+67 | |                     }
+   | |_____________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+56 ~                         && message["executionContextId"].as_i64() == view.context.get()
+57 ~                         && let Some(revision) = message["payload"]
+58 |                             .as_str()
+...
+64 |                             view.manual_activity();
+65 ~                         }
+   |
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/browser_workspace/windows/preview.rs:226:12
+    |
+226 |     reply: &Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>,
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/browser_workspace/windows/mod.rs:212:12
+    |
+212 |     reply: &Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>,
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#type_complexity
+
+error: could not compile `farfold` (lib) due to 6 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: items after a test module
+   --> src/lib.rs:295:1
+    |
+295 | mod tests {
+    | ^^^^^^^^^
+...
+342 | pub fn run_browser_helper_if_requested() -> Option<i32> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#items_after_test_module
+    = note: `-D clippy::items-after-test-module` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::items_after_test_module)]`
+    = help: move the items to before the test module was defined
+
+error: this `MutexGuard` is held across an await point
+    --> src/acp_client/manager.rs:1379:13
+     |
+1379 |         let updates = seen.lock().unwrap();
+     |             ^^^^^^^
+     |
+     = help: consider using an async-aware `Mutex` type or ensuring the `MutexGuard` is dropped before calling `await`
+note: these are all the await points this lock is held through
+    --> src/acp_client/manager.rs:1417:14
+     |
+1417 |             .await
+     |              ^^^^^
+...
+1430 |             .await
+     |              ^^^^^
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#await_holding_lock
+     = note: `-D clippy::await-holding-lock` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::await_holding_lock)]`
+
+error: items after a test module
+   --> src/acp_client/operations.rs:33:1
+    |
+ 33 |   mod tests {
+    |   ^^^^^^^^^
+...
+123 |   impl Operation {
+    |   ^^^^^^^^^^^^^^
+...
+164 |   pub(crate) struct QueuedCommand {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+170 |   impl super::manager::ManagedConnection {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+194 |   impl ManagerCommand {
+    |   ^^^^^^^^^^^^^^^^^^^
+...
+219 | / pub(crate) async fn execute<T>(
+220 | |     mut reply: oneshot::Sender<Result<T, String>>,
+221 | |     life: Arc<ConnectionLife>,
+222 | |     operation: Operation,
+...   |
+225 | |     future: impl std::future::Future<Output = Result<T, String>>,
+226 | | ) -> Option<T> {
+    | |______________^
+...
+262 | / async fn execute_list<T>(
+263 | |     reply: oneshot::Sender<Result<T, String>>,
+264 | |     life: Arc<ConnectionLife>,
+265 | |     operation: Operation,
+...   |
+268 | |     future: impl std::future::Future<Output = Result<T, String>>,
+269 | | ) -> Option<T> {
+    | |______________^
+...
+282 |   pub(crate) fn authentication_error(error: agent_client_protocol::Error) -> String {
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+293 | / async fn authentication_result(
+294 | |     reply: oneshot::Sender<Result<(), String>>,
+295 | |     life: Arc<ConnectionLife>,
+296 | |     deadline: tokio::time::Instant,
+...   |
+299 | |     future: impl std::future::Future<Output = Result<(), String>>,
+300 | | ) {
+    | |_^
+...
+327 | / pub(crate) async fn run(
+328 | |     queued: QueuedCommand,
+329 | |     cx: ConnectionTo<Agent>,
+330 | |     cwd: PathBuf,
+...   |
+333 | |     ops: SessionOps,
+334 | | ) {
+    | |_^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#items_after_test_module
+
+error: the borrowed expression implements the required traits
+  --> src/acp_client/session_config/tests.rs:12:13
+   |
+12 |             &json!({"sessionId":"fixture","update":value}),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `json!({"sessionId":"fixture","update":value})`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#needless_borrows_for_generic_args
+   = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: this call to `clone` can be replaced with `std::slice::from_ref`
+   --> src/acp_client/transient_mcp_route_tests.rs:284:5
+    |
+284 |     assert_eq!(*owner.bound.lock().unwrap(), [opened.session_id.clone()]);
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#cloned_ref_to_slice_refs
+    = note: `-D clippy::cloned-ref-to-slice-refs` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::cloned_ref_to_slice_refs)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src/browser_sharing/transport.rs:839:9
+    |
+839 | /         wire.waiting = Some(WaitingRead {
+840 | |             request: ToolRequest::Read,
+841 | |             id: json!(42),
+842 | |             permission,
+843 | |         });
+    | |___________^
+    |
+note: consider initializing the variable with `browser_sharing::transport::Wire { waiting: Some(WaitingRead {
+                  request: ToolRequest::Read,
+                  id: json!(42),
+                  permission,
+              }), ..Default::default() }` and removing relevant reassignments
+   --> src/browser_sharing/transport.rs:838:9
+    |
+838 |         let mut wire = Wire::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src/browser_sharing/transport.rs:874:9
+    |
+874 | /         wire.waiting = Some(WaitingRead {
+875 | |             request: ToolRequest::Read,
+876 | |             id: json!(42),
+877 | |             permission,
+878 | |         });
+    | |___________^
+    |
+note: consider initializing the variable with `browser_sharing::transport::Wire { waiting: Some(WaitingRead {
+                  request: ToolRequest::Read,
+                  id: json!(42),
+                  permission,
+              }), ..Default::default() }` and removing relevant reassignments
+   --> src/browser_sharing/transport.rs:873:9
+    |
+873 |         let mut wire = Wire::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#field_reassign_with_default
+
+error: unnecessary use of `to_string`
+  --> src/browser_workspace/local_preview/tests.rs:22:17
+   |
+22 | /                 &preview
+23 | |                     .start_url()
+24 | |                     .join("page?a=1#top")
+25 | |                     .unwrap()
+26 | |                     .to_string()
+   | |________________________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#unnecessary_to_owned
+   = note: `-D clippy::unnecessary-to-owned` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::unnecessary_to_owned)]`
+help: use
+   |
+22 ~                 preview
+23 +                     .start_url()
+24 +                     .join("page?a=1#top")
+25 +                     .unwrap().as_ref()
+   |
+
+error: could not compile `farfold` (lib test) due to 14 previous errors

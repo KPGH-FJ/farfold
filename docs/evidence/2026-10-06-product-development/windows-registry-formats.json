@@ -1,0 +1,318 @@
+{
+  "date": "2026-10-06",
+  "evidenceLevel": "public_registry_manifest_read_only",
+  "scopeSource": "docs/evidence/2026-10-05-first-batch-acp-research/registry-scope-pinned.json",
+  "scopeSnapshotCommit": "8ed458f223534a602cc6b74d186c3898a8428b2d",
+  "sourceCommit": "65ba23daddb224a376e1955f51c095d0fb1b7448",
+  "sourceCommitTime": "2026-10-05T17:32:31Z",
+  "sourceCommitURL": "https://api.github.com/repos/agentclientprotocol/registry/commits/65ba23daddb224a376e1955f51c095d0fb1b7448",
+  "method": "Resolved official main commit, fetched all 33 fixed-commit raw agent.json files through urllib.request with ThreadPoolExecutor(max_workers=8), then enumerated stable distribution.binary keys beginning windows-. No Agent/archive/package was executed. This small record is transcribed from the completed tool output; no second network fetch was made.",
+  "fetchResults": {
+    "success": 33,
+    "failure": 0
+  },
+  "summary": {
+    "agents": 33,
+    "windowsBinaryAgents": 15,
+    "windowsBinaryPlatformItems": 23,
+    "formats": {
+      "zip": 19,
+      "tar.gz": 2,
+      "exe": 2
+    },
+    "tarBz2Items": 0,
+    "withoutWindowsBinary": {
+      "agents": 18,
+      "npxOnly": 17,
+      "uvxOnly": 1
+    }
+  },
+  "comparison": "The 2026-10-05 fixed scope snapshot has the same Windows format totals: zip 19, tar.gz 2, exe 2, tar.bz2 0. Registry versions changed for some entries; installed versions were not changed or inferred.",
+  "agents": [
+    {
+      "id": "amp-acp",
+      "version": "0.9.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/amp-acp/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "antigravity-acp",
+      "version": "1.3.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/antigravity-acp/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64", "windows-aarch64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "auggie",
+      "version": "0.36.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/auggie/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "autohand",
+      "version": "0.2.1",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/autohand/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "claude-acp",
+      "version": "0.86.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/claude-acp/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "cline",
+      "version": "3.0.68",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/cline/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "codebuddy-code",
+      "version": "2.161.3",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/codebuddy-code/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "codex-acp",
+      "version": "2.1.1",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/codex-acp/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "corust-agent",
+      "version": "0.6.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/corust-agent/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "cursor",
+      "version": "2026.10.01",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/cursor/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "devin",
+      "version": "3000.11.3",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/devin/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "dimcode",
+      "version": "0.5.16",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/dimcode/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "dirac",
+      "version": "0.5.17",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/dirac/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "factory-droid",
+      "version": "0.233.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/factory-droid/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "fast-agent",
+      "version": "0.10.1",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/fast-agent/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["uvx"]
+    },
+    {
+      "id": "gemini",
+      "version": "0.62.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/gemini/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "github-copilot-cli",
+      "version": "1.0.91",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/github-copilot-cli/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "goose",
+      "version": "1.53.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/goose/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "grok-build",
+      "version": "1.0.49",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/grok-build/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "junie",
+      "version": "3419.24.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/junie/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64", "windows-aarch64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "kilo",
+      "version": "7.8.3",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/kilo/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "kimchi",
+      "version": "1.6.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/kimchi/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "kimi",
+      "version": "1.52.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/kimi/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "minimax-code",
+      "version": "0.2.7",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/minimax-code/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "mistral-vibe",
+      "version": "2.25.8",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/mistral-vibe/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "nova",
+      "version": "1.1.50",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/nova/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "opencode",
+      "version": "1.18.34",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/opencode/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "pi-acp",
+      "version": "0.0.34",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/pi-acp/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "poolside",
+      "version": "1.0.16",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/poolside/agent.json",
+      "windowsBinaryFormat": "tar.gz",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": []
+    },
+    {
+      "id": "qoder",
+      "version": "0.2.14",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/qoder/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "qwen-code",
+      "version": "0.25.0",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/qwen-code/agent.json",
+      "windowsBinaryFormat": null,
+      "windowsPlatforms": [],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "sigit",
+      "version": "1.6.1",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/sigit/agent.json",
+      "windowsBinaryFormat": "exe",
+      "windowsPlatforms": ["windows-aarch64", "windows-x86_64"],
+      "otherDeclaredRoutes": ["npx"]
+    },
+    {
+      "id": "stakpak",
+      "version": "0.3.88",
+      "sourceURL": "https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/stakpak/agent.json",
+      "windowsBinaryFormat": "zip",
+      "windowsPlatforms": ["windows-x86_64"],
+      "otherDeclaredRoutes": []
+    }
+  ],
+  "previewSpotCheck": {
+    "junie": {
+      "version": "3647.1.0",
+      "windowsFormat": "zip",
+      "platformItems": 2
+    },
+    "claude-acp": {
+      "version": "0.86.1-preview.2",
+      "route": "npx"
+    },
+    "codex-acp": {
+      "version": "2.1.2-preview.1",
+      "route": "npx"
+    }
+  },
+  "limitations": [
+    "The raw GitHub source commit is not a CDN publication receipt or an installed-package receipt.",
+    "Archive format declarations do not establish file contents, platform runtime support, successful installation, authentication, or ACP/model/session behavior.",
+    "Zero Windows tar.bz2 entries only rules out this specific format gap for this reviewed stable 33-entry snapshot. It is not evidence that all 33 Agents pass Windows acceptance.",
+    "No production source changed and no Cargo, installer, downloaded executable, Agent, account or model was started during the format review."
+  ]
+}

@@ -29,7 +29,7 @@ export const SETTINGS_PRESENTATION = {
     },
     {
       title: "API Key",
-      text: "保存在系统钥匙串。保存配置不会自动发送给所有 Agent；使用时由你选择来源。",
+      text: "保存在系统安全存储。保存配置不会自动发送给所有 Agent；使用时由你选择来源。",
     },
     {
       title: "LifeModel",

@@ -132,11 +132,20 @@ fn document_extension(path: &Path) -> bool {
 pub async fn file_delivery_open(webview: Webview, file: VerifiedFile) -> Result<(), String> {
     require_main(&webview)?;
     tauri::async_runtime::spawn_blocking(move || {
-        use std::os::unix::fs::PermissionsExt;
         let path = file_delivery::revalidate_for_open(&file).map_err(display_error)?;
-        let metadata =
-            std::fs::metadata(&path).map_err(|_| display_error(DeliveryError::Changed))?;
-        if !document_extension(Path::new(&path)) || metadata.permissions().mode() & 0o111 != 0 {
+        #[cfg(unix)]
+        let executable = {
+            use std::os::unix::fs::PermissionsExt;
+            std::fs::metadata(&path)
+                .map_err(|_| display_error(DeliveryError::Changed))?
+                .permissions()
+                .mode()
+                & 0o111
+                != 0
+        };
+        #[cfg(windows)]
+        let executable = false; // Windows launchable suffixes are absent from the document allowlist.
+        if !document_extension(Path::new(&path)) || executable {
             return Err("此文件请先定位到文件夹，再选择打开方式".to_owned());
         }
         // Explicit user action only. No command interpolation or open-with override.

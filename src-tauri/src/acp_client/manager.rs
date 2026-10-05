@@ -840,18 +840,6 @@ impl AcpManager {
     }
 }
 
-impl Default for AcpManager {
-    fn default() -> Self {
-        let home = std::env::var_os("HOME")
-            .map(PathBuf::from)
-            .unwrap_or_else(|| PathBuf::from("."));
-        Self::new(
-            home.join("Library/Logs/Farfold"),
-            home.join("Library/Application Support/ai.farfold.desktop"),
-        )
-    }
-}
-
 // ---------------------------------------------------------------------------
 // Commands
 // ---------------------------------------------------------------------------
@@ -1388,40 +1376,41 @@ mod e2e_tests {
                 .trim(),
             "hello"
         );
-        let updates = seen.lock().unwrap();
-        // The artifact pane renders file writes from `type:"diff"` content
-        // or, for agents that don't emit diff blocks, from an `edit`-kind
-        // call whose rawInput carries filePath + new content.
-        let saw_write_evidence = updates.iter().any(|e| {
-            let u = match e.get("update") {
-                Some(u) => u,
-                None => return false,
-            };
-            let diff_content = u
-                .get("content")
-                .and_then(serde_json::Value::as_array)
-                .is_some_and(|content| {
-                    content
-                        .iter()
-                        .any(|c| c.get("type").and_then(serde_json::Value::as_str) == Some("diff"))
-                });
-            let edit_input = u.get("kind").and_then(serde_json::Value::as_str) == Some("edit")
-                && u.pointer("/rawInput/filePath").is_some()
-                && (u.pointer("/rawInput/content").is_some()
-                    || u.pointer("/rawInput/newString").is_some());
-            diff_content || edit_input
-        });
-        if !saw_write_evidence {
-            eprintln!(
-                "event stream: {}",
-                serde_json::to_string_pretty(&*updates).unwrap_or_default()
+        {
+            let updates = seen.lock().unwrap();
+            // The artifact pane renders file writes from `type:"diff"` content
+            // or, for agents that don't emit diff blocks, from an `edit`-kind
+            // call whose rawInput carries filePath + new content.
+            let saw_write_evidence = updates.iter().any(|e| {
+                let u = match e.get("update") {
+                    Some(u) => u,
+                    None => return false,
+                };
+                let diff_content = u
+                    .get("content")
+                    .and_then(serde_json::Value::as_array)
+                    .is_some_and(|content| {
+                        content.iter().any(|c| {
+                            c.get("type").and_then(serde_json::Value::as_str) == Some("diff")
+                        })
+                    });
+                let edit_input = u.get("kind").and_then(serde_json::Value::as_str) == Some("edit")
+                    && u.pointer("/rawInput/filePath").is_some()
+                    && (u.pointer("/rawInput/content").is_some()
+                        || u.pointer("/rawInput/newString").is_some());
+                diff_content || edit_input
+            });
+            if !saw_write_evidence {
+                eprintln!(
+                    "event stream: {}",
+                    serde_json::to_string_pretty(&*updates).unwrap_or_default()
+                );
+            }
+            assert!(
+                saw_write_evidence,
+                "no diff content or edit rawInput in event stream"
             );
         }
-        assert!(
-            saw_write_evidence,
-            "no diff content or edit rawInput in event stream"
-        );
-        drop(updates);
 
         // Resume on a fresh connection: session/load must replay updates.
         manager

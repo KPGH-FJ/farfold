@@ -216,6 +216,7 @@ mod tests {
         assert!(original.origin.host_str().unwrap().len() < 64);
     }
 
+    #[cfg(unix)]
     #[test]
     fn storage_project_is_independent_of_file_receipt_root_and_path_alias() {
         use std::os::unix::fs::symlink;

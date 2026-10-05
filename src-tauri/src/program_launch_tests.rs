@@ -1,3 +1,4 @@
+#![cfg(unix)]
 use crate::npm_release::ProgramRelease;
 use crate::program_launch::{NodeLaunch, create, validate};
 use std::os::unix::fs::{PermissionsExt, symlink};

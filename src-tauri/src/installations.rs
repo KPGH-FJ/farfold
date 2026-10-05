@@ -682,16 +682,24 @@ mod tests {
     use super::*;
 
     pub(super) fn candidate_fixture(store: &MetaStore, root: &Path) -> (AgentRow, ProgramReceipt) {
-        use std::os::unix::fs::PermissionsExt;
         std::fs::create_dir_all(root).unwrap();
-        let program = root.join("program");
+        let program = root.join(if cfg!(windows) {
+            "program.exe"
+        } else {
+            "program"
+        });
         std::fs::write(&program, "#!/bin/sh\nprintf '0.81.0\\n'\n").unwrap();
-        std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+        // This fixture is selected as metadata only, never launched.
+        crate::process_platform::set_executable(&program).unwrap();
         let row = AgentRow {
             id: "pi".into(),
             name: "Pi".into(),
             source: "registry".into(),
-            command: "/bin/sh".into(),
+            command: if cfg!(windows) {
+                std::env::current_exe().unwrap().display().to_string()
+            } else {
+                "/bin/sh".into()
+            },
             args: vec!["kept-component".into()],
             env: vec![("PI_ACP_PI_COMMAND".into(), "/external/daily-pi".into())],
             version: Some("0.0.34".into()),
@@ -784,13 +792,13 @@ mod tests {
         assert_eq!(store.get_agent(&row.id).unwrap().unwrap(), row);
         commit_candidate(&store, &candidate, Some(&row), None).unwrap();
         let mut external = item.clone();
-        external.path = "/bin/sh".into();
+        external.path = row.command.clone();
         external.managed_root = None;
         external.node_launch = None;
         external.release = None;
         let returned = selection_candidate(&external, &candidate, data.path(), || Ok(())).unwrap();
         assert_eq!(returned.command, row.command);
-        assert_eq!(program_path(&returned), Some("/bin/sh"));
+        assert_eq!(program_path(&returned), Some(row.command.as_str()));
     }
 
     #[test]
@@ -798,7 +806,8 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let data = dir.path().canonicalize().unwrap();
         let store = MetaStore::open(&data.join("meta.db")).unwrap();
-        let root = data.join("agents/registry:amp-acp/dependency-fixture");
+        let root =
+            crate::managed_programs::parent(&data, "registry:amp-acp").join("dependency-fixture");
         std::fs::create_dir_all(&root).unwrap();
         let program = root.join("amp");
         std::fs::write(&program, "fixture").unwrap();
@@ -1098,9 +1107,12 @@ mod tests {
         assert!(owned_root(&item, dir.path()).is_ok());
         item.managed_root = None;
         assert!(owned_root(&item, dir.path()).is_err());
-        let link = parent.join("link");
-        std::os::unix::fs::symlink(&root, &link).unwrap();
-        item.managed_root = Some(link.display().to_string());
-        assert!(owned_root(&item, dir.path()).is_err());
+        #[cfg(unix)]
+        {
+            let link = parent.join("link");
+            std::os::unix::fs::symlink(&root, &link).unwrap();
+            item.managed_root = Some(link.display().to_string());
+            assert!(owned_root(&item, dir.path()).is_err());
+        }
     }
 }

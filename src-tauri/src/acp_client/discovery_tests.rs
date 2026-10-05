@@ -63,7 +63,7 @@ impl Fixture {
             id: "history-fixture".into(),
             name: "History fixture".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: crate::platform_tests::python(),
             args: vec![
                 "-u".into(),
                 script.to_string_lossy().into_owned(),
@@ -656,7 +656,7 @@ async fn preview_cleanup_is_idempotent_after_detach_and_agent_exit() {
         .unwrap();
     let pid = owner.child_pid.load(std::sync::atomic::Ordering::SeqCst);
     assert!(pid > 0);
-    assert_eq!(unsafe { libc::kill(pid as i32, libc::SIGTERM) }, 0);
+    assert_eq!(crate::platform_tests::terminate(pid as i32), 0);
     let _ = tokio::time::timeout(std::time::Duration::from_secs(5), owner.life.closed())
         .await
         .unwrap();

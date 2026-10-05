@@ -164,7 +164,7 @@ async fn explicit_and_unexpected_close_reasons_reach_status_and_the_conversation
             let pid = connection
                 .child_pid
                 .load(std::sync::atomic::Ordering::SeqCst);
-            assert_eq!(unsafe { libc::kill(pid as i32, libc::SIGTERM) }, 0);
+            assert_eq!(crate::platform_tests::terminate(pid as i32), 0);
             CloseReason::Unexpected
         } else {
             f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();

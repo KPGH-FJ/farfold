@@ -2,7 +2,6 @@
 use serde::Serialize;
 use std::collections::HashMap;
 use std::io::Read;
-use std::os::fd::AsRawFd;
 use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::{
     Arc, Mutex, OnceLock,
@@ -129,16 +128,17 @@ impl InstallDiagnostics {
     }
 }
 
-struct InstallChild(Child);
+struct InstallChild {
+    child: Child,
+    _group: crate::process_platform::OwnedGroup,
+}
 impl Drop for InstallChild {
     fn drop(&mut self) {
         // This command owns the process group. Descendants may still hold
         // stderr even after npm itself exits.
-        unsafe {
-            libc::kill(-(self.0.id() as i32), libc::SIGKILL);
-        }
-        let _ = self.0.kill();
-        let _ = self.0.wait();
+        crate::supervisor::signal_owned_group(self.child.id(), crate::supervisor::KILL);
+        let _ = self.child.kill();
+        let _ = self.child.wait();
     }
 }
 impl Job {
@@ -235,25 +235,28 @@ impl Job {
     }
     pub fn run(&self, command: &mut Command) -> Result<(), String> {
         self.check()?;
-        #[cfg(unix)]
-        {
-            use std::os::unix::process::CommandExt;
-            command.process_group(0);
-        }
-        let mut child = InstallChild(
-            command
-                .stdin(Stdio::null())
-                .stdout(Stdio::null())
-                .stderr(Stdio::piped())
-                .spawn()
-                .map_err(|_| "安装程序未能启动，请重试".to_string())?,
-        );
-        let mut stderr = child.0.stderr.take().ok_or("无法读取安装结果，请重试")?;
-        let fd = stderr.as_raw_fd();
-        let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
-        if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
-            return Err("无法读取安装结果，请重试".into());
-        }
+        let pending =
+            crate::process_platform::prepare_command(command).map_err(|_| "无法准备安装程序")?;
+        let child = command
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::piped())
+            .spawn()
+            .map_err(|_| "安装程序未能启动，请重试")?;
+        let group = pending
+            .attach(child.id())
+            .map_err(|_| "无法确认安装程序进程")?;
+        let mut child = InstallChild {
+            child,
+            _group: group,
+        };
+        let stderr = child
+            .child
+            .stderr
+            .take()
+            .ok_or("无法读取安装结果，请重试")?;
+        let mut stderr = crate::process_platform::PipeReader::new(stderr)
+            .map_err(|_| "无法读取安装结果，请重试")?;
         let mut diagnostics = InstallDiagnostics::default();
         let started = std::time::Instant::now();
         loop {
@@ -264,7 +267,7 @@ impl Job {
             diagnostics
                 .drain(&mut stderr)
                 .map_err(|_| "无法读取安装结果，请重试")?;
-            match child.0.try_wait() {
+            match child.child.try_wait() {
                 Ok(Some(status)) => {
                     diagnostics
                         .drain(&mut stderr)
@@ -389,13 +392,19 @@ mod tests {
     #[test]
     fn failed_install_reports_safe_error_code_without_echoing_output() {
         let lease = begin("safe-install-error", Channel::new(|_| Ok(()))).unwrap();
-        let error = lease
-            .job
-            .run(Command::new("/bin/sh").args([
-                "-c",
-                "printf '%s\\n' 'npm error code EACCES' 'Authorization: Bearer fixture-secret' 'https://user:password@example.invalid/private?token=secret' >&2; exit 13",
-            ]))
-            .unwrap_err();
+        #[cfg(windows)]
+        let mut command = {
+            let mut command = Command::new(crate::windows_process::helper_executable().unwrap());
+            command.arg("install-error");
+            command
+        };
+        #[cfg(unix)]
+        let mut command = {
+            let mut command = Command::new("/bin/sh");
+            command.args(["-c", "printf '%s\\n' 'npm error code EACCES' 'Authorization: Bearer fixture-secret' 'https://user:password@example.invalid/private?token=secret' >&2; exit 13"]);
+            command
+        };
+        let error = lease.job.run(&mut command).unwrap_err();
         assert!(error.contains("EACCES"), "{error}");
         assert!(error.contains("13"), "{error}");
         for secret in ["fixture-secret", "password", "example.invalid", "Bearer"] {
@@ -406,13 +415,19 @@ mod tests {
     #[test]
     fn failed_install_drains_large_stderr_without_losing_its_safe_error_code() {
         let lease = begin("large-install-error", Channel::new(|_| Ok(()))).unwrap();
-        let error = lease
-            .job
-            .run(Command::new("/bin/sh").args([
-                "-c",
-                "i=0; while [ $i -lt 10000 ]; do printf 'untrusted-output-and-secret-value\\n' >&2; i=$((i + 1)); done; printf 'npm ERR! code ENOSPC\\n' >&2; exit 1",
-            ]))
-            .unwrap_err();
+        #[cfg(windows)]
+        let mut command = {
+            let mut command = Command::new(crate::windows_process::helper_executable().unwrap());
+            command.arg("install-large-error");
+            command
+        };
+        #[cfg(unix)]
+        let mut command = {
+            let mut command = Command::new("/bin/sh");
+            command.args(["-c", "i=0; while [ $i -lt 10000 ]; do printf 'untrusted-output-and-secret-value\\n' >&2; i=$((i + 1)); done; printf 'npm ERR! code ENOSPC\\n' >&2; exit 1"]);
+            command
+        };
+        let error = lease.job.run(&mut command).unwrap_err();
         assert!(error.contains("ENOSPC"), "{error}");
         assert!(error.len() < 300);
         assert!(!error.contains("secret"));

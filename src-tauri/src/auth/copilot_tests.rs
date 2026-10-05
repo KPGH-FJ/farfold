@@ -1,43 +1,53 @@
 //! Owned package/SDK/PTY fixtures only; no official CLI, account or Keychain.
 use super::*;
+use crate::acp_client::recipes::COPILOT_LOGIN as DECLARATION;
 use serde_json::{Value, json};
-use std::{
-    os::unix::fs::{PermissionsExt, symlink},
-    path::{Path, PathBuf},
-    sync::Arc,
-};
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
+use std::path::{Path, PathBuf};
 
 struct Fixture {
-    _temp: tempfile::TempDir,
     data: PathBuf,
     root: PathBuf,
     loader: PathBuf,
     target: PathBuf,
     row: AgentRow,
     store: MetaStore,
+    // Keep the directory until its SQLite store has closed on Windows.
+    _temp: tempfile::TempDir,
 }
 
 fn executable(path: &Path, body: &str) {
     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
     std::fs::write(path, body).unwrap();
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(path).unwrap();
 }
 
 impl Fixture {
     fn new() -> Self {
-        Self::with_layout(false)
+        Self::with_layout(cfg!(windows))
     }
     fn with_layout(encoded: bool) -> Self {
         let temp = tempfile::tempdir().unwrap();
         let data = temp.path().canonicalize().unwrap().join("data");
-        let root = data.join(if encoded {
+        let root = data.join(if encoded || cfg!(windows) {
             "agent-installations/agent-registry%3Agithub-copilot-cli/install-fixture"
         } else {
             "agents/registry:github-copilot-cli/install-fixture"
         });
-        let loader = root.join("node_modules/@github/copilot/npm-loader.js");
-        let target = root.join("node_modules/@github/copilot-darwin-arm64/copilot");
-        let node = data.join("tools/node");
+        let loader = root
+            .join("node_modules")
+            .join(DECLARATION.package)
+            .join(DECLARATION.loader);
+        let target = root
+            .join("node_modules")
+            .join(DECLARATION.platform_package)
+            .join(DECLARATION.platform_entry);
+        let node = data.join(if cfg!(windows) {
+            "tools/node.exe"
+        } else {
+            "tools/node"
+        });
         executable(&node, "#!/bin/sh\nexec /usr/bin/python3 \"$@\"\n");
         executable(&target, "#!/bin/sh\nexit 0\n");
         executable(
@@ -51,14 +61,14 @@ for line in sys.stdin:
  m=json.loads(line)
  Path(__file__).with_name('protocol-observed').open('a').write(m.get('method','')+'\n')
  if m.get('method')=='initialize':
-  target=str(Path(__file__).parent.parent/'copilot-darwin-arm64'/'copilot')
+  target=str(Path(__file__).parent.parent/'FIXTURE_PLATFORM_PACKAGE'/'FIXTURE_PLATFORM_ENTRY')
   result={'protocolVersion':1,'agentCapabilities':{},'authMethods':[{'id':'copilot-login','name':'Login','_meta':{'terminal-auth':{'command':target,'args':['login']}}}]}
  else: result={}
  print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':result}),flush=True)
-"#,
+"#.replace("FIXTURE_PLATFORM_PACKAGE", DECLARATION.platform_package.strip_prefix("@github/").unwrap()).replace("FIXTURE_PLATFORM_ENTRY", DECLARATION.platform_entry).as_str(),
         );
-        std::fs::write(loader.with_file_name("package.json"), json!({"name":"@github/copilot","version":"1.0.89","bin":{"copilot":"npm-loader.js"},"optionalDependencies":{"@github/copilot-darwin-arm64":"1.0.89"}}).to_string()).unwrap();
-        std::fs::write(target.with_file_name("package.json"), json!({"name":"@github/copilot-darwin-arm64","version":"1.0.89","os":["darwin"],"cpu":["arm64"],"exports":{".":"./copilot"}}).to_string()).unwrap();
+        std::fs::write(loader.with_file_name("package.json"), json!({"name":DECLARATION.package,"version":DECLARATION.version,"bin":{"copilot":DECLARATION.loader},"optionalDependencies":{(DECLARATION.platform_package):DECLARATION.version}}).to_string()).unwrap();
+        std::fs::write(target.with_file_name("package.json"), json!({"name":DECLARATION.platform_package,"version":DECLARATION.version,"os":[if cfg!(windows) {"win32"} else {"darwin"}],"cpu":[if cfg!(target_arch="aarch64") {"arm64"} else {"x64"}],"exports":{".":format!("./{}", DECLARATION.platform_entry)}}).to_string()).unwrap();
         let row = AgentRow {
             id: "registry:github-copilot-cli".into(),
             name: "Fixture".into(),
@@ -177,12 +187,20 @@ fn copilot_rejects_wrong_package_platform_version_and_unbounded_manifests() {
         (
             "main",
             "optionalDependencies",
-            json!({"@github/copilot-darwin-arm64":"1.0.90"}),
+            json!({(DECLARATION.platform_package):"1.0.90"}),
         ),
         ("platform", "name", json!("another-platform")),
         ("platform", "version", json!("1.0.90")),
         ("platform", "os", json!(["linux"])),
-        ("platform", "cpu", json!(["x64"])),
+        (
+            "platform",
+            "cpu",
+            json!([if cfg!(target_arch = "aarch64") {
+                "x64"
+            } else {
+                "arm64"
+            }]),
+        ),
         ("platform", "exports", json!({".":"./other"})),
     ] {
         let f = Fixture::new();
@@ -205,26 +223,37 @@ fn copilot_rejects_wrong_package_platform_version_and_unbounded_manifests() {
 }
 
 #[test]
-fn copilot_rejects_nearer_packages_even_when_their_symlink_is_broken() {
-    for near in [
-        "node_modules/@github/copilot/node_modules/@github/copilot-darwin-arm64",
-        "node_modules/@github/node_modules/@github/copilot-darwin-arm64",
-    ] {
-        for broken in [false, true] {
-            let f = Fixture::new();
-            let path = f.root.join(near);
-            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
-            if broken {
-                symlink(f.root.join("missing"), &path).unwrap();
-            } else {
-                std::fs::create_dir(&path).unwrap();
-            }
-            f.denied();
-        }
+fn copilot_rejects_nearer_packages() {
+    for near in ["node_modules/@github/copilot", "node_modules/@github"] {
+        let f = Fixture::new();
+        let path = f
+            .root
+            .join(near)
+            .join("node_modules")
+            .join(DECLARATION.platform_package);
+        std::fs::create_dir_all(&path).unwrap();
+        f.denied();
     }
 }
 
 #[test]
+#[cfg(unix)]
+fn copilot_rejects_nearer_packages_even_when_their_symlink_is_broken() {
+    for near in ["node_modules/@github/copilot", "node_modules/@github"] {
+        let f = Fixture::new();
+        let path = f
+            .root
+            .join(near)
+            .join("node_modules")
+            .join(DECLARATION.platform_package);
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        symlink(f.root.join("missing"), &path).unwrap();
+        f.denied();
+    }
+}
+
+#[test]
+#[cfg(unix)]
 fn copilot_rejects_a_broken_scoped_directory_before_the_flat_platform_package() {
     for near in [
         "node_modules/@github/copilot/node_modules/@github",
@@ -240,6 +269,7 @@ fn copilot_rejects_a_broken_scoped_directory_before_the_flat_platform_package() 
 }
 
 #[test]
+#[cfg(unix)]
 fn copilot_rejects_redirected_loader_package_root_and_target() {
     for target in [
         "loader-inside",
@@ -373,8 +403,10 @@ fn copilot_standard_terminal_keeps_literal_append_despite_invalid_old_metadata()
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[cfg(unix)]
 async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proof() {
     use crate::acp_client::manager::AuthenticationOperation;
+    use std::sync::Arc;
     use std::sync::atomic::{AtomicUsize, Ordering};
     struct Owners {
         manager: Arc<AcpManager>,

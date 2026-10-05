@@ -1,20 +1,17 @@
 //! One authenticated local MCP connection. The helper owns its standard stdout.
 //! Shared-page stop succeeds only after the helper acknowledges its output gate.
 //! No page content or bearer secret is logged or persisted by this module.
-use super::{helper, permission::PermissionWait, protocol};
+use super::{
+    channel::{self, Listener, Stream, poll_ready, wait_fd},
+    helper,
+    permission::PermissionWait,
+    protocol,
+};
 use crate::browser_workspace::{FixedPageReadScope, ToolRequest};
 use agent_client_protocol::schema::v1::{EnvVariable, McpServerStdio};
 use serde_json::Value;
 use std::{
-    fs,
     io::{Read, Write},
-    os::{
-        fd::AsRawFd,
-        unix::{
-            fs::PermissionsExt,
-            net::{UnixListener, UnixStream},
-        },
-    },
     path::PathBuf,
     sync::{
         Arc, Mutex,
@@ -128,34 +125,17 @@ pub(super) fn start(
     on_permission: Permission,
     on_invalidated: Invalidated,
 ) -> Result<(TransportHandle, HelperLaunch), String> {
-    let directory = tempfile::Builder::new()
-        .prefix("ff-page-")
-        .tempdir_in("/tmp")
-        .map_err(|_| "无法准备网页工具".to_owned())?;
-    fs::set_permissions(directory.path(), fs::Permissions::from_mode(0o700))
-        .map_err(|_| "无法准备网页工具".to_owned())?;
-    let endpoint = directory.path().join("mcp.sock");
-    let listener = UnixListener::bind(&endpoint).map_err(|_| "无法准备网页工具".to_owned())?;
-    fs::set_permissions(&endpoint, fs::Permissions::from_mode(0o600))
-        .map_err(|_| "无法准备网页工具".to_owned())?;
-    listener
-        .set_nonblocking(true)
-        .map_err(|_| "无法准备网页工具".to_owned())?;
+    let channel::Endpoint {
+        guard: directory,
+        listener,
+        path: endpoint,
+        name,
+    } = channel::create().map_err(|_| "无法准备网页工具".to_owned())?;
     let mut random = [0u8; 32];
-    if unsafe { libc::getentropy(random.as_mut_ptr().cast(), random.len()) } != 0 {
-        return Err("无法准备临时读取许可".into());
-    }
+    getrandom::fill(&mut random).map_err(|_| "无法准备临时读取许可")?;
     let capability: String = random.iter().map(|byte| format!("{byte:02x}")).collect();
     random.fill(0);
-    let name = format!(
-        "farfold_page_{}",
-        directory
-            .path()
-            .file_name()
-            .and_then(|value| value.to_str())
-            .ok_or("无法准备网页工具名称")?
-            .replace('-', "_")
-    );
+    let name = format!("farfold_page_{name}");
     let launch = HelperLaunch {
         name,
         command: std::env::current_exe().map_err(|_| "找不到网页工具程序".to_owned())?,
@@ -401,7 +381,7 @@ impl Worker {
             notify_page_closed(&self.page, &self.on_closed, confirmed);
         }
     }
-    fn accept(&mut self, listener: UnixListener, capability: String) -> bool {
+    fn accept(&mut self, listener: Listener, capability: String) -> bool {
         let deadline = Instant::now() + BOOTSTRAP_TTL;
         while Instant::now() < deadline && !self.shutdown.load(Ordering::Acquire) {
             while let Ok(Control::Quiesce(reply)) = self.controls.try_recv() {
@@ -440,7 +420,7 @@ impl Worker {
                     return self.serve(channel);
                 }
                 Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
-                    wait_fd(listener.as_raw_fd(), libc::POLLIN, 50)
+                    wait_fd(channel::listener_token(&listener), channel::READ, 50)
                 }
                 Err(_) => return true,
             }
@@ -561,7 +541,7 @@ impl Worker {
         }
         true
     }
-    fn serve(&mut self, mut channel: UnixStream) -> bool {
+    fn serve(&mut self, mut channel: Stream) -> bool {
         let mut protocol = protocol::Protocol::default();
         let mut input = Vec::new();
         let mut wire = Wire::default();
@@ -637,7 +617,7 @@ impl Worker {
             }
             // Read control traffic before attempting an outgoing response. A stop
             // acknowledgement is never inferred from socket EOF or queued writes.
-            if poll_ready(channel.as_raw_fd(), libc::POLLIN) {
+            if poll_ready(channel::token(&channel), channel::READ) {
                 let mut bytes = [0u8; 8192];
                 match channel.read(&mut bytes) {
                     Ok(0) => return false,
@@ -770,7 +750,7 @@ impl Worker {
                     }
                     (self.on_invalidated)(scope);
                 }
-                if poll_ready(channel.as_raw_fd(), libc::POLLOUT) {
+                if poll_ready(channel::token(&channel), channel::WRITE) {
                     match channel.write(&packet.bytes[packet.written..]) {
                         Ok(0) => return false,
                         Ok(count) => {
@@ -784,13 +764,13 @@ impl Worker {
                     }
                 }
             }
-            let events = libc::POLLIN
+            let events = channel::READ
                 | if wire.packets.is_empty() {
                     0
                 } else {
-                    libc::POLLOUT
+                    channel::WRITE
                 };
-            wait_fd(channel.as_raw_fd(), events, 50);
+            wait_fd(channel::token(&channel), events, 50);
         }
     }
 }
@@ -803,7 +783,7 @@ fn same_capability(left: &[u8], right: &[u8]) -> bool {
         .fold(0u8, |difference, (a, b)| difference | (a ^ b))
         == 0
 }
-fn read_hello(channel: &mut UnixStream) -> Result<Value, ()> {
+fn read_hello(channel: &mut Stream) -> Result<Value, ()> {
     let deadline = Instant::now() + Duration::from_secs(1);
     let mut bytes = Vec::new();
     loop {
@@ -826,25 +806,6 @@ fn read_hello(channel: &mut UnixStream) -> Result<Value, ()> {
         }
     }
 }
-fn poll_ready(fd: i32, interests: i16) -> bool {
-    let mut descriptor = libc::pollfd {
-        fd,
-        events: interests,
-        revents: 0,
-    };
-    unsafe { libc::poll(&mut descriptor, 1, 0) > 0 }
-}
-fn wait_fd(fd: i32, interests: i16, timeout: i32) {
-    let mut descriptor = libc::pollfd {
-        fd,
-        events: interests,
-        revents: 0,
-    };
-    unsafe {
-        libc::poll(&mut descriptor, 1, timeout);
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -874,12 +835,14 @@ mod tests {
     #[test]
     fn cancellation_finishes_only_the_original_waiting_call() {
         let (owner, permission) = waiting_fixture();
-        let mut wire = Wire::default();
-        wire.waiting = Some(WaitingRead {
-            request: ToolRequest::Read,
-            id: json!(42),
-            permission,
-        });
+        let mut wire = Wire {
+            waiting: Some(WaitingRead {
+                request: ToolRequest::Read,
+                id: json!(42),
+                permission,
+            }),
+            ..Default::default()
+        };
         wire.cancel(&json!(41)).unwrap();
         assert!(wire.waiting.is_some());
         assert!(
@@ -909,12 +872,14 @@ mod tests {
     #[test]
     fn stopping_permission_wait_returns_same_call_error_and_still_waits_for_ack() {
         let (owner, permission) = waiting_fixture();
-        let mut wire = Wire::default();
-        wire.waiting = Some(WaitingRead {
-            request: ToolRequest::Read,
-            id: json!(42),
-            permission,
-        });
+        let mut wire = Wire {
+            waiting: Some(WaitingRead {
+                request: ToolRequest::Read,
+                id: json!(42),
+                permission,
+            }),
+            ..Default::default()
+        };
         let (send, mut receive) = oneshot::channel();
         wire.stop(false, Some(send)).unwrap();
         assert!(wire.waiting.is_none());

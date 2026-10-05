@@ -9,7 +9,7 @@ fn update(value: Value) -> Dispatch {
     Dispatch::Notification(
         UntypedMessage::new(
             "session/update",
-            &json!({"sessionId":"fixture","update":value}),
+            json!({"sessionId":"fixture","update":value}),
         )
         .unwrap(),
     )

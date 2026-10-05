@@ -1,7 +1,7 @@
 [package]
 name = "farfold"
 version = "0.1.7"
-description = "A macOS desktop workspace for external coding agents"
+description = "A desktop workspace for external coding agents"
 authors = ["Farfold"]
 edition = "2024"
 default-run = "farfold"
@@ -18,6 +18,8 @@ agent-client-protocol = "=2.2.0"
 async-process = "=2.5.0"
 base64 = "0.22"
 flate2 = "=1.1.9"
+futures-lite = "=2.6.1"
+getrandom = "=0.3.4"
 libc = "0.2"
 minisign-verify = "=0.2.5"
 portable-pty = "=0.9.0"
@@ -36,3 +38,9 @@ tauri-plugin-single-instance = "=2.4.4"
 tauri-plugin-updater = "=2.10.1"
 tempfile = "=3.27.0"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
+zip = { version = "=4.6.1", default-features = false, features = ["deflate-flate2"] }
+
+[target.'cfg(windows)'.dependencies]
+webview2-com = "=0.38.2"
+windows = { version = "=0.61.3", features = ["Data_Xml_Dom", "Foundation", "UI_Notifications", "Win32_Foundation", "Win32_System_Com", "Win32_System_Ole", "Win32_System_WinRT", "Win32_UI_WindowsAndMessaging", "Win32_UI_Shell", "Win32_System_Threading", "Win32_System_IO"] }
+windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Globalization", "Win32_Security", "Win32_Security_Authorization", "Win32_Security_Credentials", "Win32_Security_Cryptography", "Win32_Storage_FileSystem", "Win32_System_Console", "Win32_System_IO", "Win32_System_JobObjects", "Win32_System_Pipes", "Win32_System_SystemServices", "Win32_System_Threading", "Win32_System_WindowsProgramming", "Wdk_Foundation", "Wdk_Storage_FileSystem"] }

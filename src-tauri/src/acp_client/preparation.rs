@@ -234,10 +234,14 @@ fn resolve_in(
         return Some(selected(path));
     }
     find_binary(declaration.binary, dirs).or_else(|| {
-        let candidate = home?
-            .join(declaration.home_bin_dir?)
-            .join(declaration.binary);
-        candidate.exists().then_some(candidate)
+        let directory = home?.join(declaration.home_bin_dir?);
+        let candidate = directory.join(declaration.binary);
+        if candidate.exists() {
+            return Some(candidate);
+        }
+        // Official Windows CLIs retain their executable suffix in standard
+        // locations even when the declared command name has no suffix.
+        find_binary(declaration.binary, &[directory])
     })
 }
 
@@ -260,7 +264,7 @@ pub(crate) fn resolve_dependency(
     let dirs = search_path
         .map(|path| std::env::split_paths(path).collect::<Vec<_>>())
         .unwrap_or_default();
-    let home = std::env::var_os("HOME").map(PathBuf::from);
+    let home = crate::process_platform::home_dir();
     resolve_in(
         declaration,
         row,
@@ -271,10 +275,7 @@ pub(crate) fn resolve_dependency(
 }
 
 fn executable(path: &Path) -> bool {
-    use std::os::unix::fs::PermissionsExt;
-    path.is_absolute()
-        && path.is_file()
-        && std::fs::metadata(path).is_ok_and(|metadata| metadata.permissions().mode() & 0o111 != 0)
+    path.is_absolute() && crate::process_platform::executable(path)
 }
 
 /// Launch-copy only; never changes a user's selected path or external config.
@@ -354,7 +355,6 @@ fn observe_program(
     refresh: bool,
     check: impl Fn() -> Result<(), String>,
 ) -> Result<ProgramObservation, String> {
-    use std::os::unix::fs::PermissionsExt;
     check()?;
     if !executable(path) {
         return Ok(ProgramObservation {
@@ -368,7 +368,7 @@ fn observe_program(
         canonical: path.canonicalize().map_err(|_| "无法读取所选程序位置")?,
         length: metadata.len(),
         modified: metadata.modified().ok(),
-        mode: metadata.permissions().mode(),
+        mode: crate::process_platform::permissions_stamp(&metadata),
     };
     static CACHE: OnceLock<Mutex<ProbeCache>> = OnceLock::new();
     let mut cache = loop {
@@ -575,6 +575,7 @@ mod companion_preparation_tests;
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(unix)]
     use std::os::unix::fs::PermissionsExt;
 
     fn row(id: &str) -> AgentRow {
@@ -758,6 +759,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn version_probe_is_cached_and_rechecks_changed_file_without_a_version_allowlist() {
         let root = tempfile::tempdir().unwrap();
         let program = root.path().join("program");
@@ -780,6 +782,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn dependency_guard_only_checks_paths_and_never_executes_the_program() {
         let root = tempfile::tempdir().unwrap();
         let program = root.path().join("program");
@@ -822,6 +825,24 @@ mod tests {
         );
     }
 
+    #[test]
+    #[cfg(windows)]
+    fn standard_windows_location_resolves_the_executable_suffix_without_path() {
+        let home = tempfile::tempdir().unwrap();
+        let declaration = &super::super::recipes::AMP_DEPENDENCIES[0];
+        let path = home
+            .path()
+            .join(declaration.home_bin_dir.unwrap())
+            .join("amp.exe");
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(&path, "synthetic PE location; not executed").unwrap();
+        assert_eq!(
+            resolve_in(declaration, None, &[], Some(home.path()), None),
+            Some(path)
+        );
+    }
+
+    #[cfg(unix)]
     fn version_fixture(root: &Path, version: &str) -> PathBuf {
         let path = root.join("program");
         std::fs::write(&path, format!("#!/bin/sh\nprintf '%s\\n' '{version}'\n")).unwrap();
@@ -830,6 +851,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn supported_scope_reports_old_program_without_blocking_executable_use() {
         let root = tempfile::tempdir().unwrap();
         let mut agent =
@@ -857,6 +879,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn unknown_version_or_new_component_has_no_invented_requirement_gate() {
         let root = tempfile::tempdir().unwrap();
         let mut agent =
@@ -901,6 +924,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn explicit_refresh_reads_new_version_without_relying_on_only_a_launcher_stamp() {
         let root = tempfile::tempdir().unwrap();
         let program = root.path().join("program");

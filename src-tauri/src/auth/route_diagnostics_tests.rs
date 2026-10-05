@@ -1,7 +1,7 @@
 //! Owned file fixtures only. No Agent, account, credential or user data access.
 use super::*;
 use serde_json::json;
-use std::{os::unix::fs::PermissionsExt, path::Path};
+use std::path::Path;
 
 const INVALID: &str = "此登录方式提供的信息不完整或格式不正确，请在更多登录方式中明确配置";
 const PATH_UNAVAILABLE: &str = "无法确认此登录方式的程序路径，请检查程序或在更多登录方式中明确配置";
@@ -12,7 +12,7 @@ const CANARY: &str = "fixture-auth-route-sensitive-canary";
 
 fn executable(path: &Path) {
     std::fs::write(path, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(path).unwrap();
 }
 fn row(command: &Path, args: Vec<String>, method: serde_json::Value) -> AgentRow {
     AgentRow {
@@ -59,7 +59,12 @@ fn denied(row: &AgentRow, expected: &str) {
 #[test]
 fn auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("selected");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&selected);
     for method in [
         json!({"id":"login","name":"Login","_farfoldInvalid":true,"secret":CANARY}),
@@ -74,9 +79,14 @@ fn auth_route_diagnostics_invalid_markers_and_malformed_values_have_fixed_reason
 #[test]
 fn auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("selected");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&selected);
-    let missing = dir.path().join(CANARY);
+    let missing = root.join(CANARY);
     denied(
         &row(
             &selected,
@@ -85,7 +95,7 @@ fn auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program() {
         ),
         PATH_UNAVAILABLE,
     );
-    let other = dir.path().join("other");
+    let other = root.join(if cfg!(windows) { "other.exe" } else { "other" });
     executable(&other);
     denied(
         &row(
@@ -100,9 +110,14 @@ fn auth_route_diagnostics_unresolved_paths_are_distinct_from_another_program() {
 #[test]
 fn auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interpreter() {
     let dir = tempfile::tempdir().unwrap();
-    let python = dir.path().join("python3.13");
-    let selected = dir.path().join("selected.py");
-    let other = dir.path().join("other.py");
+    let root = dir.path().canonicalize().unwrap();
+    let python = root.join(if cfg!(windows) {
+        "python3.13.exe"
+    } else {
+        "python3.13"
+    });
+    let selected = root.join("selected.py");
+    let other = root.join("other.py");
     for path in [&python, &selected, &other] {
         executable(path);
     }
@@ -119,7 +134,8 @@ fn auth_route_diagnostics_script_mismatch_does_not_authorize_the_same_interprete
 #[test]
 fn auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailable() {
     let dir = tempfile::tempdir().unwrap();
-    let node = dir.path().join("node");
+    let root = dir.path().canonicalize().unwrap();
+    let node = root.join(if cfg!(windows) { "node.exe" } else { "node" });
     executable(&node);
     denied(
         &row(
@@ -129,7 +145,7 @@ fn auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailab
         ),
         LAUNCH_UNSUPPORTED,
     );
-    let missing = dir.path().join(CANARY);
+    let missing = root.join(CANARY);
     denied(
         &row(
             &node,
@@ -143,7 +159,12 @@ fn auth_route_diagnostics_interpreter_flags_and_missing_scripts_remain_unavailab
 #[test]
 fn auth_route_diagnostics_malformed_environment_is_not_partially_delivered() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("selected");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&selected);
     let mut method = legacy(&selected, json!(["login", CANARY]));
     method["env"] = json!({"BAD-NAME":CANARY});
@@ -153,7 +174,12 @@ fn auth_route_diagnostics_malformed_environment_is_not_partially_delivered() {
 #[test]
 fn auth_route_diagnostics_standard_terminal_still_appends_exact_declared_arguments() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("selected");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     let row = row(
         &selected,
         vec!["acp".into()],

@@ -1,6 +1,8 @@
 //! Temporary, explicitly granted access to one running public page.
 //! Agent-specific eligibility lives in acp_client; no page bodies are retained here.
+mod channel;
 mod helper;
+mod helper_io;
 mod permission;
 mod protocol;
 #[cfg(test)]

@@ -83,7 +83,7 @@ impl Fixture {
             id: "lifecycle-fixture".into(),
             name: "Fixture".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: crate::platform_tests::python(),
             args: vec![
                 "-u".into(),
                 script.to_string_lossy().into(),
@@ -199,7 +199,7 @@ async fn disconnect_interrupts_hung_list_and_reaps_its_exact_child() {
     let listing = tokio::spawn(async move { manager.agent_session_list(&agent, &cwd).await });
     until(|| f.cwd.join("listed").exists()).await;
     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
-    until(|| unsafe { libc::kill(pid as i32, 0) != 0 }).await;
+    until(|| crate::platform_tests::process_check(pid as i32) != 0).await;
     assert!(listing.await.unwrap().is_err());
 }
 
@@ -254,7 +254,7 @@ async fn account_recheck_keeps_other_directories_and_api_work_connected() {
         .recheck_authentication(&f.row.id, &f.cwd, &f.store)
         .await
         .unwrap();
-    assert_ne!(unsafe { libc::kill(original_pid as i32, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(original_pid as i32), 0);
     let replacement = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
     assert_ne!(replacement.child_pid.load(Ordering::SeqCst), original_pid);
     for connection in [other, api] {
@@ -263,7 +263,7 @@ async fn account_recheck_keeps_other_directories_and_api_work_connected() {
             super::manager::STATE_READY
         );
         assert_eq!(
-            unsafe { libc::kill(connection.child_pid.load(Ordering::SeqCst) as i32, 0) },
+            crate::platform_tests::process_check(connection.child_pid.load(Ordering::SeqCst) as i32),
             0
         );
         assert_eq!(connection.life.work.load(Ordering::SeqCst), 1);
@@ -288,13 +288,13 @@ async fn account_recheck_refuses_work_in_its_exact_connection_without_closing_it
         original.state.load(Ordering::SeqCst),
         super::manager::STATE_READY
     );
-    assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_eq!(crate::platform_tests::process_check(pid as i32), 0);
     drop(work);
     f.manager
         .recheck_authentication(&f.row.id, &f.cwd, &f.store)
         .await
         .unwrap();
-    assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid as i32), 0);
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -315,7 +315,7 @@ async fn account_recheck_preserves_an_unfinished_effectful_operation() {
         original.state.load(Ordering::SeqCst),
         super::manager::STATE_READY
     );
-    assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_eq!(crate::platform_tests::process_check(pid as i32), 0);
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -541,6 +541,7 @@ async fn forms_validate_before_consuming_and_expire_individually() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[cfg(unix)]
 async fn failed_process_registration_still_reaps_the_exact_child() {
     use std::os::unix::{ffi::OsStrExt, fs::OpenOptionsExt};
 
@@ -602,7 +603,7 @@ async fn failed_process_registration_still_reaps_the_exact_child() {
     assert!(connecting.await.unwrap().is_err());
     until(|| f.manager.status(&f.row.id).unwrap().is_empty()).await;
     assert_ne!(pid, 0, "fixture must observe the exact spawned Child");
-    assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid as i32), 0);
     assert!(!f.cwd.join("not-a-directory/pids.json").exists());
 }
 
@@ -631,10 +632,11 @@ async fn stdout_eof_does_not_wait_for_stderr_or_a_living_child() {
             .unwrap()
             .is_err()
     );
-    until(|| unsafe { libc::kill(pid as i32, 0) != 0 }).await;
+    until(|| crate::platform_tests::process_check(pid as i32) != 0).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[cfg(unix)]
 async fn app_exit_waits_for_exact_owner_and_term_ignoring_descendant() {
     let f = Fixture::new();
     let peer = PEER.replace("prompt=None", "child=os.fork()\nif child==0:\n signal.signal(signal.SIGTERM, signal.SIG_IGN)\n open(sys.argv[1]+'_child','w').write(str(os.getpid()))\n time.sleep(60)\n sys.exit(0)\nwhile not os.path.exists(sys.argv[1]+'_child') or not open(sys.argv[1]+'_child').read(): time.sleep(.005)\nprompt=None");
@@ -649,7 +651,7 @@ async fn app_exit_waits_for_exact_owner_and_term_ignoring_descendant() {
     assert!(f.manager.status(&f.row.id).unwrap().is_empty());
     assert!(started.elapsed() >= Duration::from_secs(2));
     assert!(started.elapsed() < Duration::from_secs(5));
-    assert_ne!(unsafe { libc::kill(child, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(child), 0);
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -688,7 +690,7 @@ async fn cancelled_candidate_reaps_child_before_allowing_another_launch() {
     let result = f.manager.probe_launch(&candidate, &f.store, cancel).await;
     assert!(result.unwrap_err().contains("取消"));
     let pid: i32 = std::fs::read_to_string(marker).unwrap().parse().unwrap();
-    assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid), 0);
     assert!(!f.manager.candidate_pending(&f.row.id).unwrap());
     assert_eq!(f.store.get_agent(&f.row.id).unwrap().unwrap(), f.row);
 }

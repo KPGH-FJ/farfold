@@ -22,9 +22,25 @@ fn text(path: &Path, root: &Path) -> Option<String> {
         use std::os::unix::fs::OpenOptionsExt;
         options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
     }
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::OpenOptionsExt;
+        options.custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT);
+    }
     let file = options.open(canonical).ok()?;
-    if !file.metadata().ok()?.is_file() {
+    let metadata = file.metadata().ok()?;
+    if !metadata.is_file() {
         return None;
+    }
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt;
+        if metadata.file_attributes()
+            & windows_sys::Win32::Storage::FileSystem::FILE_ATTRIBUTE_REPARSE_POINT
+            != 0
+        {
+            return None;
+        }
     }
     let mut bytes = Vec::new();
     file.take(LIMIT + 1).read_to_end(&mut bytes).ok()?;
@@ -48,7 +64,9 @@ pub(crate) fn reviewed(row: &AgentRow) -> Option<AccountQuery> {
 fn codebuddy(row: &AgentRow) -> bool {
     (|| {
         let command = Path::new(&row.command);
-        if command.file_name()?.to_str()? != "node" || row.args.len() != 2 || row.args[1] != "--acp"
+        if crate::process_platform::program_name(command).as_deref() != Some("node")
+            || row.args.len() != 2
+            || row.args[1] != "--acp"
         {
             return None;
         }
@@ -90,25 +108,22 @@ fn vibe(row: &AgentRow) -> bool {
         let command = Path::new(&row.command).canonicalize().ok()?;
         // Official registry archives contain this standalone executable. The
         // v2.25.8 build spec points to the same ACP server/extension handlers.
-        if command.file_name()?.to_str()? == "vibe-acp" && row.args.is_empty() {
+        let program = crate::process_platform::program_name(&command)?;
+        if program == "vibe-acp" && row.args.is_empty() {
             return command.is_file().then_some(());
         }
-        if command.file_name()?.to_str()? != "vibe" || !command.is_file() || row.args != ["--acp"] {
+        if program != "vibe" || !command.is_file() || row.args != ["--acp"] {
             return None;
         }
         let bin = command.parent()?;
-        if bin.file_name()?.to_str()? != "bin" {
+        if bin.file_name()?.to_str()? != if cfg!(windows) { "Scripts" } else { "bin" } {
             return None;
         }
         let root = bin.parent()?.canonicalize().ok()?;
         // The managed Python installer resolves this same public console entry.
         // Never inspect ~/.vibe, keyring, .env or a work-folder configuration.
-        let libraries = std::fs::read_dir(root.join("lib")).ok()?;
-        for library in libraries.take(32).flatten() {
-            if !library.file_name().to_str()?.starts_with("python") {
-                continue;
-            }
-            let Ok(packages) = std::fs::read_dir(library.path().join("site-packages")) else {
+        for site in package_sites(&root)? {
+            let Ok(packages) = std::fs::read_dir(site) else {
                 continue;
             };
             for info in packages.take(2048).flatten() {
@@ -141,6 +156,26 @@ fn vibe(row: &AgentRow) -> bool {
         None
     })()
     .is_some()
+}
+
+fn package_sites(root: &Path) -> Option<Vec<std::path::PathBuf>> {
+    if cfg!(windows) {
+        return Some(vec![root.join("Lib/site-packages")]);
+    }
+    Some(
+        std::fs::read_dir(root.join("lib"))
+            .ok()?
+            .take(32)
+            .flatten()
+            .filter(|entry| {
+                entry
+                    .file_name()
+                    .to_str()
+                    .is_some_and(|name| name.starts_with("python"))
+            })
+            .map(|entry| entry.path().join("site-packages"))
+            .collect(),
+    )
 }
 
 #[cfg(test)]

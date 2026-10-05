@@ -169,6 +169,17 @@ mod tests {
     }
 
     #[test]
+    fn mac_signature_cannot_authorize_a_windows_installer() {
+        let mut binding = expected();
+        binding.target = "windows";
+        assert!(
+            verify(&fixture(), KEY, binding, NOW)
+                .unwrap_err()
+                .contains("identity")
+        );
+    }
+
+    #[test]
     fn metadata_expiry_is_revalidated_and_unbounded_lifetimes_are_refused() {
         assert!(
             verify(&fixture(), KEY, expected(), NOW + 60)

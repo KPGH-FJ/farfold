@@ -17,9 +17,7 @@ fn row_scope(row: &AgentRow) -> bool {
         && row.source == "registry"
         && row.version.as_deref() == Some(DECLARATION.version)
         && Path::new(&row.command).is_absolute()
-        && Path::new(&row.command)
-            .file_name()
-            .is_some_and(|name| name == "node")
+        && crate::process_platform::program_name(Path::new(&row.command)).as_deref() == Some("node")
         && row.args.len() == 2
         && row.args[1] == "--acp"
 }
@@ -117,8 +115,13 @@ pub(super) fn verify(row: &AgentRow, store: &MetaStore, data: &Path) -> Option<T
             != DECLARATION.version
         || native.get("name")?.as_str()? != DECLARATION.platform_package
         || native.get("version")?.as_str()? != DECLARATION.version
-        || native.get("os")? != &serde_json::json!(["darwin"])
-        || native.get("cpu")? != &serde_json::json!(["arm64"])
+        || native.get("os")? != &serde_json::json!([if cfg!(windows) { "win32" } else { "darwin" }])
+        || native.get("cpu")?
+            != &serde_json::json!([if cfg!(target_arch = "aarch64") {
+                "arm64"
+            } else {
+                "x64"
+            }])
         || native.pointer("/exports/.")?.as_str()? != format!("./{}", DECLARATION.platform_entry)
     {
         return None;

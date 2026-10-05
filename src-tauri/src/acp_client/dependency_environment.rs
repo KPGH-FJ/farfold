@@ -7,6 +7,10 @@ use std::path::Path;
 #[path = "dependency_environment_tests.rs"]
 mod launch_tests;
 
+#[cfg(all(test, windows))]
+#[path = "dependency_environment_windows_tests.rs"]
+mod windows_tests;
+
 pub(crate) fn is_command_name(value: &str) -> bool {
     !value.is_empty()
         && !matches!(value, "." | "..")
@@ -20,7 +24,6 @@ fn search_path_program(
     variable: &str,
     environment: &mut HashMap<String, String>,
 ) -> Result<(), String> {
-    use std::os::unix::fs::PermissionsExt;
     let invalid = || "所选程序的位置不能用于此次连接，请在程序管理中检查或安装所需程序".to_string();
     let name = selected
         .file_name()
@@ -32,9 +35,9 @@ fn search_path_program(
         .ok_or_else(invalid)?;
     if !selected.is_absolute()
         || !is_command_name(name)
-        || parent.contains([':', '\n', '\r', '\0'])
-        || !std::fs::metadata(selected)
-            .is_ok_and(|metadata| metadata.is_file() && metadata.permissions().mode() & 0o111 != 0)
+        || parent.contains(['\n', '\r', '\0'])
+        || (cfg!(unix) && parent.contains(':'))
+        || !crate::process_platform::executable(selected)
     {
         return Err(invalid());
     }
@@ -44,8 +47,12 @@ fn search_path_program(
         .get("PATH")
         .cloned()
         .or_else(|| std::env::var("PATH").ok());
-    let path = previous.map_or_else(|| parent.to_owned(), |old| format!("{parent}:{old}"));
-    environment.insert("PATH".into(), path);
+    let mut paths = vec![std::path::PathBuf::from(parent)];
+    if let Some(previous) = previous {
+        paths.extend(std::env::split_paths(&previous));
+    }
+    let path = std::env::join_paths(paths).map_err(|_| invalid())?;
+    environment.insert("PATH".into(), path.to_string_lossy().into_owned());
     environment.insert(variable.into(), name.into());
     Ok(())
 }
@@ -94,7 +101,7 @@ pub(crate) fn apply(
     Ok(())
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::os::unix::fs::PermissionsExt;

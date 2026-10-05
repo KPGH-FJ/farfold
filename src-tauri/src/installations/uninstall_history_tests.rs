@@ -1,6 +1,19 @@
 //! Whole-program history, owned removal and retry using only temporary data.
 use super::*;
-use std::os::unix::fs::{PermissionsExt, symlink};
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
+
+fn entry_name() -> &'static str {
+    if cfg!(windows) { "entry.exe" } else { "entry" }
+}
+
+fn external_interpreter() -> String {
+    if cfg!(windows) {
+        std::env::current_exe().unwrap().display().to_string()
+    } else {
+        "/bin/sh".into()
+    }
+}
 
 struct Fixture {
     _dir: tempfile::TempDir,
@@ -11,6 +24,7 @@ struct Fixture {
     old_root: PathBuf,
     current_root: PathBuf,
     old_item: Installation,
+    old_path: PathBuf,
     kept_session: crate::meta_store::SessionRow,
 }
 
@@ -23,18 +37,25 @@ impl Fixture {
         let current_root = data.join("agents/whole-history/current");
         for root in [&old_root, &current_root] {
             std::fs::create_dir_all(root).unwrap();
-            let program = root.join("entry");
+            let program = root.join(entry_name());
             std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
-            std::fs::set_permissions(program, std::fs::Permissions::from_mode(0o755)).unwrap();
+            // These files exercise metadata and removal only; they are not launched.
+            crate::process_platform::set_executable(&program).unwrap();
         }
-        let alias = data.join("old-user-alias");
-        symlink(old_root.join("entry"), &alias).unwrap();
+        #[cfg(unix)]
+        let alias = {
+            let alias = data.join("old-user-alias");
+            symlink(old_root.join(entry_name()), &alias).unwrap();
+            alias
+        };
+        #[cfg(windows)]
+        let alias = old_root.join(entry_name());
         let old = AgentRow {
             id: "whole-history".into(),
             name: "Fixture".into(),
             source: "registry".into(),
             command: if script {
-                "/bin/sh".into()
+                external_interpreter()
             } else {
                 alias.display().to_string()
             },
@@ -56,7 +77,7 @@ impl Fixture {
         record(&store, &old, &old_root).unwrap();
         let old_item = read(&store).unwrap().remove(0);
         let mut current = old.clone();
-        current.command = current_root.join("entry").display().to_string();
+        current.command = current_root.join(entry_name()).display().to_string();
         current.args = vec!["--new-acp".into()];
         current.version = Some("2.0.0".into());
         commit_candidate(&store, &current, Some(&old), Some(&current_root)).unwrap();
@@ -89,6 +110,7 @@ impl Fixture {
             old_root,
             current_root,
             old_item,
+            old_path: alias,
             kept_session,
         }
     }
@@ -102,7 +124,7 @@ impl Fixture {
             store.get_agent(&self.current.id).unwrap().unwrap(),
             self.current
         );
-        assert!(self.current_root.join("entry").exists());
+        assert!(self.current_root.join(entry_name()).exists());
         assert_eq!(
             store.get_session("kept-session").unwrap().unwrap(),
             self.kept_session
@@ -111,8 +133,9 @@ impl Fixture {
             store.get_setting("kept-draft").unwrap().unwrap(),
             serde_json::json!({"text":"original-unsent-draft","choices":["keep"]})
         );
+        #[cfg(unix)]
         assert!(
-            std::fs::symlink_metadata(self.data.join("old-user-alias"))
+            std::fs::symlink_metadata(&self.old_path)
                 .unwrap()
                 .file_type()
                 .is_symlink()
@@ -184,7 +207,7 @@ fn assert_whole_history_removed(script: bool) {
 #[test]
 fn whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entries() {
     let f = Fixture::new(true);
-    let alias = f.data.join("old-user-alias").display().to_string();
+    let alias = f.old_path.display().to_string();
     let mut items = read(&f.store).unwrap();
     let mut raw = f.old_item.clone();
     raw.id = "other:raw-script".into();
@@ -196,7 +219,7 @@ fn whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entrie
     raw.path = raw.command.clone();
     items.push(raw);
     write(&f.store, &items).unwrap();
-    let old_other = serde_json::json!({"command":"/bin/sh","args":[alias,"--acp"],"source":"kept-source","version":"kept-version","programPath":"/unrelated/external"});
+    let old_other = serde_json::json!({"command":external_interpreter(),"args":[alias,"--acp"],"source":"kept-source","version":"kept-version","programPath":"/unrelated/external"});
     f.store
         .set_setting("installPrevious.other", &old_other)
         .unwrap();
@@ -221,7 +244,7 @@ fn whole_history_uninstall_clears_only_deleted_root_across_agents_and_raw_entrie
             .unwrap(),
         old_other
     );
-    active.command = "/bin/sh".into();
+    active.command = external_interpreter();
     active.args.clear();
     f.store.replace_agent_launch(&active).unwrap();
     let active = f.store.get_agent("other").unwrap().unwrap();

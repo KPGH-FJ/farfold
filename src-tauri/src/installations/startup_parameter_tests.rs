@@ -5,16 +5,19 @@ use crate::agent_catalog::{RegistryAgent, registry_launch};
 use std::collections::BTreeMap;
 
 fn candidate(data: &Path, index: usize, value: &str) -> (AgentRow, PathBuf) {
-    use std::os::unix::fs::PermissionsExt;
     let id = "registry:fast-agent";
-    let root = data
-        .join("agents")
-        .join(id)
+    let root = crate::managed_paths::prepare_agent_parent(data, id)
+        .unwrap()
         .join(format!("install-{index}"));
-    let command = root.join("venv/bin/fast-agent-acp");
+    let command = root.join(if cfg!(windows) {
+        "venv/Scripts/fast-agent-acp.exe"
+    } else {
+        "venv/bin/fast-agent-acp"
+    });
     std::fs::create_dir_all(command.parent().unwrap()).unwrap();
     std::fs::write(&command, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(&command, std::fs::Permissions::from_mode(0o755)).unwrap();
+    // Only metadata selection is exercised; this fixture is never executed.
+    crate::process_platform::set_executable(&command).unwrap();
     let entry: RegistryAgent = serde_json::from_value(serde_json::json!({
         "id":"fast-agent","version":"0.10.1",
         "distribution":{"uvx":{"package":"fast-agent-acp==0.10.1","args":["-x"],"env":{}}}

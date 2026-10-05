@@ -1,22 +1,16 @@
 //! Private single-threaded MCP relay. Invoke its entry branch before Tauri,
 //! logging, plugins or threads. Bodies never enter stderr, logs or files.
+use super::{
+    channel::{self, Stream},
+    helper_io,
+};
 use serde_json::{Value, json};
 use std::{
     collections::VecDeque,
     env,
     ffi::OsStr,
     io,
-    mem::{self, size_of},
-    os::{
-        fd::{AsRawFd, FromRawFd, OwnedFd, RawFd},
-        unix::{
-            ffi::OsStrExt,
-            fs::{FileTypeExt, MetadataExt},
-            net::UnixStream,
-        },
-    },
     path::Path,
-    ptr,
     time::{Duration, Instant},
 };
 
@@ -28,8 +22,6 @@ const BROKER_LIMIT: usize = 1_300_000;
 const OUTPUT_LIMIT: usize = 600_000;
 const CONTROL_LIMIT: usize = 256_000;
 const CONTROL_FRAMES: usize = 256;
-// Public macOS sys/fcntl.h; cached libc does not export this constant.
-const F_SETNOSIGPIPE: libc::c_int = 73;
 
 /// None selects normal startup. Some must immediately exit without app setup.
 pub fn run_if_requested() -> Option<i32> {
@@ -46,19 +38,16 @@ pub fn run_if_requested() -> Option<i32> {
             return Err(());
         }
         let capability = capability.ok_or(())?;
+        let capability = capability.to_str().ok_or(())?;
         let bytes = capability.as_bytes();
         if bytes.len() != 64 || !bytes.iter().all(u8::is_ascii_hexdigit) {
             return Err(());
         }
         let capability = std::str::from_utf8(bytes).map_err(|_| ())?;
-        let stream = connect_bounded(Path::new(&path)).map_err(|_| ())?;
+        let stream = channel::connect(Path::new(&path)).map_err(|_| ())?;
         authenticate(&stream, capability)?;
         // Authentication completes before any stdin read/forwarding.
-        set_nonblocking(0).map_err(|_| ())?;
-        set_nonblocking(1).map_err(|_| ())?;
-        if unsafe { libc::fcntl(1, F_SETNOSIGPIPE, 1) } < 0 {
-            return Err(());
-        }
+        helper_io::prepare().map_err(|_| ())?;
         stream.set_nonblocking(true).map_err(|_| ())?;
         Worker::new(stream).run()
     })();
@@ -80,7 +69,7 @@ struct OutputFrame {
     id: Value,
 }
 struct Worker {
-    stream: UnixStream,
+    stream: Stream,
     broker_input: Vec<u8>,
     stdin_input: Vec<u8>,
     controls: VecDeque<ControlFrame>,
@@ -92,7 +81,7 @@ struct Worker {
     exit_code: Option<i32>,
 }
 impl Worker {
-    fn new(stream: UnixStream) -> Self {
+    fn new(stream: Stream) -> Self {
         Self {
             stream,
             broker_input: Vec::new(),
@@ -111,9 +100,7 @@ impl Worker {
         if self.stdout_closed {
             return Ok(());
         }
-        if unsafe { libc::close(1) } != 0 && !fd_closed(1) {
-            return Err(());
-        }
+        helper_io::close_stdout().map_err(|_| ())?;
         self.stdout_closed = true;
         Ok(())
     }
@@ -245,27 +232,17 @@ impl Worker {
             }
             let mut bytes = [0_u8; 8192];
             let capacity = bytes.len().min(BROKER_LIMIT - self.broker_input.len());
-            let count = unsafe {
-                libc::recv(
-                    self.stream.as_raw_fd(),
-                    bytes.as_mut_ptr().cast(),
-                    capacity,
-                    libc::MSG_DONTWAIT,
-                )
-            };
-            if count == 0 {
-                return Ok(false);
-            }
-            if count < 0 {
-                match io::Error::last_os_error().kind() {
+            let count = match channel::read_nowait(&self.stream, &mut bytes[..capacity]) {
+                Ok(0) => return Ok(false),
+                Ok(n) => n,
+                Err(error) => match error.kind() {
                     io::ErrorKind::Interrupted => continue,
                     io::ErrorKind::WouldBlock => return Ok(true),
                     _ => return Err(()),
-                }
-            }
-            self.broker_input
-                .extend_from_slice(&bytes[..count as usize]);
-            total += count as usize;
+                },
+            };
+            self.broker_input.extend_from_slice(&bytes[..count]);
+            total += count;
             if total > BROKER_LIMIT * 2 {
                 return Err(());
             }
@@ -343,16 +320,15 @@ impl Worker {
         }
         let mut bytes = [0_u8; 8192];
         let capacity = bytes.len().min(INPUT_LIMIT - self.stdin_input.len());
-        let count = unsafe { libc::read(0, bytes.as_mut_ptr().cast(), capacity) };
-        if count == 0 {
-            self.stdin_eof = true;
-        } else if count > 0 {
-            self.stdin_input.extend_from_slice(&bytes[..count as usize]);
-        } else if !matches!(
-            io::Error::last_os_error().kind(),
-            io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
-        ) {
-            return Err(());
+        match helper_io::read_stdin(&mut bytes[..capacity]) {
+            Ok(0) => self.stdin_eof = true,
+            Ok(n) => self.stdin_input.extend_from_slice(&bytes[..n]),
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
+                ) => {}
+            Err(_) => return Err(()),
         }
         self.forward_stdin()
     }
@@ -362,27 +338,21 @@ impl Worker {
                 return Err(());
             }
             let bytes = &frame.bytes[frame.offset..];
-            let count = unsafe {
-                libc::send(
-                    self.stream.as_raw_fd(),
-                    bytes.as_ptr().cast(),
-                    bytes.len(),
-                    libc::MSG_DONTWAIT,
-                )
+            let count = match channel::write_nowait(&self.stream, bytes) {
+                Ok(n) => n,
+                Err(error) => match error.kind() {
+                    io::ErrorKind::Interrupted => continue,
+                    io::ErrorKind::WouldBlock => return Ok(()),
+                    _ => return Err(()),
+                },
             };
             if count > 0 {
-                frame.offset += count as usize;
+                frame.offset += count;
                 if frame.offset == frame.bytes.len() {
                     self.controls.pop_front();
                 }
             } else if count == 0 {
                 return Err(());
-            } else {
-                match io::Error::last_os_error().kind() {
-                    io::ErrorKind::Interrupted => continue,
-                    io::ErrorKind::WouldBlock => return Ok(()),
-                    _ => return Err(()),
-                }
             }
         }
         self.stdin_paused = false;
@@ -399,9 +369,20 @@ impl Worker {
             return Err(());
         }
         let bytes = &frame.bytes[frame.offset..];
-        let count = unsafe { libc::write(1, bytes.as_ptr().cast(), bytes.len()) };
+        let count = match helper_io::write_stdout(bytes) {
+            Ok(n) => n,
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
+                ) =>
+            {
+                return Ok(());
+            }
+            Err(_) => return Err(()),
+        };
         if count > 0 {
-            frame.offset += count as usize;
+            frame.offset += count;
             if frame.offset == frame.bytes.len() {
                 let delivery = frame.delivery;
                 self.output = None;
@@ -410,12 +391,7 @@ impl Worker {
                     return Err(());
                 }
             }
-        } else if count == 0
-            || !matches!(
-                io::Error::last_os_error().kind(),
-                io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
-            )
-        {
+        } else {
             return Err(());
         }
         Ok(())
@@ -426,40 +402,6 @@ impl Worker {
             || self.controls.front().is_some_and(|f| now >= f.deadline)
     }
     fn poll(&self) -> Result<(), ()> {
-        let mut fds = [
-            libc::pollfd {
-                fd: self.stream.as_raw_fd(),
-                events: libc::POLLIN
-                    | if self.controls.is_empty() {
-                        0
-                    } else {
-                        libc::POLLOUT
-                    },
-                revents: 0,
-            },
-            libc::pollfd {
-                fd: if !self.stdin_eof
-                    && !self.stdin_paused
-                    && self.exit_code.is_none()
-                    && self.stdin_input.len() < INPUT_LIMIT
-                {
-                    0
-                } else {
-                    -1
-                },
-                events: libc::POLLIN,
-                revents: 0,
-            },
-            libc::pollfd {
-                fd: if !self.stdout_closed && self.output.is_some() && self.controls.is_empty() {
-                    1
-                } else {
-                    -1
-                },
-                events: libc::POLLOUT,
-                revents: 0,
-            },
-        ];
         let now = Instant::now();
         let mut millis = 50;
         for deadline in self
@@ -477,11 +419,17 @@ impl Worker {
                     .min(50) as i32,
             );
         }
-        let result = unsafe { libc::poll(fds.as_mut_ptr(), fds.len() as libc::nfds_t, millis) };
-        if result < 0 && io::Error::last_os_error().kind() != io::ErrorKind::Interrupted {
-            return Err(());
-        }
-        Ok(())
+        helper_io::wait(
+            &self.stream,
+            !self.controls.is_empty(),
+            !self.stdin_eof
+                && !self.stdin_paused
+                && self.exit_code.is_none()
+                && self.stdin_input.len() < INPUT_LIMIT,
+            !self.stdout_closed && self.output.is_some() && self.controls.is_empty(),
+            millis,
+        )
+        .map_err(|_| ())
     }
     fn run(mut self) -> Result<i32, ()> {
         loop {
@@ -556,7 +504,7 @@ fn line(value: &Value, limit: usize) -> Result<Vec<u8>, ()> {
     }
     Ok(bytes)
 }
-fn authenticate(stream: &UnixStream, capability: &str) -> Result<(), ()> {
+fn authenticate(stream: &Stream, capability: &str) -> Result<(), ()> {
     let deadline = Instant::now() + TIMEOUT;
     send_bytes(
         stream,
@@ -566,28 +514,22 @@ fn authenticate(stream: &UnixStream, capability: &str) -> Result<(), ()> {
     .map_err(|_| ())?;
     let mut bytes = Vec::new();
     loop {
-        wait_ready(stream.as_raw_fd(), libc::POLLIN, deadline).map_err(|_| ())?;
-        let mut byte = 0_u8;
-        let count = unsafe {
-            libc::recv(
-                stream.as_raw_fd(),
-                (&mut byte as *mut u8).cast(),
-                1,
-                libc::MSG_DONTWAIT,
-            )
-        };
-        if count == 0 {
-            return Err(());
-        }
-        if count < 0 {
-            if matches!(
-                io::Error::last_os_error().kind(),
-                io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
-            ) {
+        channel::wait_ready(channel::token(stream), channel::READ, deadline).map_err(|_| ())?;
+        let mut input = [0u8];
+        match channel::read_nowait(stream, &mut input) {
+            Ok(0) => return Err(()),
+            Ok(_) => {}
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
+                ) =>
+            {
                 continue;
             }
-            return Err(());
+            Err(_) => return Err(()),
         }
+        let byte = input[0];
         bytes.push(byte);
         if bytes.len() > 256 {
             return Err(());
@@ -602,189 +544,40 @@ fn authenticate(stream: &UnixStream, capability: &str) -> Result<(), ()> {
         }
     }
 }
-fn fd_closed(fd: RawFd) -> bool {
-    (unsafe { libc::fcntl(fd, libc::F_GETFD) }) == -1
-        && io::Error::last_os_error().raw_os_error() == Some(libc::EBADF)
-}
-fn set_nonblocking(fd: RawFd) -> io::Result<()> {
-    let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
-    if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
-        return Err(io::Error::last_os_error());
-    }
-    Ok(())
-}
-fn connect_bounded(path: &Path) -> io::Result<UnixStream> {
-    let bytes = path.as_os_str().as_bytes();
-    let mut address: libc::sockaddr_un = unsafe { mem::zeroed() };
-    if !path.is_absolute()
-        || bytes.is_empty()
-        || bytes.len() >= address.sun_path.len()
-        || bytes.contains(&0)
-    {
-        return Err(io::Error::from(io::ErrorKind::InvalidInput));
-    }
-    let uid = unsafe { libc::getuid() };
-    let metadata = std::fs::symlink_metadata(path)?;
-    let parent = path
-        .parent()
-        .ok_or_else(|| io::Error::from(io::ErrorKind::InvalidInput))?;
-    let parent_metadata = std::fs::symlink_metadata(parent)?;
-    if !metadata.file_type().is_socket()
-        || metadata.uid() != uid
-        || metadata.mode() & 0o7777 != 0o600
-        || !parent_metadata.file_type().is_dir()
-        || parent_metadata.uid() != uid
-        || parent_metadata.mode() & 0o7777 != 0o700
-    {
-        return Err(io::Error::from(io::ErrorKind::PermissionDenied));
-    }
-    address.sun_family = libc::AF_UNIX as libc::sa_family_t;
-    address.sun_len = size_of::<libc::sockaddr_un>() as u8;
-    unsafe {
-        ptr::copy_nonoverlapping(
-            bytes.as_ptr(),
-            address.sun_path.as_mut_ptr().cast(),
-            bytes.len(),
-        );
-    }
-    let raw = unsafe { libc::socket(libc::AF_UNIX, libc::SOCK_STREAM, 0) };
-    if raw < 0 {
-        return Err(io::Error::last_os_error());
-    }
-    let socket = unsafe { OwnedFd::from_raw_fd(raw) };
-    let flags = unsafe { libc::fcntl(raw, libc::F_GETFD) };
-    if flags < 0 || unsafe { libc::fcntl(raw, libc::F_SETFD, flags | libc::FD_CLOEXEC) } < 0 {
-        return Err(io::Error::last_os_error());
-    }
-    set_nonblocking(raw)?;
-    let enabled: libc::c_int = 1;
-    if unsafe {
-        libc::setsockopt(
-            raw,
-            libc::SOL_SOCKET,
-            libc::SO_NOSIGPIPE,
-            (&enabled as *const libc::c_int).cast(),
-            size_of::<libc::c_int>() as libc::socklen_t,
-        )
-    } < 0
-    {
-        return Err(io::Error::last_os_error());
-    }
-    let result = unsafe {
-        libc::connect(
-            raw,
-            (&address as *const libc::sockaddr_un).cast(),
-            size_of::<libc::sockaddr_un>() as libc::socklen_t,
-        )
-    };
-    if result < 0 {
-        let error = io::Error::last_os_error();
-        if !matches!(
-            error.raw_os_error(),
-            Some(libc::EINPROGRESS | libc::EINTR | libc::EAGAIN)
-        ) {
-            return Err(error);
-        }
-        wait_ready(raw, libc::POLLOUT, Instant::now() + TIMEOUT)?;
-        let mut error: libc::c_int = 0;
-        let mut length = size_of::<libc::c_int>() as libc::socklen_t;
-        if unsafe {
-            libc::getsockopt(
-                raw,
-                libc::SOL_SOCKET,
-                libc::SO_ERROR,
-                (&mut error as *mut libc::c_int).cast(),
-                &mut length,
-            )
-        } < 0
-        {
-            return Err(io::Error::last_os_error());
-        }
-        if length as usize != size_of::<libc::c_int>() || error != 0 {
-            return Err(io::Error::from(io::ErrorKind::ConnectionRefused));
-        }
-    }
-    let stream = UnixStream::from(socket);
-    stream.peer_addr()?;
-    let mut peer_uid: libc::uid_t = 0;
-    let mut peer_gid: libc::gid_t = 0;
-    if unsafe { libc::getpeereid(stream.as_raw_fd(), &mut peer_uid, &mut peer_gid) } != 0
-        || peer_uid != uid
-    {
-        return Err(io::Error::from(io::ErrorKind::PermissionDenied));
-    }
-    Ok(stream)
-}
-fn wait_ready(fd: RawFd, events: libc::c_short, deadline: Instant) -> io::Result<()> {
-    loop {
-        let left = deadline
-            .checked_duration_since(Instant::now())
-            .ok_or_else(|| io::Error::from(io::ErrorKind::TimedOut))?;
-        let mut descriptor = libc::pollfd {
-            fd,
-            events,
-            revents: 0,
-        };
-        let result = unsafe {
-            libc::poll(
-                &mut descriptor,
-                1,
-                (left.as_millis() + 1).min(i32::MAX as u128) as i32,
-            )
-        };
-        if result < 0 {
-            let error = io::Error::last_os_error();
-            if error.kind() == io::ErrorKind::Interrupted {
+fn send_bytes(stream: &Stream, mut bytes: &[u8], deadline: Instant) -> io::Result<()> {
+    while !bytes.is_empty() {
+        channel::wait_ready(channel::token(stream), channel::WRITE, deadline)?;
+        let sent = match channel::write_nowait(stream, bytes) {
+            Ok(n) => n,
+            Err(error)
+                if matches!(
+                    error.kind(),
+                    io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
+                ) =>
+            {
+                channel::wait_fd(channel::token(stream), channel::WRITE, 5);
                 continue;
             }
-            return Err(error);
-        }
-        if result > 0 {
-            if descriptor.revents & libc::POLLNVAL != 0 {
-                return Err(io::Error::from(io::ErrorKind::InvalidInput));
-            }
-            if descriptor.revents & (events | libc::POLLERR | libc::POLLHUP) != 0 {
-                return Ok(());
-            }
-        }
-    }
-}
-fn send_bytes(stream: &UnixStream, mut bytes: &[u8], deadline: Instant) -> io::Result<()> {
-    while !bytes.is_empty() {
-        wait_ready(stream.as_raw_fd(), libc::POLLOUT, deadline)?;
-        let sent = unsafe {
-            libc::send(
-                stream.as_raw_fd(),
-                bytes.as_ptr().cast(),
-                bytes.len(),
-                libc::MSG_DONTWAIT,
-            )
+            Err(error) => return Err(error),
         };
         if sent > 0 {
-            bytes = &bytes[sent as usize..];
+            bytes = &bytes[sent..];
             continue;
         }
         if sent == 0 {
             return Err(io::Error::from(io::ErrorKind::WriteZero));
         }
-        let error = io::Error::last_os_error();
-        if !matches!(
-            error.kind(),
-            io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
-        ) {
-            return Err(error);
-        }
     }
     Ok(())
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
 
     #[test]
     fn queued_request_does_not_block_active_request_cancellation() {
-        let (stream, _peer) = UnixStream::pair().unwrap();
+        let (stream, _peer) = Stream::pair().unwrap();
         let mut worker = Worker::new(stream);
         // This in-memory test owns no process stdout; keep Drop from closing it.
         worker.stdout_closed = true;
@@ -809,7 +602,7 @@ mod tests {
 
     #[test]
     fn cancellation_for_another_request_cannot_jump_the_active_request() {
-        let (stream, _peer) = UnixStream::pair().unwrap();
+        let (stream, _peer) = Stream::pair().unwrap();
         let mut worker = Worker::new(stream);
         worker.stdout_closed = true;
         worker.inflight = Some(json!(10));

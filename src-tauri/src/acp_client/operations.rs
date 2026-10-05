@@ -29,97 +29,6 @@ pub(crate) struct Operation {
     cancel: watch::Sender<bool>,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn authentication_timeout_keeps_final_response_and_ownership() {
-        let life = ConnectionLife::new();
-        life.ready().unwrap();
-        let account = life.operation("account_change".into()).unwrap();
-        let (reply, mut receive) = oneshot::channel();
-        let (finish, result) = oneshot::channel();
-        let (unknown, mut observed) = tokio::sync::mpsc::unbounded_channel();
-        let task_life = life.clone();
-        let task = tokio::spawn(async move {
-            let _account = account;
-            let lease = task_life.operation("authentication".into()).unwrap();
-            authentication_result(
-                reply,
-                task_life,
-                tokio::time::Instant::now() + Duration::from_millis(5),
-                Arc::new(move || {
-                    let _ = unknown.send(());
-                }),
-                lease,
-                async { result.await.map_err(|_| "fixture".into()) },
-            )
-            .await;
-        });
-        tokio::time::timeout(Duration::from_secs(1), observed.recv())
-            .await
-            .unwrap()
-            .unwrap();
-        assert!(receive.try_recv().is_err());
-        assert!(life.work().is_err());
-        assert!(life.operation("authentication".into()).is_err());
-        finish.send(()).unwrap();
-        receive.await.unwrap().unwrap();
-        task.await.unwrap();
-        assert!(life.work().is_ok());
-    }
-
-    #[tokio::test]
-    async fn deadline_retains_effectful_ownership_until_terminal_response() {
-        let life = ConnectionLife::new();
-        life.ready().unwrap();
-        let lease = life.operation("authentication".into()).unwrap();
-        let (reply, receive) = oneshot::channel();
-        let (terminal, done) = oneshot::channel();
-        let task_life = life.clone();
-        let task = tokio::spawn(async move {
-            let _lease = lease;
-            execute(
-                reply,
-                task_life,
-                Operation::new(),
-                tokio::time::Instant::now() + Duration::from_millis(5),
-                true,
-                async { done.await.map_err(|_| "fixture closed".into()) },
-            )
-            .await
-        });
-        assert!(receive.await.unwrap().unwrap_err().contains("尚未确认"));
-        assert!(!life.close(false, Some(Duration::ZERO)).unwrap());
-        assert!(life.operation("authentication".into()).is_err());
-        terminal.send(7).unwrap();
-        assert_eq!(task.await.unwrap(), Some(7));
-        assert!(life.close(false, Some(Duration::ZERO)).unwrap());
-    }
-
-    #[tokio::test]
-    async fn already_expired_queued_request_never_starts() {
-        let life = ConnectionLife::new();
-        life.ready().unwrap();
-        let (reply, receive) = oneshot::channel::<Result<(), String>>();
-        let dispatched = AtomicBool::new(false);
-        execute(
-            reply,
-            life,
-            Operation::new(),
-            tokio::time::Instant::now(),
-            true,
-            async {
-                dispatched.store(true, Ordering::SeqCst);
-                Ok(())
-            },
-        )
-        .await;
-        assert!(!dispatched.load(Ordering::SeqCst));
-        assert!(receive.await.is_err());
-    }
-}
 impl Operation {
     pub fn new() -> Self {
         Self {
@@ -484,5 +393,97 @@ pub(crate) async fn run(
             )
             .await;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn authentication_timeout_keeps_final_response_and_ownership() {
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let account = life.operation("account_change".into()).unwrap();
+        let (reply, mut receive) = oneshot::channel();
+        let (finish, result) = oneshot::channel();
+        let (unknown, mut observed) = tokio::sync::mpsc::unbounded_channel();
+        let task_life = life.clone();
+        let task = tokio::spawn(async move {
+            let _account = account;
+            let lease = task_life.operation("authentication".into()).unwrap();
+            authentication_result(
+                reply,
+                task_life,
+                tokio::time::Instant::now() + Duration::from_millis(5),
+                Arc::new(move || {
+                    let _ = unknown.send(());
+                }),
+                lease,
+                async { result.await.map_err(|_| "fixture".into()) },
+            )
+            .await;
+        });
+        tokio::time::timeout(Duration::from_secs(1), observed.recv())
+            .await
+            .unwrap()
+            .unwrap();
+        assert!(receive.try_recv().is_err());
+        assert!(life.work().is_err());
+        assert!(life.operation("authentication".into()).is_err());
+        finish.send(()).unwrap();
+        receive.await.unwrap().unwrap();
+        task.await.unwrap();
+        assert!(life.work().is_ok());
+    }
+
+    #[tokio::test]
+    async fn deadline_retains_effectful_ownership_until_terminal_response() {
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let lease = life.operation("authentication".into()).unwrap();
+        let (reply, receive) = oneshot::channel();
+        let (terminal, done) = oneshot::channel();
+        let task_life = life.clone();
+        let task = tokio::spawn(async move {
+            let _lease = lease;
+            execute(
+                reply,
+                task_life,
+                Operation::new(),
+                tokio::time::Instant::now() + Duration::from_millis(5),
+                true,
+                async { done.await.map_err(|_| "fixture closed".into()) },
+            )
+            .await
+        });
+        assert!(receive.await.unwrap().unwrap_err().contains("尚未确认"));
+        assert!(!life.close(false, Some(Duration::ZERO)).unwrap());
+        assert!(life.operation("authentication".into()).is_err());
+        terminal.send(7).unwrap();
+        assert_eq!(task.await.unwrap(), Some(7));
+        assert!(life.close(false, Some(Duration::ZERO)).unwrap());
+    }
+
+    #[tokio::test]
+    async fn already_expired_queued_request_never_starts() {
+        let life = ConnectionLife::new();
+        life.ready().unwrap();
+        let (reply, receive) = oneshot::channel::<Result<(), String>>();
+        let dispatched = AtomicBool::new(false);
+        execute(
+            reply,
+            life,
+            Operation::new(),
+            tokio::time::Instant::now(),
+            true,
+            async {
+                dispatched.store(true, Ordering::SeqCst);
+                Ok(())
+            },
+        )
+        .await;
+        assert!(!dispatched.load(Ordering::SeqCst));
+        assert!(receive.await.is_err());
     }
 }

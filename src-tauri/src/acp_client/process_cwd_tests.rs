@@ -1,4 +1,5 @@
 //! Actual subprocess cwd regressions, not real-Agent or installed-product acceptance.
+#![cfg(unix)]
 use super::super::{
     manager::{AcpManager, validate_cwd},
     pump::SessionSink,

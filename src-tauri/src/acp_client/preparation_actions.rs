@@ -1,6 +1,10 @@
 //! Explicit official configuration actions, separate from protocol authentication.
 //! No credential lookup, output persistence, hidden model checks or prompt dispatch.
-use std::{io::Read as _, os::unix::fs::OpenOptionsExt as _, path::Path, sync::atomic::Ordering};
+#[cfg(unix)]
+use std::os::unix::fs::OpenOptionsExt as _;
+#[cfg(windows)]
+use std::os::windows::fs::{MetadataExt as _, OpenOptionsExt as _};
+use std::{io::Read as _, path::Path, sync::atomic::Ordering};
 
 use serde::Serialize;
 use tauri::{AppHandle, Manager as _, ipc::Channel};
@@ -118,14 +122,24 @@ fn matching_npm_installation(
     if !exact_file(&manifest_path) {
         return false;
     }
-    let Ok(file) = std::fs::File::options()
-        .read(true)
-        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
-        .open(&manifest_path)
-    else {
+    let mut options = std::fs::File::options();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
+    #[cfg(windows)]
+    options.custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT);
+    let Ok(file) = options.open(&manifest_path) else {
         return false;
     };
     if !file.metadata().is_ok_and(|metadata| metadata.is_file()) {
+        return false;
+    }
+    #[cfg(windows)]
+    if !file.metadata().is_ok_and(|metadata| {
+        metadata.file_attributes()
+            & windows_sys::Win32::Storage::FileSystem::FILE_ATTRIBUTE_REPARSE_POINT
+            == 0
+    }) {
         return false;
     }
     const MAX_MANIFEST_BYTES: u64 = 64 * 1024;

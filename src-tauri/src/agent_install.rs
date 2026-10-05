@@ -28,6 +28,9 @@ use crate::node_runtime;
 
 mod archive;
 mod cleanup;
+mod raw_executable;
+#[cfg(any(windows, test))]
+mod windows_tar;
 use archive::extract_archive;
 
 const ARCHIVE_TIMEOUT: Duration = Duration::from_secs(300);
@@ -72,9 +75,26 @@ fn install_binary_agent(
         .distribution
         .binary
         .as_ref()
-        .and_then(|map| map.get("darwin-aarch64"))
-        .ok_or_else(|| format!("{agent_id} has no darwin-aarch64 binary distribution"))?;
-    let archive = job.download(&binary.archive, ARCHIVE_TIMEOUT)?;
+        .and_then(|map| map.get(crate::agent_catalog::registry_platform()))
+        .ok_or_else(|| {
+            format!(
+                "{agent_id} has no {} binary distribution",
+                crate::agent_catalog::registry_platform()
+            )
+        })?;
+    let raw_target = cfg!(windows)
+        .then(|| crate::archive_zip::raw_executable_target(&binary.archive, &binary.cmd))
+        .flatten();
+    let archive = if cfg!(windows) {
+        job.download_bounded(
+            &binary.archive,
+            ARCHIVE_TIMEOUT,
+            raw_executable::MAX_BYTES,
+            None,
+        )?
+    } else {
+        job.download(&binary.archive, ARCHIVE_TIMEOUT)?
+    };
     job.report("verify", None, None);
     job.check()?;
     if let Some(expected) = &binary.sha256 {
@@ -90,7 +110,13 @@ fn install_binary_agent(
         .map_err(|error| format!("cannot create install dir: {error}"))?;
     job.report("extract", None, None);
     job.check()?;
-    extract_archive(&archive, install_dir, &binary.archive, job)?;
+    if raw_target.is_some() {
+        raw_executable::write(&archive, install_dir, &binary.archive, &binary.cmd, || {
+            job.check()
+        })?;
+    } else {
+        extract_archive(&archive, install_dir, &binary.archive, job)?;
+    }
     job.check()?;
     let cmd = install_dir.join(&binary.cmd);
     let cmd = cmd
@@ -195,7 +221,7 @@ fn prepare_from_registry(
                 .distribution
                 .binary
                 .as_ref()
-                .and_then(|map| map.get("darwin-aarch64"))
+                .and_then(|map| map.get(crate::agent_catalog::registry_platform()))
                 .map(|binary| binary.env.clone())
                 .unwrap_or_default();
             (command, startup_args.clone(), env)

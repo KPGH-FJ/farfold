@@ -13,6 +13,8 @@ use crate::agent_discovery::version_output;
 use crate::install_job::Job;
 
 mod archive;
+mod distribution;
+mod layout;
 
 // Official release 2026-09-22. Archive digest is from its immutable asset page.
 // Python is the 20260807 build listed in this uv release's frozen metadata.
@@ -22,12 +24,7 @@ const UV_VERSION: &str = "0.12.18";
 // both declared by uv 0.2.37's official uv-cli source. Older PATH tools must
 // not hide a suitable managed tool. This is not an Agent version gate.
 const UV_INSTALL_BASELINE: semver::Version = semver::Version::new(0, 2, 37);
-const UV_ARCHIVE: &str =
-    "https://github.com/astral-sh/uv/releases/download/0.12.18/uv-aarch64-apple-darwin.tar.gz";
-const UV_SHA256: &str = "cf40e0c6a202190ccd9e0406dcfdd5b2d6668a9a5c779b17948963df32aafe5b";
 const PYTHON_VERSION: &str = "3.12.13";
-const PYTHON_ARCHIVE: &str = "https://github.com/astral-sh/python-build-standalone/releases/download/20260807/cpython-3.12.13%2B20260807-aarch64-apple-darwin-install_only_stripped.tar.gz";
-const PYTHON_SHA256: &str = "25baa97c65b3f0aa90e21131b4f9e80aef8899e8144006db8a9d2c1ab9e807e3";
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(300);
 const METADATA_LIMIT: u64 = 128 * 1024;
 
@@ -38,16 +35,16 @@ struct Tool {
 }
 
 fn uv_root(data: &Path) -> PathBuf {
-    data.join("uv").join(format!("uv-{UV_VERSION}"))
+    data.join("uv").join(distribution::UV.root)
 }
 fn python_root(data: &Path) -> PathBuf {
-    data.join("python").join("cpython-3.12.13+20260807-aarch64")
+    data.join("python").join(distribution::PYTHON.root)
 }
 fn uv_path(data: &Path) -> PathBuf {
-    uv_root(data).join("uv")
+    uv_root(data).join(distribution::UV.executable)
 }
 fn python_path(data: &Path) -> PathBuf {
-    python_root(data).join("bin/python3.12")
+    python_root(data).join(distribution::PYTHON.executable)
 }
 
 fn usable_version(output: &str, python: bool) -> Option<String> {
@@ -95,7 +92,7 @@ fn tools_in(
         .unwrap_or_default();
     let mut uv_candidates = Vec::new();
     for dir in &dirs {
-        uv_candidates.push(dir.join("uv"));
+        uv_candidates.push(dir.join(if cfg!(windows) { "uv.exe" } else { "uv" }));
     }
     uv_candidates.push(uv_path(data));
     let mut uv = None;
@@ -124,7 +121,11 @@ fn tools_in(
     ] {
         for dir in &dirs {
             check()?;
-            let path = dir.join(name);
+            let path = dir.join(if cfg!(windows) {
+                format!("{name}.exe")
+            } else {
+                name.into()
+            });
             let Ok(canonical) = path.canonicalize() else {
                 continue;
             };
@@ -301,37 +302,26 @@ pub(crate) fn install_dependency(data: &Path, id: &str, job: &Job) -> Result<(),
     if (id == "uv" && uv.is_some()) || (id == "python" && python.is_some()) {
         return job.check();
     }
-    let (url, digest, root, prefix, executable, is_python, limit) = if id == "uv" {
-        (
-            UV_ARCHIVE,
-            UV_SHA256,
-            uv_root(data),
-            "uv-aarch64-apple-darwin",
-            "uv",
-            false,
-            128 * 1024 * 1024,
-        )
+    let (tool, root, is_python, limit) = if id == "uv" {
+        (&distribution::UV, uv_root(data), false, 128 * 1024 * 1024)
     } else {
         (
-            PYTHON_ARCHIVE,
-            PYTHON_SHA256,
+            &distribution::PYTHON,
             python_root(data),
-            "python",
-            "bin/python3.12",
             true,
             256 * 1024 * 1024,
         )
     };
     // Official fixed URL may redirect to the HTTPS release-assets CDN. The
     // immutable digest and byte bound remain mandatory before extraction.
-    let bytes = job.download_bounded(url, DOWNLOAD_TIMEOUT, limit, None)?;
+    let bytes = job.download_bounded(tool.url, DOWNLOAD_TIMEOUT, limit, None)?;
     publish_tool(
         data,
         &root,
         &bytes,
-        digest,
-        prefix,
-        (executable, is_python),
+        tool.digest,
+        tool.prefix,
+        (tool.executable, is_python),
         job,
     )
 }
@@ -387,7 +377,7 @@ pub(crate) fn install_package(
     job.run(
         package_command(&uv.path, data, destination)
             .args(["pip", "install", "--python"])
-            .arg(venv.join("bin/python"))
+            .arg(layout::venv_python(&venv, cfg!(windows)))
             .arg(&package.requirement),
     )?;
     job.check()?;
@@ -433,17 +423,19 @@ fn metadata_header(path: &Path, root: &Path) -> Result<String, String> {
 }
 
 fn console_script(venv: &Path, package: &UvxPackage, job: &Job) -> Result<PathBuf, String> {
-    use std::os::unix::fs::PermissionsExt;
+    console_script_for(venv, package, job, cfg!(windows))
+}
+fn console_script_for(
+    venv: &Path,
+    package: &UvxPackage,
+    job: &Job,
+    windows: bool,
+) -> Result<PathBuf, String> {
     let root = venv.canonicalize().map_err(|_| "安装后的程序目录不完整")?;
-    let libraries = std::fs::read_dir(root.join("lib")).map_err(|_| "安装后的程序目录不完整")?;
     let mut found = false;
-    for library in libraries {
+    for library in layout::site_packages(&root, windows, || job.check())? {
         job.check()?;
-        let library = library.map_err(|_| "无法读取安装后的程序目录")?;
-        if !library.file_name().to_string_lossy().starts_with("python") {
-            continue;
-        }
-        let Ok(packages) = std::fs::read_dir(library.path().join("site-packages")) else {
+        let Ok(packages) = std::fs::read_dir(library) else {
             continue;
         };
         for info in packages {
@@ -498,15 +490,13 @@ fn console_script(venv: &Path, package: &UvxPackage, job: &Job) -> Result<PathBu
     if !found {
         return Err("安装包未提供目录声明的启动程序，请查看官方说明".into());
     }
-    let command = root
-        .join("bin")
-        .join(&package.script)
+    let command = layout::console_program(&root, &package.script, windows)
         .canonicalize()
         .map_err(|_| "安装包中的启动程序不存在，请查看官方说明")?;
     let metadata = std::fs::metadata(&command).map_err(|_| "无法读取安装后的启动程序")?;
     if !command.starts_with(&root)
         || !metadata.is_file()
-        || metadata.permissions().mode() & 0o111 == 0
+        || (!windows && !crate::process_platform::executable(&command))
     {
         return Err("安装包中的启动程序位置或执行权限无效".into());
     }
@@ -514,5 +504,5 @@ fn console_script(venv: &Path, package: &UvxPackage, job: &Job) -> Result<PathBu
     Ok(command)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests;

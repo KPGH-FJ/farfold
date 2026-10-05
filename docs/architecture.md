@@ -1,5 +1,15 @@
 # 当前源码架构
 
+## Windows 平台适配（2026-10-06）
+
+前端继续使用同一工作台；`file_paths.ts` 和 `platform_shortcuts.ts` 处理 Windows 路径与 Ctrl 操作。`process_platform`、`windows_process`、`pty` 与 `supervisor` 保持选定命令、参数、环境和工作目录，Windows 用由父进程持有的 Job 管理进程树；自身辅助入口先入组再启动外部程序，不实现 Agent 循环。
+
+`auth/windows_vault.rs` 使用当前用户的系统凭据；`file_access/windows.rs` 以相对目录句柄逐层打开并拒重解析点，保留读取前后身份核对与精确临时导出。当前文件服务支持本机磁盘，UNC、链接和重解析目录不在本片范围。
+
+`browser_workspace/windows` 独立创建 WebView2，页面没有应用桥；固定脚本在隔离环境内观察和操作，目录资源由原文件许可提供。网页共享以当前登录身份限制的私有命名管道连接，撤回与停止确认仍沿共用协议。`desktop_notifications/windows.rs` 使用系统实际状态，点击仅定位正在运行的应用；未实现冷启动通知激活。
+
+Node/uv/Python 与 Registry 安装按官方 Windows 发行布局处理，不猜缺失的下载地址。`tauri.windows.conf.json` 提供当前用户安装包配置，Windows 工作流只在明确触发时运行验证、保留未签名产物，不发布。交叉编译与 Windows 实际运行、安装、签名、更新分开验收。
+
 ## 共用连接、模型与账号（2026-10-06）
 
 `connection_identity.rs` 将准备连接与每个工作对话的独立进程分开；临时 `connectionId` 只用于事件、页面持有与精确关闭，不写持久会话绑定。`OpenReservations` 在新建/加载未确认时保留请求与已返回编号，直到实际进程回收；已活动或已存编号不能被新建结果覆盖。同Agent账号动作覆盖全部服务；独立进程不等于共享磁盘配置或凭据已隔离。

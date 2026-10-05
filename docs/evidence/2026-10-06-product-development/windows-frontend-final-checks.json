@@ -1,0 +1,53 @@
+{
+  "scope": "Shared frontend compiled and tested on macOS; this is not Windows desktop execution.",
+  "checks": [
+    {
+      "command": "corepack pnpm format:check",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm test",
+      "exitCode": 0,
+      "filesPassed": 184,
+      "testsPassed": 2101
+    },
+    {
+      "command": "corepack pnpm build",
+      "exitCode": 0,
+      "remainingWarning": "Existing minified main chunk exceeds 500 kB."
+    }
+  ],
+  "coverage": "Windows Ctrl shortcuts, drive/UNC display URI handling, attachment admission, actual fixed browser script execution in a synthetic JS realm, notification state projection.",
+  "notExecuted": [
+    "Windows installed UI",
+    "Windows system alerts or sound",
+    "Real Agent or model",
+    "Formal app replacement"
+  ],
+  "rawLogs": [
+    {
+      "path": "windows-stage6-final-typecheck.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "windows-stage6-final-frontend-test.log",
+      "bytes": 287,
+      "sha256": "19d7a6b9d31fe505ca5082ab26365583408fea2fa1598d6f8a3779e7ba8123ef"
+    },
+    {
+      "path": "windows-stage6-final-build.log",
+      "bytes": 935,
+      "sha256": "87be1b02fa373282a6fd7d2aff93cfdffa83a62101add375e6f73fe0fc368a1c"
+    },
+    {
+      "path": "windows-stage6-final-format-check.log",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    }
+  ]
+}

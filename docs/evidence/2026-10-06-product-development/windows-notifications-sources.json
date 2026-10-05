@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-10-06",
+  "kind": "first-party-source-inspection-only",
+  "installedCliVersion": "2.11.4",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "platform": "windows-x86_64",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/windows/nsis/mod.rs",
+      "sha256": "b1c6db4e8a9bcc55ed6a739fe73a64a18801600bbefc76083f7449db4fb87a0f",
+      "bytes": 30821
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/windows/nsis/installer.nsi",
+      "sha256": "20f4ecc730defb71f1342eaeaec4021df13be3d843abba0effe88ea5835fa079",
+      "bytes": 32007
+    },
+    {
+      "url": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/windows/nsis/utils.nsh",
+      "sha256": "b27b407f886cca738e44e774f15e6b556b43ce52557a7c8891ee4eca7dd8013d",
+      "bytes": 6163
+    }
+  ],
+  "binding": [
+    "mod.rs:250/273 passes settings.bundle_identifier() as bundle_id",
+    "installer.nsi:51 defines BUNDLEID; 883-887 applies SetLnkAppUserModelId to Start Menu shortcut",
+    "utils.nsh:70-87 writes BUNDLEID as PKEY_AppUserModel_ID then saves shortcut"
+  ],
+  "limitations": [
+    "No Windows installation or API invocation performed",
+    "A shortcut suppressed or removed by the user does not establish notification registration",
+    "Cold-start COM activation is not implemented; only in-process activation is supported",
+    "System Show acceptance does not prove display or delivery"
+  ]
+}

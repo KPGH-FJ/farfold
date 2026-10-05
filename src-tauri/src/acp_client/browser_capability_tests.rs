@@ -1,5 +1,6 @@
 use super::*;
 use serde_json::json;
+#[cfg(unix)]
 use std::os::unix::fs::symlink;
 use std::path::PathBuf;
 
@@ -8,7 +9,11 @@ fn fixture() -> AgentRow {
         id: "codex".into(),
         name: "Codex".into(),
         source: "registry".into(),
-        command: "/controlled/registry/codex-acp".into(),
+        command: if cfg!(windows) {
+            r"C:\controlled\registry\codex-acp.exe".into()
+        } else {
+            "/controlled/registry/codex-acp".into()
+        },
         args: vec![],
         env: vec![],
         version: None,
@@ -35,7 +40,10 @@ impl NodeFixture {
         std::fs::create_dir_all(entry.parent().unwrap()).unwrap();
         std::fs::write(&entry, "// synthetic public JavaScript bin\n").unwrap();
         let mut row = fixture();
-        row.command = root.join("node").to_string_lossy().into_owned();
+        row.command = root
+            .join(if cfg!(windows) { "node.exe" } else { "node" })
+            .to_string_lossy()
+            .into_owned();
         row.args = vec![entry.to_string_lossy().into_owned()];
         let result = Self {
             _directory: directory,
@@ -147,6 +155,7 @@ fn absolute_and_parent_traversing_manifest_bins_are_rejected() {
 }
 
 #[test]
+#[cfg(unix)]
 fn normal_node_and_package_local_bin_links_remain_usable() {
     let sample = NodeFixture::new();
     let node_target = sample.root.join("selected-node");
@@ -158,6 +167,7 @@ fn normal_node_and_package_local_bin_links_remain_usable() {
 }
 
 #[test]
+#[cfg(unix)]
 fn bin_or_entry_link_cannot_escape_the_named_package() {
     let sample = NodeFixture::new();
     let outside = sample.root.join("other.js");
@@ -172,6 +182,7 @@ fn bin_or_entry_link_cannot_escape_the_named_package() {
 }
 
 #[test]
+#[cfg(unix)]
 fn package_directory_link_cannot_select_an_unrelated_package() {
     let sample = NodeFixture::new();
     let relocated = sample.package.with_file_name("other-package");
@@ -181,6 +192,7 @@ fn package_directory_link_cannot_select_an_unrelated_package() {
 }
 
 #[test]
+#[cfg(unix)]
 fn ordinary_directory_alias_above_node_modules_is_canonicalized() {
     let mut sample = NodeFixture::new();
     let alias = sample.root.join("install-alias");
@@ -222,31 +234,39 @@ fn exactly_bounded_manifest_remains_valid() {
 }
 
 #[test]
-fn manifest_links_and_directories_are_not_read() {
+#[cfg(unix)]
+fn manifest_links_are_not_read() {
     let sample = NodeFixture::new();
     let path = sample.package.join("package.json");
     let target = sample.root.join("outside-manifest.json");
     std::fs::rename(&path, &target).unwrap();
     symlink(&target, &path).unwrap();
     assert_eq!(reviewed_launch(&sample.row), None);
+}
+
+#[test]
+fn manifest_and_entry_directories_are_not_read() {
+    let sample = NodeFixture::new();
+    let path = sample.package.join("package.json");
     std::fs::remove_file(&path).unwrap();
     std::fs::create_dir(&path).unwrap();
+    assert_eq!(reviewed_launch(&sample.row), None);
+    std::fs::remove_dir(&path).unwrap();
+    sample.manifest(json!({"name":PACKAGE,"bin":{BIN:"dist/index.js"}}));
+    std::fs::remove_file(&sample.entry).unwrap();
+    std::fs::create_dir(&sample.entry).unwrap();
     assert_eq!(reviewed_launch(&sample.row), None);
 }
 
 #[test]
-fn nonregular_manifest_and_entry_are_rejected_without_opening_a_writer() {
+#[cfg(unix)]
+fn fifo_manifest_is_rejected_without_opening_a_writer() {
     let sample = NodeFixture::new();
     let manifest = sample.package.join("package.json");
     std::fs::remove_file(&manifest).unwrap();
     let c_path = std::ffi::CString::new(manifest.as_os_str().as_encoded_bytes()).unwrap();
     // SAFETY: the owned CString stays alive and names only this temporary fixture.
     assert_eq!(unsafe { libc::mkfifo(c_path.as_ptr(), 0o600) }, 0);
-    assert_eq!(reviewed_launch(&sample.row), None);
-    std::fs::remove_file(&manifest).unwrap();
-    sample.manifest(json!({"name":PACKAGE,"bin":{BIN:"dist/index.js"}}));
-    std::fs::remove_file(&sample.entry).unwrap();
-    std::fs::create_dir(&sample.entry).unwrap();
     assert_eq!(reviewed_launch(&sample.row), None);
 }
 

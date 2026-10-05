@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-06",
+  "scope": "Public fixed installation-tool archives only; no Agent installation, no Windows executable ran",
+  "sources": [
+    "https://github.com/astral-sh/uv/releases/expanded_assets/0.12.18",
+    "https://raw.githubusercontent.com/astral-sh/uv/0.12.18/crates/uv-python/download-metadata.json"
+  ],
+  "uv": {
+    "version": "0.12.18",
+    "released": "2026-09-22",
+    "x64_sha256": "cae6a3bc25239f83dffb467a4b180508d9da23986c04639ebfa44e43e6a84bff",
+    "arm64_sha256": "17f27b1c64eacc757ae603579f116a014881e486c5e79ae81877980d4699e943"
+  },
+  "python": {
+    "cpython-3.12.13-windows-x86_64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "x86_64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 12,
+      "patch": 13,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260807/cpython-3.12.13%2B20260807-x86_64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "18bcc65b17921806b72cdc88bcf000bf67a2c99a8fc381fe1629f2b9ba56858d",
+      "variant": null,
+      "build": "20260807"
+    },
+    "cpython-3.12.13-windows-aarch64-none": {
+      "name": "cpython",
+      "arch": {
+        "family": "aarch64",
+        "variant": null
+      },
+      "os": "windows",
+      "libc": "none",
+      "major": 3,
+      "minor": 12,
+      "patch": 13,
+      "prerelease": "",
+      "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20260807/cpython-3.12.13%2B20260807-aarch64-pc-windows-msvc-install_only_stripped.tar.gz",
+      "sha256": "07bd1b23b9193e778a7ddb031f5dc3b12a73d47990064126d97b46fc4f64c40f",
+      "variant": null,
+      "build": "20260807"
+    }
+  },
+  "x64_archive_observations": {
+    "uv_members": ["uv.exe", "uvw.exe", "uvx.exe"],
+    "python_executable": "python/python.exe",
+    "python_members": 3338,
+    "python_links": 0,
+    "both_downloaded_digests_match_official": true
+  },
+  "unverified": [
+    "Windows execution and installation",
+    "ARM64 archive download or execution",
+    "Actual Agent package installation and initialize"
+  ]
+}

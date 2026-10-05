@@ -1,4 +1,5 @@
 //! Controlled subprocess receipts. No official Agent, account or user data.
+#![cfg(unix)]
 use super::*;
 
 fn fixture(action: &str) -> Fixture {

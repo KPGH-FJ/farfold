@@ -1,13 +1,9 @@
 use super::{DIRECTORY_CSP, MAX_RESOURCE_BYTES, MAX_TEXT_BYTES, PreviewLease, storage_identifier};
+use crate::file_access::{self, Stamp};
 use std::{
-    ffi::CString,
-    fs::{File, Metadata},
+    fs::File,
     io::Read,
-    os::{
-        fd::{AsRawFd, FromRawFd},
-        unix::{ffi::OsStrExt, fs::MetadataExt},
-    },
-    path::{Component, Path, PathBuf},
+    path::{Path, PathBuf},
     sync::Arc,
 };
 
@@ -58,6 +54,10 @@ impl DirectoryPreview {
             .or_else(|_| entry.strip_prefix(&root))
             .map_err(|_| DENIED)?;
         let relative = relative.to_str().ok_or(INVALID)?;
+        #[cfg(windows)]
+        let relative_storage = relative.replace('\\', "/");
+        #[cfg(windows)]
+        let relative = relative_storage.as_str();
         validate_relative(relative)?;
         if !matches!(
             Path::new(relative)
@@ -128,7 +128,7 @@ impl DirectoryPreview {
         };
         self.check_root()?;
         let file = open_relative(&self.root_handle, relative)?;
-        let before = stamp(&file.metadata().map_err(|_| CHANGED)?)?;
+        let before = stamp(&file)?;
         if before.size > max {
             return Err("网页资源超过当前大小限制".into());
         }
@@ -141,18 +141,11 @@ impl DirectoryPreview {
             return Err("网页资源超过当前大小限制".into());
         }
         after_read();
-        if stamp(&file.metadata().map_err(|_| CHANGED)?)? != before
-            || bytes.len() as u64 != before.size
-        {
+        if stamp(&file)? != before || bytes.len() as u64 != before.size {
             return Err(CHANGED.into());
         }
         self.check_root()?;
-        if stamp(
-            &open_relative(&self.root_handle, relative)?
-                .metadata()
-                .map_err(|_| CHANGED)?,
-        )? != before
-        {
+        if stamp(&open_relative(&self.root_handle, relative)?)? != before {
             return Err(CHANGED.into());
         }
         if text {
@@ -170,92 +163,44 @@ impl DirectoryPreview {
     }
 
     fn check_root(&self) -> Result<(), String> {
-        let expected = self.root_handle.metadata().map_err(|_| CHANGED)?;
-        let current = open_directory(&self.root)?
-            .metadata()
-            .map_err(|_| CHANGED)?;
-        if current.dev() != expected.dev() || current.ino() != expected.ino() {
+        let current = open_directory(&self.root)?;
+        if !file_access::same_object(&self.root_handle, &current).map_err(|_| CHANGED)? {
             return Err(CHANGED.into());
         }
         Ok(())
     }
 }
-
-#[derive(PartialEq, Eq)]
-struct Stamp {
-    device: u64,
-    inode: u64,
-    size: u64,
-    modified: (i64, i64),
-    changed: (i64, i64),
-}
-
-fn stamp(meta: &Metadata) -> Result<Stamp, String> {
-    // Hard-linked files could expose another folder's secret through an innocent
-    // asset name. Symlinks are refused by openat, hard links by the metadata.
-    if !meta.is_file() || meta.nlink() != 1 {
+fn stamp(file: &File) -> Result<Stamp, String> {
+    let stamp = file_access::stamp(file).map_err(|_| DENIED)?;
+    if !stamp.regular || stamp.links != 1 {
         return Err(DENIED.into());
     }
-    Ok(Stamp {
-        device: meta.dev(),
-        inode: meta.ino(),
-        size: meta.len(),
-        modified: (meta.mtime(), meta.mtime_nsec()),
-        changed: (meta.ctime(), meta.ctime_nsec()),
-    })
+    Ok(stamp)
 }
-
 fn absolute(path: &Path) -> Result<(), String> {
+    file_access::absolute(path).map_err(|_| INVALID)?;
     let text = path.to_str().ok_or(INVALID)?;
-    if !path.is_absolute()
-        || text.contains("//")
+    if text.chars().any(char::is_control) {
+        return Err(INVALID.into());
+    }
+    #[cfg(unix)]
+    if text.contains("//")
         || text.contains('\\')
-        || text.chars().any(char::is_control)
         || text.split('/').any(|p| matches!(p, "." | ".."))
     {
         return Err(INVALID.into());
     }
+    #[cfg(windows)]
+    if text.split(['/', '\\']).any(|p| matches!(p, "." | "..")) {
+        return Err(INVALID.into());
+    }
     Ok(())
 }
-
 fn open_directory(path: &Path) -> Result<File, String> {
-    let mut directory = File::open("/").map_err(|_| CHANGED)?;
-    for part in path.components() {
-        match part {
-            Component::RootDir => {}
-            Component::Normal(name) => directory = open_at(&directory, name.as_bytes(), true)?,
-            _ => return Err(INVALID.into()),
-        }
-    }
-    Ok(directory)
+    file_access::open_directory(path).map_err(|_| CHANGED.into())
 }
-
 fn open_relative(root: &File, relative: &str) -> Result<File, String> {
-    let mut directory = root.try_clone().map_err(|_| CHANGED)?;
-    let parts: Vec<_> = relative.split('/').collect();
-    for (index, part) in parts.iter().enumerate() {
-        directory = open_at(&directory, part.as_bytes(), index + 1 < parts.len())?;
-    }
-    Ok(directory)
-}
-
-fn open_at(parent: &File, name: &[u8], directory: bool) -> Result<File, String> {
-    let name = CString::new(name).map_err(|_| INVALID)?;
-    let flags = libc::O_RDONLY
-        | libc::O_NOFOLLOW
-        | libc::O_CLOEXEC
-        | if directory {
-            libc::O_DIRECTORY
-        } else {
-            libc::O_NONBLOCK
-        };
-    // SAFETY: live owned parent descriptor and terminated filename; successful
-    // openat returns a fresh descriptor transferred immediately to File.
-    let fd = unsafe { libc::openat(parent.as_raw_fd(), name.as_ptr(), flags) };
-    if fd < 0 {
-        return Err(CHANGED.into());
-    }
-    Ok(unsafe { File::from_raw_fd(fd) })
+    file_access::open_relative(root, Path::new(relative)).map_err(|_| CHANGED.into())
 }
 
 fn decode_path(path: &str) -> Result<String, String> {

@@ -1,0 +1,21 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: spawned process is never `wait()`ed on
+  --> examples/windows_process_fixture.rs:50:13
+   |
+50 | /             std::process::Command::new(std::env::current_exe().unwrap())
+51 | |                 .arg("wait")
+52 | |                 .arg(&args[1])
+53 | |                 .spawn()
+54 | |                 .unwrap();
+   | |                         ^- help: try: `.wait()`
+   | |_________________________|
+   |
+   |
+   = note: not doing so might leave behind zombie processes
+   = note: see https://doc.rust-lang.org/stable/std/process/struct.Child.html#warning
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#zombie_processes
+   = note: `-D clippy::zombie-processes` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::zombie_processes)]`
+
+error: could not compile `farfold` (example "windows_process_fixture") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

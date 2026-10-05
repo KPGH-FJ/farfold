@@ -1,3 +1,4 @@
+use crate::update_platform::UpdatePlatform;
 use reqwest::Response;
 use serde_json::Value;
 use std::time::Duration;
@@ -42,7 +43,12 @@ async fn read_metadata_response(mut response: Response) -> Result<Value, String>
         .map_err(|_| "Managed update metadata is invalid JSON".to_string())
 }
 
-fn endpoint_url(endpoint: &str, version: &str, arch: &str) -> Result<reqwest::Url, String> {
+fn endpoint_url(
+    endpoint: &str,
+    version: &str,
+    arch: &str,
+    platform: UpdatePlatform,
+) -> Result<reqwest::Url, String> {
     // Retain the official Tauri endpoint placeholders, including URL-encoded paths.
     let version = semver::Version::parse(version)
         .map_err(|_| "Managed update current version is invalid".to_string())?
@@ -51,9 +57,9 @@ fn endpoint_url(endpoint: &str, version: &str, arch: &str) -> Result<reqwest::Ur
     let mut endpoint = endpoint.to_string();
     for (key, value) in [
         ("current_version", version.as_str()),
-        ("target", "darwin"),
+        ("target", platform.target),
         ("arch", arch),
-        ("bundle_type", "app"),
+        ("bundle_type", platform.bundle),
     ] {
         endpoint = endpoint
             .replace(&format!("{{{{{key}}}}}"), value)
@@ -72,19 +78,23 @@ fn endpoint_url(endpoint: &str, version: &str, arch: &str) -> Result<reqwest::Ur
     Ok(url)
 }
 
-fn release_from_json(raw_json: Value, current_version: &str) -> Result<UpdateRelease, String> {
+fn release_from_json(
+    raw_json: Value,
+    current_version: &str,
+    platform: UpdatePlatform,
+) -> Result<UpdateRelease, String> {
     // Use the pinned official parser, not a parallel interpretation of Tauri versions/dates.
     let release: RemoteRelease = serde_json::from_value(raw_json.clone())
         .map_err(|_| "Managed update release metadata is invalid".to_string())?;
-    let RemoteReleaseInner::Dynamic(platform) = release.data else {
+    let RemoteReleaseInner::Dynamic(artifact) = release.data else {
         return Err("Managed update requires a scoped dynamic release document".to_string());
     };
     Ok(UpdateRelease {
         current_version: current_version.to_string(),
         version: release.version.to_string(),
-        target: "darwin".to_string(),
-        download_url: platform.url,
-        signature: platform.signature,
+        target: platform.target.to_string(),
+        download_url: artifact.url,
+        signature: artifact.signature,
         body: release.notes,
         raw_json,
     })
@@ -97,7 +107,8 @@ pub(crate) async fn fetch(
     accept_invalid_certificates: bool,
     timeout: Duration,
 ) -> Result<UpdateRelease, String> {
-    let endpoint = endpoint_url(endpoint, current_version, arch)?;
+    let platform = UpdatePlatform::current();
+    let endpoint = endpoint_url(endpoint, current_version, arch, platform)?;
     let client = reqwest::Client::builder()
         .https_only(true)
         .danger_accept_invalid_certs(accept_invalid_certificates)
@@ -112,7 +123,11 @@ pub(crate) async fn fetch(
         .send()
         .await
         .map_err(|_| "Managed update metadata request failed".to_string())?;
-    release_from_json(read_metadata_response(response).await?, current_version)
+    release_from_json(
+        read_metadata_response(response).await?,
+        current_version,
+        platform,
+    )
 }
 
 #[cfg(test)]
@@ -203,7 +218,8 @@ mod tests {
                 chunked,
             )))
             .unwrap();
-            let release = release_from_json(raw, "0.1.2").unwrap();
+            let release =
+                release_from_json(raw, "0.1.2", UpdatePlatform::for_os("macos").unwrap()).unwrap();
             assert_eq!(release.current_version, "0.1.2");
             assert_eq!(release.version, "0.1.3");
             assert_eq!(release.target, "darwin");
@@ -258,11 +274,32 @@ mod tests {
         for field in ["version", "pub_date"] {
             let mut raw = fixture.clone();
             raw[field] = Value::String("invalid".to_string());
-            assert!(release_from_json(raw, "0.1.2").is_err());
+            assert!(
+                release_from_json(raw, "0.1.2", UpdatePlatform::for_os("macos").unwrap()).is_err()
+            );
         }
         let mut raw = fixture;
         raw["platforms"] = serde_json::json!({});
-        assert!(release_from_json(raw, "0.1.2").is_err());
+        assert!(release_from_json(raw, "0.1.2", UpdatePlatform::for_os("macos").unwrap()).is_err());
+    }
+
+    #[test]
+    fn windows_feed_uses_its_installer_target_and_never_inherits_mac_scope() {
+        let platform = UpdatePlatform::for_os("windows").unwrap();
+        let url = endpoint_url(
+            "https://example.com/{{target}}/{{arch}}/{{bundle_type}}",
+            "0.1.2",
+            "x86_64",
+            platform,
+        )
+        .unwrap();
+        assert_eq!(url.as_str(), "https://example.com/windows/x86_64/nsis");
+        let fixture: Value =
+            serde_json::from_str(include_str!("../testdata/signed-update-metadata.json")).unwrap();
+        let release = release_from_json(fixture, "0.1.2", platform).unwrap();
+        // The envelope still carries its original macOS signature. The caller's
+        // signed-scope verifier will reject it against this Windows expectation.
+        assert_eq!(release.target, "windows");
     }
 
     #[test]
@@ -271,6 +308,7 @@ mod tests {
             "https://example.com/{{target}}/%7B%7Barch%7D%7D/{{bundle_type}}?v={{current_version}}",
             "1.2.3+build.4",
             "aarch64",
+            UpdatePlatform::for_os("macos").unwrap(),
         )
         .unwrap();
         assert_eq!(
@@ -283,7 +321,15 @@ mod tests {
             "https://example.com/feed#fragment",
             "invalid",
         ] {
-            assert!(endpoint_url(url, "0.1.3", "aarch64").is_err());
+            assert!(
+                endpoint_url(
+                    url,
+                    "0.1.3",
+                    "aarch64",
+                    UpdatePlatform::for_os("macos").unwrap()
+                )
+                .is_err()
+            );
         }
     }
 }

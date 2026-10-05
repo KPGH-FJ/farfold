@@ -2,7 +2,10 @@ use super::*;
 use crate::acp_client::browser_capability::LaunchKind;
 use crate::acp_client::transient_mcp::{McpUnavailable, launch_rejection};
 use std::cell::Cell;
+#[cfg(unix)]
 use std::os::unix::ffi::OsStringExt;
+#[cfg(windows)]
+use std::os::windows::ffi::OsStringExt;
 
 fn captured(logs: Option<&str>, config: Option<&str>) -> McpSpawnFacts {
     let mut command = std::process::Command::new("/controlled/never-executed");
@@ -90,7 +93,10 @@ fn mcp_launch_inline_configuration_preserves_native_servers_or_refuses_injection
     for config in ["invalid", "null", "[]", "true", "5"] {
         assert_eq!(captured(None, Some(config)).inline_mcp_safe, None);
     }
+    #[cfg(unix)]
     let non_utf8 = OsString::from_vec(vec![0xff]);
+    #[cfg(windows)]
+    let non_utf8 = OsString::from_wide(&[0xd800]);
     assert_eq!(inline_mcp_safe(Some(&non_utf8)), None);
 }
 

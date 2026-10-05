@@ -31,13 +31,18 @@ fn distribution_url(
     declaration: &DependencyDeclaration,
     version_bytes: &[u8],
 ) -> Result<(String, String), String> {
-    let DependencyDistribution::Gzip {
-        download_base,
-        platform,
-        ..
-    } = declaration.distribution
-    else {
-        return Err("此程序不使用此下载方式".into());
+    let (download_base, platform, suffix) = match declaration.distribution {
+        DependencyDistribution::Gzip {
+            download_base,
+            platform,
+            ..
+        } => (download_base, platform, "gz"),
+        DependencyDistribution::Executable {
+            download_base,
+            platform,
+            ..
+        } => (download_base, platform, "exe"),
+        _ => return Err("此程序不使用此下载方式".into()),
     };
     let version = std::str::from_utf8(version_bytes)
         .map_err(|_| "无法读取官方版本信息")?
@@ -55,7 +60,7 @@ fn distribution_url(
     }
     Ok((
         format!(
-            "{}/{version}/{}-{}.gz",
+            "{}/{version}/{}-{}.{suffix}",
             download_base, declaration.binary, platform
         ),
         version.into(),
@@ -63,9 +68,16 @@ fn distribution_url(
 }
 
 fn unpack_program(bytes: &[u8], destination: &Path, job: &Job, limit: u64) -> Result<(), String> {
+    write_program(flate2::read::GzDecoder::new(bytes), destination, job, limit)
+}
+fn write_program(
+    mut input: impl Read,
+    destination: &Path,
+    job: &Job,
+    limit: u64,
+) -> Result<(), String> {
     job.check()?;
     job.report("extract", None, None);
-    let mut input = flate2::read::GzDecoder::new(bytes);
     let mut output = std::fs::OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -93,9 +105,7 @@ fn unpack_program(bytes: &[u8], destination: &Path, job: &Job, limit: u64) -> Re
         return Err("下载的所需程序为空，请重试".into());
     }
     output.sync_all().map_err(|_| "无法完成程序保存")?;
-    use std::os::unix::fs::PermissionsExt;
-    std::fs::set_permissions(destination, std::fs::Permissions::from_mode(0o755))
-        .map_err(|_| "无法设置程序执行权限")?;
+    crate::process_platform::set_executable(destination).map_err(|_| "无法设置程序执行权限")?;
     job.check()
 }
 
@@ -225,6 +235,11 @@ fn prepare_with_mode(
             version_url,
             download_base,
             ..
+        }
+        | DependencyDistribution::Executable {
+            version_url,
+            download_base,
+            ..
         } => {
             let version = job.download_bounded(
                 version_url,
@@ -239,8 +254,20 @@ fn prepare_with_mode(
                 COMPRESSED_LIMIT,
                 Some(download_base),
             )?;
-            let path = staging.path().join(declaration.binary);
-            unpack_program(&bytes, &path, job, EXECUTABLE_LIMIT)?;
+            let direct = matches!(
+                declaration.distribution,
+                DependencyDistribution::Executable { .. }
+            );
+            let path = staging.path().join(if direct {
+                format!("{}.exe", declaration.binary)
+            } else {
+                declaration.binary.into()
+            });
+            if direct {
+                write_program(std::io::Cursor::new(&bytes), &path, job, EXECUTABLE_LIMIT)?;
+            } else {
+                unpack_program(&bytes, &path, job, EXECUTABLE_LIMIT)?;
+            }
             job.report("check", None, None);
             if !check_program(&path, || job.check())? {
                 return Err("所需程序未通过执行检查，原选择保持不变".into());

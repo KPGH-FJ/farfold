@@ -29,7 +29,8 @@ fn reviewed_package_entry_is_required_without_a_wire_declaration() {
     )
     .unwrap();
     let mut a = row(
-        &d.path().join("node"),
+        &d.path()
+            .join(if cfg!(windows) { "node.exe" } else { "node" }),
         "registry:codebuddy-code",
         vec![bin.display().to_string(), "--acp".into()],
     );
@@ -51,11 +52,18 @@ fn reviewed_package_entry_is_required_without_a_wire_declaration() {
 #[test]
 fn python_console_entry_uses_only_public_metadata_and_no_version_gate() {
     let d = tempfile::tempdir().unwrap();
-    std::fs::create_dir_all(d.path().join("bin")).unwrap();
-    std::fs::write(d.path().join("bin/vibe"), "# public entry fixture").unwrap();
+    let bin = d.path().join(if cfg!(windows) { "Scripts" } else { "bin" });
+    std::fs::create_dir_all(&bin).unwrap();
+    let command = bin.join(if cfg!(windows) { "vibe.exe" } else { "vibe" });
+    std::fs::write(&command, "# public entry fixture").unwrap();
     let info = d
         .path()
-        .join("lib/python3.12/site-packages/mistral_vibe-9.9.9.dist-info");
+        .join(if cfg!(windows) {
+            "Lib/site-packages"
+        } else {
+            "lib/python3.12/site-packages"
+        })
+        .join("mistral_vibe-9.9.9.dist-info");
     std::fs::create_dir_all(&info).unwrap();
     std::fs::write(
         info.join("METADATA"),
@@ -67,11 +75,7 @@ fn python_console_entry_uses_only_public_metadata_and_no_version_gate() {
         "[console_scripts]\nvibe = vibe.cli.launcher:main\n",
     )
     .unwrap();
-    let a = row(
-        &d.path().join("bin/vibe"),
-        "registry:mistral-vibe",
-        vec!["--acp".into()],
-    );
+    let a = row(&command, "registry:mistral-vibe", vec!["--acp".into()]);
     assert_eq!(reviewed(&a), Some(AccountQuery::Vibe));
     std::fs::write(
         info.join("entry_points.txt"),
@@ -101,7 +105,11 @@ fn unbounded_or_outside_package_metadata_is_not_inspected() {
 #[test]
 fn official_registry_standalone_vibe_entry_is_supported_without_guessing_custom_names() {
     let d = tempfile::tempdir().unwrap();
-    let binary = d.path().join("vibe-acp");
+    let binary = d.path().join(if cfg!(windows) {
+        "vibe-acp.exe"
+    } else {
+        "vibe-acp"
+    });
     std::fs::write(&binary, "standalone public fixture").unwrap();
     let mut a = row(&binary, "registry:mistral-vibe", vec![]);
     assert_eq!(reviewed(&a), Some(AccountQuery::Vibe));

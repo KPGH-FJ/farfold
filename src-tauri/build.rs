@@ -11,16 +11,31 @@ fn run_xcrun(tool: &str, arguments: &[&OsStr]) {
     assert!(status.success(), "macOS {tool} failed: {status}");
 }
 
-fn compile_browser_workspace() {
+fn compile_macos() {
     // These are Cargo's build inputs, not product/Agent runtime configuration.
-    let target_os = env::var("CARGO_CFG_TARGET_OS").expect("Cargo target OS");
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").expect("Cargo target architecture");
     assert!(
-        target_os == "macos" && target_arch == "aarch64",
+        target_arch == "aarch64",
         "the browser workspace currently supports macOS arm64 only"
     );
     let root = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("Cargo manifest directory"));
     let output = PathBuf::from(env::var_os("OUT_DIR").expect("Cargo build output directory"));
+    let observation = std::fs::read_to_string(root.join("native/browser_observation.js"))
+        .expect("browser observation script");
+    let literals: String = observation
+        .split_inclusive('\n')
+        .map(|line| {
+            format!(
+                "@\"{}\"\n",
+                line.replace('\\', "\\\\")
+                    .replace('"', "\\\"")
+                    .replace('\r', "\\r")
+                    .replace('\n', "\\n")
+            )
+        })
+        .collect();
+    std::fs::write(output.join("BrowserObservation.inc"), literals)
+        .expect("browser observation include");
     for name in ["BrowserWorkspace", "DesktopNotifications"] {
         let source = root.join(format!("native/{name}.m"));
         let object = output.join(format!("{name}.o"));
@@ -36,6 +51,8 @@ fn compile_browser_workspace() {
                 OsStr::new("-Wextra"),
                 OsStr::new("-Werror"),
                 OsStr::new("-Wno-unused-parameter"),
+                OsStr::new("-I"),
+                output.as_os_str(),
                 OsStr::new("-c"),
                 source.as_os_str(),
                 OsStr::new("-o"),
@@ -60,12 +77,62 @@ fn compile_browser_workspace() {
     println!("cargo:rustc-link-lib=framework=UserNotifications");
 }
 
+fn compile_windows_launcher() {
+    let root = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("Cargo manifest directory"));
+    let output = PathBuf::from(env::var_os("OUT_DIR").expect("Cargo build output directory"));
+    let target = env::var("TARGET").expect("Cargo target");
+    let mut command = Command::new(env::var_os("RUSTC").expect("Cargo Rust compiler"));
+    command
+        .arg(root.join("native/NodeLauncher.rs"))
+        .args([
+            "--edition=2024",
+            "--target",
+            &target,
+            "-C",
+            "opt-level=z",
+            "-C",
+            "panic=abort",
+            "-C",
+            "strip=symbols",
+        ])
+        .arg("-o")
+        .arg(output.join("launch-program-template.exe"));
+    let key = format!(
+        "CARGO_TARGET_{}_LINKER",
+        target.replace('-', "_").to_ascii_uppercase()
+    );
+    println!("cargo:rerun-if-env-changed={key}");
+    if let Some(linker) = env::var_os(key) {
+        command
+            .arg("-C")
+            .arg(format!("linker={}", linker.to_string_lossy()));
+    }
+    assert!(
+        command
+            .status()
+            .expect("Windows program launcher compiler")
+            .success(),
+        "Windows program launcher compilation failed"
+    );
+}
+
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
     println!("cargo:rerun-if-changed=native/BrowserWorkspace.h");
     println!("cargo:rerun-if-changed=native/BrowserWorkspace.m");
+    println!("cargo:rerun-if-changed=native/browser_observation.js");
+    println!("cargo:rerun-if-changed=native/NodeLauncher.rs");
     println!("cargo:rerun-if-changed=native/DesktopNotifications.h");
     println!("cargo:rerun-if-changed=native/DesktopNotifications.m");
-    compile_browser_workspace();
+    match env::var("CARGO_CFG_TARGET_OS")
+        .expect("Cargo target OS")
+        .as_str()
+    {
+        "macos" => compile_macos(),
+        // WebView2/WinRT and system credential APIs are linked by their Rust
+        // platform modules. Never invoke the macOS toolchain for this target.
+        "windows" => compile_windows_launcher(),
+        other => panic!("unsupported Farfold desktop platform: {other}"),
+    }
     tauri_build::build();
 }

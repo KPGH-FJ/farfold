@@ -1,0 +1,29 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: variants `NotDetermined` and `Provisional` are never constructed
+  --> src/desktop_notifications.rs:66:5
+   |
+64 | enum Permission {
+   |      ---------- variants in this enum
+65 |     Unknown,
+66 |     NotDetermined,
+   |     ^^^^^^^^^^^^^
+...
+69 |     Provisional,
+   |     ^^^^^^^^^^^
+   |
+   = note: `Permission` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `System` is never constructed
+  --> src/node_runtime.rs:47:5
+   |
+45 | pub enum NpmRunner {
+   |          --------- variant in this enum
+46 |     /// A system npm executable on PATH (invoked directly).
+47 |     System { npm: PathBuf },
+   |     ^^^^^^
+   |
+   = note: `NpmRunner` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: `farfold` (lib) generated 2 warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.04s

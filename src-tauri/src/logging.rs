@@ -1,16 +1,19 @@
-//! Structured app log at `~/Library/Logs/Farfold/app-v1-<YYYY-MM-DD>.log`.
+//! Structured app log in the resolved per-user log directory. macOS preserves
+//! `~/Library/Logs/Farfold`; Windows uses Tauri's app_log_dir for this identifier.
 //!
 //! One line per event: timestamp, level, known component and message size only. The file rotates
 //! once it exceeds 5 MB, keeping the current file plus two backups
 //! (`.1`, `.2`). Diagnostics only — never read back at runtime.
 //!
 //! `init` is called once from `setup` with the real log dir; writers that
-//! fire earlier fall back to the default dir so nothing is lost.
+//! fire earlier use the legacy macOS directory. Windows waits for setup's path.
 
 use std::io::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, OnceLock};
 use std::time::{SystemTime, UNIX_EPOCH};
+
+static LOG_DIRECTORY: OnceLock<PathBuf> = OnceLock::new();
 
 /// Rotate when the current file exceeds this many bytes.
 const LOG_FILE_CAP: u64 = 5 * 1024 * 1024;
@@ -81,6 +84,12 @@ fn timestamp(millis: i64) -> String {
 }
 
 pub(crate) fn default_log_dir() -> PathBuf {
+    if let Some(dir) = LOG_DIRECTORY.get() {
+        return dir.clone();
+    }
+    #[cfg(windows)]
+    return std::env::temp_dir().join("ai.farfold.desktop/logs");
+    #[cfg(not(windows))]
     std::env::var_os("HOME")
         .map(PathBuf::from)
         .unwrap_or_else(|| PathBuf::from("."))
@@ -181,13 +190,22 @@ impl AppLog {
 
 fn slot() -> &'static Mutex<Option<AppLog>> {
     static SLOT: OnceLock<Mutex<Option<AppLog>>> = OnceLock::new();
-    SLOT.get_or_init(|| Mutex::new(AppLog::open(&default_log_dir())))
+    SLOT.get_or_init(|| {
+        // Windows setup resolves the official per-user app log directory.
+        // Early calls must not create a macOS-shaped path in the working tree.
+        #[cfg(windows)]
+        let log = LOG_DIRECTORY.get().and_then(|dir| AppLog::open(dir));
+        #[cfg(not(windows))]
+        let log = AppLog::open(&default_log_dir());
+        Mutex::new(log)
+    })
 }
 
 /// Point the app log at `dir` (called once from setup with the resolved
 /// log directory). A previously opened file keeps receiving lines — the
 /// fallback and the real dir are the same in practice.
 pub(crate) fn init(dir: &Path) {
+    let _ = LOG_DIRECTORY.set(dir.to_path_buf());
     if let Ok(mut guard) = slot().lock()
         && guard.is_none()
     {

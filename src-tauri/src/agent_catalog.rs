@@ -185,12 +185,31 @@ pub(crate) fn registry_agent_id(entry: &RegistryAgent) -> Option<String> {
     )
 }
 
+pub(crate) const fn registry_platform() -> &'static str {
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    {
+        "darwin-aarch64"
+    }
+    #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
+    {
+        "darwin-x86_64"
+    }
+    #[cfg(all(windows, target_arch = "x86_64"))]
+    {
+        "windows-x86_64"
+    }
+    #[cfg(all(windows, target_arch = "aarch64"))]
+    {
+        "windows-aarch64"
+    }
+}
+
 fn registry_platform_available(entry: &RegistryAgent) -> Option<bool> {
     let distribution = &entry.distribution;
     if distribution
         .binary
         .as_ref()
-        .is_some_and(|binary| binary.contains_key("darwin-aarch64"))
+        .is_some_and(|binary| binary.contains_key(registry_platform()))
         || distribution.npx.is_some()
         || distribution.uvx.is_some()
     {
@@ -217,18 +236,22 @@ pub(crate) fn registry_launch(entry: &RegistryAgent) -> Option<AgentLaunch> {
         .distribution
         .binary
         .as_ref()
-        .and_then(|map| map.get("darwin-aarch64"))
+        .and_then(|map| map.get(registry_platform()))
         && !binary.cmd.is_empty()
-        && [".tar.gz", ".tgz", ".zip", ".tar.bz2"]
+        && ([".tar.gz", ".tgz", ".zip", ".tar.bz2"]
             .iter()
             .any(|suffix| {
-                binary
-                    .archive
-                    .split(['?', '#'])
-                    .next()
-                    .unwrap_or(&binary.archive)
-                    .ends_with(suffix)
+                (!cfg!(windows) || *suffix != ".tar.bz2")
+                    && binary
+                        .archive
+                        .split(['?', '#'])
+                        .next()
+                        .unwrap_or(&binary.archive)
+                        .ends_with(suffix)
             })
+            || (cfg!(windows)
+                && crate::archive_zip::raw_executable_target(&binary.archive, &binary.cmd)
+                    .is_some()))
         && binary.archive.starts_with("https://")
         && !binary.env.contains_key("HOME")
     {
@@ -759,7 +782,7 @@ mod tests {
         for id in ["archive-example", "opencode"] {
             let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([{
                 "id": id, "name": "Example", "website": "https://example.test",
-                "distribution": {"binary": {"darwin-aarch64": {
+                "distribution": {"binary": {(registry_platform()): {
                     "archive": "https://example.test/agent.tar.xz", "cmd": "./agent"
                 }}}
             }]))
@@ -777,6 +800,7 @@ mod tests {
         }
     }
 
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     #[test]
     fn goose_bzip2_distribution_reaches_installation_entry() {
         // Observed official agentclientprotocol/registry goose/agent.json,
@@ -814,13 +838,68 @@ mod tests {
         for suffix in ["tar.gz", "tgz", "zip", "tar.bz2"] {
             let entry: RegistryAgent = serde_json::from_value(serde_json::json!({
                 "id": "archive-example",
-                "distribution": {"binary": {"darwin-aarch64": {
+                "distribution": {"binary": {(registry_platform()): {
                     "archive": format!("https://example.test/agent.{suffix}?download=1#asset"),
                     "cmd": "./agent"
                 }}}
             }))
             .unwrap();
-            assert!(registry_launch(&entry).is_some(), "{suffix}");
+            assert_eq!(
+                registry_launch(&entry).is_some(),
+                !(cfg!(windows) && suffix == "tar.bz2"),
+                "{suffix}"
+            );
+        }
+    }
+
+    #[test]
+    fn raw_executable_uses_windows_binary_route_and_retains_official_npm_fallback() {
+        for command in ["./agent.exe", ".\\bin\\agent.exe"] {
+            let entry: RegistryAgent = serde_json::from_value(serde_json::json!({
+                "id":"raw-executable-example",
+                "distribution": {
+                    "binary": {(registry_platform()): {
+                        "archive":"https://example.test/agent.exe?download=1#asset",
+                        "cmd":command,"args":["acp"]
+                    }},
+                    "npx":{"package":"example-agent@1.0.0"}
+                }
+            }))
+            .unwrap();
+            assert_eq!(
+                registry_launch(&entry),
+                Some(if cfg!(windows) {
+                    AgentLaunch::Binary {
+                        binary: command.into(),
+                        args: vec!["acp".into()],
+                    }
+                } else {
+                    AgentLaunch::Npx {
+                        package: "example-agent@1.0.0".into(),
+                        args: vec![],
+                    }
+                })
+            );
+            for invalid in [
+                "../agent.exe",
+                "C:\\agent.exe",
+                "./CON.exe",
+                "./agent.exe:stream",
+            ] {
+                let mut invalid_entry = entry.clone();
+                invalid_entry
+                    .distribution
+                    .binary
+                    .as_mut()
+                    .unwrap()
+                    .get_mut(registry_platform())
+                    .unwrap()
+                    .cmd = invalid.into();
+                assert!(matches!(
+                    registry_launch(&invalid_entry),
+                    Some(AgentLaunch::Npx { .. })
+                ));
+            }
         }
     }
 

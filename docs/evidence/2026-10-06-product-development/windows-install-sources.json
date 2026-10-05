@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-06",
+  "scope": "Read-only public official installation source review; no downloaded installer or Agent was executed. Implementation and synthetic fixtures are separate evidence; no Windows runtime/Agent acceptance claimed.",
+  "sources": [
+    {
+      "id": "amp",
+      "url": "https://ampcode.com/install.ps1",
+      "snapshot": "/tmp/farfold-amp-install.ps1",
+      "sha256": "ce1a731f2bbed1630ad80519cebaccecc5ae3b71611a3746cdd8e869f1bf86ff",
+      "lines": [115, 151, 153, 159, 166],
+      "facts": [
+        "The official PowerShell installer selects windows-x64, documenting x64 emulation on ARM64.",
+        "Version endpoint is /cli/cli-version.txt; binary is /cli/{version}/amp-windows-x64.exe.",
+        "Farfold follows that public native binary route; it does not execute the installer or guess platform asset names."
+      ]
+    },
+    {
+      "id": "copilot",
+      "version": "1.0.89",
+      "urls": [
+        "https://registry.npmjs.org/@github/copilot/1.0.89",
+        "https://registry.npmjs.org/@github/copilot-win32-x64/1.0.89",
+        "https://registry.npmjs.org/@github/copilot-win32-arm64/1.0.89"
+      ],
+      "facts": [
+        "Main package uses npm-loader.js and declares win32-x64 and win32-arm64 optional platform packages at the same version.",
+        "Observed x64 and arm64 platform manifests declare os win32, matching cpu, exports . -> ./copilot.exe.",
+        "Authentication supplement still requires the exact reviewed package/managed receipt and live official declaration; this is not an installation version pin."
+      ]
+    },
+    {
+      "id": "windows-console",
+      "urls": [
+        "https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags",
+        "https://learn.microsoft.com/en-us/windows/console/getconsolecp"
+      ],
+      "facts": [
+        "CREATE_NO_WINDOW applies only to the process being created; a GUI helper alone does not prove its selected console program will avoid a new window.",
+        "Farfold helper receives an explicit stdio/pty mode. Background selected command uses CREATE_NO_WINDOW; terminal selected command preserves the attached ConPTY.",
+        "The standalone generated Node launcher inherits an existing console; with no console it applies CREATE_NO_WINDOW to selected Node. Actual Windows behavior remains untested on this Mac."
+      ]
+    },
+    {
+      "id": "windows-process-ownership",
+      "urls": [
+        "https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-terminatejobobject",
+        "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information"
+      ],
+      "facts": [
+        "TerminateJobObject acts on currently associated processes, so the helper before Job entry is also retained and terminated by exact process handle.",
+        "attach is called while the original std/async/PTY Child still retains its Windows process handle; Windows keeps that process ID allocated until all handles are closed, making the immediate OpenProcess lookup refer to that same object.",
+        "A synthetic-only barrier fixture covers cancel before helper Job entry. This test is added but has not been executed on Windows."
+      ]
+    }
+  ],
+  "limitations": [
+    "Node forwarding template was cross-compiled to PE; no Windows execution yet.",
+    "Installation-appended paths affect Authenticode; signing/distribution is not validated.",
+    "Windows tar.bz2 extraction is not yet implemented; must remain unadvertised as installable unless another official supported route exists."
+  ]
+}

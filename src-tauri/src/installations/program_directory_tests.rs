@@ -40,6 +40,7 @@ fn only_the_matching_program_receipt_owns_the_new_direct_child() {
     assert_eq!(owned_root(&receipt(&root), data.path()).unwrap(), root);
 }
 
+#[cfg(unix)]
 #[test]
 fn legacy_roots_stay_owned_and_new_symlink_parents_never_gain_ownership() {
     use std::os::unix::fs::symlink;
@@ -90,7 +91,6 @@ fn ordinary_and_companion_roots_never_grant_each_other_ownership() {
 
 #[test]
 fn legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root() {
-    use std::os::unix::fs::symlink;
     let data = tempfile::tempdir().unwrap();
     let data_path = data.path().canonicalize().unwrap();
     std::fs::create_dir(data_path.join("agents")).unwrap();
@@ -102,30 +102,31 @@ fn legacy_escaping_ids_or_symlink_parents_never_own_a_missing_root() {
     assert!(owned_root(&item, data.path()).is_err());
     item.agent_id = outside.display().to_string();
     assert!(owned_root(&item, data.path()).is_err());
-    symlink(&outside, data_path.join("agents/registry:autohand")).unwrap();
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(&outside, data_path.join("agents/registry:autohand")).unwrap();
     item.agent_id = "registry:autohand".into();
     assert!(owned_root(&item, data.path()).is_err());
 }
 
 #[test]
 fn old_and_new_component_receipts_remain_selectable_and_independently_removable() {
-    use std::os::unix::fs::PermissionsExt;
     let data = tempfile::tempdir().unwrap();
     let store = MetaStore::open(&data.path().join("meta.db")).unwrap();
     let mut rows = Vec::new();
     let mut roots = Vec::new();
-    for parent in [
-        "agents/registry:fixture",
-        "agent-installations/agent-registry%3Afixture",
-    ] {
+    for parent in ["agents/fixture", "agent-installations/agent-fixture"] {
         let root = data.path().join(parent).join("install-fixture");
         std::fs::create_dir_all(&root).unwrap();
         let root = root.canonicalize().unwrap();
-        let program = root.join("program");
+        let program = root.join(if cfg!(windows) {
+            "program.exe"
+        } else {
+            "program"
+        });
         std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
-        std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+        crate::process_platform::set_executable(&program).unwrap();
         let row = AgentRow {
-            id: "registry:fixture".into(),
+            id: "fixture".into(),
             name: "Fixture".into(),
             source: "registry".into(),
             command: program.display().to_string(),

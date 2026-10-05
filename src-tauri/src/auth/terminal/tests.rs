@@ -59,7 +59,7 @@ async fn cancelled_declared_or_manual_login_does_not_read_environment_or_spawn()
         }
         let result = run(
             &pty,
-            "/usr/bin/python3",
+            &crate::platform_tests::python(),
             &[
                 "-c".into(),
                 "import pathlib,sys;pathlib.Path(sys.argv[1]).write_text('created')".into(),
@@ -95,7 +95,7 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     let pty = Arc::new(crate::pty::PtyManager::new());
     let id = run(
         &pty,
-        "/usr/bin/python3",
+        &crate::platform_tests::python(),
         &[
             "-c".into(),
             "import pathlib,os,sys;pathlib.Path(sys.argv[1]).write_text(str(os.getpid()));input()"
@@ -129,7 +129,7 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         outcome.is_ok(),
         "the same operation flag must reach the existing PTY owner"
     );
-    assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid), 0);
     let _available = tokio::time::timeout(
         Duration::from_secs(1),
         crate::install_job::configuration_guard(agent),
@@ -146,7 +146,7 @@ async fn cancellation_during_failed_environment_read_keeps_cancelled_status() {
     let pty = crate::pty::PtyManager::new();
     let result = run(
         &pty,
-        "/usr/bin/python3",
+        &crate::platform_tests::python(),
         &[],
         directory.path(),
         owned,

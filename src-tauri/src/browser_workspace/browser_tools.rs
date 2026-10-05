@@ -6,6 +6,8 @@ use serde_json::{Value, json};
 use std::time::{Duration, Instant};
 use tauri::AppHandle;
 
+const CONTROL_UNCONFIRMED: &str = "网页操作结果未确认，请查看页面后重新观察；不要自动重试";
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) enum ToolRequest {
     Read,
@@ -168,16 +170,44 @@ impl FixedPageReadScope {
                     reference.to_owned(),
                     action,
                 )
-                .await?;
-                self.with_valid(|| {
-                    if raw.len() > 16_384 { return Err("网页操作结果未确认，请重新观察；不要自动重试".into()); }
-                    let value: Value = serde_json::from_str(&raw).map_err(|_| "网页操作结果未确认，请重新观察；不要自动重试")?;
-                    let outcome = value.get("outcome").and_then(Value::as_str).filter(|s| matches!(*s, "dispatched" | "rejected" | "unknown")).ok_or("网页操作结果未确认，请重新观察；不要自动重试")?;
-                    let applied = if outcome == "unknown" { Value::Null } else { Value::Bool(value.get("applied").and_then(Value::as_bool).ok_or("网页操作结果未确认")?) };
-                    Ok(json!({"applied":applied,"outcome":outcome,"pageChanged":value.get("pageChanged").and_then(Value::as_bool).unwrap_or(true),"navigationChanged":value.get("navigationChanged").and_then(Value::as_bool).unwrap_or(true),"observationId":id,"reason":value.get("reason").and_then(Value::as_str).filter(|s| s.chars().count()<=256),"next":"重新观察页面后检查结果；事件已交付不代表网站操作成功，结果未知时不要自动重试。"}))
-                })
+                .await
+                .map_err(|_| CONTROL_UNCONFIRMED.to_owned())?;
+                self.complete_control(id, &raw)
             }
         }
+    }
+
+    // Once handed to the native page, withdrawal or a missing receipt does not
+    // prove that no effect happened. Preserve this meaning even on gate errors.
+    fn complete_control(&self, id: &str, raw: &str) -> Result<Value, String> {
+        self.with_valid(|| {
+            if raw.len() > 16_384 {
+                return Err(CONTROL_UNCONFIRMED.into());
+            }
+            let value: Value = serde_json::from_str(raw).map_err(|_| CONTROL_UNCONFIRMED)?;
+            let outcome = value
+                .get("outcome")
+                .and_then(Value::as_str)
+                .filter(|s| matches!(*s, "dispatched" | "rejected" | "unknown"))
+                .ok_or(CONTROL_UNCONFIRMED)?;
+            let applied = if outcome == "unknown" {
+                Value::Null
+            } else {
+                Value::Bool(
+                    value.get("applied").and_then(Value::as_bool).ok_or(CONTROL_UNCONFIRMED)?,
+                )
+            };
+            Ok(json!({
+                "applied":applied,
+                "outcome":outcome,
+                "pageChanged":value.get("pageChanged").and_then(Value::as_bool).unwrap_or(true),
+                "navigationChanged":value.get("navigationChanged").and_then(Value::as_bool).unwrap_or(true),
+                "observationId":id,
+                "reason":value.get("reason").and_then(Value::as_str).filter(|s| s.chars().count()<=256),
+                "next":"重新观察页面后检查结果；事件已交付不代表网站操作成功，结果未知时不要自动重试。"
+            }))
+        })
+        .map_err(|_| CONTROL_UNCONFIRMED.to_owned())
     }
 
     fn complete_observation(&self, raw: &str) -> Result<Value, String> {
@@ -217,6 +247,26 @@ mod tests {
         let raw = json!({"blocked":false,"url":"https://www.rust-lang.org/","title":"Example","text":"safe body","observationId":"observation-a","documentVersion":"document-a:1","nodes":[{"ref":"node-a","tag":"button","role":"button","label":"Apply","actions":["click"],"bounds":{"x":1,"y":2,"width":10,"height":20}}],"screenshot":{"status":"unavailable"}}).to_string();
         scope.complete_observation(&raw).unwrap();
         raw
+    }
+    #[test]
+    fn a_withdrawn_control_receipt_never_claims_that_the_action_was_not_applied() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:control-receipt", "page");
+        let raw = json!({"applied":true,"outcome":"dispatched"}).to_string();
+        assert_eq!(
+            scope.complete_control("control", &raw).unwrap()["applied"],
+            true
+        );
+        scope.revoke();
+        assert_eq!(
+            scope.complete_control("control", &raw).unwrap_err(),
+            CONTROL_UNCONFIRMED
+        );
+        assert_eq!(
+            scope
+                .complete_control("control", "invalid receipt")
+                .unwrap_err(),
+            CONTROL_UNCONFIRMED
+        );
     }
     #[test]
     fn actual_native_fixture_satisfies_the_rust_and_mcp_receipt_contract() {

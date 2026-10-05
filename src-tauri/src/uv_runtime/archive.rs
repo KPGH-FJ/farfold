@@ -26,7 +26,15 @@ fn inside(path: &Path) -> bool {
     let mut depth = 0;
     for part in path.components() {
         match part {
-            Component::Normal(_) => depth += 1,
+            Component::Normal(name) => {
+                if name
+                    .to_str()
+                    .is_none_or(|name| !crate::archive_zip::safe_component(name))
+                {
+                    return false;
+                }
+                depth += 1;
+            }
             Component::CurDir => {}
             Component::ParentDir if depth > 0 => depth -= 1,
             _ => return false,
@@ -54,6 +62,9 @@ impl<R: Read> Read for BoundedReader<'_, R> {
 }
 
 pub(super) fn extract(bytes: &[u8], destination: &Path, job: &Job) -> Result<(), String> {
+    if bytes.starts_with(b"PK\x03\x04") {
+        return crate::archive_zip::extract(bytes, destination, || job.check());
+    }
     unpack(
         flate2::read::GzDecoder::new(bytes),
         destination,
@@ -97,6 +108,9 @@ fn unpack(
         let kind = entry.header().entry_type();
         if !(kind.is_file() || kind.is_dir() || kind.is_symlink() || kind.is_hard_link()) {
             return Err("下载内容包含不能使用的文件类型".into());
+        }
+        if cfg!(windows) && (kind.is_symlink() || kind.is_hard_link()) {
+            return Err("下载内容包含无法安全展开的链接".into());
         }
         declared = declared.saturating_add(entry.size());
         if declared > limit {
@@ -173,7 +187,14 @@ mod tests {
 
     #[test]
     fn archive_links_and_parent_traversal_cannot_escape_owned_directory() {
-        for path in ["/outside", "../outside", "tool/../../outside"] {
+        for path in [
+            "/outside",
+            "../outside",
+            "tool/../../outside",
+            "tool/name:stream",
+            "tool/CON.txt",
+            "tool/name.",
+        ] {
             assert!(!inside(Path::new(path)));
         }
         assert!(inside(Path::new("python/bin/../lib/module.py")));

@@ -124,8 +124,26 @@ impl PtyManager {
             .openpty(size)
             .map_err(|error| format!("cannot open pty: {error}"))?;
 
-        let mut builder = CommandBuilder::new(command);
-        builder.args(args.iter().map(String::as_str));
+        #[cfg(unix)]
+        let mut builder = {
+            let mut builder = CommandBuilder::new(command);
+            builder.args(args.iter().map(String::as_str));
+            builder
+        };
+        #[cfg(windows)]
+        let pending_group = crate::windows_process::pending().map_err(|_| "无法准备终端进程")?;
+        #[cfg(windows)]
+        let mut builder = {
+            let helper =
+                crate::windows_process::helper_executable().map_err(|_| "无法定位应用程序")?;
+            let mut builder = CommandBuilder::new(helper);
+            builder.args(pending_group.helper_argv(
+                std::ffi::OsStr::new(command),
+                args.iter().map(std::ffi::OsString::from),
+                true,
+            ));
+            builder
+        };
         builder.cwd(cwd.as_os_str());
         for (name, value) in env {
             builder.env(name.as_str(), value.as_str());
@@ -146,6 +164,12 @@ impl PtyManager {
             .spawn_command(builder)
             .map_err(|error| format!("cannot spawn {command} on pty: {error}"))?;
         let pid = child.process_id();
+        #[cfg(windows)]
+        let group = pending_group
+            .attach(pid.ok_or("无法确认终端进程")?)
+            .map_err(|_| "无法确认终端进程")?;
+        #[cfg(unix)]
+        let group = crate::process_platform::OwnedGroup;
 
         let id = format!(
             "pty-{}-{}",
@@ -165,6 +189,7 @@ impl PtyManager {
             let on_output = on_output.clone();
             thread::spawn(move || {
                 let _admission = admission;
+                let _group = group;
                 let mut code = None;
                 let mut stopping = None;
                 let mut terminated = false;
@@ -173,7 +198,7 @@ impl PtyManager {
                     if (stop.load(Ordering::SeqCst) || code.is_some()) && stopping.is_none() {
                         stopping = Some(Instant::now());
                         if let Some(pid) = pid {
-                            crate::supervisor::signal_owned_group(pid, libc::SIGHUP);
+                            crate::supervisor::signal_owned_group(pid, crate::supervisor::HANGUP);
                         } else {
                             let _ = child.kill();
                         }
@@ -181,13 +206,13 @@ impl PtyManager {
                     if let Some(started) = stopping {
                         if !terminated && started.elapsed() >= Duration::from_millis(250) {
                             if let Some(pid) = pid {
-                                crate::supervisor::signal_owned_group(pid, libc::SIGTERM);
+                                crate::supervisor::signal_owned_group(pid, crate::supervisor::TERM);
                             }
                             terminated = true;
                         }
                         if !killed && started.elapsed() >= Duration::from_secs(2) {
                             if let Some(pid) = pid {
-                                crate::supervisor::signal_owned_group(pid, libc::SIGKILL);
+                                crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
                             } else {
                                 let _ = child.kill();
                             }
@@ -388,8 +413,7 @@ fn pty_cwd(cwd: Option<&str>) -> Result<PathBuf, String> {
                 Err(format!("pty working directory does not exist: {value}"))
             }
         }
-        _ => std::env::var_os("HOME")
-            .map(PathBuf::from)
+        _ => crate::process_platform::home_dir()
             .ok_or_else(|| "cannot resolve home directory".to_string()),
     }
 }
@@ -464,9 +488,13 @@ pub async fn pty_close(app: AppHandle, id: String) -> Result<Option<u32>, String
         .map_err(|_| "登录终端关闭未完成".to_string())?
 }
 
+#[cfg(all(test, windows))]
+mod windows_tests;
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(unix)]
     use std::time::{Duration, Instant};
 
     #[test]
@@ -530,6 +558,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn service_configuration_cancel_flag_ends_the_exact_running_child() {
         let manager = PtyManager::new();
@@ -577,6 +606,7 @@ mod tests {
         assert!(manager.close(&id).unwrap().is_some());
     }
 
+    #[cfg(unix)]
     #[test]
     fn close_preserves_a_terminal_that_already_exited_successfully() {
         let manager = PtyManager::new();
@@ -596,6 +626,7 @@ mod tests {
         assert_eq!(manager.close(&id).unwrap(), None);
     }
 
+    #[cfg(unix)]
     #[test]
     fn close_reaps_a_child_that_ignores_hangup_and_terminate() {
         let manager = Arc::new(PtyManager::new());
@@ -637,7 +668,7 @@ mod tests {
         // the regression is fixed. No Agent process is involved.
         if !reaped {
             if let Some(pid) = session.pid {
-                crate::supervisor::signal_owned_group(pid, libc::SIGKILL);
+                crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
             }
         }
         result.unwrap();
@@ -646,6 +677,7 @@ mod tests {
         assert!(!manager.lock().unwrap().contains_key(&id));
     }
 
+    #[cfg(unix)]
     #[test]
     fn spawn_streams_output_and_reports_exit_code() {
         let manager = PtyManager::new();

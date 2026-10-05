@@ -1,0 +1,9 @@
+{
+  "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental",
+  "reason": "user-authorized regenerable incremental cache only",
+  "noActiveCargoOrRustc": true,
+  "wasSymlink": false,
+  "beforeFreeBytes": 7085244416,
+  "afterFreeBytes": 9765179392,
+  "freedBytes": 2679934976
+}

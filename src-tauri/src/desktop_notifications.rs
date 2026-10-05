@@ -1,6 +1,12 @@
 //! Optional, content-free desktop reminders. Submission is not proof of delivery.
 //! The system receives only a digest of an existing index row, never its path.
+#[cfg(target_os = "macos")]
 mod native;
+#[cfg(windows)]
+#[path = "desktop_notifications/windows.rs"]
+mod native;
+#[cfg(any(windows, test))]
+mod windows_payload;
 use crate::meta_store::MetaStore;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -57,19 +63,29 @@ fn save_preference(store: &MetaStore, enabled: bool, sound: bool) -> Result<Pref
 #[serde(rename_all = "snake_case")]
 enum Permission {
     Unknown,
+    #[cfg(any(target_os = "macos", test))]
     NotDetermined,
     Denied,
     Authorized,
+    #[cfg(any(target_os = "macos", test))]
     Provisional,
 }
 #[derive(Clone, Copy, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct SystemSettings {
     permission: Permission,
-    system_alert: bool,
-    system_sound: bool,
+    system_alert: Option<bool>,
+    system_sound: Option<bool>,
 }
 impl SystemSettings {
+    fn unknown() -> Self {
+        Self {
+            permission: Permission::Unknown,
+            system_alert: None,
+            system_sound: None,
+        }
+    }
+    #[cfg(any(target_os = "macos", test))]
     fn from_native(permission: i32, alert: bool, sound: bool) -> Self {
         Self {
             permission: match permission {
@@ -79,15 +95,17 @@ impl SystemSettings {
                 4 => Permission::Provisional,
                 _ => Permission::Unknown,
             },
-            system_alert: alert,
-            system_sound: sound,
+            system_alert: Some(alert),
+            system_sound: Some(sound),
         }
     }
     fn allowed(self) -> bool {
-        matches!(
-            self.permission,
-            Permission::Authorized | Permission::Provisional
-        )
+        match self.permission {
+            Permission::Authorized => true,
+            #[cfg(any(target_os = "macos", test))]
+            Permission::Provisional => true,
+            _ => false,
+        }
     }
 }
 #[derive(Serialize)]
@@ -95,6 +113,7 @@ impl SystemSettings {
 pub struct NotificationState {
     enabled: bool,
     sound: bool,
+    click_requires_running: bool,
     #[serde(flatten)]
     system: SystemSettings,
 }
@@ -102,8 +121,21 @@ fn snapshot(preference: Preference, system: SystemSettings) -> NotificationState
     NotificationState {
         enabled: preference.enabled,
         sound: preference.sound,
+        click_requires_running: cfg!(windows),
         system,
     }
+}
+
+fn save_confirmed_preference(
+    store: &MetaStore,
+    enabled: bool,
+    sound: bool,
+    system: SystemSettings,
+) -> Result<Preference, String> {
+    if enabled && system.permission == Permission::Unknown {
+        return Err("系统通知许可尚未确认，原设置保持不变".into());
+    }
+    save_preference(store, enabled && system.allowed(), sound)
 }
 
 #[derive(Default)]
@@ -115,6 +147,12 @@ pub struct DesktopNotifications {
 }
 pub fn initialize(app: &AppHandle) {
     native::initialize(app);
+}
+pub fn handle_run_event(_event: &tauri::RunEvent) {
+    #[cfg(windows)]
+    if matches!(_event, tauri::RunEvent::Exit) {
+        native::shutdown();
+    }
 }
 
 #[derive(Deserialize, Clone, Copy)]
@@ -145,7 +183,7 @@ pub async fn desktop_notifications_get(app: AppHandle) -> Result<NotificationSta
     let preference = read_preference(app.state::<MetaStore>().inner())?;
     let system = native::settings(&app, false)
         .await
-        .unwrap_or(SystemSettings::from_native(0, false, false));
+        .unwrap_or_else(|_| SystemSettings::unknown());
     Ok(snapshot(preference, system))
 }
 #[tauri::command]
@@ -167,13 +205,10 @@ pub async fn desktop_notifications_set(
     } else {
         native::settings(&app, false)
             .await
-            .unwrap_or(SystemSettings::from_native(0, false, false))
+            .unwrap_or_else(|_| SystemSettings::unknown())
     };
-    let preference = save_preference(
-        app.state::<MetaStore>().inner(),
-        enabled && system.allowed(),
-        sound,
-    )?;
+    let preference =
+        save_confirmed_preference(app.state::<MetaStore>().inner(), enabled, sound, system)?;
     Ok(snapshot(preference, system))
 }
 fn claim(seen: &mut VecDeque<(String, u64)>, renderer: &str, sequence: u64) -> bool {
@@ -278,7 +313,7 @@ pub async fn desktop_notification_submit(
         &app,
         target_digest(&target_key),
         kind.body(),
-        preference.sound && system.system_sound,
+        preference.sound && system.system_sound != Some(false),
         revision,
     )
     .await?;

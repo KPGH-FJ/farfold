@@ -12,8 +12,8 @@ impl LaunchIdentity {
     pub(crate) fn from_launch(command: &str, args: &[String]) -> Option<Self> {
         let path = Path::new(command);
         let canonical = path.canonicalize().ok()?;
-        let name = path.file_name()?.to_str()?;
-        let resolved_name = canonical.file_name()?.to_str()?;
+        let name = crate::process_platform::program_name(path)?;
+        let resolved_name = crate::process_platform::program_name(&canonical)?;
         let runtime = |name: &str| {
             matches!(
                 name,
@@ -40,7 +40,7 @@ impl LaunchIdentity {
                         .all(|p| !p.is_empty() && p.bytes().all(|b| b.is_ascii_digit()))
             })
         };
-        if !runtime(name) && !runtime(resolved_name) {
+        if !runtime(&name) && !runtime(&resolved_name) {
             return canonical.is_file().then_some(Self(canonical));
         }
         // Deliberately do not parse -c/-m, loader expressions, package runners,

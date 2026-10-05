@@ -107,7 +107,6 @@ impl Fixture {
     fn with_logs(mode: &str, logs: &str) -> Self {
         let dir = tempfile::tempdir().unwrap();
         let cwd = dir.path().canonicalize().unwrap();
-        let script = cwd.join("codex-acp");
         let code = PEER.replace(
             "mode,root=sys.argv[1:3]",
             &format!(
@@ -116,9 +115,7 @@ impl Fixture {
                 serde_json::to_string(&cwd.to_string_lossy()).unwrap()
             ),
         );
-        std::fs::write(&script, format!("#!/usr/bin/python3\n{code}")).unwrap();
-        use std::os::unix::fs::PermissionsExt;
-        std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let script = crate::platform_tests::python_peer(&cwd, "codex-acp", &code);
         let store = MetaStore::open(&cwd.join("meta.db")).unwrap();
         let row = AgentRow {
             id: "registry:codex-acp".into(),
@@ -154,7 +151,9 @@ impl Fixture {
         // A controlled Python peer under the official Node launch shape tests
         // Farfold's admission/serialization only; it is not an official Agent.
         let mut fixture = Self::with_logs("ok", logs);
-        let node = fixture.cwd.join("node");
+        let node = fixture
+            .cwd
+            .join(if cfg!(windows) { "node.exe" } else { "node" });
         std::fs::rename(&fixture.row.command, &node).unwrap();
         let package = fixture
             .cwd
@@ -223,7 +222,7 @@ impl Fixture {
             .unwrap();
         for pid in pids {
             assert!(
-                pid != 0 && unsafe { libc::kill(pid as i32, 0) } != 0,
+                pid != 0 && crate::platform_tests::process_check(pid as i32) != 0,
                 "the exact controlled peer must be reaped before fixture removal"
             );
         }
@@ -282,7 +281,10 @@ async fn actual_request(resumed: bool) {
         opened.response["farfoldFutureExtension"],
         json!({"nested":["preserved",{"number":7}]})
     );
-    assert_eq!(*owner.bound.lock().unwrap(), [opened.session_id.clone()]);
+    assert_eq!(
+        owner.bound.lock().unwrap().as_slice(),
+        std::slice::from_ref(&opened.session_id)
+    );
     assert_eq!(owner.revoked.load(Ordering::Acquire), 0);
     f.manager
         .close_session(&f.row.id, &f.cwd, &opened.session_id)

@@ -184,8 +184,9 @@ fn executable(path: &Path) -> Option<PathBuf> {
 }
 
 fn resolve(command: &str) -> Option<PathBuf> {
-    if command.contains('/') {
-        return executable(Path::new(command));
+    let path = Path::new(command);
+    if path.is_absolute() || path.components().count() > 1 {
+        return executable(path);
     }
     let path =
         crate::agent_discovery::find_binary(command, &crate::agent_discovery::candidate_dirs())?;
@@ -195,11 +196,11 @@ fn resolve(command: &str) -> Option<PathBuf> {
 /// This bounded check never parses arbitrary interpreter flags or shell code.
 /// Such launches remain available through explicit manual configuration.
 fn interpreter(path: &Path) -> bool {
-    let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+    let Some(name) = crate::process_platform::program_name(path) else {
         return false;
     };
     matches!(
-        name,
+        name.as_str(),
         "node" | "bun" | "deno" | "sh" | "bash" | "zsh" | "ruby" | "perl" | "python"
     ) || name.strip_prefix("python").is_some_and(|version| {
         !version.is_empty()

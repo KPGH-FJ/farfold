@@ -1,0 +1,7 @@
+{
+  "scope": "Formatting equivalence of the extracted production program against HEAD; does not prove Windows native integration",
+  "equal_after_same_prettier_format": true,
+  "original_normalized_sha256": "fe45278efa584e6758bdb501da03c542ed3b892a1aa773168569df42f4c4609e",
+  "current_normalized_sha256": "fe45278efa584e6758bdb501da03c542ed3b892a1aa773168569df42f4c4609e",
+  "macProbeReproductionAfterExtraction": "The earlier native-browser receipts precede extraction. Cargo macOS builds now generate BrowserObservation.inc in their own OUT_DIR; standalone clang probes must include that exact output directory (-I) along with the existing source/framework inputs. The old receipts were not re-run solely for this formatting-equivalent extraction."
+}

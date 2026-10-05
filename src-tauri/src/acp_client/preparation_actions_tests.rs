@@ -1,16 +1,20 @@
 use super::*;
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
+use std::path::PathBuf;
+#[cfg(unix)]
 use std::{
     collections::HashMap,
-    os::unix::fs::{PermissionsExt, symlink},
-    path::PathBuf,
     sync::{Arc, Mutex, OnceLock, atomic::AtomicU32},
     time::{Duration, Instant},
 };
 
+#[cfg(unix)]
 struct ReapFixture {
     pty: Arc<PtyManager>,
     id: String,
 }
+#[cfg(unix)]
 impl Drop for ReapFixture {
     fn drop(&mut self) {
         let _ = self.pty.close(&self.id);
@@ -22,15 +26,19 @@ fn fixture() -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
 }
 fn fixture_with_layout(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
-    let root = data.path().canonicalize().unwrap().join(if encoded {
-        "agent-installations/agent-registry%3Agoose/install-fixture"
-    } else {
-        "agents/registry:goose/install-fixture"
-    });
+    let root = data
+        .path()
+        .canonicalize()
+        .unwrap()
+        .join(if encoded || cfg!(windows) {
+            "agent-installations/agent-registry%3Agoose/install-fixture"
+        } else {
+            "agents/registry:goose/install-fixture"
+        });
     std::fs::create_dir_all(&root).unwrap();
-    let program = root.join("goose");
+    let program = root.join(if cfg!(windows) { "goose.exe" } else { "goose" });
     std::fs::write(&program, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(&program).unwrap();
     let row = AgentRow {
         id: "registry:goose".into(),
         name: "Goose".into(),
@@ -187,13 +195,14 @@ fn service_configuration_rederives_review_and_rejects_old_or_arbitrary_commands(
 }
 
 #[test]
+#[cfg(unix)]
 fn service_configuration_rejects_a_managed_directory_or_binary_symlink_escape() {
     let (data, store, row, root) = fixture();
     let outside = data.path().canonicalize().unwrap().join("outside");
     std::fs::create_dir(&outside).unwrap();
     let external = outside.join("goose");
     std::fs::write(&external, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(&external, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(&external).unwrap();
     std::fs::remove_file(&row.command).unwrap();
     symlink(&external, &row.command).unwrap();
     assert!(actions_for(&store, &row, data.path()).unwrap().is_empty());
@@ -203,6 +212,7 @@ fn service_configuration_rejects_a_managed_directory_or_binary_symlink_escape() 
     assert!(external.exists());
 }
 
+#[cfg(unix)]
 fn api_connection(
     manager: &AcpManager,
     row: &AgentRow,
@@ -238,6 +248,7 @@ fn api_connection(
 }
 
 #[tokio::test]
+#[cfg(unix)]
 async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap() {
     let (data, store, row, _) = fixture();
     let manager = AcpManager::new(data.path().into(), data.path().into());
@@ -349,7 +360,7 @@ fn encoded_goose_root_keeps_the_existing_configuration_action_proof() {
 fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBuf) {
     let data = tempfile::tempdir().unwrap();
     let base = data.path().canonicalize().unwrap();
-    let root = base.join(if encoded {
+    let root = base.join(if encoded || cfg!(windows) {
         "agent-installations/agent-registry%3Acline/install-fixture"
     } else {
         "agents/registry:cline/install-fixture"
@@ -365,7 +376,11 @@ fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBu
             "repository":{"type":"git","url":"git+https://github.com/cline/cline.git","directory":"apps/cli"}
         })).unwrap(),
     ).unwrap();
-    let node = base.join("shared-node/bin/node");
+    let node = base.join(if cfg!(windows) {
+        "shared-node/node.exe"
+    } else {
+        "shared-node/bin/node"
+    });
     std::fs::create_dir_all(node.parent().unwrap()).unwrap();
     std::fs::write(
         &node,
@@ -375,7 +390,7 @@ fn npm_fixture(encoded: bool) -> (tempfile::TempDir, MetaStore, AgentRow, PathBu
         ),
     )
     .unwrap();
-    std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(&node).unwrap();
     let row = AgentRow {
         id: "registry:cline".into(),
         name: "Cline".into(),
@@ -515,6 +530,7 @@ fn service_configuration_npm_rejects_unverified_registration_receipts_and_manife
 }
 
 #[test]
+#[cfg(unix)]
 fn service_configuration_npm_rejects_loader_package_or_manifest_aliases() {
     for kind in ["loader", "package", "manifest"] {
         let (data, store, row, root) = npm_fixture(true);
@@ -605,6 +621,7 @@ fn service_configuration_npm_rederives_reviewed_prefix_and_public_package() {
 }
 
 #[tokio::test]
+#[cfg(unix)]
 async fn service_configuration_npm_terminal_uses_exact_loader_then_auth_without_metadata_changes() {
     let (data, store, row, root) = npm_fixture(true);
     let before = store.list_settings().unwrap();

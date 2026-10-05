@@ -4,6 +4,7 @@ mod agent_discovery;
 mod agent_install;
 mod api_endpoint;
 mod api_test;
+mod archive_zip;
 mod auth;
 mod browser_sharing;
 mod browser_workspace;
@@ -14,6 +15,7 @@ mod desktop_notifications;
 mod diagnostics;
 mod draft_attachment;
 mod draft_exit;
+mod file_access;
 mod file_delivery;
 mod file_delivery_commands;
 mod install_job;
@@ -28,6 +30,9 @@ pub mod meta_store;
 mod node_runtime;
 mod npm_release;
 mod performance_trace;
+#[cfg(test)]
+mod platform_tests;
+mod process_platform;
 mod program_launch;
 #[cfg(test)]
 mod program_launch_tests;
@@ -39,8 +44,23 @@ mod transport_security;
 mod ui_transport;
 mod update_feed;
 mod update_metadata;
+mod update_platform;
 mod uv_runtime;
+#[cfg(windows)]
+mod windows_process;
 mod work_policy;
+
+/// Process ownership helper dispatches before GUI, logging or Agent work.
+pub fn run_process_helper_if_requested() -> Option<i32> {
+    #[cfg(windows)]
+    {
+        windows_process::run_if_requested()
+    }
+    #[cfg(not(windows))]
+    {
+        None
+    }
+}
 
 use tauri::{AppHandle, Manager};
 
@@ -84,7 +104,14 @@ pub fn run() {
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
             std::fs::create_dir_all(&app_data_dir)
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
-            logging::init(&logging::default_log_dir());
+            #[cfg(windows)]
+            let log_dir = app
+                .path()
+                .app_log_dir()
+                .map_err(|error| std::io::Error::other(error.to_string()))?;
+            #[cfg(not(windows))]
+            let log_dir = logging::default_log_dir();
+            logging::init(&log_dir);
             logging::info(
                 "app",
                 format_args!("farfold {} started", env!("CARGO_PKG_VERSION")),
@@ -244,6 +271,7 @@ pub fn run() {
         .expect("failed to build Farfold")
         .run(|app, event| {
             browser_workspace::handle_run_event(app, &event);
+            desktop_notifications::handle_run_event(&event);
             draft_exit::handle(app, &event);
             if let tauri::RunEvent::WindowEvent {
                 label,
@@ -261,6 +289,11 @@ pub fn run() {
                 app.state::<pty::PtyManager>().stop_for_shutdown();
             }
         });
+}
+
+/// Dispatch the private MCP transport before any normal application setup.
+pub fn run_browser_helper_if_requested() -> Option<i32> {
+    browser_sharing::run_helper_if_requested()
 }
 
 #[cfg(test)]
@@ -308,9 +341,4 @@ mod tests {
         }
         assert_eq!(config.pointer("/bundle/externalBin"), None);
     }
-}
-
-/// Dispatch the private MCP transport before any normal application setup.
-pub fn run_browser_helper_if_requested() -> Option<i32> {
-    browser_sharing::run_helper_if_requested()
 }

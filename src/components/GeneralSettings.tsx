@@ -344,7 +344,7 @@ export function GeneralSettings({
         <p id="desktop-notification-system" className="auth-note">
           {notificationPermissionLabel(notifications)} {N.systemHint}
         </p>
-        {notifications.enabled && !notifications.systemAlert && (
+        {notifications.enabled && notifications.systemAlert === false && (
           <p className="auth-note">{N.alertsDisabled}</p>
         )}
         <button
@@ -356,6 +356,13 @@ export function GeneralSettings({
           {N.retry}
         </button>
         <p className="auth-note">{N.navigationHint}</p>
+        {notifications.clickRequiresRunning && (
+          <p className="auth-note">{N.runningNavigationHint}</p>
+        )}
+        {(notifications.systemAlert === null ||
+          notifications.systemSound === null) && (
+          <p className="auth-note">{N.systemOptionsUnknown}</p>
+        )}
         {notifications.error && (
           <div className="ac-error" role="alert">
             {notifications.error}
@@ -383,7 +390,7 @@ export function GeneralSettings({
             {notifications.sound ? N.enabled : N.disabled}
           </button>
         </div>
-        {notifications.sound && !notifications.systemSound && (
+        {notifications.sound && notifications.systemSound === false && (
           <p className="auth-note">{N.systemSoundDisabled}</p>
         )}
       </section>

@@ -4,6 +4,7 @@
 use crate::meta_store::AgentRow;
 use std::fs::File;
 use std::io::Read as _;
+#[cfg(unix)]
 use std::os::unix::fs::OpenOptionsExt as _;
 use std::path::{Component, Path};
 
@@ -29,6 +30,12 @@ pub(crate) fn reviewed_launch(agent: &AgentRow) -> Option<LaunchKind> {
     }
     match command.file_name()?.to_str()? {
         BIN if agent.args.is_empty() => Some(LaunchKind::Binary),
+        #[cfg(windows)]
+        "codex-acp.exe" if agent.args.is_empty() => Some(LaunchKind::Binary),
+        #[cfg(windows)]
+        "node.exe" if agent.args.len() == 1 && reviewed_node_entry(Path::new(&agent.args[0])) => {
+            Some(LaunchKind::Node)
+        }
         "node" if agent.args.len() == 1 && reviewed_node_entry(Path::new(&agent.args[0])) => {
             Some(LaunchKind::Node)
         }
@@ -40,6 +47,7 @@ pub(crate) fn eligible(agent: &AgentRow) -> bool {
     reviewed_launch(agent).is_some()
 }
 
+#[cfg(unix)]
 fn regular_file(path: &Path) -> Option<File> {
     // A FIFO or a last-component symlink replacement must not block this check.
     let file = File::options()
@@ -48,6 +56,16 @@ fn regular_file(path: &Path) -> Option<File> {
         .open(path)
         .ok()?;
     file.metadata().ok()?.is_file().then_some(file)
+}
+
+#[cfg(windows)]
+fn regular_file(path: &Path) -> Option<File> {
+    let parent = crate::file_access::open_directory(path.parent()?).ok()?;
+    let file = crate::file_access::open_relative(&parent, Path::new(path.file_name()?)).ok()?;
+    crate::file_access::stamp(&file)
+        .ok()?
+        .regular
+        .then_some(file)
 }
 
 fn manifest(path: &Path) -> Option<serde_json::Value> {

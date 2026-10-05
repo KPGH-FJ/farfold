@@ -7,8 +7,6 @@ use crate::supervisor;
 use agent_client_protocol::{AcpAgent, Agent, ByteStreams, Channel, Client, ConnectTo};
 use std::{
     ffi::{OsStr, OsString},
-    os::fd::AsRawFd,
-    os::unix::process::CommandExt,
     path::{Path, PathBuf},
     sync::{
         Arc, OnceLock,
@@ -135,7 +133,21 @@ impl Drop for StopOnDrop {
         self.0.stop();
     }
 }
+
+fn observe_exit(
+    status: std::io::Result<std::process::ExitStatus>,
+    stop: &watch::Receiver<bool>,
+    connection_stop: &watch::Receiver<bool>,
+) -> (std::io::Result<std::process::ExitStatus>, bool) {
+    // select! may choose a ready exit after a stop request is already visible.
+    // Freeze intent at observation, not after cleanup: later cancellation must
+    // never erase an unexpected exit we have already observed.
+    let unexpected = !*stop.borrow() && !*connection_stop.borrow();
+    (status, unexpected)
+}
+
 struct KillOnDrop {
+    _group: crate::process_platform::OwnedGroup,
     pid: u32,
     drain_stop: Arc<AtomicBool>,
     armed: bool,
@@ -146,7 +158,7 @@ impl Drop for KillOnDrop {
         self.drain_stop.store(true, Ordering::SeqCst);
         if self.armed {
             self.diagnostics.signal_requested(true, false);
-            supervisor::signal_owned_group(self.pid, libc::SIGKILL);
+            supervisor::signal_owned_group(self.pid, supervisor::KILL);
         }
     }
 }
@@ -166,6 +178,7 @@ type SpawnedProcess = (
     async_process::ChildStdout,
     async_process::ChildStderr,
     async_process::Child,
+    crate::process_platform::OwnedGroup,
 );
 
 fn spawn_process_in(
@@ -181,11 +194,12 @@ fn spawn_process_in(
     command
         .args(config.arguments())
         .envs(config.environment())
-        .current_dir(cwd)
-        .process_group(0);
+        .current_dir(cwd);
     let mcp_spawn_facts = control
         .capture_mcp_facts
         .then(|| capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name)));
+    let pending_group = crate::process_platform::prepare_command(&mut command)
+        .map_err(agent_client_protocol::Error::into_internal_error)?;
     let mut command = async_process::Command::from(command);
     command
         .stdin(std::process::Stdio::piped())
@@ -197,6 +211,9 @@ fn spawn_process_in(
         control.start_failed.store(true, Ordering::SeqCst);
         agent_client_protocol::Error::into_internal_error(error)
     })?;
+    let group = pending_group
+        .attach(child.id())
+        .map_err(agent_client_protocol::Error::into_internal_error)?;
     if let Some(facts) = mcp_spawn_facts {
         let _ = control.mcp_spawn_facts.set(facts);
     }
@@ -213,7 +230,7 @@ fn spawn_process_in(
         .stderr
         .take()
         .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序错误输出"))?;
-    Ok((stdin, stdout, stderr, child))
+    Ok((stdin, stdout, stderr, child, group))
 }
 
 impl ConnectTo<Client> for ProcessTransport {
@@ -221,11 +238,12 @@ impl ConnectTo<Client> for ProcessTransport {
         self,
         client: impl ConnectTo<Agent>,
     ) -> Result<(), agent_client_protocol::Error> {
-        let (stdin, stdout, stderr, mut child) =
+        let (stdin, stdout, mut stderr, mut child, group) =
             spawn_process_in(&self.agent, Path::new(&self.cwd), &self.control)?;
         let pid = child.id();
         let drain_stop = Arc::new(AtomicBool::new(false));
         let mut guard = KillOnDrop {
+            _group: group,
             pid,
             drain_stop: drain_stop.clone(),
             armed: true,
@@ -240,33 +258,18 @@ impl ConnectTo<Client> for ProcessTransport {
         let data_dir = self.data_dir;
         let diagnostics = self.diagnostics;
         let stderr_records = diagnostics.clone();
-        // This is genuinely blocking OS IO, isolated from protocol workers. Poll
-        // bounds shutdown even when a descendant holds stderr open indefinitely.
-        let drain = std::thread::spawn(move || {
-            let fd = stderr.as_raw_fd();
+        // Async process pipes own any blocking Windows IO internally. The
+        // observer checks stop independently; stderr content is never retained.
+        let drain = super::manager::runtime().spawn(async move {
+            use futures_lite::AsyncReadExt;
             let mut buffer = [0u8; 8192];
             while !drain_stop.load(Ordering::SeqCst) {
-                let mut descriptor = libc::pollfd {
-                    fd,
-                    events: libc::POLLIN,
-                    revents: 0,
-                };
-                let ready = unsafe { libc::poll(&mut descriptor, 1, 50) };
-                if ready < 0 {
-                    break;
-                }
-                if ready == 0 {
-                    continue;
-                }
-                let read = unsafe { libc::read(fd, buffer.as_mut_ptr().cast(), buffer.len()) };
-                if read == 0 {
-                    break;
-                }
-                if read < 0 {
-                    continue;
-                }
-                {
-                    stderr_records.record(serde_json::json!({"version":1,"ts":super::tap::now_millis(),"dir":"err","event":"other","bytes":read,"error":"stderr"}));
+                tokio::select! {
+                    _ = tokio::time::sleep(Duration::from_millis(50)) => {},
+                    result = stderr.read(&mut buffer) => match result {
+                        Ok(0) | Err(_) => break,
+                        Ok(count) => stderr_records.record(serde_json::json!({"version":1,"ts":super::tap::now_millis(),"dir":"err","event":"other","bytes":count,"error":"stderr"})),
+                    }
                 }
             }
         });
@@ -286,7 +289,10 @@ impl ConnectTo<Client> for ProcessTransport {
             let registration = if *stop.borrow() || *connection_stop.borrow() { None } else {
                 tokio::select! {
                     result = &mut registration_task => Some(result.map_err(|_| "无法保存连接进程".to_string()).and_then(|result| result)),
-                    value = child.status() => { exit = Some(value); unexpected_exit = true; None },
+                    value = child.status() => {
+                        let (status, unexpected) = observe_exit(value, &stop, &connection_stop);
+                        exit = Some(status); unexpected_exit = unexpected; None
+                    },
                     _ = stop.changed() => None,
                     _ = connection_stop.changed() => None,
                 }
@@ -298,7 +304,10 @@ impl ConnectTo<Client> for ProcessTransport {
             });
             if registered_ok && !*stop.borrow() && !*connection_stop.borrow() {
                 tokio::select! {
-                    value = child.status() => { exit = Some(value); unexpected_exit = true; }
+                    value = child.status() => {
+                        let (status, unexpected) = observe_exit(value, &stop, &connection_stop);
+                        exit = Some(status); unexpected_exit = unexpected;
+                    }
                     _ = stop.changed() => {}
                     _ = connection_stop.changed() => {}
                 }
@@ -306,11 +315,11 @@ impl ConnectTo<Client> for ProcessTransport {
             if let Some(status) = &exit { owner_diagnostics.exit(status); }
             owner_diagnostics.phase(Phase::Cleanup);
             owner_diagnostics.signal_requested(false, exit.as_ref().is_some_and(Result::is_ok));
-            supervisor::signal_owned_group(pid, libc::SIGTERM);
+            supervisor::signal_owned_group(pid, supervisor::TERM);
             guard.drain_stop.store(true, Ordering::SeqCst);
             // The drain performs only poll/read and bounded try_send. It owns
             // stderr until this bounded join; diagnostic writes are independent.
-            let draining = tauri::async_runtime::spawn_blocking(move || drain.join());
+            let draining = drain;
             let started = tokio::time::Instant::now();
             let mut killed = false;
             loop {
@@ -324,7 +333,7 @@ impl ConnectTo<Client> for ProcessTransport {
                 }
                 if !killed && started.elapsed() >= Duration::from_secs(2) {
                     owner_diagnostics.signal_requested(true, false);
-                    supervisor::signal_owned_group(pid, libc::SIGKILL);
+                    supervisor::signal_owned_group(pid, supervisor::KILL);
                     killed = true;
                 }
                 // The caller stops waiting after five seconds, while this exact

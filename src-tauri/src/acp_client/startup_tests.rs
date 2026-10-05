@@ -1,4 +1,5 @@
 //! Real controlled subprocesses; these do not execute an external Agent.
+#![cfg(unix)]
 use super::*;
 
 const CANARY: &str = "fixture-sensitive-startup-canary";

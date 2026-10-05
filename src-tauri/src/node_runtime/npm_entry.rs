@@ -2,7 +2,10 @@
 //! Inspect only bounded executable headers; initialize still decides compatibility.
 use super::NpmLaunch;
 use std::fs::File;
-use std::os::unix::fs::{FileExt, OpenOptionsExt, PermissionsExt};
+#[cfg(unix)]
+use std::os::unix::fs::{FileExt, OpenOptionsExt};
+#[cfg(windows)]
+use std::os::windows::fs::{FileExt, MetadataExt, OpenOptionsExt};
 use std::path::{Path, PathBuf};
 
 const INVALID: &str = "无法确认程序入口格式，请检查安装后重试";
@@ -32,17 +35,31 @@ pub(super) fn launch(node: PathBuf, entry: PathBuf) -> Result<NpmLaunch, String>
     if !entry.symlink_metadata().map_err(|_| INVALID)?.is_file() {
         return Err(INVALID.into());
     }
-    let file = File::options()
-        .read(true)
-        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
-        .open(&entry)
-        .map_err(|_| INVALID)?;
+    let mut options = File::options();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
+    #[cfg(windows)]
+    options.custom_flags(windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT);
+    let file = options.open(&entry).map_err(|_| INVALID)?;
     let metadata = file.metadata().map_err(|_| INVALID)?;
     if !metadata.is_file() {
         return Err(INVALID.into());
     }
-    if is_mach_executable(&file, metadata.len())? {
-        if metadata.permissions().mode() & 0o111 == 0 {
+    #[cfg(windows)]
+    if metadata.file_attributes()
+        & windows_sys::Win32::Storage::FileSystem::FILE_ATTRIBUTE_REPARSE_POINT
+        != 0
+    {
+        return Err(INVALID.into());
+    }
+    let native = if cfg!(windows) {
+        is_pe_executable(&file, metadata.len())?
+    } else {
+        is_mach_executable(&file, metadata.len())?
+    };
+    if native {
+        if !crate::process_platform::executable(&entry) {
             return Err("程序入口没有执行权限，请重新安装".into());
         }
         Ok(NpmLaunch {
@@ -61,9 +78,44 @@ pub(super) fn launch(node: PathBuf, entry: PathBuf) -> Result<NpmLaunch, String>
 
 fn read<const N: usize>(file: &File, offset: u64) -> Result<[u8; N], String> {
     let mut bytes = [0; N];
+    #[cfg(unix)]
     file.read_exact_at(&mut bytes, offset)
         .map_err(|_| INVALID)?;
+    #[cfg(windows)]
+    {
+        let mut used = 0;
+        while used < N {
+            let count = file
+                .seek_read(&mut bytes[used..], offset + used as u64)
+                .map_err(|_| INVALID)?;
+            if count == 0 {
+                return Err(INVALID.into());
+            }
+            used += count;
+        }
+    }
     Ok(bytes)
+}
+
+// Microsoft PE/COFF: DOS pointer at 0x3c, PE signature and executable image
+// characteristic. Bounded header reads distinguish PE bins from JavaScript.
+fn is_pe_executable(file: &File, len: u64) -> Result<bool, String> {
+    if len < 2 || read::<2>(file, 0)? != *b"MZ" {
+        return Ok(false);
+    }
+    if len < 64 {
+        return Err(INVALID.into());
+    }
+    let offset = u32::from_le_bytes(read::<4>(file, 60)?) as u64;
+    if offset < 64 || offset.checked_add(24).is_none_or(|end| end > len) {
+        return Err(INVALID.into());
+    }
+    let header = read::<24>(file, offset)?;
+    let characteristics = u16::from_le_bytes([header[22], header[23]]);
+    if &header[..4] != b"PE\0\0" || characteristics & 0x0002 == 0 || characteristics & 0x2000 != 0 {
+        return Err(INVALID.into());
+    }
+    Ok(true)
 }
 
 fn u32_at(bytes: &[u8], little: bool) -> u32 {
@@ -163,4 +215,29 @@ fn thin_executable(file: &File, offset: u64, size: u64) -> Result<u32, String> {
         return Err(INVALID.into());
     }
     Ok(u32_at(&header[4..], little))
+}
+
+#[cfg(test)]
+mod pe_tests {
+    use super::*;
+    #[test]
+    fn distinguishes_bounded_executable_headers_from_text_dlls_and_bad_offsets() {
+        let mut bytes = vec![0u8; 128];
+        bytes[..2].copy_from_slice(b"MZ");
+        bytes[60..64].copy_from_slice(&64u32.to_le_bytes());
+        bytes[64..68].copy_from_slice(b"PE\0\0");
+        bytes[86..88].copy_from_slice(&2u16.to_le_bytes());
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("fixture.exe");
+        let check = |body: &[u8]| {
+            std::fs::write(&path, body).unwrap();
+            is_pe_executable(&File::open(&path).unwrap(), body.len() as u64)
+        };
+        assert_eq!(check(&bytes), Ok(true));
+        bytes[86..88].copy_from_slice(&0x2002u16.to_le_bytes());
+        assert!(check(&bytes).is_err());
+        bytes[60..64].copy_from_slice(&u32::MAX.to_le_bytes());
+        assert!(check(&bytes).is_err());
+        assert_eq!(check(b"#!/usr/bin/env node\n"), Ok(false));
+    }
 }

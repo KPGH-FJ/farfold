@@ -1,0 +1,1025 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/auth_route/legacy_env_tests.rs:4:14
+  |
+4 | use std::os::unix::fs::PermissionsExt;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/auth_route/tests.rs:2:14
+  |
+2 | use std::os::unix::fs::{PermissionsExt, symlink};
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/browser_capability_tests.rs:3:14
+  |
+3 | use std::os::unix::fs::symlink;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/dependency_environment_tests.rs:4:14
+  |
+4 | use std::os::unix::fs::PermissionsExt;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/dependency_environment.rs:103:18
+    |
+103 |     use std::os::unix::fs::PermissionsExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/preparation/companion_preparation_tests.rs:2:14
+  |
+2 | use std::os::unix::fs::PermissionsExt;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/preparation.rs:574:18
+    |
+574 |     use std::os::unix::fs::PermissionsExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/preparation_actions_tests.rs:4:9
+  |
+4 |     os::unix::fs::{PermissionsExt, symlink},
+  |         ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/process_mcp_tests.rs:5:14
+  |
+5 | use std::os::unix::ffi::OsStringExt;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/recipes/companion_recipe_tests.rs:2:14
+  |
+2 | use std::os::unix::fs::symlink;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+  --> src/acp_client/account_logout_tests.rs:40:18
+   |
+40 |     use std::os::unix::fs::PermissionsExt;
+   |                  ^^^^ could not find `unix` in `os`
+   |
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+   |
+   = note: the item is gated here
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+   |
+   = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/transient_mcp_route_tests.rs:120:22
+    |
+120 |         use std::os::unix::fs::PermissionsExt;
+    |                      ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/auth/target_tests.rs:3:14
+  |
+3 | use std::os::unix::{fs::PermissionsExt, fs::symlink};
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/auth/route_diagnostics_tests.rs:4:15
+  |
+4 | use std::{os::unix::fs::PermissionsExt, path::Path};
+  |               ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/auth/copilot_tests.rs:5:9
+  |
+5 |     os::unix::fs::{PermissionsExt, symlink},
+  |         ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/auth/transport_selection_tests.rs:5:14
+  |
+5 | use std::os::unix::fs::PermissionsExt;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/installations/startup_parameter_tests.rs:8:18
+  |
+8 |     use std::os::unix::fs::PermissionsExt;
+  |                  ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/installations/uninstall_history_tests.rs:3:14
+  |
+3 | use std::os::unix::fs::{PermissionsExt, symlink};
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/installations/history_tests.rs:5:18
+  |
+5 |     use std::os::unix::fs::{PermissionsExt, symlink};
+  |                  ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/installations.rs:685:22
+    |
+685 |         use std::os::unix::fs::PermissionsExt;
+    |                      ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+ --> src/managed_paths_tests.rs:2:14
+  |
+2 | use std::os::unix::fs::symlink;
+  |              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/startup_diagnostics/tests.rs:150:18
+    |
+150 |     use std::os::unix::process::ExitStatusExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/lifecycle_tests.rs:545:18
+    |
+545 |     use std::os::unix::{ffi::OsStrExt, fs::OpenOptionsExt};
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/installations/history_tests.rs:254:18
+    |
+254 |     use std::os::unix::fs::PermissionsExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+  --> src/installations/program_directory_tests.rs:45:18
+   |
+45 |     use std::os::unix::fs::symlink;
+   |                  ^^^^ could not find `unix` in `os`
+   |
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+   |
+   = note: the item is gated here
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+   |
+   = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+  --> src/installations/program_directory_tests.rs:93:18
+   |
+93 |     use std::os::unix::fs::symlink;
+   |                  ^^^^ could not find `unix` in `os`
+   |
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+   |
+   = note: the item is gated here
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+   |
+   = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/installations/program_directory_tests.rs:112:18
+    |
+112 |     use std::os::unix::fs::PermissionsExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/dependency_environment.rs:221:31
+    |
+221 |                 _ => std::os::unix::fs::symlink(&selected, &collision).unwrap(),
+    |                               ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/lifecycle_tests.rs:555:14
+    |
+555 |     std::os::unix::fs::symlink(&pending, &blocked).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+  --> src/acp_client/archive_alias_tests.rs:59:18
+   |
+59 |         std::os::unix::fs::symlink(&canonical, &raw).unwrap();
+   |                  ^^^^ could not find `unix` in `os`
+   |
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+   |
+   = note: the item is gated here
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+   |
+   = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/archive_alias_tests.rs:313:14
+    |
+313 |     std::os::unix::fs::symlink(&missing, &dangling).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/archive_alias_tests.rs:385:14
+    |
+385 |     std::os::unix::fs::symlink(&replacement, &raw).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/archive_alias_tests.rs:540:14
+    |
+540 |     std::os::unix::fs::symlink(&changed, &raw).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+  --> src/installations/history_tests.rs:58:18
+   |
+58 |         std::os::unix::fs::symlink(&previous, &next).unwrap();
+   |                  ^^^^ could not find `unix` in `os`
+   |
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+   |
+   = note: the item is gated here
+note: found an item that was configured out
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+   |
+   = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/installations/history_tests.rs:267:14
+    |
+267 |     std::os::unix::fs::symlink(&external, &active_alias).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/installations/history_tests.rs:288:14
+    |
+288 |     std::os::unix::fs::symlink(&inner, &alias).unwrap();
+    |              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+    --> src/installations.rs:1102:18
+     |
+1102 |         std::os::unix::fs::symlink(&root, &link).unwrap();
+     |                  ^^^^ could not find `unix` in `os`
+     |
+note: found an item that was configured out
+    --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+     |
+     = note: the item is gated here
+note: found an item that was configured out
+    --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+     |
+     = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/work_policy.rs:192:18
+    |
+192 |         std::os::unix::fs::symlink(&project, &alias).unwrap();
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0425]: cannot find function `mkfifo` in crate `libc`
+   --> src/acp_client/browser_capability_tests.rs:244:31
+    |
+244 |     assert_eq!(unsafe { libc::mkfifo(c_path.as_ptr(), 0o600) }, 0);
+    |                               ^^^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+  --> src/acp_client/startup_cleanup_tests.rs:82:31
+   |
+82 |     assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+   |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/process_cwd_tests.rs:134:28
+    |
+134 |             unsafe { libc::kill(pid as i32, 0) },
+    |                            ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/process_cwd_tests.rs:220:24
+    |
+220 |         unsafe { libc::kill(observed["pid"].as_u64().unwrap() as i32, 0) },
+    |                        ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/startup_tests.rs:105:31
+    |
+105 |     assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find value `SIGUSR1` in crate `libc`
+   --> src/acp_client/startup_diagnostics_tests.rs:129:43
+    |
+129 |     assert_eq!(value["exitSignal"], libc::SIGUSR1);
+    |                                           ^^^^^^^ not found in `libc`
+
+error[E0425]: cannot find value `SIGKILL` in crate `libc`
+   --> src/acp_client/startup_diagnostics_tests.rs:163:43
+    |
+163 |     assert_eq!(value["exitSignal"], libc::SIGKILL);
+    |                                           ^^^^^^^
+    |
+   ::: /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.189/src/windows/mod.rs:237:1
+    |
+237 | pub const SIGILL: c_int = 4;
+    | ----------------------- similarly named constant `SIGILL` defined here
+    |
+help: a constant with a similar name exists
+    |
+163 -     assert_eq!(value["exitSignal"], libc::SIGKILL);
+163 +     assert_eq!(value["exitSignal"], libc::SIGILL);
+    |
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/open_delivery_tests.rs:154:31
+    |
+154 |     let gone = unsafe { libc::kill(pid as i32, 0) } != 0;
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/open_delivery_tests.rs:249:31
+    |
+249 |     let gone = unsafe { libc::kill(pid as i32, 0) } != 0;
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/retention_tests.rs:167:39
+    |
+167 |             assert_eq!(unsafe { libc::kill(pid as i32, libc::SIGTERM) }, 0);
+    |                                       ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+  --> src/acp_client/connection_isolation_tests.rs:94:24
+   |
+94 |         unsafe { libc::kill(preparation.child_pid.load(Ordering::SeqCst) as i32, 0) },
+   |                        ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/connection_isolation_tests.rs:131:24
+    |
+131 |         unsafe { libc::kill(second.child_pid.load(Ordering::SeqCst) as i32, 0) },
+    |                        ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/connection_isolation_tests.rs:188:31
+    |
+188 |     assert_eq!(unsafe { libc::kill(pid, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/connection_isolation_tests.rs:215:31
+    |
+215 |     assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/connection_isolation_tests.rs:299:31
+    |
+299 |     assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/connection_isolation_tests.rs:304:31
+    |
+304 |     assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:202:29
+    |
+202 |     until(|| unsafe { libc::kill(pid as i32, 0) != 0 }).await;
+    |                             ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:257:31
+    |
+257 |     assert_ne!(unsafe { libc::kill(original_pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:266:28
+    |
+266 |             unsafe { libc::kill(connection.child_pid.load(Ordering::SeqCst) as i32, 0) },
+    |                            ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:291:31
+    |
+291 |     assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:297:31
+    |
+297 |     assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:318:31
+    |
+318 |     assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `mkfifo` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:560:31
+    |
+560 |     assert_eq!(unsafe { libc::mkfifo(fifo.as_ptr(), 0o600) }, 0);
+    |                               ^^^^^^ not found in `libc`
+
+error[E0425]: cannot find value `O_NONBLOCK` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:566:29
+    |
+566 |         .custom_flags(libc::O_NONBLOCK)
+    |                             ^^^^^^^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:605:31
+    |
+605 |     assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:634:29
+    |
+634 |     until(|| unsafe { libc::kill(pid as i32, 0) != 0 }).await;
+    |                             ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:652:31
+    |
+652 |     assert_ne!(unsafe { libc::kill(child, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/lifecycle_tests.rs:691:31
+    |
+691 |     assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/discovery_tests.rs:659:31
+    |
+659 |     assert_eq!(unsafe { libc::kill(pid as i32, libc::SIGTERM) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/acp_client/transient_mcp_route_tests.rs:226:44
+    |
+226 |                 pid != 0 && unsafe { libc::kill(pid as i32, 0) } != 0,
+    |                                            ^^^^ not found in `libc`
+
+error[E0425]: cannot find function `kill` in crate `libc`
+   --> src/auth/terminal/tests.rs:132:31
+    |
+132 |     assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    |                               ^^^^ not found in `libc`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/auth_route/legacy_env_tests.rs:10:59
+   |
+10 |     std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                           ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/auth_route/tests.rs:18:58
+   |
+18 |     std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                          ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/dependency_environment_tests.rs:32:59
+   |
+32 |     std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                           ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/dependency_environment_tests.rs:38:63
+   |
+38 |     std::fs::set_permissions(&selected, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/dependency_environment.rs:112:62
+    |
+112 |         std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                              ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/dependency_environment.rs:285:67
+    |
+285 |         std::fs::set_permissions(&selected, std::fs::Permissions::from_mode(0o644)).unwrap();
+    |                                                                   ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/preparation/companion_preparation_tests.rs:13:62
+   |
+13 |     std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                              ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation/companion_preparation_tests.rs:127:63
+    |
+127 |     std::fs::set_permissions(&fallback, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation.rs:769:66
+    |
+769 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation.rs:788:66
+    |
+788 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation.rs:800:66
+    |
+800 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o644)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation.rs:824:63
+    |
+824 |         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation.rs:905:66
+    |
+905 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/preparation_actions_tests.rs:33:62
+   |
+33 |     std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                              ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation_actions_tests.rs:196:63
+    |
+196 |     std::fs::set_permissions(&external, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/preparation_actions_tests.rs:378:59
+    |
+378 |     std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                           ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_vec` found for struct `std::ffi::OsString` in the current scope
+  --> src/acp_client/process_mcp_tests.rs:93:30
+   |
+93 |     let non_utf8 = OsString::from_vec(vec![0xff]);
+   |                              ^^^^^^^^ associated function or constant not found in `std::ffi::OsString`
+   |
+note: if you're trying to build a new `std::ffi::OsString` consider using one of the following associated functions:
+      std::ffi::OsString::new
+      std::ffi::OsString::from_encoded_bytes_unchecked
+      std::ffi::OsString::with_capacity
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\ffi\os_str.rs:141:4
+help: there is an associated function `from` with a similar name
+   |
+93 -     let non_utf8 = OsString::from_vec(vec![0xff]);
+93 +     let non_utf8 = OsString::from(vec![0xff]);
+   |
+
+error[E0599]: no associated function or constant named `from_raw` found for struct `async_process::ExitStatus` in the current scope
+   --> src/acp_client/startup_diagnostics/tests.rs:151:42
+    |
+151 |     d.exit(&Ok(std::process::ExitStatus::from_raw(0)));
+    |                                          ^^^^^^^^ associated function or constant not found in `async_process::ExitStatus`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ExitStatusExt` which provides `from_raw` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use std::os::windows::process::ExitStatusExt;
+    |
+help: there is an associated function `from` with a similar name
+    |
+151 -     d.exit(&Ok(std::process::ExitStatus::from_raw(0)));
+151 +     d.exit(&Ok(std::process::ExitStatus::from(0)));
+    |
+
+error[E0599]: no associated function or constant named `from_raw` found for struct `async_process::ExitStatus` in the current scope
+   --> src/acp_client/startup_diagnostics/tests.rs:155:42
+    |
+155 |     d.exit(&Ok(std::process::ExitStatus::from_raw(0)));
+    |                                          ^^^^^^^^ associated function or constant not found in `async_process::ExitStatus`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ExitStatusExt` which provides `from_raw` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use std::os::windows::process::ExitStatusExt;
+    |
+help: there is an associated function `from` with a similar name
+    |
+155 -     d.exit(&Ok(std::process::ExitStatus::from_raw(0)));
+155 +     d.exit(&Ok(std::process::ExitStatus::from(0)));
+    |
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/acp_client/account_logout_tests.rs:44:61
+   |
+44 |     std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+   |                                                             ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no method named `as_bytes` found for reference `&std::ffi::OsStr` in the current scope
+   --> src/acp_client/lifecycle_tests.rs:559:60
+    |
+559 |     let fifo = std::ffi::CString::new(registry.as_os_str().as_bytes()).unwrap();
+    |                                                            ^^^^^^^^
+    |
+help: there is a method `as_encoded_bytes` with a similar name
+    |
+559 |     let fifo = std::ffi::CString::new(registry.as_os_str().as_encoded_bytes()).unwrap();
+    |                                                               ++++++++
+
+error[E0599]: no method named `custom_flags` found for mutable reference `&mut std::fs::OpenOptions` in the current scope
+   --> src/acp_client/lifecycle_tests.rs:566:10
+    |
+563 |       let registration_gate = std::fs::OpenOptions::new()
+    |  _____________________________-
+564 | |         .read(true)
+565 | |         .write(true)
+566 | |         .custom_flags(libc::O_NONBLOCK)
+    | |         -^^^^^^^^^^^^ method not found in `&mut std::fs::OpenOptions`
+    | |_________|
+    |
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OpenOptionsExt` which provides `custom_flags` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use std::os::windows::fs::OpenOptionsExt;
+    |
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/acp_client/transient_mcp_route_tests.rs:121:65
+    |
+121 |         std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+    |                                                                 ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+ --> src/auth/target_tests.rs:7:58
+  |
+7 |     std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+  |                                                          ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/auth/route_diagnostics_tests.rs:15:58
+   |
+15 |     std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                          ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/auth/copilot_tests.rs:23:58
+   |
+23 |     std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                          ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/auth/transport_selection_tests.rs:59:62
+   |
+59 |     std::fs::set_permissions(&command, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                              ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/installations/startup_parameter_tests.rs:17:62
+   |
+17 |     std::fs::set_permissions(&command, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                              ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/installations/uninstall_history_tests.rs:28:69
+   |
+28 |             std::fs::set_permissions(program, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                                     ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+  --> src/installations/history_tests.rs:11:63
+   |
+11 |         std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+   |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/installations/history_tests.rs:265:63
+    |
+265 |     std::fs::set_permissions(&external, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                               ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/installations/history_tests.rs:283:60
+    |
+283 |     std::fs::set_permissions(&inner, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                            ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/installations/program_directory_tests.rs:126:66
+    |
+126 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+error[E0599]: no associated function or constant named `from_mode` found for struct `Permissions` in the current scope
+   --> src/installations.rs:689:66
+    |
+689 |         std::fs::set_permissions(&program, std::fs::Permissions::from_mode(0o755)).unwrap();
+    |                                                                  ^^^^^^^^^ associated function or constant not found in `Permissions`
+
+Some errors have detailed explanations: E0425, E0433, E0599.
+For more information about an error, try `rustc --explain E0425`.
+error: could not compile `farfold` (lib test) due to 103 previous errors

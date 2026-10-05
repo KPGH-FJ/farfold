@@ -10,7 +10,11 @@ mod local_preview;
 #[path = "browser_workspace/preview_commands.rs"]
 pub(crate) mod preview_commands;
 use preview_commands::PreviewSource;
+#[cfg(target_os = "macos")]
 #[path = "browser_workspace/native.rs"]
+mod native;
+#[cfg(windows)]
+#[path = "browser_workspace/windows/mod.rs"]
 mod native;
 #[path = "browser_workspace/page_read.rs"]
 mod page_read;

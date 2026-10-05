@@ -8,14 +8,11 @@
 //! Receipts are transient, revalidated claims, not access tokens or persisted
 //! event history. The invoking UI remains responsible for root authorization.
 
-use std::ffi::{CString, OsStr};
-use std::fs::{self, File, Metadata};
+use crate::file_access::{self, Stamp, TemporaryExport};
+use std::ffi::OsStr;
+use std::fs::File;
 use std::io::{Read, Write};
-use std::os::fd::{AsRawFd, FromRawFd};
-use std::os::unix::ffi::OsStrExt;
-use std::os::unix::fs::MetadataExt;
-use std::path::{Component, Path, PathBuf};
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -99,83 +96,17 @@ pub struct DeliveryReceipt {
     pub source_version: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-struct Stamp {
-    device: u64,
-    inode: u64,
-    size: u64,
-    modified_seconds: i64,
-    modified_nanos: i64,
-    changed_seconds: i64,
-    changed_nanos: i64,
-}
-
-impl From<&Metadata> for Stamp {
-    fn from(meta: &Metadata) -> Self {
-        Self {
-            device: meta.dev(),
-            inode: meta.ino(),
-            size: meta.len(),
-            modified_seconds: meta.mtime(),
-            modified_nanos: meta.mtime_nsec(),
-            changed_seconds: meta.ctime(),
-            changed_nanos: meta.ctime_nsec(),
-        }
-    }
-}
-
 fn absolute(path: &Path) -> Result<(), DeliveryError> {
-    if !path.is_absolute() || path.as_os_str().as_bytes().contains(&0) {
-        return Err(DeliveryError::InvalidPath);
-    }
-    Ok(())
+    file_access::absolute(path).map_err(|_| DeliveryError::InvalidPath)
 }
-
 fn path_text(path: &Path) -> Result<String, DeliveryError> {
     path.to_str()
         .map(str::to_owned)
         .ok_or(DeliveryError::InvalidPath)
 }
-
-fn c_name(name: &OsStr) -> Result<CString, DeliveryError> {
-    CString::new(name.as_bytes()).map_err(|_| DeliveryError::InvalidPath)
-}
-
-/// Every directory component is opened relative to an owned descriptor with
-/// O_NOFOLLOW. Canonicalization alone would leave a symlink replacement race.
 fn open_directory(path: &Path) -> Result<File, DeliveryError> {
-    absolute(path)?;
-    let mut directory = File::open("/").map_err(|_| DeliveryError::Unreadable)?;
-    for component in path.components() {
-        match component {
-            Component::RootDir => {}
-            Component::Normal(name) => {
-                let name = c_name(name)?;
-                // SAFETY: descriptor and NUL-terminated name are live; the
-                // returned descriptor has one owner after from_raw_fd.
-                let fd = unsafe {
-                    libc::openat(
-                        directory.as_raw_fd(),
-                        name.as_ptr(),
-                        libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC,
-                    )
-                };
-                if fd < 0 {
-                    return Err(DeliveryError::Changed);
-                }
-                // SAFETY: successful openat returned a new owned descriptor.
-                directory = unsafe { File::from_raw_fd(fd) };
-            }
-            _ => return Err(DeliveryError::InvalidPath),
-        }
-    }
-    Ok(directory)
+    file_access::open_directory(path).map_err(|_| DeliveryError::Changed)
 }
-
-fn same_object(left: &Metadata, right: &Metadata) -> bool {
-    left.dev() == right.dev() && left.ino() == right.ino()
-}
-
 struct OpenedFile {
     root: PathBuf,
     requested: PathBuf,
@@ -204,43 +135,13 @@ fn open_source(root: &Path, path: &Path, max: u64) -> Result<OpenedFile, Deliver
     let relative = resolved
         .strip_prefix(&root)
         .map_err(|_| DeliveryError::OutsideRoot)?;
-    let mut directory = root_handle
-        .try_clone()
-        .map_err(|_| DeliveryError::Unreadable)?;
-    let mut components = relative.components().peekable();
-    let file = loop {
-        let Component::Normal(name) = components.next().ok_or(DeliveryError::InvalidPath)? else {
-            return Err(DeliveryError::InvalidPath);
-        };
-        let name = c_name(name)?;
-        let last = components.peek().is_none();
-        let flags = libc::O_RDONLY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
-        // O_NONBLOCK prevents a FIFO swapped into the last component from
-        // blocking before fstat can reject it as not a regular file.
-        let flags = flags
-            | if last {
-                libc::O_NONBLOCK
-            } else {
-                libc::O_DIRECTORY
-            };
-        // SAFETY: both borrowed inputs outlive this call; the fresh descriptor
-        // is immediately transferred to File on success.
-        let fd = unsafe { libc::openat(directory.as_raw_fd(), name.as_ptr(), flags) };
-        if fd < 0 {
-            return Err(DeliveryError::Changed);
-        }
-        // SAFETY: successful openat returned a new owned descriptor.
-        let opened = unsafe { File::from_raw_fd(fd) };
-        if last {
-            break opened;
-        }
-        directory = opened;
-    };
-    let metadata = file.metadata().map_err(|_| DeliveryError::Unreadable)?;
-    if !metadata.is_file() {
+    let file =
+        file_access::open_relative(&root_handle, relative).map_err(|_| DeliveryError::Changed)?;
+    let before = file_access::stamp(&file).map_err(|_| DeliveryError::Unreadable)?;
+    if !before.regular {
         return Err(DeliveryError::NotFile);
     }
-    if metadata.len() > max {
+    if before.size > max {
         return Err(DeliveryError::TooLarge);
     }
     Ok(OpenedFile {
@@ -249,24 +150,19 @@ fn open_source(root: &Path, path: &Path, max: u64) -> Result<OpenedFile, Deliver
         resolved,
         root_handle,
         file,
-        before: Stamp::from(&metadata),
+        before,
     })
 }
 
 fn recheck(opened: &OpenedFile) -> Result<(), DeliveryError> {
-    let current = opened.file.metadata().map_err(|_| DeliveryError::Changed)?;
-    if !current.is_file() || Stamp::from(&current) != opened.before {
+    let current = file_access::stamp(&opened.file).map_err(|_| DeliveryError::Changed)?;
+    if !current.regular || current != opened.before {
         return Err(DeliveryError::Changed);
     }
     let root_now = open_directory(&opened.root).map_err(|_| DeliveryError::Changed)?;
-    let root_before = opened
-        .root_handle
-        .metadata()
-        .map_err(|_| DeliveryError::Changed)?;
-    if !same_object(
-        &root_before,
-        &root_now.metadata().map_err(|_| DeliveryError::Changed)?,
-    ) {
+    if !file_access::same_object(&opened.root_handle, &root_now)
+        .map_err(|_| DeliveryError::Changed)?
+    {
         return Err(DeliveryError::Changed);
     }
     let resolved = opened
@@ -276,8 +172,12 @@ fn recheck(opened: &OpenedFile) -> Result<(), DeliveryError> {
     if resolved != opened.resolved || !resolved.starts_with(&opened.root) {
         return Err(DeliveryError::Changed);
     }
-    let current_path = fs::metadata(&resolved).map_err(|_| DeliveryError::Changed)?;
-    if Stamp::from(&current_path) != opened.before {
+    let relative = resolved
+        .strip_prefix(&opened.root)
+        .map_err(|_| DeliveryError::Changed)?;
+    let current_path =
+        file_access::open_relative(&root_now, relative).map_err(|_| DeliveryError::Changed)?;
+    if file_access::stamp(&current_path).map_err(|_| DeliveryError::Changed)? != opened.before {
         return Err(DeliveryError::Changed);
     }
     Ok(())
@@ -291,22 +191,19 @@ fn content_hash(bytes: &[u8]) -> String {
 }
 
 fn version(opened: &OpenedFile, sha256: &str) -> Result<String, DeliveryError> {
-    let root = opened
-        .root_handle
-        .metadata()
-        .map_err(|_| DeliveryError::Unreadable)?;
+    let root = file_access::stamp(&opened.root_handle).map_err(|_| DeliveryError::Unreadable)?;
     let stamp = &opened.before;
     let identity = format!(
         "v1:{}:{}:{}:{}:{}:{}:{}:{}:{}:{}",
-        root.dev(),
-        root.ino(),
-        stamp.device,
-        stamp.inode,
+        root.identity.device,
+        root.identity.inode,
+        stamp.identity.device,
+        stamp.identity.inode,
         stamp.size,
-        stamp.modified_seconds,
-        stamp.modified_nanos,
-        stamp.changed_seconds,
-        stamp.changed_nanos,
+        stamp.modified.0,
+        stamp.modified.1,
+        stamp.changed.0,
+        stamp.changed.1,
         sha256,
     );
     Ok(content_hash(identity.as_bytes()))
@@ -373,92 +270,6 @@ pub fn revalidate_for_open(file: &VerifiedFile) -> Result<String, DeliveryError>
     Ok(file.resolved_path.clone())
 }
 
-static TEMP_SEQUENCE: AtomicU64 = AtomicU64::new(1);
-
-/// Only removes the exact temporary filename it created, anchored to the same
-/// owned destination-directory descriptor even if an ancestor is renamed.
-struct TemporaryExport {
-    directory: File,
-    name: CString,
-    file: File,
-    published: bool,
-}
-
-impl Drop for TemporaryExport {
-    fn drop(&mut self) {
-        if self.published {
-            return;
-        }
-        // SAFETY: directory/name remain live and this name was created by us.
-        unsafe { libc::unlinkat(self.directory.as_raw_fd(), self.name.as_ptr(), 0) };
-    }
-}
-
-impl TemporaryExport {
-    fn create(directory: File) -> Result<Self, DeliveryError> {
-        for _ in 0..16 {
-            let sequence = TEMP_SEQUENCE.fetch_add(1, Ordering::Relaxed);
-            let name = CString::new(format!(
-                ".farfold-export-{}-{sequence}.tmp",
-                std::process::id()
-            ))
-            .map_err(|_| DeliveryError::WriteFailed)?;
-            // SAFETY: valid directory/name and mode; O_EXCL refuses existing
-            // files, directories and symlinks. No user pathname is removed.
-            let fd = unsafe {
-                libc::openat(
-                    directory.as_raw_fd(),
-                    name.as_ptr(),
-                    libc::O_WRONLY
-                        | libc::O_CREAT
-                        | libc::O_EXCL
-                        | libc::O_NOFOLLOW
-                        | libc::O_CLOEXEC,
-                    0o600,
-                )
-            };
-            if fd >= 0 {
-                return Ok(Self {
-                    directory,
-                    name,
-                    // SAFETY: openat returned a fresh owned descriptor.
-                    file: unsafe { File::from_raw_fd(fd) },
-                    published: false,
-                });
-            }
-            if std::io::Error::last_os_error().raw_os_error() != Some(libc::EEXIST) {
-                return Err(DeliveryError::WriteFailed);
-            }
-        }
-        Err(DeliveryError::WriteFailed)
-    }
-
-    fn publish(&mut self, name: &OsStr) -> Result<(), DeliveryError> {
-        let name = c_name(name)?;
-        // macOS no-replace rename makes a complete file visible only after
-        // write_all and sync_all, without requiring hard-link support. An
-        // unsupported filesystem fails safely; there is no replacing fallback.
-        // SAFETY: both names and the shared directory descriptor remain valid.
-        let result = unsafe {
-            libc::renameatx_np(
-                self.directory.as_raw_fd(),
-                self.name.as_ptr(),
-                self.directory.as_raw_fd(),
-                name.as_ptr(),
-                libc::RENAME_EXCL,
-            )
-        };
-        if result == 0 {
-            self.published = true;
-            Ok(())
-        } else if std::io::Error::last_os_error().raw_os_error() == Some(libc::EEXIST) {
-            Err(DeliveryError::AlreadyExists)
-        } else {
-            Err(DeliveryError::WriteFailed)
-        }
-    }
-}
-
 fn check_destination_parent(
     requested: &Path,
     resolved: &Path,
@@ -474,10 +285,7 @@ fn check_destination_parent(
         return Err(error);
     }
     let current = open_directory(resolved).map_err(|_| error)?;
-    if !same_object(
-        &directory.metadata().map_err(|_| error)?,
-        &current.metadata().map_err(|_| error)?,
-    ) {
+    if !file_access::same_object(directory, &current).map_err(|_| error)? {
         return Err(error);
     }
     Ok(())
@@ -502,7 +310,8 @@ fn write_new(
     let resolved_destination = parent.join(name);
     let destination_text = path_text(&resolved_destination)?;
     let directory = open_directory(&parent).map_err(|_| DeliveryError::InvalidDestination)?;
-    let mut temporary = TemporaryExport::create(directory)?;
+    let mut temporary =
+        TemporaryExport::create(directory).map_err(|_| DeliveryError::WriteFailed)?;
     temporary
         .file
         .write_all(bytes)
@@ -512,20 +321,22 @@ fn write_new(
         .sync_all()
         .map_err(|_| DeliveryError::WriteFailed)?;
     check_destination_parent(requested_parent, &parent, &temporary.directory, false)?;
-    temporary.publish(name)?;
+    temporary.publish(name).map_err(|error| {
+        if error.kind() == std::io::ErrorKind::AlreadyExists {
+            DeliveryError::AlreadyExists
+        } else {
+            DeliveryError::WriteFailed
+        }
+    })?;
     // A rename/replaced parent racing publication must not yield a receipt
     // claiming the old location. Publication may have happened: report that
     // distinction explicitly and leave the source and completed copy intact.
     check_destination_parent(requested_parent, &parent, &temporary.directory, true)?;
-    let published_file =
-        fs::metadata(&resolved_destination).map_err(|_| DeliveryError::DestinationChanged)?;
-    if !same_object(
-        &temporary
-            .file
-            .metadata()
-            .map_err(|_| DeliveryError::DestinationChanged)?,
-        &published_file,
-    ) {
+    let published_file = file_access::open_relative(&temporary.directory, Path::new(name))
+        .map_err(|_| DeliveryError::DestinationChanged)?;
+    if !file_access::same_object(&temporary.file, &published_file)
+        .map_err(|_| DeliveryError::DestinationChanged)?
+    {
         return Err(DeliveryError::DestinationChanged);
     }
     Ok(DeliveryReceipt {

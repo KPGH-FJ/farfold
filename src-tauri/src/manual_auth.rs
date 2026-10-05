@@ -1,7 +1,6 @@
 //! Explicit user login commands. No command is inferred from identity or prose.
 use crate::{auth, meta_store::MetaStore, pty};
 use serde::{Deserialize, Serialize};
-use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use tauri::ipc::Channel;
 use tauri::{AppHandle, Manager};
@@ -24,12 +23,7 @@ fn setting_key(agent: &str, method: &str) -> String {
 }
 fn validate(config: &ManualAuth) -> Result<(), String> {
     let path = Path::new(&config.command);
-    if !path.is_absolute()
-        || !path.is_file()
-        || !path
-            .metadata()
-            .is_ok_and(|m| m.permissions().mode() & 0o111 != 0)
-    {
+    if !path.is_absolute() || !crate::process_platform::executable(path) {
         return Err("请选择可执行文件的完整路径".into());
     }
     if config.args.iter().any(|arg| arg.contains('\0')) {
@@ -168,14 +162,17 @@ mod tests {
         assert!(validate(&config).is_err());
         assert_eq!(store.get_setting(&key).unwrap(), Some(original));
 
-        config.command = "/bin/echo".into();
+        config.command = std::env::current_exe()
+            .unwrap()
+            .to_string_lossy()
+            .into_owned();
         config.args = vec!["login".into()];
         validate(&config).unwrap();
         store
             .set_setting(&key, &serde_json::to_value(&config).unwrap())
             .unwrap();
         let restored = read(&store, "legacy-agent", "login").unwrap().unwrap();
-        assert_eq!(restored.command, "/bin/echo");
+        assert_eq!(restored.command, config.command);
         assert_eq!(restored.args, ["login"]);
         assert_eq!(restored.env_name.as_deref(), Some("LEGACY_KEY"));
     }
@@ -183,7 +180,10 @@ mod tests {
     #[test]
     fn validates_explicit_arguments_without_shell_interpretation() {
         let cfg = ManualAuth {
-            command: "/bin/echo".into(),
+            command: std::env::current_exe()
+                .unwrap()
+                .to_string_lossy()
+                .into_owned(),
             args: vec!["$(touch SHOULD_NOT_EXIST)".into()],
             env_name: Some("API_KEY".into()),
         };
@@ -191,11 +191,14 @@ mod tests {
         assert!(valid_env("API_KEY"));
         assert!(!valid_env("KEY=value"));
         assert!(!valid_env("1_KEY"));
-        let out = std::process::Command::new(&cfg.command)
-            .args(&cfg.args)
-            .output()
-            .unwrap();
-        assert_eq!(String::from_utf8(out.stdout).unwrap().trim(), cfg.args[0]);
+        #[cfg(unix)]
+        {
+            let out = std::process::Command::new("/bin/echo")
+                .args(&cfg.args)
+                .output()
+                .unwrap();
+            assert_eq!(String::from_utf8(out.stdout).unwrap().trim(), cfg.args[0]);
+        }
     }
     #[test]
     fn settings_are_scoped_by_agent_and_method() {

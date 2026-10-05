@@ -1,13 +1,14 @@
 //! Controlled declarations only; no official login process or credentials.
 use super::*;
 use serde_json::json;
-use std::os::unix::fs::PermissionsExt;
 
 fn fixture() -> (tempfile::TempDir, AgentRow, Value) {
     let directory = tempfile::tempdir().unwrap();
-    let node = directory.path().join("node");
+    let node = directory
+        .path()
+        .join(if cfg!(windows) { "node.exe" } else { "node" });
     std::fs::write(&node, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(&node, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(&node).unwrap();
     let entry = directory.path().join("package with spaces/entry.mjs");
     std::fs::create_dir_all(entry.parent().unwrap()).unwrap();
     std::fs::write(&entry, "// owned fixture\n").unwrap();

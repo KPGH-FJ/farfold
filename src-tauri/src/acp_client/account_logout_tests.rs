@@ -37,11 +37,8 @@ for line in sys.stdin:
 "#;
 
 fn fixture() -> Fixture {
-    use std::os::unix::fs::PermissionsExt;
     let mut f = Fixture::new();
-    let script = f.cwd.join("vibe-acp");
-    std::fs::write(&script, VIBE_PEER).unwrap();
-    std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
+    let script = crate::platform_tests::python_peer(&f.cwd, "vibe-acp", VIBE_PEER);
     f.row.id = "registry:mistral-vibe".into();
     f.row.source = "registry".into();
     f.row.command = script.to_string_lossy().into_owned();

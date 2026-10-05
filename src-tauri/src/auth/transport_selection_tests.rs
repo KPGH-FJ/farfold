@@ -2,7 +2,14 @@
 use super::*;
 use crate::acp_client::handshake::Handshake;
 use serde_json::{Value, json};
-use std::os::unix::fs::PermissionsExt;
+
+fn fixture_program() -> &'static str {
+    if cfg!(windows) {
+        r"C:\fixture\agent.exe"
+    } else {
+        "/fixture/agent"
+    }
+}
 
 fn row(command: &str, method: Value) -> AgentRow {
     let handshake = Handshake::decode(json!({
@@ -25,7 +32,7 @@ fn row(command: &str, method: Value) -> AgentRow {
 
 #[test]
 fn changed_terminal_declaration_rejects_the_old_protocol_selection() {
-    let old = row("/fixture/agent", json!({"id":"login", "name":"Login"}));
+    let old = row(fixture_program(), json!({"id":"login", "name":"Login"}));
     let old_method = runnable_auth_method(&old, "login", &ManagedTerminalProof::default()).unwrap();
     assert!(!auth_uses_terminal(&old_method, None).unwrap());
 
@@ -47,16 +54,20 @@ fn changed_terminal_declaration_rejects_the_old_protocol_selection() {
         derive_terminal_invocation(&current, &current_method)
             .unwrap()
             .argv,
-        vec!["/fixture/agent", "--acp", "--login"]
+        vec![fixture_program(), "--acp", "--login"]
     );
 }
 
 #[test]
 fn verified_legacy_terminal_requires_the_same_explicit_selection() {
     let root = tempfile::tempdir().unwrap();
-    let command = root.path().join("chosen");
+    let command = root.path().canonicalize().unwrap().join(if cfg!(windows) {
+        "chosen.exe"
+    } else {
+        "chosen"
+    });
     std::fs::write(&command, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(&command, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(&command).unwrap();
     let row = row(
         command.to_str().unwrap(),
         json!({"id":"login", "name":"Login", "_meta":{"terminal-auth":{
@@ -84,7 +95,7 @@ fn protocol_and_provider_key_selection_stay_out_of_the_terminal_path() {
         json!({"id":"login", "name":"Login", "type":"agent"}),
         json!({"id":"login", "name":"API Key", "_meta":{"api-key":{"provider":"openai"}}}),
     ] {
-        let row = row("/fixture/agent", declaration);
+        let row = row(fixture_program(), declaration);
         let method = runnable_auth_method(&row, "login", &ManagedTerminalProof::default()).unwrap();
         for selected in [None, Some(false)] {
             assert!(!auth_uses_terminal(&method, selected).unwrap());

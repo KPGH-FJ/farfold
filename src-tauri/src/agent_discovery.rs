@@ -6,7 +6,6 @@
 //! compatibility is decided by the ACP handshake at connect time, not here.
 
 use std::io::Read as _;
-use std::os::{fd::AsRawFd, unix::process::CommandExt};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
 use std::time::{Duration, Instant};
@@ -29,7 +28,7 @@ pub struct DiscoveredBinary {
 }
 
 fn home_dir() -> Option<PathBuf> {
-    std::env::var_os("HOME").map(PathBuf::from)
+    crate::process_platform::home_dir()
 }
 
 /// All directories probed for agent binaries: login-shell PATH entries plus
@@ -39,9 +38,8 @@ pub fn candidate_dirs() -> Vec<PathBuf> {
     let mut dirs: Vec<PathBuf> = env
         .get("PATH")
         .map(|path| {
-            path.split(':')
-                .filter(|entry| !entry.is_empty())
-                .map(PathBuf::from)
+            std::env::split_paths(path)
+                .filter(|entry| !entry.as_os_str().is_empty())
                 .collect()
         })
         .unwrap_or_default();
@@ -53,8 +51,20 @@ pub fn candidate_dirs() -> Vec<PathBuf> {
         let nvm_root = home.join(".nvm/versions/node");
         dirs.extend(nvm_bin_dirs(&nvm_root));
     }
-    dirs.push(PathBuf::from("/opt/homebrew/bin"));
-    dirs.push(PathBuf::from("/usr/local/bin"));
+    #[cfg(unix)]
+    {
+        dirs.push(PathBuf::from("/opt/homebrew/bin"));
+        dirs.push(PathBuf::from("/usr/local/bin"));
+    }
+    #[cfg(windows)]
+    {
+        if let Some(appdata) = std::env::var_os("APPDATA") {
+            dirs.push(PathBuf::from(appdata).join("npm"));
+        }
+        if let Some(programs) = std::env::var_os("ProgramFiles") {
+            dirs.push(PathBuf::from(programs).join("nodejs"));
+        }
+    }
 
     let mut seen = std::collections::HashSet::new();
     dirs.retain(|dir| dir.is_dir() && seen.insert(dir.clone()));
@@ -86,22 +96,33 @@ fn nvm_bin_dirs(root: &Path) -> Vec<PathBuf> {
 }
 
 fn is_executable(path: &Path) -> bool {
-    use std::os::unix::fs::PermissionsExt as _;
-    path.is_file()
-        && std::fs::metadata(path)
-            .map(|metadata| metadata.permissions().mode() & 0o111 != 0)
-            .unwrap_or(false)
+    crate::process_platform::executable(path)
+}
+
+fn binary_in(directory: &Path, binary: &str) -> Option<PathBuf> {
+    let path = directory.join(binary);
+    if is_executable(&path) {
+        return Some(path);
+    }
+    #[cfg(windows)]
+    if path.extension().is_none() {
+        for extension in ["exe", "com", "cmd", "bat"] {
+            let candidate = path.with_extension(extension);
+            if is_executable(&candidate) {
+                return Some(candidate);
+            }
+        }
+    }
+    None
 }
 
 /// Locate `binary` in `dirs`. Returns the first match (PATH order wins).
 pub fn find_binary(binary: &str, dirs: &[PathBuf]) -> Option<PathBuf> {
-    if binary.contains('/') {
+    if Path::new(binary).components().count() > 1 || Path::new(binary).is_absolute() {
         let path = PathBuf::from(binary);
         return is_executable(&path).then_some(path);
     }
-    dirs.iter()
-        .map(|dir| dir.join(binary))
-        .find(|path| is_executable(path))
+    dirs.iter().find_map(|dir| binary_in(dir, binary))
 }
 
 fn parse_version_output(output: &str) -> Option<String> {
@@ -130,17 +151,18 @@ pub fn probe_version(binary: &Path) -> Option<String> {
         .and_then(|output| parse_version_output(&output))
 }
 
-struct VersionChild(Child);
+struct VersionChild {
+    child: Child,
+    _group: crate::process_platform::OwnedGroup,
+}
 
 impl Drop for VersionChild {
     fn drop(&mut self) {
         // A wrapper may exit before its descendants close stdout. The probe
         // owns this group, including after the leader has already exited.
-        unsafe {
-            libc::kill(-(self.0.id() as i32), libc::SIGKILL);
-        }
-        let _ = self.0.kill();
-        let _ = self.0.wait();
+        crate::supervisor::signal_owned_group(self.child.id(), crate::supervisor::KILL);
+        let _ = self.child.kill();
+        let _ = self.child.wait();
     }
 }
 
@@ -152,25 +174,31 @@ pub(crate) fn version_output(
     check: impl Fn() -> Result<(), String>,
 ) -> Result<Option<String>, String> {
     check()?;
-    let child = Command::new(binary)
+    let mut command = Command::new(binary);
+    command
         .arg("--version")
-        .envs(crate::shell_env::command_env())
-        .process_group(0)
+        .envs(crate::shell_env::command_env());
+    let pending =
+        crate::process_platform::prepare_command(&mut command).map_err(|_| "无法准备程序检查")?;
+    let child = command
         .stdin(Stdio::null())
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn();
     let Ok(child) = child else { return Ok(None) };
-    let mut child = VersionChild(child);
-    let Some(mut stdout) = child.0.stdout.take() else {
+    let group = pending
+        .attach(child.id())
+        .map_err(|_| "无法确认程序检查进程")?;
+    let mut child = VersionChild {
+        child,
+        _group: group,
+    };
+    let Some(stdout) = child.child.stdout.take() else {
         return Ok(None);
     };
+    let mut stdout =
+        crate::process_platform::PipeReader::new(stdout).map_err(|_| "无法读取程序检查结果")?;
     let deadline = Instant::now() + timeout;
-    let fd = stdout.as_raw_fd();
-    let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
-    if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
-        return Ok(None);
-    }
     let mut buffer = Vec::new();
     let mut eof = false;
     let mut chunk = [0u8; 4096];
@@ -195,7 +223,7 @@ pub(crate) fn version_output(
                 Err(_) => return Ok(None),
             }
         }
-        match child.0.try_wait() {
+        match child.child.try_wait() {
             Ok(Some(status)) if status.success() && eof => {
                 return Ok(Some(String::from_utf8_lossy(&buffer).trim().to_string()));
             }
@@ -203,18 +231,11 @@ pub(crate) fn version_output(
             Err(_) => return Ok(None),
             _ => {}
         }
-        let wait = deadline
-            .saturating_duration_since(Instant::now())
-            .min(Duration::from_millis(20));
-        let mut poll_fd = libc::pollfd {
-            fd: if eof { -1 } else { fd },
-            events: libc::POLLIN,
-            revents: 0,
-        };
-        let result = unsafe { libc::poll(&mut poll_fd, 1, wait.as_millis() as i32) };
-        if result < 0 && std::io::Error::last_os_error().kind() != std::io::ErrorKind::Interrupted {
-            return Ok(None);
-        }
+        std::thread::sleep(
+            deadline
+                .saturating_duration_since(Instant::now())
+                .min(Duration::from_millis(20)),
+        );
     }
 }
 
@@ -227,10 +248,9 @@ pub fn discover() -> Vec<DiscoveredBinary> {
     for def in builtin_defs() {
         let mut seen = std::collections::HashSet::new();
         for dir in &dirs {
-            let path = dir.join(def.discovery_binary);
-            if !is_executable(&path) {
+            let Some(path) = binary_in(dir, def.discovery_binary) else {
                 continue;
-            }
+            };
             let Ok(path) = path.canonicalize() else {
                 continue;
             };
@@ -317,10 +337,14 @@ mod tests {
     fn validate_executable_path_rejects_missing_and_dirs() {
         assert!(validate_executable_path("").is_err());
         assert!(validate_executable_path("/definitely/not/here").is_err());
-        assert!(validate_executable_path("/tmp").is_err());
-        assert!(validate_executable_path("/bin/ls").is_ok());
+        let directory = tempfile::tempdir().unwrap();
+        assert!(validate_executable_path(directory.path().to_str().unwrap()).is_err());
+        assert!(
+            validate_executable_path(std::env::current_exe().unwrap().to_str().unwrap()).is_ok()
+        );
     }
 
+    #[cfg(unix)]
     #[test]
     fn probe_version_reads_real_binary() {
         // /bin/echo ignores --version and prints it back — exercises the
@@ -329,6 +353,7 @@ mod tests {
         assert_eq!(output.as_deref(), Some("--version"));
     }
 
+    #[cfg(unix)]
     #[test]
     fn version_probe_rejects_hanging_failed_and_oversized_output() {
         use std::os::unix::fs::PermissionsExt;

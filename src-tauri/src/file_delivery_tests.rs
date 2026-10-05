@@ -1,4 +1,6 @@
 use super::*;
+use std::fs;
+#[cfg(unix)]
 use std::os::unix::fs::symlink;
 
 fn fixture() -> (tempfile::TempDir, PathBuf, VerifiedFile) {
@@ -47,6 +49,7 @@ fn refuses_absolute_and_parent_escape() {
     );
 }
 
+#[cfg(unix)]
 #[test]
 fn symlink_must_resolve_inside_authorized_root() {
     let (root, path, _) = fixture();
@@ -69,6 +72,7 @@ fn symlink_must_resolve_inside_authorized_root() {
     );
 }
 
+#[cfg(unix)]
 #[test]
 fn redirected_symlink_invalidates_receipt() {
     let (root, path, _) = fixture();
@@ -109,6 +113,7 @@ fn replacing_file_with_identical_bytes_invalidates_receipt() {
     assert!(matches!(read_text(&file), Err(DeliveryError::Changed)));
 }
 
+#[cfg(unix)]
 #[test]
 fn directory_and_fifo_are_not_files_and_do_not_block() {
     let root = tempfile::tempdir().unwrap();
@@ -119,7 +124,8 @@ fn directory_and_fifo_are_not_files_and_do_not_block() {
         Err(DeliveryError::NotFile)
     );
     let fifo = root.path().join("fifo");
-    let name = c_name(fifo.as_os_str()).unwrap();
+    use std::os::unix::ffi::OsStrExt;
+    let name = std::ffi::CString::new(fifo.as_os_str().as_bytes()).unwrap();
     // SAFETY: name is a live NUL-terminated fixture path, mode is valid.
     assert_eq!(unsafe { libc::mkfifo(name.as_ptr(), 0o600) }, 0);
     assert_eq!(inspect(root.path(), &fifo), Err(DeliveryError::NotFile));
@@ -162,6 +168,7 @@ fn existing_destination_is_never_overwritten_and_source_remains() {
     }));
 }
 
+#[cfg(unix)]
 #[test]
 fn destination_symlink_is_not_followed_or_replaced() {
     let (root, path, file) = fixture();
@@ -240,6 +247,7 @@ fn replaced_root_during_read_is_rejected() {
     assert_eq!(recheck(&opened), Err(DeliveryError::Changed));
 }
 
+#[cfg(unix)]
 #[test]
 fn destination_parent_replacement_and_alias_redirect_have_distinct_post_commit_error() {
     let outer = tempfile::tempdir().unwrap();

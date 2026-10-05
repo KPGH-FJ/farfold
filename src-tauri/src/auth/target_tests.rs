@@ -1,10 +1,11 @@
 //! Owned executable fixtures only; no official Agent, account or credential access.
 use super::*;
-use std::os::unix::{fs::PermissionsExt, fs::symlink};
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
 
 fn executable(path: &std::path::Path) {
     std::fs::write(path, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(path).unwrap();
 }
 fn row(
     command: &std::path::Path,
@@ -39,8 +40,13 @@ fn assert_unavailable(row: &AgentRow) {
 #[test]
 fn unknown_legacy_program_is_unavailable_without_changing_the_protocol_method() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("chosen");
-    let other = dir.path().join("other");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "chosen.exe"
+    } else {
+        "chosen"
+    });
+    let other = root.join(if cfg!(windows) { "other.exe" } else { "other" });
     executable(&selected);
     executable(&other);
     let row = row(
@@ -56,7 +62,12 @@ fn unknown_legacy_program_is_unavailable_without_changing_the_protocol_method() 
 #[test]
 fn malformed_legacy_arguments_are_not_silently_filtered_into_a_command() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("chosen");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "chosen.exe"
+    } else {
+        "chosen"
+    });
     executable(&selected);
     for args in [
         serde_json::json!(["login", 7]),
@@ -72,10 +83,16 @@ fn malformed_legacy_arguments_are_not_silently_filtered_into_a_command() {
     }
 }
 #[test]
+#[cfg(unix)]
 fn verified_same_program_alias_executes_the_selected_absolute_path_with_full_legacy_args() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("chosen");
-    let alias = dir.path().join("alias");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "chosen.exe"
+    } else {
+        "chosen"
+    });
+    let alias = root.join("alias");
     executable(&selected);
     symlink(&selected, &alias).unwrap();
     let row = row(
@@ -96,10 +113,11 @@ fn verified_same_program_alias_executes_the_selected_absolute_path_with_full_leg
 #[test]
 fn the_same_node_executable_does_not_authorize_a_different_script() {
     let dir = tempfile::tempdir().unwrap();
-    let node = dir.path().join("node");
+    let root = dir.path().canonicalize().unwrap();
+    let node = root.join(if cfg!(windows) { "node.exe" } else { "node" });
     executable(&node);
-    let selected = dir.path().join("chosen.js");
-    let other = dir.path().join("other.js");
+    let selected = root.join("chosen.js");
+    let other = root.join("other.js");
     std::fs::write(&selected, "").unwrap();
     std::fs::write(&other, "").unwrap();
     assert_unavailable(&row(
@@ -110,12 +128,18 @@ fn the_same_node_executable_does_not_authorize_a_different_script() {
     ));
 }
 #[test]
+#[cfg(unix)]
 fn a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution() {
     let dir = tempfile::tempdir().unwrap();
-    let node = dir.path().join("node");
+    let root = dir.path().canonicalize().unwrap();
+    let node = root.join(if cfg!(windows) { "node.exe" } else { "node" });
     executable(&node);
-    let selected = dir.path().join("chosen.js");
-    let alias = dir.path().join("chosen");
+    let selected = root.join("chosen.js");
+    let alias = root.join(if cfg!(windows) {
+        "chosen.exe"
+    } else {
+        "chosen"
+    });
     executable(&selected);
     symlink(&selected, &alias).unwrap();
     let row = row(
@@ -137,7 +161,12 @@ fn a_script_alias_uses_the_selected_node_and_entry_instead_of_direct_execution()
 #[test]
 fn an_invalid_typed_terminal_keeps_its_kind_and_cannot_be_automatically_run() {
     let dir = tempfile::tempdir().unwrap();
-    let selected = dir.path().join("selected");
+    let root = dir.path().canonicalize().unwrap();
+    let selected = root.join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&selected);
     let mut row = row(
         &selected,

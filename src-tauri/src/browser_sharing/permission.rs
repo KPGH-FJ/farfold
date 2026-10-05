@@ -92,7 +92,7 @@ impl ToolSession {
         }
         // Fresh per-request nonce, never a credential or a page authority.
         let mut bytes = [0u8; 16];
-        if unsafe { libc::getentropy(bytes.as_mut_ptr().cast(), bytes.len()) } != 0 {
+        if getrandom::fill(&mut bytes).is_err() {
             return Err("无法准备网页读取确认".into());
         }
         let request_id: String = bytes.iter().map(|byte| format!("{byte:02x}")).collect();

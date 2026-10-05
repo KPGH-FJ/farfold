@@ -1,5 +1,8 @@
-use std::io::{Read, Write as _};
+use std::io::Read;
+#[cfg(unix)]
+use std::io::Write as _;
 use std::path::Path;
+#[cfg(unix)]
 use std::process::Command;
 
 use crate::install_job::Job;
@@ -16,38 +19,48 @@ pub(super) fn extract_archive(
     job.check()?;
     let path = label.split(['?', '#']).next().unwrap_or(label);
     if path.ends_with(".zip") {
-        let mut tmp = tempfile::Builder::new()
-            .prefix(".archive-")
-            .suffix(".zip")
-            .tempfile_in(dest)
-            .map_err(|error| format!("cannot create archive staging: {error}"))?;
-        tmp.write_all(archive)
-            .map_err(|error| format!("cannot stage {label}: {error}"))?;
-        job.run(
-            Command::new("/usr/bin/ditto")
-                .args(["-x", "-k"])
-                .arg(tmp.path())
-                .arg(dest),
-        )?;
+        #[cfg(windows)]
+        crate::archive_zip::extract(archive, dest, || job.check())?;
+        #[cfg(unix)]
+        {
+            let mut tmp = tempfile::Builder::new()
+                .prefix(".archive-")
+                .suffix(".zip")
+                .tempfile_in(dest)
+                .map_err(|error| format!("cannot create archive staging: {error}"))?;
+            tmp.write_all(archive)
+                .map_err(|error| format!("cannot stage {label}: {error}"))?;
+            job.run(
+                Command::new("/usr/bin/ditto")
+                    .args(["-x", "-k"])
+                    .arg(tmp.path())
+                    .arg(dest),
+            )?;
+        }
     } else if path.ends_with(".tar.bz2") {
-        let staging = tempfile::Builder::new()
-            .prefix(".archive-")
-            .tempdir_in(dest)
-            .map_err(|_| "无法准备解压目录，请重试")?;
-        let compressed = staging.path().join("download.tar.bz2");
-        std::fs::write(&compressed, archive).map_err(|_| "无法暂存下载内容，请重试")?;
-        // Decode only. External archive paths never reach a shell or an
-        // extractor that could bypass tar::Archive's destination checks.
-        job.run(
-            Command::new("/usr/bin/bzip2")
-                .env_remove("BZIP")
-                .env_remove("BZIP2")
-                .arg("-d")
-                .arg(&compressed),
-        )?;
-        let decoded = std::fs::File::open(staging.path().join("download.tar"))
-            .map_err(|_| "无法读取解压内容，请重试")?;
-        unpack_tar(decoded, dest, label, job)?;
+        #[cfg(windows)]
+        return Err("此压缩格式暂未支持，请选择已有程序".into());
+        #[cfg(unix)]
+        {
+            let staging = tempfile::Builder::new()
+                .prefix(".archive-")
+                .tempdir_in(dest)
+                .map_err(|_| "无法准备解压目录，请重试")?;
+            let compressed = staging.path().join("download.tar.bz2");
+            std::fs::write(&compressed, archive).map_err(|_| "无法暂存下载内容，请重试")?;
+            // Decode only. External archive paths never reach a shell or an
+            // extractor that could bypass tar::Archive's destination checks.
+            job.run(
+                Command::new("/usr/bin/bzip2")
+                    .env_remove("BZIP")
+                    .env_remove("BZIP2")
+                    .arg("-d")
+                    .arg(&compressed),
+            )?;
+            let decoded = std::fs::File::open(staging.path().join("download.tar"))
+                .map_err(|_| "无法读取解压内容，请重试")?;
+            unpack_tar(decoded, dest, label, job)?;
+        }
     } else {
         // Preserve existing gzip behavior, including extensionless downloads.
         unpack_tar(flate2::read::GzDecoder::new(archive), dest, label, job)?;
@@ -55,25 +68,33 @@ pub(super) fn extract_archive(
     job.check()
 }
 
+#[cfg(unix)]
 struct CheckedReader<'a, R> {
     reader: R,
     job: &'a Job,
 }
+#[cfg(unix)]
 impl<R: Read> Read for CheckedReader<'_, R> {
     fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
         self.job.check().map_err(std::io::Error::other)?;
         self.reader.read(buffer)
     }
 }
-fn unpack_tar(reader: impl Read, dest: &Path, label: &str, job: &Job) -> Result<(), String> {
+fn unpack_tar(reader: impl Read, dest: &Path, _label: &str, job: &Job) -> Result<(), String> {
+    #[cfg(windows)]
+    {
+        super::windows_tar::unpack(reader, dest, || job.check())
+    }
+    #[cfg(unix)]
     tar::Archive::new(CheckedReader { reader, job })
         .unpack(dest)
-        .map_err(|error| format!("cannot extract {label}: {error}"))
+        .map_err(|error| format!("cannot extract {_label}: {error}"))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Write as _;
 
     fn job(name: &str) -> crate::install_job::Lease {
         crate::install_job::begin(name, tauri::ipc::Channel::new(|_| Ok(()))).unwrap()
@@ -88,6 +109,7 @@ mod tests {
         builder.into_inner().unwrap()
     }
 
+    #[cfg(unix)]
     fn bzip2(content: &[u8]) -> Vec<u8> {
         let mut input = tempfile::NamedTempFile::new().unwrap();
         input.write_all(content).unwrap();
@@ -107,6 +129,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn extracts_bzip2_distribution_using_the_declared_relative_program() {
         let directory = tempfile::tempdir().unwrap();
         let lease = job("bzip2-distribution");
@@ -130,6 +153,7 @@ mod tests {
             ),
             ("agent.tgz", gzip(&content)),
             ("https://official.invalid/download", gzip(&content)),
+            #[cfg(unix)]
             (
                 "https://official.invalid/agent.tar.bz2?download=1#asset",
                 bzip2(&content),
@@ -160,6 +184,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn bzip2_rejects_symlink_pivots_outside_the_candidate() {
         let root = tempfile::tempdir().unwrap();
         let outside = root.path().join("outside");
@@ -199,6 +224,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn bzip2_never_writes_parent_traversal_entries_outside_the_candidate() {
         let root = tempfile::tempdir().unwrap();
         let destination = root.path().join("candidate");
@@ -223,6 +249,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn cancelled_bzip2_never_creates_staging_or_commits() {
         let dir = tempfile::tempdir().unwrap();
         let bytes = bzip2(&tar_file("agent", b"fixture program"));

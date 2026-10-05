@@ -1,24 +1,37 @@
+#[cfg(unix)]
 use super::tests::candidate_fixture;
 use super::*;
 
 fn history_fixture(data: &Path) -> (MetaStore, AgentRow, String, [String; 2]) {
-    use std::os::unix::fs::{PermissionsExt, symlink};
     let store = MetaStore::open(&data.join("meta.db")).unwrap();
     let mut programs = Vec::new();
     for name in ["original", "second", "third"] {
-        let path = data.join(name);
+        let path = data.join(if cfg!(windows) {
+            format!("{name}.exe")
+        } else {
+            name.into()
+        });
         std::fs::write(&path, "#!/bin/sh\nexit 0\n").unwrap();
-        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        crate::process_platform::set_executable(&path).unwrap();
         programs.push(path.display().to_string());
     }
-    let alias = data.join("original-alias");
-    symlink(&programs[0], &alias).unwrap();
-    let alias = alias.display().to_string();
+    #[cfg(unix)]
+    let alias = {
+        let alias = data.join("original-alias");
+        std::os::unix::fs::symlink(&programs[0], &alias).unwrap();
+        alias.display().to_string()
+    };
+    #[cfg(windows)]
+    let alias = programs[0].clone();
     let row = AgentRow {
         id: "pi".into(),
         name: "Pi".into(),
         source: "registry".into(),
-        command: "/bin/sh".into(),
+        command: if cfg!(windows) {
+            std::env::current_exe().unwrap().display().to_string()
+        } else {
+            "/bin/sh".into()
+        },
         args: vec!["kept-component".into()],
         env: vec![
             ("PI_ACP_PI_COMMAND".into(), alias.clone()),
@@ -51,6 +64,7 @@ fn choose_program(row: &AgentRow, path: &str) -> AgentRow {
     candidate
 }
 
+#[cfg(unix)]
 fn alias_chain(data: &Path, target: &Path, count: usize) -> PathBuf {
     let mut previous = target.to_path_buf();
     for index in 0..count {
@@ -80,6 +94,7 @@ fn assert_program_selection(actual: &AgentRow, expected: &AgentRow) {
     assert_eq!(other_env(actual), other_env(expected));
 }
 
+#[cfg(unix)]
 #[test]
 fn program_history_retains_original_alias_without_discovery_and_returns_it_exactly() {
     let data = tempfile::tempdir().unwrap();
@@ -169,6 +184,7 @@ fn program_history_recovers_legacy_snapshot_and_persists_it_on_the_next_switch()
     );
 }
 
+#[cfg(unix)]
 #[test]
 fn program_history_deduplicates_discovered_targets_without_replacing_the_explicit_alias() {
     let data = tempfile::tempdir().unwrap();
@@ -226,6 +242,7 @@ fn program_history_is_not_published_by_a_stale_selection_or_storage_failure() {
     assert!(store.get_setting("installPrevious.pi").unwrap().is_none());
 }
 
+#[cfg(unix)]
 #[test]
 fn program_history_replaces_a_persisted_external_canonical_path_with_the_explicit_alias() {
     let data = tempfile::tempdir().unwrap();
@@ -249,6 +266,7 @@ fn program_history_replaces_a_persisted_external_canonical_path_with_the_explici
     assert_program_selection(&returned, &original);
 }
 
+#[cfg(unix)]
 #[test]
 fn program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_external_entries() {
     use std::os::unix::fs::PermissionsExt;
@@ -375,6 +393,7 @@ fn program_history_does_not_resurrect_uninstalled_managed_paths_or_inner_externa
     assert!(external.exists());
 }
 
+#[cfg(unix)]
 #[test]
 fn program_history_uninstall_metadata_failures_keep_the_owned_receipt_for_exact_retry() {
     for failing_key in ["installPrevious.pi", "installations.v1"] {

@@ -18,7 +18,24 @@ use crate::shell_env;
 mod npm_entry;
 
 const NODE_DIST_VERSION: &str = "v22.20.0";
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 const NODE_DIST_NAME: &str = "node-v22.20.0-darwin-arm64";
+#[cfg(all(target_os = "macos", target_arch = "x86_64"))]
+const NODE_DIST_NAME: &str = "node-v22.20.0-darwin-x64";
+#[cfg(all(windows, target_arch = "x86_64"))]
+const NODE_DIST_NAME: &str = "node-v22.20.0-win-x64";
+#[cfg(all(windows, target_arch = "aarch64"))]
+const NODE_DIST_NAME: &str = "node-v22.20.0-win-arm64";
+const NODE_BIN: &str = if cfg!(windows) {
+    "node.exe"
+} else {
+    "bin/node"
+};
+const NPM_CLI: &str = if cfg!(windows) {
+    "node_modules/npm/bin/npm-cli.js"
+} else {
+    "lib/node_modules/npm/bin/npm-cli.js"
+};
 const NODE_MIN_MAJOR: u64 = 18;
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(300);
 
@@ -27,6 +44,7 @@ const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(300);
 #[serde(rename_all = "snake_case", tag = "kind")]
 pub enum NpmRunner {
     /// A system npm executable on PATH (invoked directly).
+    #[cfg(unix)]
     System { npm: PathBuf },
     /// The npm bundled inside a Node dist (`node <npm-cli.js>`).
     BundledCli { npm_cli: PathBuf },
@@ -45,6 +63,7 @@ pub struct NodeRuntime {
 impl NodeRuntime {
     fn npm_install_command(&self, pkg_spec: &str, install_dir: &Path) -> Command {
         let mut command = match &self.npm {
+            #[cfg(unix)]
             NpmRunner::System { npm } => {
                 let mut command = Command::new(npm);
                 command
@@ -115,9 +134,8 @@ fn try_system_node(job: &crate::install_job::Job) -> Option<NodeRuntime> {
     let dirs: Vec<PathBuf> = env
         .get("PATH")
         .map(|path| {
-            path.split(':')
-                .filter(|entry| !entry.is_empty())
-                .map(PathBuf::from)
+            std::env::split_paths(path)
+                .filter(|entry| !entry.as_os_str().is_empty())
                 .collect()
         })
         .unwrap_or_default();
@@ -130,16 +148,33 @@ fn try_system_node(job: &crate::install_job::Job) -> Option<NodeRuntime> {
     }
     Some(NodeRuntime {
         version: Some(version),
-        node,
-        npm: NpmRunner::System { npm },
+        node: node.clone(),
+        npm: {
+            #[cfg(unix)]
+            {
+                NpmRunner::System { npm }
+            }
+            #[cfg(windows)]
+            {
+                // Official Node Windows distributions keep npm beside node.exe.
+                // Execute its declared JavaScript CLI directly, never through cmd.
+                let cli = node.parent()?.join("node_modules/npm/bin/npm-cli.js");
+                if !cli.is_file()
+                    || npm.parent()?.canonicalize().ok()? != node.parent()?.canonicalize().ok()?
+                {
+                    return None;
+                }
+                NpmRunner::BundledCli { npm_cli: cli }
+            }
+        },
         source: "system",
     })
 }
 
 fn bundled_layout(app_data_dir: &Path) -> (PathBuf, PathBuf, PathBuf) {
     let root = app_data_dir.join("node").join(NODE_DIST_NAME);
-    let node = root.join("bin/node");
-    let npm_cli = root.join("lib/node_modules/npm/bin/npm-cli.js");
+    let node = root.join(NODE_BIN);
+    let npm_cli = root.join(NPM_CLI);
     (root, node, npm_cli)
 }
 
@@ -181,15 +216,24 @@ fn shasums_entry(shasums: &str, file_name: &str) -> Option<String> {
     None
 }
 
-fn extract_node_archive(archive: &[u8], dist_dir: &Path) -> Result<tempfile::TempDir, String> {
+fn extract_node_archive(
+    archive: &[u8],
+    dist_dir: &Path,
+    _check: impl Fn() -> Result<(), String>,
+) -> Result<tempfile::TempDir, String> {
     let staging = tempfile::Builder::new()
         .prefix(".extract-")
         .tempdir_in(dist_dir)
         .map_err(|error| format!("cannot create node staging dir: {error}"))?;
-    let decoder = flate2::read::GzDecoder::new(archive);
-    tar::Archive::new(decoder)
-        .unpack(staging.path())
-        .map_err(|error| format!("cannot extract node archive: {error}"))?;
+    #[cfg(windows)]
+    crate::archive_zip::extract(archive, staging.path(), _check)?;
+    #[cfg(unix)]
+    {
+        let decoder = flate2::read::GzDecoder::new(archive);
+        tar::Archive::new(decoder)
+            .unpack(staging.path())
+            .map_err(|error| format!("cannot extract node archive: {error}"))?;
+    }
     Ok(staging)
 }
 
@@ -202,15 +246,26 @@ fn download_and_extract_node(
         .map_err(|error| format!("cannot create node directory: {error}"))?;
 
     let base = format!("https://nodejs.org/dist/{NODE_DIST_VERSION}");
-    let archive_name = format!("{NODE_DIST_NAME}.tar.gz");
-    let shasums = String::from_utf8_lossy(
-        &job.download(&format!("{base}/SHASUMS256.txt"), Duration::from_secs(30))?,
-    )
-    .into_owned();
+    let archive_name = format!(
+        "{NODE_DIST_NAME}.{}",
+        if cfg!(windows) { "zip" } else { "tar.gz" }
+    );
+    let sums_url = format!("{base}/SHASUMS256.txt");
+    let sums_bytes = if cfg!(windows) {
+        job.download_bounded(&sums_url, Duration::from_secs(30), 1024 * 1024, None)?
+    } else {
+        job.download(&sums_url, Duration::from_secs(30))?
+    };
+    let shasums = String::from_utf8_lossy(&sums_bytes).into_owned();
     let expected = shasums_entry(&shasums, &archive_name)
         .ok_or_else(|| format!("no SHASUMS256 entry for {archive_name}"))?;
 
-    let archive = job.download(&format!("{base}/{archive_name}"), DOWNLOAD_TIMEOUT)?;
+    let archive_url = format!("{base}/{archive_name}");
+    let archive = if cfg!(windows) {
+        job.download_bounded(&archive_url, DOWNLOAD_TIMEOUT, 1024 * 1024 * 1024, None)?
+    } else {
+        job.download(&archive_url, DOWNLOAD_TIMEOUT)?
+    };
     let actual = sha256_hex(&archive);
     if actual != expected {
         return Err(format!(
@@ -220,18 +275,14 @@ fn download_and_extract_node(
 
     job.check()?;
     job.report("extract", None, None);
-    let staging = extract_node_archive(&archive, &dist_dir)?;
+    let staging = extract_node_archive(&archive, &dist_dir, || job.check())?;
     let extracted_root = staging.path().join(NODE_DIST_NAME);
     let (final_root, node, npm_cli) = bundled_layout(app_data_dir);
     if final_root.exists() {
         return Err("已有 Node 文件不完整；已保留，请检查后重试".into());
     }
     job.check()?;
-    if !extracted_root.join("bin/node").is_file()
-        || !extracted_root
-            .join("lib/node_modules/npm/bin/npm-cli.js")
-            .is_file()
-    {
+    if !extracted_root.join(NODE_BIN).is_file() || !extracted_root.join(NPM_CLI).is_file() {
         return Err("运行环境下载不完整，请重试".into());
     }
     std::fs::rename(&extracted_root, &final_root)
@@ -511,10 +562,14 @@ fn bin_entry_of(manifest: &serde_json::Value) -> Option<String> {
 #[cfg(test)]
 pub(crate) mod npm_entry_tests;
 
+#[cfg(all(test, windows))]
+mod windows_tests;
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn engine_requirement_checks_full_node_version_without_changing_default_policy() {
         use std::os::unix::fs::PermissionsExt;
@@ -561,8 +616,8 @@ mod tests {
     fn verified_named_install_overrides_registry_and_scope_without_changing_ordinary_npm() {
         let runtime = NodeRuntime {
             node: "/fixture/node".into(),
-            npm: NpmRunner::System {
-                npm: "/fixture/npm".into(),
+            npm: NpmRunner::BundledCli {
+                npm_cli: "/fixture/npm-cli.js".into(),
             },
             source: "fixture",
             version: None,
@@ -585,6 +640,7 @@ mod tests {
         assert!(!ordinary.get_args().any(|arg| arg == "--registry"));
     }
 
+    #[cfg(unix)]
     #[test]
     fn cancelled_node_probe_ends_descendants_holding_stdout() {
         use std::os::unix::fs::PermissionsExt;
@@ -644,6 +700,7 @@ mod tests {
         assert!(result.is_ok_and(|result| result.is_err()));
     }
 
+    #[cfg(unix)]
     #[test]
     fn access_regression_npm_uses_selected_node_with_a_gui_path() {
         use std::os::unix::fs::PermissionsExt;
@@ -677,6 +734,7 @@ mod tests {
         assert_eq!(output.stdout, b"selected-node");
     }
 
+    #[cfg(unix)]
     #[test]
     fn npm_lifecycle_uses_the_selected_node_for_system_and_bundled_launches() {
         use std::os::unix::fs::PermissionsExt;
@@ -726,7 +784,7 @@ mod tests {
         std::fs::create_dir(&previous).unwrap();
         std::fs::write(previous.join("keep"), "previous attempt").unwrap();
         std::fs::write(dir.path().join(NODE_DIST_NAME), "keep installed data").unwrap();
-        assert!(extract_node_archive(b"invalid archive", dir.path()).is_err());
+        assert!(extract_node_archive(b"invalid archive", dir.path(), || Ok(())).is_err());
         assert_eq!(
             std::fs::read_to_string(previous.join("keep")).unwrap(),
             "previous attempt"

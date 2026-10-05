@@ -1,4 +1,5 @@
 use super::*;
+#[cfg(unix)]
 use std::os::unix::fs::symlink;
 
 fn autohand(root: &Path) -> AgentRow {
@@ -98,6 +99,7 @@ fn scope_source_argv_manifest_and_declared_entry_are_required() {
     assert!(declared_for(&row).is_empty());
 }
 
+#[cfg(unix)]
 #[test]
 fn package_or_entry_symlink_cannot_escape_the_node_modules_tree() {
     let root = tempfile::tempdir().unwrap();

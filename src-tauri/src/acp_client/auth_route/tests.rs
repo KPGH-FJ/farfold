@@ -1,5 +1,6 @@
 use super::*;
-use std::os::unix::fs::{PermissionsExt, symlink};
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
 
 fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
     super::route(
@@ -15,7 +16,7 @@ fn route(row: &AgentRow, method: &Value, managed_kilo: bool) -> Route {
 fn executable(path: &Path) {
     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
     std::fs::write(path, "#!/bin/sh\nexit 0\n").unwrap();
-    std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    crate::process_platform::set_executable(path).unwrap();
 }
 fn row(command: &Path) -> AgentRow {
     AgentRow {
@@ -43,7 +44,11 @@ fn argv(route: Route) -> Vec<String> {
 #[test]
 fn typed_terminal_is_authoritative_even_with_malformed_legacy_and_api_metadata() {
     let dir = tempfile::tempdir().unwrap();
-    let row = row(&dir.path().join("selected"));
+    let row = row(&dir.path().join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    }));
     let method = serde_json::json!({"id":"login","name":"Login","type":"terminal","args":["--standard"],
         "env":{"PUBLIC_MODE":"standard"},"_meta":{"terminal-auth":true,"api-key":{"env":"OTHER"}}});
     let Route::Terminal(invocation) = route(&row, &method, false) else {
@@ -73,7 +78,11 @@ fn plain_agent_and_default_methods_keep_protocol_authentication() {
 #[test]
 fn malformed_terminal_declarations_never_fall_through_to_protocol_or_pty() {
     let dir = tempfile::tempdir().unwrap();
-    let command = dir.path().join("selected");
+    let command = dir.path().join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&command);
     let row = row(&command);
     for metadata in [
@@ -94,7 +103,11 @@ fn malformed_terminal_declarations_never_fall_through_to_protocol_or_pty() {
 #[test]
 fn relative_and_missing_targets_are_not_resolved_to_another_program() {
     let dir = tempfile::tempdir().unwrap();
-    let command = dir.path().join("selected");
+    let command = dir.path().join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&command);
     let row = row(&command);
     for target in [
@@ -112,7 +125,11 @@ fn relative_and_missing_targets_are_not_resolved_to_another_program() {
 #[test]
 fn legacy_environment_is_checked_before_a_terminal_route_is_available() {
     let dir = tempfile::tempdir().unwrap();
-    let command = dir.path().join("selected");
+    let command = dir.path().join(if cfg!(windows) {
+        "selected.exe"
+    } else {
+        "selected"
+    });
     executable(&command);
     let row = row(&command);
     for env in [
@@ -128,7 +145,9 @@ fn legacy_environment_is_checked_before_a_terminal_route_is_available() {
 #[test]
 fn a_node_script_identity_is_required_even_when_the_node_path_is_identical() {
     let dir = tempfile::tempdir().unwrap();
-    let node = dir.path().join("node");
+    let node = dir
+        .path()
+        .join(if cfg!(windows) { "node.exe" } else { "node" });
     executable(&node);
     let script = dir.path().join("entry.js");
     let other = dir.path().join("other.js");
@@ -168,21 +187,28 @@ fn a_node_script_identity_is_required_even_when_the_node_path_is_identical() {
             "login".into()
         ]
     );
-    let alias = dir.path().join("entry");
-    symlink(&script, &alias).unwrap();
-    assert_eq!(
-        argv(route(
-            &row,
-            &legacy(alias.to_str().unwrap(), serde_json::json!(["login"])),
-            false
-        )),
-        vec![row.command.clone(), row.args[0].clone(), "login".into()]
-    );
+    #[cfg(unix)]
+    {
+        let alias = dir.path().join("entry");
+        symlink(&script, &alias).unwrap();
+        assert_eq!(
+            argv(route(
+                &row,
+                &legacy(alias.to_str().unwrap(), serde_json::json!(["login"])),
+                false
+            )),
+            vec![row.command.clone(), row.args[0].clone(), "login".into()]
+        );
+    }
 }
 #[test]
 fn shared_python_requires_the_same_absolute_script() {
     let dir = tempfile::tempdir().unwrap();
-    let python = dir.path().join("python3.13");
+    let python = dir.path().join(if cfg!(windows) {
+        "python3.13.exe"
+    } else {
+        "python3.13"
+    });
     let selected = dir.path().join("selected.py");
     let other = dir.path().join("other.py");
     executable(&python);
@@ -219,7 +245,11 @@ fn shell_code_and_interpreter_options_require_explicit_configuration() {
     for name in [
         "sh", "bash", "zsh", "node", "bun", "deno", "ruby", "perl", "python",
     ] {
-        let command = dir.path().join(name);
+        let command = dir.path().join(if cfg!(windows) {
+            format!("{name}.exe")
+        } else {
+            name.into()
+        });
         executable(&command);
         let mut row = row(&command);
         for args in [
@@ -247,8 +277,16 @@ fn shell_code_and_interpreter_options_require_explicit_configuration() {
     }
 }
 fn amp(dir: &Path) -> (AgentRow, Value, PathBuf) {
-    let component = dir.join("amp-acp");
-    let program = dir.join("managed/amp");
+    let component = dir.join(if cfg!(windows) {
+        "amp-acp.exe"
+    } else {
+        "amp-acp"
+    });
+    let program = dir.join(if cfg!(windows) {
+        "managed/amp.exe"
+    } else {
+        "managed/amp"
+    });
     executable(&component);
     executable(&program);
     let mut row = row(&component);
@@ -268,7 +306,11 @@ fn amp_uses_its_verified_selected_companion_instead_of_a_path_namesake() {
         argv(route(&row, &method, false)),
         vec![selected.display().to_string()]
     );
-    let other = dir.path().join("other/amp");
+    let other = dir.path().join(if cfg!(windows) {
+        "other/amp.exe"
+    } else {
+        "other/amp"
+    });
     executable(&other);
     assert!(matches!(
         route(
@@ -292,9 +334,11 @@ fn amp_uses_its_verified_selected_companion_instead_of_a_path_namesake() {
     ));
     assert_eq!(row.env[0].1, selected.display().to_string());
 }
+#[cfg(unix)]
 fn kilo(data: &Path) -> (AgentRow, MetaStore, Value) {
     kilo_with_layout(data, false)
 }
+#[cfg(unix)]
 fn kilo_with_layout(data: &Path, encoded: bool) -> (AgentRow, MetaStore, Value) {
     let command = data.join(if encoded {
         "agent-installations/agent-registry%3Akilo/install-fixture/kilo"
@@ -313,6 +357,7 @@ fn kilo_with_layout(data: &Path, encoded: bool) -> (AgentRow, MetaStore, Value) 
     (row, store, method)
 }
 #[test]
+#[cfg(unix)]
 fn the_kilo_supplement_requires_the_selected_managed_zip_and_exact_bad_declaration() {
     let dir = tempfile::tempdir().unwrap();
     let (row, store, method) = kilo(dir.path());
@@ -346,6 +391,7 @@ fn the_kilo_supplement_requires_the_selected_managed_zip_and_exact_bad_declarati
     assert!(matches!(route(&row, &method, false), Route::Unavailable(_)));
 }
 #[test]
+#[cfg(unix)]
 fn explicit_agent_type_does_not_extend_the_fixed_kilo_supplement() {
     let dir = tempfile::tempdir().unwrap();
     let (row, _, mut method) = kilo(dir.path());
@@ -376,6 +422,7 @@ fn typed_agent_roundtrip_normalizes_explicit_and_default_type() {
     );
 }
 #[test]
+#[cfg(unix)]
 fn missing_external_or_replaced_kilo_receipts_cannot_grant_the_supplement() {
     let dir = tempfile::tempdir().unwrap();
     let (row, store, _) = kilo(dir.path());
@@ -398,6 +445,7 @@ fn missing_external_or_replaced_kilo_receipts_cannot_grant_the_supplement() {
     assert!(!managed_kilo(&row, &store, dir.path()));
 }
 #[test]
+#[cfg(unix)]
 fn a_replaced_agent_parent_cannot_grant_the_kilo_supplement() {
     let dir = tempfile::tempdir().unwrap();
     let (row, store, _) = kilo(dir.path());
@@ -413,7 +461,9 @@ fn a_replaced_agent_parent_cannot_grant_the_kilo_supplement() {
 #[test]
 fn verified_qwen_setup_retains_valid_declared_environment() {
     let dir = tempfile::tempdir().unwrap();
-    let node = dir.path().join("node");
+    let node = dir
+        .path()
+        .join(if cfg!(windows) { "node.exe" } else { "node" });
     executable(&node);
     let package = dir.path().join("node_modules/@qwen-code/qwen-code");
     let entry = package.join("cli-entry.js");
@@ -448,6 +498,7 @@ fn unknown_qwen_style_terminal_signals_are_not_protocol_authentication() {
 }
 
 #[test]
+#[cfg(unix)]
 fn encoded_kilo_root_keeps_the_receipt_scoped_supplement() {
     let dir = tempfile::tempdir().unwrap();
     let (row, store, method) = kilo_with_layout(dir.path(), true);

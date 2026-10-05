@@ -1,0 +1,51 @@
+ Downloading crates ...
+warning: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+  Downloaded zip v4.6.1
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+   Compiling zip v4.6.1
+error[E0433]: cannot find type `CString` in this scope
+   --> src/browser_workspace/local_preview/directory_tests.rs:173:16
+    |
+173 |     let fifo = CString::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
+    |                ^^^^^^^ use of undeclared type `CString`
+    |
+help: a struct with a similar name exists
+    |
+173 -     let fifo = CString::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
+173 +     let fifo = String::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
+    |
+help: consider importing this struct
+    |
+  1 + use std::ffi::CString;
+    |
+
+error[E0609]: no field `target` on type `ReleaseManifestPlatform`
+  --> src/update_feed.rs:95:26
+   |
+95 |         target: platform.target.to_string(),
+   |                          ^^^^^^ unknown field
+   |
+   = note: available fields are: `url`, `signature`
+
+error[E0599]: no method named `as_bytes` found for reference `&std::ffi::OsStr` in the current scope
+   --> src/browser_workspace/local_preview/directory_tests.rs:173:68
+    |
+173 |     let fifo = CString::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
+    |                                                                    ^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OsStrExt` which provides `as_bytes` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use std::os::unix::ffi::OsStrExt;
+    |
+help: there is a method `as_encoded_bytes` with a similar name
+    |
+173 |     let fifo = CString::new(dir.path().join("pipe.js").as_os_str().as_encoded_bytes()).unwrap();
+    |                                                                       ++++++++
+
+For more information about this error, try `rustc --explain E0609`.
+error: could not compile `farfold` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+Some errors have detailed explanations: E0433, E0599, E0609.
+For more information about an error, try `rustc --explain E0433`.
+error: could not compile `farfold` (lib test) due to 3 previous errors

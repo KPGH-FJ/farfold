@@ -17,7 +17,7 @@ it("describes separate data ownership without providing a broad destructive oper
   const html = renderToStaticMarkup(
     <GeneralSettingsDialog page="privacy" onClose={() => {}} />,
   );
-  expect(html).toContain("系统钥匙串");
+  expect(html).toContain("系统安全存储");
   expect(html).toContain("由你选择的 Agent 管理");
   expect(html).toContain("未发内容");
   expect(html).not.toContain("清除全部");

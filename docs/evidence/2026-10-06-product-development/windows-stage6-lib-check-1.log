@@ -1,0 +1,2715 @@
+ Downloading crates ...
+  Downloaded jiff-tzdb-platform v0.1.3
+  Downloaded lazy_static v1.5.0
+  Downloaded jiff-tzdb v0.1.8
+  Downloaded objc2-quartz-core v0.3.2
+  Downloaded softbuffer v0.4.8
+  Downloaded shared_library v0.1.9
+  Downloaded webview2-com-macros v0.8.1
+  Downloaded webview2-com v0.38.2
+  Downloaded winapi-util v0.1.11
+  Downloaded windows-collections v0.2.0
+  Downloaded windows-numerics v0.2.0
+  Downloaded windows-future v0.2.1
+  Downloaded windows-link v0.1.3
+  Downloaded windows-interface v0.59.3
+  Downloaded windows-implement v0.60.2
+  Downloaded windows-core v0.62.2
+  Downloaded windows-result v0.3.4
+  Downloaded windows-core v0.61.2
+  Downloaded windows-strings v0.5.1
+  Downloaded windows-result v0.4.1
+  Downloaded windows-strings v0.4.2
+  Downloaded windows-targets v0.53.5
+  Downloaded windows-threading v0.1.0
+  Downloaded windows-version v0.1.7
+  Downloaded windows-targets v0.52.6
+  Downloaded winreg v0.10.1
+  Downloaded winapi v0.3.9
+  Downloaded windows_x86_64_gnullvm v0.52.6
+  Downloaded windows_x86_64_gnullvm v0.53.1
+  Downloaded windows-sys v0.59.0
+  Downloaded windows-sys v0.60.2
+  Downloaded webview2-com-sys v0.38.2
+  Downloaded windows v0.61.3
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling icu_properties_data v2.3.0
+   Compiling icu_normalizer_data v2.3.0
+    Checking windows-link v0.2.1
+   Compiling phf_shared v0.13.1
+   Compiling fastrand v2.5.0
+   Compiling libc v0.2.189
+   Compiling stable_deref_trait v1.2.1
+   Compiling phf_generator v0.13.1
+   Compiling getrandom v0.4.3
+   Compiling smallvec v1.15.2
+    Checking cfg-if v1.0.4
+   Compiling serde v1.0.229
+    Checking windows-sys v0.61.2
+   Compiling thiserror v2.0.20
+   Compiling parking_lot_core v0.9.12
+   Compiling strsim v0.11.1
+   Compiling typeid v1.0.3
+   Compiling ident_case v1.0.1
+   Compiling thiserror v1.0.69
+    Checking pin-project-lite v0.2.17
+   Compiling anyhow v1.0.104
+   Compiling phf_codegen v0.13.1
+   Compiling shlex v2.0.1
+   Compiling serde_json v1.0.151
+   Compiling autocfg v1.5.1
+   Compiling erased-serde v0.4.10
+   Compiling find-msvc-tools v0.1.11
+    Checking memchr v2.8.3
+   Compiling cc v1.4.4
+   Compiling convert_case v0.10.0
+   Compiling syn v2.0.119
+   Compiling syn v3.0.4
+   Compiling unicode-xid v0.2.6
+   Compiling new_debug_unreachable v1.0.6
+   Compiling scopeguard v1.2.0
+   Compiling lock_api v0.4.14
+   Compiling string_cache_codegen v0.6.1
+   Compiling precomputed-hash v0.1.1
+   Compiling serde_spanned v1.1.1
+   Compiling web_atoms v0.2.6
+   Compiling ctor-proc-macro v0.0.7
+   Compiling synstructure v0.13.2
+   Compiling darling_core v0.23.0
+   Compiling parking_lot v0.12.5
+   Compiling string_cache v0.9.0
+   Compiling semver v1.0.28
+   Compiling percent-encoding v2.3.2
+   Compiling dtoa v1.0.11
+    Checking itoa v1.0.18
+   Compiling form_urlencoded v1.2.2
+   Compiling serde_derive v1.0.229
+   Compiling zerovec-derive v0.11.6
+   Compiling displaydoc v0.2.7
+   Compiling thiserror-impl v2.0.20
+   Compiling zerofrom-derive v0.1.7
+   Compiling yoke-derive v0.8.2
+   Compiling phf_macros v0.13.1
+   Compiling thiserror-impl v1.0.69
+   Compiling derive_more-impl v2.1.1
+   Compiling darling_macro v0.23.0
+   Compiling phf v0.13.1
+   Compiling uuid v1.26.0
+   Compiling darling v0.23.0
+   Compiling cssparser-macros v0.6.1
+   Compiling dtoa-short v0.3.5
+   Compiling zerofrom v0.1.8
+   Compiling tendril v0.5.1
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling indexmap v1.9.3
+   Compiling selectors v0.36.1
+   Compiling camino v1.2.5
+   Compiling serde_with_macros v3.22.0
+   Compiling markup5ever v0.38.0
+   Compiling derive_more v2.1.1
+   Compiling yoke v0.8.3
+   Compiling toml v1.1.4+spec-1.1.0
+   Compiling cssparser v0.36.0
+   Compiling serde_derive_internals v0.29.1
+   Compiling swift-rs v1.0.8
+   Compiling servo_arc v0.4.3
+   Compiling schemars v0.8.22
+   Compiling hashbrown v0.12.3
+   Compiling bit-vec v0.8.0
+   Compiling bitflags v2.13.1
+   Compiling time v0.3.55
+   Compiling bit-set v0.8.0
+   Compiling cfb v0.7.3
+   Compiling jsonptr v0.6.3
+   Compiling cargo-platform v0.1.9
+   Compiling schemars_derive v0.8.22
+   Compiling html5ever v0.38.0
+   Compiling foldhash v0.2.0
+   Compiling base64 v0.21.7
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling plist v1.10.0
+   Compiling cargo_metadata v0.19.2
+   Compiling dom_query v0.27.0
+   Compiling serde-untagged v0.1.9
+   Compiling infer v0.19.0
+   Compiling serde_with v3.22.0
+   Compiling ctor v0.8.0
+    Checking once_cell v1.21.4
+    Checking bytes v1.12.1
+    Checking hashbrown v0.17.1
+    Checking futures-core v0.3.34
+    Checking equivalent v1.0.2
+   Compiling version_check v0.9.5
+    Checking indexmap v2.14.0
+    Checking litemap v0.8.3
+    Checking windows-link v0.1.3
+    Checking writeable v0.6.4
+   Compiling crossbeam-utils v0.8.22
+    Checking utf8_iter v1.0.4
+    Checking tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+    Checking windows-result v0.3.4
+    Checking windows-strings v0.4.2
+    Checking http v1.5.0
+   Compiling windows-implement v0.60.2
+   Compiling windows-interface v0.59.3
+    Checking icu_provider v2.3.1
+   Compiling json-patch v3.0.1
+   Compiling rustc_version v0.4.1
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling winnow v0.7.15
+   Compiling crc32fast v1.5.1
+   Compiling icu_normalizer v2.3.0
+   Compiling icu_properties v2.3.0
+    Checking windows-core v0.61.2
+   Compiling embed-resource v3.0.11
+   Compiling dirs-sys v0.5.0
+    Checking futures-io v0.3.34
+   Compiling idna_adapter v1.2.2
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling idna v1.1.0
+   Compiling dirs v6.0.0
+   Compiling tauri-winres v0.3.6
+   Compiling url v2.5.8
+   Compiling tokio-macros v2.7.2
+   Compiling cargo_toml v0.22.3
+    Checking mio v1.2.2
+    Checking socket2 v0.6.5
+   Compiling urlpattern v0.3.0
+   Compiling ref-cast v1.0.27
+    Checking tokio v1.53.1
+    Checking windows-threading v0.1.0
+   Compiling generic-array v0.14.7
+    Checking tracing-core v0.1.36
+   Compiling tracing-attributes v0.1.31
+   Compiling ref-cast-impl v1.0.27
+   Compiling serde_derive_internals v0.30.0
+    Checking log v0.4.34
+   Compiling time-macros v0.2.32
+    Checking time-core v0.1.9
+    Checking raw-window-handle v0.6.2
+   Compiling schemars_derive v1.2.2
+    Checking tracing v0.1.44
+    Checking num-conv v0.2.2
+    Checking futures-sink v0.3.34
+   Compiling tauri-utils v2.9.3
+    Checking base64 v0.22.1
+    Checking deranged v0.5.8
+   Compiling typenum v1.20.1
+    Checking powerfmt v0.2.0
+    Checking dyn-clone v1.0.20
+   Compiling webview2-com-sys v0.38.2
+    Checking aho-corasick v1.1.5
+    Checking windows-future v0.2.1
+    Checking windows-numerics v0.2.0
+    Checking windows-collections v0.2.0
+    Checking unic-common v0.9.0
+    Checking windows v0.61.3
+    Checking regex-syntax v0.8.11
+    Checking alloc-no-stdlib v2.0.4
+    Checking unic-char-range v0.9.0
+    Checking slab v0.4.12
+    Checking alloc-stdlib v0.2.4
+    Checking unic-ucd-version v0.9.0
+    Checking unic-char-property v0.9.0
+    Checking futures-channel v0.3.34
+   Compiling cookie v0.18.2
+    Checking dpi v0.1.2
+    Checking schemars v1.2.2
+    Checking winapi-util v0.1.11
+    Checking regex-automata v0.4.18
+    Checking byteorder v1.5.0
+    Checking dunce v1.0.5
+    Checking winnow v1.0.4
+    Checking fnv v1.0.7
+   Compiling windows_x86_64_gnullvm v0.52.6
+    Checking siphasher v1.0.3
+    Checking toml_parser v1.1.3+spec-1.1.0
+    Checking same-file v1.0.6
+   Compiling flate2 v1.1.9
+    Checking regex v1.13.1
+    Checking unic-ucd-ident v0.9.0
+    Checking brotli-decompressor v5.0.3
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+   Compiling webview2-com-macros v0.8.1
+   Compiling tauri-build v2.6.3
+   Compiling tauri-plugin v2.6.3
+   Compiling futures-macro v0.3.34
+   Compiling ring v0.17.14
+    Checking quick-xml v0.41.0
+    Checking windows-version v0.1.7
+    Checking toml_writer v1.1.2+spec-1.1.0
+   Compiling bitflags v1.3.2
+    Checking futures-task v0.3.34
+    Checking unicode-segmentation v1.13.3
+   Compiling png v0.17.16
+    Checking futures-util v0.3.34
+    Checking brotli v8.0.4
+   Compiling digest v0.10.7
+    Checking walkdir v2.5.0
+    Checking crossbeam-channel v0.5.16
+   Compiling cpufeatures v0.2.17
+    Checking atomic-waker v1.1.2
+   Compiling wry v0.55.1
+    Checking glob v0.3.4
+   Compiling tauri-runtime v2.11.3
+    Checking parking v2.2.1
+   Compiling sha2 v0.10.9
+    Checking windows-targets v0.52.6
+   Compiling ico v0.5.0
+    Checking getrandom v0.2.17
+    Checking option-ext v0.2.0
+    Checking untrusted v0.9.0
+    Checking zeroize v1.9.0
+   Compiling getrandom v0.3.4
+   Compiling windows_x86_64_gnullvm v0.53.1
+   Compiling tauri-runtime-wry v2.11.4
+    Checking rustls-pki-types v1.15.1
+   Compiling tauri-codegen v2.6.3
+    Checking windows-sys v0.59.0
+    Checking keyboard-types v0.7.0
+    Checking softbuffer v0.4.8
+    Checking http-body v1.1.0
+   Compiling serialize-to-javascript-impl v0.1.2
+   Compiling rustls v0.23.43
+   Compiling httparse v1.10.1
+    Checking rustls-webpki v0.103.15
+    Checking window-vibrancy v0.6.0
+    Checking muda v0.19.3
+    Checking serialize-to-javascript v0.1.2
+    Checking concurrent-queue v2.5.0
+   Compiling serde_repr v0.1.21
+    Checking tower-service v0.3.3
+    Checking heck v0.5.0
+    Checking mime v0.3.17
+    Checking try-lock v0.2.5
+    Checking subtle v2.6.1
+    Checking want v0.3.1
+    Checking windows-targets v0.53.5
+    Checking futures-lite v2.6.1
+    Checking event-listener v5.4.2
+   Compiling winapi v0.3.9
+   Compiling rustix v1.1.4
+    Checking event-listener-strategy v0.5.4
+    Checking hyper v1.11.0
+    Checking windows-sys v0.60.2
+    Checking sync_wrapper v1.0.2
+    Checking errno v0.3.14
+    Checking hybrid-array v0.4.14
+   Compiling async-io v2.6.0
+   Compiling vcpkg v0.2.15
+    Checking adler2 v2.0.1
+    Checking ipnet v2.12.1
+    Checking simd-adler32 v0.3.10
+    Checking tower-layer v0.3.3
+   Compiling pkg-config v0.3.34
+   Compiling cfg_aliases v0.1.1
+    Checking hyper-util v0.1.20
+    Checking tower v0.5.3
+   Compiling nix v0.28.0
+    Checking miniz_oxide v0.8.9
+    Checking tokio-rustls v0.26.5
+   Compiling libsqlite3-sys v0.38.2
+    Checking async-channel v2.5.0
+    Checking polling v3.11.0
+    Checking piper v0.2.5
+   Compiling strum_macros v0.28.0
+   Compiling pin-project-internal v1.1.13
+   Compiling rfd v0.16.0
+    Checking async-task v4.7.1
+   Compiling winreg v0.10.1
+    Checking ryu v1.0.23
+    Checking blocking v1.7.0
+    Checking serde_urlencoded v0.7.1
+    Checking hyper-rustls v0.27.9
+    Checking rustls-platform-verifier v0.7.0
+   Compiling tauri v2.11.5
+   Compiling tauri-macros v2.6.3
+   Compiling tauri-plugin-fs v2.5.1
+   Compiling tauri-plugin-opener v2.5.4
+   Compiling tauri-plugin-updater v2.10.1
+   Compiling tauri-plugin-dialog v2.7.2
+    Checking pin-project v1.1.13
+    Checking tower-http v0.6.11
+    Checking block-buffer v0.12.1
+    Checking crypto-common v0.2.2
+    Checking http-body-util v0.1.5
+    Checking futures-executor v0.3.34
+    Checking tokio-util v0.7.19
+    Checking lazy_static v1.5.0
+    Checking strum v0.28.0
+    Checking fixedbitset v0.5.7
+    Checking shell-words v1.1.1
+    Checking shared_library v0.1.9
+    Checking reqwest v0.13.4
+    Checking digest v0.11.3
+    Checking futures-concurrency v7.7.1
+    Checking futures v0.3.34
+    Checking zip v4.6.1
+    Checking filedescriptor v0.8.3
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Checking agent-client-protocol-schema v1.9.1
+    Checking async-process v2.5.0
+    Checking tempfile v3.27.0
+    Checking open v5.4.2
+   Compiling agent-client-protocol-derive v2.2.0
+    Checking serial2 v0.2.38
+    Checking filetime v0.2.29
+    Checking rustc-hash v2.1.3
+    Checking minisign-verify v0.2.5
+    Checking cpufeatures v0.3.1
+    Checking fallible-iterator v0.3.0
+    Checking fallible-streaming-iterator v0.1.9
+    Checking downcast-rs v1.2.1
+    Checking sha2 v0.11.0
+    Checking portable-pty v0.9.0
+    Checking tar v0.4.46
+    Checking rusqlite v0.40.2
+    Checking agent-client-protocol v2.2.0
+    Checking tao v0.35.3
+    Checking webview2-com v0.38.2
+    Checking tauri-plugin-single-instance v2.4.4
+error[E0433]: cannot find `unix` in `os`
+ --> src/acp_client/preparation_actions.rs:3:30
+  |
+3 | use std::{io::Read as _, os::unix::fs::OpenOptionsExt as _, path::Path, sync::atomic::Ordering};
+  |                              ^^^^ could not find `unix` in `os`
+  |
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+  |
+  = note: the item is gated here
+note: found an item that was configured out
+ --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+  |
+  = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/acp_client/startup_diagnostics.rs:215:30
+    |
+215 |                 use std::os::unix::process::ExitStatusExt;
+    |                              ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0433]: cannot find `unix` in `os`
+   --> src/uv_runtime.rs:436:18
+    |
+436 |     use std::os::unix::fs::PermissionsExt;
+    |                  ^^^^ could not find `unix` in `os`
+    |
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:29:4
+    |
+    = note: the item is gated here
+note: found an item that was configured out
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\std\src\os\mod.rs:84:40
+    |
+    = note: the item is gated here
+
+error[E0432]: unresolved import `crate::browser_workspace::local_preview::Resource`
+  --> src/browser_workspace/windows/preview.rs:2:5
+   |
+ 2 | use crate::browser_workspace::local_preview::Resource;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `Resource` in `browser_workspace::local_preview`
+   |
+note: struct `crate::browser_workspace::local_preview::directory::Resource` exists but is inaccessible
+  --> src/browser_workspace/local_preview/directory.rs:25:1
+   |
+25 | pub(crate) struct Resource {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0425]: cannot find value `O_NOFOLLOW` in crate `libc`
+   --> src/acp_client/preparation_actions.rs:123:29
+    |
+123 |         .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+    |                             ^^^^^^^^^^ not found in `libc`
+
+error[E0425]: cannot find value `O_NONBLOCK` in crate `libc`
+   --> src/acp_client/preparation_actions.rs:123:48
+    |
+123 |         .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+    |                                                ^^^^^^^^^^ not found in `libc`
+
+warning: unused import: `std::process::Command`
+ --> src/process_platform.rs:3:5
+  |
+3 | use std::process::Command;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `PendingGroup`
+  --> src/process_platform.rs:10:53
+   |
+10 | pub(crate) use crate::windows_process::{OwnedGroup, PendingGroup};
+   |                                                     ^^^^^^^^^^^^
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/mod.rs:28:30
+   |
+28 | type Reply = oneshot::Sender<Result<String, String>>;
+   |                              ^^^^^^       -------- help: remove the unnecessary generic argument
+   |                              |
+   |                              expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/observation.rs:12:6
+   |
+12 | ) -> Result<(), String> {
+   |      ^^^^^^   -------- help: remove the unnecessary generic argument
+   |      |
+   |      expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:197:33
+    |
+197 |     receiver: oneshot::Receiver<Result<T, String>>,
+    |                                 ^^^^^^  -------- help: remove the unnecessary generic argument
+    |                                 |
+    |                                 expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/events.rs:10:43
+   |
+10 | pub(super) fn install(view: &Rc<View>) -> Result<(), String> {
+   |                                           ^^^^^^   -------- help: remove the unnecessary generic argument
+   |                                           |
+   |                                           expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/observation.rs:11:23
+   |
+11 |     done: impl FnOnce(Result<Value, String>) + 'static,
+   |                       ^^^^^^      -------- help: remove the unnecessary generic argument
+   |                       |
+   |                       expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/observation.rs:98:19
+   |
+98 | fn random_id() -> Result<String, String> {
+   |                   ^^^^^^       -------- help: remove the unnecessary generic argument
+   |                   |
+   |                   expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/observation.rs:103:36
+    |
+103 | fn finish(view: &Rc<View>, result: Result<String, String>) {
+    |                                    ^^^^^^       -------- help: remove the unnecessary generic argument
+    |                                    |
+    |                                    expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/observation.rs:115:6
+    |
+115 | ) -> Result<String, String> {
+    |      ^^^^^^       -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/preview.rs:66:43
+   |
+66 | pub(super) fn install(view: &Rc<View>) -> Result<(), String> {
+   |                                           ^^^^^^   -------- help: remove the unnecessary generic argument
+   |                                           |
+   |                                           expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:173:47
+    |
+173 |     reply: &Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>,
+    |                                               ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                               |
+    |                                               expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:174:13
+    |
+174 |     result: Result<(), String>,
+    |             ^^^^^^   -------- help: remove the unnecessary generic argument
+    |             |
+    |             expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:182:6
+    |
+182 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:182:23
+    |
+182 | fn lookup(id: u64) -> Result<Rc<View>, String> {
+    |                       ^^^^^^         -------- help: remove the unnecessary generic argument
+    |                       |
+    |                       expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:189:47
+    |
+189 |     reply: &Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>,
+    |                                               ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                               |
+    |                                               expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:190:13
+    |
+190 |     result: Result<(), String>,
+    |             ^^^^^^   -------- help: remove the unnecessary generic argument
+    |             |
+    |             expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:199:6
+    |
+199 | ) -> Result<T, String> {
+    |      ^^^^^^  -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:207:30
+    |
+207 |     action: impl FnOnce() -> Result<T, String> + Send + 'static,
+    |                              ^^^^^^  -------- help: remove the unnecessary generic argument
+    |                              |
+    |                              expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:208:6
+    |
+208 | ) -> Result<T, String> {
+    |      ^^^^^^  -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:224:6
+    |
+224 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:234:6
+    |
+234 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:244:6
+    |
+244 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:260:6
+    |
+260 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:263:52
+    |
+263 | fn profile_path(app: &AppHandle, storage: &str) -> Result<PathBuf, String> {
+    |                                                    ^^^^^^        -------- help: remove the unnecessary generic argument
+    |                                                    |
+    |                                                    expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:280:6
+    |
+280 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:459:6
+    |
+459 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:468:6
+    |
+468 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:483:6
+    |
+483 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:486:73
+    |
+486 | pub(super) async fn resize(app: &AppHandle, id: u64, bounds: Bounds) -> Result<(), String> {
+    |                                                                         ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                                                         |
+    |                                                                         expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:495:6
+    |
+495 | ) -> Result<(), String> {
+    |      ^^^^^^   -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:512:56
+    |
+512 | pub(super) async fn close(app: &AppHandle, id: u64) -> Result<(), String> {
+    |                                                        ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                                        |
+    |                                                        expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:541:73
+    |
+541 | pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<String, String> {
+    |                                                                         ^^^^^^       -------- help: remove the unnecessary generic argument
+    |                                                                         |
+    |                                                                         expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:548:6
+    |
+548 | ) -> Result<String, String> {
+    |      ^^^^^^       -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:557:6
+    |
+557 | ) -> Result<String, String> {
+    |      ^^^^^^       -------- help: remove the unnecessary generic argument
+    |      |
+    |      expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+  --> src/browser_workspace/windows/mod.rs:97:25
+   |
+97 |     fn source(&self) -> Result<String, String> {
+   |                         ^^^^^^       -------- help: remove the unnecessary generic argument
+   |                         |
+   |                         expected 1 generic argument
+   |
+note: type alias defined here, with 1 generic parameter: `T`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+   |
+50 | pub type Result<T> = std::result::Result<T, Error>;
+   |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:124:55
+    |
+124 |     fn navigate(&self, navigation: u64, url: &str) -> Result<(), String> {
+    |                                                       ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                                       |
+    |                                                       expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:136:41
+    |
+136 |     fn resize(&self, bounds: Bounds) -> Result<(), String> {
+    |                                         ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                         |
+    |                                         expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/browser_tools.rs:142:74
+    |
+142 |                 let raw = native::observe(app, self.clone(), false).await?;
+    |                           -----------------------------------------------^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    |                           |
+    |                           this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/browser_tools.rs:171:23
+    |
+164 |                   let raw = native::act(
+    |  ___________________________-
+165 | |                     app,
+166 | |                     self.clone(),
+167 | |                     id.to_owned(),
+...   |
+171 | |                 .await?;
+    | |                      -^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    | |______________________|
+    |                        this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/observation.rs:124:45
+    |
+124 |                 return Err("网页操作目标无效，请重新观察".into());
+    |                                                           ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/observation.rs:135:45
+    |
+135 |                 return Err("输入内容过长或含不支持的字符".into());
+    |                                                           ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/windows/observation.rs:144:86
+    |
+144 |             let expected=expected.ok_or("请先确认要分享的页面")?.to_owned();let view=lookup(id)?;let navigation=scope.navigation();
+    |                                                                                      ----------^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    |                                                                                      |
+    |                                                                                      this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/windows/observation.rs:146:64
+    |
+146 |             if view.navigation.get()!=navigation||view.source()?!=expected{return Err("网页已变化，请重新确认要分享的页面".into());}
+    |                                                        --------^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    |                                                        |
+    |                                                        this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/windows/observation.rs:149:70
+    |
+149 |             view.observation.borrow_mut().take();let seed=random_id()?;let epoch=random_id()?;
+    |                                                           -----------^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    |                                                           |
+    |                                                           this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/windows/observation.rs:149:93
+    |
+149 |             view.observation.borrow_mut().take();let seed=random_id()?;let epoch=random_id()?;
+    |                                                                                  -----------^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    |                                                                                  |
+    |                                                                                  this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/observation.rs:159:197
+    |
+159 | ... 变化，请重新确认分享范围".into())});return;}
+    |                               ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/observation.rs:160:119
+    |
+160 | ...rn Err("网页操作结果未确认".into());}result.get("result").and_then(|r|r.get("value")).cloned().filter(Value::is_object).ok_or("...
+    |                                ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/observation.rs:160:228
+    |
+160 | ...t).ok_or("网页返回内容无效".into())});
+    |                                ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0308]: mismatched types
+   --> src/browser_workspace/windows/observation.rs:163:102
+    |
+163 |             });if result.is_err(){view.pending.borrow_mut().take();view.action_navigation.set(None);}result
+    |                                                                                                      ^^^^^^ expected `Result<_, String>`, found `Result<(), Error>`
+    |
+    = note: expected enum `std::result::Result<_, std::string::String>`
+               found enum `std::result::Result<(), webview2_com::Error>`
+note: return type inferred to be `std::result::Result<_, std::string::String>` here
+   --> src/browser_workspace/windows/observation.rs:143:42
+    |
+143 |             if sender.is_closed(){return Err("网页操作已取消".into());}
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> src/browser_workspace/windows/observation.rs:142:9
+    |
+142 | /         scope.observe(|id,expected|{
+143 | |             if sender.is_closed(){return Err("网页操作已取消".into());}
+144 | |             let expected=expected.ok_or("请先确认要分享的页面")?.to_owned();let view=lookup(id)?;let navigation=scope.navigation();
+145 | |             if view.loading.get()||view.pending.borrow().is_some(){return Err("网页正在变化或操作中，请稍后再试".into());}
+...   |
+163 | |             });if result.is_err(){view.pending.borrow_mut().take();view.action_navigation.set(None);}result
+164 | |         })
+    | |__________^ expected `Result<_, Error>`, found `Result<_, String>`
+    |
+    = note: expected enum `std::result::Result<_, webview2_com::Error>`
+               found enum `std::result::Result<_, std::string::String>`
+help: consider using `Result::expect` to unwrap the `std::result::Result<_, std::string::String>` value, panicking if the value is a `Result::Err`
+    |
+164 |         }).expect("REASON")
+    |           +++++++++++++++++
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/observation.rs:168:40
+    |
+166 | /     receiver
+167 | |         .await
+    | |______________- this has type `Result<_, tokio::sync::oneshot::error::RecvError>`
+168 |           .map_err(|_| "网页操作结果未确认，请查看页面")?
+    |            ---------------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |            |
+    |            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:184:66
+    |
+184 |     let parent = app.get_webview_window("main").ok_or("找不到应用主页面")?;
+    |                                                 -------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                 |
+    |                                                 this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/preview.rs:199:63
+    |
+199 |                 finish_create(&reply, Err("网页仍在使用此进度，请先关闭后重试".into()));
+    |                                                                                ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:202:33
+    |
+202 |             let result = (|| -> Result<(), String> {
+    |                                 ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                 |
+    |                                 expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:205:44
+    |
+204 |                 unsafe { platform.controller().ParentWindow(&mut hwnd) }
+    |                 -------------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+205 |                     .map_err(|_| "找不到应用窗口")?;
+    |                      -----------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                      |
+    |                      this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:212:45
+    |
+212 |                         let result = (|| -> Result<(), String> {
+    |                                             ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                             |
+    |                                             expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:213:60
+    |
+213 | ...                   result.map_err(|_| "无法访问此网页进度")?;
+    |                       ------ ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                       |      |
+    |                       |      this can't be annotated with `?` because it has type `Result<_, &str>`
+    |                       this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:214:77
+    |
+214 | ...                   let environment = environment.ok_or("无法访问此网页进度")?;
+    |                                                     ---------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                     |
+    |                                                     this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:217:57
+    |
+216 | ...                   .cast::<ICoreWebView2Environment10>()
+    |                        ------------------------------------ this has type `Result<_, windows_result::error::Error>`
+217 | ...                   .map_err(|_| "网页组件版本过旧")?;
+    |                        -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                        |
+    |                        this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:219:58
+    |
+218 | ...                   let options = unsafe { env.CreateCoreWebView2ControllerOptions() }
+    |                                     ---------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+219 | ...                       .map_err(|_| "无法访问此网页进度")?;
+    |                            ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:221:58
+    |
+220 | ...                   unsafe { options.SetProfileName(windows::core::w!("Farfold")) }
+    |                       --------------------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+221 | ...                       .map_err(|_| "无法访问此网页进度")?;
+    |                            ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:223:58
+    |
+222 | ...                   unsafe { options.SetIsInPrivateModeEnabled(false) }
+    |                       --------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+223 | ...                       .map_err(|_| "无法访问此网页进度")?;
+    |                            ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/preview.rs:228:57
+    |
+228 | ...                   let result = (|| -> Result<(), String> {
+    |                                           ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                           |
+    |                                           expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:229:72
+    |
+229 | ...                   result.map_err(|_| "无法访问此网页进度")?;
+    |                       ------ ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                       |      |
+    |                       |      this can't be annotated with `?` because it has type `Result<_, &str>`
+    |                       this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:230:87
+    |
+230 | ...                   let controller = controller.ok_or("无法访问此网页进度")?;
+    |                                                   ---------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                   |
+    |                                                   this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:232:70
+    |
+231 | ...                   let core = unsafe { controller.CoreWebView2() }
+    |                                  ------------------------------------ this has type `Result<_, windows_result::error::Error>`
+232 | ...                       .map_err(|_| "无法访问此网页进度")?;
+    |                            ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:234:70
+    |
+233 | ...                   unsafe { controller.SetIsVisible(false) }
+    |                       ----------------------------------------- this has type `Result<_, windows_result::error::Error>`
+234 | ...                       .map_err(|_| "无法访问此网页进度")?;
+    |                            ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:237:73
+    |
+236 | ...                   core.cast::<ICoreWebView2_13>()
+    |                            -------------------------- this has type `Result<_, windows_result::error::Error>`
+237 | ...                       .map_err(|_| "网页组件版本过旧")?
+    |                            -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:240:66
+    |
+235 |   ...                   let profile = unsafe {
+    |  _____________________________________-
+236 | | ...                       core.cast::<ICoreWebView2_13>()
+237 | | ...                           .map_err(|_| "网页组件版本过旧")?
+238 | | ...                           .Profile()
+239 | | ...                   }
+    | |_______________________- this has type `Result<_, windows_result::error::Error>`
+240 |   ...                   .map_err(|_| "无法访问此网页进度")?
+    |                          ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:242:65
+    |
+241 | ...                   .cast::<ICoreWebView2Profile2>()
+    |                        ------------------------------- this has type `Result<_, windows_result::error::Error>`
+242 | ...                   .map_err(|_| "网页组件版本过旧")?;
+    |                        -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                        |
+    |                        this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/preview.rs:254:78
+    |
+254 | ...                   Err("网页进度清除尚未确认，请重试".into())
+    |                                                          ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:261:71
+    |
+260 | ...                   unsafe { profile.ClearBrowsingDataAll(&callback) }
+    |                       -------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+261 | ...                       .map_err(|_| "网页进度清除尚未确认")?;
+    |                            -----------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:275:54
+    |
+270 | / ...                   unsafe {
+271 | | ...                       env.CreateCoreWebView2ControllerWithOptions(
+272 | | ...                           hwnd, &options, &callback,
+273 | | ...                       )
+274 | | ...                   }
+    | |_______________________- this has type `Result<_, windows_result::error::Error>`
+275 |   ...                   .map_err(|_| "无法访问此网页进度")?;
+    |                          ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:292:42
+    |
+284 | /                 unsafe {
+285 | |                     CreateCoreWebView2EnvironmentWithOptions(
+286 | |                         PCWSTR::null(),
+287 | |                         &HSTRING::from(path.as_os_str()),
+...   |
+291 | |                 }
+    | |_________________- this has type `Result<_, windows_result::error::Error>`
+292 |                   .map_err(|_| "无法访问此网页进度")?;
+    |                    ---------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                    |
+    |                    this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/preview.rs:299:33
+    |
+187 |           .with_webview(move |platform| {
+    |  __________-
+188 | |             let reply = Rc::new(RefCell::new(Some(sender)));
+189 | |             let id = storage.identifier;
+190 | |             if SHUTDOWN.get()
+...   |
+298 | |         })
+    | |__________- this has type `Result<_, tauri::Error>`
+299 |           .map_err(|_| "无法操作网页视图")?;
+    |            -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |            |
+    |            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:202:38
+    |
+200 | /     tokio::time::timeout(wait, receiver)
+201 | |         .await
+    | |______________- this has type `Result<_, Elapsed>`
+202 |           .map_err(|_| "网页操作未确认，请重试关闭")?
+    |            -----------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |            |
+    |            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:203:32
+    |
+200 | /     tokio::time::timeout(wait, receiver)
+201 | |         .await
+202 | |         .map_err(|_| "网页操作未确认，请重试关闭")?
+    | |___________________________________________________- this has type `Result<_, tokio::sync::oneshot::error::RecvError>`
+203 |           .map_err(|_| "网页操作已取消")?
+    |            -----------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |            |
+    |            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:215:29
+    |
+210 |       app.run_on_main_thread(move || {
+    |  _________-
+211 | |         if !sender.is_closed() {
+212 | |             let _ = sender.send(action());
+213 | |         }
+214 | |     })
+    | |______- this has type `Result<_, tauri::Error>`
+215 |       .map_err(|_| "无法操作网页视图")?;
+    |        -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |        |
+    |        this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:281:66
+    |
+281 |     let parent = app.get_webview_window("main").ok_or("找不到应用主页面")?;
+    |                                                 -------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                 |
+    |                                                 this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:287:33
+    |
+287 |             let result = (|| -> Result<(), String> {
+    |                                 ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                 |
+    |                                 expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:289:42
+    |
+289 |                     return Err("网页打开已取消".into());
+    |                                                 ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:295:50
+    |
+295 |                     return Err("网页进度正在清除，请稍后再打开".into());
+    |                                                                 ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:299:44
+    |
+298 |                 unsafe { platform.controller().ParentWindow(&mut hwnd) }
+    |                 -------------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+299 |                     .map_err(|_| "找不到应用窗口")?;
+    |                      -----------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                      |
+    |                      this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:302:75
+    |
+302 |                     std::fs::create_dir_all(&path).map_err(|_| "无法准备网页存储")?;
+    |                     ------------------------------ -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                     |                              |
+    |                     |                              this can't be annotated with `?` because it has type `Result<_, &str>`
+    |                     this has type `Result<_, std::io::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:308:49
+    |
+307 |                         .tempdir()
+    |                          --------- this has type `Result<_, std::io::Error>`
+308 |                         .map_err(|_| "无法准备临时网页")?;
+    |                          -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:326:45
+    |
+326 |                         let result = (|| -> Result<(), String> {
+    |                                             ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                             |
+    |                                             expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:328:85
+    |
+327 | ...                   result
+    |                       ------ this has type `Result<_, windows_result::error::Error>`
+328 | ...                       .map_err(|_| "网页组件未能启动，请检查 Microsoft Edge WebView2")?;
+    |                            ---------------------------------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:335:54
+    |
+335 | ...                   return Err("网页打开已取消".into());
+    |                                                   ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:337:76
+    |
+337 | ...                   let environment = environment.ok_or("网页组件未能启动")?;
+    |                                                     -------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                     |
+    |                                                     this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:340:85
+    |
+339 | ...                   .cast::<ICoreWebView2Environment10>()
+    |                        ------------------------------------ this has type `Result<_, windows_result::error::Error>`
+340 | ...                   .map_err(|_| "网页组件版本过旧，请更新 Microsoft Edge WebView2")?;
+    |                        ---------------------------------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                        |
+    |                        this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:343:61
+    |
+342 | ...                   unsafe { environment10.CreateCoreWebView2ControllerOptions() }
+    |                       -------------------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+343 | ...                       .map_err(|_| "无法准备网页视图")?;
+    |                            -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:347:53
+    |
+344 | / ...                   unsafe {
+345 | | ...                       controller_options.SetProfileName(windows::core::w!("Farfold"))
+346 | | ...                   }
+    | |_______________________- this has type `Result<_, windows_result::error::Error>`
+347 |   ...                   .map_err(|_| "无法准备网页存储")?;
+    |                          -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:351:53
+    |
+348 | / ...                   unsafe {
+349 | | ...                       controller_options.SetIsInPrivateModeEnabled(!content.local())
+350 | | ...                   }
+    | |_______________________- this has type `Result<_, windows_result::error::Error>`
+351 |   ...                   .map_err(|_| "无法准备临时网页")?;
+    |                          -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0107]: type alias takes 1 generic argument but 2 generic arguments were supplied
+   --> src/browser_workspace/windows/mod.rs:356:57
+    |
+356 | ...                   let result = (|| -> Result<(), String> {
+    |                                           ^^^^^^   -------- help: remove the unnecessary generic argument
+    |                                           |
+    |                                           expected 1 generic argument
+    |
+note: type alias defined here, with 1 generic parameter: `T`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:50:10
+    |
+ 50 | pub type Result<T> = std::result::Result<T, Error>;
+    |          ^^^^^^ -
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:357:71
+    |
+357 | ...                   result.map_err(|_| "网页视图未能创建")?;
+    |                       ------ -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                       |      |
+    |                       |      this can't be annotated with `?` because it has type `Result<_, &str>`
+    |                       this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:358:86
+    |
+358 | ...                   let controller = controller.ok_or("网页视图未能创建")?;
+    |                                                   -------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                                   |
+    |                                                   this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:368:66
+    |
+368 | ...                   return Err("网页打开已取消".into());
+    |                                                   ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:371:69
+    |
+370 | ...                   let core = unsafe { controller.CoreWebView2() }
+    |                                  ------------------------------------ this has type `Result<_, windows_result::error::Error>`
+371 | ...                       .map_err(|_| "无法准备网页视图")?;
+    |                            -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                            |
+    |                            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:426:53
+    |
+419 | / ...                   unsafe {
+420 | | ...                       environment10.CreateCoreWebView2ControllerWithOptions(
+421 | | ...                           hwnd,
+422 | | ...                           &controller_options,
+...   |
+425 | | ...                   }
+    | |_______________________- this has type `Result<_, windows_result::error::Error>`
+426 |   ...                   .map_err(|_| "网页视图未能创建")?;
+    |                          -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                          |
+    |                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:443:68
+    |
+435 | /                 unsafe {
+436 | |                     CreateCoreWebView2EnvironmentWithOptions(
+437 | |                         PCWSTR::null(),
+438 | |                         &HSTRING::from(path.as_os_str()),
+...   |
+442 | |                 }
+    | |_________________- this has type `Result<_, windows_result::error::Error>`
+443 |                   .map_err(|_| "网页组件不可用，请安装 Microsoft Edge WebView2")?;
+    |                    -------------------------------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                    |
+    |                    this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:450:33
+    |
+285 |           .with_webview(move |platform| {
+    |  __________-
+286 | |             let reply = Rc::new(RefCell::new(Some(sender)));
+287 | |             let result = (|| -> Result<(), String> {
+288 | |                 if SHUTDOWN.get() || !state.can_operate(id, Some(1)) {
+...   |
+449 | |         })
+    | |__________- this has type `Result<_, tauri::Error>`
+450 |           .map_err(|_| "无法操作网页视图")?;
+    |            -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |            |
+    |            this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:471:34
+    |
+471 |             return Err("网页打开已取消".into());
+    |                                         ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:498:32
+    |
+498 |             return Err("网页已关闭".into());
+    |                                     ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:501:77
+    |
+501 |         unsafe { view.controller.SetIsVisible(false) }.map_err(|_| "无法隐藏网页")?;
+    |         ---------------------------------------------- ---------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |         |                                              |
+    |         |                                              this can't be annotated with `?` because it has type `Result<_, &str>`
+    |         this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:504:59
+    |
+504 |             view.resize(bounds.ok_or("网页显示区域未确认，请重新打开内容栏")?)?;
+    |                                ---------------------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |                                |
+    |                                this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:505:80
+    |
+505 |             unsafe { view.controller.SetIsVisible(true) }.map_err(|_| "无法显示网页")?;
+    |             --------------------------------------------- ---------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |             |                                             |
+    |             |                                             this can't be annotated with `?` because it has type `Result<_, &str>`
+    |             this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:517:43
+    |
+517 |                 return Err("网页关闭尚未确认，请重试".into());
+    |                                                       ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `std::string::String`
+   --> src/browser_workspace/page_read.rs:222:48
+    |
+220 |           let raw = tokio::time::timeout(Duration::from_secs(8), native::read(app, self.clone()))
+    |  ___________________-
+221 | |             .await
+222 | |             .map_err(|_| "网页读取未完成，请关闭网页后重新打开")??;
+    | |                                                                 -^ the trait `From<webview2_com::Error>` is not implemented for `std::string::String`
+    | |_________________________________________________________________|
+    |                                                                   this can't be annotated with `?` because it has type `Result<_, webview2_com::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: `std::string::String` implements trait `From<T>`:
+              From<&mut str>
+              From<&std::string::String>
+              From<&str>
+              From<AssetKey>
+              From<Box<str>>
+              From<Cow<'_, str>>
+              From<char>
+              From<tauri::Url>
+              From<uuid::Uuid>
+
+error[E0308]: mismatched types
+   --> src/browser_workspace.rs:696:20
+    |
+696 |         return Err(error);
+    |                --- ^^^^^ expected `String`, found `Error`
+    |                |
+    |                arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `webview2_com::Error` due to the type of the argument passed
+   --> src/browser_workspace.rs:696:16
+    |
+696 |         return Err(error);
+    |                ^^^^-----^
+    |                    |
+    |                    this argument influences the type of `Err`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\core\src\result.rs:566:4
+help: try using a conversion method
+    |
+696 |         return Err(error.to_string());
+    |                         ++++++++++++
+
+error[E0308]: mismatched types
+   --> src/browser_workspace.rs:717:5
+    |
+717 |     native::resize(&app, id, bounds).await
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), String>`, found `Result<(), Error>`
+    |
+    = note: expected enum `std::result::Result<_, std::string::String>`
+               found enum `std::result::Result<_, webview2_com::Error>`
+
+error[E0308]: mismatched types
+   --> src/browser_workspace.rs:743:5
+    |
+743 |     native::set_visible(&app, state.inner().clone(), id, visible, bounds).await
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), String>`, found `Result<(), Error>`
+    |
+    = note: expected enum `std::result::Result<_, std::string::String>`
+               found enum `std::result::Result<_, webview2_com::Error>`
+
+error[E0308]: mismatched types
+   --> src/browser_workspace.rs:788:5
+    |
+788 |     native::clear_html_storage(&app, storage).await
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Result<(), String>`, found `Result<(), Error>`
+    |
+    = note: expected enum `std::result::Result<_, std::string::String>`
+               found enum `std::result::Result<_, webview2_com::Error>`
+
+error[E0308]: mismatched types
+   --> src/browser_workspace.rs:811:24
+    |
+811 |             return Err(error);
+    |                    --- ^^^^^ expected `String`, found `Error`
+    |                    |
+    |                    arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `webview2_com::Error` due to the type of the argument passed
+   --> src/browser_workspace.rs:811:20
+    |
+811 |             return Err(error);
+    |                    ^^^^-----^
+    |                        |
+    |                        this argument influences the type of `Err`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\core\src\result.rs:566:4
+help: try using a conversion method
+    |
+811 |             return Err(error.to_string());
+    |                             ++++++++++++
+
+error[E0599]: no method named `custom_flags` found for mutable reference `&mut std::fs::OpenOptions` in the current scope
+   --> src/acp_client/preparation_actions.rs:123:10
+    |
+121 |       let Ok(file) = std::fs::File::options()
+    |  ____________________-
+122 | |         .read(true)
+123 | |         .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+    | |         -^^^^^^^^^^^^ method not found in `&mut std::fs::OpenOptions`
+    | |_________|
+    |
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OpenOptionsExt` which provides `custom_flags` is implemented but not in scope; perhaps you want to import it
+    |
+  3 + use std::os::windows::fs::OpenOptionsExt;
+    |
+
+error[E0599]: no method named `signal` found for reference `&async_process::ExitStatus` in the current scope
+   --> src/acp_client/startup_diagnostics.rs:218:49
+    |
+218 |                 s.snapshot.exit_signal = status.signal().and_then(|v| v.try_into().ok());
+    |                                                 ^^^^^^ method not found in `&async_process::ExitStatus`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/events.rs:196:67
+    |
+196 |     result.map_err(|_| "网页组件缺少所需隔离接口，请更新 Microsoft Edge WebView2".into())
+    |                                                                                   ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0308]: mismatched types
+  --> src/browser_workspace/windows/observation.rs:23:18
+   |
+23 |             done(result);
+   |             ---- ^^^^^^ expected `Result<Value, Error>`, found `Result<_, String>`
+   |             |
+   |             arguments to this function are incorrect
+   |
+   = note: expected enum `std::result::Result<serde_json::Value, webview2_com::Error>`
+              found enum `std::result::Result<_, std::string::String>`
+note: type parameter defined here
+  --> src/browser_workspace/windows/observation.rs:11:11
+   |
+11 |     done: impl FnOnce(Result<Value, String>) + 'static,
+   |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `std::result::Result<_, std::string::String>` value, panicking if the value is a `Result::Err`
+   |
+23 |             done(result.expect("REASON"));
+   |                        +++++++++++++++++
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+  --> src/browser_workspace/windows/observation.rs:33:29
+   |
+33 |     .map_err(|_| "网页操作未能开始".into())
+   |                                     ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+   |
+help: `webview2_com::Error` implements trait `From<T>`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+   |
+38 | impl From<windows::core::Error> for Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+44 | impl From<HRESULT> for Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+   = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/observation.rs:100:56
+    |
+ 98 | fn random_id() -> Result<String, String> {
+    |                   ---------------------- expected `webview2_com::Error` because of this
+ 99 |     let mut bytes = [0u8; 16];
+100 |     getrandom::fill(&mut bytes).map_err(|_| "无法准备网页观察")?;
+    |     --------------------------- -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |     |                           |
+    |     |                           this can't be annotated with `?` because it has type `Result<_, &str>`
+    |     this has type `Result<_, getrandom::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0631]: type mismatch in function arguments
+   --> src/browser_workspace/windows/preview.rs:149:68
+    |
+149 | ...                   result.take().and_then(Result::ok).and_then(Result::ok),
+    |                                     -------- ^^^^^^^^^^
+    |                                     |        |
+    |                                     |        expected due to this
+    |                                     |        found signature defined here
+    |                                     required by a bound introduced by this call
+    |
+    = note: expected function signature `fn(std::result::Result<_, tauri::Error>) -> _`
+               found function signature `fn(std::result::Result<_, webview2_com::Error>) -> _`
+note: required by a bound in `std::option::Option::<T>::and_then`
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library\core\src\option.rs:1541:4
+help: consider wrapping the function in a closure
+    |
+149 |                                             result.take().and_then(|arg0: std::result::Result<std::result::Result<directory::Resource, std::string::String>, tauri::Error>| Result::ok(/* std::result::Result<std::result::Result<directory::Resource, std::string::String>, webview2_com::Error> */)).and_then(Result::ok),
+    |                                                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/browser_workspace/windows/preview.rs:145:72
+    |
+145 |   ...                   let delivered = lease.with_live(|| {
+    |  __________________________________________________________^
+146 | | ...                       response(
+147 | | ...                           &view,
+148 | | ...                           pending.take().expect("owned request"),
+149 | | ...                           result.take().and_then(Result::ok).and_then(Result::ok),
+150 | | ...                       );
+151 | | ...                   });
+    | |_______________________^ expected `Result<_, String>`, found `()`
+    |
+    = note:   expected enum `std::result::Result<_, std::string::String>`
+            found unit type `()`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/preview.rs:169:37
+    |
+169 |     result.map_err(|_| "无法准备本地网页资源".into())
+    |                                               ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+  --> src/browser_workspace/windows/mod.rs:99:72
+   |
+99 |         unsafe { self.core.Source(&mut value) }.map_err(|_| "网页位置不可读取")?;
+   |         --------------------------------------- -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+   |         |                                       |
+   |         |                                       this can't be annotated with `?` because it has type `Result<_, &str>`
+   |         this has type `Result<_, windows_result::error::Error>`
+   |
+   = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+  --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+   |
+38 | impl From<windows::core::Error> for Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+44 | impl From<HRESULT> for Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:126:39
+    |
+126 |             return Err("网页已关闭或地址不受支持".into());
+    |                                                   ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:134:81
+    |
+134 |         unsafe { self.core.Navigate(&HSTRING::from(url)) }.map_err(|_| "无法打开网页".into())
+    |                                                                                       ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:145:37
+    |
+144 |         unsafe { windows::Win32::UI::WindowsAndMessaging::GetClientRect(self.parent, &mut client) }
+    |         ------------------------------------------------------------------------------------------- this has type `Result<_, windows_result::error::Error>`
+145 |             .map_err(|_| "无法调整网页位置")?;
+    |              -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |              |
+    |              this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:159:45
+    |
+159 |             return Err("网页显示区域已变化，请重新打开内容栏".into());
+    |                                                               ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:161:75
+    |
+161 |         unsafe { self.controller.SetBounds(rect) }.map_err(|_| "无法调整网页位置")?;
+    |         ------------------------------------------ -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |         |                                          |
+    |         |                                          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |         this has type `Result<_, windows_result::error::Error>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:186:24
+    |
+186 |         .ok_or("网页已关闭".into())
+    |                             ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: the trait bound `webview2_com::Error: From<&str>` is not satisfied
+   --> src/browser_workspace/windows/mod.rs:265:31
+    |
+265 |         return Err("网页存储位置无效".into());
+    |                                       ^^^^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+    = note: required for `&str` to implement `Into<webview2_com::Error>`
+
+error[E0277]: `?` couldn't convert the error to `webview2_com::Error`
+   --> src/browser_workspace/windows/mod.rs:270:33
+    |
+263 | fn profile_path(app: &AppHandle, storage: &str) -> Result<PathBuf, String> {
+    |                                                    ----------------------- expected `webview2_com::Error` because of this
+...
+269 |         .app_local_data_dir()
+    |          -------------------- this has type `Result<_, tauri::Error>`
+270 |         .map_err(|_| "无法访问网页存储")?
+    |          -------------------------------^ the trait `From<&str>` is not implemented for `webview2_com::Error`
+    |          |
+    |          this can't be annotated with `?` because it has type `Result<_, &str>`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+help: `webview2_com::Error` implements trait `From<T>`
+   --> /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/lib.rs:38:1
+    |
+ 38 | impl From<windows::core::Error> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<windows_result::error::Error>`
+...
+ 44 | impl From<HRESULT> for Error {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<HRESULT>`
+
+error[E0599]: no method named `mode` found for struct `Permissions` in the current scope
+   --> src/uv_runtime.rs:509:35
+    |
+509 |         || metadata.permissions().mode() & 0o111 == 0
+    |                                   ^^^^ method not found in `Permissions`
+
+Some errors have detailed explanations: E0107, E0277, E0308, E0425, E0432, E0433, E0599, E0631.
+For more information about an error, try `rustc --explain E0107`.
+warning: `farfold` (lib) generated 2 warnings
+error: could not compile `farfold` (lib) due to 137 previous errors; 2 warnings emitted

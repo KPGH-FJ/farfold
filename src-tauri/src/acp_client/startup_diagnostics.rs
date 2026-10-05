@@ -212,10 +212,13 @@ impl Diagnostics {
     pub(crate) fn exit(&self, status: &Result<std::process::ExitStatus, std::io::Error>) {
         self.update(|s| match status {
             Ok(status) => {
-                use std::os::unix::process::ExitStatusExt;
                 s.snapshot.child_reaped = true;
                 s.snapshot.exit_code = status.code().and_then(|v| v.try_into().ok());
-                s.snapshot.exit_signal = status.signal().and_then(|v| v.try_into().ok());
+                #[cfg(unix)]
+                {
+                    use std::os::unix::process::ExitStatusExt;
+                    s.snapshot.exit_signal = status.signal().and_then(|v| v.try_into().ok());
+                }
             }
             Err(_) => s.snapshot.wait_failed = true,
         });

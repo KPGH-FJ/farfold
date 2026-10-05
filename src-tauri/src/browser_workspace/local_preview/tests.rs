@@ -18,13 +18,7 @@ fn developer_server_requires_explicit_literal_loopback_origin_and_port() {
             assert!(preview.allows_navigation("https://[::1]:443/"));
         }
         assert!(
-            preview.allows_navigation(
-                &preview
-                    .start_url()
-                    .join("page?a=1#top")
-                    .unwrap()
-                    .to_string()
-            )
+            preview.allows_navigation(preview.start_url().join("page?a=1#top").unwrap().as_str())
         );
     }
     for url in [

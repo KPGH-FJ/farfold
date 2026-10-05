@@ -1,4 +1,5 @@
 use super::*;
+#[cfg(unix)]
 use std::os::unix::fs::symlink;
 
 #[test]
@@ -35,6 +36,7 @@ fn ordinary_encoding_is_injective_and_separate_from_both_previous_namespaces() {
     }
 }
 
+#[cfg(unix)]
 #[test]
 fn preparation_rejects_every_existing_symlink_before_creating_descendants() {
     for leaf in [
@@ -74,15 +76,20 @@ fn roots_require_exact_normal_parent_and_correct_namespace_even_after_removal() 
     assert!(recorded_root(&base, "registry%3Afixture", &root, Layout::Agent, false).is_none());
     std::fs::create_dir(root.join("nested")).unwrap();
     assert!(recorded_root(&base, id, &root.join("nested"), Layout::Agent, false).is_none());
-    let link = parent.join("linked");
-    symlink(&root, &link).unwrap();
-    assert!(recorded_root(&base, id, &link, Layout::Agent, false).is_none());
+    #[cfg(unix)]
+    let link = {
+        let link = parent.join("linked");
+        symlink(&root, &link).unwrap();
+        assert!(recorded_root(&base, id, &link, Layout::Agent, false).is_none());
+        link
+    };
     std::fs::remove_dir_all(&root).unwrap();
     assert!(recorded_root(&base, id, &root, Layout::Agent, false).is_none());
     assert_eq!(
         recorded_root(&base, id, &root, Layout::Agent, true),
         Some(root)
     );
+    #[cfg(unix)]
     assert!(recorded_root(&base, id, &link, Layout::Agent, true).is_none());
 }
 
@@ -96,6 +103,7 @@ fn legacy_parent_normalization_never_grants_an_outside_or_alias_root() {
     for id in ["../outside", "a/../../outside", "/absolute", "", ".", "a/"] {
         assert!(recorded_root(&base, id, &root, Layout::Agent, true).is_none());
     }
+    #[cfg(unix)]
     symlink(base.join("outside"), base.join("agents/registry:fixture")).unwrap();
     assert!(recorded_root(&base, "registry:fixture", &root, Layout::Agent, true).is_none());
     std::fs::remove_dir(&root).unwrap();

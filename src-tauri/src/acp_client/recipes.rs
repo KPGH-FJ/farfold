@@ -23,9 +23,21 @@ pub(crate) const COPILOT_LOGIN: PackageLoginDeclaration = PackageLoginDeclaratio
     registry_id: "registry:github-copilot-cli",
     version: "1.0.89",
     package: "@github/copilot",
-    platform_package: "@github/copilot-darwin-arm64",
+    platform_package: if cfg!(windows) {
+        if cfg!(target_arch = "aarch64") {
+            "@github/copilot-win32-arm64"
+        } else {
+            "@github/copilot-win32-x64"
+        }
+    } else {
+        "@github/copilot-darwin-arm64"
+    },
     loader: "npm-loader.js",
-    platform_entry: "copilot",
+    platform_entry: if cfg!(windows) {
+        "copilot.exe"
+    } else {
+        "copilot"
+    },
     method: "copilot-login",
 };
 
@@ -199,9 +211,7 @@ pub(crate) fn terminal_action_declaration(
             && row.env.is_empty()
             && match declaration.launch {
                 TerminalActionLaunch::Native { binary } => {
-                    Path::new(&row.command)
-                        .file_name()
-                        .and_then(|name| name.to_str())
+                    crate::process_platform::program_name(Path::new(&row.command)).as_deref()
                         == Some(binary)
                         && row
                             .args
@@ -210,9 +220,8 @@ pub(crate) fn terminal_action_declaration(
                             .eq(declaration.launch_args.iter().copied())
                 }
                 TerminalActionLaunch::Npm { .. } => {
-                    Path::new(&row.command)
-                        .file_name()
-                        .is_some_and(|name| name == "node")
+                    crate::process_platform::program_name(Path::new(&row.command)).as_deref()
+                        == Some("node")
                         && row.args.len() == declaration.launch_args.len() + 1
                         && Path::new(&row.args[0]).is_absolute()
                         && row.args[1..]
@@ -226,6 +235,11 @@ pub(crate) fn terminal_action_declaration(
 
 #[derive(Clone, Copy)]
 pub(crate) enum DependencyDistribution {
+    Executable {
+        version_url: &'static str,
+        download_base: &'static str,
+        platform: &'static str,
+    },
     Gzip {
         version_url: &'static str,
         download_base: &'static str,
@@ -283,10 +297,20 @@ pub(crate) const AMP_DEPENDENCIES: &[DependencyDeclaration] = &[DependencyDeclar
     home_bin_dir: Some(".amp/bin"),
     // Official install.sh and CLI docs checked 2026-09-26; migration only.
     source_url: "https://ampcode.com/docs/cli",
-    distribution: DependencyDistribution::Gzip {
-        version_url: "https://static.ampcode.com/cli/cli-version.txt",
-        download_base: "https://static.ampcode.com/cli",
-        platform: "darwin-arm64",
+    // Official https://ampcode.com/install.ps1 (2026-10-06) declares this
+    // native x64 executable, also used on ARM64 via Windows emulation.
+    distribution: if cfg!(windows) {
+        DependencyDistribution::Executable {
+            version_url: "https://static.ampcode.com/cli/cli-version.txt",
+            download_base: "https://static.ampcode.com/cli",
+            platform: "windows-x64",
+        }
+    } else {
+        DependencyDistribution::Gzip {
+            version_url: "https://static.ampcode.com/cli/cli-version.txt",
+            download_base: "https://static.ampcode.com/cli",
+            platform: "darwin-arm64",
+        }
     },
     support: None,
 }];
@@ -377,8 +401,8 @@ fn registered_version(row: &AgentRow) -> Option<Option<String>> {
     if row.source != "registry" || !Path::new(&row.command).is_absolute() {
         return None;
     }
-    let binary = Path::new(&row.command).file_name()?.to_str()?;
-    if recipe.component_binary == Some(binary) && row.args.is_empty() {
+    let binary = crate::process_platform::program_name(Path::new(&row.command))?;
+    if recipe.component_binary == Some(binary.as_str()) && row.args.is_empty() {
         return Some(row.version.clone());
     }
     if binary != "node" || row.args.len() != 1 {
@@ -505,7 +529,13 @@ pub(crate) mod tests {
             id: id.into(),
             name: id.into(),
             source: "registry".into(),
-            command: "/fixture/node".into(),
+            command: if cfg!(windows) {
+                r"C:ixture
+ode.exe"
+            } else {
+                "/fixture/node"
+            }
+            .into(),
             args: vec![entry.display().to_string()],
             env: vec![],
             version: Some(version.into()),
@@ -536,7 +566,12 @@ pub(crate) mod tests {
     fn migrated_amp_dependency_preserves_the_registry_native_binary_shape() {
         let root = tempfile::tempdir().unwrap();
         let mut row = official_row(root.path(), "registry:amp-acp", "amp-acp", "0.9.0");
-        row.command = "/managed/amp-acp".into();
+        row.command = if cfg!(windows) {
+            r"C:\managedmp-acp.exe"
+        } else {
+            "/managed/amp-acp"
+        }
+        .into();
         row.args.clear();
         assert_eq!(declared_for(&row)[0].id, "amp-cli");
         row.version = None;

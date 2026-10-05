@@ -1,5 +1,7 @@
 use super::*;
-use std::{fs, os::unix::fs::symlink};
+use std::fs;
+#[cfg(unix)]
+use std::os::unix::fs::symlink;
 
 fn fixture() -> (tempfile::TempDir, DirectoryPreview) {
     let directory = tempfile::tempdir().unwrap();
@@ -111,6 +113,7 @@ fn directory_selection_does_not_auto_expose_hidden_config_credentials_or_source_
     assert!(preview.read_resource("/data.json").is_ok());
 }
 
+#[cfg(unix)]
 #[test]
 fn symlink_files_directories_and_hard_links_are_never_followed() {
     let (dir, preview) = fixture();
@@ -149,6 +152,7 @@ fn root_replacement_and_mutation_during_read_discard_the_bytes() {
     assert!(preview.read_resource("/app.js").is_err());
 }
 
+#[cfg(unix)]
 #[test]
 fn root_or_file_retargeted_to_symlink_after_selection_is_rejected() {
     let (dir, preview) = fixture();
@@ -162,10 +166,12 @@ fn root_or_file_retargeted_to_symlink_after_selection_is_rejected() {
     fs::remove_file(dir.path()).unwrap();
 }
 
+#[cfg(unix)]
 #[test]
 fn special_files_invalid_text_and_oversize_assets_return_errors() {
     let (dir, preview) = fixture();
-    let fifo = CString::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
+    use std::os::unix::ffi::OsStrExt;
+    let fifo = std::ffi::CString::new(dir.path().join("pipe.js").as_os_str().as_bytes()).unwrap();
     assert_eq!(unsafe { libc::mkfifo(fifo.as_ptr(), 0o600) }, 0);
     assert!(preview.read_resource("/pipe.js").is_err());
     fs::write(dir.path().join("bad.js"), [255, 0]).unwrap();
@@ -206,6 +212,7 @@ fn cancel_during_read_and_cloned_readers_cannot_return_or_deliver_late_content()
     assert!(!delivered);
 }
 
+#[cfg(unix)]
 #[test]
 fn entry_must_be_explicit_html_inside_root_and_selected_alias_root_is_canonicalized() {
     let (dir, _preview) = fixture();

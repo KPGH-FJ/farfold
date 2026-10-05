@@ -27,6 +27,7 @@ const saved = (enabled: boolean, sound = false) => ({
   permission: "authorized",
   systemAlert: true,
   systemSound: true,
+  clickRequiresRunning: false,
 });
 function fixture(enabled = true) {
   const read = vi.fn(async (): Promise<unknown> => saved(enabled));
@@ -71,6 +72,24 @@ const question = {
 };
 
 describe("desktop reminder preferences", () => {
+  it("keeps unavailable Windows banner and sound status unknown and states the running-only click scope", async () => {
+    const f = fixture();
+    f.read.mockResolvedValueOnce({
+      ...saved(true),
+      systemAlert: null,
+      systemSound: null,
+      clickRequiresRunning: true,
+    });
+    await f.notifications.load();
+    expect(f.notifications.snapshot()).toMatchObject({
+      ready: true,
+      enabled: true,
+      systemAlert: null,
+      systemSound: null,
+      clickRequiresRunning: true,
+      error: null,
+    });
+  });
   it("reports denied system permission without showing enabled and does not auto retry", async () => {
     const f = fixture(false);
     await f.notifications.load();

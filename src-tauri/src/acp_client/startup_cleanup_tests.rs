@@ -1,4 +1,5 @@
 //! A real failed candidate must not hide an unknown manager cleanup outcome.
+#![cfg(unix)]
 use super::*;
 
 #[tokio::test(flavor = "multi_thread")]

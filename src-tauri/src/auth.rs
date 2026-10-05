@@ -1,10 +1,12 @@
 //! Agent authentication: `authMethods` rendering data, `authenticate`,
 //! terminal-style login through the embedded PTY, optional API-key injection
-//! (macOS keychain only, never stored in SQLite), and `logout`.
+//! (the system credential store, never SQLite), and `logout`.
 //!
 //! Login actions come from declarations or explicit user configuration.
 
+#[cfg(target_os = "macos")]
 use std::io::Write as _;
+#[cfg(target_os = "macos")]
 use std::process::{Command, Stdio};
 
 use serde::Serialize;
@@ -19,6 +21,12 @@ use crate::shell_env;
 
 pub(crate) mod attempts;
 pub(crate) mod terminal;
+#[cfg(any(target_os = "windows", test))]
+mod windows_vault;
+#[cfg(target_os = "windows")]
+pub(crate) use windows_vault::{
+    delete as keychain_delete, lookup as keychain_lookup, store as keychain_store,
+};
 
 #[tauri::command]
 pub fn auth_cancel(agent_id: String, attempt_id: String) -> Result<(), String> {
@@ -36,7 +44,8 @@ pub async fn auth_end(app: AppHandle, agent_id: String, attempt_id: String) -> R
 }
 
 /// Env placeholder stored on an agents row: the real value lives in the
-/// macOS keychain and is resolved at spawn time only.
+/// system credential store and is resolved at spawn time only. Keep the existing
+/// marker and service IDs so the platform addition does not migrate user data.
 const KEYCHAIN_MARKER: &str = "__keychain__";
 
 fn keychain_service(agent_id: &str, env_name: &str) -> String {
@@ -284,12 +293,14 @@ fn auth_methods_with_proof(row: &AgentRow, proof: &ManagedTerminalProof) -> Auth
 // Keychain
 // ---------------------------------------------------------------------------
 
+#[cfg(target_os = "macos")]
 fn shell_quote(value: &str) -> String {
     format!("\"{}\"", value.replace('\\', "\\\\").replace('"', "\\\""))
 }
 
 /// Store `key` in the login keychain via `security -i` so the secret travels
 /// over stdin and never appears in the process list.
+#[cfg(target_os = "macos")]
 pub(crate) fn keychain_store(service: &str, key: &str) -> Result<(), String> {
     if key.trim().is_empty() || key.len() > 16384 || key.chars().any(char::is_control) {
         return Err("请输入有效的单行密钥".into());
@@ -326,6 +337,7 @@ pub(crate) fn keychain_store(service: &str, key: &str) -> Result<(), String> {
 }
 
 /// Read a key back out of the login keychain (`None` when absent).
+#[cfg(target_os = "macos")]
 pub(crate) fn keychain_lookup(service: &str) -> Option<String> {
     let output = Command::new("security")
         .args([
@@ -348,6 +360,7 @@ pub(crate) fn keychain_lookup(service: &str) -> Option<String> {
     if value.is_empty() { None } else { Some(value) }
 }
 
+#[cfg(target_os = "macos")]
 pub(crate) fn keychain_delete(service: &str) -> Result<(), String> {
     let status = Command::new("security")
         .args(["delete-generic-password", "-a", "farfold", "-s", service])
@@ -803,7 +816,7 @@ pub async fn agent_logout(
         ))
         .await?;
     let row = live_auth_row(&app.state::<AcpManager>(), &row, &cwd)?;
-    if !auth_methods_for(&row).can_logout {
+    if !app.state::<AcpManager>().can_logout(&agent_id, &cwd) {
         return Err("此 Agent 当前不支持退出登录，请查看官方账号说明".into());
     }
     let manager = app.state::<AcpManager>();
@@ -1181,6 +1194,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(target_os = "macos")]
     #[ignore = "writes and removes one non-account test key in the local Keychain"]
     fn keychain_round_trip_stores_and_reads_back() {
         let millis = std::time::SystemTime::now()

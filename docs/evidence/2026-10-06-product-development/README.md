@@ -1,5 +1,13 @@
 # 连续开发检查（2026-10-06）
 
+Windows 本片复用同一UI，补系统凭据、进程树和终端、句柄文件访问、独立WebView2、私有网页分享、系统通知及安装更新配置。交叉复核修了辅助进程入组前取消、迟到网页回调抢新请求、资源准备失败未停止、手动观察误拒与安装取消/体积限制。前端184文件/2101项、类型/构建通过，见[最终前端回执](windows-frontend-final-checks.json)；macOS Rust949项通过、4项原忽略，格式/Clippy与Windows x86_64 GNU LLVM全部目标Clippy退出0，见[最终Rust回执](windows-rust-checks.json)。
+
+中间两次全量失败保留。第一次在断开清理报错，具体原因未知；第二次确证合成Python内2秒期限触发，不证明子shell实际运行2秒或是首次原因。停止观察竞争用两个真实Child/watch反例修正并验证；夹具去掉重复内层期限，全部原断言、真实子程序、外层10秒及精确进程组清理保留。最终相同8线程全量通过，不以调度猜测解释原失败。
+
+官方Windows发行格式逐项核查没有tar.bz2；其暂不支持不构成这33项的已知格式阻断。新增裸EXE保存保留Registry摘要校验，和ZIP/tar.gz均不改变Agent兼容判定；新增raw/tar共14项合成临时文件测试在Mac通过，不执行EXE。[siGit官方格式](https://raw.githubusercontent.com/agentclientprotocol/registry/65ba23daddb224a376e1955f51c095d0fb1b7448/sigit/agent.json)、[下载来源](windows-install-sources.json)、[uv/Python来源](windows-uv-sources.json)。
+
+边界：没有Windows桌面实机；交叉编译不等于Windows测试执行、MSVC安装包或平台验收。系统凭据/声音、WebView2/NTFS、真实Agent、签名和发布渠道仍待验证或配置；Windows通知点击暂限应用运行中，文件访问拒UNC/重解析目录，生产截图仍不交付。未替换正式应用，未追加真实消息预算。Windows工作流保持手动且未触发；新工作流首次注册需默认分支，远端main未因本片修改，参见[GitHub规则](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)。
+
 本轮已获用户开发授权，先保存依赖闭合的既有源码，再按唯一活动计划推进。工程测试与真实产品验证分开；未启动真实Agent、访问账号、调用模型或替换应用。
 
 基线检查全部退出0：格式、类型、前端测试、构建、Rust格式/Clippy/测试。前端174文件/2000项通过；Rust823项通过、4项原忽略（真实Agent2、Keychain2）未启用。构建保留大于500kB的包体积提示。日志为本目录baseline-*.log。

@@ -91,7 +91,7 @@ async fn same_agent_directory_and_source_isolate_processes_stop_and_preparation(
         .await
         .unwrap();
     assert_ne!(
-        unsafe { libc::kill(preparation.child_pid.load(Ordering::SeqCst) as i32, 0) },
+        crate::platform_tests::process_check(preparation.child_pid.load(Ordering::SeqCst) as i32),
         0
     );
     for connection in [&first, &second] {
@@ -128,7 +128,7 @@ async fn same_agent_directory_and_source_isolate_processes_stop_and_preparation(
             .unwrap()
     );
     assert_eq!(
-        unsafe { libc::kill(second.child_pid.load(Ordering::SeqCst) as i32, 0) },
+        crate::platform_tests::process_check(second.child_pid.load(Ordering::SeqCst) as i32),
         0
     );
     assert!(f.manager.live_connection(&f.row.id, &f.cwd).is_ok());
@@ -185,7 +185,7 @@ async fn pending_new_retains_its_process_and_blocks_another_new_until_response()
             .is_err()
     );
     assert_eq!(f.manager.status(&f.row.id).unwrap().len(), 1);
-    assert_eq!(unsafe { libc::kill(pid, 0) }, 0);
+    assert_eq!(crate::platform_tests::process_check(pid), 0);
     std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
     until(|| {
         f.manager
@@ -212,7 +212,7 @@ async fn pending_new_retains_its_process_and_blocks_another_new_until_response()
     let (next, _) = open(&f).await;
     assert_ne!(next, pid.to_string());
     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
-    assert_ne!(unsafe { libc::kill(pid, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid), 0);
     let restored = f
         .manager
         .open_session(
@@ -296,12 +296,12 @@ async fn cold_new_collision_preserves_history_and_keeps_remote_creation_owned() 
     let connection = f.manager.lock().unwrap().values().next().unwrap().clone();
     let pid = connection.child_pid.load(Ordering::SeqCst);
     assert!(!connection.life.close(false, Some(Duration::ZERO)).unwrap());
-    assert_eq!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_eq!(crate::platform_tests::process_check(pid as i32), 0);
     f.manager
         .disconnect_selected(&f.row.id, None, Some(&connection.connection_id))
         .await
         .unwrap();
-    assert_ne!(unsafe { libc::kill(pid as i32, 0) }, 0);
+    assert_ne!(crate::platform_tests::process_check(pid as i32), 0);
 }
 
 #[tokio::test(flavor = "multi_thread")]

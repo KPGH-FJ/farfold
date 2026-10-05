@@ -151,7 +151,7 @@ async fn terminal_delivery(failed: bool, drop_at_delivery: bool) {
         None
     };
     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
-    let gone = unsafe { libc::kill(pid as i32, 0) } != 0;
+    let gone = crate::platform_tests::process_check(pid as i32) != 0;
     eprintln!("open-delivery fixture pid={pid} reaped={gone}");
     assert!(
         gone,
@@ -246,7 +246,7 @@ fn available(f: &Fixture, connection: &ManagedConnection, native: &str) -> (bool
 async fn finish(f: &Fixture, connection: &ManagedConnection) {
     let pid = connection.child_pid.load(Ordering::SeqCst);
     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
-    let gone = unsafe { libc::kill(pid as i32, 0) } != 0;
+    let gone = crate::platform_tests::process_check(pid as i32) != 0;
     eprintln!("open-delivery fixture pid={pid} reaped={gone}");
     assert!(gone);
 }

@@ -13,7 +13,10 @@ export const NOTIFICATION_STRINGS = {
   permissionAllowed: "系统已允许通知。",
   permissionQuiet: "系统已允许安静提醒。",
   alertsDisabled: "系统横幅已关闭，提醒可能只出现在通知中心。",
+  systemOptionsUnknown: "横幅和声音的具体设置请在系统通知设置中查看。",
   navigationHint: "点击提醒可回到对应对话，不会自动连接或发送消息。",
+  runningNavigationHint:
+    "仅在 Farfold 仍运行时支持点击提醒回到对话；退出后不会通过提醒重新打开应用。",
   coldConversation: "这段对话尚未打开。你可以继续查看，消息不会自动发送。",
   openConversation: "查看这段对话",
   soundHint: "仅在系统允许声音时播放；关闭后提醒保持安静。",
@@ -39,8 +42,9 @@ export interface NotificationPreference {
   enabled: boolean;
   sound: boolean;
   permission: NotificationPermission;
-  systemAlert: boolean;
-  systemSound: boolean;
+  systemAlert: boolean | null;
+  systemSound: boolean | null;
+  clickRequiresRunning: boolean;
 }
 function preference(value: unknown): NotificationPreference {
   if (!value || typeof value !== "object")
@@ -49,8 +53,9 @@ function preference(value: unknown): NotificationPreference {
   if (
     typeof v.enabled !== "boolean" ||
     typeof v.sound !== "boolean" ||
-    typeof v.systemAlert !== "boolean" ||
-    typeof v.systemSound !== "boolean" ||
+    (v.systemAlert !== null && typeof v.systemAlert !== "boolean") ||
+    (v.systemSound !== null && typeof v.systemSound !== "boolean") ||
+    typeof v.clickRequiresRunning !== "boolean" ||
     ![
       "not_determined",
       "denied",
@@ -162,8 +167,9 @@ export class DesktopNotifications {
     enabled: false,
     sound: false,
     permission: "unknown",
-    systemAlert: false,
-    systemSound: false,
+    systemAlert: null,
+    systemSound: null,
+    clickRequiresRunning: true,
     ready: false,
     saving: false,
     error: null,

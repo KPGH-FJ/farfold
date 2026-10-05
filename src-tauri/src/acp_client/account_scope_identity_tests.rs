@@ -5,12 +5,18 @@ fn resolved_scripts_group_aliases_without_grouping_their_interpreter() {
     let dir = tempfile::tempdir().unwrap();
     let first = dir.path().join("first.js");
     let second = dir.path().join("second.js");
-    let node = dir.path().join("node");
+    let node = dir
+        .path()
+        .join(if cfg!(windows) { "NODE.EXE" } else { "node" });
     for path in [&first, &second, &node] {
         std::fs::write(path, "fixture").unwrap();
     }
+    #[cfg(unix)]
     let alias = dir.path().join("alias.js");
+    #[cfg(unix)]
     std::os::unix::fs::symlink(&first, &alias).unwrap();
+    #[cfg(windows)]
+    let alias = dir.path().join(".").join("first.js");
     let identify = |path: &Path| {
         LaunchIdentity::from_launch(node.to_str().unwrap(), &[path.to_string_lossy().into()])
     };
@@ -28,7 +34,11 @@ fn resolved_scripts_group_aliases_without_grouping_their_interpreter() {
 fn unknown_package_runners_do_not_group_every_agent_by_runtime() {
     let dir = tempfile::tempdir().unwrap();
     for runner in ["npm", "npx", "uv", "uvx", "env", "sh"] {
-        let path = dir.path().join(runner);
+        let path = dir.path().join(if cfg!(windows) {
+            format!("{runner}.exe")
+        } else {
+            runner.into()
+        });
         std::fs::write(&path, "fixture").unwrap();
         assert!(
             LaunchIdentity::from_launch(path.to_str().unwrap(), &["unreviewed".into()]).is_none()

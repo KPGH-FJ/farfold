@@ -35,6 +35,22 @@ fn saved_choice_survives_restart_and_failed_write_preserves_it() {
 }
 
 #[test]
+fn unknown_system_result_cannot_overwrite_an_existing_choice_but_disable_still_works() {
+    let dir = tempfile::tempdir().unwrap();
+    let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
+    save_preference(&store, true, false).unwrap();
+    assert!(save_confirmed_preference(&store, true, true, SystemSettings::unknown()).is_err());
+    let saved = read_preference(&store).unwrap();
+    assert!(saved.enabled);
+    assert!(!saved.sound);
+    assert!(
+        !save_confirmed_preference(&store, false, false, SystemSettings::unknown())
+            .unwrap()
+            .enabled
+    );
+}
+
+#[test]
 fn duplicate_submissions_are_bounded_and_payloads_only_accept_known_kinds() {
     let mut seen = VecDeque::new();
     assert!(!claim(&mut seen, "0123456789abcdef0123456789abcdef", 0));

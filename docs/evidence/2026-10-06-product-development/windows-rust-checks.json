@@ -1,0 +1,574 @@
+{
+  "date": "2026-10-06",
+  "recordedAt": "2026-10-05T22:28:14.682246+00:00",
+  "baseCommit": "515414c8faa3be791df9a4e0fa1655e7bbc4a957",
+  "scope": "阶段 6 当前冻结源码的 macOS 工程回归与 Windows x64 交叉编译。没有启动真实 Agent、登录/模型请求、正式应用、真实安全存储 API、桌面通知或实际安装/更新。",
+  "toolchain": {
+    "host": "aarch64-apple-darwin",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+    "windowsTarget": "x86_64-pc-windows-gnullvm",
+    "llvmMinGW": "20260922 UCRT macOS universal",
+    "download": "https://github.com/mstorsjo/llvm-mingw/releases/download/20260922/llvm-mingw-20260922-ucrt-macos-universal.tar.xz",
+    "publishedAt": "2026-09-22T16:14:56Z",
+    "archiveSha256": "52e5f5a7b131021d0c39a37a38fa380a1da7885cd04bd61afd0cd4ecfb8bc1f3",
+    "platformSupport": "https://doc.rust-lang.org/rustc/platform-support/windows-gnullvm.html",
+    "commandLocalEnvironment": {
+      "CARGO_INCREMENTAL": "0",
+      "PATH": "仅 Windows 检查子进程前置下载工具链 bin；系统 PATH 未修改",
+      "CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_LINKER": "<downloaded-toolchain>/bin/x86_64-w64-mingw32-gcc",
+      "CC_x86_64_pc_windows_gnullvm": "<downloaded-toolchain>/bin/x86_64-w64-mingw32-gcc",
+      "CXX_x86_64_pc_windows_gnullvm": "<downloaded-toolchain>/bin/x86_64-w64-mingw32-g++",
+      "AR_x86_64_pc_windows_gnullvm": "<downloaded-toolchain>/bin/x86_64-w64-mingw32-ar"
+    }
+  },
+  "finalChecks": [
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-gnullvm",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "target": "x86_64-pc-windows-gnullvm",
+      "exit": 0,
+      "log": "windows-stage6-clippy-check-5.log",
+      "sourceChangedDuringCheck": [],
+      "sourceFreeze": {
+        "capturedAt": "2026-10-05T22:18:03.195054+00:00",
+        "files": 252,
+        "aggregateSha256": "a1edd20242941d8c4c712ba977bd5e95a0848d0bf7fe555e2a6dd2928fcf7b28",
+        "currentChanges": []
+      },
+      "scope": "生产库、二进制、测试与 windows_process_fixture example 的交叉编译和 Clippy；未执行 Windows 程序。"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 0.6,
+      "sourceChangedDuringCheck": [],
+      "summaries": [],
+      "log": "windows-stage6-mac-final-fmt-3.log",
+      "sourceFreeze": {
+        "capturedAt": "2026-10-05T22:18:26.551685+00:00",
+        "files": 250,
+        "aggregateSha256": "d3bb7b2758b7cac7f210091e7631528e5b2493996367fe76891c615407b09dca",
+        "currentChanges": []
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 0.9,
+      "sourceChangedDuringCheck": [],
+      "summaries": [],
+      "log": "windows-stage6-mac-final-clippy-3.log",
+      "sourceFreeze": {
+        "capturedAt": "2026-10-05T22:19:02.465224+00:00",
+        "files": 250,
+        "aggregateSha256": "d3bb7b2758b7cac7f210091e7631528e5b2493996367fe76891c615407b09dca",
+        "currentChanges": []
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "--test-threads=8"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 35.6,
+      "sourceChangedDuringCheck": [],
+      "summaries": [
+        "test result: ok. 949 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 32.03s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "log": "windows-stage6-mac-test-3.log",
+      "sourceFreeze": {
+        "capturedAt": "2026-10-05T22:19:37.154962+00:00",
+        "files": 250,
+        "aggregateSha256": "d3bb7b2758b7cac7f210091e7631528e5b2493996367fe76891c615407b09dca",
+        "currentChanges": []
+      }
+    }
+  ],
+  "finalMacCounts": {
+    "passed": 949,
+    "failed": 0,
+    "ignored": 4,
+    "mainTests": 0,
+    "docTests": 0
+  },
+  "ignored": [
+    "acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session ... ignored, requires a real agent binary; run manually",
+    "acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ignored, requires a real agent binary; run manually",
+    "auth::tests::keychain_round_trip_stores_and_reads_back ... ignored, writes and removes one non-account test key in the local Keychain",
+    "credentials::keychain_test::real_keychain_roundtrip ... ignored, writes and removes one non-account test key in the local Keychain"
+  ],
+  "sourceFreezeDefinition": {
+    "scope": "src-tauri/src/**/*.rs、examples/**/*.rs、capabilities/**/*.json、native 下全部文件、Cargo.toml/Cargo.lock/build.rs；Windows 另包含 tauri.conf.json 与 tauri.windows.conf.json。",
+    "aggregate": "SHA-256 of UTF-8 JSON of sorted relative-path → SHA-256 map, sort_keys=True, separators=(comma,colon)。",
+    "comparison": "各检查结束核对 sourceChangedDuringCheck；本回执写入前再核全部当前文件，均无变化。完整临时 SHA 映射仍保留 /tmp。"
+  },
+  "targetedChecks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "raw_executable",
+        "--",
+        "--test-threads=8"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 29.0,
+      "sourceChangedDuringCheck": [],
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 944 filtered out; finished in 0.01s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "log": "windows-stage6-mac-final-raw-executable.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "windows_tar",
+        "--",
+        "--test-threads=8"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 18.8,
+      "sourceChangedDuringCheck": [],
+      "summaries": [
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 944 filtered out; finished in 0.01s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "log": "windows-stage6-mac-final-windows-tar.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::process::startup_tests",
+        "--",
+        "--test-threads=8"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 19.0,
+      "sourceChangedDuringCheck": [],
+      "summaries": [
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 950 filtered out; finished in 0.03s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "log": "windows-stage6-mac-final-process-startup.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "target": "aarch64-apple-darwin",
+      "exit": 0,
+      "seconds": 20.4,
+      "sourceChangedDuringCheck": [],
+      "summaries": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 952 filtered out; finished in 1.37s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "log": "windows-stage6-mac-final-dependency-environment-2.log"
+    }
+  ],
+  "history": [
+    {
+      "phase": "Windows 工具链预检",
+      "exit": 1,
+      "log": "windows-launcher-cross-compile.log",
+      "finding": "初次 x86_64-pc-windows-gnu 与 LLVM-MinGW UCRT 组合缺 GCC libgcc_eh/libgcc，属于工具链 ABI/链接库问题。改用 Rust 官方支持的 x86_64-pc-windows-gnullvm；后续 PE launcher 模板可编译，未执行。"
+    },
+    {
+      "phase": "Windows lib 第 1、2、3 轮",
+      "command": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-gnullvm",
+        "--locked",
+        "--lib"
+      ],
+      "attempts": [
+        {
+          "exit": 101,
+          "log": "windows-stage6-lib-check-1.log",
+          "errors": 137
+        },
+        {
+          "exit": 101,
+          "log": "windows-stage6-lib-check-2.log",
+          "errors": 1
+        },
+        {
+          "exit": 0,
+          "log": "windows-stage6-lib-check-3.log",
+          "warnings": 2
+        }
+      ],
+      "finding": "修复 WebView2 Result 别名遮蔽、Unix 专属调用及 lease 闭包返回类型；随后精确 cfg 清理剩余平台专属未用声明。最终 all-targets Clippy 无警告。"
+    },
+    {
+      "phase": "Windows tests 第 1、2 轮",
+      "command": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-gnullvm",
+        "--locked",
+        "--tests"
+      ],
+      "attempts": [
+        {
+          "exit": 101,
+          "log": "windows-stage6-tests-check-1.log",
+          "filesWithErrors": 35
+        },
+        {
+          "exit": 0,
+          "log": "windows-stage6-tests-check-2.log"
+        }
+      ],
+      "finding": "逐项适配平台夹具，保留通用策略与真实 stdio 合成测试；仅将真正 POSIX signal/FIFO/symlink 等案例精确限制到 Unix，新增 Windows Job/PTY/PE/文件访问行为夹具。Windows 夹具仅编译，未执行。"
+    },
+    {
+      "phase": "Windows all-targets Clippy 第 1–5 轮",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-gnullvm",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "attempts": [
+        {
+          "exit": 101,
+          "log": "windows-stage6-clippy-check-1.log"
+        },
+        {
+          "exit": 101,
+          "log": "windows-stage6-clippy-check-2.log"
+        },
+        {
+          "exit": 0,
+          "log": "windows-stage6-clippy-check-3.log"
+        },
+        {
+          "exit": 0,
+          "log": "windows-stage6-clippy-check-4.log"
+        },
+        {
+          "exit": 0,
+          "log": "windows-stage6-clippy-check-5.log"
+        }
+      ],
+      "finding": "先修正常规源/测试 lint。合成 example 中故意先退出 leader 的单个函数保留窄 zombie_processes allow，注释说明后代由父 Job 终止；不通过等待子进程破坏测试语义。后续必要重检覆盖新增安装边界、退出分类和夹具修补。"
+    },
+    {
+      "phase": "macOS 初次 file_delivery 定向编译",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery"
+      ],
+      "exit": 101,
+      "log": "windows-stage6-mac-file-delivery.log",
+      "finding": "update_feed 变量遮蔽与文件访问夹具缺少导入，修复后定向组和最终全量通过。"
+    },
+    {
+      "phase": "macOS 8 线程全量第 1 轮",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "--test-threads=8"
+      ],
+      "exit": 101,
+      "counts": {
+        "passed": 946,
+        "failed": 1,
+        "ignored": 4
+      },
+      "log": "windows-stage6-mac-test-1.log",
+      "failure": "dependency_environment_tests.rs:83 cleanup.unwrap(): Agent 已意外退出。",
+      "causality": "原始子进程退出原因未知。随后同源码单项 1/1 通过（1.26 秒），不能据此消除该失败。"
+    },
+    {
+      "phase": "独立确认的退出分类竞态",
+      "finding": "child.status 与主动停止同时就绪时，原退出分支无条件标为异常。改为退出观测当刻读取 stop/connection_stop；后到停止不得改写已观察的异常。",
+      "evidence": "windows-stage6-mac-final-process-startup.log",
+      "counts": {
+        "passed": 3,
+        "failed": 0
+      },
+      "causality": "实际 Child/watch 同时就绪与晚到停止反例验证了该漏洞和修补；不能据此断言它就是第 1 轮失败的原因。"
+    },
+    {
+      "phase": "macOS 8 线程全量第 2 轮",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "--test-threads=8"
+      ],
+      "exit": 101,
+      "counts": {
+        "passed": 948,
+        "failed": 1,
+        "ignored": 4
+      },
+      "log": "windows-stage6-mac-test-2.log",
+      "failure": "dependency_environment_tests.rs:141 connect failed: AGENT_CONNECTION_ENDED。自有夹具诊断仅报告 stage=probe_subprocess、exceptionType=TimeoutExpired、timedOut=true、timeoutSeconds=2。",
+      "causality": "只证实 Python 内层 subprocess.run 的超时，不证明 shell 本身执行时间超过 2 秒，亦不解释第 1 轮退出。"
+    },
+    {
+      "phase": "环境交付夹具修补与最终复验",
+      "finding": "移除与环境交付目标无关、重复设置的夹具内层 timeout=2；保留真实相对子命令、PATH/argv/exit/output/DB 全部断言、外层 10 秒期限及断开时确切进程组的 TERM/KILL/wait。未提高期限、删除断言或忽略失败项。",
+      "targetedLog": "windows-stage6-mac-final-dependency-environment-2.log",
+      "targetedCounts": {
+        "passed": 1,
+        "failed": 0
+      },
+      "fullLog": "windows-stage6-mac-test-3.log",
+      "fullCounts": {
+        "passed": 949,
+        "failed": 0,
+        "ignored": 4
+      }
+    }
+  ],
+  "rawLogs": [
+    {
+      "path": "windows-launcher-cross-compile.log",
+      "bytes": 1642,
+      "sha256": "672669c4cad3d3a55c0e08dc984ae73093993a13343a183a0bb37a91a353b3cc"
+    },
+    {
+      "path": "windows-stage6-clippy-check-1.log",
+      "bytes": 12397,
+      "sha256": "966dbcf4c6fa0b378f69994eb4f9a35e296ae43c256add3d59dab6e8d851404f"
+    },
+    {
+      "path": "windows-stage6-clippy-check-2.log",
+      "bytes": 1049,
+      "sha256": "d1768d2744c31a8bd79b91286212cab3bb0e6c4781e7bcfe74acecedbdc1a6e3"
+    },
+    {
+      "path": "windows-stage6-clippy-check-3.log",
+      "bytes": 138,
+      "sha256": "79b9dba97e9e271b43da23d321a63ba17ced8bbd09120f58469c46b9b200b7b7"
+    },
+    {
+      "path": "windows-stage6-clippy-check-4.log",
+      "bytes": 138,
+      "sha256": "4d53825c3f2b52faba9e7d81c8a99b124d493aed82dac394cb1fbaa7dc5d6c74"
+    },
+    {
+      "path": "windows-stage6-clippy-check-5.log",
+      "bytes": 138,
+      "sha256": "bb512b34b3737ae8fb4f1dcb9a8b1a8ed72d840f82f8438ccd3343ef65025892"
+    },
+    {
+      "path": "windows-stage6-lib-check-1.log",
+      "bytes": 134669,
+      "sha256": "feed8ced9affc0b28425b99e6be4fd2e5064cb7b2916d10d83084920fcaf018d"
+    },
+    {
+      "path": "windows-stage6-lib-check-2.log",
+      "bytes": 945,
+      "sha256": "7ea5f2fb98de6c10b6c1b233a190f335ab9c3b38a3ff4e1b8e4a2cca1637cf72"
+    },
+    {
+      "path": "windows-stage6-lib-check-3.log",
+      "bytes": 1101,
+      "sha256": "b0d79b1f6b6a5b3848253ad0db66d8c1c13fe2533f8e0bd274394b480ae8c2ac"
+    },
+    {
+      "path": "windows-stage6-mac-file-delivery.log",
+      "bytes": 2348,
+      "sha256": "236f8e0b92963e2461157074c671d2ffa79d918ca250c0df473b048f9b88e84a"
+    },
+    {
+      "path": "windows-stage6-mac-final-clippy-2.log",
+      "bytes": 138,
+      "sha256": "6aa250ebd4d4338bf2ec4addf0e27cb60f2264e6eeb398b55b34dd58c7cb6e11"
+    },
+    {
+      "path": "windows-stage6-mac-final-clippy-3.log",
+      "bytes": 72,
+      "sha256": "4a6e66bbe890656a5ca831a4dfbb7296d4ce7d22ce63363371d945097aa6611a"
+    },
+    {
+      "path": "windows-stage6-mac-final-clippy.log",
+      "bytes": 162,
+      "sha256": "72eae6eb9e0003d375212921d17e9c60cb5d099d27f821d0c7e333c27ff02158"
+    },
+    {
+      "path": "windows-stage6-mac-final-dependency-environment-2.log",
+      "bytes": 981,
+      "sha256": "5bc58e64f7ed415bf60898db51f9900203591f15ecc32c8b6473e0cf73df0b23"
+    },
+    {
+      "path": "windows-stage6-mac-final-dependency-environment.log",
+      "bytes": 914,
+      "sha256": "93638db7d773a5f2115c4c53757f55dfb56bffc36690b6de1e7f33c9d4600da4"
+    },
+    {
+      "path": "windows-stage6-mac-final-fmt-2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "windows-stage6-mac-final-fmt-3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "windows-stage6-mac-final-fmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "windows-stage6-mac-final-process-startup.log",
+      "bytes": 1188,
+      "sha256": "5406c9ef8e5a909f692db5119733080160554b6b52301a0c29d164e002e4b882"
+    },
+    {
+      "path": "windows-stage6-mac-final-raw-executable.log",
+      "bytes": 1677,
+      "sha256": "311bd18fca7512d6249a21aeb070f7febce1d42abf1933e7d153d8169d8e980e"
+    },
+    {
+      "path": "windows-stage6-mac-final-windows-tar.log",
+      "bytes": 1561,
+      "sha256": "7b23972b55efe54e1d65a63265508487d429303a3911939e9981e243e16e6913"
+    },
+    {
+      "path": "windows-stage6-mac-test-1.log",
+      "bytes": 103675,
+      "sha256": "9c0661d1837ec36434f0fac1ca7856a15e142699676cd20f6a8864775086a232"
+    },
+    {
+      "path": "windows-stage6-mac-test-2.log",
+      "bytes": 103978,
+      "sha256": "113fc8b5aa58379e3a2aa47e7bbeddc9896a08b43ccb9899c97f781c60434c0c"
+    },
+    {
+      "path": "windows-stage6-mac-test-3.log",
+      "bytes": 103440,
+      "sha256": "808e456f847265d8cd67d5ac9601fe9a0449149521b1fb3ba074e259cac6a930"
+    },
+    {
+      "path": "windows-stage6-tests-check-1.log",
+      "bytes": 44803,
+      "sha256": "12a97f9b7d5c063963733a49ac86a6986d1d631e3222f3ba07e808bbc5180fdb"
+    },
+    {
+      "path": "windows-stage6-tests-check-2.log",
+      "bytes": 138,
+      "sha256": "8a8671971c99cd7afcfac81077923af014b21458363138a5204e3fb9df29272b"
+    }
+  ],
+  "boundaries": [
+    "Windows gnullvm 检查不是 Windows MSVC 构建、链接、安装或运行；WinRT 通知/点击、WinCred、WebView2、本地预览、Job/ConPTY 和 Windows 合成行为测试尚未在 Windows 执行。",
+    "四个真实 Agent/Keychain 测试仍显式 ignored，未作为成功计数。macOS 合成测试通过不代表真实 Agent、账号或完整产品旅程达标。",
+    "Windows workflow_dispatch 配置已准备，位于当前分支；未改默认分支或触发私有仓库托管 runner。NSIS/AUMID 配置源码已核，未生成或执行安装包。",
+    "本轮清理仅精确授权的临时下载工具链；正式应用、用户数据、系统工具链、Rust targets、target/deps 未删除。"
+  ],
+  "temporaryToolchainCleanup": {
+    "at": "2026-10-05T22:24:13.918554+00:00",
+    "removed": [
+      "/tmp/farfold-llvm-mingw-20260922.tar.xz",
+      "/tmp/farfold-windows-toolchain-20260922"
+    ],
+    "archiveBytes": 124289672,
+    "archiveSha256": "52e5f5a7b131021d0c39a37a38fa380a1da7885cd04bd61afd0cd4ecfb8bc1f3",
+    "extractedAllocatedBytes": 798515200,
+    "matchingCompilerProcesses": [],
+    "topLevelSymlink": false,
+    "ownedByCurrentUser": true,
+    "freeBytesBefore": 9998917632,
+    "freeBytesAfter": 10925105152,
+    "freeBytesObservedIncrease": 926187520,
+    "retained": [
+      "/tmp/farfold-llvm-mingw-20260922-source.json",
+      "system tools and installed Rust targets",
+      "src-tauri/target and deps",
+      "raw check logs and source snapshots"
+    ]
+  }
+}

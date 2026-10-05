@@ -147,7 +147,10 @@ fn startup_diagnostics_candidate_release_requires_actual_reap_group_and_removal(
     d.group_ended();
     d.exit(&Err(std::io::Error::other("wait-canary")));
     assert!(!d.candidate_files_releasable());
+    #[cfg(unix)]
     use std::os::unix::process::ExitStatusExt;
+    #[cfg(windows)]
+    use std::os::windows::process::ExitStatusExt;
     d.exit(&Ok(std::process::ExitStatus::from_raw(0)));
     assert!(d.candidate_files_releasable());
     let d = Diagnostics::with_tap(None);
