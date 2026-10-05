@@ -532,3 +532,56 @@ it("orders a clear with an already showing page and a later hide without treatin
   expect(client.close).not.toHaveBeenCalled();
   expect(client.openHtml).toHaveBeenCalledOnce();
 });
+
+it("keeps development URLs separate from public addresses and retains explicitly selected default ports", async () => {
+  const { developmentBrowserUrl } = await import("./browser_workspace");
+  expect(developmentBrowserUrl("http://127.0.0.1:3000")).toBe(
+    "http://127.0.0.1:3000/",
+  );
+  expect(developmentBrowserUrl("https://[::1]:443/")).toBe(
+    "https://[::1]:443/",
+  );
+  for (const input of [
+    "http://localhost:3000",
+    "http://127.0.0.1",
+    "http://127.0.0.1:0",
+    "http://127.0.0.1:70000",
+    "http://127.0.0.1:3000/private?token=x",
+    "http://name@127.0.0.1:3000",
+  ])
+    expect(developmentBrowserUrl(input)).toBeNull();
+  expect(publicBrowserUrl("http://127.0.0.1:3000")).toBeNull();
+});
+
+it("an explicitly selected directory keeps ownership, supports reads and closes a late-created page", async () => {
+  const client = fakeClient();
+  const pending = deferred<BrowserWorkspaceState>();
+  const directory = {
+    ...page(),
+    localFileName: "index.html",
+    previewMode: "directory" as const,
+  };
+  const openDirectory = vi.fn(() => pending.promise);
+  const owner = new BrowserWorkspaceScope(
+    { ...client, openDirectory },
+    "task-a",
+  );
+  const opening = owner.openDirectory(
+    "/fixture/index.html",
+    bounds,
+    "/fixture",
+  );
+  const rejected = expect(opening).rejects.toBeInstanceOf(
+    BrowserWorkspaceRetiredError,
+  );
+  await vi.waitFor(() => expect(openDirectory).toHaveBeenCalledOnce());
+  const closing = owner.close();
+  pending.resolve(directory);
+  await closing;
+  await rejected;
+  expect(client.close).toHaveBeenCalledWith({
+    taskKey: "task-a",
+    label: "page-a",
+  });
+  expect(client.snapshot).not.toHaveBeenCalled();
+});

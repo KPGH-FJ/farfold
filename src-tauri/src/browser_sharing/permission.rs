@@ -1,7 +1,7 @@
 //! One volatile user decision for one already-issued MCP call. No page read,
 //! Agent request, persisted approval or retargeting is performed here.
 use super::{READY, ShareState, ToolSession};
-use crate::browser_workspace::{BrowserInfo, FixedPageReadScope};
+use crate::browser_workspace::{BrowserInfo, ControlReview, FixedPageReadScope};
 use serde::Serialize;
 use std::sync::{Arc, mpsc};
 use std::time::{Duration, Instant};
@@ -17,6 +17,8 @@ pub(crate) struct PendingRequestInfo {
     pub url: String,
     pub page_revision: u64,
     pub phase: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub control: Option<ControlReview>,
 }
 
 pub(super) struct PendingPermission {
@@ -62,9 +64,18 @@ impl ShareState {
 }
 
 impl ToolSession {
+    #[cfg(test)]
     pub(super) fn request_permission(
         self: &Arc<Self>,
         page: BrowserInfo,
+    ) -> Result<PermissionWait, String> {
+        self.request_tool_permission(page, None)
+    }
+
+    pub(super) fn request_tool_permission(
+        self: &Arc<Self>,
+        page: BrowserInfo,
+        control: Option<ControlReview>,
     ) -> Result<PermissionWait, String> {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         if self.task_key().as_deref() != Some(page.task_key.as_str())
@@ -85,7 +96,12 @@ impl ToolSession {
             return Err("无法准备网页读取确认".into());
         }
         let request_id: String = bytes.iter().map(|byte| format!("{byte:02x}")).collect();
-        let deadline = Instant::now() + PERMISSION_WAIT;
+        let deadline = Instant::now()
+            + if control.is_some() {
+                Duration::from_secs(30)
+            } else {
+                PERMISSION_WAIT
+            };
         let (reply, result) = mpsc::channel();
         state.pending_request = Some(PendingPermission {
             info: PendingRequestInfo {
@@ -95,6 +111,7 @@ impl ToolSession {
                 url: page.url,
                 page_revision: page.revision,
                 phase: "awaiting_permission",
+                control,
             },
             deadline,
             reply,
@@ -150,7 +167,16 @@ impl ToolSession {
             self.changed();
             return Err("此网页读取请求已结束，请查看当前对话".into());
         }
-        let result = if allow {
+        let control = pending.info.control.is_some();
+        let result = if allow && control {
+            self.page
+                .lock()
+                .map_err(|_| "网页状态暂时不可用")?
+                .as_ref()
+                .filter(|scope| scope.task_key() == task && scope.label() == label)
+                .ok_or_else(|| "请先允许读取当前网页".to_owned())
+                .and_then(FixedPageReadScope::one_shot)
+        } else if allow {
             capture(&pending.info)
         } else {
             Err("用户取消了本次网页读取".into())
@@ -161,25 +187,36 @@ impl ToolSession {
             .expect("checked pending permission");
         let mut grant = self.page.lock().unwrap_or_else(|e| e.into_inner());
         let result = result.and_then(|scope| {
-            if grant.is_some()
+            if (!control && grant.is_some())
                 || !scope.is_valid()
                 || scope.task_key() != task
                 || scope.label() != label
             {
-                scope.revoke();
+                if control {
+                    scope.cancel_action();
+                } else {
+                    scope.revoke();
+                }
                 Err("网页或对话已变化，请重新确认".into())
             } else {
-                *grant = Some(scope.clone());
+                if !control {
+                    *grant = Some(scope.clone());
+                }
                 Ok(scope)
             }
         });
         let failure = result.as_ref().err().cloned();
         if let Err(undelivered) = pending.reply.send(result) {
             if let Ok(scope) = undelivered.0 {
-                scope.revoke();
-                if grant
-                    .as_ref()
-                    .is_some_and(|current| current.same_grant(&scope))
+                if control {
+                    scope.cancel_action();
+                } else {
+                    scope.revoke();
+                }
+                if !control
+                    && grant
+                        .as_ref()
+                        .is_some_and(|current| current.same_grant(&scope))
                 {
                     *grant = None;
                 }

@@ -1,4 +1,9 @@
-use super::{Bounds, BrowserWorkspace, FixedPageReadScope, local_html::StoragePartition, publish};
+use super::{
+    Bounds, BrowserWorkspace, FixedPageReadScope,
+    local_html::StoragePartition,
+    local_preview::{DevServerOrigin, DirectoryPreview},
+    publish,
+};
 use std::ffi::{CStr, CString, c_char, c_void};
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
@@ -9,6 +14,7 @@ type Policy = unsafe extern "C" fn(*mut c_void, *const c_char) -> bool;
 type Status = unsafe extern "C" fn(*mut c_void, i32, u64, *const c_char) -> u64;
 type Release = unsafe extern "C" fn(*mut c_void);
 type Read = unsafe extern "C" fn(*mut c_void, *const c_char, *const c_char);
+type ResourceRequest = unsafe extern "C" fn(*mut c_void, u64, *const c_char);
 
 unsafe extern "C" {
     fn ff_browser_create(
@@ -37,6 +43,30 @@ unsafe extern "C" {
         storage_identifier: *const c_char,
     ) -> bool;
     fn ff_browser_persistent_html_supported() -> bool;
+    fn ff_browser_create_preview(
+        id: u64,
+        parent: *mut c_void,
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        context: *mut c_void,
+        policy: Policy,
+        status: Status,
+        release: Release,
+        storage_identifier: *const c_char,
+        origin: *const c_char,
+        resource: Option<ResourceRequest>,
+    ) -> bool;
+    fn ff_browser_navigate_preview(id: u64, navigation: u64, url: *const c_char) -> bool;
+    fn ff_browser_resource_finish(
+        id: u64,
+        request: u64,
+        bytes: *const u8,
+        length: usize,
+        mime: *const c_char,
+        headers_json: *const c_char,
+    ) -> bool;
     fn ff_browser_clear_html_storage(
         identifier: *const c_char,
         context: *mut c_void,
@@ -64,6 +94,25 @@ unsafe extern "C" {
         context: *mut c_void,
         callback: Read,
     ) -> i32;
+    fn ff_browser_observe(
+        id: u64,
+        navigation: u64,
+        expected_url: *const c_char,
+        screenshot: bool,
+        context: *mut c_void,
+        callback: Read,
+    ) -> i32;
+    fn ff_browser_act(
+        id: u64,
+        navigation: u64,
+        expected_url: *const c_char,
+        observation_id: *const c_char,
+        node_ref: *const c_char,
+        kind: i32,
+        input_text: *const c_char,
+        context: *mut c_void,
+        callback: Read,
+    ) -> i32;
     fn ff_browser_close(id: u64) -> bool;
     fn ff_browser_close_all() -> bool;
 }
@@ -72,6 +121,87 @@ struct Owner {
     state: BrowserWorkspace,
     app: AppHandle,
     id: u64,
+    directory: Option<(DirectoryPreview, tauri::Url)>,
+}
+
+unsafe extern "C" fn resource_request(context: *mut c_void, request: u64, url: *const c_char) {
+    let owner = unsafe { &*(context.cast::<Owner>()) };
+    // Clone owned state before the callback returns; close may free Owner while
+    // disk I/O is pending. No user filesystem work runs on the WebKit thread.
+    let Some((preview, origin)) = owner.directory.clone() else {
+        return;
+    };
+    let app = owner.app.clone();
+    let id = owner.id;
+    let url = tauri::Url::parse(unsafe { text(url) });
+    let path = url
+        .ok()
+        .filter(|url| {
+            url.scheme() == origin.scheme()
+                && url.host_str() == origin.host_str()
+                && url.port() == origin.port()
+                && url.username().is_empty()
+                && url.password().is_none()
+                && url.query().is_none()
+                && url.fragment().is_none()
+        })
+        .map(|url| url.path().to_owned());
+    let lease = preview.lease();
+    tauri::async_runtime::spawn(async move {
+        let resource = tauri::async_runtime::spawn_blocking(move || {
+            preview.read_resource(&path.ok_or("网页资源位置无效")?)
+        })
+        .await;
+        let _ = app.run_on_main_thread(move || {
+            let delivered = lease.with_live(|| {
+                if let Ok(Ok(resource)) = resource {
+                    let mime = CString::new(resource.mime).expect("fixed MIME");
+                    let headers: std::collections::BTreeMap<_, _> =
+                        resource.headers().into_iter().collect();
+                    let headers = CString::new(
+                        serde_json::to_string(&headers).expect("fixed resource headers"),
+                    )
+                    .expect("JSON has no NUL");
+                    unsafe {
+                        ff_browser_resource_finish(
+                            id,
+                            request,
+                            resource.bytes.as_ptr(),
+                            resource.bytes.len(),
+                            mime.as_ptr(),
+                            headers.as_ptr(),
+                        );
+                    }
+                } else {
+                    unsafe {
+                        ff_browser_resource_finish(
+                            id,
+                            request,
+                            std::ptr::null(),
+                            0,
+                            std::ptr::null(),
+                            std::ptr::null(),
+                        );
+                    }
+                }
+                Ok(())
+            });
+            if delivered.is_err() {
+                // Failure acknowledges no bytes, including a close/revoke while
+                // the file was being read. A stopped native request is ignored.
+                unsafe {
+                    ff_browser_resource_finish(
+                        id,
+                        request,
+                        std::ptr::null(),
+                        0,
+                        std::ptr::null(),
+                        std::ptr::null(),
+                    );
+                }
+            }
+        });
+    });
 }
 
 unsafe fn text<'a>(value: *const c_char) -> &'a str {
@@ -92,6 +222,13 @@ unsafe extern "C" fn status(
     url: *const c_char,
 ) -> u64 {
     let owner = unsafe { &*(context.cast::<Owner>()) };
+    if kind == 6 {
+        if let Some((token, info)) = owner.state.manual_activity(owner.id) {
+            publish(&owner.app, info);
+            return token;
+        }
+        return 0;
+    }
     if kind == 4 {
         if let Some((token, info)) = owner.state.link_navigation(owner.id, unsafe { text(url) }) {
             publish(&owner.app, info);
@@ -173,12 +310,45 @@ pub(super) async fn create_html(
     .await
 }
 
+pub(super) async fn create_directory(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    bounds: Bounds,
+    preview: DirectoryPreview,
+    origin: tauri::Url,
+) -> Result<(), String> {
+    create_content(
+        app,
+        state,
+        id,
+        bounds,
+        InitialContent::Directory { preview, origin },
+    )
+    .await
+}
+
+pub(super) async fn create_development(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    bounds: Bounds,
+    origin: DevServerOrigin,
+) -> Result<(), String> {
+    create_content(app, state, id, bounds, InitialContent::Development(origin)).await
+}
+
 enum InitialContent {
     Public(String),
     Html {
         storage: StoragePartition,
         document: String,
     },
+    Directory {
+        preview: DirectoryPreview,
+        origin: tauri::Url,
+    },
+    Development(DevServerOrigin),
 }
 
 async fn create_content(
@@ -201,6 +371,12 @@ async fn create_content(
                 state,
                 app: owner_app,
                 id,
+                directory: match &content {
+                    InitialContent::Directory { preview, origin } => {
+                        Some((preview.clone(), origin.clone()))
+                    }
+                    _ => None,
+                },
             }))
             .cast();
             // Tauri's official PlatformWebview.inner() is the current WKWebView.
@@ -210,9 +386,39 @@ async fn create_content(
                 InitialContent::Html { storage, .. } => {
                     Some(CString::new(storage.identifier.clone()).expect("generated UUID"))
                 }
+                InitialContent::Directory { preview, .. } => {
+                    Some(CString::new(preview.storage_identifier()).expect("generated UUID"))
+                }
+                InitialContent::Development(_) => None,
                 _ => None,
             };
-            let success = if let Some(storage_id) = storage_id {
+            let preview_origin = match &content {
+                InitialContent::Directory { origin, .. } => Some((origin.as_str(), true)),
+                InitialContent::Development(origin) => Some((origin.start_url().as_str(), false)),
+                _ => None,
+            };
+            let success = if let Some((origin, directory)) = preview_origin {
+                let origin = CString::new(origin).expect("validated origin");
+                unsafe {
+                    ff_browser_create_preview(
+                        id,
+                        platform.inner(),
+                        bounds.x,
+                        bounds.y,
+                        bounds.width,
+                        bounds.height,
+                        context,
+                        policy,
+                        status,
+                        release,
+                        storage_id
+                            .as_ref()
+                            .map_or(std::ptr::null(), |value| value.as_ptr()),
+                        origin.as_ptr(),
+                        directory.then_some(resource_request as ResourceRequest),
+                    )
+                }
+            } else if let Some(storage_id) = storage_id {
                 unsafe {
                     ff_browser_create_html(
                         id,
@@ -265,6 +471,18 @@ async fn create_content(
                         },
                         Err(_) => false,
                     }
+                }
+                InitialContent::Directory {
+                    preview,
+                    mut origin,
+                } => {
+                    origin.set_path(&preview.entry_path());
+                    let target = CString::new(origin.as_str()).expect("generated URL");
+                    unsafe { ff_browser_navigate_preview(id, 1, target.as_ptr()) }
+                }
+                InitialContent::Development(origin) => {
+                    let target = CString::new(origin.start_url().as_str()).expect("validated URL");
+                    unsafe { ff_browser_navigate_preview(id, 1, target.as_ptr()) }
                 }
             };
             if !started {
@@ -327,6 +545,26 @@ pub(super) async fn navigate(
             Ok(())
         } else {
             Err("网页已关闭或地址未获准".into())
+        }
+    })
+    .await
+}
+
+pub(super) async fn navigate_preview(
+    app: &AppHandle,
+    state: BrowserWorkspace,
+    id: u64,
+    navigation: u64,
+    url: String,
+) -> Result<(), String> {
+    main(app, move || {
+        let target = CString::new(url).map_err(|_| "网页地址无效")?;
+        if state.can_operate(id, Some(navigation))
+            && unsafe { ff_browser_navigate_preview(id, navigation, target.as_ptr()) }
+        {
+            Ok(())
+        } else {
+            Err("本地网页无法打开".into())
         }
     })
     .await
@@ -427,4 +665,141 @@ pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<S
     })
     .await?;
     receiver.await.map_err(|_| "网页读取已取消")?
+}
+
+pub(super) enum NativeAction {
+    Click,
+    Input { text: String },
+}
+
+enum ObservationOperation {
+    Observe {
+        screenshot: bool,
+    },
+    Act {
+        observation_id: CString,
+        node_ref: CString,
+        kind: i32,
+        input: CString,
+    },
+}
+
+pub(super) async fn observe(
+    app: &AppHandle,
+    scope: FixedPageReadScope,
+    _screenshot: bool,
+) -> Result<String, String> {
+    // Current public WebKit APIs cannot rule out filled controls in closed
+    // shadow trees. Keep pixel capture confined to the direct synthetic native
+    // fixture until that boundary can be enforced; no production Rust caller
+    // can request pixels, even if an upper layer accidentally passes true.
+    observation_operation(
+        app,
+        scope,
+        ObservationOperation::Observe { screenshot: false },
+    )
+    .await
+}
+
+pub(super) async fn act(
+    app: &AppHandle,
+    scope: FixedPageReadScope,
+    observation_id: String,
+    node_ref: String,
+    action: NativeAction,
+) -> Result<String, String> {
+    if observation_id.is_empty()
+        || observation_id.len() > 128
+        || node_ref.is_empty()
+        || node_ref.len() > 64
+    {
+        return Err("网页操作目标无效，请重新观察".into());
+    }
+    let (kind, input) = match action {
+        NativeAction::Click => (1, String::new()),
+        NativeAction::Input { text } => (2, text),
+    };
+    if input.len() > 8192
+        || input
+            .chars()
+            .any(|value| value.is_control() && value != '\n' && value != '\t')
+    {
+        return Err("输入内容过长或含不支持的字符".into());
+    }
+    let operation = ObservationOperation::Act {
+        observation_id: CString::new(observation_id).map_err(|_| "网页操作目标无效")?,
+        node_ref: CString::new(node_ref).map_err(|_| "网页操作目标无效")?,
+        kind,
+        input: CString::new(input).map_err(|_| "输入内容无效")?,
+    };
+    observation_operation(app, scope, operation).await
+}
+
+async fn observation_operation(
+    app: &AppHandle,
+    scope: FixedPageReadScope,
+    operation: ObservationOperation,
+) -> Result<String, String> {
+    let (sender, receiver) = oneshot::channel();
+    main(app, move || {
+        let navigation = scope.navigation();
+        let outcome = scope.observe(|id, expected| {
+            if sender.is_closed() {
+                return Err("网页操作已取消".into());
+            }
+            // Agent observation/actions always require the exact captured URL.
+            let expected = CString::new(expected.ok_or("请先确认要分享的页面")?)
+                .map_err(|_| "网页地址无效")?;
+            let context = Box::into_raw(Box::new(sender)).cast();
+            let outcome = unsafe {
+                match operation {
+                    ObservationOperation::Observe { screenshot } => ff_browser_observe(
+                        id,
+                        navigation,
+                        expected.as_ptr(),
+                        screenshot,
+                        context,
+                        read_result,
+                    ),
+                    ObservationOperation::Act {
+                        observation_id,
+                        node_ref,
+                        kind,
+                        input,
+                    } => ff_browser_act(
+                        id,
+                        navigation,
+                        expected.as_ptr(),
+                        observation_id.as_ptr(),
+                        node_ref.as_ptr(),
+                        kind,
+                        input.as_ptr(),
+                        context,
+                        read_result,
+                    ),
+                }
+            };
+            if outcome != 1 {
+                drop(unsafe {
+                    Box::from_raw(context.cast::<oneshot::Sender<Result<String, String>>>())
+                });
+            }
+            Ok(outcome)
+        })?;
+        match outcome {
+            1 => Ok(()),
+            2 => {
+                scope.revoke();
+                Err("网页已变化，请重新确认要分享的页面".into())
+            }
+            3 => Err("网页操作目标已失效，请重新观察".into()),
+            _ => Err("网页正在变化或操作中，请稍后再试".into()),
+        }
+    })
+    .await?;
+    // A cancelled receiver cannot imply that an already dispatched action had
+    // no effect. Callers must keep timeout/closed results unknown and never retry.
+    receiver
+        .await
+        .map_err(|_| "网页操作结果未确认，请查看页面")?
 }

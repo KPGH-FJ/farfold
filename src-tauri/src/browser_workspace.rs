@@ -1,8 +1,15 @@
 //! Public pages and verified local HTML share one independent WK view without a Tauri bridge.
 //! Public pages stay temporary; offline HTML has isolated, per-project/file storage.
 //! Tools receive only a fixed, revocable public-page read scope.
+#[path = "browser_workspace/browser_tools.rs"]
+mod browser_tools;
 #[path = "browser_workspace/local_html.rs"]
 mod local_html;
+#[path = "browser_workspace/local_preview.rs"]
+mod local_preview;
+#[path = "browser_workspace/preview_commands.rs"]
+pub(crate) mod preview_commands;
+use preview_commands::PreviewSource;
 #[path = "browser_workspace/native.rs"]
 mod native;
 #[path = "browser_workspace/page_read.rs"]
@@ -18,6 +25,7 @@ use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Url, Webview};
 
+pub(crate) use browser_tools::{ControlReview, ToolRequest};
 pub(crate) use page_read::{FixedPageReadScope, PageReadLease};
 pub use policy::Bounds;
 #[cfg(test)]
@@ -40,6 +48,7 @@ struct Active {
     info: BrowserInfo,
     origin: Url,
     local_storage: Option<local_html::StoragePartition>,
+    preview: Option<PreviewSource>,
     navigation: u64,
     closing: bool,
 }
@@ -53,6 +62,8 @@ pub struct BrowserInfo {
     /// Present only for a verified, offline local HTML document. Never shareable.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub local_file_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preview_mode: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub local_storage_persistent: Option<bool>,
     pub phase: String,
@@ -135,6 +146,7 @@ impl BrowserWorkspace {
                 .as_ref()
                 .map(|_| native::persistent_html_supported()),
             local_file_name,
+            preview_mode: None,
             phase: "loading".into(),
             revision: 1,
             error: None,
@@ -144,6 +156,7 @@ impl BrowserWorkspace {
             info: info.clone(),
             origin: url,
             local_storage,
+            preview: None,
             navigation: 1,
             closing: false,
         });
@@ -172,7 +185,7 @@ impl BrowserWorkspace {
                     && !active.closing
                     && active.info.task_key == task
                     && active.info.phase == "ready"
-                    && active.info.local_file_name.is_none()
+                    && active.shareable()
             })
             .map(|active| active.info.clone())
             .ok_or_else(|| "请先打开此对话的公开网页".into())
@@ -211,11 +224,17 @@ impl BrowserWorkspace {
         if active.closing {
             return Err("网页正在关闭，请重试关闭后再打开".into());
         }
-        if active.info.local_file_name.is_some() {
+        if active.preview.is_some() {
+            if active.allowed_url(url.as_str()).is_none() {
+                return Err("此跳转不在已选择的网页范围内".into());
+            }
+        } else if active.info.local_file_name.is_some() {
             return Err("本地网页不能跳转到网站，请关闭后从网页入口打开".into());
         }
         // Only this explicit user command may authorize a different origin.
-        active.origin = url.clone();
+        if active.preview.is_none() {
+            active.origin = url.clone();
+        }
         active.navigation += 1;
         active.info.revision += 1;
         active.info.url = url.to_string();
@@ -224,12 +243,33 @@ impl BrowserWorkspace {
         Ok(active.info.clone())
     }
 
+    pub(super) fn is_preview(&self, id: u64) -> bool {
+        self.0.lock().is_ok_and(|s| {
+            s.active
+                .as_ref()
+                .is_some_and(|a| a.id == id && a.preview.is_some())
+        })
+    }
+
     fn can_operate(&self, id: u64, navigation: Option<u64>) -> bool {
         self.0.lock().ok().is_some_and(|store| {
             store.active.as_ref().is_some_and(|a| {
                 a.id == id && !a.closing && navigation.is_none_or(|n| n == a.navigation)
             })
         })
+    }
+
+    /// User input takes control back without inspecting its contents. Keep the
+    /// page visible, but invalidate every outstanding observation/operation.
+    pub(super) fn manual_activity(&self, id: u64) -> Option<(u64, BrowserInfo)> {
+        let mut store = self.0.lock().ok()?;
+        let active = store
+            .active
+            .as_mut()
+            .filter(|a| a.id == id && !a.closing && a.info.phase == "ready")?;
+        active.navigation = active.navigation.checked_add(1)?;
+        active.info.revision = active.info.revision.checked_add(1)?;
+        Some((active.navigation, active.info.clone()))
     }
 
     fn navigation(&self, id: u64) -> Result<u64, String> {
@@ -249,6 +289,9 @@ impl BrowserWorkspace {
         let Some(active) = store.active.as_ref().filter(|a| a.id == id && !a.closing) else {
             return false;
         };
+        if active.preview.is_some() {
+            return active.allowed_url(text).is_some();
+        }
         if active.info.local_file_name.is_some() {
             // Only the exact initial in-memory load is admitted. No local path,
             // subframe or later same-origin navigation acquires a file grant.
@@ -259,12 +302,12 @@ impl BrowserWorkspace {
 
     // A link is claimed BEFORE native loadRequest; didStart never invents a token.
     fn link_navigation(&self, id: u64, text: &str) -> Option<(u64, BrowserInfo)> {
-        let url = policy::validate_public_url(text).ok()?;
         let mut store = self.0.lock().ok()?;
         let a = store.active.as_mut().filter(|a| a.id == id && !a.closing)?;
-        if a.info.local_file_name.is_some() || !policy::same_origin(&a.origin, &url) {
+        if !a.shareable() {
             return None;
         }
+        let url = a.allowed_url(text)?;
         a.navigation = a.navigation.checked_add(1)?;
         a.info.revision += 1;
         a.info.url = url.to_string();
@@ -286,15 +329,9 @@ impl BrowserWorkspace {
         match kind {
             0 => {}
             1 => {
-                let valid = if active.info.local_file_name.is_some() {
-                    (raw_url == active.origin.as_str()).then(|| active.origin.clone())
-                } else {
-                    policy::validate_public_url(raw_url)
-                        .ok()
-                        .filter(|url| policy::same_origin(url, &active.origin))
-                };
+                let valid = active.allowed_url(raw_url);
                 if let Some(url) = valid {
-                    if active.info.local_file_name.is_none() {
+                    if active.shareable() {
                         active.info.url = url.to_string();
                     }
                     active.info.phase = "ready".into();
@@ -327,7 +364,7 @@ impl BrowserWorkspace {
             .as_ref()
             .filter(|a| a.id == id)
             .ok_or("网页已关闭或已更换")?;
-        if active.info.local_file_name.is_some() {
+        if !active.shareable() {
             return Err("本地网页暂不提供网页读取或分享".into());
         }
         if active.closing || active.info.phase != "ready" {
@@ -350,10 +387,9 @@ impl BrowserWorkspace {
             if page.blocked {
                 return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
             }
-            let url = policy::validate_public_url(&page.url)?;
-            if !policy::same_origin(&url, &active.origin) {
-                return Err("网页已变化，本次读取已取消".into());
-            }
+            let url = active
+                .allowed_url(&page.url)
+                .ok_or("网页已变化，本次读取已取消")?;
             if page.title.chars().count() > 512 || page.text.chars().count() > 65_536 {
                 return Err("网页返回内容过大".into());
             }
@@ -390,7 +426,7 @@ impl BrowserWorkspace {
                     && !a.closing
                     && a.navigation == ticket.navigation
                     && a.info.phase == "ready"
-                    && a.info.local_file_name.is_none()
+                    && a.shareable()
             })
             .ok_or("网页已变化，本次读取已取消，请重新读取")?;
         // Keep ownership/navigation stable through a fast nonblocking action.
@@ -408,6 +444,9 @@ impl BrowserWorkspace {
         }
         let active = store.active.as_mut().ok_or("网页已关闭")?;
         active.closing = true;
+        if let Some(preview) = &active.preview {
+            preview.revoke();
+        }
         active.info.phase = "loading".into();
         active.info.revision += 1;
         active.info.error = None;
@@ -456,6 +495,9 @@ impl BrowserWorkspace {
         store.shutting_down = true;
         if let Some(active) = store.active.as_mut() {
             active.closing = true;
+            if let Some(preview) = &active.preview {
+                preview.revoke();
+            }
             active.info.phase = "loading".into();
             active.info.revision = active.info.revision.saturating_add(1);
         }
@@ -611,9 +653,23 @@ pub async fn browser_workspace_navigate(
     url: String,
 ) -> Result<BrowserInfo, String> {
     require_main(&webview)?;
-    let url = policy::validate_public_url(&url)?;
     let _operation = state.1.lock().await;
     let id = state.identity(&task_key, &label)?;
+    let url = {
+        let store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
+        let active = store
+            .active
+            .as_ref()
+            .filter(|a| a.id == id)
+            .ok_or("网页已关闭")?;
+        if active.preview.is_some() {
+            active
+                .allowed_url(&url)
+                .ok_or("此地址不在已选择的网页范围内")?
+        } else {
+            policy::validate_public_url(&url)?
+        }
+    };
     let info = state.navigate(id, url.clone())?;
     publish(&app, info);
     let token = state.navigation(id)?;
@@ -625,9 +681,11 @@ pub async fn browser_workspace_navigate(
         }
         return Err(error);
     }
-    if let Err(error) =
+    if let Err(error) = if state.is_preview(id) {
+        native::navigate_preview(&app, state.inner().clone(), id, token, url.to_string()).await
+    } else {
         native::navigate(&app, state.inner().clone(), id, token, url.to_string()).await
-    {
+    } {
         if let Some(info) = state.event(id, token, 2, "") {
             publish(&app, info);
         }

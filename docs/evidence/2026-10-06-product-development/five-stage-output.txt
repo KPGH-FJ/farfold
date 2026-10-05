@@ -1,0 +1,15 @@
+/tmp/farfold-five-stage-frontend-final2.log
+ Test Files  181 passed (181)
+      Tests  2085 passed (2085)
+
+/tmp/farfold-five-stage-rust-tests-bounded.log
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.64s
+test result: ok. 915 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 36.68s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+/tmp/farfold-five-stage-clippy-final.log
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.66s
+
+/tmp/farfold-five-stage-format-final2.log
+All matched files use Prettier code style!

@@ -133,6 +133,8 @@ pub fn run() {
                 browser_sharing::browser_share_stop,
                 browser_workspace::browser_workspace_open,
                 browser_workspace::browser_workspace_open_html,
+                browser_workspace::preview_commands::browser_workspace_open_directory,
+                browser_workspace::preview_commands::browser_workspace_open_development,
                 browser_workspace::browser_workspace_clear_html_storage,
                 browser_workspace::browser_workspace_navigate,
                 browser_workspace::browser_workspace_resize,

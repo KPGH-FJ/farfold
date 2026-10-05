@@ -1,0 +1,66 @@
+{
+  "checks" : [
+    {
+      "name" : "create",
+      "pass" : true
+    },
+    {
+      "name" : "navigate",
+      "pass" : true
+    },
+    {
+      "name" : "observe",
+      "pass" : true
+    },
+    {
+      "name" : "observation_ready_before_user_activity",
+      "pass" : true
+    },
+    {
+      "name" : "local_monitor_registered",
+      "pass" : true
+    },
+    {
+      "name" : "outside_approval_area_click_keeps_page_scope",
+      "pass" : true
+    },
+    {
+      "name" : "hidden_page_click_ignored",
+      "pass" : true
+    },
+    {
+      "name" : "owned_page_click_advances_navigation_and_clears_node_map",
+      "pass" : true
+    },
+    {
+      "name" : "old_action_ref_rejected_after_manual_click",
+      "pass" : true
+    },
+    {
+      "name" : "app_composer_keyboard_focus_ignored",
+      "pass" : true
+    },
+    {
+      "name" : "page_keyboard_focus_revokes_without_reading_key_data",
+      "pass" : true
+    },
+    {
+      "name" : "pending_observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "manual_activity_cancels_pending_observation_without_body",
+      "pass" : true
+    },
+    {
+      "name" : "close_removes_monitor",
+      "pass" : true
+    },
+    {
+      "name" : "pending_callback_once",
+      "pass" : true
+    }
+  ],
+  "pass" : true,
+  "scope" : "Direct synthetic NSEvent objects passed only to the production ownership predicate of this test-owned hidden window. No system keyboard\/mouse injection and no user content. Real WebKit observation callback cancellation. Does not claim installed-app event-loop acceptance."
+}

@@ -30,6 +30,7 @@ fn fixture() -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope) {
         label: "page-a".into(),
         url: "https://example.com/public".into(),
         local_file_name: None,
+        preview_mode: None,
         local_storage_persistent: None,
         phase: "ready".into(),
         revision: 3,
@@ -234,4 +235,46 @@ fn waiting_timeout_cleans_request_on_drop_even_without_a_user_response() {
     drop(wait);
     assert!(owner.info(TASK, "").pending_request.is_none());
     assert_eq!(owner.info(TASK, "").revision, 3);
+}
+
+#[test]
+fn explicit_operation_grant_is_one_shot_and_does_not_replace_the_read_grant() {
+    let (owner, page, scope) = fixture();
+    *owner.page.lock().unwrap() = Some(scope.clone());
+    let wait = owner
+        .request_tool_permission(
+            page.clone(),
+            Some(crate::browser_workspace::ControlReview {
+                kind: "screenshot",
+                target: "Visible page".into(),
+                text: None,
+            }),
+        )
+        .unwrap();
+    let id = pending_id(&owner);
+    owner
+        .respond_permission(TASK, &page.label, &id, true, |_| {
+            panic!("operation must not manufacture a new read scope")
+        })
+        .unwrap();
+    let approved = wait.poll().unwrap().unwrap();
+    approved.cancel_action();
+    assert!(!approved.is_valid());
+    assert!(scope.is_valid());
+    assert!(
+        owner
+            .page
+            .lock()
+            .unwrap()
+            .as_ref()
+            .unwrap()
+            .same_grant(&scope)
+    );
+    assert!(
+        owner
+            .respond_permission(TASK, &page.label, &id, true, |_| panic!(
+                "no second delivery"
+            ))
+            .is_err()
+    );
 }

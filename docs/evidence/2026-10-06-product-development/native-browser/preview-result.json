@@ -1,0 +1,102 @@
+{
+  "checks" : [
+    {
+      "name" : "validated_default_http_origin_create",
+      "pass" : true
+    },
+    {
+      "name" : "validated_default_https_origin_create",
+      "pass" : true
+    },
+    {
+      "name" : "default_origin_views_closed_without_network",
+      "pass" : true
+    },
+    {
+      "name" : "directory_create",
+      "pass" : true
+    },
+    {
+      "name" : "directory_initial_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "directory_real_multi_file_script_style_image",
+      "pass" : true
+    },
+    {
+      "name" : "directory_same_source_fetch",
+      "pass" : true
+    },
+    {
+      "name" : "directory_CSP_blocks_external_and_other_source_fetch",
+      "pass" : true
+    },
+    {
+      "name" : "directory_local_storage_and_no_tauri_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "directory_observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "directory_observation_real_DOM_and_pixels",
+      "pass" : true
+    },
+    {
+      "name" : "directory_unselected_top_origin_denied",
+      "pass" : true
+    },
+    {
+      "name" : "directory_delayed_resource_started",
+      "pass" : true
+    },
+    {
+      "name" : "delayed_request_recorded",
+      "pass" : true
+    },
+    {
+      "name" : "directory_close_ack",
+      "pass" : true
+    },
+    {
+      "name" : "late_resource_not_delivered_after_close",
+      "pass" : true
+    },
+    {
+      "name" : "development_create",
+      "pass" : true
+    },
+    {
+      "name" : "development_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "development_ignores_persistent_store_argument",
+      "pass" : true
+    },
+    {
+      "name" : "development_real_page_no_bridge",
+      "pass" : true
+    },
+    {
+      "name" : "development_external_top_navigation_denied",
+      "pass" : true
+    },
+    {
+      "name" : "all_preview_close",
+      "pass" : true
+    }
+  ],
+  "pass" : true,
+  "requests" : [
+    "\/image.svg",
+    "\/delayed.html",
+    "\/index.html",
+    "\/style.css",
+    "\/main.js",
+    "\/data.json"
+  ],
+  "scope" : "Real WKURLSchemeHandler and WebKit custom origin multi-resource loading with synthetic callback bytes; actual production native create\/finish\/close. Test-only direct WK JS reads assertions. Directory filesystem guards\/lease tested separately in Rust; does not prove Tauri UI integration or installed app. Explicit loopback dev page retains its network capabilities; no network sandbox claim."
+}

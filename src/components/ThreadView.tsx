@@ -275,7 +275,8 @@ export function ThreadView({
           },
         }
       : null,
-    browserPage?.taskKey === thread.key && !browserPage.localFileName
+    browserPage?.taskKey === thread.key &&
+      (!browserPage.localFileName || !!browserPage.previewMode)
       ? browserPage
       : null,
     active,

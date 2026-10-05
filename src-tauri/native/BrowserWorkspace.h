@@ -7,6 +7,7 @@ typedef bool (*FFBrowserPolicy)(void *context, const char *url);
 typedef uint64_t (*FFBrowserStatus)(void *context, int event, uint64_t navigation, const char *url);
 typedef void (*FFBrowserRelease)(void *context);
 typedef void (*FFBrowserRead)(void *context, const char *json, const char *error);
+typedef void (*FFBrowserResource)(void *context, uint64_t request_id, const char *url);
 
 // All entry points run on the main thread. IDs address only this module's
 // registry; no raw view, IPC object, eval function or port is returned to JS.
@@ -20,6 +21,19 @@ bool ff_browser_create_html(uint64_t id, void *parent_wk_view, double x, double 
                        double width, double height, void *context,
                        FFBrowserPolicy policy, FFBrowserStatus status,
                        FFBrowserRelease release, const char *storage_identifier);
+// resource is non-NULL only for an exact ff-preview:// source. NULL selects an
+// explicit loopback development origin and always uses a fresh temporary store.
+// Neither mode grants an application bridge.
+bool ff_browser_create_preview(uint64_t id, void *parent_wk_view, double x, double y,
+                       double width, double height, void *context,
+                       FFBrowserPolicy policy, FFBrowserStatus status,
+                       FFBrowserRelease release, const char *storage_identifier,
+                       const char *origin, FFBrowserResource resource);
+bool ff_browser_navigate_preview(uint64_t id, uint64_t navigation, const char *url);
+// Final resource delivery must occur under the source's live lease. A cancelled
+// request ID is ignored. NULL mime denotes a bounded, non-path-revealing failure.
+bool ff_browser_resource_finish(uint64_t id, uint64_t request_id, const uint8_t *bytes,
+                               uintptr_t length, const char *mime, const char *headers_json);
 bool ff_browser_persistent_html_supported(void);
 // Requires every view for this exact store to be closed; callback acknowledges
 // clearing its page data. Reopening is blocked until completion, including after
@@ -36,6 +50,14 @@ bool ff_browser_set_visible(uint64_t id, bool visible, double x, double y, doubl
 // 0: unavailable, 1: started (callback owns context), 2: expected URL changed.
 // expected_url is NULL for the manual preview; a shared read requires its exact URL.
 int32_t ff_browser_read(uint64_t id, const char *expected_url, void *context, FFBrowserRead callback);
+// Fixed observation/action programs only. Navigation, URL and one-use node refs
+// are checked again inside WebKit; no caller-supplied script is accepted.
+int32_t ff_browser_observe(uint64_t id, uint64_t navigation, const char *expected_url,
+                          bool screenshot, void *context, FFBrowserRead callback);
+// kind 1 = click, 2 = replace ordinary text field. No submit/key/script API.
+int32_t ff_browser_act(uint64_t id, uint64_t navigation, const char *expected_url,
+                      const char *observation_id, const char *node_ref, int32_t kind,
+                      const char *input_text, void *context, FFBrowserRead callback);
 bool ff_browser_close(uint64_t id);
 // Shutdown only: permanently rejects new create/navigate/resize/read operations
 // in this process and closes this module's owners. Call on the main thread.

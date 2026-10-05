@@ -1324,3 +1324,79 @@ it("closes the current HTML owner on unmount after replacing an earlier page", a
   );
   await vi.waitFor(() => expect(guard.hasSurfaces).toBe(false));
 });
+
+it.each(["directory", "development"] as const)(
+  "reloads %s in its existing owner without a picker or replacement store",
+  async (mode) => {
+    const backend = client();
+    const state = {
+      taskKey: "task-a",
+      label: "preview-owner",
+      revision: 1,
+      phase: "ready" as const,
+      url:
+        mode === "directory"
+          ? "ff-preview://preview-test/index.html"
+          : "http://127.0.0.1:3000/",
+      previewMode: mode,
+      ...(mode === "directory"
+        ? { localFileName: "index.html", localStoragePersistent: true }
+        : {}),
+    };
+    backend.openDirectory = vi.fn(async () => state);
+    backend.openDevelopment = vi.fn(async () => state);
+    vi.mocked(backend.navigate).mockResolvedValue({ ...state, revision: 2 });
+    const props = {
+      taskKey: "task-a",
+      projectDirectory: "/fixture-project",
+      active: true,
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+    };
+    render(props);
+    await Promise.resolve();
+    if (mode === "directory") {
+      h.chooseFile.mockResolvedValueOnce("/fixture-project/index.html");
+      clickLabel(render(props).tree, "打开项目网页…");
+      await vi.waitFor(() =>
+        expect(backend.openDirectory).toHaveBeenCalledOnce(),
+      );
+    } else {
+      find(render(props).tree, (n) => n.type === "select").props.onChange({
+        target: { value: "development" },
+      });
+      find(render(props).tree, (n) => n.type === "input").props.onChange({
+        target: { value: state.url },
+      });
+      await find(render(props).tree, (n) => n.type === "form").props.onSubmit({
+        preventDefault() {},
+      });
+      await vi.waitFor(() =>
+        expect(backend.openDevelopment).toHaveBeenCalledOnce(),
+      );
+    }
+    await vi.waitFor(() =>
+      expect(render(props).html).toContain(
+        mode === "directory" ? "index.html" : "本机服务地址",
+      ),
+    );
+    clickLabel(
+      render(props).tree,
+      mode === "directory" ? "重新载入文件" : "重新加载网页",
+    );
+    await vi.waitFor(() =>
+      expect(backend.navigate).toHaveBeenCalledExactlyOnceWith({
+        taskKey: "task-a",
+        label: state.label,
+        url: state.url,
+      }),
+    );
+    expect(backend.close).not.toHaveBeenCalled();
+    expect(
+      mode === "directory" ? backend.openDirectory : backend.openDevelopment,
+    ).toHaveBeenCalledOnce();
+    expect(h.chooseFile).toHaveBeenCalledTimes(mode === "directory" ? 1 : 0);
+    if (mode === "directory")
+      expect(render(props).html).not.toContain("在浏览器打开");
+  },
+);

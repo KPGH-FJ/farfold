@@ -1,5 +1,17 @@
 export const BROWSER_WORKSPACE_STRINGS = {
   title: "网页",
+  source: "打开来源",
+  development: "本机服务",
+  openDirectory: "打开项目网页…",
+  directoryHint:
+    "可加载当前工作文件夹内的 HTML、脚本、样式和图片；文件夹外及受保护配置不能读取。",
+  developmentHint:
+    "仅打开你指定的本机服务。该应用可以请求网络资源；内容不会自动提供给 Agent。",
+  developmentAddress: "本机服务地址",
+  developmentPlaceholder: "http://127.0.0.1:3000",
+  invalidDevelopment:
+    "请输入包含端口的 http://127.0.0.1:端口 或 http://[::1]:端口。",
+  directoryFailed: "项目网页未能打开，请选择当前工作文件夹内的 HTML 入口。",
   openHtml: "打开 HTML…",
   chooseHtml: "选择 HTML 文件",
   choosingHtml: "正在核实 HTML 文件…",
@@ -36,8 +48,9 @@ export const BROWSER_WORKSPACE_STRINGS = {
   reading: "正在读取…",
   close: "关闭网页",
   closing: "正在关闭…",
-  emptyTitle: "在这里查看公开网页",
-  emptyBody: "输入网址，或打开本地 HTML。内容不会自动发给 Agent。",
+  emptyTitle: "在这里查看网页",
+  emptyBody:
+    "输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。",
   currentAddress: "当前地址",
   reload: "重新加载网页",
   publicPage: "公开网页",

@@ -430,11 +430,22 @@ impl BrowserSharing {
                         .retain(|entry| !entry.removable());
                 }
             }),
-            Arc::new(move || {
+            Arc::new(move |request: &crate::browser_workspace::ToolRequest| {
                 let owner = permission_owner.upgrade().ok_or("当前对话已结束")?;
                 let task = owner.task_key().ok_or("网页工具尚未准备完成")?;
                 let page = workspace.permission_page(&task)?;
-                let wait = owner.request_permission(page.clone())?;
+                let control = if request.control() {
+                    let grant = owner.page.lock().map_err(|_| "网页状态暂时不可用")?;
+                    Some(
+                        grant
+                            .as_ref()
+                            .ok_or("请先允许读取当前网页")?
+                            .review_control(request)?,
+                    )
+                } else {
+                    None
+                };
+                let wait = owner.request_tool_permission(page.clone(), control)?;
                 // Close the metadata-snapshot -> pending-registration race.
                 // Later changes see the registered request and invalidate it.
                 let current = workspace.permission_page(&task)?;

@@ -45,6 +45,8 @@ pub(crate) struct FixedPageReadScope {
     // Only the private manual constructor omits a lease.
     lease: Option<PageReadLease>,
     expected_url: Option<String>,
+    pub(super) observation: Arc<Mutex<Option<super::browser_tools::Observation>>>,
+    action_lease: Option<PageReadLease>,
 }
 
 impl BrowserWorkspace {
@@ -68,7 +70,7 @@ impl BrowserWorkspace {
                         && active.info.label == label
                         && active.info.revision == expected_revision
                         && active.info.phase == "ready"
-                        && active.info.local_file_name.is_none()
+                        && active.shareable()
                         && !active.closing
                 })
                 .ok_or("网页已变化，请重新确认要分享的页面")?;
@@ -87,6 +89,8 @@ impl BrowserWorkspace {
             ticket,
             lease: Some(lease),
             expected_url: Some(expected_url),
+            observation: Arc::new(Mutex::new(None)),
+            action_lease: None,
         };
         scope.with_valid(|| Ok(()))?;
         Ok(scope)
@@ -102,6 +106,8 @@ impl BrowserWorkspace {
             ticket: self.read_ticket(task, label)?,
             lease: None,
             expected_url: None,
+            observation: Arc::new(Mutex::new(None)),
+            action_lease: None,
         })
     }
 }
@@ -118,9 +124,13 @@ impl FixedPageReadScope {
     }
 
     fn with_lease<T>(&self, action: impl FnOnce() -> Result<T, String>) -> Result<T, String> {
-        match &self.lease {
+        let with_action = || match &self.action_lease {
             Some(lease) => lease.with_live(action),
             None => action(),
+        };
+        match &self.lease {
+            Some(lease) => lease.with_live(with_action),
+            None => with_action(),
         }
     }
 
@@ -138,6 +148,31 @@ impl FixedPageReadScope {
 
     pub(crate) fn label(&self) -> &str {
         &self.ticket.label
+    }
+
+    pub(super) fn navigation(&self) -> u64 {
+        self.ticket.navigation
+    }
+
+    pub(super) fn matches_url(&self, url: &str) -> bool {
+        self.expected_url
+            .as_ref()
+            .is_some_and(|expected| expected == url)
+    }
+
+    /// An approved operation inherits page withdrawal and also owns a separate
+    /// one-shot gate. Cancelling it must not withdraw the general read grant.
+    pub(crate) fn one_shot(&self) -> Result<Self, String> {
+        self.with_valid(|| Ok(()))?;
+        let mut scope = self.clone();
+        scope.action_lease = Some(PageReadLease::new());
+        Ok(scope)
+    }
+
+    pub(crate) fn cancel_action(&self) {
+        if let Some(lease) = &self.action_lease {
+            lease.revoke();
+        }
     }
 
     pub(crate) fn same_grant(&self, other: &Self) -> bool {
@@ -168,10 +203,11 @@ impl FixedPageReadScope {
                 self.revoke();
                 return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
             }
-            if self.expected_url.as_ref().is_some_and(|expected| {
-                !super::policy::validate_public_url(&page.url)
-                    .is_ok_and(|url| url.as_str() == expected)
-            }) {
+            if self
+                .expected_url
+                .as_ref()
+                .is_some_and(|expected| page.url != *expected)
+            {
                 self.revoke();
                 return Err("网页已变化，请重新确认要分享的页面".into());
             }

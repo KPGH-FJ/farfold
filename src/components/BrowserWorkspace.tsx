@@ -19,6 +19,7 @@ import {
   BrowserWorkspaceScope,
   browserWorkspaceBounds,
   publicBrowserUrl,
+  developmentBrowserUrl,
   type BrowserWorkspaceBounds,
   type BrowserWorkspaceClient,
   type BrowserWorkspaceSnapshot,
@@ -74,7 +75,7 @@ function phaseText(state: BrowserWorkspaceState | null): string {
     state?.localFileName !== undefined &&
     (state.phase === "blocked" || state.phase === "error")
   )
-    return S.htmlFailed;
+    return state.previewMode === "directory" ? S.directoryFailed : S.htmlFailed;
   switch (state?.phase) {
     case "loading":
       return S.loading;
@@ -134,6 +135,9 @@ export function BrowserWorkspace({
   const callbacks = useRef({ onStateChange, onVisibilityChange });
   callbacks.current = { onStateChange, onVisibilityChange };
   const [address, setAddress] = useState("");
+  const [sourceMode, setSourceMode] = useState<"public" | "development">(
+    "public",
+  );
   const [state, setState] = useState<BrowserWorkspaceState | null>(null);
   const [snapshot, setSnapshot] = useState<BrowserWorkspaceSnapshot | null>(
     null,
@@ -289,15 +293,57 @@ export function BrowserWorkspace({
   }
 
   async function navigateAddress(target: string) {
-    const url = publicBrowserUrl(target);
+    const url =
+      sourceMode === "development"
+        ? developmentBrowserUrl(target)
+        : publicBrowserUrl(target);
     if (!url) {
       setAddressError(true);
       return;
     }
-    await openTarget({ url });
+    await openTarget(
+      sourceMode === "development" ? { development: url } : { url },
+    );
   }
 
-  async function openTarget(target: { url: string } | { file: VerifiedFile }) {
+  async function reloadPreview() {
+    const owner = scope.current;
+    if (
+      !active ||
+      !visible ||
+      !guard.canOpen ||
+      busy.current ||
+      !owner?.current?.previewMode ||
+      owner.isRetired
+    )
+      return;
+    const request = ++sequence.current;
+    busy.current = "navigate";
+    setOperation("navigate");
+    setSnapshot(null);
+    setError("");
+    try {
+      await owner.navigate(owner.current.url);
+      if (request === sequence.current && scope.current === owner)
+        publish(owner);
+    } catch {
+      if (request === sequence.current && scope.current === owner)
+        setError(S.loadFailed);
+    } finally {
+      if (request === sequence.current) {
+        busy.current = null;
+        setOperation(null);
+      }
+    }
+  }
+
+  async function openTarget(
+    target:
+      | { url: string }
+      | { file: VerifiedFile }
+      | { entry: string }
+      | { development: string },
+  ) {
     const owner = scope.current;
     if (
       !active ||
@@ -309,7 +355,10 @@ export function BrowserWorkspace({
     )
       return;
     const html = "file" in target ? target.file : null;
-    if (html && !projectDirectory) {
+    if (
+      (html || "entry" in target || "development" in target) &&
+      !projectDirectory
+    ) {
       setError(S.htmlProjectMissing);
       return;
     }
@@ -325,7 +374,12 @@ export function BrowserWorkspace({
       return;
     }
     const hasPage = owner.current && owner.current.phase !== "closed";
-    const replacePage = !!html || owner.current?.localFileName !== undefined;
+    const replacePage =
+      !!html ||
+      "entry" in target ||
+      "development" in target ||
+      owner.current?.localFileName !== undefined ||
+      owner.current?.previewMode !== undefined;
     const nextOperation = hasPage && !replacePage ? "navigate" : "open";
     const nextOwner =
       owner.isRetired ||
@@ -346,7 +400,15 @@ export function BrowserWorkspace({
     setStorageNotice("");
     setSnapshot(null);
     try {
-      if (html) await nextOwner.openHtml(html, bounds, projectDirectory!);
+      if ("entry" in target)
+        await nextOwner.openDirectory(target.entry, bounds, projectDirectory!);
+      else if ("development" in target)
+        await nextOwner.openDevelopment(
+          target.development,
+          bounds,
+          projectDirectory!,
+        );
+      else if (html) await nextOwner.openHtml(html, bounds, projectDirectory!);
       else if ("url" in target) {
         if (hasPage && !replacePage && !owner.isRetired)
           await nextOwner.navigate(target.url);
@@ -358,7 +420,14 @@ export function BrowserWorkspace({
           registrations.current.delete(owner);
         }
         localFile.current = html;
-        setAddress("url" in target ? target.url : "");
+        setAddress(
+          "url" in target
+            ? target.url
+            : "development" in target
+              ? target.development
+              : "",
+        );
+        setSourceMode("development" in target ? "development" : "public");
         publish(nextOwner);
         if (!hasPage) callbacks.current.onVisibilityChange?.(true);
       }
@@ -377,11 +446,68 @@ export function BrowserWorkspace({
             }
           }
           if (mounted.current && scope.current === nextOwner)
-            setError(html ? S.htmlFailed : S.openFailed);
+            setError(
+              html
+                ? S.htmlFailed
+                : "entry" in target
+                  ? S.directoryFailed
+                  : S.openFailed,
+            );
         }
       }
     } finally {
       if (request === sequence.current) {
+        busy.current = null;
+        setOperation(null);
+      }
+    }
+  }
+
+  async function selectDirectory() {
+    if (!active || !visible || !listening || !guard.canOpen || busy.current)
+      return;
+    if (!projectDirectory) {
+      setError(S.htmlProjectMissing);
+      return;
+    }
+    const request = ++sequence.current;
+    const choice = {};
+    choiceOwner.current = choice;
+    busy.current = "choose";
+    setOperation("choose");
+    setError("");
+    try {
+      const entry = await chooseFile({
+        title: S.openDirectory,
+        multiple: false,
+        directory: false,
+        defaultPath: projectDirectory,
+        filters: [{ name: "HTML", extensions: ["html", "htm"] }],
+      });
+      if (
+        mounted.current &&
+        available.current.active &&
+        available.current.visible &&
+        available.current.taskKey === taskKey &&
+        request === sequence.current &&
+        guard.canOpen &&
+        typeof entry === "string"
+      ) {
+        busy.current = null;
+        setOperation(null);
+        await openTarget({ entry });
+      }
+    } catch {
+      if (mounted.current && request === sequence.current)
+        setError(S.directoryFailed);
+    } finally {
+      if (
+        mounted.current &&
+        available.current.taskKey === taskKey &&
+        choiceOwner.current === choice &&
+        busy.current === "choose"
+      ) {
+        choiceOwner.current = null;
         busy.current = null;
         setOperation(null);
       }
@@ -572,7 +698,7 @@ export function BrowserWorkspace({
       busy.current ||
       !owner ||
       owner.current?.phase !== "ready" ||
-      owner.current.localFileName !== undefined
+      (owner.current.localFileName !== undefined && !owner.current.previewMode)
     )
       return;
     const request = ++sequence.current;
@@ -634,6 +760,9 @@ export function BrowserWorkspace({
             url: visibleState.url,
             phase: visibleState.phase,
             revision: visibleState.revision,
+            ...(visibleState.previewMode
+              ? { previewMode: visibleState.previewMode }
+              : {}),
             ...(visibleState.localFileName !== undefined
               ? {
                   localFileName: visibleState.localFileName,
@@ -775,7 +904,11 @@ export function BrowserWorkspace({
               title={S.reloadHtml}
               aria-label={S.reloadHtml}
               disabled={operation !== null || blocked || !visible}
-              onClick={() => void selectHtml(true)}
+              onClick={() =>
+                visibleState.previewMode
+                  ? void reloadPreview()
+                  : void selectHtml(true)
+              }
             >
               <ArrowClockwiseIcon size={17} aria-hidden="true" />
             </button>
@@ -785,18 +918,23 @@ export function BrowserWorkspace({
                 {visibleState.localFileName}
               </span>
             </div>
-            <button
-              type="button"
-              className="browser-workspace-external"
-              title={S.openInBrowser}
-              disabled={
-                operation !== null || blocked || !visible || !localFile.current
-              }
-              onClick={() => void openInBrowser()}
-            >
-              <ArrowSquareOutIcon size={15} aria-hidden="true" />
-              <span>{S.openInBrowser}</span>
-            </button>
+            {!visibleState.previewMode && (
+              <button
+                type="button"
+                className="browser-workspace-external"
+                title={S.openInBrowser}
+                disabled={
+                  operation !== null ||
+                  blocked ||
+                  !visible ||
+                  !localFile.current
+                }
+                onClick={() => void openInBrowser()}
+              >
+                <ArrowSquareOutIcon size={15} aria-hidden="true" />
+                <span>{S.openInBrowser}</span>
+              </button>
+            )}
             <button
               type="button"
               className="browser-workspace-icon"
@@ -813,7 +951,7 @@ export function BrowserWorkspace({
         ) : (
           <form onSubmit={(event) => void submit(event)} noValidate>
             <label className="browser-workspace-sr-only" htmlFor={addressId}>
-              {S.address}
+              {sourceMode === "development" ? S.developmentAddress : S.address}
             </label>
             <div className="browser-workspace-address-row">
               <button
@@ -822,7 +960,10 @@ export function BrowserWorkspace({
                 title={S.reload}
                 aria-label={S.reload}
                 onClick={() =>
-                  visibleState?.url && void navigateAddress(visibleState.url)
+                  visibleState?.previewMode
+                    ? void reloadPreview()
+                    : visibleState?.url &&
+                      void navigateAddress(visibleState.url)
                 }
                 disabled={!hasPage || operation !== null || blocked || !visible}
               >
@@ -838,7 +979,11 @@ export function BrowserWorkspace({
                     setAddress(event.target.value);
                     setAddressError(false);
                   }}
-                  placeholder={S.addressPlaceholder}
+                  placeholder={
+                    sourceMode === "development"
+                      ? S.developmentPlaceholder
+                      : S.addressPlaceholder
+                  }
                   autoComplete="off"
                   autoCapitalize="none"
                   spellCheck={false}
@@ -907,17 +1052,21 @@ export function BrowserWorkspace({
               </button>
             </div>
             <p id={hintId} className="browser-workspace-sr-only">
-              {S.addressHint}
+              {sourceMode === "development"
+                ? S.invalidDevelopment
+                : S.addressHint}
             </p>
             {addressError && (
               <p id={errorId} className="browser-workspace-error" role="alert">
-                {S.invalidAddress}
+                {sourceMode === "development"
+                  ? S.invalidDevelopment
+                  : S.invalidAddress}
               </p>
             )}
           </form>
         )}
         <div className="browser-workspace-access-row">
-          {isLocal ? (
+          {isLocal && !visibleState?.previewMode ? (
             <span className="browser-workspace-sharing">{S.localHtml}</span>
           ) : (
             (toolbar ?? (
@@ -925,6 +1074,46 @@ export function BrowserWorkspace({
             ))
           )}
           <div className="browser-workspace-file-actions">
+            {client.openDevelopment && (
+              <select
+                aria-label={S.source}
+                value={sourceMode}
+                disabled={operation !== null || blocked || !visible}
+                onChange={(e) => {
+                  setSourceMode(e.target.value as "public" | "development");
+                  setAddress("");
+                  setAddressError(false);
+                }}
+              >
+                <option value="public">{S.publicPage}</option>
+                <option value="development">{S.development}</option>
+              </select>
+            )}
+            {visibleState?.previewMode === "directory" && (
+              <button
+                type="button"
+                onClick={() => void readSnapshot()}
+                disabled={
+                  operation !== null ||
+                  blocked ||
+                  !visible ||
+                  visibleState.phase !== "ready"
+                }
+              >
+                {S.read}
+              </button>
+            )}
+            {client.openDirectory && (
+              <button
+                type="button"
+                onClick={() => void selectDirectory()}
+                disabled={
+                  operation !== null || blocked || !visible || !listening
+                }
+              >
+                {S.openDirectory}
+              </button>
+            )}
             <button
               type="button"
               onClick={() => void selectHtml()}
@@ -942,15 +1131,24 @@ export function BrowserWorkspace({
               </button>
             ) : (
               <details className="browser-workspace-help">
-                <summary>{S.publicPage}</summary>
-                <p>{S.scope}</p>
+                <summary>
+                  {sourceMode === "development" ? S.development : S.publicPage}
+                </summary>
+                <p>
+                  {sourceMode === "development" ? S.developmentHint : S.scope}
+                </p>
               </details>
             )}
           </div>
         </div>
+        {visibleState?.previewMode === "development" && (
+          <p className="browser-workspace-hint">{S.developmentHint}</p>
+        )}
         {isLocal && (
           <p className="browser-workspace-hint">
-            {S.localHint}{" "}
+            {visibleState.previewMode === "directory"
+              ? S.directoryHint
+              : S.localHint}{" "}
             {visibleState.localStoragePersistent === true
               ? S.localPersistent
               : visibleState.localStoragePersistent === false

@@ -2,7 +2,7 @@
 //! Shared-page stop succeeds only after the helper acknowledges its output gate.
 //! No page content or bearer secret is logged or persisted by this module.
 use super::{helper, permission::PermissionWait, protocol};
-use crate::browser_workspace::FixedPageReadScope;
+use crate::browser_workspace::{FixedPageReadScope, ToolRequest};
 use agent_client_protocol::schema::v1::{EnvVariable, McpServerStdio};
 use serde_json::Value;
 use std::{
@@ -33,7 +33,7 @@ const MAX_RESPONSE: usize = 600_000;
 pub(crate) type SharedPage = Arc<Mutex<Option<FixedPageReadScope>>>;
 type Callback = Arc<dyn Fn() + Send + Sync>;
 type Closed = Arc<dyn Fn(bool) + Send + Sync>;
-type Permission = Arc<dyn Fn() -> Result<PermissionWait, String> + Send + Sync>;
+type Permission = Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
 type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
 
 /// Consumed exactly once into the official request. Intentionally no Debug/Clone.
@@ -243,6 +243,7 @@ struct Delivery {
 struct WaitingRead {
     id: Value,
     permission: PermissionWait,
+    request: ToolRequest,
 }
 
 struct PendingRead {
@@ -250,10 +251,15 @@ struct PendingRead {
     scope: FixedPageReadScope,
     result: mpsc::Receiver<Result<Value, String>>,
     task: tauri::async_runtime::JoinHandle<()>,
+    request: ToolRequest,
+    finished: Arc<AtomicBool>,
 }
 impl Drop for PendingRead {
     fn drop(&mut self) {
         self.task.abort();
+        if self.request.control() && !self.finished.load(Ordering::Acquire) {
+            self.scope.cancel_action();
+        }
     }
 }
 struct Barrier {
@@ -276,7 +282,7 @@ impl Wire {
     fn defer_during_stop(&mut self, action: protocol::Action) -> Result<(), ()> {
         // A request arriving during stop cannot capture a later grant.
         let action = match action {
-            protocol::Action::Read { id } => protocol::Action::Reply {
+            protocol::Action::Read { id, .. } => protocol::Action::Reply {
                 value: protocol::tool_error(id, "读取许可已停止"),
                 list: false,
             },
@@ -462,16 +468,22 @@ impl Worker {
                     (self.on_invalidated)(scope);
                 }
             }
-            protocol::Action::Read { id } => {
+            protocol::Action::Read { id, request } => {
                 if wire.pending.is_some() || wire.waiting.is_some() || wire.delivery.is_some() {
                     return false;
                 }
                 let scope = self.page.lock().ok().and_then(|page| page.clone());
-                if let Some(scope) = scope.filter(FixedPageReadScope::is_valid) {
-                    self.begin_read(id, scope, wire);
+                if let Some(scope) = scope.filter(|scope| !request.control() && scope.is_valid()) {
+                    self.begin_read(id, scope, request, wire);
                 } else {
-                    match (self.on_permission)() {
-                        Ok(permission) => wire.waiting = Some(WaitingRead { id, permission }),
+                    match (self.on_permission)(&request) {
+                        Ok(permission) => {
+                            wire.waiting = Some(WaitingRead {
+                                id,
+                                permission,
+                                request,
+                            })
+                        }
                         Err(_) => {
                             if wire
                                 .reply(
@@ -493,15 +505,22 @@ impl Worker {
         }
         true
     }
-    fn begin_read(&self, id: Value, scope: FixedPageReadScope, wire: &mut Wire) {
+    fn begin_read(
+        &self,
+        id: Value,
+        scope: FixedPageReadScope,
+        request: ToolRequest,
+        wire: &mut Wire,
+    ) {
         let (send, receive) = mpsc::channel();
         let observer = scope.clone();
         let app = self.app.clone();
+        let finished = Arc::new(AtomicBool::new(false));
+        let finished_task = finished.clone();
+        let operation = request.clone();
         let task = tauri::async_runtime::spawn(async move {
-            let result = observer
-                .read(&app)
-                .await
-                .and_then(|page| serde_json::to_value(page).map_err(|_| "网页读取未完成".into()));
+            let result = observer.tool(&app, operation).await;
+            finished_task.store(true, Ordering::Release);
             let _ = send.send(result);
         });
         wire.pending = Some(PendingRead {
@@ -509,6 +528,8 @@ impl Worker {
             scope,
             result: receive,
             task,
+            request,
+            finished,
         });
     }
     fn permission_result(&self, wire: &mut Wire) -> bool {
@@ -519,9 +540,10 @@ impl Worker {
             return true;
         };
         let id = waiting.id.clone();
+        let request = waiting.request.clone();
         wire.waiting = None;
         match result {
-            Ok(scope) if scope.is_valid() => self.begin_read(id, scope, wire),
+            Ok(scope) if scope.is_valid() => self.begin_read(id, scope, request, wire),
             Ok(_) => {
                 return wire
                     .reply(
@@ -575,6 +597,7 @@ impl Worker {
                     Ok(result) => {
                         let id = read.id.clone();
                         let scope = read.scope.clone();
+                        let control = read.request.control();
                         wire.pending = None;
                         let (value, grant) = match result {
                             Ok(page) => (protocol::snapshot(id, page), Some(scope)),
@@ -583,7 +606,14 @@ impl Worker {
                                     (self.on_invalidated)(scope);
                                 }
                                 (
-                                    protocol::tool_error(id, "当前网页未允许读取或读取许可已停止"),
+                                    protocol::tool_error(
+                                        id,
+                                        if control {
+                                            "网页操作结果未确认，请重新观察；不要自动重试"
+                                        } else {
+                                            "当前网页未允许读取或读取许可已停止"
+                                        },
+                                    ),
                                     None,
                                 )
                             }
@@ -831,6 +861,7 @@ mod tests {
                 label: "page-a".into(),
                 url: "https://example.com/".into(),
                 local_file_name: None,
+                preview_mode: None,
                 local_storage_persistent: None,
                 phase: "ready".into(),
                 revision: 3,
@@ -845,6 +876,7 @@ mod tests {
         let (owner, permission) = waiting_fixture();
         let mut wire = Wire::default();
         wire.waiting = Some(WaitingRead {
+            request: ToolRequest::Read,
             id: json!(42),
             permission,
         });
@@ -879,6 +911,7 @@ mod tests {
         let (owner, permission) = waiting_fixture();
         let mut wire = Wire::default();
         wire.waiting = Some(WaitingRead {
+            request: ToolRequest::Read,
             id: json!(42),
             permission,
         });
@@ -955,8 +988,11 @@ mod tests {
     fn read_arriving_during_stop_can_never_capture_a_future_grant() {
         let mut wire = Wire::default();
         wire.stop(false, None).unwrap();
-        wire.defer_during_stop(protocol::Action::Read { id: json!(7) })
-            .unwrap();
+        wire.defer_during_stop(protocol::Action::Read {
+            id: json!(7),
+            request: ToolRequest::Read,
+        })
+        .unwrap();
         // Even after the stop barrier is removed, this action is only a fixed error.
         wire.barrier = None;
         let Some(protocol::Action::Reply { value, list: false }) = wire.deferred.take() else {

@@ -123,3 +123,36 @@ it("keeps an unconfirmed request visible with a status retry and disables decisi
   expect(sharing.refresh).toHaveBeenCalledTimes(1);
   expect(sharing.respond).not.toHaveBeenCalled();
 });
+
+it("shows exact one-shot input content as inert text and approves only that pending request", () => {
+  const sharing = model();
+  sharing.pendingRequest = {
+    ...sharing.pendingRequest!,
+    control: {
+      kind: "input",
+      target: "Search",
+      text: "<script>private draft</script>",
+    },
+  };
+  const html = renderToStaticMarkup(<BrowserReadRequest sharing={sharing} />);
+  expect(html).toContain("需要填写网页内容");
+  expect(html).toContain("仅允许这一次操作");
+  expect(html).toContain("&lt;script&gt;private draft&lt;/script&gt;");
+  expect(html).not.toContain("<script>");
+  expect(html).not.toContain("允许读取并继续");
+  findButton(BrowserReadRequest({ sharing }), "允许本次操作").props.onClick();
+  expect(sharing.respond).toHaveBeenCalledWith("request-a", true);
+  expect(sharing.allow).not.toHaveBeenCalled();
+});
+
+it("keeps screenshot consent distinct from text reading", () => {
+  const sharing = model();
+  sharing.pendingRequest = {
+    ...sharing.pendingRequest!,
+    control: { kind: "screenshot", target: "当前网页可见区域" },
+  };
+  const html = renderToStaticMarkup(<BrowserReadRequest sharing={sharing} />);
+  expect(html).toContain("需要截取当前网页");
+  expect(html).toContain("可见区域的截图");
+  expect(html).toContain("允许本次操作");
+});

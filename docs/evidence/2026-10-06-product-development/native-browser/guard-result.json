@@ -1,0 +1,94 @@
+{
+  "checks" : [
+    {
+      "name" : "guard_create",
+      "pass" : true
+    },
+    {
+      "name" : "guard_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_start",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_completed",
+      "pass" : true
+    },
+    {
+      "name" : "OTP_associated_label_blocks_reading",
+      "pass" : true
+    },
+    {
+      "name" : "guard_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_start",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_completed",
+      "pass" : true
+    },
+    {
+      "name" : "upload_control_blocks_reading",
+      "pass" : true
+    },
+    {
+      "name" : "guard_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_start",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_completed",
+      "pass" : true
+    },
+    {
+      "name" : "open_shadow_DOM_excludes_values_and_blocks_pixels",
+      "pass" : true
+    },
+    {
+      "name" : "guard_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_start",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_completed",
+      "pass" : true
+    },
+    {
+      "name" : "closed_shadow_DOM_excludes_values_pixels_disabled_by_production_path",
+      "pass" : true
+    },
+    {
+      "name" : "guard_navigation",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_start",
+      "pass" : true
+    },
+    {
+      "name" : "guard_observation_completed",
+      "pass" : true
+    },
+    {
+      "name" : "offscreen_and_transparent_text_not_observed",
+      "pass" : true
+    },
+    {
+      "name" : "guard_close",
+      "pass" : true
+    }
+  ],
+  "pass" : true,
+  "scope" : "Synthetic real WK OTP\/upload\/open-shadow\/offscreen samples. Closed shadow observation uses screenshot=false exactly as hardcoded by production Rust; no claim that native screenshot can identify a closed root. Production pixel delivery is disabled for this reason. No real app or Agent."
+}

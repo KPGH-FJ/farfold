@@ -1,0 +1,138 @@
+{
+  "checks" : [
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "directory_progress_written",
+      "pass" : true
+    },
+    {
+      "name" : "directory_first_close",
+      "pass" : true
+    },
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "directory_close_reopen_same_store_origin_restores_progress",
+      "pass" : true
+    },
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "different_source_does_not_inherit_progress",
+      "pass" : true
+    },
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "original_source_progress_unchanged",
+      "pass" : true
+    },
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "development_store_nonpersistent",
+      "pass" : true
+    },
+    {
+      "name" : "development_temporary_progress_written",
+      "pass" : true
+    },
+    {
+      "name" : "create_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_exact_source",
+      "pass" : true
+    },
+    {
+      "name" : "development_reopen_does_not_retain_page_storage",
+      "pass" : true
+    },
+    {
+      "name" : "development_closed",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "cleanup_started_for_exact_fixture_store",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    },
+    {
+      "name" : "exact_synthetic_store_cleared",
+      "pass" : true
+    }
+  ],
+  "pass" : true,
+  "scope" : "Actual WKWebView close\/reopen in one synthetic executable, fixed fixture-only stores and stable origins. No process-restart or installed-app persistence claim; no browser profile copied. Dev uses separate nonpersistent stores. Only six explicitly created synthetic stores cleared through production native API."
+}

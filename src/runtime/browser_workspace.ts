@@ -17,6 +17,7 @@ export interface BrowserWorkspaceState extends BrowserWorkspaceIdentity {
   url: string;
   /** Present only for an isolated local HTML document; never a public share target. */
   localFileName?: string;
+  previewMode?: "directory" | "development";
   /** Local document store support confirmed by the native page receipt. */
   localStoragePersistent?: boolean;
   phase: "loading" | "ready" | "blocked" | "error" | "closed";
@@ -43,6 +44,18 @@ export interface BrowserWorkspaceClient {
     taskKey: string;
     file: VerifiedFile;
     projectDirectory: string;
+    bounds: BrowserWorkspaceBounds;
+  }): Promise<BrowserWorkspaceState>;
+  openDirectory?(input: {
+    taskKey: string;
+    projectDirectory: string;
+    entry: string;
+    bounds: BrowserWorkspaceBounds;
+  }): Promise<BrowserWorkspaceState>;
+  openDevelopment?(input: {
+    taskKey: string;
+    projectDirectory: string;
+    url: string;
     bounds: BrowserWorkspaceBounds;
   }): Promise<BrowserWorkspaceState>;
   navigate(
@@ -79,6 +92,9 @@ export function createBrowserWorkspaceClient(
   return {
     open: (input) => invoke("browser_workspace_open", input),
     openHtml: (input) => invoke("browser_workspace_open_html", input),
+    openDirectory: (input) => invoke("browser_workspace_open_directory", input),
+    openDevelopment: (input) =>
+      invoke("browser_workspace_open_development", input),
     navigate: (input) => invoke("browser_workspace_navigate", { ...input }),
     resize: (input) => invoke("browser_workspace_resize", { ...input }),
     setVisible: (input) =>
@@ -176,6 +192,38 @@ export class BrowserWorkspaceScope {
     );
   }
 
+  openDirectory(
+    entry: string,
+    bounds: BrowserWorkspaceBounds,
+    projectDirectory: string,
+  ) {
+    return this.openWith(() => {
+      if (!this.client.openDirectory) throw new BrowserWorkspaceRetiredError();
+      return this.client.openDirectory({
+        taskKey: this.taskKey,
+        entry,
+        bounds,
+        projectDirectory,
+      });
+    });
+  }
+  openDevelopment(
+    url: string,
+    bounds: BrowserWorkspaceBounds,
+    projectDirectory: string,
+  ) {
+    return this.openWith(() => {
+      if (!this.client.openDevelopment)
+        throw new BrowserWorkspaceRetiredError();
+      return this.client.openDevelopment({
+        taskKey: this.taskKey,
+        url,
+        bounds,
+        projectDirectory,
+      });
+    });
+  }
+
   private async openWith(create: () => Promise<BrowserWorkspaceState>) {
     if (this.retired || this.opening || this.state) {
       throw new BrowserWorkspaceRetiredError();
@@ -254,7 +302,7 @@ export class BrowserWorkspaceScope {
     const startRevision = this.state?.revision;
     if (
       this.state?.phase !== "ready" ||
-      this.state.localFileName !== undefined
+      (this.state.localFileName !== undefined && !this.state.previewMode)
     ) {
       throw new BrowserWorkspaceRetiredError();
     }
@@ -364,4 +412,21 @@ export function browserWorkspaceBounds(
     return null;
   }
   return { x, y, width, height };
+}
+
+/** Explicit source selection, separate from the public-page URL policy. */
+export function developmentBrowserUrl(input: string): string | null {
+  if (!/^https?:\/\/(?:127\.0\.0\.1|\[::1\]):[0-9]+\/?$/.test(input))
+    return null;
+  try {
+    const url = new URL(input);
+    const port = Number(input.match(/:([0-9]+)\/?$/)?.[1]);
+    return port > 0 && port <= 65535
+      ? input.endsWith("/")
+        ? input
+        : `${input}/`
+      : null;
+  } catch {
+    return null;
+  }
 }

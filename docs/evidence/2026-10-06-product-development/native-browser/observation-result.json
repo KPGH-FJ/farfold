@@ -1,0 +1,166 @@
+{
+  "checks" : [
+    {
+      "name" : "create",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "safe_dom_visible_text",
+      "pass" : true
+    },
+    {
+      "name" : "real_webkit_png_bounded",
+      "pass" : true
+    },
+    {
+      "name" : "fixed_action_started",
+      "pass" : true
+    },
+    {
+      "name" : "click_dispatch_and_dom_version_changed",
+      "pass" : true
+    },
+    {
+      "name" : "node_one_use_native_rejection",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "click_visible_effect",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "editable_page_dom_available_screenshot_refused",
+      "pass" : true
+    },
+    {
+      "name" : "fixed_action_started",
+      "pass" : true
+    },
+    {
+      "name" : "fixed_input_dispatched",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "filled_value_not_observed",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "fixed_action_started",
+      "pass" : true
+    },
+    {
+      "name" : "mutated_dom_reference_rejected",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "password_page_blocked_without_values",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "frame_pixels_refused_dom_kept",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "wrong_navigation_rejected_before_js",
+      "pass" : true
+    },
+    {
+      "name" : "fixed_action_started",
+      "pass" : true
+    },
+    {
+      "name" : "thirty_second_ref_expired",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "navigate_during_async_observation_rejects_late_content",
+      "pass" : true
+    },
+    {
+      "name" : "production_navigation_started",
+      "pass" : true
+    },
+    {
+      "name" : "observation_started",
+      "pass" : true
+    },
+    {
+      "name" : "close_cancels_pending_callback_without_content",
+      "pass" : true
+    },
+    {
+      "name" : "close_during_async_observation_ack",
+      "pass" : true
+    },
+    {
+      "name" : "close_ack",
+      "pass" : true
+    }
+  ],
+  "pass" : true,
+  "scope" : "Standalone synthetic NSWindow and owned loopback fixture. Production native WebKit observation\/action entrypoints; fixture policy authorizes only its own loopback origin. Does not prove production public URL policy, Tauri\/MCP permission UI, real websites\/Agents\/accounts, trusted user gestures, or installed app."
+}

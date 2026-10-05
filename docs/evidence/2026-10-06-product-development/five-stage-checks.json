@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-06",
+  "scope": "前五阶段可自主实施部分；源码与合成验证，不是安装或真实Agent验收",
+  "candidateBase": "7e2fdd2bbdbca1d7f5ef23274692246467c99d57",
+  "checks": {
+    "format": "pass",
+    "typecheck": "pass",
+    "frontend": {
+      "files": 181,
+      "pass": 2085
+    },
+    "build": "pass; retained >500kB bundle warning",
+    "rustFmt": "pass",
+    "clippy": "pass -D warnings",
+    "rust": {
+      "pass": 915,
+      "ignored": 4,
+      "threads": 8
+    }
+  },
+  "firstRustRun": {
+    "pass": 914,
+    "failed": 1,
+    "failure": "program_launch_tests::cancelled_selection_does_not_start_program_version_check: expected cancellation, received Node version unavailable",
+    "singleRetest": "1 pass",
+    "boundedFullRetest": "915 pass/4 original ignored",
+    "conclusion": "未定位到确证源码根因；保留负载相关失败记录，不把复测反推为问题已修复"
+  },
+  "visual": {
+    "surface": "BrowserWorkspace, BrowserReadRequest, GeneralSettings 生产组件；IPC替身，未运行系统许可或网页容器",
+    "viewports": [800, 1280],
+    "horizontalOverflow": false,
+    "checks": [
+      "合成通知关闭/开启文案",
+      "本机服务来源与地址",
+      "输入审批多行文字及取消",
+      "手动文字快照"
+    ],
+    "fixed": [
+      "目录预览载入按钮未执行",
+      "开发服务重载误换临时存储",
+      "本机服务误标公开网页地址",
+      "来源选择沿共用样式并换行"
+    ]
+  },
+  "limits": [
+    "截图生产禁用：当前公开SDK无法可靠检查封闭组件敏感输入",
+    "WebKit进度仅同测试进程关页重开成功，正式冷启动未验",
+    "实际OS提醒、声音、正式应用退出及诊断导出未验",
+    "逐家真实Agent/账号/模型/安装测试待用户；33项仍待完善",
+    "Windows只读调查和独立模块不是完整平台编译或使用证明"
+  ]
+}

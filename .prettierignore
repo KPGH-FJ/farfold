@@ -201,3 +201,7 @@ docs/evidence/2026-10-05-mcp-file-feedback/official-merge/
 # Frozen research and real-response receipts retain captured bytes.
 docs/evidence/2026-10-05-first-batch-acp-research/*.json
 docs/evidence/2026-10-05-response-acceptance/*.json
+
+# Captured native browser receipts and the exact protocol sample preserve tested bytes.
+docs/evidence/2026-10-06-product-development/native-browser/*-result.json
+src-tauri/src/browser_workspace/fixtures/native-directory-observation.json

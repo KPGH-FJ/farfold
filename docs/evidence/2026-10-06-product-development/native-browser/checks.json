@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-06",
+  "implementation": [
+    "src-tauri/native/BrowserWorkspace.h",
+    "src-tauri/native/BrowserWorkspace.m",
+    "src-tauri/src/browser_workspace/native.rs"
+  ],
+  "checks": {
+    "nativeCompile": "clang -arch arm64 -fobjc-arc -mmacosx-version-min=11.0 -Wall -Wextra -Werror -Wno-unused-parameter succeeded",
+    "observation": {
+      "checks": 40,
+      "pass": true
+    },
+    "preview": {
+      "checks": 22,
+      "pass": true
+    },
+    "sensitiveGuards": {
+      "checks": 22,
+      "pass": true
+    },
+    "manualActivity": {
+      "checks": 15,
+      "pass": true
+    },
+    "sourceStorage": {
+      "checks": 33,
+      "pass": true
+    }
+  },
+  "nativePixelSample": "synthetic-wk-pixels.png was produced by real WKWebView takeSnapshotWithConfiguration and visually inspected. Native PNG limit 300000 bytes, maximum 1024x1024 pixels; total JSON limit 550000 bytes.",
+  "productionPixelLimitation": "Production Rust observe always forces screenshot=false. Current public SDK cannot reliably inspect closed shadow trees, so Agent pixel delivery is unavailable. Direct native pixel fixture success is not screenshot product acceptance.",
+  "boundaries": [
+    "Standalone non-installed synthetic executables; no Farfold app replacement, Agent, account, login or model call.",
+    "Observation fixture policy permits only owned http://127.0.0.1:18746; not proof of production public URL policy.",
+    "NativePreviewProbe directly reads its own test WebKit view for assertions, never exposes this test API to application or Agent.",
+    "Directory native fixture supplies synthetic bytes; filesystem allowlist, stamp and lease behavior belong to separate Rust tests.",
+    "Development pages retain network and WebSocket capability; only exact selected top-level origin is enforced.",
+    "Dispatched actions mean fixed DOM events delivered; website business success, trusted user gestures and cancellation of already delivered actions are not promised.",
+    "Mutation/nav/close/expiry reject stale future requests; a delivered effect followed by failure is unknown, never automatically retried.",
+    "NativeInteractionProbe directly passes constructed NSEvent objects to the ownership predicate; no OS key/mouse injection. It verifies installed monitor registration/removal and real pending-read cancellation, not formal-app user event delivery.",
+    "Directory progress persistence is verified across actual close/reopen of views in one synthetic process, not an installed-app process restart. Only directories use durable stores; developer services always receive a fresh temporary store.",
+    "Open shadow roots are detected and observed, but their input values are never projected. Closed-root values cannot be verified through current public SDK; pixel delivery is unavailable in every production Rust request."
+  ],
+  "sources": [
+    "https://developer.apple.com/documentation/webkit/wkwebview/callasyncjavascript%3Aarguments%3Ainframe%3Aincontentworld%3Acompletionhandler%3A",
+    "https://developer.apple.com/documentation/webkit/wksnapshotconfiguration",
+    "https://webkit.org/blog/13851/declarative-shadow-dom/",
+    "https://webkit.org/blog/18325/webkit-features-for-safari-27-0/"
+  ],
+  "reproduction": "Run fixture-server.py with Python3 on 127.0.0.1:18746; clang compile NativeObservationProbe.m or NativeGuardProbe.m plus src-tauri/native/BrowserWorkspace.m, or NativePreviewProbe.m alone (includes actual production module); link AppKit/WebKit with ARC/macOS11. Outputs intentionally go to /tmp/farfold-browser-observation-probe. Synthetic tests are not installed-product or real-Agent acceptance.",
+  "cleanup": {
+    "temporaryStores": "Six exact synthetic UUID stores cleared after tests through native clear API; final cleanup returned fixtureStoresCleared=6, failures=0. No user/browser profile touched.",
+    "server": "Owned fixture server stopped; all temporary probe executables, diagnostic copies and native object files removed after evidence preservation."
+  }
+}

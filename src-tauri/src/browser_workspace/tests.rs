@@ -502,3 +502,27 @@ fn only_exact_active_local_page_can_select_its_storage_for_explicit_clear() {
     state.acknowledge_close(id);
     assert!(state.local_storage("a", &local.label).is_err());
 }
+
+#[test]
+fn manual_page_input_withdraws_observation_without_closing_or_reading_values() {
+    let state = BrowserWorkspace::default();
+    let (id, info) = ready(&state, "task");
+    let scope = state
+        .capture_read_scope(
+            "task",
+            &info.label,
+            state.info(id).unwrap().revision,
+            PageReadLease::new(),
+        )
+        .unwrap();
+    let (token, current) = state.manual_activity(id).unwrap();
+    assert_eq!(current.phase, "ready");
+    assert!(!scope.is_valid());
+    assert_eq!(state.navigation(id).unwrap(), token);
+    assert!(
+        state
+            .capture_read_scope("task", &info.label, current.revision, PageReadLease::new())
+            .unwrap()
+            .is_valid()
+    );
+}

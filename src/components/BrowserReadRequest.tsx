@@ -31,18 +31,37 @@ export function BrowserReadRequest({
       </p>
     ) : null;
   const busy = sharing.operation !== null;
+  const control = request.control;
+  const title =
+    control?.kind === "click"
+      ? S.clickTitle
+      : control?.kind === "input"
+        ? S.inputTitle
+        : control
+          ? S.screenshotTitle
+          : S.requestTitle;
   return (
     <section
       className="approval browser-read-request"
-      aria-label={S.requestTitle}
+      aria-label={title}
       aria-busy={busy}
     >
       <div className="browser-read-request-heading ap-title">
         <GlobeIcon size={18} aria-hidden="true" />
-        {S.requestTitle}
+        {title}
       </div>
-      <p className="ap-sub">{S.requestScope}</p>
+      <p className="ap-sub">
+        {control
+          ? control.kind === "screenshot"
+            ? S.screenshotScope
+            : S.operationScope
+          : S.requestScope}
+      </p>
       <p className="browser-read-request-url">{request.url}</p>
+      {control && <p className="ap-sub">{control.target}</p>}
+      {control?.kind === "input" && (
+        <pre className="browser-request-input">{control.text}</pre>
+      )}
       <p className="ap-sub">{S.retained}</p>
       {sharing.error && (
         <div className="browser-share-error" role="alert">
@@ -64,7 +83,11 @@ export function BrowserReadRequest({
           disabled={busy || !sharing.ready}
           onClick={() => void sharing.respond(request.requestId, true)}
         >
-          {sharing.operation === "allow" ? S.allowing : S.allowAndContinue}
+          {sharing.operation === "allow"
+            ? S.allowing
+            : control
+              ? S.operationAllow
+              : S.allowAndContinue}
         </button>
         <button
           type="button"
@@ -72,7 +95,11 @@ export function BrowserReadRequest({
           disabled={busy || !sharing.ready}
           onClick={() => void sharing.respond(request.requestId, false)}
         >
-          {sharing.operation === "deny" ? S.denying : S.deny}
+          {sharing.operation === "deny"
+            ? S.denying
+            : control
+              ? S.operationDeny
+              : S.deny}
         </button>
         {onViewPage && (
           <button type="button" className="btn btn-text" onClick={onViewPage}>

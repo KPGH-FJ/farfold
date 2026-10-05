@@ -1,0 +1,34 @@
+#import "../../../../src-tauri/native/BrowserWorkspace.m"
+@interface StorageProbe : NSObject<NSApplicationDelegate>
+@property NSWindow *window;@property WKWebView *parent;@property NSMutableArray *checks;
+@property NSUInteger stage;@property uint64_t browserID;@property BOOL finished;@property NSUInteger cleanup;
+- (void)ready;- (void)finish;- (void)check:(NSString *)name pass:(BOOL)pass;- (void)open:(NSString *)origin storage:(NSString *)storage;
+@end
+static NSString *storeA=@"637a301d-6c8c-40a0-9bc5-b9bb7b16b1f7";
+static NSString *storeB=@"96479c34-c10a-4308-8d81-4b7a13ee0977";
+static StorageProbe *owner(void *p){return (__bridge StorageProbe *)p;}
+static bool allow(void *p,const char *url){NSString *s=url ? @(url):@"";return [s hasPrefix:@"ff-preview://preview-storage-a/"] || [s hasPrefix:@"ff-preview://preview-storage-b/"] || [s hasPrefix:@"http://127.0.0.1:18746/"];}
+static void released(void *p){}
+static uint64_t status(void *p,int event,uint64_t token,const char *url){if(event==1)dispatch_async(dispatch_get_main_queue(),^{[owner(p) ready];});return 0;}
+static void resource(void *p,uint64_t request,const char *url){const char *html="<!doctype html><h1>Storage fixture</h1>";ff_browser_resource_finish(owner(p).browserID,request,(const uint8_t *)html,strlen(html),"text/html; charset=utf-8","{\"Cache-Control\":\"no-store\"}");}
+static void cleaned(void *p,const char *json,const char *error){StorageProbe *probe=owner(p);[probe check:@"exact_synthetic_store_cleared" pass:json!=NULL && error==NULL];if(--probe.cleanup==0)[probe finish];}
+@implementation StorageProbe
+- (void)check:(NSString *)name pass:(BOOL)pass{[self.checks addObject:@{@"name":name,@"pass":@(pass)}];fprintf(stderr,"%s %s\n",pass?"PASS":"FAIL",name.UTF8String);}
+- (void)open:(NSString *)origin storage:(NSString *)storage{
+ self.browserID++;
+ [self check:@"create_exact_source" pass:ff_browser_create_preview(self.browserID,(__bridge void *)self.parent,0,0,640,480,(__bridge void *)self,allow,status,released,storage.UTF8String,origin.UTF8String,storage ? resource:NULL)];
+ [self check:@"navigate_exact_source" pass:ff_browser_navigate_preview(self.browserID,1,[origin stringByAppendingString:storage ? @"index.html":@"safe"].UTF8String)];
+}
+- (void)applicationDidFinishLaunching:(NSNotification *)note{self.checks=[NSMutableArray new];self.browserID=97;self.window=[[NSWindow alloc]initWithContentRect:NSMakeRect(0,0,640,480) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];NSView *container=[[NSView alloc]initWithFrame:NSMakeRect(0,0,640,480)];self.window.contentView=container;self.parent=[[WKWebView alloc]initWithFrame:container.bounds configuration:[WKWebViewConfiguration new]];[container addSubview:self.parent];[self open:@"ff-preview://preview-storage-a/" storage:storeA];dispatch_after(dispatch_time(DISPATCH_TIME_NOW,20*NSEC_PER_SEC),dispatch_get_main_queue(),^{if(!self.finished){[self check:@"bounded_finish" pass:NO];[self finish];}});}
+- (void)ready{
+ FFPublicBrowser *browser=lookup(self.browserID);
+ if(self.stage==0){self.stage=1;[browser.view evaluateJavaScript:@"localStorage.setItem('progress','alpha');localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"directory_progress_written" pass:!error && [value isEqual:@"alpha"]];[self check:@"directory_first_close" pass:ff_browser_close(self.browserID)];[self open:@"ff-preview://preview-storage-a/" storage:storeA];}];return;}
+ if(self.stage==1){self.stage=2;[browser.view evaluateJavaScript:@"localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"directory_close_reopen_same_store_origin_restores_progress" pass:!error && [value isEqual:@"alpha"]];ff_browser_close(self.browserID);[self open:@"ff-preview://preview-storage-b/" storage:storeB];}];return;}
+ if(self.stage==2){self.stage=3;[browser.view evaluateJavaScript:@"localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"different_source_does_not_inherit_progress" pass:!error && value==NSNull.null];ff_browser_close(self.browserID);[self open:@"ff-preview://preview-storage-a/" storage:storeA];}];return;}
+ if(self.stage==3){self.stage=4;[browser.view evaluateJavaScript:@"localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"original_source_progress_unchanged" pass:!error && [value isEqual:@"alpha"]];ff_browser_close(self.browserID);[self open:@"http://127.0.0.1:18746/" storage:nil];}];return;}
+ if(self.stage==4){self.stage=5;[self check:@"development_store_nonpersistent" pass:!browser.view.configuration.websiteDataStore.persistent];[browser.view evaluateJavaScript:@"localStorage.setItem('progress','dev-private');localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"development_temporary_progress_written" pass:!error && [value isEqual:@"dev-private"]];ff_browser_close(self.browserID);[self open:@"http://127.0.0.1:18746/" storage:nil];}];return;}
+ if(self.stage==5){self.stage=6;[browser.view evaluateJavaScript:@"localStorage.getItem('progress')" completionHandler:^(id value,NSError *error){[self check:@"development_reopen_does_not_retain_page_storage" pass:!error && value==NSNull.null];[self check:@"development_closed" pass:ff_browser_close(self.browserID)];NSArray *stores=@[storeA,storeB,@"d1f7ec2f-6e61-4a4e-8a17-4e2f35f1d639",@"7c5c9991-b680-41ae-ad33-66a47ca49c90",@"62781cd5-fb1f-44ab-a1a3-e6597473d250",@"47831cda-62d4-45d7-9b7c-319f647be5f8"];self.cleanup=stores.count;for(NSString *store in stores){BOOL started=ff_browser_clear_html_storage(store.UTF8String,(__bridge void *)self,cleaned);[self check:@"cleanup_started_for_exact_fixture_store" pass:started];if(!started)self.cleanup--;}if(!self.cleanup)[self finish];}];}
+}
+- (void)finish{if(self.finished)return;self.finished=YES;ff_browser_close(self.browserID);BOOL pass=YES;for(NSDictionary *c in self.checks)if(![c[@"pass"] boolValue])pass=NO;NSDictionary *report=@{@"pass":@(pass),@"checks":self.checks,@"scope":@"Actual WKWebView close/reopen in one synthetic executable, fixed fixture-only stores and stable origins. No process-restart or installed-app persistence claim; no browser profile copied. Dev uses separate nonpersistent stores. Only six explicitly created synthetic stores cleared through production native API."};NSData *data=[NSJSONSerialization dataWithJSONObject:report options:NSJSONWritingPrettyPrinted|NSJSONWritingSortedKeys error:NULL];[data writeToFile:@"/tmp/farfold-browser-observation-probe/storage-result.json" atomically:YES];puts([[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding].UTF8String);[NSApplication.sharedApplication terminate:nil];}
+@end
+int main(){@autoreleasepool{NSApplication *app=NSApplication.sharedApplication;[app setActivationPolicy:NSApplicationActivationPolicyProhibited];StorageProbe *p=[StorageProbe new];app.delegate=p;[app run];}return 0;}

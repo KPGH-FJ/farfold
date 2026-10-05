@@ -6,6 +6,17 @@ export const BROWSER_SHARING_STRINGS = {
     "允许此对话的 Agent 读取本页的标题、地址和文字，以继续刚才的请求？不会点击或填写；换页后失效。",
   manualScope:
     "允许此对话的 Agent 读取本页的标题、地址和文字。不会点击或填写；换页后失效。",
+  clickTitle: "需要点击网页位置",
+  inputTitle: "需要填写网页内容",
+  screenshotTitle: "需要截取当前网页",
+  operationScope:
+    "仅允许这一次操作。请检查页面和具体内容；换页或页面变化后需重新观察。取消或停止共享不能撤销已经交付的网站操作。",
+  screenshotScope:
+    "提供当前网页可见区域的截图；含受保护输入或其他页面时可能无法提供。",
+  operationAllow: "允许本次操作",
+  operationDeny: "取消本次操作",
+  operationAllowed: "已允许本次操作，正在等待结果。",
+  operationDenied: "已取消本次操作。",
   retained: "停止共享不会删除已提供给 Agent 的内容。",
   allowAndContinue: "允许读取并继续",
   allow: "允许读取",

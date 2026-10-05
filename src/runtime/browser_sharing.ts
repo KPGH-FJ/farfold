@@ -29,6 +29,11 @@ export interface BrowserReadPendingRequest {
   url: string;
   pageRevision: number;
   phase: "awaiting_permission";
+  control?: {
+    kind: "click" | "input" | "screenshot";
+    target: string;
+    text?: string;
+  };
 }
 
 export interface BrowserShareInfo {
@@ -450,7 +455,13 @@ export class BrowserSharingController {
           requestId,
           allow,
         }),
-      allow ? S.allowed : S.denied,
+      pending.control
+        ? allow
+          ? S.operationAllowed
+          : S.operationDenied
+        : allow
+          ? S.allowed
+          : S.denied,
     );
   };
   dispose() {

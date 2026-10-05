@@ -1,10 +1,11 @@
-//! Narrow stdio MCP surface: one fixed-scope, read-only tool. No logging.
+//! Fixed-page MCP tools. Arguments never supply a new page or script. No logging.
+use crate::browser_workspace::ToolRequest;
 use serde_json::{Value, json};
 
 pub(super) enum Action {
     None,
     Reply { value: Value, list: bool },
-    Read { id: Value },
+    Read { id: Value, request: ToolRequest },
     Cancel { id: Value },
 }
 #[derive(Default)]
@@ -76,37 +77,85 @@ impl Protocol {
             "ping" => reply(result(id, json!({}))),
             _ if !self.notified => reply(error(id, -32002, "Initialization required")),
             "tools/list" => Action::Reply {
-                value: result(
-                    id,
-                    json!({"tools":[{
-                        "name":"read_page_snapshot", "description":"读取当前对话中打开的公开网页；如尚未允许，将等待用户在对话中确认。跳转、关闭或停止共享后需重新允许。",
-                        "inputSchema":{"type":"object","properties":{},"additionalProperties":false},
-                        "annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}
-                    }]}),
-                ),
+                value: result(id, tool_list()),
                 list: true,
             },
             "tools/call" => {
-                if params.get("name").and_then(Value::as_str) != Some("read_page_snapshot")
-                    || params
-                        .get("arguments")
-                        .is_some_and(|arguments| arguments != &json!({}))
-                    || params.get("_meta").is_some_and(|meta| !meta.is_object())
-                    || params.as_object().is_none_or(|value| {
-                        value
-                            .keys()
-                            .any(|key| !matches!(key.as_str(), "name" | "arguments" | "_meta"))
-                    })
-                {
+                let Some(request) = parse_tool(&params) else {
                     return reply(error(id, -32602, "Unknown tool or invalid parameters"));
-                }
+                };
                 if !self.listed {
                     return reply(tool_error(id, "网页工具尚未准备完成"));
                 }
-                Action::Read { id }
+                Action::Read { id, request }
             }
             _ => reply(error(id, -32601, "Method not found")),
         }
+    }
+}
+fn tool_list() -> Value {
+    let empty = json!({"type":"object","properties":{},"additionalProperties":false});
+    let target = json!({"observationId":{"type":"string","minLength":1,"maxLength":128},"nodeRef":{"type":"string","minLength":1,"maxLength":128}});
+    let mut input_target = target.clone();
+    input_target["text"] = json!({"type":"string","maxLength":4096});
+    json!({"tools":[
+        {"name":"read_page_snapshot","description":"读取此对话当前页面的标题、地址和文字，未允许时等待用户确认。关闭、跳转或停止共享后失效。","inputSchema":empty,"annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}},
+        {"name":"observe_page","description":"观察当前页面的可见文字和可操作位置。当前版本不提供页面截图，screenshot=true仍返回文字与位置并说明截图不可用。位置30秒内有效，每次操作后重新观察。","inputSchema":{"type":"object","properties":{"screenshot":{"type":"boolean","default":false}},"additionalProperties":false},"annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}},
+        {"name":"click_page_node","description":"申请点击最近观察得到的位置，等待用户确认。本次许可仅用一次；结果未知时先重新观察，不自动重复。","inputSchema":{"type":"object","properties":target,"required":["observationId","nodeRef"],"additionalProperties":false},"annotations":{"readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}},
+        {"name":"input_page_node","description":"申请把文字填入最近观察得到的普通输入位置，用户确认具体内容后仅执行一次。不提交表单；密码、账号和验证码输入受保护。","inputSchema":{"type":"object","properties":input_target,"required":["observationId","nodeRef","text"],"additionalProperties":false},"annotations":{"readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}
+    ]})
+}
+fn parse_tool(params: &Value) -> Option<ToolRequest> {
+    let params = params.as_object()?;
+    if params
+        .keys()
+        .any(|key| !matches!(key.as_str(), "name" | "arguments" | "_meta"))
+        || params.get("_meta").is_some_and(|v| !v.is_object())
+    {
+        return None;
+    }
+    let empty = json!({});
+    let arguments = params.get("arguments").unwrap_or(&empty).as_object()?;
+    let name = params.get("name")?.as_str()?;
+    let token = |key: &str| {
+        arguments
+            .get(key)?
+            .as_str()
+            .filter(|s| {
+                !s.is_empty()
+                    && s.len() <= 128
+                    && s.bytes()
+                        .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_'))
+            })
+            .map(str::to_owned)
+    };
+    match name {
+        "read_page_snapshot" if arguments.is_empty() => Some(ToolRequest::Read),
+        "observe_page" if arguments.keys().all(|key| key == "screenshot") => {
+            Some(ToolRequest::Observe {
+                screenshot: match arguments.get("screenshot") {
+                    None => false,
+                    Some(v) => v.as_bool()?,
+                },
+            })
+        }
+        "click_page_node" if arguments.len() == 2 => Some(ToolRequest::Click {
+            observation_id: token("observationId")?,
+            node_ref: token("nodeRef")?,
+        }),
+        "input_page_node" if arguments.len() == 3 => {
+            let text = arguments
+                .get("text")?
+                .as_str()
+                .filter(|s| s.len() <= 8192 && s.chars().count() <= 4096 && !s.contains('\0'))?
+                .to_owned();
+            Some(ToolRequest::Input {
+                observation_id: token("observationId")?,
+                node_ref: token("nodeRef")?,
+                text,
+            })
+        }
+        _ => None,
     }
 }
 fn reply(value: Value) -> Action {
@@ -124,10 +173,19 @@ pub(super) fn tool_error(id: Value, message: &str) -> Value {
         json!({"content":[{"type":"text","text":message}],"isError":true}),
     )
 }
-pub(super) fn snapshot(id: Value, page: Value) -> Value {
+pub(super) fn snapshot(id: Value, mut page: Value) -> Value {
+    let image = page
+        .get_mut("screenshot")
+        .and_then(Value::as_object_mut)
+        .and_then(|s| s.remove("data"))
+        .and_then(|v| v.as_str().map(str::to_owned));
+    let mut content = vec![json!({"type":"text","text":page.to_string()})];
+    if let Some(data) = image {
+        content.push(json!({"type":"image","mimeType":"image/png","data":data}));
+    }
     result(
         id,
-        json!({"content":[{"type":"text","text":page.to_string()}],"structuredContent":page,"isError":false}),
+        json!({"content":content,"structuredContent":page,"isError":false}),
     )
 }
 
@@ -185,7 +243,7 @@ mod tests {
             json!({"name":"read_page_snapshot"}),
             json!({"name":"read_page_snapshot","arguments":{},"_meta":{"progressToken":"CANARY_IGNORED","custom":"CANARY_IGNORED"}}),
         ] {
-            let Action::Read { id } = protocol.receive(request("tools/call", params)) else {
+            let Action::Read { id, .. } = protocol.receive(request("tools/call", params)) else {
                 panic!("standard call rejected");
             };
             assert_eq!(id, 7);
@@ -223,7 +281,7 @@ mod tests {
         }
     }
     #[test]
-    fn tool_discovery_contains_only_one_readonly_tool() {
+    fn discovery_separates_observation_from_effectful_tools() {
         let mut protocol = ready();
         let Action::Reply { value, list } = protocol.receive(request("tools/list", json!({})))
         else {
@@ -231,7 +289,9 @@ mod tests {
         };
         assert!(list);
         let tools = value["result"]["tools"].as_array().unwrap();
-        assert_eq!(tools.len(), 1);
+        assert_eq!(tools.len(), 4);
+        assert_eq!(tools[2]["annotations"]["readOnlyHint"], false);
+        assert_eq!(tools[3]["annotations"]["idempotentHint"], false);
         assert_eq!(tools[0]["name"], "read_page_snapshot");
         assert_eq!(tools[0]["annotations"]["readOnlyHint"], true);
         assert_eq!(tools[0]["inputSchema"]["additionalProperties"], false);
@@ -253,5 +313,57 @@ mod tests {
             assert!(value.get("error").is_some());
             assert!(!value.to_string().contains("CANARY"));
         }
+    }
+}
+
+#[cfg(test)]
+mod control_tests {
+    use super::*;
+    #[test]
+    fn fixed_tools_reject_scripts_selectors_extra_targets_and_invalid_text() {
+        for arguments in [
+            json!({"observationId":"a","nodeRef":"n","selector":"#a"}),
+            json!({"observationId":"a","nodeRef":"n","text":"x","url":"https://other.test"}),
+            json!({"observationId":"a","nodeRef":"n","text":null}),
+        ] {
+            assert!(parse_tool(&json!({"name":"input_page_node","arguments":arguments})).is_none());
+        }
+        assert!(
+            parse_tool(
+                &json!({"name":"click_page_node","arguments":{"observationId":"a","nodeRef":"n"}})
+            )
+            .unwrap()
+            .control()
+        );
+        assert!(
+            !parse_tool(&json!({"name":"observe_page","arguments":{"screenshot":true}}))
+                .unwrap()
+                .control()
+        );
+        assert!(
+            !parse_tool(&json!({"name":"observe_page"}))
+                .unwrap()
+                .control()
+        );
+    }
+    #[test]
+    fn screenshot_bytes_are_image_content_and_never_repeated_in_text() {
+        let response = snapshot(
+            json!(1),
+            json!({"screenshot":{"status":"captured","mimeType":"image/png","data":"CANARY_PNG"},"text":"visible"}),
+        );
+        assert_eq!(response["result"]["content"][1]["type"], "image");
+        assert_eq!(response["result"]["content"][1]["data"], "CANARY_PNG");
+        assert!(
+            !response["result"]["content"][0]["text"]
+                .as_str()
+                .unwrap()
+                .contains("CANARY_PNG")
+        );
+        assert!(
+            response["result"]["structuredContent"]["screenshot"]
+                .get("data")
+                .is_none()
+        );
     }
 }

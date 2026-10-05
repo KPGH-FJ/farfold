@@ -1,0 +1,16 @@
+failures:
+
+---- program_launch_tests::cancelled_selection_does_not_start_program_version_check stdout ----
+
+thread 'program_launch_tests::cancelled_selection_does_not_start_program_version_check' (6569925) panicked at src/program_launch_tests.rs:210:5:
+assertion `left == right` failed
+  left: "此程序所需的 Node 版本未满足或无法核对，请重新检查；原选择保持不变"
+ right: "fixture selection cancelled"
+
+
+failures:
+    program_launch_tests::cancelled_selection_does_not_start_program_version_check
+
+test result: FAILED. 914 passed; 1 failed; 4 ignored; 0 measured; 0 filtered out; finished in 43.20s
+
+error: test failed, to rerun pass `--lib`
