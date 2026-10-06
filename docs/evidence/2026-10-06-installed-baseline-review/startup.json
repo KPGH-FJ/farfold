@@ -1,0 +1,37 @@
+{
+  "installedBinarySha256": "384f3fed2932af18cbf3971def2a2172276a0f797b21702db1a4f7f8f6bd5998",
+  "appPid": 24574,
+  "windowShown": true,
+  "composerObservedEmpty": true,
+  "sendObservedDisabled": true,
+  "observedUiError": "创建会话失败：等待连接检查超时，请稍后重试",
+  "selectedAgent": "opencode",
+  "restoredQueueCount": 1,
+  "databaseCounts": {
+    "agents": 40,
+    "sessions": 70,
+    "settings": 50,
+    "dismissed_sessions": 107
+  },
+  "databaseQuickCheck": "ok",
+  "automaticPreopen": {
+    "outcome": "initialize_timeout",
+    "initializeResponse": "not_observed",
+    "initializeAccepted": false,
+    "childStarted": true,
+    "childReaped": true,
+    "groupEnded": true,
+    "connectionRemoved": true,
+    "outboundEvents": {
+      "initialize": 1
+    },
+    "traceFile": "protocol-v1-1791259139125-0.jsonl",
+    "traceCopy": "startup-protocol.jsonl",
+    "traceSha256": "ee4fc87ad5ab35779a034b7f4a6c4c9d979f91567ba5a2c2af10d185d77a2cfa"
+  },
+  "modelRequests": 0,
+  "modelRequestsMeaning": "Farfold session/prompt requests in this startup trace; not a provider billing audit.",
+  "manualRetry": false,
+  "accountOrModelChanged": false,
+  "scope": "Actual cold app startup and one automatic OpenCode connection attempt; installation/startup UI succeeded, Agent initialize timed out. No session/new/load/prompt occurred; no complete task, attachment or native-browser acceptance."
+}

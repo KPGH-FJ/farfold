@@ -1,0 +1,72 @@
+{
+  "userConfirmed": true,
+  "normalQuitConfirmed": true,
+  "pidsEmptyBeforeReplacement": true,
+  "sourceHead": "9ed2e6be56bdce193d6bbdfe0dcbdeac735b641f",
+  "installedAtUtc": "2026-10-06T03:55:59.280231+00:00",
+  "installedApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "binarySha256": "384f3fed2932af18cbf3971def2a2172276a0f797b21702db1a4f7f8f6bd5998",
+  "method": "Atomic replacement of the sole changed executable; remaining four package files already matched. No app backup or additional app created.",
+  "installedFilesMatchedCandidate": 5,
+  "strictSignatureVerified": true,
+  "architecture": "arm64",
+  "dataBefore": {
+    "appData": {
+      "entries": 198023,
+      "fileBytes": 7842526660,
+      "treeSha256": "b8da60f0f4d2a8c517d80fe65189a3306d29ba10b75758c8048361b8066d7fcd"
+    },
+    "webkit": {
+      "entries": 77,
+      "fileBytes": 1009335,
+      "treeSha256": "e7131b0c06677737f372025072f344566b4454102468180540e03b30892b064d"
+    },
+    "cache": {
+      "entries": 10,
+      "fileBytes": 16,
+      "treeSha256": "dccaac5122c855460ed28fb5c787879df91f6050dbe70ea1fcbf84c3b9a5cfc1"
+    }
+  },
+  "dataAfter": {
+    "appData": {
+      "entries": 198023,
+      "fileBytes": 7842526660,
+      "treeSha256": "b8da60f0f4d2a8c517d80fe65189a3306d29ba10b75758c8048361b8066d7fcd"
+    },
+    "webkit": {
+      "entries": 77,
+      "fileBytes": 1009335,
+      "treeSha256": "e7131b0c06677737f372025072f344566b4454102468180540e03b30892b064d"
+    },
+    "cache": {
+      "entries": 10,
+      "fileBytes": 16,
+      "treeSha256": "dccaac5122c855460ed28fb5c787879df91f6050dbe70ea1fcbf84c3b9a5cfc1"
+    }
+  },
+  "databaseBefore": {
+    "quickCheck": "ok",
+    "userVersion": 0,
+    "counts": {
+      "agents": 40,
+      "dismissed_sessions": 107,
+      "sessions": 70,
+      "settings": 50
+    }
+  },
+  "databaseAfter": {
+    "quickCheck": "ok",
+    "userVersion": 0,
+    "counts": {
+      "agents": 40,
+      "dismissed_sessions": 107,
+      "sessions": 70,
+      "settings": 50
+    }
+  },
+  "launched": false,
+  "realAgentStarted": false,
+  "modelRequests": 0,
+  "scope": "Actual formal-app replacement and stopped-data verification; startup, real Agent and Windows acceptance not performed."
+}
