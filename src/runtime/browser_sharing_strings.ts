@@ -15,8 +15,6 @@ export const BROWSER_SHARING_STRINGS = {
     "提供当前网页可见区域的截图；含受保护输入或其他页面时可能无法提供。",
   operationAllow: "允许本次操作",
   operationDeny: "取消本次操作",
-  operationAllowed: "已允许本次操作，正在等待结果。",
-  operationDenied: "已取消本次操作。",
   retained: "停止共享不会删除已提供给 Agent 的内容。",
   allowAndContinue: "允许读取并继续",
   allow: "允许读取",

@@ -447,6 +447,8 @@ export class BrowserSharingController {
   respond = async (requestId: string, allow: boolean) => {
     const pending = this.snapshot.pendingRequest;
     if (!pending || pending.requestId !== requestId) return;
+    // Control consent delivery is not an execution result. Its tool output
+    // remains in the conversation, without a second waiting status here.
     await this.run(
       allow ? "allow" : "deny",
       () =>
@@ -455,13 +457,7 @@ export class BrowserSharingController {
           requestId,
           allow,
         }),
-      pending.control
-        ? allow
-          ? S.operationAllowed
-          : S.operationDenied
-        : allow
-          ? S.allowed
-          : S.denied,
+      pending.control ? "" : allow ? S.allowed : S.denied,
     );
   };
   dispose() {

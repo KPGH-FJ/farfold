@@ -1,4 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { BrowserReadRequest } from "../components/BrowserReadRequest";
 import {
   BrowserSharingController,
   browserSharingIdleSnapshot,
@@ -636,3 +639,143 @@ it.each([
     expect(controller.getSnapshot().error).toBe("");
   },
 );
+
+describe("one-time browser control consent", () => {
+  const controlPending = {
+    ...pending,
+    control: {
+      kind: "input" as const,
+      target: "ordinary field",
+      text: "FARFOLD_CONTROL_CONSENT_TEST",
+    },
+  };
+  const markup = (controller: BrowserSharingController) =>
+    renderToStaticMarkup(
+      createElement(BrowserReadRequest, {
+        sharing: {
+          ...controller.getSnapshot(),
+          refresh: controller.refresh,
+          allow: controller.allow,
+          stop: controller.stop,
+          respond: controller.respond,
+        },
+      }),
+    );
+
+  it.each([true, false])(
+    "retires confirmed control consent without claiming an execution result: allow=%s",
+    async (allow) => {
+      const { controller, client } = setup();
+      client.status.mockResolvedValueOnce(
+        info({ phase: "shared", revision: 3, pendingRequest: controlPending }),
+      );
+      await controller.start();
+      expect(markup(controller)).toContain("需要填写网页内容");
+      const response = deferred<BrowserShareInfo>();
+      client.respond.mockReturnValueOnce(response.promise);
+      const responding = controller.respond(controlPending.requestId, allow);
+      expect(markup(controller)).toContain('aria-busy="true"');
+      expect(controller.getSnapshot().pendingRequest).toEqual(controlPending);
+      expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+        controlPending.requestId,
+      );
+      await controller.respond(controlPending.requestId, !allow);
+      expect(client.respond).toHaveBeenCalledOnce();
+
+      // This receipt only confirms consent delivery. It deliberately supplies
+      // no browser execution or verification result and retains the page grant.
+      response.resolve(info({ phase: "shared", revision: 4 }));
+      await responding;
+      expect(controller.getSnapshot().operation).toBeNull();
+      expect(controller.getSnapshot().pendingRequest).toBeNull();
+      expect(controller.getSnapshot().info?.phase).toBe("shared");
+      expect(controller.getSnapshot().notice).toBe("");
+      expect(markup(controller)).toBe("");
+      expect(
+        browserSharingAttention.pendingRequestId(scope.taskKey),
+      ).toBeNull();
+
+      client.status.mockResolvedValueOnce(
+        info({ phase: "shared", revision: 4 }),
+      );
+      await controller.refresh();
+      expect(markup(controller)).toBe("");
+      const next = { ...controlPending, requestId: "next-control" };
+      client.status.mockResolvedValueOnce(
+        info({ phase: "shared", revision: 5, pendingRequest: next }),
+      );
+      await controller.refresh();
+      expect(controller.getSnapshot().pendingRequest).toEqual(next);
+      expect(markup(controller)).toContain("需要填写网页内容");
+      expect(client.respond).toHaveBeenCalledOnce();
+      expect(client.allow).not.toHaveBeenCalled();
+      expect(client.stop).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([true, false])(
+    "keeps control consent unknown when its reply is lost: allow=%s",
+    async (allow) => {
+      const { controller, client } = setup();
+      client.status.mockResolvedValueOnce(
+        info({ phase: "shared", revision: 3, pendingRequest: controlPending }),
+      );
+      client.respond.mockRejectedValueOnce(new Error("private lost reply"));
+      await controller.start();
+      await controller.respond(controlPending.requestId, allow);
+      expect(controller.getSnapshot().pendingRequest).toEqual(controlPending);
+      expect(controller.getSnapshot().ready).toBe(false);
+      expect(controller.getSnapshot().notice).toBe("");
+      expect(controller.getSnapshot().error).toContain("未能确认");
+      expect(markup(controller)).not.toContain("private lost reply");
+      expect(markup(controller)).toContain("需要填写网页内容");
+      expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+        controlPending.requestId,
+      );
+      await controller.respond(controlPending.requestId, allow);
+      expect(client.respond).toHaveBeenCalledOnce();
+
+      client.status.mockResolvedValueOnce(
+        info({ phase: "shared", revision: 4 }),
+      );
+      await controller.refresh();
+      expect(controller.getSnapshot().ready).toBe(true);
+      expect(markup(controller)).toBe("");
+      expect(
+        browserSharingAttention.pendingRequestId(scope.taskKey),
+      ).toBeNull();
+      expect(client.respond).toHaveBeenCalledOnce();
+    },
+  );
+
+  it("does not let an old control response retire a later page's consent", async () => {
+    const { controller, client } = setup();
+    client.status.mockResolvedValueOnce(
+      info({ phase: "shared", revision: 3, pendingRequest: controlPending }),
+    );
+    await controller.start();
+    const response = deferred<BrowserShareInfo>();
+    client.respond.mockReturnValueOnce(response.promise);
+    const responding = controller.respond(controlPending.requestId, true);
+    const next = {
+      ...controlPending,
+      requestId: "next-page-control",
+      pageRevision: 4,
+    };
+    client.status.mockResolvedValueOnce(
+      info({ phase: "shared", revision: 6, pendingRequest: next }),
+    );
+    controller.setPage({ ...page, revision: 4 });
+    response.resolve(info({ phase: "shared", revision: 4 }));
+    await responding;
+    expect(controller.getSnapshot().pendingRequest).toEqual(next);
+    expect(controller.getSnapshot().info?.revision).toBe(6);
+    expect(controller.getSnapshot().notice).toBe("");
+    expect(markup(controller)).toContain("需要填写网页内容");
+    expect(browserSharingAttention.pendingRequestId(scope.taskKey)).toBe(
+      next.requestId,
+    );
+    await controller.respond(controlPending.requestId, true);
+    expect(client.respond).toHaveBeenCalledOnce();
+  });
+});
