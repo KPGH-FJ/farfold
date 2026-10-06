@@ -1,0 +1,42 @@
+{
+  "auggie-preparation": {
+    "log": "protocol-v1-1791280583826-37.jsonl",
+    "recordedAtUtc": "2026-10-06T10:02:58.363583+00:00",
+    "sha256": "ca9ae92f7baef057fd9108cd83a386e8dff4e15d72741bf35f4e99cb5bdb9af0",
+    "bytes": 2715,
+    "records": 10,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "copilot": {
+    "log": "protocol-v1-1791280733746-40.jsonl",
+    "recordedAtUtc": "2026-10-06T10:02:58.363907+00:00",
+    "sha256": "3069c5c7f6cbc950a80eacba921f949976474d9cf4198c99b4c9bb8989bdbaab",
+    "bytes": 4447,
+    "records": 29,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:59:46.583000+00:00",
+        "firstResponseAt": "2026-10-06T09:59:51.177000+00:00",
+        "durationMs": 4594,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

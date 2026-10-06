@@ -1,0 +1,36 @@
+{
+  "antigravity": {
+    "log": "protocol-v1-1791281850749-52.jsonl",
+    "recordedAtUtc": "2026-10-06T10:18:48.297054+00:00",
+    "sha256": "946392a0ee625b8c94d93577834254db7811f5232dc885e7946e9e594e1b2706",
+    "bytes": 3074,
+    "records": 14,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 5,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "dimcode": {
+    "log": "protocol-v1-1791281879421-54.jsonl",
+    "recordedAtUtc": "2026-10-06T10:18:48.297258+00:00",
+    "sha256": "74f7229a4e62fcb1e31852a14e44cd81df5f65ca7b9f15e57f08622f9a1b8ad0",
+    "bytes": 2716,
+    "records": 10,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

@@ -2,7 +2,9 @@
 
 ## macOS逐家实测第一批（2026-10-06）
 
-正式应用仍为94786241/55abe01b。Pi真实双对话重叠，A停止不影响B完成且停后续答原记号成功；重试文字混入正文，未完整达标。OpenCode同一服务改实际免费Apodex，短答与最早记号续答成功；CodeBuddy现有Hy4 preview/High、Kilo现有免费Nemotron短答成功。Cline首次internal_error、Droid401无响应体、goose原模型失败，具体原因未知；Cline和goose免费设置已确认，失败空队列补测待新版安装。Amp实际auth_required，等用户完成当前使用方式认证；已查设置检查不验证Key有效性；通知系统未允许，等设置确认。未把连接、一次回复或设置成功判完整接入。
+追加第一路径检查已触及33家；fast-agent、Copilot取得有限短答，siGit原选免费本地模型载入后，新短答550ms返回internal_error、无回答；实际服务覆盖与具体错误未证。多家沿已有设置的session/new实际要求认证，用户已指定先不处理登录；不擅自换服务或将其统一归为账号失效。Autohand官方CLI补装/连接完成，登录路径所选程序缺口已在源码补强：release后端983通过/4原忽略，Clippy/fmt及独立复核通过，尚未安装。Stakpak首次连接后下一实例spawn失败；FD容量风险已核源码与聚合资源，具体OS原因未证，不冒称EMFILE/泄漏。仅清理核归属debug/deps及incremental，实测释放约65GiB；数据、配置和正式应用保留。
+
+正式应用仍为94786241/55abe01b。Pi真实双对话重叠，A停止不影响B完成且停后续答原记号成功；重试文字混入正文，未完整达标。OpenCode同一服务改实际免费Apodex，短答与最早记号续答成功；CodeBuddy现有Hy4 preview/High、Kilo现有免费Nemotron短答成功。Cline首次internal_error、Droid401无响应体、goose原模型失败，具体原因未知；Cline和goose免费设置已确认，失败空队列补测待新版安装。Amp实际auth_required，本轮按用户要求暂缓认证；已查设置检查不验证Key有效性；通知系统未允许，等设置确认。未把连接、一次回复或设置成功判完整接入。
 
 配置卡片、固定通知许可指引、安全空failed队列新消息恢复分别提交f96c2d73/dd792b37/a872873c；前端184文件/2146项、类型/格式/打包通过。网页执行前已确定未执行的失败改为rejected/false（a059aede），入执行路径后的未知保持unknown/null，期限与权限不变；浏览器145项、完整Rust979通过/4原忽略、fmt/clippy和独立复核通过。四项源码修复尚未安装复测，a059aede最终候选已核对完成，等用户保存/正常退出确认，不转标正式应用通过。
 

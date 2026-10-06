@@ -1,0 +1,65 @@
+{
+  "fast-agent": {
+    "log": "protocol-v1-1791280018579-30.jsonl",
+    "recordedAtUtc": "2026-10-06T09:55:45.944149+00:00",
+    "sha256": "f68702a4460d6d1d51788d0b663cb623fd73d8e53c24709260118fd44c149a0e",
+    "bytes": 3964,
+    "records": 24,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:47:47.319000+00:00",
+        "firstResponseAt": "2026-10-06T09:47:49.688000+00:00",
+        "durationMs": 2369,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "sigit": {
+    "log": "protocol-v1-1791280358150-35.jsonl",
+    "recordedAtUtc": "2026-10-06T09:55:45.944301+00:00",
+    "sha256": "fcac2efbdf4fdc5683f14a4b00adaa89f142af072632496d063a6ed2102d187f",
+    "bytes": 3357,
+    "records": 18,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 5,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:54:28.631000+00:00",
+        "firstResponseAt": "2026-10-06T09:54:28.632000+00:00",
+        "durationMs": 1,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "gemini-preparation": {
+    "log": "protocol-v1-1791280262402-32.jsonl",
+    "recordedAtUtc": "2026-10-06T09:55:45.944602+00:00",
+    "sha256": "7729239e5ddbfec19e05efbe8538b0f2c3d1206b9f9499c769974f6583650a1a",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

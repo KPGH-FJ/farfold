@@ -278,6 +278,39 @@ fn amp_companion(
     Some(vec![path.to_str()?.to_string()])
 }
 
+/// The verified 0.2.1 component declares a bare CLI login, while the selected
+/// CLI may live outside the global PATH. Use the same dependency selection as
+/// its ACP launch; a broken explicit selection must not try another program.
+fn autohand_companion(
+    row: &AgentRow,
+    method: &Value,
+    command: &str,
+    args: &[String],
+) -> Option<Result<Vec<String>, UnavailableReason>> {
+    if row.id != "registry:autohand"
+        || method.get("id").and_then(Value::as_str) != Some("autohand-login")
+    {
+        return None;
+    }
+    Some((|| {
+        let declaration = super::recipes::verified_for(row)
+            .iter()
+            .find(|item| item.id == "autohand-cli")
+            .ok_or(UnavailableReason::Unverified)?;
+        if command != declaration.binary || args != ["login"] {
+            return Err(UnavailableReason::Unverified);
+        }
+        executable(Path::new(&row.command)).ok_or(UnavailableReason::PathUnavailable)?;
+        let path = super::preparation::resolve_dependency(declaration, Some(row))
+            .ok_or(UnavailableReason::PathUnavailable)?;
+        let selected = executable(&path).ok_or(UnavailableReason::PathUnavailable)?;
+        let selected = selected
+            .to_str()
+            .ok_or(UnavailableReason::PathUnavailable)?;
+        Ok(vec![selected.into(), "login".into()])
+    })())
+}
+
 /// This proof is limited to an existing selected registry ZIP installation.
 /// It never gives a path new ownership or creates another installation record.
 pub(crate) fn managed_kilo(row: &AgentRow, store: &MetaStore, data: &Path) -> bool {
@@ -416,6 +449,8 @@ pub(crate) fn route(row: &AgentRow, method: &Value, proof: &ManagedTerminalProof
             .and_then(|target| target.invocation(row, method, command, &args))
         {
             Ok(argv)
+        } else if let Some(result) = autohand_companion(row, method, command, &args) {
+            result
         } else {
             amp_companion(row, method, command, &args)
                 .map(Ok)

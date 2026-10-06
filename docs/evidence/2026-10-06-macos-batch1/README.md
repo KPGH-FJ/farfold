@@ -24,8 +24,22 @@ Factory Droid保留已有GPT-6 Sol/High，17:27单条实际请求771ms后失败�
 
 三项前端修复f96c2d73/dd792b37/a872873c通过独立复核；184文件/2146测试、类型/格式/打包通过，原格式失败和两证据JSON纯格式且值不变保留于frontend-checks.json。网页执行前确定未执行的失败修复a059aede：返回rejected/applied=false，入执行路径后的未知保持unknown/null，不改期限或审批；真实首次点击原因仍未知。Dirac已有免费nvidia/nemotron-3-ultra-550b-a55b:free/Medium，17:41请求22.7秒后完成；正文有多次重试提示与两次记号，失败步骤详情为API Error (Retrying)，只发1次Farfold请求，严格仅记号未通过。Vibe已有Mistral Medium 3.5，17:43首次2.910秒精确短答成功；17:44不含原记号的提问1.905秒后准确续答最早记号。
 
-Claude0.81.2本轮正式连接检查通过，账号由Agent报告未登录，停在现有终端Subscription/Console选择，未启动登录或付费模型。fast-agent0.10.1连接检查通过且确认沿用已有设置；没有提供精确模型或思考选项，新对话显示沿用当前模型，不猜实际模型。
+Claude0.81.2本轮正式连接检查通过，账号由Agent报告未登录，停在现有终端Subscription/Console选择，未启动登录或付费模型。fast-agent0.10.1连接检查通过且确认沿用已有设置；没有提供精确模型或思考选项，新对话显示沿用当前模型，不猜实际模型；17:47单条2.369秒后精确返回FARFOLD_FAST_A_20261006。siGit1.5.11已有Qwen 2.5 3B选项，17:54单条1ms后提示本机模型未载入，没有模型回复；结束请求不算任务成功。官方/load会走下载/载入链，资源条件未核清前不执行。Gemini0.62.0与Auggie0.36.0程序连接通过，但沿用已有设置读取模型均要求认证，未发模型消息或登录。
 
 后端2项红测转绿，浏览器145项、完整Rust979通过/4原忽略、fmt/clippy通过，独立复核无阻断。源码与正式应用结果分开，尚未安装复测；候选回执另记，不据打包判实测通过。
 
 最终a059aede候选已准备，713输入与Git/构建前后一致；arm64、身份、严格签名及ZIP/5文件通过，回执见final-package-receipt.json。旧a872873c候选ZIP保留，新候选尚未安装，正在等用户保存/正常退出确认。
+
+协议JSON保存读取时的安全元数据前缀快照，记录字节数/摘要；后台追加不覆盖此前范围。对照UI判断模型/回复/错误，不留原始正文或凭据。当前目标继续macOS全名单；未安装候选/未做换号或Windows，下一步核其余准备条件，获得保存退出确认后安装并定向复测。
+
+追加准备检查：Copilot1.0.89沿用已有设置、默认模型/Agent/Allow All Off，17:59单条4.594秒后精确回复；不猜精确模型。Qwen0.24.7、Cursor2026.09.28、Kimi1.52.0、Corust0.6.0沿用已有设置读取模型均实际要求认证，未发模型消息、启动登录或换服务。存储按既有授权只清理已核归属的debug/deps与debug/incremental，实测空闲增70001934336字节、清理后72857882624字节；不将硬链接累计显示量当收益，正式/候选应用及用户数据均未删，见storage-cleanup.json。
+
+追加现有设置读取：MiniMax、Antigravity、DimCode、Grok Build、Junie、Nova、Poolside、Qoder正式程序检查成功，但session/new分别返回auth_required；没有发模型请求或自动更换服务/认证。它只证明当前使用方式需要有效认证，不据此判断所有来源或原账号失效。Stakpak首次检查initialize成功，随后读取模型前程序启动失败，第二日志为空，具体原因正在独立定位。Autohand缺官方CLI本体，已核官方npm补装路线并在准备页启动安装，尚未确认结果。
+
+后续定位：Stakpak -66此前0字节快照之后追加两条startup，明确spawn/start_failed、childStarted=false，未派发initialize或模型请求；另存当前结果，不覆盖首次前缀。程序存在且可执行；正式父端253个FD/57直接子进程、launchctl域软限256仅为容量风险线索，未读到父实际RLIMIT或OS errno，不能确定EMFILE或进程泄漏。共用源码确有准备与模型草稿分别保留连接、每连接3管道+协议文件且无容量保护的可达风险；不得直接终止工作/未知对话来掩盖。Autohand补装及握手完成后，官方login声明使用autohand CLI，而认证路由未承接已选的托管CLI；已开始最小源反例与修复，尚未判正式可用。
+
+用户随后指定暂不处理登录，优先已可用Agent；不再主动启动该批认证。siGit官方/status与/models先证实Unloaded、当前Qwen 2.5 3B未缓存；资源核验后仅/load原选本地免费模型，约2m55s下载载入成功步骤，界面主终态无可展示结果。后续/status实际Ready、约1.93GB，首次已加载模型短答正在验证，不重复/load。
+
+Autohand登录路线最小补强：仅官方已核声明承接所选CLI，坏选中路径不回退、未知声明不获新增权限，声明环境保留，canonical路径严格UTF8；无用户账号配置写入。红测2失败→定向29项通过，完整release后端983通过/4原忽略、Clippy/fmt通过；复用现有release缓存避开数十GiB冷debug产物，未加产品环境开关。独立复核与root路径复核通过，仍未安装/真实认证。见autohand-route-checks.json。siGit载入后18:31新短答550ms实际internal_error、无回答；Ready只证明本地引擎，官方服务覆盖可改变实际后端，具体来源/错误未证，不归因Onde/内存/FD，不继续重发。
+
+Kilo18:42同一Gateway由免费Ultra/None改为免费Nano Omni，Agent返回Instant配置，实际精确续答首条记号；仍保留原对话正文。18:43文件复制任务口头DONE但output.txt不存在，无工具步骤；18:45限定随机输入文件只读核验又回复旧DONE而非文件记号，无工具步骤。两项工具验证失败，不推断整个Kilo/所有模型均无工具能力，具体模型/工具链原因核查中；审批并未发生，保持未测。未运行命令或访问外部网页，不将‘请求已完成’当文件任务完成。

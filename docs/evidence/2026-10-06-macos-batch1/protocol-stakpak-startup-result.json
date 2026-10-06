@@ -1,0 +1,38 @@
+{
+  "stakpak-model": {
+    "log": "protocol-v1-1791282038287-66.jsonl",
+    "recordedAtUtc": "2026-10-06T10:22:32.338678+00:00",
+    "sha256": "d8413f66aebdbf3c82209b45962555e6c109bff20950e08d5129e6f052a36cb6",
+    "bytes": 869,
+    "records": 2,
+    "outbound": {},
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained.",
+    "startupEvidence": [
+      {
+        "ts": 1791282038288,
+        "event": "startup",
+        "phase": "spawn",
+        "failurePhase": "spawn",
+        "startupOutcome": "start_failed",
+        "childStarted": false,
+        "initializeAccepted": false,
+        "childReaped": false,
+        "connectionRemoved": false
+      },
+      {
+        "ts": 1791282038288,
+        "event": "startup",
+        "phase": "spawn",
+        "failurePhase": "spawn",
+        "startupOutcome": "start_failed",
+        "childStarted": false,
+        "initializeAccepted": false,
+        "childReaped": false,
+        "connectionRemoved": true
+      }
+    ]
+  }
+}

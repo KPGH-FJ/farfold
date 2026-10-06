@@ -1,0 +1,36 @@
+{
+  "qwen": {
+    "log": "protocol-v1-1791280946689-42.jsonl",
+    "recordedAtUtc": "2026-10-06T10:07:45.254612+00:00",
+    "sha256": "d2245063eb2a33d22839751fe5cdd5215a0fb5ef9282819d1cbc8dd6a98ac29e",
+    "bytes": 2715,
+    "records": 10,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "cursor": {
+    "log": "protocol-v1-1791281079770-44.jsonl",
+    "recordedAtUtc": "2026-10-06T10:07:45.254890+00:00",
+    "sha256": "61e296d621b368db7dc80e980618fc72b6d92f731ee4de4fcd06f2414390cf58",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

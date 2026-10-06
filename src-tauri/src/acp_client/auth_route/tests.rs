@@ -334,6 +334,126 @@ fn amp_uses_its_verified_selected_companion_instead_of_a_path_namesake() {
     ));
     assert_eq!(row.env[0].1, selected.display().to_string());
 }
+
+fn autohand(dir: &Path) -> (AgentRow, Value, PathBuf) {
+    let node = dir.join(if cfg!(windows) { "node.exe" } else { "node" });
+    executable(&node);
+    let mut row = super::super::recipes::tests::official_row(
+        dir,
+        "registry:autohand",
+        "@autohandai/autohand-acp",
+        "0.2.1",
+    );
+    row.command = node.display().to_string();
+    let cli = dir.join(if cfg!(windows) {
+        "selected CLI/launch-program.exe"
+    } else {
+        "selected CLI/launch-program"
+    });
+    executable(&cli);
+    row.env = vec![("AUTOHAND_CMD".into(), cli.display().to_string())];
+    let mut method = legacy("autohand", serde_json::json!(["login"]));
+    method["id"] = serde_json::json!("autohand-login");
+    (row, method, cli)
+}
+
+#[test]
+fn autohand_login_uses_selected_cli_and_preserves_declared_environment() {
+    let dir = tempfile::tempdir().unwrap();
+    let (row, mut method, cli) = autohand(dir.path());
+    method["_meta"]["terminal-auth"]["env"] = serde_json::json!({"PUBLIC_MODE":"login-fixture"});
+    let Route::Terminal(invocation) = route(&row, &method, false) else {
+        panic!("the official login must use the selected companion CLI");
+    };
+    assert_eq!(
+        invocation.argv,
+        vec![
+            cli.canonicalize().unwrap().display().to_string(),
+            "login".into()
+        ]
+    );
+    assert_eq!(
+        invocation.env,
+        vec![("PUBLIC_MODE".into(), "login-fixture".into())]
+    );
+    assert!(!invocation.setup);
+    assert_eq!(row.env[0].1, cli.display().to_string());
+}
+
+#[test]
+fn autohand_login_does_not_accept_another_command_or_arguments() {
+    let dir = tempfile::tempdir().unwrap();
+    let (row, method, cli) = autohand(dir.path());
+    for index in 0..5 {
+        let mut changed = method.clone();
+        match index {
+            0 => changed["_meta"]["terminal-auth"]["command"] = serde_json::json!(cli),
+            1 => {
+                changed["_meta"]["terminal-auth"]["args"] = serde_json::json!(["login", "--extra"])
+            }
+            2 => changed["_meta"]["terminal-auth"]["args"] = serde_json::json!(["logout"]),
+            3 => changed["id"] = serde_json::json!("unknown-login"),
+            _ => {
+                // A same-program declaration is generally valid, but it is not
+                // the exact official companion login reviewed for this release.
+                changed["_meta"]["terminal-auth"]["command"] = serde_json::json!(row.command);
+                changed["_meta"]["terminal-auth"]["args"] =
+                    serde_json::json!([row.args[0], "login"]);
+            }
+        }
+        assert!(
+            matches!(route(&row, &changed, false), Route::Unavailable(_)),
+            "case {index}"
+        );
+    }
+}
+
+#[test]
+fn autohand_login_requires_the_verified_registered_component() {
+    let dir = tempfile::tempdir().unwrap();
+    let (row, method, _) = autohand(dir.path());
+    for index in 0..4 {
+        let mut changed = row.clone();
+        match index {
+            0 => changed.source = "custom".into(),
+            1 => changed.version = Some("0.2.2".into()),
+            2 => changed.args.push("--unverified".into()),
+            _ => changed.id = "custom-autohand".into(),
+        }
+        assert!(
+            matches!(route(&changed, &method, false), Route::Unavailable(_)),
+            "case {index}"
+        );
+    }
+}
+
+#[test]
+fn autohand_login_keeps_a_broken_explicit_cli_instead_of_a_path_namesake() {
+    let dir = tempfile::tempdir().unwrap();
+    let (mut row, method, _) = autohand(dir.path());
+    let namesake = dir.path().join(if cfg!(windows) {
+        "path/autohand.exe"
+    } else {
+        "path/autohand"
+    });
+    executable(&namesake);
+    row.env.push((
+        "PATH".into(),
+        namesake.parent().unwrap().display().to_string(),
+    ));
+    let declaration = &super::super::recipes::verified_for(&row)[0];
+    let mut unselected = row.clone();
+    unselected.env.retain(|(name, _)| name != "AUTOHAND_CMD");
+    assert_eq!(
+        super::super::preparation::resolve_dependency(declaration, Some(&unselected)),
+        Some(namesake)
+    );
+    row.env[0].1 = dir.path().join("missing CLI").display().to_string();
+    assert!(matches!(
+        route(&row, &method, false),
+        Route::Unavailable(UnavailableReason::PathUnavailable)
+    ));
+}
 #[cfg(unix)]
 fn kilo(data: &Path) -> (AgentRow, MetaStore, Value) {
     kilo_with_layout(data, false)

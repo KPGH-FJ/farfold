@@ -1,0 +1,62 @@
+{
+  "poolside": {
+    "log": "protocol-v1-1791281986795-62.jsonl",
+    "recordedAtUtc": "2026-10-06T10:21:18.028662+00:00",
+    "sha256": "b7471001942b5b3acf8a25faab20bbef42b353090e6d96ef07ae5e224464d352",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "qoder": {
+    "log": "protocol-v1-1791282005625-64.jsonl",
+    "recordedAtUtc": "2026-10-06T10:21:18.028954+00:00",
+    "sha256": "72a2155d9f00d6b5b8f27e7fb0bc5216935d5588782ad4850fcccbbcbf105d01",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "stakpak-check": {
+    "log": "protocol-v1-1791282027806-65.jsonl",
+    "recordedAtUtc": "2026-10-06T10:21:18.029076+00:00",
+    "sha256": "187e66b5ce6b0d7d4faf0b25cba82373d133a6169224799971c13c4ab111b6cd",
+    "bytes": 2433,
+    "records": 8,
+    "outbound": {
+      "initialize": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {},
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "stakpak-model": {
+    "log": "protocol-v1-1791282038287-66.jsonl",
+    "recordedAtUtc": "2026-10-06T10:21:18.029241+00:00",
+    "sha256": "d8413f66aebdbf3c82209b45962555e6c109bff20950e08d5129e6f052a36cb6",
+    "bytes": 869,
+    "records": 2,
+    "outbound": {},
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

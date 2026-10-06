@@ -1,0 +1,88 @@
+{
+  "autohand-check": {
+    "log": "protocol-v1-1791282143872-68.jsonl",
+    "recordedAtUtc": "2026-10-06T10:35:29.624414+00:00",
+    "sha256": "3d9700e337591608520b2f530bec670a3c50061b3f0c0828f6b378494e2a5fce",
+    "bytes": 2344,
+    "records": 7,
+    "outbound": {
+      "initialize": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "autohand-config": {
+    "log": "protocol-v1-1791282144575-69.jsonl",
+    "recordedAtUtc": "2026-10-06T10:35:29.626122+00:00",
+    "sha256": "6f8ad1a9c236fb82404ea9c6cdfac8a5e3f68555e61d9912b39747e1cab508d5",
+    "bytes": 2715,
+    "records": 10,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "sigit": {
+    "log": "protocol-v1-1791280358150-35.jsonl",
+    "recordedAtUtc": "2026-10-06T10:35:29.627718+00:00",
+    "sha256": "fffecdb48661ec5afd9e7d3a447335f79fe66583ba841ab226046e23acd628fe",
+    "bytes": 23912,
+    "records": 233,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 6
+    },
+    "stderrRecords": 31,
+    "protocolErrors": {
+      "internal_error": 1
+    },
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:54:28.631000+00:00",
+        "firstResponseAt": "2026-10-06T09:54:28.632000+00:00",
+        "durationMs": 1,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:26:39.299000+00:00",
+        "firstResponseAt": "2026-10-06T10:26:39.312000+00:00",
+        "durationMs": 13,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:26:49.493000+00:00",
+        "firstResponseAt": "2026-10-06T10:26:49.501000+00:00",
+        "durationMs": 8,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:27:29.248000+00:00",
+        "firstResponseAt": "2026-10-06T10:30:24.261000+00:00",
+        "durationMs": 175013,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:31:34.379000+00:00",
+        "firstResponseAt": "2026-10-06T10:31:34.385000+00:00",
+        "durationMs": 6,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:31:47.051000+00:00",
+        "firstResponseAt": "2026-10-06T10:31:47.601000+00:00",
+        "durationMs": 550,
+        "errorClass": "internal_error"
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

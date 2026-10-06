@@ -1,0 +1,16 @@
+{
+  "recordedAtUtc": "2026-10-06T10:04:44.045123+00:00",
+  "authorization": "User authorized storage cleanup; exact paths audited as generated Cargo files before removal.",
+  "paths": [
+    "/Users/tw/Desktop/farfold/src-tauri/target/debug/deps",
+    "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental"
+  ],
+  "noActiveCompilerOrCandidateBinary": true,
+  "noSymbolicOrSpecialFilesInPriorAudit": true,
+  "diskFreeBytesBefore": 2855948288,
+  "diskFreeBytesAfter": 72857882624,
+  "measuredFreeBytesIncrease": 70001934336,
+  "formalAppOrCandidateRemoved": false,
+  "sourceUserDataAgentConfigOrHistoryRemoved": false,
+  "boundary": "Measured free space change in cleanup window, not a guarantee that all concurrent filesystem changes came from cleanup. Future debug builds regenerate these artifacts; no whole target deletion."
+}

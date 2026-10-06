@@ -1,0 +1,51 @@
+{
+  "recordedAtUtc": "2026-10-06T10:46:42.646016+00:00",
+  "scope": "Verified official Autohand CLI login route; source and automated results, not installed or real authentication.",
+  "delegatedRed": {
+    "passed": 2,
+    "failed": 2,
+    "exitCode": 101,
+    "boundary": "Reported by implementation agent; detailed tool output retained in its task, not a local log claim."
+  },
+  "targeted": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --release --lib acp_client::auth_route:: -- --test-threads=1",
+    "passed": 29,
+    "failed": 0,
+    "exitCode": 0
+  },
+  "fullRust": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --release",
+    "passed": 983,
+    "failed": 0,
+    "ignored": 4,
+    "exitCode": 0,
+    "elapsedSeconds": 72.794
+  },
+  "clippy": {
+    "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked --release -- -D warnings",
+    "exitCode": 0,
+    "elapsedSeconds": 20.098
+  },
+  "format": {
+    "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+    "exitCode": 0
+  },
+  "profileReason": "Reuse verified release dependency cache after authorized debug cleanup; avoid rebuilding tens of GiB of debug objects. No product environment flags or source test switches added.",
+  "sourceSha256": {
+    "src-tauri/src/acp_client/auth_route.rs": "dff45f0d8ed88c4a4454284c23f85a5f71a83b94d4fe1185c41c79c2cdbcdd27",
+    "src-tauri/src/acp_client/auth_route/tests.rs": "d4b334f3b467a070560d38ab99853908fdedf310dee24d68b11584ab51800913"
+  },
+  "localLogs": {
+    "autohand-full-release-test.txt": {
+      "path": "output/2026-10-06-macos-batch1/autohand-full-release-test.txt",
+      "sha256": "b6c679fa2ed6c7be8779effe2611af5199a985bb33601a0aa9d6ab2ce8271cee",
+      "bytes": 107420
+    },
+    "autohand-release-clippy.txt": {
+      "path": "output/2026-10-06-macos-batch1/autohand-release-clippy.txt",
+      "sha256": "877e63ad2ea7fce183d732bdffd1397286161ed5c544c3250de796ee2895b3f8",
+      "bytes": 7882
+    }
+  },
+  "review": "Independent source review and root exact-path UTF-8 follow-up; selected broken CLI never falls back, legacy environment preserved; no auth status or user config edits."
+}

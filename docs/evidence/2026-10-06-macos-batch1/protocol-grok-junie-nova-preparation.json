@@ -1,0 +1,53 @@
+{
+  "grok": {
+    "log": "protocol-v1-1791281907286-56.jsonl",
+    "recordedAtUtc": "2026-10-06T10:20:00.501930+00:00",
+    "sha256": "cef877412a4ca38c384c838def2d07fdf76d74daf64900c692e1557a584027c0",
+    "bytes": 3321,
+    "records": 17,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "junie": {
+    "log": "protocol-v1-1791281933362-58.jsonl",
+    "recordedAtUtc": "2026-10-06T10:20:00.502323+00:00",
+    "sha256": "f245d3f4a0f07860bf1ea0ab24257d099e44015fa2de7463864f5f7172ae1004",
+    "bytes": 2626,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "nova": {
+    "log": "protocol-v1-1791281962446-60.jsonl",
+    "recordedAtUtc": "2026-10-06T10:20:00.502392+00:00",
+    "sha256": "45e33918f89229b319febf519d5b3d432ed036dd8d01e28213f542f094c5216a",
+    "bytes": 2804,
+    "records": 11,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 2,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

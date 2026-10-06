@@ -1,0 +1,53 @@
+{
+  "kimi": {
+    "log": "protocol-v1-1791281200991-46.jsonl",
+    "recordedAtUtc": "2026-10-06T10:18:48.272519+00:00",
+    "sha256": "ec77e9c1d96d4bcb8acd6dd33acac8984b0a0ccaf6e838b6369aa494a8f42931",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "corust": {
+    "log": "protocol-v1-1791281307297-48.jsonl",
+    "recordedAtUtc": "2026-10-06T10:18:48.272877+00:00",
+    "sha256": "01a2d9800a17a7dd8d96ca03eb7189e6d571f66a99564408e7d13605fa052036",
+    "bytes": 2625,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "minimax": {
+    "log": "protocol-v1-1791281440479-50.jsonl",
+    "recordedAtUtc": "2026-10-06T10:18:48.273032+00:00",
+    "sha256": "bee52bcd91fe9f773c387a646087433906f9a925163bef9304557e567f1ebd5b",
+    "bytes": 2626,
+    "records": 9,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}
