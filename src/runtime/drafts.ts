@@ -15,6 +15,9 @@ export interface DraftAttachment {
   content?: string;
   loading?: boolean;
   recovered?: boolean;
+  /** Transient preview eligibility for these exact checked bytes and source.
+   * It is never persisted and never authorizes sending. */
+  imageChecked?: { data: string; mimeType: string; uri?: string };
 }
 
 export interface ComposerDraft {
@@ -58,7 +61,27 @@ export const composerDrafts = {
     return values.get(key) ?? empty;
   },
   update(key: string, update: (draft: ComposerDraft) => ComposerDraft) {
-    const next = update(this.read(key));
+    let next = update(this.read(key));
+    const attachments = next.attachments.map((attachment) => {
+      const checked = attachment.imageChecked;
+      if (
+        checked &&
+        (attachment.kind !== "image" ||
+          checked.data !== attachment.data ||
+          checked.mimeType !== attachment.mimeType ||
+          checked.uri !== attachment.uri)
+      ) {
+        const { imageChecked: _checked, ...remaining } = attachment;
+        return remaining;
+      }
+      return attachment;
+    });
+    if (
+      attachments.some(
+        (attachment, index) => attachment !== next.attachments[index],
+      )
+    )
+      next = { ...next, attachments };
     if (
       !next.text &&
       next.attachments.length === 0 &&
@@ -373,6 +396,7 @@ function serializeComposer(value: ComposerDraft): ComposerDraft {
         content: _content,
         loading: _loading,
         recovered: _recovered,
+        imageChecked: _checked,
         ...attachment
       }) => attachment,
     ),

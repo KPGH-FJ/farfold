@@ -19,6 +19,10 @@ import {
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
 import { canDrain } from "./queue";
 import { startQueueEditor, queueEditorKey } from "./queue_edit";
+import {
+  PNG_IMAGE_TEST_DATA,
+  TestImageDecoder,
+} from "./image_fixtures.test-support";
 
 let serial = 0;
 const file = (name = "notes.md", recovered = true): DraftAttachment => ({
@@ -37,7 +41,7 @@ const resource = (name: string): PromptBlock => ({
   },
 });
 const text = (value: string): PromptBlock => ({ type: "text", text: value });
-const image = (data = "saved-image"): PromptBlock => ({
+const image = (data = PNG_IMAGE_TEST_DATA): PromptBlock => ({
   type: "image",
   data,
   mimeType: "image/png",
@@ -53,11 +57,15 @@ function seed(queue: PromptBlock[][], uncertainIndex: number | null = null) {
 const keepAll = (review: ReturnType<typeof captureAttachmentReview>) =>
   new Set(review.entries.map((entry) => entry.id));
 beforeEach(() => {
+  vi.stubGlobal("Image", TestImageDecoder);
   h.invoke.mockReset().mockResolvedValue("current contents");
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();
   draftPersistence.lockInteraction(false);
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 it("marks only actual restored attachment queues and blocks both draining and explicit continuation before review", async () => {
   const state = seed([[text("first")], [text("second"), resource("notes.md")]]);

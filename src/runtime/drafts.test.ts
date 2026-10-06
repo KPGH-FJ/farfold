@@ -74,3 +74,36 @@ it("appends file feedback only to its conversation while retaining text and atta
   expect(composerDrafts.read("session:b").text).toBe("Other conversation");
   expect(composerDrafts.read("new").text).toBe("");
 });
+
+it.each(["data", "mimeType", "uri"] as const)(
+  "revokes an image preview check when %s changes",
+  (field) => {
+    const checked = {
+      data: "checked bytes",
+      mimeType: "image/png",
+      uri: "file:///one.png",
+    };
+    const attachment = {
+      id: "image",
+      kind: "image" as const,
+      name: "one.png",
+      ...checked,
+      imageChecked: checked,
+    };
+    composerDrafts.update("new", () => ({
+      text: "Keep",
+      attachments: [attachment],
+    }));
+    composerDrafts.update("new", (draft) => ({
+      ...draft,
+      attachments: draft.attachments.map((item) => ({
+        ...item,
+        [field]: "changed",
+      })),
+    }));
+    expect(composerDrafts.read("new").attachments[0]).not.toHaveProperty(
+      "imageChecked",
+    );
+    expect(composerDrafts.read("new").text).toBe("Keep");
+  },
+);

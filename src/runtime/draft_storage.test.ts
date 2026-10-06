@@ -328,6 +328,43 @@ it("stores only user input, not transient tests or cached file body; queue snaps
   expect(latest.composers.new.attachments[0].content).toBeUndefined();
 });
 
+it("does not persist or restore an image preview check, while retaining its source and unsent data", async () => {
+  mock.invoke.mockResolvedValue(null);
+  const d = await import("./drafts");
+  await d.draftPersistence.load();
+  const checked = {
+    data: "kept image bytes",
+    mimeType: "image/png",
+    uri: "file:///own.png",
+  };
+  const attachment = {
+    id: "image",
+    kind: "image" as const,
+    name: "own.png",
+    ...checked,
+    imageChecked: checked,
+  };
+  d.composerDrafts.update("new", () => ({
+    text: "Keep",
+    attachments: [attachment],
+  }));
+  await d.draftPersistence.flush();
+  const latest = mock.invoke.mock.calls
+    .filter(([name]) => name === "settings_set")
+    .at(-1)![1].value;
+  expect(latest.composers.new.attachments[0]).not.toHaveProperty(
+    "imageChecked",
+  );
+  latest.composers.new.attachments[0].imageChecked = checked;
+  mock.invoke.mockResolvedValue(latest);
+  vi.resetModules();
+  const restored = await import("./drafts");
+  await restored.draftPersistence.load();
+  const image = restored.composerDrafts.read("new").attachments[0]!;
+  expect(image).toMatchObject({ ...checked, recovered: true });
+  expect(image).not.toHaveProperty("imageChecked");
+});
+
 it("persists and restores a first-message native target without restoring any transcript", async () => {
   const target = {
     agentId: "a",

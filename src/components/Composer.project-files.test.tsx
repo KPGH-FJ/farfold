@@ -4,6 +4,7 @@ vi.mock("../runtime/browser_surface", async (original) => ({
   useBrowserSurfaceBarrier: (requested: boolean) => requested,
 }));
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { crc32 } from "node:zlib";
 import {
   Children,
   isValidElement,
@@ -16,7 +17,9 @@ const hooks = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   effects: [] as (() => void)[],
+  openDialog: vi.fn(),
 }));
+vi.mock("@tauri-apps/plugin-dialog", () => ({ open: hooks.openDialog }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
@@ -60,6 +63,11 @@ import { Composer } from "./Composer";
 import { composerDrafts } from "../runtime/drafts";
 import { threads } from "../runtime/sessions";
 import { freshThreadState } from "../runtime/session_projection";
+import { STRINGS } from "../runtime/strings";
+import {
+  PNG_IMAGE_TEST_DATA,
+  TestImageDecoder,
+} from "../runtime/image_fixtures.test-support";
 
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof Composer>;
@@ -110,6 +118,22 @@ function deferred<T>() {
   });
   return { promise, resolve };
 }
+function openFilePicker() {
+  const plus = render().find(
+    (node) => node.props["aria-label"] === STRINGS.composer.addTitle,
+  )!;
+  (plus.props.onClick as () => void)();
+  const choose = render().find(
+    (node) =>
+      node.type === "button" &&
+      nodes(node.props.children as ReactNode).some(
+        (child) =>
+          child.type === "strong" &&
+          child.props.children === STRINGS.composer.addFile,
+      ),
+  )!;
+  (choose.props.onClick as () => void)();
+}
 function noAgentRequests() {
   expect(threads.open).not.toHaveBeenCalled();
   expect(threads.send).not.toHaveBeenCalled();
@@ -129,6 +153,7 @@ beforeEach(() => {
   hooks.cursor = 0;
   hooks.slots = [];
   hooks.effects = [];
+  hooks.openDialog.mockReset().mockResolvedValue(null);
   vi.mocked(invoke)
     .mockReset()
     .mockResolvedValue({ files: ["note.txt"] });
@@ -155,6 +180,100 @@ beforeEach(() => {
     text: "Other",
     attachments: [],
   }));
+});
+
+it("uses the existing add-file menu to import an image without changing text or contacting an Agent", async () => {
+  props.imageEnabled = true;
+  vi.stubGlobal("Image", TestImageDecoder);
+  hooks.openDialog.mockResolvedValue(["/chosen/图片 space%.txt"]);
+  vi.mocked(invoke).mockResolvedValue({
+    mimeType: "image/png",
+    data: PNG_IMAGE_TEST_DATA,
+  });
+  openFilePicker();
+  await vi.waitFor(() =>
+    expect(
+      composerDrafts.read("project-new-a").attachments.at(-1),
+    ).toMatchObject({
+      kind: "image",
+      uri: "file:///chosen/%E5%9B%BE%E7%89%87%20space%25.txt",
+      data: PNG_IMAGE_TEST_DATA,
+      loading: false,
+    }),
+  );
+  expect(hooks.openDialog).toHaveBeenCalledExactlyOnceWith({ multiple: true });
+  expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_image", {
+    uri: "file:///chosen/%E5%9B%BE%E7%89%87%20space%25.txt",
+    read: true,
+  });
+  expect(composerDrafts.read("project-new-a").text).toBe("Keep");
+  expect(composerDrafts.read("project-new-a").attachments[0]!.id).toBe("kept");
+  expect(threads.open).not.toHaveBeenCalled();
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+  expect(render().find((node) => node.type === "img")?.props.src).toBe(
+    `data:image/png;base64,${PNG_IMAGE_TEST_DATA}`,
+  );
+});
+
+function tooWidePng() {
+  const bytes = Uint8Array.from(atob(PNG_IMAGE_TEST_DATA), (char) =>
+    char.charCodeAt(0),
+  );
+  const view = new DataView(bytes.buffer);
+  view.setUint32(16, 9000);
+  view.setUint32(29, crc32(bytes.subarray(12, 29)));
+  return btoa(String.fromCharCode(...bytes));
+}
+it.each([
+  "AAAA",
+  tooWidePng(),
+  "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAACGFjVEwAAAACAAAAAPONk3AAAAAaZmNUTAAAAAAAAAACAAAAAQAAAAAAAAAAAGQD6AAAECjlZAAAAAxJREFUeJxj/M8AAgAGCAEBWs8GSAAAABpmY1RMAAAAAQAAAAIAAAABAAAAAAAAAAAAZAPoAACLWw+wAAAAE2ZkQVQAAAACeJxjZGj4z8DAAAAGigGBHdUz0wAAAABJRU5ErkJggg==",
+])(
+  "retains a refused image without sending it into the thumbnail decoder %#",
+  async (data) => {
+    props.imageEnabled = true;
+    const decoder = vi.fn();
+    vi.stubGlobal("Image", decoder);
+    hooks.openDialog.mockResolvedValue(["/chosen.png"]);
+    vi.mocked(invoke).mockResolvedValue({ mimeType: "image/png", data });
+    openFilePicker();
+    await vi.waitFor(() =>
+      expect(
+        composerDrafts.read("project-new-a").attachments.at(-1),
+      ).toMatchObject({
+        kind: "image",
+        data,
+        loading: false,
+      }),
+    );
+    expect(render().some((node) => node.type === "img")).toBe(false);
+    expect(decoder).not.toHaveBeenCalled();
+    expect(props.onSend).not.toHaveBeenCalled();
+  },
+);
+
+it("keeps cancellation and a late chooser response from replacing later draft input", async () => {
+  const original = composerDrafts.read("project-new-a");
+  openFilePicker();
+  await settle();
+  expect(composerDrafts.read("project-new-a")).toBe(original);
+  const choice = deferred<string[] | null>();
+  hooks.openDialog.mockReturnValue(choice.promise);
+  openFilePicker();
+  composerDrafts.clear("project-new-a");
+  composerDrafts.update("project-new-a", () => ({
+    text: "Later",
+    attachments: [],
+  }));
+  const later = composerDrafts.read("project-new-a");
+  choice.resolve(["/chosen.png"]);
+  await settle();
+  expect(composerDrafts.read("project-new-a")).toBe(later);
+  expect(invoke).not.toHaveBeenCalled();
+  expect(threads.open).not.toHaveBeenCalled();
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
 });
 afterEach(() => {
   hooks.slots.forEach((slot) => slot.cleanup?.());

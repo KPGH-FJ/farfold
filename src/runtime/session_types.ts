@@ -7,7 +7,7 @@ import type { CommandEntry } from "./commands";
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
   | { type: "text"; text: string }
-  | { type: "image"; data: string; mimeType: string }
+  | { type: "image"; data: string; mimeType: string; uri?: string }
   | { type: "resource_link"; name: string; uri: string; mimeType?: string }
   | {
       type: "resource";

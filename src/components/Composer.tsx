@@ -1,4 +1,4 @@
-import { filePathUri, projectFileUri } from "../runtime/file_paths";
+import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
@@ -57,7 +57,18 @@ import {
   type ComposerDraft,
 } from "../runtime/drafts";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
-import { prepareDraftAttachments } from "../runtime/draft_attachments";
+import {
+  attachmentPromptBlocks,
+  prepareDraftAttachments,
+} from "../runtime/draft_attachments";
+import {
+  addClipboardImages,
+  addPickedAttachments,
+} from "../runtime/composer_attachment_import";
+import {
+  IMAGE_INPUT_STRINGS,
+  draftImagePreview,
+} from "../runtime/draft_images";
 import { queuedAttachmentsNeedReview } from "../runtime/recovered_attachments";
 import { AttachmentRecovery } from "./AttachmentRecovery";
 import {
@@ -65,15 +76,6 @@ import {
   DRAFT_STRINGS,
   useDraftSaveStatus,
 } from "../runtime/draft_storage";
-
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
 
 export function Composer({
   thread,
@@ -430,35 +432,6 @@ export function Composer({
     requestAnimationFrame(autogrow);
   };
 
-  const blocks = (attachments: DraftAttachment[]): PromptBlock[] => {
-    const out: PromptBlock[] = [];
-    const trimmed = text.trim();
-    if (trimmed) out.push({ type: "text", text: trimmed });
-    for (const chip of attachments) {
-      if (chip.kind === "image" && chip.data) {
-        out.push({
-          type: "image",
-          data: chip.data,
-          mimeType: chip.mimeType ?? "image/png",
-        });
-      } else if (chip.kind === "file" && chip.uri) {
-        if (embedContext && chip.content !== undefined) {
-          out.push({
-            type: "resource",
-            resource: {
-              uri: chip.uri,
-              mimeType: "text/plain",
-              text: chip.content,
-            },
-          });
-        } else {
-          out.push({ type: "resource_link", name: chip.name, uri: chip.uri });
-        }
-      }
-    }
-    return out;
-  };
-
   const unsupportedImages =
     !imageEnabled && chips.some((chip) => chip.kind === "image");
   const canSend =
@@ -510,7 +483,7 @@ export function Composer({
         submitted.attachments,
         embedContext,
       );
-      const payload = blocks(prepared);
+      const payload = attachmentPromptBlocks(text, prepared, embedContext);
       if (composerDrafts.read(targetKey) !== submitted) return;
       // A stop may arrive while attachments or the draft are being saved.
       // Keep that input in place rather than silently adding it to the queue.
@@ -575,13 +548,9 @@ export function Composer({
     if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
     try {
-      const additions = paths.map((p) => ({
-        id: crypto.randomUUID(),
-        kind: "file" as const,
-        name: basename(p),
-        uri: filePathUri(p),
-      }));
-      setChips((prev) => [...prev, ...additions]);
+      await addPickedAttachments(storageKey, paths, imageEnabled, (message) => {
+        if (liveKey.current === storageKey) setSendError(message);
+      });
     } catch {
       if (liveKey.current === storageKey)
         setSendError(STRINGS.repair.requestFailed);
@@ -593,46 +562,15 @@ export function Composer({
       f.type.startsWith("image/"),
     );
     if (files.length === 0 || inputDisabled) return;
-    // Agent 不支持图片时按规格忽略。
     if (!imageEnabled) {
       e.preventDefault();
+      setSendError(IMAGE_INPUT_STRINGS.noImageInput);
       return;
     }
     e.preventDefault();
-    for (const file of files) {
-      const id = crypto.randomUUID();
-      setChips((prev) => [
-        ...prev,
-        {
-          id,
-          kind: "image",
-          name: `pasted.${(file.type.split("/")[1] ?? "png").split(";")[0]}`,
-          mimeType: file.type,
-          loading: true,
-        },
-      ]);
-      draftPersistence.trackAttachment(
-        fileToDataUrl(file)
-          .then((url) => {
-            setChips((prev) =>
-              prev.map((chip) =>
-                chip.id === id
-                  ? { ...chip, data: url.split(",")[1] ?? "", loading: false }
-                  : chip,
-              ),
-            );
-          })
-          .catch(() => {
-            setChips((prev) =>
-              prev.map((chip) =>
-                chip.id === id ? { ...chip, loading: false } : chip,
-              ),
-            );
-            if (liveKey.current === storageKey)
-              setSendError(DRAFT_STRINGS.attachmentIncomplete);
-          }),
-      );
-    }
+    void addClipboardImages(storageKey, files, (message) => {
+      if (liveKey.current === storageKey) setSendError(message);
+    });
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -1274,27 +1212,25 @@ export function Composer({
         {contextChips}
         {chips.length > 0 && (
           <div className="c-chips">
-            {chips.map((chip, i) => (
-              <span key={chip.id} className="c-chip">
-                {chip.data && (
-                  <img
-                    src={`data:${chip.mimeType};base64,${chip.data}`}
-                    alt=""
-                  />
-                )}
-                {chip.name}
-                <button
-                  type="button"
-                  className="x"
-                  aria-label={W.removeAttachment(chip.name)}
-                  onClick={() =>
-                    setChips((prev) => prev.filter((_, j) => j !== i))
-                  }
-                >
-                  ×
-                </button>
-              </span>
-            ))}
+            {chips.map((chip, i) => {
+              const preview = draftImagePreview(chip);
+              return (
+                <span key={chip.id} className="c-chip">
+                  {preview && <img src={preview} alt="" />}
+                  {chip.name}
+                  <button
+                    type="button"
+                    className="x"
+                    aria-label={W.removeAttachment(chip.name)}
+                    onClick={() =>
+                      setChips((prev) => prev.filter((_, j) => j !== i))
+                    }
+                  >
+                    ×
+                  </button>
+                </span>
+              );
+            })}
           </div>
         )}
         <textarea

@@ -4,6 +4,8 @@ use std::path::{Path, PathBuf};
 
 use crate::file_delivery::{self, DeliveryError};
 
+mod images;
+
 fn check(path: &Path, embed: bool) -> Result<Option<String>, String> {
     // The parent only bounds this exact selected file; it is not a reusable
     // permission to read other files in that directory.
@@ -57,6 +59,21 @@ pub async fn draft_attachment_check(
         return Err("请从主界面操作附件".to_owned());
     }
     check_uri(uri, embed).await
+}
+
+/// Classify only the explicitly selected file. The UI decides from the Agent's
+/// declared image capability whether actual media bytes should be requested.
+#[tauri::command]
+pub async fn draft_attachment_image(
+    webview: tauri::Webview,
+    uri: String,
+    read: bool,
+) -> Result<Option<images::ImageCandidate>, String> {
+    if !crate::browser_workspace::caller_allowed(&webview) {
+        return Err("请从主界面操作附件".to_owned());
+    }
+    let path = attachment_path(&uri)?;
+    crate::file_read_check::run(move || images::read_candidate(&path, read)).await
 }
 
 #[cfg(test)]

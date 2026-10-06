@@ -8,13 +8,20 @@ import {
   startQueueEditor,
 } from "./queue_edit";
 import type { PromptBlock } from "./session_types";
+import { keepPromptAsDraft } from "./uncertain_prompt";
 
 it("edits an independent copy with all attachment kinds and cannot replace a shifted or changed original", async () => {
   await draftPersistence.load();
   const key = "queue-editor-attachments";
+  const image = {
+    type: "image" as const,
+    data: "image-data",
+    mimeType: "image/png",
+    uri: "file:///tmp/chosen.png",
+  };
   const original: PromptBlock[] = [
     { type: "text", text: "question" },
-    { type: "image", data: "image-data", mimeType: "image/png" },
+    image,
     {
       type: "resource",
       resource: {
@@ -31,6 +38,11 @@ it("edits an independent copy with all attachment kinds and cannot replace a shi
   startQueueEditor(key, 1, original);
   const edit = composerDrafts.read(queueEditorKey(key));
   expect(edit.attachments).toHaveLength(2);
+  expect(edit.attachments[0].uri).toBe(image.uri);
+  expect(
+    keepPromptAsDraft({ text: "kept", attachments: [] }, original)
+      .attachments[0].uri,
+  ).toBe(image.uri);
   expect(edit.attachments[1].content).toBeUndefined();
   expect(composerDrafts.read(`session:${key}`).text).toBe("keep main input");
   expect(queueEditorTarget(edit, [[], original])).toBe(original);

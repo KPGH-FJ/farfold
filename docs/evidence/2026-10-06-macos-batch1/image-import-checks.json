@@ -1,0 +1,56 @@
+{
+  "sourceOnly": true,
+  "purpose": "Use the existing file picker for bounded static image input; re-read file backed images before sending; retain rejected input without decoding thumbnails",
+  "sourceSha256": {
+    "src-tauri/src/draft_attachment.rs": "a861a5f06a28bd243b658352aa1ba932a7128fd87dddb7c810dd09f92aa86a41",
+    "src-tauri/src/draft_attachment/images.rs": "60a88c2b2db23445bd4b1d73ec451c468c6423eff16fde8abe4323c85059b602",
+    "src-tauri/src/file_delivery.rs": "73b2a51b1d7f2290e7dda0b1ff241a369de46e507c1ed2b6af8ee5eb080bedd9",
+    "src-tauri/src/lib.rs": "76a0f6ca6520b4e3a1a2055cf8c4502e1ed8e4a881f2d08b7ab71335d8885b54",
+    "src/components/Composer.tsx": "1b6945d472b1243d2296a4e2a679732a7eac06b86132112987b7406483948934",
+    "src/components/Composer.project-files.test.tsx": "bb78870702e10789d82fa327285104fdc50594d8ee66bd680dacfa71bc0ffb07",
+    "src/runtime/attachment_review.test.ts": "717e32750911218017c04c4d7fb4843522799c02c78938868c442dd513229ed0",
+    "src/runtime/draft_attachments.test.ts": "cb011c5f4e29a8765e992e2d89b09c48437204ebacd3b8e95c4a625e93a92a7e",
+    "src/runtime/draft_attachments.ts": "4d92d32b82d7c855327c48b46f7d6ab6d287ab9964541201d4ae879c4da85ba7",
+    "src/runtime/queue_edit.test.ts": "6192c6bc84ecde241e27fd320f4dc4d1320d269e6188ee1d2d72ea9ab831325c",
+    "src/runtime/queue_edit.ts": "a17ecd79b9a075e4d7d8738d19331056a94647254008017c72904621292fcb5e",
+    "src/runtime/session_types.ts": "19847d553d18a2e0717107c8e5ae34c70793dc9abb1bac63c8cd7763c8c51af2",
+    "src/runtime/uncertain_prompt.ts": "baa3b84263772c7dc503ce94ec92236f2af08ad5536796986117b6e53fdd194a",
+    "src/runtime/composer_attachment_import.test.ts": "c42793d9d31fe3acef1d3bc68d2e66aefb83690f61ad834c4187b70292fdf6d0",
+    "src/runtime/composer_attachment_import.ts": "cd901f0bfbb397c91e25092ed85cab666ccfa2528fe5b288c795e810d5880014",
+    "src/runtime/draft_images.test.ts": "a5a4c3d5261cdbdd0c909487a3ecd1cecd691cc730168c07e392d59afb3cac81",
+    "src/runtime/draft_images.ts": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86",
+    "src/runtime/image_bytes.test.ts": "ea50a646918df57620194c76065d18d380d11d8ef0c77ffac41163ac91545d88",
+    "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+    "src/runtime/image_fixtures.test-support.ts": "30d091895898e7b0ef2980c606aee751716572230f4b8523d96be035bdfcb66a",
+    "src/runtime/drafts.ts": "67908127a82dec60abbfff1f834a3c576472ffde97f99c34e5c9777266f6e924",
+    "src/runtime/drafts.test.ts": "bb5be9c1532c688c4ded1cb0abb37d2d274a0d7a4c3721eb93b5e5071f6453a4",
+    "src/runtime/draft_storage.test.ts": "97d70f02102b7eac28fcb0bc8eab9ef7f29463142c0d810452328a581c0f069a"
+  },
+  "verification": {
+    "independentReview": "no remaining blockers; original thumbnail bypass identified and repaired",
+    "thumbnailRedFailures": 7,
+    "thumbnailGreen": 41,
+    "directedFrontend": 111,
+    "directedRust": 26,
+    "typecheckExit": 0,
+    "formatExit": 0,
+    "clippyExit": 0
+  },
+  "newLimits": {
+    "bytesPerImage": 8388608,
+    "pixels": 16777216,
+    "edge": 8192,
+    "staticOnly": true,
+    "policy": "new conservative product bounds; not upstream or industry guarantees"
+  },
+  "formatReferences": [
+    "https://www.w3.org/TR/png-3/",
+    "https://developers.google.com/speed/webp/docs/riff_container"
+  ],
+  "notVerified": [
+    "installed file-picker image input",
+    "WebKit decode of every advertised format",
+    "real model image input"
+  ],
+  "privateReceiptSha256": "e82343d7997a6031bf21fb1331fd8f9008d964dd733c8dda36902f0f407c7b4a"
+}

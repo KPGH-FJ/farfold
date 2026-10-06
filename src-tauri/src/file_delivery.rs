@@ -265,6 +265,29 @@ pub(crate) fn check_attachment(
         .map_err(|_| DeliveryError::UnsupportedText)
 }
 
+/// Read only a bounded format prefix of one explicit attachment. Large ordinary
+/// file links remain usable without loading their contents into the UI.
+pub(crate) fn attachment_prefix(root: &Path, path: &Path) -> Result<Vec<u8>, DeliveryError> {
+    let mut opened = open_source(root, path, u64::MAX)?;
+    let mut bytes = Vec::new();
+    (&mut opened.file)
+        .take(32)
+        .read_to_end(&mut bytes)
+        .map_err(|_| DeliveryError::Unreadable)?;
+    recheck(&opened)?;
+    Ok(bytes)
+}
+
+/// The caller chooses a smaller media limit; all bytes use the same safe path
+/// and identity checks as ordinary user-selected file reads.
+pub(crate) fn attachment_bytes(
+    root: &Path,
+    path: &Path,
+    max: u64,
+) -> Result<Vec<u8>, DeliveryError> {
+    capture(root, path, max).map(|(_, bytes)| bytes)
+}
+
 fn capture_expected(file: &VerifiedFile, max: u64) -> Result<Vec<u8>, DeliveryError> {
     let (current, bytes) = capture(Path::new(&file.root), Path::new(&file.path), max)?;
     if current != *file {

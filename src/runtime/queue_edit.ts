@@ -30,6 +30,7 @@ export function startQueueEditor(
         name: `image.${block.mimeType.split("/")[1] ?? "png"}`,
         data: block.data,
         mimeType: block.mimeType,
+        uri: block.uri,
         recovered: queuedAttachmentsNeedReview(blocks),
       });
     else {
