@@ -44,6 +44,8 @@ import { configCheckMessage } from "../runtime/config_check";
 import { streamTailItem } from "../runtime/session_streams";
 import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
+import { canExplainFailedToolQueue } from "../runtime/queue";
+import { FailedToolQueueHint } from "./FailedToolQueueHint";
 import { useComposerDraft } from "../runtime/drafts";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
@@ -301,8 +303,8 @@ export function ThreadView({
   );
   usePreparationChanges();
   useAuthenticationActivity(thread.agentId);
-  useComposerDraft(`session:${thread.key}`);
-  useComposerDraft(`queue-edit:${thread.key}`);
+  const draftInput = useComposerDraft(`session:${thread.key}`);
+  const queueInput = useComposerDraft(`queue-edit:${thread.key}`);
   const readRequired = pendingPreparationRead(thread);
   const draftReadRequired = thread.identity === "draft" && readRequired;
   const artifactReturnFocus =
@@ -700,6 +702,15 @@ export function ThreadView({
                 {lastCompletion?.status === "stopped"
                   ? STRINGS.thread.toolsAfterStop
                   : STRINGS.thread.toolsAfterReply}
+                {active &&
+                  lastCompletion?.status === "failed" &&
+                  !draftReadRequired &&
+                  !draftInput.sendPending &&
+                  !draftInput.pendingConversation &&
+                  !queueInput.queueEdit &&
+                  canExplainFailedToolQueue(thread) && (
+                    <FailedToolQueueHint thread={thread} />
+                  )}
               </div>
             )}
             {empty && !thread.openError && (

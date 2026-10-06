@@ -381,6 +381,7 @@ export const STRINGS = {
     toolDurationUnknown: "耗时未知",
     toolsAfterStop: "回复已停止，仍有步骤未确认结束",
     toolsAfterReply: "回复已结束，仍有步骤未确认结束",
+    failedToolQueueHint: "新消息会先加入待发；检查后点“继续发送”。",
     toolResultUnknown: "步骤结果未知",
     plan: "计划",
     toolDetail: "详情",

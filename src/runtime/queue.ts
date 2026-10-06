@@ -1,4 +1,5 @@
 import {
+  hasActiveTools,
   hasPendingRequests,
   type PromptBlock,
   type ThreadState,
@@ -69,6 +70,19 @@ export function canReleaseEmptyQueuePause(
     s.queued.length === 0 &&
     canAdmit(s) &&
     (!blocks || !queuedAttachmentsNeedReview(blocks))
+  );
+}
+
+/** Display the two explicit queue actions; never relax admission or settle tools. */
+export function canExplainFailedToolQueue(s: ThreadState): boolean {
+  return (
+    s.queuePaused === "failed" &&
+    s.queued.length === 0 &&
+    hasActiveTools(s) &&
+    !s.sourceError &&
+    !s.unrecoverable &&
+    !s.historyUnavailable &&
+    canAdmit(s)
   );
 }
 export function removeQueued(s: ThreadState, blocks: PromptBlock[]): void {

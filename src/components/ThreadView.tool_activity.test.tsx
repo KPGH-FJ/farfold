@@ -1,4 +1,12 @@
-import { expect, it } from "vitest";
+import { beforeEach, expect, it, vi } from "vitest";
+const work = vi.hoisted(() => ({ ready: true, enabled: true }));
+vi.mock("../runtime/work_policy", () => ({
+  useWorkPolicy: () => ({
+    ready: work.ready,
+    enabled: () => work.enabled,
+    saving: false,
+  }),
+}));
 import { renderToStaticMarkup } from "react-dom/server";
 import {
   freshThreadState,
@@ -7,6 +15,20 @@ import {
   applyConnectionLost,
 } from "../runtime/sessions";
 import { ThreadView } from "./ThreadView";
+import { composerDrafts } from "../runtime/drafts";
+
+beforeEach(() => {
+  work.ready = true;
+  work.enabled = true;
+  composerDrafts.update("session:a:/p:tools", () => ({
+    text: "",
+    attachments: [],
+  }));
+  composerDrafts.update("queue-edit:a:/p:tools", () => ({
+    text: "",
+    attachments: [],
+  }));
+});
 
 function state() {
   const thread = freshThreadState("a:/p:tools", "a", "/p", "tools");
@@ -72,4 +94,57 @@ it("describes an officially pending step as waiting without changing its status"
   expect(html).not.toContain("正在处理");
   expect(html).not.toContain('class="g run"');
   expect(html).toContain("回复已停止，仍有步骤未确认结束");
+});
+
+it("explains the explicit queue path only for a failed reply whose new input can be staged", () => {
+  const failed = () => {
+    const thread = state();
+    thread.identity = "established";
+    applyTurnEnd(thread, { failure: { category: "service" } });
+    return thread;
+  };
+  const hint = "新消息会先加入待发；检查后点“继续发送”。";
+  const thread = failed();
+  const before = structuredClone(thread);
+  expect(render(thread)).toContain(hint);
+  expect(thread).toEqual(before);
+
+  const blocked: Partial<ReturnType<typeof state>>[] = [
+    { running: true },
+    { submitting: true },
+    { reconnecting: true },
+    { configuring: true },
+    { configError: "check failed" },
+    { stopping: true },
+    { stopUnconfirmed: true },
+    { connectionOutcomeUnknown: true },
+    { connectionLost: true },
+    { browserReadRequestId: "browser-approval" },
+    { uncertainPrompt: [{ type: "text", text: "unknown input" }] },
+    { permissionConfigId: "permission", permissionState: "required" },
+    { modelDrift: true },
+    { openError: "read failed" },
+    { workEnabled: false },
+    { queued: [[{ type: "text", text: "already queued" }]] },
+    { activeToolCallIds: [] },
+  ];
+  for (const changes of blocked)
+    expect(render(Object.assign(failed(), changes))).not.toContain(hint);
+  expect(render(state())).not.toContain(hint);
+  const done = failed();
+  applyTurnEnd(done, { stopReason: "end_turn" });
+  expect(render(done)).not.toContain(hint);
+
+  work.ready = false;
+  expect(render(failed())).not.toContain(hint);
+  work.ready = true;
+  work.enabled = false;
+  expect(render(failed())).not.toContain(hint);
+  work.enabled = true;
+  composerDrafts.update("session:a:/p:tools", (draft) => ({
+    ...draft,
+    text: "input awaiting confirmation",
+    sendPending: true,
+  }));
+  expect(render(failed())).not.toContain(hint);
 });
