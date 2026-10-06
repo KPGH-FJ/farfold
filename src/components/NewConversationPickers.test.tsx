@@ -354,10 +354,52 @@ it("offers a prepared offline Agent through the same selection dialog", () => {
   );
   const row = tree.find((node) => node.key === "A");
   expect(row).toBeDefined();
+  expect(text(row!.props.children as ReactNode)).toContain("待命");
+  expect(text(row!.props.children as ReactNode)).not.toContain("已连接");
   expect(pick).not.toHaveBeenCalled();
   (row!.props.onClick as () => void)();
   expect(pick).toHaveBeenCalledWith("A");
   expect(prepare).not.toHaveBeenCalled();
+});
+
+it("distinguishes live connections from saved preparation and retains a released choice", () => {
+  const pick = vi.fn();
+  const prepare = vi.fn();
+  let cards = [
+    agent,
+    { ...agent, id: "B", name: "Agent B", status: "installed" as const },
+  ];
+  const renderAgents = () =>
+    render(() =>
+      NewConversationAgentDialog({
+        cards,
+        picked: "A",
+        prepared: () => true,
+        onPick: pick,
+        onPrepare: prepare,
+        onClose: vi.fn(),
+      }),
+    );
+  let tree = renderAgents();
+  const connected = tree.find((node) => node.key === "A")!;
+  const standby = tree.find((node) => node.key === "B")!;
+  expect(text(connected.props.children as ReactNode)).toContain("已连接");
+  expect(text(connected.props.children as ReactNode)).not.toContain("待命");
+  expect(text(standby.props.children as ReactNode)).toContain("待命");
+  expect(text(standby.props.children as ReactNode)).not.toContain("已连接");
+  expect(connected.props["aria-pressed"]).toBe(true);
+  expect(standby.props["aria-pressed"]).toBe(false);
+
+  cards = cards.map((card) => ({ ...card, status: "installed" as const }));
+  tree = renderAgents();
+  const released = tree.find((node) => node.key === "A")!;
+  expect(text(released.props.children as ReactNode)).toContain("待命");
+  expect(text(released.props.children as ReactNode)).not.toContain("已连接");
+  expect(released.props["aria-pressed"]).toBe(true);
+  expect(pick).not.toHaveBeenCalled();
+  expect(prepare).not.toHaveBeenCalled();
+  (released.props.onClick as () => void)();
+  expect(pick).toHaveBeenCalledExactlyOnceWith("A");
 });
 
 it("rechecks preparation before selecting a row that just became unavailable", () => {

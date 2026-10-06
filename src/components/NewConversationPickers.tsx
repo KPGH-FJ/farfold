@@ -17,6 +17,7 @@ import {
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
+import { ACCESS_STRINGS as A } from "../runtime/access_strings";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
@@ -149,7 +150,9 @@ export function NewConversationAgentDialog({
             <AgentLogo card={card} />
             <span>
               <strong>{card.name}</strong>
-              <small>{S.connected}</small>
+              <small>
+                {card.status === "connected" ? A.connected : A.standby}
+              </small>
             </span>
             {card.id === picked && <Check size={16} />}
           </button>
