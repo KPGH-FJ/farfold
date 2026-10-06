@@ -21,7 +21,10 @@ type SettingsReply = unsafe extern "C" fn(*mut c_void, i32, bool, bool, bool);
 type SubmitReply = unsafe extern "C" fn(*mut c_void, bool);
 type DiagnosticReply = unsafe extern "C" fn(*const c_char, i32, bool, bool, bool, bool, i32, i64);
 unsafe extern "C" {
-    fn ff_notifications_initialize(click: unsafe extern "C" fn(*const c_char)) -> bool;
+    fn ff_notifications_initialize(
+        click: unsafe extern "C" fn(*const c_char),
+        foreground: unsafe extern "C" fn() -> i32,
+    ) -> bool;
     fn ff_notifications_set_diagnostic(reply: DiagnosticReply);
     fn ff_notifications_settings(request: bool, context: *mut c_void, reply: SettingsReply)
     -> bool;
@@ -42,10 +45,21 @@ pub(super) fn initialize(app: &AppHandle) {
     }
     // Tauri setup runs on the main thread. This only installs our delegate.
     AVAILABLE.store(
-        unsafe { ff_notifications_initialize(clicked) },
+        unsafe { ff_notifications_initialize(clicked, foreground) },
         Ordering::SeqCst,
     );
     unsafe { ff_notifications_set_diagnostic(observed) };
+}
+
+unsafe extern "C" fn foreground() -> i32 {
+    let Some(window) = APP.get().and_then(|app| app.get_webview_window("main")) else {
+        return 2;
+    };
+    match super::diagnostic::window_gate(window.is_visible().ok(), window.is_focused().ok()) {
+        Ok(()) => 0,
+        Err(Reason::WindowFocused) => 1,
+        Err(_) => 2,
+    }
 }
 #[allow(clippy::too_many_arguments)] // Exact fixed-field Objective-C callback ABI.
 unsafe extern "C" fn observed(

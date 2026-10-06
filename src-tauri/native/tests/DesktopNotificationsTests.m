@@ -43,7 +43,15 @@
 @end
 @implementation FFTestResponse
 @end
+@interface FFTestApplication : NSObject
+@property BOOL active;
+@end
+@implementation FFTestApplication
+- (BOOL)isActive { return self.active; }
+@end
 static int permissionValue, replies, clicks;
+static int foregroundState;
+static int32_t foreground(void) { return foregroundState; }
 static void status(void *context, int32_t permission, bool alert, bool sound, bool success) {
   assert(success); assert(alert); assert(sound); permissionValue = permission; replies++;
 }
@@ -60,6 +68,10 @@ int main(void) {
   ffCenter = (UNUserNotificationCenter *)peer;
   ffDelegate = [FFNotificationDelegate new];
   ffClick = clicked;
+  ffForeground = foreground;
+  FFTestApplication *application = [FFTestApplication new];
+  application.active = YES;
+  NSApp = (NSApplication *)application;
   assert(ff_notifications_settings(false,NULL,status));
   assert(permissionValue==1 && peer.requests==0);
   assert(ff_notifications_settings(true,NULL,status));
@@ -91,9 +103,50 @@ int main(void) {
   [ffDelegate userNotificationCenter:ffCenter didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:^{completed++;}];
   [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
   assert(completed==2 && clicks==1);
+  // An active application with a minimized/unfocused main window still needs
+  // a visible reminder. App activity alone is not the foreground test.
+  __block int presentations = 0;
+  [ffDelegate userNotificationCenter:ffCenter willPresentNotification:(UNNotification *)response.notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
+    assert(options == (UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionList | UNNotificationPresentationOptionSound));
+    presentations++;
+  }];
+  [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
+  assert(presentations == 1);
+  // Recheck at presentation time; returning to the window after submission
+  // must suppress the stale banner, even when the request was made away.
+  foregroundState = 0;
+  [ffDelegate userNotificationCenter:ffCenter willPresentNotification:(UNNotification *)response.notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
+    assert(options == UNNotificationPresentationOptionNone); presentations++;
+  }];
+  foregroundState = 1;
+  [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
+  assert(presentations == 2);
+  // Unknown/missing window queries are not interpreted as permission to show.
+  foregroundState = 2;
+  [ffDelegate userNotificationCenter:ffCenter willPresentNotification:(UNNotification *)response.notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
+    assert(options == UNNotificationPresentationOptionNone); presentations++;
+  }];
+  [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
+  ffForeground = NULL;
+  [ffDelegate userNotificationCenter:ffCenter willPresentNotification:(UNNotification *)response.notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
+    assert(options == UNNotificationPresentationOptionNone); presentations++;
+  }];
+  [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
+  // Leaving again before the presentation callback uses the new window state;
+  // a quiet reminder stays quiet while retaining banner/list presentation.
+  ffForeground = foreground;
+  assert(ff_notifications_submit("farfold-fixture",digest,"有一项工作需要你检查。",false,NULL,submitted));
+  response.notification.request = peer.last;
+  foregroundState = 1;
+  [ffDelegate userNotificationCenter:ffCenter willPresentNotification:(UNNotification *)response.notification withCompletionHandler:^(UNNotificationPresentationOptions options) {
+    assert(options == (UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionList)); presentations++;
+  }];
+  foregroundState = 0;
+  [[NSRunLoop mainRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.02]];
+  assert(presentations == 5);
   ff_notifications_remove("farfold-fixture");
   assert([peer.removed isEqualToArray:@[@"farfold-fixture"]]);
-  assert(replies==7);
+  assert(replies==8);
   puts("notification bridge: permission/read/request, payload, sound, click filter, removal passed; no system center used");
  }
  return 0;

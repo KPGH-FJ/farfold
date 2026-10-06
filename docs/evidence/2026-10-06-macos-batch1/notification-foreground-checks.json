@@ -1,0 +1,105 @@
+{
+  "sourceOnly": true,
+  "formalInstalledCommit": "b117339f",
+  "sourceNotInstalled": true,
+  "frontend": {
+    "files": 187,
+    "passed": 2214
+  },
+  "rust": {
+    "passed": 1011,
+    "ignored": 4,
+    "ignoredPreexisting": true
+  },
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "durationSeconds": 35.985,
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "durationSeconds": 26.46,
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "durationSeconds": 29.535,
+      "logSha256": "3720613268266e6dd7cdab36a8b73ca9e87d5a83d3e3a2962245c75bf6521087"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "durationSeconds": 27.358,
+      "logSha256": "ea43b868e4f7b19f91478d62f16ee2c4fdf07047c0a9080d630d71dde1b63e1b"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.699,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 16.275,
+      "logSha256": "d670b3fc834852c7ead34eef65fdcd1a80a162a6f7eb7bcf545c998a66c64e20"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 104.337,
+      "logSha256": "5376496b345ddb2b51b49ef4949c63f8c9ddc8dbb4a690013ac1e2c5f0b53b0e"
+    }
+  ],
+  "independentReadReview": "no remaining blocker after final quit callback correction",
+  "realGuiAcceptance": false,
+  "problem": "Minimized main window can be unfocused while NSApp remains active; old presentation callback suppressed an admitted notification.",
+  "fix": "Use exact main-window visibility/focus at native presentation callback through existing Tauri state; preserve unknown and foreground suppression.",
+  "nativeRed": {
+    "sha256": "2e3ed96e9e0a6fbf56964883ec8984a120b97cbcbc13db65ee5aac3a7bc8eaf8",
+    "result": {
+      "compileExit": 0,
+      "runExit": -6,
+      "sourceSha256": "b8593df8827e90e7c8b1019f14689b1f3f286eee628b3323f575f2ef25b8f0a6",
+      "expected": "active app/minimized main window must request banner/list/sound",
+      "scope": "Objective-C production delegate via controlled peer; no OS notification center, UI or live notification"
+    }
+  },
+  "nativeGreen": {
+    "sha256": "b08ed39f5ec474768a0a3578c788eec82de9815ebf5cbd2d606f3d8cd90f2d45",
+    "result": {
+      "compileExit": 0,
+      "runExit": 0,
+      "sourceSha256": "d83212d605a262a0cb457aaf2686801fc2faffe255b99e0a8df1f42bc0058c94",
+      "scope": "Production native bridge with controlled peers only; five presentation outcomes, two timing transitions, no OS notification center or real reminder"
+    }
+  },
+  "nativeScope": "Controlled production bridge peers; not system banner, click or audible sound."
+}

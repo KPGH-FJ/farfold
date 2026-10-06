@@ -63,7 +63,8 @@ pub(crate) enum ErrorDomain {
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Presentation {
     NotObserved,
-    SuppressedActive,
+    SuppressedForeground,
+    SuppressedUnconfirmed,
     BannerList,
 }
 
@@ -187,11 +188,12 @@ impl DiagnosticSnapshot {
                     None
                 };
             }
-            3 => self.presentation = Presentation::SuppressedActive,
+            3 => self.presentation = Presentation::SuppressedForeground,
             4 => self.presentation = Presentation::BannerList,
             5 => self.clicked = true,
             6 => self.stop(Stage::Native, Reason::NativeUnavailable),
             7 => self.stop(Stage::Native, Reason::PayloadUnavailable),
+            8 => self.presentation = Presentation::SuppressedUnconfirmed,
             _ => {}
         }
     }
@@ -321,7 +323,7 @@ mod tests {
             d.native_event(5, false, false, false, false, 0, 0);
         });
         let current = store.for_attempt(RENDERER, 2).unwrap();
-        assert_eq!(current.presentation, Presentation::SuppressedActive);
+        assert_eq!(current.presentation, Presentation::SuppressedForeground);
         assert!(current.clicked);
         let serialized = serde_json::to_string(&current).unwrap();
         for private in [
@@ -334,6 +336,13 @@ mod tests {
         ] {
             assert!(!serialized.contains(private));
         }
+        store.observe_notice("owned-current-notice", |d| {
+            d.native_event(8, false, false, false, false, 0, 0);
+        });
+        let current = store.for_attempt(RENDERER, 2).unwrap();
+        assert_eq!(current.presentation, Presentation::SuppressedUnconfirmed);
+        assert_eq!(current.add_result, AddResult::Accepted);
+        assert_eq!(current.app_active, Some(false));
     }
 
     #[test]

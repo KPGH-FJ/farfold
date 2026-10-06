@@ -6,6 +6,7 @@ static NSString *const FFNotificationCategory = @"farfold-work-attention";
 static FFNotificationClick ffClick;
 static UNUserNotificationCenter *ffCenter;
 static FFNotificationDiagnostic ffDiagnostic;
+static FFNotificationForeground ffForeground;
 static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64_t code);
 
 @interface FFNotificationDelegate : NSObject <UNUserNotificationCenterDelegate>
@@ -15,8 +16,11 @@ static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completion {
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (NSApp.active) {
-      ffObserve(notification.request.identifier, 3, 0, 0);
+    // A minimized main window can leave NSApp active. Query the same window
+    // used by the submission gate again when the system asks to present.
+    int32_t foreground = ffForeground ? ffForeground() : 2;
+    if (foreground != 0) {
+      ffObserve(notification.request.identifier, foreground == 1 ? 3 : 8, 0, 0);
       completion(UNNotificationPresentationOptionNone); return;
     }
     UNNotificationPresentationOptions options = UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionList;
@@ -65,11 +69,13 @@ static int32_t ffErrorDomain(NSError *error) {
   return 5;
 }
 
-bool ff_notifications_initialize(FFNotificationClick click) {
+bool ff_notifications_initialize(FFNotificationClick click,
+                                 FFNotificationForeground foreground) {
   if (!NSThread.isMainThread) return false;
   @try {
     if (!NSBundle.mainBundle.bundleIdentifier.length) return false;
     ffClick = click;
+    ffForeground = foreground;
     ffCenter = UNUserNotificationCenter.currentNotificationCenter;
     if (!ffDelegate) ffDelegate = [FFNotificationDelegate new];
     ffCenter.delegate = ffDelegate;
