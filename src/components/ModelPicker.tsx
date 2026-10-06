@@ -4,7 +4,7 @@
  * 搜索框过滤 name/value/group，↑↓/Enter/Esc 键盘操作。
  * 面板用 fixed 定位 + 按钮矩形计算，不被 overflow 容器（sw-panel）裁剪。
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { ConfigChoice, ConfigOptionView } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 
@@ -18,11 +18,13 @@ export function ModelPicker({
   option,
   disabled,
   className,
+  label,
   onPick,
 }: {
   option: ConfigOptionView | null;
   disabled?: boolean;
   className?: string;
+  label?: string;
   onPick: (value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -34,8 +36,10 @@ export function ModelPicker({
     width: 280,
   });
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
+  const listId = useId();
 
   const options = useMemo(() => option?.options ?? [], [option]);
   const current =
@@ -104,13 +108,19 @@ export function ModelPicker({
   };
 
   const pick = (value: string) => {
+    if (disabled) return;
     setOpen(false);
+    buttonRef.current?.focus();
     onPick(value);
   };
 
   const onKey = (e: React.KeyboardEvent) => {
+    if (e.nativeEvent.isComposing) return;
     if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
       setOpen(false);
+      buttonRef.current?.focus();
       return;
     }
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -130,13 +140,23 @@ export function ModelPicker({
       pick(flat[hi].choice.value);
     }
   };
+  const searchLabel =
+    option.category === "model" || option.id === "model"
+      ? STRINGS.switcher.modelSearch
+      : STRINGS.switcher.optionSearch;
+  const accessibleLabel = label ?? option.name;
 
   return (
     <div className={`mp${className ? ` ${className}` : ""}`} ref={rootRef}>
       <button
+        ref={buttonRef}
         type="button"
         className="mp-btn"
         disabled={disabled}
+        aria-label={`${accessibleLabel}: ${currentName}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
         onClick={() => (open ? setOpen(false) : openPanel())}
         title={currentName}
       >
@@ -151,19 +171,29 @@ export function ModelPicker({
           <input
             ref={inputRef}
             className="mp-search"
-            value={query}
-            placeholder={
-              option.category === "model" || option.id === "model"
-                ? STRINGS.switcher.modelSearch
-                : STRINGS.switcher.optionSearch
+            role="combobox"
+            aria-label={searchLabel}
+            aria-autocomplete="list"
+            aria-expanded={open}
+            aria-controls={listId}
+            aria-activedescendant={
+              flat[hi] ? `${listId}-option-${hi}` : undefined
             }
+            value={query}
+            placeholder={searchLabel}
             onChange={(e) => {
               setQuery(e.target.value);
               setHi(0);
             }}
             onKeyDown={onKey}
           />
-          <div className="mp-list" ref={listRef}>
+          <div
+            className="mp-list"
+            ref={listRef}
+            id={listId}
+            role="listbox"
+            aria-label={accessibleLabel}
+          >
             {flat.length === 0 && (
               <div className="mp-empty">{STRINGS.palette.empty}</div>
             )}
@@ -173,6 +203,11 @@ export function ModelPicker({
                   <div className="mp-group">{entry.group}</div>
                 )}
                 <div
+                  id={`${listId}-option-${idx}`}
+                  role="option"
+                  aria-label={entry.choice.name}
+                  aria-selected={entry.choice.value === current}
+                  aria-disabled={disabled === true}
                   data-idx={idx}
                   className={`mp-opt${idx === hi ? " hi" : ""}${entry.choice.value === current ? " cur" : ""}`}
                   onMouseEnter={() => setHi(idx)}

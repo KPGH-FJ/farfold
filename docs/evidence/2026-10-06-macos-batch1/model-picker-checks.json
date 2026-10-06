@@ -1,0 +1,53 @@
+{
+  "recordedAtUtc": "2026-10-06T11:14:37.745857+00:00",
+  "scope": "Shared picker accessibility, keyboard and busy selection; source verification only, not installed acceptance.",
+  "red": {
+    "picker": {
+      "passed": 1,
+      "failed": 5
+    },
+    "commonLabelFullSuite": {
+      "passed": 2151,
+      "failed": 1
+    },
+    "boundary": "Actual recorded failures; preserve original common-mode assertion."
+  },
+  "fullFrontend": [
+    {
+      "name": "model-picker-verified-full-test",
+      "exitCode": 0,
+      "elapsedSeconds": 20.871
+    },
+    {
+      "name": "model-picker-verified-full-typecheck",
+      "exitCode": 0,
+      "elapsedSeconds": 5.207
+    },
+    {
+      "name": "model-picker-verified-full-format",
+      "exitCode": 0,
+      "elapsedSeconds": 13.541
+    },
+    {
+      "name": "model-picker-verified-full-build",
+      "exitCode": 0,
+      "elapsedSeconds": 5.414
+    }
+  ],
+  "testCounts": {
+    "files": 185,
+    "passed": 2152,
+    "failed": 0
+  },
+  "sourceSha256": {
+    "src/components/ModelPicker.tsx": "9aaba57ef05bbd73b0da840d64ebcd3368082d6da576865a8c2dc4fe8d17b6a9",
+    "src/components/ModelPicker.test.tsx": "946297f00019e43110fd619472fb73eeafdbd9c93ecd549146f994e2cf6d6522",
+    "src/components/SessionOptionsMenu.tsx": "4495cd26d7a694a05b2692983dc6595bde34768b672640fb3fb28256376197ba"
+  },
+  "review": "Independent review and root current-choice accessible-name correction. Semantic mode label uses existing translation. No CSS, positioning, portal, model choice or strings changed.",
+  "boundaries": [
+    "Composition tested automatically; actual macOS IME not tested.",
+    "Search field invisibility cause remains unknown; no layout fix claimed.",
+    "Formal app remains previous binary."
+  ]
+}

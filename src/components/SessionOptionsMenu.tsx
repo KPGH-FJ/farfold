@@ -46,7 +46,12 @@ function OptionRow({
         <span className="so-name" title={option.description ?? option.id}>
           {optionLabel(option)}
         </span>
-        <ModelPicker option={option} disabled={disabled} onPick={change} />
+        <ModelPicker
+          option={option}
+          label={optionLabel(option)}
+          disabled={disabled}
+          onPick={change}
+        />
       </div>
     );
   }
