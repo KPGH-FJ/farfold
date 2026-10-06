@@ -50,6 +50,7 @@ import { useComposerDraft } from "../runtime/drafts";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
+import { UserMessageContent } from "./UserMessageContent";
 import { permissionShortcut } from "../runtime/permission_shortcuts";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -808,7 +809,10 @@ export function ThreadView({
                         {STRINGS.thread.you} · {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
                       </div>
-                      <div className="msg-user">{first.text}</div>
+                      <UserMessageContent
+                        text={first.text}
+                        historical={first.time === 0}
+                      />
                       <MessageAttachments
                         attachments={first.attachments}
                         onOpenFile={openFile}
