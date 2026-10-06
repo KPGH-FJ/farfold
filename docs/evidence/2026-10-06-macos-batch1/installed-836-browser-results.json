@@ -1,0 +1,43 @@
+{
+  "appCommit": "836cda89",
+  "binarySha256": "ec35b2bb4ba1db3d300e9f26f6fcf1f1a326e78494d206e9d3cfc41119248bab",
+  "configuration": "Existing Codex / 6 Sol / High; cold-restored original synthetic chat; Ask for approval explicitly reconfirmed",
+  "fixture": {
+    "origin": "http://127.0.0.1:61916/",
+    "marker": "FARFOLD_BROWSER_836_NEW_PAGE_20261006",
+    "initialVisibleCounter": "0",
+    "initialSubmitStatus": "尚未提交",
+    "ownedServerPid": 80079,
+    "scope": "New independent origin/page, no retry of previous unknown action; original fixture unchanged"
+  },
+  "firstTask": {
+    "observe": "Allowed, correct initial marker/zero/unsubmitted",
+    "nativeApproval": "ToolDetail confirmed click_page_node nodeRef n1; Allow once",
+    "toolReceipt": {
+      "outcome": "rejected",
+      "applied": false,
+      "reason": "网页观察已过期，请重新观察后再操作"
+    },
+    "timing": "40.1s tool display; includes approval and waiting, not model or execution latency",
+    "farfoldActionCard": "Not reached",
+    "final": "Agent stopped; no input/submit call"
+  },
+  "freshShortTask": {
+    "basis": "Previous explicit rejected/false proves no click; fresh observe and new call authorized by synthetic task",
+    "observe": "Correct marker and zero",
+    "nativeApproval": "Confirmed actual click_page_node, Allow once",
+    "farfoldActionApproval": "Card showed exact new origin and 增加 1; allowed once",
+    "toolReceipt": {
+      "outcome": "rejected",
+      "applied": false,
+      "pageChanged": false,
+      "navigationChanged": false,
+      "reason": "页面或操作目标已变化，请重新观察"
+    },
+    "timing": "21.3s displayed click call, not observation age",
+    "visibleCounter": "Still 0; no manual counter click",
+    "final": "Agent stopped; input and submit not reached",
+    "counterexample": "pageChanged/navigationChanged false are fixed reject fields, not measured proof of unchanged DOM; first guard merges missing/ref/navigation/URL/version/expiry/deadline. Root cause still unknown."
+  },
+  "scope": "Observe path and rejected/false classification have real evidence. Successful click/input/submit are not passed. No login/account switch/new paid model/external network."
+}

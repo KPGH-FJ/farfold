@@ -1,0 +1,30 @@
+{
+  "app": {
+    "sourceCommit": "836cda89",
+    "binarySha256": "ec35b2bb4ba1db3d300e9f26f6fcf1f1a326e78494d206e9d3cfc41119248bab",
+    "path": "/Applications/Farfold.app"
+  },
+  "goose": {
+    "configuration": "Existing OpenRouter / Nemotron 3 Ultra (free) / auto / reasoning off",
+    "coldRestore": "Original user marker replayed; model retained",
+    "explicitNewMessage": "Returned original marker FARFOLD_GOOSE_A_20261006 and new marker FARFOLD_GOOSE_FREE_20261006, completed",
+    "menu": "Visible accessible search, Nemotron3 filtering, Escape closed only child list then outer panel, confirmed selection unchanged",
+    "scope": "One cold-restored previously failed chat, one explicit short prompt. Does not prove failed-queue recovery in the original live connection, real IME, tools or all standards."
+  },
+  "cline": {
+    "configuration": "Pre-install confirmed free Nemotron 3 Ultra / Act / auto allow off",
+    "result": "Failed before session/load or model prompt: 60-second initialize timeout",
+    "draft": "Exact saved synthetic free-test draft retained; sending disabled",
+    "startupMetadata": {
+      "initializeResponse": "not_observed",
+      "childStarted": true,
+      "exitSignal": 15,
+      "childReaped": true,
+      "groupEnded": true,
+      "connectionRemoved": true
+    },
+    "independentReadOnlyCheck": "Official installed 3.0.65 ACP initialize has no session authentication check; no TTY requirement. Root cause unknown; neither authentication nor pipe regression established. No retry or login."
+  },
+  "protocol": "protocol-installed-836-first.json contains only metadata; messages/model/UI verified separately",
+  "boundary": "No login, logout/account switching, Windows or complete eight-standard claim."
+}

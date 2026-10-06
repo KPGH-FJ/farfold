@@ -1,0 +1,33 @@
+{
+  "Codex": {
+    "log": "protocol-v1-1791300144296-3.jsonl",
+    "recordedAtUtc": "2026-10-06T15:33:34.833355+00:00",
+    "sha256": "54c6c913ede1e4a5c0e6c070090b63e8b7dfbe0aed2641bebfc25c9fbf47cc6b",
+    "bytes": 36729,
+    "records": 365,
+    "outbound": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/set_config_option": 3,
+      "session/prompt": 2,
+      "response": 2
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T15:26:00.978000+00:00",
+        "firstResponseAt": "2026-10-06T15:27:26.016000+00:00",
+        "durationMs": 85038,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T15:28:16.704000+00:00",
+        "firstResponseAt": "2026-10-06T15:28:57.600000+00:00",
+        "durationMs": 40896,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

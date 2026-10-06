@@ -1,0 +1,60 @@
+{
+  "recordedAtUtc": "2026-10-06T15:05:59.275764+00:00",
+  "userConfirmedSavedNormalExit": true,
+  "dataRetentionWindow": {
+    "beforeAfterContentsAndModesEqual": true,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195433,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 48,
+        "file": 29,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "aggregateSha256": "befa44c43bb8571ea845c9ef4447a07859b368b4767073e2462432284a8827c4",
+    "scope": "Three Farfold trees, no symlink traversal; per-file race checks. Not a global atomic snapshot, keychain or outside Agent data inventory. Private detailed JSONL not committed."
+  },
+  "coldLaunch": {
+    "formalProcesses": [78727],
+    "uiHistoryIndexCount": 88,
+    "newEmptyComposer": "Observed empty and send disabled; no automatic message",
+    "historyAndDraftBodyRecovery": "Individual installed tests in progress, not claimed complete"
+  },
+  "cleanup": {
+    "onlyRemovedGeneratedApp": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+    "verifiedZipPreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-06-836cda89/Farfold-0.1.7-836cda89.zip",
+    "formalAppRetained": "/Applications/Farfold.app"
+  },
+  "boundary": "Installed internal macOS candidate. Real-Agent tests continue; no login, logout/account switching, Windows or release/notarization claim.",
+  "operationSnapshotBeforeDataCheck": {
+    "installedAtUtc": "2026-10-06T15:02:13.892240+00:00",
+    "candidateCommit": "836cda89d3a210af4162fbb47d37d6bca05f298b",
+    "binarySha256": "ec35b2bb4ba1db3d300e9f26f6fcf1f1a326e78494d206e9d3cfc41119248bab",
+    "onlyFormalAppReplaced": true,
+    "formalAppProcessesBefore": 0,
+    "beforeAppExactFiveFiles": true,
+    "installedExactFiveFiles": true,
+    "strictCodesignExit": 0,
+    "dataComparisonPending": true,
+    "launched": false
+  },
+  "completedInstallation": {
+    "dataRetentionCheckedBeforeLaunch": true,
+    "exactFiveFilesAndStrictSignaturePassed": true,
+    "formalApp": "/Applications/Farfold.app",
+    "candidateCommit": "836cda89",
+    "binarySha256": "ec35b2bb4ba1db3d300e9f26f6fcf1f1a326e78494d206e9d3cfc41119248bab"
+  }
+}
