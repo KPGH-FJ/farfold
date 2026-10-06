@@ -1,0 +1,82 @@
+{
+  "sourceCommit": "94786241a0db2288792f63044da7b77bcef2c8f2",
+  "sourceInputs": 713,
+  "sourceInputDigest": "1a1bf9332fe6d180dfd1cd9f92f9d88e5011efc3b922daee0e37fbad525c25cd",
+  "archive": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-06-94786241/Farfold-0.1.7-94786241.zip",
+  "archiveSha256": "d89bd5c3bf73315af05a69e4a6d1a47bf202b422f0dae26de903c45a29aed6b4",
+  "candidateFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "55abe01bddf2eec389b3c25b841eb034747bc53339d13835c682e6d82c295f52",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "normalQuitBeforeReplacement": true,
+  "phase": "afterReplacement",
+  "dataBefore": {
+    "appData": {
+      "fileCount": 178393,
+      "sha256": "050f9907c03076e941375fffadf6d972d42ae8ce57b8452f7c30c4e8ee2a4efb"
+    },
+    "webkit": {
+      "fileCount": 29,
+      "sha256": "63da638113fd82125dc4f70cb5f5e8991e85c26fcac3858cdb9e81d182e53072"
+    },
+    "cache": {
+      "fileCount": 2,
+      "sha256": "78e90a943f3b14674533957ad690429a1a99402dcd83ede672f40f4b7951ee92"
+    }
+  },
+  "installedBinarySha256": "55abe01bddf2eec389b3c25b841eb034747bc53339d13835c682e6d82c295f52",
+  "installedFilesMatchCandidate": true,
+  "strictCodesignPassed": true,
+  "dataAfter": {
+    "appData": {
+      "fileCount": 178393,
+      "sha256": "050f9907c03076e941375fffadf6d972d42ae8ce57b8452f7c30c4e8ee2a4efb"
+    },
+    "webkit": {
+      "fileCount": 29,
+      "sha256": "63da638113fd82125dc4f70cb5f5e8991e85c26fcac3858cdb9e81d182e53072"
+    },
+    "cache": {
+      "fileCount": 2,
+      "sha256": "78e90a943f3b14674533957ad690429a1a99402dcd83ede672f40f4b7951ee92"
+    }
+  },
+  "dataUnchanged": true,
+  "changedPathCounts": {
+    "appData": 0,
+    "webkit": 0,
+    "cache": 0
+  },
+  "processesRemaining": 0,
+  "timestamp": "2026-10-06T08:01:29.803984+00:00",
+  "previous7fDataEqualityFailureNotCovered": true,
+  "independentFilesAndInputsMatched": true,
+  "normalQuitAfterRetestProcessesRemaining": 0,
+  "installedRetest": {
+    "sampleBytes": 171,
+    "configuredReplyDeadlineSeconds": 15,
+    "firstRecoveryObservationSecondsAfterClick": 38.575,
+    "timeoutGuidanceVisible": true,
+    "checkingStateRemoved": true,
+    "pickerReopened": true,
+    "newPickerCancelled": true,
+    "htmlRenderingPassed": false,
+    "capacityLimitInstalledTested": false,
+    "permissionsChanged": 0,
+    "modelMessages": 0,
+    "scope": "Observed recovery after the configured deadline; does not establish exact latency, terminate the OS check, or prove HTML rendering."
+  },
+  "recentDesktopAuthorizationEvents": [
+    {
+      "time": "2026-10-06 16:03:20.386216+0800",
+      "message": "Failed to match existing code requirement for subject ai.farfold.desktop and service kTCCServiceSystemPolicyDesktopFolder\n\tcdhash H\"fb583580c19fa1d246a74940e9ce22d962b477a7\"\n\tcdhash H\"362ccebfb1dd081f8232770adf1078958d6de03d\""
+    },
+    {
+      "time": "2026-10-06 16:03:20.386726+0800",
+      "message": "AUTHREQ_PROMPTING: msgID=8517.95, service=kTCCServiceSystemPolicyDesktopFolder, subject=Sub:{ai.farfold.desktop}Resp:{TCCDProcess: identifier=ai.farfold.desktop, pid=45921, auid=501, euid=501, binary_path=/Applications/Farfold.app/Contents/MacOS/farfold},"
+    }
+  ]
+}
