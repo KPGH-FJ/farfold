@@ -223,6 +223,58 @@ it.each(["history", "connection"] as const)(
   },
 );
 
+it("shows a pending index-open recovery instead of the old startup failure and blocks another recovery", async () => {
+  // Installed OpenCode startup diagnostics: selecting its failed history starts
+  // another open, while this view's local retry state has never been set.
+  const s = state("pending-index-open", "connection");
+  const owner = vi.fn().mockResolvedValue(undefined);
+  const opened = vi.fn();
+  const previousRetry = render(s, true, opened, owner).find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === STRINGS.thread.reconnect,
+  )!;
+  s.reconnecting = true;
+  const waiting = render(s, true, opened, owner);
+  const button = waiting.find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === STRINGS.thread.reconnecting,
+  );
+  expect(button).toBeDefined();
+  expect(button!.props.disabled).toBe(true);
+  expect(
+    waiting.some(
+      (node) =>
+        node.type === "span" &&
+        [STRINGS.thread.openFailed, s.openError].includes(
+          node.props.children as string,
+        ),
+    ),
+  ).toBe(false);
+  (previousRetry.props.onClick as () => void)();
+  (button!.props.onClick as () => void)();
+  expect(owner).not.toHaveBeenCalled();
+
+  s.reconnecting = false;
+  const failed = render(s, true, opened, owner);
+  const retry = failed.find(
+    (node) =>
+      node.type === "button" &&
+      node.props.children === STRINGS.thread.reconnect,
+  )!;
+  expect(retry.props.disabled).toBe(false);
+  expect(
+    failed.some(
+      (node) => node.type === "span" && node.props.children === s.openError,
+    ),
+  ).toBe(true);
+  (retry.props.onClick as () => void)();
+  await complete();
+  expect(owner).toHaveBeenCalledExactlyOnceWith(s.key);
+  expect(opened).not.toHaveBeenCalled();
+});
+
 it.each(["inactive", "other-target", "unmounted"] as const)(
   "does not pull a late retry back after the view became %s",
   async (exit) => {

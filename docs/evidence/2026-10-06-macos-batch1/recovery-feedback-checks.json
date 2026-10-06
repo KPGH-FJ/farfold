@@ -1,0 +1,19 @@
+{
+  "sourceOnly": true,
+  "purpose": "show the actual existing shared reconnect-in-progress state and prevent another recovery click",
+  "filesSha256": {
+    "src/components/ThreadView.tsx": "3e6afb1a369abea063ad02da8d09d14aee76b8e284f7f21cc47e8fe882d47640",
+    "src/components/ThreadView.history-navigation.test.tsx": "dc4e5240a5475492090764f5aa021f81cf644f86cd05bf19ba66ee620f537b75"
+  },
+  "verification": {
+    "initialRed": 1,
+    "sharedHandlerRed": 1,
+    "relatedTests": 128,
+    "files": 7,
+    "formatExit": 0
+  },
+  "limits": [
+    "installed UI not yet verified",
+    "row reuse/connect behavior and unknown outcomes unchanged"
+  ]
+}

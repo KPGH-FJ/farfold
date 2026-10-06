@@ -356,8 +356,10 @@ export function ThreadView({
     };
   }, []);
   const [reconnecting, setReconnecting] = useState(false);
+  const recoveryBusy = reconnecting || thread.reconnecting;
   const recover = () => {
-    if (!activeRef.current || reconnecting || creating) return;
+    if (!activeRef.current || reconnecting || thread.reconnecting || creating)
+      return;
     const key = thread.key;
     const request = ++recoveryRequest.current;
     setReconnecting(true);
@@ -560,23 +562,27 @@ export function ThreadView({
             {thread.openError && !recoveryNotice && (
               <div className="banner">
                 <span className="b-tag">
-                  {thread.unrecoverable
-                    ? STRINGS.thread.unrecoverable
-                    : thread.historyUnavailable
-                      ? STRINGS.repair.historyFailed
-                      : STRINGS.thread.openFailed}
+                  {recoveryBusy
+                    ? thread.historyUnavailable
+                      ? STRINGS.repair.readingHistory
+                      : STRINGS.thread.reconnecting
+                    : thread.unrecoverable
+                      ? STRINGS.thread.unrecoverable
+                      : thread.historyUnavailable
+                        ? STRINGS.repair.historyFailed
+                        : STRINGS.thread.openFailed}
                 </span>
-                <span>{thread.openError}</span>
+                {!recoveryBusy && <span>{thread.openError}</span>}
                 {recoveryDetails}
                 <span className="b-act">
                   {thread.historyUnavailable ? (
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={reconnecting || creating}
+                      disabled={recoveryBusy || creating}
                       onClick={recover}
                     >
-                      {reconnecting
+                      {recoveryBusy
                         ? STRINGS.repair.readingHistory
                         : STRINGS.repair.retryHistory}
                     </button>
@@ -658,9 +664,10 @@ export function ThreadView({
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={creating || reconnecting}
+                      disabled={creating || recoveryBusy}
                       onClick={() => {
-                        if (creating || reconnecting) return;
+                        if (creating || reconnecting || thread.reconnecting)
+                          return;
                         if (pendingPreparationRead(thread)) {
                           onGoSettings();
                           return;
@@ -989,7 +996,9 @@ export function ThreadView({
           <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
           {recoveryNotice && (
             <div className="banner" role="status">
-              {thread.openError ? (
+              {recoveryBusy ? (
+                <span className="b-tag">{STRINGS.thread.reconnecting}</span>
+              ) : thread.openError ? (
                 <>
                   <span className="b-tag">{STRINGS.thread.openFailed}</span>
                   <span>{thread.openError}</span>
@@ -1010,10 +1019,10 @@ export function ThreadView({
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  disabled={reconnecting || creating}
+                  disabled={recoveryBusy || creating}
                   onClick={recover}
                 >
-                  {reconnecting
+                  {recoveryBusy
                     ? STRINGS.thread.reconnecting
                     : STRINGS.thread.reconnect}
                 </button>

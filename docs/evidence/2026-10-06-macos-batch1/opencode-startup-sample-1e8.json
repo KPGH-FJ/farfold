@@ -1,0 +1,26 @@
+{
+  "installedCommit": "1e8dc5d5",
+  "purpose": "controlled OpenCode startup phase diagnosis, no model request",
+  "attempts": 2,
+  "secondAttempt": "root navigating the failed history entry caused another start; not readonly/no-start; current row-click means explicit reuse",
+  "firstChildFilesystemSample": {
+    "pid": 28879,
+    "points": 2606,
+    "allPointsIn": "openat->__openat",
+    "sampleSeconds": 3,
+    "sampleSha256": "e35b9c9972ee4bb87d75a18c28fa82590bfee43ffda38367c90fa841ad1da65b"
+  },
+  "both": {
+    "initializeOutOnly": true,
+    "inbound": 0,
+    "prompt": 0,
+    "timeoutAroundMs": 60030,
+    "childReaped": true,
+    "groupEnded": true
+  },
+  "limits": [
+    "only first attempt sampled; do not infer second/old failures same cause",
+    "exact target path and root cause not known; no TCC/account/network causal claim",
+    "no configuration/permission/Agent changes or forced termination by tester"
+  ]
+}
