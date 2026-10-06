@@ -20,6 +20,10 @@ use tokio::sync::watch;
 #[path = "process_mcp_tests.rs"]
 mod mcp_tests;
 
+#[cfg(target_os = "macos")]
+#[path = "process_stdio.rs"]
+mod stdio;
+
 /// Effective launch facts only. Values never enter process diagnostics or status.
 /// Absence of this cell means a completed asynchronous launch has not been confirmed.
 #[derive(Clone, Copy)]
@@ -173,10 +177,20 @@ pub(crate) struct ProcessTransport {
     pub diagnostics: Arc<Diagnostics>,
 }
 
+#[cfg(not(target_os = "macos"))]
 type SpawnedProcess = (
     async_process::ChildStdin,
     async_process::ChildStdout,
     async_process::ChildStderr,
+    async_process::Child,
+    crate::process_platform::OwnedGroup,
+);
+
+#[cfg(target_os = "macos")]
+type SpawnedProcess = (
+    stdio::Input,
+    stdio::Output,
+    stdio::Output,
     async_process::Child,
     crate::process_platform::OwnedGroup,
 );
@@ -200,18 +214,30 @@ fn spawn_process_in(
         .then(|| capture_mcp_spawn_facts(&mut command, |name| std::env::var_os(name)));
     let pending_group = crate::process_platform::prepare_command(&mut command)
         .map_err(agent_client_protocol::Error::into_internal_error)?;
-    let mut command = async_process::Command::from(command);
+    let command = async_process::Command::from(command);
+    #[cfg(not(target_os = "macos"))]
+    let mut command = command;
+    #[cfg(not(target_os = "macos"))]
     command
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped());
-    let mut child = command.spawn().map_err(|error| {
-        // The asynchronous launch returned no Child handle. Its error can come
-        // from OS spawn or later stdio setup; it does not prove no child existed.
+    #[cfg(target_os = "macos")]
+    let launch = stdio::spawn(command);
+    #[cfg(not(target_os = "macos"))]
+    let launch = command.spawn();
+    let launched = launch.map_err(|error| {
+        // No controlled Child handle was acquired. macOS stdio preparation now
+        // precedes OS spawn; other platforms retain their existing post-spawn
+        // conversion. An old log's childStarted=false is not a no-child proof.
         control.diagnostics.spawn_failed(&error);
         control.start_failed.store(true, Ordering::SeqCst);
         agent_client_protocol::Error::into_internal_error(error)
     })?;
+    #[cfg(target_os = "macos")]
+    let (streams, child) = launched;
+    #[cfg(not(target_os = "macos"))]
+    let mut child = launched;
     let group = pending_group
         .attach(child.id())
         .map_err(agent_client_protocol::Error::into_internal_error)?;
@@ -219,19 +245,29 @@ fn spawn_process_in(
         let _ = control.mcp_spawn_facts.set(facts);
     }
     control.diagnostics.started();
+    #[cfg(not(target_os = "macos"))]
     let stdin = child
         .stdin
         .take()
         .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序输入"))?;
+    #[cfg(not(target_os = "macos"))]
     let stdout = child
         .stdout
         .take()
         .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序输出"))?;
+    #[cfg(not(target_os = "macos"))]
     let stderr = child
         .stderr
         .take()
         .ok_or_else(|| agent_client_protocol::util::internal_error("无法打开程序错误输出"))?;
-    Ok((stdin, stdout, stderr, child, group))
+    #[cfg(not(target_os = "macos"))]
+    {
+        Ok((stdin, stdout, stderr, child, group))
+    }
+    #[cfg(target_os = "macos")]
+    {
+        Ok((streams.stdin, streams.stdout, streams.stderr, child, group))
+    }
 }
 
 impl ConnectTo<Client> for ProcessTransport {

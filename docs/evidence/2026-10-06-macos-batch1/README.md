@@ -51,3 +51,5 @@ Kilo18:42同一Gateway由免费Ultra/None改为免费Nano Omni，Agent返回Inst
 文件扩测：Kilo同Gateway恢复原免费Ultra/None后真正读取成功；复制48字节比49字节输入少末尾LF，返工申请任务禁止的xxd命令被仅拒绝一次，LF仍缺，返工失败。Nano公开目录声明支持tools不能替代两次实际失败，也不能确定原因。Kilo成果需手选文件后核实。Vibe保留Medium3.5/High/Accept Edits，真实读取并续答原记号、逐字49字节复制、原对话返工至48字节均成功，所需LF和输入保留；有结构化位置，文件变更后旧核实被拒绝，重新核实及当前预览成功；未请求批准，审批未测。见kilo-vibe-tools-results.json及两份协议快照。
 
 CodeBuddy保留Hy4 preview/High/Always Ask，在原测试对话读取新文件及最早记号成功；复制逐字54字节、返工53字节均实际成功，输入和LF保留。两次写入/修改逐项检查后仅批准一次；文件意见先入输入框，再明确发送，没有自动发送。Agent只给文稿、无可核实结构化位置，手选文件核实成功；变更后旧核实被拒绝，重新核实及当前预览成功。两次耗时含人工批准等待，不当纯模型速度。见codebuddy-tools-results.json及protocol-codebuddy-tools.json。三家均不判八项完整达标，未以同一连接续答冒称冷恢复。
+
+macOS启动前置管道补强：三组管道及异步包装先准备，自定义输入输出绕过依赖的启动后包装；命令所持子端副本及时关闭，现有进程生命周期、停止、环境和官方配置保留。仅加入已锁定的async-io2.6.0直接依赖。真实旧分支红测失败，六个准备失败点、双向输入/错误输出/EOF及受控回收通过；首绿ENOENT即时关闭断言失败仍保留，后续仅证明2秒内实际EPIPE/EOF，具体瞬间所有者未知。process20/20、manager3/3、root完整release995通过/4原忽略、Clippy/fmt/全格式及独立复核通过；错误隔离过滤跑0项不算通过，完整Rust另覆盖。见mac-stdio-checks.json。尚未安装/实测Stakpak，不据此判容量、泄漏或全panic安全已解决。

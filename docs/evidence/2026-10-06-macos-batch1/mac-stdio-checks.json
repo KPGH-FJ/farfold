@@ -1,0 +1,64 @@
+{
+  "recordedAtUtc": "2026-10-06T11:43:42.247555+00:00",
+  "baseCommit": "931a6b473cb8943e2f4ff25d24a5b3bd8a6ed827",
+  "scope": "macOS prebuilt process stdio; official command/environment/history unchanged; no Agent invocation or installed-app verification",
+  "files": {
+    "src-tauri/Cargo.toml": "e9ddc0cff871d46690d07a7d0730df43816e16b91bab6c3118c8e63b1d6dd313",
+    "src-tauri/Cargo.lock": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08",
+    "src-tauri/src/acp_client/process.rs": "f160e72374889c0a03b4d208f6dec099a2f012bec34172005ba14cd1ba1c60f8",
+    "src-tauri/src/acp_client/process_stdio.rs": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162",
+    "src-tauri/src/acp_client/process_stdio_tests.rs": "b043f9fc96cde4e71c467216372dc396b31ea494bc28e8666f07a54d75e2abdf"
+  },
+  "dependency": {
+    "name": "async-io",
+    "version": "2.6.0",
+    "alreadyInLock": true,
+    "published": "2025-09-14",
+    "officialSource": "https://docs.rs/crate/async-io/2.6.0",
+    "stdlibPipeStableSince": "1.87.0",
+    "stdlibSource": "https://doc.rust-lang.org/std/io/fn.pipe.html"
+  },
+  "red": "Actual old .piped() production branch returned Child stdio [true,true,true], controlled child waited; one meaningful runtime test failed in implementer tool output",
+  "firstGreen": "4/5; immediate ENOENT EPIPE assertion observed one successful byte write; preserved implementer tool output, exact transient owner unknown",
+  "targeted": "Final process20/20 and manager3/3 passed in implementer tool output; attempted separate isolation filter ran0 tests and is not a pass",
+  "rootChecks": {
+    "cargoTestLockedRelease": {
+      "exit": 0,
+      "passed": 995,
+      "failed": 0,
+      "ignored": 4,
+      "compileSeconds": 45.01,
+      "testSeconds": 25.57
+    },
+    "clippyLockedReleaseDenyWarnings": {
+      "exit": 0,
+      "compileSeconds": 7.32
+    },
+    "cargoFmt": {
+      "exit": 0
+    },
+    "pnpmFormatCheck": {
+      "exit": 0
+    }
+  },
+  "logs": {
+    "fullRust": {
+      "path": "output/2026-10-06-macos-batch1/mac-stdio-root-full-rust.txt",
+      "sha256": "dc01399be9147728fb383ca855ada5de8ffb1a54eaf787397377ea3629bb8648"
+    },
+    "clippy": {
+      "path": "output/2026-10-06-macos-batch1/mac-stdio-root-clippy.txt",
+      "sha256": "ff9e3a8708c56a2be2270be6710f6fee6a35bf0debd9279308b757532864018b"
+    },
+    "rustfmt": {
+      "path": "output/2026-10-06-macos-batch1/mac-stdio-root-rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "format": {
+      "path": "output/2026-10-06-macos-batch1/mac-stdio-root-format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    }
+  },
+  "independentReview": "Independent reviewer and root source review found no blocking defect; no extra real-Agent claims",
+  "boundary": "Three pipe/Async preparations before OS spawn, custom stdio skips locked macOS post-spawn wrappers; preparation failures close immediately, ENOENT endpoint closure observed within2s. No production delay/error swallowing. Does not establish Stakpak root cause, capacity/leak repair, universal panic or cross-exec safety; Windows code path unchanged and untested this round. Original archive.rs test warning retained."
+}
