@@ -79,7 +79,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 import { ThreadView } from "./ThreadView";
 import { ArtifactPane } from "./ArtifactPane";
 import { threads } from "../runtime/sessions";
-import { MessageCopyButton, ToolStep } from "./thread-items";
+import { MessageCopyButton, RawBlock, ToolStep } from "./thread-items";
 import { freshThreadState } from "../runtime/session_projection";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 
@@ -218,6 +218,96 @@ it("hides the return action after manual scrolling to the bottom", () => {
   scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
   render().onScroll();
   expect(render().latest).toBeUndefined();
+});
+
+it.each(
+  (["text", "attachment"] as const).flatMap((growth) =>
+    (["following", "scrolled up", "hidden"] as const).map(
+      (mode) => [growth, mode] as const,
+    ),
+  ),
+)(
+  "handles %s growth before transparent notifications while %s",
+  (growth, mode) => {
+    const reply: Extract<(typeof thread.items)[number], { kind: "agent" }> = {
+      kind: "agent",
+      id: "reply",
+      text: "MARK",
+      attachments: [],
+      streaming: true,
+      time: 1,
+    };
+    thread.items = [
+      reply,
+      {
+        kind: "raw",
+        id: "notification",
+        update: { method: "_future/status" },
+        label: "notification",
+        streamNeutral: true,
+        time: 2,
+      },
+    ];
+    render();
+    if (mode !== "following") {
+      scroll.scrollTop = 100;
+      render().onScroll();
+    }
+    render(mode !== "hidden");
+    if (growth === "text") reply.text += "ER";
+    else
+      reply.attachments!.push({
+        name: "notes",
+        kind: "resource_link",
+        uri: "file:///p/notes.md",
+      });
+    scroll.scrollHeight = 1400;
+    render(mode !== "hidden");
+    expect(scroll.scrollTop).toBe(mode === "following" ? 1400 : 100);
+  },
+);
+
+it("provides one complete copy action when an ordinary notification interrupts a word", () => {
+  thread = threads.markOpenFailed(
+    "reading-notification",
+    "a",
+    "/p",
+    "history",
+    "fixture",
+  );
+  thread.openError = null;
+  const event = (value: unknown) =>
+    (
+      threads as unknown as {
+        applyChannelEvent: (key: string, value: unknown) => void;
+      }
+    ).applyChannelEvent(thread.key, value);
+  for (const value of [
+    {
+      update: {
+        sessionUpdate: "agent_message_chunk",
+        content: { type: "text", text: "MARK" },
+      },
+    },
+    {
+      kind: "notification",
+      method: "_future/status",
+      params: { complete: true },
+    },
+    {
+      update: {
+        sessionUpdate: "agent_message_chunk",
+        content: { type: "text", text: "ER\n**whole answer**" },
+      },
+    },
+  ])
+    event(value);
+  const tree = render().tree;
+  expect(tree.filter((node) => node.type === RawBlock)).toHaveLength(1);
+  const copy = tree.filter((node) => node.type === MessageCopyButton);
+  expect(copy.map((node) => node.props.text)).toEqual([
+    "MARKER\n**whole answer**",
+  ]);
 });
 
 it("does not move a hidden conversation even through a previously captured return action", () => {

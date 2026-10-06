@@ -1,0 +1,128 @@
+{
+  "recordedAtUtc": "2026-10-06T16:04:13.017936+00:00",
+  "scope": "Common transient notification stream repair; source and automated checks only.",
+  "originalOutputRetention": {
+    "diskLogs": false,
+    "evidence": "Tool output chunk IDs; no reconstructed original logs."
+  },
+  "testFiles": [
+    "src/runtime/sessions.notifications.test.ts",
+    "src/runtime/sessions.test.ts",
+    "src/runtime/sessions.regression.test.ts",
+    "src/runtime/sessions.history.test.tsx",
+    "src/runtime/sessions.history-retry.test.tsx",
+    "src/components/ThreadView.reading.test.tsx",
+    "src/components/MessageContent.test.tsx",
+    "src/components/thread-items.file-links.test.tsx"
+  ],
+  "checks": [
+    {
+      "stage": "initial_red",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.notifications.test.ts src/components/ThreadView.reading.test.tsx",
+      "toolChunk": "c426cb",
+      "exitCode": 1,
+      "passed": 33,
+      "failed": 3,
+      "total": 36,
+      "failures": [
+        "Word/Markdown stream split into 3 Agent items instead of 1.",
+        "Copy props split into MARK and ER plus Markdown instead of one complete message.",
+        "Following text growth behind a notification remained at scrollTop 1000 instead of 1400."
+      ]
+    },
+    {
+      "stage": "first_green",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.notifications.test.ts src/runtime/sessions.test.ts src/runtime/sessions.regression.test.ts src/runtime/sessions.history.test.tsx src/runtime/sessions.history-retry.test.tsx src/components/ThreadView.reading.test.tsx src/components/MessageContent.test.tsx src/components/thread-items.file-links.test.tsx",
+      "toolChunk": "ab0f63",
+      "exitCode": 0,
+      "files": 8,
+      "passed": 169,
+      "failed": 0,
+      "durationSeconds": 2.32
+    },
+    {
+      "stage": "attachment_red",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.notifications.test.ts src/components/ThreadView.reading.test.tsx",
+      "toolChunk": "43ba37",
+      "exitCode": 1,
+      "passed": 39,
+      "failed": 1,
+      "total": 40,
+      "failures": [
+        "Following attachment growth behind a notification remained at scrollTop 1000 instead of 1400."
+      ]
+    },
+    {
+      "stage": "final_green",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.notifications.test.ts src/runtime/sessions.test.ts src/runtime/sessions.regression.test.ts src/runtime/sessions.history.test.tsx src/runtime/sessions.history-retry.test.tsx src/components/ThreadView.reading.test.tsx src/components/MessageContent.test.tsx src/components/thread-items.file-links.test.tsx",
+      "toolChunk": "c2ebd5",
+      "exitCode": 0,
+      "files": 8,
+      "passed": 173,
+      "failed": 0,
+      "durationSeconds": 2.4
+    },
+    {
+      "stage": "typecheck",
+      "command": "corepack pnpm typecheck",
+      "toolChunk": "7722ac",
+      "exitCode": 0
+    },
+    {
+      "stage": "format",
+      "command": "corepack pnpm exec prettier --check src/runtime/session_types.ts src/runtime/session_streams.ts src/runtime/session_projection.ts src/runtime/sessions.ts src/runtime/sessions.notifications.test.ts src/components/ThreadView.tsx src/components/ThreadView.reading.test.tsx",
+      "toolChunk": "60080f",
+      "exitCode": 0
+    },
+    {
+      "stage": "diff",
+      "command": "git diff --check -- src/runtime/session_types.ts src/runtime/session_streams.ts src/runtime/session_projection.ts src/runtime/sessions.ts src/runtime/sessions.notifications.test.ts src/components/ThreadView.tsx src/components/ThreadView.reading.test.tsx",
+      "toolChunk": "4873db",
+      "exitCode": 0
+    }
+  ],
+  "independentSourceReview": "No remaining blocker reported; no tests rerun by reviewer.",
+  "sourceHashes": [
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "8d8e3a2765180d7485830f329691ca81db3cfa0b869bd0268d5132320ac957e7"
+    },
+    {
+      "path": "src/runtime/session_streams.ts",
+      "sha256": "58c9ebd6f8f58af6ef7bd9a40eb78ec839d30bb8214f7422d41c4a1b76766d85"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "e4fdcdd461ceb0bc1c8421d7dfb13fefae56f539cbd0ef7e8f90555c05edee02"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "104e90407d9eeb7a4b06783cd403990d4b3ee6e16ea1292acb6cb0859d34f8eb"
+    },
+    {
+      "path": "src/runtime/sessions.notifications.test.ts",
+      "sha256": "28669e9584551a2b3d7df1695780872372eb7bf340aa6f8a40b3ca074ca98f0c"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "c904fff6b1d0fee2bec2c168c937264ed2e70f0d2c9cbe95fa0036cf9d80b31f"
+    },
+    {
+      "path": "src/components/ThreadView.reading.test.tsx",
+      "sha256": "6b90edc10dbe263c6177ffe0cb20797dc059ca86a1831ae6e2783f617c5aa6c7"
+    }
+  ],
+  "sourceHashTiming": "Captured at receipt creation after the checks; author made no further source edits.",
+  "sessionsLineCount": 1498,
+  "boundaries": [
+    "Ordinary notifications remain visible with their original envelope; only trusted in-memory markers allow stream continuation.",
+    "Tools, thoughts, users, plans, unknown updates, completion, disconnect and historical messages retain boundaries.",
+    "Text and attachment growth respect existing following, scrolled-up and hidden-view protections.",
+    "No commit, build, installation, GUI or real-Agent test was performed by this repair author."
+  ],
+  "rootReview": {
+    "blocked": false,
+    "sourceHashesMatched": true,
+    "independentReview": "Source cross-review found no remaining blocker; installed behavior remains unverified."
+  }
+}

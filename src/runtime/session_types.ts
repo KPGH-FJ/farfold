@@ -88,7 +88,15 @@ export type ThreadItem =
     }
   | { kind: "tool"; id: string; call: ToolCallView }
   | { kind: "plan"; id: string; entries: PlanEntry[]; time: number }
-  | { kind: "raw"; id: string; update: unknown; label?: string; time: number }
+  | {
+      kind: "raw";
+      id: string;
+      update: unknown;
+      label?: string;
+      /** In-memory marker set only by the ordinary notification route. */
+      streamNeutral?: true;
+      time: number;
+    }
   | { kind: "notice"; id: string; message: string; time: number }
   | {
       /** Permission decision record left in the transcript after the card

@@ -144,6 +144,7 @@ import {
   nextItemId,
   sealStreams,
   pushRaw,
+  pushNotification,
   isKnownConfigUpdate,
 } from "./session_projection";
 import { ThreadNotifications } from "./thread_notifications";
@@ -493,7 +494,7 @@ class ThreadsStore {
     } else if (e.kind === "toolOutput") {
       appendToolOutput(s, e);
     } else if (e.kind === "notification") {
-      pushRaw(s, { method: e.method, params: e.params }, "notification");
+      pushNotification(s, { method: e.method, params: e.params });
     } else if (e.update !== undefined) {
       if (
         (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===

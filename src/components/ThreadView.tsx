@@ -41,6 +41,7 @@ import {
   type ThreadState,
 } from "../runtime/sessions";
 import { configCheckMessage } from "../runtime/config_check";
+import { streamTailItem } from "../runtime/session_streams";
 import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { useComposerDraft } from "../runtime/drafts";
@@ -408,7 +409,7 @@ export function ThreadView({
   // 底部跟滚：新条目/流式内容增长时保持在底部（用户上翻则停）。
   const follow = useRef(true);
   const [showLatest, setShowLatest] = useState(false);
-  const lastItem = thread.items[thread.items.length - 1];
+  const lastItem = streamTailItem(thread.items);
   const lastCompletion = thread.items
     .slice()
     .reverse()
@@ -416,7 +417,7 @@ export function ThreadView({
   const roundResults = settledRoundResults(thread);
   const streamTail =
     lastItem && "text" in lastItem
-      ? lastItem.text.length
+      ? `${lastItem.text.length}:${"attachments" in lastItem ? (lastItem.attachments?.length ?? 0) : 0}`
       : lastItem?.kind === "tool"
         ? lastItem.call.status
         : "";

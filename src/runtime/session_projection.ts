@@ -11,6 +11,7 @@ import { forgetConfigurationPause } from "./configuration_pause";
 import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
 import { normalizeMessageAttachment } from "./message_attachments";
+import { streamTailItem } from "./session_streams";
 import type {
   ConfigChoice,
   ConfigOptionView,
@@ -110,15 +111,30 @@ export function sealStreams(s: ThreadState): void {
   }
 }
 
-export function pushRaw(s: ThreadState, update: unknown, label?: string): void {
-  sealStreams(s);
+function appendRaw(
+  s: ThreadState,
+  update: unknown,
+  label?: string,
+  streamNeutral = false,
+): void {
   s.items.push({
     kind: "raw",
     id: nextItemId(),
     update,
     label,
+    ...(streamNeutral ? { streamNeutral: true as const } : {}),
     time: Date.now(),
   });
+}
+
+export function pushRaw(s: ThreadState, update: unknown, label?: string): void {
+  sealStreams(s);
+  appendRaw(s, update, label);
+}
+
+/** Out-of-band notifications are retained without declaring a message boundary. */
+export function pushNotification(s: ThreadState, update: unknown): void {
+  appendRaw(s, update, "notification", true);
 }
 
 function appendStreamText(
@@ -131,6 +147,15 @@ function appendStreamText(
     const attachment =
       kind === "thought" ? null : normalizeMessageAttachment(content);
     if (attachment && kind !== "thought") {
+      const tail = streamTailItem(s.items);
+      if (
+        tail?.kind === kind &&
+        (tail.kind === "user" || tail.kind === "agent") &&
+        tail.streaming
+      ) {
+        tail.attachments = [...(tail.attachments ?? []), attachment];
+        return;
+      }
       const last = lastItem(s);
       if (
         last?.kind === kind &&
@@ -146,10 +171,6 @@ function appendStreamText(
               JSON.stringify(existing) === JSON.stringify(attachment),
           );
         if (duplicate) return;
-        if (last.streaming) {
-          last.attachments = [...(last.attachments ?? []), attachment];
-          return;
-        }
       }
       sealStreams(s);
       s.items.push({
@@ -165,11 +186,12 @@ function appendStreamText(
     pushRaw(s, content ?? {});
     return;
   }
-  const last = lastItem(s);
-  if (last && last.kind === kind && last.streaming) {
-    last.text += text;
+  const tail = streamTailItem(s.items);
+  if (tail && tail.kind === kind && tail.streaming) {
+    tail.text += text;
     return;
   }
+  const last = lastItem(s);
   // Echo de-dup: a live agent may replay the user's message we already
   // rendered optimistically; skip chunks fully contained in it.
   if (
