@@ -1,0 +1,69 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.86s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-0c277573533e5470)
+
+running 46 tests
+test browser_sharing::helper::tests::partial_page_output_keeps_the_transport_close_boundary_for_read_and_control ... ok
+test browser_sharing::helper::tests::queued_read_stop_does_not_trust_page_owned_control_fields ... ok
+test browser_sharing::helper::tests::queued_request_does_not_block_active_request_cancellation ... ok
+test browser_sharing::helper::tests::review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status ... ok
+test browser_sharing::helper::tests::cancellation_for_another_request_cannot_jump_the_active_request ... ok
+test browser_sharing::permission::tests::waiting_timeout_cleans_request_on_drop_even_without_a_user_response ... ok
+test browser_sharing::permission::tests::expired_confirmation_rejects_approval_without_capture ... ok
+test browser_sharing::permission::tests::cancelled_original_wait_cannot_be_approved_later ... ok
+test browser_sharing::permission::tests::exact_page_capture_failure_ends_original_request_without_authority ... ok
+test browser_sharing::permission::tests::changed_page_invalidates_confirmation_before_approval ... ok
+test browser_sharing::permission::tests::asking_permission_keeps_the_request_waiting_without_read_authority ... ok
+test browser_sharing::permission::tests::disconnect_ends_wait_without_creating_a_grant ... ok
+test browser_sharing::permission::tests::denial_never_captures_page_and_stale_approval_cannot_replace_next_request ... ok
+test browser_sharing::permission::tests::approval_delivers_exact_grant_to_original_waiter_once ... ok
+test browser_sharing::permission::tests::explicit_operation_grant_is_one_shot_and_does_not_replace_the_read_grant ... ok
+test browser_sharing::permission::tests::wrong_task_or_label_never_consumes_original_confirmation ... ok
+test browser_sharing::prompt_tests::stopped_prompt_cancels_its_decision_without_mcp_notification_and_rejects_late_requests ... ok
+test browser_sharing::prompt_tests::ending_one_prompt_keeps_other_owner_and_explicit_page_grant ... ok
+test browser_sharing::prompt_tests::next_prompt_can_request_and_approve_after_old_wait_is_dropped ... ok
+test browser_sharing::protocol::control_tests::fixed_tools_reject_scripts_selectors_extra_targets_and_invalid_text ... ok
+test browser_sharing::protocol::control_tests::screenshot_bytes_are_image_content_and_never_repeated_in_text ... ok
+test browser_sharing::protocol::tests::cancellation_uses_only_exact_request_id_and_never_echoes_reason ... ok
+test browser_sharing::protocol::tests::caller_input_not_reflected_in_protocol_errors ... ok
+test browser_sharing::protocol::tests::discovery_separates_observation_from_effectful_tools ... ok
+test browser_sharing::protocol::tests::standard_optional_arguments_and_progress_metadata_are_accepted_without_echo ... ok
+test browser_sharing::state_tests::confirmed_final_output_close_releases_retiring_ownership ... ok
+test browser_sharing::protocol::tests::read_requires_handshake_and_actual_list_delivery ... ok
+test browser_sharing::protocol::tests::tool_cannot_choose_task_page_url_or_javascript ... ok
+test browser_sharing::state_tests::route_revoke_without_stdout_confirmation_preserves_retiring_ownership ... ok
+test browser_sharing::transport::tests::cancellation_finishes_only_the_original_waiting_call ... ok
+test browser_sharing::state_tests::old_page_label_stop_cannot_revoke_the_current_page_grant ... ok
+test browser_sharing::state_tests::same_page_old_expected_revision_is_rechecked_after_waiting_for_operation ... ok
+test browser_sharing::transport::tests::cancellation_of_queued_page_body_revokes_and_requires_stdout_barrier ... ok
+test browser_sharing::transport::tests::enqueuing_stop_is_ordered_and_never_synthesizes_an_ack ... ok
+test browser_sharing::state_tests::unconfirmed_close_retains_registry_owner_until_final_stdout_confirmation ... ok
+test browser_sharing::transport::tests::read_arriving_during_stop_can_never_capture_a_future_grant ... ok
+test browser_sharing::transport::tests::page_data_cannot_mark_a_read_receipt_as_control_and_partial_frames_are_not_replaced ... ok
+test browser_sharing::transport::tests::control_cancelled_before_permission_never_reports_a_dispatched_effect ... ok
+test browser_sharing::transport::tests::unknown_transport_exit_preserves_revoked_scope_for_registry_retirement ... ok
+test browser_sharing::transport::tests::stopping_permission_wait_returns_same_call_error_and_still_waits_for_ack ... ok
+test browser_sharing::transport::tests::queued_control_withdrawal_preserves_unknown_status_and_discards_page_fields ... ok
+test browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome ... ok
+test browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier ... ok
+test browser_sharing::state_tests::delayed_invalidated_stop_rechecks_exact_retiring_grant_after_operation_lock ... ok
+test browser_sharing::state_tests::stopping_and_failed_stop_without_quiesce_ack_never_report_unshared ... ok
+test browser_sharing::transport::tests::oversized_response_becomes_a_bounded_fixed_error ... ok
+
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 928 filtered out; finished in 0.06s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-33192dc009f8ea67)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

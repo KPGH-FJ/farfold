@@ -1,0 +1,62 @@
+{
+  "ts": "2026-10-06T05:48:56.005861+00:00",
+  "sourceCommit": "f563f0b8c8c61574fe9347a5a2f146b35df97961",
+  "previousBinarySha256": "384f3fed2932af18cbf3971def2a2172276a0f797b21702db1a4f7f8f6bd5998",
+  "installedBinarySha256": "4831b23661e4e0c843f40af3a209331a744f2b4120bccd034a1a8f499bbe2972",
+  "appFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "4831b23661e4e0c843f40af3a209331a744f2b4120bccd034a1a8f499bbe2972",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "archiveSha256": "c32a962e7291283a0445a5d98e37e5bdc369e4b2ab868b549c5a442bb85997d4",
+  "architecture": "arm64",
+  "strictCodesignPassed": true,
+  "dataBefore": {
+    "treeFileCount": 178393,
+    "treeDigest": "5d6918727bf13bd3f819a179f0784b1ad8e6e8559baec3e0ca8dea056cbbf9ab",
+    "counts": {
+      "agents": 40,
+      "sessions": 72,
+      "settings": 50,
+      "dismissed_sessions": 109
+    },
+    "unsentSha256": "78067b5da346df14cb8b9c6fdc899e0cbaa65fcd36f30d13a3a9b422b98f3882",
+    "queueCount": 1,
+    "queueDigest": "b15503ba09e099c3388cae91ce1ed256aff29eeb0bc5ffbae45c01051afe3eed",
+    "composerCount": 1,
+    "coldDraftStored": true,
+    "coldAttachmentStored": true,
+    "dbSha256": "050e76fcac6d19d858015fc2e565bfed086173746e12e05263f4edee20d5e3fc"
+  },
+  "dataAfter": {
+    "treeFileCount": 178393,
+    "treeDigest": "5d6918727bf13bd3f819a179f0784b1ad8e6e8559baec3e0ca8dea056cbbf9ab",
+    "counts": {
+      "agents": 40,
+      "sessions": 72,
+      "settings": 50,
+      "dismissed_sessions": 109
+    },
+    "unsentSha256": "78067b5da346df14cb8b9c6fdc899e0cbaa65fcd36f30d13a3a9b422b98f3882",
+    "queueCount": 1,
+    "queueDigest": "b15503ba09e099c3388cae91ce1ed256aff29eeb0bc5ffbae45c01051afe3eed",
+    "composerCount": 1,
+    "coldDraftStored": true,
+    "coldAttachmentStored": true,
+    "dbSha256": "050e76fcac6d19d858015fc2e565bfed086173746e12e05263f4edee20d5e3fc"
+  },
+  "stoppedDataUnchanged": true,
+  "installMethod": "atomic executable replacement; other four app files unchanged",
+  "coldRestoreVerified": false,
+  "queueDigestEncoding": "ensure_ascii=False,sort_keys=True,compact separators UTF8",
+  "protectedQueueAsciiDigest": "534bc72807018903bafeecbc872d6db34b4c2f370270ec55a104d1a293a6748a",
+  "treeDigestRule": "sorted relative paths; file(relative,size,sha256), symlink(relative,link,sha256(target)); compact ensure_ascii=False JSON UTF8; directories ignored",
+  "scope": "first 4831b236 stopped installation snapshot before launching; subsequent cold recovery recorded separately",
+  "laterColdRecoveryEvidence": [
+    "cold-after.png",
+    "codex-cold-reply.png",
+    "run-summary.json"
+  ]
+}

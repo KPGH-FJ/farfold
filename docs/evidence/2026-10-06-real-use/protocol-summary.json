@@ -1,0 +1,111 @@
+[
+  {
+    "file": "protocol-v1-1791263267707-1.jsonl",
+    "sha256": "bae5738cab3d8c8810eca8072840f7efc313a6a2c80475a3808d1259f7733e5d",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "other": 1
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791263382144-2.jsonl",
+    "sha256": "8924f40a476e61aaf44c7606b3d51bae31f55fd556e5be0657bd4ed931573c2d",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "errors": [
+      {
+        "version": 1,
+        "ts": 1791263597161,
+        "dir": "in",
+        "event": "response",
+        "bytes": 215,
+        "error": "protocol",
+        "protocolErrorClass": "internal_error",
+        "responseIdNull": false,
+        "beforeInitializeAccepted": false
+      }
+    ]
+  },
+  {
+    "file": "protocol-v1-1791263938099-3.jsonl",
+    "sha256": "3d7aff52fa56f287dab76774293259c0e5f71a553429c69fa64c674a1c8da44f",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "other": 1
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791263995409-4.jsonl",
+    "sha256": "4a522f4b75db70eb75c2a4212505bd12e9199fd36262ca76950e6dadd7824df9",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 4,
+      "session/prompt": 7,
+      "session/cancel": 1
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791269435559-0.jsonl",
+    "sha256": "f83618f4239e92aed8d2040f727608cd18f510b51a085d39d95f53d59c822eda",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 2,
+      "session/prompt": 1,
+      "session/cancel": 1
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791269467261-1.jsonl",
+    "sha256": "8de98507eb1f6dd5fb5eb773cc355a2b9e9b133c4178b999de46223737c0dedd",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/set_config_option": 3,
+      "session/prompt": 2
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791269624220-2.jsonl",
+    "sha256": "fda0c8c3ed550153d9dbbff16f571fead2ab088efdc0225ef5f8399f98971417",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 2
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791270934676-0.jsonl",
+    "sha256": "7093e60c850a30d4f8254346b749ec7c272ce773cb0d740999cd3169f16a8ee0",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 2
+    },
+    "errors": []
+  },
+  {
+    "file": "protocol-v1-1791270950364-1.jsonl",
+    "sha256": "26c8e817be6acf775488f71525fbe464fc7e7b55f03a31635c807da655486e6f",
+    "outboundCounts": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/set_config_option": 3,
+      "session/prompt": 2,
+      "session/cancel": 1
+    },
+    "errors": []
+  }
+]

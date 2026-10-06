@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "7f05140b54667ced51f721d6c59405c7feb3a0c7",
+  "outcome": "binary replaced; aggregate stopped-data equality assertion failed; no first-window retention pass claimed",
+  "firstWindowPreDigestsRetained": false,
+  "failedCheck": "aggregate dataBefore == dataAfter after replacement",
+  "possibleCause": "unknown; readonly SQLite inspection occurred between tree captures; no per-file difference retained",
+  "currentIdentityVerified": "five candidate app files match installed",
+  "next": "finish all readonly SQLite checks before a controlled identity and data recheck; preserve failure and restrict final claims"
+}

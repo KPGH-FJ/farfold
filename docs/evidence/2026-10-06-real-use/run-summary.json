@@ -1,0 +1,39 @@
+{
+  "endedAtUtc": "2026-10-06T07:20:09.627149+00:00",
+  "sourceCommit": "7f05140b54667ced51f721d6c59405c7feb3a0c7",
+  "installedBinarySha256": "1b029aba5a24a538b09d594f161804ca8d893436f7e82ad73850576041dc4dd7",
+  "frontendTests": 2102,
+  "rustTests": {
+    "passed": 970,
+    "existingIgnored": 4
+  },
+  "requestCounts": {
+    "farfoldOutboundPrompts": 13,
+    "opencodePrompts": 1,
+    "codexPrompts": 12,
+    "cancelNotifications": 3,
+    "scope": "Farfold session/prompt messages; not model API/billing call count"
+  },
+  "protectedQueueCount": 1,
+  "protectedQueueAsciiDigest": "534bc72807018903bafeecbc872d6db34b4c2f370270ec55a104d1a293a6748a",
+  "finalDbCounts": {
+    "agents": 40,
+    "sessions": 73,
+    "settings": 50,
+    "dismissed_sessions": 109
+  },
+  "finalQuickCheck": "ok",
+  "testSessions": 3,
+  "finalAppProcesses": 0,
+  "authWrites": 0,
+  "keyWrites": 0,
+  "accountLogoutCalls": 0,
+  "opencodeSelectedModel": "stealth/space-bunny-alpha",
+  "opencodeRealRequestResult": "failed: endpoint_not_found in official Agent log",
+  "opencodeInitialTimeoutRootCause": "unknown",
+  "htmlPreviewResult": "failed to obtain rendering; OS openat blocked; exact cause unknown",
+  "firstReplacementDataEqualityPassed": false,
+  "secondStoppedDataWindowPassed": true,
+  "full33StandardPassed": false,
+  "windowsRealTested": false
+}

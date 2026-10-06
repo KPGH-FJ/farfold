@@ -1,0 +1,28 @@
+[
+  {
+    "id": "opencode:/Users/tw/Desktop/farfold/output/2026-10-06-real-use:ses_ef061e253ffe70lhVFuhtKtCk8",
+    "agent": "opencode",
+    "nativeSessionId": "ses_ef061e253ffe70lhVFuhtKtCk8",
+    "choices": {
+      "model": "farfold_3fe8f99daf528aff98450ffa0c58075b28fadb70055a41537a194a325da3dc16/stealth/space-bunny-alpha"
+    }
+  },
+  {
+    "id": "codex:/Users/tw/Desktop/farfold/output/2026-10-06-real-use:01a10fa7-825f-7312-ba48-6790b1b3463c",
+    "agent": "codex",
+    "nativeSessionId": "01a10fa7-825f-7312-ba48-6790b1b3463c",
+    "choices": {
+      "model": "gpt-6-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  {
+    "id": "codex:/Users/tw/Desktop/farfold/output/2026-10-06-real-use:01a10ffa-7ecf-77e3-9ab8-1ed38ef0fa76",
+    "agent": "codex",
+    "nativeSessionId": "01a10ffa-7ecf-77e3-9ab8-1ed38ef0fa76",
+    "choices": {
+      "model": "gpt-6-sol",
+      "reasoning_effort": "high"
+    }
+  }
+]

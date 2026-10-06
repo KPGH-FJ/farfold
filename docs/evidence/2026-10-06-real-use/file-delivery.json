@@ -1,0 +1,12 @@
+{
+  "path": "/Users/tw/Desktop/farfold/output/2026-10-06-real-use/result.md",
+  "expectedContentsMatched": true,
+  "bytes": 29,
+  "sha256": "e2fccbffb76f10fa54705365488ccc33d7328feb0795542e6ddfbb8a17b8e318",
+  "revision": {
+    "expectedContentsMatched": true,
+    "bytes": 59,
+    "sha256": "b81c97dd551942f09b7be0155b408cadcde23f75d4ac3b7400d59cff3e50c6be",
+    "joinedFeedbackDidNotSend": true
+  }
+}

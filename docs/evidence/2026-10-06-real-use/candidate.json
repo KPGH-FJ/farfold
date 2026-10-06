@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "f563f0b8c8c61574fe9347a5a2f146b35df97961",
+  "sourceInputCount": 710,
+  "changedSourceInputs": [
+    "src/components/NewConversationPickers.test.tsx",
+    "src/components/NewConversationPickers.tsx"
+  ],
+  "sourceInputDigest": "59c96e0ec520e9596c0ba5e5690fe303f746202dde5b936a626fa6778797edf9",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "appFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "4831b23661e4e0c843f40af3a209331a744f2b4120bccd034a1a8f499bbe2972",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "archivePath": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-06-f563f0b8/Farfold-0.1.7-f563f0b8.zip",
+  "archiveSha256": "c32a962e7291283a0445a5d98e37e5bdc369e4b2ab868b549c5a442bb85997d4",
+  "archiveBytes": 10136429,
+  "strictCodesignPassed": true,
+  "architecture": "arm64",
+  "installed": false,
+  "scope": "candidate creation snapshot before first installation; superseded by 7f05140b candidate",
+  "laterInstallationReceipt": "install-receipt.json"
+}

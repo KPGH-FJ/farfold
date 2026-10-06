@@ -1,0 +1,87 @@
+{
+  "ts": "2026-10-06T07:14:51.544483+00:00",
+  "sourceCommit": "7f05140b54667ced51f721d6c59405c7feb3a0c7",
+  "sourceInputCount": 711,
+  "sourceInputDigest": "180576112b2d5b49136e654e6864928191a1d8335677681f42ab317604c159b4",
+  "version": "0.1.7",
+  "bundleId": "ai.farfold.desktop",
+  "installedBinarySha256": "1b029aba5a24a538b09d594f161804ca8d893436f7e82ad73850576041dc4dd7",
+  "appFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "1b029aba5a24a538b09d594f161804ca8d893436f7e82ad73850576041dc4dd7",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  },
+  "archivePath": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-06-7f05140b/Farfold-0.1.7-7f05140b.zip",
+  "archiveSha256": "a0294bcfccfab125af2541a6e291dea65c7949d73cdbde3cb09134e260ad98d2",
+  "normalQuitConfirmed": true,
+  "revalidationAlreadyInstalledSameCandidate": true,
+  "firstReplacementDataEqualityPassed": false,
+  "firstReplacementFailureFile": "stop-approval-install-attempt.json",
+  "dataBefore": {
+    "appData": {
+      "exists": true,
+      "fileCount": 178393,
+      "treeSha256": "a4bd730b09be90c5cc25e459988b5621f9d8a346635a4982c27c92315b8bb5ad"
+    },
+    "webkit": {
+      "exists": true,
+      "fileCount": 29,
+      "treeSha256": "c06f7f1a258e5f1390f2c326a81b911415f78791d45f041afeb9f339c3ac6d79"
+    },
+    "cache": {
+      "exists": true,
+      "fileCount": 2,
+      "treeSha256": "5e3ff7a169810e5d0513c0bdd4b59db2e26b8a489676311e54a21df3627ec3d4"
+    }
+  },
+  "protectedQueueAsciiDigest": "534bc72807018903bafeecbc872d6db34b4c2f370270ec55a104d1a293a6748a",
+  "protectedQueueCount": 1,
+  "independentDbCounts": {
+    "agents": 40,
+    "sessions": 73,
+    "settings": 50,
+    "dismissed_sessions": 109
+  },
+  "independentQuickCheck": "ok",
+  "realFixRetest": {
+    "result": "passed for this installed Codex conversation",
+    "pendingCardShown": true,
+    "stopImmediateCardRemoved": true,
+    "attentionCleared": true,
+    "nextPromptPermissionShown": true,
+    "nextPermissionCancelled": true,
+    "nextRealReply": "FARFOLD_AFTER_STOP_DENIED_20261006",
+    "nextTerminalUi": "completed",
+    "finalPageClosed": true,
+    "finalAppNormalQuit": true
+  },
+  "scope": "second stopped window after readonly SQLite probes closed; not reconstruction of first failed replacement window",
+  "dataAfter": {
+    "appData": {
+      "exists": true,
+      "fileCount": 178393,
+      "treeSha256": "a4bd730b09be90c5cc25e459988b5621f9d8a346635a4982c27c92315b8bb5ad"
+    },
+    "webkit": {
+      "exists": true,
+      "fileCount": 29,
+      "treeSha256": "c06f7f1a258e5f1390f2c326a81b911415f78791d45f041afeb9f339c3ac6d79"
+    },
+    "cache": {
+      "exists": true,
+      "fileCount": 2,
+      "treeSha256": "5e3ff7a169810e5d0513c0bdd4b59db2e26b8a489676311e54a21df3627ec3d4"
+    }
+  },
+  "secondStoppedWindowDataUnchanged": true,
+  "dataChangedPaths": {
+    "appData": [],
+    "webkit": [],
+    "cache": []
+  },
+  "appProcessesEmptyBeforeAndAfterReplacement": true,
+  "strictCodesignPassed": true,
+  "architecture": "arm64"
+}
