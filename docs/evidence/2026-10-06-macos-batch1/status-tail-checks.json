@@ -1,0 +1,27 @@
+{
+  "scope": "Source only; no installed GUI acceptance. Targeted runs summarized from recorded tool outputs; targeted raw logs were not separately saved.",
+  "change": "Display only: stopped/failed unconfirmed tool tail is need/result unknown, not running; all controls/exit/queue protection unchanged.",
+  "red": {
+    "command": "corepack pnpm exec vitest run src/runtime/sessions.tool_activity.test.ts src/components/ConversationLibrary.test.tsx --reporter=dot",
+    "testFiles": 2,
+    "passed": 25,
+    "failed": 5,
+    "total": 30
+  },
+  "green": {
+    "command": "corepack pnpm exec vitest run src/runtime/sessions.tool_activity.test.ts src/components/ConversationLibrary.test.tsx src/runtime/sessions.test.ts src/runtime/collections.test.ts src/runtime/exit_impact.test.ts src/runtime/strings.test.ts src/runtime/sessions.outcomes.test.ts --reporter=dot",
+    "testFiles": 7,
+    "passed": 106,
+    "failed": 0
+  },
+  "sourceSha256": {
+    "src/runtime/sidebar.ts": "89616e5d8fc83feb6b06f6c45b664fb823ef275c5cac8e27f510396f1d58f53b",
+    "src/runtime/sessions.tool_activity.test.ts": "086eff74d9f5a4a5d72bc5ee795457ad3f62b79fb45fc361f1950001e3ec4833",
+    "src/components/Sidebar.tsx": "b1a3c8607374227757a0c3f8d20f8f390b2a6fb11185eac38bcadabd2f82c953",
+    "src/components/ConversationLibrary.tsx": "ba0a88fa439f685b739cb88a32d993b9d62768c57da2a49eedec2e433d4a9650",
+    "src/components/ConversationLibrary.test.tsx": "9d67f23b3eb1f8fc137397f74c97cad7dfd4bc22b348cee19475334c06b3df67"
+  },
+  "privateReceiptSha256": "c33b52ed53f8013f64d6467b60adc01b968fe72ab0a7c72cbc365c0274548db9",
+  "installed": false,
+  "independentReview": "root reviewed shared display-only projection"
+}

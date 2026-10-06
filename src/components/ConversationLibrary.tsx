@@ -615,9 +615,11 @@ export function ConversationLibrary({
                 </button>
                 {row.status !== "idle" && (
                   <span className={`library-status ${row.status}`}>
-                    {row.status === "need"
-                      ? LIBRARY.attention
-                      : LIBRARY.running}
+                    {row.toolTailUnconfirmed
+                      ? STRINGS.thread.unknown
+                      : row.status === "need"
+                        ? LIBRARY.attention
+                        : LIBRARY.running}
                   </span>
                 )}
                 {result && (

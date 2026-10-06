@@ -8,6 +8,7 @@ vi.mock("@tauri-apps/api/core", () => ({
 }));
 import { threads, groupSidebarRows, type IndexRow } from "./sessions";
 import { draftPersistence } from "./drafts";
+import type { CompletionEvent } from "./completion";
 
 const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown): void;
@@ -26,7 +27,7 @@ afterEach(() => {
   vi.restoreAllMocks();
   invoke.mockReset();
 });
-function seed(id: string) {
+function seed(id: string, end: CompletionEvent = { stopReason: "cancelled" }) {
   const s = threads.markOpenFailed(`a:/p:${id}`, "a", "/p", id, "fixture");
   s.openError = null;
   s.running = true;
@@ -45,7 +46,7 @@ function seed(id: string) {
   });
   channel.applyChannelEvent(s.key, {
     kind: "turnEnd",
-    stopReason: "cancelled",
+    ...end,
   });
   return s;
 }
@@ -72,7 +73,12 @@ it("keeps stopped replies with official unfinished tools active and reachable un
   const groups = groupSidebarRows([row(s.key)], new Map([[s.key, s]]), {
     autoArchiveDays: 1,
   });
-  expect(groups[0]?.rows[0].status).toBe("run");
+  expect(groups[0]?.rows[0]).toMatchObject({
+    status: "need",
+    toolTailUnconfirmed: true,
+  });
+  expect(s.activeToolCallIds).toEqual(["tool"]);
+  expect(threads.needsAttention(s)).toBe(false);
   channel.applyChannelEvent(s.key, {
     update: {
       sessionUpdate: "tool_call_update",
@@ -81,16 +87,80 @@ it("keeps stopped replies with official unfinished tools active and reachable un
     },
   });
   channel.applyChannelEvent(s.key, { kind: "toolActivity", toolCallIds: [] });
-  expect(
-    groupSidebarRows([row(s.key)], new Map([[s.key, s]]), { archived: true })[0]
-      ?.rows[0].status,
-  ).toBe("idle");
+  const completed = groupSidebarRows([row(s.key)], new Map([[s.key, s]]), {
+    archived: true,
+  })[0]?.rows[0];
+  expect(completed?.status).toBe("idle");
+  expect(completed).not.toMatchObject({ toolTailUnconfirmed: true });
   expect(
     s.items.filter((i) => i.kind === "settled").map((i) => i.status),
   ).toEqual(["stopped"]);
 });
+it("shows a failed reply with unfinished official tools as an unknown result", () => {
+  const s = seed("failed-tool-tail-sidebar", {
+    failure: { category: "service" },
+  });
+  expect(s.items.at(-1)).toMatchObject({ kind: "settled", status: "failed" });
+  expect(
+    groupSidebarRows([row(s.key)], new Map([[s.key, s]]), {
+      attentionOnly: true,
+    })[0]?.rows[0],
+  ).toMatchObject({ status: "need", toolTailUnconfirmed: true });
+  expect(s.activeToolCallIds).toEqual(["tool"]);
+  expect(s.queuePaused).toBe("failed");
+});
+it("keeps a normal end with official background tools in the running view", () => {
+  const s = seed("background-tools-normal-end", { stopReason: "end_turn" });
+  expect(s.items.at(-1)).toMatchObject({ kind: "settled", status: "done" });
+  const background = groupSidebarRows([row(s.key)], new Map([[s.key, s]]))[0]
+    ?.rows[0];
+  expect(background?.status).toBe("run");
+  expect(background).not.toMatchObject({ toolTailUnconfirmed: true });
+});
+it.each([
+  "running",
+  "submitting",
+  "reconnecting",
+  "configuring",
+  "stopping",
+  "new-message",
+])("does not carry an older stopped tool warning into %s work", (next) => {
+  const s = seed(`tool-tail-next-${next}`);
+  if (next === "running") s.running = true;
+  else if (next === "submitting") s.submitting = true;
+  else if (next === "reconnecting") s.reconnecting = true;
+  else if (next === "configuring") s.configuring = true;
+  else if (next === "stopping") s.stopping = true;
+  else
+    s.items.push({
+      kind: "user",
+      id: "new-user",
+      text: "New request",
+      attachments: [],
+      streaming: false,
+      time: Date.now(),
+    });
+  const current = groupSidebarRows([row(s.key)], new Map([[s.key, s]]))[0]
+    ?.rows[0];
+  expect(current?.status).toBe("run");
+  expect(current).not.toMatchObject({ toolTailUnconfirmed: true });
+  expect(s.activeToolCallIds).toEqual(["tool"]);
+});
+it("does not replace a newer pending request with the previous tool warning", () => {
+  const s = seed("tool-tail-next-approval");
+  s.browserReadRequestId = "new-request";
+  const pending = groupSidebarRows([row(s.key)], new Map([[s.key, s]]))[0]
+    ?.rows[0];
+  expect(pending?.status).toBe("need");
+  expect(pending).not.toMatchObject({ toolTailUnconfirmed: true });
+  expect(s.browserReadRequestId).toBe("new-request");
+  expect(s.activeToolCallIds).toEqual(["tool"]);
+});
 it("rejects archive and permission mutation during the tool tail, but permits an explicit follow-up", async () => {
   const s = seed("tool-tail-guards");
+  expect(
+    groupSidebarRows([row(s.key)], new Map([[s.key, s]]))[0]?.rows[0].status,
+  ).toBe("need");
   s.permissionConfigId = "mode";
   await expect(threads.setArchived(s.key, true)).rejects.toBeTruthy();
   await expect(threads.setConfig(s.key, "mode", "ask")).rejects.toBeTruthy();
@@ -106,6 +176,11 @@ it("rejects archive and permission mutation during the tool tail, but permits an
   expect(
     invoke.mock.calls.some(([command]) => command === "session_prompt"),
   ).toBe(true);
+  expect(s.activeToolCallIds).toEqual(["tool"]);
+  const followUp = groupSidebarRows([row(s.key)], new Map([[s.key, s]]))[0]
+    ?.rows[0];
+  expect(followUp?.status).toBe("run");
+  expect(followUp).not.toMatchObject({ toolTailUnconfirmed: true });
 });
 it("does not interpret an unfinished replayed status as a newly executing tool", () => {
   const s = seed("tool-replay");

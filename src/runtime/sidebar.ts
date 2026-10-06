@@ -20,6 +20,8 @@ export interface SidebarRow {
   updatedAt: number;
   /** `need` | `run` | `idle` — live state overlays the index row. */
   status: "need" | "run" | "idle";
+  /** Display only: a stopped/failed reply left official tools unconfirmed. */
+  toolTailUnconfirmed?: boolean;
   unread?: boolean;
   live: boolean;
   /** `agent` = agent-side session with no index row yet (limited menu). */
@@ -58,6 +60,28 @@ function needsAttention(s: ThreadState): boolean {
   );
 }
 
+/** Keep the official activity untouched; its last reply ending only changes
+ * how a remaining tool is described. A newer request cannot inherit it. */
+function toolTailUnconfirmed(s: ThreadState): boolean {
+  if (
+    s.running ||
+    s.submitting ||
+    s.reconnecting ||
+    s.configuring ||
+    s.stopping ||
+    !hasActiveTools(s) ||
+    hasPendingRequests(s)
+  )
+    return false;
+  for (let i = s.items.length - 1; i >= 0; i -= 1) {
+    const item = s.items[i];
+    if (item.kind === "user") return false;
+    if (item.kind === "settled")
+      return item.status === "stopped" || item.status === "failed";
+  }
+  return false;
+}
+
 /** Merge index rows (plus agent-side `session/list` rows) with live
  *  thread state, then group by project directory. Pinned first, then
  *  attention > running > idle, then `updatedAt` desc within a group.
@@ -84,8 +108,9 @@ export function groupSidebarRows(
   };
   for (const row of rows) {
     const liveState = live.get(row.id);
+    const unconfirmedTail = liveState ? toolTailUnconfirmed(liveState) : false;
     const status: SidebarRow["status"] = liveState
-      ? needsAttention(liveState)
+      ? needsAttention(liveState) || unconfirmedTail
         ? "need"
         : liveState.running || hasActiveTools(liveState)
           ? "run"
@@ -103,6 +128,7 @@ export function groupSidebarRows(
         archived: row.archived,
         updatedAt: row.updatedAt,
         status,
+        toolTailUnconfirmed: unconfirmedTail,
         live: liveState !== undefined,
         source: "meta",
       },

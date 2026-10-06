@@ -23,6 +23,7 @@ import {
   type LibraryFilter,
 } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
+import { STRINGS } from "../runtime/strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { AgentLogo } from "./AgentLogo";
 import { useComposerDraft } from "../runtime/drafts";
@@ -62,6 +63,15 @@ export function Sidebar({
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const attentionCount = rows.filter((row) => row.status === "need").length;
+  const unknownCount = rows.filter(
+    (row) => row.status === "need" && row.toolTailUnconfirmed,
+  ).length;
+  const attentionLabel =
+    unknownCount === 0
+      ? LIBRARY.attention
+      : unknownCount === attentionCount
+        ? STRINGS.thread.unknown
+        : STRINGS.thread.needYou;
   const runningCount = rows.filter((row) => row.status === "run").length;
   const unreadCount = rows.filter((row) => row.unread).length;
   const operation = useRef(new CollectionActionScope());
@@ -306,7 +316,7 @@ export function Sidebar({
                 onClick={() => onLibrary({ kind: "attention" })}
               >
                 <i className="attention-dot" />
-                {attentionCount} {LIBRARY.attention}
+                {attentionCount} {attentionLabel}
               </button>
             )}
             {runningCount > 0 && (

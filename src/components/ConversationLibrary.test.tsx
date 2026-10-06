@@ -3,8 +3,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { AgentCardModel } from "../runtime/agents";
 import { agentBrand } from "../runtime/agent_brands";
 import type { LibraryFilter } from "../runtime/collections";
-import type { SidebarRow } from "../runtime/sidebar";
+import { groupSidebarRows, type SidebarRow } from "../runtime/sidebar";
 import { LIBRARY } from "../runtime/library_strings";
+import { STRINGS } from "../runtime/strings";
 import { ConversationLibrary } from "./ConversationLibrary";
 import { Sidebar } from "./Sidebar";
 import { freshThreadState } from "../runtime/session_projection";
@@ -79,6 +80,54 @@ const renderLibrary = (
       defaultCwd="/ordinary"
     />,
   );
+const renderSidebar = () =>
+  renderToStaticMarkup(
+    <Sidebar
+      agents={[agent]}
+      active="start"
+      filter={{ kind: "all" }}
+      onNew={vi.fn()}
+      onLibrary={vi.fn()}
+      onSearch={vi.fn()}
+      onSettings={vi.fn()}
+      onExplore={vi.fn()}
+      onCollapse={vi.fn()}
+    />,
+  );
+
+function addUnconfirmedToolTail(status: "stopped" | "failed") {
+  const state = freshThreadState("tail", agent.id, "/ordinary", "tail");
+  state.activeToolCallIds = ["unfinished-tool"];
+  state.items.push({
+    kind: "settled",
+    id: "end",
+    status,
+    replyReceived: false,
+    diffCount: 0,
+    artifactCount: 0,
+    time: 1,
+  });
+  liveThreads.set(state.key, state);
+  rows.push(
+    ...groupSidebarRows(
+      [
+        {
+          id: state.key,
+          agentId: agent.id,
+          cwd: state.cwd,
+          nativeSessionId: state.nativeSessionId,
+          title: "tail conversation",
+          pinned: false,
+          archived: false,
+          createdAt: 1,
+          updatedAt: 1,
+          configOptions: null,
+        },
+      ],
+      liveThreads,
+    ).flatMap((group) => group.rows),
+  );
+}
 
 beforeEach(() => {
   liveThreads = new Map();
@@ -87,6 +136,39 @@ beforeEach(() => {
     row("waiting", "need"),
     row("busy", "run"),
   ];
+});
+
+it.each(["stopped", "failed"] as const)(
+  "labels an unfinished tool after a %s reply as unknown in the row and global count",
+  (status) => {
+    rows = [];
+    addUnconfirmedToolTail(status);
+    const library = renderLibrary({ kind: "attention" });
+    expect(library).toContain("tail conversation");
+    expect(library).toContain(`>${STRINGS.thread.unknown}</span>`);
+    expect(library).not.toContain(`>${LIBRARY.running}</span>`);
+    const sidebar = renderSidebar();
+    expect(sidebar).toContain(`1 ${STRINGS.thread.unknown}</button>`);
+    expect(sidebar).not.toContain(`1 ${LIBRARY.running}</button>`);
+    expect(renderLibrary({ kind: "running" })).not.toContain(
+      "tail conversation",
+    );
+    expect(liveThreads.get("tail")?.activeToolCallIds).toEqual([
+      "unfinished-tool",
+    ]);
+  },
+);
+
+it("counts mixed unknown and pending work as needing attention without changing real running work", () => {
+  rows = [row("waiting", "need"), row("busy", "run")];
+  addUnconfirmedToolTail("stopped");
+  const sidebar = renderSidebar();
+  expect(sidebar).toContain(`2 ${STRINGS.thread.needYou}</button>`);
+  expect(sidebar).toContain(`1 ${LIBRARY.running}</button>`);
+  const attention = renderLibrary({ kind: "attention" });
+  expect(attention).toContain("tail conversation");
+  expect(attention).toContain("waiting conversation");
+  expect(attention).not.toContain("busy conversation");
 });
 
 it.each([
