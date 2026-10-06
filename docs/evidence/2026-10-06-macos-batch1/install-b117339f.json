@@ -49,5 +49,11 @@
     "highSettingRestored": true,
     "ownMarkerExplicitlyCleared": true,
     "scope": "One owned test conversation; not full history acceptance."
+  },
+  "evidenceCorrection": {
+    "normalCmdQWasObserved": true,
+    "saveBarrierExecutionProvenAtReplacement": false,
+    "laterFinding": "Default macOS CmdQ bypasses existing save/activity barrier; own pending permission had no reply or terminal response before exit cleanup. Data comparison during replacement remains valid.",
+    "sourceFixInstalled": false
   }
 }

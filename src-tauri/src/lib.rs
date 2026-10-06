@@ -4,6 +4,8 @@ mod agent_discovery;
 mod agent_install;
 mod api_endpoint;
 mod api_test;
+#[cfg(target_os = "macos")]
+mod app_menu;
 mod archive_zip;
 mod auth;
 mod browser_sharing;
@@ -23,6 +25,8 @@ mod install_job;
 mod installations;
 mod lifemodel;
 mod logging;
+#[cfg(target_os = "macos")]
+mod macos_quit;
 mod managed_paths;
 mod managed_programs;
 mod managed_update;
@@ -82,7 +86,12 @@ pub fn run() {
     performance_trace::start();
     let context = tauri::generate_context!();
     transport_security::ensure_rustls_crypto_provider();
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(target_os = "macos")]
+    let builder = builder
+        .menu(app_menu::create)
+        .on_menu_event(app_menu::handle);
+    builder
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _cwd| {
                 activate_existing_instance(app);
@@ -271,6 +280,8 @@ pub fn run() {
         .build(context)
         .expect("failed to build Farfold")
         .run(|app, event| {
+            #[cfg(target_os = "macos")]
+            macos_quit::handle(app, &event);
             browser_workspace::handle_run_event(app, &event);
             desktop_notifications::handle_run_event(&event);
             draft_exit::handle(app, &event);

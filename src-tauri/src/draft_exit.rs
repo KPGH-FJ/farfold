@@ -14,6 +14,27 @@ pub struct DraftExit {
     exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
 impl DraftExit {
+    #[cfg(target_os = "macos")]
+    pub(crate) fn external_owner(&self) -> u64 {
+        if !self.ready.load(Ordering::SeqCst) {
+            return 0;
+        }
+        let Ok(token) = self.request(0) else {
+            return 0;
+        };
+        self.pending
+            .lock()
+            .ok()
+            .and_then(|pending| match *pending {
+                Some((current, code, false))
+                    if current == token && code != tauri::RESTART_EXIT_CODE =>
+                {
+                    Some(token)
+                }
+                _ => None,
+            })
+            .unwrap_or(0)
+    }
     fn request(&self, code: i32) -> Result<u64, String> {
         let mut pending = self.pending.lock().map_err(|_| "暂时无法关闭，请重试")?;
         if code == tauri::RESTART_EXIT_CODE
@@ -70,20 +91,20 @@ impl DraftExit {
 
     // An acknowledged normal exit may already be queued when installation
     // begins. Recheck before consuming it, retaining the original save owner.
-    fn take_allowed(&self, installing: bool) -> (bool, Option<u64>) {
+    fn take_allowed(&self, installing: bool) -> (Option<u64>, Option<u64>) {
         let Ok(mut pending) = self.pending.lock() else {
-            return (false, None);
+            return (None, None);
         };
         match *pending {
             Some((token, code, true)) if installing => {
                 *pending = Some((token, code, false));
-                (false, Some(token))
+                (None, Some(token))
             }
-            Some((_, _, true)) => {
+            Some((token, _, true)) => {
                 *pending = None;
-                (true, None)
+                (Some(token), None)
             }
-            _ => (false, None),
+            _ => (None, None),
         }
     }
 }
@@ -99,7 +120,11 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                 .state::<crate::managed_update::ManagedUpdateAuthority>()
                 .is_installing();
             let (allowed, deferred) = state.take_allowed(installing);
-            if allowed {
+            if let Some(owner) = allowed {
+                #[cfg(target_os = "macos")]
+                crate::macos_quit::reply_allowed(owner);
+                #[cfg(not(target_os = "macos"))]
+                let _ = owner;
                 return;
             }
             api.prevent_exit();
@@ -178,12 +203,46 @@ pub fn app_exit_after_save(
 
 #[tauri::command]
 pub fn app_exit_cancel(app: AppHandle, token: u64) -> Result<(), String> {
-    app.state::<DraftExit>().cancel(token)
+    app.state::<DraftExit>().cancel(token)?;
+    #[cfg(target_os = "macos")]
+    crate::macos_quit::reply_cancelled(&app, token);
+    Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    #[cfg(target_os = "macos")]
+    fn apple_event_owner_requires_ready_and_reuses_only_unconfirmed_normal_exit() {
+        let state = DraftExit::default();
+        assert_eq!(state.external_owner(), 0);
+        assert!(state.pending.lock().unwrap().is_none());
+        state.ready.store(true, Ordering::SeqCst);
+        let owner = state.external_owner();
+        assert_ne!(owner, 0);
+        assert_eq!(state.external_owner(), owner);
+        assert_eq!(state.request(0).unwrap(), owner);
+        assert!(state.complete(owner, false, || Err("busy".into())).is_err());
+        assert_eq!(state.external_owner(), owner);
+        state.cancel(owner).unwrap();
+        let next = state.external_owner();
+        assert_ne!(next, owner);
+        assert!(state.complete(owner, false, || Ok(None)).is_err());
+        assert_eq!(state.external_owner(), next);
+        state.complete(next, false, || Ok(None)).unwrap();
+        assert_eq!(state.external_owner(), 0);
+    }
+
+    #[test]
+    #[cfg(target_os = "macos")]
+    fn apple_event_cannot_take_over_an_installed_restart() {
+        let state = DraftExit::default();
+        state.ready.store(true, Ordering::SeqCst);
+        let token = state.request(tauri::RESTART_EXIT_CODE).unwrap();
+        assert_eq!(state.external_owner(), 0);
+        assert_eq!(state.request(tauri::RESTART_EXIT_CODE).unwrap(), token);
+    }
     #[test]
     fn quiet_exit_keeps_new_activity_out_after_save() {
         let gate = crate::managed_update::UpdateAdmission::default();
@@ -196,7 +255,7 @@ mod tests {
             0
         );
         assert!(gate.activity().is_err());
-        assert_eq!(state.take_allowed(false), (true, None));
+        assert_eq!(state.take_allowed(false), (Some(token), None));
         assert!(gate.activity().is_err());
         drop(state);
         assert!(gate.activity().is_ok());
@@ -213,7 +272,7 @@ mod tests {
                 .complete(token, false, || gate.update().map(Some))
                 .is_err()
         );
-        assert_eq!(state.take_allowed(false), (false, None));
+        assert_eq!(state.take_allowed(false), (None, None));
         assert!(state.cancel(token + 1).is_err());
         assert!(state.cancel(token).is_ok());
         assert!(
@@ -248,10 +307,10 @@ mod tests {
         let token = state.request(9).unwrap();
         assert_eq!(state.request(0).unwrap(), token);
         assert!(state.complete(token + 1, false, || Ok(None)).is_err());
-        assert_eq!(state.take_allowed(false), (false, None));
+        assert_eq!(state.take_allowed(false), (None, None));
         assert_eq!(state.complete(token, false, || Ok(None)).unwrap(), 9);
         assert!(state.complete(token, false, || Ok(None)).is_err());
-        assert_eq!(state.take_allowed(false), (true, None));
+        assert_eq!(state.take_allowed(false), (Some(token), None));
     }
 
     #[test]
@@ -272,17 +331,40 @@ mod tests {
         let state = DraftExit::default();
         let closing = state.request(0).unwrap();
         assert!(state.complete(closing, true, || Ok(None)).is_err());
-        assert_eq!(state.take_allowed(true), (false, None));
+        assert_eq!(state.take_allowed(true), (None, None));
         assert_eq!(state.request(0).unwrap(), closing);
         assert_eq!(state.complete(closing, false, || Ok(None)).unwrap(), 0);
-        assert_eq!(state.take_allowed(true), (false, Some(closing)));
-        assert_eq!(state.take_allowed(false), (false, None));
+        assert_eq!(state.take_allowed(true), (None, Some(closing)));
+        assert_eq!(state.take_allowed(false), (None, None));
         let restart = state.request(tauri::RESTART_EXIT_CODE).unwrap();
         assert!(state.complete(closing, false, || Ok(None)).is_err());
         assert_eq!(
             state.complete(restart, false, || Ok(None)).unwrap(),
             tauri::RESTART_EXIT_CODE
         );
-        assert_eq!(state.take_allowed(false), (true, None));
+        assert_eq!(state.take_allowed(false), (Some(restart), None));
+    }
+
+    #[test]
+    fn late_installation_cannot_release_a_saved_quit_owner() {
+        let state = DraftExit::default();
+        let owner = state.request(0).unwrap();
+        // This represents explicit busy-work confirmation: save succeeded but
+        // there is no quiet permit protecting against a late installation.
+        state.complete(owner, false, || Ok(None)).unwrap();
+        let mut replies = Vec::new();
+        let (allowed, deferred) = state.take_allowed(true);
+        replies.extend(allowed);
+        assert!(replies.is_empty());
+        assert_eq!(deferred, Some(owner));
+        // Merely finishing installation cannot restore the retired approval.
+        replies.extend(state.take_allowed(false).0);
+        assert!(replies.is_empty());
+        assert!(state.complete(owner + 1, false, || Ok(None)).is_err());
+        assert_eq!(state.request(0).unwrap(), owner);
+        state.complete(owner, false, || Ok(None)).unwrap();
+        replies.extend(state.take_allowed(false).0);
+        replies.extend(state.take_allowed(false).0);
+        assert_eq!(replies, [owner]);
     }
 }

@@ -1,0 +1,280 @@
+{
+  "sourceOnly": true,
+  "formalInstalledCommit": "b117339f",
+  "sourceNotInstalled": true,
+  "frontend": {
+    "files": 187,
+    "passed": 2214
+  },
+  "rust": {
+    "passed": 1011,
+    "ignored": 4,
+    "ignoredPreexisting": true
+  },
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "durationSeconds": 35.985,
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "durationSeconds": 26.46,
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "durationSeconds": 29.535,
+      "logSha256": "3720613268266e6dd7cdab36a8b73ca9e87d5a83d3e3a2962245c75bf6521087"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "durationSeconds": 27.358,
+      "logSha256": "ea43b868e4f7b19f91478d62f16ee2c4fdf07047c0a9080d630d71dde1b63e1b"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.699,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 16.275,
+      "logSha256": "d670b3fc834852c7ead34eef65fdcd1a80a162a6f7eb7bcf545c998a66c64e20"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 104.337,
+      "logSha256": "5376496b345ddb2b51b49ef4949c63f8c9ddc8dbb4a690013ac1e2c5f0b53b0e"
+    }
+  ],
+  "independentReadReview": "no remaining blocker after final quit callback correction",
+  "realGuiAcceptance": false,
+  "problem": "Default macOS predefined Quit reaches terminate: and bypasses existing save/activity barrier.",
+  "fix": "Ordinary standard-menu Quit routes normal exit; official suspended Dock quit shares existing owner. Success reply occurs only when final exit recheck consumes owner; cancellation remains scoped.",
+  "nativeChecks": {
+    "sha256": "254263e124442a15e37fc2d9952bc7c2213ebb93946df4bbba1d16c8caa1558b",
+    "result": {
+      "observedUtc": "2026-10-06T19:07:23.093749+00:00",
+      "baseCommit": "3a1f4de76df0a0ccec29ca7e0ba2467a81faa0cb",
+      "sourceInputs": [
+        {
+          "path": "src-tauri/src/app_menu.rs",
+          "sha256": "d1e5586c967b098e96c99cc15a8de576d3387e8d63bbefe2224abfe5e3201e1b",
+          "lines": 77
+        },
+        {
+          "path": "src-tauri/src/macos_quit.rs",
+          "sha256": "9ed7d7344c2e5b2d2803ea7c077f3255fe5492fd8a750df9fbe2f8462b950b84",
+          "lines": 49
+        },
+        {
+          "path": "src-tauri/src/draft_exit.rs",
+          "sha256": "197033eca94cc79e085f77d5b1db9e183d0408ededbb02e0f4afd17a6cdb2d55",
+          "lines": 345
+        },
+        {
+          "path": "src-tauri/src/lib.rs",
+          "sha256": "58e902622882ead7415cd070117380605c22fd0b0779d83e5fb611c5b1c7f51f",
+          "lines": 356
+        },
+        {
+          "path": "src-tauri/build.rs",
+          "sha256": "3cfd26a3c287abeaf2818c622cdf6fb9409039d8576954dc1f4b961e0d710967",
+          "lines": 141
+        },
+        {
+          "path": "src-tauri/native/AppQuit.m",
+          "sha256": "e9c4ab88b59bf0f01680bae91edddae5ddc0d4476b2fd36bd1cd2ec72ecff56c",
+          "lines": 94
+        },
+        {
+          "path": "src-tauri/native/AppQuit.h",
+          "sha256": "a3814caab67241677b68f3719ca09a7b40625cd7dec52e94c7ea70159c11c190",
+          "lines": 10
+        },
+        {
+          "path": "src-tauri/native/tests/AppQuitTests.m",
+          "sha256": "5c670474bd699af052873eda24b9a720ef521543e70b4af094eafab5314e334f",
+          "lines": 106
+        },
+        {
+          "path": "src-tauri/native/tests/AppMenuTests.rs",
+          "sha256": "aea44bc9cd6ef174ff6d913e8e9de68363b8a740096aed45d6334c2ff1f274e1",
+          "lines": 140
+        }
+      ],
+      "checks": [
+        {
+          "name": "baseline-native-menu",
+          "compileExit": 0,
+          "executionExit": 101,
+          "logs": ["native-menu-red-compile.log", "native-menu-red.log"],
+          "reason": "actual default quit was Predefined, assertion requires ordinary MenuItem"
+        },
+        {
+          "name": "native-menu-green-attempt1",
+          "compileExit": 1,
+          "logs": ["native-menu-green-compile.log"],
+          "reason": "prior cached Tauri rlib could not be resolved"
+        },
+        {
+          "name": "native-menu-green-attempt2",
+          "compileExit": 1,
+          "logs": ["native-menu-green2-compile.log"],
+          "reason": "Tauri Menu has no public ns_menu API"
+        },
+        {
+          "name": "native-menu-green-final",
+          "compileExit": 0,
+          "executionExit": 0,
+          "logs": ["native-menu-green3-compile.log", "native-menu-green3.log"],
+          "assertions": [
+            "ordinary MenuItem",
+            "unique quit ID",
+            "enabled",
+            "native action fireMenuItemAction: and not terminate:",
+            "native q key with Command modifier",
+            "six standard root menus and eight application items; other submenu names/counts preserved"
+          ]
+        },
+        {
+          "name": "apple-event-production-peer",
+          "compileExit": 0,
+          "executionExit": 0,
+          "logs": ["apple-event-peer-compile.log", "apple-event-peer.log"],
+          "cases": [
+            "fixed quit handler registration",
+            "no successful reply before completion and repeat grouped",
+            "wrong/stale owner cannot resume",
+            "cancel replies userCanceledErr and resumes once",
+            "new-owner race cannot be released by old completion",
+            "eight-suspension bound and not-ready rejection"
+          ]
+        },
+        {
+          "name": "scope-format-first",
+          "exit": 1,
+          "reason": "one peer line required wrapping"
+        },
+        {
+          "name": "scope-format-final",
+          "exit": 0
+        },
+        {
+          "name": "rust-unit-and-full-project",
+          "status": "delegated to root after stable source; not claimed passed by this receipt"
+        }
+      ],
+      "scopeLimits": [
+        "controlled own peers only; no formal app or GUI/Agent operations",
+        "native peer inspects constructed menu key/selector, not a physical CmdQ keypress",
+        "Dock uses fake Apple-event manager exercising production handler, not OS Dock end-to-end",
+        "installed menu click/CmdQ stay/cancel and Dock stay/cancel/save pending root verification",
+        "system logout, forced termination and direct NSApp terminate are not covered"
+      ],
+      "officialSources": [
+        "https://developer.apple.com/documentation/foundation/nsappleeventmanager/seteventhandler(_:andselector:foreventclass:andeventid:)",
+        "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ScriptableCocoaApplications/SApps_handle_AEs/SAppsHandleAEs.html",
+        "https://developer.apple.com/documentation/foundation/nsappleeventmanager/suspendcurrentappleevent()",
+        "https://developer.apple.com/documentation/foundation/nsappleeventmanager/resume(withsuspensionid:)?language=objc"
+      ],
+      "evidenceCorrections": [
+        {
+          "kind": "official-reference-url",
+          "old": "https://developer.apple.com/documentation/foundation/nsappleeventmanager/resumewithsuspensionid(_:)",
+          "corrected": "https://developer.apple.com/documentation/foundation/nsappleeventmanager/resume(withsuspensionid:)?language=objc",
+          "basis": "official current Apple SDK header and primary page crosscheck; no source/test result changed"
+        }
+      ]
+    }
+  },
+  "finalGateChecks": {
+    "sha256": "be61d8db198d898e64f2939772133613c8d0c9fcf99cf3a4041cdc3d20959f21",
+    "result": {
+      "observedUtc": "2026-10-06T19:18:00.287589+00:00",
+      "sourceInputs": [
+        {
+          "path": "src-tauri/src/draft_exit.rs",
+          "sha256": "7d0bfc8016d67141422a2274636055345ec88000d1911a3016fc7a48ab30d5d8"
+        },
+        {
+          "path": "src-tauri/src/macos_quit.rs",
+          "sha256": "96d10b3a5fba7699655ea0510923cfbe6a9fbbddc6420c1827366579eb023b21"
+        },
+        {
+          "path": "src-tauri/native/tests/AppQuitTests.m",
+          "sha256": "ed5a2a5eaf4bf5117d7431ee69c09cfb05efb597acc06277660dd382283c1136"
+        }
+      ],
+      "issue": "saved quit acknowledgement could reply success before final installation recheck deferred exit",
+      "change": "only the actual owner consumed by final ExitRequested allowance gets synchronous main-thread success reply; validated cancellation keeps its original owner",
+      "checks": [
+        {
+          "kind": "controlled-old-call-order-counterexample",
+          "compileExit": 0,
+          "executionExit": -6,
+          "logs": [
+            "apple-event-early-red-compile.log",
+            "apple-event-early-red.log"
+          ],
+          "boundary": "test-only macro invokes production native completion at the old pre-final-gate location; does not claim real Tauri concurrent installation reproduction"
+        },
+        {
+          "kind": "production-native-peer-final",
+          "compileExit": 0,
+          "executionExit": 0,
+          "logs": [
+            "apple-event-final-gate-green-compile.log",
+            "apple-event-final-gate-green.log"
+          ]
+        },
+        {
+          "kind": "scope-rustfmt-final",
+          "exit": 0
+        },
+        {
+          "kind": "new-Rust-state-regression",
+          "name": "late_installation_cannot_release_a_saved_quit_owner",
+          "status": "pending root centralized Rust check"
+        }
+      ],
+      "previousReceipt": "checks.json retains earlier source/check stage; this record supersedes only these three source inputs",
+      "limits": [
+        "no GUI, formal app, Agent or OS Dock event invoked",
+        "installation end-to-end and actual Dock/menu paths pending installed verification"
+      ]
+    }
+  },
+  "boundary": "Controlled menu/Foundation peers and state tests. Actual CmdQ/menu/Dock and notification remain installation tests; no system logout, reboot or forced-kill acceptance."
+}

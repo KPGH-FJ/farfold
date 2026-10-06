@@ -36,7 +36,7 @@ fn compile_macos() {
         .collect();
     std::fs::write(output.join("BrowserObservation.inc"), literals)
         .expect("browser observation include");
-    for name in ["BrowserWorkspace", "DesktopNotifications"] {
+    for name in ["BrowserWorkspace", "DesktopNotifications", "AppQuit"] {
         let source = root.join(format!("native/{name}.m"));
         let object = output.join(format!("{name}.o"));
         run_xcrun(
@@ -68,6 +68,7 @@ fn compile_macos() {
             archive.as_os_str(),
             output.join("BrowserWorkspace.o").as_os_str(),
             output.join("DesktopNotifications.o").as_os_str(),
+            output.join("AppQuit.o").as_os_str(),
         ],
     );
     println!("cargo:rustc-link-search=native={}", output.display());
@@ -124,6 +125,8 @@ fn main() {
     println!("cargo:rerun-if-changed=native/NodeLauncher.rs");
     println!("cargo:rerun-if-changed=native/DesktopNotifications.h");
     println!("cargo:rerun-if-changed=native/DesktopNotifications.m");
+    println!("cargo:rerun-if-changed=native/AppQuit.h");
+    println!("cargo:rerun-if-changed=native/AppQuit.m");
     match env::var("CARGO_CFG_TARGET_OS")
         .expect("Cargo target OS")
         .as_str()
