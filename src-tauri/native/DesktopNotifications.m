@@ -5,6 +5,8 @@
 static NSString *const FFNotificationCategory = @"farfold-work-attention";
 static FFNotificationClick ffClick;
 static UNUserNotificationCenter *ffCenter;
+static FFNotificationDiagnostic ffDiagnostic;
+static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64_t code);
 
 @interface FFNotificationDelegate : NSObject <UNUserNotificationCenterDelegate>
 @end
@@ -13,9 +15,13 @@ static UNUserNotificationCenter *ffCenter;
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completion {
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (NSApp.active) { completion(UNNotificationPresentationOptionNone); return; }
+    if (NSApp.active) {
+      ffObserve(notification.request.identifier, 3, 0, 0);
+      completion(UNNotificationPresentationOptionNone); return;
+    }
     UNNotificationPresentationOptions options = UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionList;
     if (notification.request.content.sound) options |= UNNotificationPresentationOptionSound;
+    ffObserve(notification.request.identifier, 4, 0, 0);
     completion(options);
   });
 }
@@ -26,6 +32,7 @@ static UNUserNotificationCenter *ffCenter;
       [response.notification.request.content.categoryIdentifier isEqualToString:FFNotificationCategory]) {
     id target = response.notification.request.content.userInfo[@"target"];
     if ([target isKindOfClass:NSString.class] && [target length] == 64) {
+      ffObserve(response.notification.request.identifier, 5, 0, 0);
       NSString *copy = [target copy];
       dispatch_async(dispatch_get_main_queue(), ^{ if (ffClick) ffClick(copy.UTF8String); });
     }
@@ -34,6 +41,29 @@ static UNUserNotificationCenter *ffCenter;
 }
 @end
 static FFNotificationDelegate *ffDelegate;
+static void ffObserve(NSString *identifier, int32_t event, int32_t domain, int64_t code) {
+  if (!ffDiagnostic || !identifier) return;
+  // State is sampled at the real submission, not during later diagnostics reads.
+  bool initialized = false, delegateMatches = false, bundleMatches = false, active = false;
+  if (event == 0) {
+    initialized = ffCenter != nil;
+    delegateMatches = initialized && ffCenter.delegate == ffDelegate;
+    bundleMatches = [NSBundle.mainBundle.bundleIdentifier isEqualToString:@"ai.farfold.desktop"];
+    active = NSApp.active;
+  }
+  ffDiagnostic(identifier.UTF8String, event, initialized, delegateMatches,
+               bundleMatches, active, domain, code);
+}
+void ff_notifications_set_diagnostic(FFNotificationDiagnostic diagnostic) {
+  if (NSThread.isMainThread) ffDiagnostic = diagnostic;
+}
+static int32_t ffErrorDomain(NSError *error) {
+  if ([error.domain isEqualToString:UNErrorDomain]) return 1;
+  if ([error.domain isEqualToString:NSCocoaErrorDomain]) return 2;
+  if ([error.domain isEqualToString:NSPOSIXErrorDomain]) return 3;
+  if ([error.domain isEqualToString:NSOSStatusErrorDomain]) return 4;
+  return 5;
+}
 
 bool ff_notifications_initialize(FFNotificationClick click) {
   if (!NSThread.isMainThread) return false;
@@ -78,11 +108,16 @@ bool ff_notifications_settings(bool request, void *context, FFNotificationSettin
 bool ff_notifications_submit(const char *identifier, const char *target,
                              const char *body, bool sound, void *context,
                              FFNotificationSubmitted reply) {
-  if (!NSThread.isMainThread || !ffCenter) return false;
-  NSString *requestId = [NSString stringWithUTF8String:identifier];
+  if (!NSThread.isMainThread) return false;
+  NSString *observedId = [NSString stringWithUTF8String:identifier];
+  ffObserve(observedId, 0, 0, 0);
+  if (!ffCenter) { ffObserve(observedId, 6, 0, 0); return false; }
+  NSString *requestId = observedId;
   NSString *targetId = [NSString stringWithUTF8String:target];
   NSString *message = [NSString stringWithUTF8String:body];
-  if (!requestId || targetId.length != 64 || !message) return false;
+  if (!requestId || targetId.length != 64 || !message) {
+    ffObserve(observedId, 7, 0, 0); return false;
+  }
   UNMutableNotificationContent *content = [UNMutableNotificationContent new];
   content.title = @"Farfold";
   content.body = message;
@@ -90,7 +125,11 @@ bool ff_notifications_submit(const char *identifier, const char *target,
   content.userInfo = @{@"target":targetId};
   if (sound) content.sound = UNNotificationSound.defaultSound;
   UNNotificationRequest *notice = [UNNotificationRequest requestWithIdentifier:requestId content:content trigger:nil];
-  [ffCenter addNotificationRequest:notice withCompletionHandler:^(NSError *error) { reply(context, error == nil); }];
+  [ffCenter addNotificationRequest:notice withCompletionHandler:^(NSError *error) {
+    ffObserve(notice.identifier, error ? 2 : 1, error ? ffErrorDomain(error) : 0,
+              error ? (int64_t)error.code : 0);
+    reply(context, error == nil);
+  }];
   return true;
 }
 

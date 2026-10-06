@@ -1,7 +1,10 @@
 //! Installed Windows desktop toasts through the official WinRT API.
 //! Setting() is the actual system decision. Windows does not expose separate
 //! banner/sound settings here, and no cold-start COM activator is registered.
-use super::{DesktopNotifications, Permission, SystemSettings};
+use super::{
+    DesktopNotifications, Permission, SystemSettings,
+    diagnostic::{Attempt, Stage},
+};
 use std::collections::VecDeque;
 use std::sync::{
     Mutex, OnceLock,
@@ -117,6 +120,7 @@ pub(super) async fn submit(
     body: &'static str,
     sound: bool,
     revision: u64,
+    attempt: Attempt,
 ) -> Result<bool, String> {
     let app = app.clone();
     tokio::time::timeout(
@@ -189,7 +193,7 @@ pub(super) async fn submit(
             let Ok(_change) = state.changes.try_lock() else {
                 return Ok(false);
             };
-            if !super::may_submit_locked(&app, revision)
+            if !super::may_submit_locked(&app, revision, &attempt, Stage::Native)
                 || super::resolve_target(
                     app.state::<crate::meta_store::MetaStore>().inner(),
                     &target,

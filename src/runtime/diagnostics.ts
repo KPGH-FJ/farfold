@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
 import { uiError } from "./ui_error";
+import { desktopNotificationDiagnostic } from "./desktop_notifications";
 
 export const DIAGNOSTIC_STRINGS = {
   title: "导出诊断",
@@ -8,7 +9,7 @@ export const DIAGNOSTIC_STRINGS = {
   noteHint: "你填写的说明会按原样加入诊断文件，请不要填写密钥或私密内容。",
   notePlaceholder: "例如：恢复一个对话后无法继续发送。",
   scope:
-    "应用自动收集的部分仅包含版本、限量连接记录、受限设置与统计，不包含对话正文、文件内容、密钥、命令内容或工作路径。",
+    "应用自动收集的部分仅包含版本、限量连接记录、受限设置、提醒诊断与统计，不包含对话正文、文件内容、密钥、命令内容或工作路径。",
   local: "只在本机保存，由你决定是否分享。不会自动上传。",
   preview: "预览诊断内容",
   previewing: "正在准备预览…",
@@ -54,7 +55,11 @@ export class DiagnosticsReview {
   private listeners = new Set<() => void>();
   constructor(
     private readonly ports: Ports = {
-      preview: (note) => invoke("diagnostics_preview", { note }),
+      preview: (note) =>
+        invoke("diagnostics_preview", {
+          note,
+          notification: desktopNotificationDiagnostic(),
+        }),
       export: (previewId) => invoke("export_diagnostics", { previewId }),
     },
   ) {}

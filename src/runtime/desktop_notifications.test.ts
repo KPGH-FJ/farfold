@@ -16,10 +16,12 @@ const settle = async () => {
 };
 function deferred<T>() {
   let resolve!: (value: T) => void;
-  const promise = new Promise<T>((yes) => {
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<T>((yes, no) => {
     resolve = yes;
+    reject = no;
   });
-  return { promise, resolve };
+  return { promise, resolve, reject };
 }
 const saved = (enabled: boolean, sound = false) => ({
   enabled,
@@ -492,6 +494,283 @@ describe("live, content-free desktop reminders", () => {
     f.background.mockReturnValue(true);
     await f.notifications.setEnabled(true);
     f.notifications.observe(f.s, event, true);
+    await settle();
+    expect(f.submit).not.toHaveBeenCalled();
+  });
+});
+
+describe("last desktop reminder diagnostic", () => {
+  it("starts empty and never records history or unknown output as a candidate", async () => {
+    const f = fixture();
+    const initial = f.notifications.diagnostic();
+    expect(initial).toMatchObject({
+      version: 1,
+      frontend: { kind: null, source: null, phase: "none", background: null },
+      backendAttempt: null,
+    });
+    f.notifications.observe(f.s, approval, false);
+    f.notifications.observe(
+      f.s,
+      { kind: "notification", text: "private" },
+      true,
+    );
+    f.notifications.observe(
+      f.s,
+      { update: { sessionUpdate: "_future" } },
+      true,
+    );
+    await settle();
+    expect(f.notifications.diagnostic()).toEqual(initial);
+    expect(f.background).not.toHaveBeenCalled();
+  });
+
+  it("keeps the actual observation-time foreground decision after later focus and preference changes", async () => {
+    const f = fixture();
+    f.background.mockReturnValue(false);
+    f.notifications.observe(f.s, approval, true);
+    const recorded = f.notifications.diagnostic();
+    f.background.mockReturnValue(true);
+    await f.notifications.load();
+    f.notifications.observe(f.s, approval, true);
+    expect(f.notifications.diagnostic()).toEqual(recorded);
+    expect(recorded).toMatchObject({
+      frontend: {
+        kind: "approval",
+        source: "agent",
+        phase: "skipped",
+        reason: "foreground",
+        background: false,
+        ready: false,
+      },
+      backendAttempt: null,
+    });
+    expect(f.background).toHaveBeenCalledTimes(1);
+    expect(f.submit).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["not_ready", "malformed"],
+    ["disabled", "disabled"],
+    ["saving", "saving"],
+    ["preferences_changed", "preferences_changed"],
+    ["connection_changed", "connection_changed"],
+    ["foreground", "foreground"],
+    ["not_pending", "answered"],
+  ] as const)(
+    "records the %s submission gate without submitting",
+    async (reason, change) => {
+      const f = fixture();
+      const reading = deferred<unknown>();
+      const saving = deferred<unknown>();
+      if (change === "saving") {
+        await f.notifications.load();
+        f.save.mockReturnValueOnce(saving.promise);
+      } else {
+        f.read.mockReturnValueOnce(reading.promise);
+      }
+      let preferenceChanged = false;
+      const unsubscribe = f.notifications.subscribe(() => {
+        if (
+          change === "preferences_changed" &&
+          f.notifications.snapshot().ready &&
+          !preferenceChanged
+        ) {
+          preferenceChanged = true;
+          void f.notifications.setSound(true);
+        }
+      });
+      f.notifications.observe(f.s, question, true);
+      applyElicitation(f.s, question);
+      if (change === "saving") void f.notifications.setSound(true);
+      if (change === "connection_changed") f.s.connectionId = "connection-2";
+      if (change === "foreground") f.background.mockReturnValue(false);
+      if (change === "answered") f.s.pendingElicitations = [];
+      reading.resolve(
+        change === "malformed" ? {} : saved(change !== "disabled"),
+      );
+      await settle();
+      unsubscribe();
+      expect(f.submit).not.toHaveBeenCalled();
+      expect(f.notifications.diagnostic()).toMatchObject({
+        frontend: {
+          phase: "skipped",
+          reason,
+          background: change === "foreground" ? false : true,
+        },
+        backendAttempt: null,
+      });
+      if (change === "saving") {
+        saving.resolve(saved(true, true));
+        await settle();
+      }
+    },
+  );
+
+  it.each(["submitted", "suppressed", "invalid", "rejected"])(
+    "records the %s submit receipt without exposing payloads or retrying",
+    async (receipt) => {
+      const f = fixture();
+      const waiting = deferred<string>();
+      f.submit.mockReturnValueOnce(waiting.promise);
+      await f.notifications.load();
+      f.notifications.observe(f.s, approval, true);
+      applyPermissionRequest(f.s, approval);
+      await settle();
+      const pending = f.notifications.diagnostic();
+      expect(pending).toMatchObject({
+        frontend: { phase: "submitting", reason: "none", background: true },
+        backendAttempt: {
+          sequence: 1,
+          rendererNonce: f.submit.mock.calls[0][3],
+        },
+      });
+      // A caller cannot mutate either nested part of the retained diagnostic.
+      pending.frontend.phase = "none";
+      pending.backendAttempt!.sequence = 999;
+      expect(f.notifications.diagnostic().frontend.phase).toBe("submitting");
+      expect(f.notifications.diagnostic().backendAttempt!.sequence).toBe(1);
+      if (receipt === "rejected") {
+        waiting.reject(new Error("private OS error"));
+      } else waiting.resolve(receipt);
+      await settle();
+      const expected = ["submitted", "suppressed"].includes(receipt)
+        ? receipt
+        : "unconfirmed";
+      expect(f.notifications.diagnostic().frontend).toMatchObject({
+        phase: expected,
+        reason: expected,
+      });
+      expect(JSON.stringify(f.notifications.diagnostic())).not.toMatch(
+        /private-path|private-agent|private-id|private conversation title|secret command|approval-1|unsupported receipt/,
+      );
+      f.notifications.observe(f.s, approval, true);
+      await settle();
+      expect(f.submit).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it("does not attach an older successful receipt to a newer skipped candidate", async () => {
+    const f = fixture();
+    const submitted = deferred<string>();
+    f.submit.mockReturnValueOnce(submitted.promise);
+    await f.notifications.load();
+    f.notifications.observe(f.s, approval, true);
+    applyPermissionRequest(f.s, approval);
+    await settle();
+    f.background.mockReturnValue(false);
+    f.notifications.observe(f.s, question, true);
+    applyElicitation(f.s, question);
+    const latest = f.notifications.diagnostic();
+    submitted.resolve("submitted");
+    await settle();
+    expect(f.notifications.diagnostic()).toEqual(latest);
+    expect(latest).toMatchObject({
+      frontend: { kind: "question", phase: "skipped", reason: "foreground" },
+      backendAttempt: null,
+    });
+  });
+
+  it("retains submission-time preferences when the receipt arrives after a user preference change", async () => {
+    const f = fixture();
+    const submitted = deferred<string>();
+    f.submit.mockReturnValueOnce(submitted.promise);
+    await f.notifications.load();
+    f.notifications.observe(f.s, approval, true);
+    applyPermissionRequest(f.s, approval);
+    await settle();
+    await f.notifications.setEnabled(false);
+    f.background.mockReturnValue(false);
+    submitted.resolve("submitted");
+    await settle();
+    expect(f.notifications.snapshot().enabled).toBe(false);
+    expect(f.notifications.diagnostic().frontend).toMatchObject({
+      phase: "submitted",
+      ready: true,
+      enabled: true,
+      saving: false,
+      background: true,
+    });
+    expect(f.background).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not attach an older rejection to a newer submitted candidate", async () => {
+    const f = fixture();
+    let rejectOld!: (error: unknown) => void;
+    f.submit.mockReturnValueOnce(
+      new Promise<string>((_, reject) => {
+        rejectOld = reject;
+      }),
+    );
+    await f.notifications.load();
+    f.notifications.observe(f.s, approval, true);
+    applyPermissionRequest(f.s, approval);
+    await settle();
+    f.notifications.observe(f.s, question, true);
+    applyElicitation(f.s, question);
+    await settle();
+    const latest = f.notifications.diagnostic();
+    rejectOld(new Error("private OS error"));
+    await settle();
+    expect(f.notifications.diagnostic()).toEqual(latest);
+    expect(latest).toMatchObject({
+      frontend: { kind: "question", phase: "submitted" },
+      backendAttempt: { sequence: 2 },
+    });
+    // Preserve the pre-existing generic submission-error behavior.
+    expect(f.notifications.snapshot().submissionError).toBe(
+      NOTIFICATION_STRINGS.submitError,
+    );
+  });
+
+  it("does not overwrite a newer candidate when an older preference read resolves", async () => {
+    const f = fixture();
+    const reading = deferred<unknown>();
+    f.read.mockReturnValueOnce(reading.promise);
+    f.notifications.observe(f.s, approval, true);
+    applyPermissionRequest(f.s, approval);
+    await settle();
+    f.background.mockReturnValue(false);
+    f.notifications.observe(f.s, question, true);
+    const latest = f.notifications.diagnostic();
+    f.background.mockReturnValue(true);
+    reading.resolve(saved(true));
+    await settle();
+    expect(f.submit).toHaveBeenCalledTimes(1);
+    expect(f.notifications.diagnostic()).toEqual(latest);
+  });
+
+  it("does not replace the latest question with a duplicate older abnormal result", async () => {
+    const f = fixture();
+    await f.notifications.load();
+    f.s.activeToolCallIds = ["private-unfinished-tool"];
+    const interrupted = { kind: "turnEnd", stopReason: "unknown" };
+    f.notifications.observe(f.s, interrupted, true);
+    await settle();
+    f.notifications.observe(f.s, question, true);
+    applyElicitation(f.s, question);
+    await settle();
+    const latest = f.notifications.diagnostic();
+    f.notifications.observe(f.s, interrupted, true);
+    await settle();
+    expect(f.notifications.diagnostic()).toEqual(latest);
+    expect(latest.frontend.kind).toBe("question");
+    expect(f.submit).toHaveBeenCalledTimes(2);
+  });
+
+  it("records browser ownership expiry and ignores an already remembered browser request", async () => {
+    const f = fixture();
+    await f.notifications.load();
+    f.s.browserReadRequestId = "browser-1";
+    let pending = true;
+    f.notifications.observeBrowserRequest(f.s, "browser-1", () => pending);
+    pending = false;
+    await settle();
+    expect(f.notifications.diagnostic()).toMatchObject({
+      frontend: { source: "browser", reason: "not_pending", phase: "skipped" },
+      backendAttempt: null,
+    });
+    pending = true;
+    f.notifications.observeBrowserRequest(f.s, "browser-1", () => pending);
     await settle();
     expect(f.submit).not.toHaveBeenCalled();
   });

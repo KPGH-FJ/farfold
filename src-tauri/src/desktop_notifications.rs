@@ -1,5 +1,8 @@
 //! Optional, content-free desktop reminders. Submission is not proof of delivery.
 //! The system receives only a digest of an existing index row, never its path.
+mod diagnostic;
+pub(crate) use diagnostic::DiagnosticSnapshot;
+use diagnostic::{Attempt, DiagnosticStore, Reason, Stage};
 #[cfg(target_os = "macos")]
 mod native;
 #[cfg(windows)]
@@ -61,7 +64,7 @@ fn save_preference(store: &MetaStore, enabled: bool, sound: bool) -> Result<Pref
 
 #[derive(Clone, Copy, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
-enum Permission {
+pub(crate) enum Permission {
     Unknown,
     #[cfg(any(target_os = "macos", test))]
     NotDetermined,
@@ -144,6 +147,21 @@ pub struct DesktopNotifications {
     pending: Mutex<VecDeque<String>>,
     changes: tokio::sync::Mutex<()>,
     revision: AtomicU64,
+    diagnostic: DiagnosticStore,
+}
+pub(crate) fn diagnostic_for(
+    app: &AppHandle,
+    renderer_nonce: &str,
+    sequence: u64,
+) -> Option<DiagnosticSnapshot> {
+    app.state::<DesktopNotifications>()
+        .diagnostic
+        .for_attempt(renderer_nonce, sequence)
+}
+fn diagnostic_stop(app: &AppHandle, attempt: &Attempt, stage: Stage, reason: Reason) {
+    app.state::<DesktopNotifications>()
+        .diagnostic
+        .update(attempt, |d| d.stop(stage, reason));
 }
 pub fn initialize(app: &AppHandle) {
     native::initialize(app);
@@ -256,27 +274,48 @@ fn resolve_target(store: &MetaStore, digest: &str) -> Option<String> {
     }
     Some(row.id)
 }
-fn may_submit(app: &AppHandle, revision: u64) -> bool {
+fn may_submit(app: &AppHandle, revision: u64, attempt: &Attempt) -> bool {
     let state = app.state::<DesktopNotifications>();
     let Ok(_change) = state.changes.try_lock() else {
+        diagnostic_stop(app, attempt, Stage::Backend, Reason::ChangeBusy);
         return false;
     };
-    may_submit_locked(app, revision)
+    may_submit_locked(app, revision, attempt, Stage::Backend)
 }
 // Caller keeps changes locked through the final, nonblocking system submission.
-fn may_submit_locked(app: &AppHandle, revision: u64) -> bool {
+fn may_submit_locked(app: &AppHandle, revision: u64, attempt: &Attempt, stage: Stage) -> bool {
     let state = app.state::<DesktopNotifications>();
-    if state.revision.load(Ordering::SeqCst) != revision
-        || !read_preference(app.state::<MetaStore>().inner()).is_ok_and(|p| p.enabled)
-    {
+    if state.revision.load(Ordering::SeqCst) != revision {
+        diagnostic_stop(app, attempt, stage, Reason::PreferenceChanged);
         return false;
     }
-    app.get_webview_window("main").is_some_and(|window| {
-        matches!(
-            (window.is_visible(), window.is_focused()),
-            (Ok(false), _) | (Ok(true), Ok(false))
-        )
-    })
+    match read_preference(app.state::<MetaStore>().inner()) {
+        Ok(preference) if preference.enabled => {}
+        Ok(_) => {
+            diagnostic_stop(app, attempt, stage, Reason::PreferenceOff);
+            return false;
+        }
+        Err(_) => {
+            diagnostic_stop(app, attempt, stage, Reason::PreferenceUnreadable);
+            return false;
+        }
+    }
+    let Some(window) = app.get_webview_window("main") else {
+        diagnostic_stop(app, attempt, stage, Reason::MainWindowMissing);
+        return false;
+    };
+    // Capture the same queries used by the gate, never a later diagnostic read.
+    let visible = window.is_visible().ok();
+    let focused = window.is_focused().ok();
+    let gate = diagnostic::window_gate(visible, focused);
+    state.diagnostic.update(attempt, |d| {
+        d.window_visible = visible;
+        d.window_focused = focused;
+        if let Err(reason) = gate {
+            d.stop(stage, reason);
+        }
+    });
+    gate.is_ok()
 }
 #[tauri::command]
 pub async fn desktop_notification_submit(
@@ -287,34 +326,68 @@ pub async fn desktop_notification_submit(
     renderer_nonce: String,
 ) -> Result<Submission, String> {
     let state = app.state::<DesktopNotifications>();
+    let attempt = state.diagnostic.begin(&renderer_nonce, sequence);
     let revision = state.revision.load(Ordering::SeqCst);
-    if !claim(
-        &mut *state.seen.lock().map_err(|_| "提醒未能提交")?,
-        &renderer_nonce,
-        sequence,
-    ) || !may_submit(&app, revision)
-    {
+    let claimed = {
+        let mut seen = state.seen.lock().map_err(|_| {
+            diagnostic_stop(&app, &attempt, Stage::Backend, Reason::ClaimUnavailable);
+            "提醒未能提交"
+        })?;
+        claim(&mut seen, &renderer_nonce, sequence)
+    };
+    if !claimed {
+        diagnostic_stop(
+            &app,
+            &attempt,
+            Stage::Backend,
+            if sequence == 0 || !diagnostic::valid_renderer(&renderer_nonce) {
+                Reason::InvalidAttempt
+            } else {
+                Reason::Duplicate
+            },
+        );
+        return Ok(Submission::Suppressed);
+    }
+    if !may_submit(&app, revision, &attempt) {
         return Ok(Submission::Suppressed);
     }
     let store = app.state::<MetaStore>();
     if store
         .get_session(&target_key)
-        .map_err(|_| "提醒未能提交")?
+        .map_err(|_| {
+            diagnostic_stop(&app, &attempt, Stage::Backend, Reason::TargetLookupFailed);
+            "提醒未能提交"
+        })?
         .is_none()
     {
+        diagnostic_stop(&app, &attempt, Stage::Backend, Reason::TargetMissing);
         return Ok(Submission::Suppressed);
     }
-    let preference = read_preference(store.inner())?;
-    let system = native::settings(&app, false).await?;
-    if !system.allowed() || !may_submit(&app, revision) {
+    let preference = read_preference(store.inner()).inspect_err(|_| {
+        diagnostic_stop(&app, &attempt, Stage::Backend, Reason::PreferenceUnreadable);
+    })?;
+    let system = native::settings(&app, false).await.inspect_err(|_| {
+        diagnostic_stop(&app, &attempt, Stage::Backend, Reason::SystemReadFailed);
+    })?;
+    state.diagnostic.update(&attempt, |d| d.system(system));
+    if !system.allowed() {
+        diagnostic_stop(&app, &attempt, Stage::Backend, Reason::SystemNotAllowed);
         return Ok(Submission::Suppressed);
     }
+    if !may_submit(&app, revision, &attempt) {
+        return Ok(Submission::Suppressed);
+    }
+    let sound = preference.sound && system.system_sound != Some(false);
+    state
+        .diagnostic
+        .update(&attempt, |d| d.sound_requested = Some(sound));
     let submitted = native::submit(
         &app,
         target_digest(&target_key),
         kind.body(),
-        preference.sound && system.system_sound != Some(false),
+        sound,
         revision,
+        attempt,
     )
     .await?;
     Ok(if submitted {

@@ -52,7 +52,7 @@ fn spawn_failure_preview_and_zip_keep_numeric_facts_and_old_v2_records() {
     std::fs::write(&path, format!("{}{}", line(&startup(1)), line(&untrusted))).unwrap();
     let store = MetaStore::open(&dir.path().join("meta.sqlite3")).unwrap();
     let state = DiagnosticsState::default();
-    let preview = state.preview(&store, dir.path(), "").unwrap();
+    let preview = state.preview(&store, dir.path(), "", None).unwrap();
     let log = preview
         .entries
         .iter()
@@ -217,7 +217,7 @@ fn startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip() {
     std::fs::write(&path, line(&startup(1))).unwrap();
     let store = MetaStore::open(&dir.path().join("meta.sqlite3")).unwrap();
     let state = DiagnosticsState::default();
-    let preview = state.preview(&store, dir.path(), "").unwrap();
+    let preview = state.preview(&store, dir.path(), "", None).unwrap();
     let log = preview
         .entries
         .iter()
@@ -242,7 +242,7 @@ fn startup_tail_changes_after_preview_do_not_enter_the_reviewed_zip() {
         .unwrap();
     assert!(output.status.success());
     assert_eq!(String::from_utf8(output.stdout).unwrap(), log.text);
-    let refreshed = state.preview(&store, dir.path(), "").unwrap();
+    let refreshed = state.preview(&store, dir.path(), "", None).unwrap();
     let refreshed_log = refreshed
         .entries
         .iter()
@@ -293,7 +293,7 @@ fn protocol_errors_preview_and_zip_keep_safe_classification_and_old_versions() {
     .unwrap();
     let store = MetaStore::open(&dir.path().join("meta.sqlite3")).unwrap();
     let state = DiagnosticsState::default();
-    let preview = state.preview(&store, dir.path(), "").unwrap();
+    let preview = state.preview(&store, dir.path(), "", None).unwrap();
     let log = preview
         .entries
         .iter()

@@ -52,6 +52,43 @@ function preferenceSaveError(error: unknown): string {
 }
 
 type NoticeKind = "approval" | "question" | "interrupted";
+type NoticeSource = "agent" | "browser";
+type DiagnosticPhase =
+  | "none"
+  | "observed"
+  | "skipped"
+  | "submitting"
+  | "submitted"
+  | "suppressed"
+  | "unconfirmed";
+type DiagnosticReason =
+  | "none"
+  | "foreground"
+  | "not_ready"
+  | "disabled"
+  | "saving"
+  | "preferences_changed"
+  | "connection_changed"
+  | "not_pending"
+  | "submitted"
+  | "suppressed"
+  | "unconfirmed";
+export interface DesktopNotificationDiagnostic {
+  version: 1;
+  frontend: {
+    kind: NoticeKind | null;
+    source: NoticeSource | null;
+    phase: DiagnosticPhase;
+    reason: DiagnosticReason;
+    background: boolean | null;
+    ready: boolean;
+    enabled: boolean;
+    saving: boolean;
+  };
+  // Existing submission identity is for matching the backend's last attempt.
+  // Diagnostics export strips it; no conversation identity or contents enter here.
+  backendAttempt: { rendererNonce: string; sequence: number } | null;
+}
 interface Notice {
   kind: NoticeKind;
   requestId?: string;
@@ -204,9 +241,30 @@ export class DesktopNotifications {
     (byte) => byte.toString(16).padStart(2, "0"),
   ).join("");
   private decided = new Set<string>();
+  private lastDiagnostic: DesktopNotificationDiagnostic = {
+    version: 1,
+    frontend: {
+      kind: null,
+      source: null,
+      phase: "none",
+      reason: "none",
+      background: null,
+      ready: false,
+      enabled: false,
+      saving: false,
+    },
+    backendAttempt: null,
+  };
 
   constructor(private readonly port: NotificationPort) {}
   snapshot = () => this.state;
+  diagnostic = (): DesktopNotificationDiagnostic => ({
+    version: 1,
+    frontend: { ...this.lastDiagnostic.frontend },
+    backendAttempt: this.lastDiagnostic.backendAttempt
+      ? { ...this.lastDiagnostic.backendAttempt }
+      : null,
+  });
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
     return () => {
@@ -300,7 +358,7 @@ export class DesktopNotifications {
   private enqueue(
     s: ThreadState,
     notice: Notice,
-    source: "agent" | "browser",
+    source: NoticeSource,
     stillRelevant: () => boolean,
   ): void {
     const connection = s.connectionId;
@@ -319,35 +377,103 @@ export class DesktopNotifications {
     this.decided.add(token);
     if (this.decided.size > 512)
       this.decided.delete(this.decided.values().next().value!);
+    const candidate: DesktopNotificationDiagnostic = {
+      version: 1,
+      frontend: {
+        kind: notice.kind,
+        source,
+        phase: "observed",
+        reason: "none",
+        background: null,
+        ready: this.state.ready,
+        enabled: this.state.enabled,
+        saving: this.state.saving,
+      },
+      backendAttempt: null,
+    };
+    this.lastDiagnostic = candidate;
+    const record = (
+      phase: DiagnosticPhase,
+      reason: DiagnosticReason,
+      background = candidate.frontend.background,
+      backendAttempt = candidate.backendAttempt,
+      capturePreferences = true,
+    ) => {
+      // A late read or submit reply must never become a newer request's receipt.
+      if (this.lastDiagnostic !== candidate) return;
+      candidate.frontend = {
+        ...candidate.frontend,
+        phase,
+        reason,
+        background,
+        ready: capturePreferences ? this.state.ready : candidate.frontend.ready,
+        enabled: capturePreferences
+          ? this.state.enabled
+          : candidate.frontend.enabled,
+        saving: capturePreferences
+          ? this.state.saving
+          : candidate.frontend.saving,
+      };
+      candidate.backendAttempt = backendAttempt;
+    };
     // An event seen in the foreground is not a new event when focus later moves.
-    if (!this.port.background()) return;
+    const observedBackground = this.port.background();
+    record("observed", "none", observedBackground);
+    if (!observedBackground) {
+      record("skipped", "foreground");
+      return;
+    }
     const revision = this.revision;
     void (async () => {
       try {
         // Let the synchronous event projection publish its pending card first.
         await Promise.resolve();
         if (!this.state.ready && !this.state.error) await this.load();
-        if (
-          !this.state.ready ||
-          !this.state.enabled ||
-          this.state.saving ||
-          revision !== this.revision ||
-          s.connectionId !== connection ||
-          !this.port.background()
-        )
+        const reason: DiagnosticReason | null = !this.state.ready
+          ? "not_ready"
+          : !this.state.enabled
+            ? "disabled"
+            : this.state.saving
+              ? "saving"
+              : revision !== this.revision
+                ? "preferences_changed"
+                : s.connectionId !== connection
+                  ? "connection_changed"
+                  : null;
+        if (reason) {
+          record("skipped", reason);
           return;
+        }
+        const currentBackground = this.port.background();
+        record("observed", "none", currentBackground);
+        if (!currentBackground) {
+          record("skipped", "foreground");
+          return;
+        }
         // The state has now consumed the event. Do not notify an already answered,
         // expired or cancelled request after an asynchronous preference read.
-        if (!stillRelevant()) return;
+        if (!stillRelevant()) {
+          record("skipped", "not_pending");
+          return;
+        }
+        const sequence = ++this.sequence;
+        record("submitting", "none", currentBackground, {
+          rendererNonce: this.rendererNonce,
+          sequence,
+        });
         const submitted = await this.port.submit(
           notice.kind,
-          ++this.sequence,
+          sequence,
           s.key,
           this.rendererNonce,
         );
         if (submitted !== "submitted" && submitted !== "suppressed")
           throw new Error("unconfirmed notification receipt");
+        // Retain the actual gate-time preferences, not choices made while the
+        // operating system's asynchronous submission was in flight.
+        record(submitted, submitted, undefined, undefined, false);
       } catch {
+        record("unconfirmed", "unconfirmed", undefined, undefined, false);
         this.publish({ submissionError: NOTIFICATION_STRINGS.submitError });
       }
     })();
@@ -374,6 +500,7 @@ const desktopNotifications = new DesktopNotifications({
 export const observeDesktopNotification = desktopNotifications.observe;
 export const observeBrowserDesktopNotification =
   desktopNotifications.observeBrowserRequest;
+export const desktopNotificationDiagnostic = desktopNotifications.diagnostic;
 
 export function useDesktopNotifications() {
   const state = useSyncExternalStore(

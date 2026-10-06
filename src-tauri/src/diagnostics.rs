@@ -17,6 +17,8 @@ use tauri::{AppHandle, Manager};
 use crate::logging;
 use crate::meta_store::MetaStore;
 mod log_file;
+mod notification;
+use notification::NotificationInput;
 
 /// Entry in the zip being assembled.
 #[derive(Clone)]
@@ -330,11 +332,16 @@ fn diagnostic_entries(
     store: &MetaStore,
     log_dir: &Path,
     note: &str,
+    notification: Option<ZipEntry>,
 ) -> Result<(String, Vec<ZipEntry>), String> {
     if note.chars().count() > MAX_NOTE_CHARS {
         return Err("问题说明请控制在 4000 字以内".into());
     }
     let mut entries = safe_logs(log_dir);
+    let includes_notification = notification.is_some();
+    if let Some(notification) = notification {
+        entries.push(notification);
+    }
     entries.push(ZipEntry {
         name: "settings.json".into(),
         data: serde_json::to_vec_pretty(&Value::Object(redact_settings(store.list_settings()?)))
@@ -363,6 +370,7 @@ fn diagnostic_entries(
         "agentCount": agent_rows.len(), "sessionCount": sessions.len(),
         "logFiles": entries.iter().filter(|e| e.name.starts_with("logs/")).count(),
         "limitedLogs": true, "includesUserNote": !note.trim().is_empty(),
+        "includesNotificationDiagnostic": includes_notification,
     });
     entries.push(ZipEntry {
         name: "manifest.json".into(),
@@ -379,8 +387,9 @@ impl DiagnosticsState {
         store: &MetaStore,
         log_dir: &Path,
         note: &str,
+        notification: Option<ZipEntry>,
     ) -> Result<DiagnosticPreview, String> {
-        let (generated_at, entries) = diagnostic_entries(store, log_dir, note)?;
+        let (generated_at, entries) = diagnostic_entries(store, log_dir, note, notification)?;
         let mut state = self.0.lock().map_err(|_| "暂时无法读取诊断预览")?;
         state.sequence = state.sequence.wrapping_add(1);
         let preview = DiagnosticPreview {
@@ -437,10 +446,19 @@ impl DiagnosticsState {
 }
 
 #[tauri::command]
-pub fn diagnostics_preview(app: AppHandle, note: String) -> Result<DiagnosticPreview, String> {
+pub fn diagnostics_preview(
+    app: AppHandle,
+    note: String,
+    notification: Option<NotificationInput>,
+) -> Result<DiagnosticPreview, String> {
+    let notification = notification.map(|input| input.entry(&app)).transpose()?;
     let store = app.state::<MetaStore>();
-    app.state::<DiagnosticsState>()
-        .preview(&store, &logging::default_log_dir(), &note)
+    app.state::<DiagnosticsState>().preview(
+        &store,
+        &logging::default_log_dir(),
+        &note,
+        notification,
+    )
 }
 
 /// Only the currently reviewed snapshot can be written. Never recollect on export.
@@ -539,7 +557,7 @@ mod tests {
         assert!(state.export("not-reviewed", &dest).is_err());
         assert!(!dest.exists());
         let preview = state
-            .preview(&store, dir.path(), "My exact issue\nsecond line")
+            .preview(&store, dir.path(), "My exact issue\nsecond line", None)
             .unwrap();
         assert!(
             !serde_json::to_string(&preview)
@@ -559,12 +577,14 @@ mod tests {
             assert!(output.status.success());
             assert_eq!(String::from_utf8(output.stdout).unwrap(), entry.text);
         }
-        let newer = state.preview(&store, dir.path(), "Updated issue").unwrap();
+        let newer = state
+            .preview(&store, dir.path(), "Updated issue", None)
+            .unwrap();
         assert_ne!(newer.preview_id, preview.preview_id);
         assert!(state.export(&preview.preview_id, &dest).is_err());
         assert!(
             state
-                .preview(&store, dir.path(), &"x".repeat(MAX_NOTE_CHARS + 1))
+                .preview(&store, dir.path(), &"x".repeat(MAX_NOTE_CHARS + 1), None)
                 .is_err()
         );
         state.0.lock().unwrap().bundle.as_mut().unwrap().created =
@@ -604,7 +624,12 @@ mod tests {
         let dest_dir = dir.path().join("Desktop");
         let state = DiagnosticsState::default();
         let preview = state
-            .preview(&store, &dir.path().join("logs"), "A user-authored issue")
+            .preview(
+                &store,
+                &dir.path().join("logs"),
+                "A user-authored issue",
+                None,
+            )
             .unwrap();
         let path = state
             .export(&preview.preview_id, &dest_dir)

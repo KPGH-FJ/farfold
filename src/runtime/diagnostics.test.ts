@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { DiagnosticsReview, type DiagnosticPreview } from "./diagnostics";
+import { invoke } from "@tauri-apps/api/core";
+vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 const preview: DiagnosticPreview = {
   previewId: "reviewed-1",
   generatedAt: "now",
@@ -14,6 +16,27 @@ function deferred<T>() {
 }
 
 describe("diagnostic review and export", () => {
+  it("includes the current reminder decision only when preparing the reviewed snapshot", async () => {
+    vi.mocked(invoke).mockClear();
+    vi.mocked(invoke).mockResolvedValueOnce(preview);
+    const review = new DiagnosticsReview();
+    review.setNote("notification test");
+    await review.prepare();
+    expect(invoke).toHaveBeenCalledExactlyOnceWith("diagnostics_preview", {
+      note: "notification test",
+      notification: expect.objectContaining({
+        version: 1,
+        frontend: expect.objectContaining({ phase: "none", kind: null }),
+        backendAttempt: null,
+      }),
+    });
+    vi.mocked(invoke).mockResolvedValueOnce("/Desktop/result.zip");
+    await review.export();
+    expect(invoke).toHaveBeenLastCalledWith("export_diagnostics", {
+      previewId: "reviewed-1",
+    });
+    expect(invoke).toHaveBeenCalledTimes(2);
+  });
   it("requires a real preview and exports its exact id while retaining the note through return paths", async () => {
     const ports = {
       preview: vi.fn(async () => preview),

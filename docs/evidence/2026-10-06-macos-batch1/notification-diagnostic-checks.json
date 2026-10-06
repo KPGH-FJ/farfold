@@ -1,0 +1,76 @@
+{
+  "scope": "Source and controlled checks only; not installed notification delivery acceptance.",
+  "implementation": [
+    "One volatile frontend decision and one matched backend attempt; no content or private identity in reviewed export.",
+    "Actual gate-time focus, OS add receipt, fixed error domain/code and callback observation; no automatic retry.",
+    "Preview freezes notification.json; export writes only the reviewed bytes. Native result coverage is explicit and macOS only."
+  ],
+  "frontend": {
+    "format": "passed",
+    "typecheck": "passed",
+    "testFiles": 187,
+    "testsPassed": 2214,
+    "build": "passed"
+  },
+  "rust": {
+    "fullTestsPassed": 1007,
+    "originalIgnored": 4,
+    "fmt": "passed",
+    "clippy": "passed",
+    "finalCoverageMetadataCheck": {
+      "diagnosticsTestsPassed": 37,
+      "fmt": "passed",
+      "clippy": "passed"
+    }
+  },
+  "nativeControlled": {
+    "diagnosticPeer": "strict compile and execution passed",
+    "unchangedLegacyPeer": "compile and execution passed",
+    "liveSystemCenter": "not initialized"
+  },
+  "independentReview": {
+    "remainingBlockers": 0,
+    "fixedCounterexample": "Local bridge refusal is not an OS add rejection; precise local reasons remain."
+  },
+  "retainedFailures": [
+    "First async guard compile failure",
+    "Second typed input visibility failure",
+    "Old local refusal classification red test",
+    "Root collapsible-if Clippy failure"
+  ],
+  "limitations": [
+    "Formal app remains c42 until verified update.",
+    "OS accepted and delegate presentation options do not establish visible/audible delivery or click return.",
+    "Windows native observation is unavailable; compatibility source change is not Windows real testing."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-final-source-checks-closed/result.json",
+      "sha256": "8d42765a4f49824ecd1c6b760d7c7e1bbd9d5ea9628c2bc2d3e140a034163a2a"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-final-coverage-checks/result.json",
+      "sha256": "4f55ad7e33e825a7aee57f50ca0beab3d8014e4cfcd266449793e4a905be41a3"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-user-away-window4/backend-diagnostic-receipt.json",
+      "sha256": "1b0f341f11a0aee08d8b70357d657a7d2de75debe6756afab10ee3b7668d3d29"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-user-away-window4/rust-notification-diagnostic.log",
+      "sha256": "5a33e37cdf6abdf920e29ff37c33416902171ca8fa6082e80502bc2e33a7a592"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-user-away-window4/rust-notification-diagnostic-green.log",
+      "sha256": "adae8e7c63052a704e80482f0e5c5fc12a7e0a43e1dac140e0aa706ef54a90fc"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-user-away-window4/rust-local-start-red.log",
+      "sha256": "41ef0b73bc060681d1bf9f56ebac7074856103d985f9f795fe7b52afcf83ee3b"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/notification-final-source-checks/2.log",
+      "sha256": "42d758659cbcf7fff11f46ef0767cb8cc24a7f5d0a30346298a51ef7ee8eaff0"
+    }
+  ]
+}
