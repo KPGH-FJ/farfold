@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "checkedAtUtc": "2026-10-06T19:29:20.674059+00:00",
+  "candidateCommit": "1e8dc5d509a6e7986e9e211c5fa2782b1062d23d",
+  "binarySha256": "e9d9a906b6df40fd2289cba6e1d466239579de960ca9826797b4235fe1372f1e",
+  "cdHash": "b40e6c494747a586a819c201437831094c1001e3",
+  "passed": true,
+  "checkCount": 20,
+  "failedChecks": [],
+  "formal": {
+    "payloadFiles": 5,
+    "bytesAndUnixModesEqualGenerated": true,
+    "strictSignaturePassed": true,
+    "architecture": "arm64",
+    "exactExecutableProcessesAtStartAndEnd": 0,
+    "onlyFormalInApplications": true
+  },
+  "retention": {
+    "entryCount": 217280,
+    "aggregateSha256": "c5521f13f18c48c827efb273fa45b5712f79568129cd2fd1c769517c790d89ed",
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195433,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 90,
+        "file": 59,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "lineForLineEqual": true,
+    "detailMode": "0600",
+    "currentComparison": "complete",
+    "operationPendingField": "historical intermediate snapshot retained; not current pending result"
+  },
+  "scope": "Independent stopped-window review of saved three-tree snapshots and installed bundle; no fresh user-data traversal, SQLite query, GUI or app launch.",
+  "limitations": [
+    "Normal window Close and absence of confirmActivity override are root recorded observations, not an independently observed GUI action or fresh user personal save/exit confirmation.",
+    "Before/after records prove content/type/Unix mode/file size/symlink target equality within three Farfold trees, not globally atomic snapshots, ACL/xattr/timestamp equality, Keychain or external Agent storage.",
+    "Current process absence was checked at review start/end; this is not post-startup or new CmdQ/Dock protection acceptance.",
+    "Strict adhoc signature does not establish notarization/release signing."
+  ],
+  "operation": {
+    "installedAtUtc": "2026-10-06T19:26:51.385110+00:00",
+    "candidateCommit": "1e8dc5d509a6e7986e9e211c5fa2782b1062d23d",
+    "binarySha256": "e9d9a906b6df40fd2289cba6e1d466239579de960ca9826797b4235fe1372f1e",
+    "userConfirmedSavedNormalExit": false,
+    "latestUserFullMacTestAuthority": true,
+    "normalQuitObservedByAgent": true,
+    "forcedQuit": false,
+    "formalAppProcessesBefore": 0,
+    "onlyFormalAppReplaced": true,
+    "installedExactFiveFiles": true,
+    "strictCodesignExit": 0,
+    "architecture": "arm64",
+    "dataRetentionComparisonPending": "historical intermediate only; independent completed above",
+    "launched": false
+  },
+  "coldRootObservation": {
+    "index": 88,
+    "newAndThreadDrafts": "two own exact markers and multiline restored; no auto send; only own markers then cleared",
+    "favoriteGroup": "1/1 retained"
+  }
+}

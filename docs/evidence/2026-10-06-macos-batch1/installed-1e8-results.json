@@ -1,0 +1,134 @@
+{
+  "candidate": "1e8dc5d5",
+  "at": "2026-10-06T19:55:54.093303+00:00",
+  "quitPending": {
+    "cmdQMinimized": "confirmation then Escape; pending retained",
+    "cmdQRestored": "confirmation then stay; pending retained",
+    "appMenu": "custom ID; confirmation then stay; pending retained",
+    "dock": "actual system Dock UI unavailable, not tested"
+  },
+  "approval": {
+    "deniedOnce": true,
+    "responseOut": 1791316338369,
+    "terminalIn": 1791316390215,
+    "targetExists": false,
+    "noAutoSendDraft": "FARFOLD_DRAFT_PENDING_20261007\\nsecond",
+    "newDraft": "FARFOLD_NEW_DRAFT_ONLY_20261007"
+  },
+  "notificationSettingsRestored": "off/off, authorization unchanged",
+  "browser": {
+    "firstClick": "rejected applied=false expired; MCP 37.8s; page counter0",
+    "secondNewTask": "fresh observation; MCP and exact page action allowed; rejected applied=false expired; total33.8s; no unknown result/no retry",
+    "thirdNewTask": {
+      "applied": true,
+      "outcome": "dispatched",
+      "pageChanged": true,
+      "navigationChanged": false,
+      "observationAgeMs": 13389,
+      "realUiCounter": 1,
+      "twoSingleApprovals": true,
+      "newObservation": "37EC49AC-0728-4420-9870-EE6A27B65F1E",
+      "agentPostObservation": "real observe: counter1, completed"
+    },
+    "oldInput": "timeout/unknown; old page not retried",
+    "independentFormFill": {
+      "url": "http://127.0.0.1:63841/",
+      "applied": true,
+      "outcome": "dispatched",
+      "observationAgeMs": 17856,
+      "field": "独立填写项",
+      "value": "FARFOLD_FORM_TEXT_20261007",
+      "notSubmittedYet": true,
+      "nativeValueObserved": true,
+      "agentPostObserveResult": "cannot read current input value; notSubmitted visible"
+    },
+    "independentFormSubmit": {
+      "applied": true,
+      "outcome": "dispatched",
+      "observationAgeMs": 20227,
+      "realUiResult": "已提交：FARFOLD_FORM_TEXT_20261007",
+      "agentPostObserveResult": "same submitted text, completed"
+    }
+  },
+  "files": {
+    "htmlCold": "one.html WAIT still; exact LS sample captured",
+    "markdownSelected": "one.md explicitly selected via productionFileDelivery; checking pending",
+    "tempFourFormats": {
+      "md": "58bytes;heading+two Chinese bullets",
+      "json": "62bytes; marker+value7",
+      "csv": "44bytes; exact2lines plain text",
+      "py": "44bytes; source text, no execution feature",
+      "scope": "explicit production picker; temp identical copied bytes; Desktop waiter notfixed"
+    },
+    "staleCopy": "changed source refused; no stale-copy destination created; source unchanged by failed copy; reopen gets new text",
+    "missing": "owned temp file renamed aside; reload removed stalebody and error; restored then reopened correct text",
+    "tempHtml": "same22882 bytes rendered actual own marker; Desktop remains wait"
+  },
+  "quitSave": {
+    "cmdQConfirmation": "work or uncertain work warning; own CodeBuddy only global item",
+    "selected": "保存并退出",
+    "nativeGuiResult": "App quit",
+    "forceUsed": false,
+    "draftsBefore": "own two markers, current CB multiline",
+    "oldMainProcessAbsent": true,
+    "coldIndex": 88,
+    "newDraftRestored": "exact marker, not sent; own marker cleared",
+    "favoriteAndGroupRetained": "1 and1",
+    "threadDraftRestored": "exact multiline CB marker, no auto send; cleared only own marker"
+  },
+  "codebuddyParallel": "output/2026-10-07-autonomous-macos/codebuddy-parallel-stop-1e8.json",
+  "attachments": {
+    "missing": "blocked before prompt; draft/chip retained",
+    "restoredChanged": "exact current changed firstline Agent reply",
+    "pngFilePicker": "kind=file UTF8 error no prompt; actual image paste untested"
+  },
+  "notification": {
+    "version": 1,
+    "nativeResultCoverage": "macos_submission_and_callbacks",
+    "frontend": {
+      "kind": "approval",
+      "source": "agent",
+      "phase": "submitted",
+      "reason": "submitted",
+      "background": true,
+      "ready": true,
+      "enabled": true,
+      "saving": false
+    },
+    "backend": {
+      "stage": "add",
+      "reason": "add_accepted",
+      "windowVisible": false,
+      "windowFocused": false,
+      "systemPermission": "authorized",
+      "systemAlert": true,
+      "systemSound": true,
+      "soundRequested": true,
+      "nativeInitialized": true,
+      "delegateMatches": true,
+      "bundleMatches": true,
+      "appActive": true,
+      "addResult": "accepted",
+      "errorDomain": null,
+      "errorCode": null,
+      "presentation": "not_observed",
+      "clicked": false
+    },
+    "ownEvidence": {
+      "installedCommit": "1e8dc5d5",
+      "zipSha256": "a20720dd9d2690248d273b68b9999b62cbcfe5f72b9a6a51b5a1a3cf700f2a43",
+      "marker": "FARFOLD_NOTIFY_QUIT_FIX_20261007",
+      "noApprovalGiven": true,
+      "realCardClickUnverified": true,
+      "audibleSoundUnverified": true
+    },
+    "limits": "macOS add accepted, no banner/sound/click witness; willPresent missing is not bg delivery failure"
+  },
+  "htmlDiagnostic": {
+    "sampleSha256": "a618cc665099743183b880ce7121131b3054d8669e4cddb463422d34619c9f30",
+    "observed": "exact official PID blocking in file_delivery::capture/open_directory/open_at/__openat",
+    "scope": "does not identify directory or root cause; no permission weakened"
+  },
+  "dataScope": "own tasks/fixtures only; Mac no login/account change/Windows",
+  "full33Passed": 0
+}
