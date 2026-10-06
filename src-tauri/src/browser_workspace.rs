@@ -551,12 +551,37 @@ fn publish(app: &AppHandle, info: BrowserInfo) {
 
 pub fn caller_allowed(webview: &Webview) -> bool {
     let Ok(url) = webview.url() else { return false };
+    caller_allowed_for_config(
+        webview.label(),
+        &url,
+        webview.app_handle().config(),
+        cfg!(windows),
+    )
+}
+
+/// Inputs come from Tauri IPC context and trusted app config. The explicit
+/// platform argument keeps the production Windows mapping testable on macOS.
+pub(crate) fn caller_allowed_for_config(
+    label: &str,
+    url: &Url,
+    config: &tauri::Config,
+    windows: bool,
+) -> bool {
+    let Some(main) = config
+        .app
+        .windows
+        .iter()
+        .find(|window| window.label == "main")
+    else {
+        return false;
+    };
     let development = if cfg!(debug_assertions) {
-        webview.app_handle().config().build.dev_url.as_ref()
+        config.build.dev_url.as_ref()
     } else {
         None
     };
-    policy::caller_is_main(webview.label(), &url, development)
+    let packaged = policy::MainAppOrigin::for_platform(windows, main.use_https_scheme);
+    policy::caller_is_main(label, url, packaged, development)
 }
 
 fn require_main(webview: &Webview) -> Result<(), String> {

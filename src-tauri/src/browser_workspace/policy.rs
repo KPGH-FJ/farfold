@@ -248,14 +248,44 @@ pub fn same_origin(left: &Url, right: &Url) -> bool {
         }
 }
 
+/// Tauri 2.11's packaged app protocol uses a WebView2 HTTP(S) mapping on Windows
+/// and its custom scheme on macOS. Select one origin from trusted window config;
+/// never admit both Windows schemes or another platform's mapping as aliases.
+#[derive(Clone, Copy)]
+pub enum MainAppOrigin {
+    CustomProtocol,
+    WindowsHttp,
+    WindowsHttps,
+}
+
+impl MainAppOrigin {
+    pub fn for_platform(windows: bool, use_https_scheme: bool) -> Self {
+        match (windows, use_https_scheme) {
+            (true, true) => Self::WindowsHttps,
+            (true, false) => Self::WindowsHttp,
+            (false, _) => Self::CustomProtocol,
+        }
+    }
+
+    fn matches(self, url: &Url) -> bool {
+        let (scheme, host) = match self {
+            Self::CustomProtocol => ("tauri", "localhost"),
+            Self::WindowsHttp => ("http", "tauri.localhost"),
+            Self::WindowsHttps => ("https", "tauri.localhost"),
+        };
+        url.scheme() == scheme && url.host_str() == Some(host) && url.port().is_none()
+    }
+}
+
 /// `label` and `url` must come from the actual invoking Webview, not its payload.
+/// `packaged` and `dev` must come from trusted app config and the current platform.
 /// Development URLs are accepted only in debug builds, for an exact configured
 /// loopback origin. Release builds always ignore `dev`.
-pub fn caller_is_main(label: &str, url: &Url, dev: Option<&Url>) -> bool {
+pub fn caller_is_main(label: &str, url: &Url, packaged: MainAppOrigin, dev: Option<&Url>) -> bool {
     if label != "main" || !url.username().is_empty() || url.password().is_some() {
         return false;
     }
-    if url.scheme() == "tauri" && url.host_str() == Some("localhost") && url.port().is_none() {
+    if packaged.matches(url) {
         return true;
     }
     cfg!(debug_assertions)

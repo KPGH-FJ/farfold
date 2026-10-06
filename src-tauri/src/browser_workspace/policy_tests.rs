@@ -121,47 +121,122 @@ fn compares_origin_not_path_prefix_or_opaque_identity() {
 }
 
 #[test]
-fn accepts_only_local_main_caller_in_packaged_mode() {
+fn review_regression_windows_packaged_main_uses_tauri_localhost_origin() {
+    // Tauri 2.11.5 maps its app protocol to HTTP on Windows when the main
+    // window's useHttpsScheme option is false (the current configuration).
+    // Keep this test runnable on macOS so a platform compile cannot hide it.
     assert!(caller_is_main(
         "main",
-        &parsed("tauri://localhost/tasks/a"),
+        &parsed("http://tauri.localhost/tasks/a"),
+        MainAppOrigin::for_platform(true, false),
         None
     ));
-    for (label, value) in [
-        ("browser", "tauri://localhost"),
-        ("main", "https://example.com"),
-        ("main", "tauri://localhost.evil.com"),
-        ("main", "tauri://user@localhost"),
-        ("main", "tauri://localhost:1234"),
+}
+
+#[test]
+fn accepts_only_local_main_caller_in_packaged_mode() {
+    for (windows, use_https_scheme, trusted) in [
+        (false, false, "tauri://localhost"),
+        (false, true, "tauri://localhost"),
+        (true, false, "http://tauri.localhost"),
+        (true, true, "https://tauri.localhost"),
     ] {
-        assert!(
-            !caller_is_main(label, &parsed(value), None),
-            "{label} {value}"
-        );
+        let packaged = MainAppOrigin::for_platform(windows, use_https_scheme);
+        assert!(caller_is_main(
+            "main",
+            &parsed(&format!("{trusted}/tasks/a?view=files#preview")),
+            packaged,
+            None
+        ));
+        assert!(!caller_is_main("browser", &parsed(trusted), packaged, None));
+        for other in [
+            "tauri://localhost",
+            "http://tauri.localhost",
+            "https://tauri.localhost",
+        ] {
+            if other != trusted {
+                assert!(!caller_is_main("main", &parsed(other), packaged, None));
+            }
+        }
+        for value in [
+            "https://example.com",
+            "tauri://localhost.evil.com",
+            "tauri://user@localhost",
+            "tauri://:secret@localhost",
+            "tauri://localhost:1234",
+            "http://tauri.localhost.evil.com",
+            "https://tauri.localhost.evil.com",
+            "http://tauri.localhost.",
+            "https://tauri.localhost.",
+            "http://tauri.localhost:1420",
+            "https://tauri.localhost:1420",
+            "http://user@tauri.localhost",
+            "https://user:secret@tauri.localhost",
+            "http://:secret@tauri.localhost",
+            "http://tauri.localhost@evil.com",
+            "https://tauri.localhost@evil.com",
+            "http://127.0.0.1:1420",
+            "http://localhost:1420",
+            "data:text/html,main",
+            "file:///index.html",
+        ] {
+            assert!(
+                !caller_is_main("main", &parsed(value), packaged, None),
+                "{trusted} must not admit {value}"
+            );
+        }
     }
 }
 
 #[test]
 fn dev_caller_requires_exact_configured_loopback_origin() {
-    let dev = parsed("http://localhost:1420");
-    assert_eq!(
-        caller_is_main("main", &parsed("http://localhost:1420/tasks"), Some(&dev)),
-        cfg!(debug_assertions)
-    );
-    for value in [
-        "http://localhost:1421",
-        "http://127.0.0.1:1420",
-        "https://localhost:1420",
-        "http://localhost.evil.com:1420",
+    for packaged in [
+        MainAppOrigin::CustomProtocol,
+        MainAppOrigin::WindowsHttp,
+        MainAppOrigin::WindowsHttps,
     ] {
-        assert!(
-            !caller_is_main("main", &parsed(value), Some(&dev)),
-            "{value}"
+        let dev = parsed("http://127.0.0.1:1420");
+        assert_eq!(
+            caller_is_main(
+                "main",
+                &parsed("http://127.0.0.1:1420/tasks"),
+                packaged,
+                Some(&dev)
+            ),
+            cfg!(debug_assertions)
         );
+        for value in [
+            "http://127.0.0.1:1421",
+            "http://127.0.0.1",
+            "http://localhost:1420",
+            "https://127.0.0.1:1420",
+            "http://localhost.evil.com:1420",
+            "http://user@127.0.0.1:1420",
+            "http://:secret@127.0.0.1:1420",
+            "http://127.0.0.1:1420@evil.com",
+        ] {
+            assert!(
+                !caller_is_main("main", &parsed(value), packaged, Some(&dev)),
+                "{value}"
+            );
+        }
+        for value in [
+            "https://example.com",
+            "http://user@127.0.0.1:1420",
+            "http://:secret@127.0.0.1:1420",
+            "file:///index.html",
+        ] {
+            let invalid_dev = parsed(value);
+            assert!(!caller_is_main(
+                "main",
+                &invalid_dev,
+                packaged,
+                Some(&invalid_dev)
+            ));
+        }
+        assert!(!caller_is_main("browser", &dev, packaged, Some(&dev)));
+        assert!(!caller_is_main("main", &dev, packaged, None));
     }
-    let remote = parsed("https://example.com");
-    assert!(!caller_is_main("main", &remote, Some(&remote)));
-    assert!(!caller_is_main("browser", &dev, Some(&dev)));
 }
 
 #[test]

@@ -4,17 +4,8 @@ use tauri::Webview;
 
 use crate::file_delivery::{self, DeliveryError, DeliveryReceipt, TextPreview, VerifiedFile};
 
-fn allowed_caller(label: &str, url: &tauri::Url, development: bool) -> bool {
-    if label != "main" || !url.username().is_empty() || url.password().is_some() {
-        return false;
-    }
-    (url.scheme() == "tauri" && url.host_str() == Some("localhost") && url.port().is_none())
-        || (development && url.origin().ascii_serialization() == "http://127.0.0.1:1420")
-}
-
 fn require_main(webview: &Webview) -> Result<(), String> {
-    let url = webview.url().map_err(|_| "请从主界面操作文件".to_owned())?;
-    if allowed_caller(webview.label(), &url, cfg!(debug_assertions)) {
+    if crate::browser_workspace::caller_allowed(webview) {
         Ok(())
     } else {
         Err("请从主界面操作文件".to_owned())
@@ -172,8 +163,78 @@ pub async fn file_delivery_reveal(webview: Webview, file: VerifiedFile) -> Resul
 mod tests {
     use super::*;
 
+    fn app_config() -> tauri::Config {
+        serde_json::from_str(include_str!("../tauri.conf.json")).unwrap()
+    }
+
+    #[test]
+    fn review_regression_delivery_accepts_windows_packaged_main_origin() {
+        let mut config = app_config();
+        config.build.dev_url = None;
+        let main = config
+            .app
+            .windows
+            .iter()
+            .find(|window| window.label == "main")
+            .unwrap();
+        assert!(!main.use_https_scheme);
+        assert!(crate::browser_workspace::caller_allowed_for_config(
+            "main",
+            &tauri::Url::parse("http://tauri.localhost/index.html").unwrap(),
+            &config,
+            true
+        ));
+    }
+
+    #[test]
+    fn main_caller_uses_exact_platform_and_configured_protocol() {
+        for (windows, use_https_scheme, trusted) in [
+            (false, false, "tauri://localhost"),
+            (false, true, "tauri://localhost"),
+            (true, false, "http://tauri.localhost"),
+            (true, true, "https://tauri.localhost"),
+        ] {
+            let mut config = app_config();
+            config.build.dev_url = None;
+            config
+                .app
+                .windows
+                .iter_mut()
+                .find(|window| window.label == "main")
+                .unwrap()
+                .use_https_scheme = use_https_scheme;
+            for candidate in [
+                "tauri://localhost",
+                "http://tauri.localhost",
+                "https://tauri.localhost",
+            ] {
+                assert_eq!(
+                    crate::browser_workspace::caller_allowed_for_config(
+                        "main",
+                        &tauri::Url::parse(candidate).unwrap(),
+                        &config,
+                        windows
+                    ),
+                    candidate == trusted,
+                    "{trusted} must only admit its own origin: {candidate}"
+                );
+            }
+        }
+        let mut missing_main = app_config();
+        missing_main.app.windows.clear();
+        assert!(!crate::browser_workspace::caller_allowed_for_config(
+            "main",
+            &tauri::Url::parse("http://tauri.localhost").unwrap(),
+            &missing_main,
+            true
+        ));
+    }
+
     #[test]
     fn remote_content_and_other_webviews_cannot_use_delivery_commands() {
+        let mut packaged = app_config();
+        packaged.build.dev_url = None;
+        let development_config = app_config();
         for (label, url, development) in [
             ("browser", "tauri://localhost", false),
             ("main", "https://example.com", false),
@@ -182,22 +243,33 @@ mod tests {
             ("main", "http://127.0.0.1:1421", true),
             ("main", "tauri://user@localhost", false),
         ] {
-            assert!(!allowed_caller(
+            let config = if development {
+                &development_config
+            } else {
+                &packaged
+            };
+            assert!(!crate::browser_workspace::caller_allowed_for_config(
                 label,
                 &tauri::Url::parse(url).unwrap(),
-                development
+                config,
+                false
             ));
         }
-        assert!(allowed_caller(
+        assert!(crate::browser_workspace::caller_allowed_for_config(
             "main",
             &tauri::Url::parse("tauri://localhost/index.html").unwrap(),
+            &packaged,
             false
         ));
-        assert!(allowed_caller(
-            "main",
-            &tauri::Url::parse("http://127.0.0.1:1420").unwrap(),
-            true
-        ));
+        assert_eq!(
+            crate::browser_workspace::caller_allowed_for_config(
+                "main",
+                &tauri::Url::parse("http://127.0.0.1:1420").unwrap(),
+                &development_config,
+                false
+            ),
+            cfg!(debug_assertions)
+        );
     }
 
     #[test]
