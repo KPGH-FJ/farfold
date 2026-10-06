@@ -282,6 +282,7 @@ pub(crate) async fn open_session_on_connection(
         .as_mut()
         .map(|offer| offer.bind_route(&session_id))
         .transpose()?;
+    let mcp_requests = mcp_lease.as_ref().map(|lease| lease.requests());
     sessions
         .lock()
         .map_err(|_| "session map lock poisoned")?
@@ -315,6 +316,7 @@ pub(crate) async fn open_session_on_connection(
         permission_guard,
         config_store,
         opening,
+        mcp_requests,
     ));
 
     let ready = ready_rx

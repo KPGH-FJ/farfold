@@ -20,6 +20,7 @@ pub(super) fn session(page: FixedPageReadScope) -> Arc<ToolSession> {
             phase: READY,
             ready: true,
             ended: false,
+            prompt_active: true,
             revision: 1,
             retiring: None,
             pending_request: None,

@@ -23,6 +23,7 @@ const PEER: &str = r#"
 import sys,json,os,time
 mode,root=sys.argv[1:3]
 counter=0
+prompts={}
 def send(v): print(json.dumps(dict(jsonrpc='2.0',**v)),flush=True)
 def reply(m,r): send({'id':m['id'],'result':r})
 for line in sys.stdin:
@@ -57,6 +58,12 @@ for line in sys.stdin:
    result={'configOptions':[],'farfoldFutureExtension':{'nested':['preserved',{'number':7}]},'farfoldRequestProof':proof}
    if method=='session/new': result['sessionId']='controlled-new-'+str(os.getpid())+'-'+str(counter)
    reply(m,result)
+ elif method=='session/prompt':
+  if p['prompt'][0]['text']=='wait': prompts[p['sessionId']]=m
+  else: reply(m,{'stopReason':'end_turn'})
+ elif method=='session/cancel':
+  original=prompts.pop(p['sessionId'],None)
+  if original is not None: reply(original,{'stopReason':'cancelled'})
  elif method=='session/close': reply(m,{})
  elif 'id' in m: send({'id':m['id'],'error':{'code':-32601,'message':'controlled unsupported request'}})
 "#;
@@ -66,6 +73,7 @@ struct OwnerWitness {
     bound: Mutex<Vec<String>>,
     revoked: AtomicUsize,
     revoked_marker: Option<PathBuf>,
+    prompt_states: Mutex<Vec<bool>>,
 }
 impl SessionMcpOwner for OwnerWitness {
     fn bind_session(&self, id: &str) -> Result<(), String> {
@@ -77,6 +85,9 @@ impl SessionMcpOwner for OwnerWitness {
         if let Some(marker) = &self.revoked_marker {
             std::fs::write(marker, "revoked").unwrap();
         }
+    }
+    fn set_prompt_active(&self, active: bool) {
+        self.prompt_states.lock().unwrap().push(active);
     }
 }
 
@@ -367,6 +378,52 @@ async fn transient_mcp_two_real_routes_close_and_connection_drop_revoke_independ
     f.finish().await;
     assert_eq!(one.revoked.load(Ordering::Acquire), 1);
     assert_eq!(two.revoked.load(Ordering::Acquire), 1);
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn transient_mcp_prompt_lifecycle_without_mcp_cancel_is_scoped_to_its_route() {
+    let f = Fixture::new("ok");
+    let first = Arc::new(OwnerWitness::default());
+    let other = Arc::new(OwnerWitness::default());
+    let one = f.open(None, first.clone()).await.unwrap();
+    let two = f.open(None, other.clone()).await.unwrap();
+    let blocks = |text: &str| serde_json::from_value(json!([{"type":"text","text":text}])).unwrap();
+    for id in [&one.session_id, &two.session_id] {
+        f.manager
+            .session_prompt(&f.row.id, &f.cwd, id, blocks("wait"))
+            .await
+            .unwrap();
+    }
+    assert_eq!(*first.prompt_states.lock().unwrap(), [true]);
+    assert_eq!(*other.prompt_states.lock().unwrap(), [true]);
+    f.manager
+        .session_cancel(&f.row.id, &f.cwd, &one.session_id)
+        .await
+        .unwrap();
+    until(|| *first.prompt_states.lock().unwrap() == [true, false, false]).await;
+    assert_eq!(*other.prompt_states.lock().unwrap(), [true]);
+    assert_eq!(first.revoked.load(Ordering::Acquire), 0);
+    assert_eq!(other.revoked.load(Ordering::Acquire), 0);
+    f.manager
+        .session_prompt(&f.row.id, &f.cwd, &one.session_id, blocks("complete"))
+        .await
+        .unwrap();
+    until(|| *first.prompt_states.lock().unwrap() == [true, false, false, true, false]).await;
+    assert_eq!(*other.prompt_states.lock().unwrap(), [true]);
+    f.manager
+        .session_cancel(&f.row.id, &f.cwd, &two.session_id)
+        .await
+        .unwrap();
+    until(|| *other.prompt_states.lock().unwrap() == [true, false, false]).await;
+    for id in [&one.session_id, &two.session_id] {
+        f.manager
+            .close_session(&f.row.id, &f.cwd, id)
+            .await
+            .unwrap();
+    }
+    assert_eq!(first.revoked.load(Ordering::Acquire), 1);
+    assert_eq!(other.revoked.load(Ordering::Acquire), 1);
+    f.finish().await;
 }
 
 #[tokio::test(flavor = "multi_thread")]

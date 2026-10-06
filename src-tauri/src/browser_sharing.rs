@@ -4,6 +4,8 @@ mod channel;
 mod helper;
 mod helper_io;
 mod permission;
+#[cfg(test)]
+mod prompt_tests;
 mod protocol;
 #[cfg(test)]
 mod state_tests;
@@ -53,6 +55,7 @@ struct ShareState {
     phase: u8,
     ready: bool,
     ended: bool,
+    prompt_active: bool,
     revision: u64,
     retiring: Option<FixedPageReadScope>,
     pending_request: Option<PendingPermission>,
@@ -342,6 +345,17 @@ impl SessionMcpOwner for ToolSession {
         Ok(())
     }
 
+    fn set_prompt_active(&self, active: bool) {
+        let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
+        state.prompt_active = active && !state.ended;
+        // This ends only an outstanding user decision. It is not a tool-end
+        // receipt or a withdrawal of the user's independent page grant.
+        if !state.prompt_active && state.cancel_permission("本次网页请求已取消") {
+            drop(state);
+            self.changed();
+        }
+    }
+
     fn revoke(&self) {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         state.ended = true;
@@ -401,6 +415,7 @@ impl BrowserSharing {
                 phase: CONNECTING,
                 ready: false,
                 ended: false,
+                prompt_active: false,
                 revision: 1,
                 retiring: None,
                 pending_request: None,

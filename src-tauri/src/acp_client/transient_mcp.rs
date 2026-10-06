@@ -7,7 +7,7 @@ use agent_client_protocol::schema::v1::{McpServer, McpServerStdio};
 use std::fmt;
 use std::path::Path;
 use std::sync::{
-    Arc,
+    Arc, Weak,
     atomic::{AtomicBool, Ordering},
 };
 
@@ -69,6 +69,9 @@ pub(crate) fn launch_rejection(
 pub(crate) trait SessionMcpOwner: Send + Sync {
     /// Bind the actual returned ID in memory. This must not grant page access.
     fn bind_session(&self, native_session_id: &str) -> Result<(), String>;
+    /// Accept decisions only for a locally admitted live prompt. Ending a
+    /// prompt cancels pending decisions, not page grants or running tools.
+    fn set_prompt_active(&self, active: bool);
     fn revoke(&self);
 }
 
@@ -155,6 +158,26 @@ pub(crate) struct SessionMcpLease {
     state: Arc<OwnerState>,
 }
 
+/// The pump observes its route without extending ownership or revoking it on
+/// drop. Only the original SessionMcpLease owns final route teardown.
+pub(crate) struct SessionMcpRequests(Weak<OwnerState>);
+
+impl SessionMcpRequests {
+    pub(crate) fn set_prompt_active(&self, active: bool) {
+        if let Some(state) = self.0.upgrade()
+            && !state.revoked.load(Ordering::Acquire)
+        {
+            state.owner.set_prompt_active(active);
+        }
+    }
+}
+
+impl SessionMcpLease {
+    pub(crate) fn requests(&self) -> SessionMcpRequests {
+        SessionMcpRequests(Arc::downgrade(&self.state))
+    }
+}
+
 impl fmt::Debug for SessionMcpLease {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str("SessionMcpLease([redacted])")
@@ -199,6 +222,7 @@ mod tests {
         sessions: Mutex<Vec<String>>,
         revokes: AtomicUsize,
         fail_bind: AtomicBool,
+        prompt_states: Mutex<Vec<bool>>,
     }
     impl SessionMcpOwner for Witness {
         fn bind_session(&self, id: &str) -> Result<(), String> {
@@ -210,6 +234,9 @@ mod tests {
         }
         fn revoke(&self) {
             self.revokes.fetch_add(1, Ordering::AcqRel);
+        }
+        fn set_prompt_active(&self, active: bool) {
+            self.prompt_states.lock().unwrap().push(active);
         }
     }
     fn offer(witness: Arc<Witness>) -> TransientMcpOpen {
@@ -251,6 +278,25 @@ mod tests {
         assert_eq!(owner.revokes.load(Ordering::Acquire), 0);
         assert_eq!(*owner.sessions.lock().unwrap(), ["actual-session"]);
         drop(route);
+        assert_eq!(owner.revokes.load(Ordering::Acquire), 1);
+    }
+    #[test]
+    fn prompt_callback_handles_do_not_own_or_revoke_the_route() {
+        let owner = Arc::new(Witness::default());
+        let mut open = offer(owner.clone());
+        let route = open.bind_route("prompt-session").unwrap();
+        let requests = route.requests();
+        open.finish_opening();
+        requests.set_prompt_active(true);
+        drop(route.requests());
+        assert_eq!(owner.revokes.load(Ordering::Acquire), 0);
+        requests.set_prompt_active(false);
+        assert_eq!(*owner.prompt_states.lock().unwrap(), [true, false]);
+        drop(route);
+        assert_eq!(owner.revokes.load(Ordering::Acquire), 1);
+        requests.set_prompt_active(true);
+        assert_eq!(*owner.prompt_states.lock().unwrap(), [true, false]);
+        drop(requests);
         assert_eq!(owner.revokes.load(Ordering::Acquire), 1);
     }
     #[test]

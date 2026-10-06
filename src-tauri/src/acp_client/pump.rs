@@ -689,6 +689,7 @@ async fn session_pump(
     mut permission_guard: super::permission_guard::PermissionGuard,
     mut config_store: super::model_guard::ConfigStore,
     opening: restore_config::Opening,
+    mcp_requests: Option<super::transient_mcp::SessionMcpRequests>,
 ) {
     let mut opening = Some(opening);
     let mut detached = None;
@@ -827,6 +828,7 @@ async fn session_pump(
                     }
                     cancel_permissions(&pending, &mut permission_ids);
                     cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
+                    if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }
                     let failure = failures.finish(outcome.as_ref().ok());
                     let mut event = turn_end_event(outcome);
                     if let Some(failure) = failure { event["failure"] = failure; }
@@ -1090,6 +1092,9 @@ async fn session_pump(
                         let _ = result.send(Err("请求等待已结束，消息尚未发送".into()));
                         continue;
                     }
+                    // Open before the synchronous send: an immediate MCP call
+                    // on another worker must not outrun prompt admission.
+                    if let Some(requests) = &mcp_requests { requests.set_prompt_active(true); }
                     let sent = cx
                         .send_request_to(Agent, PromptRequest::new(session_id.clone(), blocks))
                         .on_receiving_result({
@@ -1113,6 +1118,8 @@ async fn session_pump(
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         prompt_lease = Some(lease);
                         prompt_in_flight = true;
+                    } else if let Some(requests) = &mcp_requests {
+                        requests.set_prompt_active(false);
                     }
                     let _ = result.send(sent);
                 }
@@ -1126,6 +1133,7 @@ async fn session_pump(
                     if sent.is_ok() {
                         cancel_permissions(&pending, &mut permission_ids);
                         cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
+                        if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }
                         events(serde_json::json!({"kind":"interactionsCancelled"}));
                     }
                     let _ = result.send(sent);

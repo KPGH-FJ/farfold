@@ -19,6 +19,7 @@ fn fixture() -> (Arc<ToolSession>, BrowserInfo, FixedPageReadScope) {
             phase: READY,
             ready: true,
             ended: false,
+            prompt_active: true,
             revision: 1,
             retiring: None,
             pending_request: None,

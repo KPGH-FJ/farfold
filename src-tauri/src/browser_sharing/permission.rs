@@ -81,6 +81,7 @@ impl ToolSession {
         if self.task_key().as_deref() != Some(page.task_key.as_str())
             || page.phase != "ready"
             || state.ended
+            || !state.prompt_active
             || !state.ready
             || state.phase != READY
             || state.retiring.is_some()
