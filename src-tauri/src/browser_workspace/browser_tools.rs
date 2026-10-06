@@ -8,6 +8,21 @@ use tauri::AppHandle;
 
 const CONTROL_UNCONFIRMED: &str = "网页操作结果未确认，请查看页面后重新观察；不要自动重试";
 
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum ToolFailure {
+    // Created only by checks before the native action entry point. The reason
+    // comes from fixed local checks, never a page, node label or input value.
+    ControlNotApplied(String),
+    // Entering the native action path does not prove dispatch or its absence.
+    Unconfirmed,
+}
+
+impl From<String> for ToolFailure {
+    fn from(_: String) -> Self {
+        Self::Unconfirmed
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) enum ToolRequest {
     Read,
@@ -90,6 +105,14 @@ fn bounded(value: &Value, key: &str, max: usize) -> Result<String, String> {
 }
 
 impl FixedPageReadScope {
+    pub(crate) fn preflight_control(
+        &self,
+        request: &ToolRequest,
+    ) -> Result<ControlReview, ToolFailure> {
+        self.review_control(request)
+            .map_err(ToolFailure::ControlNotApplied)
+    }
+
     pub(crate) fn review_control(&self, request: &ToolRequest) -> Result<ControlReview, String> {
         self.with_valid(|| {
             if matches!(request, ToolRequest::Observe { screenshot: true }) {
@@ -126,17 +149,21 @@ impl FixedPageReadScope {
         &self,
         app: &AppHandle,
         request: ToolRequest,
-    ) -> Result<Value, String> {
+    ) -> Result<Value, ToolFailure> {
         match request {
             ToolRequest::Read => self
                 .read(app)
                 .await
-                .and_then(|p| serde_json::to_value(p).map_err(|_| "网页读取未完成".into())),
+                .and_then(|p| serde_json::to_value(p).map_err(|_| "网页读取未完成".into()))
+                .map_err(ToolFailure::from),
             ToolRequest::Observe { screenshot } => {
                 self.with_valid(|| Ok(()))?;
                 // Starting a new observation always invalidates the older refs,
                 // including when the new observation fails or is cancelled.
-                *self.observation.lock().map_err(|_| "网页观察已失效")? = None;
+                *self
+                    .observation
+                    .lock()
+                    .map_err(|_| ToolFailure::Unconfirmed)? = None;
                 // The current public WebKit surface cannot prove that closed
                 // shadow roots contain no protected input. A separate consent
                 // is not a substitute for that product boundary. Keep pixel
@@ -144,16 +171,16 @@ impl FixedPageReadScope {
                 let raw = native::observe(app, self.clone(), false).await?;
                 let raw = if screenshot {
                     let mut value: Value =
-                        serde_json::from_str(&raw).map_err(|_| "网页观察未完成")?;
+                        serde_json::from_str(&raw).map_err(|_| ToolFailure::Unconfirmed)?;
                     value["screenshot"] = json!({"status":"unavailable","reason":"当前页面受保护的输入无法可靠核实，暂不提供截图；可以继续读取文字和位置。"});
                     value.to_string()
                 } else {
                     raw
                 };
-                self.complete_observation(&raw)
+                self.complete_observation(&raw).map_err(ToolFailure::from)
             }
             request => {
-                self.review_control(&request)?;
+                self.preflight_control(&request)?;
                 let (id, reference, _) = request.target().expect("control request");
                 let action = match &request {
                     ToolRequest::Input { text, .. } => {
@@ -162,7 +189,10 @@ impl FixedPageReadScope {
                     _ => native::NativeAction::Click,
                 };
                 // Consume before dispatch, even if dispatch or its result fails.
-                *self.observation.lock().map_err(|_| "网页观察已失效")? = None;
+                *self
+                    .observation
+                    .lock()
+                    .map_err(|_| ToolFailure::ControlNotApplied("网页观察已失效".into()))? = None;
                 let raw = native::act(
                     app,
                     self.clone(),
@@ -171,8 +201,8 @@ impl FixedPageReadScope {
                     action,
                 )
                 .await
-                .map_err(|_| CONTROL_UNCONFIRMED.to_owned())?;
-                self.complete_control(id, &raw)
+                .map_err(|_| ToolFailure::Unconfirmed)?;
+                self.complete_control(id, &raw).map_err(ToolFailure::from)
             }
         }
     }
@@ -314,6 +344,44 @@ mod tests {
         scope.observation.lock().unwrap().as_mut().unwrap().at =
             Instant::now() - Duration::from_secs(31);
         assert!(scope.review_control(&click).is_err());
+    }
+    #[test]
+    fn preflight_failures_are_typed_before_the_action_entry_point() {
+        for failure in ["expired", "wrong-node", "wrong-observation", "withdrawn"] {
+            let (scope, _) = sharing_scope_fixture("agent:/fixture:preflight", "page");
+            observed(&scope);
+            let mut click = ToolRequest::Click {
+                observation_id: "observation-a".into(),
+                node_ref: "node-a".into(),
+            };
+            match failure {
+                "expired" => {
+                    scope.observation.lock().unwrap().as_mut().unwrap().at =
+                        Instant::now() - Duration::from_secs(31);
+                }
+                "wrong-node" => {
+                    if let ToolRequest::Click { node_ref, .. } = &mut click {
+                        *node_ref = "other-node".into();
+                    }
+                }
+                "wrong-observation" => {
+                    if let ToolRequest::Click { observation_id, .. } = &mut click {
+                        *observation_id = "other-observation".into();
+                    }
+                }
+                "withdrawn" => scope.revoke(),
+                _ => unreachable!(),
+            }
+            let error = scope
+                .preflight_control(&click)
+                .err()
+                .expect("preflight fails");
+            assert!(matches!(error, ToolFailure::ControlNotApplied(_)));
+            assert!(
+                scope.observation.lock().unwrap().is_some(),
+                "a failed preflight does not consume an observation or reach dispatch"
+            );
+        }
     }
     #[test]
     fn malformed_or_sensitive_results_cannot_create_a_node_authority() {

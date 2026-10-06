@@ -7,7 +7,7 @@ use super::{
     permission::PermissionWait,
     protocol,
 };
-use crate::browser_workspace::{FixedPageReadScope, ToolRequest};
+use crate::browser_workspace::{FixedPageReadScope, ToolFailure, ToolRequest};
 use agent_client_protocol::schema::v1::{EnvVariable, McpServerStdio};
 use serde_json::Value;
 use std::{
@@ -32,6 +32,25 @@ type Callback = Arc<dyn Fn() + Send + Sync>;
 type Closed = Arc<dyn Fn(bool) + Send + Sync>;
 type Permission = Arc<dyn Fn(&ToolRequest) -> Result<PermissionWait, String> + Send + Sync>;
 type Invalidated = Arc<dyn Fn(FixedPageReadScope) + Send + Sync>;
+
+fn operation_error_reply(id: Value, control: bool, error: ToolFailure) -> Value {
+    match (control, error) {
+        (true, ToolFailure::ControlNotApplied(reason)) => {
+            protocol::control_not_applied(id, &reason)
+        }
+        (true, ToolFailure::Unconfirmed) => protocol::control_unknown(id),
+        (false, _) => protocol::tool_error(id, "当前网页未允许读取或读取许可已停止"),
+    }
+}
+
+fn permission_error_reply(id: Value, control: bool, error: &str) -> Value {
+    if control {
+        // The permission callback failed before any operation was started.
+        protocol::control_not_applied(id, error)
+    } else {
+        protocol::tool_error(id, "请先在当前对话中打开可读取的公开网页")
+    }
+}
 
 /// Consumed exactly once into the official request. Intentionally no Debug/Clone.
 pub(crate) struct HelperLaunch {
@@ -259,7 +278,7 @@ struct WaitingRead {
 struct PendingRead {
     id: Value,
     scope: FixedPageReadScope,
-    result: mpsc::Receiver<Result<Value, String>>,
+    result: mpsc::Receiver<Result<Value, ToolFailure>>,
     task: tauri::async_runtime::JoinHandle<()>,
     request: ToolRequest,
     finished: Arc<AtomicBool>,
@@ -527,13 +546,10 @@ impl Worker {
                                 request,
                             })
                         }
-                        Err(_) => {
+                        Err(error) => {
                             if wire
                                 .reply(
-                                    protocol::tool_error(
-                                        id,
-                                        "请先在当前对话中打开可读取的公开网页",
-                                    ),
+                                    permission_error_reply(id, request.control(), &error),
                                     None,
                                     false,
                                 )
@@ -644,15 +660,11 @@ impl Worker {
                         wire.pending = None;
                         let (value, grant) = match result {
                             Ok(page) => (protocol::snapshot(id, page), Some(scope)),
-                            Err(_) => {
+                            Err(error) => {
                                 if !scope.is_valid() {
                                     (self.on_invalidated)(scope);
                                 }
-                                let value = if control {
-                                    protocol::control_unknown(id)
-                                } else {
-                                    protocol::tool_error(id, "当前网页未允许读取或读取许可已停止")
-                                };
+                                let value = operation_error_reply(id, control, error);
                                 (value, None)
                             }
                         };
@@ -861,7 +873,7 @@ mod tests {
     use serde_json::json;
     use std::sync::atomic::AtomicUsize;
 
-    type ControlCallback = mpsc::Sender<Result<Value, String>>;
+    type ControlCallback = mpsc::Sender<Result<Value, ToolFailure>>;
 
     fn pending_control_fixture(
         request: ToolRequest,
@@ -938,6 +950,99 @@ mod tests {
         assert!(text.contains("结果未确认"));
         assert!(text.contains("不要自动重试"));
         assert_eq!(packet["page"], false, "fixed status contains no page body");
+    }
+
+    #[test]
+    fn review_regression_preflight_control_failure_reports_not_applied() {
+        for request in control_requests() {
+            let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+            let error = scope
+                .preflight_control(&request)
+                .err()
+                .expect("preflight fails");
+            assert_eq!(
+                error,
+                ToolFailure::ControlNotApplied("网页观察已过期，请重新观察后再操作".into())
+            );
+            let mut wire = Wire::default();
+            wire.reply(operation_error_reply(json!(42), true, error), None, false)
+                .unwrap();
+            let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+            assert_eq!(
+                packet["message"]["result"]["structuredContent"]["outcome"],
+                "rejected"
+            );
+            assert_eq!(
+                packet["message"]["result"]["structuredContent"]["applied"],
+                false
+            );
+            assert_eq!(packet["page"], false);
+            assert_eq!(
+                packet["message"]["result"]["structuredContent"]
+                    .as_object()
+                    .unwrap()
+                    .len(),
+                2
+            );
+            assert!(!packet.to_string().contains("synthetic input"));
+            assert!(!packet.to_string().contains("nodeRef"));
+            assert!(!packet.to_string().contains("observationId"));
+            assert!(
+                packet["message"]["result"]["content"][0]["text"]
+                    .as_str()
+                    .unwrap()
+                    .contains("网页观察已过期")
+            );
+        }
+    }
+
+    #[test]
+    fn review_regression_control_permission_preflight_failure_preserves_reason() {
+        for request in control_requests() {
+            let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+            let error = scope
+                .review_control(&request)
+                .err()
+                .expect("preflight fails");
+            let reply = permission_error_reply(json!(42), request.control(), &error);
+            assert_eq!(reply["result"]["structuredContent"]["outcome"], "rejected");
+            assert_eq!(reply["result"]["structuredContent"]["applied"], false);
+            assert!(
+                reply["result"]["content"][0]["text"]
+                    .as_str()
+                    .unwrap()
+                    .contains("网页观察已过期")
+            );
+        }
+    }
+
+    #[test]
+    fn matching_error_text_without_preflight_proof_keeps_unknown() {
+        let error = ToolFailure::from("网页观察已过期，请重新观察后再操作".to_owned());
+        let mut wire = Wire::default();
+        wire.reply(operation_error_reply(json!(42), true, error), None, false)
+            .unwrap();
+        assert_unknown_control_reply(&wire.packets[0]);
+        let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+        assert!(!packet.to_string().contains("网页观察已过期"));
+    }
+
+    #[test]
+    fn noncontrol_errors_keep_the_existing_read_reply() {
+        let reason = "网页观察已过期，请重新观察后再操作";
+        let permission = permission_error_reply(json!(42), false, reason);
+        assert_eq!(
+            permission["result"]["content"][0]["text"],
+            "请先在当前对话中打开可读取的公开网页"
+        );
+        assert!(permission["result"].get("structuredContent").is_none());
+        let operation =
+            operation_error_reply(json!(42), false, ToolFailure::from(reason.to_owned()));
+        assert_eq!(
+            operation["result"]["content"][0]["text"],
+            "当前网页未允许读取或读取许可已停止"
+        );
+        assert!(operation["result"].get("structuredContent").is_none());
     }
 
     #[test]

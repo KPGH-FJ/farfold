@@ -29,7 +29,7 @@ use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Url, Webview};
 
-pub(crate) use browser_tools::{ControlReview, ToolRequest};
+pub(crate) use browser_tools::{ControlReview, ToolFailure, ToolRequest};
 pub(crate) use page_read::{FixedPageReadScope, PageReadLease};
 pub use policy::Bounds;
 #[cfg(test)]

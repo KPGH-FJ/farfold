@@ -173,6 +173,18 @@ pub(super) fn tool_error(id: Value, message: &str) -> Value {
         json!({"content":[{"type":"text","text":message}],"isError":true}),
     )
 }
+/// A fixed local check proved no action was started. No page or target data is
+/// attached, so this status can be delivered without a page grant.
+pub(super) fn control_not_applied(id: Value, reason: &str) -> Value {
+    result(
+        id,
+        json!({
+            "content":[{"type":"text","text":reason}],
+            "structuredContent":{"outcome":"rejected","applied":false},
+            "isError":true
+        }),
+    )
+}
 /// Status only: safe to deliver after page authority is withdrawn. Never copy
 /// page-owned data or entered text into an interrupted control receipt.
 pub(super) fn control_unknown(id: Value) -> Value {
