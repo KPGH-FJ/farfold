@@ -12,6 +12,8 @@
 
 浏览器独立原生受控测试5/5点击成功，没有复现正式应用拒绝；仅补固定guard类别、首次失效来源及有界观察年龄，保留原权限、期限、目标校验、单次消费及unknown/null。16项真实脚本、9项Rust定向和独立审通过；整组增量七项工程检查通过，前端2191项、Rust998项/4原忽略。尚未安装，真实拒绝原因仍待新回执；通知允许后的送达待用户确认。见browser-action-diagnostics-checks.json、browser-native-controlled-results.json及followup-full-checks.json。
 
+后续候选c42d7ca2/9fb0cffd已准备：721输入、前后内容/模式及包5文件、ZIP、签名、arm64独立31项核对通过；正式836及原ZIP未变。打包脚本临近启动补路径集合检查，加载版本未知；实际构建前清单已另与完整Git集合/字节/模式核对，构建后复核一致，没有重复打包。待用户新一次保存/正常退出确认后安装，只复测受影响路径；见package-c42d7ca2-receipt.json。
+
 Stakpak新版仅检查连接一次，后续准备模型查询的第二连接也握手成功，session/new实际auth_required；没有登录/模型消息或升级。只证明此次后续启动路径成功，不反推旧失败根因或容量/泄漏修复，见installed-836-stakpak-results.json。
 
 Copilot复制返工核实成功；fast-agent复制成功但此次只有工具日志、缺文件交付；Pi及OpenCode逐字复制/返工仍有LF误差；Dirac服务过载后单次允许继续及写入，复制成功但正文重复杂字。结果与缺口见本轮新证据，不冒称八项达标。fast-agent此次官方工具路线只提供文本，无可核实结构化文件位置；共用ToolDetail已有位置入口，不能据此说所有位置丢失，也不解析英文文稿虚构交付或重建被契约禁止的客户端文件代跑。
