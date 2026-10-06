@@ -1,0 +1,20 @@
+{
+  "command": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-gnullvm",
+    "--locked",
+    "--all-targets",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "exit": 0,
+  "archiveSha256": "52e5f5a7b131021d0c39a37a38fa380a1da7885cd04bd61afd0cd4ecfb8bc1f3",
+  "toolchainVersion": "20260922",
+  "target": "x86_64-pc-windows-gnullvm",
+  "scope": "cross-compilation and Clippy only; no Windows executable run"
+}

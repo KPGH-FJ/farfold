@@ -1,0 +1,73 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.55s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-0c277573533e5470)
+
+running 6 tests
+test file_delivery_commands::tests::review_regression_delivery_accepts_windows_packaged_main_origin ... FAILED
+test browser_workspace::policy::tests::review_regression_windows_packaged_main_uses_tauri_localhost_origin ... FAILED
+test browser_sharing::helper::tests::review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status ... FAILED
+test browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome ... FAILED
+test browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier ... FAILED
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::review_regression_logout_reaps_idle_account_copies_and_preserves_api_and_history ... FAILED
+
+failures:
+
+---- file_delivery_commands::tests::review_regression_delivery_accepts_windows_packaged_main_origin stdout ----
+
+thread 'file_delivery_commands::tests::review_regression_delivery_accepts_windows_packaged_main_origin' (7308131) panicked at src/file_delivery_commands.rs:177:9:
+assertion failed: allowed_caller("main",
+    &tauri::Url::parse("http://tauri.localhost/index.html").unwrap(), false)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- browser_workspace::policy::tests::review_regression_windows_packaged_main_uses_tauri_localhost_origin stdout ----
+
+thread 'browser_workspace::policy::tests::review_regression_windows_packaged_main_uses_tauri_localhost_origin' (7308130) panicked at src/browser_workspace/policy_tests.rs:128:5:
+assertion failed: caller_is_main("main", &parsed("http://tauri.localhost/tasks/a"), None)
+
+---- browser_sharing::helper::tests::review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status stdout ----
+
+thread 'browser_sharing::helper::tests::review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status' (7308127) panicked at src/browser_sharing/helper.rs:612:9:
+assertion `left == right` failed
+  left: Null
+ right: "unknown"
+
+---- browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome stdout ----
+
+thread 'browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome' (7308128) panicked at src/browser_sharing/transport.rs:873:9:
+assertion `left == right` failed
+  left: Null
+ right: "unknown"
+
+---- browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier stdout ----
+
+thread 'browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier' (7308129) panicked at src/browser_sharing/transport.rs:873:9:
+assertion `left == right` failed
+  left: Null
+ right: "unknown"
+
+---- acp_client::lifecycle_tests::account_logout_tests::connection_tests::review_regression_logout_reaps_idle_account_copies_and_preserves_api_and_history stdout ----
+
+thread 'acp_client::lifecycle_tests::account_logout_tests::connection_tests::review_regression_logout_reaps_idle_account_copies_and_preserves_api_and_history' (7308126) panicked at src/acp_client/account_logout_connections_tests.rs:165:9:
+a settled process retaining the signed-out account can still accept work
+
+
+failures:
+    acp_client::lifecycle_tests::account_logout_tests::connection_tests::review_regression_logout_reaps_idle_account_copies_and_preserves_api_and_history
+    browser_sharing::helper::tests::review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status
+    browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome
+    browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier
+    browser_workspace::policy::tests::review_regression_windows_packaged_main_uses_tauri_localhost_origin
+    file_delivery_commands::tests::review_regression_delivery_accepts_windows_packaged_main_origin
+
+test result: FAILED. 0 passed; 6 failed; 0 ignored; 0 measured; 953 filtered out; finished in 0.97s
+
+error: test failed, to rerun pass `--lib`

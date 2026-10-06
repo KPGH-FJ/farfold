@@ -1,0 +1,116 @@
+{
+  "baseline": "fe63cf5ce8b9ceb3c36f650e09160d2a476cf2c2",
+  "sourceHead": "c0f8d7e360e8f4ec88d9c9eb7cc76c481f1feee0",
+  "fixCommits": {
+    "windowsOrigin": "b6c5dd402953329ece45122974354ca78881aacd",
+    "accountLogout": "7822f06547abfad5ee270f1f32e49016522a7eb6",
+    "browserUnknown": "c0f8d7e360e8f4ec88d9c9eb7cc76c481f1feee0"
+  },
+  "scope": "Source and controlled automated tests on macOS arm64; Windows cross-compilation only.",
+  "checks": [
+    {
+      "command": "corepack pnpm format:check",
+      "exit": 0,
+      "log": "frontend-format.log"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exit": 0,
+      "log": "frontend-typecheck.log"
+    },
+    {
+      "command": "corepack pnpm test",
+      "exit": 0,
+      "log": "frontend-tests.log"
+    },
+    {
+      "command": "corepack pnpm build",
+      "exit": 0,
+      "log": "frontend-build.log"
+    },
+    {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exit": 0,
+      "log": "rust-format.log"
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exit": 0,
+      "log": "rust-clippy.log"
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+      "exit": 0,
+      "log": "rust-tests.log"
+    }
+  ],
+  "results": {
+    "frontend": {
+      "files": 184,
+      "passed": 2101
+    },
+    "rust": {
+      "passed": 965,
+      "failed": 0,
+      "ignored": 4
+    },
+    "accountGroup": {
+      "passed": 12,
+      "exit": 0,
+      "log": "account-tests.log"
+    },
+    "windows": "windows-check.json"
+  },
+  "regressions": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib review_regression_",
+    "before": {
+      "passed": 0,
+      "failed": 6,
+      "exit": 101,
+      "log": "regression-before.log"
+    },
+    "after": {
+      "passed": 6,
+      "failed": 0,
+      "exit": 0,
+      "log": "regression-after.log"
+    }
+  },
+  "intermediateFailure": {
+    "passed": 964,
+    "failed": 1,
+    "ignored": 4,
+    "exit": 101,
+    "log": "rust-tests-first.log",
+    "cause": "The old logout-error test indexed the manager status after the corrected implementation removed the stale connection. Only the test changed; error and no-fake-sign-out assertions were preserved and exact process cleanup assertions added."
+  },
+  "independentReview": "Each fix was reviewed by a different agent; no additional blocking finding. This is not proof of untested paths.",
+  "notExecuted": [
+    "Real Agent account/model requests",
+    "Native browser website effects",
+    "Windows executable or desktop/install journey",
+    "Formal app replacement or release acceptance"
+  ],
+  "remainingCoverage": [
+    "Standard-logout sibling error/disconnect path is not directly tested",
+    "Frontend drafts and attachments during account logout are not real-product tested",
+    "Windows terminal and native system features are not runtime tested",
+    "Partially written browser response closes the connection; a fixed unknown receipt may then be undeliverable"
+  ],
+  "sourceSha256": {
+    "src-tauri/src/acp_client/account_logout.rs": "1afcbd097b38f7b10a2f0a712e5d045203dd258b1e9edb8fc15d8ac7ae41a505",
+    "src-tauri/src/acp_client/account_logout_connections_tests.rs": "35cce28c13dc73b9dcbc9cd6f83b41021c835a3fa689fa810213aee740d3a0e2",
+    "src-tauri/src/acp_client/account_logout_tests.rs": "a048af983de5d77798ec616fb7c27cb634a2616918cf83041575cd8c104c7546",
+    "src-tauri/src/acp_client/account_scope.rs": "040457f028f178db9096effe873493150ae7ad1a340054d90f05e31f4ebdee15",
+    "src-tauri/src/acp_client/manager.rs": "2367238d6ed4be944f5a24aeeeaaa66af8e54445314dce24a5b7efb32b464911",
+    "src-tauri/src/acp_client/operations.rs": "eb95fea126f341e67575ec6b23e0f21c5ec37b2de3e9c7320f33ce90c7379878",
+    "src-tauri/src/auth.rs": "8e51c9d1ffbf3d607b5c95c239abd3018eb8c009ac9320e057ec5697d6d41e00",
+    "src-tauri/src/browser_sharing/helper.rs": "8a7be882ed46d36a1e10190bc7c2cd72a281f6a109881a9c99281d20ad7ec0c5",
+    "src-tauri/src/browser_sharing/protocol.rs": "53730a3499401e5165246d5a96f5876e0a8ec6cace50961891ee870afb8463cc",
+    "src-tauri/src/browser_sharing/transport.rs": "61c60321cfcadfb051a3de94f682524c835138626f48bd2c7e3c203086278abc",
+    "src-tauri/src/browser_workspace.rs": "4cf3cf460f7a8749d9c47dc8bc9c0ada08b3c85347172199f25957e19165b1e8",
+    "src-tauri/src/browser_workspace/policy.rs": "b6f5e572d1329fccdfeac8228eaf7bfeb86033ec77ea4171ae45af7af70ff088",
+    "src-tauri/src/browser_workspace/policy_tests.rs": "2643ee6868f0849f9816840344bf48612d2fd681615c31a6836c867b0c1b44de",
+    "src-tauri/src/file_delivery_commands.rs": "f36e6d8bfd5ef8d0ae030de70fc05156d362b622521b2949a57b4bdcd300ef8d"
+  }
+}
