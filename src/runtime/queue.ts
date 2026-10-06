@@ -64,7 +64,8 @@ export function canReleaseEmptyQueuePause(
   return (
     (s.queuePaused === "stopped" ||
       s.queuePaused === "work_disabled" ||
-      s.queuePaused === "no_result") &&
+      s.queuePaused === "no_result" ||
+      (s.queuePaused === "failed" && s.activeToolCallIds.length === 0)) &&
     s.queued.length === 0 &&
     canAdmit(s) &&
     (!blocks || !queuedAttachmentsNeedReview(blocks))

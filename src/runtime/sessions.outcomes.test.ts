@@ -4,6 +4,9 @@ vi.mock("@tauri-apps/api/core", () => ({ invoke, Channel: class {} }));
 import { threads, type PromptBlock } from "./sessions";
 import { composerDrafts, draftPersistence, draftQueues } from "./drafts";
 import { archiveActivity } from "./archive_activity";
+import { canReleaseEmptyQueuePause } from "./queue";
+import type { ThreadState } from "./session_types";
+import { markRestoredQueueAttachments } from "./recovered_attachments";
 
 const channel = threads as unknown as {
   applyChannelEvent(key: string, event: unknown): void;
@@ -57,6 +60,160 @@ it("pauses queued input after an empty ending and never records it as completed 
     invoke.mock.calls.filter(([command]) => command === "session_prompt"),
   ).toHaveLength(1);
   expect(archiveActivity.finish).not.toHaveBeenCalled();
+});
+
+it("admits only an explicit new message after a confirmed failure with an empty queue", async () => {
+  const s = state();
+  await threads.send(s.key, text("Failed request"));
+  event(s.key, { kind: "turnEnd", failure: { category: "service" } });
+  expect(s).toMatchObject({
+    running: false,
+    connectionOutcomeUnknown: false,
+    queuePaused: "failed",
+    queued: [],
+  });
+  expect(s.items.at(-1)).toMatchObject({ kind: "settled", status: "failed" });
+  const failedItems = [...s.items];
+  const draftKey = `session:${s.key}`;
+  composerDrafts.update(draftKey, () => ({
+    text: "Keep later typing",
+    attachments: [
+      { id: "later", kind: "file", name: "Later", uri: "file:///later.txt" },
+    ],
+    sendPending: true,
+  }));
+  const draft = composerDrafts.read(draftKey);
+  const generation = composerDrafts.generation(draftKey);
+  const canStart = canReleaseEmptyQueuePause(s);
+  expect(await threads.send(s.key, text("New request"))).toEqual({
+    status: "accepted",
+  });
+  expect(canStart).toBe(true);
+  const calls = invoke.mock.calls.filter(
+    ([command]) => command === "session_prompt",
+  );
+  expect(calls.map(([, args]) => args.content)).toEqual([
+    text("Failed request"),
+    text("New request"),
+  ]);
+  expect(s.queuePaused).toBeNull();
+  expect(s.queued).toEqual([]);
+  expect(s.items.slice(0, failedItems.length)).toEqual(failedItems);
+  expect(composerDrafts.read(draftKey)).toBe(draft);
+  expect(composerDrafts.generation(draftKey)).toBe(generation);
+});
+
+it("keeps an active tool protected after failure and never automatically sends waiting new input", async () => {
+  const s = state();
+  await threads.send(s.key, text("Failed request"));
+  event(s.key, {
+    update: {
+      sessionUpdate: "tool_call",
+      toolCallId: "tail",
+      status: "in_progress",
+    },
+  });
+  event(s.key, { kind: "toolActivity", toolCallIds: ["tail"] });
+  event(s.key, { kind: "turnEnd", failure: { category: "service" } });
+  expect(s.activeToolCallIds).toEqual(["tail"]);
+  expect(canReleaseEmptyQueuePause(s)).toBe(false);
+  const next = text("New request");
+  expect(await threads.send(s.key, next)).toEqual({ status: "queued" });
+  event(s.key, { kind: "toolActivity", toolCallIds: [] });
+  expect(s.queuePaused).toBe("failed");
+  expect(s.queued).toEqual([next]);
+  expect(
+    invoke.mock.calls.filter(([command]) => command === "session_prompt"),
+  ).toHaveLength(1);
+});
+
+const failureAdmissionGuards: [string, Partial<ThreadState>][] = [
+  ["unknown execution", { connectionOutcomeUnknown: true }],
+  ["uncertain request", { uncertainPrompt: text("Possibly dispatched") }],
+  ["configuration in progress", { configuring: true }],
+  ["configuration mismatch", { modelDrift: true }],
+  [
+    "unconfirmed permission",
+    { permissionConfigId: "permission", permissionState: "unknown" },
+  ],
+  ["pending webpage approval", { browserReadRequestId: "approval" }],
+  ["unconfirmed stop", { stopUnconfirmed: true }],
+  ["connection lost", { connectionLost: true }],
+  ["work disabled", { workEnabled: false }],
+];
+it.each(failureAdmissionGuards)(
+  "keeps a failed empty queue paused with %s",
+  async (_reason, guard) => {
+    const s = state();
+    s.queuePaused = "failed";
+    Object.assign(s, guard);
+    expect(canReleaseEmptyQueuePause(s)).toBe(false);
+    const next = text("Keep new input");
+    expect(await threads.send(s.key, next)).toEqual({ status: "queued" });
+    expect(s.queuePaused).toBe("failed");
+    expect(s.queued).toEqual([next]);
+    expect(s).toMatchObject(guard);
+    expect(invoke).not.toHaveBeenCalled();
+  },
+);
+
+it("retains a failed configuration and its draft instead of admitting new input", async () => {
+  const s = state();
+  s.queuePaused = "failed";
+  s.configError = "fixture";
+  const key = `session:${s.key}`;
+  composerDrafts.update(key, () => ({ text: "Keep draft", attachments: [] }));
+  const draft = composerDrafts.read(key);
+  expect(canReleaseEmptyQueuePause(s)).toBe(false);
+  await expect(threads.send(s.key, text("New request"))).rejects.toThrow();
+  expect(s.queuePaused).toBe("failed");
+  expect(s.queued).toEqual([]);
+  expect(s.configError).toBe("fixture");
+  expect(composerDrafts.read(key)).toBe(draft);
+  expect(invoke).not.toHaveBeenCalled();
+});
+
+it("retains existing failed input and appends new input without sending either", async () => {
+  const s = state();
+  const original = text("Never dispatched");
+  s.queued = [original];
+  s.queuePaused = "failed";
+  const next = text("New request");
+  expect(canReleaseEmptyQueuePause(s)).toBe(false);
+  expect(await threads.send(s.key, next)).toEqual({ status: "queued" });
+  expect(s.queuePaused).toBe("failed");
+  expect(s.queued).toEqual([original, next]);
+  expect(s.queued[0]).toBe(original);
+  expect(invoke).not.toHaveBeenCalled();
+});
+
+it.each(["uncertain", "unavailable"] as const)(
+  "does not release an empty %s pause for a new message",
+  async (pause) => {
+    const s = state();
+    s.queuePaused = pause;
+    expect(canReleaseEmptyQueuePause(s)).toBe(false);
+    const next = text("New request");
+    expect(await threads.send(s.key, next)).toEqual({ status: "queued" });
+    expect(s.queuePaused).toBe(pause);
+    expect(s.queued).toEqual([next]);
+    expect(invoke).not.toHaveBeenCalled();
+  },
+);
+
+it("keeps restored attachments awaiting review when new input follows a failure", async () => {
+  const s = state();
+  s.queuePaused = "failed";
+  const next: PromptBlock[] = [
+    ...text("Recovered image"),
+    { type: "image", data: "aW1hZ2U=", mimeType: "image/png" },
+  ];
+  markRestoredQueueAttachments([next]);
+  expect(canReleaseEmptyQueuePause(s, next)).toBe(false);
+  expect(await threads.send(s.key, next)).toEqual({ status: "queued" });
+  expect(s.queuePaused).toBe("failed");
+  expect(s.queued).toEqual([next]);
+  expect(invoke).not.toHaveBeenCalled();
 });
 
 it.each(["unknown", "lost-reply"])(
