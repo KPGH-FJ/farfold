@@ -229,6 +229,82 @@ it.each([
   },
 );
 
+it.each([false, true])(
+  "rechecks a chosen file before sending and keeps its draft after a failed check (embed: %s)",
+  async (embedContext) => {
+    composerDrafts.update("new", () => ({
+      text: "read my selected file",
+      attachments: [
+        {
+          id: "chosen-file",
+          kind: "file",
+          name: "附件 space%测试.txt",
+          uri: "file:///chosen/%E9%99%84%E4%BB%B6%20space%25%E6%B5%8B%E8%AF%95.txt",
+          content: "cached contents must not bypass the new read",
+        },
+      ],
+    }));
+    const original = composerDrafts.read("new");
+    vi.mocked(invoke).mockRejectedValueOnce("current file read failed");
+    const onSend = vi.fn();
+    const props = {
+      thread: null,
+      draftKey: "new",
+      imageEnabled: false,
+      embedContext,
+      onGoSettings() {},
+      onSend,
+    };
+    const send = render(props).find(
+      (element) => element.props["aria-label"] === STRINGS.composer.sendTitle,
+    )!;
+    await (send.props.onClick as () => Promise<void>)();
+    expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_check", {
+      uri: original.attachments[0]!.uri,
+      embed: embedContext,
+    });
+    expect(onSend).not.toHaveBeenCalled();
+    expect(composerDrafts.read("new")).toBe(original);
+    expect(composerDrafts.read("new").sendPending).not.toBe(true);
+  },
+);
+
+it("does not submit an attachment read after its exact draft has changed", async () => {
+  composerDrafts.update("new", () => ({
+    text: "original input",
+    attachments: [
+      { id: "file", kind: "file", name: "note.txt", uri: "file:///note.txt" },
+    ],
+  }));
+  let finish!: (value: string) => void;
+  vi.mocked(invoke).mockImplementationOnce(
+    () => new Promise<string>((resolve) => (finish = resolve)),
+  );
+  const onSend = vi.fn();
+  const send = render({
+    thread: null,
+    draftKey: "new",
+    imageEnabled: false,
+    embedContext: true,
+    onGoSettings() {},
+    onSend,
+  }).find(
+    (element) => element.props["aria-label"] === STRINGS.composer.sendTitle,
+  )!;
+  const sending = (send.props.onClick as () => Promise<void>)();
+  await vi.waitFor(() => expect(finish).toBeTypeOf("function"));
+  composerDrafts.update("new", (draft) => ({
+    ...draft,
+    text: "revised input",
+  }));
+  const revised = composerDrafts.read("new");
+  finish("current file contents");
+  await sending;
+  expect(onSend).not.toHaveBeenCalled();
+  expect(composerDrafts.read("new")).toBe(revised);
+  expect(revised.attachments).toHaveLength(1);
+});
+
 it("allows stop retry after confirmation expires even while the first cancel call is unresolved", async () => {
   vi.useFakeTimers();
   const thread = threads.markOpenFailed(

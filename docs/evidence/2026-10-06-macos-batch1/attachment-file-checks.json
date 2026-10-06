@@ -1,0 +1,57 @@
+{
+  "baseCommit": "853ce5148b8c87cc8aceda8a6bce0be6732d620f",
+  "sourceFrozen": true,
+  "sourceSha256": {
+    "src-tauri/src/draft_attachment.rs": "092e88b581160e62a276e701eb726e4f71e64cf9f2d6f6872b5752b44ca01c33",
+    "src-tauri/src/file_delivery.rs": "81d0df6806c9277cca44abedbb325876bd5986ead1d04a8192b18c7e6c5a6648",
+    "src/runtime/draft_attachments.ts": "8c33df4344a32545cfbb64dad00c92e74767a09889a40d1864eb44704efee348",
+    "src/runtime/draft_attachments.test.ts": "9dd2e3d6163183d198f910b349599bedfd1a405e6ee2c9594ade9bb2479614ec",
+    "src/components/Composer.errors.test.tsx": "355bb28d1280cc8bb91b3791547236daf753acf1c77b2a373f09a1d08c82a151"
+  },
+  "red": [
+    {
+      "log": "red-rust.log",
+      "exit": 101,
+      "passed": 1,
+      "failed": 2,
+      "cases": [
+        "encoded_file_names_read_the_exact_selected_file",
+        "rejects_a_selected_link_redirected_outside_its_parent"
+      ]
+    },
+    {
+      "log": "red-capacity.log",
+      "exit": 1,
+      "passed": 0,
+      "failed": 1,
+      "case": "prepares three files without exceeding the shared read-check capacity"
+    }
+  ],
+  "finalRust": {
+    "receipt": "final-checks.json",
+    "passed": 24,
+    "failed": 0,
+    "ignored": 0,
+    "clippyExit": 0,
+    "fmtExit": 0
+  },
+  "finalFrontend": {
+    "receipt": "final-frontend-checks.json",
+    "files": 6,
+    "passed": 51,
+    "failed": 0,
+    "typecheckExit": 0,
+    "prettierExit": 0
+  },
+  "independentReview": "no blocker, exact five frozen source hashes matched",
+  "boundaries": {
+    "imageFeatureAdded": false,
+    "uiChanged": false,
+    "agentStarted": false,
+    "installedAppChanged": false,
+    "installedFixVerified": false,
+    "committedByThisAgent": false
+  },
+  "rawReceiptSha256": "95ff03f173f359c8dba9b7c5ce5ddcc4ee32599b225ea9c37bd67ab655277612",
+  "installed": false
+}

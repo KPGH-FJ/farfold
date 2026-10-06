@@ -35,21 +35,23 @@ export async function prepareDraftAttachments(
   attachments: DraftAttachment[],
   embed: boolean,
 ) {
-  return Promise.all(
-    attachments.map(async (attachment) => {
-      if (attachment.kind === "image") {
-        if (!attachment.data)
-          throw new Error(DRAFT_STRINGS.attachmentIncomplete);
-        return attachment;
-      }
-      if (!attachment.uri) throw new Error(DRAFT_STRINGS.attachmentFailed);
-      const content = await checkFile(attachment.uri, embed);
-      return {
-        ...attachment,
-        content: content ?? undefined,
-        recovered: false,
-        loading: false,
-      };
-    }),
-  );
+  const prepared: DraftAttachment[] = [];
+  // Native checks have a shared limit on genuinely unfinished OS work. Read
+  // this one message in order rather than filling every slot at once.
+  for (const attachment of attachments) {
+    if (attachment.kind === "image") {
+      if (!attachment.data) throw new Error(DRAFT_STRINGS.attachmentIncomplete);
+      prepared.push(attachment);
+      continue;
+    }
+    if (!attachment.uri) throw new Error(DRAFT_STRINGS.attachmentFailed);
+    const content = await checkFile(attachment.uri, embed);
+    prepared.push({
+      ...attachment,
+      content: content ?? undefined,
+      recovered: false,
+      loading: false,
+    });
+  }
+  return prepared;
 }

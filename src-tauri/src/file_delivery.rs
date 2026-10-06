@@ -245,6 +245,26 @@ pub fn inspect(root: &Path, path: &Path) -> Result<VerifiedFile, DeliveryError> 
     capture(root, path, MAX_FILE_BYTES).map(|(file, _)| file)
 }
 
+/// Recheck one explicit unsent attachment using the same safe path handling.
+/// Links carry no file contents, so retain their existing lack of a content
+/// size limit. Embedded text keeps the smaller attachment-specific limit.
+pub(crate) fn check_attachment(
+    root: &Path,
+    path: &Path,
+    embed: bool,
+) -> Result<Option<String>, DeliveryError> {
+    if !embed {
+        let opened = open_source(root, path, u64::MAX)?;
+        recheck(&opened)?;
+        return Ok(None);
+    }
+    const MAX_ATTACHMENT_TEXT_BYTES: u64 = 256 * 1024;
+    let (_, bytes) = capture(root, path, MAX_ATTACHMENT_TEXT_BYTES)?;
+    String::from_utf8(bytes)
+        .map(Some)
+        .map_err(|_| DeliveryError::UnsupportedText)
+}
+
 fn capture_expected(file: &VerifiedFile, max: u64) -> Result<Vec<u8>, DeliveryError> {
     let (current, bytes) = capture(Path::new(&file.root), Path::new(&file.path), max)?;
     if current != *file {
