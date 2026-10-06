@@ -69,6 +69,7 @@ pub enum ManagerCommand {
     Logout {
         route: super::account_logout::LogoutRoute,
         account: Arc<Mutex<Option<super::account_status::AccountIdentity>>>,
+        effect_sent: Arc<AtomicBool>,
         operation: AuthenticationOperation,
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
         result: oneshot::Sender<Result<(), String>>,
@@ -762,16 +763,22 @@ impl AcpManager {
         &self,
         agent_id: &str,
         cwd: &Path,
+        scope: &AccountScope,
         operation: AuthenticationOperation,
         on_unknown: std::sync::Arc<dyn Fn() + Send + Sync>,
     ) -> Result<(), String> {
         let selected = self.live_connection(agent_id, cwd)?;
+        if !scope.protects(&selected) {
+            return Err("账号操作保护已变化，请重新操作".into());
+        }
         let route = super::account_logout::LogoutRoute::for_connection(&selected)
             .ok_or("此目录的 Agent 未提供退出登录，请使用账号设置")?;
         let (result, reply) = oneshot::channel();
+        let effect_sent = Arc::new(AtomicBool::new(false));
         selected.send(ManagerCommand::Logout {
             route,
             account: selected.account.clone(),
+            effect_sent: effect_sent.clone(),
             operation,
             on_unknown,
             result,
@@ -787,6 +794,14 @@ impl AcpManager {
                 Err("账号连接已结束，请重新检查账号状态".into())
             }
         };
+        if effect_sent.load(Ordering::SeqCst) {
+            // An error after dispatch may follow a partial credential change,
+            // including an acknowledged sign-out with an unconfirmed status
+            // query. Never release old process-local copies on such an outcome.
+            scope
+                .retire_account_copies(outcome.as_ref().ok().map(|_| &selected))
+                .await?;
+        }
         if let Ok(connections) = self.lock()
             && let Some((key, connection)) = connections
                 .iter()
@@ -1156,6 +1171,7 @@ mod authentication_tests {
                 .logout(
                     "example",
                     Path::new("/a"),
+                    &manager.reserve_account_change("example").unwrap(),
                     AuthenticationOperation::new(),
                     Arc::new(|| {})
                 )

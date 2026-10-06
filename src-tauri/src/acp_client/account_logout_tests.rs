@@ -8,6 +8,9 @@ use crate::acp_client::{
 };
 use std::sync::atomic::{AtomicBool, Ordering};
 
+#[path = "account_logout_connections_tests.rs"]
+mod connection_tests;
+
 const VIBE_PEER: &str = r#"#!/usr/bin/python3 -u
 import sys,json,time,os
 root=os.path.dirname(os.path.realpath(__file__))
@@ -71,7 +74,7 @@ async fn ready(f: &Fixture) {
 async fn logout(f: &Fixture, operation: AuthenticationOperation) -> Result<(), String> {
     let _scope = f.manager.reserve_account_change(&f.row.id)?;
     f.manager
-        .logout(&f.row.id, &f.cwd, operation, Arc::new(|| {}))
+        .logout(&f.row.id, &f.cwd, &_scope, operation, Arc::new(|| {}))
         .await
 }
 
@@ -150,6 +153,8 @@ async fn empty_ack_or_remote_error_does_not_invent_a_signed_out_state() {
     for marker in ["keep_credential", "logout_error"] {
         let f = fixture();
         ready(&f).await;
+        let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+        let pid = connection.child_pid.load(Ordering::SeqCst);
         std::fs::write(f.cwd.join(marker), "controlled").unwrap();
         let error = logout(&f, AuthenticationOperation::new())
             .await
@@ -160,11 +165,19 @@ async fn empty_ack_or_remote_error_does_not_invent_a_signed_out_state() {
             1
         );
         assert!(
-            f.manager.status(&f.row.id).unwrap()[0]
+            connection
                 .account
+                .lock()
+                .unwrap()
                 .as_ref()
                 .is_none_or(|a| a.kind != AccountKind::MissingCredential)
         );
+        // A dispatched error can follow a partial account change. Ending its
+        // process protects later requests without inventing a signed-out state.
+        assert!(connection.life.closed().await.is_ok());
+        assert!(connection.life.work().is_err());
+        assert_ne!(crate::platform_tests::process_check(pid as i32), 0);
+        assert!(f.manager.status(&f.row.id).unwrap().is_empty());
     }
 }
 
@@ -174,6 +187,18 @@ async fn late_logout_keeps_shared_scope_until_real_reply_and_never_retries() {
     ready(&f).await;
     std::fs::write(f.cwd.join("logout_wait"), "wait").unwrap();
     let connection = f.manager.live_connection(&f.row.id, &f.cwd).unwrap();
+    let mut connected_alias = f.row.clone();
+    connected_alias.id = "custom:vibe-connected-alias".into();
+    connected_alias.source = "custom".into();
+    f.store.insert_agent(&connected_alias).unwrap();
+    f.manager
+        .connect(&connected_alias, &f.cwd, &f.store)
+        .await
+        .unwrap();
+    let sibling = f
+        .manager
+        .live_connection(&connected_alias.id, &f.cwd)
+        .unwrap();
     let scope = f.manager.reserve_account_change(&f.row.id).unwrap();
     let (result, mut receive) = tokio::sync::oneshot::channel();
     let unknown = Arc::new(AtomicBool::new(false));
@@ -185,6 +210,7 @@ async fn late_logout_keeps_shared_scope_until_real_reply_and_never_retries() {
             command: ManagerCommand::Logout {
                 route: LogoutRoute::for_connection(&connection).unwrap(),
                 account: connection.account.clone(),
+                effect_sent: Arc::new(AtomicBool::new(false)),
                 operation: operation.clone(),
                 on_unknown: Arc::new(move || {
                     signal.store(true, Ordering::SeqCst);
@@ -198,6 +224,7 @@ async fn late_logout_keeps_shared_scope_until_real_reply_and_never_retries() {
     until(|| f.cwd.join("logout_wait_started").exists() && unknown.load(Ordering::SeqCst)).await;
     assert!(receive.try_recv().is_err());
     assert!(connection.life.work().is_err());
+    assert!(sibling.life.work().is_err());
     let mut alias = f.row.clone();
     alias.id = "custom:vibe-alias".into();
     alias.source = "custom".into();

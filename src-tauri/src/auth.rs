@@ -850,7 +850,7 @@ pub async fn agent_logout(
             let _ = on_output.send(serde_json::json!({"authStatus":"unknown"}));
         });
         app.state::<AcpManager>()
-            .logout(&agent_id, &cwd, operation, on_unknown)
+            .logout(&agent_id, &cwd, &_scope, operation, on_unknown)
             .await
     })
     .await

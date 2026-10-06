@@ -11,7 +11,10 @@ use agent_client_protocol::{Agent, ConnectionTo, UntypedMessage};
 use serde_json::{Value, json};
 use std::{
     path::Path,
-    sync::{Arc, Mutex},
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
     time::Duration,
 };
 
@@ -51,8 +54,10 @@ impl LogoutRoute {
         cx: &ConnectionTo<Agent>,
         operation: &Operation,
         account: &Arc<Mutex<Option<AccountIdentity>>>,
+        effect_sent: &AtomicBool,
     ) -> Result<(), String> {
         if matches!(self, Self::Standard) {
+            effect_sent.store(true, Ordering::SeqCst);
             return operation
                 .request(cx, cx.send_request(LogoutRequest::new()))
                 .await
@@ -74,6 +79,7 @@ impl LogoutRoute {
         Self::publish(account, None)?;
         let request = UntypedMessage::new("_auth/signOut", json!({}))
             .map_err(super::operations::authentication_error)?;
+        effect_sent.store(true, Ordering::SeqCst);
         operation
             .request(cx, cx.send_request_to(Agent, request))
             .await

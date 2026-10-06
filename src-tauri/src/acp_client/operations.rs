@@ -294,6 +294,7 @@ pub(crate) async fn run(
         ManagerCommand::Logout {
             route,
             account,
+            effect_sent,
             operation,
             on_unknown,
             result,
@@ -309,7 +310,7 @@ pub(crate) async fn run(
                 deadline,
                 on_unknown,
                 _lease,
-                route.execute(&cx, &operation, &account),
+                route.execute(&cx, &operation, &account, &effect_sent),
             )
             .await;
         }

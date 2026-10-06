@@ -135,7 +135,56 @@ impl AccountAdmission {
 pub(crate) struct AccountScope {
     // Release member admissions before allowing another launch into this scope.
     _operations: Vec<super::super::lifecycle::OperationLease>,
+    connections: Vec<ManagedConnection>,
     _claim: Arc<Claim>,
+}
+
+impl AccountScope {
+    pub(super) fn protects(&self, selected: &ManagedConnection) -> bool {
+        self.connections
+            .iter()
+            .any(|connection| Arc::ptr_eq(&connection.life, &selected.life))
+    }
+
+    /// A shared credential change cannot clear copies already loaded by other
+    /// processes. Retire the exact idle owners admitted before the mutation,
+    /// retaining only a preparation process whose signed-out result is known.
+    /// Explicit API selections have their own source and are not affected.
+    pub(super) async fn retire_account_copies(
+        &self,
+        confirmed_preparation: Option<&ManagedConnection>,
+    ) -> Result<(), String> {
+        let mut retiring = Vec::new();
+        let mut failure = None;
+        for connection in &self.connections {
+            if connection.service.is_some()
+                || confirmed_preparation
+                    .is_some_and(|kept| Arc::ptr_eq(&kept.life, &connection.life))
+            {
+                continue;
+            }
+            // The held account_change lease prevents new work and admitted
+            // unresolved work would have rejected scope collection. Never force
+            // close a process whose activity cannot be verified.
+            match connection
+                .life
+                .close_for(false, None, CloseReason::Configuration)
+            {
+                Ok(_) => retiring.push(&connection.life),
+                Err(error) => failure = Some(error),
+            }
+        }
+        // All owners are marked closing before any wait can yield. Do not release
+        // shared account admission on a local wait timeout: exact child reap and
+        // route removal are the completion boundary.
+        for life in retiring {
+            life.terminated().await;
+            if let Err(error) = life.closed().await {
+                failure = Some(error);
+            }
+        }
+        failure.map_or(Ok(()), Err)
+    }
 }
 
 #[cfg(test)]
@@ -143,6 +192,7 @@ impl AccountScope {
     pub(crate) fn empty_for_test() -> Self {
         Self {
             _operations: Vec::new(),
+            connections: Vec::new(),
             _claim: Arc::new(Claim {
                 agent_id: String::new(),
                 entries: Vec::new(),
@@ -210,6 +260,7 @@ impl AcpManager {
             entries,
         })?;
         let mut operations = Vec::new();
+        let mut protected = Vec::new();
         for (key, connection) in connections.iter() {
             if !claim.includes(&key.agent_id, connection.launch_identity.as_ref())
                 || matches!(
@@ -223,9 +274,11 @@ impl AcpManager {
                 return Err("相关程序检查尚未结束，请等待后再处理账号或配置".into());
             }
             operations.push(connection.life.operation("account_change".into())?);
+            protected.push(connection.clone());
         }
         Ok(AccountScope {
             _operations: operations,
+            connections: protected,
             _claim: claim,
         })
     }
