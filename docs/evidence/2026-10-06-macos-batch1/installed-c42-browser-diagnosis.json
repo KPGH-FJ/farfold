@@ -1,0 +1,49 @@
+{
+  "installedCommit": "c42d7ca2ceec1e6c07d1e971e9cfff86c858ffcd",
+  "binarySha256": "9fb0cffd02055f685548225b08ea0a17ce81f676ae340037df20c823d97c936f",
+  "evidenceSource": "Root installed native UI, expanded actual tool inputs and results; screenshots and AX retained in task output, no local PNG asserted.",
+  "fixture": "New owned loopback page on port 63794; original unknown action and original page were not retried or modified.",
+  "requests": [
+    {
+      "sequence": 1,
+      "outcome": "rejected",
+      "applied": false,
+      "stage": "native preflight observation expiry",
+      "boundary": "Operator inspection delayed approval. No page-level diagnostic or click permission card."
+    },
+    {
+      "sequence": 2,
+      "outcome": "rejected",
+      "applied": false,
+      "stage": "native preflight observation expiry",
+      "boundary": "Native tool and precise page action approvals confirmed; total displayed time is not observation age."
+    },
+    {
+      "sequence": 3,
+      "outcome": "rejected",
+      "applied": false,
+      "guardClass": "observation_missing",
+      "observationInvalidatedBy": "resize",
+      "observationAgeMs": 9354,
+      "boundary": "Actual page-level result after both approvals; first invalidation was resize within the unchanged 30-second limit. Specific resizing UI caller not observed directly."
+    }
+  ],
+  "visibleStateAfterThreeDiagnosisRequests": {
+    "counter": 0,
+    "inputEmpty": true,
+    "submitted": false,
+    "pageClosedAndReadingRevoked": true
+  },
+  "independentNativeComparison": {
+    "receipt": "output/2026-10-06-macos-batch1/browser-resize-repro/receipt.json",
+    "receiptSha256": "50b075a9391e183a841d2559303cf89a3774944145e1d4ca0d8e4497004afe74",
+    "summary": "output/2026-10-06-macos-batch1/browser-resize-repro/difference-summary.json",
+    "summarySha256": "4d7eee1a69e8911d63640e8b2f30362830ca07c76a2736fc970e75ea03158e8a",
+    "actualHarnessHead": "ac2c02bd9062f8a7dc0a7e9fcb6259dbb1b96b05",
+    "threeNativeSourceHashesMatchInstalledC42": true,
+    "sameSizeMovementAndHideShow": "Five controlled cases dispatched successfully and observed counter=1.",
+    "realWidthOrHeightReduction": "Two controlled cases reproduced observation_missing/resize/rejected/false, counter=0.",
+    "boundary": "Hidden native synthetic comparisons do not identify the installed layout caller or prove an installed fix. Initial verbal HEAD mistake corrected in the summary; original receipts preserved."
+  },
+  "result": "Installed click failed with a bounded resize diagnosis. Input, submit and successful click remain unverified; no guard, permission, expiry or single-use protection was weakened."
+}
