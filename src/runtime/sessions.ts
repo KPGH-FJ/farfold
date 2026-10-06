@@ -39,7 +39,7 @@ import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
 import { StopConfirmation } from "./stop_confirmation";
 import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
-import { normalizeMessageAttachment } from "./message_attachments";
+import { normalizeMessageAttachments } from "./message_attachments";
 import { validateQueuedAttachments } from "./draft_attachments";
 import {
   markRestoredQueueAttachments,
@@ -105,12 +105,7 @@ export interface AgentOnlyRow {
 
 /** View-model types live in `session_types.ts` (file-size cap); re-export
  *  so `../runtime/sessions` imports keep working. */
-import type {
-  Attachment,
-  PromptBlock,
-  ThreadItem,
-  ThreadState,
-} from "./session_types";
+import type { PromptBlock, ThreadItem, ThreadState } from "./session_types";
 import { hasPendingRequests } from "./session_types";
 export * from "./session_types";
 export {
@@ -926,9 +921,7 @@ class ThreadsStore {
       kind: "user",
       id: nextItemId(),
       text,
-      attachments: blocks
-        .map(normalizeMessageAttachment)
-        .filter((item): item is Attachment => item !== null),
+      attachments: [],
       streaming: false,
       time: Date.now(),
     };
@@ -963,6 +956,8 @@ class ThreadsStore {
     };
     try {
       await validateQueuedAttachments(blocks);
+      // Project checked dispatch content, not the earlier queue snapshot.
+      item.attachments = normalizeMessageAttachments(blocks);
       // Persist the in-flight input before it can reach an Agent. A crash in
       // this window restores an explicitly quarantined request, never a retry.
       this.emit(key);

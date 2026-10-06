@@ -1,0 +1,26 @@
+{
+  "baseCommit": "7ceee05d94df8b7dfe8fab9f0bdcef8f40bb67a0",
+  "sourceFiles": {
+    "src/runtime/sessions.ts": {
+      "sha256": "4fcf0e9e6ae3a9332ced2fe8bd82a5e0aba3d0b5a6e5831b17cc15d0036b5b70",
+      "lines": 1493
+    },
+    "src/runtime/message_attachments.ts": {
+      "sha256": "68657ebd762b0206c3a6cafc5693e5cc2434fc3d5210d43c27af82c6e3995e06",
+      "lines": 96
+    },
+    "src/runtime/sessions.queue-images.test.ts": {
+      "sha256": "023a70d810ec2b59573087e0fbedb48220fc897f47aa6c7401882558d754582c",
+      "lines": 171
+    }
+  },
+  "privateReceiptSha256": "cb267cef48f6fc1e9c5bf6fbdd9cd1ab5de3f0d4c20a6813882cfc7712ea9b4d",
+  "red": "1 failed, 1 passed",
+  "green": "2 passed",
+  "adjacent": "114 passed, 6 files",
+  "typecheck": 0,
+  "format": 0,
+  "independentReview": "3 source files and 8 logs matched; no blocking findings",
+  "result": "Message attachment presentation now uses the validated and reread dispatch content. Unreadable queued source still remains queued without sending.",
+  "boundary": "Controlled production store and native-read peer; no installed UI or real Agent proof. This does not explain the tiny-image model response."
+}

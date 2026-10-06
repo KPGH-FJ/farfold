@@ -56,6 +56,14 @@ export function normalizeMessageAttachment(
   return null;
 }
 
+export function normalizeMessageAttachments(
+  content: readonly unknown[],
+): Attachment[] {
+  return content
+    .map(normalizeMessageAttachment)
+    .filter((attachment): attachment is Attachment => attachment !== null);
+}
+
 export function hasReadableMessages(items: readonly ThreadItem[]): boolean {
   return items.some(
     (item) =>
