@@ -7,6 +7,8 @@ export const NOTIFICATION_STRINGS = {
   hint: "在你离开 Farfold 时，提醒新的批准请求、提问和工作异常。提醒不包含对话内容。",
   systemHint: "是否实际显示仍由系统通知设置和专注模式决定。",
   permissionUnknown: "系统通知许可尚未确认，请重新检查。",
+  permissionUnavailable:
+    "系统通知暂不可用。请稍后重新检查；提醒仍使用之前的选择。",
   permissionPending: "开启提醒时，系统会询问是否允许 Farfold 通知。",
   permissionDenied:
     "系统未允许通知。请在系统设置中允许 Farfold 通知，再重新检查。",
@@ -30,6 +32,24 @@ export const NOTIFICATION_STRINGS = {
   disabled: "已关闭",
   retry: "重新检查",
 } as const;
+
+function preferenceSaveError(error: unknown): string {
+  const message =
+    typeof error === "string"
+      ? error
+      : error instanceof Error
+        ? error.message
+        : null;
+  switch (message) {
+    case "系统通知许可尚未确认，请重新检查":
+    case "系统通知许可尚未确认，原设置保持不变":
+      return NOTIFICATION_STRINGS.permissionUnknown;
+    case "系统通知暂不可用":
+      return NOTIFICATION_STRINGS.permissionUnavailable;
+    default:
+      return NOTIFICATION_STRINGS.saveError;
+  }
+}
 
 type NoticeKind = "approval" | "question" | "interrupted";
 interface Notice {
@@ -241,8 +261,8 @@ export class DesktopNotifications {
         error:
           enabled && !saved.enabled ? notificationPermissionLabel(saved) : null,
       });
-    } catch {
-      this.publish({ error: NOTIFICATION_STRINGS.saveError });
+    } catch (error) {
+      this.publish({ error: preferenceSaveError(error) });
     } finally {
       this.publish({ saving: false });
     }

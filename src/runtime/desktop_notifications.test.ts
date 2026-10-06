@@ -104,6 +104,78 @@ describe("desktop reminder preferences", () => {
     expect(f.save).toHaveBeenCalledTimes(1);
   });
 
+  it.each([
+    {
+      error: "系统通知许可尚未确认，请重新检查",
+      message: NOTIFICATION_STRINGS.permissionUnknown,
+    },
+    {
+      error: "系统通知暂不可用",
+      message: "系统通知暂不可用。请稍后重新检查；提醒仍使用之前的选择。",
+    },
+  ])(
+    "explains a fixed system-permission failure without changing saved choices or retrying: $error",
+    async ({ error, message }) => {
+      const f = fixture(false);
+      f.read.mockResolvedValueOnce(saved(false, true));
+      await f.notifications.load();
+      f.save.mockRejectedValueOnce(error);
+      await f.notifications.setEnabled(true);
+      expect(f.notifications.snapshot()).toMatchObject({
+        enabled: false,
+        sound: true,
+        permission: "authorized",
+        saving: false,
+        error: message,
+      });
+      await settle();
+      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true);
+      expect(f.submit).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    "系统通知许可尚未确认，原设置保持不变",
+    new Error("系统通知许可尚未确认，请重新检查"),
+  ])(
+    "recognizes only the exact known permission error when it is returned directly or as an Error: %j",
+    async (error) => {
+      const f = fixture(false);
+      await f.notifications.load();
+      f.save.mockRejectedValueOnce(error);
+      await f.notifications.setEnabled(true);
+      expect(f.notifications.snapshot()).toMatchObject({
+        enabled: false,
+        saving: false,
+        error: NOTIFICATION_STRINGS.permissionUnknown,
+      });
+      expect(f.save).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it.each([
+    "系统通知暂不可用：private-provider-details",
+    "private-database-details",
+    { message: "系统通知暂不可用", privateDetail: "private-value" },
+  ])(
+    "does not expose unknown or storage failures that resemble a permission error: %j",
+    async (error) => {
+      const f = fixture();
+      await f.notifications.load();
+      f.save.mockRejectedValueOnce(error);
+      await f.notifications.setSound(true);
+      expect(f.notifications.snapshot()).toMatchObject({
+        enabled: true,
+        sound: false,
+        saving: false,
+        error: NOTIFICATION_STRINGS.saveError,
+      });
+      await settle();
+      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true);
+      expect(f.submit).not.toHaveBeenCalled();
+    },
+  );
+
   it("stores a quiet default and keeps the explicit sound choice separate from system permission", async () => {
     const f = fixture(false);
     await f.notifications.load();
