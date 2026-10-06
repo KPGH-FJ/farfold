@@ -67,3 +67,5 @@ fast-agent文件反例只适用于其官方文本工具路线；另一官方客�
 安装版Devin保持SWE-2/High/Code，原正文恢复后两条新任务：实际读/写/重读复制50字节一致，意见仅入输入框、明确发送后blue→red返工49字节一致；输入及两LF保留，结构化位置/差异真实存在。正文仍被普通未知notification（只取类型_cognition.ai/thinking_complete）拆句，未把正确记号拼成体验通过。位置打开超时只显示泛化错误，另核实实际显示等待指引；返工后核实返回忙碌/未开始，不反复再核。见installed-836-devin-results.json、protocol-installed-836-devin.json。桌面访问待用户检查，不从4条TCC聚合记录猜根因；通知设置实际显示正确拒绝指引，系统送达仍缺许可。
 
 OpenedFileView现已在源码严格匹配两条固定文件检查等待/忙碌文案，其他错误仍隐藏，未动权限、期限、写入或后台槽位；红35项中4失败/31通过，绿35通过、类型检查及独立复核无阻断，尚未安装。见file-open-guidance-checks.json，实机文件仍未核实通过。
+
+836安装版Stakpak沿既有0.3.88仅检查连接一次：连接与随后模型查询的两次initialize均成功，第二连接session/new实际auth_required，界面程序已连接后要求登录。按本轮边界关闭准备，无authenticate/prompt/升级；88条历史未增加。原下一实例启动失败在此限定路径未复现，不反推原OS错误或容量/泄漏根因解决。见installed-836-stakpak-results.json及protocol-installed-836-stakpak.json。

@@ -1,0 +1,33 @@
+{
+  "StakpakConnection": {
+    "log": "protocol-v1-1791301926985-5.jsonl",
+    "recordedAtUtc": "2026-10-06T15:55:42.952524+00:00",
+    "sha256": "ac4d7403827529541ab2973eed0b780bdc9756e902e6240659ebc4fea5e4d2aa",
+    "bytes": 2433,
+    "records": 8,
+    "outbound": {
+      "initialize": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {},
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "StakpakModels": {
+    "log": "protocol-v1-1791301933258-6.jsonl",
+    "recordedAtUtc": "2026-10-06T15:55:42.952781+00:00",
+    "sha256": "0461520740f6a2fee5f482f750e07061a560684d973afe258599e10cfe7656fe",
+    "bytes": 2714,
+    "records": 10,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

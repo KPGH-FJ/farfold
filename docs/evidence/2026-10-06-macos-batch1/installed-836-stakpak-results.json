@@ -1,0 +1,8 @@
+{
+  "appCommit": "836cda89",
+  "agent": "Existing Stakpak 0.3.88 installation; no upgrade or config change",
+  "actions": "One explicit Check connection in existing preparation; subsequent preparation model query started by same UI flow",
+  "protocol": "Two initialize handshakes succeeded; second connection session/new returned auth_required; no prompt/authenticate",
+  "ui": "Program connected, then 当前使用方式需要登录. Root closed preparation without login. History count stayed 88, no test message sent.",
+  "scope": "The previously failing next-process start path succeeded in this bounded attempt. Does not establish original OS failure cause, capacity/leak resolution or logged-in use; eight-standard completion not passed."
+}
