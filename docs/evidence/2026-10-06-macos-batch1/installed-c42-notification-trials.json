@@ -1,0 +1,48 @@
+{
+  "installedCommit": "c42d7ca2ceec1e6c07d1e971e9cfff86c858ffcd",
+  "evidenceSource": "Root installed UI plus human observations; notification-center screenshot supplied by human is retained in the conversation, not copied into Git.",
+  "configuration": {
+    "systemPermission": "authorized, refreshed in installed settings after human changed macOS permission",
+    "originalReminderAndSound": [false, false],
+    "trialReminderAndSound": [true, true],
+    "settingsDuringFileTrial": "After the trial, installed settings still showed authorized/on/on and no submission-error text.",
+    "restoredReminderAndSound": [false, false]
+  },
+  "trials": [
+    {
+      "sequence": 1,
+      "agent": "Codex",
+      "approvalActuallyPresent": true,
+      "background": "Automation pressed Calculator zero; actual Farfold focus not established.",
+      "humanResult": "Initial possible observation withdrawn; no confirmed Farfold banner or sound.",
+      "operation": "Denied at native tool approval; no page click approved."
+    },
+    {
+      "sequence": 2,
+      "agent": "Codex",
+      "approvalActuallyPresent": true,
+      "background": "Same automation limitation as first trial.",
+      "humanResult": "No banner or sound observed.",
+      "operation": "Denied at native tool approval; no page click approved."
+    },
+    {
+      "sequence": 3,
+      "agent": "Codex",
+      "approvalActuallyPresent": false,
+      "background": "Human sent and switched apps.",
+      "humanResult": "No reminder observed.",
+      "boundary": "Agent saw only lower-page text and could not confirm fixture marker, so stopped without requesting click. This is not a notification-delivery test."
+    },
+    {
+      "sequence": 4,
+      "agent": "CodeBuddy",
+      "configuration": "Existing Hy4 preview/High/Always Ask retained.",
+      "approvalActuallyPresent": true,
+      "background": "Human instructed to send, immediately switch apps and wait 30 seconds; reported after this manual trial. Focus at the exact notification event was not independently traced.",
+      "humanResult": "No Farfold reminder seen; human-supplied visible notification-center crop contains no Farfold card. A faint sound was heard but its source was not confirmed.",
+      "operation": "File request denied once, UI stopped; new owned target file still absent."
+    }
+  ],
+  "diagnosis": "One earlier bounded app/PID system-log window had no matching entries; no submission receipt was retained. Submission, suppression reason and OS delivery remain unknown. Code review alone did not establish cause.",
+  "result": "Notification real-use path not accepted. Click return remains untested, Farfold sound unconfirmed. Preserve this negative observation and diagnose before repeating the same conditions."
+}

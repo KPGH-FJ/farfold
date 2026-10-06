@@ -1,0 +1,67 @@
+{
+  "phase": "internalCandidatePreparedNotInstalled",
+  "sourceCommit": "01c93c7b3260cbcdb55306ae18853707259ae924",
+  "candidateApp": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalApp": "/Applications/Farfold.app",
+  "archive": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/Farfold-0.1.7-01c93c7b3260cbcdb55306ae18853707259ae924.zip",
+  "installed": false,
+  "notarized": false,
+  "sourceInputs": 721,
+  "sourceInputDigest": "5e7a2cb8740a02dc80277cff20de56be71f6df717e9b58027a4b7faa036be262",
+  "sourceInputDigestAfterBuild": "5e7a2cb8740a02dc80277cff20de56be71f6df717e9b58027a4b7faa036be262",
+  "sourceInputManifest": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/source-inputs.json",
+  "sourceInputsMatchGitBefore": true,
+  "sourceInputsMatchGitAfterBuild": true,
+  "sourceInputStatsUnchanged": true,
+  "changedSourcePaths": [],
+  "buildExitCode": 0,
+  "buildDurationSeconds": 53.104,
+  "candidateFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/MacOS/farfold": "af838ad6a0abc33eee8f885d8d1759ee91089bc3e6f85ad2dbfca31569edca93",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "formalAppFilesBeforeBuild": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/MacOS/farfold": "9fb0cffd02055f685548225b08ea0a17ce81f676ae340037df20c823d97c936f",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "binarySha256": "af838ad6a0abc33eee8f885d8d1759ee91089bc3e6f85ad2dbfca31569edca93",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "signature": "adhoc",
+  "cdHash": "f3ba09e2db1fad37dae0333a3f4ec87b001218c4",
+  "strictCodesignPassed": true,
+  "archiveBytes": 10167715,
+  "archiveSha256": "a6b3074f2200245347b7aea049696ce19f1cd1939fceb3015bb3cadc32df90d7",
+  "archiveCrcPassed": true,
+  "formalAppFilesUnchangedAcrossCandidateBuildAndChecks": true,
+  "oldZipPreservedAndHashUnchanged": true,
+  "evidence": [
+    {
+      "path": "output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/package-receipt.json",
+      "sha256": "066549fd08ae50fc6cb91208c68ff18dff241e38a1e0aa23235b7e8d31a7a1e8"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/helper-execution.json",
+      "sha256": "21c4a19f8f21649bf821c75a4f18ce173841ce3323095a0865f8cae9b7682bcd"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/independent-checks.json",
+      "sha256": "188d160c152b5c25a32b1311b7180460c798e4fa7dbd8efdbd115fc9036eca14"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/followup-candidates/01c93c7b3260cbcdb55306ae18853707259ae924/root-package-checks.json",
+      "sha256": "85cfd20e04a94783bcca13be2043bfc3c66875f387b926d4e6224bbbbe046750"
+    }
+  ],
+  "helperLoadedSha256": "e9648790659cc3ceb2cadc032daf4d691eb9901675df4935f540bbddcc3723bd",
+  "independentChecksPassed": 54,
+  "rootZipCountCorrection": "Initial whole-archive five-file assertion was too strict; verified five bundle payload files plus nine known AppleDouble metadata entries. Failure retained; no rebuild.",
+  "scope": "One internal macOS candidate, exact sources and payload; no formal replacement or installed/real-Agent acceptance."
+}
