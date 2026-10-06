@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "scope": "macOS batch 1 Pi A/B overlap; content-free live snapshot before subsequent increments",
+  "anchorUtc": "2026-10-06T08:32:06Z",
+  "associationBasis": "A/B identities are supplied by main-task observed actions; protocol logs omit Agent and native session identifiers",
+  "snapshots": {
+    "A": {
+      "file": "protocol-v1-1791275544814-1.jsonl",
+      "snapshotBytes": 14048,
+      "snapshotSha256": "fc6030048334b2ff958950de88608273efdbea13f37d1b84eb5695540331925b",
+      "completeRecordCount": 129,
+      "incompleteTrailingBytes": 0,
+      "outboundCounts": {
+        "initialize": 1,
+        "session/new": 1,
+        "session/set_config_option": 2,
+        "session/prompt": 4,
+        "session/cancel": 1
+      },
+      "incomingResponseCounts": {
+        "none": 8
+      },
+      "protocolErrorClasses": {},
+      "stderrMetadataCount": 0,
+      "promptIntervals": [
+        {
+          "ordinal": 1,
+          "promptTs": 1791275890197,
+          "firstFollowingResponseTs": 1791275900001,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 9804,
+          "cancelTs": [],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 28
+        },
+        {
+          "ordinal": 2,
+          "promptTs": 1791276041424,
+          "firstFollowingResponseTs": 1791276094916,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 53492,
+          "cancelTs": [],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 32
+        },
+        {
+          "ordinal": 3,
+          "promptTs": 1791276161106,
+          "firstFollowingResponseTs": 1791276199711,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 38605,
+          "cancelTs": [1791276199697],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 17
+        },
+        {
+          "ordinal": 4,
+          "promptTs": 1791276280136,
+          "firstFollowingResponseTs": 1791276282057,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 1921,
+          "cancelTs": [],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 22
+        }
+      ],
+      "latestLifecycle": {
+        "ts": 1791275544942,
+        "phase": "initialize",
+        "startupOutcome": "success",
+        "initializeResponse": "matched_result",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": false,
+        "groupEnded": false,
+        "connectionRemoved": false
+      }
+    },
+    "B": {
+      "file": "protocol-v1-1791276051025-2.jsonl",
+      "snapshotBytes": 10987,
+      "snapshotSha256": "833dd8669b72d6f80b0bca2ec297e05fcecb92ae59b557d9132e471c58e939b0",
+      "completeRecordCount": 97,
+      "incompleteTrailingBytes": 0,
+      "outboundCounts": {
+        "initialize": 1,
+        "session/new": 1,
+        "session/set_config_option": 2,
+        "session/prompt": 2
+      },
+      "incomingResponseCounts": {
+        "none": 6
+      },
+      "protocolErrorClasses": {},
+      "stderrMetadataCount": 0,
+      "promptIntervals": [
+        {
+          "ordinal": 1,
+          "promptTs": 1791276100708,
+          "firstFollowingResponseTs": 1791276146868,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 46160,
+          "cancelTs": [],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 41
+        },
+        {
+          "ordinal": 2,
+          "promptTs": 1791276184826,
+          "firstFollowingResponseTs": 1791276221445,
+          "firstFollowingResponseError": "none",
+          "elapsedToFirstFollowingResponseMs": 36619,
+          "cancelTs": [],
+          "interveningOutboundNonCancelEvents": {},
+          "incomingUpdateCountBeforeResponse": 31
+        }
+      ],
+      "latestLifecycle": {
+        "ts": 1791276051128,
+        "phase": "initialize",
+        "startupOutcome": "success",
+        "initializeResponse": "matched_result",
+        "initializeAccepted": true,
+        "childStarted": true,
+        "childReaped": false,
+        "groupEnded": false,
+        "connectionRemoved": false
+      }
+    }
+  },
+  "intervalScope": "first following incoming response; safe logs omit request IDs and result/stopReason",
+  "A2B1": {
+    "metadataIntervalsOverlap": false,
+    "gapFromA2ResponseToB1PromptMs": 5792,
+    "mainTaskObservedOverlap": false,
+    "concurrencyAcceptance": false
+  },
+  "A3B2": {
+    "metadataIntervalsOverlap": true,
+    "metadataOverlapMs": 14885,
+    "aCancelTs": 1791276199697,
+    "aFirstFollowingResponseAfterCancelMs": 14,
+    "bFirstFollowingResponseAfterACancelMs": 21748,
+    "bOutboundCancels": 0,
+    "mainTaskObservedTwoRunning": true,
+    "mainTaskObservedAToolInProgressAtStop": true,
+    "mainTaskObservedAStopped": true,
+    "mainTaskObservedBStillRunningAfterAStop": true,
+    "mainTaskObservedB2ToolSeconds": 30.1,
+    "mainTaskObservedB2ExpectedMarkerMatched": true,
+    "mainTaskObservedB2TerminalUi": "completed",
+    "acceptanceScope": "Only this Pi A/B combination and the described overlap/stop path"
+  },
+  "A4": {
+    "outboundPromptObserved": true,
+    "nonErrorResponseMetadataObserved": true,
+    "elapsedToFirstFollowingResponseMs": 1921,
+    "terminalUiAcceptance": "Main task observed completed UI after this request.",
+    "strictMarkerAcceptance": "Main task observed exact expected first marker and no appended retry wording.",
+    "acceptanceBasis": "Main-task final UI observation, not inferred from protocol response metadata."
+  },
+  "visualEvidence": {
+    "location": "Main-task screenshot and AX tool outputs only",
+    "diskPngProvided": false,
+    "localScreenshotPath": null
+  },
+  "toolCallCount": null,
+  "limitations": [
+    "session/update metadata contains no tool-update subtype; tool calls cannot be counted here.",
+    "Response timestamps omit request IDs and stopReason; no intervening non-cancel outbound event was observed in these prompt intervals.",
+    "Farfold prompt counts do not count Agent internal model attempts, retry notices or billing.",
+    "Latest lifecycle snapshots have no cleanup yet; this is not final run-end evidence.",
+    "No message, command, page, account identity or credential body is saved."
+  ]
+}

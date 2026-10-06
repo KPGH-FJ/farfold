@@ -1,0 +1,50 @@
+{
+  "codebuddy": {
+    "log": "protocol-v1-1791278245254-8.jsonl",
+    "sha256": "839da626ab9ae964413cfdbb5706f5050f9f011ac258ae122e8689c07085b625",
+    "bytes": 5109,
+    "records": 36,
+    "outbound": {
+      "initialize": 1,
+      "other": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:18:52.022000+00:00",
+        "firstResponseAt": "2026-10-06T09:19:03.736000+00:00",
+        "durationMs": 11714,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata only. UI confirms model, answer and visible outcome separately; no error body, identity or credential retained."
+  },
+  "amp": {
+    "log": "protocol-v1-1791278642960-13.jsonl",
+    "sha256": "18d5336c616198f3b30a588be2bff6ffbbf636cf01068cd60cd9d8eb2ffe6432",
+    "bytes": 3088,
+    "records": 14,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 2,
+    "protocolErrors": {
+      "auth_required": 1
+    },
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:24:36.598000+00:00",
+        "firstResponseAt": "2026-10-06T09:24:38.568000+00:00",
+        "durationMs": 1970,
+        "errorClass": "auth_required"
+      }
+    ],
+    "boundary": "Metadata only. UI confirms model, answer and visible outcome separately; no error body, identity or credential retained."
+  }
+}

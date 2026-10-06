@@ -1,0 +1,68 @@
+{
+  "started_at_utc": "2026-10-06T09:11:33.132Z",
+  "scope": "Frontend source verification only; no installed-app or real-Agent retest.",
+  "checks": [
+    {
+      "command": "corepack pnpm format:check",
+      "exit_code": 1,
+      "result": "failed",
+      "elapsed_seconds": 31.604,
+      "failed_files": [
+        "docs/evidence/2026-10-06-macos-batch1/protocol-cline-initial.json",
+        "docs/evidence/2026-10-06-macos-batch1/protocol-pi-overlap.json"
+      ],
+      "reason": "Prettier reports formatting only; first check not passed."
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exit_code": 0,
+      "result": "passed",
+      "elapsed_seconds": 20.82
+    },
+    {
+      "command": "corepack pnpm test",
+      "exit_code": 0,
+      "result": "passed",
+      "elapsed_seconds": 24.703,
+      "test_files_passed": 184,
+      "tests_passed": 2146,
+      "vitest_duration_seconds": 23.93
+    },
+    {
+      "command": "corepack pnpm build",
+      "exit_code": 0,
+      "result": "passed",
+      "elapsed_seconds": 22.125,
+      "modules_transformed": 5029,
+      "warning": "Existing Vite warning: some minified chunks exceed 500 kB."
+    }
+  ],
+  "queue_recovery_red_test": {
+    "command": "corepack pnpm exec vitest run src/runtime/sessions.outcomes.test.ts -t 'admits only an explicit new message'",
+    "exit_code": 1,
+    "test_files_failed": 1,
+    "tests_failed": 1,
+    "tests_skipped": 26,
+    "elapsed_seconds": 0.397,
+    "assertion": "After a confirmed service failure with an empty queue, threads.send for a new message returned queued; expected accepted.",
+    "file": "src/runtime/sessions.outcomes.test.ts",
+    "line": 88
+  },
+  "queue_recovery_targeted_green": {
+    "command": "corepack pnpm exec vitest run src/runtime/sessions.outcomes.test.ts src/runtime/sessions.queue-edit.test.ts src/runtime/attachment_review.test.ts",
+    "exit_code": 0,
+    "test_files_passed": 3,
+    "tests_passed": 43,
+    "vitest_duration_seconds": 0.269
+  },
+  "status": "All four frontend checks passed. Original format failure retained; only format:check was rerun after formatting the two evidence JSON files without changing values.",
+  "format_recheck": {
+    "command": "corepack pnpm format:check",
+    "exit_code": 0,
+    "result": "passed",
+    "evidence_json_values_unchanged": true,
+    "observed_tool_wait_seconds": 6.004,
+    "wall_runtime_seconds": null,
+    "duration_note": "Sum of tool wait intervals; total wall runtime was not captured for this rerun."
+  }
+}

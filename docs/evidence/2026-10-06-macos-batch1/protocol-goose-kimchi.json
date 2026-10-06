@@ -1,0 +1,53 @@
+{
+  "goose": {
+    "log": "protocol-v1-1791279261114-18.jsonl",
+    "sha256": "1d4ca25b1fc09c3bad8ae18b588fab34dc06623fc4bd5b47e48c4a8fbf03b129",
+    "bytes": 3498,
+    "records": 18,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1,
+      "session/set_config_option": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "internal_error": 1
+    },
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:35:02.880000+00:00",
+        "firstResponseAt": "2026-10-06T09:35:03.381000+00:00",
+        "durationMs": 501,
+        "errorClass": "internal_error"
+      }
+    ],
+    "boundary": "Metadata only; generic failure supplies no exact root cause."
+  },
+  "kimchi": {
+    "log": "protocol-v1-1791279398529-20.jsonl",
+    "sha256": "f185ea32df2eac44c4590b11a5573c601f8d8dca97e5aee92d39d1f0b4c60a9c",
+    "bytes": 4537,
+    "records": 30,
+    "outbound": {
+      "initialize": 1,
+      "other": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 1,
+    "protocolErrors": {
+      "internal_error": 1
+    },
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:37:18.732000+00:00",
+        "firstResponseAt": "2026-10-06T09:37:19.566000+00:00",
+        "durationMs": 834,
+        "errorClass": "internal_error"
+      }
+    ],
+    "boundary": "Metadata only; generic failure supplies no exact root cause."
+  }
+}

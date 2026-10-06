@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "scope": "macOS batch 1, Pi initial prompt; content-free protocol metadata snapshot",
+  "sourceLog": "protocol-v1-1791275544814-1.jsonl",
+  "snapshotBytes": 6577,
+  "snapshotSha256": "b7a2280dcc3fa8b69ab0bf66c3189cc84c1c648da6c4c454aebf7995231afc49",
+  "completeRecordCount": 51,
+  "incompleteTrailingBytes": 0,
+  "outboundCounts": {
+    "initialize": 1,
+    "session/new": 1,
+    "session/set_config_option": 2,
+    "session/prompt": 1
+  },
+  "incomingResponseCounts": {
+    "none": 5
+  },
+  "stderrMetadataCount": 0,
+  "protocolErrorClasses": {},
+  "firstPromptTs": 1791275890197,
+  "afterFirstPrompt": {
+    "outboundCounts": {
+      "session/prompt": 1
+    },
+    "incomingEventCounts": {
+      "session/update": 28,
+      "response": 1
+    },
+    "incomingResponseCounts": {
+      "none": 1
+    },
+    "stderrMetadataCount": 0,
+    "protocolErrorClasses": {}
+  },
+  "toolCallCount": null,
+  "toolCallCountScope": "Safe protocol logs omit the session/update subtype; request_permission is not a tool-call count.",
+  "phase": "Live snapshot before later increments; not the final whole-file digest.",
+  "limitations": [
+    "Farfold protocol message counts do not measure Agent internal retries, model API attempts or billing.",
+    "A non-error response does not establish exact reply content or strict short-reply acceptance.",
+    "No message, page, account identity or credential body is included."
+  ]
+}

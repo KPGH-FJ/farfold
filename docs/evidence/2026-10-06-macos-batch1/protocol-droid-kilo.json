@@ -1,0 +1,49 @@
+{
+  "droid": {
+    "log": "protocol-v1-1791278810823-14.jsonl",
+    "sha256": "191c96831d13bfe5178c2d9ec329e1e6053257e01178c8bc720064a912401404",
+    "bytes": 3201,
+    "records": 15,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {
+      "internal_error": 1
+    },
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:27:50.142000+00:00",
+        "firstResponseAt": "2026-10-06T09:27:50.913000+00:00",
+        "durationMs": 771,
+        "errorClass": "internal_error"
+      }
+    ],
+    "boundary": "Metadata only. UI outcome and native error text recorded separately; no secret or response body retained."
+  },
+  "kilo": {
+    "log": "protocol-v1-1791279185045-16.jsonl",
+    "sha256": "c52717c3bc133f446b3d81af598ffceceb549fe61f34f3d994902b580991d589",
+    "bytes": 3590,
+    "records": 20,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:33:48.400000+00:00",
+        "firstResponseAt": "2026-10-06T09:33:51.434000+00:00",
+        "durationMs": 3034,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata only. UI outcome and native error text recorded separately; no secret or response body retained."
+  }
+}

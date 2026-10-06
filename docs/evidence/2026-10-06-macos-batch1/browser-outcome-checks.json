@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "scope": "Browser control outcome classification: source and automated checks only",
+  "baseCommit": "a872873c7d3354db0489fa0196de00eadc3652a2",
+  "sourceHashes": {
+    "src-tauri/src/browser_workspace.rs": "6be7d5c954af55bcacd6945f90b29efc388683f064b345436773e13d79308070",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "58aa761a9202a335d7da458b1a2be7bc209e8b28b44554188c49800a72022a59",
+    "src-tauri/src/browser_sharing/protocol.rs": "3ccb94c2f464db3481d0b44eb8f7e28b0d29b11fd5b9586e6e2b8cf365636b77",
+    "src-tauri/src/browser_sharing/transport.rs": "42b18294440a4800466745df0f9e95084822b988d63857cdc0593aa8a1416ec8"
+  },
+  "change": {
+    "preflight": "Fixed local failures proven before native::act return rejected/applied:false, with their fixed reason.",
+    "beforePermission": "The sole production permission callback failed before begin_read; control requests return rejected/applied:false.",
+    "uncertain": "Native action errors, invalid/missing receipts, cancellation and withdrawal retain unknown/applied:null.",
+    "preserved": [
+      "30-second observation lifetime",
+      "30-second control permission wait",
+      "Safety checks and one-shot authority",
+      "Existing read/observe error replies",
+      "No automatic refresh or retry"
+    ]
+  },
+  "intermediatePreparationError": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked review_regression_preflight_control_failure_reports_not_applied -- --exact --nocapture",
+    "exitCode": 101,
+    "summary": "Two E0277 compile errors: test unwrap_err required Debug on existing ControlReview. Tests changed to err().expect(); no production Debug addition. This compile failure is not counted as the behavioral red result."
+  },
+  "behavioralRed": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked review_regression_ -- --nocapture",
+    "exitCode": 101,
+    "passed": 6,
+    "failed": 2,
+    "failures": [
+      {
+        "test": "review_regression_preflight_control_failure_reports_not_applied",
+        "actual": "unknown/null",
+        "expected": "rejected/false"
+      },
+      {
+        "test": "review_regression_control_permission_preflight_failure_preserves_reason",
+        "actual": "No structuredContent; misleading generic page-opening instruction",
+        "expected": "rejected/false with actual fixed preflight reason"
+      }
+    ],
+    "basis": "Real scope rejection routed through behavior-preserving extraction of the production error reply functions; no GUI/native action executed."
+  },
+  "behavioralGreen": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked review_regression_ -- --nocapture",
+    "exitCode": 0,
+    "passed": 8,
+    "failed": 0
+  },
+  "finalChecks": [
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_ -- --nocapture",
+      "exitCode": 0,
+      "passed": 145,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --quiet",
+      "exitCode": 0,
+      "total": 983,
+      "passed": 979,
+      "failed": 0,
+      "ignored": 4,
+      "seconds": 28.73
+    },
+    {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "boundaryRegressionCoverage": [
+    "Expired observation, wrong node/observation and withdrawn scope create typed preflight failures.",
+    "Same error text without preflight proof remains unknown; no string-based phase inference.",
+    "Rejected receipt contains no node, input or observation fields and no page grant.",
+    "Existing dispatched-effect cancellation, stop barriers and late-receipt protection pass."
+  ],
+  "permissionReasonAudit": {
+    "soleProductionEntry": "src-tauri/src/browser_sharing.rs:431",
+    "callback": "src-tauri/src/browser_sharing.rs:450",
+    "auditedProducers": [
+      "Owner/task readiness checks in the callback",
+      "BrowserWorkspace::permission_page",
+      "FixedPageReadScope::review_control",
+      "PageReadLease::with_live and BrowserWorkspace::with_read_ticket",
+      "ToolSession::request_tool_permission",
+      "Post-registration page metadata race check"
+    ],
+    "allCurrentErrorSourcesFixedLocal": true,
+    "dynamicUrlNodeInputBodyOrIdentityInterpolation": false,
+    "limitation": "Current production callback was audited; future error producers must preserve this fixed-local reason boundary."
+  },
+  "warning": {
+    "location": "src-tauri/src/agent_install/archive.rs:97",
+    "summary": "Existing test-build unused import std::io::Write; file is outside this four-file change. Tests pass; normal-target clippy with -D warnings passes.",
+    "unrelatedFileModified": false
+  },
+  "independentReview": "Read-only four-file review found no new blocking issue.",
+  "limitations": [
+    "New tests do not call full tool() or count real Native entry calls; non-dispatch follows source control flow and actual scope preflight results.",
+    "No installed-app, real Agent, authentication or new model request was run for this patch.",
+    "The original installed click unknown outcome still has no proven concrete cause.",
+    "No claim that installed click/input functionality has recovered.",
+    "Evidence recorded before backend commit/package/install; those remain the main task's next steps."
+  ]
+}

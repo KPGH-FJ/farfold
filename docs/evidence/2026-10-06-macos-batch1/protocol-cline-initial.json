@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "scope": "macOS batch 1 Cline first prompt; content-free live snapshot",
+  "filename": "protocol-v1-1791276454954-3.jsonl",
+  "snapshotBytes": 3388,
+  "snapshotSha256": "6e335e9504ba809c20a0af44556f310de6bd0bd48ebd4f6c263515c495804e4f",
+  "completeRecordCount": 17,
+  "incompleteTailBytes": 0,
+  "rejectedRecords": {},
+  "unexpectedFieldCount": 0,
+  "outboundCounts": {
+    "initialize": 1,
+    "session/new": 1,
+    "session/set_config_option": 1,
+    "session/prompt": 1
+  },
+  "incomingResponseErrorCounts": {
+    "none": 3,
+    "protocol": 1
+  },
+  "protocolErrorClassCounts": {
+    "internal_error": 1
+  },
+  "protocolErrorFlags": [
+    {
+      "ts": 1791276521432,
+      "dir": "in",
+      "event": "response",
+      "protocolErrorClass": "internal_error",
+      "responseIdNull": false,
+      "beforeInitializeAccepted": false
+    }
+  ],
+  "stderrMetadataRecords": 2,
+  "stderrBytes": 1005,
+  "lastLifecycle": {
+    "childStarted": true,
+    "exitSignal": null,
+    "waitFailed": false,
+    "groupEnded": false,
+    "connectionRemoved": false,
+    "childReaped": false,
+    "initializeAccepted": true,
+    "candidateCleanup": "not_applicable",
+    "ts": 1791276455592,
+    "version": 2,
+    "exitCode": null,
+    "startupOutcome": "success",
+    "initializeResponse": "matched_result",
+    "killRequested": false,
+    "event": "startup",
+    "termRequested": false,
+    "exitObservedBeforeTerm": false,
+    "failurePhase": null,
+    "phase": "initialize"
+  },
+  "promptTimestamps": [1791276520436],
+  "afterFirstPrompt": {
+    "outboundPromptCount": 1,
+    "outboundCancelCount": 0,
+    "incomingResponseCount": 1,
+    "incomingUpdateCount": 1,
+    "protocolErrorClassCounts": {
+      "internal_error": 1
+    },
+    "stderrMetadataRecords": 1,
+    "stderrBytes": 967
+  },
+  "toolCallCount": null,
+  "limitations": [
+    "Safe protocol metadata omits response bodies, request IDs, result/stopReason and session/update subtypes.",
+    "Agent/model/provider failure cause cannot be inferred from unrelated Agent or earlier model endpoint observations.",
+    "No message, command, account identity, page or credential body is read or saved.",
+    "Internal Agent retries and stderr text are not available from this metadata."
+  ],
+  "lifecycleRecordCount": 5,
+  "protocolFailureLatencyMs": 996,
+  "mainTaskObserved": {
+    "preopenSucceeded": true,
+    "selectedModel": "Space Bunny Alpha",
+    "serviceSource": "Existing Cline settings",
+    "firstRequestExpectedMarkerObserved": false,
+    "firstRequestUiOutcome": "Request error; no marker reply",
+    "additionalFarfoldPromptObserved": false
+  },
+  "lifecycleParserValidation": "Optional lifecycle failurePhase, exitCode and exitSignal may be null, as defined by startup_diagnostics::Snapshot; same fixed snapshot hash validated."
+}

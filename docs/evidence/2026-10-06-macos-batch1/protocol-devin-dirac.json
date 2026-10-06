@@ -1,0 +1,46 @@
+{
+  "devin": {
+    "log": "protocol-v1-1791279491162-22.jsonl",
+    "sha256": "151d98860213f998bd489dffa48f9d3e9a4b5924f38f2f7f052324fa79997b1c",
+    "bytes": 16686,
+    "records": 166,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 109,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:38:43.045000+00:00",
+        "firstResponseAt": "2026-10-06T09:38:48.331000+00:00",
+        "durationMs": 5286,
+        "errorClass": null
+      }
+    ],
+    "boundary": "One Farfold prompt each; UI fragmented/retry/duplicate content separately observed; Agent-internal retries not new Farfold sends."
+  },
+  "dirac": {
+    "log": "protocol-v1-1791279621570-24.jsonl",
+    "sha256": "649bf7b05546d8fc1c7504fcb55439321fab0d89b7f47f2128f9eb0c3439be48",
+    "bytes": 10210,
+    "records": 89,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:41:06.190000+00:00",
+        "firstResponseAt": "2026-10-06T09:41:28.890000+00:00",
+        "durationMs": 22700,
+        "errorClass": null
+      }
+    ],
+    "boundary": "One Farfold prompt each; UI fragmented/retry/duplicate content separately observed; Agent-internal retries not new Farfold sends."
+  }
+}

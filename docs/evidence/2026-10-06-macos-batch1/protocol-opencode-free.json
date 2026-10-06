@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "scope": "macOS batch 1 OpenCode user-selected free model; content-free exact-log snapshot",
+  "associationBasis": "New protocol file created at 17:06 Asia/Shanghai; first prompt matches main-task 17:07 outbound observation. Log omits Agent/session identifiers; file contains session/load rather than session/new.",
+  "filename": "protocol-v1-1791277567253-4.jsonl",
+  "snapshotReadUtc": "2026-10-06T09:13:40.419008+00:00",
+  "snapshotBytes": 8388,
+  "snapshotSha256": "a2d7511cfc7d246c548a01fc372acba0a61767a4a2218eed4a6455e16655ce38",
+  "completeRecordCount": 70,
+  "incompleteTailBytes": 0,
+  "unexpectedFieldCount": 0,
+  "outboundCounts": {
+    "initialize": 1,
+    "session/load": 1,
+    "session/set_config_option": 1,
+    "session/prompt": 2
+  },
+  "incomingResponseErrorCounts": {
+    "none": 5
+  },
+  "protocolErrorClassCounts": {},
+  "stderrMetadataRecords": 0,
+  "stderrBytes": 0,
+  "lastLifecycle": {
+    "version": 2,
+    "exitSignal": null,
+    "waitFailed": false,
+    "groupEnded": false,
+    "initializeResponse": "matched_result",
+    "childReaped": false,
+    "phase": "initialize",
+    "failurePhase": null,
+    "termRequested": false,
+    "connectionRemoved": false,
+    "exitCode": null,
+    "startupOutcome": "success",
+    "killRequested": false,
+    "childStarted": true,
+    "event": "startup",
+    "ts": 1791277568015,
+    "initializeAccepted": true,
+    "candidateCleanup": "not_applicable",
+    "exitObservedBeforeTerm": false
+  },
+  "promptIntervals": [
+    {
+      "outboundTs": 1791277649386,
+      "firstFollowingResponseTs": 1791277654724,
+      "elapsedMs": 5338,
+      "firstFollowingResponseError": "none",
+      "protocolErrorClass": null,
+      "interveningOutboundEvents": [],
+      "incomingUpdateCount": 16
+    },
+    {
+      "outboundTs": 1791277845010,
+      "firstFollowingResponseTs": 1791277846944,
+      "elapsedMs": 1934,
+      "firstFollowingResponseError": "none",
+      "protocolErrorClass": null,
+      "interveningOutboundEvents": [],
+      "incomingUpdateCount": 36
+    }
+  ],
+  "setConfigAdjacentResponses": [
+    {
+      "outboundTs": 1791277627155,
+      "firstFollowingResponseTs": 1791277627160,
+      "elapsedMs": 5,
+      "firstFollowingResponseError": "none",
+      "protocolErrorClass": null,
+      "interveningOutboundEvents": [],
+      "incomingUpdateCount": 1
+    }
+  ],
+  "toolCallCount": null,
+  "uiProvidedModelSelection": {
+    "previous": "stealth/space-bunny-alpha",
+    "requested": "apodex/apodex-1.1-mini:free",
+    "source": "Main-task observation; values are absent from protocol diagnostics"
+  },
+  "finalUiAcceptance": "Not supplied at this evidence request; response metadata alone is insufficient.",
+  "limitations": [
+    "Safe records omit bodies, request IDs, response result/stopReason and update subtypes.",
+    "Intervals use the first following incoming response; any intervening outbound request must be considered before pairing.",
+    "No prompt, page, account identity, service secrets or stderr text is copied.",
+    "This is one snapshot; later increments and run-end cleanup are not included."
+  ],
+  "snapshotState": "Both observed prompt intervals have a first following non-error response; this is not a terminal UI/marker assertion."
+}
