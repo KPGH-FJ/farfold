@@ -1,0 +1,50 @@
+{
+  "Vibe": {
+    "log": "protocol-v1-1791279745648-26.jsonl",
+    "recordedAtUtc": "2026-10-06T11:20:45.467713+00:00",
+    "sha256": "b3aaafe044ec4a617c3f8e07613acc951473b3557b11988becd2a69d16c534a4",
+    "bytes": 12954,
+    "records": 118,
+    "outbound": {
+      "initialize": 1,
+      "other": 1,
+      "session/new": 1,
+      "session/prompt": 5
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:43:06.605000+00:00",
+        "firstResponseAt": "2026-10-06T09:43:09.515000+00:00",
+        "durationMs": 2910,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T09:44:03.838000+00:00",
+        "firstResponseAt": "2026-10-06T09:44:05.743000+00:00",
+        "durationMs": 1905,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:07:02.410000+00:00",
+        "firstResponseAt": "2026-10-06T11:07:07.390000+00:00",
+        "durationMs": 4980,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:09:27.461000+00:00",
+        "firstResponseAt": "2026-10-06T11:09:34.494000+00:00",
+        "durationMs": 7033,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:11:47.323000+00:00",
+        "firstResponseAt": "2026-10-06T11:11:57.554000+00:00",
+        "durationMs": 10231,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

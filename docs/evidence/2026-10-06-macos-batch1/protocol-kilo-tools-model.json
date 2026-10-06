@@ -1,0 +1,63 @@
+{
+  "Kilo": {
+    "log": "protocol-v1-1791279185045-16.jsonl",
+    "recordedAtUtc": "2026-10-06T11:03:46.717846+00:00",
+    "sha256": "fc3a509b3d2e37f211eecceb9a9e6caab7d5f1decae970cc8ecf8a43fb0490cc",
+    "bytes": 15205,
+    "records": 141,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 3,
+      "session/prompt": 7,
+      "response": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:33:48.400000+00:00",
+        "firstResponseAt": "2026-10-06T09:33:51.434000+00:00",
+        "durationMs": 3034,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:42:05.286000+00:00",
+        "firstResponseAt": "2026-10-06T10:42:10.753000+00:00",
+        "durationMs": 5467,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:43:55.339000+00:00",
+        "firstResponseAt": "2026-10-06T10:43:58.676000+00:00",
+        "durationMs": 3337,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:45:50.036000+00:00",
+        "firstResponseAt": "2026-10-06T10:45:55.430000+00:00",
+        "durationMs": 5394,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:57:55.431000+00:00",
+        "firstResponseAt": "2026-10-06T10:58:10.307000+00:00",
+        "durationMs": 14876,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T10:59:32.581000+00:00",
+        "firstResponseAt": "2026-10-06T10:59:53.662000+00:00",
+        "durationMs": 21081,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:01:56.435000+00:00",
+        "firstResponseAt": "2026-10-06T11:02:52.285000+00:00",
+        "durationMs": 55850,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

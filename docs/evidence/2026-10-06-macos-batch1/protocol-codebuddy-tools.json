@@ -1,0 +1,46 @@
+{
+  "CodeBuddy": {
+    "log": "protocol-v1-1791278245254-8.jsonl",
+    "recordedAtUtc": "2026-10-06T11:32:14.041109+00:00",
+    "sha256": "a434d7c80a070f32767103b2bd9318c76caf5250aa6614e28ee930b0f8d09092",
+    "bytes": 22459,
+    "records": 216,
+    "outbound": {
+      "initialize": 1,
+      "other": 1,
+      "session/new": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 4,
+      "response": 2
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:18:52.022000+00:00",
+        "firstResponseAt": "2026-10-06T09:19:03.736000+00:00",
+        "durationMs": 11714,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:21:29.368000+00:00",
+        "firstResponseAt": "2026-10-06T11:21:46.625000+00:00",
+        "durationMs": 17257,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:23:49.856000+00:00",
+        "firstResponseAt": "2026-10-06T11:29:01.376000+00:00",
+        "durationMs": 311520,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:30:01.748000+00:00",
+        "firstResponseAt": "2026-10-06T11:31:49.192000+00:00",
+        "durationMs": 107444,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

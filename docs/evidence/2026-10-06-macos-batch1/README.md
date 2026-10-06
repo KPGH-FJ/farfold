@@ -47,3 +47,7 @@ Kilo18:42同一Gateway由免费Ultra/None改为免费Nano Omni，Agent返回Inst
 模型选择器源码补强：搜索及选项增加可访问语义，关闭按钮读出当前选择，Escape只关闭子层，busy或输入法确认不提交选择；共用工作模式名称保留中文。真实红测与完整前端回归2152通过/185文件，类型/全格式/构建通过，独立与root复核通过，见model-picker-checks.json。搜索框不可见根因未证，未改定位，正式应用/真实Mac输入法仍未复测。
 
 启动诊断增加失败调用返回的数字OS码与当时本进程限额，旧v2兼容且日志/自有ZIP出口严格白名单；红测5失败→定向9通过，完整release后端990通过/4原忽略、Clippy/fmt通过及独立复核，见spawn-diagnostics-checks.json，未安装。依赖反例纠正：async-process可在OS子进程产生后于stdio包装失败，childStarted=false只证明未取得完整句柄，不证明从未有进程。后段失败的进程控制风险继续调查；此片不修容量/回收、不归因Stakpak、不自动重试。
+
+文件扩测：Kilo同Gateway恢复原免费Ultra/None后真正读取成功；复制48字节比49字节输入少末尾LF，返工申请任务禁止的xxd命令被仅拒绝一次，LF仍缺，返工失败。Nano公开目录声明支持tools不能替代两次实际失败，也不能确定原因。Kilo成果需手选文件后核实。Vibe保留Medium3.5/High/Accept Edits，真实读取并续答原记号、逐字49字节复制、原对话返工至48字节均成功，所需LF和输入保留；有结构化位置，文件变更后旧核实被拒绝，重新核实及当前预览成功；未请求批准，审批未测。见kilo-vibe-tools-results.json及两份协议快照。
+
+CodeBuddy保留Hy4 preview/High/Always Ask，在原测试对话读取新文件及最早记号成功；复制逐字54字节、返工53字节均实际成功，输入和LF保留。两次写入/修改逐项检查后仅批准一次；文件意见先入输入框，再明确发送，没有自动发送。Agent只给文稿、无可核实结构化位置，手选文件核实成功；变更后旧核实被拒绝，重新核实及当前预览成功。两次耗时含人工批准等待，不当纯模型速度。见codebuddy-tools-results.json及protocol-codebuddy-tools.json。三家均不判八项完整达标，未以同一连接续答冒称冷恢复。

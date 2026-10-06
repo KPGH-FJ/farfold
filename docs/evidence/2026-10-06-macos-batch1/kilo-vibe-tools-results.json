@@ -1,0 +1,99 @@
+{
+  "recordedAtUtc": "2026-10-06T11:22:04.796084+00:00",
+  "installedBinarySha256": "55abe01bddf2eec389b3c25b841eb034747bc53339d13835c682e6d82c295f52",
+  "scope": "Own macOS test conversations and synthetic files; no account switching, authentication, Windows or full acceptance.",
+  "Kilo": {
+    "runtimeVersion": "7.8.1",
+    "service": "Existing Kilo Gateway",
+    "selection": "Nano Omni (free)/Instant -> original Ultra (free)/None, confirmed by Agent",
+    "NanoOmni": {
+      "fileCopy": "failed: DONE with output.txt absent",
+      "fileRead": "failed: old DONE without file nonce or visible tool steps",
+      "cause": "unknown, public catalog declares tools/tool_choice; no unsupported-model claim"
+    },
+    "Ultra": {
+      "fileRead": "passed: tool step and first-line nonce matched own file",
+      "copy": "failed exact-copy: 48-byte output vs49-byte input, missing final LF",
+      "revision": "failed: final LF still absent; requested xxd command rejected as outside task; request ended without required revision reply",
+      "approval": "actual one-time rejection reached Agent; no always-allow or command execution authorized",
+      "delivery": "manual file choice verified 48 bytes, reread and current-file preview worked; upstream did not provide usable structured location"
+    },
+    "inputSha256": "814f64febf512cfe56a50bbfc066b647e9e3a60c9fcb48c659766c410b49a8f9",
+    "outputSha256": "ce10e6c83a4d1eb6a2254742cda3cfc2bb1de6852716aceb8dd9a20c05f45b7a",
+    "originalNanoOutputExists": false
+  },
+  "Vibe": {
+    "runtimeVersion": "2.25.8",
+    "selection": "Existing Mistral Medium3.5/High/Accept Edits retained",
+    "fileReadContext": "passed: actual tool step, nonce and earliest user marker correct",
+    "copy": "passed: 49 bytes exactly equal, final LF preserved, input unchanged",
+    "delivery": "structured location -> verify49bytes passed",
+    "revision": "original file opinion -> composer without auto-send -> explicit send -> actual3tools -> requested change and final LF exact, input unchanged",
+    "staleProtection": "old verified snapshot refused current-file read after change; clear reverify instruction; reverify48bytes and preview actual red line passed",
+    "approval": "not requested under existing Accept Edits; not tested",
+    "coldRecovery": "not tested: same protocol log and process chain",
+    "inputSha256": "6039fded0c4bfd2244e2c6ebcc12a5659bda544c59ff04eb98c17695765e590b",
+    "revisedOutputSha256": "2e2ba38c3f33483182fe0157002e3851e233b4b20bfc8e15dd0c56c870538522"
+  },
+  "publicKiloCatalog": {
+    "observedAtUtc": "2026-10-06T10:49:22.696795+00:00",
+    "url": "https://api.kilo.ai/api/gateway/models",
+    "authenticated": false,
+    "modelInvocation": false,
+    "selectedModels": [
+      {
+        "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "name": "NVIDIA: Nemotron 3 Ultra (free)",
+        "architecture": {
+          "modality": "text->text",
+          "input_modalities": ["text"],
+          "output_modalities": ["text"],
+          "tokenizer": "Other"
+        },
+        "pricing": {
+          "prompt": "0",
+          "completion": "0",
+          "discount": 0
+        },
+        "context_length": 1000000,
+        "supported_parameters": [
+          "include_reasoning",
+          "max_tokens",
+          "reasoning",
+          "reasoning_effort",
+          "seed",
+          "temperature",
+          "tool_choice",
+          "tools",
+          "top_p"
+        ]
+      },
+      {
+        "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "name": "NVIDIA: Nemotron 3 Nano Omni (free)",
+        "architecture": {
+          "modality": "text+image+audio+video->text",
+          "input_modalities": ["text", "audio", "image", "video"],
+          "output_modalities": ["text"],
+          "tokenizer": "Other"
+        },
+        "pricing": {
+          "prompt": "0",
+          "completion": "0",
+          "discount": 0
+        },
+        "context_length": 256000,
+        "supported_parameters": [
+          "include_reasoning",
+          "max_tokens",
+          "reasoning",
+          "seed",
+          "temperature",
+          "tool_choice",
+          "tools",
+          "top_p"
+        ]
+      }
+    ]
+  }
+}

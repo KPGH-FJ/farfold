@@ -1,0 +1,18 @@
+{
+  "recordedAtUtc": "2026-10-06T11:32:00Z",
+  "installedBinarySha256": "55abe01bddf2eec389b3c25b841eb034747bc53339d13835c682e6d82c295f52",
+  "runtimeVersion": "2.160.0",
+  "selection": "Existing Hy4 preview/High/Always Ask/Local Environment retained; no login or service change",
+  "scope": "Own macOS test conversation and synthetic files only; no full acceptance, account switching or Windows",
+  "readAndContext": "Passed: actual file-tool step, earliest user marker and fresh file nonce both correct; same running connection, not cold recovery",
+  "copy": "Passed: 54 bytes exactly equal to input, both LF retained, input unchanged; actual write/read tools",
+  "approval": "Two separate actual write/edit requests inspected and approved once; no always-allow, command or outside-file approval",
+  "delivery": "Agent diff did not provide a usable structured delivery location; manual file choice -> verified54bytes passed",
+  "revision": "File opinion -> composer without auto-send -> explicit send in original conversation -> approved exact edit -> actual reread -> requested content exact53bytes; input unchanged",
+  "staleProtection": "Old verified snapshot refused current-file read after change; explicit reverify53bytes -> current red-line preview passed",
+  "timing": "Protocol prompt spans include human approval waits; not inference-only latency or performance evidence",
+  "inputSha256": "bf4119b121745018eb487452f3518ad6ab4096ad1c454afa7cde389279b0b42b",
+  "copiedOutputSha256": "bf4119b121745018eb487452f3518ad6ab4096ad1c454afa7cde389279b0b42b",
+  "revisedOutputSha256": "2901cf2bbd534941d8d20a77a0a8bf41fd498aeb42e3becf408d24ab263afe5a",
+  "remaining": "Unknown native messages preserved; model switch, cold recovery, parallel/stop, native history list and skills not covered by these tasks"
+}
