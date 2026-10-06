@@ -224,7 +224,7 @@ impl FixedPageReadScope {
             }
             request => {
                 self.preflight_control(&request)?;
-                let (id, reference, _) = request.target().expect("control request");
+                let (id, reference, kind) = request.target().expect("control request");
                 let action = match &request {
                     ToolRequest::Input { text, .. } => {
                         native::NativeAction::Input { text: text.clone() }
@@ -245,14 +245,15 @@ impl FixedPageReadScope {
                 )
                 .await
                 .map_err(|_| ToolFailure::Unconfirmed)?;
-                self.complete_control(id, &raw).map_err(ToolFailure::from)
+                self.complete_control(id, kind, &raw)
+                    .map_err(ToolFailure::from)
             }
         }
     }
 
     // Once handed to the native page, withdrawal or a missing receipt does not
     // prove that no effect happened. Preserve this meaning even on gate errors.
-    fn complete_control(&self, id: &str, raw: &str) -> Result<Value, String> {
+    fn complete_control(&self, id: &str, kind: &str, raw: &str) -> Result<Value, String> {
         self.with_valid(|| {
             if raw.len() > 16_384 {
                 return Err(CONTROL_UNCONFIRMED.into());
@@ -279,6 +280,23 @@ impl FixedPageReadScope {
                 "reason":value.get("reason").and_then(Value::as_str).filter(|s| s.chars().count()<=256),
                 "next":"重新观察页面后检查结果；事件已交付不代表网站操作成功，结果未知时不要自动重试。"
             });
+            if kind == "input" {
+                // This enum compares only the just-approved input at the reply
+                // instant. It is not proof of submission or a website result.
+                let verification = if outcome == "dispatched"
+                    && applied == true
+                    && result["navigationChanged"] == false
+                {
+                    match value.get("verification").and_then(Value::as_str) {
+                        Some("matched") => "matched",
+                        Some("mismatched") => "mismatched",
+                        _ => "unverified",
+                    }
+                } else {
+                    "unverified"
+                };
+                result["verification"] = json!(verification);
+            }
             append_control_diagnostics(&value, &mut result);
             Ok(result)
         })
@@ -328,17 +346,19 @@ mod tests {
         let (scope, _) = sharing_scope_fixture("agent:/fixture:control-receipt", "page");
         let raw = json!({"applied":true,"outcome":"dispatched"}).to_string();
         assert_eq!(
-            scope.complete_control("control", &raw).unwrap()["applied"],
+            scope.complete_control("control", "click", &raw).unwrap()["applied"],
             true
         );
         scope.revoke();
         assert_eq!(
-            scope.complete_control("control", &raw).unwrap_err(),
+            scope
+                .complete_control("control", "click", &raw)
+                .unwrap_err(),
             CONTROL_UNCONFIRMED
         );
         assert_eq!(
             scope
-                .complete_control("control", "invalid receipt")
+                .complete_control("control", "click", "invalid receipt")
                 .unwrap_err(),
             CONTROL_UNCONFIRMED
         );
@@ -347,7 +367,7 @@ mod tests {
     fn control_diagnostics_pass_only_fixed_classes_and_bounded_integer_age() {
         let (scope, _) = sharing_scope_fixture("agent:/fixture:control-diagnostics", "page");
         let raw = json!({"applied":false,"outcome":"rejected","reason":"页面或操作目标已变化，请重新观察","guardClass":"observation_missing","observationAgeMs":1234,"observationInvalidatedBy":"resize"}).to_string();
-        let reply = scope.complete_control("control", &raw).unwrap();
+        let reply = scope.complete_control("control", "click", &raw).unwrap();
         assert_eq!(reply["applied"], false);
         assert_eq!(reply["outcome"], "rejected");
         assert_eq!(reply["guardClass"], "observation_missing");
@@ -365,7 +385,7 @@ mod tests {
             json!({"private":"payload"}),
         ] {
             let raw = json!({"applied":false,"outcome":"rejected","guardClass":"expired PRIVATE_PAYLOAD","observationAgeMs":age,"observationInvalidatedBy":{"private":"payload"},"unknown":{"private":"payload"}}).to_string();
-            let reply = scope.complete_control("control", &raw).unwrap();
+            let reply = scope.complete_control("control", "click", &raw).unwrap();
             for key in [
                 "guardClass",
                 "observationAgeMs",
@@ -377,7 +397,7 @@ mod tests {
             assert!(!reply.to_string().contains("PRIVATE_PAYLOAD"));
         }
         let raw = json!({"applied":false,"outcome":"rejected","guardClass":{"private":"payload"},"observationInvalidatedBy":"resize PRIVATE_PAYLOAD"}).to_string();
-        let reply = scope.complete_control("control", &raw).unwrap();
+        let reply = scope.complete_control("control", "click", &raw).unwrap();
         assert!(reply.get("guardClass").is_none());
         assert!(reply.get("observationInvalidatedBy").is_none());
     }
@@ -385,11 +405,67 @@ mod tests {
     fn valid_control_diagnostics_never_turn_unknown_into_not_applied() {
         let (scope, _) = sharing_scope_fixture("agent:/fixture:control-diagnostics", "page");
         let raw = json!({"applied":false,"outcome":"unknown","guardClass":"expired","observationAgeMs":300000,"observationInvalidatedBy":"mutation"}).to_string();
-        let reply = scope.complete_control("control", &raw).unwrap();
+        let reply = scope.complete_control("control", "click", &raw).unwrap();
         assert_eq!(reply["applied"], Value::Null);
         assert_eq!(reply["outcome"], "unknown");
         assert_eq!(reply["guardClass"], "expired");
         assert_eq!(reply["observationAgeMs"], 300000);
+    }
+    #[test]
+    fn input_verification_exports_only_a_fixed_comparison_not_field_contents() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:input-verification", "page");
+        for verification in ["matched", "mismatched", "unverified"] {
+            let raw = json!({"applied":true,"outcome":"dispatched","navigationChanged":false,"verification":verification,"actualValue":"PRIVATE_CURRENT_FIELD","oldValue":"PRIVATE_OLD_FIELD","inputText":"PRIVATE_APPROVED_TEXT"}).to_string();
+            let reply = scope.complete_control("control", "input", &raw).unwrap();
+            assert_eq!(reply["verification"], verification);
+            assert_eq!(reply["outcome"], "dispatched");
+            assert_eq!(reply["applied"], true);
+            assert!(!reply.to_string().contains("PRIVATE_"));
+        }
+    }
+    #[test]
+    fn unconfirmed_input_never_trusts_a_native_matched_claim() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:input-verification", "page");
+        for raw in [
+            json!({"applied":true,"outcome":"dispatched","navigationChanged":true,"verification":"matched"}),
+            json!({"applied":false,"outcome":"dispatched","navigationChanged":false,"verification":"matched"}),
+            json!({"applied":false,"outcome":"rejected","navigationChanged":false,"verification":"matched"}),
+            json!({"applied":true,"outcome":"unknown","navigationChanged":false,"verification":"matched"}),
+            json!({"applied":true,"outcome":"dispatched","navigationChanged":false}),
+            json!({"applied":true,"outcome":"dispatched","navigationChanged":false,"verification":"matched PRIVATE_FIELD"}),
+            json!({"applied":true,"outcome":"dispatched","navigationChanged":false,"verification":{"private":"PRIVATE_FIELD"}}),
+        ] {
+            let reply = scope
+                .complete_control("control", "input", &raw.to_string())
+                .unwrap();
+            assert_eq!(reply["verification"], "unverified");
+            if raw["outcome"] == "unknown" {
+                assert_eq!(reply["applied"], Value::Null);
+                assert_eq!(reply["outcome"], "unknown");
+            }
+            assert!(!reply.to_string().contains("PRIVATE_"));
+        }
+    }
+    #[test]
+    fn click_and_withdrawn_input_never_forward_a_verification_or_value() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:input-verification", "page");
+        let raw = json!({"applied":true,"outcome":"dispatched","navigationChanged":false,"verification":"matched","actualValue":"PRIVATE_FIELD"}).to_string();
+        let click = scope.complete_control("control", "click", &raw).unwrap();
+        assert!(click.get("verification").is_none());
+        assert!(!click.to_string().contains("PRIVATE_"));
+        let one = scope.one_shot().unwrap();
+        one.cancel_action();
+        assert_eq!(
+            one.complete_control("control", "input", &raw).unwrap_err(),
+            CONTROL_UNCONFIRMED
+        );
+        scope.revoke();
+        assert_eq!(
+            scope
+                .complete_control("control", "input", &raw)
+                .unwrap_err(),
+            CONTROL_UNCONFIRMED
+        );
     }
     #[test]
     fn actual_native_fixture_satisfies_the_rust_and_mcp_receipt_contract() {

@@ -1,0 +1,40 @@
+{
+  "scope": "one-time approved ordinary input comparison; actual production JS in controlled DOM fixtures and Rust whitelist/gate tests, not installed/WebKit acceptance",
+  "change": "Input only fixed matched/mismatched/unverified; compare approved ordinary field once, no values returned. Transient password/OTP and DOM mutation unverified.",
+  "source": {
+    "src-tauri/native/browser_observation.js": {
+      "sha256": "0cd3166c9369d3c7efccfe44f5d7ca2e704428e02a50d03ba6e16ec3c81de788",
+      "lines": 413
+    },
+    "src-tauri/src/browser_workspace/browser_tools.rs": {
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+      "lines": 566
+    },
+    "src-tauri/src/browser_sharing/protocol.rs": {
+      "sha256": "b43f435f45bbe4e32665c1413adf7b3ae65f6ec144294fc960e69670eb95f3c5",
+      "lines": 393
+    },
+    "src/runtime/browser_input_verification.test.ts": {
+      "sha256": "beb48094ceb9df3f6b259f601f573fb3a15478da49f18dd74402dbde9163fb3e",
+      "lines": 348
+    }
+  },
+  "red": {
+    "jsFailed": 11,
+    "jsTransientFailed": 2,
+    "rustFailed": 2
+  },
+  "green": {
+    "js": 30,
+    "rust": 151
+  },
+  "independentReview": "two read-only reviewers no blocker",
+  "receiptSha256": "9a03428da2a959752c804cd1e571d79bdde7aa1dc6df881f4d3ab395dc7bba38",
+  "limits": [
+    "matched means only same approved ordinary field matched at the reply instant; no website submission proof",
+    "any DOM mutation during input handlers yields unverified, including benign re-render, to avoid temporarily protected/restored fields",
+    "withdrawn or missing native receipts keep existing generic unknown with no verification; description treats a missing verification as unverified",
+    "no form values or input history added to observe or replies"
+  ],
+  "installed": false
+}

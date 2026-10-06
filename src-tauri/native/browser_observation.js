@@ -4,6 +4,7 @@ if (!s) {
   s = {
     epoch: epochSeed,
     version: 0,
+    mutationVersion: 0,
     observation: null,
     observationExpires: null,
     invalidatedBy: null,
@@ -16,7 +17,10 @@ if (!s) {
     s.version++;
     s.observation = null;
   };
-  s.observer = new MutationObserver(() => invalidate("mutation"));
+  s.observer = new MutationObserver(() => {
+    s.mutationVersion++;
+    invalidate("mutation");
+  });
   s.observer.observe(document, {
     subtree: true,
     childList: true,
@@ -30,39 +34,46 @@ if (!s) {
 }
 const flush = () => {
   if (s.observer.takeRecords().length) {
+    s.mutationVersion++;
     if (s.observation) s.invalidatedBy = "mutation";
     s.version++;
     s.observation = null;
   }
 };
 flush();
-const roots = [document];
-let inspected = 0,
-  incomplete = false;
-for (let i = 0; i < roots.length; i++) {
-  for (const el of roots[i].querySelectorAll("*")) {
-    if (++inspected > 4000) {
-      incomplete = true;
-      break;
-    }
-    if (el.shadowRoot) {
-      roots.push(el.shadowRoot);
-      if (!s.roots.has(el.shadowRoot)) {
-        s.roots.add(el.shadowRoot);
-        s.observer.observe(el.shadowRoot, {
-          subtree: true,
-          childList: true,
-          attributes: true,
-          characterData: true,
-        });
-        if (s.observation) s.invalidatedBy = "shadow_root";
-        s.version++;
-        s.observation = null;
+const inspectRoots = () => {
+  const roots = [document];
+  let inspected = 0,
+    incomplete = false;
+  for (let i = 0; i < roots.length; i++) {
+    for (const el of roots[i].querySelectorAll("*")) {
+      if (++inspected > 4000) {
+        incomplete = true;
+        break;
+      }
+      if (el.shadowRoot) {
+        roots.push(el.shadowRoot);
+        if (!s.roots.has(el.shadowRoot)) {
+          s.roots.add(el.shadowRoot);
+          s.observer.observe(el.shadowRoot, {
+            subtree: true,
+            childList: true,
+            attributes: true,
+            characterData: true,
+          });
+          if (s.observation) s.invalidatedBy = "shadow_root";
+          s.mutationVersion++;
+          s.version++;
+          s.observation = null;
+        }
       }
     }
+    if (incomplete) break;
   }
-  if (incomplete) break;
-}
+  return { roots, incomplete };
+};
+const initialRoots = inspectRoots(),
+  roots = initialRoots.roots;
 const version = () => s.epoch + ":" + s.version;
 const visible = (el) => {
   if (
@@ -118,13 +129,14 @@ const sensitive = (el) => {
     )
   );
 };
-const blocked =
+const pageBlocked = ({ roots, incomplete }) =>
   incomplete ||
   roots.some((root) =>
     [...root.querySelectorAll("input,textarea,select")].some(
       (el) => el.type === "password" || (visible(el) && sensitive(el)),
     ),
   );
+const blocked = pageBlocked(initialRoots);
 const screenshotReason = () =>
   roots.length > 1 ||
   document.querySelector(editable + ",iframe,frame,object,embed") !== null
@@ -287,6 +299,7 @@ const diagnostics = () => {
 const reject = (reason, guardClass) => ({
   applied: false,
   outcome: "rejected",
+  ...(kind === "input" ? { verification: "unverified" } : {}),
   reason,
   ...(guardClass ? { guardClass } : {}),
   ...diagnostics(),
@@ -323,6 +336,7 @@ const rect = el.getBoundingClientRect(),
   hit = document.elementFromPoint(x, y);
 if (!hit || (hit !== el && !el.contains(hit)))
   return reject("操作目标被遮挡，请先查看页面");
+let inputValueAccessor, inputMutationVersion;
 if (kind === "input") {
   if (
     !actions(el).includes("input") ||
@@ -334,16 +348,62 @@ if (kind === "input") {
     el.tagName === "TEXTAREA"
       ? HTMLTextAreaElement.prototype
       : HTMLInputElement.prototype;
-  Object.getOwnPropertyDescriptor(proto, "value").set.call(el, inputText);
+  inputValueAccessor = Object.getOwnPropertyDescriptor(proto, "value");
+  inputMutationVersion = s.mutationVersion;
+  inputValueAccessor.set.call(el, inputText);
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
 } else if (kind === "click" && actions(el).includes("click")) el.click();
 else return reject("此操作不受支持");
 await Promise.resolve();
 flush();
+const verifyInput = () => {
+  // Recheck protection after website handlers ran, before accessing a value.
+  // The input/change events invalidate observation versions themselves, so a
+  // version difference alone is not evidence that this same field changed.
+  // A temporary password/OTP change that was restored still makes verification
+  // unsafe. Keep only a numeric DOM revision, never mutation or input history.
+  if (
+    !Number.isSafeInteger(inputMutationVersion) ||
+    inputMutationVersion !== s.mutationVersion ||
+    globalThis.__farfoldManualVersion !== manualRevision ||
+    Date.now() > deadline ||
+    Date.now() > observation.expires ||
+    observation.navigation !== navigation ||
+    observation.url !== location.href
+  )
+    return "unverified";
+  const currentRoots = inspectRoots();
+  if (
+    inputMutationVersion !== s.mutationVersion ||
+    pageBlocked(currentRoots) ||
+    !visible(el) ||
+    sensitive(el) ||
+    entry.semantic !== label(el) ||
+    entry.html !== el.outerHTML ||
+    entry.allowed !== actions(el).join(",")
+  )
+    return "unverified";
+  const rect = el.getBoundingClientRect(),
+    x = (Math.max(0, rect.left) + Math.min(innerWidth, rect.right)) / 2,
+    y = (Math.max(0, rect.top) + Math.min(innerHeight, rect.bottom)) / 2,
+    hit = document.elementFromPoint(x, y);
+  if (!hit || (hit !== el && !el.contains(hit))) return "unverified";
+  try {
+    if (!inputValueAccessor?.get) return "unverified";
+    // A single comparison, using the native accessor for the already-approved
+    // node. Neither the current nor previous value enters a reply or state.
+    return inputValueAccessor.get.call(el) === inputText
+      ? "matched"
+      : "mismatched";
+  } catch {
+    return "unverified";
+  }
+};
 return {
   applied: true,
   outcome: "dispatched",
+  ...(kind === "input" ? { verification: verifyInput() } : {}),
   ...diagnostics(),
   pageChanged:
     observation.version !== version() || observation.url !== location.href,
