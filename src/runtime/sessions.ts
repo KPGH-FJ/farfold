@@ -144,6 +144,7 @@ import {
   nextItemId,
   sealStreams,
   pushRaw,
+  isKnownConfigUpdate,
 } from "./session_projection";
 import { ThreadNotifications } from "./thread_notifications";
 import { conversationReadState } from "./conversation_read_state";
@@ -498,7 +499,8 @@ class ThreadsStore {
         (e.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
         "config_option_update"
       ) {
-        pushRaw(s, e.update, "config_option_update");
+        if (!isKnownConfigUpdate(e.update))
+          pushRaw(s, e.update, "config_option_update");
         this.emit(key);
         return;
       }

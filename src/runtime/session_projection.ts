@@ -339,6 +339,81 @@ function flattenChoices(raw: unknown): ConfigChoice[] {
   return out;
 }
 
+function knownConfigFields(
+  value: unknown,
+  fields: readonly string[],
+): value is Record<string, unknown> {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Object.keys(value).every((key) => fields.includes(key))
+  );
+}
+
+function optionalConfigLabel(value: unknown): boolean {
+  return value == null || typeof value === "string";
+}
+
+function knownConfigChoice(value: unknown): boolean {
+  return (
+    knownConfigFields(value, ["value", "name", "description"]) &&
+    typeof value.value === "string" &&
+    typeof value.name === "string" &&
+    optionalConfigLabel(value.description)
+  );
+}
+
+function knownConfigGroup(value: unknown): boolean {
+  return (
+    knownConfigFields(value, ["group", "name", "options"]) &&
+    typeof value.group === "string" &&
+    typeof value.name === "string" &&
+    Array.isArray(value.options) &&
+    value.options.every(knownConfigChoice)
+  );
+}
+
+/** Recognition only: raw updates never confirm or save configuration choices. */
+export function isKnownConfigUpdate(update: unknown): boolean {
+  if (
+    !knownConfigFields(update, ["sessionUpdate", "configOptions"]) ||
+    update.sessionUpdate !== "config_option_update" ||
+    !Array.isArray(update.configOptions)
+  )
+    return false;
+  return update.configOptions.every((option) => {
+    if (
+      !knownConfigFields(option, [
+        "id",
+        "name",
+        "description",
+        "category",
+        "type",
+        "currentValue",
+        "options",
+      ]) ||
+      typeof option.id !== "string" ||
+      typeof option.name !== "string" ||
+      !optionalConfigLabel(option.description) ||
+      !optionalConfigLabel(option.category)
+    )
+      return false;
+    if (option.type === "boolean")
+      return (
+        typeof option.currentValue === "boolean" &&
+        !Object.hasOwn(option, "options")
+      );
+    return (
+      option.type === "select" &&
+      typeof option.currentValue === "string" &&
+      Array.isArray(option.options) &&
+      (option.options.every(knownConfigChoice) ||
+        option.options.every(knownConfigGroup))
+    );
+  });
+}
+
 export function normalizeConfigOptions(raw: unknown): ConfigOptionView[] {
   if (!Array.isArray(raw)) return [];
   return raw

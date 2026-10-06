@@ -439,6 +439,152 @@ function event(key: string, value: unknown) {
     }
   ).applyChannelEvent(key, value);
 }
+
+it.each(
+  [
+    [],
+    [
+      {
+        id: "model",
+        name: "Model",
+        type: "select",
+        category: "model",
+        description: "Available model",
+        currentValue: "new",
+        options: [{ value: "new", name: "New", description: "Model choice" }],
+      },
+    ],
+    [
+      {
+        id: "effort",
+        name: "Effort",
+        type: "select",
+        currentValue: "high",
+        options: [
+          {
+            group: "depth",
+            name: "Depth",
+            options: [{ value: "high", name: "High" }],
+          },
+        ],
+      },
+    ],
+    [{ id: "enabled", name: "Enabled", type: "boolean", currentValue: true }],
+  ].map((options) => ({ options })),
+)(
+  "keeps known configuration notifications out of the transcript without treating them as confirmed choices: %j",
+  ({ options }) => {
+    const s = seed(`known-config-${JSON.stringify(options)}`);
+    const previous = [
+      {
+        id: "model",
+        name: "Model",
+        type: "select",
+        currentValue: "old",
+        options: [],
+      },
+    ];
+    s.configOptions = previous;
+    s.items = [
+      {
+        kind: "agent",
+        id: "existing",
+        text: "Actual streamed text",
+        streaming: true,
+        time: 1,
+      },
+    ];
+    s.modelDrift = true;
+    s.permissionState = "unknown";
+    s.configCheck = { status: "blocked", issues: [], current: {} };
+    s.queuePaused = "stopped";
+    s.queued = [[{ type: "text", text: "Keep paused" }]];
+    event(s.key, {
+      sessionId: s.nativeSessionId,
+      update: { sessionUpdate: "config_option_update", configOptions: options },
+    });
+    expect(s.items).toEqual([
+      {
+        kind: "agent",
+        id: "existing",
+        text: "Actual streamed text",
+        streaming: true,
+        time: 1,
+      },
+    ]);
+    expect(s.configOptions).toBe(previous);
+    expect(s.modelDrift).toBe(true);
+    expect(s.configCheck?.status).toBe("blocked");
+    expect(s.permissionState).toBe("unknown");
+    expect(s.queuePaused).toBe("stopped");
+    expect(s.queued[0][0]).toMatchObject({ text: "Keep paused" });
+    expect(h.invoke).not.toHaveBeenCalled();
+    event(s.key, { kind: "configOptions", options });
+    expect(s.configOptions.map((option) => option.id)).toEqual(
+      options.map((option) => option.id),
+    );
+    expect(s.items).toHaveLength(1);
+  },
+);
+
+it.each([
+  {},
+  { configOptions: null },
+  { configOptions: {} },
+  { configOptions: [null] },
+  {
+    configOptions: [
+      { id: "model", type: "select", currentValue: "m", options: [] },
+    ],
+  },
+  {
+    configOptions: [
+      {
+        id: "model",
+        name: "Model",
+        type: "select",
+        currentValue: "m",
+        options: [{}],
+      },
+    ],
+  },
+  {
+    configOptions: [
+      { id: "toggle", name: "Toggle", type: "boolean", currentValue: "true" },
+    ],
+  },
+  {
+    configOptions: [
+      { id: "future", name: "Future", type: "unknown-type", currentValue: "m" },
+    ],
+  },
+  { configOptions: [], _meta: { future: { keep: true } } },
+  { configOptions: [], futureField: { keep: true } },
+])(
+  "retains malformed or extended configuration notifications verbatim: %j",
+  (fields) => {
+    const s = seed(`raw-config-${JSON.stringify(fields)}`);
+    const update = { sessionUpdate: "config_option_update", ...fields };
+    event(s.key, { update });
+    expect(s.items).toHaveLength(1);
+    expect(s.items[0]).toMatchObject({ kind: "raw", update });
+    if (s.items[0].kind === "raw") expect(s.items[0].update).toBe(update);
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
+
+it("keeps an unknown notification type verbatim even when it carries configuration-shaped data", () => {
+  const s = seed("unknown-config-kind");
+  const update = {
+    sessionUpdate: "future_config_update",
+    configOptions: [],
+    data: { keep: true },
+  };
+  event(s.key, { update });
+  expect(s.items[0]).toMatchObject({ kind: "raw", update });
+  if (s.items[0].kind === "raw") expect(s.items[0].update).toBe(update);
+});
+
 it("renders passive terminal output deltas in the matching command artifact", () => {
   const s = seed("terminal-output");
   event(s.key, {
