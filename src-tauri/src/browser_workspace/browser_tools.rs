@@ -8,6 +8,49 @@ use tauri::AppHandle;
 
 const CONTROL_UNCONFIRMED: &str = "网页操作结果未确认，请查看页面后重新观察；不要自动重试";
 
+fn append_control_diagnostics(source: &Value, result: &mut Value) {
+    for (field, allowed) in [
+        (
+            "guardClass",
+            &[
+                "deadline",
+                "observation_missing",
+                "observation_id",
+                "navigation",
+                "url",
+                "version",
+                "expired",
+            ][..],
+        ),
+        (
+            "observationInvalidatedBy",
+            &[
+                "mutation",
+                "input",
+                "change",
+                "scroll",
+                "resize",
+                "shadow_root",
+            ][..],
+        ),
+    ] {
+        if let Some(class) = allowed
+            .iter()
+            .copied()
+            .find(|class| source.get(field).and_then(Value::as_str) == Some(*class))
+        {
+            result[field] = json!(class);
+        }
+    }
+    if let Some(age) = source
+        .get("observationAgeMs")
+        .and_then(Value::as_u64)
+        .filter(|age| *age <= 300_000)
+    {
+        result["observationAgeMs"] = json!(age);
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) enum ToolFailure {
     // Created only by checks before the native action entry point. The reason
@@ -227,7 +270,7 @@ impl FixedPageReadScope {
                     value.get("applied").and_then(Value::as_bool).ok_or(CONTROL_UNCONFIRMED)?,
                 )
             };
-            Ok(json!({
+            let mut result = json!({
                 "applied":applied,
                 "outcome":outcome,
                 "pageChanged":value.get("pageChanged").and_then(Value::as_bool).unwrap_or(true),
@@ -235,7 +278,9 @@ impl FixedPageReadScope {
                 "observationId":id,
                 "reason":value.get("reason").and_then(Value::as_str).filter(|s| s.chars().count()<=256),
                 "next":"重新观察页面后检查结果；事件已交付不代表网站操作成功，结果未知时不要自动重试。"
-            }))
+            });
+            append_control_diagnostics(&value, &mut result);
+            Ok(result)
         })
         .map_err(|_| CONTROL_UNCONFIRMED.to_owned())
     }
@@ -297,6 +342,54 @@ mod tests {
                 .unwrap_err(),
             CONTROL_UNCONFIRMED
         );
+    }
+    #[test]
+    fn control_diagnostics_pass_only_fixed_classes_and_bounded_integer_age() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:control-diagnostics", "page");
+        let raw = json!({"applied":false,"outcome":"rejected","reason":"页面或操作目标已变化，请重新观察","guardClass":"observation_missing","observationAgeMs":1234,"observationInvalidatedBy":"resize"}).to_string();
+        let reply = scope.complete_control("control", &raw).unwrap();
+        assert_eq!(reply["applied"], false);
+        assert_eq!(reply["outcome"], "rejected");
+        assert_eq!(reply["guardClass"], "observation_missing");
+        assert_eq!(reply["observationAgeMs"], 1234);
+        assert_eq!(reply["observationInvalidatedBy"], "resize");
+    }
+    #[test]
+    fn control_diagnostics_reject_unknown_strings_objects_and_invalid_ages() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:control-diagnostics", "page");
+        for age in [
+            json!(-1),
+            json!(300001),
+            json!(1.5),
+            json!("1234"),
+            json!({"private":"payload"}),
+        ] {
+            let raw = json!({"applied":false,"outcome":"rejected","guardClass":"expired PRIVATE_PAYLOAD","observationAgeMs":age,"observationInvalidatedBy":{"private":"payload"},"unknown":{"private":"payload"}}).to_string();
+            let reply = scope.complete_control("control", &raw).unwrap();
+            for key in [
+                "guardClass",
+                "observationAgeMs",
+                "observationInvalidatedBy",
+                "unknown",
+            ] {
+                assert!(reply.get(key).is_none(), "untrusted {key} was forwarded");
+            }
+            assert!(!reply.to_string().contains("PRIVATE_PAYLOAD"));
+        }
+        let raw = json!({"applied":false,"outcome":"rejected","guardClass":{"private":"payload"},"observationInvalidatedBy":"resize PRIVATE_PAYLOAD"}).to_string();
+        let reply = scope.complete_control("control", &raw).unwrap();
+        assert!(reply.get("guardClass").is_none());
+        assert!(reply.get("observationInvalidatedBy").is_none());
+    }
+    #[test]
+    fn valid_control_diagnostics_never_turn_unknown_into_not_applied() {
+        let (scope, _) = sharing_scope_fixture("agent:/fixture:control-diagnostics", "page");
+        let raw = json!({"applied":false,"outcome":"unknown","guardClass":"expired","observationAgeMs":300000,"observationInvalidatedBy":"mutation"}).to_string();
+        let reply = scope.complete_control("control", &raw).unwrap();
+        assert_eq!(reply["applied"], Value::Null);
+        assert_eq!(reply["outcome"], "unknown");
+        assert_eq!(reply["guardClass"], "expired");
+        assert_eq!(reply["observationAgeMs"], 300000);
     }
     #[test]
     fn actual_native_fixture_satisfies_the_rust_and_mcp_receipt_contract() {

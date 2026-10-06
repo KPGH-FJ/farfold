@@ -1,0 +1,112 @@
+{
+  "recordedAtUtc": "2026-10-06T16:07:24.782941+00:00",
+  "scope": "Seven required engineering checks on the reviewed reply-stream, file-open guidance and browser-diagnostic increments; release Rust profile. No installed or real-Agent pass claim.",
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "startedAtUtc": "2026-10-06T16:04:43.393868+00:00",
+      "exitCode": 0,
+      "durationSeconds": 36.468,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/frontend-format.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "startedAtUtc": "2026-10-06T16:04:43.394063+00:00",
+      "exitCode": 0,
+      "durationSeconds": 27.335,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/frontend-typecheck.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "startedAtUtc": "2026-10-06T16:04:43.395502+00:00",
+      "exitCode": 0,
+      "durationSeconds": 30.085,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/frontend-test.log",
+      "sha256": "0f23f75c155ef8d1af6cc828fbcbf839caca51bd690e765f01b3e7f2672a8f32"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "startedAtUtc": "2026-10-06T16:04:43.396323+00:00",
+      "exitCode": 0,
+      "durationSeconds": 28.187,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/frontend-build.log",
+      "sha256": "fcb6c3851b31266b949f4790c29060759cac9263d3ae26cf7c1e3bdb8fcfa96c"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "startedAtUtc": "2026-10-06T16:04:44.592903+00:00",
+      "exitCode": 0,
+      "durationSeconds": 2.299,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/rust-fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-10-06T16:04:46.892574+00:00",
+      "exitCode": 0,
+      "durationSeconds": 1.153,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/rust-clippy.log",
+      "sha256": "48d78d5f87406b37c5362a4178c798bccec8e27713de9851ea83441df3743ad8"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--release"
+      ],
+      "startedAtUtc": "2026-10-06T16:04:48.046372+00:00",
+      "exitCode": 0,
+      "durationSeconds": 37.466,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/followup-full-checks/rust-test.log",
+      "sha256": "b548a0aa0517c1123651f520430fb3a1a0440134db3aae82beb1436399c082c4"
+    }
+  ],
+  "frontend": {
+    "files": 186,
+    "passed": 2191,
+    "failed": 0
+  },
+  "rust": {
+    "passed": 998,
+    "failed": 0,
+    "ignored": 4,
+    "ignoredWerePreExisting": true
+  },
+  "sourceHashes": {
+    "src/runtime/session_types.ts": "8d8e3a2765180d7485830f329691ca81db3cfa0b869bd0268d5132320ac957e7",
+    "src/runtime/session_streams.ts": "58c9ebd6f8f58af6ef7bd9a40eb78ec839d30bb8214f7422d41c4a1b76766d85",
+    "src/runtime/session_projection.ts": "e4fdcdd461ceb0bc1c8421d7dfb13fefae56f539cbd0ef7e8f90555c05edee02",
+    "src/runtime/sessions.ts": "104e90407d9eeb7a4b06783cd403990d4b3ee6e16ea1292acb6cb0859d34f8eb",
+    "src/runtime/sessions.notifications.test.ts": "28669e9584551a2b3d7df1695780872372eb7bf340aa6f8a40b3ca074ca98f0c",
+    "src/components/ThreadView.tsx": "c904fff6b1d0fee2bec2c168c937264ed2e70f0d2c9cbe95fa0036cf9d80b31f",
+    "src/components/ThreadView.reading.test.tsx": "6b90edc10dbe263c6177ffe0cb20797dc059ca86a1831ae6e2783f617c5aa6c7",
+    "src-tauri/native/browser_observation.js": "329d791d7ee67c7636c445e7b1ca8141da2099b291053e152387f736793e6e57",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "bc58ba8e924434033624442af76c5d17fe952061ea115accd8194a9322cd5cbc",
+    "src/runtime/browser_native_scripts.test.ts": "4f0268712c197842e4fbbd73bc3b1b50e4841ab10cd7d07738db633ec62c2ba8",
+    "src/components/OpenedFileView.tsx": "70d39cbf95bed418c667d2221235d8dcfa5111f953935bd43cf8a1dc1b467319",
+    "src/components/OpenedFileView.test.tsx": "181c9e5fd48735de160fa043e893dbdbc28fe0e9adf86f7276bbf69e92d04191"
+  },
+  "sourceHashTiming": "Captured after all checks; no source edits occurred during these checks. Final committed inputs are verified separately by candidate packaging.",
+  "installed": false
+}

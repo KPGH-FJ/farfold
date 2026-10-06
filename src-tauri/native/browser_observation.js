@@ -1,12 +1,22 @@
 const key = "__farfold_observation_v1";
 let s = globalThis[key];
 if (!s) {
-  s = { epoch: epochSeed, version: 0, observation: null, roots: new WeakSet() };
-  const invalidate = () => {
+  s = {
+    epoch: epochSeed,
+    version: 0,
+    observation: null,
+    observationExpires: null,
+    invalidatedBy: null,
+    roots: new WeakSet(),
+  };
+  const invalidate = (category) => {
+    // Keep only the first fixed cause that invalidated this observation. Do
+    // not inspect the event, its target, or any page/input contents.
+    if (s.observation) s.invalidatedBy = category;
     s.version++;
     s.observation = null;
   };
-  s.observer = new MutationObserver(invalidate);
+  s.observer = new MutationObserver(() => invalidate("mutation"));
   s.observer.observe(document, {
     subtree: true,
     childList: true,
@@ -14,12 +24,13 @@ if (!s) {
     characterData: true,
   });
   for (const event of ["input", "change", "scroll", "resize"])
-    addEventListener(event, invalidate, true);
+    addEventListener(event, () => invalidate(event), true);
   s.roots.add(document);
   globalThis[key] = s;
 }
 const flush = () => {
   if (s.observer.takeRecords().length) {
+    if (s.observation) s.invalidatedBy = "mutation";
     s.version++;
     s.observation = null;
   }
@@ -44,6 +55,7 @@ for (let i = 0; i < roots.length; i++) {
           attributes: true,
           characterData: true,
         });
+        if (s.observation) s.invalidatedBy = "shadow_root";
         s.version++;
         s.observation = null;
       }
@@ -192,6 +204,8 @@ if (mode === "check")
   };
 if (mode === "observe") {
   s.observation = null;
+  s.observationExpires = null;
+  s.invalidatedBy = null;
   if (blocked)
     return {
       blocked: true,
@@ -243,6 +257,7 @@ if (mode === "observe") {
     version: version(),
     expires: Date.now() + 30000,
   };
+  s.observationExpires = s.observation.expires;
   return {
     blocked: false,
     url: location.href.slice(0, 4096),
@@ -257,26 +272,41 @@ if (mode === "observe") {
 }
 const observation = s.observation;
 s.observation = null;
-const reject = (reason) => ({
+const diagnostics = () => {
+  const expires = observation?.expires ?? s.observationExpires;
+  const age = Number.isFinite(expires) ? Date.now() - (expires - 30000) : null;
+  const value = {};
+  // Omit unavailable, backwards-clock and old ages rather than fabricating a
+  // capped duration. The original thirty-second expiry remains unchanged.
+  if (Number.isSafeInteger(age) && age >= 0 && age <= 300000)
+    value.observationAgeMs = age;
+  if (!observation && s.invalidatedBy)
+    value.observationInvalidatedBy = s.invalidatedBy;
+  return value;
+};
+const reject = (reason, guardClass) => ({
   applied: false,
   outcome: "rejected",
   reason,
+  ...(guardClass ? { guardClass } : {}),
+  ...diagnostics(),
   pageChanged: false,
   navigationChanged: false,
   observationId,
   documentVersion: version(),
 });
 if (mode !== "act" || blocked) return reject("页面不允许此操作");
-if (
-  Date.now() > deadline ||
-  !observation ||
-  observation.id !== observationId ||
-  observation.navigation !== navigation ||
-  observation.url !== location.href ||
-  observation.version !== version() ||
-  Date.now() > observation.expires
-)
-  return reject("页面或操作目标已变化，请重新观察");
+const stale = (guardClass) =>
+  reject("页面或操作目标已变化，请重新观察", guardClass);
+// Preserve the original short-circuit order and comparisons. These classes
+// describe a rejection; they never establish permission or dispatch facts.
+if (Date.now() > deadline) return stale("deadline");
+if (!observation) return stale("observation_missing");
+if (observation.id !== observationId) return stale("observation_id");
+if (observation.navigation !== navigation) return stale("navigation");
+if (observation.url !== location.href) return stale("url");
+if (observation.version !== version()) return stale("version");
+if (Date.now() > observation.expires) return stale("expired");
 const entry = observation.map.get(nodeRef),
   el = entry?.el;
 if (
@@ -314,6 +344,7 @@ flush();
 return {
   applied: true,
   outcome: "dispatched",
+  ...diagnostics(),
   pageChanged:
     observation.version !== version() || observation.url !== location.href,
   navigationChanged: observation.url !== location.href,

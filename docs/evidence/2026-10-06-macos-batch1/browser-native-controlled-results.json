@@ -1,0 +1,90 @@
+{
+  "scope": "Standalone controlled native WebKit reproduction only; no formal Farfold, Agent, account, user-data scan, UI automation or installed-app fix proof.",
+  "receipt": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/receipt.json",
+  "receiptSha256": "abf05239082c95c6f8e4ab35bc86f22a4afdf0f5607667ba6386ca1eb42031c4",
+  "sourceCommitAtStart": "be5aad00546f539547f6628cb2010bd4ca4ed12a",
+  "productionSourcesUnchanged": true,
+  "originalProgramByteIdentical": true,
+  "fixtureComplexByteIdenticalToOwnRootSample": true,
+  "compiles": [
+    {
+      "variant": "original",
+      "exitCode": 0,
+      "binarySha256": "43b765a9e41cb85341d6cab323321cae82e604200d7ca1628f683de3d2518c23"
+    },
+    {
+      "variant": "diagnostic",
+      "exitCode": 0,
+      "binarySha256": "81761d35fe78c3ec14c57a63f4e6edc10dd48fa8a1011c286a768fed67a3b0e0"
+    }
+  ],
+  "runs": [
+    {
+      "variant": "original",
+      "fixture": "minimal",
+      "delayMs": 300,
+      "exitCode": 0,
+      "resultPath": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/original-minimal-300ms.json",
+      "resultSha256": "47ef4725f29f28357ecb526040a76edbc394f61478e973370fe0f4331b867e8e",
+      "applied": true,
+      "outcome": "dispatched",
+      "counterOneObserved": true,
+      "closeAcknowledged": true
+    },
+    {
+      "variant": "diagnostic",
+      "fixture": "minimal",
+      "delayMs": 300,
+      "exitCode": 0,
+      "resultPath": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/diagnostic-minimal-300ms.json",
+      "resultSha256": "47ef4725f29f28357ecb526040a76edbc394f61478e973370fe0f4331b867e8e",
+      "applied": true,
+      "outcome": "dispatched",
+      "counterOneObserved": true,
+      "closeAcknowledged": true
+    },
+    {
+      "variant": "original",
+      "fixture": "complex",
+      "delayMs": 300,
+      "exitCode": 0,
+      "resultPath": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/original-complex-300ms.json",
+      "resultSha256": "8bbf30e9a67c888220c16a2bec1c3ae1435d01e5dbc0b25bd0eff21c9d6a3cdb",
+      "applied": true,
+      "outcome": "dispatched",
+      "counterOneObserved": true,
+      "closeAcknowledged": true
+    },
+    {
+      "variant": "diagnostic",
+      "fixture": "complex",
+      "delayMs": 300,
+      "exitCode": 0,
+      "resultPath": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/diagnostic-complex-300ms.json",
+      "resultSha256": "8bbf30e9a67c888220c16a2bec1c3ae1435d01e5dbc0b25bd0eff21c9d6a3cdb",
+      "applied": true,
+      "outcome": "dispatched",
+      "counterOneObserved": true,
+      "closeAcknowledged": true
+    },
+    {
+      "variant": "diagnostic",
+      "fixture": "complex",
+      "delayMs": 20000,
+      "exitCode": 0,
+      "resultPath": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/diagnostic-complex-20000ms.json",
+      "resultSha256": "46a2dd7d8e3aa9f19b908e750ab4406962964ae207146148a80c82a4201b7c88",
+      "applied": true,
+      "outcome": "dispatched",
+      "counterOneObserved": true,
+      "closeAcknowledged": true
+    }
+  ],
+  "priorFailedCompileReceipts": [
+    "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/receipt-compile-attempt1.json",
+    "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-native-repro/receipt-compile-attempt2.json"
+  ],
+  "serverStopped": true,
+  "installedFailureReproduced": false,
+  "boundary": "Standalone controlled native WebKit success does not prove formal-app approvals, clicks, input or submission."
+}

@@ -1,0 +1,74 @@
+{
+  "recordedAtUtc": "2026-10-06T16:01:56.815166+00:00",
+  "scope": "Diagnostic-only increment. Directed source/VM/Rust checks; no installed-app or real-Agent fix claim. Original controlled native 5/5 and failed preparation/compiles remain in browser-native-repro.",
+  "files": {
+    "src-tauri/native/browser_observation.js": "329d791d7ee67c7636c445e7b1ca8141da2099b291053e152387f736793e6e57",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "bc58ba8e924434033624442af76c5d17fe952061ea115accd8194a9322cd5cbc",
+    "src/runtime/browser_native_scripts.test.ts": "4f0268712c197842e4fbbd73bc3b1b50e4841ab10cd7d07738db633ec62c2ba8"
+  },
+  "checks": {
+    "jsRed": {
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 14,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/red-js.log",
+      "actualDurationReceipt": "Duration  115ms (transform 16ms, setup 0ms, import 22ms, tests 16ms, environment 0ms)",
+      "logSha256": "8c04db05acf78cab48b2b47178019d563a60a6e3e471651df34e907438f8b1c1"
+    },
+    "rustRed": {
+      "exitCode": 101,
+      "passed": 7,
+      "failed": 2,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/red-rust.log",
+      "actualDurationReceipt": "Finished `release` profile [optimized] target(s) in 1m 24s",
+      "logSha256": "928a367e620b2504963efacdbc9b626cfb32fcd51c309356096c03e2c2d9c973"
+    },
+    "jsGreen": {
+      "exitCode": 0,
+      "passed": 16,
+      "failed": 0,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/green-js.log",
+      "actualDurationReceipt": "Duration  86ms (transform 15ms, setup 0ms, import 21ms, tests 9ms, environment 0ms)",
+      "logSha256": "aa1c1f80e054733eca8c41c14c9fb7ab72c84d06c1b7d588df3bb1dc21c8d24b"
+    },
+    "rustGreen": {
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0,
+      "filteredOut": 993,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/green-rust.log",
+      "actualDurationReceipt": "Finished `release` profile [optimized] target(s) in 1m 05s",
+      "logSha256": "5e9dd9876b9d77f5323590f7cd048acaac83f4b2017dab94b489b2501f2ea23d"
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/typecheck.log",
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "prettier": {
+      "exitCode": 0,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/format.log",
+      "logSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "rustfmt": {
+      "exitCode": 0,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/rustfmt.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "clippyReleaseLib": {
+      "exitCode": 0,
+      "log": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/browser-action-diagnostics/clippy.log",
+      "actualDurationReceipt": "Finished `release` profile [optimized] target(s) in 15.01s",
+      "logSha256": "da5d75d1f7a0f9b1c777071c299c253604e0ff567e928ad7964a3d2a8963dd1a"
+    },
+    "gitDiffCheck": {
+      "exitCode": 0
+    }
+  },
+  "committed": false,
+  "rootReview": {
+    "blocked": false,
+    "sourceHashesMatched": true,
+    "independentReview": "Source cross-review found no remaining blocker; installed behavior remains unverified."
+  }
+}
