@@ -1,0 +1,6 @@
+{
+  "command": ["corepack", "pnpm", "tauri:build:internal", "--", "--locked"],
+  "exit": 0,
+  "sourceHead": "9ed2e6be56bdce193d6bbdfe0dcbdeac735b641f",
+  "log": "package-build.log"
+}

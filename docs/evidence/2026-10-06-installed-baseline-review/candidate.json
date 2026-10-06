@@ -1,0 +1,38 @@
+{
+  "sourceHead": "9ed2e6be56bdce193d6bbdfe0dcbdeac735b641f",
+  "sourceInputs": 710,
+  "sourceInputsUnchanged": true,
+  "sourceManifestSha256": "360dff9e4d7ed764adb60c2acd28551ecb679a0f280560d116155010c6721194",
+  "bundleId": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "signing": "adhoc",
+  "strictSignatureVerified": true,
+  "notarized": false,
+  "bundleFiles": {
+    "Contents/Info.plist": "3a98270c00d9bbfb7545a775c2bf58591d3f249574bed248e42524319adad0d3",
+    "Contents/MacOS/farfold": "384f3fed2932af18cbf3971def2a2172276a0f797b21702db1a4f7f8f6bd5998",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archivePath": "src-tauri/target/internal-candidate/2026-10-06-9ed2e6be/Farfold-0.1.7-9ed2e6be.zip",
+  "archiveSha256": "5f1ce0324d05c61491e70ec66cae2b386ed4e7ba8ffbb36c5c8c6f22caa253d3",
+  "archiveBytes": 10136536,
+  "archiveVerifiedFiles": 5,
+  "archiveExecutableModeVerified": true,
+  "installed": false,
+  "launched": false,
+  "installedFilesUnchanged": true,
+  "temporaryBundleRemoved": true,
+  "scope": "Prepared current-source macOS package only; no installed-product or real-Agent acceptance.",
+  "independentReview": {
+    "result": "pass",
+    "sourceInputsMatchedHead": 710,
+    "bundleFilesMatchedArchive": 5,
+    "archiveExecutableModeVerified": true,
+    "oldInstalledAppUnchanged": true,
+    "archiveAppleDoubleEntries": 9,
+    "scope": "Read-only source, signature, archive and installed-file verification; no launch or installation."
+  }
+}
