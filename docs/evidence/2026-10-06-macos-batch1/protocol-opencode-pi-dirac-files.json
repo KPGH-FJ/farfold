@@ -1,0 +1,123 @@
+{
+  "OpenCode": {
+    "log": "protocol-v1-1791277567253-4.jsonl",
+    "recordedAtUtc": "2026-10-06T14:55:26.628384+00:00",
+    "sha256": "c475a02528597fd72b709d144768d2c7483744030d0dadc423f1d6f9635b880f",
+    "bytes": 70110,
+    "records": 713,
+    "outbound": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/set_config_option": 1,
+      "session/prompt": 4
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:07:29.386000+00:00",
+        "firstResponseAt": "2026-10-06T09:07:34.724000+00:00",
+        "durationMs": 5338,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T09:10:45.010000+00:00",
+        "firstResponseAt": "2026-10-06T09:10:46.944000+00:00",
+        "durationMs": 1934,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:39:08.090000+00:00",
+        "firstResponseAt": "2026-10-06T11:39:23.155000+00:00",
+        "durationMs": 15065,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:41:09.003000+00:00",
+        "firstResponseAt": "2026-10-06T11:41:18.973000+00:00",
+        "durationMs": 9970,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "Pi": {
+    "log": "protocol-v1-1791275544814-1.jsonl",
+    "recordedAtUtc": "2026-10-06T14:55:26.629366+00:00",
+    "sha256": "dea07f3c71037499da3c0c08f0fc8f9a82d9317aeac07dfcbdef927aedf775ba",
+    "bytes": 25178,
+    "records": 245,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/set_config_option": 2,
+      "session/prompt": 5,
+      "session/cancel": 1
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T08:38:10.197000+00:00",
+        "firstResponseAt": "2026-10-06T08:38:20.001000+00:00",
+        "durationMs": 9804,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T08:40:41.424000+00:00",
+        "firstResponseAt": "2026-10-06T08:41:34.916000+00:00",
+        "durationMs": 53492,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T08:42:41.106000+00:00",
+        "firstResponseAt": "2026-10-06T08:43:19.711000+00:00",
+        "durationMs": 38605,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T08:44:40.136000+00:00",
+        "firstResponseAt": "2026-10-06T08:44:42.057000+00:00",
+        "durationMs": 1921,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:44:41.239000+00:00",
+        "firstResponseAt": "2026-10-06T11:45:09.861000+00:00",
+        "durationMs": 28622,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "Dirac": {
+    "log": "protocol-v1-1791279621570-24.jsonl",
+    "recordedAtUtc": "2026-10-06T14:55:26.630382+00:00",
+    "sha256": "08851c7371a04dc4129cea7f565714f494e80ffa6646ac1bd26af99e8b6016bf",
+    "bytes": 39499,
+    "records": 394,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 2,
+      "response": 2
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:41:06.190000+00:00",
+        "firstResponseAt": "2026-10-06T09:41:28.890000+00:00",
+        "durationMs": 22700,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T14:48:07.282000+00:00",
+        "firstResponseAt": "2026-10-06T14:52:36.882000+00:00",
+        "durationMs": 269600,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

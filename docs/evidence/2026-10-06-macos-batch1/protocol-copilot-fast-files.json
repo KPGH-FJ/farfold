@@ -1,0 +1,67 @@
+{
+  "Copilot": {
+    "log": "protocol-v1-1791280733746-40.jsonl",
+    "recordedAtUtc": "2026-10-06T11:37:47.748562+00:00",
+    "sha256": "de603405def710d08bae2ebd0177966fc5cc98df1cf32c85e160890dba9fcd00",
+    "bytes": 19045,
+    "records": 181,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 3,
+      "response": 2
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:59:46.583000+00:00",
+        "firstResponseAt": "2026-10-06T09:59:51.177000+00:00",
+        "durationMs": 4594,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:32:02.735000+00:00",
+        "firstResponseAt": "2026-10-06T11:33:14.571000+00:00",
+        "durationMs": 71836,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:34:35.008000+00:00",
+        "firstResponseAt": "2026-10-06T11:35:19.242000+00:00",
+        "durationMs": 44234,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  },
+  "fast-agent": {
+    "log": "protocol-v1-1791280018579-30.jsonl",
+    "recordedAtUtc": "2026-10-06T11:37:47.749366+00:00",
+    "sha256": "f29a87be5085201235a3e559c9a4a1eb67e34774f490f7b6a407937afdaa311c",
+    "bytes": 16439,
+    "records": 154,
+    "outbound": {
+      "initialize": 1,
+      "session/new": 1,
+      "session/prompt": 2
+    },
+    "stderrRecords": 0,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T09:47:47.319000+00:00",
+        "firstResponseAt": "2026-10-06T09:47:49.688000+00:00",
+        "durationMs": 2369,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T11:35:43.093000+00:00",
+        "firstResponseAt": "2026-10-06T11:36:02.727000+00:00",
+        "durationMs": 19634,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

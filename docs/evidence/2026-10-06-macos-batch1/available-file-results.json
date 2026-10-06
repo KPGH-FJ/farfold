@@ -1,0 +1,54 @@
+{
+  "recordedAtUtc": "2026-10-06T14:58:52.876929+00:00",
+  "installedBinarySha256": "55abe01bddf2eec389b3c25b841eb034747bc53339d13835c682e6d82c295f52",
+  "scope": "Own macOS synthetic files and original test conversations. No login, account switching, paid-model selection or Windows. None is full eight-standard acceptance.",
+  "Copilot": {
+    "runtimeVersion": "1.0.89",
+    "selection": "Existing default model/Agent/Allow All Off, exact model unreported",
+    "context": "Earliest user marker and fresh file nonce both correct",
+    "copy": "52 bytes exactly equal, LF and input retained",
+    "revision": "File opinion -> unsent composer -> explicit send -> actual tools -> exact51bytes red-line change, LF/input retained",
+    "approval": "Two separate write/edit requests approved once each; no always-allow",
+    "delivery": "Structured file location, copy52/revision51 verified, latest diff shows red line",
+    "inputSha256": "e58fb97b10c39a32569b9adfea40db6f4d8c7cdf895606f097391db80d89efca",
+    "revisedOutputSha256": "2870bc1404b53c31c901afbb1500e4d81b1f74e7eaa8fc7611f3c914db885281"
+  },
+  "fast-agent": {
+    "runtimeVersion": "0.10.1",
+    "selection": "Existing settings; precise model/reasoning not reported",
+    "context": "Earliest marker and fresh file nonce correct in final reply; earlier narrative also present",
+    "copy": "49 bytes exactly equal, LF and input retained; actual3file-tool steps",
+    "approval": "Not requested; untested",
+    "delivery": "Artifact pane contains environment/read_text_file/apply_patch/read logs only, no file item or opinion entry; no structured delivery passed",
+    "inputSha256": "baecfd3accdcd268f56a2289bbc5fbff2479c7e89926451a3232b0a108282c97"
+  },
+  "OpenCode": {
+    "selection": "Existing bunny/Farfold API, apodex/apodex-1.1-mini:free, unchanged in this extension",
+    "context": "Earliest marker and fresh nonce correct",
+    "copy": "Failed exact-copy: output54 vsinput53, one extra final LF",
+    "revision": "One explicit file opinion -> unsent composer -> explicit send -> actual3tools; returned done but output52, missing final LF; failed exact-copy, no further retry",
+    "approval": "Not requested in these tasks; untested",
+    "delivery": "Diff visible, no usable structured location; manual file verification not performed for this extension",
+    "inputSha256": "5b6723e92c1515c3f5c6965a586cae1f47c5c184c7e9cc4d43143bd1fbab6f85",
+    "firstOutputSha256": "ce62508f06ee041b8cacf4130757ac8628f95cb1d36f31d3c6f12f52b9e3d583",
+    "revisedOutputSha256": "c270353318d90550fae54561354cd46edfdcfb9448c3cb78284c2f0f508be3d0"
+  },
+  "Pi": {
+    "selection": "Existing OpenRouter/Nemotron3Ultra free/Thinking medium",
+    "context": "Earliest marker and fresh nonce correct in final reply; retry text still ordinary body",
+    "copy": "Failed exact-copy: output46 vsinput47, missing final LF; actual3tools, input unchanged",
+    "delivery": "File diff and Agent-provided location shown; UI verification not exercised",
+    "approval": "Not requested; untested",
+    "inputSha256": "4e86dca9cee01ef9d0fad14eedaa48600e8121a1a2b72459bb04f115c278ae8a",
+    "outputSha256": "a4f859742f327b2a9da6de00d7b9952f39c35264a16476222c70835162ab0902"
+  },
+  "Dirac": {
+    "selection": "Existing free nvidia/nemotron-3-ultra-550b-a55b:free/Medium",
+    "copy": "50 bytes exactly equal, both LF/input retained, actual read/write/reread",
+    "reply": "Both marker values present but repeated and contaminated with Medium section marker and retry text; strict two-line response failed",
+    "approval": "Provider temporarily overloaded shown by Agent. One explicit approve-once continued that failed free request; separate exact file-write request approved once. No new Farfold prompt/re-send or always-approve",
+    "delivery": "Not exercised yet",
+    "inputSha256": "4dd9523710760e6962983a8036ed2a887c060b1b6905138effd2819e08a38dfb"
+  },
+  "limits": "Model/task byte adherence failures are real observed outcomes; exact external model/tool cause not inferred and Farfold never silently rewrites files to fabricate success. Same logs/processes do not establish cold recovery; durations include approval waits."
+}
