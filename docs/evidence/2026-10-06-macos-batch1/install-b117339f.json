@@ -1,0 +1,53 @@
+{
+  "installedAtUtc": "2026-10-06T18:27:58.912522+00:00",
+  "candidateCommit": "b117339fbbf8a4e0d86a0efa28433efe24d1ff20",
+  "binarySha256": "e9fbdc8ebece41b8c6b73b3400ef35e61465879d274b6defeac6b57f738a59ed",
+  "userConfirmedSavedNormalExit": false,
+  "latestUserFullMacTestAuthority": true,
+  "normalQuitObservedByAgent": true,
+  "forcedQuit": false,
+  "formalAppProcessesBefore": 0,
+  "onlyFormalAppReplaced": true,
+  "installedExactFiveFiles": true,
+  "strictCodesignExit": 0,
+  "architecture": "arm64",
+  "dataRetentionComparisonPending": false,
+  "launched": false,
+  "dataRetentionComparison": {
+    "summariesMatch": true,
+    "perEntryContentAndModeRecordsMatch": true,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195433,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 90,
+        "file": 59,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "aggregateSha256": "e14e3f08529ba033142c28be86f9781ad096db7cd622037e2c4ba129ac0c8f57",
+    "scope": "Three Farfold data trees during stopped-app replacement window; each entry had stable reads. Not a globally atomic snapshot or evidence about Keychain/external Agent storage."
+  },
+  "independentReceiptSha256": "ee26e3d3fb87526eab7cda80998aad0cd19b0fbc349321e77f34f2b953ddfe49",
+  "coldLaunch": {
+    "indexCount": 88,
+    "ownedCodeBuddyHistoryBody": true,
+    "ownedUnsentMarkerRestored": true,
+    "marker": "FARFOLD_UNSENT_RESTART_B117_20261007",
+    "automaticallySent": false,
+    "highSettingRestored": true,
+    "ownMarkerExplicitlyCleared": true,
+    "scope": "One owned test conversation; not full history acceptance."
+  }
+}

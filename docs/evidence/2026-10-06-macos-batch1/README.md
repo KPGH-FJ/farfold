@@ -1,8 +1,8 @@
 # macOS逐家实测：第一批
 
-通知最后一次诊断已补齐：固定前端跳过原因、匹配的后端门槛与系统add回执，仅内存单条、无正文/关联编号导出，不重试；预览冻结后才导出。前端2214项、Rust1007项/4原忽略通过，最终覆盖说明另37项及格式/Clippy通过，受控Objective-C新旧桥与独立审无阻断。实际提醒送达仍未通过；正式c42未更新，通知诊断和网页窄修将合包复测。见 notification-diagnostic-checks.json。用户已全权授权休息期间完成可自主测试，登录/换号及Windows实机仍按本轮既定范围。
+正式应用已更新为 b117339f/e9fbdc8e（0.1.7 arm64）：用户全权测试授权下走正常退出保存屏障，没有强杀或绕过活动保护；5文件/签名及独立28项核验通过，替换窗口217,280项数据内容/模式相同。冷启动88条索引，自建CodeBuddy正文、High和未发送标记恢复且无自动发送；已核后清除该自建标记。已删除精确核验的重复生成应用，正式应用与ZIP保留。通知诊断与网页布局修复已安装，实际行为继续验证，均不判33家达标。见 [安装收据](install-b117339f.json)。 用户休息期间继续所有可自主macOS测试，登录/换号/Windows实机仍不做。下段c42与未安装为此前事实。
 
-当前正式应用（2026-10-07）为c42d7ca2/9fb0cffd，0.1.7 arm64；安装、数据保持和Devin有限短回复见install-c42d7ca2.json及protocol-installed-c42-devin-reply.json。桌面访问获准后，同进程单次打开完整49字节测试文件成功，见installed-c42-file-read.json；旧等待保留，不判全部TCC问题已解。三次浏览器操作明确拒绝且未执行，第三次9354ms内由resize失效；7组原生对照支持实际宽高变化，见installed-c42-browser-diagnosis.json。工具栏尺寸修复中，尚未安装复测；通知已获系统许可，送达仍需手动后台条件实测。下面“未安装”等为之前阶段。
+此前正式应用（2026-10-07）为c42d7ca2/9fb0cffd，0.1.7 arm64；安装、数据保持和Devin有限短回复见install-c42d7ca2.json及protocol-installed-c42-devin-reply.json。桌面访问获准后，同进程单次打开完整49字节测试文件成功，见installed-c42-file-read.json；旧等待保留，不判全部TCC问题已解。三次浏览器操作明确拒绝且未执行，第三次9354ms内由resize失效；7组原生对照支持实际宽高变化，见installed-c42-browser-diagnosis.json。工具栏尺寸修复中，尚未安装复测；通知已获系统许可，送达仍需手动后台条件实测。下面“未安装”等为之前阶段。
 
 待批准工具栏窄修已完成，20组真实组件/CSS尺寸及入口检查通过；完整前端2191项后，最终选择器收窄另76项/格式/构建通过，Rust不变复用前检查，独立审无阻断。见browser-toolbar-layout-checks.json；01c93c7b/af838ad6候选已核对，721来源/包独立54项通过；原完整回执与root ZIP范围纠正保留，见package-01c93c7b-receipt.json。尚未安装，点击仍待复测。通知第四轮人工文件批准仍未见Far提醒，声音来源不确定，设置已恢复原关闭；见installed-c42-notification-trials.json，继续定位。
 

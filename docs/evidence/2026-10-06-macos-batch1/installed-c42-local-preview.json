@@ -1,0 +1,28 @@
+{
+  "installedCommit": "c42d7ca2",
+  "ownedFixtureReceipt": "output/2026-10-07-autonomous-macos/local-preview/fixture-receipt.json",
+  "html": {
+    "rendered": true,
+    "nativeFileVerifiedBytes": 22882,
+    "counterOne": 1,
+    "storedOwnText": "FARFOLD_HTML_STATE_20261007",
+    "closeReopenRetains": true,
+    "collapseReopenRetains": true,
+    "reloadRetains": true,
+    "secondFileInitiallyCounter0Empty": true,
+    "secondFileIncrementedTo2": true,
+    "returnFirstFileCounter1AndText": true,
+    "perFileStorageIsolation": "Observed on these two owned files only",
+    "clearConfirmationShowsExactFile": true,
+    "clearCancelledKeepStorage": true,
+    "actualStorageClear": "not executed"
+  },
+  "media": {
+    "inlineSvgRendered": true,
+    "audioPlayAndEndedEvent": true,
+    "audioPauseEvent": true,
+    "audibleSound": "unverified",
+    "agentProducedMedia": "not tested"
+  },
+  "scope": "Manual native HTML preview using own files; not Agent browser-control or full media acceptance."
+}
