@@ -97,15 +97,22 @@ export function BrowserShareControls({
                 ? S.stop
                 : S.permission}
         </button>
-        <span className="browser-share-status" role="status">
+        <span className="browser-share-status" role="status" title={status}>
           {status}
         </span>
+        {onViewRequest && (
+          <button
+            type="button"
+            className={`btn btn-text browser-share-request${sharing.pendingRequest ? "" : " is-idle"}`}
+            disabled={!sharing.pendingRequest}
+            aria-hidden={!sharing.pendingRequest || undefined}
+            tabIndex={sharing.pendingRequest ? undefined : -1}
+            onClick={onViewRequest}
+          >
+            {S.viewRequest}
+          </button>
+        )}
       </div>
-      {sharing.pendingRequest && onViewRequest && (
-        <button type="button" className="btn btn-text" onClick={onViewRequest}>
-          {S.viewRequest}
-        </button>
-      )}
       {expanded && canAllow && (
         <div
           className="browser-share-scope"

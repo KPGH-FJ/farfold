@@ -389,6 +389,8 @@
   cursor: pointer;
 }
 .browser-share-controls {
+  flex: 1 1 240px;
+  min-width: 0;
   font-size: 11px;
   color: var(--ink-2);
 }
@@ -397,14 +399,24 @@
   min-height: 28px;
   padding: 4px 9px;
 }
-.browser-share-toggle,
-.browser-share-status {
+.browser-share-toggle {
   display: flex;
   align-items: center;
   gap: 7px;
+  min-width: 0;
 }
-.browser-share-status {
-  justify-content: space-between;
+.browser-share-toggle > .browser-share-status {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.browser-share-toggle > .btn {
+  white-space: nowrap;
+}
+.browser-share-request.is-idle {
+  visibility: hidden;
 }
 .browser-share-scope {
   border: 1px solid var(--line);

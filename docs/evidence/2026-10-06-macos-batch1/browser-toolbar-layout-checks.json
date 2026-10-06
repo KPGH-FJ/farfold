@@ -1,0 +1,100 @@
+{
+  "scope": "Controlled hidden WebKit with current production React components/CSS; synthetic state and callbacks, no installed or Agent action acceptance.",
+  "changedFiles": {
+    "src/components/BrowserShareControls.tsx": "03192a4fc3886b5f73ee605e4851121207401c34c3edb8b4159d88108d0c5806",
+    "src/desktop-workbench.css": "4680e663609786e004562a58f50af2bcf1663897a821a2b2b0341f7126d16b04"
+  },
+  "geometryOrder": "x,y,width,height",
+  "height": 800,
+  "measurements": [
+    {
+      "width": 1280,
+      "beforeShared": [1, 137, 1279, 663],
+      "beforePending": [1, 167, 1279, 633],
+      "afterAllFour": [1, 137, 1279, 663],
+      "equal": true
+    },
+    {
+      "width": 800,
+      "beforeShared": [41, 137, 759, 663],
+      "beforePending": [41, 167, 759, 633],
+      "afterAllFour": [41, 137, 759, 663],
+      "equal": true
+    },
+    {
+      "width": 640,
+      "beforeShared": [1, 137, 639, 663],
+      "beforePending": [1, 167, 639, 633],
+      "afterAllFour": [1, 137, 639, 663],
+      "equal": true
+    },
+    {
+      "width": 480,
+      "beforeShared": [1, 166, 479, 634],
+      "beforePending": [1, 196, 479, 604],
+      "afterAllFour": [1, 166, 479, 634],
+      "equal": true
+    },
+    {
+      "width": 360,
+      "beforeShared": [1, 179, 359, 621],
+      "beforePending": [1, 209, 359, 591],
+      "afterAllFour": [1, 179, 359, 621],
+      "equal": true
+    }
+  ],
+  "semantics": {
+    "pending10CallbacksExecuted": true,
+    "idle5ClicksIgnored": true,
+    "idleDisabledHiddenAndNotTabbable": true,
+    "pendingEnabledVisibleTabbable": true,
+    "statusTitleAlwaysEqualsFullText": true,
+    "noHorizontalPageOverflow": true
+  },
+  "notice": {
+    "width": 320,
+    "height": 34,
+    "whiteSpace": "normal",
+    "overflow": "visible",
+    "textOverflow": "clip",
+    "all20Match": true
+  },
+  "checks": {
+    "fullFrontendBeforeFinalCssSelector": {
+      "all4Exit0": true,
+      "testFiles": 186,
+      "tests": 2191
+    },
+    "finalCssTargetedAndBuild": {
+      "formatAndBuildExit0": true,
+      "testFiles": 3,
+      "tests": 76
+    },
+    "rustReused": "No src-tauri, package.json or pnpm-lock.yaml difference from c42; prior 998 passed/4 original ignored and fmt/clippy retained, not rerun."
+  },
+  "independentReview": "No blocker; global status selector was narrowed to toolbar, actual long conversation notice wraps normally.",
+  "detailEvidence": [
+    {
+      "path": "output/2026-10-06-macos-batch1/browser-layout-crosscheck/receipt.json",
+      "sha256": "52b03c46bffb9ceb026e83de9b659a323093530cd9d20f394ed1fa1acb2ae728"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/browser-layout-crosscheck/summary.json",
+      "sha256": "1524a959490d851d1dd9a2553cd1329d2928044b9c08d8cf1fe937a36ecc7832"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/browser-layout-crosscheck/frontend-checks.json",
+      "sha256": "c2d0d0d7df3dd50ce62fca870d951ca553fcbd817ab5a93f5ac31e60e779cd1a"
+    },
+    {
+      "path": "output/2026-10-06-macos-batch1/browser-layout-crosscheck/post-review-checks.json",
+      "sha256": "d359e95c1254c9974204b5b1355fa10ac80f0111a6a9966f73793808198c2df8"
+    }
+  ],
+  "limits": [
+    "Actual production React component/CSS layout in hidden WK, synthetic callbacks; no installed app or real Agent.",
+    "No native resize call was dispatched in hidden harness; no browser action acceptance proof.",
+    "Title property was verified; actual native tooltip hover and screen-reader use not tested.",
+    "Explicit user scope/error expansion and actual window resize may still change bounds; guards remain untouched."
+  ]
+}
