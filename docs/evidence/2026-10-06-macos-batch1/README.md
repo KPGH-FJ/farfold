@@ -63,3 +63,7 @@ macOS启动前置管道补强：三组管道及异步包装先准备，自定义
 新版浏览器独立端口61916新页，旧页及未知动作未重试。Codex原6 Sol/High、逐次批准重新确认后，两条新任务只用当前网页工具：首观察/读取许可成功，官方工具单次批准后前置拒绝expired/false；第二条基于明确未执行重新观察，官方单次批准与精确“增加1”网页卡都确认，页面层仍以合并guard拒绝/false，数字可见仍0、Agent停止。40.1/21.3秒含等待，不算模型速度或观察年龄；固定pageChanged/navChanged=false不是DOM未变证明。点击/填写/提交仍未通过，正在用原生受控对照定位。见installed-836-browser-results.json与protocol-installed-836-browser.json。
 
 fast-agent文件反例只适用于其官方文本工具路线；另一官方客户端文件路线可有差异，但Farfold契约禁止代跑，不能为交付补回。当前共用ToolDetail确实支持结构化位置和链接打开，只有成果列表侧重差异；不把此次缺位置扩成所有标准位置被丢，也不以解析英文“成功”替代文件核实。
+
+安装版Devin保持SWE-2/High/Code，原正文恢复后两条新任务：实际读/写/重读复制50字节一致，意见仅入输入框、明确发送后blue→red返工49字节一致；输入及两LF保留，结构化位置/差异真实存在。正文仍被普通未知notification（只取类型_cognition.ai/thinking_complete）拆句，未把正确记号拼成体验通过。位置打开超时只显示泛化错误，另核实实际显示等待指引；返工后核实返回忙碌/未开始，不反复再核。见installed-836-devin-results.json、protocol-installed-836-devin.json。桌面访问待用户检查，不从4条TCC聚合记录猜根因；通知设置实际显示正确拒绝指引，系统送达仍缺许可。
+
+OpenedFileView现已在源码严格匹配两条固定文件检查等待/忙碌文案，其他错误仍隐藏，未动权限、期限、写入或后台槽位；红35项中4失败/31通过，绿35通过、类型检查及独立复核无阻断，尚未安装。见file-open-guidance-checks.json，实机文件仍未核实通过。

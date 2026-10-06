@@ -19,6 +19,7 @@ import { fileFeedbackText } from "../runtime/feedback_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
+import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 
 export interface OpenedFileViewProps {
   /** The original conversation owns unsent feedback, including after refresh. */
@@ -135,6 +136,15 @@ function sameFile(left: VerifiedFile, right: VerifiedFile) {
   ).every((key) => left[key] === right[key]);
 }
 
+function openFailureNotice(error: unknown): string {
+  // Only the fixed read-check notices are safe to show. Never expose a raw
+  // rejection, file path or OS error through this recovery view.
+  const message = error instanceof Error ? error.message : error;
+  return message === D.checkWaitExpired || message === D.checkBusy
+    ? message
+    : S.failed;
+}
+
 /** A transient disk-file view. Mount/selection follows an explicit user click. */
 export function OpenedFileView({
   threadKey,
@@ -217,9 +227,9 @@ export function OpenedFileView({
           note: isText(file) ? S.large : S.other,
         });
       }
-    } catch {
+    } catch (error) {
       if (current(owner))
-        setView({ identity, phase: "failed", note: S.failed });
+        setView({ identity, phase: "failed", note: openFailureNotice(error) });
     } finally {
       if (operation.current === owner) operation.current = null;
     }

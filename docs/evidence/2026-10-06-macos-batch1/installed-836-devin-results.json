@@ -1,0 +1,32 @@
+{
+  "appCommit": "836cda89",
+  "configuration": "Existing Devin SWE-2 / High / Code, existing account state unreported; no model/service change",
+  "coldRestore": "Original synthetic first user marker and historical answer replayed; later explicit task returned same first marker",
+  "copy": {
+    "inputBytes": 50,
+    "outputBytes": 50,
+    "bothSha256": "fd304751f116a5ec050a00c19e581fbcd3e6f620699ba0e3c1a63501fe3f4ae3",
+    "exactCopy": true,
+    "inputPreserved": true,
+    "lfCount": 2,
+    "terminalLf": true,
+    "actualTools": "Read file, Wrote output.txt, Read file; structured output path and diff present"
+  },
+  "feedback": {
+    "staging": "Line-two opinion entered composer, not automatically sent; root explicitly sent it",
+    "exactRevision": true,
+    "revisedBytes": 49,
+    "revisedSha256": "69dc790f8035e4723af456ae6c59d525f160791bb245cbbe24ff5c2286af819d",
+    "inputPreserved": true,
+    "lfCount": 2,
+    "terminalLf": true,
+    "result": "blue to red only, actual reread; no approval requested in these two tasks so approval not passed"
+  },
+  "failures": {
+    "streamingText": "First marker split between FARFOLD_DEV and IN_A_20261006, separated by unknown notification; same problem during revision reply. Unknown card type only: _cognition.ai/thinking_complete. Source fix underway, not installed.",
+    "fileOpen": "Clicked exact structured output location; waiting then generic failure",
+    "verification": "Separate file check reached fixed timeout guidance; after real revision new check returned fixed busy/not-started guidance, so no verification or current preview pass",
+    "systemAccess": "User asked to check Desktop access; root cause not inferred from TCC aggregate"
+  },
+  "scope": "File copy, edit and cold context limited success; live display and installed file inspection fail. No full eight-standard, native listing/model switch/parallel/stop/account-switch or Windows claim."
+}

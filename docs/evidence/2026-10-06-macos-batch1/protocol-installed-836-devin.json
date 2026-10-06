@@ -1,0 +1,31 @@
+{
+  "Devin": {
+    "log": "protocol-v1-1791300919504-4.jsonl",
+    "recordedAtUtc": "2026-10-06T15:48:53.284338+00:00",
+    "sha256": "9ff8f8dd62b18955134235eee5ed6a5999d7eadd96b3984876511535bb212fee",
+    "bytes": 32130,
+    "records": 334,
+    "outbound": {
+      "initialize": 1,
+      "session/load": 1,
+      "session/prompt": 2
+    },
+    "stderrRecords": 207,
+    "protocolErrors": {},
+    "promptSpans": [
+      {
+        "promptAt": "2026-10-06T15:36:15.736000+00:00",
+        "firstResponseAt": "2026-10-06T15:36:32.870000+00:00",
+        "durationMs": 17134,
+        "errorClass": null
+      },
+      {
+        "promptAt": "2026-10-06T15:46:53.365000+00:00",
+        "firstResponseAt": "2026-10-06T15:47:00.357000+00:00",
+        "durationMs": 6992,
+        "errorClass": null
+      }
+    ],
+    "boundary": "Metadata snapshot of the first recorded bytes; later appends may change the whole log. UI/model/service/outcome are separate evidence; no body or secret retained."
+  }
+}

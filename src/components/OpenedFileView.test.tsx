@@ -68,6 +68,7 @@ vi.mock("react", async (original) => {
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
+import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -160,6 +161,33 @@ it("opens the exact clicked path through the common inspector and renders verifi
   expect(render().html).toContain("<h1>Real disk content</h1>");
   expect(h.open).not.toHaveBeenCalled();
   expect(props.onOpenHtml).not.toHaveBeenCalled();
+});
+
+it.each([
+  ["inspect", D.checkWaitExpired],
+  ["inspect", D.checkBusy],
+  ["read", D.checkWaitExpired],
+  ["read", D.checkBusy],
+])(
+  "keeps the fixed recovery guidance when %s reports %s",
+  async (stage, notice) => {
+    const rejected = stage === "inspect" ? h.inspectLink : h.readText;
+    rejected.mockRejectedValueOnce(notice);
+    render();
+    await vi.waitFor(() => expect(button(S.retry)).toBeDefined());
+    expect(render().html).toContain(notice);
+    expect(render().html).not.toContain("Real disk content");
+    expect(h.open).not.toHaveBeenCalled();
+    expect(h.inspectLink).toHaveBeenCalledOnce();
+  },
+);
+
+it("does not display arbitrary inspection errors as recovery guidance", async () => {
+  h.inspectLink.mockRejectedValueOnce(new Error("private-path-and-secret"));
+  render();
+  await vi.waitFor(() => expect(button(S.retry)).toBeDefined());
+  expect(render().html).toContain(S.failed);
+  expect(render().html).not.toContain("private-path-and-secret");
 });
 
 it("renders code and CSV as literal text instead of executing their contents", async () => {

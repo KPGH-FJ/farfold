@@ -1,0 +1,25 @@
+{
+  "scope": "OpenedFileView preserves only two fixed read-check notices; arbitrary errors stay hidden. No file access, read deadline, writes, slots or OS permission changed.",
+  "red": "35 tests: 4 recovery-guidance failures, 31 passed",
+  "green": "35 passed, typecheck exit0",
+  "logs": {
+    "file-open-guidance-red.txt": {
+      "bytes": 4837,
+      "sha256": "89f49aca05d06484c341afba5ab80c649dcbfd3f77a14d452fbf5f34d3d81c9e"
+    },
+    "file-open-guidance-green.txt": {
+      "bytes": 314,
+      "sha256": "e284079f4cae207b35d80eefc1dbc3752c4fb9a74895ee2c4527408c96a3ca06"
+    },
+    "file-open-guidance-typecheck.txt": {
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  },
+  "installed": "Not installed; formal app remains 836cda89. Does not resolve OS file checks waiting.",
+  "independentReview": "No blocker; strict fixed strings only, current ownership guard and failed-receipt invalidation retained; no OS or background completion claim.",
+  "sourceFiles": {
+    "src/components/OpenedFileView.tsx": "70d39cbf95bed418c667d2221235d8dcfa5111f953935bd43cf8a1dc1b467319",
+    "src/components/OpenedFileView.test.tsx": "181c9e5fd48735de160fa043e893dbdbc28fe0e9adf86f7276bbf69e92d04191"
+  }
+}
