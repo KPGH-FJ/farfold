@@ -173,6 +173,18 @@ pub(super) fn tool_error(id: Value, message: &str) -> Value {
         json!({"content":[{"type":"text","text":message}],"isError":true}),
     )
 }
+/// Status only: safe to deliver after page authority is withdrawn. Never copy
+/// page-owned data or entered text into an interrupted control receipt.
+pub(super) fn control_unknown(id: Value) -> Value {
+    result(
+        id,
+        json!({
+            "content":[{"type":"text","text":"网页操作结果未确认，请重新观察；不要自动重试"}],
+            "structuredContent":{"outcome":"unknown","applied":null},
+            "isError":true
+        }),
+    )
+}
 pub(super) fn snapshot(id: Value, mut page: Value) -> Value {
     let image = page
         .get_mut("screenshot")

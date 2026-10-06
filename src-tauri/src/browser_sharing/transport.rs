@@ -191,6 +191,8 @@ struct Packet {
     scope: Option<FixedPageReadScope>,
     delivery: Option<u64>,
     id: Value,
+    // Derived from the issued ToolRequest, never from page-owned JSON fields.
+    control: bool,
 }
 impl Packet {
     fn message(
@@ -211,7 +213,35 @@ impl Packet {
             scope,
             delivery,
             id,
+            control: false,
         })
+    }
+
+    fn withdraw_invalid(&mut self) -> Result<Option<FixedPageReadScope>, ()> {
+        let Some(scope) = self
+            .scope
+            .as_ref()
+            .filter(|scope| self.written == 0 && !scope.is_valid())
+            .cloned()
+        else {
+            return Ok(None);
+        };
+        let number = self.delivery.ok_or(())?;
+        let control = self.control;
+        let message = if control {
+            protocol::control_unknown(self.id.clone())
+        } else {
+            protocol::tool_error(self.id.clone(), "读取许可已停止")
+        };
+        let mut replacement = Self::message(
+            serde_json::json!({"kind":"response","delivery":number,"page":false,"control":control,"message":message}),
+            None,
+            Some(number),
+            self.id.clone(),
+        )?;
+        replacement.control = control;
+        *self = replacement;
+        Ok(Some(scope))
     }
 }
 struct Delivery {
@@ -278,10 +308,15 @@ impl Wire {
         let waiting = self.waiting.as_ref().is_some_and(|p| &p.id == id);
         let reading = self.pending.as_ref().is_some_and(|p| &p.id == id);
         if waiting || reading {
+            let control = self.pending.as_ref().is_some_and(|p| p.request.control());
             self.waiting = None;
             self.pending = None;
             self.reply(
-                protocol::tool_error(id.clone(), "网页读取已取消"),
+                if control {
+                    protocol::control_unknown(id.clone())
+                } else {
+                    protocol::tool_error(id.clone(), "网页读取已取消")
+                },
                 None,
                 false,
             )?;
@@ -306,6 +341,18 @@ impl Wire {
         scope: Option<FixedPageReadScope>,
         list: bool,
     ) -> Result<(), ()> {
+        self.reply_kind(value, scope, list, false)
+    }
+    fn control_reply(&mut self, value: Value, scope: FixedPageReadScope) -> Result<(), ()> {
+        self.reply_kind(value, Some(scope), false, true)
+    }
+    fn reply_kind(
+        &mut self,
+        value: Value,
+        scope: Option<FixedPageReadScope>,
+        list: bool,
+        control: bool,
+    ) -> Result<(), ()> {
         if self.delivery.is_some() {
             return Err(());
         }
@@ -319,7 +366,14 @@ impl Wire {
             (value, scope)
         };
         let number = self.serial()?;
-        self.packets.push_back(Packet::message(serde_json::json!({"kind":"response","delivery":number,"page":scope.is_some(),"message":value}), scope.clone(), Some(number), id.clone())?);
+        let mut packet = Packet::message(
+            serde_json::json!({"kind":"response","delivery":number,"page":scope.is_some(),"control":control,"message":value}),
+            scope.clone(),
+            Some(number),
+            id.clone(),
+        )?;
+        packet.control = control;
+        self.packets.push_back(packet);
         self.delivery = Some(Delivery {
             id,
             number,
@@ -346,8 +400,17 @@ impl Wire {
         }
         if let Some(old) = self.pending.take() {
             let id = old.id.clone();
+            let control = old.request.control();
             drop(old);
-            self.reply(protocol::tool_error(id, "读取许可已停止"), None, false)?;
+            self.reply(
+                if control {
+                    protocol::control_unknown(id)
+                } else {
+                    protocol::tool_error(id, "读取许可已停止")
+                },
+                None,
+                false,
+            )?;
         }
         let number = self.serial()?;
         self.packets.push_back(Packet::message(
@@ -585,20 +648,19 @@ impl Worker {
                                 if !scope.is_valid() {
                                     (self.on_invalidated)(scope);
                                 }
-                                (
-                                    protocol::tool_error(
-                                        id,
-                                        if control {
-                                            "网页操作结果未确认，请重新观察；不要自动重试"
-                                        } else {
-                                            "当前网页未允许读取或读取许可已停止"
-                                        },
-                                    ),
-                                    None,
-                                )
+                                let value = if control {
+                                    protocol::control_unknown(id)
+                                } else {
+                                    protocol::tool_error(id, "当前网页未允许读取或读取许可已停止")
+                                };
+                                (value, None)
                             }
                         };
-                        if wire.reply(value, grant, false).is_err() {
+                        let reply = match grant {
+                            Some(scope) if control => wire.control_reply(value, scope),
+                            grant => wire.reply(value, grant, false),
+                        };
+                        if reply.is_err() {
                             return false;
                         }
                     }
@@ -728,23 +790,10 @@ impl Worker {
                 if Instant::now() >= packet.deadline {
                     return false;
                 }
-                if packet.written == 0
-                    && let Some(scope) = packet.scope.as_ref()
-                    && !scope.is_valid()
-                {
-                    let scope = scope.clone();
-                    let number = packet.delivery.expect("page delivery");
-                    let id = packet.id.clone();
-                    let error = protocol::tool_error(id.clone(), "读取许可已停止");
-                    let Ok(replacement) = Packet::message(
-                        serde_json::json!({"kind":"response","delivery":number,"page":false,"message":error}),
-                        None,
-                        Some(number),
-                        id,
-                    ) else {
-                        return false;
-                    };
-                    *packet = replacement;
+                let Ok(withdrawn) = packet.withdraw_invalid() else {
+                    return false;
+                };
+                if let Some(scope) = withdrawn {
                     if let Some(delivery) = wire.delivery.as_mut() {
                         delivery.scope = None;
                     }
@@ -810,6 +859,151 @@ fn read_hello(channel: &mut Stream) -> Result<Value, ()> {
 mod tests {
     use super::*;
     use serde_json::json;
+    use std::sync::atomic::AtomicUsize;
+
+    type ControlCallback = mpsc::Sender<Result<Value, String>>;
+
+    fn pending_control_fixture(
+        request: ToolRequest,
+    ) -> (
+        Wire,
+        FixedPageReadScope,
+        FixedPageReadScope,
+        Arc<AtomicUsize>,
+        ControlCallback,
+    ) {
+        let (read_scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+        let action_scope = read_scope.one_shot().unwrap();
+        let observer = action_scope.clone();
+        let applied = Arc::new(AtomicUsize::new(0));
+        let effect = applied.clone();
+        let (ready_send, ready_receive) = mpsc::channel();
+        let (send, receive) = mpsc::channel();
+        let callback = send.clone();
+        let task = tauri::async_runtime::spawn(async move {
+            // Model the guarded native handoff followed by an indefinitely late
+            // callback. Aborting this future cannot undo the handed-off effect.
+            let dispatched = observer.with_valid(|| {
+                effect.fetch_add(1, Ordering::AcqRel);
+                Ok(())
+            });
+            ready_send.send(dispatched).unwrap();
+            std::future::pending::<()>().await;
+            let _ = send.send(Ok(json!({"outcome":"dispatched","applied":true})));
+        });
+        ready_receive
+            .recv_timeout(Duration::from_secs(5))
+            .unwrap()
+            .unwrap();
+        let wire = Wire {
+            pending: Some(PendingRead {
+                id: json!(42),
+                scope: action_scope.clone(),
+                result: receive,
+                task,
+                request,
+                finished: Arc::new(AtomicBool::new(false)),
+            }),
+            ..Default::default()
+        };
+        (wire, read_scope, action_scope, applied, callback)
+    }
+
+    fn control_requests() -> [ToolRequest; 2] {
+        [
+            ToolRequest::Click {
+                observation_id: "observation".into(),
+                node_ref: "node".into(),
+            },
+            ToolRequest::Input {
+                observation_id: "observation".into(),
+                node_ref: "node".into(),
+                text: "synthetic input".into(),
+            },
+        ]
+    }
+
+    fn assert_unknown_control_reply(packet: &Packet) {
+        let packet: Value = serde_json::from_slice(&packet.bytes).unwrap();
+        assert_eq!(packet["message"]["id"], 42);
+        assert_eq!(packet["message"]["result"]["isError"], true);
+        assert_eq!(
+            packet["message"]["result"]["structuredContent"]["outcome"],
+            "unknown"
+        );
+        assert!(packet["message"]["result"]["structuredContent"]["applied"].is_null());
+        let text = packet["message"]["result"]["content"][0]["text"]
+            .as_str()
+            .unwrap();
+        assert!(text.contains("结果未确认"));
+        assert!(text.contains("不要自动重试"));
+        assert_eq!(packet["page"], false, "fixed status contains no page body");
+    }
+
+    #[test]
+    fn review_regression_cancel_after_control_dispatch_preserves_unknown_outcome() {
+        for request in control_requests() {
+            let (mut wire, read_scope, action_scope, applied, callback) =
+                pending_control_fixture(request);
+            wire.cancel(&json!(41)).unwrap();
+            assert!(wire.pending.is_some());
+            wire.cancel(&json!(42)).unwrap();
+            assert!(wire.pending.is_none());
+            assert_eq!(applied.load(Ordering::Acquire), 1);
+            assert!(!action_scope.is_valid());
+            assert!(read_scope.is_valid());
+            assert!(action_scope.with_valid(|| Ok(())).is_err());
+            assert_eq!(wire.packets.len(), 1);
+            assert_unknown_control_reply(&wire.packets[0]);
+            assert!(
+                callback
+                    .send(Ok(json!({"outcome":"dispatched","applied":true})))
+                    .is_err()
+            );
+            assert_eq!(
+                wire.packets.len(),
+                1,
+                "late receipt cannot replace or duplicate the result"
+            );
+        }
+    }
+
+    #[test]
+    fn review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier() {
+        for request in control_requests() {
+            let (mut wire, read_scope, action_scope, applied, callback) =
+                pending_control_fixture(request);
+            // TransportHandle::quiesce withdraws page authority before sending
+            // this stop to the Wire, while the native callback is still pending.
+            read_scope.revoke();
+            let (send, mut receive) = oneshot::channel();
+            wire.stop(false, Some(send)).unwrap();
+            assert!(wire.pending.is_none());
+            assert_eq!(applied.load(Ordering::Acquire), 1);
+            assert!(!action_scope.is_valid());
+            assert!(!read_scope.is_valid());
+            assert_eq!(wire.packets.len(), 2);
+            assert_unknown_control_reply(&wire.packets[0]);
+            let stop: Value = serde_json::from_slice(&wire.packets[1].bytes).unwrap();
+            assert_eq!(stop["kind"], "stop");
+            assert!(wire.barrier.is_some());
+            assert!(wire.delivery.is_some());
+            assert!(matches!(
+                receive.try_recv(),
+                Err(oneshot::error::TryRecvError::Empty)
+            ));
+            assert!(
+                callback
+                    .send(Ok(json!({"outcome":"dispatched","applied":true})))
+                    .is_err()
+            );
+            assert_eq!(
+                wire.packets.len(),
+                2,
+                "late receipt cannot cross the stop barrier"
+            );
+        }
+    }
 
     fn waiting_fixture() -> (Arc<super::super::ToolSession>, PermissionWait) {
         let task = "controlled:/fixture:native";
@@ -830,6 +1024,113 @@ mod tests {
             })
             .unwrap();
         (owner, permission)
+    }
+
+    #[test]
+    fn control_cancelled_before_permission_never_reports_a_dispatched_effect() {
+        for request in control_requests() {
+            for stop in [false, true] {
+                let (owner, permission) = waiting_fixture();
+                let mut wire = Wire {
+                    waiting: Some(WaitingRead {
+                        request: request.clone(),
+                        id: json!(42),
+                        permission,
+                    }),
+                    ..Default::default()
+                };
+                if stop {
+                    wire.stop(false, None).unwrap();
+                } else {
+                    wire.cancel(&json!(42)).unwrap();
+                }
+                assert!(wire.waiting.is_none());
+                assert!(wire.pending.is_none());
+                assert!(
+                    owner
+                        .info("controlled:/fixture:native", "")
+                        .pending_request
+                        .is_none()
+                );
+                let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+                assert_eq!(packet["message"]["id"], 42);
+                assert_eq!(packet["message"]["result"]["isError"], true);
+                assert!(
+                    packet["message"]["result"]
+                        .get("structuredContent")
+                        .is_none()
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn queued_control_withdrawal_preserves_unknown_status_and_discards_page_fields() {
+        for stop in [false, true] {
+            let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+            let mut wire = Wire::default();
+            wire.control_reply(
+                protocol::snapshot(
+                    json!(42),
+                    json!({
+                        "outcome":"dispatched", "applied":true,
+                        "reason":"page-owned body", "entered":"synthetic input"
+                    }),
+                ),
+                scope.one_shot().unwrap(),
+            )
+            .unwrap();
+            let delivery = wire.delivery.as_ref().unwrap().number;
+            if stop {
+                scope.revoke();
+                wire.stop(false, None).unwrap();
+            } else {
+                wire.cancel(&json!(42)).unwrap();
+            }
+            assert!(wire.packets[0].withdraw_invalid().unwrap().is_some());
+            assert_unknown_control_reply(&wire.packets[0]);
+            let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+            assert_eq!(packet["control"], true);
+            assert_eq!(packet["delivery"], delivery);
+            assert!(!String::from_utf8_lossy(&wire.packets[0].bytes).contains("page-owned"));
+            assert!(!String::from_utf8_lossy(&wire.packets[0].bytes).contains("synthetic input"));
+            assert!(wire.barrier.is_some());
+            assert!(
+                wire.delivery.is_some(),
+                "no written or stopped ACK was received"
+            );
+        }
+    }
+
+    #[test]
+    fn page_data_cannot_mark_a_read_receipt_as_control_and_partial_frames_are_not_replaced() {
+        let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
+        let mut wire = Wire::default();
+        wire.reply(
+            protocol::snapshot(json!(42), json!({"control":true,"outcome":"dispatched"})),
+            Some(scope.clone()),
+            false,
+        )
+        .unwrap();
+        scope.revoke();
+        let original = wire.packets[0].bytes.clone();
+        wire.packets[0].written = 1;
+        assert!(wire.packets[0].withdraw_invalid().unwrap().is_none());
+        assert_eq!(wire.packets[0].bytes, original);
+        wire.packets[0].written = 0;
+        assert!(wire.packets[0].withdraw_invalid().unwrap().is_some());
+        let packet: Value = serde_json::from_slice(&wire.packets[0].bytes).unwrap();
+        assert_eq!(packet["control"], false);
+        assert_eq!(packet["page"], false);
+        assert!(
+            packet["message"]["result"]
+                .get("structuredContent")
+                .is_none()
+        );
+        assert_eq!(
+            packet["message"]["result"]["content"][0]["text"],
+            "读取许可已停止"
+        );
     }
 
     #[test]

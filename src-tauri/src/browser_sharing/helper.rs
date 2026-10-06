@@ -2,7 +2,7 @@
 //! logging, plugins or threads. Bodies never enter stderr, logs or files.
 use super::{
     channel::{self, Stream},
-    helper_io,
+    helper_io, protocol,
 };
 use serde_json::{Value, json};
 use std::{
@@ -67,6 +67,7 @@ struct OutputFrame {
     delivery: u64,
     page: bool,
     id: Value,
+    control: bool,
 }
 struct Worker {
     stream: Stream,
@@ -150,21 +151,21 @@ impl Worker {
         self.terminate(json!({"kind":"failed"}), 1)
     }
     fn stop(&mut self, barrier: u64, close: bool) -> Result<(), ()> {
-        let partial = self.output.as_ref().is_some_and(|f| f.page && f.offset > 0);
         // Already-observed input must never cross this barrier into a future
         // grant. Closing is the conservative boundary for buffered requests.
-        if close || partial || self.stdout_closed || !self.stdin_input.is_empty() {
+        if self.stop_requires_close(close) {
             return self.terminate(
                 json!({"kind":"stopped","barrier":barrier,"stdoutClosed":true}),
                 0,
             );
         }
         if let Some(frame) = self.output.as_mut().filter(|f| f.page) {
-            frame.bytes = line(
-                &json!({"jsonrpc":"2.0","id":frame.id,"result":{
-                "content":[{"type":"text","text":"网页分享已停止"}],"isError":true}}),
-                OUTPUT_LIMIT,
-            )?;
+            let message = if frame.control {
+                protocol::control_unknown(frame.id.clone())
+            } else {
+                protocol::tool_error(frame.id.clone(), "网页分享已停止")
+            };
+            frame.bytes = line(&message, OUTPUT_LIMIT)?;
             frame.offset = 0;
             frame.page = false;
             frame.deadline = Instant::now() + TIMEOUT;
@@ -182,6 +183,12 @@ impl Worker {
         }
         Ok(())
     }
+    fn stop_requires_close(&self, close: bool) -> bool {
+        close
+            || self.output.as_ref().is_some_and(|f| f.page && f.offset > 0)
+            || self.stdout_closed
+            || !self.stdin_input.is_empty()
+    }
     fn broker_message(&mut self, message: Value) -> Result<(), ()> {
         match message.get("kind").and_then(Value::as_str) {
             Some("stop") => self.stop(
@@ -194,6 +201,7 @@ impl Worker {
                 }
                 let delivery = message.get("delivery").and_then(Value::as_u64).ok_or(())?;
                 let page = message.get("page").and_then(Value::as_bool).ok_or(())?;
+                let control = message.get("control").and_then(Value::as_bool).ok_or(())?;
                 let response = message.get("message").ok_or(())?;
                 let id = self.inflight.as_ref().ok_or(())?;
                 if response.get("jsonrpc").and_then(Value::as_str) != Some("2.0")
@@ -209,6 +217,7 @@ impl Worker {
                     delivery,
                     page,
                     id: id.clone(),
+                    control,
                 });
                 Ok(())
             }
@@ -574,6 +583,103 @@ fn send_bytes(stream: &Stream, mut bytes: &[u8], deadline: Instant) -> io::Resul
 #[cfg(all(test, unix))]
 mod tests {
     use super::*;
+
+    struct MemoryWorker(Worker);
+    impl Drop for MemoryWorker {
+        fn drop(&mut self) {
+            // This fixture only exercises queued memory frames. Never let its
+            // Worker destructor close the test runner's process stdout.
+            self.0.stdout_closed = true;
+        }
+    }
+
+    #[test]
+    fn review_regression_stop_with_queued_control_receipt_keeps_only_unknown_status() {
+        let (stream, _peer) = Stream::pair().unwrap();
+        let mut fixture = MemoryWorker(Worker::new(stream));
+        let worker = &mut fixture.0;
+        worker.inflight = Some(json!(42));
+        worker
+            .broker_message(json!({
+                "kind":"response", "delivery":7, "page":true, "control":true,
+                "message":{
+                    "jsonrpc":"2.0", "id":42,
+                    "result":{
+                        "content":[{"type":"text","text":"page-owned content and entered value"}],
+                        "structuredContent":{"applied":true,"outcome":"dispatched","reason":"page-owned reason"},
+                        "isError":false
+                    }
+                }
+            }))
+            .unwrap();
+        assert_eq!(worker.output.as_ref().unwrap().offset, 0);
+        worker.stop(8, false).unwrap();
+        let output = worker.output.as_ref().expect("fixed status remains queued");
+        let message: Value = serde_json::from_slice(&output.bytes).unwrap();
+        assert_eq!(message["id"], 42);
+        assert_eq!(message["result"]["isError"], true);
+        assert_eq!(message["result"]["structuredContent"]["outcome"], "unknown");
+        assert!(message["result"]["structuredContent"]["applied"].is_null());
+        let text = message["result"]["content"][0]["text"].as_str().unwrap();
+        assert!(text.contains("结果未确认"));
+        assert!(text.contains("不要自动重试"));
+        assert!(!String::from_utf8_lossy(&output.bytes).contains("page-owned"));
+        assert!(!String::from_utf8_lossy(&output.bytes).contains("entered value"));
+        assert!(!output.page);
+        assert_eq!(output.delivery, 7);
+        assert!(!worker.stdout_closed);
+        assert!(worker.stdin_paused);
+        let ack: Value = serde_json::from_slice(&worker.controls[0].bytes).unwrap();
+        assert_eq!(ack["barrier"], 8);
+        assert_eq!(ack["stdoutClosed"], false);
+    }
+
+    #[test]
+    fn queued_read_stop_does_not_trust_page_owned_control_fields() {
+        let (stream, _peer) = Stream::pair().unwrap();
+        let mut fixture = MemoryWorker(Worker::new(stream));
+        let worker = &mut fixture.0;
+        worker.inflight = Some(json!(42));
+        worker.broker_message(json!({
+            "kind":"response", "delivery":7, "page":true, "control":false,
+            "message":{
+                "jsonrpc":"2.0", "id":42,
+                "result":{"structuredContent":{"control":true,"outcome":"dispatched"},"isError":false}
+            }
+        })).unwrap();
+        worker.stop(8, false).unwrap();
+        let output = worker.output.as_ref().unwrap();
+        let message: Value = serde_json::from_slice(&output.bytes).unwrap();
+        assert_eq!(message["result"]["content"][0]["text"], "网页分享已停止");
+        assert!(message["result"].get("structuredContent").is_none());
+        assert!(!output.page);
+        assert!(!worker.stdout_closed);
+    }
+
+    #[test]
+    fn partial_page_output_keeps_the_transport_close_boundary_for_read_and_control() {
+        for control in [false, true] {
+            let (stream, _peer) = Stream::pair().unwrap();
+            let mut fixture = MemoryWorker(Worker::new(stream));
+            let worker = &mut fixture.0;
+            worker.inflight = Some(json!(42));
+            worker
+                .broker_message(json!({
+                    "kind":"response", "delivery":7, "page":true, "control":control,
+                    "message":{"jsonrpc":"2.0", "id":42,"result":{"isError":false}}
+                }))
+                .unwrap();
+            assert!(!worker.stop_requires_close(false));
+            worker.output.as_mut().unwrap().offset = 1;
+            assert!(worker.stop_requires_close(false));
+            // Exercise the production close decision without closing the test
+            // runner's actual stdout. No replacement can resume a partial JSON.
+            worker.output.as_mut().unwrap().offset = 0;
+            assert!(worker.stop_requires_close(true));
+            worker.stdin_input.extend_from_slice(b"queued old request");
+            assert!(worker.stop_requires_close(false));
+        }
+    }
 
     #[test]
     fn queued_request_does_not_block_active_request_cancellation() {
