@@ -2,6 +2,90 @@ use super::*;
 use serde_json::json;
 use std::time::Duration;
 
+fn spawn_failure_record() -> serde_json::Value {
+    let mut value = encode(&Snapshot::default());
+    value["phase"] = json!("cleanup");
+    value["failurePhase"] = json!("spawn");
+    value["startupOutcome"] = json!("start_failed");
+    value["spawnFailure"] = json!({
+        "osError": 24,
+        "fileLimit": {"soft":{"kind":"finite","value":256},"hard":{"kind":"infinite"}}
+    });
+    value
+}
+
+#[test]
+fn spawn_failure_validator_keeps_numeric_facts_and_strips_nested_extras() {
+    for limit in [
+        json!({"kind":"finite","value":0}),
+        json!({"kind":"finite","value":u64::MAX}),
+        json!({"kind":"infinite"}),
+        json!({"kind":"unavailable"}),
+    ] {
+        let mut expected = spawn_failure_record();
+        expected["spawnFailure"]["fileLimit"]["soft"] = limit;
+        let mut input = expected.clone();
+        input["env"] = json!("spawn-private-canary");
+        input["spawnFailure"]["message"] = json!("spawn-private-canary");
+        input["spawnFailure"]["fileLimit"]["path"] = json!("spawn-private-canary");
+        input["spawnFailure"]["fileLimit"]["soft"]["raw"] = json!("spawn-private-canary");
+        assert_eq!(safe_record(&input), Some(expected));
+    }
+    let mut value = spawn_failure_record();
+    value["spawnFailure"]["osError"] = serde_json::Value::Null;
+    assert_eq!(safe_record(&value), Some(value));
+}
+
+#[test]
+fn spawn_failure_validator_rejects_untyped_values_and_impossible_child_context() {
+    for limit in [
+        json!({"kind":"private-canary"}),
+        json!({"kind":"finite","value":-1}),
+        json!({"kind":"finite","value":1.5}),
+        json!({"kind":"finite","value":"256"}),
+        json!({"kind":"finite"}),
+    ] {
+        let mut value = spawn_failure_record();
+        value["spawnFailure"]["fileLimit"]["soft"] = limit;
+        assert!(safe_record(&value).is_none());
+    }
+    for error in [json!("24"), json!(true), json!(1.5), json!(i64::MAX)] {
+        let mut value = spawn_failure_record();
+        value["spawnFailure"]["osError"] = error;
+        assert!(safe_record(&value).is_none());
+    }
+    let mut value = spawn_failure_record();
+    value["childStarted"] = json!(true);
+    assert!(safe_record(&value).is_none());
+    value = spawn_failure_record();
+    value["failurePhase"] = json!("initialize");
+    assert!(safe_record(&value).is_none());
+}
+
+#[test]
+fn spawn_failure_old_v2_without_optional_facts_keeps_identical_output() {
+    let value = encode(&Snapshot::default());
+    assert!(value.get("spawnFailure").is_none());
+    assert_eq!(safe_record(&value), Some(value));
+}
+
+#[cfg(unix)]
+#[test]
+fn spawn_failure_file_limits_distinguish_failed_observation_from_zero_and_infinity() {
+    assert_eq!(
+        serde_json::to_value(FileLimits::from_observed(None)).unwrap(),
+        json!({"soft":{"kind":"unavailable"},"hard":{"kind":"unavailable"}})
+    );
+    assert_eq!(
+        serde_json::to_value(FileLimits::from_observed(Some(libc::rlimit {
+            rlim_cur: 0,
+            rlim_max: libc::RLIM_INFINITY,
+        })))
+        .unwrap(),
+        json!({"soft":{"kind":"finite","value":0},"hard":{"kind":"infinite"}})
+    );
+}
+
 #[test]
 fn startup_diagnostics_matches_only_our_outgoing_initialize_id() {
     let d = Diagnostics::with_tap(None);

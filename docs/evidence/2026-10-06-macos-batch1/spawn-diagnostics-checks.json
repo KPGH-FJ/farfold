@@ -1,0 +1,53 @@
+{
+  "recordedAtUtc": "2026-10-06T11:16:39.920733+00:00",
+  "scope": "Typed diagnostics from an asynchronous launch error; not an installed Agent retry or capacity fix.",
+  "red": {
+    "passed": 3,
+    "failed": 5,
+    "exitCode": 101
+  },
+  "targeted": {
+    "passed": 9,
+    "failed": 0
+  },
+  "fullRust": [
+    {
+      "name": "spawn-full-release-test",
+      "exitCode": 0,
+      "elapsedSeconds": 81.923
+    },
+    {
+      "name": "spawn-release-clippy",
+      "exitCode": 0,
+      "elapsedSeconds": 5.461
+    },
+    {
+      "name": "spawn-rust-format",
+      "exitCode": 0,
+      "elapsedSeconds": 0.658
+    }
+  ],
+  "testCounts": {
+    "passed": 990,
+    "failed": 0,
+    "ignored": 4
+  },
+  "sourceSha256": {
+    "src-tauri/src/acp_client/process.rs": "8d4a3532c31c1753c370e2d1577e6db6c0ee8f5a7cb423a046ad997b747212d3",
+    "src-tauri/src/acp_client/startup_diagnostics.rs": "5f17579dd0fd9bfef540571e39759c605b4e32b08a551ad2da2202d88cc77e81",
+    "src-tauri/src/acp_client/process_startup_tests.rs": "f8469efbcb4a8e16c2da5e1f670965eba70d1315116495fccb128690cf6d56cf",
+    "src-tauri/src/acp_client/startup_diagnostics/tests.rs": "3592a58a300521ea0690edd9fcc9bf6d7378d5b8d5e936e7d851a5a10c97a8f7",
+    "src-tauri/src/acp_client/tap.rs": "5106bf33514aaeb3ee6bd6e2fd7e13599b22500d37d48c5bf29158e6a3583e2d",
+    "src-tauri/src/diagnostics/log_tests.rs": "e9087b35aba6424613e2c17ca9ca9c2cdac512aba8248df31f647eedaf13d7a5"
+  },
+  "review": "Independent typed-data and dependency review plus root review; comments narrowed after full checks, final fmt check passed. No behavior edits followed full checks.",
+  "boundaries": [
+    "OS error is taken directly from the failed asynchronous launch call, not last_os_error or error text.",
+    "Limits describe this process at that call, not descriptor count.",
+    "Old version-2 records remain compatible; extra nested fields and error text are removed in safe log and synthetic ZIP export.",
+    "async-process may return an error after OS child creation; childStarted=false only means no completed child handle was observed.",
+    "Existing Stakpak cause remains unknown; no real failed Agent request was replayed.",
+    "No automatic retries, resource policy, limit changes, credentials or configuration changes.",
+    "Post-spawn ownership risk is under investigation, not fixed by this diagnostic change."
+  ]
+}

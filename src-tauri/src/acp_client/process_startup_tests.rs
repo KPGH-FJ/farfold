@@ -1,5 +1,66 @@
-//! Actual OS spawn failure must not pre-empt the caller's chosen cancellation.
+//! Launch failure must not pre-empt the caller's chosen cancellation.
 use super::*;
+
+#[test]
+fn spawn_failure_missing_program_records_os_error_and_own_file_limits() {
+    let dir = tempfile::tempdir().unwrap();
+    let logs = dir.path().join("logs");
+    let diagnostics = Diagnostics::open(&logs, "fixture");
+    let control = ProcessControl::new(diagnostics.clone());
+    let agent = AcpAgent::new(agent_client_protocol::AcpAgentConfig::new(
+        dir.path().join("missing-spawn-private-canary"),
+    ));
+    assert!(spawn_process_in(&agent, dir.path(), &control).is_err());
+    assert!(control.start_failed());
+    assert_eq!(control.pid.load(Ordering::SeqCst), 0);
+    diagnostics.outcome(super::super::startup_diagnostics::Outcome::StartFailed);
+    let until = std::time::Instant::now() + Duration::from_secs(2);
+    loop {
+        let observed = std::fs::read_dir(&logs)
+            .unwrap()
+            .flat_map(|entry| {
+                let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
+                assert!(!text.contains("private-canary"));
+                text.lines()
+                    .filter_map(|line| serde_json::from_str::<serde_json::Value>(line).ok())
+                    .collect::<Vec<_>>()
+            })
+            .find(|value| value["startupOutcome"] == "start_failed");
+        if let Some(value) = observed {
+            assert_eq!(value["spawnFailure"]["osError"], 2);
+            assert_eq!(value["childStarted"], false);
+            #[cfg(unix)]
+            {
+                let mut limits = libc::rlimit {
+                    rlim_cur: 0,
+                    rlim_max: 0,
+                };
+                assert_eq!(
+                    unsafe { libc::getrlimit(libc::RLIMIT_NOFILE, &mut limits) },
+                    0
+                );
+                for (name, limit) in [("soft", limits.rlim_cur), ("hard", limits.rlim_max)] {
+                    let expected = if limit == libc::RLIM_INFINITY {
+                        serde_json::json!({"kind":"infinite"})
+                    } else {
+                        serde_json::json!({"kind":"finite","value":limit})
+                    };
+                    assert_eq!(value["spawnFailure"]["fileLimit"][name], expected);
+                }
+            }
+            #[cfg(not(unix))]
+            {
+                assert_eq!(
+                    value["spawnFailure"]["fileLimit"],
+                    serde_json::json!({"soft":{"kind":"unavailable"},"hard":{"kind":"unavailable"}})
+                );
+            }
+            break;
+        }
+        assert!(std::time::Instant::now() < until);
+        std::thread::sleep(Duration::from_millis(5));
+    }
+}
 
 fn nonzero_child() -> async_process::Child {
     #[cfg(unix)]

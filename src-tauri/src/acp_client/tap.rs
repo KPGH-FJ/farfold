@@ -230,6 +230,34 @@ impl Drop for DebugTap {
 mod tests {
     use super::*;
     #[test]
+    fn spawn_failure_tap_preserves_only_typed_facts_for_records_and_summaries() {
+        let expected = serde_json::json!({
+            "version":2,"event":"startup","ts":1,"phase":"cleanup","failurePhase":"spawn",
+            "startupOutcome":"cancelled","initializeResponse":"not_observed","initializeAccepted":false,
+            "childStarted":false,"childReaped":false,"waitFailed":false,"exitCode":null,"exitSignal":null,
+            "termRequested":false,"killRequested":false,"exitObservedBeforeTerm":false,"groupEnded":false,
+            "connectionRemoved":true,"candidateCleanup":"deleted",
+            "spawnFailure":{"osError":24,"fileLimit":{"soft":{"kind":"finite","value":256},"hard":{"kind":"infinite"}}}
+        });
+        let mut input = expected.clone();
+        for field in ["argv", "env", "message", "path"] {
+            input[field] = "spawn-private-canary".into();
+            input["spawnFailure"][field] = "spawn-private-canary".into();
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let tap = DebugTap::open(dir.path(), "fixture").unwrap();
+        tap.lock().unwrap().write_record(&input);
+        tap.lock().unwrap().write_summary(&input);
+        let text = std::fs::read_to_string(&tap.lock().unwrap().path).unwrap();
+        assert!(!text.contains("canary"));
+        let records: Vec<serde_json::Value> = text
+            .lines()
+            .map(|line| serde_json::from_str(line).unwrap())
+            .collect();
+        assert_eq!(records, vec![expected.clone(), expected]);
+    }
+
+    #[test]
     fn protocol_errors_validator_keeps_only_the_complete_fixed_group() {
         for class in [
             "parse_error",

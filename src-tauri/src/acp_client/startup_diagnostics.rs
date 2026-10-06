@@ -46,6 +46,70 @@ pub(crate) enum Cleanup {
     Unconfirmed,
 }
 
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+enum FileLimitValue {
+    Finite {
+        value: u64,
+    },
+    Infinite,
+    #[default]
+    Unavailable,
+}
+impl FileLimitValue {
+    #[cfg(unix)]
+    fn from_raw(value: libc::rlim_t) -> Self {
+        if value == libc::RLIM_INFINITY {
+            Self::Infinite
+        } else {
+            // rlim_t is unsigned, but its width differs across Unix targets.
+            #[allow(clippy::unnecessary_cast)]
+            let value = value as u64;
+            Self::Finite { value }
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
+struct FileLimits {
+    soft: FileLimitValue,
+    hard: FileLimitValue,
+}
+impl FileLimits {
+    fn capture() -> Self {
+        #[cfg(unix)]
+        {
+            let mut limits = libc::rlimit {
+                rlim_cur: 0,
+                rlim_max: 0,
+            };
+            // This observes our process without opening a descriptor, spawning
+            // another program or modifying limits. Never read an unwritten value.
+            let observed = (unsafe { libc::getrlimit(libc::RLIMIT_NOFILE, &mut limits) } == 0)
+                .then_some(limits);
+            Self::from_observed(observed)
+        }
+        #[cfg(not(unix))]
+        {
+            Self::default()
+        }
+    }
+    #[cfg(unix)]
+    fn from_observed(observed: Option<libc::rlimit>) -> Self {
+        observed.map_or_else(Self::default, |limits| Self {
+            soft: FileLimitValue::from_raw(limits.rlim_cur),
+            hard: FileLimitValue::from_raw(limits.rlim_max),
+        })
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+struct SpawnFailure {
+    os_error: Option<i32>,
+    file_limit: FileLimits,
+}
+
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 struct Snapshot {
@@ -65,6 +129,8 @@ struct Snapshot {
     group_ended: bool,
     connection_removed: bool,
     candidate_cleanup: Cleanup,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    spawn_failure: Option<SpawnFailure>,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -85,6 +151,7 @@ impl Default for Snapshot {
             group_ended: false,
             connection_removed: false,
             candidate_cleanup: Cleanup::NotApplicable,
+            spawn_failure: None,
         }
     }
 }
@@ -195,6 +262,18 @@ impl Diagnostics {
             s.snapshot.child_started = true;
             s.snapshot.phase = Phase::Registration;
             s.last_startup_phase = Phase::Registration;
+        });
+    }
+    /// Only an actual failed asynchronous launch may call this. The returned
+    /// error does not identify OS spawn versus later setup, imply resource
+    /// exhaustion or choose the caller's outcome. No error text is stored.
+    pub(crate) fn spawn_failed(&self, error: &std::io::Error) {
+        let failure = SpawnFailure {
+            os_error: error.raw_os_error(),
+            file_limit: FileLimits::capture(),
+        };
+        self.update(|s| {
+            s.snapshot.spawn_failure.get_or_insert(failure);
         });
     }
     pub(crate) fn signal_requested(&self, kill: bool, exit_already_observed: bool) {
@@ -343,6 +422,13 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
             && (snapshot.exit_code.is_some() || snapshot.exit_signal.is_some()))
         || (snapshot.exit_code.is_some() && snapshot.exit_signal.is_some())
         || (snapshot.child_reaped && !snapshot.child_started)
+        || (snapshot.spawn_failure.is_some()
+            && (snapshot.child_started
+                || snapshot.initialize_accepted
+                || snapshot.startup_outcome == Outcome::Success
+                || snapshot
+                    .failure_phase
+                    .is_some_and(|phase| phase != Phase::Spawn)))
     {
         return None;
     }

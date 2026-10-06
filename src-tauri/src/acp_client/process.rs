@@ -21,7 +21,7 @@ use tokio::sync::watch;
 mod mcp_tests;
 
 /// Effective launch facts only. Values never enter process diagnostics or status.
-/// Absence of this cell means the actual OS spawn has not been confirmed.
+/// Absence of this cell means a completed asynchronous launch has not been confirmed.
 #[derive(Clone, Copy)]
 pub(crate) struct McpSpawnFacts {
     pub logs_safe: bool,
@@ -206,8 +206,9 @@ fn spawn_process_in(
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped());
     let mut child = command.spawn().map_err(|error| {
-        // This fact is set only at the actual OS spawn failure, before any
-        // child exists; missing PID or SDK error codes cannot imply it.
+        // The asynchronous launch returned no Child handle. Its error can come
+        // from OS spawn or later stdio setup; it does not prove no child existed.
+        control.diagnostics.spawn_failed(&error);
         control.start_failed.store(true, Ordering::SeqCst);
         agent_client_protocol::Error::into_internal_error(error)
     })?;

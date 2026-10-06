@@ -34,6 +34,51 @@ fn records(entries: &[ZipEntry]) -> Vec<Value> {
 }
 
 #[test]
+fn spawn_failure_preview_and_zip_keep_numeric_facts_and_old_v2_records() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("protocol-v1-spawn-fixture.jsonl");
+    let mut expected = startup(2);
+    expected["failurePhase"] = json!("spawn");
+    expected["startupOutcome"] = json!("start_failed");
+    expected["childStarted"] = json!(false);
+    expected["childReaped"] = json!(false);
+    expected["exitCode"] = Value::Null;
+    expected["spawnFailure"] = json!({"osError":24,"fileLimit":{"soft":{"kind":"finite","value":256},"hard":{"kind":"infinite"}}});
+    let mut untrusted = expected.clone();
+    for field in ["argv", "env", "message", "path"] {
+        untrusted[field] = json!("spawn-private-canary");
+        untrusted["spawnFailure"][field] = json!("spawn-private-canary");
+    }
+    std::fs::write(&path, format!("{}{}", line(&startup(1)), line(&untrusted))).unwrap();
+    let store = MetaStore::open(&dir.path().join("meta.sqlite3")).unwrap();
+    let state = DiagnosticsState::default();
+    let preview = state.preview(&store, dir.path(), "").unwrap();
+    let log = preview
+        .entries
+        .iter()
+        .find(|entry| entry.name.starts_with("logs/"))
+        .unwrap();
+    let actual: Vec<Value> = log
+        .text
+        .lines()
+        .map(|line| serde_json::from_str(line).unwrap())
+        .collect();
+    assert_eq!(actual, vec![expected]);
+    assert!(!log.text.contains("canary"));
+    let bundle = state
+        .export(&preview.preview_id, &dir.path().join("out"))
+        .unwrap();
+    let output = std::process::Command::new("unzip")
+        .args(["-p", &bundle, &log.name])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), log.text);
+    std::fs::write(&path, line(&startup(1))).unwrap();
+    assert_eq!(records(&safe_logs(dir.path())), vec![startup(1)]);
+}
+
+#[test]
 fn log_windows_bounds_total_io_and_reads_small_files_only_once() {
     struct CountedReader {
         cursor: std::io::Cursor<Vec<u8>>,

@@ -33,6 +33,7 @@
         "childReaped": false,
         "connectionRemoved": true
       }
-    ]
+    ],
+    "startupInterpretation": "childStarted=false is a captured-handle observation. async-process can fail after OS child creation; these records do not prove no child ever existed. No initialize or model prompt was sent. OS cause remains unknown."
   }
 }
