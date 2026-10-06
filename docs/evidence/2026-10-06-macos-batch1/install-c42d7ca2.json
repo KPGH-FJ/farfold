@@ -1,0 +1,68 @@
+{
+  "recordedAtUtc": "2026-10-06T16:37:35.684306+00:00",
+  "userConfirmedSavedNormalExit": true,
+  "completedInstallation": {
+    "candidateCommit": "c42d7ca2ceec1e6c07d1e971e9cfff86c858ffcd",
+    "binarySha256": "9fb0cffd02055f685548225b08ea0a17ce81f676ae340037df20c823d97c936f",
+    "formalApp": "/Applications/Farfold.app",
+    "exactFiveFilesAndStrictSignaturePassed": true,
+    "dataRetentionComparedBeforeLaunch": true,
+    "independentChecksPassed": 19
+  },
+  "dataRetentionWindow": {
+    "beforeAfterContentsAndUnixModesEqual": true,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195433,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 48,
+        "file": 29,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "aggregateSha256": "601b45c819db1dc764afb235306e52084e3bf23b386a63d6fee2b22bb07a0264",
+    "detailFilesMode": "0600; private and uncommitted",
+    "scope": "Three named app data/cache/WebKit trees in this replacement window; per-entry stable reads, not globally atomic, no Keychain or outside Agent data claim."
+  },
+  "coldLaunch": {
+    "formalProcesses": [89103],
+    "historyIndexCount": 88,
+    "newComposerWasEmpty": true,
+    "sendWasDisabled": true,
+    "historyAndDraftBodies": "Index count alone does not validate all bodies or drafts. Selected own Devin history was replayed; original settings were visibly SWE-2/High/Code."
+  },
+  "cleanup": {
+    "onlyRemovedGeneratedApp": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+    "formalAppRetained": true,
+    "candidateZipRetained": true
+  },
+  "operationSnapshotBeforeDataCheck": {
+    "installedAtUtc": "2026-10-06T16:27:17.950466+00:00",
+    "candidateCommit": "c42d7ca2ceec1e6c07d1e971e9cfff86c858ffcd",
+    "binarySha256": "9fb0cffd02055f685548225b08ea0a17ce81f676ae340037df20c823d97c936f",
+    "userConfirmedSavedNormalExit": true,
+    "formalAppProcessesBefore": 0,
+    "onlyFormalAppReplaced": true,
+    "installedExactFiveFiles": true,
+    "strictCodesignExit": 0,
+    "architecture": "arm64",
+    "dataRetentionComparisonPending": true,
+    "launched": false
+  },
+  "independentReceipt": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-06-macos-batch1/install-c42d7ca2/independent-install-checks.json",
+    "sha256": "b95abaeadbbc3f3d71b3dd9c8114de50ffe548790417860170f84f65ae456089"
+  },
+  "uiLookupBoundary": "Initial bundle-id lookup was ambiguous before launch because generated candidate shared the identity. Only verified generated bundle was removed; explicit /Applications/Farfold.app path launched formal app. Tool lookup ambiguity is not an app defect."
+}

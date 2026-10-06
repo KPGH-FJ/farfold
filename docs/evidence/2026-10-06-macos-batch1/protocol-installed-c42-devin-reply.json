@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-06T16:35:13.840037+00:00",
+  "windowStartUtc": "2026-10-06T16:27:17.950+00:00",
+  "candidateCommit": "c42d7ca2ceec1e6c07d1e971e9cfff86c858ffcd",
+  "scope": "Read-only creation-time-qualified new protocol logs; no UI, Agent request, source edit, or credential/config read.",
+  "fileSelection": "Only protocol-v1-*.jsonl regular files born after the installation window start; directory filenames/metadata only for selection.",
+  "sourceLogs": [
+    {
+      "file": "protocol-v1-1791304133969-0.jsonl",
+      "readStartedAtUtc": "2026-10-06T16:35:13.839041+00:00",
+      "snapshotBytes": 2723,
+      "snapshotSha256": "b0fbb084e21320c19ff6c1da89527c3060465dc8eca182d96ee25f4ba048beb4",
+      "createdAtUtc": "2026-10-06T16:28:53.969297+00:00",
+      "mtimeBeforeReadUtc": "2026-10-06T16:28:59.646955+00:00",
+      "recordsParsed": 11,
+      "malformedLines": 0,
+      "unrecognizedRecordsDiscarded": 0,
+      "firstRecordUtc": "2026-10-06T16:28:53.970000+00:00",
+      "lastRecordUtc": "2026-10-06T16:28:59.646000+00:00",
+      "eventDirectionErrorCounts": [
+        {
+          "direction": "in",
+          "event": "response",
+          "error": "none",
+          "count": 2
+        },
+        {
+          "direction": "in",
+          "event": "session/update",
+          "error": "none",
+          "count": 2
+        },
+        {
+          "direction": "out",
+          "event": "initialize",
+          "error": "none",
+          "count": 1
+        },
+        {
+          "direction": "out",
+          "event": "session/new",
+          "error": "none",
+          "count": 1
+        }
+      ],
+      "initializeAcceptedObserved": true,
+      "startupOutcomeCounts": {
+        "unknown": 4,
+        "success": 1
+      },
+      "protocolErrorRecords": 0,
+      "stderrRecords": 0,
+      "incomingToolPermissionRequests": 0,
+      "sessionUpdateToolEventCount": null
+    },
+    {
+      "file": "protocol-v1-1791304167407-1.jsonl",
+      "readStartedAtUtc": "2026-10-06T16:35:13.839277+00:00",
+      "snapshotBytes": 21188,
+      "snapshotSha256": "f6fd1dfd2a2fec00b54668dead57b6aa63e8a9971addbe7dce62fb665d619ac3",
+      "createdAtUtc": "2026-10-06T16:29:27.407189+00:00",
+      "mtimeBeforeReadUtc": "2026-10-06T16:35:12.611701+00:00",
+      "recordsParsed": 214,
+      "malformedLines": 0,
+      "unrecognizedRecordsDiscarded": 0,
+      "firstRecordUtc": "2026-10-06T16:29:27.409000+00:00",
+      "lastRecordUtc": "2026-10-06T16:35:12.611000+00:00",
+      "eventDirectionErrorCounts": [
+        {
+          "direction": "err",
+          "event": "other",
+          "error": "stderr",
+          "count": 122
+        },
+        {
+          "direction": "in",
+          "event": "other",
+          "error": "none",
+          "count": 32
+        },
+        {
+          "direction": "in",
+          "event": "response",
+          "error": "none",
+          "count": 3
+        },
+        {
+          "direction": "in",
+          "event": "session/update",
+          "error": "none",
+          "count": 49
+        },
+        {
+          "direction": "out",
+          "event": "initialize",
+          "error": "none",
+          "count": 1
+        },
+        {
+          "direction": "out",
+          "event": "session/load",
+          "error": "none",
+          "count": 1
+        },
+        {
+          "direction": "out",
+          "event": "session/prompt",
+          "error": "none",
+          "count": 1
+        }
+      ],
+      "initializeAcceptedObserved": true,
+      "startupOutcomeCounts": {
+        "unknown": 4,
+        "success": 1
+      },
+      "protocolErrorRecords": 0,
+      "stderrRecords": 122,
+      "incomingToolPermissionRequests": 0,
+      "sessionUpdateToolEventCount": null
+    }
+  ],
+  "promptBearingConnection": "protocol-v1-1791304167407-1.jsonl",
+  "connectionAttribution": "Only one prompt-bearing connection matches the root-reported journey timing; Agent/account/session identifiers are not persisted in this log.",
+  "requestSequence": [
+    {
+      "method": "initialize",
+      "sentAtUtc": "2026-10-06T16:29:27.409000+00:00",
+      "nextInboundResponseAtUtc": "2026-10-06T16:29:27.527000+00:00",
+      "requestToNextInboundResponseMs": 118,
+      "nextResponseProtocolError": false,
+      "correlation": "Ordering only; RPC IDs are intentionally absent from safety logs."
+    },
+    {
+      "method": "session/load",
+      "sentAtUtc": "2026-10-06T16:29:27.527000+00:00",
+      "nextInboundResponseAtUtc": "2026-10-06T16:29:27.693000+00:00",
+      "requestToNextInboundResponseMs": 166,
+      "nextResponseProtocolError": false,
+      "correlation": "Ordering only; RPC IDs are intentionally absent from safety logs."
+    },
+    {
+      "method": "session/prompt",
+      "sentAtUtc": "2026-10-06T16:30:10.278000+00:00",
+      "nextInboundResponseAtUtc": "2026-10-06T16:30:15.480000+00:00",
+      "requestToNextInboundResponseMs": 5202,
+      "nextResponseProtocolError": false,
+      "correlation": "Ordering only; RPC IDs are intentionally absent from safety logs."
+    }
+  ],
+  "promptInterval": {
+    "sentAtUtc": "2026-10-06T16:30:10.278000+00:00",
+    "firstUpdateAtUtc": "2026-10-06T16:30:14.810000+00:00",
+    "nextInboundResponseAtUtc": "2026-10-06T16:30:15.480000+00:00",
+    "durationToNextResponseMs": 5202,
+    "sessionUpdateCount": 15,
+    "incomingOtherCount": 3,
+    "stderrRecordCount": 18,
+    "protocolErrorRecordCount": 0,
+    "incomingToolPermissionRequests": 0,
+    "updateOtherUpdateObserved": true,
+    "interleavedOtherFileLines": [166],
+    "wireSequence": [
+      {
+        "fileLine": 156,
+        "elapsedFromPromptMs": 0,
+        "direction": "out",
+        "event": "session/prompt",
+        "wholeRpcEnvelopeBytes": 312,
+        "error": "none"
+      },
+      {
+        "fileLine": 164,
+        "elapsedFromPromptMs": 4532,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 217,
+        "error": "none"
+      },
+      {
+        "fileLine": 165,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 170,
+        "error": "none"
+      },
+      {
+        "fileLine": 166,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "other",
+        "wholeRpcEnvelopeBytes": 131,
+        "error": "none"
+      },
+      {
+        "fileLine": 167,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 172,
+        "error": "none"
+      },
+      {
+        "fileLine": 168,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 172,
+        "error": "none"
+      },
+      {
+        "fileLine": 169,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 173,
+        "error": "none"
+      },
+      {
+        "fileLine": 170,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 171,
+        "error": "none"
+      },
+      {
+        "fileLine": 171,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 175,
+        "error": "none"
+      },
+      {
+        "fileLine": 172,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 171,
+        "error": "none"
+      },
+      {
+        "fileLine": 173,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 171,
+        "error": "none"
+      },
+      {
+        "fileLine": 174,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 170,
+        "error": "none"
+      },
+      {
+        "fileLine": 175,
+        "elapsedFromPromptMs": 4533,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 172,
+        "error": "none"
+      },
+      {
+        "fileLine": 176,
+        "elapsedFromPromptMs": 4579,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 172,
+        "error": "none"
+      },
+      {
+        "fileLine": 177,
+        "elapsedFromPromptMs": 4579,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 171,
+        "error": "none"
+      },
+      {
+        "fileLine": 178,
+        "elapsedFromPromptMs": 5182,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 227,
+        "error": "none"
+      },
+      {
+        "fileLine": 179,
+        "elapsedFromPromptMs": 5182,
+        "direction": "in",
+        "event": "session/update",
+        "wholeRpcEnvelopeBytes": 284,
+        "error": "none"
+      },
+      {
+        "fileLine": 187,
+        "elapsedFromPromptMs": 5190,
+        "direction": "in",
+        "event": "other",
+        "wholeRpcEnvelopeBytes": 1067,
+        "error": "none"
+      },
+      {
+        "fileLine": 188,
+        "elapsedFromPromptMs": 5190,
+        "direction": "in",
+        "event": "other",
+        "wholeRpcEnvelopeBytes": 1211,
+        "error": "none"
+      },
+      {
+        "fileLine": 193,
+        "elapsedFromPromptMs": 5202,
+        "direction": "in",
+        "event": "response",
+        "wholeRpcEnvelopeBytes": 242,
+        "error": "none"
+      }
+    ]
+  },
+  "textContinuationEvidence": {
+    "textChunkLengths": null,
+    "sessionUpdateSubtypesRecorded": false,
+    "ordinaryNotificationIdentityRecorded": false,
+    "crossNotificationTextContinuation": "Unverified. Update/other/update is visible, but update subtypes, text lengths and ordinary notification identity are absent.",
+    "wholeRpcBytesAreTextLengths": false,
+    "allToolCallCount": null
+  },
+  "uiObservationReportedByRoot": {
+    "oneCompleteMessage": true,
+    "expectedCopyPastedExactly": true,
+    "testDraftClearedWithoutSending": true
+  },
+  "boundaries": [
+    "Source tap v1 stores only version/ts/dir/event/bytes/error and a fixed error-class extension; whole-envelope byte lengths cannot prove text lengths.",
+    "event=other does not prove a particular ordinary notification kind; method/id/params are deliberately not logged.",
+    "stderr rows do not by themselves establish a failed request. No error response was recorded in this interval.",
+    "The installed UI result is supplied by root; this task independently verifies only the retained safety-log facts.",
+    "Logs may continue growing; hashes describe the bytes read for this snapshot, not a claim that the live files are frozen."
+  ]
+}
