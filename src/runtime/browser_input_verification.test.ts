@@ -4,21 +4,31 @@ import vm from "node:vm";
 import { describe, expect, it } from "vitest";
 
 const native = new URL("../../src-tauri/native/", import.meta.url);
+const program = readFileSync(new URL("browser_observation.js", native), "utf8");
 const operation = readFileSync(
   new URL("browser_operation.js", native),
   "utf8",
-).replace(
-  "/* FARFOLD_OBSERVATION_PROGRAM */",
-  readFileSync(new URL("browser_observation.js", native), "utf8"),
-);
+).replace("/* FARFOLD_OBSERVATION_PROGRAM */", program);
 const monitor = readFileSync(
   new URL("browser_manual_activity.js", native),
   "utf8",
 );
+// WebKit injects only these named dictionary arguments into the script body.
+// Derive their names from the production call, without supplying Windows-only
+// bindings that would hide a missing macOS argument.
+const macSource = readFileSync(new URL("BrowserWorkspace.m", native), "utf8");
+const macArgumentsSource = macSource.match(
+  /NSMutableDictionary \*arguments = \[([\s\S]*?)__weak FFPublicBrowser \*weakBrowser/,
+)?.[1];
+if (!macArgumentsSource) throw new Error("missing macOS observation arguments");
+const macArgumentNames = [...macArgumentsSource.matchAll(/@"(\w+)":/g)].map(
+  ([, name]) => name!,
+);
+const macOperation = `(async function (${macArgumentNames.join(",")}) {\n${program}\n})`;
 
 // Run the production script against an owned input fixture. The fixture models
 // native value access and website event handlers, not the verification decision.
-function inputPage(tag = "INPUT") {
+function inputPage(tag = "INPUT", platform: "windows" | "macos" = "windows") {
   let stored = "OLD_VALUE_NOT_TO_EXPORT";
   let reads = 0,
     writes = 0,
@@ -131,10 +141,12 @@ function inputPage(tag = "INPUT") {
     },
     __farfoldManualActivity: () => {},
   });
-  (vm.runInContext(monitor, context) as () => void)();
-  const run = vm.runInContext(operation, context) as (
-    ...args: unknown[]
-  ) => Promise<Record<string, unknown>>;
+  if (platform === "windows")
+    (vm.runInContext(monitor, context) as () => void)();
+  const run = vm.runInContext(
+    platform === "macos" ? macOperation : operation,
+    context,
+  ) as (...args: unknown[]) => Promise<Record<string, unknown>>;
   const observe = () =>
     run(
       "observe",
@@ -146,7 +158,7 @@ function inputPage(tag = "INPUT") {
       "",
       "",
       Date.now() + 5000,
-      0,
+      ...(platform === "windows" ? [0] : []),
     );
   const act = (text = "APPROVED_TEXT_NOT_TO_EXPORT") =>
     run(
@@ -159,7 +171,7 @@ function inputPage(tag = "INPUT") {
       "input",
       text,
       Date.now() + 5000,
-      0,
+      ...(platform === "windows" ? [0] : []),
     );
   return {
     observe,
@@ -192,14 +204,94 @@ function inputPage(tag = "INPUT") {
       if (delivery === "queued") pendingMutation = true;
       else mutation?.();
     },
-    manualActivity: () => {
-      for (const listener of listeners.get("keydown") ?? [])
-        listener({ isTrusted: true });
+    listenerCount: (type: string) => listeners.get(type)?.length ?? 0,
+    manualActivity: (type = "keydown", trusted = true) => {
+      const event = {
+        isTrusted: trusted,
+        get key(): never {
+          throw new Error("must not inspect keys");
+        },
+        get target(): never {
+          throw new Error("must not inspect event targets");
+        },
+        get value(): never {
+          throw new Error("must not inspect values");
+        },
+      };
+      for (const listener of listeners.get(type) ?? []) listener(event);
     },
   };
 }
 
 describe("one-time native input verification", () => {
+  it("uses the actual macOS named arguments to verify a static field without Windows-only bindings", async () => {
+    expect(macArgumentNames).toEqual([
+      "mode",
+      "epochSeed",
+      "observationSeed",
+      "navigation",
+      "observationId",
+      "nodeRef",
+      "kind",
+      "inputText",
+      "deadline",
+    ]);
+    const page = inputPage("INPUT", "macos");
+    await page.observe();
+    await page.observe();
+    expect(await page.act()).toMatchObject({
+      applied: true,
+      outcome: "dispatched",
+      verification: "matched",
+    });
+    expect(page.reads()).toBe(1);
+    expect(page.writes()).toBe(1);
+    expect(page.listenerCount("pointerdown")).toBe(1);
+    expect(page.listenerCount("keydown")).toBe(1);
+  });
+  it.each(["pointerdown", "keydown"])(
+    "never reads a field after trusted macOS %s during the approved input",
+    async (type) => {
+      const page = inputPage("INPUT", "macos");
+      await page.observe();
+      page.onInput(() => {
+        page.forbidRead();
+        page.manualActivity(type);
+      });
+      expect(await page.act()).toMatchObject({
+        applied: true,
+        outcome: "dispatched",
+        verification: "unverified",
+      });
+      expect(page.reads()).toBe(0);
+      expect(page.writes()).toBe(1);
+    },
+  );
+  it("rejects a macOS observation withdrawn by trusted activity before dispatch", async () => {
+    const page = inputPage("INPUT", "macos");
+    await page.observe();
+    page.manualActivity();
+    page.forbidRead();
+    expect(await page.act()).toMatchObject({
+      applied: false,
+      outcome: "rejected",
+      verification: "unverified",
+    });
+    expect(page.reads()).toBe(0);
+    expect(page.writes()).toBe(0);
+  });
+  it("keeps untrusted macOS programmatic activity from withdrawing the approved input", async () => {
+    const page = inputPage("INPUT", "macos");
+    await page.observe();
+    page.onInput(() => page.manualActivity("pointerdown", false));
+    expect(await page.act()).toMatchObject({
+      applied: true,
+      outcome: "dispatched",
+      verification: "matched",
+    });
+    expect(page.reads()).toBe(1);
+    expect(page.writes()).toBe(1);
+  });
   it.each(["INPUT", "TEXTAREA"])(
     "verifies the approved %s write without exporting or storing a value",
     async (tag) => {

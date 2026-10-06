@@ -5,6 +5,7 @@ if (!s) {
     epoch: epochSeed,
     version: 0,
     mutationVersion: 0,
+    manualVersion: 0,
     observation: null,
     observationExpires: null,
     invalidatedBy: null,
@@ -29,6 +30,20 @@ if (!s) {
   });
   for (const event of ["input", "change", "scroll", "resize"])
     addEventListener(event, () => invalidate(event), true);
+  // This isolated program runs with different native argument bindings on
+  // each platform. Capture real trusted DOM activity here as well as keeping
+  // each platform's existing cancellation of outstanding native requests.
+  for (const type of ["pointerdown", "keydown"])
+    addEventListener(
+      type,
+      (event) => {
+        if (event.isTrusted) {
+          s.manualVersion++;
+          invalidate("manual");
+        }
+      },
+      true,
+    );
   s.roots.add(document);
   globalThis[key] = s;
 }
@@ -336,7 +351,7 @@ const rect = el.getBoundingClientRect(),
   hit = document.elementFromPoint(x, y);
 if (!hit || (hit !== el && !el.contains(hit)))
   return reject("操作目标被遮挡，请先查看页面");
-let inputValueAccessor, inputMutationVersion;
+let inputValueAccessor, inputMutationVersion, inputManualVersion;
 if (kind === "input") {
   if (
     !actions(el).includes("input") ||
@@ -350,6 +365,7 @@ if (kind === "input") {
       : HTMLInputElement.prototype;
   inputValueAccessor = Object.getOwnPropertyDescriptor(proto, "value");
   inputMutationVersion = s.mutationVersion;
+  inputManualVersion = s.manualVersion;
   inputValueAccessor.set.call(el, inputText);
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
@@ -366,7 +382,8 @@ const verifyInput = () => {
   if (
     !Number.isSafeInteger(inputMutationVersion) ||
     inputMutationVersion !== s.mutationVersion ||
-    globalThis.__farfoldManualVersion !== manualRevision ||
+    !Number.isSafeInteger(inputManualVersion) ||
+    inputManualVersion !== s.manualVersion ||
     Date.now() > deadline ||
     Date.now() > observation.expires ||
     observation.navigation !== navigation ||

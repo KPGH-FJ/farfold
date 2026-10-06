@@ -1,0 +1,93 @@
+{
+  "baseCommit": "41d35be67eca8dc65cca6d4847c02a79473bd485",
+  "recordedAt": "2026-10-06T21:57:25.244484+00:00",
+  "scope": "source and production-script tests; installed verification pending",
+  "cause": "macOS WebKit uses the nine named bindings derived from its actual argument dictionary. Shared input verification referenced the Windows-only manualRevision after writing and dispatching, causing ReferenceError; the native live/error fallback then returns unknown and Rust sets unverified.",
+  "fix": "Shared isolated program installs trusted pointerdown/keydown listeners once, retains only a numeric activity revision and invalidates its observation. It captures this revision before an approved write and checks it before a value comparison. No event keys, targets or values are read. Mac AppKit cancellation and Windows wrapper/native cancellation remain unchanged; Mac argument dictionary is unchanged.",
+  "sourceFiles": {
+    "src-tauri/native/BrowserWorkspace.m": {
+      "sha256": "7dd61e561dd80c38e27be138abdbdb4686535b0c3b7bd5e7bd82e4e7428f67a5",
+      "lines": 733
+    },
+    "src-tauri/native/browser_observation.js": {
+      "sha256": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+      "lines": 430
+    },
+    "src/runtime/browser_input_verification.test.ts": {
+      "sha256": "0d945692b08c738389087bc77a931b3e45a101e620381a908f62636a51aa40fd",
+      "lines": 440
+    }
+  },
+  "checks": [
+    {
+      "name": "original actual macOS argument shape red",
+      "exit": 1,
+      "testsFailed": 5,
+      "testsPassed": 14,
+      "files": 1,
+      "log": "red.log",
+      "error": "ReferenceError: manualRevision is not defined"
+    },
+    {
+      "name": "production JS fixtures green",
+      "exit": 0,
+      "testsPassed": 35,
+      "files": 2,
+      "log": "green.log"
+    },
+    {
+      "name": "final same related JS fixtures after formatting",
+      "exit": 0,
+      "testsPassed": 35,
+      "files": 2,
+      "log": "frontend-final.log"
+    },
+    {
+      "name": "typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "name": "changed JS/TS Prettier",
+      "exit": 0,
+      "log": "format.log"
+    },
+    {
+      "name": "cargo fmt",
+      "exit": 0,
+      "log": "cargo-fmt.log"
+    },
+    {
+      "name": "Rust browser tool result gates and native build",
+      "exit": 0,
+      "testsPassed": 12,
+      "testsFiltered": 1013,
+      "log": "rust-browser-tools.log"
+    },
+    {
+      "name": "Clippy/native compile",
+      "exit": 0,
+      "log": "clippy.log"
+    },
+    {
+      "name": "three-file diff check",
+      "exit": 0,
+      "log": "diff.log"
+    }
+  ],
+  "privateReceipt": "output/2026-10-07-autonomous-macos/browser-macos-input-fix/receipt.json",
+  "privateReceiptSHA256": "7a6c60ff5c0832490682804e25868df3cb5b3be874ad3a22b85ed01954a17a9a",
+  "logs": {
+    "red.log": "870b8189739558d5e1c7c3090e3dcd0c79fad69d44c683e519f6fc383e1185da",
+    "green.log": "d7ded9cff2ed488feffa51a04a58be9129a6269c672103a63d97821127d6a801",
+    "frontend-final.log": "8463541f939fd62086dd872265e78393fa95455d8e833a485fc8e805668683de",
+    "typecheck.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "format.log": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+    "cargo-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rust-browser-tools.log": "17af73304b1bc96038f61d799dc374e98ab1033d037fb26a552b5ec3e223fd1b",
+    "clippy.log": "29a1f8fe718f3f9d892f5387efb51cf14dff73e46661c555b2e9056e8bae803d",
+    "diff.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "independentReview": "html_hang_readonly inspected frozen hashes, actual Mac named bindings, red/green logs and platform cancellation without rerunning tests; no blocker.",
+  "diagnosticLimit": "Internal manual invalidation is not forwarded by the unchanged Rust diagnostic enum whitelist; rejection and safe input comparison still apply."
+}

@@ -655,6 +655,9 @@ static int32_t startObservation(uint64_t browserID, uint64_t navigation, const c
     if (action && (!browser.observationID || ![browser.observationID isEqual:observationID])) return 3;
     browser.observationID = nil;
     FFReadRequest *request = [FFReadRequest new]; request.context = context; request.callback = callback; browser.readRequest = request;
+    // WebKit supplies these shared-program bindings only. Trusted DOM activity
+    // is checked by the program's own captured revision; AppKit userActivity:
+    // still cancels the request and advances the page token independently.
     NSMutableDictionary *arguments = [@{@"mode":action ? @"act" : @"observe",@"epochSeed":NSUUID.UUID.UUIDString,@"observationSeed":NSUUID.UUID.UUIDString,@"navigation":[NSString stringWithFormat:@"%llu",(unsigned long long)navigation]} mutableCopy];
     if (action) [arguments addEntriesFromDictionary:@{@"observationId":observationID,@"nodeRef":nodeRef,@"kind":kind,@"inputText":inputText ?: @"",@"deadline":@([NSDate.date timeIntervalSince1970]*1000+5000)}];
     __weak FFPublicBrowser *weakBrowser = browser;
