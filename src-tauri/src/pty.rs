@@ -230,12 +230,14 @@ impl PtyManager {
                     thread::sleep(Duration::from_millis(if killed { 100 } else { 25 }));
                 }
                 let code = code.unwrap_or(1);
+                crate::logging::info("pty", format_args!("exit: {id} code {code}"));
+                // The exit sink releases authentication/configuration owners.
+                // Await/close must not consume this session before that cleanup.
+                on_output(serde_json::json!({"id": id, "exit": code}));
                 if let Ok(mut slot) = exit.0.lock() {
                     *slot = Some(code);
                 }
                 exit.1.notify_all();
-                crate::logging::info("pty", format_args!("exit: {id} code {code}"));
-                on_output(serde_json::json!({"id": id, "exit": code}));
             });
         }
 
@@ -604,6 +606,64 @@ mod tests {
             "the same cancellation flag must reach the child owner"
         );
         assert!(manager.close(&id).unwrap().is_some());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn exit_waits_for_the_exit_sink_before_releasing_the_session() {
+        let manager = PtyManager::new();
+        let (entered_tx, entered_rx) = std::sync::mpsc::channel();
+        let release = Arc::new((Mutex::new(false), Condvar::new()));
+        let completed = Arc::new(AtomicBool::new(false));
+        let sink: PtySink = {
+            let release = release.clone();
+            let completed = completed.clone();
+            Arc::new(move |frame| {
+                if frame.get("exit").is_none() {
+                    return;
+                }
+                let _ = entered_tx.send(());
+                let mut ready = release.0.lock().unwrap();
+                while !*ready {
+                    ready = release.1.wait(ready).unwrap();
+                }
+                completed.store(true, Ordering::SeqCst);
+            })
+        };
+        let id = manager
+            .spawn(
+                "/bin/sh",
+                &["-c".into(), "exit 0".into()],
+                &[],
+                Path::new("/tmp"),
+                PtySize::default(),
+                sink,
+            )
+            .unwrap();
+        let entered = entered_rx.recv_timeout(Duration::from_secs(3));
+        let published_before_cleanup = manager
+            .lock()
+            .unwrap()
+            .get(&id)
+            .unwrap()
+            .exit
+            .0
+            .lock()
+            .unwrap()
+            .is_some();
+        // Always release the real child owner before an assertion, including
+        // on the red version. The gate, rather than a sleep, fixes the order.
+        *release.0.lock().unwrap() = true;
+        release.1.notify_all();
+        let code = manager.await_exit(&id).unwrap();
+        assert!(entered.is_ok(), "the exact child must reach its exit sink");
+        assert!(
+            !published_before_cleanup,
+            "await/close must not receive an exit receipt before its sink releases ownership"
+        );
+        assert!(completed.load(Ordering::SeqCst));
+        assert_eq!(code, 0);
+        assert!(!manager.lock().unwrap().contains_key(&id));
     }
 
     #[cfg(unix)]

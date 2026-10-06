@@ -1,0 +1,149 @@
+{
+  "scope": "Source only; real controlled child, no GUI or real account login. Targeted runs summarized from recorded tool outputs; targeted raw logs were not separately saved.",
+  "change": "Release attempt then account scope then configuration lock; exit sink finishes before publishing PTY exit latch. Original reap/timeout/cancel retained.",
+  "red": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked pty::tests::exit_waits_for_the_exit_sink_before_releasing_the_session -- --exact --nocapture",
+    "passed": 0,
+    "failed": 1,
+    "durationSeconds": 0.03
+  },
+  "green": [
+    {
+      "filter": "pty::tests::",
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "filter": "auth::",
+      "passed": 71,
+      "failed": 0,
+      "ignored": 1
+    },
+    {
+      "filter": "acp_client::preparation_actions::tests::",
+      "passed": 11,
+      "failed": 0,
+      "ignored": 0
+    }
+  ],
+  "sourceSha256": {
+    "src-tauri/src/auth.rs": "84b78949ecf350199e303085ebee5ca324c5f4e534ce32ef0b7fe454f6913909",
+    "src-tauri/src/pty.rs": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+  },
+  "privateReceiptSha256": "96b7157c96b2ed286247df1ce1fe7707abeadc62f54af10ac48a670480493e8b",
+  "installed": false,
+  "independentReview": "root diff check; lifecycle second reviewer no blocker",
+  "fullRustRelease": {
+    "passed": 1015,
+    "failed": 0,
+    "ignored": 4,
+    "receipts": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "startedAtUtc": "2026-10-06T20:38:45.723911+00:00",
+        "exitCode": 0,
+        "durationSeconds": 0.738,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-full-checks/rust-fmt.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--release",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "startedAtUtc": "2026-10-06T20:38:46.462873+00:00",
+        "exitCode": 0,
+        "durationSeconds": 6.416,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-full-checks/rust-clippy.log",
+        "sha256": "eb7723882d8d3d75ddc67a579a03cb5d38cb2f13b80796249f96cebdad3fbcfb"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--release"
+        ],
+        "startedAtUtc": "2026-10-06T20:38:52.879577+00:00",
+        "exitCode": 0,
+        "durationSeconds": 111.254,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-full-checks/rust-test.log",
+        "sha256": "dd2adb90acb641a51431eb71ceb3eab9a9ea2913a7c9114136a33f6eac32f241"
+      }
+    ]
+  },
+  "priorFailure": {
+    "passed": 1013,
+    "failed": 1,
+    "ignored": 4,
+    "logSha256": "bffb8fe6ff1e8364f7826b1580a9be2177be772e5620d3ba13a036c21c180681"
+  },
+  "fullRustDefault": {
+    "passed": 1015,
+    "failed": 0,
+    "ignored": 4,
+    "receipts": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "startedAtUtc": "2026-10-06T20:47:04.439920+00:00",
+        "exitCode": 0,
+        "durationSeconds": 0.88,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-default-checks/rust-fmt.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "startedAtUtc": "2026-10-06T20:47:05.320570+00:00",
+        "exitCode": 0,
+        "durationSeconds": 8.292,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-default-checks/rust-clippy.log",
+        "sha256": "fa32a4239e6a815f121bc97ea05733840baacd8e42c5a9b39f80c10232f1865c"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "startedAtUtc": "2026-10-06T20:47:13.612841+00:00",
+        "exitCode": 0,
+        "durationSeconds": 33.688,
+        "log": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/lifecycle-default-checks/rust-test.log",
+        "sha256": "4bf0324b3cf23ff03bbae91fdf18b819c54ca89361603e5fab8493f757fa93ac"
+      }
+    ]
+  }
+}

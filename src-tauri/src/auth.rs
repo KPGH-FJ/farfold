@@ -595,8 +595,13 @@ pub(crate) fn terminal_output(
     std::sync::Arc::new(move |frame| {
         if frame.get("exit").is_some()
             && let Ok(mut owned) = configuration.lock()
+            && let Some((configuration, scope, attempt)) = owned.take()
         {
-            owned.take();
+            // Waiting configuration changes must not observe a free lock
+            // while the previous account operation still owns its attempt.
+            drop(attempt);
+            drop(scope);
+            drop(configuration);
         }
         let _ = channel.send(frame);
     })
