@@ -105,14 +105,20 @@ mod tests {
     use super::*;
     use std::fs;
 
-    #[test]
-    fn complete_verified_html_is_read_without_altering_original_file() {
+    #[tokio::test]
+    async fn complete_verified_html_is_checked_without_altering_original_file() {
+        let _checks = crate::file_read_check::tests::PRODUCTION_CHECKS
+            .lock()
+            .await;
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("game.HTML");
         let input = "<!doctype html><html lang='zh'><head><title>fixture</title></head><body><script>localStorage.setItem('fixture','ok')</script><svg></svg></body></html>";
         fs::write(&path, input).unwrap();
         let file = file_delivery::inspect(dir.path(), &path).unwrap();
-        let result = read_document(dir.path(), &file).unwrap();
+        let project = dir.path().to_owned();
+        let result = crate::file_read_check::run(move || read_document(&project, &file))
+            .await
+            .unwrap();
         assert_eq!(result.name, "game.HTML");
         let result = result.html;
         assert!(result.starts_with("<!doctype html><html><head><meta charset="));

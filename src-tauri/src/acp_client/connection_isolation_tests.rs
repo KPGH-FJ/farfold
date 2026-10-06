@@ -159,7 +159,7 @@ async fn pending_new_retains_its_process_and_blocks_another_new_until_response()
     distinct_sessions(&f);
     let script = std::fs::read_to_string(f.cwd.join("peer.py")).unwrap().replace(
         "elif method=='session/new': reply(m,",
-        "elif method=='session/new':\n  open(sys.argv[1]+'_new','w').write(str(os.getpid()))\n  while not os.path.exists(sys.argv[1]+'_release'): time.sleep(.005)\n  reply(m,",
+        "elif method=='session/new':\n  with open(sys.argv[1]+'_new.tmp','w') as published: published.write(str(os.getpid()))\n  os.replace(sys.argv[1]+'_new.tmp', sys.argv[1]+'_new')\n  while not os.path.exists(sys.argv[1]+'_release'): time.sleep(.005)\n  reply(m,",
     );
     std::fs::write(f.cwd.join("peer.py"), script).unwrap();
     let mut opening =

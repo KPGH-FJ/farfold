@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-06",
+  "installedSourceCandidate": "7f05140b",
+  "selectedSample": "output/2026-10-06-real-use/sample.html",
+  "selectedSampleBytes": 171,
+  "currentInstalledRetest": "file inspection did not return; HTML rendering was not reached",
+  "visibleSystemPrompt": false,
+  "macOSRequest": {
+    "requestId": "8517.85",
+    "applicationPid": 39533,
+    "service": "kTCCServiceSystemPolicyDesktopFolder",
+    "time": "2026-10-06 15:33:21 +0800",
+    "events": [
+      "Failed to match existing code requirement for subject ai.farfold.desktop",
+      "AUTHREQ_PROMPTING"
+    ],
+    "oldRequirementCdhash": "23358565d5afc382e9e686de689375adf060696b",
+    "currentRequirementCdhash": "fb583580c19fa1d246a74940e9ce22d962b477a7",
+    "currentDesignatedRequirementVerifiedByCodesign": true
+  },
+  "scope": "Current installed retest only; does not establish the cause of the previous 4831b236 candidate failure or why the system prompt was not visible.",
+  "permissionChanges": 0,
+  "modelMessages": 0,
+  "normalQuitInstalledProcessesRemaining": 0,
+  "frontendRedRegression": {
+    "command": "corepack pnpm exec vitest run src/components/BrowserWorkspace.test.tsx -t 'recovers the HTML picker after a read check'",
+    "exit": 1,
+    "failed": 2,
+    "passed": 1,
+    "skipped": 45,
+    "finding": "The HTML error handler discarded the two known recovery messages and showed only the generic reselect-file error."
+  }
+}

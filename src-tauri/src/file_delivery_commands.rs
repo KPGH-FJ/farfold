@@ -23,12 +23,10 @@ pub async fn file_delivery_inspect(
     path: String,
 ) -> Result<VerifiedFile, String> {
     require_main(&webview)?;
-    tauri::async_runtime::spawn_blocking(move || {
-        file_delivery::inspect(Path::new(&root), Path::new(&path))
+    crate::file_read_check::run(move || {
+        file_delivery::inspect(Path::new(&root), Path::new(&path)).map_err(display_error)
     })
     .await
-    .map_err(|_| display_error(DeliveryError::Unavailable))?
-    .map_err(display_error)
 }
 
 #[tauri::command]
@@ -40,14 +38,14 @@ pub async fn file_delivery_inspect_selected(
     // The main UI calls this for one exact file explicitly chosen by the user,
     // through a native picker or a clicked local file link. Never scan prose.
     // The parent is an implementation bound for this file, not a reusable grant.
-    tauri::async_runtime::spawn_blocking(move || {
+    crate::file_read_check::run(move || {
         let selected = Path::new(&path);
-        let parent = selected.parent().ok_or(DeliveryError::InvalidPath)?;
-        file_delivery::inspect(parent, selected)
+        let parent = selected
+            .parent()
+            .ok_or_else(|| display_error(DeliveryError::InvalidPath))?;
+        file_delivery::inspect(parent, selected).map_err(display_error)
     })
     .await
-    .map_err(|_| display_error(DeliveryError::Unavailable))?
-    .map_err(display_error)
 }
 
 #[tauri::command]
@@ -56,10 +54,8 @@ pub async fn file_delivery_read_text(
     file: VerifiedFile,
 ) -> Result<TextPreview, String> {
     require_main(&webview)?;
-    tauri::async_runtime::spawn_blocking(move || file_delivery::read_text(&file))
+    crate::file_read_check::run(move || file_delivery::read_text(&file).map_err(display_error))
         .await
-        .map_err(|_| display_error(DeliveryError::Unavailable))?
-        .map_err(display_error)
 }
 
 #[tauri::command]

@@ -2,6 +2,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
 import type { BrowserWorkspaceClient } from "../runtime/browser_workspace";
+import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
+import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
 
 const h = vi.hoisted(() => ({
   chooseFile: vi.fn(),
@@ -704,6 +706,51 @@ it.each(["cancel", "hidden", "task"])(
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(h.inspectSelected).not.toHaveBeenCalled();
     expect(backend.openHtml).not.toHaveBeenCalled();
+  },
+);
+
+it.each(
+  [
+    [D.checkWaitExpired, D.checkWaitExpired],
+    [D.checkBusy, D.checkBusy],
+    ["UNKNOWN_ERROR_WITH_PRIVATE_PATH", S.htmlFailed],
+  ].flatMap(([failure, message]) =>
+    ["inspection", "opening"].map((stage) => ({ stage, failure, message })),
+  ),
+)(
+  "recovers HTML after $stage rejects with $failure",
+  async ({ stage, failure, message }) => {
+    const backend = client();
+    h.chooseFile.mockResolvedValueOnce("/fixture/game.html");
+    if (stage === "inspection")
+      h.inspectSelected.mockRejectedValueOnce(failure);
+    else {
+      h.inspectSelected.mockResolvedValueOnce(htmlFile);
+      vi.mocked(backend.openHtml).mockRejectedValueOnce(failure);
+    }
+    const props = {
+      projectDirectory: "/fixture-project",
+      taskKey: "task-a",
+      active: true,
+      client: backend,
+      guard: new BrowserSurfaceGuard(),
+    };
+    render(props);
+    await Promise.resolve();
+    clickLabel(render(props).tree, S.openHtml);
+    await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledOnce());
+    await vi.waitFor(() => expect(render(props).html).toContain(message));
+    const view = render(props);
+    expect(view.html).not.toContain(S.choosingHtml);
+    expect(view.html).not.toContain("UNKNOWN_ERROR_WITH_PRIVATE_PATH");
+    expect(
+      find(
+        view.tree,
+        (node) => node.type === "button" && node.props.children === S.openHtml,
+      ).props.disabled,
+    ).toBe(false);
+    expect(backend.openHtml).toHaveBeenCalledTimes(stage === "opening" ? 1 : 0);
+    expect(backend.open).not.toHaveBeenCalled();
   },
 );
 

@@ -1,0 +1,31 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.90s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-0c277573533e5470)
+
+running 4 tests
+test file_read_check::tests::dropping_the_reply_also_keeps_the_real_worker_slot ... ok
+
+thread 'tokio-rt-worker' (7685644) panicked at src/file_read_check_tests.rs:152:13:
+controlled file-check failure
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test file_read_check::tests::production_checks_share_one_capacity_limit ... ok
+test file_read_check::tests::successful_and_failed_checks_preserve_results_and_release_slots ... ok
+test file_read_check::tests::hung_check_times_out_but_keeps_admission_until_the_os_work_finishes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 974 filtered out; finished in 0.04s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-33192dc009f8ea67)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -641,11 +641,10 @@ pub async fn browser_workspace_open_html(
     require_main(&webview)?;
     bounds.validate()?;
     policy::validate_task_key(&task_key)?;
-    let document = tauri::async_runtime::spawn_blocking(move || {
+    let document = crate::file_read_check::run(move || {
         local_html::read_document(std::path::Path::new(&project_directory), &file)
     })
-    .await
-    .map_err(|_| "无法读取本地网页，请重新核实文件")??;
+    .await?;
     let _operation = state.1.lock().await;
     if let Some(old) = state.active_info()? {
         close_owned(&app, &state, &old.task_key, &old.label).await?;

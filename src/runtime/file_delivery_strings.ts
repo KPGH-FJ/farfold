@@ -6,6 +6,10 @@ export const FILE_DELIVERY_STRINGS = {
   inspect: "核实文件",
   inspectAgain: "重新核实",
   checking: "正在核实文件…",
+  checkWaitExpired:
+    "文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。",
+  checkBusy:
+    "已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。",
   choose: "选择文件…",
   chooseTitle: "选择要核实的文件",
   choosePending: "正在选择文件…",

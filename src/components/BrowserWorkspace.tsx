@@ -1,5 +1,6 @@
 import { open as chooseFile } from "@tauri-apps/plugin-dialog";
 import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
+import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
 import type {
   BrowserSurfaceGuard,
@@ -90,6 +91,12 @@ function phaseText(state: BrowserWorkspaceState | null): string {
     default:
       return "";
   }
+}
+
+function htmlFailure(error: unknown): string {
+  return error === D.checkWaitExpired || error === D.checkBusy
+    ? error
+    : S.htmlFailed;
 }
 
 function sameBounds(a: BrowserWorkspaceBounds, b: BrowserWorkspaceBounds) {
@@ -448,7 +455,7 @@ export function BrowserWorkspace({
           if (mounted.current && scope.current === nextOwner)
             setError(
               html
-                ? S.htmlFailed
+                ? htmlFailure(failure)
                 : "entry" in target
                   ? S.directoryFailed
                   : S.openFailed,
@@ -557,8 +564,8 @@ export function BrowserWorkspace({
       busy.current = null;
       setOperation(null);
       await openTarget({ file });
-    } catch {
-      if (current()) setError(S.htmlFailed);
+    } catch (error) {
+      if (current()) setError(htmlFailure(error));
     } finally {
       if (
         mounted.current &&

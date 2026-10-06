@@ -18,6 +18,7 @@ mod draft_exit;
 mod file_access;
 mod file_delivery;
 mod file_delivery_commands;
+mod file_read_check;
 mod install_job;
 mod installations;
 mod lifemodel;
