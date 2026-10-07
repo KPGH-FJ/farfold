@@ -24,7 +24,12 @@ import {
   isAgentPresentable,
   isAgentReadyForConversation,
 } from "../runtime/agent_directory";
-import { useConversationAgentReadiness } from "../runtime/agent_readiness";
+import {
+  hasSavedAgentPreparation,
+  useConversationAgentReadiness,
+} from "../runtime/agent_readiness";
+import { isMyAgent } from "../runtime/my_agents";
+import { agentStatus } from "../runtime/agent_status";
 import {
   allowAutomaticConnection,
   isAutomaticConnectionAllowed,
@@ -90,9 +95,11 @@ import {
 } from "@phosphor-icons/react";
 
 const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
+const NO_HISTORY: ReadonlySet<string> = new Set();
 
 export function EmptyState({
   agents,
+  historyAgentIds,
   initialAgentId = null,
   initialAgentRevision = 0,
   initialSelection,
@@ -110,7 +117,8 @@ export function EmptyState({
   header?: ReactNode;
   active?: boolean;
   agents: AgentCardModel[];
-  defaultCwd: string | null;
+  /** Conversation history membership for the shared "我的 Agent" rule. */
+  historyAgentIds?: ReadonlySet<string>;
   /** Explicit selection from Agent discovery. */
   initialAgentId?: string | null;
   initialAgentRevision?: number;
@@ -157,6 +165,23 @@ export function EmptyState({
     );
   const currentAgent = agents.find((agent) => agent.id === agentId);
   const candidateSelected = isCurrentCandidate(agentId);
+  const history = historyAgentIds ?? NO_HISTORY;
+  const hasMyAgent = agents.some((card) => isMyAgent(card, history));
+  // 尚未接入任何 Agent 时给出最多三条直接接入选项：先本机已发现的，
+  // 再按目录顺序补可安装条目。
+  const welcomeSuggestions = hasMyAgent
+    ? []
+    : [
+        ...agents.filter(
+          (card) => isAgentPresentable(card) && card.status === "discovered",
+        ),
+        ...agents.filter(
+          (card) =>
+            isAgentPresentable(card) &&
+            card.status !== "discovered" &&
+            (card.installable || card.registerable),
+        ),
+      ].slice(0, 3);
   const initialCandidatePresentable = isCurrentCandidate(initialAgentId);
   const [service, setService] = useState<ServiceChoice | null>(
     newConversationChoice.service,
@@ -203,6 +228,8 @@ export function EmptyState({
   const [draftError, setDraftError] = useState<string | null>(null);
   const [opening, setOpening] = useState(false);
   const [picking, setPicking] = useState(false);
+  const [folderCancelled, setFolderCancelled] = useState(false);
+  const [sendRequest, setSendRequest] = useState(0);
   const [choiceDialog, setChoiceDialog] = useState<"agent" | "model" | null>(
     null,
   );
@@ -263,6 +290,13 @@ export function EmptyState({
   }, []);
   const pair = `${agentId}|${cwd}|${requestCwd}|${JSON.stringify(service)}`;
   const handedOffKeys = useRef(new Set<string>());
+  // One-shot intent from a folderless send: armed before the folder choice,
+  // bound to the pair the pick creates, then sent once when ready.
+  const sendAfterFolder = useRef<{
+    from: string;
+    to: string | null;
+    content: string;
+  } | null>(null);
   const currentPair = useRef(pair);
   currentPair.current = pair;
   const requestedAgent = useRef<{ id: string | null; revision: number }>({
@@ -493,14 +527,14 @@ export function EmptyState({
     draftError,
   ]);
 
-  const pickProject = async () => {
+  const pickProject = async (): Promise<boolean> => {
     if (
       picking ||
       unsent.pendingConversation ||
       draft?.submitting ||
       draft?.running
     )
-      return;
+      return false;
     const selection = pair;
     setPicking(true);
     try {
@@ -514,7 +548,9 @@ export function EmptyState({
         setDraftError(null);
         failedPairRef.current = null;
         setFolder(picked);
+        return true;
       }
+      return false;
     } catch {
       if (
         mounted.current &&
@@ -522,6 +558,7 @@ export function EmptyState({
         currentPair.current === selection
       )
         setDraftError(STRINGS.repair.directoryFailed);
+      return false;
     } finally {
       setPicking(false);
     }
@@ -641,15 +678,17 @@ export function EmptyState({
     }
   };
 
-  const ready =
+  const agentSendable =
     candidateSelected &&
     connectionAllowed &&
     preparationComplete &&
     !needsAuthentication &&
     agentId !== null &&
-    cwd !== null &&
     work.enabled(agentId) &&
-    !opening &&
+    !opening;
+  const ready =
+    agentSendable &&
+    cwd !== null &&
     draft !== null &&
     draft.identity === "draft" &&
     draft.agentId === agentId &&
@@ -662,6 +701,66 @@ export function EmptyState({
     !draft.sourceError &&
     !draft.openError &&
     !draft.configuring;
+  // Editing the draft abandons a pending folderless send.
+  const draftSignature = JSON.stringify([
+    unsent.text,
+    unsent.attachments.map((item) => [
+      item.kind,
+      item.name,
+      item.uri ?? "",
+      item.data?.length ?? 0,
+    ]),
+  ]);
+  useEffect(() => {
+    const armed = sendAfterFolder.current;
+    if (!armed) return;
+    if (armed.to === null) {
+      // The picked folder reshapes the pair and binds the token; any other
+      // change while still folderless drops the pending send.
+      if (pair === armed.from) return;
+      if (cwd !== null) armed.to = pair;
+      else sendAfterFolder.current = null;
+      return;
+    }
+    if (armed.to !== pair) sendAfterFolder.current = null;
+  }, [pair, cwd]);
+  useEffect(() => {
+    const armed = sendAfterFolder.current;
+    if (armed && armed.content !== draftSignature)
+      sendAfterFolder.current = null;
+  }, [draftSignature]);
+  useEffect(() => {
+    if (draftError) sendAfterFolder.current = null;
+  }, [draftError]);
+  useEffect(() => {
+    setFolderCancelled(false);
+  }, [pair, draftSignature]);
+  useEffect(() => {
+    const armed = sendAfterFolder.current;
+    if (!armed?.to || armed.to !== pair || !ready) return;
+    sendAfterFolder.current = null;
+    setSendRequest((value) => value + 1);
+  }, [ready, pair]);
+  const sendOrPickFolder = async (
+    blocks: PromptBlock[],
+    submittedDraft: ComposerDraft,
+  ): Promise<boolean> => {
+    // A direct send consumes any armed one-shot so it cannot fire twice.
+    sendAfterFolder.current = null;
+    if (requestCwd) {
+      await send(blocks, submittedDraft);
+      return true;
+    }
+    const armed = { from: pair, to: null, content: draftSignature };
+    sendAfterFolder.current = armed;
+    const picked = await pickProject();
+    if (!picked && sendAfterFolder.current === armed && armed.to === null) {
+      sendAfterFolder.current = null;
+      setFolderCancelled(true);
+    }
+    // Nothing was sent yet: the composer must keep the draft either way.
+    return false;
+  };
   // Keep the original editor and its in-flight attachment/send state mounted.
   // Only its DOM host moves; the draft remains in the existing `new` slot.
   const [editorRoot] = useState(() =>
@@ -704,10 +803,12 @@ export function EmptyState({
     draft?.configError ??
     (draft?.connectionLost ? STRINGS.thread.connectionIdle : null) ??
     (draft?.sourceError ? STRINGS.service.reconnect : null) ??
-    (!cwd
-      ? STRINGS.empty.projectRequired
-      : !agentId
-        ? STRINGS.empty.agentRequired
+    (!agentId
+      ? STRINGS.empty.agentRequired
+      : !cwd
+        ? agentSendable && folderCancelled
+          ? STRINGS.empty.sendNeedsFolder
+          : null
         : opening
           ? STRINGS.empty.opening
           : draftError
@@ -967,6 +1068,39 @@ export function EmptyState({
           </button>
         )}
       </div>
+      {!hasMyAgent && (
+        <div className="workspace-welcome">
+          <h2>{W.welcomeTitle}</h2>
+          <p>{W.welcomeHint}</p>
+          {welcomeSuggestions.map((card) => (
+            <button
+              key={card.id}
+              type="button"
+              className="workspace-welcome-card"
+              onClick={() => onGoSettings(card.id)}
+            >
+              <AgentLogo card={card} />
+              <span>{card.name}</span>
+              <small>
+                {
+                  agentStatus({
+                    card,
+                    prepared: hasSavedAgentPreparation(card.id),
+                  }).label
+                }
+              </small>
+              <strong>{W.welcomeConnect}</strong>
+            </button>
+          ))}
+          <button
+            type="button"
+            className="btn btn-text workspace-welcome-browse"
+            onClick={() => onGoSettings()}
+          >
+            {W.browseAgents}
+          </button>
+        </div>
+      )}
       <Composer
         thread={draft}
         workContext={
@@ -978,7 +1112,9 @@ export function EmptyState({
         imageEnabled={imageOk}
         embedContext={caps.embeddedContext}
         onGoSettings={openRepair}
-        onSend={send}
+        onSend={sendOrPickFolder}
+        sendRequest={sendRequest}
+        onRequireFolder={() => void pickProject()}
         onRecoverPending={async (target) => {
           const key = await recoverPendingConversation(target);
           handedOffKeys.current.add(key);
@@ -988,7 +1124,11 @@ export function EmptyState({
             onStarted(key);
           }
         }}
-        disabled={!ready || draftError !== null || needsPreparation}
+        disabled={
+          !(ready || (agentSendable && !cwd)) ||
+          draftError !== null ||
+          needsPreparation
+        }
         editableWhenDisabled
         prepareAction={
           folder && needsPreparation

@@ -86,8 +86,11 @@ const renderSidebar = () =>
       agents={[agent]}
       active="start"
       filter={{ kind: "all" }}
+      currentKey={null}
       onNew={vi.fn()}
       onLibrary={vi.fn()}
+      onOpenRow={vi.fn()}
+      onAllAgents={vi.fn()}
       onSearch={vi.fn()}
       onSettings={vi.fn()}
       onExplore={vi.fn()}
@@ -484,8 +487,11 @@ it("keeps the sidebar signature and hides empty live-activity shortcuts", () => 
       agents={[agent]}
       active="start"
       filter={{ kind: "all" }}
+      currentKey={null}
       onNew={vi.fn()}
       onLibrary={vi.fn()}
+      onOpenRow={vi.fn()}
+      onAllAgents={vi.fn()}
       onSearch={vi.fn()}
       onSettings={vi.fn()}
       onExplore={vi.fn()}
@@ -495,4 +501,48 @@ it("keeps the sidebar signature and hides empty live-activity shortcuts", () => 
   expect(html).toContain('class="product-new" aria-current="page"');
   expect(html).toContain(LIBRARY.tagline);
   expect(html).not.toContain('class="activity-links"');
+});
+
+it("lists the eight newest conversations in 最近 with a 查看全部 link", () => {
+  rows = Array.from({ length: 10 }, (_, index) => ({
+    ...row(`r${index}`, index === 9 ? "need" : "idle"),
+    updatedAt: index + 1,
+  }));
+  const onLibrary = vi.fn();
+  const html = renderToStaticMarkup(
+    <Sidebar
+      agents={[agent]}
+      active="thread"
+      filter={{ kind: "all" }}
+      currentKey="r9"
+      onNew={vi.fn()}
+      onLibrary={onLibrary}
+      onOpenRow={vi.fn()}
+      onAllAgents={vi.fn()}
+      onSearch={vi.fn()}
+      onSettings={vi.fn()}
+      onExplore={vi.fn()}
+      onCollapse={vi.fn()}
+    />,
+  );
+  expect(html).toContain(LIBRARY.recent);
+  expect(html).toContain("r9 conversation");
+  expect(html).toContain("r2 conversation");
+  expect(html).not.toContain("r1 conversation");
+  expect(html).not.toContain("r0 conversation");
+  expect(html).toContain(LIBRARY.viewAll);
+});
+
+it("hides 最近 when only unsent drafts or no conversations exist", () => {
+  rows = [
+    {
+      ...row("unsent", "idle"),
+      title: "",
+      nativeSessionId: null,
+      live: true,
+    },
+  ];
+  expect(renderSidebar()).not.toContain(LIBRARY.recent);
+  rows = [];
+  expect(renderSidebar()).not.toContain(LIBRARY.recent);
 });

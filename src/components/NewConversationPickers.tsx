@@ -127,7 +127,8 @@ export function NewConversationAgentDialog({
 }) {
   const [query, setQuery] = useState("");
   const search = useRef<HTMLInputElement>(null);
-  const visible = usableAgents(cards, prepared).filter((card) =>
+  const usable = usableAgents(cards, prepared);
+  const visible = usable.filter((card) =>
     card.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
   );
   return (
@@ -172,7 +173,19 @@ export function NewConversationAgentDialog({
             {card.id === picked && <Check size={16} />}
           </button>
         ))}
-        {!visible.length && (
+        {!visible.length && !query.trim() && !usable.length && (
+          <div className="new-choice-empty">
+            <strong>{S.agentNone}</strong>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => onPrepare()}
+            >
+              {S.agentExplore}
+            </button>
+          </div>
+        )}
+        {!visible.length && (query.trim() || usable.length > 0) && (
           <div className="new-choice-empty">
             <strong>{S.agentEmpty}</strong>
             <p>{S.agentEmptyHint}</p>

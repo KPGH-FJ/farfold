@@ -98,8 +98,11 @@ it.each([
           agents={[]}
           active={scenario.start ? "start" : "thread"}
           filter={{ kind: "all" }}
+          currentKey={null}
           onNew={noAction}
           onLibrary={noAction}
+          onOpenRow={noAction}
+          onAllAgents={noAction}
           onSearch={noAction}
           onSettings={noAction}
           onExplore={noAction}

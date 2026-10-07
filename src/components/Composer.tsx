@@ -97,6 +97,8 @@ export function Composer({
   attachmentControls,
   editableWhenDisabled = false,
   prepareAction,
+  onRequireFolder,
+  sendRequest,
   placeholder,
   workContext,
   caption,
@@ -113,7 +115,7 @@ export function Composer({
   onSend?: (
     blocks: PromptBlock[],
     submitted: ComposerDraft,
-  ) => void | Promise<void>;
+  ) => void | boolean | Promise<void | boolean>;
   onRecoverPending?: (target: PendingConversation) => Promise<void>;
   autofocus?: boolean;
   active?: boolean;
@@ -133,6 +135,11 @@ export function Composer({
   attachmentControls?: ReactNode;
   editableWhenDisabled?: boolean;
   prepareAction?: () => void;
+  /** Invoked when a file action needs a working folder that is not set. */
+  onRequireFolder?: () => void | Promise<unknown>;
+  /** One-shot send trigger: each new value runs the send path once when
+   *  `canSend`; requests that arrive while it cannot send are dropped. */
+  sendRequest?: number;
   placeholder?: string;
   workContext?: { agentId: string; cwd: string };
   caption?: ReactNode;
@@ -360,6 +367,19 @@ export function Composer({
 
   useEffect(() => setPickIndex(0), [slashQ, mentionQ]);
 
+  // `@` file search asks for a working folder first when none is chosen.
+  // Once per mention session; a cancelled choice simply does nothing.
+  const folderAsked = useRef(false);
+  useEffect(() => {
+    if (!mentionOpen) {
+      folderAsked.current = false;
+      return;
+    }
+    if (cwd || folderAsked.current) return;
+    folderAsked.current = true;
+    void onRequireFolder?.();
+  }, [mentionOpen, cwd, onRequireFolder]);
+
   const pickSlash = (index: number) => {
     const command = slashList[index];
     if (!command) return;
@@ -460,7 +480,11 @@ export function Composer({
   };
   const ownsAddMenu = () => !inputDisabled && plusOwner.current === storageKey;
   const findProjectFile = () => {
-    if (!ownsAddMenu() || !cwd) return;
+    if (!ownsAddMenu()) return;
+    if (!cwd) {
+      void onRequireFolder?.();
+      return;
+    }
     const next = `${text}${text && !/\s$/.test(text) ? " " : ""}@`;
     setText(next);
     setMentionAt(next.length - 1);
@@ -500,12 +524,15 @@ export function Composer({
         }));
       submitted = composerDrafts.read(targetKey);
       await draftPersistence.flush();
+      let sent: void | boolean = true;
       if (onSend) {
-        await onSend(payload, submitted);
+        sent = await onSend(payload, submitted);
       } else if (thread) {
         await threads.send(thread.key, payload);
       }
-      composerDrafts.clearIfUnchanged(targetKey, submitted);
+      // `false` means the send did not happen (e.g. waiting on a folder
+      // choice): keep the draft instead of treating it as delivered.
+      if (sent !== false) composerDrafts.clearIfUnchanged(targetKey, submitted);
       if (
         composerDrafts.read(targetKey).sendPending &&
         !composerDrafts.read(targetKey).pendingConversation
@@ -534,6 +561,13 @@ export function Composer({
       if (liveKey.current === targetKey) busy.current = false;
     }
   };
+  const handledSendRequest = useRef(sendRequest);
+  useEffect(() => {
+    if (sendRequest === undefined || sendRequest === handledSendRequest.current)
+      return;
+    handledSendRequest.current = sendRequest;
+    if (canSend) void doSend();
+  }, [sendRequest, canSend]);
 
   const pickFiles = async () => {
     const generation = composerDrafts.generation(storageKey);
@@ -726,7 +760,7 @@ export function Composer({
             </span>
           </button>
           {thread?.identity === "established" && (
-            <button type="button" disabled={!cwd} onClick={findProjectFile}>
+            <button type="button" onClick={findProjectFile}>
               <FileTextIcon size={19} />
               <span>
                 <strong>{C.findProjectFile}</strong>

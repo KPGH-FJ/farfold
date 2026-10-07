@@ -41,7 +41,14 @@ import {
   notificationPermissionLabel,
 } from "../runtime/desktop_notifications";
 
+export interface GeneralSettingsRequest {
+  kind: "update" | "shortcuts" | "privacy";
+  request: number;
+}
+
 interface GeneralSettingsProps {
+  request?: GeneralSettingsRequest | null;
+  onRequestHandled?: () => void;
   onOpenConversation?: (key: string) => void;
   onOpenArchived?: () => void;
   onOpenAgents?: (agentId?: string) => void;
@@ -53,6 +60,8 @@ interface GeneralSettingsProps {
 }
 
 export function GeneralSettings({
+  request,
+  onRequestHandled,
   onOpenConversation,
   onOpenArchived,
   onOpenAgents,
@@ -79,6 +88,17 @@ export function GeneralSettings({
   const diagnostics = useDiagnosticsReview();
   const autoArchive = useAutoArchive();
   const notifications = useDesktopNotifications();
+
+  // Menu-driven requests (检查更新/键盘快捷键/数据与隐私) open the matching
+  // panel once, then the request is handed back to be cleared.
+  const handledRequest = useRef(0);
+  useEffect(() => {
+    if (!request || handledRequest.current === request.request) return;
+    handledRequest.current = request.request;
+    if (request.kind === "update") setUpdateOpen(true);
+    else setPanel(request.kind);
+    onRequestHandled?.();
+  }, [request, onRequestHandled]);
 
   useEffect(() => {
     let cancelled = false;

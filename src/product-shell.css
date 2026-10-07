@@ -184,6 +184,7 @@ select:focus-visible {
 }
 .product-navigation > button,
 .product-agent,
+.product-recent,
 .product-settings {
   border: 0;
   border-radius: 7px;
@@ -199,7 +200,8 @@ select:focus-visible {
   cursor: pointer;
 }
 .product-navigation > button span,
-.product-agent > span:nth-child(2) {
+.product-agent > span:nth-child(2),
+.product-recent > span:nth-child(2) {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -220,6 +222,7 @@ select:focus-visible {
 }
 .product-navigation > button:hover,
 .product-agent:hover,
+.product-recent:hover,
 .product-settings:hover,
 .product-group:hover {
   background: var(--row-hover);
@@ -273,6 +276,39 @@ select:focus-visible {
   width: 18px;
   height: 18px;
   object-fit: contain;
+}
+.product-recent {
+  height: 33px;
+  padding-left: 14px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.product-recent .agent-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+.product-recent > i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.product-recent > i.attention-dot {
+  background: var(--amber);
+}
+.product-side-more {
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 14px 6px;
+}
+.product-side-more:hover {
+  color: var(--ink);
 }
 .product-group {
   display: flex;

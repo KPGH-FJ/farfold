@@ -9,7 +9,10 @@ import {
 import type { AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 import type { ThemeMode, ThemeStatus } from "../runtime/theme";
-import { GeneralSettings } from "./GeneralSettings";
+import {
+  GeneralSettings,
+  type GeneralSettingsRequest,
+} from "./GeneralSettings";
 import { CredentialSettings } from "./CredentialSettings";
 import { LifeModelSettings } from "./LifeModelSettings";
 import { ResumeDraftButton } from "./ResumeDraftButton";
@@ -36,6 +39,8 @@ interface SettingsPageProps {
   onOpenArchived?: () => void;
   active?: boolean;
   tab?: SettingsTab;
+  generalRequest?: GeneralSettingsRequest | null;
+  onGeneralRequestHandled?: () => void;
   onTabChange?: (tab: SettingsTab) => void;
   agents: AgentsState;
   initialCwd: string | null;
@@ -55,6 +60,8 @@ export function SettingsPage({
   onOpenArchived,
   active = true,
   tab: selectedTab,
+  generalRequest,
+  onGeneralRequestHandled,
   onTabChange,
   initialCwd,
   initialTab = "general",
@@ -114,6 +121,8 @@ export function SettingsPage({
             {active && tab === "lifemodel" && <LifeModelSettings />}
             {active && tab === "general" && (
               <GeneralSettings
+                request={generalRequest}
+                onRequestHandled={onGeneralRequestHandled}
                 onOpenConversation={onOpenConversation}
                 onOpenArchived={onOpenArchived}
                 onOpenAgents={(agentId) =>

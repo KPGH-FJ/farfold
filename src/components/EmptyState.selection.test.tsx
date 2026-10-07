@@ -195,7 +195,6 @@ beforeEach(() => {
     agents: ["A", "B"].map(
       (id) => ({ id, name: id, status: "connected" }) as AgentCardModel,
     ),
-    defaultCwd: "/ordinary",
     onGoSettings: vi.fn(),
     onManageServices: vi.fn(),
     onStarted: vi.fn(),
@@ -221,24 +220,133 @@ function folderButton() {
   )!;
 }
 
-it("requires an explicit working folder before opening or sending and preserves the unsent draft", async () => {
+it("asks for a working folder at send time and keeps the draft when the choice is cancelled", async () => {
   vi.useFakeTimers();
   h.enabled = true;
   newConversationChoice.cwd = null;
   const view = composer();
   expect(folderButton().props["aria-label"]).toBe(W.folder);
-  expect(view.props.disabled).toBe(true);
+  expect(view.props.disabled).toBe(false);
+  // Writing folderless shows no folder hint until a send attempt is cancelled.
+  expect(view.props.note).toBeNull();
   await vi.advanceTimersByTimeAsync(300);
   expect(h.open).not.toHaveBeenCalled();
-  await expect(
-    (view.props.onSend as Function)(
-      [{ type: "text", text: "test" }],
-      composerDrafts.read("new"),
-    ),
-  ).rejects.toThrow();
+  await (view.props.onSend as Function)(
+    [{ type: "text", text: "test" }],
+    composerDrafts.read("new"),
+  );
+  expect(h.chooseDirectory).toHaveBeenCalledTimes(1);
   expect(h.open).not.toHaveBeenCalled();
   expect(newConversationChoice.cwd).toBeNull();
   expect(composerDrafts.read("new").text).toBe("Keep my draft");
+  expect(composer().props.note).toBe(STRINGS.empty.sendNeedsFolder);
+});
+
+it("clears the cancelled-folder note when the draft changes", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  const view = composer();
+  await (view.props.onSend as Function)(
+    [{ type: "text", text: "test" }],
+    composerDrafts.read("new"),
+  );
+  expect(composer().props.note).toBe(STRINGS.empty.sendNeedsFolder);
+  composerDrafts.update("new", (draft) => ({
+    ...draft,
+    text: "edited after the cancelled choice",
+  }));
+  expect(composer().props.note).toBeNull();
+  composerDrafts.update("new", (draft) => ({
+    ...draft,
+    text: "Keep my draft",
+  }));
+});
+
+it("requests exactly one send after the picked folder's draft becomes ready", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  h.chooseDirectory.mockResolvedValue("/picked-project");
+  h.live = freshThreadState("picked", "A", "/picked-project", "native");
+  h.live.configOptions = [
+    configOption("model", "current-A", ["current-A", "other"]),
+    configOption("reasoning", "ultra", ["low", "ultra"]),
+  ];
+  h.open.mockResolvedValue(h.live);
+  const sending = await import("../runtime/new_conversation");
+  const { draftPersistence } = await import("../runtime/drafts");
+  const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  const dispatch = vi.spyOn(sending, "sendNewConversation").mockResolvedValue();
+  try {
+    const view = composer();
+    expect(view.props.sendRequest).toBe(0);
+    await (view.props.onSend as Function)(
+      [{ type: "text", text: "test" }],
+      composerDrafts.read("new"),
+    );
+    expect(h.chooseDirectory).toHaveBeenCalledTimes(1);
+    composer();
+    expect(newConversationChoice.cwd).toBe("/picked-project");
+    await vi.advanceTimersByTimeAsync(300);
+    expect(h.open).toHaveBeenCalledWith(
+      expect.objectContaining({ agentId: "A", cwd: "/picked-project" }),
+    );
+    // The armed one-shot becomes a single send request for the composer.
+    expect(composer().props.sendRequest).toBe(1);
+    composer();
+    await vi.advanceTimersByTimeAsync(1000);
+    composer();
+    expect(composer().props.sendRequest).toBe(1);
+    // The composer runs the request through the same send path; its send
+    // pipeline marks the draft pending before invoking onSend.
+    composerDrafts.update("new", (draft) => ({ ...draft, sendPending: true }));
+    await (composer().props.onSend as Function)(
+      [{ type: "text", text: "test" }],
+      composerDrafts.read("new"),
+    );
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(props.onStarted).toHaveBeenCalledWith("picked");
+  } finally {
+    flush.mockRestore();
+    dispatch.mockRestore();
+  }
+});
+
+it("drops the pending send when the draft changes before the picked folder is ready", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.cwd = null;
+  h.chooseDirectory.mockResolvedValue("/picked-project");
+  h.live = freshThreadState("picked", "A", "/picked-project", "native");
+  h.live.configOptions = [
+    configOption("model", "current-A", ["current-A", "other"]),
+    configOption("reasoning", "ultra", ["low", "ultra"]),
+  ];
+  h.open.mockResolvedValue(h.live);
+  const sending = await import("../runtime/new_conversation");
+  const dispatch = vi.spyOn(sending, "sendNewConversation").mockResolvedValue();
+  try {
+    const view = composer();
+    await (view.props.onSend as Function)(
+      [{ type: "text", text: "test" }],
+      composerDrafts.read("new"),
+    );
+    composer();
+    composerDrafts.update("new", (draft) => ({
+      ...draft,
+      text: "changed while opening",
+    }));
+    composer();
+    await vi.advanceTimersByTimeAsync(300);
+    composer();
+    expect(composer().props.sendRequest).toBe(0);
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(composerDrafts.read("new").text).toBe("changed while opening");
+    expect(props.onStarted).not.toHaveBeenCalled();
+  } finally {
+    dispatch.mockRestore();
+  }
 });
 
 it("opens only the explicitly chosen folder, never the application preparation directory", async () => {
@@ -282,6 +390,7 @@ it("rejects a stale send after the working folder is cleared without falling bac
     (node) => node.props["aria-label"] === W.clearFolder,
   )!;
   (clear.props.onClick as Function)();
+  // The stale callback still rejects; sending itself stays gated by work.
   expect(composer().props.disabled).toBe(true);
   await expect(
     (view.props.onSend as Function)(
@@ -1274,4 +1383,49 @@ it("releases the prepared editor after recovering the original pending target wi
   } finally {
     recover.mockRestore();
   }
+});
+
+it("shows onboarding with direct connect options when no Agent is mine", () => {
+  props.agents = [
+    {
+      id: "C",
+      name: "Codex",
+      status: "discovered",
+      source: "discovered",
+    } as AgentCardModel,
+    {
+      id: "D",
+      name: "Delta",
+      status: "none",
+      source: "registry",
+      installable: true,
+    } as AgentCardModel,
+  ];
+  const welcome = render().find(
+    (node) => node.props.className === "workspace-welcome",
+  );
+  expect(welcome).toBeDefined();
+  const buttons = nodes(welcome!.props.children as ReactNode).filter(
+    (node) => node.type === "button",
+  );
+  expect(buttons.length).toBeGreaterThanOrEqual(3);
+  (buttons[0]!.props.onClick as () => void)();
+  expect(props.onGoSettings).toHaveBeenCalledWith("C");
+  (buttons.at(-1)!.props.onClick as () => void)();
+  expect(props.onGoSettings).toHaveBeenLastCalledWith();
+});
+
+it("skips onboarding once an Agent belongs to me", () => {
+  props.agents = [
+    {
+      id: "C",
+      name: "Codex",
+      status: "discovered",
+      source: "discovered",
+    } as AgentCardModel,
+    ...props.agents,
+  ];
+  expect(
+    render().find((node) => node.props.className === "workspace-welcome"),
+  ).toBeUndefined();
 });

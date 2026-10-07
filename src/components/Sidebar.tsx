@@ -13,6 +13,7 @@ import {
   DotsThreeIcon,
 } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
+import type { SidebarRow } from "../runtime/sessions";
 import {
   CollectionActionScope,
   collections,
@@ -32,27 +33,35 @@ export function Sidebar({
   agents,
   active,
   filter,
+  currentKey,
   onNew,
   onLibrary,
+  onOpenRow,
   onSearch,
   onSettings,
   onExplore,
+  onAllAgents,
   onCollapse,
 }: {
   agents: AgentCardModel[];
   active: "start" | "thread" | "library" | "agents" | "settings";
   filter: LibraryFilter;
+  /** The currently shown conversation's key, or null outside a thread view. */
+  currentKey: string | null;
   onNew: () => void;
   onLibrary: (filter: LibraryFilter) => void;
+  onOpenRow: (row: SidebarRow) => void;
   onSearch: (opener: HTMLButtonElement) => void;
   onSettings: () => void;
   onExplore: () => void;
+  onAllAgents: () => void;
   onCollapse: () => void;
 }) {
   const data = useCollections();
   const draft = useComposerDraft("new");
   const hasDraft = Boolean(draft.text.trim() || draft.attachments.length);
   const rows = useLibraryRows();
+  const [recentExpanded, setRecentExpanded] = useState(true);
   const [agentsExpanded, setAgentsExpanded] = useState(true);
   const [groupsExpanded, setGroupsExpanded] = useState(true);
   const [editing, setEditing] = useState<ConversationGroup | "new" | null>(
@@ -74,6 +83,22 @@ export function Sidebar({
         : STRINGS.thread.needYou;
   const runningCount = rows.filter((row) => row.status === "run").length;
   const unreadCount = rows.filter((row) => row.unread).length;
+  // 未发送草稿（无标题且无原生记录）不进最近列表。
+  const recent = rows
+    .filter((row) => row.title.trim() || row.nativeSessionId)
+    .sort((a, b) => b.updatedAt - a.updatedAt);
+  const recentTop = recent.slice(0, 8);
+  const lastActivity = new Map<string, number>();
+  for (const row of rows) {
+    const at = lastActivity.get(row.agentId) ?? 0;
+    if (row.updatedAt > at) lastActivity.set(row.agentId, row.updatedAt);
+  }
+  const orderedAgents = [...agents].sort(
+    (a, b) =>
+      (lastActivity.get(b.id) ?? 0) - (lastActivity.get(a.id) ?? 0) ||
+      a.name.localeCompare(b.name, "zh-Hans"),
+  );
+  const visibleAgents = orderedAgents.slice(0, 6);
   const operation = useRef(new CollectionActionScope());
   const editorReturnFocus = useRef<HTMLElement | null>(null);
   useEffect(() => {
@@ -199,6 +224,65 @@ export function Sidebar({
         </button>
       </nav>
       <div className="product-side-scroll">
+        {recentTop.length > 0 && (
+          <section>
+            <div className="product-section">
+              <button
+                type="button"
+                aria-expanded={recentExpanded}
+                onClick={() => setRecentExpanded(!recentExpanded)}
+              >
+                <CaretDownIcon
+                  size={12}
+                  style={{
+                    transform: recentExpanded ? undefined : "rotate(-90deg)",
+                  }}
+                />
+                {LIBRARY.recent}
+              </button>
+            </div>
+            {recentExpanded && (
+              <>
+                {recentTop.map((row) => {
+                  const card = agents.find((a) => a.id === row.agentId);
+                  return (
+                    <button
+                      type="button"
+                      key={row.key}
+                      className={`product-recent ${currentKey === row.key ? "active" : ""}`}
+                      onClick={() => onOpenRow(row)}
+                    >
+                      {card ? (
+                        <AgentLogo card={card} />
+                      ) : (
+                        <ChatsCircleIcon size={17} />
+                      )}
+                      <span>{row.title || STRINGS.sessions.untitled}</span>
+                      {(row.status === "need" ||
+                        row.status === "run" ||
+                        row.unread) && (
+                        <i
+                          className={
+                            row.status === "need" ? "attention-dot" : ""
+                          }
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+                {recent.length > recentTop.length && (
+                  <button
+                    type="button"
+                    className="product-side-more"
+                    onClick={() => onLibrary({ kind: "all" })}
+                  >
+                    {LIBRARY.viewAll}
+                  </button>
+                )}
+              </>
+            )}
+          </section>
+        )}
         <section>
           <div className="product-section">
             <button
@@ -224,7 +308,7 @@ export function Sidebar({
             </button>
           </div>
           {agentsExpanded &&
-            agents.map((a) => (
+            visibleAgents.map((a) => (
               <button
                 type="button"
                 key={a.id}
@@ -236,6 +320,15 @@ export function Sidebar({
                 <small>{rows.filter((r) => r.agentId === a.id).length}</small>
               </button>
             ))}
+          {agentsExpanded && orderedAgents.length > visibleAgents.length && (
+            <button
+              type="button"
+              className="product-side-more"
+              onClick={onAllAgents}
+            >
+              {LIBRARY.moreAgents(orderedAgents.length)}
+            </button>
+          )}
         </section>
         <section>
           <div className="product-section">

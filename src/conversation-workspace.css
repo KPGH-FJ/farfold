@@ -245,6 +245,66 @@
 .workspace-suggestions button:hover {
   background: var(--row-hover);
 }
+.workspace-welcome {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workspace-welcome h2 {
+  font-size: 14px;
+  font-weight: 560;
+  margin: 0;
+}
+.workspace-welcome > p {
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+.workspace-welcome-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: transparent;
+  padding: 8px 11px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.workspace-welcome-card:hover {
+  background: var(--row-hover);
+}
+.workspace-welcome-card .agent-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+.workspace-welcome-card > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workspace-welcome-card > small {
+  color: var(--ink-3);
+}
+.workspace-welcome-card > strong {
+  color: var(--accent);
+  font-weight: 520;
+}
+.workspace-welcome-browse {
+  align-self: flex-start;
+}
 .workspace-folder-bar {
   display: flex;
   align-items: center;

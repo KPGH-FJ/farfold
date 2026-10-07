@@ -64,7 +64,6 @@ function render(cards = [agent]) {
   return renderToStaticMarkup(
     <EmptyState
       agents={cards}
-      defaultCwd="/ordinary"
       onGoSettings={() => {}}
       onProjectChange={() => {}}
       onStarted={() => {}}

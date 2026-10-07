@@ -327,20 +327,12 @@ export const STRINGS = {
     escBack: "esc 返回",
   },
   empty: {
-    connectTitle: "连接 Agent 后开始",
-    connectSubtitle:
-      "Farfold 本身不内置模型能力——接入你已有的 Agent，在这里统一调度它们。",
     goSettings: "去设置",
-    readyTitle: "今天想推进什么？",
-    readySubtitle: "发消息即创建新会话",
-    projectLabel: "项目",
-    projectPick: "选择项目文件夹",
-    projectRequired: "先选择一个项目文件夹",
     agentRequired: "选择一个 Agent",
     agentLabel: "选择 Agent",
+    sendNeedsFolder: "选择工作文件夹后即可发送",
     opening: "正在创建会话…",
     openFailed: "创建会话失败",
-    bindNote: "会话创建后，Agent 与模型不可更改；模型选择只影响新会话。",
   },
   thread: {
     you: "你",

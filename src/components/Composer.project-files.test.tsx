@@ -546,3 +546,61 @@ it.each([
     noAgentRequests();
   },
 );
+
+it("asks for a working folder before an @ search and resumes when one arrives", async () => {
+  const requireFolder = vi.fn();
+  props.workContext = undefined;
+  props.onRequireFolder = requireFolder;
+  typeMention();
+  await settle();
+  expect(requireFolder).toHaveBeenCalledTimes(1);
+  expect(
+    vi
+      .mocked(invoke)
+      .mock.calls.filter(([command]) => command === "project_files"),
+  ).toHaveLength(0);
+  props.workContext = { agentId: "selected", cwd: "/picked" };
+  await settle();
+  expect(invoke).toHaveBeenCalledWith("project_files", { cwd: "/picked" });
+  expect(requireFolder).toHaveBeenCalledTimes(1);
+  noAgentRequests();
+});
+
+it("runs a requested send once and clears the draft only after it is sent", async () => {
+  const { draftPersistence } = await import("../runtime/draft_storage");
+  const flush = vi.spyOn(draftPersistence, "flush").mockResolvedValue();
+  try {
+    props.disabled = false;
+    composerDrafts.update("project-new-a", () => ({
+      text: "Requested send",
+      attachments: [],
+    }));
+    render();
+    props.sendRequest = 1;
+    render();
+    expect(composerDrafts.read("project-new-a").text).toBe("Requested send");
+    await vi.waitFor(() => expect(props.onSend).toHaveBeenCalledTimes(1));
+    expect(composerDrafts.read("project-new-a").text).toBe("");
+    render();
+    await settle();
+    expect(props.onSend).toHaveBeenCalledTimes(1);
+  } finally {
+    flush.mockRestore();
+  }
+});
+
+it("drops a send request that arrives while sending is unavailable", async () => {
+  composerDrafts.update("project-new-a", () => ({
+    text: "Requested send",
+    attachments: [],
+  }));
+  render();
+  props.sendRequest = 1;
+  render();
+  await settle();
+  expect(props.onSend).not.toHaveBeenCalled();
+  props.disabled = false;
+  render();
+  await settle();
+  expect(props.onSend).not.toHaveBeenCalled();
+});

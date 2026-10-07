@@ -31,6 +31,7 @@ import {
 import { useConnectionHold } from "../runtime/connection_hold";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import { agentStatus } from "../runtime/agent_status";
+import { isMyAgent } from "../runtime/my_agents";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import { programProgress } from "../runtime/program_progress";
@@ -112,6 +113,8 @@ function progressDirectory(scope: string, fallback?: string) {
 export interface AgentHubProps {
   preparationContext?: AgentPreparationContext;
   agents: AgentsState;
+  /** Conversation history membership, part of the shared "我的 Agent" rule. */
+  historyAgentIds?: ReadonlySet<string>;
   onReturn: () => void;
   onResumeDraft?: () => void;
   onStart: (
@@ -141,8 +144,11 @@ export function agentSourceLabel(card: AgentCardModel) {
       : S.registry;
 }
 
+const NO_HISTORY: ReadonlySet<string> = new Set();
+
 export function AgentHub({
   agents,
+  historyAgentIds = NO_HISTORY,
   onReturn,
   onResumeDraft,
   onStart,
@@ -229,8 +235,7 @@ export function AgentHub({
         .join("\n"),
     () => "",
   );
-  const added = (card: AgentCardModel) =>
-    card.status === "installed" || card.status === "connected";
+  const added = (card: AgentCardModel) => isMyAgent(card, historyAgentIds);
   const entryKey = JSON.stringify([
     initialAgentId,
     initialIntent,

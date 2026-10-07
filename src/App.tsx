@@ -11,6 +11,7 @@ import {
   useVisibleConversation,
 } from "./runtime/conversation_read_state";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   ArrowLeftIcon,
@@ -37,11 +38,8 @@ import { WorkspaceDialog } from "./components/WorkspaceDialog";
 import { WorkspaceActionMenu } from "./components/WorkspaceActionMenu";
 import { ImportConversations } from "./components/ImportConversations";
 import { useAgents } from "./runtime/agents";
-import {
-  hasSavedAgentPreparation,
-  useConversationAgentReadiness,
-} from "./runtime/agent_readiness";
-import { isAgentPresentable } from "./runtime/agent_directory";
+import { useConversationAgentReadiness } from "./runtime/agent_readiness";
+import { isMyAgent } from "./runtime/my_agents";
 import { allowAutomaticConnection } from "./runtime/connection_intent";
 import {
   CollectionActionScope,
@@ -586,6 +584,13 @@ export default function App() {
   }, []);
   const [filter, setFilter] = useState<LibraryFilter>({ kind: "all" });
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
+  const generalRequestId = useRef(0);
+  const [generalRequest, setGeneralRequest] = useState<{
+    kind: "update" | "shortcuts" | "privacy";
+    request: number;
+  } | null>(null);
+  const requestGeneralPanel = (kind: "update" | "shortcuts" | "privacy") =>
+    setGeneralRequest({ kind, request: ++generalRequestId.current });
   const [settingsMounted, setSettingsMounted] = useState(
     view.kind === "settings",
   );
@@ -939,39 +944,82 @@ export default function App() {
       goNew();
     },
   );
+  const runAppCommand = (action: string) => {
+    if (
+      typeof document !== "undefined" &&
+      document.querySelector("dialog[open], .workspace-action-menu")
+    )
+      return;
+    if (action === "search") {
+      if (!paletteOpen)
+        searchReturnFocus.current =
+          typeof document !== "undefined" &&
+          document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+      browserSurfaceGuard.runLatest(() => setPaletteOpen((v) => !v));
+    } else if (action === "settings") {
+      setPaletteOpen(false);
+      openSettings();
+    } else if (action === "new") {
+      goNew();
+    } else if (action === "toggleSidebar") {
+      browserSurfaceGuard.runLatest(() => setSidebarOpen((v) => !v));
+    } else if (
+      action === "checkUpdates" ||
+      action === "shortcuts" ||
+      action === "privacy"
+    ) {
+      setPaletteOpen(false);
+      openSettings("general");
+      requestGeneralPanel(action === "checkUpdates" ? "update" : action);
+    }
+  };
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (
-        event.defaultPrevented ||
-        event.isComposing ||
-        document.querySelector("dialog[open], .workspace-action-menu")
-      )
-        return;
+      if (event.defaultPrevented || event.isComposing) return;
       const meta = event.metaKey || event.ctrlKey;
       const key = event.key.toLowerCase();
-      if (meta && (key === "k" || (event.shiftKey && key === "p"))) {
-        event.preventDefault();
-        if (!paletteOpen)
-          searchReturnFocus.current =
-            document.activeElement instanceof HTMLElement
-              ? document.activeElement
+      const action =
+        meta && (key === "k" || (event.shiftKey && key === "p"))
+          ? "search"
+          : meta && key === ","
+            ? "settings"
+            : meta && key === "n"
+              ? "new"
               : null;
-        browserSurfaceGuard.runLatest(() => setPaletteOpen((v) => !v));
-      } else if (meta && key === ",") {
+      if (action) {
         event.preventDefault();
-        setPaletteOpen(false);
-        openSettings();
-      } else if (meta && key === "n") {
-        event.preventDefault();
-        goNew();
-      } else if (event.key === "Escape") {
+        runAppCommand(action);
+        return;
+      }
+      if (event.key === "Escape") {
+        if (
+          typeof document !== "undefined" &&
+          document.querySelector("dialog[open], .workspace-action-menu")
+        )
+          return;
         if (paletteOpen) setPaletteOpen(false);
         else if (view.kind === "settings" || view.kind === "agents")
           returnToOrigin();
       }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    let disposed = false;
+    let unlisten: (() => void) | undefined;
+    void listen<{ action: string }>("app-menu", (event) =>
+      runAppCommand(event.payload.action),
+    )
+      .then((off) => {
+        if (disposed) off();
+        else unlisten = off;
+      })
+      .catch(() => undefined);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      disposed = true;
+      unlisten?.();
+    };
   }, [paletteOpen, view.kind]);
   const navToggle = !sidebarOpen ? (
     <button
@@ -989,22 +1037,22 @@ export default function App() {
       <div className="body-row">
         {sidebarOpen && (
           <Sidebar
-            agents={agents.cards.filter(
-              (card) =>
-                isAgentPresentable(card) &&
-                (hasSavedAgentPreparation(card.id) ||
-                  historyAgents.has(card.id)),
+            agents={agents.cards.filter((card) =>
+              isMyAgent(card, historyAgents),
             )}
             active={view.kind}
             filter={filter}
+            currentKey={view.kind === "thread" ? threadKey : null}
             onNew={goNew}
             onLibrary={showLibrary}
+            onOpenRow={openRow}
             onSearch={(opener) => {
               searchReturnFocus.current = opener;
               browserSurfaceGuard.runLatest(() => setPaletteOpen(true));
             }}
             onSettings={() => openSettings()}
             onExplore={() => openAgents()}
+            onAllAgents={() => openAgents(undefined, "manage")}
             onCollapse={() =>
               browserSurfaceGuard.runLatest(() => setSidebarOpen(false))
             }
@@ -1052,7 +1100,7 @@ export default function App() {
           ) : (
             <EmptyState
               agents={agents.cards}
-              defaultCwd={defaultCwd}
+              historyAgentIds={historyAgents}
               initialAgentId={newAgent}
               initialAgentRevision={agentRequest}
               initialSelection={preparedSelection}
@@ -1157,6 +1205,7 @@ export default function App() {
           <div className="workspace-route" hidden={view.kind !== "agents"}>
             <AgentHub
               agents={agents}
+              historyAgentIds={historyAgents}
               active={view.kind === "agents" && !importOpen && !paletteOpen}
               initialAgentId={hubTarget}
               initialIntent={hubIntent}
@@ -1196,6 +1245,8 @@ export default function App() {
           <SettingsPage
             active={view.kind === "settings"}
             tab={settingsTab}
+            generalRequest={generalRequest}
+            onGeneralRequestHandled={() => setGeneralRequest(null)}
             onTabChange={setSettingsTab}
             onReturn={returnToOrigin}
             onManageAgent={(agentId) => openAgents(agentId, "manage")}
