@@ -132,8 +132,10 @@ export function useWorkPolicy(cwd: string | null) {
       state !== null && Object.values(state.enabled).some((value) => !value),
     enabled: (id: string) =>
       owner.current === currentOwner &&
-      state !== null &&
-      (state.locationEnabled ?? state.enabled[id] ?? true),
+      (cwd === null
+        ? true
+        : state !== null &&
+          (state.locationEnabled ?? state.enabled[id] ?? true)),
     set,
     setLocation: (enabled: boolean) => set(null, enabled),
     retry: () => {

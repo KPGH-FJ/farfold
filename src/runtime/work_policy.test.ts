@@ -72,12 +72,16 @@ function events() {
   const off = startWorkEvents();
   return { emit: (payload: WorkSnapshot) => event({ payload }), off };
 }
-function unavailable(value: ReturnType<typeof useWorkPolicy>) {
+function unavailable(
+  value: ReturnType<typeof useWorkPolicy>,
+  folderless = false,
+) {
   expect(value.ready).toBe(false);
   expect(value.cwd).toBeUndefined();
   expect(value.locationEnabled).toBeUndefined();
   expect(value.legacyPaused).toBe(false);
-  expect(value.enabled("a")).toBe(false);
+  // 未选位置时没有可执行的地点规则：默认允许，等文件夹选定后再按快照判断。
+  expect(value.enabled("a")).toBe(folderless);
   expect(value.error).toBeNull();
   expect(value.saving).toBe(false);
 }
@@ -181,11 +185,11 @@ it("clears canonical access immediately when the selected folder becomes null", 
   await settle();
   expect(render("/alias-clear").ready).toBe(true);
   const empty = render(null, false);
-  unavailable(empty);
+  unavailable(empty, true);
   expect(await empty.setLocation(true)).toBe(false);
   expect(h.invoke).toHaveBeenCalledTimes(1);
   effects();
-  unavailable(render(null));
+  unavailable(render(null), true);
 });
 
 it("rejects a late old-folder read even before its effect has been cleaned up", async () => {
@@ -292,6 +296,6 @@ it("invalidates a previous read synchronously on retry and ignores a captured re
   expect(render("/retry-alias").enabled("a")).toBe(false);
   render(null);
   previous.retry();
-  unavailable(render(null));
+  unavailable(render(null), true);
   expect(h.invoke).toHaveBeenCalledTimes(2);
 });
