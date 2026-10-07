@@ -734,19 +734,17 @@ export function Composer({
               </span>
             </button>
           )}
-          {(!thread || thread.identity === "draft") && (
-            <button
-              type="button"
-              onClick={() => {
-                if (ownsAddMenu()) setAgentCommandsOpen(true);
-              }}
-            >
-              <CommandIcon size={19} />
-              <span>
-                <strong>{C.agentCommands}</strong>
-              </span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              if (ownsAddMenu()) setAgentCommandsOpen(true);
+            }}
+          >
+            <CommandIcon size={19} />
+            <span>
+              <strong>{C.agentCommands}</strong>
+            </span>
+          </button>
           {attachmentControls}
         </>
       )}

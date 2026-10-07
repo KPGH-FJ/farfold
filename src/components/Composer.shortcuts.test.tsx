@@ -175,51 +175,62 @@ it("exposes project-file lookup through the add menu and keeps existing input", 
   expect(threads.send).not.toHaveBeenCalled();
 });
 
-it("inserts only real Agent commands before the existing draft and preserves input on cancellation", () => {
-  const before = composerDrafts.read("session:shortcut-a");
-  const queued = props.thread!.queued;
-  props.thread!.identity = "draft";
-  const tree = openAdd();
-  expect(
-    tree.some(
-      (node) =>
-        node.type === WorkspaceActionMenu &&
-        node.props.title === "添加到这段对话",
-    ),
-  ).toBe(true);
-  expect(tree.some((node) => node.type === WorkspaceDialog)).toBe(false);
-  expect(buttonNamed("选择文件夹")).toBeUndefined();
-  expect(plusFocus).toHaveBeenCalled();
-  const commands = buttonNamed("Agent 命令");
-  expect(commands).toBeDefined();
-  (commands!.props.onClick as () => void)();
-  expect(
-    render().some(
-      (node) => node.props.children === "这个 Agent 暂未提供命令。",
-    ),
-  ).toBe(true);
-  expect(buttonNamed("/compact")).toBeUndefined();
-  props.thread!.availableCommands = [
-    { name: "official", description: "Agent command" },
-  ];
-  const command = buttonNamed("/official");
-  expect(command).toBeDefined();
-  (command!.props.onClick as () => void)();
-  expect(composerDrafts.read("session:shortcut-a").text).toBe(
-    `/official ${before.text}`,
-  );
-  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
-    before.attachments,
-  );
-  expect(props.thread!.queued).toBe(queued);
-  expect(threads.send).not.toHaveBeenCalled();
-  const reopened = openAdd().find((node) => node.type === WorkspaceActionMenu)!;
-  (reopened.props.onClose as () => void)();
-  expect(render().some((node) => node.type === WorkspaceDialog)).toBe(false);
-  expect(composerDrafts.read("session:shortcut-a").text).toBe(
-    `/official ${before.text}`,
-  );
-});
+it.each(["draft", "established"] as const)(
+  "inserts only declared Agent commands in a %s conversation and preserves input on cancellation",
+  (identity) => {
+    const before = composerDrafts.read("session:shortcut-a");
+    const queued = props.thread!.queued;
+    props.thread!.identity = identity;
+    const tree = openAdd();
+    expect(
+      tree.some(
+        (node) =>
+          node.type === WorkspaceActionMenu &&
+          node.props.title === "添加到这段对话",
+      ),
+    ).toBe(true);
+    expect(tree.some((node) => node.type === WorkspaceDialog)).toBe(false);
+    expect(buttonNamed("选择文件夹")).toBeUndefined();
+    expect(plusFocus).toHaveBeenCalled();
+    const commands = buttonNamed("Agent 命令");
+    expect(commands).toBeDefined();
+    (commands!.props.onClick as () => void)();
+    expect(
+      render().some(
+        (node) => node.props.children === "这个 Agent 暂未提供命令。",
+      ),
+    ).toBe(true);
+    expect(buttonNamed("/compact")).toBeUndefined();
+    applyUpdate(props.thread!, {
+      sessionUpdate: "available_commands_update",
+      availableCommands: [{ name: "official", description: "Agent command" }],
+    });
+    const command = buttonNamed("/official");
+    expect(command).toBeDefined();
+    (command!.props.onClick as () => void)();
+    expect(composerDrafts.read("session:shortcut-a").text).toBe(
+      `/official ${before.text}`,
+    );
+    expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+      before.attachments,
+    );
+    expect(props.thread!.queued).toBe(queued);
+    expect(threads.send).not.toHaveBeenCalled();
+    const reopened = openAdd().find(
+      (node) => node.type === WorkspaceActionMenu,
+    )!;
+    (reopened.props.onClose as () => void)();
+    expect(render().some((node) => node.type === WorkspaceDialog)).toBe(false);
+    expect(composerDrafts.read("session:shortcut-a").text).toBe(
+      `/official ${before.text}`,
+    );
+    expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+      before.attachments,
+    );
+    expect(props.thread!.queued).toBe(queued);
+    expect(threads.send).not.toHaveBeenCalled();
+  },
+);
 afterEach(() => {
   h.slots.forEach((slot) => slot.cleanup?.());
   composerDrafts.clear("session:shortcut-a");
