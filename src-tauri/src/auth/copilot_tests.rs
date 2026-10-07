@@ -436,18 +436,23 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
     assert!(info.methods[0].terminal_command.is_none()); // Execution fields stay live only.
     let other = f.data.join("other-work");
     std::fs::create_dir(&other).unwrap();
-    for info in [
-        methods_for_target(&owners.manager, &cached, Some(&other), None, &proof),
+    // Another directory only has the persisted display snapshot; the chosen
+    // source still cannot expose existing-settings methods at all.
+    let other_dir = methods_for_target(&owners.manager, &cached, Some(&other), None, &proof);
+    assert!(!other_dir.execution_ready);
+    assert!(other_dir.methods[0].unavailable_reason.is_none());
+    assert!(
         methods_for_target(
             &owners.manager,
             &cached,
             Some(&f.data),
             Some("api-service"),
             &proof,
-        ),
-    ] {
-        assert!(info.methods.iter().all(|m| m.unavailable_reason.is_some()));
-    }
+        )
+        .methods
+        .iter()
+        .all(|m| m.unavailable_reason.is_some())
+    );
     assert!(
         owners
             .manager
@@ -519,12 +524,9 @@ async fn copilot_actual_sdk_target_and_owned_pty_dispatch_share_the_current_proo
         "initialize\n"
     );
     owners.manager.disconnect(&f.row.id, &f.data).await.unwrap();
-    assert!(
-        methods_for_target(&owners.manager, &cached, Some(&f.data), None, &proof)
-            .methods
-            .iter()
-            .all(|m| m.unavailable_reason.is_some())
-    );
+    let disconnected = methods_for_target(&owners.manager, &cached, Some(&f.data), None, &proof);
+    assert!(!disconnected.execution_ready);
+    assert!(disconnected.methods[0].unavailable_reason.is_none());
 }
 
 #[test]

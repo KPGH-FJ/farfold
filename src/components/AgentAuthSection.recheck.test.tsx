@@ -84,6 +84,11 @@ vi.mock("./AgentAccountLinks", () => ({ AgentAccountLinks: () => null }));
 import { AgentAuthSection } from "./AgentAuthSection";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
+import {
+  AgentAccountExit,
+  AgentAuthManage,
+  AgentAuthWorkBlockers,
+} from "./AgentAuthManage";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import { STRINGS } from "../runtime/strings";
 import { beginAuthentication } from "../runtime/auth_actions";
@@ -96,6 +101,22 @@ function render(source?: string, cwd = "/original") {
     Children.forEach(node, (child) => {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       nodes.push(child);
+      if (child.type === AgentAuthManage)
+        visit(
+          AgentAuthManage(child.props as Parameters<typeof AgentAuthManage>[0]),
+        );
+      if (child.type === AgentAccountExit)
+        visit(
+          AgentAccountExit(
+            child.props as Parameters<typeof AgentAccountExit>[0],
+          ),
+        );
+      if (child.type === AgentAuthWorkBlockers)
+        visit(
+          AgentAuthWorkBlockers(
+            child.props as Parameters<typeof AgentAuthWorkBlockers>[0],
+          ),
+        );
       visit(child.props.children as ReactNode);
     });
   visit(

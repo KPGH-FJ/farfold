@@ -85,7 +85,7 @@ for (const entry of entries) {
         );
       else if (entry === "install")
         expect(await action.install(card)).toBe(false);
-      else await action.connect(card, "/chosen-folder");
+      else expect(await action.connect(card, "/chosen-folder")).toBe(false);
       expect(render().errors[card.id]).toBe(text);
       expect(render().busy[card.id]).toBeNull();
       if (entry === "install")
@@ -120,7 +120,7 @@ for (const entry of entries) {
         );
       else if (entry === "install")
         expect(await action.install(card)).toBe(false);
-      else await action.connect(card, "/chosen-folder");
+      else expect(await action.connect(card, "/chosen-folder")).toBe(false);
       expect(render().errors[card.id]).toBe(
         entry === "install"
           ? STRINGS.install.failed
@@ -162,6 +162,29 @@ it("keeps a failed first installation separate from connection and only retries 
     true,
   );
   expect(h.invoke.mock.calls.some(([name]) => name === "agent_connect")).toBe(
+    false,
+  );
+});
+
+it("connects a registered card directly while a conversation connection exists", async () => {
+  // Regression: a "connected" card (e.g. a live conversation connection)
+  // fell into the register/install branch and the backend rejected it with
+  // "请先结束任务并断开此 Agent，再更换程序".
+  const connected = {
+    ...card,
+    custom: false,
+    status: "connected" as const,
+    registerable: true,
+    discoveredPath: "/usr/local/bin/fixture",
+  };
+  expect(await render().connect(connected, "/chosen-folder")).toBe(true);
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "agent_connect"),
+  ).toHaveLength(1);
+  expect(h.invoke.mock.calls.some(([name]) => name === "agent_register")).toBe(
+    false,
+  );
+  expect(h.invoke.mock.calls.some(([name]) => name === "agent_install")).toBe(
     false,
   );
 });

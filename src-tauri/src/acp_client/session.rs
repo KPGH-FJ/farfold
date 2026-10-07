@@ -7,6 +7,7 @@
 //! The Tauri commands live in [`crate::acp_client::session_commands`].
 
 use std::path::Path;
+use std::sync::Arc;
 use std::sync::atomic::Ordering;
 
 use agent_client_protocol::schema::v1::ContentBlock;
@@ -14,6 +15,7 @@ use serde::Serialize;
 use serde_json::Value;
 use tokio::sync::{mpsc, oneshot};
 
+use crate::acp_client::handshake::Handshake;
 use crate::acp_client::manager::{
     AcpManager, ConnectionKey, ManagedConnection, ManagerCommand, STATE_READY,
 };
@@ -125,6 +127,38 @@ impl AcpManager {
                 store.archive_session_row_in_directory(&row, &canonical_cwd)
             })
             .await
+    }
+
+    /// A READY same-directory declaration for read-only display while no
+    /// preparation connection exists. The preparation connection wins when
+    /// present; otherwise a conversation connection may be borrowed.
+    /// Candidates and service-scoped connections never qualify, and the
+    /// borrowed handshake must not be used for execution.
+    pub(crate) fn borrowable_handshake(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+    ) -> Option<Arc<std::sync::OnceLock<Handshake>>> {
+        let connections = self.lock().ok()?;
+        let mut conversation = None;
+        for (key, connection) in connections.iter() {
+            if key.agent_id != agent_id
+                || key.cwd != cwd
+                || key.candidate
+                || key.service.is_some()
+                || connection.state.load(Ordering::SeqCst) != STATE_READY
+                || connection.handshake.get().is_none()
+            {
+                continue;
+            }
+            if key.conversation_id.is_none() {
+                return Some(connection.handshake.clone());
+            }
+            if conversation.is_none() {
+                conversation = Some(connection.handshake.clone());
+            }
+        }
+        conversation
     }
 
     /// Ready preparation connection; never select an active conversation.

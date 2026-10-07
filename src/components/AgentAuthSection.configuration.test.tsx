@@ -1,93 +1,16 @@
-import { ConnectionAccount } from "./ConnectionAccount";
-import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import {
-  Children,
-  isValidElement,
-  type ReactElement,
-  type ReactNode,
-} from "react";
+import { expect, it, vi } from "vitest";
 import type { AgentAuthSectionProps } from "./AgentAuthSection";
-import type { ThreadState } from "../runtime/session_types";
-const h = vi.hoisted(() => ({
-  cursor: 0,
-  slots: [] as unknown[],
-  effects: [] as { deps?: unknown[]; cleanup?: () => void }[],
-  pending: [] as (() => void)[],
-  methods: vi.fn(),
-  prepare: vi.fn(),
-  preparation: vi.fn(),
-  recheck: vi.fn(async (_target: unknown, changed: () => Promise<void>) => {
-    await changed();
-  }),
-  changed: vi.fn(async () => {}),
-  openModels: vi.fn(),
-  threads: new Map<string, ThreadState>(),
-}));
-vi.mock("react", async (original) => ({
-  ...(await original<typeof import("react")>()),
-  useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
-  useState: (initial: unknown) => {
-    const index = h.cursor++;
-    if (!(index in h.slots))
-      h.slots[index] = typeof initial === "function" ? initial() : initial;
-    return [
-      h.slots[index],
-      (value: unknown) => {
-        h.slots[index] =
-          typeof value === "function" ? value(h.slots[index]) : value;
-      },
-    ];
-  },
-  useRef: (initial: unknown) => {
-    const index = h.cursor++;
-    if (!(index in h.slots)) h.slots[index] = { current: initial };
-    return h.slots[index];
-  },
-  useEffect: (effect: () => (() => void) | void, deps?: unknown[]) => {
-    const index = h.cursor++;
-    const previous = h.effects[index];
-    if (
-      !previous ||
-      !deps ||
-      deps.some((value, i) => !Object.is(value, previous.deps?.[i]))
-    ) {
-      const next = { deps } as typeof previous;
-      h.effects[index] = next;
-      h.pending.push(() => {
-        previous?.cleanup?.();
-        next.cleanup = effect() || undefined;
-      });
-    }
-  },
-}));
-vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
-vi.mock("@tauri-apps/api/event", () => ({
-  listen: vi.fn(async () => () => {}),
-}));
-vi.mock("../runtime/agents", () => ({ authMethods: h.methods }));
-vi.mock("../runtime/connection_account", () => ({
-  useConnectionAccount: () => null,
-}));
-vi.mock("../runtime/auth_actions", () => ({
-  beginAuthentication: vi.fn(),
-  beginPreparationAction: h.prepare,
-  recheckAuthentication: h.recheck,
-}));
-vi.mock("../runtime/sessions", () => ({
-  useThreadsSnapshot: () => ({ threads: h.threads }),
-  threads: { getSnapshot: () => ({ threads: h.threads }) },
-}));
-vi.mock("../runtime/preparation", () => ({
-  getAgentPreparation: h.preparation,
-}));
-vi.mock("./ManualAuthSection", () => ({ ManualAuthSection: () => null }));
-vi.mock("./InlineTerminal", () => ({ InlineTerminal: () => null }));
-vi.mock("./AgentAccountLinks", () => ({ AgentAccountLinks: () => null }));
-vi.mock("./AgentPreparationActions", () => ({
-  AgentPreparationActions: () => null,
-}));
-import { AgentAuthSection } from "./AgentAuthSection";
-import { AgentAccountHeading } from "./AgentAccountHeading";
+import {
+  agentId,
+  button,
+  deferred,
+  h,
+  login,
+  loginSuccess,
+  render,
+  settled,
+} from "./AgentAuthSection.test-harness";
+import { ConnectionAccount } from "./ConnectionAccount";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { InlineTerminal } from "./InlineTerminal";
@@ -99,93 +22,6 @@ import { AUTH_ACTIVITY_STRINGS as A } from "../runtime/auth_strings";
 import { PREPARATION_ACTION_STRINGS as S } from "../runtime/preparation_action_strings";
 import { STRINGS } from "../runtime/strings";
 import { freshThreadState } from "../runtime/session_projection";
-type Element = ReactElement<Record<string, unknown>>;
-let sequence = 0,
-  agentId: string;
-function render(
-  source?: string,
-  props: Partial<AgentAuthSectionProps> = {},
-  flushEffects = true,
-) {
-  h.cursor = 0;
-  const nodes: Element[] = [];
-  const visit = (node: ReactNode) =>
-    Children.forEach(node, (child) => {
-      if (!isValidElement<Record<string, unknown>>(child)) return;
-      nodes.push(child);
-      if (child.type === AgentAccountHeading)
-        visit(
-          AgentAccountHeading(
-            child.props as Parameters<typeof AgentAccountHeading>[0],
-          ),
-        );
-      visit(child.props.children as ReactNode);
-    });
-  visit(
-    AgentAuthSection({
-      agentId,
-      cwd: "/original",
-      source,
-      onConfigureKey() {},
-      onChanged: h.changed,
-      onReconnect: async () => {},
-      canOpenModels: true,
-      onOpenModels: h.openModels,
-      ...props,
-    }),
-  );
-  if (flushEffects) for (const effect of h.pending.splice(0)) effect();
-  return nodes;
-}
-async function settled(
-  source?: string,
-  props: Partial<AgentAuthSectionProps> = {},
-) {
-  let nodes: Element[] = [];
-  for (let i = 0; i < 6; i++) {
-    nodes = render(source, props);
-    await Promise.resolve();
-  }
-  return nodes;
-}
-const button = (nodes: Element[], label: string) =>
-  nodes.find(
-    (node) => node.type === "button" && node.props.children === label,
-  )!;
-function deferred<T>() {
-  let resolve!: (value: T) => void;
-  let reject!: (error: unknown) => void;
-  const promise = new Promise<T>((yes, no) => {
-    resolve = yes;
-    reject = no;
-  });
-  return { promise, resolve, reject };
-}
-const login = {
-  kind: "authentication" as const,
-  methodId: "method",
-  title: "Account login",
-  completion: "exit_code" as const,
-};
-const loginSuccess = (nodes: Element[]) =>
-  nodes.some((node) =>
-    [
-      R.confirmed,
-      R.keyConfirmed,
-      A.loginConfirmedChecking,
-      A.loginConfirmedCheckFailed,
-    ].some((text) => text === String(node.props.children)),
-  );
-beforeEach(() => {
-  h.slots = [];
-  h.effects = [];
-  h.pending = [];
-  vi.clearAllMocks();
-  h.threads.clear();
-  agentId = `configuration-view-${++sequence}`;
-  h.methods.mockResolvedValue({ methods: [], canLogout: false });
-  h.preparation.mockReset().mockResolvedValue({ actions: [] });
-});
 
 it.each(["account"])(
   "shows a dedicated restored protocol login detail without executing it (method %s)",
@@ -212,10 +48,10 @@ it.each(["account"])(
         onPrimaryChange: receive,
       },
     });
-    expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(
-      false,
-    );
-    expect(button(nodes, R.backMethod)?.props.className).toContain("btn-ghost");
+    // A restored protocol method has no separate detail page: the saved
+    // choice stays selected in the method list with its direct action.
+    const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+    expect(picker.props.value).toBe(JSON.stringify(["method", "account"]));
     expect(receive.mock.calls.at(-1)?.[0]).toMatchObject({
       label: R.accountContinue("Account"),
       disabled: false,
@@ -226,7 +62,7 @@ it.each(["account"])(
 );
 
 it.each(["agent", "terminal", "api-key"] as const)(
-  "commits the default %s choice before opening its account form",
+  "executes the default %s choice directly from the method list",
   async (kind) => {
     h.methods.mockResolvedValue({
       methods: [
@@ -280,26 +116,30 @@ it.each(["agent", "terminal", "api-key"] as const)(
     expect(primary?.disabled).toBe(false);
     primary.run();
     expect(choose).toHaveBeenCalledExactlyOnceWith("login", "default");
-    expect(choose.mock.invocationCallOrder[0]).toBeLessThan(
-      advance.mock.invocationCallOrder[0],
-    );
     expect(methodId).toBe("default");
-    expect(stage).toBe("account");
-    const nodes = await settled(undefined, props());
-    expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(
-      false,
-    );
-    expect(button(nodes, R.backMethod)?.props.className).toContain("btn-ghost");
-    expect(nodes.some((node) => node.props.children === R.existingStatus)).toBe(
-      false,
-    );
-    expect(beginAuthentication).not.toHaveBeenCalled();
     expect(h.prepare).not.toHaveBeenCalled();
-    if (kind === "terminal") {
-      const next = receive.mock.calls.at(-1)?.[0];
-      expect(next?.label).toBe(R.terminalStart);
-      next.run();
-      expect(beginAuthentication).toHaveBeenCalledOnce();
+    if (kind === "api-key") {
+      // The API-key form is the account stage; the choice lands first.
+      expect(choose.mock.invocationCallOrder[0]).toBeLessThan(
+        advance.mock.invocationCallOrder[0],
+      );
+      expect(stage).toBe("account");
+      const nodes = await settled(undefined, props());
+      expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(
+        false,
+      );
+      expect(nodes.some((node) => node.type === MethodApiKeySection)).toBe(
+        true,
+      );
+      expect(beginAuthentication).not.toHaveBeenCalled();
+    } else {
+      // Agent and terminal methods run in place without a detail page.
+      expect(advance).not.toHaveBeenCalled();
+      expect(beginAuthentication).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          method: expect.objectContaining({ id: "default", kind }),
+        }),
+      );
     }
   },
 );
@@ -517,9 +357,6 @@ it.each([
     expect(h.openModels).not.toHaveBeenCalled();
   },
 );
-afterEach(() => {
-  for (const effect of h.effects) effect?.cleanup?.();
-});
 
 it.each([undefined, "login"] as const)(
   "shows the actual protocol login receipt for intent %s before and after its independent connection check",
@@ -728,11 +565,10 @@ it("keeps confirmed completion as a summary, then explicitly opens management be
   nodes = await settled(undefined, { methodId: "method" });
   (button(nodes, R.change).props.onClick as () => void)();
   nodes = await settled(undefined, { methodId: "other" });
-  expect(button(nodes, R.continue)).toBeDefined();
-  expect(button(nodes, R.accountContinue("Other account"))).toBeUndefined();
+  expect(button(nodes, R.accountContinue("Other account"))).toBeDefined();
   expect(button(nodes, A.loginAgain)).toBeUndefined();
   nodes = await settled(undefined, { methodId: "key" });
-  (button(nodes, R.continue).props.onClick as () => void)();
+  (button(nodes, R.keyContinue("Key account")).props.onClick as () => void)();
   nodes = await settled(undefined, { methodId: "key" });
   expect(
     nodes.find((node) => node.type === MethodApiKeySection)?.props.startLabel,
@@ -1350,16 +1186,27 @@ it.each(["api", "other-method"])(
     expect(loginSuccess(nodes)).toBe(false);
     expect(nodes.some((node) => node.props.children === "ChatGPT")).toBe(false);
     expect(nodes.some((node) => node.props.title === "/original")).toBe(false);
-    expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(
-      false,
-    );
-    expect(button(nodes, R.backMethod)?.props.className).toContain("btn-ghost");
     expect(activity.getSnapshot()).toMatchObject({
       operationConfirmed: true,
       checked: true,
     });
-    if (route === "api")
+    if (route === "api") {
+      expect(nodes.some((node) => node.type === AgentConnectionPicker)).toBe(
+        false,
+      );
+      expect(button(nodes, R.backMethod)?.props.className).toContain(
+        "btn-ghost",
+      );
       expect(receive.mock.calls.at(-1)?.[0] ?? null).toBeNull();
+    } else {
+      // Another agent method has no detail page: it stays selected in the
+      // method list with its direct action while the receipt stays hidden.
+      const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+      expect(picker.props.value).toBe(JSON.stringify(["method", "other"]));
+      expect(receive.mock.calls.at(-1)?.[0]).toMatchObject({
+        label: R.accountContinue("Other account"),
+      });
+    }
     expect(beginAuthentication).not.toHaveBeenCalled();
   },
 );
@@ -1388,7 +1235,9 @@ it.each([null, "removed"])(
     expect(
       nodes.find((node) => node.type === AgentConnectionPicker)?.props.options,
     ).toHaveLength(2);
-    expect(receive.mock.calls.at(-1)?.[0]?.label).toBe(R.continue);
+    expect(receive.mock.calls.at(-1)?.[0]?.label).toBe(
+      R.accountContinue("Account"),
+    );
     expect(beginAuthentication).not.toHaveBeenCalled();
   },
 );

@@ -1,6 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
-import { parseAccountRegistration } from "./account_registration";
 import { parseInstallationInput } from "./installation_input";
 import type {
   AgentSetupProgress,
@@ -119,11 +118,6 @@ function parseProgress(value: unknown): AgentSetupProgress {
     result.authMethodId = value.authMethodId;
   if (typeof value.preparationActionId === "string")
     result.preparationActionId = value.preparationActionId;
-  const registration = parseAccountRegistration(
-    value.registration,
-    result.authMethodId,
-  );
-  if (registration) result.registration = registration;
   if (["method", "account", "api"].includes(value.accessStage as string))
     result.accessStage = value.accessStage as AgentSetupProgress["accessStage"];
   if (value.selection !== undefined)

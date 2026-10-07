@@ -1,7 +1,7 @@
 //! Controlled public declarations over the actual SDK/manager transport. No
 //! official Agent, account, credential lookup, prompt or user file is involved.
 use super::*;
-use crate::acp_client::manager::AuthenticationOperation;
+use crate::acp_client::manager::{AuthenticationOperation, ConnectionPurpose};
 use serde_json::json;
 use std::{
     path::{Path, PathBuf},
@@ -162,12 +162,12 @@ async fn auth_declaration_transport_preserves_types_and_only_uses_the_exact_live
         );
     }
     assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
-    assert!(
-        f.info(&f.b, None)
-            .methods
-            .iter()
-            .all(|m| m.unavailable_reason.is_some())
-    );
+    // Another project directory has no live or borrowed declaration; the
+    // persisted snapshot is display-only and stays executable-looking.
+    let cached_b = f.info(&f.b, None);
+    assert!(!cached_b.execution_ready);
+    assert!(!cached_b.can_logout);
+    assert!(cached_b.methods[2].unavailable_reason.is_none());
     assert!(
         f.info(&f.a, Some("chosen-service"))
             .methods
@@ -207,11 +207,13 @@ async fn auth_declaration_transport_preserves_types_and_only_uses_the_exact_live
     );
     f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
     assert!(live_auth_row(&f.manager, &f.row(), &f.a).is_err());
+    let disconnected_a = f.info(&f.a, None);
+    assert!(!disconnected_a.execution_ready);
     assert!(
-        f.info(&f.a, None)
+        disconnected_a
             .methods
             .iter()
-            .all(|m| m.unavailable_reason.is_some())
+            .any(|m| m.unavailable_reason.is_none())
     );
     assert!(f.info(&f.b, None).methods[2].unavailable_reason.is_none());
     f.manager.disconnect(&f.row.id, &f.b).await.unwrap();
@@ -288,21 +290,73 @@ async fn legacy_terminal_environment_actual_sdk_is_live_target_only_and_never_au
             .to_string()
             .contains("fixture-sensitive-canary")
     );
-    for (cwd, source) in [(&f.b, None), (&f.a, Some("chosen-service"))] {
-        assert!(
-            f.info(cwd, source)
-                .methods
-                .iter()
-                .all(|method| method.unavailable_reason.is_some())
-        );
-    }
-    f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
+    let other_dir = f.info(&f.b, None);
+    assert!(!other_dir.execution_ready);
     assert!(
-        f.info(&f.a, None)
+        other_dir
+            .methods
+            .iter()
+            .any(|method| method.unavailable_reason.is_none())
+    );
+    assert!(
+        f.info(&f.a, Some("chosen-service"))
             .methods
             .iter()
             .all(|method| method.unavailable_reason.is_some())
     );
+    f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
+    let disconnected = f.info(&f.a, None);
+    assert!(!disconnected.execution_ready);
+    assert!(
+        disconnected
+            .methods
+            .iter()
+            .any(|method| method.unavailable_reason.is_none())
+    );
+    no_secret_files(&f.root.join("logs"));
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn conversation_declaration_is_borrowed_for_display_and_never_executed() {
+    let f = Fixture::new();
+    // A ready conversation connection in the same project lends its
+    // declaration for read-only display; it is not an execution source.
+    let (conversation, _) = f
+        .manager
+        .connect_selected(&f.row, &f.a, &f.store, None, None, true)
+        .await
+        .unwrap();
+    assert_eq!(conversation.purpose, ConnectionPurpose::Conversation);
+    assert!(live_auth_row(&f.manager, &f.row(), &f.a).is_err());
+    let borrowed = f.info(&f.a, None);
+    assert!(!borrowed.execution_ready);
+    assert_eq!(borrowed.methods[0].id, "environment-a");
+    assert!(borrowed.methods[2].unavailable_reason.is_none());
+    assert_eq!(borrowed.methods[2].id, "default");
+    assert!(
+        f.manager
+            .authenticate(
+                &f.row.id,
+                &f.a,
+                "default",
+                AuthenticationOperation::new(),
+                Arc::new(|| {})
+            )
+            .await
+            .is_err()
+    );
+    // agent_connect's preparation key does not collide with the live
+    // conversation connection: a second process starts.
+    let preparation = f.manager.connect(&f.row, &f.a, &f.store).await.unwrap();
+    assert_eq!(preparation.purpose, ConnectionPurpose::Preparation);
+    assert_eq!(
+        std::fs::read_to_string(&f.calls).unwrap(),
+        "initialize\ninitialize\n"
+    );
+    assert_eq!(f.manager.status(&f.row.id).unwrap().len(), 2);
+    let live = f.info(&f.a, None);
+    assert!(live.execution_ready);
+    f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
     no_secret_files(&f.root.join("logs"));
 }
 
@@ -322,6 +376,8 @@ async fn auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_tar
             .unwrap()
             .contains("fixture-sensitive-canary")
     );
+    // Neither another directory nor a missing target yields an executable
+    // declaration; display still comes from the persisted public snapshot.
     for info in [
         f.info(&f.b, None),
         methods_for_target(
@@ -333,11 +389,9 @@ async fn auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_tar
         ),
     ] {
         assert!(!info.can_logout);
-        assert!(
-            info.methods
-                .iter()
-                .all(|m| m.unavailable_reason.as_deref() == Some(RECHECK_METHODS))
-        );
+        assert!(!info.execution_ready);
+        let method = info.methods.iter().find(|m| m.id == "default").unwrap();
+        assert!(method.unavailable_reason.is_none());
     }
     let other_source = f.info(&f.a, Some("chosen-service"));
     assert!(!other_source.can_logout);
@@ -360,12 +414,9 @@ async fn auth_route_diagnostics_live_reason_cannot_authorize_cached_or_other_tar
     assert_eq!(std::fs::read_to_string(&f.calls).unwrap(), "initialize\n");
     f.manager.disconnect(&f.row.id, &f.a).await.unwrap();
     let cached = f.info(&f.a, None);
-    assert!(
-        cached
-            .methods
-            .iter()
-            .all(|m| m.unavailable_reason.as_deref() == Some(RECHECK_METHODS))
-    );
+    assert!(!cached.execution_ready);
+    let method = cached.methods.iter().find(|m| m.id == "default").unwrap();
+    assert!(method.unavailable_reason.is_none());
     assert!(
         !serde_json::to_string(&cached)
             .unwrap()

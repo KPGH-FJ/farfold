@@ -103,6 +103,11 @@ vi.mock("./MethodApiKeySection", () => ({ MethodApiKeySection: () => null }));
 
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentAccountHeading } from "./AgentAccountHeading";
+import {
+  AgentAccountExit,
+  AgentAuthManage,
+  AgentAuthWorkBlockers,
+} from "./AgentAuthManage";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AgentAccountLinks } from "./AgentAccountLinks";
@@ -136,6 +141,22 @@ function render(flushEffects = true) {
             child.props as Parameters<typeof AgentConnectionPicker>[0],
           ),
         );
+      if (child.type === AgentAuthManage)
+        visit(
+          AgentAuthManage(child.props as Parameters<typeof AgentAuthManage>[0]),
+        );
+      if (child.type === AgentAccountExit)
+        visit(
+          AgentAccountExit(
+            child.props as Parameters<typeof AgentAccountExit>[0],
+          ),
+        );
+      if (child.type === AgentAuthWorkBlockers)
+        visit(
+          AgentAuthWorkBlockers(
+            child.props as Parameters<typeof AgentAuthWorkBlockers>[0],
+          ),
+        );
       visit(child.props.children as ReactNode);
     });
   visit(AgentAuthSection(props));
@@ -151,11 +172,9 @@ async function settled() {
   return nodes;
 }
 async function openMethod() {
-  const next = button(await settled(), R.continue);
-  expect(next).toBeDefined();
-  (next!.props.onClick as () => void)();
+  const nodes = await settled();
   expect(h.begin).not.toHaveBeenCalled();
-  return settled();
+  return nodes;
 }
 function button(nodes: Element[], text: string) {
   return nodes.find(
@@ -220,17 +239,14 @@ it("rejects a login callback after another method is selected", async () => {
     canLogout: false,
   });
   props.methodId = "method";
-  const old = button(
-    await openMethod(),
-    R.accountContinue("Original method（Agent 登录 · method）"),
-  )!;
+  const old = button(await openMethod(), R.accountContinue("Original method"))!;
   props.methodId = "other";
   const nodes = await settled();
   (old.props.onClick as () => void)();
   expect(h.begin).not.toHaveBeenCalled();
   (
-    button(nodes, R.accountContinue("Original method（Agent 登录 · other）"))!
-      .props.onClick as () => void
+    button(nodes, R.accountContinue("Original method"))!.props
+      .onClick as () => void
   )();
   expect(h.begin).toHaveBeenCalledWith(
     expect.objectContaining({
@@ -260,9 +276,17 @@ it("keeps non-executable equal-name declarations separate from the shared select
   expect(selector.props.options).toEqual([
     {
       id: JSON.stringify(["method", "official-login"]),
-      title: "Original same name（Agent 登录）",
+      title: "Original same name",
       description: R.accountHint,
       disabled: false,
+      group: R.groupAgent,
+    },
+    {
+      id: JSON.stringify(["method", "environment-info"]),
+      title: "Original same name",
+      description: `${S.environment}：PUBLIC_KEY_NAME`,
+      disabled: true,
+      group: R.groupEnvironment,
     },
   ]);
   expect(selector.props.value).toBe(
@@ -274,7 +298,7 @@ it("keeps non-executable equal-name declarations separate from the shared select
   props.methodId = "environment-info";
   nodes = await settled();
   expect(
-    button(nodes, R.accountContinue("Original same name（Agent 登录）")),
+    button(nodes, R.accountContinue("Original same name")),
   ).toBeUndefined();
   expect(nodes.some((node) => node.props.children === "PUBLIC_KEY_NAME")).toBe(
     true,
@@ -287,7 +311,7 @@ it("keeps non-executable equal-name declarations separate from the shared select
   props.methodId = "official-login";
   nodes = await openMethod();
   (
-    button(nodes, R.accountContinue("Original same name（Agent 登录）"))!.props
+    button(nodes, R.accountContinue("Original same name"))!.props
       .onClick as () => void
   )();
   expect(h.begin).toHaveBeenCalledWith(
@@ -315,14 +339,8 @@ it("uses public IDs rather than list order for equal-name terminal labels and re
       (option) => [option.id, option.title],
     );
   expect(labels()).toEqual([
-    [
-      JSON.stringify(["method", "first-stable"]),
-      "终端设置 · Same terminal（终端登录 · first-stable）",
-    ],
-    [
-      JSON.stringify(["method", "second-stable"]),
-      "终端设置 · Same terminal（终端登录 · second-stable）",
-    ],
+    [JSON.stringify(["method", "first-stable"]), "Same terminal"],
+    [JSON.stringify(["method", "second-stable"]), "Same terminal"],
   ]);
   (selector().props.onChange as (value: string) => void)(
     JSON.stringify(["method", "second-stable"]),
@@ -336,14 +354,8 @@ it("uses public IDs rather than list order for equal-name terminal labels and re
     listener({ payload: { agentId: props.agentId } });
   nodes = await settled();
   expect(labels()).toEqual([
-    [
-      JSON.stringify(["method", "second-stable"]),
-      "终端设置 · Same terminal（终端登录 · second-stable）",
-    ],
-    [
-      JSON.stringify(["method", "first-stable"]),
-      "终端设置 · Same terminal（终端登录 · first-stable）",
-    ],
+    [JSON.stringify(["method", "second-stable"]), "Same terminal"],
+    [JSON.stringify(["method", "first-stable"]), "Same terminal"],
   ]);
   expect(selector().props.value).toBe(
     JSON.stringify(["method", "second-stable"]),
@@ -376,9 +388,14 @@ it.each(["environment", "unsupported"])(
     expect(
       nodes.some((node) => node.props.children === "RAW-PAYLOAD-CANARY"),
     ).toBe(false);
-    const links = nodes.find((node) => node.type === AgentAccountLinks)!;
-    expect(links.props.onContinueLogin).toBeUndefined();
-    expect(links.props.loginDisabled).toBe(true);
+    const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+    expect(
+      (picker.props.options as { disabled?: boolean; group?: string }[]).map(
+        (option) => [option.group, option.disabled],
+      ),
+    ).toEqual([
+      [kind === "environment" ? R.groupEnvironment : undefined, true],
+    ]);
     expect(nodes.some((node) => node.props.children === P.moreLogin)).toBe(
       true,
     );
@@ -425,7 +442,7 @@ it.each(["empty", "filtered-api"])(
     ).toBe(true);
     const links = nodes.find((node) => node.type === AgentAccountLinks)!;
     expect(links).toBeDefined();
-    expect(links.props.methodId).toBeUndefined();
+    expect(links.props.methodIds).toBeUndefined();
     const manual = nodes.find((node) => node.type === ManualAuthSection)!;
     expect(manual).toBeDefined();
     expect(manual.props.methodId).toBe("manual");
@@ -452,7 +469,7 @@ it("keeps an executable method-level Key route independent of API service suppor
     canLogout: false,
   });
   let nodes = await settled();
-  const initial = button(nodes, R.continue)!;
+  const initial = button(nodes, R.keyContinue("Original method"))!;
   expect(initial).toBeDefined();
   (initial.props.onClick as () => void)();
   nodes = await settled();
@@ -520,13 +537,10 @@ it("shows the remaining terminal choice before its detail when the saved API met
   expect(
     nodes.find((node) => node.type === ManualAuthSection)?.props.methodId,
   ).toBe("terminal");
-  const login = button(nodes, R.continue)!;
+  const login = button(nodes, R.terminalStart)!;
   expect(login.props.disabled).toBe(false);
   expect(h.begin).not.toHaveBeenCalled();
   (login.props.onClick as () => void)();
-  expect(h.begin).not.toHaveBeenCalled();
-  nodes = await settled();
-  (button(nodes, R.terminalStart)!.props.onClick as () => void)();
   expect(h.begin).toHaveBeenCalledExactlyOnceWith(
     expect.objectContaining({
       method: expect.objectContaining({ id: "terminal", kind: "terminal" }),
@@ -556,7 +570,9 @@ it("offers only the remaining executable methods before choosing among multiple 
     JSON.stringify(["method", "terminal"]),
   ]);
   expect(button(nodes, STRINGS.access.apiRoute)).toBeUndefined();
-  expect(button(nodes, R.continue)?.props.disabled).toBe(false);
+  expect(
+    button(nodes, R.accountContinue("Original method"))?.props.disabled,
+  ).toBe(false);
   expect(button(nodes, R.terminalStart)).toBeUndefined();
   expect(
     nodes.find((node) => node.type === ManualAuthSection)?.props.methodId,
@@ -565,7 +581,7 @@ it("offers only the remaining executable methods before choosing among multiple 
   expect(h.configure).not.toHaveBeenCalled();
   props = { ...props, methodId: "terminal" };
   nodes = await settled();
-  expect(button(nodes, R.continue)?.props.disabled).toBe(false);
+  expect(button(nodes, R.terminalStart)?.props.disabled).toBe(false);
   expect(
     nodes.find((node) => node.type === ManualAuthSection)?.props.methodId,
   ).toBe("terminal");
@@ -705,9 +721,10 @@ it("ignores a late response from another directory without replacing current met
   ).toEqual([
     {
       id: JSON.stringify(["method", "method"]),
-      title: R.terminal,
+      title: "Current method",
       description: R.terminalHint,
       disabled: false,
+      group: R.groupTerminal,
     },
   ]);
   expect(
@@ -746,7 +763,9 @@ it("refreshes a display-only cache when this Agent connection changes, without r
     cwd: "/original",
     source: undefined,
   });
-  expect(button(nodes, R.continue)!.props.disabled).toBe(false);
+  expect(
+    button(nodes, R.accountContinue("Original method"))!.props.disabled,
+  ).toBe(false);
   expect(h.begin).not.toHaveBeenCalled();
   expect(h.reconnect).not.toHaveBeenCalled();
 });
@@ -758,7 +777,7 @@ it.each(["agent", "api-key"])(
     const nodes = await openMethod();
     const label =
       kind === "api-key"
-        ? R.accountContinue("Original method")
+        ? R.keyContinue("Original method")
         : R.accountContinue("Original method");
     const click = button(nodes, label)!.props.onClick as () => void;
     for (const listener of h.status)
@@ -790,18 +809,19 @@ it("keeps another declared terminal choice usable beside read-only environment i
   expect(
     nodes.some((node) => node.props.children === "PUBLIC_PROVIDER_KEY"),
   ).toBe(true);
-  expect(button(nodes, R.continue)).toBeUndefined();
+  expect(button(nodes, R.accountContinue("Official terminal"))).toBeUndefined();
   const selector = nodes.find((node) => node.type === AgentConnectionPicker)!;
   expect(
     (selector.props.options as { id: string }[]).map((option) => option.id),
-  ).toEqual([JSON.stringify(["method", "terminal"])]);
+  ).toEqual([
+    JSON.stringify(["method", "terminal"]),
+    JSON.stringify(["method", "environment"]),
+  ]);
   props.methodId = "terminal";
   nodes = await settled();
-  expect(button(nodes, R.continue)!.props.disabled).toBe(false);
-  (button(nodes, R.continue)!.props.onClick as () => void)();
-  expect(h.begin).not.toHaveBeenCalled();
-  nodes = await settled();
-  (button(nodes, R.terminalStart)!.props.onClick as () => void)();
+  const start = button(nodes, R.terminalStart)!;
+  expect(start.props.disabled).toBe(false);
+  (start.props.onClick as () => void)();
   expect(h.begin).toHaveBeenCalledWith(
     expect.objectContaining({
       method: expect.objectContaining({ id: "terminal", kind: "terminal" }),
@@ -874,8 +894,12 @@ it("shares a variable method list with declared account, key, terminal and compa
   ).toEqual([
     [JSON.stringify(["existing"]), R.existing, R.existingHint],
     [JSON.stringify(["method", "account"]), "Account", R.accountHint],
-    [JSON.stringify(["method", "provider-key"]), R.openaiKey, R.openaiKeyHint],
-    [JSON.stringify(["method", "terminal"]), R.terminal, R.terminalHint],
+    [
+      JSON.stringify(["method", "terminal"]),
+      "Official settings",
+      R.terminalHint,
+    ],
+    [JSON.stringify(["method", "provider-key"]), "Provider key", R.keyHint],
     [JSON.stringify(["api"]), R.api, R.apiHint],
   ]);
   (picker.props.onChange as (id: string) => void)(
@@ -885,9 +909,12 @@ it("shares a variable method list with declared account, key, terminal and compa
     "login",
     "provider-key",
   );
+  // An API-key method opens its form directly instead of a confirm page.
+  expect(props.connection.onStageChange).toHaveBeenCalledExactlyOnceWith(
+    "account",
+  );
   expect(h.begin).not.toHaveBeenCalled();
   expect(h.configure).not.toHaveBeenCalled();
-  expect(props.connection.onStageChange).not.toHaveBeenCalled();
 });
 
 it.each(["unknown", "unsupported"] as const)(
@@ -1012,4 +1039,120 @@ it("rejects a prior API footer action when capability becomes unsupported", asyn
   expect(stage).not.toHaveBeenCalled();
   expect(h.begin).not.toHaveBeenCalled();
   expect(h.configure).not.toHaveBeenCalled();
+});
+
+it("shows borrowed declarations without a connect button and connects silently before running the method", async () => {
+  const connect = vi.fn(async () => {});
+  props.onConnect = connect;
+  h.methods.mockResolvedValue({ ...response(), executionReady: false });
+  let nodes = await settled();
+  const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+  expect(
+    (picker.props.options as { id: string }[]).map((option) => option.id),
+  ).toEqual([JSON.stringify(["method", "method"])]);
+  const login = button(nodes, R.accountContinue("Original method"))!;
+  expect(login.props.disabled).toBe(false);
+  expect(connect).not.toHaveBeenCalled();
+  h.methods.mockResolvedValue({
+    methods: [{ ...response().methods[0], name: "Fresh method" }],
+    canLogout: false,
+    executionReady: true,
+  });
+  (login.props.onClick as () => void)();
+  nodes = await settled();
+  expect(connect).toHaveBeenCalledOnce();
+  expect(h.methods).toHaveBeenCalledTimes(2);
+  expect(h.begin).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({
+      method: expect.objectContaining({ id: "method", name: "Fresh method" }),
+    }),
+  );
+});
+
+it("asks for a fresh choice when the declaration changes during silent connect", async () => {
+  props.onConnect = vi.fn(async () => {});
+  h.methods.mockResolvedValue({ ...response(), executionReady: false });
+  const nodes = await settled();
+  h.methods.mockResolvedValue({
+    methods: [{ ...response().methods[0], id: "replacement" }],
+    canLogout: false,
+    executionReady: true,
+  });
+  (
+    button(nodes, R.accountContinue("Original method"))!.props
+      .onClick as () => void
+  )();
+  const updated = await settled();
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(
+    updated.some(
+      (node) =>
+        node.props.role === "alert" &&
+        Children.toArray(node.props.children as ReactNode).includes(
+          R.methodsChanged,
+        ),
+    ),
+  ).toBe(true);
+});
+
+it("shows a thrown connection failure and keeps the action retryable", async () => {
+  props.onConnect = vi.fn(async () => {
+    throw new Error("连接失败");
+  });
+  h.methods.mockResolvedValue({ ...response(), executionReady: false });
+  const nodes = await settled();
+  (
+    button(nodes, R.accountContinue("Original method"))!.props
+      .onClick as () => void
+  )();
+  const updated = await settled();
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(
+    updated.some(
+      (node) =>
+        node.props.role === "alert" &&
+        Children.toArray(node.props.children as ReactNode).includes("连接失败"),
+    ),
+  ).toBe(true);
+  expect(
+    button(updated, R.accountContinue("Original method"))!.props.disabled,
+  ).toBe(false);
+});
+
+it("reports an incomplete connection when the refreshed declaration still cannot execute", async () => {
+  props.onConnect = vi.fn(async () => {});
+  h.methods.mockResolvedValue({ ...response(), executionReady: false });
+  const nodes = await settled();
+  (
+    button(nodes, R.accountContinue("Original method"))!.props
+      .onClick as () => void
+  )();
+  const updated = await settled();
+  expect(h.begin).not.toHaveBeenCalled();
+  expect(
+    updated.some(
+      (node) =>
+        node.props.role === "alert" &&
+        Children.toArray(node.props.children as ReactNode).includes(
+          R.connectionIncomplete,
+        ),
+    ),
+  ).toBe(true);
+});
+
+it("does not connect when a ready declaration can execute directly", async () => {
+  const connect = vi.fn(async () => {});
+  props.onConnect = connect;
+  h.methods.mockResolvedValue({ ...response(), executionReady: true });
+  const nodes = await settled();
+  (
+    button(nodes, R.accountContinue("Original method"))!.props
+      .onClick as () => void
+  )();
+  expect(h.begin).toHaveBeenCalledExactlyOnceWith(
+    expect.objectContaining({
+      method: expect.objectContaining({ id: "method" }),
+    }),
+  );
+  expect(connect).not.toHaveBeenCalled();
 });

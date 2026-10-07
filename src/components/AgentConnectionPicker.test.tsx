@@ -90,3 +90,44 @@ it("preserves one explicit choice and rejects disabled options and disabled list
   }
   expect(locked.onChange).not.toHaveBeenCalled();
 });
+
+it("renders a header for every group and footers after each group's last item", () => {
+  const grouped: ConnectionOption[] = [
+    { ...options[0], group: "账号登录" },
+    { ...options[1], group: "终端登录" },
+    {
+      id: JSON.stringify(["method", "second"]),
+      title: "T2",
+      description: "d",
+      group: "终端登录",
+    },
+    { ...options[2] },
+  ];
+  const tree = AgentConnectionPicker({
+    name: "connection",
+    options: grouped,
+    value: null,
+    disabled: false,
+    groupFooters: { 终端登录: <p className="group-footer">注册行</p> },
+    onChange: vi.fn(),
+  });
+  const html = renderToStaticMarkup(tree);
+  const at = (text: string) => html.indexOf(text);
+  expect(at("账号登录")).toBeGreaterThanOrEqual(0);
+  expect(at("终端登录")).toBeGreaterThanOrEqual(0);
+  expect(at("账号登录")).toBeLessThan(at("终端登录"));
+  expect(at("终端登录")).toBeLessThan(at("注册行"));
+  expect(at("注册行")).toBeLessThan(at("模型 API 服务"));
+  expect(html.match(/journey-method-group/g)).toHaveLength(2);
+});
+
+it("shows a single group header even when only one group is listed", () => {
+  const tree = AgentConnectionPicker({
+    name: "connection",
+    options: [{ ...options[0], group: "账号登录" }],
+    value: null,
+    disabled: false,
+    onChange: vi.fn(),
+  });
+  expect(renderToStaticMarkup(tree)).toContain("账号登录");
+});

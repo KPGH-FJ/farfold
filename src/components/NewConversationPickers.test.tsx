@@ -354,8 +354,8 @@ it("offers a prepared offline Agent through the same selection dialog", () => {
   );
   const row = tree.find((node) => node.key === "A");
   expect(row).toBeDefined();
-  expect(text(row!.props.children as ReactNode)).toContain("待命");
-  expect(text(row!.props.children as ReactNode)).not.toContain("已连接");
+  expect(text(row!.props.children as ReactNode)).toContain("可以使用");
+  expect(text(row!.props.children as ReactNode)).not.toContain("待命");
   expect(pick).not.toHaveBeenCalled();
   (row!.props.onClick as () => void)();
   expect(pick).toHaveBeenCalledWith("A");
@@ -383,18 +383,17 @@ it("distinguishes live connections from saved preparation and retains a released
   let tree = renderAgents();
   const connected = tree.find((node) => node.key === "A")!;
   const standby = tree.find((node) => node.key === "B")!;
-  expect(text(connected.props.children as ReactNode)).toContain("已连接");
-  expect(text(connected.props.children as ReactNode)).not.toContain("待命");
-  expect(text(standby.props.children as ReactNode)).toContain("待命");
-  expect(text(standby.props.children as ReactNode)).not.toContain("已连接");
+  // Connection state stays internal: both usable rows read as ready.
+  expect(text(connected.props.children as ReactNode)).toContain("可以使用");
+  expect(text(standby.props.children as ReactNode)).toContain("可以使用");
   expect(connected.props["aria-pressed"]).toBe(true);
   expect(standby.props["aria-pressed"]).toBe(false);
 
   cards = cards.map((card) => ({ ...card, status: "installed" as const }));
   tree = renderAgents();
   const released = tree.find((node) => node.key === "A")!;
-  expect(text(released.props.children as ReactNode)).toContain("待命");
-  expect(text(released.props.children as ReactNode)).not.toContain("已连接");
+  expect(text(released.props.children as ReactNode)).toContain("可以使用");
+  expect(text(released.props.children as ReactNode)).not.toContain("待命");
   expect(released.props["aria-pressed"]).toBe(true);
   expect(pick).not.toHaveBeenCalled();
   expect(prepare).not.toHaveBeenCalled();

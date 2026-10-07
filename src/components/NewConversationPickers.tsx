@@ -18,7 +18,7 @@ import {
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
-import { ACCESS_STRINGS as A } from "../runtime/access_strings";
+import { agentStatus } from "../runtime/agent_status";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
@@ -160,11 +160,13 @@ export function NewConversationAgentDialog({
             <span>
               <strong>{card.name}</strong>
               <small>
-                {needsAuth?.(card.id)
-                  ? A.needLogin
-                  : card.status === "connected"
-                    ? A.connected
-                    : A.standby}
+                {
+                  agentStatus({
+                    card,
+                    authRequired: needsAuth?.(card.id),
+                    prepared: prepared(card.id),
+                  }).label
+                }
               </small>
             </span>
             {card.id === picked && <Check size={16} />}

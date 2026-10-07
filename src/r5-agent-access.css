@@ -18,6 +18,14 @@
   white-space: nowrap;
   border: 0;
 }
+.journey-method-group {
+  margin: 6px 0 -2px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.journey-method-group:first-of-type {
+  margin-top: 0;
+}
 .journey-method-card {
   display: flex;
   align-items: center;

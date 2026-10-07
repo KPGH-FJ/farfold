@@ -162,42 +162,27 @@ it("keeps legacy progress and flags malformed installation values without persis
   expect(saved.progress.scope.installationInputInvalid).toBe(true);
 });
 
-it("restores a registration page as UI progress only and ignores invalid or different-method records", async () => {
-  const registration = {
-    methodId: "official",
-    url: "https://account.example.com/",
-    page: "returned" as const,
-  };
+it("drops a legacy registration page from stored progress without losing the selection", async () => {
   mock.invoke.mockResolvedValue({
     version: 1,
     completed: [],
     pending: { a: "scope" },
-    progress: { scope: { ...progress, registration } },
+    progress: {
+      scope: {
+        ...progress,
+        registration: {
+          methodId: "official",
+          url: "https://account.example.com/",
+          page: "returned",
+        },
+      },
+    },
   });
   const { setupStorage: store } = await import("./setup_storage");
   await store.load();
-  expect(store.snapshot().progress.scope.registration).toEqual(registration);
+  expect(store.snapshot().progress.scope).not.toHaveProperty("registration");
   expect(store.completed("a")).toBe(false);
-  expect(store.snapshot().progress.scope).not.toHaveProperty("authenticated");
-  for (const invalid of [
-    { ...registration, methodId: "other" },
-    { ...registration, url: "http://insecure.example.com" },
-    { ...registration, page: "logged-in" },
-  ]) {
-    vi.resetModules();
-    mock.invoke.mockResolvedValue({
-      version: 1,
-      completed: [],
-      pending: { a: "scope" },
-      progress: { scope: { ...progress, registration: invalid } },
-    });
-    const { setupStorage: restored } = await import("./setup_storage");
-    await restored.load();
-    expect(restored.snapshot().progress.scope.registration).toBeUndefined();
-    expect(restored.snapshot().progress.scope.selection).toEqual(
-      progress.selection,
-    );
-  }
+  expect(store.snapshot().progress.scope.selection).toEqual(progress.selection);
 });
 
 it("keeps one unfinished entry across use/manage, reloads choices without claiming login or request success", async () => {

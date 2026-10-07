@@ -28,7 +28,6 @@ export const ACCESS_STRINGS = {
   directoryNote:
     "目录信息来自官方发布。连接成功后，仍需通过实际对话确认模型和工具是否可用。",
   available: (count: number) => `${count} 个 Agent`,
-  directoryEntry: "目录条目",
   directoryFooter: "找不到想用的 Agent？可以添加自定义接入。",
   directoryCustomDescription: "由你指定的程序，通过同一套界面检查和使用。",
   directoryInstalledDescription:
@@ -36,17 +35,16 @@ export const ACCESS_STRINGS = {
   directoryDiscoveredDescription: "已发现本机程序，添加并检查连接后继续准备。",
   directoryInstallDescription: "可以在这里安装，连接后选择使用方式与模型。",
   directoryExternalDescription: "查看官方说明，或添加已安装的程序。",
-  connectedUnfinished: "程序已连接 · 接入未完成",
-  connected: "已连接",
-  standby: "待命",
-  disconnected: "已断开",
-  connectionFailed: "连接异常",
+  ready: "可以使用",
+  setupIncomplete: "未完成设置",
+  problem: "出现问题",
+  preparing: "准备中…",
   disconnectedHint: "已断开，点击重试后继续。",
-  registered: "已添加，尚未连接",
   needLogin: "需要登录",
-  notConnected: "未连接",
-  discovered: "已在本机发现",
-  notInstalled: "尚未安装",
+  authRequiredName: (name: string) =>
+    `${name} 还没有登录，选择下面一种方式登录。`,
+  installedLocally: "本机已安装",
+  notAdded: "未添加",
   unavailable: "当前尚不能在此安装",
   platformUnavailable: "官方未提供此设备的安装方式",
   prepare: "准备使用",
@@ -86,7 +84,7 @@ export const ACCESS_STRINGS = {
   setupTitle: (name: string) => `接入 ${name}`,
   programDescription:
     "使用本机已有程序，或从官方目录安装。已有账号和配置继续沿用。",
-  connect: "检查连接",
+  connect: "连接",
   connectedHint:
     "程序已经连接。可查看模型；需要登录或更换服务时，打开账号与服务。",
   connectionScope: "连接检查不会向模型发送消息。",

@@ -5,6 +5,7 @@ import {
   preparationConnection,
   type AgentCardModel,
   type AgentsState,
+  type AuthMethodsResponse,
 } from "../runtime/agents";
 import { isAutomaticConnectionAllowed } from "../runtime/connection_intent";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
@@ -28,22 +29,20 @@ import { AgentAuthSection } from "./AgentAuthSection";
 import { useSetupAuthFocus } from "./useSetupAuthFocus";
 import { useProgramInventory } from "./ProgramManager";
 import { agentSetupProgram } from "./AgentSetupProgram";
+import {
+  agentSetupCurrentSelection,
+  agentSetupModelOptions,
+  agentSetupModelReview,
+  agentSetupTestNote,
+} from "./AgentSetupModels";
 import { AgentLogo } from "./AgentLogo";
 import type { ServiceChoice } from "./ServicePicker";
 import { AgentServiceSection } from "./AgentServiceSection";
 import { ServiceModelPicker } from "./ServiceModelPicker";
 import { apiConfigurationState } from "../runtime/service_capability";
 import { AgentPrerequisites } from "./AgentPrerequisites";
-import { ModelPicker } from "./ModelPicker";
 import { AgentModelReadNotice } from "./AgentModelReadNotice";
-import { additionalModelRows } from "./ModelConfigRows";
-import { protectedConfigOptions } from "../runtime/protected_config";
-import {
-  configValueLabel,
-  modelConfigOption,
-  threads,
-  useThread,
-} from "../runtime/sessions";
+import { modelConfigOption, threads, useThread } from "../runtime/sessions";
 import type { ConversationRepairContext } from "../runtime/agent_repair";
 import { isReasoningOption } from "./ReasoningControl";
 import {
@@ -67,7 +66,8 @@ import { AgentSetupNavigation } from "./AgentSetupNavigation";
 import { SENDING_STRINGS } from "../runtime/sending_strings";
 import { WORKSPACE_STRINGS } from "../runtime/workspace_strings";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
-import type { AccountRegistrationProgress } from "../runtime/account_registration";
+import { agentStatus } from "../runtime/agent_status";
+import { setupStorage } from "../runtime/setup_storage";
 import type { InstallationInput } from "../runtime/installation_input";
 import { useInstallationReview } from "./AgentInstallOptions";
 import "../agent-setup-presentation.css";
@@ -86,7 +86,6 @@ export interface AgentSetupProgress {
   selection?: AgentSetupSelection;
   authMethodId?: string;
   preparationActionId?: string;
-  registration?: AccountRegistrationProgress;
   installationInput?: InstallationInput;
   /** A rejected persisted installation field must not become implicit omission. */
   installationInputInvalid?: boolean;
@@ -176,7 +175,6 @@ export function AgentSetup({
       accessStage: "method",
       authMethodId,
       preparationActionId,
-      registration: undefined,
       selection:
         value === "api" || !selection.service
           ? selection
@@ -207,6 +205,8 @@ export function AgentSetup({
     latestProgress.current = next;
     onProgress(next);
   };
+  const [authInfo, setAuthInfo] = useState<AuthMethodsResponse | null>(null);
+  useEffect(() => setAuthInfo(null), [card.id]);
   const [reportedAuthBusy, setAuthBusy] = useState(false);
   const [accountPrimary, setAccountPrimary] =
     useState<AgentAccessPrimary | null>(null);
@@ -664,6 +664,12 @@ export function AgentSetup({
       operationPending ||
       !cwd ||
       !agents.statuses ||
+      // Borrowed/cached declarations display without a connection; only a
+      // first-time Agent with no declaration at all is connected up front.
+      !authInfo ||
+      authInfo.executionReady ||
+      authInfo.methods.length > 0 ||
+      authInfo.canLogout ||
       !isAutomaticConnectionAllowed(card.id)
     )
       return;
@@ -683,6 +689,7 @@ export function AgentSetup({
     cwd,
     card.id,
     connect,
+    authInfo,
   ]);
   useEffect(
     () => () => {
@@ -754,6 +761,19 @@ export function AgentSetup({
       {S.importConversations}
     </button>
   );
+  const headerStatus = agentStatus({
+    card,
+    progressLabel:
+      progress?.label ?? (connecting ? STRINGS.agents.connecting : null),
+    accountInProgress: authBusy,
+    configuring: authJob?.operation?.kind === "preparation",
+    readRequired: explicitReadRequired,
+    authRequired: needsAuth,
+    prepared:
+      !!conversation ||
+      (setupStorage.completed(card.id) &&
+        !!(selection.service || Object.keys(selection.config).length)),
+  });
   return (
     <dialog
       ref={dialog}
@@ -780,17 +800,9 @@ export function AgentSetup({
         <span title={displayLocation ?? ""}>
           {intent === "manage" ? R.management : R.step(step)}
         </span>
-        <span className={`agent-setup-status ${connected ? "ready" : ""}`}>
+        <span className={`agent-setup-status tone-${headerStatus.tone}`}>
           <i aria-hidden="true" />
-          {step === 1 && !conversation
-            ? prepConnected
-              ? R.connected
-              : connecting
-                ? P.readingAccount
-                : S.notConnected
-            : connected
-              ? R.connected
-              : M.goProgram}
+          {headerStatus.label}
         </span>
       </div>
       <AgentSetupNavigation
@@ -809,13 +821,24 @@ export function AgentSetup({
         {(error || agents.errors[card.id]) && (
           <div role="alert" className="ac-error">
             {error ?? agents.errors[card.id]}
-            {!cwd && (
+            {!cwd ? (
               <button
                 className="btn btn-text"
                 onClick={() => retryDirectory((v) => v + 1)}
               >
                 {S.retry}
               </button>
+            ) : (
+              step === 1 &&
+              !prepConnected &&
+              !connecting && (
+                <button
+                  className="btn btn-text"
+                  onClick={() => void connect().catch(() => undefined)}
+                >
+                  {S.retry}
+                </button>
+              )
             )}
           </div>
         )}
@@ -904,7 +927,9 @@ export function AgentSetup({
           <>
             {needsAuth && (
               <p className="agent-setup-notice">
-                {choice === "api" ? S.apiAuthRequired : S.authRequired}
+                {choice === "api"
+                  ? S.apiAuthRequired
+                  : S.authRequiredName(card.name)}
               </p>
             )}
             {conversation && (
@@ -918,37 +943,11 @@ export function AgentSetup({
                 <p className="agent-setup-note">{STRINGS.repair.modelLocked}</p>
               </div>
             )}
-            {(!connected || (!!agents.statuses && !prepConnected)) &&
-              !authBusy && (
-                <div className="agent-setup-notice" role="status">
-                  {connecting && !needsProgramInstall ? (
-                    <p>{P.readingAccount}</p>
-                  ) : (
-                    <>
-                      <h3>{P.connectionRequired}</h3>
-                      <p>{P.connectionRequiredHint}</p>
-                      <div className="auth-actions">
-                        {!needsProgramInstall && (
-                          <button
-                            className="btn btn-ghost"
-                            onClick={() =>
-                              void connect().catch(() => undefined)
-                            }
-                          >
-                            {P.connectForMethods}
-                          </button>
-                        )}
-                        <button
-                          className="btn btn-text"
-                          onClick={() => setStep(0)}
-                        >
-                          {M.goProgram}
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+            {!conversation && !prepConnected && !authBusy && connecting && (
+              <div className="agent-setup-notice" role="status">
+                <p>{P.readingMethods}</p>
+              </div>
+            )}
             {capabilityError && (
               <button
                 className="btn btn-text"
@@ -957,11 +956,7 @@ export function AgentSetup({
                 {S.retry}
               </button>
             )}
-            {(authJob ||
-              authBusy ||
-              (conversation
-                ? connected
-                : prepConnected || !agents.statuses)) && (
+            {(conversation ? authJob || authBusy || connected : true) && (
               <AgentAuthSection
                 connection={
                   conversation
@@ -970,6 +965,7 @@ export function AgentSetup({
                         choice,
                         stage: accountStage,
                         apiAvailable,
+                        authRequired: needsAuth,
                         onChoice: setChoice,
                         onPrimaryChange: setAccountPrimary,
                         onUseExisting: () => {
@@ -980,7 +976,6 @@ export function AgentSetup({
                             accessStage: "account",
                             authMethodId: undefined,
                             preparationActionId: undefined,
-                            registration: undefined,
                             selection: selection.service
                               ? { service: null, config: {} }
                               : selection,
@@ -1007,7 +1002,6 @@ export function AgentSetup({
                           updateAccess({
                             preparationActionId: id ?? undefined,
                             authMethodId: undefined,
-                            registration: undefined,
                           }),
                         apiContent: (
                           <AgentServiceSection
@@ -1059,23 +1053,25 @@ export function AgentSetup({
                   )
                     onProgress({ ...latestProgress.current, step: 2 });
                 }}
-                focused={intent === "use"}
+                card={card}
+                busy={busy}
+                onConnect={async () => {
+                  const target =
+                    entryCwd ??
+                    cwd ??
+                    (await invoke<string>("app_default_working_directory"));
+                  if (!(await agents.connect(card, target)))
+                    throw new Error(
+                      agents.errors[card.id] ??
+                        STRINGS.agents.errors.connectFailed,
+                    );
+                }}
+                onInfoChange={setAuthInfo}
                 methodId={setupProgress.authMethodId ?? null}
-                registration={setupProgress.registration}
-                onRegistrationChange={(registration) =>
-                  onProgress({
-                    ...setupProgress,
-                    registration,
-                    authMethodId: registration
-                      ? registration.methodId || undefined
-                      : setupProgress.authMethodId,
-                  })
-                }
                 onMethodChange={(authMethodId) =>
                   updateAccess({
                     authMethodId,
                     preparationActionId: undefined,
-                    registration: undefined,
                   })
                 }
                 cwd={cwd}
@@ -1101,47 +1097,14 @@ export function AgentSetup({
             )}
           </>
         )}
-        {step === 2 && conversation && (
-          <section className="agent-setup-selection">
-            <h3>{M.model}</h3>
-            <p className="agent-setup-subtitle">{STRINGS.repair.modelLocked}</p>
-            <dl className="agent-setup-review">
-              <div>
-                <dt>{S.source}</dt>
-                <dd>
-                  {source
-                    ? (selectedService?.label ?? STRINGS.service.unavailable)
-                    : S.existing}
-                </dd>
-              </div>
-              {conversation.recordedModel && (
-                <div>
-                  <dt>{STRINGS.repair.recordedModel}</dt>
-                  <dd>{conversation.recordedModel}</dd>
-                </div>
-              )}
-              {protectedConfigOptions(
-                conversation.configOptions,
-                conversation.protectedIds,
-              ).map((option) => (
-                <div key={option.id}>
-                  <dt>{option.name}</dt>
-                  <dd>{configValueLabel(option)}</dd>
-                </div>
-              ))}
-              {!conversation.configOptions.length && (
-                <div>
-                  <dt>{S.model}</dt>
-                  <dd>{STRINGS.repair.unknownModel}</dd>
-                </div>
-              )}
-              <div>
-                <dt>{S.workFolder}</dt>
-                <dd>{displayLocation}</dd>
-              </div>
-            </dl>
-          </section>
-        )}
+        {step === 2 &&
+          conversation &&
+          agentSetupModelReview({
+            conversation,
+            source,
+            serviceLabel: selectedService?.label,
+            displayLocation,
+          })}
         {step === 2 && !conversation && (
           <section className="agent-setup-selection">
             <h3>{R.chooseModel}</h3>
@@ -1159,31 +1122,13 @@ export function AgentSetup({
                 disabled={busy || authBusy || operationPending || modelChanging}
               />
             )}
-            {intent === "use" && (
-              <details className="journey-details">
-                <summary>{R.currentSelection}</summary>
-                <dl className="agent-setup-review">
-                  <div>
-                    <dt>{S.title}</dt>
-                    <dd>{card.name}</dd>
-                  </div>
-                  <div>
-                    <dt>{S.source}</dt>
-                    <dd>
-                      {choice === "api"
-                        ? (selectedService?.label ?? S.chooseService)
-                        : S.existing}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{S.workFolder}</dt>
-                    <dd title={displayLocation ?? ""}>
-                      {displayLocation ?? S.defaultDirectoryError}
-                    </dd>
-                  </div>
-                </dl>
-              </details>
-            )}
+            {intent === "use" &&
+              agentSetupCurrentSelection({
+                name: card.name,
+                apiChoice: choice === "api",
+                serviceLabel: selectedService?.label,
+                displayLocation,
+              })}
             {!sourceValid && (
               <div role="alert" className="agent-setup-notice">
                 <p>{S.chooseCompatibleApi}</p>
@@ -1194,7 +1139,11 @@ export function AgentSetup({
             )}
             {needsAuth && (choice !== "api" || apiState !== "unsupported") && (
               <div role="alert" className="agent-setup-notice">
-                <p>{choice === "api" ? S.apiAuthRequired : S.authRequired}</p>
+                <p>
+                  {choice === "api"
+                    ? S.apiAuthRequired
+                    : S.authRequiredName(card.name)}
+                </p>
                 <button
                   className="btn btn-ghost"
                   onClick={() => {
@@ -1249,90 +1198,23 @@ export function AgentSetup({
                   (option) =>
                     (option.category === "model" && option.id !== model?.id) ||
                     isReasoningOption(option),
-                )) && (
-                <fieldset
-                  className="agent-setup-options"
-                  disabled={
-                    testThread.identity !== "draft" ||
-                    testing ||
-                    modelReadFailed ||
-                    explicitReadRequired
-                  }
-                >
-                  {choice !== "api" &&
-                    (model ? (
-                      <div className="so-row">
-                        <span className="so-name">{S.model}</span>
-                        <ModelPicker
-                          option={model}
-                          disabled={
-                            testing ||
-                            modelChanging ||
-                            testThread.identity !== "draft" ||
-                            testThread.configuring
-                          }
-                          onPick={(value) => void pickOption(model.id, value)}
-                        />
-                      </div>
-                    ) : (
-                      <p className="auth-note">{S.testModelUnspecified}</p>
-                    ))}
-                  {additionalModelRows({
-                    options: testThread.configOptions,
-                    primaryId: model?.id,
-                    disabled:
-                      testing ||
-                      modelChanging ||
-                      testThread.identity !== "draft" ||
-                      testThread.configuring,
-                    onPick: (id, value) => void pickOption(id, value),
-                  })}
-                  {testThread.configOptions
-                    .filter(isReasoningOption)
-                    .map((option) => (
-                      <label
-                        className="so-row agent-setup-reasoning"
-                        key={option.id}
-                      >
-                        <span className="so-name">{option.name}</span>
-                        {option.type === "select" && option.options.length ? (
-                          <select
-                            aria-label={option.name}
-                            title={option.description}
-                            value={String(option.currentValue ?? "")}
-                            disabled={
-                              testing ||
-                              modelChanging ||
-                              testThread.identity !== "draft" ||
-                              testThread.configuring
-                            }
-                            onChange={(event) =>
-                              void pickOption(option.id, event.target.value)
-                            }
-                          >
-                            {!option.options.some(
-                              (item) => item.value === option.currentValue,
-                            ) && (
-                              <option
-                                value={String(option.currentValue ?? "")}
-                                disabled
-                              >
-                                {configValueLabel(option)}
-                              </option>
-                            )}
-                            {option.options.map((item) => (
-                              <option key={item.value} value={item.value}>
-                                {item.name}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <span>{configValueLabel(option)}</span>
-                        )}
-                      </label>
-                    ))}
-                </fieldset>
-              )}
+                )) &&
+              agentSetupModelOptions({
+                apiChoice: choice === "api",
+                model,
+                options: testThread.configOptions,
+                fieldsetDisabled:
+                  testThread.identity !== "draft" ||
+                  testing ||
+                  modelReadFailed ||
+                  explicitReadRequired,
+                fieldsDisabled:
+                  testing ||
+                  modelChanging ||
+                  testThread.identity !== "draft" ||
+                  testThread.configuring,
+                onPick: (id, value) => void pickOption(id, value),
+              })}
             <div className="agent-model-reading">
               <p role="status">
                 {!connected
@@ -1396,112 +1278,64 @@ export function AgentSetup({
                 {testThread.configError}
               </p>
             )}
-            <details
-              className="agent-setup-test-note"
-              open={
+            {agentSetupTestNote({
+              open:
                 sameSource &&
                 !readingModels &&
                 !modelReadFailed &&
-                (testing || !!test.error || passed)
-                  ? true
-                  : undefined
-              }
-            >
-              <summary>{S.optionalTest}</summary>
-              <h4 role="status">
-                {sameSource && !readingModels && !modelReadFailed
+                (testing || !!test.error || passed),
+              label:
+                sameSource && !readingModels && !modelReadFailed
                   ? testLabel
-                  : S.testNotRun}
-              </h4>
-              <p>{S.conversationTestHint}</p>
-              {sameSource && test.prompt && (
-                <details className="agent-test-message" open>
-                  <summary>{S.testMessage}</summary>
-                  <p>{test.prompt}</p>
-                </details>
-              )}
-              {sameSource && !modelReadFailed && test.error && (
-                <p role="alert" className="ac-error">
-                  {test.error}
-                </p>
-              )}
-              {sameSource && test.reply && (
-                <details className="agent-test-message" open>
-                  <summary>{S.testActualReply}</summary>
-                  <pre>{test.reply}</pre>
-                </details>
-              )}
-              <div className="agent-test-actions">
-                {sameSource &&
+                  : S.testNotRun,
+              prompt: sameSource ? test.prompt : null,
+              error: sameSource && !modelReadFailed ? test.error : null,
+              reply: sameSource ? test.reply : null,
+              passed,
+              action:
+                sameSource &&
                 testThread?.identity === "draft" &&
-                test.phase === "untested" ? (
-                  <button
-                    className="btn btn-primary"
-                    disabled={
-                      busy ||
-                      selectionMismatch ||
-                      modelChanging ||
-                      authBusy ||
-                      !connected ||
-                      !prerequisitesReady ||
-                      !modelValid ||
-                      !work.enabled(card.id) ||
-                      testThread.configuring ||
-                      !!testThread.configError
+                test.phase === "untested"
+                  ? "start"
+                  : operationPending
+                    ? null
+                    : "reprepare",
+              startDisabled:
+                busy ||
+                selectionMismatch ||
+                modelChanging ||
+                authBusy ||
+                !connected ||
+                !prerequisitesReady ||
+                !modelValid ||
+                !work.enabled(card.id) ||
+                !!testThread?.configuring ||
+                !!testThread?.configError,
+              reprepareDisabled:
+                busy ||
+                authBusy ||
+                !connected ||
+                !prerequisitesReady ||
+                !modelValid ||
+                !work.enabled(card.id) ||
+                !controller.canPrepare(),
+              showStop: sameSource && testing && test.phase !== "stopping",
+              onStartTest: () => void controller.start(),
+              onPrepare: prepareAgain,
+              onStop: controller.stop,
+              onOpenTest:
+                sameSource &&
+                test.threadKey &&
+                onOpenConversation &&
+                testThread?.identity === "established"
+                  ? () => {
+                      dialog.current?.close();
+                      onOpenConversation(test.threadKey!);
                     }
-                    onClick={() => void controller.start()}
-                  >
-                    {S.testInConversation}
-                  </button>
-                ) : (
-                  !operationPending && (
-                    <button
-                      className="btn btn-ghost"
-                      disabled={
-                        busy ||
-                        authBusy ||
-                        !connected ||
-                        !prerequisitesReady ||
-                        !modelValid ||
-                        !work.enabled(card.id) ||
-                        !controller.canPrepare()
-                      }
-                      onClick={prepareAgain}
-                    >
-                      {passed ? S.testChangeOptions : S.testReprepare}
-                    </button>
-                  )
-                )}
-                {sameSource && testing && test.phase !== "stopping" && (
-                  <button className="btn btn-ghost" onClick={controller.stop}>
-                    {S.testStop}
-                  </button>
-                )}
-                {sameSource &&
-                  test.threadKey &&
-                  onOpenConversation &&
-                  testThread?.identity === "established" && (
-                    <button
-                      className="btn btn-ghost"
-                      onClick={() => {
-                        dialog.current?.close();
-                        onOpenConversation(test.threadKey!);
-                      }}
-                    >
-                      {S.testOpen}
-                    </button>
-                  )}
-              </div>
-              {sameSource && testing && (
-                <p className="agent-setup-note">{S.testCloseHint}</p>
-              )}
-              {sameSource && test.phase === "opening" && (
-                <p className="agent-setup-note">{S.testModelLoading}</p>
-              )}
-              <p className="agent-setup-note">
-                {passed ? S.readyScope : S.untestedReturnHint}
-              </p>
-            </details>
+                  : undefined,
+              closeHint: sameSource && testing,
+              openingHint: sameSource && test.phase === "opening",
+            })}
             {importControl}
           </section>
         )}

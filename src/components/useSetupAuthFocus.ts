@@ -38,7 +38,8 @@ export function useSetupAuthFocus({
     )
       return;
     focused.current = target;
-    const accessStage = progress.authMethodId ? "account" : "method";
+    // The method list is the only login stage; execution happens in place.
+    const accessStage = "method" as const;
     if (
       progress.step !== 1 ||
       progress.choice !== "login" ||

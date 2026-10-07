@@ -208,6 +208,7 @@ beforeEach(() => {
       },
     ],
     canLogout: false,
+    executionReady: true,
   });
   vi.stubGlobal("document", { activeElement: null });
   vi.stubGlobal("HTMLElement", class {});
@@ -287,15 +288,10 @@ it.each(
       view.auth.find((node) => node.type === AgentConnectionPicker)?.props
         .options,
     ).toHaveLength(2);
-    expect(button(view.setup, R.terminalStart)).toBeUndefined();
+    const launch = button(view.setup, R.terminalStart)!;
+    expect(launch.props.disabled).toBe(false);
     expect(h.begin).not.toHaveBeenCalled();
-    await click(button(view.setup, R.continue));
-    view = await settled();
-    expect(view.auth.some((node) => node.type === AgentConnectionPicker)).toBe(
-      false,
-    );
-    expect(h.begin).not.toHaveBeenCalled();
-    await click(button(view.setup, R.terminalStart));
+    await click(launch);
     expect(h.begin).toHaveBeenCalledExactlyOnceWith(
       expect.objectContaining({
         method: expect.objectContaining({ id: "terminal", kind: "terminal" }),

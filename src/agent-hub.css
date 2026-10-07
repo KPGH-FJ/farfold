@@ -301,6 +301,27 @@
   border-radius: 50%;
   background: var(--ink-3);
 }
+.agent-hub-state.tone-ready,
+.agent-hub-badge.tone-ready {
+  color: var(--green);
+}
+.agent-hub-state.tone-attention,
+.agent-hub-badge.tone-attention {
+  color: var(--amber);
+}
+.agent-hub-state.tone-error,
+.agent-hub-badge.tone-error {
+  color: var(--red);
+}
+.agent-hub-state.tone-progress,
+.agent-hub-badge.tone-progress {
+  color: var(--accent);
+}
+.agent-hub-state.tone-attention .agent-hub-status-dot,
+.agent-hub-state.tone-error .agent-hub-status-dot,
+.agent-hub-state.tone-progress .agent-hub-status-dot {
+  background: currentColor;
+}
 .agent-hub-card-actions {
   gap: 6px;
   margin-top: 8px;

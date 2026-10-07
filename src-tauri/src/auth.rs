@@ -245,6 +245,10 @@ pub struct AuthMethodInfo {
 pub struct AuthMethodsResponse {
     pub methods: Vec<AuthMethodInfo>,
     pub can_logout: bool,
+    /// True only while the exact preparation connection is live and ready.
+    /// Borrowed or cached declarations are display-only; the caller connects
+    /// before running a listed method.
+    pub execution_ready: bool,
 }
 
 fn auth_methods_for(row: &AgentRow) -> AuthMethodsResponse {
@@ -286,6 +290,7 @@ fn auth_methods_with_proof(row: &AgentRow, proof: &ManagedTerminalProof) -> Auth
     AuthMethodsResponse {
         methods,
         can_logout,
+        execution_ready: false,
     }
 }
 
@@ -459,6 +464,20 @@ fn live_auth_row(
     Ok(current)
 }
 
+/// Read-only declarations from a ready conversation connection in the same
+/// Agent/project context. Never a source for execution.
+fn borrowed_auth_row(
+    manager: &AcpManager,
+    row: &AgentRow,
+    cwd: &std::path::Path,
+) -> Option<(AgentRow, bool)> {
+    let handshake = manager.borrowable_handshake(&row.id, cwd)?;
+    let handshake = handshake.get()?;
+    let mut borrowed = row.clone();
+    borrowed.handshake = Some(handshake.execution_json());
+    Some((borrowed, handshake.can_logout()))
+}
+
 fn methods_for_target(
     manager: &AcpManager,
     row: &AgentRow,
@@ -466,33 +485,39 @@ fn methods_for_target(
     source: Option<&str>,
     proof: &ManagedTerminalProof,
 ) -> AuthMethodsResponse {
-    let current = if attempts::require_existing_source(source).is_ok() {
+    let existing_source = attempts::require_existing_source(source);
+    let live = if existing_source.is_ok() {
         cwd.and_then(|cwd| live_auth_row(manager, row, cwd).ok())
     } else {
         None
     };
-    let mut info = match current {
-        Some(current) => {
-            let mut info = auth_methods_with_proof(&current, proof);
-            info.can_logout = cwd.is_some_and(|cwd| manager.can_logout(&row.id, cwd));
-            info
-        }
-        None => {
-            let mut cached = row.clone();
-            cached.handshake = Some(crate::acp_client::handshake::cached_json(
-                row.handshake.as_ref(),
-            ));
-            let mut info = auth_methods_for(&cached);
+    let borrowed = if live.is_none() && existing_source.is_ok() {
+        cwd.and_then(|cwd| borrowed_auth_row(manager, row, cwd))
+    } else {
+        None
+    };
+    let mut info = if let Some(current) = live {
+        let mut info = auth_methods_with_proof(&current, proof);
+        info.can_logout = cwd.is_some_and(|cwd| manager.can_logout(&row.id, cwd));
+        info.execution_ready = true;
+        info
+    } else if let Some((borrowed, can_logout)) = borrowed {
+        let mut info = auth_methods_with_proof(&borrowed, proof);
+        info.can_logout = can_logout;
+        info
+    } else {
+        let mut cached = row.clone();
+        cached.handshake = Some(crate::acp_client::handshake::cached_json(
+            row.handshake.as_ref(),
+        ));
+        let mut info = auth_methods_for(&cached);
+        if let Err(reason) = &existing_source {
             for method in &mut info.methods {
-                method.unavailable_reason = Some(
-                    attempts::require_existing_source(source)
-                        .err()
-                        .unwrap_or_else(|| RECHECK_METHODS.into()),
-                );
+                method.unavailable_reason = Some(reason.clone());
             }
-            info.can_logout = false;
-            info
         }
+        info.can_logout = false;
+        info
     };
     // The current UI does not consume command previews here. Do not forward
     // live terminal arguments (which may carry dynamic values) to UI snapshots.

@@ -38,8 +38,9 @@ import {
 import {
   authMethodReadOnly,
   authMethodUnavailable,
-  authMethodLabel,
 } from "../runtime/auth_method";
+import { allowAutomaticConnection } from "../runtime/connection_intent";
+import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 import { MethodApiKeySection } from "./MethodApiKeySection";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AgentAccountHeading } from "./AgentAccountHeading";
@@ -50,6 +51,17 @@ import {
   useAccessPrimary,
   type AgentAccessPrimary,
 } from "../runtime/access_primary";
+import {
+  authConnectionOptions,
+  groupedAuthMethods,
+  methodTitle,
+} from "./agent_auth_options";
+import {
+  AgentAccountExit,
+  AgentAuthManage,
+  AgentAuthWorkBlockers,
+  AgentExistingVerify,
+} from "./AgentAuthManage";
 import "../r5-agent-access.css";
 
 import type {
@@ -91,8 +103,10 @@ export function AgentAuthSection({
   canOpenModels = false,
   onOpenConversation,
   active = true,
-  registration,
-  onRegistrationChange,
+  card,
+  onConnect,
+  onInfoChange,
+  busy = false,
   connection,
 }: AgentAuthSectionProps) {
   const [loadedInfo, setInfo] = useState<AuthMethodsResponse | null>(null);
@@ -101,6 +115,9 @@ export function AgentAuthSection({
   const targetKey = JSON.stringify([agentId, directory, source ?? null]);
   const target = useRef(targetKey);
   const currentView = useRef("");
+  // Committing a method choice advances the view key; the destination key
+  // stays acceptable so a still-running execution is not treated as stale.
+  const acceptedView = useRef<string | null>(null);
   target.current = targetKey;
   const modelNavigation = useRef(canOpenModels);
   modelNavigation.current = canOpenModels;
@@ -139,6 +156,11 @@ export function AgentAuthSection({
     phase: "checking" | "checked";
   } | null>(null);
   const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
+  const [preparing, setPreparing] = useState(false);
+  const [registrationNotice, setRegistrationNotice] = useState(false);
+  const preparationTicket = useRef(0);
+  const infoChange = useRef(onInfoChange);
+  infoChange.current = onInfoChange;
   const existingAccount = useConnectionAccount(
     agentId,
     directory ?? null,
@@ -179,6 +201,8 @@ export function AgentAuthSection({
     setLocalActionId(null);
     setChangingConnection(false);
     setLocalStage("method");
+    setRegistrationNotice(false);
+    setPreparing(false);
   }, [agentId, directory, source]);
   useEffect(() => {
     let current = true;
@@ -220,6 +244,7 @@ export function AgentAuthSection({
       methodsRequest.current++;
       methodsOwner.current = "";
       setInfo(null);
+      infoChange.current?.(null);
       setAccountExit(null);
       setReload((value) => value + 1);
     });
@@ -232,6 +257,7 @@ export function AgentAuthSection({
     const request = ++methodsRequest.current;
     methodsOwner.current = "";
     setInfo(null);
+    infoChange.current?.(null);
     setMethodsError(null);
     setHidden(false);
     void authMethods(agentId, {
@@ -246,6 +272,7 @@ export function AgentAuthSection({
         ) {
           methodsOwner.current = targetKey;
           setInfo(value);
+          infoChange.current?.(value);
         }
       })
       .catch((reason) => {
@@ -281,15 +308,17 @@ export function AgentAuthSection({
     logout = false,
     switchAccount = false,
     credential?: { id: string; revision: string },
+    /** The caller re-validated this method id against a fresh declaration. */
+    verified = false,
   ) => {
     if (
       !directory ||
       target.current !== targetKey ||
-      currentView.current !== viewKey ||
-      (!manual && !logout && stage !== "account") ||
-      (!manual && methodsOwner.current !== targetKey) ||
-      (!logout && !methodIsCurrent(method, manual)) ||
+      (currentView.current !== viewKey &&
+        currentView.current !== acceptedView.current) ||
+      (!logout && !verified && !methodIsCurrent(method, manual)) ||
       occupied ||
+      busy ||
       authActive(activity.getSnapshot()) ||
       source ||
       hasCurrentWork() ||
@@ -341,6 +370,69 @@ export function AgentAuthSection({
       return;
     setAccountExit(intent);
   };
+  /** Borrowed or cached declarations display methods but cannot execute; the
+   *  preparation connection is established silently on demand, then the fresh
+   *  declaration replaces the displayed one. */
+  const ensureExecutable = async (): Promise<AuthMethodsResponse | null> => {
+    if (info?.executionReady || !onConnect) return info;
+    const ticket = ++preparationTicket.current;
+    setPreparing(true);
+    setError(null);
+    try {
+      allowAutomaticConnection(agentId);
+      await onConnect();
+      const fresh = await authMethods(agentId, {
+        cwd: directory,
+        source: connection ? undefined : source,
+      });
+      if (target.current !== targetKey || ticket !== preparationTicket.current)
+        return null;
+      methodsOwner.current = targetKey;
+      setInfo(fresh);
+      infoChange.current?.(fresh);
+      return fresh;
+    } catch (reason) {
+      if (target.current === targetKey) setError(uiError(reason, A.failed));
+      return null;
+    } finally {
+      if (ticket === preparationTicket.current) setPreparing(false);
+    }
+  };
+  /** Run `invoke` after connecting when needed; the method id is re-validated
+   *  against the fresh declaration so a changed list never executes stale. */
+  const runWithConnection = (
+    method: AuthMethodInfo,
+    invokeMethod: (method: AuthMethodInfo) => void,
+  ) => {
+    if (!info || info.executionReady || !onConnect) {
+      invokeMethod(method);
+      return;
+    }
+    void (async () => {
+      const fresh = await ensureExecutable();
+      if (!fresh) return;
+      if (!fresh.executionReady) {
+        setError(R.connectionIncomplete);
+        return;
+      }
+      const next =
+        method.id === "manual" || method.id === "logout"
+          ? method
+          : fresh.methods.find((entry) => entry.id === method.id);
+      if (!next) {
+        setError(R.methodsChanged);
+        return;
+      }
+      // Abort when the selection moved on while the connection was prepared.
+      if (
+        method.id !== "manual" &&
+        method.id !== "logout" &&
+        methodView.current.selected !== methodSignature(next)
+      )
+        return;
+      invokeMethod(next);
+    })();
+  };
   const confirmAccountExit = () => {
     if (
       !accountExit ||
@@ -351,30 +443,18 @@ export function AgentAuthSection({
       hasCurrentWork()
     )
       return;
-    start(
-      { id: "logout", kind: "agent" },
-      false,
-      true,
-      accountExit === "switch",
+    runWithConnection({ id: "logout", kind: "agent" } as AuthMethodInfo, () =>
+      start(
+        { id: "logout", kind: "agent" },
+        false,
+        true,
+        accountExit === "switch",
+        undefined,
+        true,
+      ),
     );
   };
-  const continueLogin = (method: AuthMethodInfo) => {
-    if (
-      target.current !== targetKey ||
-      methodsOwner.current !== targetKey ||
-      !methodIsCurrent(method) ||
-      authMethodUnavailable(method) ||
-      (method.kind === "api-key" &&
-        (method.apiKeyProvider || apiState === "unsupported")) ||
-      !directory ||
-      occupied ||
-      source ||
-      hasCurrentWork()
-    )
-      return;
-    if (method.kind === "api-key") onConfigureKey();
-    else start(method);
-  };
+
   const startPreparation = (action: PreparationAction, targetCwd: string) => {
     if (
       target.current !== targetKey ||
@@ -432,6 +512,7 @@ export function AgentAuthSection({
       setConnectionCheck({ targetKey, phase: "checking" });
       setError(null);
       try {
+        if (info && !info.executionReady && !source) await ensureExecutable();
         invalidateAuthentication(agentId);
         if (source) await onReconnect();
         else if (directory)
@@ -483,7 +564,11 @@ export function AgentAuthSection({
     ((connection?.choice === "login" && !chosenMethod) ||
       (!!actionId && !selectedAction));
   const stage =
-    !authActive(job) && requestedStage === "account" && missingChoice
+    !authActive(job) &&
+    !recordedChoice &&
+    requestedStage === "account" &&
+    (missingChoice ||
+      (connection?.choice === "login" && !chosenMethod?.apiKeyProvider))
       ? "method"
       : requestedStage;
   const selectedMethod = authActive(job)
@@ -672,74 +757,14 @@ export function AgentAuthSection({
                     : protocolLogin
                       ? S.loginWaiting
                       : S.waiting;
-  const terminalChoices =
-    methods.filter((method) => method.kind === "terminal").length +
-    actions.length;
-  const methodTitle = (method: AuthMethodInfo) =>
-    method.kind === "terminal"
-      ? terminalChoices > 1
-        ? `${R.terminal} · ${authMethodLabel(method, methods)}`
-        : R.terminal
-      : method.apiKeyProvider === "openai"
-        ? R.openaiKey
-        : authMethodLabel(method, methods);
-  const existingOptionDescription = existingAccount
-    ? [
-        existingAccount.email ?? existingAccount.displayName,
-        existingAccount.plan,
-      ]
-        .filter(Boolean)
-        .join(" · ") || R.existingHint
-    : R.existingHint;
-  const connectionOptions = [
-    ...(connection
-      ? [
-          {
-            id: JSON.stringify(["existing"]),
-            title: R.existing,
-            description: existingOptionDescription,
-            disabled: false,
-          },
-        ]
-      : []),
-    ...methods
-      .filter(
-        (method) =>
-          !authMethodReadOnly(method) && !authMethodUnavailable(method),
-      )
-      .map((method) => ({
-        id: JSON.stringify(["method", method.id]),
-        title: methodTitle(method),
-        description:
-          method.kind === "terminal"
-            ? R.terminalHint
-            : method.apiKeyProvider === "openai"
-              ? R.openaiKeyHint
-              : method.kind === "api-key"
-                ? R.keyHint
-                : (method.description ?? R.accountHint),
-        disabled: false,
-      })),
-    ...actions.map((action) => ({
-      id: JSON.stringify(["action", action.id]),
-      title:
-        terminalChoices > 1
-          ? `${R.terminal} · ${R.serviceTerminal}`
-          : R.terminal,
-      description: R.terminalHint,
-      disabled: false,
-    })),
-    ...(connection && apiState !== "unsupported"
-      ? [
-          {
-            id: JSON.stringify(["api"]),
-            title: R.api,
-            description: R.apiHint,
-            disabled: !connection.apiAvailable,
-          },
-        ]
-      : []),
-  ];
+  const groupedMethods = groupedAuthMethods(methods);
+  const connectionOptions = authConnectionOptions({
+    connection,
+    existingAccount,
+    methods,
+    actions,
+    apiState,
+  });
   const existingSelected =
     !!connection &&
     connection.choice === "existing" &&
@@ -764,6 +789,8 @@ export function AgentAuthSection({
       target.current !== targetKey ||
       methodsRequest.current !== declarationRequest ||
       occupied ||
+      busy ||
+      preparing ||
       hasCurrentWork() ||
       methodsOwner.current !== targetKey
     )
@@ -775,15 +802,12 @@ export function AgentAuthSection({
     const [kind, id] = JSON.parse(encoded) as [string, string?];
     setChangingConnection(true);
     setAccountExit(null);
+    setRegistrationNotice(false);
     setLocalStage("method");
     if (kind === "existing") {
       setLocalActionId(null);
       setSelectedMethodId(null);
-      if (connection?.onUseExisting) connection.onUseExisting();
-      else {
-        connection?.onChoice("existing");
-        setStage("account");
-      }
+      chooseExisting();
     } else if (kind === "api") connection?.onChoice("api");
     else if (kind === "action" && id) {
       setLocalActionId(id);
@@ -794,6 +818,9 @@ export function AgentAuthSection({
       setSelectedMethodId(id);
       if (connection) connection.onChoice("login", id);
       else onMethodChange?.(id);
+      // The API-key form is the account stage; other kinds run in place.
+      const picked = methods.find((method) => method.id === id);
+      if (picked?.apiKeyProvider) setStage("account");
     }
   };
   const terminalNeedsReview =
@@ -836,6 +863,7 @@ export function AgentAuthSection({
       target.current !== targetKey ||
       currentView.current !== viewKey ||
       occupied ||
+      busy ||
       hasCurrentWork()
     )
       return;
@@ -860,22 +888,48 @@ export function AgentAuthSection({
     !apiSelected &&
     !selectedAction &&
     stage === "account";
-  const continueMethod = () => {
-    if (!selectedMethod || occupied || workBlocked || !directory || source)
+  /** The method-stage primary executes directly: agent login runs the declared
+   *  method, terminal starts the inline terminal, and API keys open the form. */
+  const executeSelected = () => {
+    if (
+      !selectedMethod ||
+      occupied ||
+      busy ||
+      workBlocked ||
+      !directory ||
+      source
+    )
       return;
-    if (stage === "method") {
-      if (
-        target.current !== targetKey ||
-        methodsOwner.current !== targetKey ||
-        !methodIsCurrent(selectedMethod) ||
-        hasCurrentWork()
-      )
-        return;
-      setSelectedMethodId(selectedMethod.id);
-      if (connection) connection.onChoice("login", selectedMethod.id);
-      else onMethodChange?.(selectedMethod.id);
+    if (
+      target.current !== targetKey ||
+      methodsOwner.current !== targetKey ||
+      !methodIsCurrent(selectedMethod) ||
+      hasCurrentWork()
+    )
+      return;
+    setSelectedMethodId(selectedMethod.id);
+    if (connection) connection.onChoice("login", selectedMethod.id);
+    else onMethodChange?.(selectedMethod.id);
+    // Committing the selection advances the view key; record it so the
+    // (possibly asynchronous) execution still belongs to the visible view.
+    acceptedView.current = JSON.stringify([
+      targetKey,
+      stage,
+      connection?.choice,
+      selectedMethod.id,
+      actionId,
+    ]);
+    if (selectedMethod.apiKeyProvider) {
       setStage("account");
-    } else continueLogin(selectedMethod);
+      return;
+    }
+    if (selectedMethod.kind === "api-key") {
+      onConfigureKey();
+      return;
+    }
+    runWithConnection(selectedMethod, (fresh) =>
+      start(fresh, false, false, false, undefined, true),
+    );
   };
   const methodPrimary =
     selectedMethod &&
@@ -890,23 +944,38 @@ export function AgentAuthSection({
             stage,
           ]),
           label:
-            stage === "method"
-              ? R.continue
-              : selectedMethod.kind === "terminal"
-                ? R.terminalStart
+            selectedMethod.kind === "terminal"
+              ? R.terminalStart
+              : selectedMethod.kind === "api-key"
+                ? R.keyContinue(methodTitle(selectedMethod))
                 : loginAgain(selectedMethod)
                   ? S.loginAgain
                   : R.accountContinue(methodTitle(selectedMethod)),
-          disabled: occupied || workBlocked || !directory || !!source,
-          run: continueMethod,
+          disabled:
+            occupied ||
+            busy ||
+            workBlocked ||
+            !directory ||
+            !!source ||
+            preparing,
+          run: executeSelected,
         }
       : null;
   const chooseExisting = () => {
-    if (connection?.onUseExisting) connection.onUseExisting();
-    else {
-      connection?.onChoice("existing");
-      setStage("account");
-    }
+    const run = () => {
+      if (connection?.onUseExisting) connection.onUseExisting();
+      else {
+        connection?.onChoice("existing");
+        setStage("account");
+      }
+    };
+    if (info && !info.executionReady && onConnect)
+      void (async () => {
+        const fresh = await ensureExecutable();
+        if (!fresh?.executionReady) return;
+        run();
+      })();
+    else run();
   };
   const primary =
     authActive(job) || completedSummary || showApiSummary || existingSummary
@@ -915,14 +984,25 @@ export function AgentAuthSection({
         ? {
             id: JSON.stringify([targetKey, "existing"]),
             label: R.existingContinue,
-            disabled: occupied || workBlocked || !directory || !!source,
+            disabled:
+              occupied ||
+              busy ||
+              workBlocked ||
+              !directory ||
+              !!source ||
+              preparing,
             run: chooseExisting,
           }
         : apiSelected && stage === "method"
           ? {
               id: JSON.stringify([targetKey, "api"]),
               label: R.continue,
-              disabled: occupied || workBlocked || !connection?.apiAvailable,
+              disabled:
+                occupied ||
+                busy ||
+                workBlocked ||
+                !connection?.apiAvailable ||
+                preparing,
               run: () => setStage("api"),
             }
           : selectedAction
@@ -930,7 +1010,13 @@ export function AgentAuthSection({
               ? {
                   id: JSON.stringify([targetKey, "action", selectedAction.id]),
                   label: R.continue,
-                  disabled: occupied || workBlocked || !directory || !!source,
+                  disabled:
+                    occupied ||
+                    busy ||
+                    workBlocked ||
+                    !directory ||
+                    !!source ||
+                    preparing,
                   run: () => setStage("account"),
                 }
               : preparationPrimary
@@ -938,55 +1024,52 @@ export function AgentAuthSection({
               ? keyPrimary
               : methodPrimary;
   useAccessPrimary(primary, connection?.onPrimaryChange);
+  const registrationReturn = () => {
+    setRegistrationNotice(true);
+    if (connection) chooseExisting();
+    else void recheck();
+  };
+  const registrationRow = (groupMethods: AuthMethodInfo[]) => (
+    <AgentAccountLinks
+      active={active}
+      agentId={agentId}
+      methodIds={groupMethods.map((method) => method.id)}
+      agentName={card?.name ?? agentId}
+      websiteUrl={
+        card?.presentation?.sourceUrl ?? card?.sourceUrl ?? card?.installGuide
+      }
+      onReturn={registrationReturn}
+      disabled={occupied || busy || workBlocked || !directory || !!source}
+    />
+  );
+  const groupFooters = {
+    [R.groupAgent]: registrationRow(
+      groupedMethods.filter((method) => method.kind === "agent"),
+    ),
+    [R.groupTerminal]: registrationRow(
+      groupedMethods.filter((method) => method.kind === "terminal"),
+    ),
+  };
   const accountOptions =
     selectedMethod && !apiSelected
       ? (() => {
           const method = selectedMethod;
-          const readOnly = authMethodReadOnly(method);
-          const unavailable = authMethodUnavailable(method);
           return (
-            <details className="journey-details agent-account-more">
-              <summary>{P.accountLinks}</summary>
-              <AgentAccountLinks
-                active={active}
+            <details className="agent-account-more">
+              <summary>{P.moreLogin}</summary>
+              <ManualAuthSection
                 agentId={agentId}
                 methodId={method.id}
-                registration={registration}
-                onRegistrationChange={onRegistrationChange}
-                onContinueLogin={
-                  stage !== "account" || readOnly || method.apiKeyProvider
-                    ? undefined
-                    : () => continueLogin(method)
+                declaredEnv={method.envName}
+                disabled={
+                  occupied || busy || workBlocked || !directory || !!source
                 }
-                loginDisabled={
-                  occupied ||
-                  workBlocked ||
-                  !directory ||
-                  !!source ||
-                  !!unavailable
-                }
-                loginHint={
-                  source
-                    ? S.api
-                    : workBlocked
-                      ? S.workHint
-                      : (unavailable ?? undefined)
-                }
+                onAcquire={acquireManual}
+                onInvalidate={() => {
+                  invalidateAuthentication(agentId);
+                }}
+                onRun={() => start(method, true)}
               />
-              <details className="agent-account-more">
-                <summary>{P.moreLogin}</summary>
-                <ManualAuthSection
-                  agentId={agentId}
-                  methodId={method.id}
-                  declaredEnv={method.envName}
-                  disabled={occupied || workBlocked || !directory || !!source}
-                  onAcquire={acquireManual}
-                  onInvalidate={() => {
-                    invalidateAuthentication(agentId);
-                  }}
-                  onRun={() => start(method, true)}
-                />
-              </details>
             </details>
           );
         })()
@@ -1012,7 +1095,7 @@ export function AgentAuthSection({
                       : R.methods
         }
         onBack={stage === "method" ? undefined : changeConnection}
-        disabled={occupied || workBlocked}
+        disabled={occupied || busy || workBlocked}
       />
       {visibleError && (
         <div className="ac-error auth-error" role="alert">
@@ -1037,30 +1120,11 @@ export function AgentAuthSection({
         </div>
       )}
       {workBlocked && (
-        <section aria-label={S.workHeading}>
-          <h4>{S.workHeading}</h4>
-          <p className="auth-note">{S.workHint}</p>
-          <div role="list">
-            {workBlockers.map((work) => (
-              <div className="auth-row" role="listitem" key={work.key}>
-                <div>
-                  <div className="auth-name">{work.title}</div>
-                  <div className="auth-desc">{work.reason}</div>
-                  {!work.canOpen && <p className="auth-note">{S.workDraft}</p>}
-                </div>
-                {work.canOpen && onOpenConversation && (
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    onClick={() => onOpenConversation(work.key)}
-                  >
-                    {S.workOpen}
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+        <AgentAuthWorkBlockers
+          blockers={workBlockers}
+          agentName={card?.name}
+          onOpenConversation={onOpenConversation}
+        />
       )}
       {!selectedJob &&
         !apiSelected &&
@@ -1086,24 +1150,7 @@ export function AgentAuthSection({
         </div>
       )}
       {existingSummary && connection?.existingVerify && (
-        <div className="auth-progress">
-          <div className="auth-note" role="status">
-            {connection.existingVerify.status === "checking"
-              ? R.existingChecking
-              : connection.existingVerify.status === "ready"
-                ? R.existingReady
-                : connection.existingVerify.error}
-          </div>
-          {connection.existingVerify.status === "failed" &&
-            connection.existingVerify.onRetry && (
-              <button
-                className="btn btn-ghost"
-                onClick={connection.existingVerify.onRetry}
-              >
-                {STRINGS.access.retry}
-              </button>
-            )}
-        </div>
+        <AgentExistingVerify verify={connection.existingVerify} />
       )}
       {completedSummary && !job.checked && (
         <p className="auth-note" role="alert">
@@ -1218,7 +1265,7 @@ export function AgentAuthSection({
           cwd={directory}
           source={source}
           program={program}
-          disabled={occupied || workBlocked}
+          disabled={occupied || busy || workBlocked}
           onRun={startPreparation}
           data={{
             actions,
@@ -1248,12 +1295,25 @@ export function AgentAuthSection({
         !completedSummary &&
         !apiSelected &&
         !connectionOptions.length && <div className="auth-note">{A.none}</div>}
+      {preparing && (
+        <p className="auth-note" role="status">
+          {R.preparingLogin}
+        </p>
+      )}
+      {registrationNotice && showPicker && (
+        <p className="auth-note" role="status">
+          {G.returnedPickMethod}
+        </p>
+      )}
       {showPicker && info && !!connectionOptions.length && (
         <AgentConnectionPicker
           name={`connection-${agentId}`}
           options={connectionOptions}
           value={optionValue}
-          disabled={occupied || workBlocked || (!connection && !!source)}
+          disabled={
+            occupied || busy || workBlocked || (!connection && !!source)
+          }
+          groupFooters={groupFooters}
           onChange={chooseConnection}
         />
       )}
@@ -1295,27 +1355,6 @@ export function AgentAuthSection({
                       </div>
                     )}
                 </div>
-                {method.kind === "terminal" && stage === "account" && (
-                  <>
-                    <ol className="terminal-steps" aria-label={R.terminal}>
-                      {R.terminalSteps.map((title, index) => (
-                        <li
-                          key={title}
-                          aria-current={index === 0 ? "step" : undefined}
-                        >
-                          <span aria-hidden="true">{index + 1}</span>
-                          {title}
-                        </li>
-                      ))}
-                    </ol>
-                    <details className="journey-details">
-                      <summary>{R.details}</summary>
-                      <p className="auth-note">
-                        {S.source}：{directory}
-                      </p>
-                    </details>
-                  </>
-                )}
                 {!readOnly && methodPrimary && !connection?.onPrimaryChange && (
                   <button
                     className="btn btn-primary"
@@ -1351,7 +1390,9 @@ export function AgentAuthSection({
                     }
                     onAcquire={acquireManual}
                     onStart={(credential) =>
-                      start(method, false, false, false, credential)
+                      runWithConnection(method, (fresh) =>
+                        start(fresh, false, false, false, credential, true),
+                      )
                     }
                     onPrimaryChange={
                       connection?.onPrimaryChange ? setKeyPrimary : undefined
@@ -1370,15 +1411,25 @@ export function AgentAuthSection({
             <AgentAccountLinks
               active={active}
               agentId={agentId}
-              registration={registration}
-              onRegistrationChange={onRegistrationChange}
+              agentName={card?.name ?? agentId}
+              websiteUrl={
+                card?.presentation?.sourceUrl ??
+                card?.sourceUrl ??
+                card?.installGuide
+              }
+              onReturn={registrationReturn}
+              disabled={
+                occupied || busy || workBlocked || !directory || !!source
+              }
             />
             <details className="agent-account-more">
               <summary>{P.moreLogin}</summary>
               <ManualAuthSection
                 agentId={agentId}
                 methodId="manual"
-                disabled={occupied || workBlocked || !directory || !!source}
+                disabled={
+                  occupied || busy || workBlocked || !directory || !!source
+                }
                 onAcquire={acquireManual}
                 onInvalidate={() => {
                   invalidateAuthentication(agentId);
@@ -1389,97 +1440,46 @@ export function AgentAuthSection({
           </>
         )}
       {!authActive(job) && !apiSelected && (
-        <details className="journey-details agent-account-more">
-          <summary>{R.manage}</summary>
-          {accountOptions}
-          <div className="auth-actions journey-utilities">
-            {modelsAvailable && onOpenModels && !connection && (
-              <button
-                className="btn btn-text"
-                disabled={
-                  !canOpenModels || occupied || workBlocked || checkBlocked
-                }
-                onClick={openModels}
-              >
-                {S.models}
-              </button>
-            )}
-            <button
-              className="btn btn-text"
-              disabled={occupied || checkBlocked || !directory}
-              onClick={() => void recheck()}
-            >
-              {R.connection}
-            </button>
-            <button
-              className="btn btn-text"
-              disabled={occupied || workBlocked}
-              onClick={changeConnection}
-            >
-              {R.change}
-            </button>
-            {completedSummary && completedMethod && (
-              <button
-                className="btn btn-text"
-                disabled={occupied || workBlocked || !!source}
-                onClick={() => {
-                  setChangingConnection(true);
-                  setStage("account");
-                }}
-              >
-                {completedMethod.apiKeyProvider
-                  ? R.keyManage
-                  : completedMethod.kind === "terminal"
-                    ? R.reopen
-                    : S.loginAgain}
-              </button>
-            )}
-            {info?.canLogout && (
-              <>
-                <button
-                  className="btn btn-text"
-                  disabled={!accountExitAvailable}
-                  onClick={() => chooseAccountExit("logout")}
-                >
-                  {A.logout}
-                </button>
-                {canSwitchAccount && (
-                  <button
-                    className="btn btn-text"
-                    disabled={!accountExitAvailable}
-                    onClick={() => chooseAccountExit("switch")}
-                  >
-                    {S.switchAccount}
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        </details>
+        <AgentAuthManage
+          accountOptions={accountOptions}
+          modelsAvailable={modelsAvailable}
+          canOpenModels={canOpenModels}
+          managed={!!connection}
+          occupied={occupied}
+          busy={busy}
+          workBlocked={workBlocked}
+          checkBlocked={checkBlocked}
+          directoryReady={!!directory}
+          onOpenModels={openModels}
+          onRecheck={() => void recheck()}
+          onChangeConnection={changeConnection}
+          completedLabel={
+            completedSummary && completedMethod
+              ? completedMethod.apiKeyProvider
+                ? R.keyManage
+                : completedMethod.kind === "terminal"
+                  ? R.reopen
+                  : S.loginAgain
+              : null
+          }
+          completedDisabled={occupied || workBlocked || !!source}
+          onManageCompleted={() => {
+            setChangingConnection(true);
+            setStage("account");
+          }}
+          canLogout={!!info?.canLogout}
+          canSwitch={canSwitchAccount}
+          accountExitAvailable={accountExitAvailable}
+          onAccountExit={chooseAccountExit}
+        />
       )}
       {!authActive(job) && accountExit && (
-        <section
-          aria-label={accountExit === "switch" ? S.switchAccount : A.logout}
-        >
-          <p className="auth-note">
-            {accountExit === "switch" ? S.switchHint : S.logoutHint}
-          </p>
-          <div className="auth-actions">
-            <button
-              className="btn btn-ghost"
-              onClick={() => setAccountExit(null)}
-            >
-              {STRINGS.access.cancel}
-            </button>
-            <button
-              className="btn btn-primary"
-              disabled={!accountExitAvailable}
-              onClick={confirmAccountExit}
-            >
-              {accountExit === "switch" ? S.switchConfirm : S.confirmLogout}
-            </button>
-          </div>
-        </section>
+        <AgentAccountExit
+          intent={accountExit}
+          available={accountExitAvailable}
+          onCancel={() => setAccountExit(null)}
+          onConfirm={confirmAccountExit}
+        />
       )}
     </section>
   );

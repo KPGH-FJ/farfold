@@ -127,8 +127,8 @@ describe("Agent discovery and preparation", () => {
       />,
     );
     expect(html).toContain("Example");
-    expect(html).toContain("尚未安装");
-    expect(html).toContain("已连接");
+    expect(html).toContain("未添加");
+    expect(html).toContain("未完成设置");
     expect(html).toContain("继续准备");
     expect(html).not.toContain("开始新对话");
     expect(html).toContain("管理 Agent · Ready");
@@ -321,7 +321,7 @@ describe("Agent discovery and preparation", () => {
     );
     expect(html).not.toContain("暂不支持此设备");
     expect(html).not.toContain("官方未提供此设备");
-    expect(html).toContain("已添加，尚未连接");
+    expect(html).toContain("未完成设置");
   });
   it("keeps preparation choices with their original Agent, folder and source", () => {
     const selection = {

@@ -41,13 +41,6 @@ export const PREPARATION_STRINGS = {
   cancel: "取消安装",
   cancelling: "正在取消…",
   cancelFailed: "尚未确认取消，请重试或等待安装结果。",
-  account: "准备账号或密钥",
-  accountHint:
-    "在官方页面完成注册或获取密钥，然后回到这里继续。账号权益与费用以服务方说明为准。",
   accountFailed: "读取官方入口失败，请重试。",
   openFailed: "无法打开官方页面，请重试。",
-  opened:
-    "已打开官方页面。完成账号准备后，回到这里继续登录；是否可用仍需 Agent 确认。",
-  returned: "已完成账号准备，继续登录",
-  continueLogin: "请使用下面的登录按钮，让 Agent 完成账号设置。",
 } as const;

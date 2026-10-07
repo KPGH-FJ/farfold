@@ -65,6 +65,11 @@ import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import { STRINGS } from "../runtime/strings";
 import { AgentAccountLinks } from "./AgentAccountLinks";
 import { ManualAuthSection } from "./ManualAuthSection";
+import {
+  AgentAccountExit,
+  AgentAuthManage,
+  AgentAuthWorkBlockers,
+} from "./AgentAuthManage";
 
 type Element = ReactElement<Record<string, unknown>>;
 function elements(tree: ReactNode) {
@@ -73,6 +78,22 @@ function elements(tree: ReactNode) {
     Children.forEach(node, (child) => {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       result.push(child);
+      if (child.type === AgentAuthManage)
+        visit(
+          AgentAuthManage(child.props as Parameters<typeof AgentAuthManage>[0]),
+        );
+      if (child.type === AgentAccountExit)
+        visit(
+          AgentAccountExit(
+            child.props as Parameters<typeof AgentAccountExit>[0],
+          ),
+        );
+      if (child.type === AgentAuthWorkBlockers)
+        visit(
+          AgentAuthWorkBlockers(
+            child.props as Parameters<typeof AgentAuthWorkBlockers>[0],
+          ),
+        );
       visit(child.props.children as ReactNode);
     });
   visit(tree);
@@ -125,18 +146,34 @@ beforeEach(() => {
   h.info.methods = [{ id: "declared-login", kind: "agent", name: "Own login" }];
 });
 
-it("keeps an unavailable method visible but blocks both automatic login entries", async () => {
+it("keeps an unavailable method listed but blocks its automatic login entry", async () => {
   const reason = "此登录方式的程序目标尚未确认，请使用其他方式。";
   h.info.methods[0].unavailableReason = reason;
   const nodes = render();
   expect(nodes.some((node) => node.props.children === reason)).toBe(true);
   expect(button(nodes, R.accountContinue("Own login"))).toBeUndefined();
-  const picker = nodes.find((node) => node.type === AgentConnectionPicker);
-  expect(picker).toBeUndefined();
-  const links = nodes.find((node) => node.type === AgentAccountLinks)!;
-  expect(links.props.loginDisabled).toBe(true);
-  expect(links.props.loginHint).toBe(reason);
-  (links.props.onContinueLogin as () => void)();
+  const picker = nodes.find((node) => node.type === AgentConnectionPicker)!;
+  const options = picker.props.options as { id: string; disabled?: boolean }[];
+  expect(
+    options.find(
+      (option) => option.id === JSON.stringify(["method", "declared-login"]),
+    )?.disabled,
+  ).toBe(true);
+  (picker.props.onChange as (value: string) => void)(
+    JSON.stringify(["method", "declared-login"]),
+  );
+  expect(h.begin).not.toHaveBeenCalled();
+  // Registration access stays available while the method is blocked.
+  const footers = (picker.props.groupFooters ?? {}) as Record<
+    string,
+    ReactNode
+  >;
+  const registration = Object.values(footers).find(
+    (node): node is ReactElement<Record<string, unknown>> =>
+      isValidElement(node) && node.type === AgentAccountLinks,
+  )!;
+  expect(registration.props.disabled).toBe(false);
+  (registration.props.onReturn as () => void)();
   expect(h.begin).not.toHaveBeenCalled();
   expect(button(nodes, R.connection).props.disabled).toBe(false);
   click(button(nodes, R.connection));

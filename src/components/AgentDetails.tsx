@@ -6,10 +6,8 @@ import {
   getServiceCapabilities,
   type ServiceCapability,
 } from "../runtime/credentials";
-import {
-  ACCESS_STRINGS as S,
-  installationUnavailableLabel,
-} from "../runtime/access_strings";
+import { ACCESS_STRINGS as S } from "../runtime/access_strings";
+import { agentStatus, type AgentStatus } from "../runtime/agent_status";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
 import { AgentLogo } from "./AgentLogo";
@@ -27,7 +25,7 @@ export function AgentDetails({
   onClose,
   onPrepare,
   canStart = false,
-  statusLabel,
+  status,
   returnFocusRef,
 }: {
   card: AgentCardModel;
@@ -37,7 +35,7 @@ export function AgentDetails({
   onClose: () => void;
   onPrepare: () => void;
   canStart?: boolean;
-  statusLabel?: string;
+  status?: AgentStatus;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -75,6 +73,7 @@ export function AgentDetails({
     };
   }, [card.id, card.status]);
   const connected = card.status === "connected";
+  const badge = status ?? agentStatus({ card, prepared: canStart });
   return (
     <dialog
       ref={dialog}
@@ -97,18 +96,12 @@ export function AgentDetails({
           <div>
             <h3>{card.name}</h3>
             <p>{agentDirectorySource(card) ?? source}</p>
+            {card.version && (
+              <p>{STRINGS.agents.connectionVersion(card.version)}</p>
+            )}
           </div>
-          <span className="agent-hub-badge">
-            {statusLabel ??
-              (connected
-                ? S.connected
-                : card.status === "installed"
-                  ? S.registered
-                  : card.status === "discovered"
-                    ? S.discovered
-                    : !card.installable && !card.registerable
-                      ? installationUnavailableLabel(card.platformAvailable)
-                      : source)}
+          <span className={`agent-hub-badge tone-${badge.tone}`}>
+            {badge.label}
           </span>
         </div>
         <p className="agent-detail-description">

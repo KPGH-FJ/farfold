@@ -118,7 +118,7 @@ it("offers a saved offline Agent as standby and starts with the same confirmed c
     .flatMap((node) => Children.toArray(node.props.children as ReactNode))
     .filter((child) => typeof child === "string")
     .join(" ");
-  expect(text).toContain("待命");
+  expect(text).toContain("可以使用");
   expect(text).toContain("开始新对话");
   expect(text).not.toContain("继续准备");
   expect(props.onStart).not.toHaveBeenCalled();
@@ -151,7 +151,7 @@ it.each(["manual", "failure"])(
       .flatMap((node) => Children.toArray(node.props.children as ReactNode))
       .filter((child) => typeof child === "string")
       .join(" ");
-    expect(text).toContain(reason === "manual" ? "已断开" : "连接异常");
+    expect(text).toContain(reason === "manual" ? "可以使用" : "出现问题");
     expect(text).toContain("开始新对话");
     expect(text).not.toContain("待命");
     expect(text).not.toContain("继续准备");

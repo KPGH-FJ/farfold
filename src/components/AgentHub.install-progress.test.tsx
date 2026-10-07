@@ -237,7 +237,7 @@ it("keeps the existing installation visible after leaving setup and reopens it w
   (setup.props.onClose as () => void)();
   expect(render().some((node) => node.type === AgentSetup)).toBe(false);
   expect(status()).toContain(STRINGS.install.stages.install);
-  expect(status()).not.toContain(S.discovered);
+  expect(status()).not.toContain(S.installedLocally);
   expect(text(primary().props.children as ReactNode)).toContain("查看进度");
   (primary().props.onClick as () => void)();
   setup = render().find((node) => node.type === AgentSetup)!;
@@ -374,7 +374,7 @@ it("shows the later connecting stage without mistaking connection for completed 
   expect(status()).not.toContain(STRINGS.install.stages.install);
   agents.busy[card.id] = null;
   agents.cards[0].status = "connected";
-  expect(status()).toContain(S.connected);
+  expect(status()).toContain(S.setupIncomplete);
   expect(status()).not.toContain(STRINGS.agents.connecting);
   expect(text(primary().props.children as ReactNode)).toContain(
     S.continueSetup,
@@ -388,12 +388,12 @@ it("keeps a failed Agent's message visible after leaving, without leaking it or 
   expect(text(article().props.children as ReactNode)).toContain(
     STRINGS.install.failed,
   );
-  expect(status()).toContain(S.discovered);
+  expect(status()).toContain(S.installedLocally);
   expect(text(primary().props.children as ReactNode)).toContain(S.prepare);
   expect(
     text(article("other-agent").props.children as ReactNode),
   ).not.toContain(STRINGS.install.failed);
-  expect(status("other-agent")).toContain(S.discovered);
+  expect(status("other-agent")).toContain(S.installedLocally);
   agents.busy[card.id] = "install";
   agents.installProgress[card.id].stage = "download";
   expect(status("other-agent")).not.toContain(STRINGS.install.stages.download);

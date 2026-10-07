@@ -1,0 +1,99 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`agentStatus shared mapping > maps {"accountInProgress":true,"configuring":true} 1`] = `
+{
+  "label": "配置尚未结束",
+  "tone": "progress",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"accountInProgress":true} 1`] = `
+{
+  "label": "登录尚未结束",
+  "tone": "progress",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"authRequired":true} 1`] = `
+{
+  "label": "需要登录",
+  "tone": "attention",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"installable":false,"registerable":false,"platformAvailable":false}} 1`] = `
+{
+  "label": "官方未提供此设备的安装方式",
+  "tone": "neutral",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"installable":false,"registerable":false}} 1`] = `
+{
+  "label": "当前尚不能在此安装",
+  "tone": "neutral",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"connected","connectionFailed":true},"prepared":true} 1`] = `
+{
+  "label": "出现问题",
+  "tone": "error",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"connected"},"prepared":true} 1`] = `
+{
+  "label": "可以使用",
+  "tone": "ready",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"connected"}} 1`] = `
+{
+  "label": "未完成设置",
+  "tone": "attention",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"discovered"}} 1`] = `
+{
+  "label": "本机已安装",
+  "tone": "neutral",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"installed"},"prepared":true} 1`] = `
+{
+  "label": "可以使用",
+  "tone": "ready",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"card":{"status":"installed"}} 1`] = `
+{
+  "label": "未完成设置",
+  "tone": "attention",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"progressLabel":"正在安装…"} 1`] = `
+{
+  "label": "正在安装…",
+  "tone": "progress",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {"readRequired":true} 1`] = `
+{
+  "label": "需要重新读取模型选项",
+  "tone": "progress",
+}
+`;
+
+exports[`agentStatus shared mapping > maps {} 1`] = `
+{
+  "label": "未添加",
+  "tone": "neutral",
+}
+`;

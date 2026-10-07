@@ -30,10 +30,8 @@ import {
 } from "../runtime/connection_intent";
 import { useConnectionHold } from "../runtime/connection_hold";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
-import {
-  ACCESS_STRINGS as S,
-  installationUnavailableLabel,
-} from "../runtime/access_strings";
+import { agentStatus } from "../runtime/agent_status";
+import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import { programProgress } from "../runtime/program_progress";
 import { AgentDetails } from "./AgentDetails";
@@ -492,33 +490,16 @@ export function AgentHub({
   }, [entryKey, active]);
   const programStatus = (card: AgentCardModel) =>
     programProgress(agents.busy[card.id], agents.installProgress[card.id]);
-  const stateLabel = (card: AgentCardModel) =>
-    programStatus(card)?.label ??
-    (accountInProgress(card)
-      ? configuring(card)
-        ? C.inProgress
-        : S.loginInProgress
-      : readRequired(card)
-        ? C.readPending
-        : authenticationRequired(authentication, card.id, null)
-          ? S.needLogin
-          : card.status === "connected"
-            ? setupStorage.completed(card.id) && newSelection(card.id)
-              ? S.connected
-              : S.connectedUnfinished
-            : card.status === "installed"
-              ? setupStorage.completed(card.id) && newSelection(card.id)
-                ? card.connectionFailed
-                  ? S.connectionFailed
-                  : !isAutomaticConnectionAllowed(card.id)
-                    ? S.disconnected
-                    : S.standby
-                : S.registered
-              : card.status === "discovered"
-                ? S.discovered
-                : !card.installable && !card.registerable
-                  ? installationUnavailableLabel(card.platformAvailable)
-                  : S.notInstalled);
+  const statusFor = (card: AgentCardModel) =>
+    agentStatus({
+      card,
+      progressLabel: programStatus(card)?.label,
+      accountInProgress: accountInProgress(card),
+      configuring: configuring(card),
+      readRequired: readRequired(card),
+      authRequired: authenticationRequired(authentication, card.id, null),
+      prepared: setupStorage.completed(card.id) && !!newSelection(card.id),
+    });
 
   return (
     <main className="main agent-hub-main" hidden={!active}>
@@ -652,11 +633,9 @@ export function AgentHub({
                         )}
                       </span>
                     </button>
-                    <span
-                      className={`agent-hub-badge${canStart(card) ? " ready" : ""}`}
-                    >
-                      {card.custom ? S.custom : S.directoryEntry}
-                    </span>
+                    {card.custom && (
+                      <span className="agent-hub-badge">{S.custom}</span>
+                    )}
                   </div>
                   <button
                     className="agent-hub-card-description"
@@ -674,7 +653,7 @@ export function AgentHub({
                   </div>
                   <div className="agent-hub-card-state">
                     <span
-                      className={canStart(card) ? "agent-hub-ready" : ""}
+                      className={`agent-hub-state tone-${statusFor(card).tone}`}
                       role={programStatus(card) ? "status" : undefined}
                     >
                       {canStart(card) ? (
@@ -682,13 +661,8 @@ export function AgentHub({
                       ) : (
                         <span className="agent-hub-status-dot" />
                       )}
-                      {stateLabel(card)}
+                      {statusFor(card).label}
                     </span>
-                    {card.version && (
-                      <small>
-                        {STRINGS.agents.connectionVersion(card.version)}
-                      </small>
-                    )}
                   </div>
                   <div className="agent-hub-card-actions">
                     <button
@@ -774,7 +748,7 @@ export function AgentHub({
           onClose={() => setDetail(null)}
           onPrepare={() => startOrPrepare(detailCard)}
           canStart={canStart(detailCard)}
-          statusLabel={stateLabel(detailCard)}
+          status={statusFor(detailCard)}
           returnFocusRef={detailReturnFocus}
         />
       )}

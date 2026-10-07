@@ -235,6 +235,9 @@ export interface AuthMethodInfo {
 export interface AuthMethodsResponse {
   methods: AuthMethodInfo[];
   canLogout: boolean;
+  /** Only true while the exact preparation connection is live; borrowed and
+   *  cached declarations are display-only and connecting happens on run. */
+  executionReady: boolean;
 }
 
 export interface AuthRunResult {
@@ -668,7 +671,7 @@ export interface AgentsState {
     card: AgentCardModel,
     cwd?: string,
     input?: InstallationInput,
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   reconnect: (card: AgentCardModel, cwd?: string) => Promise<void>;
   disconnect: (agentId: string) => Promise<void>;
   remove: (agentId: string) => Promise<boolean>;
@@ -809,8 +812,13 @@ export function useAgents(): AgentsState {
       setErrorFor(card.id, null);
       try {
         const target = connectCwd(cwd);
-        if (card.status === "installed" || card.custom) {
-          // Already registered: connect directly.
+        if (
+          card.status === "installed" ||
+          card.status === "connected" ||
+          card.custom
+        ) {
+          // Already registered: connect directly. A ready conversation
+          // connection does not block the preparation connection.
         } else if (card.registerable && card.discoveredPath) {
           await agentRegister(card.id, card.discoveredPath);
         } else {
@@ -824,12 +832,14 @@ export function useAgents(): AgentsState {
         }
         await agentConnect(card.id, target);
         await refresh();
+        return true;
       } catch (reason) {
         setErrorFor(
           card.id,
           uiError(reason, STRINGS.agents.errors.connectFailed),
         );
         await refresh().catch(() => undefined);
+        return false;
       } finally {
         setBusyFor(card.id, null);
       }

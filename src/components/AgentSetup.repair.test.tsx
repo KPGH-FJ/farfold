@@ -342,7 +342,7 @@ it("shares reviewed startup input between first install and program updates with
       config: { model: "draft-model", thought_level: "off" },
     },
   };
-  props.agents.connect = vi.fn(async () => {});
+  props.agents.connect = vi.fn(async () => true);
   props.agents.install = vi.fn(async () => false);
   const options = {
     declarationId: "fixture-model-v1",
@@ -421,7 +421,7 @@ it("allows the selected registered program to connect when an installation draft
     choice: "existing",
     installationInputInvalid: true,
   };
-  props.agents.connect = vi.fn(async () => {});
+  props.agents.connect = vi.fn(async () => true);
   let nodes = render();
   const prerequisites = nodes.find((node) => node.type === AgentPrerequisites)!;
   (prerequisites.props.onChange as (ready: boolean) => void)(true);
@@ -1105,7 +1105,7 @@ it.each(["method", "account", "api", undefined] as const)(
     props.intent = "use";
     props.conversation = undefined;
     props.card = { ...card, status: "installed", authMethods: [] };
-    const connect = vi.fn(async () => {});
+    const connect = vi.fn(async () => true);
     props.agents = { ...props.agents, connect };
     const saved: AgentSetupProgress = {
       step: 1,
@@ -1159,9 +1159,6 @@ it.each(["method", "account", "api", undefined] as const)(
       step: 1,
       accessStage: "method",
     });
-    expect(
-      nodes.some((node) => node.props.children === P.connectionRequired),
-    ).toBe(false);
     expect(nodes.some((node) => node.type === AgentAuthSection)).toBe(true);
     expect(h.prepare).not.toHaveBeenCalled();
     expect(props.onStart).not.toHaveBeenCalled();
@@ -1173,7 +1170,7 @@ it("waits for declared installation prerequisites before installing an unregiste
   props.conversation = undefined;
   props.progress = { step: 0, choice: "existing" };
   props.card = { ...card, status: "none", custom: false, installable: true };
-  const connect = vi.fn(async () => {});
+  const connect = vi.fn(async () => true);
   props.agents = { ...props.agents, connect };
   let nodes = render();
   const prerequisites = nodes.find((node) => node.type === AgentPrerequisites)!;
@@ -1211,7 +1208,7 @@ it("does not require installation tools again to connect an installed program", 
     custom: false,
     installable: true,
   };
-  const connect = vi.fn(async () => {});
+  const connect = vi.fn(async () => true);
   props.agents = { ...props.agents, connect };
   const prerequisites = render().find(
     (node) => node.type === AgentPrerequisites,
@@ -1256,7 +1253,7 @@ it.each([
     props.conversation = undefined;
     props.card = { ...card, status: "installed", authMethods };
     props.progress = initialAgentSetupProgress();
-    const connect = vi.fn(async () => {});
+    const connect = vi.fn(async () => true);
     props.agents = { ...props.agents, connect };
     let nodes = render();
     (
@@ -1318,12 +1315,22 @@ it("establishes one preparation connection at the account step when only a conve
   props.intent = "use";
   props.conversation = undefined;
   props.progress = { step: 1, choice: "existing" };
-  const connect = vi.fn(async () => {});
+  const connect = vi.fn(async () => true);
   props.agents = {
     ...props.agents,
     connect,
     statuses: conversationOnly(),
   };
+  render();
+  await Promise.resolve();
+  expect(connect).not.toHaveBeenCalled();
+  // Only an empty declaration triggers the one-shot preparation connect.
+  const auth = render().find((node) => node.type === AgentAuthSection)!;
+  (auth.props.onInfoChange as (info: unknown) => void)({
+    methods: [],
+    canLogout: false,
+    executionReady: false,
+  });
   render();
   await Promise.resolve();
   expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
@@ -1340,12 +1347,20 @@ it("does not re-establish a connection after an explicit disconnect pauses autom
     props.intent = "use";
     props.conversation = undefined;
     props.progress = { step: 1, choice: "existing" };
-    const connect = vi.fn(async () => {});
+    const connect = vi.fn(async () => true);
     props.agents = {
       ...props.agents,
       connect,
       statuses: conversationOnly(),
     };
+    render();
+    await Promise.resolve();
+    const auth = render().find((node) => node.type === AgentAuthSection)!;
+    (auth.props.onInfoChange as (info: unknown) => void)({
+      methods: [],
+      canLogout: false,
+      executionReady: false,
+    });
     render();
     await Promise.resolve();
     render();
@@ -1515,7 +1530,7 @@ it("resumes a saved model step after reconnect without resetting its source or c
     },
   };
   props.progress = saved;
-  props.agents = { ...props.agents, connect: vi.fn(async () => {}) };
+  props.agents = { ...props.agents, connect: vi.fn(async () => true) };
   let nodes = render();
   (
     nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
