@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "fb50d9565975972bc7e61fcebfdebcc213abb6d9",
+  "reviewConclusion": "No blocking finding in removal scope.",
+  "independentReviews": [
+    "Catalog cache, registration merge, daily UI, drafts and async qualification, preparation/install gates, history preservation.",
+    "Current documents/prototype/assets/config/scripts, exact 29 source and two document lists, generated distribution.",
+    "Package script source identity, source stability, existing app preservation, expected artifact verification."
+  ],
+  "verifiedChecksEvidence": "checks.json implementation hashes and all recorded check log hashes still match.",
+  "removedIds": ["auggie", "corust-agent", "junie", "stakpak"],
+  "dailyDirectoryCount": 29,
+  "remainingReferences": "Only removal notices, frozen evidence and historical statistics; not active first-batch entries.",
+  "preservedBoundary": "Existing user registrations, settings, histories, explicit custom access and external agent programs remain.",
+  "installedBaselineObservation": {
+    "sourceCommit": "7a36a6db284beb7d653eeeb1e8d7bc475959c44c",
+    "binarySha256": "ce7740d77314bb742e9c4b67cf735cb9d9a0f15fe12de2ffbeb86cf0cc8adb78",
+    "exploreCount": 33,
+    "removedFourCardsPresent": true,
+    "attentionCount": 1,
+    "pendingLoginVisible": true,
+    "appStopped": false
+  },
+  "limitations": "This review does not claim the new candidate is installed. Installed UI and data preservation verification follow packaging and saved/normal-exit confirmation."
+}
