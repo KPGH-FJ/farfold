@@ -684,7 +684,7 @@ mod tests {
 
     #[test]
     fn current_directory_filters_entries_without_changing_registered_data() {
-        let registry = ["auggie", "fast-agent", "retired-agent", "unreviewed"]
+        let registry = ["cline", "fast-agent", "retired-agent", "unreviewed"]
             .into_iter()
             .map(|id| RegistryAgent {
                 id: id.into(),
@@ -1043,12 +1043,12 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let catalog = AgentCatalog::new(root.path().into());
         let registry: Vec<RegistryAgent> = serde_json::from_value(serde_json::json!([
-            {"id":"auggie","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
+            {"id":"cline","name":"Example","distribution":{"npx":{"package":"example-agent@1.2.3","args":["--agent"]}}},
             {"id":"nova","distribution":{"npx":{"package":"example@1.0.0","env":{"HOME":"/private"}}}}
         ])).unwrap();
         write_registry_cache(root.path(), &registry);
-        let (entry, launch) = catalog.installation_entry("registry:auggie").unwrap();
-        assert_eq!(entry.id, "auggie");
+        let (entry, launch) = catalog.installation_entry("registry:cline").unwrap();
+        assert_eq!(entry.id, "cline");
         assert_eq!(
             launch,
             AgentLaunch::Npx {
@@ -1056,7 +1056,7 @@ mod tests {
                 args: vec!["--agent".into()]
             }
         );
-        assert!(catalog.installation_entry("auggie").is_err());
+        assert!(catalog.installation_entry("cline").is_err());
         assert!(catalog.installation_entry("registry:unknown").is_err());
         assert!(catalog.installation_entry("registry:nova").is_err());
     }

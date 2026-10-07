@@ -21,12 +21,6 @@ export const AGENT_BRANDS: Readonly<Record<string, AgentBrand>> = {
     sourceUrl: "https://antigravity.google/",
     monochrome: false,
   },
-  auggie: {
-    logo: "/agents/auggie.svg",
-    description: "借助代码库上下文，理解跨文件关系并贴合现有工程修改。",
-    sourceUrl: "https://docs.augmentcode.com/cli/overview",
-    monochrome: true,
-  },
   autohand: {
     logo: "/agents/autohand.svg",
     description: "通过记忆与技能积累项目经验，并按需要选择模型服务。",
@@ -55,12 +49,6 @@ export const AGENT_BRANDS: Readonly<Record<string, AgentBrand>> = {
     logo: "/agents/codex-acp.svg",
     description: "OpenAI 的本地编程工具，支持交互协作与脚本化执行。",
     sourceUrl: "https://github.com/openai/codex",
-    monochrome: true,
-  },
-  "corust-agent": {
-    logo: "/agents/corust-agent.svg",
-    description: "专注 Rust 开发，理解所有权、生命周期和 Cargo 生态。",
-    sourceUrl: "https://corust.ai/",
     monochrome: true,
   },
   cursor: {
@@ -125,12 +113,6 @@ export const AGENT_BRANDS: Readonly<Record<string, AgentBrand>> = {
     description: "先规划再执行复杂代码任务，并让多个助手并行研究、实现和审查。",
     sourceUrl: "https://x.ai/build",
     monochrome: true,
-  },
-  junie: {
-    logo: "/agents/junie.svg",
-    description: "结合 JetBrains 代码理解能力，规划改动、完成实现并补充测试。",
-    sourceUrl: "https://junie.jetbrains.com/",
-    monochrome: false,
   },
   kilo: {
     logo: "/agents/kilo.svg",
@@ -202,12 +184,6 @@ export const AGENT_BRANDS: Readonly<Record<string, AgentBrand>> = {
     logo: "/agents/sigit.svg",
     description: "把模型推理留在本机，也可按需选择云端服务。",
     sourceUrl: "https://github.com/getsigit/sigit",
-    monochrome: false,
-  },
-  stakpak: {
-    logo: "/agents/stakpak.png",
-    description: "持续关注应用运行状况，协助部署、排障和维护基础设施。",
-    sourceUrl: "https://stakpak.dev/",
     monochrome: false,
   },
 };

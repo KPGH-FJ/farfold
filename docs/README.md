@@ -9,7 +9,7 @@
 | [architecture.md](architecture.md)            | 当前源码结构、数据和调用路径                 |
 | [status.md](status.md)                        | 能力、验证范围、已知问题的当前基线           |
 | [活动计划](../plans/agent-access.md)          | 唯一待执行序列                               |
-| [首批 Agent 名单](agent-first-release.md)     | 探索目录范围、暂缓原因与恢复条件             |
+| [首批 Agent 名单](agent-first-release.md)     | 探索目录范围、用户调整与历史边界             |
 | [INTERNAL-USE.md](../INTERNAL-USE.md)         | 当前内部使用说明                             |
 | [设计说明](../.design/README.md)              | 唯一当前原型、运行方式与模拟边界             |
 | [evidence/](evidence/README.md)               | 带边界说明的原始验证材料                     |

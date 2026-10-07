@@ -62,7 +62,7 @@ describe("Agent discovery and preparation", () => {
     const agents = state([
       deferred,
       { ...card, name: "Unreviewed", firstBatchVisible: false },
-      { ...card, id: "auggie", name: "Auggie", firstBatchVisible: true },
+      { ...card, id: "cline", name: "Cline", firstBatchVisible: true },
       {
         ...card,
         id: "fast",
@@ -97,7 +97,7 @@ describe("Agent discovery and preparation", () => {
     expect(discover).not.toContain("管理 Agent · Unreviewed");
     expect(discover).not.toContain("管理 Agent · Deferred");
     expect(discover).toContain("管理 Agent · Custom");
-    expect(discover).toContain("管理 Agent · Auggie");
+    expect(discover).toContain("管理 Agent · Cline");
     expect(discover).toContain("管理 Agent · Fast");
     expect(discover).toContain("管理 Agent · Local");
     const added = renderToStaticMarkup(

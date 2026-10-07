@@ -85,7 +85,7 @@ fn metadata(raw: &Value, method: &mut Value) -> bool {
             }
             kept["label"] = label.clone();
         }
-        // Official legacy descriptors (including Auggie) attach environment
+        // Official legacy descriptors attach environment
         // overrides here. Preserve them only in this connection's live value;
         // public/cache snapshots deliberately exclude all execution fields.
         if let Some(env) = terminal.get("env") {

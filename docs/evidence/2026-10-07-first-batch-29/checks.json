@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-07",
+  "base_commit": "ea1d5737a2eef3a9f828133f71d96704cfd4db2f",
+  "scope": {
+    "before": 33,
+    "after": 29,
+    "removed": ["auggie", "corust-agent", "junie", "stakpak"],
+    "retained_order_unchanged": true
+  },
+  "checks_initial": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit_code": 0,
+      "seconds": 38.78,
+      "log": "output/2026-10-07-first-batch-29-checks/format-0.log",
+      "output_sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit_code": 0,
+      "seconds": 6.5,
+      "log": "output/2026-10-07-first-batch-29-checks/frontend-0.log",
+      "output_sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exit_code": 1,
+      "seconds": 29.25,
+      "log": "output/2026-10-07-first-batch-29-checks/frontend-1.log",
+      "output_sha256": "095590e71fa73615703b054998bdaa347838486cc5d9a02bb45fb6d2b7606b0a"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exit_code": 0,
+      "seconds": 6.64,
+      "log": "output/2026-10-07-first-batch-29-checks/frontend-2.log",
+      "output_sha256": "09dbcd0e4afc69e4f14d895b5594b3ca3955480ec8e103117d6b179a2a5111eb"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "seconds": 1.18,
+      "log": "output/2026-10-07-first-batch-29-checks/rust-0.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 4.75,
+      "log": "output/2026-10-07-first-batch-29-checks/rust-1.log",
+      "output_sha256": "f3bc0a1ec4dd836f42df15d0376b1389009f97973066f57f87b928f4e4cc6b31"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "seconds": 51.0,
+      "log": "output/2026-10-07-first-batch-29-checks/rust-2.log",
+      "output_sha256": "2b764dfb86efef18a67268fb41f78a230e082222fbc60c8298cf5e7176c8edd3"
+    }
+  ],
+  "frontend_retest": {
+    "command": ["corepack", "pnpm", "test"],
+    "exit_code": 0,
+    "files_passed": 197,
+    "tests_passed": 2342,
+    "log": "output/2026-10-07-first-batch-29-checks/frontend-retest.log",
+    "output_sha256": "c4d422ba9eb32ba4533914204f857d671fd5b4967af07cdc55bfcfcd85d4bc8d"
+  },
+  "initial_failure": {
+    "test": "AgentSetup.r5-render.test.tsx",
+    "reason": "The existing consistency test still required 33 identities and the old document heading. Updated its expected count, heading and output filename to 29. No product failure was reported by this test.",
+    "failed": 1,
+    "passed": 2341
+  },
+  "rust_result": {
+    "passed": 1025,
+    "failed": 0,
+    "ignored": 4
+  },
+  "final_format_and_diff": "Passed targeted Prettier check on every changed Markdown/TypeScript file and git diff --check after the consistency test update.",
+  "independent_review": "Read-only source and documentation review found no blocking issue. Catalog, installation and preparation use the reduced allowlist; historical cards remain accessible.",
+  "asset_and_source_checks": {
+    "four_logos_absent_from_public_and_dist": true,
+    "removed_brands_absent_from_production_source_and_active_prototype": true,
+    "both_document_lists_match_29_source_ids": true
+  },
+  "boundaries": [
+    "No installed application replacement or installed UI verification.",
+    "No real Agent, authentication or model request.",
+    "Existing user data, installation records and raw historical verification evidence were not edited."
+  ],
+  "changed_implementation_sha256": {
+    "src-tauri/src/acp_client/first_release.rs": "c14410373522baa96975a4d60f01baae43a3f26847632b32a456febad9e65eab",
+    "src-tauri/src/acp_client/handshake.rs": "3ef9b22d780a1170686edbcc08d0f4b5ffc3b0d08ddc30a88c68ca67c2f11860",
+    "src-tauri/src/agent_catalog.rs": "64c333c0f8d4d3c3cfa8101051a7a7c998879d2651bd077b30404d4a46ed5759",
+    "src-tauri/src/managed_paths_tests.rs": "447fe4ed7287e29a67a73326903f2c2ff8b7e3ed2ed3ce4e10f3156b549e6460",
+    "src/components/AgentHub.test.tsx": "735eb0f133e81441509643647f5b597d4e069a2a2e16522c17df91f13fb7e457",
+    "src/components/AgentSetup.r5-render.test.tsx": "49b4b8d3e6307de4e9a743b86913796f27b87b29953a858cbc670b87d825239e",
+    "src/runtime/agent_brands.test.ts": "326822614e8c22d2db7caf889abdc87f2857efdebc4528d32c5ebbe900ac9b43",
+    "src/runtime/agent_brands.ts": "b486828aabab45b6dee390ff5d29589c0055f7f152fbf136ef10ff939267d7e3"
+  }
+}

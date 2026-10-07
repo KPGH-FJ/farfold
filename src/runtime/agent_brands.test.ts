@@ -12,8 +12,8 @@ const included = readFileSync(
   .map((id) => JSON.parse(id) as string);
 
 describe("reviewed Agent branding", () => {
-  it("covers exactly the current 33 directory identities with short Chinese introductions and local artwork", () => {
-    expect(included).toHaveLength(33);
+  it("covers exactly the current 29 directory identities with short Chinese introductions and local artwork", () => {
+    expect(included).toHaveLength(29);
     expect(Object.keys(AGENT_BRANDS).sort()).toEqual([...included].sort());
     for (const id of included) {
       const brand = agentBrand({ id: `registry:${id}` });
@@ -54,7 +54,6 @@ describe("reviewed Agent branding", () => {
       "dirac",
       "fast-agent",
       "gemini",
-      "junie",
       "kilo",
       "kimchi",
       "kimi",
@@ -65,7 +64,6 @@ describe("reviewed Agent branding", () => {
       "poolside",
       "qwen-code",
       "sigit",
-      "stakpak",
     ];
     for (const id of colored) expect(AGENT_BRANDS[id].monochrome).toBe(false);
     expect(AGENT_BRANDS.cursor.monochrome).toBe(false);
@@ -74,7 +72,7 @@ describe("reviewed Agent branding", () => {
     expect(
       new Set(Object.values(AGENT_BRANDS).map((brand) => brand.description))
         .size,
-    ).toBe(33);
+    ).toBe(29);
   });
 
   it("resolves existing built-ins and explicit registry identities without matching a name or custom command", () => {

@@ -6,9 +6,9 @@ use std::os::unix::fs::symlink;
 fn ordinary_encoding_is_injective_and_separate_from_both_previous_namespaces() {
     let data = Path::new("/data");
     let ids = [
-        "registry:junie",
-        "registry%3Ajunie",
-        "agent-registry%3Ajunie",
+        "registry:fixture",
+        "registry%3Afixture",
+        "agent-registry%3Afixture",
         "../outside",
         "/absolute",
         ".",
