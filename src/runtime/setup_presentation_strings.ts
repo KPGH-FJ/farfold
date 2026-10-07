@@ -8,6 +8,8 @@ export const SETUP_PRESENTATION = {
   nextModel: "继续选择模型",
   connectionRequired: "当前程序未连接",
   connectionRequiredHint: "请先连接程序。",
+  readingAccount: "正在读取账号信息…",
+  connectForMethods: "连接以读取登录方式",
   apiChoice: "使用 API 配置",
   apiChoiceHint: "选择已保存的服务，或添加一个新服务",
   localSource: "本机配置",

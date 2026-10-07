@@ -44,6 +44,7 @@ import { MethodApiKeySection } from "./MethodApiKeySection";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AgentAccountHeading } from "./AgentAccountHeading";
 import { ConnectionAccount } from "./ConnectionAccount";
+import { useConnectionAccount } from "../runtime/connection_account";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import {
   useAccessPrimary,
@@ -123,10 +124,6 @@ export function AgentAuthSection({
   const visibleError = error ?? methodsError;
   const [reload, setReload] = useState(0);
   const [hidden, setHidden] = useState(false);
-  const [finishConfirmation, setFinishConfirmation] = useState<string | null>(
-    null,
-  );
-  const finishConsent = useRef<string | null>(null);
   const [manualBusy, setManualBusy] = useState(false);
   const [actions, setActions] = useState<PreparationAction[]>([]);
   const [actionsError, setActionsError] = useState<string | null>(null);
@@ -142,12 +139,17 @@ export function AgentAuthSection({
     phase: "checking" | "checked";
   } | null>(null);
   const [selectedMethodId, setSelectedMethodId] = useState<string | null>(null);
+  const existingAccount = useConnectionAccount(
+    agentId,
+    directory ?? null,
+    source,
+    active,
+  );
   const [accountExit, setAccountExit] = useState<"logout" | "switch" | null>(
     null,
   );
   const manualOwned = useRef(false);
   const job = useAuthenticationActivity(agentId);
-  const finishKey = JSON.stringify([job?.attemptId, targetKey]);
   const activity = authenticationActivity(agentId);
   const occupied = authActive(job) || manualBusy;
   const live = useThreadsSnapshot();
@@ -193,10 +195,6 @@ export function AgentAuthSection({
       current = false;
     };
   }, [agentId, program, actionRevision]);
-  useEffect(() => {
-    finishConsent.current = null;
-    setFinishConfirmation(null);
-  }, [targetKey, job?.attemptId]);
   useEffect(() => {
     onBusyChange?.(occupied);
     return () => onBusyChange?.(false);
@@ -685,7 +683,25 @@ export function AgentAuthSection({
       : method.apiKeyProvider === "openai"
         ? R.openaiKey
         : authMethodLabel(method, methods);
+  const existingOptionDescription = existingAccount
+    ? [
+        existingAccount.email ?? existingAccount.displayName,
+        existingAccount.plan,
+      ]
+        .filter(Boolean)
+        .join(" · ") || R.existingHint
+    : R.existingHint;
   const connectionOptions = [
+    ...(connection
+      ? [
+          {
+            id: JSON.stringify(["existing"]),
+            title: R.existing,
+            description: existingOptionDescription,
+            disabled: false,
+          },
+        ]
+      : []),
     ...methods
       .filter(
         (method) =>
@@ -701,7 +717,7 @@ export function AgentAuthSection({
               ? R.openaiKeyHint
               : method.kind === "api-key"
                 ? R.keyHint
-                : R.accountHint,
+                : (method.description ?? R.accountHint),
         disabled: false,
       })),
     ...actions.map((action) => ({
@@ -724,13 +740,21 @@ export function AgentAuthSection({
         ]
       : []),
   ];
+  const existingSelected =
+    !!connection &&
+    connection.choice === "existing" &&
+    !apiSelected &&
+    !selectedAction &&
+    !(methodId === undefined ? selectedMethodId : methodId);
   const optionValue = apiSelected
     ? JSON.stringify(["api"])
-    : selectedAction
-      ? JSON.stringify(["action", selectedAction.id])
-      : selectedMethod
-        ? JSON.stringify(["method", selectedMethod.id])
-        : null;
+    : existingSelected
+      ? JSON.stringify(["existing"])
+      : selectedAction
+        ? JSON.stringify(["action", selectedAction.id])
+        : selectedMethod
+          ? JSON.stringify(["method", selectedMethod.id])
+          : null;
   const setStage = (value: "method" | "account" | "api") => {
     if (connection) connection.onStageChange(value);
     else setLocalStage(value === "api" ? "method" : value);
@@ -752,7 +776,15 @@ export function AgentAuthSection({
     setChangingConnection(true);
     setAccountExit(null);
     setLocalStage("method");
-    if (kind === "api") connection?.onChoice("api");
+    if (kind === "existing") {
+      setLocalActionId(null);
+      setSelectedMethodId(null);
+      if (connection?.onUseExisting) connection.onUseExisting();
+      else {
+        connection?.onChoice("existing");
+        setStage("account");
+      }
+    } else if (kind === "api") connection?.onChoice("api");
     else if (kind === "action" && id) {
       setLocalActionId(id);
       setSelectedMethodId(null);
@@ -869,28 +901,42 @@ export function AgentAuthSection({
           run: continueMethod,
         }
       : null;
+  const chooseExisting = () => {
+    if (connection?.onUseExisting) connection.onUseExisting();
+    else {
+      connection?.onChoice("existing");
+      setStage("account");
+    }
+  };
   const primary =
     authActive(job) || completedSummary || showApiSummary || existingSummary
       ? null
-      : apiSelected && stage === "method"
+      : existingSelected && stage === "method"
         ? {
-            id: JSON.stringify([targetKey, "api"]),
-            label: R.continue,
-            disabled: occupied || workBlocked || !connection?.apiAvailable,
-            run: () => setStage("api"),
+            id: JSON.stringify([targetKey, "existing"]),
+            label: R.existingContinue,
+            disabled: occupied || workBlocked || !directory || !!source,
+            run: chooseExisting,
           }
-        : selectedAction
-          ? stage === "method"
-            ? {
-                id: JSON.stringify([targetKey, "action", selectedAction.id]),
-                label: R.continue,
-                disabled: occupied || workBlocked || !directory || !!source,
-                run: () => setStage("account"),
-              }
-            : preparationPrimary
-          : selectedMethod?.apiKeyProvider && stage === "account"
-            ? keyPrimary
-            : methodPrimary;
+        : apiSelected && stage === "method"
+          ? {
+              id: JSON.stringify([targetKey, "api"]),
+              label: R.continue,
+              disabled: occupied || workBlocked || !connection?.apiAvailable,
+              run: () => setStage("api"),
+            }
+          : selectedAction
+            ? stage === "method"
+              ? {
+                  id: JSON.stringify([targetKey, "action", selectedAction.id]),
+                  label: R.continue,
+                  disabled: occupied || workBlocked || !directory || !!source,
+                  run: () => setStage("account"),
+                }
+              : preparationPrimary
+            : selectedMethod?.apiKeyProvider && stage === "account"
+              ? keyPrimary
+              : methodPrimary;
   useAccessPrimary(primary, connection?.onPrimaryChange);
   const accountOptions =
     selectedMethod && !apiSelected
@@ -953,15 +999,17 @@ export function AgentAuthSection({
             ? R.choose
             : apiSelected
               ? R.api
-              : completedSummary || existingSummary
+              : completedSummary
                 ? R.current
-                : ((authActive(job) || selectedJob) && job?.terminal) ||
-                    selectedAction ||
-                    selectedMethod?.kind === "terminal"
-                  ? R.terminal
-                  : selectedMethod
-                    ? methodTitle(selectedMethod)
-                    : R.methods
+                : existingSummary
+                  ? R.existing
+                  : ((authActive(job) || selectedJob) && job?.terminal) ||
+                      selectedAction ||
+                      selectedMethod?.kind === "terminal"
+                    ? R.terminal
+                    : selectedMethod
+                      ? methodTitle(selectedMethod)
+                      : R.methods
         }
         onBack={stage === "method" ? undefined : changeConnection}
         disabled={occupied || workBlocked}
@@ -1035,6 +1083,26 @@ export function AgentAuthSection({
         <div className="journey-connection-summary">
           <strong>{summaryTitle}</strong>
           <span role="status">{summaryStatus}</span>
+        </div>
+      )}
+      {existingSummary && connection?.existingVerify && (
+        <div className="auth-progress">
+          <div className="auth-note" role="status">
+            {connection.existingVerify.status === "checking"
+              ? R.existingChecking
+              : connection.existingVerify.status === "ready"
+                ? R.existingReady
+                : connection.existingVerify.error}
+          </div>
+          {connection.existingVerify.status === "failed" &&
+            connection.existingVerify.onRetry && (
+              <button
+                className="btn btn-ghost"
+                onClick={connection.existingVerify.onRetry}
+              >
+                {STRINGS.access.retry}
+              </button>
+            )}
         </div>
       )}
       {completedSummary && !job.checked && (
@@ -1128,60 +1196,20 @@ export function AgentAuthSection({
                       {S.endConnection}
                     </button>
                   )}
-                {job.terminal &&
-                  job.phase !== "cancelling" &&
-                  finishConfirmation !== finishKey && (
-                    <button
-                      className="btn btn-primary"
-                      disabled={!finishAllowed}
-                      onClick={() => {
-                        if (canFinishNow(job.attemptId)) {
-                          finishConsent.current = finishKey;
-                          setFinishConfirmation(finishKey);
-                        }
-                      }}
-                    >
-                      {S.finish}
-                    </button>
-                  )}
+                {job.terminal && job.phase !== "cancelling" && (
+                  <button
+                    className="btn btn-primary"
+                    disabled={!finishAllowed}
+                    onClick={() => {
+                      if (canFinishNow(job.attemptId))
+                        void activity.finishTerminal();
+                    }}
+                  >
+                    {S.finish}
+                  </button>
+                )}
               </div>
             )}
-            {job.terminal &&
-              authActive(job) &&
-              job.phase !== "checking" &&
-              job.phase !== "cancelling" &&
-              finishConfirmation === finishKey && (
-                <section aria-label={S.finishConfirm}>
-                  <p className="auth-note">{S.finishConfirmHint}</p>
-                  <div className="auth-actions">
-                    <button
-                      className="btn btn-ghost"
-                      onClick={() => {
-                        finishConsent.current = null;
-                        setFinishConfirmation(null);
-                      }}
-                    >
-                      {S.finishBack}
-                    </button>
-                    <button
-                      className="btn btn-primary"
-                      disabled={!finishAllowed}
-                      onClick={() => {
-                        if (
-                          finishConsent.current !== finishKey ||
-                          !canFinishNow(job.attemptId)
-                        )
-                          return;
-                        finishConsent.current = null;
-                        setFinishConfirmation(null);
-                        void activity.finishTerminal();
-                      }}
-                    >
-                      {S.finishConfirm}
-                    </button>
-                  </div>
-                </section>
-              )}
           </div>
         )}
       {!apiSelected && (
@@ -1390,15 +1418,6 @@ export function AgentAuthSection({
             >
               {R.change}
             </button>
-            {connection?.onUseExisting && !existingSummary && (
-              <button
-                className="btn btn-text"
-                disabled={occupied || workBlocked}
-                onClick={connection.onUseExisting}
-              >
-                {R.existing}
-              </button>
-            )}
             {completedSummary && completedMethod && (
               <button
                 className="btn btn-text"

@@ -784,9 +784,9 @@ it("exports real shared components with synthetic state and no external IO", asy
     expect(markup).toContain('class="agent-setup-dialog"');
     expect(markup.match(/role="tab"/g)).toHaveLength(3);
     if (s.id.startsWith("01-") || s.id.startsWith("02-"))
-      expect(markup.match(/type="radio"/g)).toHaveLength(2);
-    if (s.id.startsWith("03-"))
       expect(markup.match(/type="radio"/g)).toHaveLength(3);
+    if (s.id.startsWith("03-"))
+      expect(markup.match(/type="radio"/g)).toHaveLength(4);
     if (s.id.startsWith("04-") || s.id.startsWith("05-")) {
       expect(markup).toContain("journey-connection-summary");
       expect(markup).not.toContain('type="radio"');
@@ -817,7 +817,7 @@ it("exports real shared components with synthetic state and no external IO", asy
       expect(markup).toContain("program-manager");
     if (s.id.startsWith("11-")) expect(markup).toContain("更换程序");
     if (s.id.startsWith("13-")) {
-      expect(markup.match(/type="radio"/g)).toHaveLength(1);
+      expect(markup.match(/type="radio"/g)).toHaveLength(2);
       expect(markup).not.toContain("启动设置终端");
     }
     if (s.id.startsWith("14-")) {

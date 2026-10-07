@@ -27,6 +27,7 @@ export function AgentDetails({
   onClose,
   onPrepare,
   canStart = false,
+  statusLabel,
   returnFocusRef,
 }: {
   card: AgentCardModel;
@@ -36,6 +37,7 @@ export function AgentDetails({
   onClose: () => void;
   onPrepare: () => void;
   canStart?: boolean;
+  statusLabel?: string;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -97,15 +99,16 @@ export function AgentDetails({
             <p>{agentDirectorySource(card) ?? source}</p>
           </div>
           <span className="agent-hub-badge">
-            {connected
-              ? S.connected
-              : card.status === "installed"
-                ? S.registered
-                : card.status === "discovered"
-                  ? S.discovered
-                  : !card.installable && !card.registerable
-                    ? installationUnavailableLabel(card.platformAvailable)
-                    : source}
+            {statusLabel ??
+              (connected
+                ? S.connected
+                : card.status === "installed"
+                  ? S.registered
+                  : card.status === "discovered"
+                    ? S.discovered
+                    : !card.installable && !card.registerable
+                      ? installationUnavailableLabel(card.platformAvailable)
+                      : source)}
           </span>
         </div>
         <p className="agent-detail-description">

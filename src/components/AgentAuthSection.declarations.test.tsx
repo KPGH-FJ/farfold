@@ -73,6 +73,9 @@ vi.mock("@tauri-apps/api/event", () => ({
   ),
 }));
 vi.mock("../runtime/agents", () => ({ authMethods: h.methods }));
+vi.mock("../runtime/connection_account", () => ({
+  useConnectionAccount: () => null,
+}));
 vi.mock("../runtime/auth_actions", () => ({
   beginAuthentication: h.begin,
   beginPreparationAction: vi.fn(),
@@ -869,6 +872,7 @@ it("shares a variable method list with declared account, key, terminal and compa
       }[]
     ).map((option) => [option.id, option.title, option.description]),
   ).toEqual([
+    [JSON.stringify(["existing"]), R.existing, R.existingHint],
     [JSON.stringify(["method", "account"]), "Account", R.accountHint],
     [JSON.stringify(["method", "provider-key"]), R.openaiKey, R.openaiKeyHint],
     [JSON.stringify(["method", "terminal"]), R.terminal, R.terminalHint],

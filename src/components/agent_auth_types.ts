@@ -17,6 +17,12 @@ export interface AgentConnectionPresentation {
   onStageChange: (stage: "method" | "account" | "api") => void;
   apiContent: ReactNode;
   apiSummary?: ReactNode;
+  /** Live status of the saved-settings verification run by the setup host. */
+  existingVerify?: {
+    status: "ready" | "checking" | "failed";
+    error?: string | null;
+    onRetry?: () => void;
+  };
   onUseExisting?: () => void;
   onPrimaryChange?: (action: AgentAccessPrimary | null) => void;
 }

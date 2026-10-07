@@ -65,6 +65,9 @@ vi.mock("@tauri-apps/api/event", () => ({
   listen: vi.fn(async () => () => {}),
 }));
 vi.mock("../runtime/agents", () => ({ authMethods: h.methods }));
+vi.mock("../runtime/connection_account", () => ({
+  useConnectionAccount: () => null,
+}));
 vi.mock("../runtime/auth_actions", () => ({
   beginAuthentication: vi.fn(),
   beginPreparationAction: h.prepare,
@@ -237,7 +240,7 @@ it.each(["agent", "terminal", "api-key"] as const)(
       canLogout: false,
     });
     let methodId: string | null = null;
-    let choice: "existing" | "login" | "api" = "existing";
+    let choice: "existing" | "login" | "api" = "login";
     let stage: "method" | "account" | "api" = "method";
     const receive = vi.fn();
     const choose = vi.fn((value: typeof choice, id?: string) => {
@@ -267,7 +270,7 @@ it.each(["agent", "terminal", "api-key"] as const)(
     expect(
       initial.find((node) => node.type === AgentConnectionPicker)?.props
         .options,
-    ).toHaveLength(1);
+    ).toHaveLength(2);
     expect(initial.some((node) => node.type === MethodApiKeySection)).toBe(
       false,
     );
@@ -329,7 +332,7 @@ it("keeps a restored existing-settings summary separate from login choices", asy
   expect(beginAuthentication).not.toHaveBeenCalled();
 });
 
-it("offers a saved-settings finish for an exit-code login, then waits for explicit confirmation and a real connection check", async () => {
+it("offers a saved-settings finish for an exit-code login, then ends the terminal and runs a real connection check", async () => {
   const job = authenticationActivity(agentId),
     exit = deferred<number>(),
     close = deferred<number | null>(),
@@ -363,15 +366,15 @@ it("offers a saved-settings finish for an exit-code login, then waits for explic
     ),
   ).toBe(true);
   (request.props.onClick as () => void)();
-  nodes = await settled();
-  expect(terminate).not.toHaveBeenCalled();
-  expect(job.getSnapshot()?.phase).toBe("waiting");
-  const confirm = button(nodes, "确认已保存，结束终端并检查连接");
-  expect(confirm).toBeDefined();
-  (confirm.props.onClick as () => void)();
   await Promise.resolve();
   expect(terminate).toHaveBeenCalledOnce();
   expect(job.getSnapshot()?.phase).toBe("cancelling");
+  nodes = await settled();
+  expect(
+    nodes.some(
+      (node) => node.props.children === "确认已保存，结束终端并检查连接",
+    ),
+  ).toBe(false);
   expect(button(await settled(), "继续选择模型")).toBeUndefined();
   close.resolve(130);
   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("checking"));
@@ -399,7 +402,7 @@ it("offers a saved-settings finish for an exit-code login, then waits for explic
   exit.resolve(130);
 });
 
-it("disables finish before a terminal id exists and rechecks late work and attempt identity before confirmation", async () => {
+it("disables finish before a terminal id exists and rechecks late work and attempt identity at click time", async () => {
   const job = authenticationActivity(agentId),
     ready = deferred<string>(),
     exit = deferred<number>();
@@ -429,20 +432,20 @@ it("disables finish before a terminal id exists and rechecks late work and attem
   ready.resolve("owned");
   await job.getSnapshot()!.terminal!.start();
   nodes = await settled();
-  (
-    button(nodes, "已保存设置，结束终端并检查连接").props.onClick as () => void
-  )();
-  nodes = await settled();
-  const confirm = button(nodes, "确认已保存，结束终端并检查连接");
   const work = freshThreadState("late-work", agentId, "/original", "work");
   work.running = true;
   h.threads.set(work.key, work);
-  (confirm.props.onClick as () => void)();
+  nodes = await settled();
+  const finish = button(nodes, "已保存设置，结束终端并检查连接");
+  expect(finish.props.disabled).toBe(true);
+  (finish.props.onClick as () => void)();
   expect(close).not.toHaveBeenCalled();
-  expect(
-    button(await settled(), "确认已保存，结束终端并检查连接").props.disabled,
-  ).toBe(true);
   h.threads.clear();
+  nodes = await settled();
+  const readyFinish = button(nodes, "已保存设置，结束终端并检查连接");
+  expect(readyFinish.props.disabled).toBe(false);
+  (readyFinish.props.onClick as () => void)();
+  expect(close).toHaveBeenCalledOnce();
   exit.resolve(0);
   await vi.waitFor(() => expect(job.getSnapshot()?.phase).toBe("completed"));
   job.begin(
@@ -455,8 +458,8 @@ it("disables finish before a terminal id exists and rechecks late work and attem
     },
     "later",
   );
-  (confirm.props.onClick as () => void)();
-  expect(close).not.toHaveBeenCalled();
+  (readyFinish.props.onClick as () => void)();
+  expect(close).toHaveBeenCalledOnce();
 });
 
 it.each([
@@ -760,7 +763,7 @@ it("keeps confirmed completion as a summary, then explicitly opens management be
   ).toBe(R.keyVerify);
 });
 
-it("revokes an inline finish confirmation when the visible target changes or the user chooses to keep working", async () => {
+it("finishes a terminal login in one step and ignores retargeted or stale finish clicks", async () => {
   const job = authenticationActivity(agentId),
     exit = deferred<number>();
   const close = vi.fn(async () => 130);
@@ -780,25 +783,16 @@ it("revokes an inline finish confirmation when the visible target changes or the
     close,
     reconnect: h.changed,
   });
-  let nodes = await settled();
-  (button(nodes, A.finish).props.onClick as () => void)();
-  nodes = await settled();
-  const previous = button(nodes, A.finishConfirm);
-  (button(nodes, A.finishBack).props.onClick as () => void)();
-  (previous.props.onClick as () => void)();
-  expect(close).not.toHaveBeenCalled();
-  nodes = await settled();
-  (button(nodes, A.finish).props.onClick as () => void)();
-  nodes = await settled();
-  const original = button(nodes, A.finishConfirm);
-  nodes = await settled(undefined, { cwd: "/elsewhere" });
-  expect(button(nodes, A.finishConfirm)).toBeUndefined();
-  (original.props.onClick as () => void)();
+  const nodes = await settled();
+  const finish = button(nodes, A.finish);
+  await settled(undefined, { cwd: "/elsewhere" });
+  (finish.props.onClick as () => void)();
   expect(close).not.toHaveBeenCalled();
   await settled();
-  (original.props.onClick as () => void)();
-  expect(close).not.toHaveBeenCalled();
-  await job.cancel();
+  (finish.props.onClick as () => void)();
+  expect(close).toHaveBeenCalledOnce();
+  (finish.props.onClick as () => void)();
+  expect(close).toHaveBeenCalledOnce();
   exit.resolve(130);
 });
 
@@ -1393,7 +1387,7 @@ it.each([null, "removed"])(
     });
     expect(
       nodes.find((node) => node.type === AgentConnectionPicker)?.props.options,
-    ).toHaveLength(1);
+    ).toHaveLength(2);
     expect(receive.mock.calls.at(-1)?.[0]?.label).toBe(R.continue);
     expect(beginAuthentication).not.toHaveBeenCalled();
   },

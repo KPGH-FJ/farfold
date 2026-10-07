@@ -501,7 +501,7 @@ export function AgentHub({
       : readRequired(card)
         ? C.readPending
         : authenticationRequired(authentication, card.id, null)
-          ? STRINGS.agents.auth.heading
+          ? S.needLogin
           : card.status === "connected"
             ? setupStorage.completed(card.id) && newSelection(card.id)
               ? S.connected
@@ -774,6 +774,7 @@ export function AgentHub({
           onClose={() => setDetail(null)}
           onPrepare={() => startOrPrepare(detailCard)}
           canStart={canStart(detailCard)}
+          statusLabel={stateLabel(detailCard)}
           returnFocusRef={detailReturnFocus}
         />
       )}

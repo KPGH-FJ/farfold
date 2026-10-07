@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { X } from "@phosphor-icons/react";
-import type { AgentCardModel, AgentsState } from "../runtime/agents";
+import {
+  preparationConnection,
+  type AgentCardModel,
+  type AgentsState,
+} from "../runtime/agents";
+import { isAutomaticConnectionAllowed } from "../runtime/connection_intent";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import { programProgress } from "../runtime/program_progress";
@@ -231,6 +236,10 @@ export function AgentSetup({
   const [prerequisitesBusy, setPrerequisitesBusy] = useState(false);
   const work = useWorkPolicy(cwd);
   const targetCwd = work.ready ? work.cwd : undefined;
+  const prepConnected = !!preparationConnection(
+    agents.statuses?.[card.id],
+    cwd,
+  );
   const program = preparationProgram(card);
   const testing = testInProgress(test.phase);
   const model = testThread ? modelConfigOption(testThread.configOptions) : null;
@@ -432,6 +441,38 @@ export function AgentSetup({
   const canOpenModels =
     canContinueModel && !nextBlocked && !!cwd && sourceValid && !needsAuth;
   modelNavigation.current = canOpenModels;
+  /** Saved-settings reuse is verified in place, before the user reaches models. */
+  const existingVerifyActive =
+    !conversation &&
+    step === 1 &&
+    prepConnected &&
+    choice === "existing" &&
+    accountStage === "account" &&
+    !setupProgress.authMethodId &&
+    !setupProgress.preparationActionId &&
+    !needsAuth &&
+    !authBusy;
+  const existingVerifyReady =
+    existingVerifyActive &&
+    sameSource &&
+    !!testThread &&
+    !test.readError &&
+    !explicitReadRequired &&
+    !modelReadFailed;
+  const verifyArmed = useRef(false);
+  const wasVerifying = useRef(false);
+  useEffect(() => {
+    if (existingVerifyActive && !wasVerifying.current && intent === "use")
+      verifyArmed.current = true;
+    if (!existingVerifyActive) verifyArmed.current = false;
+    wasVerifying.current = existingVerifyActive;
+  }, [existingVerifyActive, intent]);
+  useEffect(() => {
+    if (verifyArmed.current && existingVerifyReady) {
+      verifyArmed.current = false;
+      onProgress({ ...latestProgress.current, step: 2 });
+    }
+  }, [existingVerifyReady, onProgress]);
   useEffect(() => {
     if (
       sameSource &&
@@ -467,7 +508,7 @@ export function AgentSetup({
       explicitReadRequired ||
       needsAuth ||
       waitingForOtherSource ||
-      step !== 2 ||
+      !(step === 2 || existingVerifyActive) ||
       !connected ||
       !prerequisitesReady ||
       !modelValid ||
@@ -610,6 +651,39 @@ export function AgentSetup({
     const input = preparationInput();
     if (input) void controller.prepare(input, true);
   };
+  const autoConnectKey = useRef("");
+  useEffect(() => {
+    if (
+      !active ||
+      conversation ||
+      step !== 1 ||
+      prepConnected ||
+      needsProgramInstall ||
+      busy ||
+      authBusy ||
+      operationPending ||
+      !cwd ||
+      !agents.statuses ||
+      !isAutomaticConnectionAllowed(card.id)
+    )
+      return;
+    const key = JSON.stringify([card.id, cwd]);
+    if (autoConnectKey.current === key) return;
+    autoConnectKey.current = key;
+    void connect().catch(() => undefined);
+  }, [
+    active,
+    conversation,
+    step,
+    prepConnected,
+    needsProgramInstall,
+    busy,
+    authBusy,
+    operationPending,
+    cwd,
+    card.id,
+    connect,
+  ]);
   useEffect(
     () => () => {
       modelChange.current += 1;
@@ -708,7 +782,15 @@ export function AgentSetup({
         </span>
         <span className={`agent-setup-status ${connected ? "ready" : ""}`}>
           <i aria-hidden="true" />
-          {connected ? R.connected : M.goProgram}
+          {step === 1 && !conversation
+            ? prepConnected
+              ? R.connected
+              : connecting
+                ? P.readingAccount
+                : S.notConnected
+            : connected
+              ? R.connected
+              : M.goProgram}
         </span>
       </div>
       <AgentSetupNavigation
@@ -836,15 +918,37 @@ export function AgentSetup({
                 <p className="agent-setup-note">{STRINGS.repair.modelLocked}</p>
               </div>
             )}
-            {!connected && !authBusy && (
-              <div className="agent-setup-notice" role="status">
-                <h3>{P.connectionRequired}</h3>
-                <p>{P.connectionRequiredHint}</p>
-                <button className="btn btn-ghost" onClick={() => setStep(0)}>
-                  {M.goProgram}
-                </button>
-              </div>
-            )}
+            {(!connected || (!!agents.statuses && !prepConnected)) &&
+              !authBusy && (
+                <div className="agent-setup-notice" role="status">
+                  {connecting && !needsProgramInstall ? (
+                    <p>{P.readingAccount}</p>
+                  ) : (
+                    <>
+                      <h3>{P.connectionRequired}</h3>
+                      <p>{P.connectionRequiredHint}</p>
+                      <div className="auth-actions">
+                        {!needsProgramInstall && (
+                          <button
+                            className="btn btn-ghost"
+                            onClick={() =>
+                              void connect().catch(() => undefined)
+                            }
+                          >
+                            {P.connectForMethods}
+                          </button>
+                        )}
+                        <button
+                          className="btn btn-text"
+                          onClick={() => setStep(0)}
+                        >
+                          {M.goProgram}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             {capabilityError && (
               <button
                 className="btn btn-text"
@@ -853,7 +957,11 @@ export function AgentSetup({
                 {S.retry}
               </button>
             )}
-            {(authJob || authBusy || connected) && (
+            {(authJob ||
+              authBusy ||
+              (conversation
+                ? connected
+                : prepConnected || !agents.statuses)) && (
               <AgentAuthSection
                 connection={
                   conversation
@@ -880,6 +988,20 @@ export function AgentSetup({
                         },
                         onStageChange: (accessStage) =>
                           updateAccess({ accessStage }),
+                        existingVerify: existingVerifyActive
+                          ? {
+                              status: existingVerifyReady
+                                ? "ready"
+                                : modelReadFailed || test.readError
+                                  ? "failed"
+                                  : "checking",
+                              error:
+                                modelReadFailed || test.readError
+                                  ? (test.readError ?? test.error)
+                                  : null,
+                              onRetry: prepareAgain,
+                            }
+                          : undefined,
                         actionId: setupProgress.preparationActionId ?? null,
                         onActionChange: (id) =>
                           updateAccess({

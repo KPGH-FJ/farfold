@@ -577,6 +577,24 @@ export function mergeAgentCards(
   return [...cards, ...customs];
 }
 
+/** A ready preparation-purpose connection for one location; conversation and
+ * service-scoped connections never count, matching the backend auth target. */
+export function preparationConnection(
+  statuses: readonly AgentConnectionStatus[] | undefined,
+  cwd: string | null | undefined,
+): AgentConnectionStatus | null {
+  if (!statuses || !cwd) return null;
+  return (
+    statuses.find(
+      (status) =>
+        status.state === "ready" &&
+        status.purpose !== "conversation" &&
+        !status.serviceContext &&
+        status.cwd === cwd,
+    ) ?? null
+  );
+}
+
 /** A status event ends only its own project and model-source connection. */
 export function mergeConnectionStatus(
   existing: AgentConnectionStatus[],
@@ -632,6 +650,7 @@ export interface AgentsState {
   loadError: string | null;
   cards: AgentCardModel[];
   connectedCards: AgentCardModel[];
+  statuses?: Record<string, AgentConnectionStatus[]>;
   busy: Record<string, AgentBusy | null>;
   scanning: boolean;
   installProgress: Record<string, InstallProgress>;
@@ -1009,6 +1028,7 @@ export function useAgents(): AgentsState {
     loadError,
     cards,
     connectedCards,
+    statuses,
     busy,
     scanning,
     installProgress,

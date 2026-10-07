@@ -33,24 +33,22 @@ export function ConnectionAccount({
     active,
     connectionId,
   );
-  if (source) return null;
+  if (source || !account) return null;
   return (
     <div
       className="journey-connection-summary connection-account-summary"
       aria-label="当前账号"
     >
-      <strong>{account ? labels[account.kind] : "账号状态未报告"}</strong>
-      {account?.email && <span>{account.email}</span>}
-      {account?.displayName && <span>{account.displayName}</span>}
-      {account?.plan && <span>{`账号方案：${account.plan}`}</span>}
+      <strong>{labels[account.kind]}</strong>
+      {account.email && <span>{account.email}</span>}
+      {account.displayName && <span>{account.displayName}</span>}
+      {account.plan && <span>{`账号方案：${account.plan}`}</span>}
       <span className="auth-note">
-        {account
-          ? ["credential", "missing_credential", "not_required"].includes(
-              account.kind,
-            )
-            ? "由 Agent 检查本地设置；尚未验证服务是否可用。"
-            : "由 Agent 报告；实际服务与模型以当前选择为准。"
-          : "连接检查不代表已登录。"}
+        {["credential", "missing_credential", "not_required"].includes(
+          account.kind,
+        )
+          ? "由 Agent 检查本地设置；尚未验证服务是否可用。"
+          : "由 Agent 报告；实际服务与模型以当前选择为准。"}
       </span>
     </div>
   );

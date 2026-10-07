@@ -110,6 +110,7 @@ export function NewConversationAgentDialog({
   cards,
   picked,
   prepared,
+  needsAuth,
   onPick,
   onPrepare,
   onClose,
@@ -118,6 +119,7 @@ export function NewConversationAgentDialog({
   cards: AgentCardModel[];
   picked: string | null;
   prepared: (id: string) => boolean;
+  needsAuth?: (id: string) => boolean;
   onPick: (id: string) => void;
   onPrepare: (id?: string) => void;
   onClose: () => void;
@@ -158,7 +160,11 @@ export function NewConversationAgentDialog({
             <span>
               <strong>{card.name}</strong>
               <small>
-                {card.status === "connected" ? A.connected : A.standby}
+                {needsAuth?.(card.id)
+                  ? A.needLogin
+                  : card.status === "connected"
+                    ? A.connected
+                    : A.standby}
               </small>
             </span>
             {card.id === picked && <Check size={16} />}

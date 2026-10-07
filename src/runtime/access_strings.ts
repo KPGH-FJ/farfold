@@ -43,6 +43,8 @@ export const ACCESS_STRINGS = {
   connectionFailed: "连接异常",
   disconnectedHint: "已断开，点击重试后继续。",
   registered: "已添加，尚未连接",
+  needLogin: "需要登录",
+  notConnected: "未连接",
   discovered: "已在本机发现",
   notInstalled: "尚未安装",
   unavailable: "当前尚不能在此安装",

@@ -1064,6 +1064,7 @@ export function EmptyState({
           cards={agents}
           picked={agentId}
           prepared={preparedForConversation}
+          needsAuth={(id) => authenticationRequired(authentication, id, null)}
           onPick={pickAgent}
           onPrepare={prepareFromChoice}
           onClose={() => setChoiceDialog(null)}

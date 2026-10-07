@@ -286,7 +286,7 @@ it.each(
     expect(
       view.auth.find((node) => node.type === AgentConnectionPicker)?.props
         .options,
-    ).toHaveLength(1);
+    ).toHaveLength(2);
     expect(button(view.setup, R.terminalStart)).toBeUndefined();
     expect(h.begin).not.toHaveBeenCalled();
     await click(button(view.setup, R.continue));

@@ -1298,6 +1298,120 @@ it.each([
   },
 );
 
+const conversationOnly = () =>
+  ({
+    [card.id]: [
+      {
+        connectionId: "conversation-1",
+        purpose: "conversation",
+        agentId: card.id,
+        cwd: "/old",
+        state: "ready",
+        agentName: null,
+        agentVersion: null,
+        authMethods: [],
+      },
+    ],
+  }) as AgentsState["statuses"];
+
+it("establishes one preparation connection at the account step when only a conversation connection exists", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.progress = { step: 1, choice: "existing" };
+  const connect = vi.fn(async () => {});
+  props.agents = {
+    ...props.agents,
+    connect,
+    statuses: conversationOnly(),
+  };
+  render();
+  await Promise.resolve();
+  expect(connect).toHaveBeenCalledExactlyOnceWith(props.card, "/old");
+  render();
+  await Promise.resolve();
+  expect(connect).toHaveBeenCalledTimes(1);
+});
+
+it("does not re-establish a connection after an explicit disconnect pauses automation", async () => {
+  const { pauseAutomaticConnection } =
+    await import("../runtime/connection_intent");
+  const restore = pauseAutomaticConnection(card.id);
+  try {
+    props.intent = "use";
+    props.conversation = undefined;
+    props.progress = { step: 1, choice: "existing" };
+    const connect = vi.fn(async () => {});
+    props.agents = {
+      ...props.agents,
+      connect,
+      statuses: conversationOnly(),
+    };
+    render();
+    await Promise.resolve();
+    render();
+    await Promise.resolve();
+    expect(connect).not.toHaveBeenCalled();
+  } finally {
+    restore();
+  }
+});
+
+it("verifies saved settings in place and advances to models when the read succeeds", async () => {
+  props.intent = "use";
+  props.conversation = undefined;
+  props.progress = {
+    step: 1,
+    choice: "existing",
+    selection: { service: null, config: { model: "A" } },
+  };
+  props.agents = {
+    ...props.agents,
+    statuses: {
+      [card.id]: [
+        {
+          connectionId: "preparation-1",
+          purpose: "preparation",
+          agentId: card.id,
+          cwd: "/old",
+          state: "ready",
+          agentName: null,
+          agentVersion: null,
+          authMethods: [],
+        },
+      ],
+    } as AgentsState["statuses"],
+  };
+  let nodes = render();
+  (
+    nodes.find((node) => node.type === AgentPrerequisites)!.props.onChange as (
+      ready: boolean,
+    ) => void
+  )(true);
+  nodes = render();
+  const section = nodes.find((node) => node.type === AgentAuthSection)!;
+  (
+    section.props.connection as {
+      onUseExisting: () => void;
+      existingVerify?: { status: string };
+    }
+  ).onUseExisting();
+  nodes = render();
+  expect(props.progress.accessStage).toBe("account");
+  expect(h.prepare).toHaveBeenCalledOnce();
+  const verifying = nodes.find((node) => node.type === AgentAuthSection)!;
+  expect(
+    (
+      verifying.props.connection as {
+        existingVerify?: { status: string };
+      }
+    ).existingVerify?.status,
+  ).toBe("checking");
+  confirmModelRead();
+  render();
+  expect(props.progress.step).toBe(2);
+  expect(props.onStart).not.toHaveBeenCalled();
+});
+
 it.each(["required", "active"])(
   "does not advance past an %s account operation through the continue action",
   async (condition) => {
