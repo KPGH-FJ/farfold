@@ -1,0 +1,18 @@
+{
+  "counts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "symlink": 328
+    },
+    "webkit": {
+      "directory": 131,
+      "file": 86
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2
+    }
+  },
+  "sha256": "f367fcf81dffb942577493e1501e81a0e1100aad74c2633a47ec54605076e3f7"
+}

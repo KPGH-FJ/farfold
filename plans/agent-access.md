@@ -33,6 +33,8 @@
 
 进度：W1 已完成——源码提交 `7a36a6db`，七项检查通过；2026-10-07 换包安装（数据三树 217,365 条目无损）并实机复测 Antigravity 首次接入（已有设置置顶/Agent 描述/当场验证退回 auth_required 均符合设计）与 Codex 设置页。复测发现的残留（状态标签未全统一、设置页与卡片连接状态矛盾、忙时按钮无反应、登录单按钮中间页）并入 W1.5。
 
+W1.5+W2 已完成并实机关闭：W1.5 源码 `c68a6ea6`、W2 源码 `939bb021`；首次安装 `939bb021` 实机发现无文件夹草稿发送永久禁用（`useWorkPolicy` 无位置时恒 false），修复 `bd0bf1cb` 后重装并全项通过——菜单全中文（Info.plist 生效）、最近/我的 Agent/29 项目录/统一状态词表、Codex 透明连接与已有设置当场验证、Antigravity 分组登录+直达登录+注册回前台自动检查、无文件夹草稿发送→选框→取消保留。详见 `docs/status.md` 与 `install-bd0bf1cb/installed-app-verification.json`。未验证项：零 Agent 空态引导与空选择列表（本机 29 项均符合"我的 Agent"定义，无法制造空态）。下一步：W3 对话面。
+
 ## 完成标准
 
 29 项名单保持，以 [产品契约](../PRODUCT.md#3-当前接入完成标准) 的八项标准为准。官方接口不足也保留待完善，不以隐藏入口、能连接或能聊天判完成。列表与来源见 [首批目录](../docs/agent-first-release.md)、[补强前严格审查](../docs/evidence/2026-10-06-agent-standard-review/README.md)；新旧官方接口及官方补充能力按机制接入，不按品牌复制 UI。

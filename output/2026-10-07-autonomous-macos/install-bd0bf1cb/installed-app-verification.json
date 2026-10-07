@@ -1,0 +1,23 @@
+{
+  "verifiedAtUtc": "2026-10-07T18:27:02.356867+00:00",
+  "installedCommit": "bd0bf1cbbd86b8f0b51ba93374c237dcbfcc99f8",
+  "supersedes": "939bb02120e3c33ddd47ec0a0626b1be214cc43a (packaged+installed first; revealed work_policy folderless-send defect; fixed in bd0bf1cb)",
+  "scope": "W1.5 + W2 installed-app verification; no login, no account change, no message sent",
+  "results": {
+    "nativeMenusChinese": "pass — 全部菜单中文,含系统注入项(自动填充/开始听写/通讯录/密码/服务),Info.plist 生效; 新对话⌘N/搜索对话⌘K/设置⌘,/检查更新/键盘快捷键/数据与隐私均在",
+    "sidebarRecents": "pass — 侧栏'最近'列出最新8段(hello×5等)+'查看全部'(>8); '9 新回复'未读徽标; 当前行 active 高亮(代码); 无标题未发送草稿不入列",
+    "myAgentsUnified": "pass — 侧栏'全部 Agent（29）'与 AgentHub'我的 Agent 29'同源 isMyAgent; 侧栏展示6个+汇总入口",
+    "catalogScope29": "pass — 探索页显示'29 个 Agent'",
+    "statusLabelsUnified": "pass — 卡片只见'可以使用'(23)/'未完成设置'(6); 选择弹窗'Codex 可以使用'; 设置页与卡片一致",
+    "codexAccountStep": "pass — 连接→已连接; 账号与服务直接显示分组方式(账号登录/API 密钥),'已有设置'置顶并显示 friedmangael73gke2w@gmail.com · pro; '没有账号？前往 Codex 官网'常驻; 点'使用已有设置继续'→'正在确认已有设置…'→'已有设置可以使用'→模型步解锁",
+    "antigravityFirstSetup": "pass — 连接→方式列表直接显示; 按声明类型分组(该 Agent 声明均为账号类→'账号登录'组); Agent 原文副标题; 主按钮直接'登录 Log in with Google'(无中间页); 注册行打开官网后回到前台触发一次性已有设置验证→'需要登录'+'已有设置 需要先登录'标注+'注册完成后，选择一种方式登录。'",
+    "folderlessDraft": "pass — 移除文件夹后'选择工作文件夹'; 选 Codex+输入文字→发送可用(修复后); 点发送→原生中文文件夹选择框; 取消→草稿文字保留+'选择工作文件夹后即可发送'+发送恢复可用; 未打开 Agent 对话、未发消息; 文件/@ 走同一 onRequireFolder(代码核实)",
+    "bugFoundAndFixed": "useWorkPolicy cwd=null 时 enabled() 恒 false → 无文件夹草稿发送永久禁用; bd0bf1cb 修复并在新包中验证",
+    "draftRestored": "验证后草稿恢复原状(文件夹 /Users/tw/Desktop/TR, 文字已清空, 未发送任何内容)",
+    "notVerifiableOnThisMachine": [
+      "零'我的 Agent'空态引导(本机29个全部符合定义)",
+      "探索页'还没有可以使用的 Agent'分支(同上)"
+    ]
+  },
+  "constraints": "未登录/未换号/未发消息/未改凭据; 对话只读打开"
+}

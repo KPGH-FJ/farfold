@@ -1,0 +1,12 @@
+{
+  "comparedAtUtc": "2026-10-07T18:22:31.354465+00:00",
+  "beforeSha256": "0d8ce117f66b7a5e4ed6df754ae3e3e7ee6df4697ac5512bc01a00cc91853869",
+  "afterSha256": "0d8ce117f66b7a5e4ed6df754ae3e3e7ee6df4697ac5512bc01a00cc91853869",
+  "identical": true,
+  "roots": [
+    "appData",
+    "webkit",
+    "cache"
+  ],
+  "note": "byte-identical; install replaced only /Applications/Farfold.app"
+}

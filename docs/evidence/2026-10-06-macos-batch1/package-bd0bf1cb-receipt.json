@@ -1,0 +1,157 @@
+{
+  "phase": "internalCandidatePreparedNotInstalled",
+  "recordedAtUtc": "2026-10-07T18:20:12.158095+00:00",
+  "sourceCommit": "bd0bf1cbbd86b8f0b51ba93374c237dcbfcc99f8",
+  "command": "corepack pnpm tauri:build:internal",
+  "candidateApp": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalApp": "/Applications/Farfold.app",
+  "archive": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-07-bd0bf1cb/Farfold-0.1.7-bd0bf1cb.zip",
+  "formalAppReplaced": false,
+  "runningAppStopped": false,
+  "installed": false,
+  "notarized": false,
+  "buildScript": "source/Git/full path and content preflight; no old generated app",
+  "compileEnvironmentPresence": {
+    "FARFOLD_UPDATE_ENDPOINT": false,
+    "FARFOLD_UPDATE_PUBLIC_KEY": false,
+    "TAURI_CONFIG": false,
+    "RUSTFLAGS": false,
+    "CARGO_ENCODED_RUSTFLAGS": false,
+    "CARGO_BUILD_TARGET": false
+  },
+  "toolchain": {
+    "node": {
+      "exitCode": 0,
+      "output": "v22.22.3"
+    },
+    "pnpm": {
+      "exitCode": 0,
+      "output": "9.15.0"
+    },
+    "rustc": {
+      "exitCode": 0,
+      "output": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+    },
+    "cargo": {
+      "exitCode": 0,
+      "output": "cargo 1.96.0 (30a34c682 2026-05-25)"
+    },
+    "developerDirectory": {
+      "exitCode": 0,
+      "output": "/Library/Developer/CommandLineTools"
+    },
+    "clang": {
+      "exitCode": 0,
+      "output": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Library/Developer/CommandLineTools/usr/bin"
+    },
+    "macosSdk": {
+      "exitCode": 0,
+      "output": "15.5"
+    }
+  },
+  "sourceInputs": 753,
+  "sourceInputDigest": "f14456ced7ba60d3e4ba123db9021594a7976ded982806382826330838dcac8c",
+  "sourceInputDigestAlgorithm": "SHA256 of UTF-8 compact JSON with sorted keys",
+  "sourceInputStatDigestBefore": "31300bbf53d793200f2741410ad6764e15d58d188bd7d72aaf5d5da04994934a",
+  "sourceInputsMatchGitBefore": true,
+  "newSourcePaths": [],
+  "removedSourcePaths": [],
+  "sourceInputManifest": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/package-bd0bf1cb/source-inputs-bd0bf1cb.json",
+  "formalAppFilesBeforeBuild": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "e84e7557b02d4018ceda1c6130447a114c0ffd6a7f3fb5027984d41f2fd930da",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "generatedBundleAbsentBeforeBuild": true,
+  "oldArchive": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-07-939bb021/Farfold-0.1.7-939bb021.zip",
+    "sha256": "4e6e93e948ab510577d099a4733491ccafc696c25488007658d5121fd965c521"
+  },
+  "applicationsFarfoldEntries": [
+    "/Applications/Farfold.app"
+  ],
+  "diskFreeBytesBefore": 56881438720,
+  "sourceInputScope": {
+    "recursive": [
+      "src",
+      "assets",
+      "public",
+      "scripts",
+      "src-tauri/src",
+      "src-tauri/native",
+      "src-tauri/capabilities",
+      "src-tauri/icons",
+      "src-tauri/resources"
+    ],
+    "files": [
+      "index.html",
+      "package.json",
+      "pnpm-lock.yaml",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.node.json",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "src-tauri/Cargo.lock",
+      "src-tauri/Cargo.toml",
+      "src-tauri/build.rs",
+      "src-tauri/tauri.conf.json",
+      "src-tauri/tauri.windows.conf.json"
+    ],
+    "excluded": [
+      "target",
+      "node_modules",
+      "dist",
+      "output",
+      ".DS_Store"
+    ],
+    "claim": "Repository application build sources and existing source/test files in these roots; not an inventory of every CI/test fixture or external toolchain/dependency input."
+  },
+  "buildPid": 47329,
+  "buildExitCode": 0,
+  "buildDurationSeconds": 44.749,
+  "buildLog": "/Users/tw/Desktop/farfold/output/2026-10-07-autonomous-macos/package-bd0bf1cb/package-bd0bf1cb-build.log",
+  "buildEndedAtUtc": "2026-10-07T18:20:57.276915+00:00",
+  "sourceCommitAfterBuild": "bd0bf1cbbd86b8f0b51ba93374c237dcbfcc99f8",
+  "sourceInputDigestAfterBuild": "f14456ced7ba60d3e4ba123db9021594a7976ded982806382826330838dcac8c",
+  "sourceInputStatDigestAfterBuild": "31300bbf53d793200f2741410ad6764e15d58d188bd7d72aaf5d5da04994934a",
+  "changedSourcePaths": [],
+  "observedSourceStatChanges": [],
+  "sourceInputStatsUnchanged": true,
+  "sourceInputsMatchGitAfterBuild": true,
+  "diskFreeBytesAfterBuild": 56851468288,
+  "sourceInputsStableThroughoutObservedBuild": true,
+  "strictCodesignPassed": true,
+  "codesignExitCode": 0,
+  "codesignResult": [
+    "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk",
+    "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement"
+  ],
+  "designatedRequirement": "# designated => cdhash H\"ed13a1eb3bd27eba00e3897abfd231c5a0502143\"\nExecutable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold",
+  "signature": "adhoc",
+  "cdHash": "ed13a1eb3bd27eba00e3897abfd231c5a0502143",
+  "bundleIdentifier": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "binarySha256": "8318a05079842c85540f97670bae181c5aec33e8cba96a28983f1748a3502119",
+  "candidateFileCount": 5,
+  "candidateFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "8318a05079842c85540f97670bae181c5aec33e8cba96a28983f1748a3502119",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "completedAtUtc": "2026-10-07T18:20:58.206925+00:00",
+  "archiveBytes": 10232467,
+  "archiveSha256": "51e4a7cf0cdca376f692a1a718fff8662e1dcc4d18f14d1a4e12b587472e383a",
+  "archiveCrcPassed": true,
+  "archiveFileBytesMatchCandidate": true,
+  "formalAppFilesUnchangedAcrossCandidateBuildAndChecks": true,
+  "oldZipPreservedAndHashUnchanged": true,
+  "diskFreeBytesAfterPackage": 56851718144,
+  "duplicateAppCleanup": "Not performed before installation; only this generated bundle may be removed after root installs and verifies it.",
+  "scope": "bd0bf1cb source-stable macOS internal candidate only; no app replacement, app quit, user-data scan, or installed/real-Agent acceptance."
+}

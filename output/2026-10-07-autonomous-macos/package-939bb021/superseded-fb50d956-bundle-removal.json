@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-07T17:54:55.957381+00:00",
+  "removed": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "reason": "superseded uninstalled fb50d956 candidate blocked 939bb021 build; 5 files matched its receipt",
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-07-fb50d956/Farfold-0.1.7-fb50d956.zip",
+  "archiveSha256Verified": "619442a4d6753e5ad679dacf158059fa26bf98762958939c4e2c31620d8a813f"
+}

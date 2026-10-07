@@ -1,0 +1,9 @@
+{
+  "observedAtUtc": "2026-10-07T18:21:11.773140+00:00",
+  "userConfirmedSavedNormalExit": false,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "fullMacTestAuthority": true,
+  "exactFormalExecutableProcessesAfter": 0,
+  "note": "app quit via standard quit (osascript tell application to quit) after agent-driven verification; process count 0"
+}

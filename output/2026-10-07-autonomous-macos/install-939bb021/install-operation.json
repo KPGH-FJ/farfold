@@ -1,0 +1,16 @@
+{
+  "installedAtUtc": "2026-10-07T18:00:21.828466+00:00",
+  "candidateCommit": "939bb02120e3c33ddd47ec0a0626b1be214cc43a",
+  "binarySha256": "e84e7557b02d4018ceda1c6130447a114c0ffd6a7f3fb5027984d41f2fd930da",
+  "userConfirmedSavedNormalExit": false,
+  "latestUserFullMacTestAuthority": true,
+  "normalQuitObservedByAgent": true,
+  "forcedQuit": false,
+  "formalAppProcessesBefore": 0,
+  "onlyFormalAppReplaced": true,
+  "installedExactFiveFiles": true,
+  "strictCodesignExit": 0,
+  "architecture": "arm64",
+  "dataRetentionComparisonPending": true,
+  "launched": false
+}
