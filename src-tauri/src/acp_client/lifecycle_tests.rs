@@ -375,11 +375,23 @@ async fn confirmed_cancel_clears_every_pending_form() {
 #[tokio::test(flavor = "multi_thread")]
 async fn abandoned_mode_change_keeps_ownership_but_does_not_block_stop() {
     let f = Fixture::new();
+    // This exercises an unfinished old-mode request, not a modern list that
+    // correctly rejects the old setter before anything is dispatched.
+    let modern_new = "elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})";
+    assert_eq!(PEER.matches(modern_new).count(), 1);
+    let legacy_peer = PEER.replacen(
+        modern_new,
+        "elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'modes':{'currentModeId':'code','availableModes':[{'id':'code','name':'Code'},{'id':'plan','name':'Plan'}]}})",
+        1,
+    );
+    std::fs::write(f.cwd.join("peer.py"), legacy_peer).unwrap();
     let opened = f
         .manager
         .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store)
         .await
         .unwrap();
+    assert!(!opened.config_options_modern);
+    assert!(opened.config_options.is_none());
     let change = f
         .manager
         .session_set_mode(&f.row.id, &f.cwd, &opened.session_id, "plan");

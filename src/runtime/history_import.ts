@@ -79,7 +79,11 @@ export async function previewHistory(
       "options" in event
     ) {
       configurationDelivered = true;
-      replaceConfigOptions(state, normalizeConfigOptions(event.options));
+      replaceConfigOptions(
+        state,
+        normalizeConfigOptions(event.options),
+        !("modern" in event && event.modern === false),
+      );
     } else if ("update" in event) {
       if (
         (event.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===

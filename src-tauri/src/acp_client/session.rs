@@ -1021,6 +1021,7 @@ pub struct SessionOpenResult {
     /// build its session key from this, not the raw input path.
     pub cwd: String,
     pub config_options: Value,
+    pub config_options_modern: bool,
     pub config_check: super::model_guard::ConfigCheck,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub permission_config_id: Option<String>,

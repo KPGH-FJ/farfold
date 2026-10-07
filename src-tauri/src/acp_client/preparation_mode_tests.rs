@@ -45,6 +45,7 @@ async fn read(
     let released = Arc::new(Mutex::new(Some(released)));
     let reject = source == "reject";
     let delayed = source == "cancel";
+    let legacy = matches!(source, "synthetic" | "reject" | "cancel");
     let peer = Agent.builder().on_receive_dispatch(
         async move |message: Dispatch, _cx| {
             if let Dispatch::Request(request, responder) = message {
@@ -58,6 +59,9 @@ async fn read(
                     "session/new" | "session/load" => {
                         let mut response =
                             json!({"configOptions":options.lock().unwrap().clone(),"modes":modes});
+                        if legacy {
+                            response.as_object_mut().unwrap().remove("configOptions");
+                        }
                         if method == "session/new" {
                             response["sessionId"] = json!("mode-proof");
                         }
@@ -211,12 +215,36 @@ fn preparation_real_mode_category_suppresses_synthesis_with_a_different_option_i
     assert!(synthetic_mode_state(&response, Some(&options)).is_none());
 }
 
+#[test]
+fn preparation_modern_options_supersede_legacy_modes_even_without_mode_category() {
+    let response = json!({"modes":{"currentModeId":"medium","availableModes":[{"id":"medium","name":"Thinking: medium"},{"id":"off","name":"Thinking: off"}]}});
+    for options in [
+        json!([]),
+        json!([{"id":"thought_level","category":"thought_level","type":"select","currentValue":"medium","options":[{"value":"medium","name":"Thinking: medium"},{"value":"off","name":"Thinking: off"}]}]),
+    ] {
+        assert!(synthetic_mode_state(&response, Some(&options)).is_none());
+    }
+    assert!(synthetic_mode_state(&response, None).is_some());
+}
+
 #[tokio::test]
-async fn preparation_restores_top_level_mode_without_losing_model_or_thinking() {
+async fn preparation_restores_legacy_only_top_level_mode() {
+    let result = read("synthetic", vec![("mode", json!("off"))], false, None).await;
+    assert_eq!(changes(&result), ["session/set_mode"]);
+    let opened = result.opened.unwrap();
+    assert!(opened.warnings.is_empty(), "{:?}", opened.warnings);
+    assert_eq!(opened.response["modes"]["currentModeId"], "off");
+    assert_eq!(opened.response["modes"]["_meta"]["fixture"], "keep");
+    assert!(opened.config_options.is_none());
+    assert!(!opened.config_options_modern);
+    assert_eq!(opened.config_check.status, "ready");
+}
+
+#[tokio::test]
+async fn preparation_modern_thinking_never_calls_legacy_mode() {
     let result = read(
-        "synthetic",
+        "dual",
         vec![
-            ("mode", json!("off")),
             ("model", json!("chosen-model")),
             ("thought_level", json!("off")),
         ],
@@ -226,20 +254,15 @@ async fn preparation_restores_top_level_mode_without_losing_model_or_thinking() 
     .await;
     assert_eq!(
         changes(&result),
-        [
-            "session/set_mode",
-            "session/set_config_option",
-            "session/set_config_option"
-        ]
+        ["session/set_config_option", "session/set_config_option"]
     );
     let opened = result.opened.unwrap();
-    assert!(opened.warnings.is_empty(), "{:?}", opened.warnings);
-    assert_eq!(opened.response["modes"]["currentModeId"], "off");
-    assert_eq!(opened.response["modes"]["_meta"]["fixture"], "keep");
-    let options = opened.config_options.unwrap();
-    assert_eq!(options[0]["currentValue"], "chosen-model");
-    assert_eq!(options[1]["currentValue"], "off");
+    assert!(opened.warnings.is_empty());
+    assert!(opened.config_options_modern);
     assert_eq!(opened.config_check.status, "ready");
+    assert_eq!(opened.config_options.unwrap()[1]["currentValue"], "off");
+    // The original legacy envelope remains intact but is not an active choice.
+    assert_eq!(opened.response["modes"]["currentModeId"], "high");
 }
 
 #[tokio::test]
@@ -281,7 +304,7 @@ async fn preparation_resume_rejects_new_synthetic_mode_model_and_thinking_change
 #[tokio::test]
 async fn preparation_resume_may_read_recorded_mode_without_requesting_a_change() {
     let result = read(
-        "synthetic",
+        "dual",
         vec![],
         true,
         Some(json!({"model":"old-model","thought_level":"high","mode":"off"})),
@@ -386,8 +409,7 @@ async fn preparation_cancelled_synthetic_mode_keeps_original_response() {
                         {"id":"off", "name":"Off"}
                     ],
                     "_meta": {"fixture":"keep"}
-                },
-                "configOptions": [{"id":"model", "currentValue":"old-model"}]
+                }
             });
             let mut response = original.clone();
             let modes = synthetic_mode_state(&response, response.get("configOptions")).unwrap();

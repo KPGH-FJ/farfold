@@ -102,6 +102,11 @@ impl SessionConfig {
             .is_some_and(|options| !options.is_array())
     }
 
+    /// Preserve the actual declaration: an old models view is not modern config.
+    pub(crate) fn modern_options(&self) -> Option<&Value> {
+        self.options.as_ref()
+    }
+
     pub(crate) fn prepare(&self, id: &str, value: &Value) -> Result<ConfigRequest, String> {
         if self.has_invalid_options() {
             return Err(UNCONFIRMED.into());
@@ -255,8 +260,8 @@ impl ConfigRequest {
     }
 }
 
-pub(crate) fn projection(options: Value) -> Value {
-    json!({"kind":"configOptions", "options":options})
+pub(crate) fn projection(options: Value, modern: bool) -> Value {
+    json!({"kind":"configOptions", "options":options, "modern":modern})
 }
 
 #[cfg(test)]

@@ -16,6 +16,29 @@ fn update(value: Value) -> Dispatch {
 }
 
 #[test]
+fn configuration_origin_does_not_confuse_old_model_projection_with_a_modern_declaration() {
+    let mut configuration = legacy();
+    assert!(configuration.modern_options().is_none());
+    assert_eq!(
+        projection(configuration.options().unwrap(), false)["modern"],
+        false
+    );
+    configuration.observe(&update(
+        json!({"sessionUpdate":"config_option_update","configOptions":[]}),
+    ));
+    assert_eq!(configuration.modern_options(), Some(&json!([])));
+    assert_eq!(
+        projection(configuration.options().unwrap(), true)["modern"],
+        true
+    );
+    for value in [Value::Null, json!({"invalid":"shape"})] {
+        let configuration = SessionConfig::from_response(&json!({"configOptions":value}));
+        assert!(configuration.modern_options().is_some());
+        assert!(configuration.has_invalid_options());
+    }
+}
+
+#[test]
 fn legacy_models_become_one_generic_option_without_changing_ids_or_labels() {
     let configuration = legacy();
     let options = configuration.options().unwrap();
@@ -77,7 +100,7 @@ fn legacy_receipt_preserves_concurrent_reasoning_declarations() {
         .unwrap();
     assert_eq!(options[0]["currentValue"], "high");
     assert_eq!(options[1]["currentValue"], "b");
-    assert_eq!(projection(options)["kind"], "configOptions");
+    assert_eq!(projection(options, true)["kind"], "configOptions");
 }
 
 #[test]

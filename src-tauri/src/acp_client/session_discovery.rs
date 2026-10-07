@@ -86,10 +86,13 @@ pub(crate) async fn open_import_preview(
             native_session_id: opened.session_id,
             cwd: cwd.to_string_lossy().into_owned(),
             config_options: opened.config_options.unwrap_or(Value::Null),
+            config_options_modern: opened.config_options_modern,
             config_check: opened.config_check,
             permission_config_id: opened.permission_config_id,
             permission_state: opened.permission_state,
-            modes: opened.response.get("modes").cloned(),
+            modes: (!opened.config_options_modern)
+                .then(|| opened.response.get("modes").cloned())
+                .flatten(),
             models: opened.response.get("models").cloned(),
             meta: opened.response.get("_meta").cloned(),
             resumed: true,

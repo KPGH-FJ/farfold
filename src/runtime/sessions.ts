@@ -394,7 +394,11 @@ class ThreadsStore {
     observeDesktopNotification(s, e, live);
     if (e.kind === "configOptions") {
       if (!this.configurations.changing(s))
-        replaceConfigOptions(s, normalizeConfigOptions(e.options));
+        replaceConfigOptions(
+          s,
+          normalizeConfigOptions(e.options),
+          e.modern !== false,
+        );
     } else if (e.kind === "configCheck") {
       if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
         applyConfigCheck(s, e.check as ConfigCheck);
@@ -727,9 +731,11 @@ class ThreadsStore {
         : "ready";
       if (state.permissionConfigId && state.permissionState !== "ready")
         pauseQueue(state, state.uncertainPrompt ? "uncertain" : "stopped");
-      // Agents with a top-level `modes` object get a synthetic mode
-      // option; it routes to `session/set_mode`, not set_config_option.
-      const modeOption = synthesizeModeOption(result.modes);
+      // Prefer the Agent's actual modern declaration, not synthesized model options.
+      const modeOption = synthesizeModeOption(
+        result.modes,
+        result.configOptionsModern ?? Array.isArray(result.configOptions),
+      );
       if (
         modeOption &&
         !state.configOptions.some(

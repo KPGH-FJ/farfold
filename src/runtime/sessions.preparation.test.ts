@@ -205,7 +205,7 @@ it("retains an unapplied explicit model choice as a read failure until an explic
   });
 });
 
-it("retains separate modes through option updates replayed during model reading", async () => {
+it("prefers complete modern options over separate modes during model reading", async () => {
   const options = [
     {
       id: "model",
@@ -256,7 +256,7 @@ it("retains separate modes through option updates replayed during model reading"
     return localCommand(command, args);
   });
   const controller = new AgentPreparation(threads, () => "modes");
-  const config = { model: "chosen", thought_level: "off", mode: "off" };
+  const config = { model: "chosen", thought_level: "off" };
   await controller.prepare({
     agentId: "separate-mode",
     agentName: "Example",
@@ -272,7 +272,7 @@ it("retains separate modes through option updates replayed during model reading"
   });
   expect(
     threads.thread(controller.getSnapshot().threadKey!)?.modesSeparate,
-  ).toBe(true);
+  ).toBe(false);
 });
 
 it("keeps a real category-less mode at initial open and routes its changes through config options", async () => {

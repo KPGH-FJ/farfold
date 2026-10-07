@@ -478,10 +478,12 @@ export function modelConfigOption(
   );
 }
 
-/** Agents that send a top-level `modes` object (not a configOptions
- *  entry) get a synthetic `category:"mode"` option so one menu covers
- *  every session-level switch. Returns null when no modes are sent. */
-export function synthesizeModeOption(modes: unknown): ConfigOptionView | null {
+/** Only a legacy-only declaration may produce the older mode control. */
+export function synthesizeModeOption(
+  modes: unknown,
+  modern = false,
+): ConfigOptionView | null {
+  if (modern) return null;
   const m = modes as Record<string, unknown> | null;
   const list = m?.availableModes;
   if (!Array.isArray(list) || list.length === 0) return null;
@@ -628,6 +630,7 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
       replaceConfigOptions(s, normalizeConfigOptions(u?.configOptions));
       return;
     case "current_mode_update":
+      if (!s.modesSeparate) return;
       s.currentModeId = String(u?.currentModeId ?? "");
       for (const option of s.configOptions) {
         if (option.category === "mode") option.currentValue = s.currentModeId;
@@ -650,20 +653,22 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
   }
 }
 
-/** Option updates do not replace the separately declared modes surface. */
+/** A complete modern declaration supersedes the older modes surface. */
 export function replaceConfigOptions(
   s: ThreadState,
   options: ConfigOptionView[],
+  modern = true,
 ) {
-  const separateMode = s.modesSeparate
-    ? s.configOptions.find((option) => option.id === "mode")
-    : undefined;
+  const separateMode =
+    s.modesSeparate && !modern
+      ? s.configOptions.find((option) => option.id === "mode")
+      : undefined;
   const declaresMode = options.some(
     (option) => option.id === "mode" || option.category === "mode",
   );
   s.configOptions =
     separateMode && !declaresMode ? [...options, separateMode] : options;
-  if (declaresMode) s.modesSeparate = false;
+  if (modern || declaresMode) s.modesSeparate = false;
 }
 
 /** `{kind:"turnEnd"}` — settle the round and report whether a queued

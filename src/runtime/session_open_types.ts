@@ -8,6 +8,7 @@ export interface OpenResult {
   /** Canonicalized cwd — session keys must be built from this. */
   cwd: string;
   configOptions: unknown;
+  configOptionsModern?: boolean;
   modes?: unknown;
   models?: unknown;
   meta?: unknown;

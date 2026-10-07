@@ -273,6 +273,7 @@ pub(crate) struct OpenedSession {
     pub response: Value,
     /// Latest `configOptions` array after applying requested overrides.
     pub config_options: Option<Value>,
+    pub config_options_modern: bool,
     pub config_check: super::model_guard::ConfigCheck,
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,
@@ -426,14 +427,10 @@ pub(crate) fn parse_config_value(value: &Value) -> Result<SessionConfigOptionVal
     }
 }
 
-/// Only top-level declarations without a real mode config option produce the
-/// synthetic `mode` choice. A real id or category always keeps its config route.
+/// A declared modern list supersedes the older modes API, including an empty
+/// or invalid declaration. `options` is the actual declaration, not old models.
 fn synthetic_mode_state(response: &Value, options: Option<&Value>) -> Option<SessionModeState> {
-    if options.and_then(Value::as_array).is_some_and(|options| {
-        options
-            .iter()
-            .any(|option| option["id"] == "mode" || option["category"] == "mode")
-    }) {
+    if options.is_some() {
         return None;
     }
     serde_json::from_value::<SessionModeState>(response.get("modes")?.clone())
@@ -735,14 +732,14 @@ async fn session_pump(
                         model_guard.observe(options);
                                 if !options.is_array() { model_guard.change_unknown(); }
                         permission_guard.observe(options);
-                        restore_config::update(options, &mut opening, &mut mutation);
+                        restore_config::update(options, configuration.modern_options().is_some(), &mut opening, &mut mutation);
                         if opening.is_none() {
                             events(permission_guard.event());
                             events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         }
                     }
                     handle_session_dispatch(dispatch, &mut ctx);
-                    if let Some(options) = options { events(super::session_config::projection(options)); }
+                    if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                 }
                 None => break,
             },
@@ -955,7 +952,7 @@ async fn session_pump(
                                     if model_guard.admissible() { outcome = Ok(options.clone()); }
                                 }
                                 handle_session_dispatch(dispatch, &mut ctx);
-                                if let Some(options) = options { events(super::session_config::projection(options)); }
+                                if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                             }
                             if !completed.awaiting_reply() {
                                 model_guard.change_unknown();
@@ -979,6 +976,7 @@ async fn session_pump(
                     if matches!(&completed.kind, MutationKind::Config { .. }) {
                         outcome = outcome.map(|options| serde_json::json!({
                             "configOptions": options,
+                            "configOptionsModern": configuration.modern_options().is_some(),
                             "configCheck": model_guard.check(),
                             "permissionConfigId": permission_guard.id(),
                             "permissionState": permission_guard.state(),
@@ -1176,7 +1174,7 @@ async fn session_pump(
                                 events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                             }
                             handle_session_dispatch(dispatch, &mut ctx);
-                            if let Some(options) = options { events(super::session_config::projection(options)); }
+                            if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                         }
                         let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                             || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
@@ -1224,7 +1222,7 @@ async fn session_pump(
                                 events(permission_guard.event());
                             }
                             handle_session_dispatch(dispatch, &mut ctx);
-                            if let Some(options) = options { events(super::session_config::projection(options)); }
+                            if let Some(options) = options { events(super::session_config::projection(options, configuration.modern_options().is_some())); }
                         }
                         if displayed != model_guard.current_value() || !model_guard.admissible() {
                             Err("当前设置已变化，请重新检查".to_string())
@@ -1237,6 +1235,9 @@ async fn session_pump(
                 }
                 command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::Delete { .. }) => {
                     let (kind, result, deadline, method, params) = match command {
+                        SessionControl::SetMode { result, .. } if configuration.modern_options().is_some() => {
+                            let _ = result.send(Err("请通过当前设置选项重新选择并确认".into())); continue;
+                        }
                         SessionControl::SetMode { result, .. } if permission_guard.id().is_some() => {
                             let _ = result.send(Err("请通过权限选项重新选择并确认".into())); continue;
                         }

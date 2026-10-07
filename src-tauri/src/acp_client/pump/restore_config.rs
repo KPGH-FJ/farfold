@@ -6,6 +6,7 @@ use std::collections::{BTreeSet, VecDeque};
 
 pub(crate) struct OpenState {
     pub options: Option<Value>,
+    pub config_options_modern: bool,
     pub check: ConfigCheck,
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,
@@ -18,6 +19,7 @@ pub(super) struct Opening {
     pub recorded: Option<Value>,
     pub restored: bool,
     pub options: Option<Value>,
+    pub config_options_modern: bool,
     pub warnings: Vec<String>,
 }
 
@@ -29,6 +31,7 @@ impl Opening {
     ) -> OpenState {
         OpenState {
             options: self.options.clone(),
+            config_options_modern: self.config_options_modern,
             check: guard.check(),
             permission_config_id: permissions.id(),
             permission_state: permissions.state(),
@@ -226,11 +229,13 @@ pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
 
 pub(super) fn update(
     options: &Value,
+    modern: bool,
     opening: &mut Option<Opening>,
     mutation: &mut Option<Mutation>,
 ) {
     if let Some(opening) = opening {
         opening.options = Some(options.clone());
+        opening.config_options_modern = modern;
     }
     if let Some(Mutation {
         kind: MutationKind::Restore { plan, .. },
@@ -261,11 +266,19 @@ pub(super) fn drain(
                 guard.change_unknown();
             }
             permissions.observe(options);
-            update(options, opening, mutation);
+            update(
+                options,
+                configuration.modern_options().is_some(),
+                opening,
+                mutation,
+            );
         }
         handle_session_dispatch(dispatch, ctx);
         if let Some(options) = options {
-            (ctx.events)(super::super::session_config::projection(options));
+            (ctx.events)(super::super::session_config::projection(
+                options,
+                configuration.modern_options().is_some(),
+            ));
         }
     }
 }

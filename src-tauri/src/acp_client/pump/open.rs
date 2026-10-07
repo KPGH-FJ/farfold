@@ -199,7 +199,7 @@ pub(crate) async fn open_session_on_connection(
         return Err("恢复会话不能修改模型或思考深度".into());
     }
     if resumed
-        && synthetic_mode_state(&response, config_state.as_ref()).is_some()
+        && synthetic_mode_state(&response, configuration.modern_options()).is_some()
         && config_options.iter().any(|(id, _)| id == "mode")
     {
         // A top-level mode may change thinking or permissions. Its semantics
@@ -213,7 +213,7 @@ pub(crate) async fn open_session_on_connection(
         }
         if !resumed
             && config_id == "mode"
-            && let Some(modes) = synthetic_mode_state(&response, config_state.as_ref())
+            && let Some(modes) = synthetic_mode_state(&response, configuration.modern_options())
         {
             if let Err(error) =
                 restore_synthetic_mode(cx, &session_id, &mut response, modes, value, &operation)
@@ -270,6 +270,7 @@ pub(crate) async fn open_session_on_connection(
         recorded: recorded_config,
         restored: resumed,
         options: config_state,
+        config_options_modern: configuration.modern_options().is_some(),
         warnings,
     };
     let mut opening_route = OpeningRoute {
@@ -335,6 +336,7 @@ pub(crate) async fn open_session_on_connection(
         session_id,
         response,
         config_options: ready.options,
+        config_options_modern: ready.config_options_modern,
         config_check: ready.check,
         permission_config_id: ready.permission_config_id,
         permission_state: ready.permission_state,

@@ -22,6 +22,7 @@ interface Change {
 
 export interface ConfirmedConfigUpdate {
   configOptions: unknown;
+  configOptionsModern?: boolean;
   configCheck: ConfigCheck;
   permissionConfigId: string | null;
   permissionState: ThreadState["permissionState"];
@@ -178,7 +179,11 @@ export class SessionConfiguration {
             throw new Error(STRINGS.repair.configFailed);
           if (permission && updated.permissionState !== "ready")
             throw new Error(STRINGS.repair.configFailed);
-          replaceConfigOptions(s, options);
+          replaceConfigOptions(
+            s,
+            options,
+            updated.configOptionsModern !== false,
+          );
           applyConfigCheck(s, updated.configCheck);
           s.service = updated.service ?? undefined;
           s.permissionConfigId = updated.permissionConfigId ?? undefined;

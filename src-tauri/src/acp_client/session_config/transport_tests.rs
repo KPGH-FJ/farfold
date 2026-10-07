@@ -206,6 +206,52 @@ impl Fixture {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn modern_transport_rejects_old_mode_but_confirms_and_saves_thinking_before_next_prompt() {
+    let mut fixture = Fixture::open("thinking").await;
+    fixture.prompt().await;
+    let original = fixture.record();
+    assert!(
+        fixture
+            .manager
+            .session_set_mode(&fixture.row.id, &fixture.cwd, SESSION, "high")
+            .await
+            .is_err()
+    );
+    assert_eq!(fixture.record(), original);
+    assert!(
+        !fixture.state()["calls"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|call| call["method"] == "session/set_mode")
+    );
+    let result = fixture.set("effort", "high").await.unwrap();
+    assert_eq!(result["configCheck"]["status"], "ready");
+    let saved = fixture.record();
+    assert_eq!(
+        saved["choices"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|choice| choice["id"] == "effort")
+            .unwrap()["value"],
+        "high"
+    );
+    fixture.prompt().await;
+    assert_eq!(fixture.state()["prompts"][1]["effort"], "high");
+    assert_eq!(fixture.state()["prompts"][1]["model"], "m1");
+    assert_eq!(
+        fixture.state()["calls"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|call| call["method"] == "session/new")
+            .count(),
+        1
+    );
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn legacy_transport_empty_ack_updates_original_session_and_cold_restores_before_next_prompt()
 {
     for mode in ["silent", "thinking"] {
