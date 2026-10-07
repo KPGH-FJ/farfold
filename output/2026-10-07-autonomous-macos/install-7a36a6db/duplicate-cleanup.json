@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-07T07:01:07.856540+00:00",
+  "formalBinarySha256": "ce7740d77314bb742e9c4b67cf735cb9d9a0f15fe12de2ffbeb86cf0cc8adb78",
+  "exactFormalExecutableProcesses": [
+    {
+      "pid": 98405,
+      "ppid": 1
+    },
+    {
+      "pid": 98707,
+      "ppid": 98622
+    }
+  ],
+  "generatedExactDuplicateRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "verifiedCompleteFiveFileEquality": true,
+  "archivePreserved": true,
+  "noBackupAppCreated": true
+}

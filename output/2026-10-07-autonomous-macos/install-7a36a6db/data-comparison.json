@@ -1,0 +1,31 @@
+{
+  "comparedAtUtc": "2026-10-07T07:00:33.399080+00:00",
+  "sourceCommit": "7a36a6db284beb7d653eeeb1e8d7bc475959c44c",
+  "beforeAfterSummaryEqual": true,
+  "jsonlBytesEqual": true,
+  "contentAndUnixModesEqual": true,
+  "counts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "special": 0,
+      "symlink": 328
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2,
+      "special": 0,
+      "symlink": 0
+    },
+    "webkit": {
+      "directory": 131,
+      "file": 86,
+      "special": 0,
+      "symlink": 0
+    }
+  },
+  "sha256": "e644ab573846ff130048e9eb1f3d051be4ff42e4b889fdcfeb14abe91e1a2899",
+  "entries": 217365,
+  "formalProcessCountBeforeLaunch": 0,
+  "boundary": "Three Farfold-owned trees only; no Keychain or external Agent data inventory. Raw manifests are private mode0600."
+}

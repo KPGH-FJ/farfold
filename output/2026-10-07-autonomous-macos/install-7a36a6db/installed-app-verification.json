@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-07T07:08:08.279144+00:00",
+  "appVersion": "0.1.7",
+  "installedCommit": "7a36a6db284beb7d653eeeb1e8d7bc475959c44c",
+  "bundleId": "ai.farfold.desktop",
+  "binarySha256": "ce7740d77314bb742e9c4b67cf735cb9d9a0f15fe12de2ffbeb86cf0cc8adb78",
+  "checks": {
+    "codexSettings": {
+      "opened": true,
+      "modelStepShowedReadOptions": true,
+      "accountStepConnectionState": "未连接 + 明确按钮 连接以读取登录方式",
+      "autoConnectSkippedReason": "agents.busy 非空（后端：请先结束任务并断开此 Agent），对话进行中筛选 0 段",
+      "manualButtonWhileBusy": "静默无操作（connect 前端门禁直接 return）——记录为待办小项",
+      "existingSettingsOptionVerified": "未能验证（busy 阻断准备连接）"
+    },
+    "antigravityFirstOnboarding": {
+      "programConnect": "检查连接 → 已连接",
+      "accountStep": {
+        "existingSettingsFirstOption": true,
+        "existingSettingsText": "已有设置 沿用 Agent 已有的账号、订阅或设置。",
+        "authRequiredDefault": "默认选中首个登录方式（Agent 报告需要登录）",
+        "agentProvidedDescriptions": [
+          "Log in with Google / Log in with your Google account",
+          "Log in with Gemini Enterprise / Log in with your Gemini Enterprise account",
+          "Gemini API key / Use an API key with Gemini Developer API",
+          "Gemini Enterprise Agent Platform / Use Gemini Enterprise Agent Platform (formerly Vertex AI)..."
+        ],
+        "existingSettingsVerification": "选择已有设置点继续 → 当场验证 → 返回 auth_required → 回到登录方式列表，自动选中 Log in with Google，显示 当前使用方式需要登录。完成后返回这里继续。",
+        "noAccountStatusBlock": true
+      },
+      "noLoginPerformed": true
+    }
+  },
+  "findings": [
+    "P2: Agent busy 时账号步骤的 连接以读取登录方式 按钮静默无操作；顶部有 请先结束任务并断开此 Agent 的错误横幅，但建议 busy 时禁用按钮或直接说明忙因",
+    "AXValue 对 web 自定义 radio 不反映选中态（验证改用行为判断）"
+  ],
+  "boundary": "未登录、未切换账号、未改服务/模型；未动凭据与 Agent 私有文件"
+}
