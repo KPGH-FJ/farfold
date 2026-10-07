@@ -1,0 +1,76 @@
+{
+  "sourceCommit": "ea4a9e470592403d19707b4ddcec9045ecd6c40d",
+  "binarySha256": "97e4f2d81b0324abbe4267c142ca3c16415e077ba1d9fb31a94bb1ea3b385133",
+  "installedAtUtc": "2026-10-07T01:29:00.300705+00:00",
+  "normalSaveAndExitByAgent": true,
+  "newUserSavedExitConfirmation": false,
+  "fullAutonomousTestAuthority": true,
+  "forcedQuit": false,
+  "exactFiveFilesAndStrictSignature": true,
+  "architecture": "arm64",
+  "onlyFormalApp": "/Applications/Farfold.app",
+  "dataRetention": {
+    "comparedAtUtc": "2026-10-07T01:30:05.906790+00:00",
+    "sourceCommit": "ea4a9e470592403d19707b4ddcec9045ecd6c40d",
+    "beforeAfterSummaryEqual": true,
+    "jsonlBytesEqual": true,
+    "contentAndUnixModesEqual": true,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 131,
+        "file": 86,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256": "edc6932b6ee8a2c18a82e0a0ec20eb932ca79c69fd9e2a0c1b3e9f0ad295f362",
+    "entries": 217365,
+    "formalProcessCountBeforeLaunch": 0,
+    "boundary": "Three Farfold-owned trees only; no Keychain or external Agent data inventory. Raw manifests are private mode0600."
+  },
+  "coldStarted": true,
+  "launchBoundary": "CUA cold start observed99indices and empty new composer; independent own-thread recovery observations remain available. Original initial cold-entry raw file was overwritten by later416 capture, so its stale hash reference is withdrawn; no reconstruction claimed. Preparatory Agent process may start; no restored draft or queue auto-sent in observed paths.",
+  "evidence": [
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-ea4a9e47/normal-exit-observation.json",
+      "sha256": "3137ef58f900894506cb78b4fb22425dd9ba209c8bd1830131d87428f2f25f90"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-ea4a9e47/install-operation.json",
+      "sha256": "27181c8311c395c8f038d7ba1e1d476a6895e1329241ac7c912c99cb72524478"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-ea4a9e47/data-comparison.json",
+      "sha256": "e6237ead96aa07ca2a89eb75e9ea93d8e2e88da653f238d312c5a91af90a4306"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-ea4a9e47/independent-install-review.json",
+      "sha256": "ea6849d8ab9b3dab4d73a69b8fe3bff3b4a37e963c6bb093f8c9eac3a392ff22"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-ea4a9e47/duplicate-cleanup.json",
+      "sha256": "87aa33096022bdfa51af166a5747325a447e4ad3a9c77f0ef21c0b68313b3809"
+    }
+  ],
+  "evidenceCorrection": {
+    "record": "output/2026-10-07-autonomous-macos/evidence-directory-correction.json",
+    "removedUnavailableRawReferences": [
+      {
+        "formerPath": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/cold-entry.json",
+        "formerSha256": "faeb87425c537e56f237e8de71314912519e9cd1576f69a20d88e627388bf2dc"
+      }
+    ]
+  }
+}

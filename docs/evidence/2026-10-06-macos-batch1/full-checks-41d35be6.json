@@ -1,0 +1,82 @@
+{
+  "sourceCommit": "41d35be67eca8dc65cca6d4847c02a79473bd485",
+  "sourceOnly": true,
+  "frontend": {
+    "files": 192,
+    "passed": 2292
+  },
+  "rust": {
+    "passed": 1021,
+    "failed": 0,
+    "originalIgnored": 4
+  },
+  "requiredChecks": [
+    {
+      "name": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit": 0,
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "test",
+      "command": ["corepack", "pnpm", "test"],
+      "exit": 0,
+      "logSha256": "0445af6bf783826418cb74833438f738a0b9a570ac9c09b8e17a9a610ed4f455"
+    },
+    {
+      "name": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "exit": 0,
+      "logSha256": "5570c02d2c39b92ac38a375a277350583ec3c6b402cf8c6a8027e420d2bc7151"
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exit": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "logSha256": "c9f0eec2a190037aa001f083de556d0b5425cce72955f4f04ca11606d95c794f"
+    },
+    {
+      "name": "test",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exit": 0,
+      "logSha256": "3d03116ea641e85fb901c699a38bc85c272011d77909d9b03fe40d11c0727e9f"
+    }
+  ],
+  "limits": [
+    "not installed-product/live-Agent acceptance",
+    "original ignored tests not turned into passes"
+  ]
+}

@@ -1,0 +1,1021 @@
+{
+  "version": 2,
+  "reviewedThrough": "2026-10-07 installed source416d8142 finite samples, cross-version strict failures retained",
+  "scope": {
+    "platform": "macOS",
+    "collection": "各版本最新已观察结果的集合；新增843、ea4、416限定样本分别保留，不是33家都在416d8142完成同一轮实测。",
+    "classification": "具体失败优先归类，同时保留各家已经发生的有限成功；未测和原因未知不算通过。",
+    "agentVersionBasis": "安装/握手为首轮准备快照；自报不一致和未知保留，不冒称当前模型身份。",
+    "deferred": ["新增登录", "退出/换号", "付费新选择", "Windows实机"]
+  },
+  "counts": {
+    "agents": 33,
+    "limitedSuccessOnly": 1,
+    "withSpecificFailures": 14,
+    "conditionsMissing": 18,
+    "withAnyLimitedSuccess": 11,
+    "fullStandardPassed": 0
+  },
+  "commonGaps": [
+    "33家都没有完整满足PRODUCT.md §3八项标准；有限成功不等于接入完成。",
+    "账号身份/付费来源、退出换号、全部服务模型的确认保持、完整工具/技能和多任务隔离尚未逐家闭合。",
+    "记录的恢复成功仅限对应历史和已保存选择；回放旧正文不等于冷恢复后新续答。",
+    "9家实际运行中停止：Codex、CodeBuddy、Copilot、fast限定失败；Pi、Goose、Devin、Vibe、Dirac仅自建PID/命令在90秒前消失的限定成功。责任层/完整进程树未定，另行清理不算产品停止。"
+  ],
+  "workbenchBoundaries": [
+    "普通网页操作成功不证明受保护页面的保护规则达标；自建受保护页观察/手动读取失败且原因未知。",
+    "系统接受通知不等于横幅、声音或点击返回被真人确认；历史图片界面截图也不证明生产截图工具可用。",
+    "源码自动检查与真实Agent旅程分开；默认ignored表示未执行，不计为失败或通过。",
+    "已解决的普通输入、特殊文件URI和冷历史图片呈现问题单列，不计入当前失败。",
+    "843新对话模型弹窗失去模态的问题，在ea4限定流程实测已修复；416既有对话命令入口有限通过。文本待发冷恢复仅证明暂停保留和取消编辑，不证明发送或旧工具取消。",
+    "416临时图片缺失/损坏待发拒发、全文/附件保留、元数据整理筛选和换来源后旧网页动作拒绝有限通过；桌面读超时与保护页、截图、剪贴板及通知人工缺口保留。准备连接约30分钟清理是单例，回收原因仅据源码时序推断。"
+  ],
+  "basis": {
+    "summary": "E01",
+    "review": "E02",
+    "agentVersionSnapshot": "E03",
+    "boundary": "E01/E02/E03为旧跨版本基础快照；新增限定结果分别见843的E44、ea4的E76和416的E77，不用旧快照独立证明新结论。"
+  },
+  "agents": [
+    {
+      "agent": "Amp",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.9.0；握手 0.9.0",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E05"]
+    },
+    {
+      "agent": "Antigravity",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 1.2.1；握手 1.2.1",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E06"]
+    },
+    {
+      "agent": "Auggie",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.36.0；握手 0.36.0 (commit 7c61e5bb)",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E07"]
+    },
+    {
+      "agent": "Autohand",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.2.1；握手 0.2.1",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E08"]
+    },
+    {
+      "agent": "Claude",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.81.2；握手 0.81.2",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮:E03"]
+    },
+    {
+      "agent": "Cline",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 3.0.65；握手 3.0.65",
+      "limitedSuccess": null,
+      "currentFailures": [
+        "早前短答internal_error；836冷initialize60秒超时，无load/prompt，原因未知。"
+      ],
+      "mainGaps": [
+        "冷启动超时原因未知；同版本新会话握手成功，不代表所有连接失败。"
+      ],
+      "evidence": ["早前本轮，详见原回执:E10", "836cda89:E11"]
+    },
+    {
+      "agent": "CodeBuddy",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 2.160.0；握手 未报告",
+      "limitedSuccess": "早前文件读写、复制返工与单次批准；41d特殊名称附件首行正确；843 B冷恢复后新续答精确原首记号。 843运行中停止失败后，自建子进程另行清理，新明确请求正确返回B首记号。 843思考选项改变、新续答和原值恢复有限通过；ea4/416冷恢复一条完整文本待发、仍暂停，编辑取消保留且未发送；416 A原两行草稿保留未发，原已有缺失字符不改写。",
+      "currentFailures": [
+        "1e8：cancel后仍输出完整1–200，149476ms后正常完成而非已停止。",
+        "843：单次批准的自建90秒命令运行中点停止，界面已停止21.624秒后，同PID、父PID与命令哈希仍存活；责任层未定。"
+      ],
+      "mainGaps": [
+        "1e8回复取消与843命令停止均有失败；B冷续答和清理后新回复不覆盖这些停止失败。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E12",
+        "1e8dc5d5:E13",
+        "1e8dc5d5:E14",
+        "41d35be6:E15",
+        "843f3a78:E16",
+        "843f3a78:E47",
+        "843f3a78:E48",
+        "843f3a78:E49",
+        "843f3a78:E50",
+        "843f3a78:E44",
+        "ea4a9e47:E76",
+        "416d8142:E77"
+      ],
+      "resolvedHistoricalFailures": [
+        "1e8特殊URI失败为历史；41d对应独立真实首行任务已通过。"
+      ]
+    },
+    {
+      "agent": "Codex",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.13.1；握手 1.13.1",
+      "limitedSuccess": "早前文件与浏览器操作；41d/454大图片识别和待发换图；454普通输入matched/mismatched正确；843冷新续答及历史图片展开成功。 843独立网页点击回执交付成功后等待提示已清除（不代表网站提交成功）。 843失败的运行中停止之后，在自建子进程已另行清理条件下，新明确请求准确返回原首记号。 843思考选项改变、新续答与原值恢复，以及官方提问表单明确提交/取消和对话归属有限通过。416显示原6 Sol/High；Direct明确重新确认Ask for approval后保护解除。",
+      "currentFailures": [
+        "41d：2×1图片直接/待发均未识别，原因未知，不认定待发丢图。",
+        "843：真实自建90秒命令运行中点一次停止，界面已停止8.059秒后，同PID、父PID与命令哈希仍存活；责任层未定，后续清理不计产品停止。"
+      ],
+      "mainGaps": [
+        "2×1图片失败原因未知；实际运行中停止失败待闭合；新回复成功不覆盖停止失败或全部工具。",
+        "416权限为新明确确认；旧Direct权限原值没有独立证据，不声称恢复原权限。思考选项回执不证明隐藏推理语义，表单仅该官方流程。"
+      ],
+      "evidence": [
+        "41d35be6:E15",
+        "843f3a78:E16",
+        "843f3a78:E37",
+        "843f3a78:E38",
+        "843f3a78:E39",
+        "41d35be6:E43",
+        "843f3a78:E45",
+        "843f3a78:E46",
+        "843f3a78:E44",
+        "416d8142:E77"
+      ],
+      "resolvedHistoricalFailures": [
+        "41d普通input unverified为历史；454两个独立matched/mismatched样本验证修复。",
+        "454冷图呈现字面data链接为历史；843同自建对话历史图片展开实际可见，不消除原2×1模型识别失败。"
+      ]
+    },
+    {
+      "agent": "Corust",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.6.0；握手 0.1.0",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E18"]
+    },
+    {
+      "agent": "Cursor",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 2026.09.28；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E19"]
+    },
+    {
+      "agent": "Devin",
+      "category": "仅有限成功",
+      "agentVersionSnapshot": "安装 3000.11.3；握手 0.0.0-dev",
+      "limitedSuccess": "836/b117/1e8文件复制返工、冷上下文、独立对话记号及停止后明确续答有有限成功。 843原SWE-2/High/Code下，严格采集确认单次停止后自建PID/命令在90秒前消失；新明确请求正确返回A首记号并完成。 843思考选项改变、新续答与原值恢复有限通过；416 A冷载入原SWE-2/High/Code，新明确请求正确返回A首记号并完成。",
+      "currentFailures": [],
+      "mainGaps": [
+        "旧未知通知卡仍保留；本次批准详情缺少命令输入，单次允许不等于完整审批呈现通过；完整模型、工具和账号范围未齐。"
+      ],
+      "evidence": [
+        "836cda89:E20",
+        "b117339f:E21",
+        "1e8dc5d5:E13",
+        "843f3a78:E58",
+        "843f3a78:E59",
+        "843f3a78:E44",
+        "416d8142:E77"
+      ]
+    },
+    {
+      "agent": "DimCode",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.5.16；握手 0.5.16",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E06"]
+    },
+    {
+      "agent": "Dirac",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 0.5.17；握手 0.5.17",
+      "limitedSuccess": "早前真实读写再读、50字节复制与单次批准成功。 843同原免费Nemotron Ultra/Medium下，新A/B实际短答；严格采集确认停止后自建PID/命令在90秒前消失；A停止后保留首记号但重复。 843思考选项改变与原值恢复后上下文记号保留；ea4新D同服务模型Nano→apodex mini:free→Nano确认，新续答保留D首记号，Medium/OpenRouter未改。",
+      "currentFailures": [
+        "b117冷载入界面读取失败；早前严格短答有重试/重复杂字，load返包不算恢复成功。",
+        "843 A停止后首记号出现在两个重复正文段，未满足仅一次记号；造成重复的具体层未知。",
+        "843 B与A实际运行重叠，新续答返回当前任务前缀而非B首记号；严格上下文任务失败，未证实跨对话串扰。",
+        "ea4新D严格仅记号任务输出额外Task completed与工具步骤；843思考变更后的无工具请求也出现工具步骤，不算严格无工具通过。",
+        "416新D冷载入：initialize/load成功但无可读历史，被拒空保护拒绝；此前D已有真实用户与回复。具体缺失、形状或迟到原因未知；读取失败后模型未赋值不算已证明模型恢复失败。"
+      ],
+      "mainGaps": [
+        "旧A及416新D冷历史恢复失败保留；同服务换模型及新续答成功不覆盖恢复。重复正文、B上下文和严格无工具任务失败未闭合，不能判并行隔离通过。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E22",
+        "b117339f:E21",
+        "843f3a78:E67",
+        "843f3a78:E68",
+        "843f3a78:E69",
+        "843f3a78:E70",
+        "843f3a78:E71",
+        "843f3a78:E72",
+        "843f3a78:E73",
+        "843f3a78:E44",
+        "ea4a9e47:E76",
+        "416d8142:E77"
+      ]
+    },
+    {
+      "agent": "Factory Droid",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 0.230.0；握手 0.230.0",
+      "limitedSuccess": null,
+      "currentFailures": [
+        "早前现有选择短请求internal_error/界面401，无成功正文，具体原因未知。"
+      ],
+      "mainGaps": ["真实成功正文未取得，具体原因未知。"],
+      "evidence": ["早前本轮，详见原回执:E23"]
+    },
+    {
+      "agent": "fast-agent",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 0.10.1；握手 0.10.1",
+      "limitedSuccess": "早前/b117短答、49字节复制与冷新续答；1e8回复停止后明确新续答成功。 843该停止失败后的自建子进程另行清理，再发一次无工具新请求，正确返回原A首记号。 ea4实际/commands目录与参数提示可见，选中仅填稿、明确发送后Command map完成；416既有对话添加菜单也显示已声明命令，取消保空稿、选中不发送、明确发送该命令完成。843 PNG工具结果能暂存image/png供下一模型请求。",
+      "currentFailures": [
+        "843f3a78：同设置下自建90秒命令已真实运行；界面一次停止显示已停止后8.469秒，同一自建进程仍存活。未判定责任层，不推广全部停止行为。",
+        "843实际WAV工具调用失败，回执报告当前模型不支持内嵌audio/x-wav；不据此推断其他模型，也未通过音频播放。"
+      ],
+      "mainGaps": [
+        "真实运行中停止失败待闭合；清理后新续答不覆盖停止失败。声明命令入口仅该目录命令有限通过；PNG暂存不证明结构化媒体成果呈现，完整工具/模型来源和媒体格式未齐。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E22",
+        "b117339f:E21",
+        "843f3a78:E24",
+        "843f3a78:E25",
+        "843f3a78:E52",
+        "843f3a78:E44",
+        "ea4a9e47:E76",
+        "416d8142:E77"
+      ]
+    },
+    {
+      "agent": "Gemini",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.62.0；握手 0.62.0",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E26"]
+    },
+    {
+      "agent": "GitHub Copilot",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.0.89；握手 1.0.90；1.0.89；上轮缓存自报1.0.90差异保留，不推断",
+      "limitedSuccess": "早前/b117文件复制返工、批准、成果核实与冷新续答；1e8批准前停止后未写入，明确新续答成功。 843该停止失败后的自建子进程另行清理，再发一次无工具新请求，正确返回原A首记号。",
+      "currentFailures": [
+        "843f3a78：同设置下一次批准的自建90秒后台命令已确认运行；界面一次停止后显示已停止，9.199秒后同一自建进程仍存活。未判定责任层，不推广为所有停止均失败。"
+      ],
+      "mainGaps": [
+        "后台命令停止失败待闭合；清理后新续答仅限该条件，不代表停止步骤或旧未知工具全部恢复。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E22",
+        "b117339f:E21",
+        "843f3a78:E27",
+        "843f3a78:E51",
+        "843f3a78:E44"
+      ]
+    },
+    {
+      "agent": "Goose",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.52.0；握手 1.52.0",
+      "limitedSuccess": "836冷续答和模型菜单；1e8/843 B确认同服务免费选择后的短答与冷新续答成功；A原选择单列。 843 A原Nemotron免费选择下，严格采集确认单次停止后自建PID/命令在90秒前消失。",
+      "currentFailures": [
+        "早前严格复制49/50字节缺末LF；禁命令任务实际用了命令。"
+      ],
+      "mainGaps": [
+        "A原选择与B免费选择分开，B早前默认选择失败保留；843 A/B仍有未确认步骤，续发被保护门槛阻止，输入未改且未发送。",
+        "自建PID停止有限成功不证明所有工具已结束；当前该停止后新续答与并行未完成，不清除未知状态强行测试。"
+      ],
+      "evidence": [
+        "836cda89:E11",
+        "b117339f:E21",
+        "843f3a78:E16",
+        "843f3a78:E55",
+        "843f3a78:E56",
+        "843f3a78:E57",
+        "843f3a78:E44"
+      ]
+    },
+    {
+      "agent": "Grok Build",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 1.0.46；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E28"]
+    },
+    {
+      "agent": "Junie",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 3419.24.0；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E28"]
+    },
+    {
+      "agent": "Kilo",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 7.8.1；握手 未报告",
+      "limitedSuccess": "早前短答、同对话切模型仍记住首条；Ultra读取、拒绝命令和手选核实有有限成功。",
+      "currentFailures": [
+        "b117冷initialize超时，无load，原因未知。",
+        "早前Nano两次无工具/目标输出；Ultra复制/返工缺末LF。"
+      ],
+      "mainGaps": ["冷启动失败未闭合；早前切模型成功不覆盖冷恢复失败。"],
+      "evidence": ["早前本轮，详见原回执:E29", "b117339f:E21"]
+    },
+    {
+      "agent": "Kimchi",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.3.0；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": ["早前短请求834ms internal_error，无正文，原因未知。"],
+      "mainGaps": ["未取得成功正文，具体原因未知。"],
+      "evidence": ["早前本轮，详见原回执:E30"]
+    },
+    {
+      "agent": "Kimi",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 1.52.0；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E18"]
+    },
+    {
+      "agent": "MiniMax",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.2.7；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E18"]
+    },
+    {
+      "agent": "Mistral Vibe",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 2.25.8；握手 2.25.8",
+      "limitedSuccess": "早前/b117文件复制返工、成果核实、拒绝变更与冷新续答；1e8 B独立记号和对话整理保持成功。843 B/C原Medium3.5/High/Accept Edits下，两个自建Python命令在同一快照均真实存活；停B后B消失而C相同PID/父PID/命令哈希仍运行，再停C后C在90秒自然结束前消失，各自明确新续答返回原首记号。843思考选项改变、新续答和原值恢复有限通过；416 B冷载入原选择，新明确请求返回B首记号。",
+      "currentFailures": [
+        "1e8停止待批准任务后请求失败；后续明确继续发送仍失败。",
+        "41d既有A冷载入失败，仅一次明确重连仍失败。"
+      ],
+      "mainGaps": [
+        "旧A冷恢复/重连及其停止后续发失败仍未闭合；新B/C限定成功不覆盖A。",
+        "本次批准详情缺少命令输入，单次允许不等于完整审批呈现通过；并行/独立停止仅限该B/C自建命令与原选择，不扩大全部任务或子进程树。此前C请求完成时点未证明与B运行重叠，新的双命令存活证据单列。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E29",
+        "1e8dc5d5:E13",
+        "41d35be6:E15",
+        "41d35be6:E31",
+        "843f3a78:E60",
+        "843f3a78:E61",
+        "843f3a78:E62",
+        "843f3a78:E63",
+        "843f3a78:E64",
+        "843f3a78:E65",
+        "843f3a78:E66",
+        "843f3a78:E44",
+        "416d8142:E77"
+      ]
+    },
+    {
+      "agent": "Nova",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 1.1.49；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E28"]
+    },
+    {
+      "agent": "OpenCode",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.18.31；握手 1.18.31",
+      "limitedSuccess": "早前同服务确认免费选择后短答与最早记号续答成功；真实文件工具发生。",
+      "currentFailures": [
+        "b117/1e8 initialize约60秒超时，无load，原因未知。",
+        "早前严格复制/一次返工末LF错误（54/53及52/53字节）。"
+      ],
+      "mainGaps": [
+        "冷启动原因未知，不归因连接数量/配置；早前成功不覆盖后续失败。"
+      ],
+      "evidence": ["早前本轮，详见原回执:E32", "1e8dc5d5:E33"]
+    },
+    {
+      "agent": "Pi",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 0.0.34；握手 0.0.34；CLI 0.80.5 (README本轮观察)",
+      "limitedSuccess": "早前/b117上下文返回、两对话重叠、A停/B继续与A停后新续答有有限成功。 843原免费选择下，严格采集确认单次停止后自建PID/命令在90秒前消失；新明确无工具续答准确返回A首记号。 ea4现代思考选项off确认后新续答正确，恢复原medium后新续答亦正确；416冷载入原免费Nemotron/medium，新明确无工具请求返回原A首记号。",
+      "currentFailures": ["早前/b117严格仅记号混Retry；复制46/47字节缺末LF。"],
+      "mainGaps": [
+        "旧严格回复与末尾换行失败保留；843该停止后单记号任务通过，不覆盖所有短答或整个子进程树。"
+      ],
+      "evidence": [
+        "早前本轮，详见原回执:E34",
+        "b117339f:E21",
+        "843f3a78:E53",
+        "843f3a78:E54",
+        "843f3a78:E44",
+        "ea4a9e47:E76",
+        "416d8142:E77"
+      ],
+      "resolvedHistoricalFailures": [
+        "843旧/现代思考选项冲突导致发送受保护阻止为历史；ea4现代选项off→medium确认与新续答、416原选择冷新续答有限通过，不消除早前严格回复及末LF失败。"
+      ]
+    },
+    {
+      "agent": "Poolside",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 1.0.16；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E35"]
+    },
+    {
+      "agent": "Qoder",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.2.14；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E35"]
+    },
+    {
+      "agent": "Qwen",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.24.7；握手 0.24.7",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E19"]
+    },
+    {
+      "agent": "siGit",
+      "category": "有具体失败",
+      "agentVersionSnapshot": "安装 1.5.11；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [
+        "早前原选本地模型Ready后，550ms实际短答internal_error，无正文，原因未知。"
+      ],
+      "mainGaps": ["未取得成功正文，具体原因未知。"],
+      "evidence": ["早前本轮，详见原回执:E08"]
+    },
+    {
+      "agent": "Stakpak",
+      "category": "缺条件未测",
+      "agentVersionSnapshot": "安装 0.3.88；握手 未报告",
+      "limitedSuccess": null,
+      "currentFailures": [],
+      "mainGaps": [
+        "现有方式要求认证，未补登录；实际任务、工具、冷续答、模型和停止隔离未测。"
+      ],
+      "evidence": ["早前本轮（见原回执）:E36"]
+    }
+  ],
+  "evidenceIndex": [
+    {
+      "id": "E01",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/agent-summary.jsonl",
+      "sha256": "e53e59f7c4f967f9cede2717aeb33a5fa610dc399220f951b9f6e07b05dab10e",
+      "visibility": "private"
+    },
+    {
+      "id": "E02",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/review.json",
+      "sha256": "56a820e3899242b49adc41b311eba534f54108b904edc1b472038510279ea5ef",
+      "visibility": "private"
+    },
+    {
+      "id": "E03",
+      "path": "output/2026-10-07-autonomous-macos/agent-current-matrix.json",
+      "sha256": "014a680cf306a70a98a07567ecf394f9c53c4958ad983ad57c4c7ac48ef9e225",
+      "visibility": "private"
+    },
+    {
+      "id": "E05",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-codebuddy-amp.json",
+      "sha256": "b771609f40e97f0f9372afe3f79ac45222c9adcdceb1d0549a35a93eb1e00159",
+      "visibility": "public"
+    },
+    {
+      "id": "E06",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-antigravity-dimcode-preparation.json",
+      "sha256": "29cd6be53f262f3218ca2ce093e3d7f7b226f57a026741666d659f24c81c9bca",
+      "visibility": "public"
+    },
+    {
+      "id": "E07",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-auggie-copilot.json",
+      "sha256": "ac9913bb0bf2732efb25b1b3682552b5a8443e5b04d92e3ed2ae5329d01391e0",
+      "visibility": "public"
+    },
+    {
+      "id": "E08",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-autohand-sigit-loaded.json",
+      "sha256": "7af3374162a04b752f5e28a0204b1b4094fc228f121c9172932b8f2551a49cc5",
+      "visibility": "public"
+    },
+    {
+      "id": "E10",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-cline-initial.json",
+      "sha256": "f6c719e32a4fb69de9e5ee6018ed7474935b5ae2f2cdac811a8024ddcce55c2e",
+      "visibility": "public"
+    },
+    {
+      "id": "E11",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-836-first-results.json",
+      "sha256": "15128be899b7fa5e07eb70a3c5c4c56a520c993f6d286f241980164d5fa53d44",
+      "visibility": "public"
+    },
+    {
+      "id": "E12",
+      "path": "docs/evidence/2026-10-06-macos-batch1/codebuddy-tools-results.json",
+      "sha256": "b3f70cae472faa37cd61ddf2436287dd1eefd1f6e14365799959ab265fc12496",
+      "visibility": "public"
+    },
+    {
+      "id": "E13",
+      "path": "output/2026-10-07-autonomous-macos/agent-interactions-1e8.json",
+      "sha256": "fb031465be6990daa386b25239d3419652c12cecd1dbb20f8df6d3a1f8c31c09",
+      "visibility": "private"
+    },
+    {
+      "id": "E14",
+      "path": "output/2026-10-07-autonomous-macos/codebuddy-parallel-stop-1e8.json",
+      "sha256": "4aaa0a207b3b12387288a4c991e742723d7400df4bd2384e270ab1771e1d891b",
+      "visibility": "private"
+    },
+    {
+      "id": "E15",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-41d-results.json",
+      "sha256": "2dc54a5444ceabd36ae8804cdbe9183e843969d1df1592e1c0cade811cf386f3",
+      "visibility": "public"
+    },
+    {
+      "id": "E16",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/cold-context-843-review.json",
+      "sha256": "d04392dea3248ec01cb10a6ee0ff6e9a93003eff1bcb0e8199483ab781f517eb",
+      "visibility": "private"
+    },
+    {
+      "id": "E18",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-kimi-corust-minimax-preparation.json",
+      "sha256": "952236a4fcdd735411d473332304a28fbefa40db4de29b7903bf79b728b95ee6",
+      "visibility": "public"
+    },
+    {
+      "id": "E19",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-qwen-cursor-preparation.json",
+      "sha256": "c2170b142a4fed58a8d48d328742d46cf557b4cd960a863b575b55463e208a5b",
+      "visibility": "public"
+    },
+    {
+      "id": "E20",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-836-devin-results.json",
+      "sha256": "77236f09070d7349e832aa8f475ac8949f9ff12c17a8f1546358b90a58d9fde3",
+      "visibility": "public"
+    },
+    {
+      "id": "E21",
+      "path": "output/2026-10-07-autonomous-macos/cold-protocol-review.json",
+      "sha256": "2880ac7eea800417ae24cf4cb2136f177b314aa151c364853807d4c097de1e1e",
+      "visibility": "private"
+    },
+    {
+      "id": "E22",
+      "path": "docs/evidence/2026-10-06-macos-batch1/available-file-results.json",
+      "sha256": "3855329ab46ba7978bd7715af9e4b5eacfd72e1a6bb566b3844a98422e5e39cd",
+      "visibility": "public"
+    },
+    {
+      "id": "E23",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-droid-kilo.json",
+      "sha256": "0299c48933a07c543e7b152fc97ec24eb5f9986bd9bdfc081f150f3412f297e7",
+      "visibility": "public"
+    },
+    {
+      "id": "E24",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/fast-running-stop-review.json",
+      "sha256": "55050a0de7d312d0a7650e0f2bf0a31d0086bb8397e5eeeaaa5e9011d33ed39a",
+      "visibility": "private"
+    },
+    {
+      "id": "E25",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/fast-current-tools-review.json",
+      "sha256": "25cca73f66f9cbf4f7cd8b5fca6d40791e6f32fcb5ff7b6f2c4d477467042e55",
+      "visibility": "private"
+    },
+    {
+      "id": "E26",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-fast-sigit-gemini.json",
+      "sha256": "bdb60574efb5e8b9a212eeeb25653aad296cd15dbf6a9427dcadb6ad3eb27b18",
+      "visibility": "public"
+    },
+    {
+      "id": "E27",
+      "path": "output/2026-10-07-autonomous-macos/agent-summary-review/copilot-running-stop2-review.json",
+      "sha256": "dad5ea37667f5c84d7ecdf7bfa843c361a5efe4479204183ad3ef1818d83f520",
+      "visibility": "private"
+    },
+    {
+      "id": "E28",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-grok-junie-nova-preparation.json",
+      "sha256": "67adb9222fa1c7f7e83c5618c33c9a3cf39ffb1629541f0693ccd126a5b4cc3f",
+      "visibility": "public"
+    },
+    {
+      "id": "E29",
+      "path": "docs/evidence/2026-10-06-macos-batch1/kilo-vibe-tools-results.json",
+      "sha256": "b592ca1a4d9e73b707d06c1ff84bc76590f2cd3439281c640b91c14913797122",
+      "visibility": "public"
+    },
+    {
+      "id": "E30",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-goose-kimchi.json",
+      "sha256": "dfced1641333325ff9bde1d46f2adeee17ef9f6850c07e9ba834dc5f5c8c9440",
+      "visibility": "public"
+    },
+    {
+      "id": "E31",
+      "path": "output/2026-10-07-autonomous-macos/installed-41d35be6/vibe-reconnect-final.json",
+      "sha256": "dfbdbaee1a6db6b49b3713482fac02d16795cb2cb0d039bd6bfb396077eee9b9",
+      "visibility": "private"
+    },
+    {
+      "id": "E32",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-opencode-free.json",
+      "sha256": "9703160fd7cc23c93c5f3f4134cb2e5c07795495fd17fbc17bee5ec912a47306",
+      "visibility": "public"
+    },
+    {
+      "id": "E33",
+      "path": "output/2026-10-07-autonomous-macos/startup-sample-1e8/startup-association.json",
+      "sha256": "f748a0f54a546fa33a4790c4a78e30f075faf674b413e91e0775edc18cb33352",
+      "visibility": "private"
+    },
+    {
+      "id": "E34",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-pi-overlap.json",
+      "sha256": "74ed5c706ce409b632b85d1f5134f48e0a66b901ff2b04b88ffd98ac97a893fd",
+      "visibility": "public"
+    },
+    {
+      "id": "E35",
+      "path": "docs/evidence/2026-10-06-macos-batch1/protocol-poolside-qoder-stakpak-preparation.json",
+      "sha256": "4189be6af99e57813e4ed66b24654394cc4279e8f7fd9a2b95532f6df76ae670",
+      "visibility": "public"
+    },
+    {
+      "id": "E36",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-836-stakpak-results.json",
+      "sha256": "f3110ca3d918044edca767675620d87b1f1103287ff3d66f87fc6311df06426d",
+      "visibility": "public"
+    },
+    {
+      "id": "E37",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-acknowledged.json",
+      "sha256": "313d8caaeccb61f131c3f2880d29465d7420488ea5d80645f68b1c176f2101d4",
+      "visibility": "private"
+    },
+    {
+      "id": "E38",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-final.json",
+      "sha256": "5440876bc87c23828f563ee0be520168f86a255bcb9b67b05e58c49b9c0fbd2b",
+      "visibility": "private"
+    },
+    {
+      "id": "E39",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-tool-details.json",
+      "sha256": "5ec9538e20c38cd9b92aa2d3ecbb75b92b962a4042a3721af59acb4a3cb7b593",
+      "visibility": "private"
+    },
+    {
+      "id": "E40",
+      "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-stable-grant.json",
+      "sha256": "ef7263c12b4a204d1cf84fd30ef91f8787e6c2c0a51eafe831d3a3bd64899ea6",
+      "visibility": "private"
+    },
+    {
+      "id": "E41",
+      "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-read.json",
+      "sha256": "cdda039efcfa35e48c24c3968c8b399cba7cd776e79c0c39aa3eaeb1e4f65f68",
+      "visibility": "private"
+    },
+    {
+      "id": "E42",
+      "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-manual-snapshot.json",
+      "sha256": "4ce955134ce533a61c10d17d26453525472674a4690bc4c94be697fcacda931b",
+      "visibility": "private"
+    },
+    {
+      "id": "E43",
+      "path": "output/2026-10-07-autonomous-macos/installed-41d35be6/image-direct-model.json",
+      "sha256": "66e73af3408b31c7c63abf8e74f0fcaa28a08baa5660e581ddad0860202a9f80",
+      "visibility": "private"
+    },
+    {
+      "id": "E44",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-843-results.json",
+      "sha256": "d85908857e077ef1448e0dbe12b5713a37213037aa6a934555a7a6513526bbe6",
+      "visibility": "public"
+    },
+    {
+      "id": "E45",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-codexwindow.json",
+      "sha256": "98545e88bb13437b73fcfe39df1bf36379cb9598b099e843ee7686b777ec91e8",
+      "visibility": "private"
+    },
+    {
+      "id": "E46",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-after-running-stop-final.json",
+      "sha256": "7b8e0c8140cd2b0b4b5955ead52b58ffcd34719492991eac58c9b1d38f661940",
+      "visibility": "private"
+    },
+    {
+      "id": "E47",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-before-process.json",
+      "sha256": "6d703505da93adefc7ed382a4ef558c790328f2f3658445846f60462921d40d3",
+      "visibility": "private"
+    },
+    {
+      "id": "E48",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-stop-clicked.json",
+      "sha256": "463c6fc72cbfe06c37eb49efc0cc9b09aa24c74dafaced107fcbedf0d848d4c2",
+      "visibility": "private"
+    },
+    {
+      "id": "E49",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-after-process.json",
+      "sha256": "535beeb900420bb644654db047e8f49f5a6614115b475652d9d629db73ddec53",
+      "visibility": "private"
+    },
+    {
+      "id": "E50",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-after-running-stop-final.json",
+      "sha256": "7a6f02a0f688df76e4a39e6130f12e0e3b047b505fc3064702680657d1d6a88e",
+      "visibility": "private"
+    },
+    {
+      "id": "E51",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-after-running-stop-final.json",
+      "sha256": "79d92a53e52fe10dbe5359a39de63b008ed187ff6627082ff4c2f679a57e9962",
+      "visibility": "private"
+    },
+    {
+      "id": "E52",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-after-running-stop-final.json",
+      "sha256": "a4137283a356482c126ecc78c2eaae720abbaf2476b9a1744808dcac19b065bc",
+      "visibility": "private"
+    },
+    {
+      "id": "E53",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-pistrict.json",
+      "sha256": "7018eb6e5b0801800f6b9f0a185db741ee14409ee9d4328568f51cc0b696980e",
+      "visibility": "private"
+    },
+    {
+      "id": "E54",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-after-strict-stop-final.json",
+      "sha256": "69e28df993823d50582084667bf9bf455566ddffcceed88a5750f662e6f52498",
+      "visibility": "private"
+    },
+    {
+      "id": "E55",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-gooseastrict.json",
+      "sha256": "f67b8587605df388683bf8ca393eb1c90ad6c2613d0b15315808e4cd9e246b78",
+      "visibility": "private"
+    },
+    {
+      "id": "E56",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-a-after-strict-stop-blocked.json",
+      "sha256": "e1c0493d4423dee50b7a9505cbf3ce91d5a8e8dd9906c458074df6393f53de33",
+      "visibility": "private"
+    },
+    {
+      "id": "E57",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-after-running-stop-blocked.json",
+      "sha256": "109821e9559d6d86ff1a1496df74b5d1be8b8632faaee0e70f04dab21da1e8e7",
+      "visibility": "private"
+    },
+    {
+      "id": "E58",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-devinstrict.json",
+      "sha256": "891ce93388440f0f644b71b2efaff0f0cbb7c10319a5bc237dad60f7343e13d5",
+      "visibility": "private"
+    },
+    {
+      "id": "E59",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-after-strict-stop-final.json",
+      "sha256": "1803ea302dda80a6d6291c8d0d403cf7db41af316a8dda74dd05fa6c837abed0",
+      "visibility": "private"
+    },
+    {
+      "id": "E60",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibestrict.json",
+      "sha256": "5e647f99004d43d26ba6a2889dc910c497fdfeac1cca4cc1e1e89c54aa283939",
+      "visibility": "private"
+    },
+    {
+      "id": "E61",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-parallel-stop-final.json",
+      "sha256": "b6482ea562a3f8255d146d9acba7e7fdfd00541044ea022d633fa3a4e653529e",
+      "visibility": "private"
+    },
+    {
+      "id": "E62",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-b-process-during-c.json",
+      "sha256": "91753b56e1ca6e171e6a784d27cddedd2e96fd971d84e03ced4b22b9caafed24",
+      "visibility": "private"
+    },
+    {
+      "id": "E63",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-context-sent.json",
+      "sha256": "c778c68f4c8bc3394315d219303473a039cfeccbb7fd6aaaf19d3b5f77e288f5",
+      "visibility": "private"
+    },
+    {
+      "id": "E64",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-context-final.json",
+      "sha256": "93bd68533ebfc215aff02785e57e0b2c0a96f2ccc74b3db48b6653f993941ae1",
+      "visibility": "private"
+    },
+    {
+      "id": "E65",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibeparallel.json",
+      "sha256": "1876850a37a9bc292f24acca36ba7bb6cee61c08e363325c2cf78b76ea39d3b4",
+      "visibility": "private"
+    },
+    {
+      "id": "E66",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-current-model.json",
+      "sha256": "2ae487d50c257272b191a7ba329496096e02d406819be3135eafd591667019ea",
+      "visibility": "private"
+    },
+    {
+      "id": "E67",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-diracstrict.json",
+      "sha256": "50533a65a328c27b584b39154c732c4a6fae94beaadda98cc996e03bc58e5231",
+      "visibility": "private"
+    },
+    {
+      "id": "E68",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-after-strict-stop-final.json",
+      "sha256": "c19b03fd94bbca2cee75fe9506d62c16c15689b39eef9b93fd2c49e5e58d0d5f",
+      "visibility": "private"
+    },
+    {
+      "id": "E69",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-context-final.json",
+      "sha256": "51bea570ea9ca9ec406f85ebf259e1def661e3fbdcad2d52a5dd63208d8bccfb",
+      "visibility": "private"
+    },
+    {
+      "id": "E70",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-a-process-during-b.json",
+      "sha256": "00ca80bdec207fb48376f22c41aa0fe71bc715c54c9f62333704650ddecfc415",
+      "visibility": "private"
+    },
+    {
+      "id": "E71",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-context-sent.json",
+      "sha256": "4826faafbf19ad0a88ed053074c645f46329fba97b830d8978940a80a22eea42",
+      "visibility": "private"
+    },
+    {
+      "id": "E72",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-current-model.json",
+      "sha256": "bf84f35230dd3a079bcaddda84e2d6dbf2ffbd38bae746ddb2663156f18b8d3e",
+      "visibility": "private"
+    },
+    {
+      "id": "E73",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-first-final.json",
+      "sha256": "373409b057f739a33c1a2fcbdd64494c4a812c387f8a16eee1658ae51a4725d4",
+      "visibility": "private"
+    },
+    {
+      "id": "E74",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+      "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8",
+      "visibility": "private"
+    },
+    {
+      "id": "E75",
+      "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+      "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0",
+      "visibility": "private"
+    },
+    {
+      "id": "E76",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-ea4-results.json",
+      "sha256": "57705e6d86c86b6ccc765a4932f8a511023105b17222a4640bfbaa2845139ea5",
+      "visibility": "public"
+    },
+    {
+      "id": "E77",
+      "path": "docs/evidence/2026-10-06-macos-batch1/installed-416-results.json",
+      "sha256": "c3450091476dfe3706c1443a739d92bb89d60643986fae461dd8179fb24e6caf",
+      "visibility": "public"
+    }
+  ],
+  "evidenceRefFormat": "应用版本:E编号；实际路径和SHA见evidenceIndex，新增分版本样本及底层引用见E44/E76/E77。",
+  "navigation": "docs/evidence/2026-10-06-macos-batch1/README.md",
+  "workbenchEvidence": [
+    "843f3a78:E37",
+    "843f3a78:E38",
+    "843f3a78:E39",
+    "454bf79a:E40",
+    "454bf79a:E41",
+    "454bf79a:E42",
+    "ea4a9e47:E76",
+    "416d8142:E77"
+  ],
+  "runtimeSamples843": {
+    "agentsTested": 9,
+    "ownedCommandSurvivedStop": [
+      "Codex",
+      "CodeBuddy",
+      "GitHub Copilot",
+      "fast-agent"
+    ],
+    "ownedPidAbsentBeforeNaturalEnd": [
+      "Pi",
+      "Goose",
+      "Devin",
+      "Mistral Vibe",
+      "Dirac"
+    ],
+    "correctContextNewRepliesAfterStop": [
+      "Codex",
+      "CodeBuddy",
+      "GitHub Copilot",
+      "fast-agent",
+      "Pi",
+      "Devin",
+      "Mistral Vibe"
+    ],
+    "blockedContinuation": ["Goose"],
+    "failedStrictContinuation": ["Dirac"],
+    "limitedIndependentOverlapSuccess": ["Mistral Vibe"],
+    "boundary": "不是9家完整停止能力通过。只采用新增严格成功采集，旧四组缺查询错误记录的空观测保持未知；采集函数来源为执行后记录，未独立绑定到每次调用。四家清理后正确新回复不覆盖停止失败。 Vibe新增双命令同一快照存活、停B后C仍运行和分别新续答，有限证明该B/C独立性，不回写旧请求完成时点或推广全部任务。",
+    "evidence": ["843f3a78:E44", "843f3a78:E74", "843f3a78:E75"]
+  }
+}

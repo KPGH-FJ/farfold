@@ -1,0 +1,93 @@
+{
+  "sourceCommit": "843f3a78cc8cbe86fd56da9580d2482db7fe56e9",
+  "scope": "seven required source checks; separate from installed app and real Agent results",
+  "frontend": {
+    "filesPassed": 196,
+    "testsPassed": 2332
+  },
+  "rust": {
+    "testsPassed": 1021,
+    "testsFailed": 0,
+    "originalIgnored": 4
+  },
+  "checks": [
+    {
+      "name": "format",
+      "command": ["corepack", "pnpm", "format:check"],
+      "exit": 0,
+      "seconds": 14.789,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/frontend/format.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "typecheck",
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exit": 0,
+      "seconds": 5.532,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/frontend/typecheck.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "test",
+      "command": ["corepack", "pnpm", "test"],
+      "exit": 0,
+      "seconds": 24.058,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/frontend/test.log",
+      "sha256": "c9fbcad7dd5494b42abd2b24924d84357de51a937228b54170182df42de657ec"
+    },
+    {
+      "name": "build",
+      "command": ["corepack", "pnpm", "build"],
+      "exit": 0,
+      "seconds": 5.725,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/frontend/build.log",
+      "sha256": "dc70c753f55cf164f4dbf191169c1cd30a39863aabcadc6434eceeb7d0315a85"
+    },
+    {
+      "name": "fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exit": 0,
+      "seconds": 0.944,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/rust/fmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 0.87,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/rust/clippy.log",
+      "sha256": "f92dab9cbe3b243772444bd8f17f10a7dd3fc483a1a264eee42aef77e5bce6e3"
+    },
+    {
+      "name": "test",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exit": 0,
+      "seconds": 35.382,
+      "log": "output/2026-10-07-autonomous-macos/candidate-843f3a78-full-checks/rust/test.log",
+      "sha256": "1e4e1ff00809ba9d99f874211cb8b0b36da91fa7c2bcae97d6bac8c8455adbd4"
+    }
+  ],
+  "sourceCommitStable": true
+}

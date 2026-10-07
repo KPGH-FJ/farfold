@@ -1,0 +1,105 @@
+{
+  "sourceCommit": "416d81429abd10b0622abc7180a142052d72ca4f",
+  "scope": "Frontend source checks and reused unchanged Rust checks only, not real-Agent acceptance. Final record format gate separately recorded.",
+  "allRecordedChecksPassed": true,
+  "counts": {
+    "frontend": {
+      "files": 197,
+      "passed": 2339,
+      "failed": 0
+    },
+    "rustReusedFromEa": {
+      "passed": 1025,
+      "failed": 0,
+      "ignored": 4,
+      "mainTests": 0,
+      "docTests": 0
+    }
+  },
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "elapsedSeconds": 24.204,
+      "log": "output/2026-10-07-autonomous-macos/command-menu-full-checks/check-1.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "elapsedSeconds": 28.896,
+      "log": "output/2026-10-07-autonomous-macos/command-menu-full-checks/check-2.log",
+      "sha256": "0fb4062182de0f6728e71c2162a161b74cdc1e3baa1cf3ae41b0341977a5924d"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "elapsedSeconds": 25.471,
+      "log": "output/2026-10-07-autonomous-macos/command-menu-full-checks/check-3.log",
+      "sha256": "90e0092aae86d0e57bb1ae3c98bc1bd9d1091590e763ff429be65eac019d1c4e"
+    }
+  ],
+  "unchangedRustEvidence": {
+    "sourceCommit": "ea4a9e470592403d19707b4ddcec9045ecd6c40d",
+    "sourceAndManifestDiffEmpty": true,
+    "checks": [
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 1.531,
+        "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-5.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 19.02,
+        "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-6.log",
+        "sha256": "87e08caecbfe2d12d79147010e96479a09f71fa5e782204d22842a30d45e76d6"
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "elapsedSeconds": 29.519,
+        "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-7-final.log",
+        "sha256": "1073764a6ef7c782214a0fcb9f2da045048aba33e7da1a2874867bd0951e4d54",
+        "sourceChangeSinceFirstRun": "Only lifecycle old-mode fixture now declares a real legacy-only API; production unchanged"
+      }
+    ],
+    "scope": "No new Rust run for this frontend-only change; 1025 passed/4 original ignored retained from ea4a9e47."
+  },
+  "changedFilesSinceEa": [
+    "src/components/Composer.shortcuts.test.tsx",
+    "src/components/Composer.tsx"
+  ],
+  "redTest": {
+    "receipt": "output/2026-10-07-autonomous-macos/command-menu-fix/checks.json",
+    "boundary": "Actual established-thread command entry missing reproduced before repair; two-file correction and independent review."
+  },
+  "independentReview": "output/2026-10-07-autonomous-macos/command-menu-fix/independent-review.json",
+  "finalRecordGate": {
+    "path": "output/2026-10-07-autonomous-macos/final-record-gate/result.json",
+    "boundary": "Final repository format and diff checks are recorded in that receipt separately from the source frontend/Rust runs. This is a locator, not a cached pass flag."
+  }
+}

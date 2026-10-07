@@ -1,0 +1,94 @@
+{
+  "sourceCommit": "454bf79a85613a14f8784d99f9b5e00564384784",
+  "checks": {
+    "frontend": {
+      "commitAtStart": "454bf79a85613a14f8784d99f9b5e00564384784",
+      "scope": "exact required checks; source acceptance separate from installed/live tests",
+      "startedAt": "2026-10-06T22:12:53.298942+00:00",
+      "checks": [
+        {
+          "name": "format",
+          "command": ["corepack", "pnpm", "format:check"],
+          "exit": 0,
+          "seconds": 17.865,
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        },
+        {
+          "name": "typecheck",
+          "command": ["corepack", "pnpm", "typecheck"],
+          "exit": 0,
+          "seconds": 6.686,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "name": "test",
+          "command": ["corepack", "pnpm", "test"],
+          "exit": 0,
+          "seconds": 27.123,
+          "sha256": "4f99a54b12fadddf1f9943a9f5de8613ce7a0ea0e40783217ca5dedd9d26ccca"
+        },
+        {
+          "name": "build",
+          "command": ["corepack", "pnpm", "build"],
+          "exit": 0,
+          "seconds": 6.942,
+          "sha256": "01e7185b68c3bc511ff64fdd030f924987929256d32f72af81f54d8a018764ca"
+        }
+      ],
+      "finishedAt": "2026-10-06T22:13:51.918631+00:00",
+      "commitAtEnd": "454bf79a85613a14f8784d99f9b5e00564384784"
+    },
+    "rust": {
+      "commitAtStart": "454bf79a85613a14f8784d99f9b5e00564384784",
+      "scope": "exact required checks; source acceptance separate from installed/live tests",
+      "startedAt": "2026-10-06T22:12:53.298933+00:00",
+      "checks": [
+        {
+          "name": "fmt",
+          "command": [
+            "cargo",
+            "fmt",
+            "--check",
+            "--manifest-path",
+            "src-tauri/Cargo.toml"
+          ],
+          "exit": 0,
+          "seconds": 1.209,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "clippy",
+          "command": [
+            "cargo",
+            "clippy",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "--",
+            "-D",
+            "warnings"
+          ],
+          "exit": 0,
+          "seconds": 0.809,
+          "sha256": "e68dbb831082090d6aab9641584d06498d66907f4c3e3d2d36c4824da23e94c8"
+        },
+        {
+          "name": "test",
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked"
+          ],
+          "exit": 0,
+          "seconds": 34.547,
+          "sha256": "8312ff56512a6a2a01d1cb91c0a75150b3333e4daf5262ab7d0b902dfc058da5"
+        }
+      ],
+      "finishedAt": "2026-10-06T22:13:29.868445+00:00",
+      "commitAtEnd": "454bf79a85613a14f8784d99f9b5e00564384784"
+    }
+  },
+  "scope": "Exact seven required source checks passed. Installed UI and real-Agent acceptance are separately tested."
+}

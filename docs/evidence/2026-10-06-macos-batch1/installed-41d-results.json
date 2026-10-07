@@ -1,0 +1,183 @@
+{
+  "applicationCommit": "41d35be67eca8dc65cca6d4847c02a79473bd485",
+  "binarySha256": "4fdcb0afefba34bab08775b0bb903c78bb3cb77067682088b05b67886a9212c2",
+  "scope": "Actual macOS installation; owned fixtures, authorized existing service/model only. No login/logout/account switch or Windows.",
+  "samples": [
+    {
+      "id": "cold-drafts",
+      "status": "passed",
+      "description": "Two owned drafts and attachment restored without automatic sending; explicit recheck required.",
+      "privateEvidence": "cold-drafts.json",
+      "sha256": "cde8399b2fae034ed52e0c135c5a4ca8606bdd806fee3e6a71bf99ec68cdcd96"
+    },
+    {
+      "id": "special-file-uri",
+      "status": "passed",
+      "description": "CodeBuddy selected Chinese/space/percent file and returned its exact first line after one permission.",
+      "privateEvidence": "attachment-image-positive-protocol.json",
+      "sha256": "a20d297dd5886b96638c351825e6bad1e3cf25ae73075f4476906b239c7eb344",
+      "additionalEvidence": {
+        "file": "cold-drafts.json",
+        "field": "attachmentResult",
+        "sha256": "cde8399b2fae034ed52e0c135c5a4ca8606bdd806fee3e6a71bf99ec68cdcd96",
+        "protocolFile": "protocol-v1-1791322964197-2.jsonl",
+        "scope": "The -2 CodeBuddy sample is separately associated with the actual URI and exact reply. The -4 Codex image sample has no permission and is not counted as file approval."
+      }
+    },
+    {
+      "id": "static-image-import",
+      "status": "passed",
+      "description": "Seven owned static image encodings accepted and decoded in the actual installed webview; no Agent sending for this import sample.",
+      "privateEvidence": "native-static-imports.json",
+      "sha256": "19b769400e51a7b77025e379c485c3ce19539d317ccd7973ec735228834601bb"
+    },
+    {
+      "id": "animated-image-rejection",
+      "status": "passed",
+      "description": "Animated PNG rejection retained the input/chip and sent no Agent prompt.",
+      "privateEvidence": "image-reject-apng.json",
+      "sha256": "0ec706d335cb59c11086aac95a74f4ff05a23d8b872142df755cfaa6ecc62f08",
+      "supportingEvidence": [
+        {
+          "file": "image-negative-protocol.json",
+          "sha256": "deedcd75953219d14857b7f06308f982f6437c8ab89e3a045af0752da72f7b32"
+        }
+      ]
+    },
+    {
+      "id": "oversize-image-rejection",
+      "status": "passed",
+      "description": "100000x1 owned PNG rejection retained the input/chip and sent no Agent prompt.",
+      "privateEvidence": "image-reject-wide.json",
+      "sha256": "e5555ac1af7c1f344be49c9520444bcc9679e08c09956c24a77264126b0b6567",
+      "supportingEvidence": [
+        {
+          "file": "image-negative-protocol.json",
+          "sha256": "deedcd75953219d14857b7f06308f982f6437c8ab89e3a045af0752da72f7b32"
+        }
+      ]
+    },
+    {
+      "id": "direct-image-vision",
+      "status": "passed",
+      "description": "Codex 6 Sol/High correctly described the owned 160x100 four-color image; prompt did not supply expected colors.",
+      "privateEvidence": "image-direct-model.json",
+      "sha256": "66e73af3408b31c7c63abf8e74f0fcaa28a08baa5660e581ddad0860202a9f80"
+    },
+    {
+      "id": "tiny-image-queued",
+      "status": "failed",
+      "description": "Two-pixel image was not recognized; independent direct tiny-image control also failed, so queue-specific loss is not established.",
+      "privateEvidence": "image-queue-final.json",
+      "sha256": "0bd74bffa2c7e46083b27aa149ddf9b5dcebfbbafeefb623008ff78efcac1dd8"
+    },
+    {
+      "id": "tiny-image-direct-control",
+      "status": "failed",
+      "description": "Direct same-file two-pixel sample not recognized; cause remains unknown.",
+      "privateEvidence": "image-tiny-direct-control.json",
+      "sha256": "4365eceee3b45190eb77a154d4eda16aa69d03b26205e8bbd35e13ca6df5e95e"
+    },
+    {
+      "id": "large-image-queue-reread",
+      "status": "passed",
+      "description": "Owned 160x100 image replaced after adding to pending queue; actual response identified the new colors green/magenta.",
+      "privateEvidence": "image-large-queue-final.json",
+      "sha256": "2fd1de3c09f7e55688d95f66598f340e8f970701b4df0d8396bfd602881bb9ad",
+      "supportingEvidence": [
+        {
+          "file": "queue-large-fixture.json",
+          "sha256": "e171aabd5e3a34fa300b9e33ce0a04dc6e814e62e7312239da86ce6a5f867e59"
+        },
+        {
+          "file": "image-large-queue-file-update.json",
+          "sha256": "90c7eb7cdbe5c609443304a6fb58aec435ce3f9123094ee8bfd3e65bb68a8c55"
+        }
+      ]
+    },
+    {
+      "id": "browser-input-verification",
+      "status": "failed",
+      "description": "Ordinary field visibly changed to exact requested text but action result remained unknown/null/unverified. Source Mac argument bug fixed later in 7ceee05d; not installed here.",
+      "privateEvidence": "browser-normal-unknown.json",
+      "sha256": "f838a13f27001fa238fc477aabf5651c3cad6e431f4c112566580d4a9d094737"
+    },
+    {
+      "id": "vibe-cold-load",
+      "status": "failed",
+      "description": "Owned A history could not reopen. One explicit reconnect also failed; no further automatic retry.",
+      "privateEvidence": "vibe-cold-failed.json",
+      "sha256": "64de72aa5242f1c292e8de148b4d693254b2d85f40b2117b87d10d173ca3682f",
+      "additionalEvidence": {
+        "file": "vibe-reconnect-final.json",
+        "sha256": "dfbdbaee1a6db6b49b3713482fac02d16795cb2cb0d039bd6bfb396077eee9b9",
+        "scope": "End result after the sole explicit reconnect."
+      }
+    },
+    {
+      "id": "reconnect-busy-feedback",
+      "status": "passed",
+      "description": "Immediate reconnecting feedback disabled duplicate action and sending and hid old failure while busy.",
+      "privateEvidence": "vibe-reconnect-start.json",
+      "sha256": "e4ef9e3b9e079c6efc1e77716364a9e535604d8083986890799c41ac4cfcb862"
+    },
+    {
+      "id": "vibe-stop-feedback-sample",
+      "status": "not-tested",
+      "description": "Requested sleep was not executed; model only repeated an earlier marker, so this sample cannot test stop/tool feedback.",
+      "privateEvidence": "vibe-b-stop-request-not-followed.json",
+      "sha256": "e15191a4f1e5f3bd79d2cfdf7e45de0d5cc3fba3219b39c527eecf5cf9a37ca9"
+    },
+    {
+      "id": "binary-saveas",
+      "status": "passed",
+      "description": "334 saved bytes exactly matched the selected owned PNG SHA256.",
+      "privateEvidence": "binary-saveas.json",
+      "sha256": "2d66808493f5e7ea98a5b963bf952091c80eb324f6cf49cc364559c4b24c1e6e"
+    },
+    {
+      "id": "default-image-app",
+      "status": "passed",
+      "description": "Preview opened the exact owned image window.",
+      "privateEvidence": "default-app-image.json",
+      "sha256": "a9922ac8bf1c06183c86ecf1670cded92e72373d12a543dae771ff414c29a55e"
+    },
+    {
+      "id": "finder-reveal",
+      "status": "failed",
+      "description": "One reveal attempt eventually displayed file operation failure; no identifiable owned Finder directory; cause under investigation.",
+      "privateEvidence": "finder-reveal-failed.json",
+      "sha256": "54bf1160c9dc8fe32b868fec595c25b0782123817464170c226b448fd29e4c9b"
+    },
+    {
+      "id": "goose-cold-history",
+      "status": "passed-limited",
+      "description": "Actual owned conversation displayed prior tested messages; this does not certify all native history or all capability standards.",
+      "privateEvidence": "goose-cold-restored.json",
+      "sha256": "9ad906bf0a524271f865d8531d98a45dce8ec38acbef4f755d860fde4f0c5b6e"
+    },
+    {
+      "id": "Copilot-cold-history",
+      "status": "passed-limited",
+      "description": "Actual owned conversation displayed prior tested messages; this does not certify all native history or all capability standards.",
+      "privateEvidence": "copilot-cold-restored.json",
+      "sha256": "4cd0a5bdc586c01cc5c22dbe6d94ebd0487483a6b30c0e3b1eb5129bf4ed4e96"
+    },
+    {
+      "id": "fast-agent-cold-history",
+      "status": "passed-limited",
+      "description": "Actual owned conversation displayed prior tested messages; this does not certify all native history or all capability standards.",
+      "privateEvidence": "fast-cold-restored.json",
+      "sha256": "3e8a66415d991da95b40fbc34a77a1fe3bc7abb9f8831c5fbd1df0e5748d38bd"
+    },
+    {
+      "id": "Devin-cold-history",
+      "status": "passed-limited",
+      "description": "Actual owned conversation displayed prior tested messages; this does not certify all native history or all capability standards.",
+      "privateEvidence": "devin-cold-restored.json",
+      "sha256": "3f2d82b07a52bebad5567db1c543179fdd6f5029e1da4273c709b265b1ed3e1c"
+    }
+  ],
+  "full33StandardPassed": 0,
+  "boundary": "Observed import, protocol metadata, installed GUI and real model results are separate proof levels. Notification physical delivery/audio and unseen native tool termination are not certified."
+}

@@ -1,0 +1,199 @@
+{
+  "sourceCommit": "ea4a9e470592403d19707b4ddcec9045ecd6c40d",
+  "binarySha256": "97e4f2d81b0324abbe4267c142ca3c16415e077ba1d9fb31a94bb1ea3b385133",
+  "scope": "Finite real installed macOS samples only, original account/model/service preserved except explicitly allowed same-service free choice in a new owned conversation. No complete Agent acceptance.",
+  "samples": [
+    {
+      "sample": "Nonempty text queue cold restore and cancel edit",
+      "status": "passed",
+      "result": "Original one queued text survived normal exit/replacement/cold restore in full, remained paused, and was not sent. Edit displayed exact full text; cancelling retained it.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/queue-cold-ready.json",
+          "sha256": "c6d5356764993ed2118a6dac1e93ac1b23daa3ce9a5d893eff005f4a7a2fde7c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/queue-cold-edit-full-text.json",
+          "sha256": "19e71850861ab6ed68abba24c17963250b8e1b980dbd0879e47347bb5786321b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/queue-cold-edit-cancelled.json",
+          "sha256": "f60f27295e23d970194aa5853018c96448aa4d9ba56862e54354cb1820543f12"
+        }
+      ],
+      "boundary": "Original denied tool result still unconfirmed; Continue was not clicked. Does not prove queue delivery, attached-file queue recovery, or tool cancellation."
+    },
+    {
+      "sample": "Pi modern thought switching and context",
+      "status": "passed",
+      "result": "Cold original model/free service/medium and owned draft preserved. New modern-only panel hides old mode setter; actual off confirmed, explicit new reply returned original earliest marker. Medium restored and a further explicit reply returned original marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-cold-original-draft.json",
+          "sha256": "83069a4338c3b87248b0922988736f39bfe8109c0bfa95912ed2ad46ac7a02c7"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-original-panel.json",
+          "sha256": "79877ca29a1cda3c90af57b613ef652419a7938b46efdcc1f34496e20d14fafb"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-off-confirmed.json",
+          "sha256": "1ae896ac0747453ea5057ce20a98ec8d9ac814314cd473f8e90c95d302c92aa3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-off-sent.json",
+          "sha256": "f9518bffc5208f07360df133feacd254f1554cd1ae54ca7d9f0d72ba5c8dddb4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-off-final.json",
+          "sha256": "d2d5bf7fbd94e669a7aef0c6ac0bbd50c3d04aaf1da00ab9a1a3079a9b2f28bd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-original-restored.json",
+          "sha256": "a11862abafb1d4915c8f7564694973e7052c340caab2351078cb3dc120659967"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/pi-modern-original-context-final.json",
+          "sha256": "2d89d68017dfc339ad31d3297f305626e05804930892593f456cb67272395eba"
+        }
+      ],
+      "boundary": "Only modern configuration, saved confirmation guard and these replies. Hidden reasoning semantics not proven; old843 conflict remains historical failure."
+    },
+    {
+      "sample": "Prepared conversation model dialog",
+      "status": "passed",
+      "result": "Loading dialog stayed separate after options arrived. Tab focused its own option; Escape closed and returned focus to opener. Search filtered current free Nano, pending selection cancelled then reopened unselected; explicit confirmation selected Nano.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-loading.json",
+          "sha256": "872cf9712d9d2c9c229ce0976bd9f420dc915aa1e282bc161aa055f5b10d7228"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-ready.json",
+          "sha256": "ac571d9b0c9faaf9d0c276853ca2ee1c0d1167c9029278501cc41e39024009c6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-ready.png",
+          "sha256": "9b7b6739b009e13e33033051fca4d09d10b40bcc64a982d5813f8cafb2c09fd2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-tab-confined.json",
+          "sha256": "41b7697ef76dedec80d13622b932aaeb890f6d4cddcf9d4f918ee659e7585c4f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-escape-cancelled.json",
+          "sha256": "0b9e732971d0b5c9c98db6c8c9755c372f664643f9843641012d295c9cbbde1d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-pending-free.json",
+          "sha256": "59d3f88f7afd312cb2391341af1c8f12870e541c5947c89f23a8be4a8598c08d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-pending-cancelled.json",
+          "sha256": "a6e77f4984323a79d6fe7f06a84e7b090da731f6a57d0e775fdffaa793f00e4e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-before-apply.json",
+          "sha256": "a03324afc6da3f95d9e5fd5e0d19f33c060c99444eb3fd485d79c231c19ca590"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/model-picker-selection-confirmed.json",
+          "sha256": "3690c4757b693eaac2c86b5d20b7d9c359abd6ae33217a51ab5496f88ebdd379"
+        }
+      ],
+      "boundary": "Finite installed WebKit observation; controlled Chromium :modal test is separate. No hidden DOM probe used."
+    },
+    {
+      "sample": "Dirac new free model strict response",
+      "status": "failed",
+      "result": "New selected Nano replied with correct marker but also Task completed and a tool step; strict only-marker/no-tool request did not completely pass.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-original-panel.json",
+          "sha256": "555d781d414c4a5524a01e1f47242ebb1cc4aab4856c63b125f5c2aea8955bf2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-first-final.json",
+          "sha256": "ee60b5ea18c4dc9fcbb5cd657f483218ddc2eb64a68396d8f8055bb775d0fd12"
+        }
+      ],
+      "boundary": "Not a claim that all Dirac short replies or every model fail."
+    },
+    {
+      "sample": "Dirac same-service free model change and restore",
+      "status": "passed",
+      "result": "New owned D Nano changed through actual legacy Model selector to declared apodex mini:free; explicit new reply retained D earliest marker. Original Nano confirmed restored, OpenRouter and Medium unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-free-apodex-option.json",
+          "sha256": "d94e15ccf6299496056c684aad4ed2a4c41be63016017819819e320501c47b97"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-apodex-confirmed.json",
+          "sha256": "8996484d432173ef9bb989ae2db8e051190c2a10fc5b71bcf3c0447feff05c96"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-switched-final.json",
+          "sha256": "074d98854f1f166115887ca1fc6d904e64aae0b290c88ef9aa0584b8bfd5205f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-switched-panel.json",
+          "sha256": "f427f9c6be7b799061ac243894f07d9df0f364d5333f8ed9a1bb723245608383"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-nano-original-option.json",
+          "sha256": "07cc7353e1a7709a7d515dce6bd99780e405f229a41d5bfa1e4ded9e2ff608ab"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/dirac-model-d-original-restored.json",
+          "sha256": "2e9133276557714c201d9b90246ba11d7d188859d6b12c6c6ca31f7626f8b56e"
+        }
+      ],
+      "boundary": "A finite configuration/context trial, not native model internal identity or all service options. Existing older Ultra free conversations were not changed; full restored cold continuation is separate."
+    },
+    {
+      "sample": "Declared command selection, cancellation, parameter and explicit execution",
+      "status": "passed",
+      "result": "Fast actual slash directory included /commands and official parameter hint. Escape retained slash draft; filtered candidate Return inserted /commands without sending. Explicit Send once completed local command map.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-declared-directory.json",
+          "sha256": "f1d83c15f85d36cae1b12f2576d1230ca04eaf707b1d7e53a190fece0a05dc69"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-cancel-preserves-draft.json",
+          "sha256": "1b20ee1396a86ab9989965f19921d7795d45ff04be90e0bb02c74ecb7e7cfa3f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-command-filtered.json",
+          "sha256": "a2914dbff7c4172c743d6d9eddc21e3ed20d93a00fabbb535fce919a10580c44"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-command-selected.json",
+          "sha256": "aff57da4031acba2fb534075898f6f6b8cef98f93369ce4b20e396467308a7ae"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-command-sent.json",
+          "sha256": "573ffa0dad261cb163f2340da483a15160c256af8f0ebd4bb686c888767aa60d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/fast-slash-command-final.json",
+          "sha256": "67f65b0dc9db2be2f7247c5e747e34e668cf2539da21ad6c285d91f746b1af21"
+        }
+      ],
+      "boundary": "Slash route only; established Add menu hidden defect fixed in416 source, requires new installed menu test. No skills installed/modified or user config changed."
+    },
+    {
+      "sample": "Original global default Agent restored",
+      "status": "passed",
+      "result": "Default Dirac chosen only for new owned free-model trial; original Codex explicitly restored and observed selected.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-ea4a9e47/default-agent-original-restored.json",
+          "sha256": "31a799b0618a350ab6e41bfa9baf62d0e1048ed5d8aed4abf79f75dd84bf850d"
+        }
+      ],
+      "boundary": "No Agent change in existing conversations; no recovered draft auto-send."
+    }
+  ]
+}

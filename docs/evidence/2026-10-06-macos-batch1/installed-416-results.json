@@ -1,0 +1,548 @@
+{
+  "sourceCommit": "416d81429abd10b0622abc7180a142052d72ca4f",
+  "binarySha256": "d8e197dc4a48f6eedcfb9417bc8d961a441eddc4a311118daf4eb855d91ea53b",
+  "scope": "Finite installed macOS samples under full autonomous test authority, existing accounts/models preserved except prior same-service free selections. New logins/account changes/Windows excluded. Source tests and real results separate.",
+  "samples": [
+    {
+      "sample": "Declared Agent commands in an established conversation",
+      "status": "passed",
+      "result": "Actual fast-agent Add menu exposed declared Agent commands; Escape left empty composer; selecting /commands inserted without sending; explicit Send returned completed Command map.",
+      "boundary": "Only this declared local help command and shared entry; does not establish every command/skill/plugin execution or fix Agent tool cancellation.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/fast-add-menu-declared-command.json",
+          "sha256": "0e23ba5e9dce4d973f2ad7583864aea7ed3f297183e928bd07d3b7c04312e6f9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/fast-command-menu-choices.json",
+          "sha256": "e047967ce3abef3f06e34b46b00ce6e9ed7d7fea9cc8766a07d59a87bbbe2cd1"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/fast-command-menu-cancelled.json",
+          "sha256": "fb15b2f58867876baee3f64ab6662ad57e7ecb40245afcf6ec338382ffb2a7bb"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/fast-command-selected-unsent.json",
+          "sha256": "2d0cb4c621307ebe6e605ab3b45b32623c723561fd6fd4a03772613e5c745c07"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/fast-command-final.json",
+          "sha256": "905b3af5967e1e353967e478e7fcc61b0f1ec272d35fa7cc0bab7dfa94235203"
+        }
+      ]
+    },
+    {
+      "sample": "Pi modern configuration cold restore and new reply",
+      "status": "passed",
+      "result": "Original free Nemotron model and medium were visible after cold load; explicit new no-tool message correctly returned the earliest Pi A marker.",
+      "boundary": "Finite original conversation/model/service; earlier strict reply and file LF failures retained. No new login or hidden reasoning semantics claim.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/pi-cold-restored-before-send.json",
+          "sha256": "83fbf14be7d1f6c431abbd77bf6937d3a5b4b915c8f386a4f380b6a01e6a082a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/pi-cold-confirmed-config.json",
+          "sha256": "1a2fc0fb653ec9a9741d179de2bea9e9c50d36dc660b1f6144d0a3a8e6e6c34e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/pi-cold-config-before.json",
+          "sha256": "75f22418f3f9e7a38d939d551d76de64adc65edf5bc3ba9a13254096d48e0e7d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/pi-cold-config-sent.json",
+          "sha256": "5cded72acf1ca7473f6c03049496e7eb34f60b51c8a594590f33183e4fbf1a48"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/pi-cold-config-final.json",
+          "sha256": "96af552c79c5fc1f6f23ae00201075c5259e7dc25e815591a84b13eb424fd727"
+        }
+      ]
+    },
+    {
+      "sample": "New Dirac D cold history load",
+      "status": "failed",
+      "result": "Agent initialize and session/load succeeded, but Farfold received no readable history and rejected empty replay; UI reported read failure. D had actual earlier user and reply text.",
+      "boundary": "Two updates have only content-free timing/size logs, so missing replay, unsupported shape or late events remain unknown. Model state was not assigned after failed history guard; this is not proof of model restore failure. No lowering empty-history protection.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/dirac-d-cold-ready.json",
+          "sha256": "a4eedffbd41a3624ab8c60cf997f7cc34bb5e398143060c2f1e0bc3bcb12608c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/dirac-d-cold-config.json",
+          "sha256": "4ab68226c9356618d69d06928c216385ea7deb8fe985d6821ca2463d61f5aef9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/dirac-d-cold-diagnosis-corrected.json",
+          "sha256": "fd04c7429543439f3dcecb4121532bb6558fe7787b3b12d2a772f39d9c5631a9"
+        }
+      ]
+    },
+    {
+      "sample": "CodeBuddy nonempty queue cold restore",
+      "status": "passed",
+      "result": "One complete queued text remained paused; edit displayed full original text and Cancel retained it. Continue was not clicked.",
+      "boundary": "Old denied/unconfirmed tool remains; no automatic queue send. Does not prove its delivery or cancellation.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codebuddy-queue-cold-ready.json",
+          "sha256": "44ef75183e17f17b52304a4b1b8f1842aaeb325a697827fc1989da0aa3fc516a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codebuddy-queue-edit-full.json",
+          "sha256": "e62b08a4e06f2cf93987c17c95c1e1e0b0d4904bf55ff621656ea97dd978162e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codebuddy-queue-edit-cancelled.json",
+          "sha256": "365637d9f72a4ed9d243201daee2f72c2dea68855a4b1205dc77d07a97eb3ef2"
+        }
+      ]
+    },
+    {
+      "sample": "CodeBuddy A original two-line draft cold restore",
+      "status": "passed",
+      "result": "Both existing draft lines were visible in the input and not sent or edited.",
+      "boundary": "Only observed text draft. Existing missing underscores in line2 were preserved rather than silently rewritten; not proof of real IME typing.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codebuddy-a-original-draft-ready.json",
+          "sha256": "778c2f6ab964c1878b7e3ca7ed2c4e322726f53304e1086cf80cf18e90130806"
+        }
+      ]
+    },
+    {
+      "sample": "Vibe B original configuration cold restore and new reply",
+      "status": "passed",
+      "result": "Mistral Medium3.5/High/Accept Edits visible after cold load; explicit new request returned original B marker.",
+      "boundary": "Only B with original choices. Old A cold history and post-stop failures are not resolved by this success.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/vibe-b-cold-config.json",
+          "sha256": "a945759a67541aab27718bb79f57d609b2d1c5369ae222883093fc1996f83807"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/vibe-b-cold-config-before.json",
+          "sha256": "6a6c1d6cb90f3e5c56b3423a15732d2c65b67850b05bdbb277364fc3b23d9088"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/vibe-b-cold-config-sent.json",
+          "sha256": "765f9453a09c1c84425b55f803c8db01f1a46b0e716ba3eaeb0a296de6b05ea3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/vibe-b-cold-config-final.json",
+          "sha256": "28c5dc4a277d83f63ee939458241212c2727b0a4dad6452d8dcdaeb3e6669c46"
+        }
+      ]
+    },
+    {
+      "sample": "Devin A original configuration cold restore and new reply",
+      "status": "passed",
+      "result": "SWE-2/High/Code visible after cold load; explicit new request returned original A marker and completed.",
+      "boundary": "Unknown cards remain; limited context success does not establish complete response presentation or all tools.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/devin-a-cold-config.json",
+          "sha256": "24ea86ec99d46aecb6eee951d580507f944fe8f0f12df2fdb30078c51a0d1a95"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/devin-a-cold-config-before.json",
+          "sha256": "0b2bd1acb861905ca47a24aa3d9a8bea2395fac111b72b51363d9497c4982646"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/devin-a-cold-config-sent.json",
+          "sha256": "7fe0e95da0a5b60e2c599d391813f0a8c3c4f5bd8aa7e017493e2463c4359612"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/devin-a-cold-config-final.json",
+          "sha256": "a78f5703cc7ba43b159d1f908da7d20dfef170dce6c7de9c618d9a9b5db570c5"
+        }
+      ]
+    },
+    {
+      "sample": "Codex original choices and deliberate permission re-confirmation",
+      "status": "passed",
+      "result": "Notice cold panel showed6Sol/High/Default. Direct and Notice required explicit permission re-confirmation, blocking send and configuration changes; Direct explicitly selected Ask for approval and confirmed.",
+      "boundary": "Ask was a new explicit test confirmation; old Direct permission value was not independently available, so no original permission restoration claim. No Full access or Approve for me selected.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codex-notice-cold-config.json",
+          "sha256": "1b3cccadafb75290ec9b7bebbe2da7f308ab61d67bc34c5dfefeebcca032388b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codex-direct-permission-confirmation-options.json",
+          "sha256": "833f5e8e544c9b203a38abac302242988c129c5d51b8b2c405eb31b68993a2e0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codex-direct-ask-confirm-dialog.json",
+          "sha256": "4996de939ffd1a124e63d0dfb274ce540aa767543eadf9f0a1955710d72f7008"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/codex-direct-ask-confirmed.json",
+          "sha256": "00cfc371092a424a02524d80387e85dbd0813377c46e977c0b85b78ed1c0b858"
+        }
+      ]
+    },
+    {
+      "sample": "Native image file picker exact-path selection",
+      "status": "passed",
+      "result": "GoTo full-file path using setValue selected the owned160x100 PNG; native Open was enabled and actual attachment chip appeared.",
+      "boundary": "Selecting a file is not successful byte validation or delivery. Old disabled picker trial remains separate.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-source-picker-full-path.json",
+          "sha256": "586786d7ba7b3f94059df79199a051604523fe477464804a896d07ab2cc1bae0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-source-attached.json",
+          "sha256": "f02feb824c041d8be880cec36691f359c65f866c46cd30c13b84654327f87e64"
+        }
+      ]
+    },
+    {
+      "sample": "Image source checking and invalid-source queue journey",
+      "status": "condition_limited",
+      "result": "This owned image source check returned the fixed15s waiting-timeout error; frontend import ended and displayed that error. Owned unsent attachment was removed. Source disappearance/invalid-image dequeue still not executed.",
+      "boundary": "Read was scheduled after acquiring a slot, but OS call start/completion and current slot ownership are not proven. No TCC attribution, no forced cancellation, no model prompt with this image.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-source-check-pending.json",
+          "sha256": "9198e8f18479f1f7c7cc2374d26c528cde2a3b1fffce2389b76859c30515a2d2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-source-pending-cancelled.json",
+          "sha256": "2544d924e0534924a8c4cb26871d88c671cacd38e361663178ccd3b3758d485c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-source-file-check-readonly.json",
+          "sha256": "2e1e856702bb995a8a7ddc27c7cb830278d79d0e455b0ea9f088d31b710172c5"
+        }
+      ]
+    },
+    {
+      "sample": "Original notification preferences and default Agent",
+      "status": "passed",
+      "result": "Need-attention reminders and sound remained OFF, system permission was allowed; new composer empty, default Codex selected.",
+      "boundary": "Settings only, not actual notification delivery, sound, click-return, or absence of preparation-only native sessions.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/settings-original-notification-restored.json",
+          "sha256": "49a9e292307f1536d25f9f959a5b2386dfbaebb67916c1667f60c6e64c654527"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/final-default-agent-codex-empty.json",
+          "sha256": "bca8c263a6fa524d455763e64c7ff7f05c2da444d11b78e448511df2e5f315df"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/final-default-agent-selection.json",
+          "sha256": "32f66048d5441bb3f83c9c463982f2353580d96cedd0be74a4e09da3f0bdbda0"
+        }
+      ]
+    },
+    {
+      "sample": "Current macOS notification display and Focus settings",
+      "status": "condition_limited",
+      "result": "System Farfold notifications ON, Banner selected, Notification Center ON and sounds ON. Current Do Not Disturb ON with no allowed apps. Settings were read only and left unchanged.",
+      "boundary": "Current Focus can suppress notification interruption; this is an inference, not proof of the cause of earlier trials. No fresh delivery/sound/click-return claim. App reminder/sound preferences remain original OFF.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/os-farfold-notification-settings.json",
+          "sha256": "58824f9602713b4ac39cb3ad2271915b9e3d0ca45d26a1a16f8cdfb26dfbb5aa"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/os-focus-current-on.json",
+          "sha256": "235fdd71f6b09ec69753c7e7eb611266f4200b97aba44786d970ead6a9b3dc54"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/os-focus-allowed-apps-none.json",
+          "sha256": "bb137933f68eb3700aa73ace8f1080de731b810c049c09f1767401fc6779694a"
+        }
+      ]
+    },
+    {
+      "sample": "Preparation-only connection closure after the actual idle window",
+      "status": "passed",
+      "result": "Unique owned Pi/cwd connection had successful initialize and no new/load/prompt. Exact PID birth remained through02:22:51 and was absent at02:23:51; registration removed, cleanup showed childReaped/groupEnded/connectionRemoved, TERM requested, no KILL and no exit observed before TERM.",
+      "boundary": "One preparation-only instance and lifecycle cleanup. CloseReason is not logged; idle attribution uses source eligibility, untouched unique cwd and approximately30-minute timing. Does not prove active session eviction or all Agents. Initial subagent sampler persisted2 observations then disappeared; gap retained and root sampler resumed with same birth identity to original deadline. No manual signal sent.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/idle-preparation-observation/association.json",
+          "sha256": "997589cfef79ea604aef596f9cbef92baf11b0dc1f16d7db7cbc58799eb78c8f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/idle-preparation-observation/observations.jsonl",
+          "sha256": "30cfa9b3a19d3b8f4908850c1de75da54d97d9c8903765344a100857915c9fdd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/idle-preparation-observation/collector-gap.json",
+          "sha256": "00bfe0beda7f95d9b93bff2b5bf70817b0292225ee838b50810b50c2dc414a35"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/idle-preparation-observation/observations-resumed.jsonl",
+          "sha256": "448b0637201d3b466e588c222784592af5d8ddd39ef76916299cc33375bc3b73"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/idle-preparation-observation/collector-resumed-final.json",
+          "sha256": "af8295fa506cee11528d7de2b98cffe83d9154b3aa7bf95e0f17f6f328e99bb8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/idle-preparation-connected.json",
+          "sha256": "9cf37e1bfc525039809329f70e7cf4d4b8a471a7e7afdd6af55fdd1f72dbdb2e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/idle-preparation-released.json",
+          "sha256": "dbcfbfbb6a00f20e927476e8d4a8f80fa67246d86070849d85be17668201d54f"
+        }
+      ]
+    },
+    {
+      "sample": "Queued image source disappears before explicit continuation",
+      "status": "passed",
+      "result": "Valid334-byte temporary PNG was selected by native full-path picker, read and queued while an owned text task ran. Stop retained one paused queue item. Renaming only our disposable source then explicitly Continue produced unreadable-image error and retained the full message/image item. Associated post-restart protocol tap remained exactly2 outbound session/prompt requests; no third dispatch.",
+      "boundary": "One actual Codex queue and same temporary source. Earlier2500-line setup completed before enqueue; retained as preparation only. Source was not a user file. Does not override earlier desktop read timeout or prove every image/Agent.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/tmp-fixture.json",
+          "sha256": "9fb71a08d1e0b6cbf4566c90846ab2d2c6f53fb4c126d6c022d5b19f39234d49"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-image-enqueued.json",
+          "sha256": "12d0abc8d2a4fa6b16a15f53c4d5f6239629a5bddfe1eb4fdf136f28e31374f3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-image-queue-stopped.json",
+          "sha256": "07ee1b76ea255b4a2916af4634f32ca05c598f5b1666d98651cb47490b5282e9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-guarded-queue-full-edit-with-attachment.json",
+          "sha256": "5016921d16867ddad305a688a21d877efadf4c6c162fef6cfebdc6afb987ba6c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-guarded-queue-preserved-final.json",
+          "sha256": "c6b7cf01ad2ff2ef7814b2d4e4d03f33fae6b736a1b423570a7543009e0f6b8d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/missing-source-before.json",
+          "sha256": "0b77b2e388a15b9c7406e2b0cd2496f03f4240a37ac856a7177c9e95d52f60bd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/missing-source-after.json",
+          "sha256": "7c67026f8220200fc2055652fb18f2a6a4935e2cb8acce6d37216ccc700f7eba"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-missing-source-continue-result.json",
+          "sha256": "0f8d616e0e1f36caf1ab6ae695c0d955412f714689651ea6ba7e3ef1b8f6cc03"
+        }
+      ]
+    },
+    {
+      "sample": "Queued image source becomes non-image bytes before explicit continuation",
+      "status": "passed",
+      "result": "Same paused image item now referenced32 non-image bytes at its PNG path. Explicit Continue showed image-content-changed error, kept one paused queue item and exact full message; associated tap still2 outbound session/prompt requests. Original334-byte source restored with matching hash; no auto-send, edit cancelled, queue remains paused.",
+      "boundary": "Reject-before-dispatch for this one retained Codex image item, independently of missing-file trial. Edit displays image.png, not original file name. No claim model accepted invalid content or all formats covered. Actual continued transport was never invoked.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/tmp-fixture.json",
+          "sha256": "9fb71a08d1e0b6cbf4566c90846ab2d2c6f53fb4c126d6c022d5b19f39234d49"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-image-enqueued.json",
+          "sha256": "12d0abc8d2a4fa6b16a15f53c4d5f6239629a5bddfe1eb4fdf136f28e31374f3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-image-queue-stopped.json",
+          "sha256": "07ee1b76ea255b4a2916af4634f32ca05c598f5b1666d98651cb47490b5282e9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-guarded-queue-full-edit-with-attachment.json",
+          "sha256": "5016921d16867ddad305a688a21d877efadf4c6c162fef6cfebdc6afb987ba6c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-guarded-queue-preserved-final.json",
+          "sha256": "c6b7cf01ad2ff2ef7814b2d4e4d03f33fae6b736a1b423570a7543009e0f6b8d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/invalid-bytes-before.json",
+          "sha256": "687e3a751243496066905066774f1f31a49a0f1b418563b8a877588861566c07"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/queue-invalid-source-416/invalid-bytes-after-and-restore.json",
+          "sha256": "fe064878b3d4d44efdefc0045ec12c948e48d0b912e9aaf20165218f82e4b069"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-invalid-bytes-continue-result.json",
+          "sha256": "e6cf5e9fcbba655d0665057b1bb144ac9af2f24edb8a114b3f2ecd77a7db03a5"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fixture-restored-queue-still-paused.json",
+          "sha256": "93080e0e446c9756a320b0cbd14dfd7a5b8e79f22f30a20b027b771df2863766"
+        }
+      ]
+    },
+    {
+      "sample": "Owned conversation rename, global title search and favorite filtering",
+      "status": "passed",
+      "result": "Owned fast-agent A original full title recorded in rename input; saved unique title appeared in overview and global search. Favorite0→1, favorite view exactly1 matching item; original title restored, un-favorite1→0 and empty view, fast overview again3 items. No model request was issued for these metadata actions.",
+      "boundary": "Finite metadata GUI path, not history-body search, all filter combinations or real IME. Temporary changes affected only our owned test conversation and were restored.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fast-a-rename-original.json",
+          "sha256": "b70ece31ee540dabe7b3c2da9234b4f310c4bc3493d4f04dfc96f56012ccad36"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fast-a-renamed.json",
+          "sha256": "4bbbd0f081f21486420cb66156a5c2a08c73c96766bd0405d6cb0a8e68d014f3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fast-a-favorite-set.json",
+          "sha256": "782ba2dd137d48c823ea017e8a050ab60e2113fcddc823012af3ae096fe5b3fd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-favorite-filter.json",
+          "sha256": "1b8498293c0645f89776120f68bceb2996246fea086a47b95b619ca97b7b1349"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-renamed-title-global-search.json",
+          "sha256": "49dc4ab3778616672f9965bcbbc0801db5ddf646054657417e13732e4cb065f6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fast-a-title-restored.json",
+          "sha256": "649f5997f17e7ac3a5be717eafe99d855ad0be72e3b7b65f1622fabaa189c88a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-favorite-empty-restored.json",
+          "sha256": "93cd75af0861135bae84249ef6af78f13cd1520afb184477d6bdca2ec1899802"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-fast-a-metadata-restored-final.json",
+          "sha256": "3a528af2b7c25df1de67036dd781202f55db453dc890bc5ea351068a5d70126f"
+        }
+      ]
+    },
+    {
+      "sample": "Combined library filters and stale bulk-selection protection",
+      "status": "passed",
+      "result": "Actual fast-agent+owned empty group+Archived+title yielded0; removing title and group chips preserved other filters; Clear filters restored100 and All. In Favorite view, adding fast-agent and Clear retained Favorite with0 items. Selecting only owned Fast A showed1 selected; changing title filter to Fast B cleared selection0 and disabled archive/move. Cleared test query and exited organize, original3 Fast items/favorite0 retained.",
+      "boundary": "No archive or move action was invoked; finite combination with owned test selection only, not exhaustive all-state/filter coverage. All search is declared metadata search, not conversation-body search.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-combined-filters.json",
+          "sha256": "abf7d0ea9ca401c4897286a603b4a7e09ae39ba470fefbbeabf639666637a185"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-search-chip-cleared.json",
+          "sha256": "301b495316171e57116e1a69131e0957f6dbd2aa7483673ae6f32986a05a2e98"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-group-chip-cleared.json",
+          "sha256": "f3a7c3649d3539945539731fa27e54c5ddcba55bec89a308e81774283c5ae57b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-all-filters-cleared.json",
+          "sha256": "a991e869232f4814d53f4685477661a979c4ef81e475dc8b10ce7b6dc61ab46a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-favorites-extra-agent-filter.json",
+          "sha256": "95b293cced68e3214b96acdb4914ddb1a0ca3e94f49d6e16f5d3e38b890725c5"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-favorites-clear-filter-scope.json",
+          "sha256": "3d5acff401349d15a32ebf1db824e7f19e74fdd4df5b9547e55691cfab4bf78c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-owned-selection-one.json",
+          "sha256": "3f34db9751a6a66b5a9859df66707bfbb1bae7949db2dad3ddeccd41ab702d99"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-filter-changed-selection-cleared.json",
+          "sha256": "3d6ebeeb9578e94ed63525d48520e60aba39f794d282903cbdf7459a4215b7c3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-library-organize-restored-final.json",
+          "sha256": "45f2025f5a8baff352b0e6b99164b634896fe35b06491a1529c78b95904a738a"
+        }
+      ]
+    },
+    {
+      "sample": "Actual webpage origin change revokes reading before the old click executes",
+      "status": "passed",
+      "result": "Owned plain page on55974 shared; actual observe followed by click_page_node with visible observationId/nodeRef waited at Agent permission. Initial path/query address rejected without navigating by origin-only policy. Opened same owned fixture at55975: actual webview URL changed and read permission became ungranted. Then single Agent Allow for old click returned structured outcome=rejected/applied=false and current-page-permission error; new page still Not submitted. Task completed with no retry, closed page and both test servers exited0, ports absent.",
+      "boundary": "One actual Codex click at native Agent approval layer, not a pending Farfold action card cancellation. Observation was older than30seconds by final call; permission error and real changed/ungranted page are observed, but this is not an isolated timing or observation-generation test. Empty plain fixture, no external page or sensitive data.6Sol/High preserved; Ask for approval explicitly confirmed after restore, no claim earlier unknown permission was recovered.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-notice-explicit-ask-confirmed.json",
+          "sha256": "375ff757ac604e49b55aa9a3721d9a60e5ca2a64e5667f49be2c8f59cfea3572"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-owned-page-loaded.json",
+          "sha256": "abb93b8955b2cee4a57121ea9da732af9f1f00b2a09c21bbd4b091441c46c73a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-page-share-granted.json",
+          "sha256": "4e03b96e5bc8efe9850f61f1431945974997b69a9c19002555b1c3ef72fc8366"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-old-click-args.json",
+          "sha256": "c88a10f720aaaa6f93fd799f39ddf4d4df1d7499525326b01cfc0221ede65f4e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-actual-before-approval.json",
+          "sha256": "a713251e5493f55b8cabd4f7a0e3b8c6b502314cbf4df0c010c6679726a0d8c0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-second-origin-opened.json",
+          "sha256": "521911e3dfb30c7faffd9de121c1ecc06782411e095375285bb6faa249b15bb6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-old-request-approved-after-change.json",
+          "sha256": "23b168e2a780997127e12567f100ed418a06f1de21187e6cf3d513d5946d7203"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-old-action-result.json",
+          "sha256": "afd49c05eadf757600079fff5a0aa0d00c9768905765477fe1d1eaf1977c0558"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-navigation-web-closed-final.json",
+          "sha256": "1c257714416defafdb1f7199a6731d137952cf036cc238f64e9aae0dbefecf97"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/browser-navigation-416/server-start.json",
+          "sha256": "4a33afdb6218f9d2c544b162658fba6a8f0a292aeea8b119dd6b45c0ccc9d8ff"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/browser-navigation-416/server-cleanup.json",
+          "sha256": "f6738db0ae907e496968d9873b0a66e1e147cc89670991769e280c65c84b9183"
+        }
+      ]
+    }
+  ],
+  "recordingCorrection": "CUA helper closure initially saved post416 observations in the prior candidate directory. Actual observations were moved by timestamp without editing contents; fixed helper now uses literal416 path. One prior ea initial cold-entry raw file overwritten; its stale reference withdrawn, no reconstruction claimed.",
+  "recordingCorrectionEvidence": "output/2026-10-07-autonomous-macos/evidence-directory-correction.json",
+  "idleObservationCompletedAt": "2026-10-07T02:23:51.130920+00:00",
+  "laterNormalRestartRetention": {
+    "result": "Same installed416 binary normally quit via CmdQ, no save dialog returned, then cold started. Original CodeBuddy A two-line draft exact and B one-item paused queue full text retained; queue edit Cancel, no Continue and no new test sends to those threads.",
+    "boundary": "No save-dialog click claim; original second draft line already lacks underscores from earlier native typing and is preserved as observed. Unknown tool state remains.",
+    "evidence": [
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-416d8142/image-recheck-normal-exit-observation.json",
+        "sha256": "e686aed9b50c8c7bd411973a0953867eadc85d0a272c2f475baae06b3afe1e15"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-codebuddy-a-draft-after-normal-restart-ready.json",
+        "sha256": "dcba543c65c7f45672d3f2b1bde4ea0589d6cac8431e6d88d6162368358c432b"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-codebuddy-b-queue-after-normal-restart-ready.json",
+        "sha256": "e93acc8e6aaef75f3a9c2a2160a401a2bd49e92dbb54dd718ede4aef14201d3f"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-codebuddy-b-queue-edit-after-normal-restart.json",
+        "sha256": "26b063fe8746fe472332d7069f4616155e6888e902fe531d52be0a7a8493521d"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-416d8142/after-idle-codebuddy-b-queue-cancel-after-normal-restart.json",
+        "sha256": "ee43aea28754c89cc45a522923f65c5aa86f6a284bd5708165a2a8aa2172f692"
+      }
+    ]
+  }
+}

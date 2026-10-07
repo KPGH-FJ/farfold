@@ -1,0 +1,1217 @@
+{
+  "sourceCommit": "843f3a78cc8cbe86fd56da9580d2482db7fe56e9",
+  "binarySha256": "e6e22f5a10cd06e0795b494e7db5a1a1f979074bdf4cb90cb0864424034bb3bb",
+  "scope": "正式应用843的限定真实样本；其余版本结果各自保留，非33家同一版本全面验收。",
+  "samples": [
+    {
+      "sample": "历史图片展开",
+      "status": "passed",
+      "result": "冷恢复的Codex旧图片文字链接先折叠，展开后真实页面显示绿色/洋红图片。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/cold-image-expanded.json",
+          "sha256": "5f0928c8ad9938b0140600ef494a6a9627d72c44afa54ac4d33f6d2bf757227b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/cold-image-expanded.png",
+          "sha256": "280726f106abeab0ea16c83192c60b3ee8ecf6829eebc1f561b37e2c41596409"
+        }
+      ],
+      "boundary": "只覆盖准确完整的支持格式链接；原始文字/复制/存储不变。未抓取该次原始ACP历史envelope，不能断言结构化图片被Farfold丢弃。"
+    },
+    {
+      "sample": "网页批准后等待提示",
+      "status": "passed",
+      "result": "第三个独立短任务及时完成两层单次批准；回执applied=true/dispatched，等待批准提示消失，页面显示空字段已提交。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-acknowledged.json",
+          "sha256": "313d8caaeccb61f131c3f2880d29465d7420488ea5d80645f68b1c176f2101d4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-tool-details.json",
+          "sha256": "5ec9538e20c38cd9b92aa2d3ecbb75b92b962a4042a3721af59acb4a3cb7b593"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-final.json",
+          "sha256": "5440876bc87c23828f563ee0be520168f86a255bcb9b67b05e58c49b9c0fbd2b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/notice-third-final.png",
+          "sha256": "1168cac0a82dd0bab1cd3171a2c6b5b1c21b57ea88503e19a0b957cd244f0806"
+        }
+      ],
+      "boundary": "第一任务未调用点击、第二任务过期被拒绝均保留；没有降低期限或权限。完成后关闭页面撤回读取。"
+    },
+    {
+      "sample": "Codex冷恢复后新续答",
+      "status": "passed",
+      "result": "问题未包含预期记号，实际新回复精确返回原对话最早记号。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-cold-context-before.json",
+          "sha256": "a1108c2bfd1bb2cd621439cd5e68661d349df134e3a2298bd7bd85c748b7e3f4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-cold-context-sent.json",
+          "sha256": "86fe42ff27dcb79ed9fb59a5200a60a6cdd22e2a908d456f34017a1f04ffb509"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-cold-context-final.json",
+          "sha256": "b8d939eac10bdb067b2eaa8ca01e12e2bcdbb4d84cfebba291fa2eebbae8da5c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-41d35be6/image-direct-model.json",
+          "sha256": "66e73af3408b31c7c63abf8e74f0fcaa28a08baa5660e581ddad0860202a9f80"
+        }
+      ],
+      "boundary": "6 Sol / High；仅自建对话/该配置，界面未见工具请求；不等于全部历史、模型和账号通过。 原始首条用户记号另由41d保存的消息节点54核对，本版before AX不包含那条较早消息。"
+    },
+    {
+      "sample": "CodeBuddy冷恢复后新续答",
+      "status": "passed",
+      "result": "问题未包含预期记号，实际新回复精确返回原对话最早记号。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-cold-context-before.json",
+          "sha256": "458ead2a353ba87600705f8d74e789dc28365269db643b3d2c620ee625e244f8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-cold-context-sent.json",
+          "sha256": "620729ef8dfeece7bd9b0781f33d88164f02b2ead2e5bd4b22515327e96f5175"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-cold-context-final.json",
+          "sha256": "2d6477d945e4a3a4ba5bdbad18975359850e56e6982093017ae8d72f0a73c7e9"
+        }
+      ],
+      "boundary": "Hy4 preview / High；仅自建对话/该配置，界面未见工具请求；不等于全部历史、模型和账号通过。"
+    },
+    {
+      "sample": "Goose冷恢复后新续答",
+      "status": "passed",
+      "result": "问题未包含预期记号，实际新回复精确返回原对话最早记号。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-b-cold-context-before.json",
+          "sha256": "ebeb18551a7ec3b3ea3b4e008fc0462056a06b8d154d8cd3c9347c2b7be5bc5a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-b-cold-context-sent.json",
+          "sha256": "17052fe546fdbd0529f2b284819153b0be265ebe790c04384a1921702328fb3b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-b-cold-context-final.json",
+          "sha256": "7fc83b936874c240b122e8d184946763bd00ffd3f628c9d60e7bc737e93da4d7"
+        }
+      ],
+      "boundary": "OpenRouter / apodex-1.1-mini:free / off / auto；仅自建对话/该配置，界面未见工具请求；不等于全部历史、模型和账号通过。"
+    },
+    {
+      "sample": "Copilot运行中命令停止",
+      "status": "failed",
+      "result": "自建90秒命令确认存活后点一次停止；界面已停止9.199秒后，同PID和同测试命令仍存活。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-running-stop2-process-before.json",
+          "sha256": "8e7c04d27eeaf562f08adcfd0a5068b33d6471259c8c9d95a09844bfeb3e09c1"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-running-stop2-before-stop-ui.json",
+          "sha256": "d804b8efe0db103dcd5a7a2953c2265e971999d54531b9142ffd38f8eb0f13dd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-running-stop2-stop-clicked.json",
+          "sha256": "ed6e0fbd682a76fe2821ce0542d79adf2549a88d3d515f778a4a0ae0d78dcd5a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-running-stop2-process-after.json",
+          "sha256": "3911580f033ae21dccd1fcdfc21e4b285e5a5ff47cd95ae72109291960628a40"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-running-stop2-fixture-cleanup.json",
+          "sha256": "6aa08bf536a10ef9ad93117a578bd4b7d4eb54c5f1d12499b53a26f1f7669124"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/agent-summary-review/copilot-running-stop2-review.json",
+          "sha256": "dad5ea37667f5c84d7ecdf7bfa843c361a5efe4479204183ad3ef1818d83f520"
+        }
+      ],
+      "boundary": "只覆盖这次官方bash任务与当前配置；取消请求确认不证明后台任务已结束。后来单独清理自建子进程，不计产品停止成功。第一条30秒任务自然完成且没有点停止，不计停止验收。"
+    },
+    {
+      "sample": "fast-agent运行中命令停止",
+      "status": "failed",
+      "result": "自建90秒命令确认存活后点一次停止；界面已停止8.468803秒后，同PID和同测试命令仍存活。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-running-stop-process-before.json",
+          "sha256": "a703a1a6fe4b20ad4ce8656de898b3d166660a384f4f22811d1dc0ec1275b596"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-running-stop-before-stop-ui.json",
+          "sha256": "6e6aab81fba019688260187a56ce0e9617ff174c101c4aeec770eb01c4affcbe"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-running-stop-stop-clicked.json",
+          "sha256": "0463cf3fb1a8c56cda1a01c21b9d6f166bb616304420ffd0b9ded5930055980a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-running-stop-process-after.json",
+          "sha256": "5552127bc46924b23b6ea6bfdd8a2861b980a11400b918db6e9265dae7b7c889"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-running-stop-fixture-cleanup.json",
+          "sha256": "cd4fb0cf187a9afc95ea1392812402c5140b0847fc6db6fea686a427292c52e3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/agent-summary-review/fast-running-stop-review.json",
+          "sha256": "55050a0de7d312d0a7650e0f2bf0a31d0086bb8397e5eeeaaa5e9011d33ed39a"
+        }
+      ],
+      "boundary": "仅当前bash工具任务；不扩大为全部停止失败。单独清理测试子进程，不计产品停止成功。"
+    },
+    {
+      "sample": "fast-agent官方工具查询",
+      "status": "passed",
+      "result": "/tools实际列出bash、process、read_text_file、apply_patch、attach_media；/tools execute返回无此工具。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tools-list-final.json",
+          "sha256": "a76a9d1f9e8d7b67b5a830f849f2118947c5906e0211236a09fae5ec5b4bb356"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tools-execute-query.json",
+          "sha256": "43b949209e64f0422fd0a75a713b59a7b92d5bf8c96b09a77d3da7595318c228"
+        }
+      ],
+      "boundary": "五个列出不等于五个工具都真实通过；不能从缺execute推断没有命令工具。"
+    },
+    {
+      "sample": "当前源图片失效与无效图片出队拦截",
+      "status": "not_tested",
+      "result": "新的目录+键盘准确选择自建PNG后Open仍禁用、Return无效；另一次采用选择框实际提供的Open Finder item动作也只选中文件未导入，已取消。文件未变、消息未发。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/invalid-source-picker-selected.json",
+          "sha256": "3906e74f689b1e91ed84ea9afdf0af39df25f11e88dc7a47110d455ce2706e31"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/invalid-source-picker-blocked-final.json",
+          "sha256": "c2c770a904beeb2604a85dcb6e66c91f9127e7c5412bcacbbcb290b23a1f9730"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/invalid-source-picker-secondary-before.json",
+          "sha256": "ef7b9716e046f9c361b2424a5cb192c8f29bb9e20edbcee072de05127c8bb1c4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/invalid-source-picker-secondary-after.json",
+          "sha256": "544759efae514d08e7f7918a5cbb6f8ae7b24ec1edca748826639ebfedea7581"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/invalid-source-picker-secondary-conclusion.json",
+          "sha256": "79531d452c9749313cf8c1a1249a32165f93362c32472254df28ef9adcf0f258"
+        }
+      ],
+      "boundary": "自动化界面条件受限，不判产品附件失败；已有自动测试不代替这两个实际场景。"
+    },
+    {
+      "sample": "Dock退出入口",
+      "status": "not_tested",
+      "result": "通过CUA选择系统Dock超时(-10005 timeoutReached)，没有发出退出操作。",
+      "boundary": "CmdQ/应用菜单待批准保存确认已有独立安装实测；不能代替Dock/系统入口。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dock-entry-availability.json",
+          "sha256": "90325e910c3e5545f56bc34a2dd78e7a28dc0aac98e78c65229b1fbc3c9bc3f3"
+        }
+      ]
+    },
+    {
+      "sample": "Codex running command Stop",
+      "status": "failed",
+      "result": "The same owned Python PID/PPID/command hash remained alive 8.059 seconds after the newly displayed stopped state.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codexwindow-running-stop-before.json",
+          "sha256": "a71bc6beda24e2deecb8d77aadf32f2b28685206c7f9f30683ea121383029793"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codexwindow-running-stop-sent.json",
+          "sha256": "6f2cea3c644b504d58f62b41fdadbdf2b86b4be268f797de1b3c03ec4026c06a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-codexwindow.json",
+          "sha256": "98545e88bb13437b73fcfe39df1bf36379cb9598b099e843ee7686b777ec91e8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-codexwindow-cleanup.json",
+          "sha256": "64a4d47039e5aced64aec72e07569eb4775e514c5f6352115698d9e5e10b057f"
+        }
+      ],
+      "boundary": "Original 6 Sol/High. Later individual fixture cleanup is not product Stop. The earlier late-observed FINISHED trial is inconclusive and not used as the strict counterexample."
+    },
+    {
+      "sample": "CodeBuddy running command Stop",
+      "status": "failed",
+      "result": "The same owned Python PID/PPID/command hash remained alive 21.624 seconds after the newly displayed stopped state, after one-time approval.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-before.json",
+          "sha256": "1196475990b0a00c3505b9356308d4ec3f86b5fa49a0fd1f60a6c2b87eef3210"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-approved.json",
+          "sha256": "17e1532c8fffa429cc2be2299e603ec331a160278fa985c3b0e0854a4c3d1e2c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-before-process.json",
+          "sha256": "6d703505da93adefc7ed382a4ef558c790328f2f3658445846f60462921d40d3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-before-stop-ui.json",
+          "sha256": "b50160f6dae7146df1e9c61f98cdad98f8bdb288210f4fa277c4981fb797fda3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-stop-clicked.json",
+          "sha256": "463c6fc72cbfe06c37eb49efc0cc9b09aa24c74dafaced107fcbedf0d848d4c2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-after-process.json",
+          "sha256": "535beeb900420bb644654db047e8f49f5a6614115b475652d9d629db73ddec53"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-running-stop-cleanup.json",
+          "sha256": "29dbf3d67a6995522e1e15a7fec22106959ae44c8d222ecfcb5037997b93ef52"
+        }
+      ],
+      "boundary": "Original Hy4 preview/High/Always Ask. Only the owned test child was manually terminated. Later Agent claims that clicking Stop ended it cannot override the process evidence and manual cleanup."
+    },
+    {
+      "sample": "Pi owned command Stop",
+      "status": "passed",
+      "result": "After actual Python execution and newly displayed stopped state, a successful global process query found neither the original PID nor the unique command. Process-age upper bound 10.206s is below its 90s natural completion.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pistrict-running-stop-before.json",
+          "sha256": "218125e6db9dd8afb338402f128feb163698aaf67533e49412084c78ff689698"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pistrict-running-stop-sent.json",
+          "sha256": "f999201d011291f9bc44bc17ff53a04a9a53fe071d3739e267596086656366ac"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-pistrict.json",
+          "sha256": "7018eb6e5b0801800f6b9f0a185db741ee14409ee9d4328568f51cc0b696980e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+          "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+          "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+        }
+      ],
+      "boundary": "Original Nemotron3Ultra free/Thinking medium/A. Only this owned PID/command, not all tools or descendants. No manual cleanup. Devin/Vibe permission input details were missing; one-time approval does not establish full approval detail support. Helper source provenance was captured after execution, not independently bound at call time."
+    },
+    {
+      "sample": "Goose owned command Stop",
+      "status": "passed",
+      "result": "After actual Python execution and newly displayed stopped state, a successful global process query found neither the original PID nor the unique command. Process-age upper bound 9.920s is below its 90s natural completion.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/gooseastrict-running-stop-before.json",
+          "sha256": "88595c6570c1abf4183029e0ff4c61c4ca1ad946eb6af23ed08a18300aefd814"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/gooseastrict-running-stop-sent.json",
+          "sha256": "c3386311c956a5f15be05498231cafb3c74ee5618bbd6599bd96bfb03da08037"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-gooseastrict.json",
+          "sha256": "f67b8587605df388683bf8ca393eb1c90ad6c2613d0b15315808e4cd9e246b78"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+          "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+          "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+        }
+      ],
+      "boundary": "A original OpenRouter/Nemotron3Ultra free/off/auto; B retained apodex free. Only this owned PID/command, not all tools or descendants. No manual cleanup. Devin/Vibe permission input details were missing; one-time approval does not establish full approval detail support. Helper source provenance was captured after execution, not independently bound at call time."
+    },
+    {
+      "sample": "Devin owned command Stop",
+      "status": "passed",
+      "result": "After actual Python execution and newly displayed stopped state, a successful global process query found neither the original PID nor the unique command. Process-age upper bound 11.368s is below its 90s natural completion.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devinstrict-running-stop-before.json",
+          "sha256": "ea5cc9c8b3afba26836d8a43d68121bea2ae0ef193e3a325a235ac981e8ea6b6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devinstrict-running-stop-sent.json",
+          "sha256": "4461845e88cc63e04806d1eb019c897e1056973488b3bc1351032a48b0c28058"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-devinstrict.json",
+          "sha256": "891ce93388440f0f644b71b2efaff0f0cbb7c10319a5bc237dad60f7343e13d5"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+          "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+          "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devinstrict-running-stop-approved.json",
+          "sha256": "1c68ce578252c6627779acd4c4692119d4a1e176604e51b16f15cce7408449f5"
+        }
+      ],
+      "boundary": "Original SWE-2/High/Code/A. Only this owned PID/command, not all tools or descendants. No manual cleanup. Devin/Vibe permission input details were missing; one-time approval does not establish full approval detail support. Helper source provenance was captured after execution, not independently bound at call time."
+    },
+    {
+      "sample": "Mistral Vibe owned command Stop",
+      "status": "passed",
+      "result": "After actual Python execution and newly displayed stopped state, a successful global process query found neither the original PID nor the unique command. Process-age upper bound 10.292s is below its 90s natural completion.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibestrict-running-stop-before.json",
+          "sha256": "67a5de742bddd25080a4f71d81096af035d1a574b1ba34f296a138d79345f012"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibestrict-running-stop-sent.json",
+          "sha256": "951f7d3adb0408f825c1f62345c159fac7270081f4b8e5006829a524543bc09e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibestrict.json",
+          "sha256": "5e647f99004d43d26ba6a2889dc910c497fdfeac1cca4cc1e1e89c54aa283939"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+          "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+          "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibestrict-running-stop-approved.json",
+          "sha256": "2796f3ddddc38598efbfe16fc827f45d92e2ce6e48b4edd5b3d5d1523b014a5c"
+        }
+      ],
+      "boundary": "Original Medium3.5/High/Accept Edits/B. Only this owned PID/command, not all tools or descendants. No manual cleanup. Devin/Vibe permission input details were missing; one-time approval does not establish full approval detail support. Helper source provenance was captured after execution, not independently bound at call time."
+    },
+    {
+      "sample": "Dirac owned command Stop",
+      "status": "passed",
+      "result": "After actual Python execution and newly displayed stopped state, a successful global process query found neither the original PID nor the unique command. Process-age upper bound 31.294s is below its 90s natural completion.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/diracstrict-running-stop-before.json",
+          "sha256": "59501e851d5ba5d8b2a180484824e0a2aa79f0efdb2c62433073beb98566898c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/diracstrict-running-stop-sent.json",
+          "sha256": "ba840d9cd839af517c3e30fed13ea8a5fadca5bbcb064cff62d5b6fa33fee964"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-diracstrict.json",
+          "sha256": "50533a65a328c27b584b39154c732c4a6fae94beaadda98cc996e03bc58e5231"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+          "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+          "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-current-model.json",
+          "sha256": "bf84f35230dd3a079bcaddda84e2d6dbf2ffbd38bae746ddb2663156f18b8d3e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/diracstrict-approved.json",
+          "sha256": "a4b857f190b3262e4c3519478893a9fb2dc18cd5f60a5a3846d1a7a9e275dbff"
+        }
+      ],
+      "boundary": "New A retains OpenRouter/NemotronUltra free/Medium/Act/Thinking Budget Off. Only this owned PID/command, not all tools or descendants. No manual cleanup. Devin/Vibe permission input details were missing; one-time approval does not establish full approval detail support. Helper source provenance was captured after execution, not independently bound at call time."
+    },
+    {
+      "sample": "Copilot explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-after-running-stop-before.json",
+          "sha256": "1bb78a3e1d4659f208deb0398c4bff3bfba2edc03ab76401038c610a8f8f34fd"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-after-running-stop-sent.json",
+          "sha256": "154608b84ac039af0ea4ee96fc08db041fbfe1b8d610bcc3675b32646cc24896"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/copilot-after-running-stop-final.json",
+          "sha256": "79d92a53e52fe10dbe5359a39de63b008ed187ff6627082ff4c2f679a57e9962"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. The failed Stop fixture was manually cleaned before this new request; continuation cannot retrospectively validate product Stop."
+    },
+    {
+      "sample": "fast-agent explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-after-running-stop-before.json",
+          "sha256": "62206c29ed7623108891f6d97e5ed494758623ddebfa0df4bf053a163d314e28"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-after-running-stop-sent.json",
+          "sha256": "2aa839dc52b91bca84459641927bae19d37fa1f834fc9d4abb3946df525de7b6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-after-running-stop-final.json",
+          "sha256": "a4137283a356482c126ecc78c2eaae720abbaf2476b9a1744808dcac19b065bc"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. The failed Stop fixture was manually cleaned before this new request; continuation cannot retrospectively validate product Stop."
+    },
+    {
+      "sample": "Codex explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-after-running-stop-before.json",
+          "sha256": "86ff12987fd666ff503586d0f088c0e9188a75b869cbe2af43c86149f0668550"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-after-running-stop-sent.json",
+          "sha256": "8410bca407a61866e30282179b99f4594e796a8b54e51e19e56872b1faee080e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-after-running-stop-final.json",
+          "sha256": "7b8e0c8140cd2b0b4b5955ead52b58ffcd34719492991eac58c9b1d38f661940"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. The failed Stop fixture was manually cleaned before this new request; continuation cannot retrospectively validate product Stop."
+    },
+    {
+      "sample": "CodeBuddy explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-after-running-stop-before.json",
+          "sha256": "a62064c11fbc5fb2549851996169429456f040fcf0670a674901e158f6bf2192"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-after-running-stop-sent.json",
+          "sha256": "1d01ef6767e44bf98c0b9bb948b02e77eca111575a31f11b51d418dba71c9c96"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-after-running-stop-final.json",
+          "sha256": "7a6f02a0f688df76e4a39e6130f12e0e3b047b505fc3064702680657d1d6a88e"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. The failed Stop fixture was manually cleaned before this new request; continuation cannot retrospectively validate product Stop."
+    },
+    {
+      "sample": "Pi explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-after-strict-stop-before.json",
+          "sha256": "24081a8099a53c3083a161bbed71e431385f5b6a370aea9434a15a09e6b9c0e0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-after-strict-stop-sent.json",
+          "sha256": "e72a709b0a6d3194af6a02b44b6dd36b10df57effaa22fd5922f5d1b3a8f74b8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-after-strict-stop-final.json",
+          "sha256": "69e28df993823d50582084667bf9bf455566ddffcceed88a5750f662e6f52498"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. Uses the latest strict-2 Stop sample."
+    },
+    {
+      "sample": "Devin explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-after-strict-stop-before.json",
+          "sha256": "904ebf1b3dd9628f2f1236230448797a517103f399b1da352993f8c0199dea20"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-after-strict-stop-sent.json",
+          "sha256": "c1776c7a5c386b0d6be4c8fce70e1f5b1dce5fe0dd87aeab62d8e358be70a743"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-after-strict-stop-final.json",
+          "sha256": "1803ea302dda80a6d6291c8d0d403cf7db41af316a8dda74dd05fa6c837abed0"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. Uses the latest strict-2 Stop sample."
+    },
+    {
+      "sample": "Mistral Vibe explicit post-Stop continuation",
+      "status": "passed",
+      "result": "A new explicit question did not supply the expected answer; its completed reply returned the original first test marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-strict-stop-before.json",
+          "sha256": "99cf7dc4bf6fc4f40502352108fa896b51b999044932ab7bf5f392d50a5ca059"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-strict-stop-sent.json",
+          "sha256": "5b87ea325f13c0c31845e3977c41d10664398fcdbdc617753f5be48eab8f0a94"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-strict-stop-final.json",
+          "sha256": "5c32939e214004af98267df047b6b1ab36b46085880e99a1c46428dfee34b78f"
+        }
+      ],
+      "boundary": "Only the original owned conversation/configuration. UI showed no new tool request; no protocol-level zero-tools claim. Uses the latest strict-2 Stop sample."
+    },
+    {
+      "sample": "Goose post-Stop continuation guard",
+      "status": "blocked",
+      "result": "A and B retained unconfirmed tool steps and disabled sending. No continuation was sent, no unknown state was cleared.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-after-running-stop-blocked.json",
+          "sha256": "109821e9559d6d86ff1a1496df74b5d1be8b8632faaee0e70f04dab21da1e8e7"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/goose-a-after-strict-stop-blocked.json",
+          "sha256": "e1c0493d4423dee50b7a9505cbf3ce91d5a8e8dd9906c458074df6393f53de33"
+        }
+      ],
+      "boundary": "Owned PID absence is not an Agent tool terminal-state receipt. Recovery remains incomplete; this does not establish that the conservative UI guard is incorrect."
+    },
+    {
+      "sample": "Dirac fresh conversation response",
+      "status": "passed",
+      "result": "New conversation A returned its exact initial marker and completed.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-first-before.json",
+          "sha256": "95b3546de81de444fa6ded17747e1db4b6261392beaa34dee76078ea9ae5691a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-first-sent.json",
+          "sha256": "3e8870657c7b3c8f81af76788a42acbcd204b8bd1a3c1c6ee94da273f1a8c833"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-first-final.json",
+          "sha256": "2256fb74e8bb1208bd62ba2eb5f2aecbccd1c32ac7a6ff18dd43e8befe980471"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-first-tool-detail.json",
+          "sha256": "9bd59968d9aa3d5ba018ac4567f340e8a4ce74687f165819711394b78b44c375"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-new-current-model.json",
+          "sha256": "bf84f35230dd3a079bcaddda84e2d6dbf2ffbd38bae746ddb2663156f18b8d3e"
+        }
+      ],
+      "boundary": "A new conversation does not repair old cold history replay. UI showed Task Completed, so this is not a zero-tool assertion."
+    },
+    {
+      "sample": "Dirac overlapping requests and context",
+      "status": "failed",
+      "result": "B sent a new request while A owned command was running; B final reply was observed after A Stop, so completion overlap is not proven. B returned the current question prefix instead of its first marker.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-first-before.json",
+          "sha256": "8e362d846052596434eba5560710fd25460a2c630931f7dec331c269e130664e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-first-sent.json",
+          "sha256": "54d47d85c984e39fb8dc2fbdaac0024cac58ce5a7412e3819798fbb8282a3d0d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-first-final.json",
+          "sha256": "373409b057f739a33c1a2fcbdd64494c4a812c387f8a16eee1658ae51a4725d4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-a-process-before-b.json",
+          "sha256": "a2b17b9516a098ced5cedd8647a0f1d1e99a83e666855d05731f58e7d1f2e73d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-context-before.json",
+          "sha256": "f783cce62657b8d3a3241f9a38c66f9cfa868ab533aec432c24290650efd90f0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-context-sent.json",
+          "sha256": "4826faafbf19ad0a88ed053074c645f46329fba97b830d8978940a80a22eea42"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-a-process-during-b.json",
+          "sha256": "00ca80bdec207fb48376f22c41aa0fe71bc715c54c9f62333704650ddecfc415"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-diracstrict.json",
+          "sha256": "50533a65a328c27b584b39154c732c4a6fae94beaadda98cc996e03bc58e5231"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-parallel-b-context-final.json",
+          "sha256": "51bea570ea9ca9ec406f85ebf259e1def661e3fbdcad2d52a5dd63208d8bccfb"
+        }
+      ],
+      "boundary": "Overlap and completion observed; strict context answer failed. This does not prove cross-conversation contamination or full isolation."
+    },
+    {
+      "sample": "Dirac post-Stop strict response shape",
+      "status": "failed",
+      "result": "A retained its earliest marker after Stop, but emitted it in two repeated segments rather than once.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-after-strict-stop-before.json",
+          "sha256": "8446ac1b859f1471b494bf820d7f19f0ec5aeb88b7539aa758e1e8e31a6973d4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-after-strict-stop-sent.json",
+          "sha256": "79505e8d14b2dc7c52a16ee59f30c74b8654b6cb33257b4e5c40d27220c3be3b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-after-strict-stop-final.json",
+          "sha256": "c19b03fd94bbca2cee75fe9506d62c16c15689b39eef9b93fd2c49e5e58d0d5f"
+        }
+      ],
+      "boundary": "Finite context retention evidence exists, but strict response shape failed. The exact layer causing duplication is not determined."
+    },
+    {
+      "sample": "Vibe overlapping requests and independent continuation",
+      "status": "passed",
+      "result": "C sent a new request while B owned command was actually running. B was then stopped; C final reply and B explicit continuation returned their own earliest markers. C completion before B Stop was not established.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-draft-model.json",
+          "sha256": "594863498ca484b88a708e5c00517d62e684909c6d3fe8def1f0e9c253c5e422"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-current-model.json",
+          "sha256": "2ae487d50c257272b191a7ba329496096e02d406819be3135eafd591667019ea"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-first-before.json",
+          "sha256": "b633647913404ff9d258c7f968010292a2f736432eda0d79c6bfcee028877e71"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-first-sent.json",
+          "sha256": "2bead562965b05827b3f2baae9b974a7e3fb74bed3d548f3baeb62ba2db44005"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-first-final.json",
+          "sha256": "b0430d552fde153e0b0d1b9391e08ec218febfd3146f182426f79fefb185f86c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibeparallel-running-stop-before.json",
+          "sha256": "16a6ffe86b4c93b2ef5a7296b388a35e2245f7503780658e99c06096f32d6593"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibeparallel-running-stop-sent.json",
+          "sha256": "1c929c7d367add247ef708020572b692b7f10dce33abda090acceb9c9a84b8ee"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibeparallel-pending.json",
+          "sha256": "58909790063484d0ea191a007c2d71a02cc139ab447979c6ae5b9b650857cf32"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibeparallel-approved.json",
+          "sha256": "e143656791721667a65724f25ba691cbad30c193d20c384c4898355a9655828f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-b-process-before-c.json",
+          "sha256": "bf2812a4c7143c68c09f45b6cf0f62bf29a5c91bc82ddea02671801116e25769"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-context-before.json",
+          "sha256": "ac3e1cc4b7b1a7f2b575fc091633a0e60e394ad89167b598a7d01fa5fa34e902"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-context-sent.json",
+          "sha256": "c778c68f4c8bc3394315d219303473a039cfeccbb7fd6aaaf19d3b5f77e288f5"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-b-process-during-c.json",
+          "sha256": "91753b56e1ca6e171e6a784d27cddedd2e96fd971d84e03ced4b22b9caafed24"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibeparallel.json",
+          "sha256": "1876850a37a9bc292f24acca36ba7bb6cee61c08e363325c2cf78b76ea39d3b4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-parallel-c-context-final.json",
+          "sha256": "93bd68533ebfc215aff02785e57e0b2c0a96f2ccc74b3db48b6653f993941ae1"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-parallel-stop-before.json",
+          "sha256": "a6c601154fd5175ff0b2e31f9286016c872d0498964f9e266a5fb310f4c46eef"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-parallel-stop-sent.json",
+          "sha256": "1d0f4211e8c4bec29162b0f6a0cc5a106970170d61ab2a0d617d16f575014cc9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-after-parallel-stop-final.json",
+          "sha256": "b6482ea562a3f8255d146d9acba7e7fdfd00541044ea022d633fa3a4e653529e"
+        }
+      ],
+      "boundary": "Request submission overlap is proven; exact reply completion overlap is not. The later true two-command pair is separate evidence."
+    },
+    {
+      "sample": "Native-paste global search",
+      "status": "passed",
+      "result": "Native input contains FARFOLD_PI_A. Pi A is selected; screenshot also contains Copilot A/B and Pi B, consistent with subsequence fuzzy matching and descending last-update sorting.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/global-search-pi-native-paste.json",
+          "sha256": "72304d1d3e6890855867c983f55fa49249c32bff770431b00632727b412f9ba3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/global-search-pi-native-paste.png",
+          "sha256": "263820de5c41aee0a533fef4b76ec43027b50ed84108e64458e36f9635e15e0e"
+        }
+      ],
+      "boundary": "No candidate opened and no message sent. Only this query and current metadata. Prior Copilot matching alone does not prove broken input events or asynchronous indexing; exact-match-first ranking is not implemented."
+    },
+    {
+      "sample": "System notification automation surface",
+      "status": "not_tested",
+      "result": "Current CUA app inventory returned no Notification Center or Control Center surface. No new notification trial or system settings change performed.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/system-notification-surface-availability.json",
+          "sha256": "be59f7d25c9aa33fe0f99cf0e35133aaf05edd3809f818ccb11d58c6c0239903"
+        }
+      ],
+      "boundary": "Earlier human observation of no Farfold reminder remains. Sound source and click-return are still unverified. Inventory absence does not prove that the OS UI does not exist."
+    },
+    {
+      "sample": "Vibe simultaneous owned commands and independent stops",
+      "status": "passed",
+      "result": "Both original owned Python commands were live in the same global process snapshot. Stopping B removed B while C same PID/PPID/hash continued; stopping C removed C. Both later explicit replies returned their own first markers.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-pair-both-before-stop.json",
+          "sha256": "184aec99a81452bc3aa242c35a06296568869481d9376163fe0e683bf845ac78"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibepairb.json",
+          "sha256": "acb4c2dea779499b506c3545fe2c221c5424f1c44ce8b29e46d2c69b86a00f0c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-pair-after-b-stop.json",
+          "sha256": "7256e3f785d1e1249ebd9023f8a4728b83897f5f05b553f127fc1b94712973b0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-vibepairc.json",
+          "sha256": "3cf0deb5b1dc8d4c8dd7f9e7dfbdfb9a9c61581fbb1a0d0b5e8ac1ded0ac7cac"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-pair-b-context-final.json",
+          "sha256": "82cb7bcef772c6b70477e8505637e1b8b8eede6685b290f8218d5e02553aca83"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-pair-c-context-final.json",
+          "sha256": "2ea655c667c8ea0d9d0a28b71cf90a2f9a2269a00d68d6fad6f6197cac80626b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-pair-final-process-check.json",
+          "sha256": "a7d1ab8d2d2f91474545a3e81a2bd06e5084dc68735c4e9df4ee4008a2234f96"
+        }
+      ],
+      "boundary": "Finite owned commands, not every tool or all descendant cleanup. Root recorded no manual kill in this trial, not independent signal forensics."
+    },
+    {
+      "sample": "Codex thinking change and original restore",
+      "status": "passed",
+      "result": "Actual declared choice changed; new explicit context reply retained the first marker; original thought choice was restored. Agent/model/service unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-thinking-original-panel.json",
+          "sha256": "8e9460f0636181cd4b84fc9cb19083536c9a8f63a5c04617456d0d53d5b720e5"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-thinking-changed-panel.json",
+          "sha256": "ae9e0aa1e4a911a189692d4c1c03f7866151e4717069208ff65e054277d467f8"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-thinking-context-final.json",
+          "sha256": "1ff2bcd5e4da09359c65c392a2b3f03ea6a4a987db02e3275482be7df379f68b"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-thinking-restored-panel.json",
+          "sha256": "6cb42f78fea1c0273dd03f6ea05c529675d32ab8cd887627bd780205765693fd"
+        }
+      ],
+      "boundary": "Only declared configuration and this response; not hidden reasoning semantics or cold persistence."
+    },
+    {
+      "sample": "CodeBuddy thinking change and original restore",
+      "status": "passed",
+      "result": "Actual declared choice changed; new explicit context reply retained the first marker; original thought choice was restored. Agent/model/service unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-thinking-original-panel.json",
+          "sha256": "67ab9e5cc535158517cb3dc4acc585dc61b1fe42ef096a145e9c08cf035f0fc2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-thinking-changed-panel.json",
+          "sha256": "8b6e8e60569ba96fc7461f3be735c4f04544f75c73e8e07c30771072674ce409"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-thinking-context-final.json",
+          "sha256": "dd50655dc5af3b7b41dc2dc4224fba5a2258c6fe4ec6f36ee679702a49bb15ce"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codebuddy-thinking-restored-panel.json",
+          "sha256": "5ef969916cda67c50aa7b3d511bc50f983623dd59a991f13c4e5f793baa0f258"
+        }
+      ],
+      "boundary": "Only declared configuration and this response; not hidden reasoning semantics or cold persistence."
+    },
+    {
+      "sample": "Devin thinking change and original restore",
+      "status": "passed",
+      "result": "Actual declared choice changed; new explicit context reply retained the first marker; original thought choice was restored. Agent/model/service unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-thinking-original-panel.json",
+          "sha256": "0de72259a652eebe628122b05cdfb011708c1bf0cbd301bd8714c841fae9dea9"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-thinking-changed-panel.json",
+          "sha256": "1224c4f58d5387acaed43eafa5adeb54ad9ff83fc032e68dc5df4c8acefd0511"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-thinking-context-final.json",
+          "sha256": "f1bc87f578ba51e01f72321519d226937b5dc601b3e2e9aa987616d7a21a39a4"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/devin-thinking-restored-panel.json",
+          "sha256": "1302780610539eba8e29ae5655f70f9189bde8774b277acf43a7354c1e0a0b68"
+        }
+      ],
+      "boundary": "Only declared configuration and this response; not hidden reasoning semantics or cold persistence."
+    },
+    {
+      "sample": "Dirac thinking change and original restore",
+      "status": "passed",
+      "result": "Actual declared choice changed; new explicit context reply retained the first marker; original thought choice was restored. Agent/model/service unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-thinking-original-panel.json",
+          "sha256": "6f2b18899424e5bbe5d0f9d35c358aea2ae2705212cdea945301cd9cd09fd798"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-thinking-changed-panel.json",
+          "sha256": "e5f13a0e79b69d6e4500f6f8b052c294af624a11222c2ec81cb0416022755ae2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-thinking-context-final.json",
+          "sha256": "67c86da31c36a98f0161e82087ab40f6e3040f8047c507c94fe6d75b394fd4d0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-thinking-restored-panel.json",
+          "sha256": "ea7340efce7c148cdef31ad0f4e100314b34a11ac58254c9828463238901d55c"
+        }
+      ],
+      "boundary": "Only declared configuration and this response; not hidden reasoning semantics or cold persistence. Dirac emitted a tool step despite no-tool instruction; no strict no-tool pass."
+    },
+    {
+      "sample": "Mistral Vibe thinking change and original restore",
+      "status": "passed",
+      "result": "Actual declared choice changed; new explicit context reply retained the first marker; original thought choice was restored. Agent/model/service unchanged.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-thinking-original-panel.json",
+          "sha256": "09a19454bdea7dc2904ecff6598e6fcf6c0e8e1424a7b50e7e866750e398e71f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-thinking-changed-panel.json",
+          "sha256": "b594070ca34dbd0e3ebb0c0e6caadfb97e07e79eead3b782f692f6f727444a6c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-thinking-context-final.json",
+          "sha256": "e97d7125155e622a8e42c40f430f1c070afbbd1b57e486ae2a289caedadb765c"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/vibe-thinking-restored-confirmed.json",
+          "sha256": "c5f55c18523f00050c2c2847c04fbf0b15f8412decc5b341eb4cee2aea562012"
+        }
+      ],
+      "boundary": "Only declared configuration and this response; not hidden reasoning semantics or cold persistence."
+    },
+    {
+      "sample": "Pi old/modern thought conflict",
+      "status": "failed",
+      "result": "Legacy Thinking:off displayed, but protected-choice guard paused sending; no request was sent. Restoring original medium removed mismatch. Own draft retained.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-thinking-changed-panel.json",
+          "sha256": "f9e491017fb1d80aead3b3e0ddc518d6923fba3a97aad4724ec93174e4519e16"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-thinking-send-blocked.json",
+          "sha256": "8baada5910badd77acb95a6bcdcc09654c162236632ad92de4150e9bb7dffb6d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-thinking-blocked-panel.json",
+          "sha256": "ff24a9f09aa70de1f7f335c50f6c3bd3ce476c7c71f98cb49e0ede1d69ee7541"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-thinking-original-restore-confirmed.json",
+          "sha256": "b692dd9bab7d5bbe2007814f2849e13fb1e67f71d42b39afded40705de7fd2a4"
+        }
+      ],
+      "boundary": "Source fix ea4a9e47 is separate; old installed failure remains."
+    },
+    {
+      "sample": "New conversation model picker after preparation",
+      "status": "failed",
+      "result": "Initially modal loading dialog became in-page when preparation completed; Tab reached background composer; Escape did not dismiss. Pending Nano choice was never applied. Navigation closed the dialog; global default Agent restored.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-model-switch-draft-options.json",
+          "sha256": "5b2d0a00022d2bc469cd77cd58ab69615666e441ea6e85d761fd715a521d43a3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-model-switch-draft-selection.png",
+          "sha256": "1dc9e443881e5323b59d1bcd15b9de5116190578b9915f0cffa39b56197c84e0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-model-switch-picker-reopened.json",
+          "sha256": "268f806b033a110576aa194d8a6c5ee42ccf0927b320c87cf371e0c30ee96da0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-model-switch-picker-cancel-attempt.json",
+          "sha256": "c310843d6dd8c2fb70d73c243a1fee98fe4e1758866c3a222912fcbd00394bf2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/dirac-model-switch-picker-navigation-out.json",
+          "sha256": "d13ed847e8f74b8b181ed1d7a7800e2a575334483e653e6c07f69445d8b9139f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/default-agent-restored-after-dirac-model-draft.json",
+          "sha256": "e6955605dd0970b74d8b3fad6c149379b71e64f891be155941b14e22cd030794"
+        }
+      ],
+      "boundary": "Existing Dirac free Ultra absent from modern choices, so not changed. Source portal fix requires new installed retest."
+    },
+    {
+      "sample": "Workspace send pause and restore",
+      "status": "passed",
+      "result": "Exact owned test workspace paused; actual existing thread sending disabled. Restore enabled workspace sending without sending its draft; only root-created draft was cleared.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/workspace-sending-original-state.json",
+          "sha256": "7d5f0d9feaf7e3c87a6acfe361dd09a01c10924d4cbe40acf23140a886df5912"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/workspace-pause-review.json",
+          "sha256": "317ba6987d8096aaadc9bdc4aae68e212ba8081154983a59dc859f34097ad4f2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/workspace-sending-paused.json",
+          "sha256": "77f1511e330d27923fa5b99a2e00443687a67a23ce32602adfda3dd0fdd90319"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/workspace-pause-owned-draft.json",
+          "sha256": "03ba6dc9f76e225d115671dab4af1e9bdfbcb0a26e9eba0bfa8f006159da1d83"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/workspace-restore-no-autosend-own-draft-cleared.json",
+          "sha256": "2ad80c388105cda4c4feb7b9001a3adbc671c38c06e2a77575b6016ed83a1a0c"
+        }
+      ],
+      "boundary": "Owned test workspace only; does not prove pending queue automatic delivery."
+    },
+    {
+      "sample": "Nonempty queued text under denied approval",
+      "status": "partial",
+      "result": "Added one owned text while real CodeBuddy approval pending. Workspace pause retained it; Reject informed Agent, no command approved. Restore kept queue paused, no Continue clicked.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-permission-pending.json",
+          "sha256": "34018ff206c67fb9503bc4caca801324a972cbe0ec74747ebc16d10393047c82"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-cold-added-while-permission-pending.json",
+          "sha256": "be4e02a20d28a142adb56eb834bc5487fa270c2238ef9578090589721698b375"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-cold-paused-pending-approval.json",
+          "sha256": "d27941db931fd91cd8aceff0f0a4d6eee92c6f9502ae13b938ef426d6b504cad"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-cold-approval-rejected.json",
+          "sha256": "dc59f120bdd83c4e712b873ab9c180da1e2967db0f806b8487b4c9c706ce5464"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-cold-before-restart.json",
+          "sha256": "4d6e101511435aa8e2c1e508d43dc0587bfe81b97d4911039b3270aa49e64bb2"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/queue-cold-workspace-restored-no-autosend.json",
+          "sha256": "f57806fe48d97979eb6878568c3f96604739216427d81331005113ad62504800"
+        }
+      ],
+      "boundary": "Unconfirmed tool status persisted; not successful command execution, queue delivery, or cold restore yet."
+    },
+    {
+      "sample": "Fast real media tool",
+      "status": "partial",
+      "result": "PNG tool result stages embedded image/png for next model call. Actual WAV tool call failed: current model does not support embedded audio/x-wav. No retry.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tool-media-sent.json",
+          "sha256": "b5ed59553794675dfa8c55620633a0631795c2f2979e97d0454c8c7d3cbb6aef"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tool-image-content.json",
+          "sha256": "1ae46b7671a31bc4e14293b6355f887c0fea81355402d0c765e91118d20f28b1"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tool-audio-content.json",
+          "sha256": "aaebff232d58411505664646df80e8bbbd0a7dac2e928fc29ed4d5d1b3e46534"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/fast-tool-media-final.json",
+          "sha256": "34d8b7a54b2a34e6c7aad6a293568c6723a604c3b6f3e831bcd3adba5251b31d"
+        }
+      ],
+      "boundary": "PNG model input staging is not Farfold structured media output rendering; audio playback not passed."
+    },
+    {
+      "sample": "Native macOS image clipboard",
+      "status": "not_tested",
+      "result": "Selecting Preview via CUA timed out; no native image copied or pasted into Farfold.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/native-clipboard-preview-condition.json",
+          "sha256": "faddedb7fc2467ef637f10d6c0638aaf86c6754c2d623eb87425e2fff7d78764"
+        }
+      ],
+      "boundary": "Isolated browser clipboard is not native pasteboard evidence."
+    },
+    {
+      "sample": "Codex real question submit, cancel and attribution",
+      "status": "passed",
+      "result": "In declared Plan mode, actual form selection red submitted; completed reply red. Separate form Cancel yielded completed cancelled. Other conversation did not display form; returning preserved form. Original Default/High/6 Sol restored.",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-plan-confirmed.json",
+          "sha256": "8d9566b9870d6bb2e670995344a0cbe71abdb00201e0c9b71ac189f653c7de3f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-submit-observed.json",
+          "sha256": "43092d3d8ad954fb049363892292ee5d73896ee1c2fb6f061d24af9ab5f8cf7a"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-other-thread.json",
+          "sha256": "b83482fe5891a3cb3883fbc41ef15181e40e9fa82ae03e2f955a2f9d8b7e40e0"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-selected.json",
+          "sha256": "dab64fe46f5f74b4ae63afb261eb4523c402c7bb76b2c1a9ce54f5bfa3cf2bf7"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-submit-final.json",
+          "sha256": "1a46f6cb71ab63bdafcbc3b57f2ede87a8fed21e3da06d13d9917dd3f6aa0272"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-cancel-pending.json",
+          "sha256": "5771d40f015a53cfc9ae90038e58911de2a734486617b8a2dcd84626b5cdac98"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-cancel-final.json",
+          "sha256": "1a87cd4219e12f478716967e9092fd7e2508303e1ce95d630bbc074cb07fc57f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/codex-elicitation-default-restored-confirmed.json",
+          "sha256": "9f84d1a77504df26dda435aec5bb51817b72414ab440e819510a8408843d7cdc"
+        }
+      ],
+      "boundary": "Finite Codex current official form pathway, not all Agents or each form schema."
+    }
+  ],
+  "ownRunningFixturesCleaned": {
+    "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/stop-four-fixtures-cleanup-final.json",
+    "sha256": "8889de5f10c2215ff206b2a13bd4232ee204aaca314cd71026324af870f74e8e"
+  },
+  "independentReview": {
+    "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/independent-crosscheck.json",
+    "sha256": "1701f79debc7bcc34619d40f2d5aad0dcdbc8aca92da919e6898be832d919812"
+  },
+  "runningStopIndependentReview": {
+    "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/independent-running-stop-review.json",
+    "sha256": "fd3e7f6374f4f6cf0c419539d49cb92b28e78bc06d9f3c837908cac2bf69027e"
+  },
+  "runningStopImplementationBoundary": "Common code sends cancellation and displays stopped upon Agent cancelled; completed tool updates remove active IDs. Four observed live-command counterexamples are not overridden by acknowledgement or Agent prose. Goose unconfirmed-step guard remains. No evidence-backed universal functional repair consistent with the product boundary was found; no new task ledger, Agent descendant killing, or upstream patch.",
+  "previousIndependentReviewScope": "Existing independent receipts cover their previous declared samples only. New Stop/continuation/overlap reviews are recorded separately in private final-public-review.json; old receipts do not validate all added results.",
+  "measurementCorrections": {
+    "result": "Four earlier Pi/Goose/Devin/Vibe empty observations did not record comm-query errors and remain inconclusive. New strict-2 samples retain matching rows on query errors and record global success, raw marker counts and original PID presence.",
+    "evidence": [
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-running-stop-before-process.json",
+        "sha256": "c5b1a3407e0a23e91e61adb3ad28fcf1979b24aac7763bea8d75eefad44dff68"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/pi-running-stop-after-process.json",
+        "sha256": "4ef41a8ace5d39ca8c5237a63c2ab220799738398c472155aa1f5c4d2fbbe18c"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-goosewindow.json",
+        "sha256": "69100817ef57eaaa16882da1e45ef5068e94d80f022480a99ab74fb8131e960c"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-devin.json",
+        "sha256": "5c527c538113f11476df5ccbb462f0b8cd51437fabd3cfcdbf0d883837626893"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-vibe.json",
+        "sha256": "d17af9bf544f936868ff40f9cef33cae3140439738567dbaeb2091ddff77925e"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-collector-source.json",
+        "sha256": "14da4763e721f7a74a77444cfeb24b91e5c587c271985c1df71f25b94f7e30a0"
+      },
+      {
+        "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/runtime-window-strict-helper-provenance.json",
+        "sha256": "69d8c11013f737764e36d9aacb287b3cf79a42e3e8dd1bbe47bf2d075e3e83d8"
+      }
+    ]
+  },
+  "finalUiState": {
+    "path": "output/2026-10-07-autonomous-macos/installed-843f3a78/autonomous-ui-final-state.json",
+    "sha256": "e95964439233c1b46b6999561ce64efb2a1e19304eef056afe014e68ff7cda03"
+  },
+  "additionalBatchRecord": {
+    "previousPublicSha256": "ca8241348a1696d15d4e6c3851161688b013fb830afb04a44ab75f2bfa84b510",
+    "scope": "Further autonomous 843 tests before normal save/exit for ea4a9e47; candidate retests are separate.",
+    "sourceOnlyFixes": [
+      "e6fd8481 picker portal",
+      "ea4a9e47 modern configuration declaration preference"
+    ],
+    "remainingCapabilityConditions": [
+      "native clipboard UI unavailable in attempted surface",
+      "invalid-source attachment import not completed",
+      "declared commands journey pending accurate menu/slash investigation",
+      "idle release has no eligible accurately attributable preparation connection",
+      "Windows and new account tests excluded by user"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "843f3a78cc8cbe86fd56da9580d2482db7fe56e9",
+  "scope": "源码在本机真实钥匙串的两个自建非账号夹具；不是安装版账号切换。",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "keychain_round",
+    "--",
+    "--ignored",
+    "--nocapture"
+  ],
+  "exit": 0,
+  "testsPassed": 2,
+  "testsFailed": 0,
+  "names": [
+    "credentials::keychain_test::real_keychain_roundtrip",
+    "auth::tests::keychain_round_trip_stores_and_reads_back"
+  ],
+  "evidence": {
+    "path": "output/2026-10-07-autonomous-macos/keychain-live-checks/auth.log",
+    "sha256": "bc574a5d25bea53e372222db013b9bb0e74c9a30c3aba3a66080f484d9e85cb0"
+  },
+  "cleanupBoundary": "credentials测试明确断言删除后不存在；auth测试仅尝试删除且忽略返回，不能冒称其删除已独立验证。",
+  "unexecutedIgnored": [
+    "两个OpenCode E2E使用默认command/env且不承接当前Farfold服务选择；其中一个会调用默认模型并自动批准文件任务，本轮未擅自运行。"
+  ],
+  "defaultRequiredSuite": "1021通过、4原忽略；另行运行这两个钥匙串测试通过，不改写原始默认结果。",
+  "sourceSha256": {
+    "src-tauri/src/auth.rs": "84b78949ecf350199e303085ebee5ca324c5f4e534ce32ef0b7fe454f6913909",
+    "src-tauri/src/credentials.rs": "3822d16f9b7a1ca5eaab1741f870b936236f0bcf95e1bcfda086707fed4df687"
+  }
+}

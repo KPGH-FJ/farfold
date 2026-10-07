@@ -1,0 +1,71 @@
+{
+  "sourceCommit": "416d81429abd10b0622abc7180a142052d72ca4f",
+  "binarySha256": "d8e197dc4a48f6eedcfb9417bc8d961a441eddc4a311118daf4eb855d91ea53b",
+  "installedAtUtc": "2026-10-07T01:44:59.677693+00:00",
+  "normalSaveAndExitByAgent": true,
+  "newUserSavedExitConfirmation": false,
+  "fullAutonomousTestAuthority": true,
+  "forcedQuit": false,
+  "exactFiveFilesAndStrictSignature": true,
+  "architecture": "arm64",
+  "onlyFormalApp": "/Applications/Farfold.app",
+  "dataRetention": {
+    "comparedAtUtc": "2026-10-07T01:46:42.117224+00:00",
+    "sourceCommit": "416d81429abd10b0622abc7180a142052d72ca4f",
+    "beforeAfterSummaryEqual": true,
+    "jsonlBytesEqual": true,
+    "contentAndUnixModesEqual": true,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 131,
+        "file": 86,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256": "6712b8b16ed02f7095bf2aa826051a548e9fdc0c786f390b7d66a24203f33459",
+    "entries": 217365,
+    "formalProcessCountBeforeLaunch": 0,
+    "boundary": "Only three Farfold-owned trees, raw manifests0600. No Keychain or external Agent data claim."
+  },
+  "coldStarted": true,
+  "launchBoundary": "CUA cold start observed100indices and empty new composer. Preparatory Codex process/session may start; not proof that no Agent starts automatically. Restore and queue samples recorded separately; no auto-sending observed.",
+  "evidence": [
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-416d8142/normal-exit-observation.json",
+      "sha256": "5baa64f31f6105e02feff482c507cecb5819e084d1baf3a35833ea3cce98fd54"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-416d8142/install-operation.json",
+      "sha256": "51b2aef6772c19e3f49cb0b9a3af26c4c5a5a6f08b4163eba18bf776321c6b6d"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-416d8142/data-comparison.json",
+      "sha256": "b53919ef44d82d7767d6d16cae5c24bc6cc0bf8f0664bd91d9795ca275571236"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-416d8142/independent-install-review.json",
+      "sha256": "0a2bfb86919597cb3ed70a68fb5652c100319147863c1219a0d46236f754d438"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-416d8142/duplicate-cleanup.json",
+      "sha256": "a346296c5504c2ee7aa425d505e4ba41c84e514b37a2d30b9989bd508cb3d30f"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/installed-416d8142/cold-entry.json",
+      "sha256": "b671a66980eadf834ecf695695098b3acfd22678cf7332c897bb08a4572538a8"
+    }
+  ]
+}

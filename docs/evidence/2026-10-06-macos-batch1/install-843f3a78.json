@@ -1,0 +1,53 @@
+{
+  "sourceCommit": "843f3a78cc8cbe86fd56da9580d2482db7fe56e9",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "binarySha256": "e6e22f5a10cd06e0795b494e7db5a1a1f979074bdf4cb90cb0864424034bb3bb",
+  "installedAtUtc": "2026-10-06T23:07:56.064611+00:00",
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "userConfirmedSavedNormalExit": false,
+  "authority": "用户离开前全权授权本轮可自主完成的macOS测试；本次由操作者观察正常退出，不冒称用户再次确认保存。",
+  "exactFiveFiles": true,
+  "strictCodesignExit": 0,
+  "dataRetention": {
+    "scope": "three Farfold-owned trees; entry path/type/mode and regular-file size/hash or symlink target; not Keychain or external Agent stores",
+    "rows": 217349,
+    "beforeAfterIdentical": true,
+    "snapshotSha256": "86b5ad1e0bf691215258b50d91d1a81662497b86aa49ff61d469e5e61916653c",
+    "launchedBeforeComparison": false
+  },
+  "duplicateGeneratedAppRemoved": true,
+  "coldLaunchObserved": true,
+  "evidence": [
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/normal-exit-observation.json",
+      "sha256": "d56f9aaa174269cefde9fb211bf62b48eda53aa670ce8ee8ecbd49e4945f5da7"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/install-operation.json",
+      "sha256": "6acaf2bd1961aade8b707baab3f78d5f0bde2896e9d93a2a7421a826b52b18ee"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/data-comparison.json",
+      "sha256": "1f06455fc4a8b5f21e690157eb3723fb7bab882c9b57208f7c3cf4af929b1d2a"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/independent-install-review.json",
+      "sha256": "126ecd0a2fce1165d404e5d807e4850632796e3634fa59ad616c7aebd43b4df9"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/independent-install-supplement.json",
+      "sha256": "f5bb12961b59375ac8e2a94f18e5082b1101e69a695412002505576ea79ce066"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/duplicate-cleanup.json",
+      "sha256": "2328dd6998b39eb8543e7c14e1d47d220a04d342f7964c549bd8cd059a28afce"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-843f3a78/cold-running-binary.json",
+      "sha256": "5d3d8b3c2c4096071b7d91cb217524e9b366aff20f032a682b22951f59755cb4"
+    }
+  ]
+}

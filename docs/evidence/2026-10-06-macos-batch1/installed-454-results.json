@@ -1,0 +1,198 @@
+{
+  "sourceCommit": "454bf79a85613a14f8784d99f9b5e00564384784",
+  "binarySha256": "05a30889b5bd1f1674d23ae1e698926bf1aeb86283bc22ba6004c155d27a6e7f",
+  "scope": "这一正式版本的限定样本；后续843安装不把旧证据重标为新版本测试。",
+  "samples": [
+    {
+      "sample": "排队图片使用出队时的当前文件",
+      "status": "passed",
+      "result": "同一自建地址替换为绿色/洋红图片后，真实Codex回复与展开图片均对应当前文件。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/queue-fixture.json",
+          "sha256": "1ef00b6a2b3f3bc62c8af3d8d2a29605b97b3ab1c41c4fba6f76b69edf96321d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/image-queue-file-update.json",
+          "sha256": "ab318ed1e7716de75085ba3c8792824a911656571fc458dffc008a8190a95556"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/image-queued-before-update.json",
+          "sha256": "baa9a8ca0353d86df7f3c10da058a04d2e3210f5d7eab8e9d056412502822dd3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/image-queue-final.json",
+          "sha256": "85615f0c09aed1de41dc8e08ffb767396d585d32c5c432b44832567a6c9929a3"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/image-queue-expanded.json",
+          "sha256": "c474e57947abe64a2660a74418db560f9e00ae9fd6e5d46d3033d3edd3c8d67e"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/image-queue-expanded.png",
+          "sha256": "dbd94884044c29daf4bec0c9c5fd9a69496fd3529679258803db8d043058c3d1"
+        }
+      ],
+      "boundary": "仅此次有效静态PNG；不证明无效图片排队拦截或全部编码。"
+    },
+    {
+      "sample": "普通网页填写和结果核对",
+      "status": "passed",
+      "result": "新任务MATCH2实际填写成功；MISMATCH任务中页面把小写变大写，回执正确报告mismatched，没有擅自补填。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-match2-final.json",
+          "sha256": "2c92734190f21f4a3c8cefc7cd06a4287c54560449d61b1b48d06d8d0fb22a0f"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-mismatch-raw-final.json",
+          "sha256": "bb93c4596ba0b4958da899b9d4d00010c57ef0962f17e63bfa00bf270b4a1253"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-mismatch-final.json",
+          "sha256": "66d9e8caa244c8f8ca4f57af921343b7661850a343a6908a63e2a345e6abb0b7"
+        }
+      ],
+      "boundary": "旧过期失败保留；browser-mismatch-raw.json实际是MATCH2，不用作MISMATCH证据。"
+    },
+    {
+      "sample": "普通网页点击提交",
+      "status": "passed",
+      "result": "仅自建本机页空字段提交，实际页面显示已提交；工具回执dispatched/true。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-click-final.json",
+          "sha256": "566d33577447ec7e6cc6afbb3a146e40e9670e79913e54d492c6ef3c1847e77d"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-click-tool-details.json",
+          "sha256": "72d5b672289b32fd6ae6ee62201a5374f41a1cc37eda1ba02fda7f9b0118075a"
+        }
+      ]
+    },
+    {
+      "sample": "网页截图",
+      "status": "unavailable",
+      "result": "正式网页工具报告截图不可用；CUA截图不代替产品功能。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-screenshot-unavailable.json",
+          "sha256": "df1ea493c2308c56b3d7d2e709096039130587a7dc86715357f94bce5c9a71bb"
+        }
+      ],
+      "boundary": "工具详情AX截断，未保存完整原始截图状态回执。"
+    },
+    {
+      "sample": "受保护网页读取",
+      "status": "failed_cause_unknown",
+      "result": "两次独立Agent观察及手动读取均失败；不能证明密码/验证码保护拦截成功。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-read.json",
+          "sha256": "cdda039efcfa35e48c24c3968c8b399cba7cd776e79c0c39aa3eaeb1e4f65f68"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-stable-grant.json",
+          "sha256": "ef7263c12b4a204d1cf84fd30ef91f8787e6c2c0a51eafe831d3a3bd64899ea6"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/browser-protected-manual-snapshot.json",
+          "sha256": "4ce955134ce533a61c10d17d26453525472674a4690bc4c94be697fcacda931b"
+        }
+      ],
+      "boundary": "固定错误合并许可、页面范围、保护检测和读取等原因；内层原因未观测。"
+    },
+    {
+      "sample": "Finder定位",
+      "status": "passed",
+      "result": "新选择的自建PNG已在Finder准确选中。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/finder-reveal-fresh-confirmed.json",
+          "sha256": "43f10c39369e5e7c4a6352bacbc882ed39d80eaedd182cb49729783de59572b2"
+        }
+      ],
+      "boundary": "旧保存后定位失败根因仍未知；新成功不覆盖旧失败。"
+    },
+    {
+      "sample": "诊断导出",
+      "status": "passed",
+      "result": "实际ZIP独立核对38条目、6605协议元数据记录、CRC和字段边界通过；用户备注不宣称自动脱敏。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/diagnostic-export-completed.json",
+          "sha256": "6d289c528cc81694853be4e19e84affa5b6d634fe70764a6d5f73d49f7bbd347"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/diagnostic-export-454bf79a/receipt.json",
+          "sha256": "2b90af436145a408b1067dde81f894240415ab69ea61fab1406c5623d060d9dc"
+        }
+      ],
+      "boundary": "AX预览截断，未证明完整预览与ZIP逐字相同；未上传。"
+    },
+    {
+      "sample": "批量分组归档恢复",
+      "status": "passed",
+      "result": "仅自建fast-agent A/B两条对话移组→归档→恢复→回原分组，索引数量恢复；不发模型请求。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/batch-group-moved.json",
+          "sha256": "f603d17af8ce22662cbfb4f3bbc73b72ac4aa6b20b46d59215ce48a4b1440e24"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/batch-archived.json",
+          "sha256": "6ebe7cc8d1c49e1fd0bee42e598737b4a56a60c5652a92ddf9c57666cd057090"
+        },
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/batch-restored-original.json",
+          "sha256": "60f5b46bad14e3ca353f6c26a717b5934ea98fb4b0a184081beb368c2cb61bcc"
+        }
+      ]
+    },
+    {
+      "sample": "自动更新",
+      "status": "missing_release_channel",
+      "result": "安装版显示当前版本没有配置发布通道，检查不可用。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/update-check.json",
+          "sha256": "98e2b33f652c6a1e6f4c06f6fa98a18665745c4519593eeb03bdf792e56a52a0"
+        }
+      ],
+      "boundary": "未证明更新下载、签名或安装。"
+    },
+    {
+      "sample": "系统剪贴板图片",
+      "status": "not_tested",
+      "result": "隔离浏览器的图片剪贴板写入没有成为系统图片；真实图片粘贴未完成，未发送。",
+      "evidence": [
+        {
+          "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/clipboard-png-import.json",
+          "sha256": "ea847ae0a319c2d83918528022762a1dfc06d8151abb566fa14f8008ee16a86c"
+        }
+      ]
+    }
+  ],
+  "independentReview": {
+    "path": "output/2026-10-07-autonomous-macos/installed-454bf79a/independent-crosscheck.json",
+    "sha256": "81cdf2f9694635416974abde1ed68a91e422cc678b9b318c56c1059b960e4e9b"
+  },
+  "installationEvidence": [
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-454bf79a/install-operation.json",
+      "sha256": "56d2eddd21fa9098eaaf47759980be50ab2851b62a62441e810f9b24a0812dd5"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-454bf79a/data-comparison.json",
+      "sha256": "62de42ac2d310fe7efcc80f90977d64d1c56690f091bcd278b4cf1989ddaa492"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-454bf79a/independent-install-review.json",
+      "sha256": "bf86f504cfe884f261eaefe7cf53031a4864fed1e8a3fc4fc7b70682cfb15ecc"
+    },
+    {
+      "path": "output/2026-10-07-autonomous-macos/install-454bf79a/duplicate-cleanup.json",
+      "sha256": "536d77f000a596180b891334f6c14b310bd913ac6b89858c643b2ad25db99677"
+    }
+  ]
+}

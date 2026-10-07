@@ -1,0 +1,118 @@
+{
+  "sourceCommit": "ea4a9e470592403d19707b4ddcec9045ecd6c40d",
+  "scope": "Source and controlled fixtures; not installed-product or real-Agent acceptance",
+  "allPassed": true,
+  "counts": {
+    "frontend": {
+      "files": 197,
+      "passed": 2338,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 1025,
+      "failed": 0,
+      "ignored": 4,
+      "mainTests": 0,
+      "docTests": 0
+    }
+  },
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "elapsedSeconds": 43.87,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-1.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "elapsedSeconds": 32.779,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-2.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "elapsedSeconds": 36.885,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-3.log",
+      "sha256": "0ba81ccad2ede8a050fa1be18cd0b89e23705c6ca28d43de1358fd6f98ea9cd6"
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "elapsedSeconds": 33.872,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-4.log",
+      "sha256": "33c003afa28c297fa6ff4b63dfc0d02e7acd91f4513721fb620deb5bccc3f715"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.531,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-5.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 19.02,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-6.log",
+      "sha256": "87e08caecbfe2d12d79147010e96479a09f71fa5e782204d22842a30d45e76d6"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 29.519,
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-7-final.log",
+      "sha256": "1073764a6ef7c782214a0fcb9f2da045048aba33e7da1a2874867bd0951e4d54",
+      "sourceChangeSinceFirstRun": "Only lifecycle old-mode fixture now declares a real legacy-only API; production unchanged"
+    }
+  ],
+  "firstRunFailure": {
+    "receipt": "output/2026-10-07-autonomous-macos/config-picker-full-checks/checks.json",
+    "sha256": "12052f02d5c0a592302f02f0793556887943cf0a6f9b5e48294f8d7191bb00de",
+    "allPassed": false,
+    "rust": {
+      "passed": 1024,
+      "failed": 1,
+      "ignored": 4,
+      "failure": "acp_client::lifecycle_tests::abandoned_mode_change_keeps_ownership_but_does_not_block_stop",
+      "assertion": "30ms caller timeout unexpectedly completed before the peer got an old-mode request",
+      "log": "output/2026-10-07-autonomous-macos/config-picker-full-checks/check-7.log",
+      "sha256": "47d54e18e80a51d1c106d4e44eb3df896790df2ac0a7950af5a889550de48c80"
+    }
+  },
+  "sourceProof": {
+    "piFiles": 18,
+    "pickerFiles": 3,
+    "independentReview": "output/2026-10-07-autonomous-macos/config-picker-independent-review.json"
+  },
+  "boundary": "cargo test reports pre-existing unused std::io::Write import in src/agent_install/archive.rs:97; required production cargo clippy -- -D warnings exited 0.",
+  "ignored": [
+    "test acp_client::manager::e2e_tests::e2e_connect_new_and_resume_session ... ignored, requires a real agent binary; run manually",
+    "test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ignored, requires a real agent binary; run manually",
+    "test auth::tests::keychain_round_trip_stores_and_reads_back ... ignored, writes and removes one non-account test key in the local Keychain",
+    "test credentials::keychain_test::real_keychain_roundtrip ... ignored, writes and removes one non-account test key in the local Keychain"
+  ]
+}
