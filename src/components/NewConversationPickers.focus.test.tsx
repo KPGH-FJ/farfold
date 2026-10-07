@@ -10,6 +10,13 @@ import type { AgentCardModel } from "../runtime/agents";
 const h = vi.hoisted(() => ({
   effects: [] as (() => void | (() => void))[],
   cleanups: [] as (() => void)[],
+  portalTargets: [] as unknown[],
+}));
+vi.mock("react-dom", () => ({
+  createPortal: (children: ReactNode, target: unknown) => {
+    h.portalTargets.push(target);
+    return children;
+  },
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -31,7 +38,7 @@ import {
 } from "./NewConversationPickers";
 
 type Element = ReactElement<Record<string, unknown>>;
-const page = { activeElement: null as FocusTarget | null };
+const page = { activeElement: null as FocusTarget | null, body: {} };
 const events: string[] = [];
 class FocusTarget {
   isConnected = true;
@@ -101,6 +108,7 @@ const agent = { id: "A", name: "Agent A" } as AgentCardModel;
 beforeEach(() => {
   h.effects = [];
   h.cleanups = [];
+  h.portalTargets = [];
   events.length = 0;
   page.activeElement = new FocusTarget("body");
   vi.stubGlobal("document", page);
@@ -124,6 +132,7 @@ it("focuses Agent search after native showModal, then Escape returns to the actu
     returnFocusRef: { current: opener as unknown as HTMLElement },
   });
   const { tree } = mount(picker);
+  expect(h.portalTargets).toEqual([page.body]);
   expect(page.activeElement?.name).toBe("search");
   expect(events).toEqual(["showModal", "close", "search"]);
   const preventDefault = vi.fn();
@@ -148,6 +157,7 @@ it("focuses model search, reveals the current model after opening, then restores
     returnFocusRef: { current: opener as unknown as HTMLElement },
   });
   const { tree } = mount(picker);
+  expect(h.portalTargets).toEqual([page.body]);
   expect(page.activeElement?.name).toBe("search");
   expect(events).toEqual([
     "showModal",

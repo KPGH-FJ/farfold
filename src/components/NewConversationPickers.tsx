@@ -5,6 +5,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 import { Check, Plus, X } from "@phosphor-icons/react";
 import type { AgentCardModel } from "../runtime/agents";
 import type { ConfigOptionView } from "../runtime/session_types";
@@ -63,7 +64,7 @@ function PickerDialog({
         previous.focus();
     };
   }, []);
-  return (
+  const content = (
     <dialog
       ref={dialog}
       className="new-choice-dialog"
@@ -97,6 +98,12 @@ function PickerDialog({
       {footer && <footer>{footer}</footer>}
     </dialog>
   );
+  // The composer moves into its prepared conversation without a React remount.
+  // Moving an open native dialog removes its modal state, so keep its DOM host
+  // stable while the opener and the preserved draft move between containers.
+  return typeof document === "undefined"
+    ? content
+    : createPortal(content, document.body);
 }
 
 export function NewConversationAgentDialog({
