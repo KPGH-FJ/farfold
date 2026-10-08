@@ -1,5 +1,13 @@
 # Farfold 当前状态
 
+## UI/UX 产品化 W3+W4+W5：已安装 d7e454ac 并实机复测（2026-10-08）
+
+正式应用现为 **d7e454ac（0.1.7 arm64）**。777 项构建输入与提交逐项一致，5 文件/严格签名/ZIP 核验通过，安装前后 Farfold 数据三树 217,256 条目逐字节一致（sha256 `62677dae…`），仅替换 `/Applications/Farfold.app`，生成 bundle 已移除、归档保留。回执：`package-d7e454ac-receipt.json`、`install-d7e454ac/`。
+
+实机验证（未登录、未换号、未发消息、未确认任何破坏性操作）全部通过。**W3**：用户消息"消息操作"含复制/编辑后重发/再发一次/从这里开新对话四项；"命令与模板"统一入口列出 Agent 命令与模板单列表；对话菜单含导出为 Markdown/移到分组/访达显示工作位置/用相同设置再开一段/删除…；当前对话"删除…"与"归档"按活跃度门禁禁用；菜单打开时输入区控件保持挂载转禁用不再卸载；错误面显示结论行"无法确认已保存选择，请重新检查"；所有对话"整理"模式出行级勾选+全选当前结果+归档/删除所选… 批量操作。**W4**：程序步单一"移除 Agent…"入口无"断开"，对话框写明默认仅撤授权+登记、对话保留"所有对话"、在用安装列"正在使用"不提供勾选；Codex 详情为能力页（登录方式/消息内容/带入历史/API 服务+诚实注记，"关闭"非"返回目录"）；自定义接入含"选择程序文件…"与环境变量 NAME=value+保密提示；设置"数据与隐私"面板有"清除 Farfold 数据…"与"完整卸载"指引。**W5**：移除/删除统一 danger 确认；截图目视字号整体提升可读；原生菜单全中文保持。证据：`install-d7e454ac/installed-app-verification.json`、截图 `/tmp/farfold-w345.png`（未入库）。
+
+未实机项（需真实工作或破坏性确认，本会话不做）：审批快捷键三枚、停止状态三态切换、导出 Markdown 产物、Agent 侧删除三态回报、清除数据实际执行、嵌套弹窗焦点极端情况。
+
 ## UI/UX 产品化 W5：底座（2026-10-08，源码完成，未安装）
 
 四项全部落地：①对话框基座统一——新 `useModalDialog` hook 收敛全部 modal 生命周期（showModal/close、opener 焦点捕获与归还、首字段聚焦、Escape、backdrop 点击关闭），带 `busy` 锁（Escape/backdrop/关闭按钮在途工作时禁用）、`deferFocusReturn` 供嵌套对话框；`WorkspaceDialog` 接入并加 `busy` prop，CommandPalette、NewConversationPickers、AgentSetup、AgentDetails、CredentialSettings 私有 Dialog 全部迁移；`ModelPicker` 补齐 focusin/scroll/resize 关闭语义与 WorkspacePopover 对齐。②危险确认统一——新 `DangerConfirm`（内联面板）与 `DangerConfirmDialog`（模态）：删除对话、清除数据、卸载安装、退出/切换账号、清存储、丢弃待发/草稿全部走 `btn-danger` 确认；更富语义的流程（移除 Agent 勾选、凭据删除影响预览、三方处置）保留专用结构但同用 danger 风格。③术语收敛——`strings.test.ts` 扫描面扩到全部 46 个字符串对象；修复 1 处真实违规（"核对账号"含禁用"对账"→"检查账号"），散落组件内的内联文案集中进 strings 模块。④设计 token——新增 `--on-accent/--shadow-sm-md-lg/--backdrop/--focus-ring(-soft)`，硬编码颜色字面量 73→46（余下为主题色板、终端/代码配色与一次性 alpha，刻意保留），font-size <12px 声明 191→11（剩余为角标/图标字形等固定尺寸例外，已记录）。
