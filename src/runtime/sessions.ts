@@ -31,7 +31,6 @@ import { configChangeBusy } from "./protected_config";
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { observeDesktopNotification } from "./desktop_notifications";
-import { useCallback, useSyncExternalStore } from "react";
 import { paneCards, appendToolOutput } from "./artifacts";
 import { artifactPaneCards } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
@@ -48,6 +47,7 @@ import {
 import { keepPromptAsDraft } from "./uncertain_prompt";
 import { archiveActivity } from "./archive_activity";
 import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
+import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
 import {
@@ -1438,17 +1438,24 @@ class ThreadsStore {
 
   /** Delete a session — agent-side `session/delete` when supported, index
    *  row removal, and a tombstone so it cannot reappear. Works for both
-   *  meta rows (`source:"meta"`) and agent-side rows (`source:"agent"`). */
+   *  meta rows (`source:"meta"`) and agent-side rows (`source:"agent"`).
+   *  Reports the agent-side outcome: "deleted" (the agent confirmed),
+   *  "unsupported" (it cannot delete or could not be asked — its record
+   *  stays), "unconfirmed" (the request failed, residue unknown). */
   async delete(row: {
     id?: string;
     key?: string;
     agentId: string;
     cwd: string;
     nativeSessionId: string | null;
-  }): Promise<void> {
+  }): Promise<"deleted" | "unsupported" | "unconfirmed"> {
     const native = row.nativeSessionId;
-    if (!native) return;
+    if (!native) return "unsupported";
     const key = row.id ?? row.key ?? `${row.agentId}:${row.cwd}:${native}`;
+    // W3-9：进行中、发送中、停止/结果未确认或还有未发送内容的对话不能
+    // 删除——先完成或清除，避免索引与 Agent 侧活动工作失联。
+    const blocked = this.archiveBlockReason(key);
+    if (blocked) throw new Error(LIBRARY.deleteReasons[blocked]);
     const s = this.threads.get(key);
     this.threads.delete(key);
     if (s) this.drafts.delete(s.draftGroup ?? "");
@@ -1461,37 +1468,24 @@ class ThreadsStore {
         sessionId: s.nativeSessionId,
       }).catch(() => undefined);
     }
-    await invoke("session_delete", {
-      agentId: row.agentId,
-      cwd: row.cwd,
-      nativeSessionId: native,
-    }).catch(() => undefined);
+    const remote = await invoke<"deleted" | "unsupported" | "unconfirmed">(
+      "session_delete",
+      {
+        agentId: row.agentId,
+        cwd: row.cwd,
+        nativeSessionId: native,
+      },
+    ).catch((): "unconfirmed" => "unconfirmed");
     await this.refreshIndex();
+    return remote;
   }
 }
 
 export const threads = new ThreadsStore();
 
-// ---------------------------------------------------------------------------
-// React bindings
-// ---------------------------------------------------------------------------
-
-export function useThreadsSnapshot(): ThreadsSnapshot {
-  return useSyncExternalStore(threads.subscribe, threads.getSnapshot);
-}
-
-export function useThread(key: string | null | undefined): ThreadState | null {
-  const subscribe = useCallback(
-    (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () => {}),
-    [key],
-  );
-  const getVersion = useCallback(
-    () => (key ? threads.threadVersion(key) : 0),
-    [key],
-  );
-  useSyncExternalStore(subscribe, getVersion, getVersion);
-  return key ? (threads.thread(key) ?? null) : null;
-}
+// React bindings live in `session_hooks.ts`; re-exported for existing
+// `../runtime/sessions` imports.
+export { useThread, useThreadsSnapshot } from "./session_hooks";
 
 // Re-exported for existing `../runtime/sessions` imports; the sidebar
 // view-model helpers now live in `runtime/sidebar.ts`.

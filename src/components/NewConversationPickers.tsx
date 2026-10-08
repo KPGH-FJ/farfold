@@ -313,44 +313,102 @@ export function NewConversationModelDialog({
     if (!query.trim())
       selectedItem.current?.scrollIntoView({ block: "nearest" });
   }, [query, loading, readingModels, existingOption, selection]);
-  const issue = selection.service
-    ? loading || loadError
-      ? loading
-        ? S.loadingServices
-        : S.loadFailed
-      : services.some(
-            (item) =>
-              item.id === selection.service!.id &&
-              item.revision === selection.service!.revision &&
-              item.models.includes(selection.service!.model),
-          )
-        ? null
-        : S.serviceChanged
-    : readingModels
-      ? S.readingModels
-      : selection.modelValue !== null &&
-          !options.some((item) => item.value === selection.modelValue)
-        ? S.modelChanged
-        : null;
-  const choose = (next: NewConversationModelChoice) => {
+  /** W3-1：与 ModelPicker 同一交互——单击或 Enter 即提交，不再有单独确认步。 */
+  const flat: { key: string; choice: NewConversationModelChoice }[] = [
+    ...visibleOptions.map((model) => ({
+      key: `option:${model.value}`,
+      choice: {
+        service: null,
+        modelValue: model.value,
+      } as NewConversationModelChoice,
+    })),
+    ...(options.length === 0 && showCurrent
+      ? [
+          {
+            key: "current",
+            choice: {
+              service: null,
+              modelValue: null,
+            } as NewConversationModelChoice,
+          },
+        ]
+      : []),
+    ...visibleServices.flatMap((item) =>
+      item.models.map((model) => ({
+        key: `service:${item.id}:${item.revision}:${model}`,
+        choice: {
+          service: { id: item.id, revision: item.revision, model },
+          modelValue: null,
+        } as NewConversationModelChoice,
+      })),
+    ),
+  ];
+  const flatIndex = new Map(flat.map((item, index) => [item.key, index]));
+  const [hi, setHi] = useState(0);
+  const hiIndex = Math.min(hi, Math.max(flat.length - 1, 0));
+  const groups = useRef<HTMLDivElement>(null);
+  const issueFor = (choice: NewConversationModelChoice) =>
+    choice.service
+      ? loading || loadError
+        ? loading
+          ? S.loadingServices
+          : S.loadFailed
+        : services.some(
+              (item) =>
+                item.id === choice.service!.id &&
+                item.revision === choice.service!.revision &&
+                item.models.includes(choice.service!.model),
+            )
+          ? null
+          : S.serviceChanged
+      : readingModels
+        ? S.readingModels
+        : choice.modelValue !== null &&
+            !options.some((item) => item.value === choice.modelValue)
+          ? S.modelChanged
+          : null;
+  const issue = issueFor(selection);
+  const applyChoice = async (choice: NewConversationModelChoice) => {
     if (saving.current) return;
-    edited.current = true;
-    setSelection(next);
-    setError(null);
-  };
-  const apply = async () => {
-    if (issue || saving.current) return;
     saving.current = true;
     setApplying(true);
     setError(null);
     try {
-      await onApply(selection);
+      await onApply(choice);
       if (live.current) onClose();
     } catch (reason) {
       if (live.current) setError(uiError(reason, S.applyFailed));
     } finally {
       saving.current = false;
       if (live.current) setApplying(false);
+    }
+  };
+  const commit = (next: NewConversationModelChoice) => {
+    if (saving.current) return;
+    edited.current = true;
+    setSelection(next);
+    setError(null);
+    // A stale choice is highlighted with its issue but never written.
+    if (issueFor(next)) return;
+    void applyChoice(next);
+  };
+  const onSearchKey = (event: React.KeyboardEvent) => {
+    if (event.nativeEvent.isComposing) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const next = Math.min(
+        Math.max(hiIndex + (event.key === "ArrowDown" ? 1 : -1), 0),
+        flat.length - 1,
+      );
+      setHi(next);
+      groups.current
+        ?.querySelector(`[data-idx="${next}"]`)
+        ?.scrollIntoView({ block: "nearest" });
+      return;
+    }
+    if (event.key === "Enter" && flat[hiIndex]) {
+      event.preventDefault();
+      commit(flat[hiIndex].choice);
     }
   };
   return (
@@ -368,7 +426,11 @@ export function NewConversationModelDialog({
           placeholder={S.modelSearchPlaceholder}
           value={query}
           disabled={applying}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setHi(0);
+          }}
+          onKeyDown={onSearchKey}
         />
       }
       onClose={() => {
@@ -394,18 +456,10 @@ export function NewConversationModelDialog({
               {S.manageServices}
             </button>
           )}
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={applying || !!issue}
-            onClick={() => void apply()}
-          >
-            {applying ? S.applying : S.useModel}
-          </button>
         </>
       }
     >
-      <div className="new-model-groups">
+      <div className="new-model-groups" ref={groups}>
         <h3>{S.existingTitle(agent.name)}</h3>
         <p>{S.existingHint}</p>
         {options.length ? (
@@ -421,13 +475,17 @@ export function NewConversationModelDialog({
               aria-pressed={
                 !selection.service && selection.modelValue === model.value
               }
+              data-idx={flatIndex.get(`option:${model.value}`)}
               className={
-                !selection.service && selection.modelValue === model.value
+                (!selection.service && selection.modelValue === model.value
                   ? "selected"
-                  : ""
+                  : "") +
+                (flatIndex.get(`option:${model.value}`) === hiIndex
+                  ? " hi"
+                  : "")
               }
               disabled={applying}
-              onClick={() => choose({ service: null, modelValue: model.value })}
+              onClick={() => commit({ service: null, modelValue: model.value })}
             >
               <span>{model.name}</span>
               {!selection.service && selection.modelValue === model.value && (
@@ -448,13 +506,14 @@ export function NewConversationModelDialog({
                 aria-pressed={
                   !selection.service && selection.modelValue === null
                 }
+                data-idx={flatIndex.get("current")}
                 className={
-                  !selection.service && selection.modelValue === null
+                  (!selection.service && selection.modelValue === null
                     ? "selected"
-                    : ""
+                    : "") + (flatIndex.get("current") === hiIndex ? " hi" : "")
                 }
                 disabled={applying || readingModels}
-                onClick={() => choose({ service: null, modelValue: null })}
+                onClick={() => commit({ service: null, modelValue: null })}
               >
                 <span>{S.currentModel}</span>
                 {!selection.service && selection.modelValue === null && (
@@ -489,16 +548,21 @@ export function NewConversationModelDialog({
                   selection.service?.id === item.id &&
                   selection.service.model === model &&
                   selection.service.revision === item.revision;
+                const rowKey = `service:${item.id}:${item.revision}:${model}`;
                 return (
                   <button
                     key={model}
                     ref={selected ? selectedItem : undefined}
                     type="button"
                     aria-pressed={selected}
-                    className={selected ? "selected" : ""}
+                    data-idx={flatIndex.get(rowKey)}
+                    className={
+                      (selected ? "selected" : "") +
+                      (flatIndex.get(rowKey) === hiIndex ? " hi" : "")
+                    }
                     disabled={applying}
                     onClick={() =>
-                      choose({
+                      commit({
                         service: {
                           id: item.id,
                           revision: item.revision,

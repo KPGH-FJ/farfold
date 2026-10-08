@@ -15,7 +15,15 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspacePopover } from "./WorkspacePopover";
 
 /** Only the access layer can identify a verified permission setting. */
-export function PermissionControl({ thread }: { thread: ThreadState }) {
+export function PermissionControl({
+  thread,
+  inactive = false,
+}: {
+  thread: ThreadState;
+  /** Keep the control mounted but inert while a menu/dialog owns the surface
+   *  so composer siblings do not reflow (W3-2). */
+  inactive?: boolean;
+}) {
   const [choice, setChoice] = useState<ConfigChoice | null>(null);
   const [reviewedOptions, setReviewedOptions] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -35,6 +43,7 @@ export function PermissionControl({ thread }: { thread: ThreadState }) {
   });
   const staleChoice = choice && reviewedOptions !== optionsIdentity;
   const blocked =
+    inactive ||
     thread.configuring ||
     thread.running ||
     hasActiveTools(thread) ||

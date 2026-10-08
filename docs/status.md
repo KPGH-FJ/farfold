@@ -1,5 +1,13 @@
 # Farfold 当前状态
 
+## UI/UX 产品化 W3：对话面（2026-10-08，源码完成，未安装）
+
+九项全部落地：①模型选择收敛——新对话模型弹窗改为与 ModelPicker 相同的"单击/Enter 即选定"单层列表（共用选项分组与 stale 服务/模型可见语义），思考深度控件复用 ModelPicker 下拉；②选项菜单跳动——菜单/弹窗打开时输入区控件不再卸载，改为挂载+禁用（`inactive` 透传 ReasoningControl/PermissionControl/SessionOptions/模型按钮），同级不再重排；③错误可读化——新增 `ErrorNotice` 共享面（结论+下一步+可展开"技术详情"）与 `toUiNotice`（原文保留进折叠层），Composer 发送/请求错误、ThreadView 恢复与消息错误接入；④审批快捷键——裸 Enter/Backspace 不再决定，⌘⏎=允许一次、⌘⌥⏎=始终允许、⌘⌫=拒绝一次（非 mac 用 Ctrl），IME 合成/重复键/表单控件内不触发，仅作用于可见对话；⑤工具行改用户语言摘要（toolSummaries："运行了命令/查看了文件/查看了网页…"），类型名与原名移入折叠详情；⑥用户消息操作——复制/编辑后重发/再发一次/从这里开新对话；附件经 `message_actions` 忠实还原为 PromptBlock/草稿附件，未知类型退回文件链接不丢弃；"从这里开新对话"经 App 级 `newFromMessage` 预填同 Agent、同工作位置与已存设置，沿用草稿冲突确认，不直接发送；⑦`/` 统一入口——Agent 命令与快捷指令并入同一分组列表 `filterComposerActions`（命令在前、模板在后，同一 query 过滤，Tab/Enter 选定、Esc 关闭、IME 安全）；⑧停止状态收敛——"停止中…/结果未知"等统一措辞落在 strings/composer/browser_sharing/update_impact；⑨对话管理——删除（单个/批量/清空已归档，确认框写明不可撤销与工作位置不受影响）、导出 Markdown（`transcriptMarkdown` 复用可读层，经 `exportFileName`+`file_delivery_export_text` 保存）、移到分组、访达显示工作位置（`file_delivery_reveal_location` 校验绝对目录后调用平台打开）、用相同设置再开一段（`storedConversationSelection` 还原索引行已存服务/配置，凭据 revision 变化按 stale 可见而不静默套用）。
+
+Agent 侧删除诚实语义：`session_delete` 返回 `deleted/unsupported/unconfirmed`，始终移除 Farfold 索引并写 tombstone 防复活，只走官方 `session/delete`、不碰 Agent 私有文件；不支持或未确认的段在结果中计数提示"Agent 侧记录仍保留"。删除与归档共用活跃度门禁（`archiveBlockReason`+`LIBRARY.deleteReasons`）：进行中/发送中/停止未确认/排队/未发送的对话先完成或清除再删，store 层与两处入口同样拦截。复核中补两处实现缺口：删除原无活跃度门禁、"从这里开新对话"原只回填文字未带上下文，均已修并回归。
+
+结构：`App.tsx` 抽出 `ThreadPage.tsx` 保持 1.5k 上限；`sessions.ts` 达上限后把 React 绑定拆入 `session_hooks.ts`（原文件 re-export，现有 import 不变）。新增 `library_strings.test.ts` 锁死 deleteReasons/archiveReasons 键一致。前端 203 文件 / 2405 项、Rust 1031 项/4 原忽略，七项检查通过。未安装复测——待用户确认换包后连同剩余 W 批实测：模型弹窗单层交互、菜单打开时控件稳定、错误面折叠详情、快捷键映射、消息操作四项、`/` 双分组、停止措辞、删除/导出/显示位置/再开/清空归档逐项。
+
 ## UI/UX 产品化 W1.5+W2：已安装 bd0bf1cb 并实机复测（2026-10-07）
 
 正式应用现为 **bd0bf1cb（0.1.7 arm64）**。安装链：`939bb021` 先打包安装，实机发现无文件夹草稿发送被永久禁用（`useWorkPolicy` 在 `cwd=null` 时 `enabled()` 恒 false——不读取位置快照又无默认放行，发送按钮永远禁用，发送时选文件夹的入口不可达；此前测试 mock 掉了整条路径），修复于 `bd0bf1cb` 后重新打包安装。安装前后 Farfold 数据三树 217,230 条目逐字节一致（sha256 `0d8ce117…`），仅替换 `/Applications/Farfold.app`，重复构建产物已移除、归档保留。回执：`package-bd0bf1cb-receipt.json`、`install-bd0bf1cb/`、`superseded-fb50d956-bundle-removal.json`。

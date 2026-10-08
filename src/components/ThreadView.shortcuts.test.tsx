@@ -47,6 +47,7 @@ afterEach(() => {
 
 it("does not approve the covered conversation from a body-targeted shortcut while its main area is inert", () => {
   const listeners: ((event: KeyboardEvent) => void)[] = [];
+  vi.stubGlobal("navigator", { platform: "MacIntel" });
   vi.stubGlobal("window", {
     addEventListener: (
       kind: string,
@@ -126,14 +127,24 @@ it("does not approve the covered conversation from a body-targeted shortcut whil
   for (const listener of listeners)
     listener({
       key: "Enter",
+      metaKey: true,
       target: { closest: () => null },
       preventDefault,
     } as unknown as KeyboardEvent);
   expect(decide).not.toHaveBeenCalled();
   thread.stopping = false;
+  // A bare Enter never approves; the platform primary modifier is required.
   for (const listener of listeners)
     listener({
       key: "Enter",
+      target: { closest: () => null },
+      preventDefault,
+    } as unknown as KeyboardEvent);
+  expect(decide).not.toHaveBeenCalled();
+  for (const listener of listeners)
+    listener({
+      key: "Enter",
+      metaKey: true,
       target: { closest: () => null },
       preventDefault,
     } as unknown as KeyboardEvent);

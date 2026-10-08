@@ -40,7 +40,9 @@ it("keeps pending approvals outside collapsed tool steps and keeps the content h
     html.indexOf('<details class="workspace-steps"'),
     html.indexOf("</details>"),
   );
-  expect(folded).toContain("Read notes");
+  // The step row shows the user-language summary; the raw title stays inside
+  // the collapsed technical details, which are not rendered while folded.
+  expect(folded).toContain("查看了文件");
   expect(folded).not.toContain("Allow reading notes");
   expect(html.indexOf("Allow reading notes")).toBeGreaterThan(
     html.indexOf("</details>"),
@@ -79,7 +81,7 @@ it("permits writing before setup while sending stays unavailable, including an u
   composerDrafts.clear("new");
 });
 
-it("removes the conversation popover controls when its page is hidden", () => {
+it("keeps the conversation popover controls mounted but disabled while its page is hidden", () => {
   const thread = freshThreadState("a:/notes:hidden", "a", "/notes", "hidden");
   const html = renderToStaticMarkup(
     <ThreadView
@@ -90,5 +92,6 @@ it("removes the conversation popover controls when its page is hidden", () => {
       onOpened={() => {}}
     />,
   );
-  expect(html).not.toContain('aria-label="模型与来源"');
+  // Controls stay mounted for a stable layout; inactivity only disables them.
+  expect(html).toMatch(/<button[^>]*disabled=""[^>]*aria-label="模型与来源"/);
 });

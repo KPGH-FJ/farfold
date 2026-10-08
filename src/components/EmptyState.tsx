@@ -5,7 +5,7 @@
  */
 import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
-import { uiError } from "../runtime/ui_error";
+import { toUiNotice, type UiNotice } from "../runtime/ui_error";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { ServiceChoice } from "./ServicePicker";
 import {
@@ -225,7 +225,7 @@ export function EmptyState({
   }, [agentId, service]);
   const [draftRevision, setDraftRevision] = useState(0);
   const [draftKey, setDraftKey] = useState<string | null>(null);
-  const [draftError, setDraftError] = useState<string | null>(null);
+  const [draftError, setDraftError] = useState<UiNotice | null>(null);
   const [opening, setOpening] = useState(false);
   const [picking, setPicking] = useState(false);
   const [folderCancelled, setFolderCancelled] = useState(false);
@@ -268,7 +268,8 @@ export function EmptyState({
     onGoSettings(agentId ?? undefined, {
       panel:
         explicitReadRequired ||
-        (!needsAuthentication && draftError === STRINGS.repair.configFailed)
+        (!needsAuthentication &&
+          draftError?.message === STRINGS.repair.configFailed)
           ? "model"
           : agentRepairPanel(draft, needsAuthentication),
       needsAuthentication,
@@ -458,7 +459,7 @@ export function EmptyState({
         .catch((error) => {
           if (!cancelled) {
             failedPairRef.current = pair;
-            setDraftError(uiError(error, STRINGS.repair.requestFailed));
+            setDraftError(toUiNotice(error, STRINGS.repair.requestFailed));
           }
         })
         .finally(() => {
@@ -557,7 +558,7 @@ export function EmptyState({
         activeRef.current &&
         currentPair.current === selection
       )
-        setDraftError(STRINGS.repair.directoryFailed);
+        setDraftError({ message: STRINGS.repair.directoryFailed });
       return false;
     } finally {
       setPicking(false);
@@ -812,7 +813,10 @@ export function EmptyState({
         : opening
           ? STRINGS.empty.opening
           : draftError
-            ? `${STRINGS.empty.openFailed}：${draftError}`
+            ? {
+                message: `${STRINGS.empty.openFailed}：${draftError.message}`,
+                detail: draftError.detail,
+              }
             : null);
 
   // Sending policy never changes whether the selected program is prepared.
@@ -947,7 +951,8 @@ export function EmptyState({
           setDraftError(null);
         }
       } catch (reason) {
-        if (ownsApplication()) setDraftError(STRINGS.repair.configFailed);
+        if (ownsApplication())
+          setDraftError({ message: STRINGS.repair.configFailed });
         throw reason;
       } finally {
         if (applyingModel.current === draft.key) applyingModel.current = null;
@@ -965,7 +970,7 @@ export function EmptyState({
   };
   const agentChoiceTrigger = useRef<HTMLButtonElement>(null);
   const modelChoiceTrigger = useRef<HTMLButtonElement>(null);
-  const controls = active ? (
+  const controls = (
     <>
       <button
         type="button"
@@ -973,7 +978,7 @@ export function EmptyState({
         className="new-choice-trigger"
         aria-label={W.agentChoice}
         aria-haspopup="dialog"
-        disabled={draft?.submitting || draft?.running}
+        disabled={!active || draft?.submitting || draft?.running}
         onClick={() => setChoiceDialog("agent")}
       >
         <span className="workspace-agent-label">
@@ -997,7 +1002,11 @@ export function EmptyState({
         aria-haspopup="dialog"
         onClick={() => setChoiceDialog("model")}
         disabled={
-          !agentId || needsPreparation || draft?.submitting || draft?.running
+          !active ||
+          !agentId ||
+          needsPreparation ||
+          draft?.submitting ||
+          draft?.running
         }
       >
         <span className="workspace-model-label">
@@ -1012,19 +1021,24 @@ export function EmptyState({
         </span>
         <CaretDownIcon size={10} />
       </button>
-      {candidateSelected && draft && <ReasoningControl thread={draft} />}
-      {candidateSelected && draft && <PermissionControl thread={draft} />}
+      {candidateSelected && draft && (
+        <ReasoningControl thread={draft} inactive={!active} />
+      )}
+      {candidateSelected && draft && (
+        <PermissionControl thread={draft} inactive={!active} />
+      )}
       {candidateSelected && draft && sessionOptions(draft, true).length > 0 && (
         <WorkspacePopover
           label={<SlidersHorizontalIcon size={17} />}
           title={W.options}
           iconOnly
+          disabled={!active}
         >
           <SessionOptionsList thread={draft} composer />
         </WorkspacePopover>
       )}
     </>
-  ) : null;
+  );
 
   const editor = (
     <>

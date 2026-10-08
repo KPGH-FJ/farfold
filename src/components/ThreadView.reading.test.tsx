@@ -139,43 +139,71 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+const textContent = (tree: ReactNode): string => {
+  let out = "";
+  const visit = (node: ReactNode) => {
+    if (node == null || typeof node === "boolean") return;
+    if (typeof node === "string" || typeof node === "number") {
+      out += node;
+      return;
+    }
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
+    }
+    if (isValidElement<Record<string, unknown>>(node))
+      visit(node.props.children as ReactNode);
+  };
+  visit(tree);
+  return out;
+};
+
 it.each([
-  ["read", "读取"],
-  ["edit", "修改"],
-  ["delete", "删除"],
-  ["move", "移动"],
-  ["search", "搜索"],
-  ["execute", "执行"],
-  ["think", "思考"],
-  ["fetch", "获取"],
-  ["switch_mode", "切换模式"],
-  ["other", "其他操作"],
-  ["custom_check", "其他操作（custom_check）"],
+  ["read", "查看了文件", "读取"],
+  ["edit", "修改了文件", "修改"],
+  ["delete", "删除了文件", "删除"],
+  ["move", "移动了文件", "移动"],
+  ["search", "搜索了内容", "搜索"],
+  ["execute", "运行了命令", "执行"],
+  ["think", "思考了", "思考"],
+  ["fetch", "查看了网页", "获取"],
+  ["switch_mode", "切换了模式", "切换模式"],
+  ["other", "执行了操作", "其他操作"],
+  ["custom_check", "执行了操作", "其他操作（custom_check）"],
 ])(
-  "labels %s in Chinese without changing the actual tool title",
-  (kind, expected) => {
+  "summarizes %s in user language while the raw kind and title stay in technical details",
+  (kind, summary, detailKind) => {
+    const call = {
+      toolCallId: "step",
+      title: "Actual Agent title",
+      kind,
+      status: "completed",
+      locations: [],
+      content: [{ type: "text" as const, text: "output text" }],
+      startedAt: 0,
+    };
     h.cursor = 0;
-    const tree = nodes(
-      ToolStep({
-        call: {
-          toolCallId: "step",
-          title: "Actual Agent title",
-          kind,
-          status: "completed",
-          locations: [],
-          content: [],
-          startedAt: 0,
-        },
-      }),
-    );
+    let tree = nodes(ToolStep({ call }));
     const label = tree.find((node) => node.props.className === "cmd")!;
-    expect((label.props.children as ReactNode[])[0]).toBe(expected);
-    expect(
-      tree.some(
-        (node) =>
-          node.type === "b" && node.props.children === "Actual Agent title",
-      ),
-    ).toBe(true);
+    expect((label.props.children as ReactNode[])[0]).toBe(summary);
+    // The collapsed primary row never shows the raw kind or Agent title.
+    expect(textContent(label.props.children as ReactNode)).not.toContain(
+      "Actual Agent title",
+    );
+    const toggle = tree.find((node) => node.props.className === "step-toggle")!;
+    (toggle.props.onClick as () => void)();
+    h.cursor = 0;
+    tree = nodes(ToolStep({ call }));
+    // ToolDetail is a component element in the unexpanded tree; render it.
+    const detailHost = tree.find((node) => node.props.call === call)!;
+    const detail = (
+      detailHost.type as (p: unknown) => ReactElement<Record<string, unknown>>
+    )(detailHost.props);
+    expect(detail.props.className).toBe("step-detail");
+    const detailText = textContent(detail);
+    expect(detailText).toContain(detailKind);
+    expect(detailText).toContain("Actual Agent title");
+    expect(detailText).toContain("output text");
   },
 );
 

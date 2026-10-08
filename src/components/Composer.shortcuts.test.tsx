@@ -91,7 +91,7 @@ function render() {
 }
 function open() {
   const trigger = render().find(
-    (node) => node.props["aria-label"] === "快捷指令",
+    (node) => node.props["aria-label"] === "命令与模板",
   );
   expect(trigger).toBeDefined();
   (trigger!.props.onClick as () => void)();
@@ -134,9 +134,7 @@ beforeEach(() => {
 function openAdd() {
   const trigger = render().find(
     (node) =>
-      node.type === "button" &&
-      node.props["aria-expanded"] !== undefined &&
-      node.props["aria-label"] !== "快捷指令",
+      node.type === "button" && node.props["aria-label"] === "添加文件或图片",
   )!;
   (trigger.props.onClick as () => void)();
   return render();
@@ -181,26 +179,34 @@ it.each(["draft", "established"] as const)(
     const before = composerDrafts.read("session:shortcut-a");
     const queued = props.thread!.queued;
     props.thread!.identity = identity;
-    const tree = openAdd();
+    // File add stays in the + menu; commands/templates live in one ⌘ entry.
+    const addMenu = openAdd();
     expect(
-      tree.some(
+      addMenu.some(
         (node) =>
           node.type === WorkspaceActionMenu &&
           node.props.title === "添加到这段对话",
       ),
     ).toBe(true);
-    expect(tree.some((node) => node.type === WorkspaceDialog)).toBe(false);
-    expect(buttonNamed("选择文件夹")).toBeUndefined();
+    expect(buttonNamed("Agent 命令")).toBeUndefined();
     expect(plusFocus).toHaveBeenCalled();
-    const commands = buttonNamed("Agent 命令");
-    expect(commands).toBeDefined();
-    (commands!.props.onClick as () => void)();
+    const tree = open();
+    expect(
+      tree.some(
+        (node) =>
+          node.type === WorkspaceActionMenu &&
+          node.props.title === "命令与模板",
+      ),
+    ).toBe(true);
+    expect(tree.some((node) => node.type === WorkspaceDialog)).toBe(false);
     expect(
       render().some(
         (node) => node.props.children === "这个 Agent 暂未提供命令。",
       ),
     ).toBe(true);
     expect(buttonNamed("/compact")).toBeUndefined();
+    // Templates share the same panel as Agent commands.
+    expect(shortcut("先给出计划")).toBeDefined();
     applyUpdate(props.thread!, {
       sessionUpdate: "available_commands_update",
       availableCommands: [{ name: "official", description: "Agent command" }],
@@ -216,9 +222,7 @@ it.each(["draft", "established"] as const)(
     );
     expect(props.thread!.queued).toBe(queued);
     expect(threads.send).not.toHaveBeenCalled();
-    const reopened = openAdd().find(
-      (node) => node.type === WorkspaceActionMenu,
-    )!;
+    const reopened = open().find((node) => node.type === WorkspaceActionMenu)!;
     (reopened.props.onClose as () => void)();
     expect(render().some((node) => node.type === WorkspaceDialog)).toBe(false);
     expect(composerDrafts.read("session:shortcut-a").text).toBe(
@@ -419,14 +423,20 @@ it("contains shortcut keyboard events so they cannot reach conversation approval
   expect(event.stopPropagation).not.toHaveBeenCalled();
 });
 
-it("does not offer local conversation shortcuts on the new-draft or queue-edit composer", () => {
-  props.thread!.identity = "draft";
-  expect(render().some((node) => node.props["aria-label"] === "快捷指令")).toBe(
-    false,
-  );
-  props.thread!.identity = "established";
+it("keeps the unified entry on opened drafts but off the pre-open and queue-edit composer", () => {
+  props.thread = null;
+  expect(
+    render().some((node) => node.props["aria-label"] === "命令与模板"),
+  ).toBe(false);
+  // An opened draft already has a live session — its commands stay reachable.
+  props.thread = freshThreadState("shortcut-draft", "test", "/p", "two");
+  props.thread.identity = "draft";
+  expect(
+    render().some((node) => node.props["aria-label"] === "命令与模板"),
+  ).toBe(true);
+  props.thread.identity = "established";
   props.queueEditing = true;
-  expect(render().some((node) => node.props["aria-label"] === "快捷指令")).toBe(
-    false,
-  );
+  expect(
+    render().some((node) => node.props["aria-label"] === "命令与模板"),
+  ).toBe(false);
 });

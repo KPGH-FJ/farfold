@@ -101,6 +101,9 @@ export const fileDelivery = {
   open: (file: VerifiedFile) => invoke<void>("file_delivery_open", { file }),
   reveal: (file: VerifiedFile) =>
     invoke<void>("file_delivery_reveal", { file }),
+  /** Show a recorded working directory in the file manager. */
+  revealLocation: (path: string) =>
+    invoke<void>("file_delivery_reveal_location", { path }),
 };
 
 export interface FileDeliveryTarget {

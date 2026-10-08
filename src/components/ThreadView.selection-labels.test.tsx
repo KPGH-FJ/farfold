@@ -330,8 +330,9 @@ it("disables idle-looking model and reasoning controls while tools or unknown wo
     (node) => node.type === ModelPicker,
   )!;
   expect(model.props.disabled).toBe(true);
+  // The reasoning control uses the same picker surface as the model control.
   const reasoning = nodes(ReasoningControl({ thread })).find(
-    (node) => node.type === "select",
+    (node) => node.type === ModelPicker,
   )!;
   expect(reasoning.props.disabled).toBe(true);
   const update = vi.spyOn(threads, "setConfig");
@@ -340,8 +341,9 @@ it("disables idle-looking model and reasoning controls while tools or unknown wo
   thread.activeToolCallIds = [];
   thread.connectionOutcomeUnknown = true;
   expect(
-    nodes(ReasoningControl({ thread })).find((node) => node.type === "select")!
-      .props.disabled,
+    nodes(ReasoningControl({ thread })).find(
+      (node) => node.type === ModelPicker,
+    )!.props.disabled,
   ).toBe(true);
   noActionRequests();
 });

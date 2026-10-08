@@ -30,8 +30,6 @@ export const NEW_CONVERSATION_PICKER_STRINGS = {
   applyFailed: "未能应用这个选择，请检查后重试。",
   prepare: "准备与连接",
   manageServices: "管理 API 服务",
-  useModel: "使用这个模型",
-  applying: "正在应用…",
   retry: "重试",
   close: "关闭",
   fixedAfterSend: "首次发送后，这段对话会保留所选的 Agent、来源和模型。",

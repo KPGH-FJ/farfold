@@ -376,7 +376,7 @@ export const STRINGS = {
     failedToolQueueHint: "新消息会先加入待发；检查后点“继续发送”。",
     toolResultUnknown: "步骤结果未知",
     plan: "计划",
-    toolDetail: "详情",
+    toolDetail: "技术详情",
     diffNew: "新文件",
     diffEdit: "修改",
     imageBlock: (mime: string) => `图片 · ${mime}`,

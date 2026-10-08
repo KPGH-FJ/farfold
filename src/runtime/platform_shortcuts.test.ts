@@ -16,14 +16,26 @@ it.each(["MacIntel", "Win32"])(
     const mac = platform === "MacIntel";
     const primary = mac ? { metaKey: true } : { ctrlKey: true };
     const other = mac ? { ctrlKey: true } : { metaKey: true };
-    expect(permissionShortcut(event(), true, options)?.optionId).toBe("once");
+    // Bare keys never decide an approval.
+    expect(permissionShortcut(event(), true, options)).toBeNull();
+    expect(
+      permissionShortcut(event({ key: "Backspace" }), true, options),
+    ).toBeNull();
     expect(permissionShortcut(event(primary), true, options)?.optionId).toBe(
-      "always",
+      "once",
     );
+    expect(
+      permissionShortcut(event({ ...primary, altKey: true }), true, options)
+        ?.optionId,
+    ).toBe("always");
     expect(permissionShortcut(event(other), true, options)).toBeNull();
     expect(
+      permissionShortcut(event({ ...primary, key: "Backspace" }), true, options)
+        ?.optionId,
+    ).toBe("reject");
+    expect(
       permissionShortcut(
-        event({ ...primary, key: "Backspace" }),
+        event({ ...primary, key: "Backspace", altKey: true }),
         true,
         options,
       ),

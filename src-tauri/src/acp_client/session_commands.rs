@@ -522,23 +522,26 @@ pub async fn session_meta_archive(
 /// capability cannot resurrect it through `session/list`.
 ///
 /// `native_session_id` is passed explicitly so callers can also delete
-/// agent-side sessions that have no index row.
+/// agent-side sessions that have no index row. The returned value reports the
+/// agent-side outcome so the UI can state residue honestly:
+/// `"deleted"`, `"unsupported"` (no session/delete capability or no live
+/// connection to ask), or `"unconfirmed"` (the remote call failed).
 #[tauri::command]
 pub async fn session_delete(
     app: AppHandle,
     agent_id: String,
     cwd: String,
     native_session_id: String,
-) -> Result<(), String> {
+) -> Result<&'static str, String> {
     let cwd = validate_cwd_async(&cwd).await?;
     let cwd_string = cwd.to_string_lossy().into_owned();
     let row_id = MetaStore::dismissed_id(&agent_id, &cwd_string, &native_session_id);
     let manager = app.state::<AcpManager>();
-    match manager
+    let remote = match manager
         .delete_session(&agent_id, &cwd, &native_session_id)
         .await
     {
-        Ok(true) => {}
+        Ok(true) => "deleted",
         Ok(false) => {
             logging::info(
                 "acp_client",
@@ -546,6 +549,7 @@ pub async fn session_delete(
                     "session_delete: {agent_id} lacks session/delete; tombstone only ({row_id})"
                 ),
             );
+            "unsupported"
         }
         Err(error) => {
             // Best-effort: the tombstone still prevents resurrection;
@@ -554,15 +558,17 @@ pub async fn session_delete(
                 "acp_client",
                 format_args!("session_delete remote failed ({row_id}): {error}"),
             );
+            "unconfirmed"
         }
-    }
+    };
     let store = app.state::<MetaStore>();
     store
         .run(move |store| {
             let _ = store.remove_session(&row_id);
             store.dismiss_session(&row_id)
         })
-        .await
+        .await?;
+    Ok(remote)
 }
 
 /// Tombstone an agent-side session so `session/list` stops surfacing it

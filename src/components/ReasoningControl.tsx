@@ -10,14 +10,24 @@ import {
   configValueLabel,
   type ThreadState,
 } from "../runtime/sessions";
+import { ModelPicker } from "./ModelPicker";
 
 export const isReasoningOption = isThoughtConfigOption;
 
 /** The same capability-driven control sits beside the model in both composers. */
-export function ReasoningControl({ thread }: { thread: ThreadState }) {
+export function ReasoningControl({
+  thread,
+  inactive = false,
+}: {
+  thread: ThreadState;
+  /** Menus/dialogs above the composer keep the control mounted but disabled,
+   *  so sibling controls do not disappear or reflow (W3-2). */
+  inactive?: boolean;
+}) {
   useAuthenticationActivity(thread.agentId);
   const option = thread.configOptions.find(isReasoningOption);
   if (!option) return null;
+  const blocked = inactive || configOptionChangeBlocked(thread, option.id);
   if (option.type === "boolean") {
     const enabled =
       option.currentValue === true || option.currentValue === "true";
@@ -30,9 +40,9 @@ export function ReasoningControl({ thread }: { thread: ThreadState }) {
           aria-label={C.reasoning}
           aria-checked={enabled}
           className="so-toggle"
-          disabled={configOptionChangeBlocked(thread, option.id)}
+          disabled={blocked}
           onClick={() => {
-            if (configOptionChangeBlocked(thread, option.id)) return;
+            if (blocked) return;
             if (thread.identity === "draft" && pendingPreparationRead(thread))
               return;
             void threads
@@ -57,31 +67,19 @@ export function ReasoningControl({ thread }: { thread: ThreadState }) {
   return (
     <label className="composer-reasoning">
       <span>{C.thinking}</span>
-      <select
-        aria-label={C.reasoning}
-        title={option.description}
-        value={String(option.currentValue ?? "")}
-        disabled={configOptionChangeBlocked(thread, option.id)}
-        onChange={(event) => {
-          if (configOptionChangeBlocked(thread, option.id)) return;
+      <ModelPicker
+        option={option}
+        label={C.reasoning}
+        disabled={blocked}
+        onPick={(value) => {
+          if (blocked) return;
           if (thread.identity === "draft" && pendingPreparationRead(thread))
             return;
           void threads
-            .setConfig(thread.key, option.id, event.target.value)
+            .setConfig(thread.key, option.id, value)
             .catch(() => undefined);
         }}
-      >
-        {!option.options.some((item) => item.value === option.currentValue) && (
-          <option value={String(option.currentValue ?? "")} disabled>
-            {configValueLabel(option)}
-          </option>
-        )}
-        {option.options.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.name}
-          </option>
-        ))}
-      </select>
+      />
     </label>
   );
 }

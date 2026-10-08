@@ -181,21 +181,28 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-it("stages an existing model and discards it when closed without confirmation", async () => {
+it("applies an existing model pick on click and closes, while an unpicked close writes nothing", async () => {
   await loaded();
   click("Other");
-  expect(props.onApply).not.toHaveBeenCalled();
-  expect(props.value.modelValue).toBe("current");
-  (render()[0].props.onClose as () => void)();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: null,
+    modelValue: "other",
+  });
   expect(props.onClose).toHaveBeenCalledTimes(1);
-  expect(props.onApply).not.toHaveBeenCalled();
   cleanup();
+  vi.mocked(props.onApply).mockClear();
+  vi.mocked(props.onClose).mockClear();
   await loaded();
   expect(button("Current").props["aria-pressed"]).toBe(true);
   expect(button("Other").props["aria-pressed"]).toBe(false);
+  (render()[0].props.onClose as () => void)();
+  expect(props.onClose).toHaveBeenCalledTimes(1);
+  expect(props.onApply).not.toHaveBeenCalled();
 });
 
-it("groups compatible saved services and only applies the explicitly confirmed model", async () => {
+it("groups compatible saved services and applies the clicked model", async () => {
   const tree = await loaded();
   expect(
     tree.some(
@@ -217,35 +224,63 @@ it("groups compatible saved services and only applies the explicitly confirmed m
     ),
   ).toBe(false);
   click("api-two");
-  expect(props.onApply).not.toHaveBeenCalled();
-  click("使用这个模型");
   await Promise.resolve();
-  expect(props.onApply).toHaveBeenCalledWith({
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
     service: { id: "service", revision: "r1", model: "api-two" },
     modelValue: null,
   });
   expect(props.onClose).toHaveBeenCalledTimes(1);
 });
 
-it("rejects a staged API selection after its service is changed or deleted", async () => {
+it("never applies a stale saved selection; a fresh pick uses the current revision", async () => {
+  props.value = {
+    service: { id: "service", revision: "r1", model: "api-two" },
+    modelValue: null,
+  };
   await loaded();
-  click("api-one");
+  // The saved service changed while the dialog was open.
   h.list.mockResolvedValue([{ ...service, revision: "r2" }]);
   h.listeners.forEach((listener) => listener());
   await loaded();
-  expect(button("使用这个模型").props.disabled).toBe(true);
-  click("使用这个模型");
+  expect(
+    render().some(
+      (node) =>
+        node.props.role === "alert" &&
+        text(node.props.children as ReactNode) ===
+          "所选服务已改变或不可用，请重新选择。",
+    ),
+  ).toBe(true);
   expect(props.onApply).not.toHaveBeenCalled();
-  click("api-one");
-  expect(button("使用这个模型").props.disabled).toBe(false);
+  click("api-two");
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
+    service: { id: "service", revision: "r2", model: "api-two" },
+    modelValue: null,
+  });
+  // A deleted service leaves the dialog without applying anything.
+  cleanup();
+  props.value = {
+    service: { id: "service", revision: "r1", model: "api-one" },
+    modelValue: null,
+  };
+  vi.mocked(props.onApply).mockClear();
+  vi.mocked(props.onClose).mockClear();
   h.list.mockResolvedValue([{ ...service, deleting: true, revision: "r2" }]);
-  h.listeners.forEach((listener) => listener());
   await loaded();
-  expect(button("使用这个模型").props.disabled).toBe(true);
+  expect(
+    render().some(
+      (node) =>
+        node.props.role === "alert" &&
+        text(node.props.children as ReactNode) ===
+          "所选服务已改变或不可用，请重新选择。",
+    ),
+  ).toBe(true);
   expect(props.onApply).not.toHaveBeenCalled();
 });
 
-it("keeps an apply failure visible and prevents duplicate confirmation while saving", async () => {
+it("keeps an apply failure visible and ignores repeat picks while saving", async () => {
   await loaded();
   let reject!: (reason: Error) => void;
   props.onApply = vi.fn(
@@ -255,11 +290,8 @@ it("keeps an apply failure visible and prevents duplicate confirmation while sav
       }),
   );
   click("Other");
-  const confirm = button("使用这个模型").props.onClick as () => void;
-  confirm();
-  confirm();
+  click("Current");
   expect(props.onApply).toHaveBeenCalledTimes(1);
-  expect(button("正在应用…").props.disabled).toBe(true);
   (render()[0].props.onClose as () => void)();
   expect(props.onClose).not.toHaveBeenCalled();
   reject(new Error("设置未确认"));
@@ -273,7 +305,10 @@ it("keeps an apply failure visible and prevents duplicate confirmation while sav
     ),
   ).toBe(true);
   expect(props.onClose).not.toHaveBeenCalled();
-  expect(button("使用这个模型").props.disabled).toBe(false);
+  click("Other");
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(props.onApply).toHaveBeenCalledTimes(2);
 });
 
 it("keeps unprepared Agents out of choices and keeps adding in the discovery entry", () => {
@@ -467,7 +502,7 @@ it("filters a large real model list without changing its order, selection or dra
   expect(button("Model 399").props["aria-pressed"]).toBe(true);
 });
 
-it("searches a saved service name while keeping the explicit model confirmation", async () => {
+it("searches a saved service name and applies the clicked model", async () => {
   const initial = await loaded();
   const search = initial.find((node) => node.type === "input")!;
   expect(search).toBeDefined();
@@ -480,8 +515,7 @@ it("searches a saved service name while keeping the explicit model confirmation"
       .map((node) => node.key),
   ).toEqual(["api-one", "api-two"]);
   click("api-two");
-  expect(props.onApply).not.toHaveBeenCalled();
-  click("使用这个模型");
+  await Promise.resolve();
   await Promise.resolve();
   expect(props.onApply).toHaveBeenCalledExactlyOnceWith({
     service: { id: "service", revision: "r1", model: "api-two" },

@@ -26,3 +26,20 @@ export function uiError(reason: unknown, fallback: string): string {
     ? text
     : fallback;
 }
+
+/** User-language reason plus the original text kept for collapsed details. */
+export interface UiNotice {
+  message: string;
+  /** Raw error text/code shown only inside expandable technical details. */
+  detail?: string;
+}
+
+/**
+ * Normalize an unknown error for the shared error surface: the primary layer
+ * gets the `uiError` conclusion, while the original text stays collapsed.
+ */
+export function toUiNotice(reason: unknown, fallback: string): UiNotice {
+  const message = uiError(reason, fallback);
+  const raw = String(reason).replace(/^Error:\s*/, "");
+  return raw && raw !== message ? { message, detail: raw } : { message };
+}

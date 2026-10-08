@@ -3,6 +3,11 @@ export const THREAD_VIEW_STRINGS = {
   copyMessage: "复制消息",
   copied: "已复制",
   copyFailed: "复制失败，请重试",
+  /** W3-6 用户消息操作 */
+  messageActions: "消息操作",
+  editResend: "编辑后重发",
+  sendAgain: "再发一次",
+  newFromHere: "从这里开新对话",
   process: "查看处理过程",
   stepCount: (count: number) => `${count} 步`,
   approval: "需要批准",
@@ -20,4 +25,18 @@ export const THREAD_VIEW_STRINGS = {
     other: "其他操作",
   },
   unknownToolKind: (kind: string) => `其他操作（${kind}）`,
+  /** User-language one-line summaries; the raw tool name and payload stay
+   *  inside the collapsed technical details (PRODUCT.md §6). */
+  toolSummaries: {
+    read: "查看了文件",
+    edit: "修改了文件",
+    delete: "删除了文件",
+    move: "移动了文件",
+    search: "搜索了内容",
+    execute: "运行了命令",
+    think: "思考了",
+    fetch: "查看了网页",
+    switch_mode: "切换了模式",
+    other: "执行了操作",
+  },
 } as const;

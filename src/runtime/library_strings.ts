@@ -99,4 +99,40 @@ export const LIBRARY = {
   returnDraft: "返回原草稿",
   clearDraft: "清空并新开",
   defaultDirectoryError: "普通对话的资料位置准备失败，请重试。",
+  /* W3-9 对话管理操作 */
+  exportMarkdown: "导出为 Markdown",
+  exportEmpty: "这段对话还没有可导出的内容。",
+  exportNotLoaded: "这段对话的内容还没有载入，请先打开后再导出。",
+  exported: (destination: string) => `已导出到 ${destination}`,
+  revealLocation: "在访达中显示工作位置",
+  reopenSame: "用相同设置再开一段",
+  deleteAction: "删除…",
+  deleteSelected: "删除所选…",
+  deleteTitle: (n: number) => `删除 ${n} 段对话`,
+  deleteHintOne: (title: string) =>
+    `将删除「${title}」。工作位置与磁盘文件不受影响，该操作不可撤销。`,
+  deleteHint:
+    "删除后这些对话会从列表移除，工作位置与磁盘文件不受影响。该操作不可撤销。",
+  deleteAgentNote:
+    "会同时请求 Agent 删除它保存的对话记录；不支持删除的 Agent 会保留其侧记录。",
+  deleteConfirm: "删除",
+  deleteDone: "已删除。",
+  deleteBlockedCount: (n: number) => `已选对话中有 ${n} 条暂时不能删除。`,
+  deleteReasons: {
+    stopping: "正在确认停止结果，确认后再删除。",
+    unconfirmed: "有操作结果尚未确认，确认后再删除。",
+    submitting: "正在发送消息，发送结束后再删除。",
+    configuring: "正在保存对话设置，保存结束后再删除。",
+    reconnecting: "正在恢复连接，连接恢复后再删除。",
+    attention: "还有需要处理的问题或回应，处理后再删除。",
+    running: "回复或步骤仍在进行，结束后再删除。",
+    queued: "还有排队消息，发送或移除后再删除。",
+    unsent: "还有未发送的内容，发送或清除后再删除。",
+  },
+  deletePartial: (n: number) =>
+    `其中 ${n} 段的 Agent 侧记录未能删除或未能确认，仍保留在 Agent 中。`,
+  clearArchived: "清空已归档",
+  clearArchivedTitle: "清空已归档",
+  clearArchivedHint: (n: number) =>
+    `将删除全部 ${n} 段已归档对话；其他对话不受影响。工作位置与磁盘文件不受影响，该操作不可撤销。`,
 } as const;

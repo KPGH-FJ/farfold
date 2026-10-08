@@ -161,7 +161,8 @@
   overflow-wrap: anywhere;
   cursor: pointer;
 }
-.new-model-groups button:hover:not(:disabled) {
+.new-model-groups button:hover:not(:disabled),
+.new-model-groups button.hi {
   background: var(--sidebar);
 }
 .new-model-groups button.selected {

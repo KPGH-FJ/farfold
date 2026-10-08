@@ -1,4 +1,5 @@
 import { ConnectionAccount } from "./ConnectionAccount";
+import { ErrorNotice } from "./ErrorNotice";
 import { BrowserReadRequest } from "./BrowserReadRequest";
 import { BrowserShareControls } from "./BrowserShareControls";
 import { useBrowserSharing } from "../runtime/browser_sharing";
@@ -36,6 +37,7 @@ import {
   configValueLabel,
   hasActiveTools,
   toolActivityState,
+  type Attachment,
   type PermissionOption,
   type ThreadItem,
   type ThreadState,
@@ -46,7 +48,14 @@ import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
 import { FailedToolQueueHint } from "./FailedToolQueueHint";
-import { useComposerDraft } from "../runtime/drafts";
+import { composerDrafts, useComposerDraft } from "../runtime/drafts";
+import { draftPersistence } from "../runtime/draft_storage";
+import { toUiNotice, type UiNotice } from "../runtime/ui_error";
+import {
+  userMessageBlocks,
+  userMessageDraftAttachments,
+} from "../runtime/message_actions";
+import { UserMessageActions } from "./UserMessageActions";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
@@ -234,6 +243,7 @@ export function ThreadView({
   onOpened,
   onRecover,
   onNew,
+  onNewFromMessage,
   header,
   artifactReturnFocusRef,
   contentMode,
@@ -257,6 +267,11 @@ export function ThreadView({
   onOpened: (key: string) => void;
   onRecover?: (key: string) => Promise<void>;
   onNew?: () => void;
+  /** W3-6：从一条用户消息开新对话（宿主负责同上下文预填与草稿冲突）。 */
+  onNewFromMessage?: (item: {
+    text: string;
+    attachments: Attachment[];
+  }) => void;
 }) {
   const [fileRequest, setFileRequest] = useState<OpenedFileRequest | null>(
     null,
@@ -386,6 +401,55 @@ export function ThreadView({
   };
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+  const [messageError, setMessageError] = useState<UiNotice | null>(null);
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+  // W3-6 用户消息操作。写回草稿/发送都走既有的草稿与发送归属保护。
+  const messageDraftKey =
+    draftComposerRef && thread.identity === "draft"
+      ? "new"
+      : `session:${thread.key}`;
+  const focusComposerInput = () => {
+    requestAnimationFrame(() => {
+      bodyRef.current?.querySelector("textarea")?.focus();
+    });
+  };
+  const editResend = (item: { text: string; attachments: Attachment[] }) => {
+    if (!activeRef.current) return;
+    const additions = userMessageDraftAttachments(item.attachments);
+    composerDrafts.update(messageDraftKey, (draft) => ({
+      ...draft,
+      // Never clobber an existing unsent draft; append on a new line.
+      text: draft.text
+        ? `${draft.text}${draft.text.endsWith("\n") ? "" : "\n"}${item.text}`
+        : item.text,
+      attachments: [...draft.attachments, ...additions],
+    }));
+    focusComposerInput();
+  };
+  const sendAgain = (item: { text: string; attachments: Attachment[] }) => {
+    if (!activeRef.current) return;
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) {
+      setMessageError({ message: C.readRequired });
+      return;
+    }
+    const key = thread.key;
+    void draftPersistence
+      .flush()
+      .then(() =>
+        threads.send(key, userMessageBlocks(item.text, item.attachments)),
+      )
+      .catch((reason) => {
+        if (mounted.current && activeRef.current)
+          setMessageError(toUiNotice(reason, STRINGS.repair.sendFailed));
+      });
+  };
+  const newFromMessage = (item: {
+    text: string;
+    attachments: Attachment[];
+  }) => {
+    if (!activeRef.current) return;
+    onNewFromMessage?.(item);
+  };
   const [sourceLabel, setSourceLabel] = useState<string>(W.savedSource);
   useEffect(() => {
     let current = true;
@@ -555,15 +619,16 @@ export function ThreadView({
   );
 
   return (
-    <div className="thread-body conversation-workspace">
+    <div className="thread-body conversation-workspace" ref={bodyRef}>
       <div className="thread-main">
         {header}
         <div className="transcript" ref={scrollRef} onScroll={onScroll}>
           <div className="col">
             {thread.openError && !recoveryNotice && (
-              <div className="banner">
-                <span className="b-tag">
-                  {recoveryBusy
+              <ErrorNotice
+                className="banner error-notice"
+                title={
+                  recoveryBusy
                     ? thread.historyUnavailable
                       ? STRINGS.repair.readingHistory
                       : STRINGS.thread.reconnecting
@@ -571,9 +636,10 @@ export function ThreadView({
                       ? STRINGS.thread.unrecoverable
                       : thread.historyUnavailable
                         ? STRINGS.repair.historyFailed
-                        : STRINGS.thread.openFailed}
-                </span>
-                {!recoveryBusy && <span>{thread.openError}</span>}
+                        : STRINGS.thread.openFailed
+                }
+                message={recoveryBusy ? undefined : thread.openError}
+              >
                 {recoveryDetails}
                 <span className="b-act">
                   {thread.historyUnavailable ? (
@@ -593,7 +659,7 @@ export function ThreadView({
                     </span>
                   ) : null}
                 </span>
-              </div>
+              </ErrorNotice>
             )}
             {(thread.modelDrift ||
               thread.configError ||
@@ -808,6 +874,19 @@ export function ThreadView({
                       <div className="who">
                         {STRINGS.thread.you} · {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
+                        {(first.text || first.attachments.length > 0) && (
+                          <UserMessageActions
+                            text={first.text}
+                            disabled={!active}
+                            onEditResend={() => editResend(first)}
+                            onSendAgain={() => sendAgain(first)}
+                            onNewFromMessage={
+                              onNewFromMessage
+                                ? () => newFromMessage(first)
+                                : undefined
+                            }
+                          />
+                        )}
                       </div>
                       <UserMessageContent
                         text={first.text}
@@ -999,25 +1078,32 @@ export function ThreadView({
           )}
           <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
           {recoveryNotice && (
-            <div className="banner" role="status">
-              {recoveryBusy ? (
-                <span className="b-tag">{STRINGS.thread.reconnecting}</span>
-              ) : thread.openError ? (
-                <>
-                  <span className="b-tag">{STRINGS.thread.openFailed}</span>
-                  <span>{thread.openError}</span>
-                </>
-              ) : thread.connectionOutcomeUnknown || thread.sourceError ? (
-                <span className="b-tag">{STRINGS.thread.needYou}</span>
-              ) : (
-                <span>
-                  {thread.connectionCloseReason === "idle"
-                    ? STRINGS.thread.connectionStandby
-                    : thread.connectionCloseReason === "user"
-                      ? STRINGS.thread.connectionDisconnected
-                      : STRINGS.thread.connectionIdle}
-                </span>
-              )}
+            <ErrorNotice
+              className="banner error-notice"
+              role="status"
+              title={
+                recoveryBusy
+                  ? STRINGS.thread.reconnecting
+                  : thread.openError
+                    ? STRINGS.thread.openFailed
+                    : thread.connectionOutcomeUnknown || thread.sourceError
+                      ? STRINGS.thread.needYou
+                      : undefined
+              }
+              message={
+                recoveryBusy
+                  ? undefined
+                  : thread.openError
+                    ? thread.openError
+                    : thread.connectionOutcomeUnknown || thread.sourceError
+                      ? undefined
+                      : thread.connectionCloseReason === "idle"
+                        ? STRINGS.thread.connectionStandby
+                        : thread.connectionCloseReason === "user"
+                          ? STRINGS.thread.connectionDisconnected
+                          : STRINGS.thread.connectionIdle
+              }
+            >
               {recoveryDetails}
               <span className="b-act">
                 <button
@@ -1031,7 +1117,7 @@ export function ThreadView({
                     : STRINGS.thread.reconnect}
                 </button>
               </span>
-            </div>
+            </ErrorNotice>
           )}
           {draftComposerRef ? (
             <div ref={draftComposerRef} />
@@ -1065,7 +1151,9 @@ export function ThreadView({
               onGoSettings={onGoSettings}
               suppressThreadOpenError={Boolean(thread.openError)}
               disabled={draftReadRequired}
-              note={draftReadRequired ? C.readRequired : undefined}
+              note={
+                draftReadRequired ? C.readRequired : (messageError ?? undefined)
+              }
               prepareAction={draftReadRequired ? onGoSettings : undefined}
               onSend={
                 thread.identity === "draft"
@@ -1081,96 +1169,88 @@ export function ThreadView({
                   : undefined
               }
               controls={
-                active ? (
-                  <>
-                    <WorkspacePopover
-                      title={W.modelChoice}
-                      label={
-                        <>
-                          {agent && <AgentLogo card={agent} />}
-                          <span>{agent?.name ?? thread.agentId}</span>
-                          <span className="workspace-identity-model">
-                            {modelLabel}
-                          </span>
-                        </>
-                      }
-                    >
-                      <dl className="workspace-identity">
-                        <dt>{STRINGS.empty.agentLabel}</dt>
-                        <dd>{agent?.name ?? thread.agentId}</dd>
-                        <dt>{STRINGS.service.source}</dt>
-                        <dd>
-                          {thread.service ? sourceLabel : W.existingSource}
-                        </dd>
-                        <dt>
-                          {choicesUnchecked
-                            ? W.returnedModel
-                            : STRINGS.switcher.modelLabel}
-                        </dt>
-                        <dd>{modelLabel}</dd>
-                      </dl>
-                      {thread.connectionId && (
-                        <ConnectionAccount
-                          agentId={thread.agentId}
-                          cwd={thread.cwd}
-                          connectionId={thread.connectionId}
-                          source={thread.service?.id}
-                          active={active && !thread.connectionLost}
-                        />
-                      )}
-                      {!draftReadRequired &&
-                        !choicesUnchecked &&
-                        modelOption && (
-                          <ModelPicker
-                            option={modelOption}
-                            disabled={configOptionChangeBlocked(
-                              thread,
-                              modelOption.id,
-                            )}
-                            onPick={(value) => {
-                              if (pendingPreparationRead(thread)) return;
-                              if (
-                                configOptionChangeBlocked(
-                                  thread,
-                                  modelOption.id,
-                                )
-                              )
-                                return;
-                              void threads
-                                .setConfig(thread.key, modelOption.id, value)
-                                .catch(() => undefined);
-                            }}
-                          />
-                        )}
-                      {!draftReadRequired && (
-                        <SessionOptionsList thread={thread} composer />
-                      )}
-                      <p className="workspace-control-note">
+                <>
+                  <WorkspacePopover
+                    title={W.modelChoice}
+                    disabled={!active}
+                    label={
+                      <>
+                        {agent && <AgentLogo card={agent} />}
+                        <span>{agent?.name ?? thread.agentId}</span>
+                        <span className="workspace-identity-model">
+                          {modelLabel}
+                        </span>
+                      </>
+                    }
+                  >
+                    <dl className="workspace-identity">
+                      <dt>{STRINGS.empty.agentLabel}</dt>
+                      <dd>{agent?.name ?? thread.agentId}</dd>
+                      <dt>{STRINGS.service.source}</dt>
+                      <dd>{thread.service ? sourceLabel : W.existingSource}</dd>
+                      <dt>
                         {choicesUnchecked
-                          ? (configCheckMessage(
-                              thread.configCheck,
-                              thread.configOptions,
-                            ) ?? W.settingsUnchecked)
-                          : draftChoices
-                            ? W.settingsDraft
-                            : W.settingsFixed}
-                      </p>
-                      {onNew && (
-                        <button
-                          type="button"
-                          className="btn btn-ghost"
-                          onClick={onNew}
-                        >
-                          {W.newWithOtherSettings}
-                        </button>
-                      )}
-                    </WorkspacePopover>
-                    {!draftReadRequired && <ReasoningControl thread={thread} />}
-                    {!draftReadRequired && (
-                      <PermissionControl thread={thread} />
+                          ? W.returnedModel
+                          : STRINGS.switcher.modelLabel}
+                      </dt>
+                      <dd>{modelLabel}</dd>
+                    </dl>
+                    {thread.connectionId && (
+                      <ConnectionAccount
+                        agentId={thread.agentId}
+                        cwd={thread.cwd}
+                        connectionId={thread.connectionId}
+                        source={thread.service?.id}
+                        active={active && !thread.connectionLost}
+                      />
                     )}
-                  </>
-                ) : null
+                    {!draftReadRequired && !choicesUnchecked && modelOption && (
+                      <ModelPicker
+                        option={modelOption}
+                        disabled={configOptionChangeBlocked(
+                          thread,
+                          modelOption.id,
+                        )}
+                        onPick={(value) => {
+                          if (pendingPreparationRead(thread)) return;
+                          if (configOptionChangeBlocked(thread, modelOption.id))
+                            return;
+                          void threads
+                            .setConfig(thread.key, modelOption.id, value)
+                            .catch(() => undefined);
+                        }}
+                      />
+                    )}
+                    {!draftReadRequired && (
+                      <SessionOptionsList thread={thread} composer />
+                    )}
+                    <p className="workspace-control-note">
+                      {choicesUnchecked
+                        ? (configCheckMessage(
+                            thread.configCheck,
+                            thread.configOptions,
+                          ) ?? W.settingsUnchecked)
+                        : draftChoices
+                          ? W.settingsDraft
+                          : W.settingsFixed}
+                    </p>
+                    {onNew && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        onClick={onNew}
+                      >
+                        {W.newWithOtherSettings}
+                      </button>
+                    )}
+                  </WorkspacePopover>
+                  {!draftReadRequired && (
+                    <ReasoningControl thread={thread} inactive={!active} />
+                  )}
+                  {!draftReadRequired && (
+                    <PermissionControl thread={thread} inactive={!active} />
+                  )}
+                </>
               }
             />
           )}

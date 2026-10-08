@@ -41,7 +41,7 @@ export const AUTH_ACTIVITY_STRINGS = {
   workDraft: "请回到原稿确认发送结果，再继续账号或服务设置。",
   workUnknown: "上次操作结果尚未确认",
   workDecision: "有等待你处理的请求",
-  workStopping: "正在等待停止确认",
+  workStopping: "停止中…",
   workSending: "正在发送",
   workConnecting: "正在恢复连接",
   workChanging: "正在更改设置",

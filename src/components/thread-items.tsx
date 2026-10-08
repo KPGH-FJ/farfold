@@ -78,6 +78,14 @@ function kindLabel(kind: string): string {
       : T.toolKinds.other;
 }
 
+/** One user-language sentence for the row; original kind/name/payload only
+ *  appear inside the collapsed technical details. */
+function toolSummary(kind: string): string {
+  return Object.hasOwn(T.toolSummaries, kind)
+    ? T.toolSummaries[kind as keyof typeof T.toolSummaries]
+    : T.toolSummaries.other;
+}
+
 function durationLabel(call: ToolCallView): string | null {
   if (call.status !== "completed" && call.status !== "failed") return null;
   if (call.startedAt <= 0 || call.endedAt === undefined)
@@ -226,6 +234,10 @@ function ToolDetail({
 }) {
   return (
     <div className="step-detail">
+      <div className="step-locs">
+        {kindLabel(call.kind)}
+        {call.title || call.name ? ` · ${call.title || call.name}` : ""}
+      </div>
       <ToolInput input={call.rawInput} />
       {call.locations.length > 0 && (
         <div className="step-locs">
@@ -312,7 +324,7 @@ export function ToolStep({
       <div className="step">
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">
-          {kindLabel(call.kind)} <b>{call.title || call.name || ""}</b>
+          {toolSummary(call.kind)}
           {loc && (
             <span className="loc">
               <MessageFileLink path={loc} onOpenFile={onOpenFile}>
@@ -438,10 +450,11 @@ function optionClass(option: PermissionOption): string {
 }
 
 function optionKbd(option: PermissionOption): string | null {
-  if (option.kind === "allow_once") return "↵";
-  if (option.kind === "allow_always")
-    return usesMacShortcuts() ? "⌘↵" : "Ctrl+Enter";
-  if (option.kind === "reject_once") return "⌫";
+  // Bare Enter/Backspace never decide — every approval needs the modifier.
+  const mac = usesMacShortcuts();
+  if (option.kind === "allow_once") return mac ? "⌘↵" : "Ctrl+Enter";
+  if (option.kind === "allow_always") return mac ? "⌘⌥↵" : "Ctrl+Alt+Enter";
+  if (option.kind === "reject_once") return mac ? "⌘⌫" : "Ctrl+Backspace";
   return null;
 }
 

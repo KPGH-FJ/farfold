@@ -16,11 +16,12 @@ import { configCheckMessage } from "../runtime/config_check";
  * 粘贴图片（需 promptCapabilities.image）、@ 或 + 添加文件、
  * 运行中排队显示、停止按钮。
  */
-import { uiError } from "../runtime/ui_error";
+import { toUiNotice, uiError, type UiNotice } from "../runtime/ui_error";
+import { ErrorNotice } from "./ErrorNotice";
 import { traceAfterPaint } from "../runtime/performance-trace";
 import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpIcon,
   CommandIcon,
@@ -30,7 +31,7 @@ import {
 } from "@phosphor-icons/react";
 import {
   commandInputHint,
-  filterCommands,
+  filterComposerActions,
   filterFiles,
   mentionAnchor,
   mentionQuery,
@@ -121,7 +122,7 @@ export function Composer({
   active?: boolean;
   disabled?: boolean;
   /** Extra note shown above the box (start-page errors/hints). */
-  note?: string | null;
+  note?: string | UiNotice | null;
   /** Whether the note gets a「去设置」link (errors — not selection hints). */
   noteAction?: boolean;
   /** The parent already presents this thread's failed-open reason and action. */
@@ -174,7 +175,7 @@ export function Composer({
   };
   const [focus, setFocus] = useState(false);
   const [plusOpen, setPlusOpen] = useState(false);
-  const [agentCommandsOpen, setAgentCommandsOpen] = useState(false);
+
   const plusAnchor = useRef<HTMLButtonElement>(null);
   const plusOwner = useRef<string | null>(null);
   plusOwner.current = active && plusOpen ? storageKey : null;
@@ -183,7 +184,7 @@ export function Composer({
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
   shortcutOwner.current = shortcutOpen ? storageKey : null;
-  const [sendError, setSendError] = useState<string | null>(null);
+  const [sendError, setSendError] = useState<UiNotice | null>(null);
   const [recoveringPending, setRecoveringPending] = useState(false);
   const [abandonPending, setAbandonPending] =
     useState<PendingConversation | null>(null);
@@ -303,17 +304,17 @@ export function Composer({
     dismissedSuggestion?.key === storageKey &&
     dismissedSuggestion.text === text;
   const slashQ = slashQuery(text);
+  // W3-7：斜杠菜单与快捷指令面板共用同一分组列表（Agent 命令 + 模板）。
+  const slashActions =
+    slashQ === null ? [] : filterComposerActions(commands, C.shortcuts, slashQ);
   const slashOpen =
-    !shortcutOpen &&
-    !suggestionsDismissed &&
-    slashQ !== null &&
-    commands.length > 0;
-  const slashList = slashOpen ? filterCommands(commands, slashQ) : [];
+    !shortcutOpen && !suggestionsDismissed && slashActions.length > 0;
+  const slashList = slashActions;
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
   const mentionOpen =
     !shortcutOpen && !suggestionsDismissed && mentionQ !== null;
   const browserSuggestionsReady = useBrowserSurfaceBarrier(
-    active && ((slashOpen && slashList.length > 0) || mentionOpen),
+    active && (slashOpen || mentionOpen),
   );
   const cwd = workCwd;
   const currentFiles =
@@ -321,7 +322,7 @@ export function Composer({
   const fileList = mentionOpen
     ? filterFiles(currentFiles?.paths ?? [], mentionQ)
     : [];
-  const pickListLen = slashOpen ? slashList.length : fileList.length;
+  const pickListLen = slashOpen ? slashActions.length : fileList.length;
   const filePickerMounted = useRef(true);
   const filePickerOwner = useRef({
     key: storageKey,
@@ -381,9 +382,11 @@ export function Composer({
   }, [mentionOpen, cwd, onRequireFolder]);
 
   const pickSlash = (index: number) => {
-    const command = slashList[index];
-    if (!command) return;
-    setText(`/${command.name} `);
+    const action = slashActions[index];
+    if (!action) return;
+    // The whole input is a single `/token`; a pick replaces it entirely —
+    // commands keep their `/name ` form, templates insert their body.
+    setText(action.kind === "command" ? `/${action.insert} ` : action.insert);
     areaRef.current?.focus();
     requestAnimationFrame(autogrow);
   };
@@ -409,7 +412,7 @@ export function Composer({
     try {
       uri = projectFileUri(cwd, rel);
     } catch {
-      setSendError(STRINGS.repair.requestFailed);
+      setSendError({ message: STRINGS.repair.requestFailed });
       return;
     }
     const id = crypto.randomUUID();
@@ -474,6 +477,16 @@ export function Composer({
       (previous) =>
         `${previous}${previous && !previous.endsWith("\n") ? "\n" : ""}${value}`,
     );
+    setShortcutScope(null);
+    setMentionAt(-1);
+    areaRef.current?.focus();
+  };
+  // Same staleness guards as templates: a menu left open across a
+  // conversation switch must never write into the other draft (W3-7).
+  const insertCommand = (name: string) => {
+    if (inputDisabled || shortcutOwner.current !== storageKey) return;
+    if (!liveCommands.current.some((item) => item.name === name)) return;
+    setText((previous) => `/${name} ${previous}`);
     setShortcutScope(null);
     setMentionAt(-1);
     areaRef.current?.focus();
@@ -556,7 +569,7 @@ export function Composer({
         liveKey.current === targetKey &&
         liveErrorContext.current === targetErrorContext
       )
-        setSendError(uiError(error, STRINGS.repair.sendFailed));
+        setSendError(toUiNotice(error, STRINGS.repair.sendFailed));
     } finally {
       if (liveKey.current === targetKey) busy.current = false;
     }
@@ -576,18 +589,18 @@ export function Composer({
       picked = await openDialog({ multiple: true });
     } catch (error) {
       if (liveKey.current === storageKey)
-        setSendError(uiError(error, STRINGS.repair.requestFailed));
+        setSendError(toUiNotice(error, STRINGS.repair.requestFailed));
       return;
     }
     if (!picked || composerDrafts.generation(storageKey) !== generation) return;
     const paths = Array.isArray(picked) ? picked : [picked];
     try {
       await addPickedAttachments(storageKey, paths, imageEnabled, (message) => {
-        if (liveKey.current === storageKey) setSendError(message);
+        if (liveKey.current === storageKey) setSendError({ message });
       });
     } catch {
       if (liveKey.current === storageKey)
-        setSendError(STRINGS.repair.requestFailed);
+        setSendError({ message: STRINGS.repair.requestFailed });
     }
   };
 
@@ -598,12 +611,12 @@ export function Composer({
     if (files.length === 0 || inputDisabled) return;
     if (!imageEnabled) {
       e.preventDefault();
-      setSendError(IMAGE_INPUT_STRINGS.noImageInput);
+      setSendError({ message: IMAGE_INPUT_STRINGS.noImageInput });
       return;
     }
     e.preventDefault();
     void addClipboardImages(storageKey, files, (message) => {
-      if (liveKey.current === storageKey) setSendError(message);
+      if (liveKey.current === storageKey) setSendError({ message });
     });
   };
 
@@ -623,7 +636,7 @@ export function Composer({
     // Legacy WebKit can dispatch compositionend before its confirming keydown;
     // that key still reports 229 even though isComposing has already cleared.
     if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
-    if ((slashOpen && slashList.length > 0) || mentionOpen) {
+    if (slashOpen || mentionOpen) {
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         setPickIndex(
@@ -663,12 +676,14 @@ export function Composer({
           ? C.permissionUnknownNote
           : C.permissionRequiredNote
       : null;
-  const notes: [string | null | undefined, boolean][] = [
+  const noteMessage = typeof note === "string" ? note : (note?.message ?? null);
+  const noteDetail = note && typeof note === "object" ? note.detail : undefined;
+  const notes: [string | null | undefined, boolean, string?][] = [
     [permissionNote, false],
     [unsupportedImages ? W.imageUnsupported : null, false],
     [suppressThreadOpenError ? null : thread?.openError, true],
     [thread?.configError, false],
-    [sendError, false],
+    [sendError?.message, false, sendError?.detail],
     [
       !queueEditing && workAgentId && work.ready && !work.enabled(workAgentId)
         ? STRINGS.repair.workOff
@@ -683,12 +698,11 @@ export function Composer({
         : null,
       false,
     ],
-    [note, noteAction],
+    [noteMessage, noteAction, noteDetail],
   ];
-  const [openNote, showAction] = notes.find(([text]) => Boolean(text)) ?? [
-    null,
-    false,
-  ];
+  const [openNote, showAction, openNoteDetail] = notes.find(([text]) =>
+    Boolean(text),
+  ) ?? [null, false];
   const uncertainCurrent =
     uncertainReview &&
     thread?.key === uncertainReview.key &&
@@ -711,77 +725,29 @@ export function Composer({
   };
   const addContents = (
     <div className="composer-add-list">
-      {agentCommandsOpen ? (
-        <>
-          <p>{C.agentCommandsHint}</p>
-          {commands.map((command) => (
-            <button
-              key={command.name}
-              type="button"
-              onClick={() => {
-                if (
-                  !ownsAddMenu() ||
-                  !liveCommands.current.some(
-                    (item) => item.name === command.name,
-                  )
-                )
-                  return;
-                setText((previous) => `/${command.name} ${previous}`);
-                setPlusOpen(false);
-                setMentionAt(-1);
-                areaRef.current?.focus();
-              }}
-            >
-              <CommandIcon size={19} />
-              <span>
-                <strong>/{command.name}</strong>
-                {command.description && <small>{command.description}</small>}
-              </span>
-            </button>
-          ))}
-          {!commands.length && <p role="status">{C.agentCommandsEmpty}</p>}
-          <button type="button" onClick={() => setAgentCommandsOpen(false)}>
-            {C.backToAdd}
-          </button>
-        </>
-      ) : (
-        <>
-          <button
-            type="button"
-            onClick={() => {
-              if (!ownsAddMenu()) return;
-              setPlusOpen(false);
-              void pickFiles();
-            }}
-          >
-            <PaperclipIcon size={19} />
-            <span>
-              <strong>{STRINGS.composer.addFile}</strong>
-            </span>
-          </button>
-          {thread?.identity === "established" && (
-            <button type="button" onClick={findProjectFile}>
-              <FileTextIcon size={19} />
-              <span>
-                <strong>{C.findProjectFile}</strong>
-                <small>{C.findProjectFileHint}</small>
-              </span>
-            </button>
-          )}
-          <button
-            type="button"
-            onClick={() => {
-              if (ownsAddMenu()) setAgentCommandsOpen(true);
-            }}
-          >
-            <CommandIcon size={19} />
-            <span>
-              <strong>{C.agentCommands}</strong>
-            </span>
-          </button>
-          {attachmentControls}
-        </>
+      <button
+        type="button"
+        onClick={() => {
+          if (!ownsAddMenu()) return;
+          setPlusOpen(false);
+          void pickFiles();
+        }}
+      >
+        <PaperclipIcon size={19} />
+        <span>
+          <strong>{STRINGS.composer.addFile}</strong>
+        </span>
+      </button>
+      {thread?.identity === "established" && (
+        <button type="button" onClick={findProjectFile}>
+          <FileTextIcon size={19} />
+          <span>
+            <strong>{C.findProjectFile}</strong>
+            <small>{C.findProjectFileHint}</small>
+          </span>
+        </button>
       )}
+      {attachmentControls}
     </div>
   );
 
@@ -810,8 +776,7 @@ export function Composer({
         active={active}
       />
       {draftSave.error && (
-        <div className="auth-note" role="alert">
-          <span>{draftSave.error}</span>
+        <ErrorNotice message={draftSave.error}>
           <button
             type="button"
             className="btn btn-ghost"
@@ -819,7 +784,7 @@ export function Composer({
           >
             {DRAFT_STRINGS.retry}
           </button>
-        </div>
+        </ErrorNotice>
       )}
       {(input.sendPending || input.pendingConversation) && !busy.current && (
         <div className="auth-note" role="alert">
@@ -838,7 +803,7 @@ export function Composer({
                     .catch((error) => {
                       if (liveKey.current === storageKey)
                         setSendError(
-                          uiError(error, STRINGS.repair.reconnectFailed),
+                          toUiNotice(error, STRINGS.repair.reconnectFailed),
                         );
                     })
                     .finally(() => setRecoveringPending(false));
@@ -1013,7 +978,7 @@ export function Composer({
                       setQueueEditOpen(true);
                     } catch (reason) {
                       setSendError(
-                        uiError(reason, STRINGS.repair.requestFailed),
+                        toUiNotice(reason, STRINGS.repair.requestFailed),
                       );
                     }
                   }}
@@ -1130,8 +1095,7 @@ export function Composer({
         </div>
       )}
       {openNote && (
-        <div className="auth-note">
-          <span>{openNote}</span>
+        <ErrorNotice message={openNote} detail={openNoteDetail}>
           {workAgentId && work.ready && !work.enabled(workAgentId) && (
             <button
               type="button"
@@ -1173,26 +1137,34 @@ export function Composer({
               {STRINGS.empty.goSettings}
             </button>
           )}
-        </div>
+        </ErrorNotice>
       )}
-      {browserSuggestionsReady && slashOpen && slashList.length > 0 && (
+      {browserSuggestionsReady && slashOpen && (
         <div className="pick-menu" role="listbox">
-          {slashList.map((command, i) => (
-            <div
-              key={command.name}
-              role="option"
-              aria-selected={i === pickIndex}
-              className={`pm${i === pickIndex ? " on" : ""}`}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                pickSlash(i);
-              }}
-            >
-              <span className="pm-name">/{command.name}</span>
-              {command.description && (
-                <span className="pm-desc">{command.description}</span>
+          {slashActions.map((action, i) => (
+            <Fragment key={`${action.kind}:${action.label}`}>
+              {(i === 0 || slashActions[i - 1].kind !== action.kind) && (
+                <div className="pm pm-group" aria-hidden="true">
+                  {action.kind === "command"
+                    ? C.agentCommands
+                    : C.templatesGroup}
+                </div>
               )}
-            </div>
+              <div
+                role="option"
+                aria-selected={i === pickIndex}
+                className={`pm${i === pickIndex ? " on" : ""}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  pickSlash(i);
+                }}
+              >
+                <span className="pm-name">{action.label}</span>
+                {action.detail && (
+                  <span className="pm-desc">{action.detail}</span>
+                )}
+              </div>
+            </Fragment>
           ))}
         </div>
       )}
@@ -1307,20 +1279,19 @@ export function Composer({
               disabled={inputDisabled}
               onClick={() => {
                 plusAnchor.current?.focus();
-                setAgentCommandsOpen(false);
                 setPlusOpen((v) => !v);
               }}
             >
               <PlusIcon size={20} />
             </button>
             {controls}
-            {thread?.identity === "established" && !queueEditing && (
+            {thread && !queueEditing && (
               <button
                 ref={shortcutAnchor}
                 type="button"
                 className="icon-btn"
-                title={C.shortcutsTitle}
-                aria-label={C.shortcutsTitle}
+                title={C.commandsTitle}
+                aria-label={C.commandsTitle}
                 aria-haspopup="dialog"
                 aria-expanded={shortcutOpen}
                 disabled={!active || inputDisabled}
@@ -1374,10 +1345,28 @@ export function Composer({
       {shortcutOpen && !inputDisabled && (
         <WorkspaceActionMenu
           anchor={shortcutAnchor.current}
-          title={C.shortcutsTitle}
+          title={C.commandsTitle}
           onClose={() => setShortcutScope(null)}
         >
           <div className="workspace-action-body composer-shortcuts">
+            <span className="composer-shortcuts-title">{C.agentCommands}</span>
+            {commands.map((command) => (
+              <button
+                key={command.name}
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => insertCommand(command.name)}
+              >
+                <CommandIcon size={15} />
+                <span>/{command.name}</span>
+                {command.description && <small>{command.description}</small>}
+              </button>
+            ))}
+            {!commands.length && (
+              <p role="status" className="composer-shortcuts-empty">
+                {C.agentCommandsEmpty}
+              </p>
+            )}
             <span className="composer-shortcuts-title">{C.shortcutsHint}</span>
             {C.shortcuts.map((shortcut) => (
               <button
@@ -1407,9 +1396,9 @@ export function Composer({
       </div>
       {active && plusOpen && (
         <WorkspaceActionMenu
-          key={agentCommandsOpen ? "commands" : "add"}
+          key="add"
           anchor={plusAnchor.current}
-          title={agentCommandsOpen ? C.agentCommands : C.addTitle}
+          title={C.addTitle}
           onClose={() => setPlusOpen(false)}
         >
           {addContents}

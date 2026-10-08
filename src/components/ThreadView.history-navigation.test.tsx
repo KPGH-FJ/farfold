@@ -58,6 +58,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {},
 }));
 import { ThreadView } from "./ThreadView";
+import { ErrorNotice } from "./ErrorNotice";
 import {
   threads,
   freshThreadState,
@@ -246,10 +247,9 @@ it("shows a pending index-open recovery instead of the old startup failure and b
   expect(
     waiting.some(
       (node) =>
-        node.type === "span" &&
-        [STRINGS.thread.openFailed, s.openError].includes(
-          node.props.children as string,
-        ),
+        node.type === ErrorNotice &&
+        (node.props.title === STRINGS.thread.openFailed ||
+          node.props.message === s.openError),
     ),
   ).toBe(false);
   (previousRetry.props.onClick as () => void)();
@@ -266,7 +266,7 @@ it("shows a pending index-open recovery instead of the old startup failure and b
   expect(retry.props.disabled).toBe(false);
   expect(
     failed.some(
-      (node) => node.type === "span" && node.props.children === s.openError,
+      (node) => node.type === ErrorNotice && node.props.message === s.openError,
     ),
   ).toBe(true);
   (retry.props.onClick as () => void)();

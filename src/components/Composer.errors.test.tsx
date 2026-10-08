@@ -59,6 +59,7 @@ vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {},
 }));
 import { Composer } from "./Composer";
+import { ErrorNotice } from "./ErrorNotice";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { freshThreadState } from "../runtime/session_projection";
 import { threads } from "../runtime/sessions";
@@ -107,12 +108,16 @@ it("omits only the failed-open reason already presented by the conversation", ()
     onGoSettings: vi.fn(),
     suppressThreadOpenError: true,
   });
-  expect(elements.some((e) => e.props.children === thread.openError)).toBe(
-    false,
-  );
-  expect(elements.some((e) => e.props.children === thread.configError)).toBe(
-    true,
-  );
+  expect(
+    elements.some(
+      (e) => e.type === ErrorNotice && e.props.message === thread.openError,
+    ),
+  ).toBe(false);
+  expect(
+    elements.some(
+      (e) => e.type === ErrorNotice && e.props.message === thread.configError,
+    ),
+  ).toBe(true);
   expect(
     elements.some((e) => e.type === "button" && e.props.children === "去设置"),
   ).toBe(false);
@@ -139,7 +144,10 @@ it.each([false, true])(
       noteAction: true,
     });
     expect(
-      elements.some((e) => e.props.children === C.permissionUnknownNote),
+      elements.some(
+        (e) =>
+          e.type === ErrorNotice && e.props.message === C.permissionUnknownNote,
+      ),
     ).toBe(true);
     expect(
       elements.some(
@@ -194,36 +202,32 @@ it.each([
     )!;
     expect(send.props.disabled).toBe(false);
     (send.props.onClick as () => void)();
-    await vi.waitFor(() =>
-      expect(render(props).some((e) => e.props.children === rejected)).toBe(
-        true,
-      ),
-    );
+    const shown = (elements: ReturnType<typeof render>) =>
+      elements.some(
+        (e) => e.type === ErrorNotice && e.props.message === rejected,
+      );
+    await vi.waitFor(() => expect(shown(render(props))).toBe(true));
     expect(
       render(props).some(
         (e) => e.type === "button" && e.props.children === "去设置",
       ),
     ).toBe(false);
+    expect(shown(render({ ...props, thread: null }))).toBe(true);
     expect(
-      render({ ...props, thread: null }).some(
-        (e) => e.props.children === rejected,
+      shown(
+        render({
+          ...props,
+          thread: freshThreadState(
+            "a:/p:prepared-again",
+            "a",
+            "/p",
+            "prepared-again",
+          ),
+        }),
       ),
     ).toBe(true);
     expect(
-      render({
-        ...props,
-        thread: freshThreadState(
-          "a:/p:prepared-again",
-          "a",
-          "/p",
-          "prepared-again",
-        ),
-      }).some((e) => e.props.children === rejected),
-    ).toBe(true);
-    expect(
-      render({ ...props, errorContextKey: "other:/p", thread: null }).some(
-        (e) => e.props.children === rejected,
-      ),
+      shown(render({ ...props, errorContextKey: "other:/p", thread: null })),
     ).toBe(false);
     expect(composerDrafts.read("new").text).toBe("first message");
   },

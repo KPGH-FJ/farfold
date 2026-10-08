@@ -36,6 +36,48 @@ export function filterCommands(
   return commands.filter((c) => c.name.toLowerCase().startsWith(q));
 }
 
+/**
+ * W3-7：Agent 命令与本地快捷指令共用同一入口。统一列表按组排序——
+ * Agent 命令在前、快捷指令在后；斜杠输入按同一个 query 过滤两组。
+ */
+export interface ComposerAction {
+  kind: "command" | "template";
+  /** Row label: `/name` for Agent commands, the short label for templates. */
+  label: string;
+  /** Secondary line: command description or template preview. */
+  detail?: string;
+  /** Insert payload: the command name for commands, the body for templates. */
+  insert: string;
+}
+
+export function filterComposerActions(
+  commands: readonly CommandEntry[],
+  templates: readonly { label: string; text: string }[],
+  query: string,
+): ComposerAction[] {
+  const q = query.trim().toLowerCase();
+  const matchedCommands = filterCommands([...commands], q).map((c) => ({
+    kind: "command" as const,
+    label: `/${c.name}`,
+    detail: c.description,
+    insert: c.name,
+  }));
+  const matchedTemplates = templates
+    .filter(
+      (t) =>
+        !q ||
+        t.label.toLowerCase().includes(q) ||
+        t.text.toLowerCase().includes(q),
+    )
+    .map((t) => ({
+      kind: "template" as const,
+      label: t.label,
+      detail: t.text,
+      insert: t.text,
+    }));
+  return [...matchedCommands, ...matchedTemplates];
+}
+
 /** Trailing mention token, including a pasted filename; never an email. */
 export function mentionAnchor(text: string): number {
   const match = /(?:^|\s)@[^\s@]*$/.exec(text);

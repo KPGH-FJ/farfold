@@ -29,6 +29,12 @@ import {
 import { LIBRARY } from "../runtime/library_strings";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
 import { uiError } from "../runtime/ui_error";
+import { save } from "@tauri-apps/plugin-dialog";
+import { fileDelivery } from "../runtime/file_delivery";
+import {
+  exportFileName,
+  transcriptMarkdown,
+} from "../runtime/conversation_actions";
 import {
   basename,
   relativeTime,
@@ -46,6 +52,7 @@ import { AgentLogo } from "./AgentLogo";
 import { composerDrafts } from "../runtime/drafts";
 import { ResumeDraftButton } from "./ResumeDraftButton";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
+import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
 import {
   conversationReadState,
   useConversationReadState,
@@ -106,6 +113,7 @@ export function ConversationLibrary({
   onOpen,
   onImport,
   onNew,
+  onReopen,
   defaultCwd,
   header,
 }: {
@@ -116,6 +124,8 @@ export function ConversationLibrary({
   onOpen: (row: SidebarRow) => void;
   onImport: (opener: HTMLButtonElement) => void;
   onNew: () => void;
+  /** W3-9：用相同 Agent 与设置再开一段对话。 */
+  onReopen?: (row: SidebarRow) => void;
   defaultCwd: string | null;
   header?: ReactNode;
 }) {
@@ -130,6 +140,8 @@ export function ConversationLibrary({
     changeFilter({ agent: "", group: "", query: "", state: "all" });
   const archived = tab === "archived";
   const allRows = useLibraryRows(archived);
+  /** 清空已归档的实际范围：只含归档标记仍为 true 的行。 */
+  const archivedRows = allRows.filter((row) => row.archived);
   const snapshot = useThreadsSnapshot();
   const index = snapshot.index;
   const agentOptions = useMemo(() => {
@@ -177,8 +189,11 @@ export function ConversationLibrary({
   const [title, setTitle] = useState("");
   const [actions, setActions] = useState<SidebarRow | null>(null);
   const [moving, setMoving] = useState<string[] | null>(null);
+  const [deleting, setDeleting] = useState<SidebarRow[] | null>(null);
+  const [clearing, setClearing] = useState(false);
   const actionAnchor = useRef<HTMLButtonElement | null>(null);
   const moveAnchor = useRef<HTMLButtonElement | null>(null);
+  const deleteAnchor = useRef<HTMLElement | null>(null);
   const operation = useRef(new CollectionActionScope());
   useEffect(() => {
     if (!active) {
@@ -186,6 +201,8 @@ export function ConversationLibrary({
       setActions(null);
       setEditing(null);
       setMoving(null);
+      setDeleting(null);
+      setClearing(false);
     }
   }, [active]);
   useEffect(() => {
@@ -197,6 +214,8 @@ export function ConversationLibrary({
     setSelected(new Set());
     setActions(null);
     setMoving(null);
+    setDeleting(null);
+    setClearing(false);
   }, [filter]);
   useEffect(() => {
     if (
@@ -241,9 +260,15 @@ export function ConversationLibrary({
   const actionRow = actions && allRows.find((row) => row.key === actions.key);
   const actionArchiveReason =
     !archived && actionRow && archiveReasons.get(actionRow.key);
+  const actionDeleteReason = actionRow && archiveReasons.get(actionRow.key);
   const blockedSelected = archived
     ? []
     : visibleSelected.filter((row) => archiveReasons.get(row.key));
+  // W3-9：删除与归档共用同一套活跃度门禁——进行中或未确认的对话先完成
+  // 或清除待办，避免删除后活动工作与索引失联。
+  const deleteBlocked = visibleSelected.filter((row) =>
+    archiveReasons.get(row.key),
+  );
   const allSelected = rows.length > 0 && visibleSelected.length === rows.length;
   const agentName = dimensions.agent
     ? (agents.find((a) => a.id === dimensions.agent)?.name ?? dimensions.agent)
@@ -304,6 +329,56 @@ export function ConversationLibrary({
           );
         else setActions(null);
       },
+    );
+  // W3-9：删除（单个/批量/清空归档共用确认）、导出、位置显示、相同设置再开。
+  const deleteRows = (targets: SidebarRow[]) =>
+    perform(
+      () => Promise.all(targets.map((row) => threads.delete(row))),
+      (outcomes) => {
+        const remaining = outcomes.filter(
+          (outcome) => outcome !== "deleted",
+        ).length;
+        setSelected(new Set());
+        setDeleting(null);
+        setClearing(false);
+        setActions(null);
+        setError(remaining ? LIBRARY.deletePartial(remaining) : null);
+        // Deleting a conversation also drops its grouping link.
+        void collections
+          .assign(
+            targets.map((row) => row.key),
+            "",
+          )
+          .catch(() => undefined);
+      },
+    );
+  const exportRow = (row: SidebarRow) =>
+    perform(
+      async () => {
+        const loaded = snapshot.threads.get(row.key);
+        if (!loaded) throw new Error(LIBRARY.exportNotLoaded);
+        const text = transcriptMarkdown(
+          loaded,
+          row.title,
+          agents.find((a) => a.id === row.agentId)?.name ?? row.agentId,
+        );
+        if (!text.replace(/^#\s.*$/m, "").trim())
+          throw new Error(LIBRARY.exportEmpty);
+        const destination = await save({
+          defaultPath: exportFileName(row.title),
+        });
+        if (!destination) return false;
+        await fileDelivery.exportText(text, destination);
+        return true;
+      },
+      (done) => {
+        if (done) setActions(null);
+      },
+    );
+  const revealLocation = (row: SidebarRow) =>
+    perform(
+      () => fileDelivery.revealLocation(row.cwd),
+      () => setActions(null),
     );
   return (
     <main className="main library-page">
@@ -382,6 +457,21 @@ export function ConversationLibrary({
           >
             {organizing ? LIBRARY.finishOrganizing : LIBRARY.organize}
           </button>
+          {archived && archivedRows.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-text"
+              disabled={busy}
+              onClick={(event) => {
+                operation.current.invalidate();
+                setError(null);
+                deleteAnchor.current = event.currentTarget;
+                setClearing(true);
+              }}
+            >
+              {LIBRARY.clearArchived}
+            </button>
+          )}
         </div>
         {filtered && (
           <div
@@ -542,6 +632,24 @@ export function ConversationLibrary({
             >
               {archived ? LIBRARY.restore : LIBRARY.archive}
             </button>
+            <button
+              className="btn btn-ghost"
+              type="button"
+              disabled={
+                busy || !visibleSelected.length || deleteBlocked.length > 0
+              }
+              aria-describedby={
+                deleteBlocked.length ? "library-bulk-delete-reason" : undefined
+              }
+              onClick={(event) => {
+                operation.current.invalidate();
+                setError(null);
+                deleteAnchor.current = event.currentTarget;
+                setDeleting(visibleSelected);
+              }}
+            >
+              {LIBRARY.deleteSelected}
+            </button>
             {blockedSelected.length ? (
               <small id="library-bulk-archive-reason">
                 {LIBRARY.archiveBlockedCount(blockedSelected.length)}{" "}
@@ -556,6 +664,19 @@ export function ConversationLibrary({
               </small>
             ) : (
               <small>{LIBRARY.activePreserved}</small>
+            )}
+            {deleteBlocked.length > 0 && (
+              <small id="library-bulk-delete-reason">
+                {LIBRARY.deleteBlockedCount(deleteBlocked.length)}{" "}
+                {[
+                  ...new Set(
+                    deleteBlocked.map(
+                      (row) =>
+                        LIBRARY.deleteReasons[archiveReasons.get(row.key)!],
+                    ),
+                  ),
+                ].join(" ")}
+              </small>
             )}
           </div>
         )}
@@ -755,6 +876,67 @@ export function ConversationLibrary({
                 {LIBRARY.archiveReasons[actionArchiveReason]}
               </p>
             )}
+            {actionRow && snapshot.threads.has(actionRow.key) && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={busy}
+                onClick={() => void exportRow(actionRow)}
+              >
+                {LIBRARY.exportMarkdown}
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={busy || !actionRow?.cwd}
+              onClick={() => {
+                if (actionRow) void revealLocation(actionRow);
+              }}
+            >
+              {LIBRARY.revealLocation}
+            </button>
+            {onReopen && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={busy || !actionRow}
+                onClick={() => {
+                  const row = actionRow;
+                  if (!row) return;
+                  setActions(null);
+                  onReopen(row);
+                }}
+              >
+                {LIBRARY.reopenSame}
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={busy || !actionRow || Boolean(actionDeleteReason)}
+              aria-describedby={
+                actionDeleteReason ? "library-row-delete-reason" : undefined
+              }
+              onClick={() => {
+                if (!actionRow) return;
+                operation.current.invalidate();
+                setError(null);
+                deleteAnchor.current = actionAnchor.current;
+                setDeleting([actionRow]);
+                setActions(null);
+              }}
+            >
+              {LIBRARY.deleteAction}
+            </button>
+            {actionDeleteReason && (
+              <p
+                className="archive-block-reason"
+                id="library-row-delete-reason"
+              >
+                {LIBRARY.deleteReasons[actionDeleteReason]}
+              </p>
+            )}
             {error && <p role="alert">{error}</p>}
           </div>
         </WorkspaceActionMenu>
@@ -776,6 +958,38 @@ export function ConversationLibrary({
               () => setMoving(null),
             )
           }
+        />
+      )}
+      {active && deleting && (
+        <DeleteConversationsDialog
+          title={LIBRARY.deleteTitle(deleting.length)}
+          hint={
+            deleting.length === 1
+              ? LIBRARY.deleteHintOne(deleting[0].title)
+              : LIBRARY.deleteHint
+          }
+          busy={busy}
+          error={error}
+          returnFocusRef={deleteAnchor}
+          onClose={() => {
+            operation.current.invalidate();
+            setDeleting(null);
+          }}
+          onDelete={() => void deleteRows(deleting)}
+        />
+      )}
+      {active && clearing && (
+        <DeleteConversationsDialog
+          title={LIBRARY.clearArchivedTitle}
+          hint={LIBRARY.clearArchivedHint(archivedRows.length)}
+          busy={busy}
+          error={error}
+          returnFocusRef={deleteAnchor}
+          onClose={() => {
+            operation.current.invalidate();
+            setClearing(false);
+          }}
+          onDelete={() => void deleteRows(archivedRows)}
         />
       )}
       {active && editing && (

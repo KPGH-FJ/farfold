@@ -262,6 +262,7 @@ pub fn run() {
                 file_delivery_commands::file_delivery_export_text,
                 file_delivery_commands::file_delivery_open,
                 file_delivery_commands::file_delivery_reveal,
+                file_delivery_commands::file_delivery_reveal_location,
                 draft_attachment::draft_attachment_check,
                 draft_attachment::draft_attachment_image,
                 draft_exit::app_drafts_ready,

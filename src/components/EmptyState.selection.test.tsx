@@ -1091,7 +1091,9 @@ it.each([
       reasoning: "ultra",
     });
     expect(view.props.disabled).toBe(true);
-    expect(view.props.note).toContain(STRINGS.repair.configFailed);
+    expect((view.props.note as { message: string }).message).toContain(
+      STRINGS.repair.configFailed,
+    );
     expect(composerDrafts.read("new").text).toBe("Keep my draft");
     expect(props.onStarted).not.toHaveBeenCalled();
     expect(
@@ -1254,7 +1256,9 @@ it.each([
       "B",
       expect.objectContaining({ panel: "model" }),
     );
-    expect(view.props.note).toContain(STRINGS.repair.configFailed);
+    expect((view.props.note as { message: string }).message).toContain(
+      STRINGS.repair.configFailed,
+    );
   },
 );
 

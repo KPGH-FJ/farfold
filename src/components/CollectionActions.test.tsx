@@ -79,6 +79,7 @@ vi.mock("../runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 import App from "../App";
 import { ConversationLibrary } from "./ConversationLibrary";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
+import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
 import { collections } from "../runtime/collections";
 import { threads, type IndexRow } from "../runtime/sessions";
 import { LIBRARY } from "../runtime/library_strings";
@@ -168,8 +169,13 @@ const libraryProps: ComponentProps<typeof ConversationLibrary> = {
   onNew: vi.fn(),
   defaultCwd: "/p",
 };
+const deletesConfirmed = () =>
+  h.invoke.mockImplementation(async (command: string) =>
+    command === "session_delete" ? "deleted" : [],
+  );
 beforeEach(() => {
   libraryProps.filter = { kind: "all" };
+  libraryProps.onReopen = undefined;
   libraryProps.onFilter = vi.fn((filter) => {
     libraryProps.filter = filter;
   });
@@ -788,4 +794,132 @@ it("reports the entire controlled filter when one dimension changes and clears a
       (node) => node.props["aria-label"] === LIBRARY.query,
     )?.props.value,
   ).toBe("");
+});
+
+it("deletes one conversation only after the explicit confirmation", async () => {
+  deletesConfirmed();
+  const render = renderer(ConversationLibrary);
+  click(button(render(libraryProps), LIBRARY.actions("first")));
+  click(button(render(libraryProps), LIBRARY.deleteAction));
+  const dialog = render(libraryProps).find(
+    (element) => element.type === DeleteConversationsDialog,
+  )!;
+  expect(dialog.props.title).toBe(LIBRARY.deleteTitle(1));
+  expect(dialog.props.hint).toContain("「first」");
+  expect(
+    h.invoke.mock.calls.some(([command]) => command === "session_delete"),
+  ).toBe(false);
+  (dialog.props.onDelete as () => void)();
+  await vi.waitFor(() =>
+    expect(
+      h.invoke.mock.calls.filter(([command]) => command === "session_delete"),
+    ).toEqual([
+      ["session_delete", { agentId: "a", cwd: "/p", nativeSessionId: "first" }],
+    ]),
+  );
+  await vi.waitFor(() =>
+    expect(
+      render(libraryProps).some(
+        (element) => element.type === DeleteConversationsDialog,
+      ),
+    ).toBe(false),
+  );
+});
+
+it("deletes the selected conversations in batch after confirmation", async () => {
+  deletesConfirmed();
+  const render = renderer(ConversationLibrary);
+  click(button(render(libraryProps), LIBRARY.organize));
+  const checkbox = (key: string) =>
+    render(libraryProps).find(
+      (element) =>
+        element.type === "input" && element.props["aria-label"] === key,
+    )!;
+  (checkbox("first").props.onChange as () => void)();
+  (checkbox("third").props.onChange as () => void)();
+  click(button(render(libraryProps), LIBRARY.deleteSelected));
+  const dialog = render(libraryProps).find(
+    (element) => element.type === DeleteConversationsDialog,
+  )!;
+  expect(dialog.props.title).toBe(LIBRARY.deleteTitle(2));
+  (dialog.props.onDelete as () => void)();
+  await vi.waitFor(() =>
+    expect(
+      h.invoke.mock.calls.filter(([command]) => command === "session_delete"),
+    ).toHaveLength(2),
+  );
+  expect(
+    h.invoke.mock.calls
+      .filter(([command]) => command === "session_delete")
+      .map(([, args]) => (args as { nativeSessionId: string }).nativeSessionId)
+      .sort(),
+  ).toEqual(["first", "third"]);
+});
+
+it("clears every archived conversation with an in-place confirmation naming the scope", async () => {
+  deletesConfirmed();
+  h.rows = [
+    row("first"),
+    { ...row("second"), archived: true },
+    { ...row("third"), archived: true },
+  ];
+  libraryProps.filter = {
+    kind: "selection",
+    favorites: false,
+    agent: "",
+    group: "",
+    query: "",
+    state: "archived",
+  };
+  const render = renderer(ConversationLibrary);
+  click(button(render(libraryProps), LIBRARY.clearArchived));
+  const dialog = render(libraryProps).find(
+    (element) => element.type === DeleteConversationsDialog,
+  )!;
+  expect(dialog.props.title).toBe(LIBRARY.clearArchivedTitle);
+  expect(dialog.props.hint).toBe(LIBRARY.clearArchivedHint(2));
+  (dialog.props.onDelete as () => void)();
+  await vi.waitFor(() =>
+    expect(
+      h.invoke.mock.calls
+        .filter(([command]) => command === "session_delete")
+        .map(
+          ([, args]) => (args as { nativeSessionId: string }).nativeSessionId,
+        )
+        .sort(),
+    ).toEqual(["second", "third"]),
+  );
+  // The active row is untouched.
+  expect(
+    h.invoke.mock.calls.some(
+      ([command, args]) =>
+        command === "session_delete" &&
+        (args as { nativeSessionId: string }).nativeSessionId === "first",
+    ),
+  ).toBe(false);
+});
+
+it("reveals the conversation's working location in the file manager on request", async () => {
+  const render = renderer(ConversationLibrary);
+  click(button(render(libraryProps), LIBRARY.actions("first")));
+  click(button(render(libraryProps), LIBRARY.revealLocation));
+  await vi.waitFor(() =>
+    expect(h.invoke.mock.calls).toContainEqual([
+      "file_delivery_reveal_location",
+      { path: "/p" },
+    ]),
+  );
+});
+
+it("reopens with the same settings through the shared entry", () => {
+  const onReopen = vi.fn();
+  libraryProps.onReopen = onReopen;
+  const render = renderer(ConversationLibrary);
+  click(button(render(libraryProps), LIBRARY.actions("first")));
+  click(button(render(libraryProps), LIBRARY.reopenSame));
+  expect(onReopen).toHaveBeenCalledTimes(1);
+  expect((onReopen.mock.calls[0][0] as { key: string }).key).toBe("first");
+  expect(
+    h.invoke.mock.calls.some(([command]) => command === "session_delete"),
+  ).toBe(false);
 });

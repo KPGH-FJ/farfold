@@ -20,7 +20,7 @@ export const UPDATE_IMPACT = {
   noWork: "当前没有已知的对话阻碍。",
   needDecision: "有等待你处理的请求",
   unknown: "上次操作结果尚未确认",
-  stopping: "正在等待停止确认",
+  stopping: "停止中…",
   running: "仍在执行",
   tools: "仍有步骤未确认结束",
   sending: "正在发送",

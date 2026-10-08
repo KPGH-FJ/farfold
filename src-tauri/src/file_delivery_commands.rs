@@ -155,6 +155,26 @@ pub async fn file_delivery_reveal(webview: Webview, file: VerifiedFile) -> Resul
     .map_err(|_| display_error(DeliveryError::Unavailable))?
 }
 
+/// Show a conversation's working directory in the file manager. The path is
+/// a recorded session cwd — only an existing absolute directory is accepted.
+#[tauri::command]
+pub async fn file_delivery_reveal_location(webview: Webview, path: String) -> Result<(), String> {
+    require_main(&webview)?;
+    tauri::async_runtime::spawn_blocking(move || {
+        if path.is_empty() || path.chars().any(|c| c.is_control()) {
+            return Err("无法确认这个工作位置，请重新打开对话后重试".to_owned());
+        }
+        let target = Path::new(&path);
+        if !target.is_absolute() || !target.is_dir() {
+            return Err("这个工作位置已不存在，请检查后再试".to_owned());
+        }
+        tauri_plugin_opener::open_path(target, None::<&str>)
+            .map_err(|_| "无法在访达中显示该位置，请重试".to_owned())
+    })
+    .await
+    .map_err(|_| "无法在访达中显示该位置，请重试".to_owned())?
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
