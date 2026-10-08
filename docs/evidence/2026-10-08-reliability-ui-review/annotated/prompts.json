@@ -1,0 +1,43 @@
+{
+  "tool": "image_gen__imagegen",
+  "date": "2026-10-08",
+  "purpose": "Non-destructive screenshot annotation copies; originals remain authoritative.",
+  "images": [
+    {
+      "key": "annotated01",
+      "file": "01-new-conversation.png",
+      "prompt": "Edit this EXACT screenshot solely by adding UX review annotations. This is evidence, NOT a redesign. Preserve the entire original screen, dimensions/aspect ratio, UI positions, Chinese text, whitespace and all visible details. Do not redraw, improve or replace any UI. Add crisp thin red rectangular outlines and red circular number badges at exactly these normalized screenshot coordinates (percent of original width/height): box 1 x42.1 y67.5 w25.4 h27.8 (the small composer at bottom center); box 2 x0.8 y38.9 w15.3 h34.0 (the sidebar recent list with repeated hello titles). Put a short readable Chinese label in adjacent otherwise empty white space with a red leader line: for 1, '1 输入区过窄，配置折成多行' (to right of composer, not covering it); for 2, '2 同名对话难辨认' (to right of sidebar, in blank main area). Label font should be large enough for the screenshot at chat scale, clean sans serif; dark red text on pale cream opaque small callout. No other changes, no invented interface items, no title/header, no crop. Keep all original pixels visually identical outside the red annotations.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-bf259740-266f-4bf8-90ba-1cac5e0e9033.png"
+    },
+    {
+      "key": "annotated14",
+      "file": "14-agent-account-navigation.png",
+      "prompt": "Edit this exact screenshot only to add thin red UX review rectangles, red circular number badges, and short Chinese callouts on pale cream backgrounds. NOT a redesign. Preserve screenshot aspect ratio, entire screen, positions, all original text and original content as accurately as possible. No crop, no replacement UI, no invented content. Coordinates below are percentages [left,top,width,height] of full screenshot. Put callouts in spare space, with red leader lines, not over the boxed original text. Use clean readable Chinese sans-serif. Mark two paired regions with badge 3: [0.8,28.0,15.2,4.4] (selected Explore Agent navigation) with label '3 管理页却选中探索'; and [47.2,64.6,22.5,4.3] (Codex card Start new conversation + tiny management icon) with label '3 管理主动作却是新对话'. Keep heading 管理已添加的 Agent visible. For the first label put it in spare space just to the right/above the sidebar active item, and second label immediately below the Codex card in the gutter or spare card area, not obscuring the buttons. Do not mark other areas.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-c4f9be33-36f8-456c-a965-e2835dd00f62.png"
+    },
+    {
+      "key": "annotated05",
+      "file": "05-agent-settings.png",
+      "prompt": "Edit this exact screenshot only to add thin red UX review rectangles, red circular number badges, and short Chinese callouts on pale cream backgrounds. NOT a redesign. Preserve screenshot aspect ratio, entire screen, positions, all original text and original content as accurately as possible. No crop, no replacement UI, no invented content. Coordinates below are percentages [left,top,width,height] of full screenshot. Put callouts in spare space, with red leader lines, not over the boxed original text. Use clean readable Chinese sans-serif. Mark two related regions with badge 4: [70.0,16.8,5.7,2.9] around green 可以使用 status; and [58.0,90.4,17.3,4.9] around bottom 暂时返回 / 使用已有设置继续 actions. Place one shared callout in the blurred background RIGHT of the dialog, around x78% y42%, wrapping into two short lines: '4 已经可以使用' then '管理仍沿用配置向导'. Red leader lines connect callout to both boxes. Do not claim the model tab is disabled. Do not mark it.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-7cb94d15-b6c2-407e-ab8f-5ef35ecf1610.png"
+    },
+    {
+      "key": "annotated08",
+      "file": "08-conversation.png",
+      "prompt": "Edit this exact screenshot only to add thin red UX review rectangles, red circular number badges, and short Chinese callouts on pale cream backgrounds. NOT a redesign. Preserve screenshot aspect ratio, entire screen, positions, all original text and original content as accurately as possible. No crop, no replacement UI, no invented content. Coordinates below are percentages [left,top,width,height] of full screenshot. Put callouts in spare space, with red leader lines, not over the boxed original text. Use clean readable Chinese sans-serif. Mark two paired regions with badge 5: [29.7,75.6,57.5,4.4] around 继续发送前，请重新确认这条对话的权限 notice, label '5 提示旁缺少确认入口'; [51.9,89.2,9.5,4.4] around 权限·待确认 dropdown, label '5 入口藏在输入区'. First callout should be at x88% y75%, wrapped in the right white margin, with leader to first box. Second callout can be in EMPTY upper right part of the composer around x65% y84% with leader to permission dropdown. Preserve every message and all controls, no redaction or redesign.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-399e9875-3924-46b1-9005-d9879482c315.png"
+    },
+    {
+      "key": "annotated09",
+      "file": "09-content-panel.png",
+      "prompt": "Edit this exact screenshot only to add thin red UX review rectangles, red circular number badges, and short Chinese callouts on pale cream backgrounds. NOT a redesign. Preserve screenshot aspect ratio, entire screen, positions, all original text and original content as accurately as possible. No crop, no replacement UI, no invented content. Coordinates below are percentages [left,top,width,height] of full screenshot. Put callouts in spare space, with red leader lines, not over boxed original text. Use clean readable Chinese sans-serif. Use badge 6 on both boxes: [60.3,21.9,39.3,38.3] (upper right panel showing raw tool names), label '6 工具原名缺少可读摘要'; [60.3,63.7,39.3,18.2] (raw JSON outputs in lower right panel), label '6 原始数据占据主视图'. Put first label above the first box in empty right-panel header space just below title, avoiding existing dropdown text. Put second label in blank horizontal gutter just above its box, not over JSON lines. Do not change the conversation on left or add anything else.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-868c8cd8-dcbf-4a26-83b8-69e8cae26f1a.png"
+    },
+    {
+      "key": "annotated11",
+      "file": "11-general-settings.png",
+      "prompt": "Edit this exact screenshot only to add thin red UX review rectangles, red circular number badges, and short Chinese callouts on pale cream backgrounds. NOT a redesign. Preserve screenshot aspect ratio, entire screen, positions, all original text and original content as accurately as possible. No crop, no replacement UI, no invented content. Coordinates below are percentages [left,top,width,height] of full screenshot. Put callouts in spare space, with red leader lines, not over boxed original text. Use clean readable Chinese sans-serif. Use badge 7 on both boxes: [34.0,28.4,63.0,16.1] around the three large appearance preview cards, label '7 外观预览占比偏大'; [34.0,75.8,63.0,21.0] around notification setting plus stacked explanatory paragraphs, label '7 一项设置堆叠多层说明'. Put first label in empty space just above cards, second label just above notification block in available gap, connect with short red leader lines. Do not change settings, state, content, or any existing labels. No redesign, no crop.",
+      "generatedPath": "/Users/tw/.codex/generated_images/01a11a52-3717-7171-9e43-963f2d14fe5c/exec-2d61eb59-0eef-4300-8e14-90f9e6f3f125.png"
+    }
+  ]
+}
