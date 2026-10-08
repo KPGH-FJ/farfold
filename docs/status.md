@@ -1,5 +1,11 @@
 # Farfold 当前状态
 
+## UI/UX 产品化 W4：生命周期（2026-10-08，源码完成，未安装）
+
+五项全部落地：①移除 Agent 合并为单一危险流程——`AgentRemoveDialog`：默认从列表移除（吊销凭据授权、删除登记行），可勾选逐份卸载 Farfold 登记安装（显示版本与路径；使用中/选中的安装列为"保留"并写明原因，未登记的安装 id 后端一律拒绝），可勾选退出 Agent 账号（仅当声明支持且连接可执行时显示，登出先于移除执行，结果未知如实报错）；固定说明"对话历史保留在所有对话"；有进行中或未确认工作、账号操作、版本检查在途时门禁阻止。②用户面"断开"删除——后端 `require_disconnected` 改 `release_connections`：配置变更自动结束安全空闲连接并等确认终止，工作/待办/未确认仍如实拦截；`AgentBusy` 移除 disconnect。③设置→数据与隐私新增"清除 Farfold 数据"（列出删除/保留两栏：删对话目录与设置含草稿待发、Farfold 安装的程序、安全存储 API 密钥、应用对话文件夹；留 Agent 自身账号配置历史与用户项目文件夹）与"完整卸载"说明；前后端双层 quiescence 门禁（`workInFlight` + `managed_update::exclusive`），新后端 `farfold_data_clear` 先断全部连接等确认，再删密钥→owning 命名空间（符号链接按链接删不跟随）→`meta_store.clear_all()` 事务删四表；任一步失败保留可重试的一致状态并如实报告保留路径。④Agent 详情改能力页：按声明快照显示登录方式（计数+名称）、内容能力（图片/音频/上下文）、能否带入历史、服务配置，各给"未声明"诚实态；两行免责收敛为一行"以实际连接为准"；"返回目录"→"关闭"。⑤自定义接入补齐"选择程序文件…"按钮（系统选文件回填命令）、环境变量 KEY=VALUE 每行文本域（严格校验名/重复/格式，提交进 `env`）、一句接入条件说明。⑥带入已有对话结果面收敛三态：已带入/未能完全带入（技术原因收进折叠详情）/没有可带入，内部复核机制不变。
+
+复核一处文案一致性：程序选择动作已名"使用这份程序"，其错误文案由"未能更换程序"同步改名。前端 207 文件 / 2425 项、Rust 1035 项/4 原忽略，七项检查通过。未安装复测——连同 W5 换包时逐项实测：移除流程三选项与忙碌门禁、清除数据两栏声明与后端顺序、详情能力页、自定义接入文件选择+env、带入三态。
+
 ## UI/UX 产品化 W3：对话面（2026-10-08，源码完成，未安装）
 
 九项全部落地：①模型选择收敛——新对话模型弹窗改为与 ModelPicker 相同的"单击/Enter 即选定"单层列表（共用选项分组与 stale 服务/模型可见语义），思考深度控件复用 ModelPicker 下拉；②选项菜单跳动——菜单/弹窗打开时输入区控件不再卸载，改为挂载+禁用（`inactive` 透传 ReasoningControl/PermissionControl/SessionOptions/模型按钮），同级不再重排；③错误可读化——新增 `ErrorNotice` 共享面（结论+下一步+可展开"技术详情"）与 `toUiNotice`（原文保留进折叠层），Composer 发送/请求错误、ThreadView 恢复与消息错误接入；④审批快捷键——裸 Enter/Backspace 不再决定，⌘⏎=允许一次、⌘⌥⏎=始终允许、⌘⌫=拒绝一次（非 mac 用 Ctrl），IME 合成/重复键/表单控件内不触发，仅作用于可见对话；⑤工具行改用户语言摘要（toolSummaries："运行了命令/查看了文件/查看了网页…"），类型名与原名移入折叠详情；⑥用户消息操作——复制/编辑后重发/再发一次/从这里开新对话；附件经 `message_actions` 忠实还原为 PromptBlock/草稿附件，未知类型退回文件链接不丢弃；"从这里开新对话"经 App 级 `newFromMessage` 预填同 Agent、同工作位置与已存设置，沿用草稿冲突确认，不直接发送；⑦`/` 统一入口——Agent 命令与快捷指令并入同一分组列表 `filterComposerActions`（命令在前、模板在后，同一 query 过滤，Tab/Enter 选定、Esc 关闭、IME 安全）；⑧停止状态收敛——"停止中…/结果未知"等统一措辞落在 strings/composer/browser_sharing/update_impact；⑨对话管理——删除（单个/批量/清空已归档，确认框写明不可撤销与工作位置不受影响）、导出 Markdown（`transcriptMarkdown` 复用可读层，经 `exportFileName`+`file_delivery_export_text` 保存）、移到分组、访达显示工作位置（`file_delivery_reveal_location` 校验绝对目录后调用平台打开）、用相同设置再开一段（`storedConversationSelection` 还原索引行已存服务/配置，凭据 revision 变化按 stale 可见而不静默套用）。

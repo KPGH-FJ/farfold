@@ -213,10 +213,8 @@ it("does not close the Agent setup when a nested dialog receives Escape", () => 
 });
 
 it("delegates guarded daily program management without duplicate headings or first-use instructions", () => {
-  const disconnect = vi.fn();
   const managed = render({
     intent: "manage",
-    agents: { ...agents, disconnect },
     progress: { step: 0, choice: "existing" },
   });
   expect(managed.html).not.toContain(P.programHint);
@@ -225,8 +223,8 @@ it("delegates guarded daily program management without duplicate headings or fir
     (node) => node.type === ProgramManager,
   )!;
   expect(manager.props.showHeading).toBeUndefined();
-  expect(manager.props.onDisconnect).toBeTypeOf("function");
-  expect(disconnect).not.toHaveBeenCalled();
+  // Connections are transparent: the manager never receives a disconnect prop.
+  expect(manager.props.onDisconnect).toBeUndefined();
 });
 
 it("shows model-read failure and retry outside the optional message test", () => {

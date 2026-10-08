@@ -503,7 +503,7 @@ function scenarios() {
   });
   const connected = structuredClone(program);
   connected.id = "11-program-connected";
-  connected.label = "已连接先断开后管理";
+  connected.label = "已连接状态下管理程序";
   connected.reference = "program-manager-connected";
   connected.card.status = "connected";
   connected.installations[0].inUse = true;
@@ -602,7 +602,6 @@ const agents = () =>
     installProgress: {},
     refresh: h.execution,
     connect: h.execution,
-    disconnect: h.execution,
     install: h.execution,
     remove: h.execution,
     cancelInstall: h.execution,
@@ -815,7 +814,11 @@ it("exports real shared components with synthetic state and no external IO", asy
       expect(markup).toContain('<option value="example-fast" selected="">');
     if (s.id.startsWith("10-") || s.id.startsWith("11-"))
       expect(markup).toContain("program-manager");
-    if (s.id.startsWith("11-")) expect(markup).toContain("更换程序");
+    if (s.id.startsWith("11-")) {
+      expect(markup).toContain("使用这份程序");
+      expect(markup).toContain("移除 Agent…");
+      expect(markup).not.toContain("断开");
+    }
     if (s.id.startsWith("13-")) {
       expect(markup.match(/type="radio"/g)).toHaveLength(2);
       expect(markup).not.toContain("启动设置终端");

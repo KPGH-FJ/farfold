@@ -148,7 +148,6 @@ beforeEach(async () => {
     rescan: vi.fn(),
     connect: vi.fn(),
     reconnect: vi.fn(),
-    disconnect: vi.fn(),
     remove: vi.fn(),
     addCustom: vi.fn(),
   };

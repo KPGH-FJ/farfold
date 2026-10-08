@@ -44,7 +44,6 @@ function state(cards: AgentCardModel[]): AgentsState {
     rescan: vi.fn(),
     connect: vi.fn(),
     reconnect: vi.fn(),
-    disconnect: vi.fn(),
     remove: vi.fn(),
     addCustom: vi.fn(),
   };

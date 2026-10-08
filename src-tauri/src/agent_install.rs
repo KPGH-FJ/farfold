@@ -459,7 +459,7 @@ pub async fn agent_register(
     path: String,
 ) -> Result<AgentRow, String> {
     let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    require_disconnected(&app, &agent_id)?;
+    release_connections(&app, &agent_id).await?;
     tauri::async_runtime::spawn_blocking(move || {
         let _guard = _guard;
         let store = app.state::<MetaStore>();
@@ -499,7 +499,7 @@ pub async fn agent_install(
     let lease = crate::install_job::begin(&agent_id, progress)?;
     tauri::async_runtime::spawn(async move {
         let _guard = lease.job.configuration(&agent_id).await?;
-        require_disconnected(&app, &agent_id)?;
+        release_connections(&app, &agent_id).await?;
         let prepare_app = app.clone();
         let prepare_job = lease.job.clone();
         let prepared = tauri::async_runtime::spawn_blocking(move || {
@@ -545,22 +545,17 @@ pub async fn agent_install(
     .map_err(|_| "安装未完成，请重试".to_string())?
 }
 
-pub(crate) fn require_disconnected(app: &AppHandle, id: &str) -> Result<(), String> {
-    if app
-        .state::<crate::acp_client::manager::AcpManager>()
-        .candidate_pending(id)?
-    {
+/// Configuration changes end this Agent's safe idle connections themselves and
+/// wait for confirmed termination — no separate user disconnect step exists.
+/// The caller must already hold the configuration reservation. Work, pending
+/// approvals, account operations, unfinished checks or unconfirmed results
+/// still block the change with an honest reason.
+pub(crate) async fn release_connections(app: &AppHandle, id: &str) -> Result<(), String> {
+    let manager = app.state::<crate::acp_client::manager::AcpManager>();
+    if manager.candidate_pending(id)? {
         return Err("版本检查进程尚未确认结束，请稍后重试".into());
     }
-    if app
-        .state::<crate::acp_client::manager::AcpManager>()
-        .status(id)?
-        .iter()
-        .any(|s| matches!(s.state.as_str(), "ready" | "connecting" | "closing"))
-    {
-        return Err("请先结束任务并断开此 Agent，再更换程序".into());
-    }
-    Ok(())
+    manager.release_for_configuration(id).await
 }
 
 #[tauri::command]
@@ -568,7 +563,7 @@ pub async fn agent_install_rollback(app: AppHandle, agent_id: String) -> Result<
     let lease = crate::install_job::begin(&agent_id, tauri::ipc::Channel::new(|_| Ok(())))?;
     tauri::async_runtime::spawn(async move {
         let _guard = lease.job.configuration(&agent_id).await?;
-        require_disconnected(&app, &agent_id)?;
+        release_connections(&app, &agent_id).await?;
         let store = app.state::<MetaStore>();
         let (row, expected) = store
             .run(move |store| {
@@ -615,7 +610,7 @@ pub async fn agent_select_program(
     let lease = crate::install_job::begin(&agent_id, tauri::ipc::Channel::new(|_| Ok(())))?;
     tauri::async_runtime::spawn(async move {
         let _guard = lease.job.configuration(&agent_id).await?;
-        require_disconnected(&app, &agent_id)?;
+        release_connections(&app, &agent_id).await?;
         let store = app.state::<MetaStore>();
         let (row, expected) = store
             .run(move |store| {
@@ -644,21 +639,70 @@ pub async fn agent_select_program(
     .map_err(|_| "程序选择未保存".to_string())?
 }
 
-/// Remove an agent row after disconnecting its live connections.
+/// Result of removing Farfold's access to one Agent. The Agent's own program,
+/// configuration, account and history are untouched; only Farfold's row,
+/// credential grants and (optionally) owned installation receipts change.
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RemovalOutcome {
+    /// `false` means the Agent row was already absent.
+    pub removed: bool,
+    /// Managed installations the user asked to delete but which stayed on
+    /// disk, each shown with its path and the refused reason.
+    pub kept_installations: Vec<String>,
+}
+
+/// Remove Farfold's access to `agent_id`: idle connections are ended and
+/// confirmed first, Farfold credential grants revoked and the row removed.
+/// Session/history records stay so conversations remain in 所有对话, and the
+/// Agent can be added again later. `uninstall_installations` optionally names
+/// recorded managed installation ids whose owned roots are deleted after the
+/// row is gone; any refused deletion is reported rather than failing removal.
 #[tauri::command]
-pub async fn agent_remove(app: AppHandle, agent_id: String) -> Result<bool, String> {
+pub async fn agent_remove(
+    app: AppHandle,
+    agent_id: String,
+    uninstall_installations: Option<Vec<String>>,
+) -> Result<RemovalOutcome, String> {
     let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    require_disconnected(&app, &agent_id)?;
+    release_connections(&app, &agent_id).await?;
     tauri::async_runtime::spawn_blocking(move || {
         let _guard = _guard;
         let store = app.state::<MetaStore>();
-        crate::installations::remember_before_remove(
-            &store,
-            &app.state::<crate::agent_catalog::AgentCatalog>(),
-            &agent_id,
-        )?;
+        let catalog = app.state::<crate::agent_catalog::AgentCatalog>();
+        let data = app.path().app_data_dir().map_err(|_| "无法读取安装目录")?;
+        let requested = uninstall_installations.unwrap_or_default();
+        // Every requested id must be a recorded managed installation of this
+        // Agent before anything changes; unknown input removes nothing.
+        let inventory = crate::installations::inventory(&store, &catalog, &agent_id)?;
+        let mut managed = Vec::new();
+        for id in &requested {
+            let item = inventory
+                .iter()
+                .find(|item| &item.id == id)
+                .ok_or("此安装未由 Farfold 登记，接入保持不变")?;
+            if item.managed_root.is_none() {
+                return Err("此程序目录未由 Farfold 登记，接入保持不变".into());
+            }
+            managed.push(item);
+        }
+        crate::installations::remember_before_remove(&store, &catalog, &agent_id)?;
         crate::credentials::revoke_agent(&store, &agent_id)?;
-        store.remove_agent(&agent_id)
+        let removed = store.remove_agent(&agent_id)?;
+        // With the row gone, requested installs delete one by one. A refused
+        // or failed deletion keeps its receipt and is reported honestly.
+        let mut kept_installations = Vec::new();
+        for item in managed {
+            if let Err(error) =
+                crate::installations::remove_installed(&store, &data, &agent_id, &item.id)
+            {
+                kept_installations.push(format!("{}（{error}）", item.path));
+            }
+        }
+        Ok(RemovalOutcome {
+            removed,
+            kept_installations,
+        })
     })
     .await
     .map_err(|_| "移除未完成，请重试".to_string())?

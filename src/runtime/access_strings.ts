@@ -39,7 +39,7 @@ export const ACCESS_STRINGS = {
   setupIncomplete: "未完成设置",
   problem: "出现问题",
   preparing: "准备中…",
-  disconnectedHint: "已断开，点击重试后继续。",
+  disconnectedHint: "未连接，点击重试后继续。",
   needLogin: "需要登录",
   authRequiredName: (name: string) =>
     `${name} 还没有登录，选择下面一种方式登录。`,
@@ -182,7 +182,6 @@ export const ACCESS_STRINGS = {
   noModelCandidates: "没有待添加的匹配模型",
   selectVisible: "全选当前结果",
   addSelectedModels: (count: number) => `添加所选模型（${count}）`,
-  disconnectHint: "断开连接后可以切换或更新程序；正在执行的任务需要先结束。",
   retry: "重试",
   loadFailed: "读取使用方式失败，请重试。",
   loginBusy: "正在等待登录完成",

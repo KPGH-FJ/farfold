@@ -13,14 +13,18 @@ it("presents LifeModel as its current boundary without a future availability pro
   expect(html).not.toContain("input");
 });
 
-it("describes separate data ownership without providing a broad destructive operation", () => {
+it("describes separate data ownership and offers a scoped clear plus uninstall guidance", () => {
   const html = renderToStaticMarkup(
     <GeneralSettingsDialog page="privacy" onClose={() => {}} />,
   );
   expect(html).toContain("系统安全存储");
   expect(html).toContain("由你选择的 Agent 管理");
   expect(html).toContain("未发内容");
+  // One scoped destructive action with its own confirmation, never a blanket wipe.
+  expect(html).toContain("清除 Farfold 数据…");
   expect(html).not.toContain("清除全部");
+  expect(html).not.toContain("将删除");
+  expect(html).toContain("完整卸载 Farfold");
   expect(html).toContain("知道了");
 });
 

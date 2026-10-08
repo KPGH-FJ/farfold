@@ -438,7 +438,7 @@ export function ImportConversations({
             ...failures,
           ]),
       );
-      setMessage(S.addedCount(count));
+      setMessage(count > 0 ? S.addedCount(count) : null);
       if (cleanupFailed) setError(S.cleanupFailed);
       else if (failures.length) setError(S.addFailed);
       try {
@@ -458,6 +458,17 @@ export function ImportConversations({
       onOpen(found);
     });
   const previewRow = visible.find((r) => r.nativeSessionId === previewId);
+  // Exactly three user-visible results: joined, nothing to join, or an
+  // incomplete/uncertain outcome whose technical detail stays collapsed.
+  const failedRows = rows.filter((r) => failed.has(r.nativeSessionId));
+  const outcome =
+    error || failed.size
+      ? "incomplete"
+      : message
+        ? "imported"
+        : searched && !listing && !choosing && (unsupported || !visible.length)
+          ? "none"
+          : null;
   const chooseAgent = (nextAgent: string) => {
     if (nextAgent === agentId) {
       if (searched) setChoosing(false);
@@ -619,12 +630,26 @@ export function ImportConversations({
             )}
           </div>
         )}
-        {error && (
+        {outcome === "incomplete" && (
           <div className="history-outcome partial" role="alert">
             <WarningCircleIcon size={20} />
             <div>
               <strong>{S.operationIncomplete}</strong>
-              <p>{error}</p>
+              {message && <p>{message}</p>}
+              {!!failed.size && <p>{S.partialHint}</p>}
+              <details className="history-outcome-details">
+                <summary>{S.outcomeDetails}</summary>
+                {error && <p>{error}</p>}
+                {!!failedRows.length && (
+                  <ul>
+                    {failedRows.map((row) => (
+                      <li key={row.nativeSessionId}>
+                        {row.title ?? S.unknownTitle}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </details>
             </div>
           </div>
         )}
@@ -638,19 +663,12 @@ export function ImportConversations({
             {S.prepareAgent}
           </button>
         )}
-        {message && (
-          <div
-            className={`history-outcome ${failed.size ? "partial" : ""}`}
-            role="status"
-          >
-            {failed.size ? (
-              <WarningCircleIcon size={20} />
-            ) : (
-              <CheckCircleIcon size={20} />
-            )}
+        {outcome === "imported" && (
+          <div className="history-outcome" role="status">
+            <CheckCircleIcon size={20} />
             <div>
               <strong>{message}</strong>
-              <p>{failed.size ? S.partialHint : S.joinedHint}</p>
+              <p>{S.joinedHint}</p>
             </div>
           </div>
         )}
@@ -681,12 +699,24 @@ export function ImportConversations({
         )}
         {!choosing &&
           !listing &&
-          (unsupported ? (
+          (outcome === "none" ? (
             <div className="history-empty">
               <ChatCircleTextIcon size={27} />
-              <strong>{S.unsupportedTitle}</strong>
-              <p>{S.unsupported}</p>
-              {onNew && (
+              <strong>
+                {unsupported
+                  ? S.unsupportedTitle
+                  : query.trim()
+                    ? S.noMatches
+                    : S.empty}
+              </strong>
+              <p>
+                {unsupported
+                  ? S.unsupported
+                  : query.trim()
+                    ? S.queryHint
+                    : S.emptyHint}
+              </p>
+              {unsupported && onNew && (
                 <button
                   type="button"
                   className="btn btn-ghost"
@@ -696,13 +726,7 @@ export function ImportConversations({
                   {S.newChat}
                 </button>
               )}
-            </div>
-          ) : searched && visible.length === 0 ? (
-            <div className="history-empty">
-              <ChatCircleTextIcon size={27} />
-              <strong>{query.trim() ? S.noMatches : S.empty}</strong>
-              <p>{query.trim() ? S.queryHint : S.emptyHint}</p>
-              {query.trim() && (
+              {!unsupported && !!query.trim() && (
                 <button
                   type="button"
                   className="btn btn-ghost"

@@ -200,8 +200,19 @@ export async function agentDisconnect(agentId: string): Promise<boolean> {
   }
 }
 
-export function agentRemove(agentId: string): Promise<boolean> {
-  return invoke("agent_remove", { agentId });
+/** Result of removing Farfold's access to one Agent. */
+export interface RemovalOutcome {
+  /** `false` means the Agent row was already absent. */
+  removed: boolean;
+  /** Requested managed installations that stayed on disk, with the reason. */
+  keptInstallations: string[];
+}
+
+export function agentRemove(
+  agentId: string,
+  uninstallInstallations: string[] = [],
+): Promise<RemovalOutcome> {
+  return invoke("agent_remove", { agentId, uninstallInstallations });
 }
 
 export function agentStatus(agentId: string): Promise<AgentConnectionStatus[]> {
@@ -646,7 +657,7 @@ export function agentIdentity(
 // useAgents hook
 // ---------------------------------------------------------------------------
 
-export type AgentBusy = "connect" | "install" | "disconnect" | "remove";
+export type AgentBusy = "connect" | "install" | "remove";
 
 export interface AgentsState {
   loading: boolean;
@@ -673,12 +684,15 @@ export interface AgentsState {
     input?: InstallationInput,
   ) => Promise<boolean>;
   reconnect: (card: AgentCardModel, cwd?: string) => Promise<void>;
-  disconnect: (agentId: string) => Promise<void>;
-  remove: (agentId: string) => Promise<boolean>;
+  remove: (
+    agentId: string,
+    options?: { uninstall?: string[] },
+  ) => Promise<RemovalOutcome | null>;
   addCustom: (input: {
     name: string;
     command: string;
     args: string[];
+    env?: Record<string, string>;
   }) => Promise<string | null>;
 }
 
@@ -884,48 +898,29 @@ export function useAgents(): AgentsState {
     [connectCwd, refresh, setBusyFor, setErrorFor],
   );
 
-  const disconnect = useCallback(
-    async (agentId: string) => {
-      setBusyFor(agentId, "disconnect");
-      setErrorFor(agentId, null);
-      try {
-        if (
-          [...threads.getSnapshot().threads.values()].some(
-            (t) =>
-              t.agentId === agentId &&
-              (t.running ||
-                t.submitting ||
-                t.stopping ||
-                t.stopUnconfirmed ||
-                hasPendingRequests(t) ||
-                t.uncertainPrompt),
-          )
-        )
-          throw new Error(STRINGS.credentials.activeTasks);
-        await agentDisconnect(agentId);
-      } catch (reason) {
-        setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
-      } finally {
-        setBusyFor(agentId, null);
-        await refresh().catch(() => undefined);
-      }
-    },
-    [refresh, setBusyFor, setErrorFor],
-  );
-
   const remove = useCallback(
-    async (agentId: string) => {
+    async (agentId: string, options?: { uninstall?: string[] }) => {
       setBusyFor(agentId, "remove");
       setErrorFor(agentId, null);
+      setErrors((prev) => ({ ...prev, __remove: null }));
       try {
-        const removed = await agentRemove(agentId);
+        const outcome = await agentRemove(agentId, options?.uninstall ?? []);
         // Removal has already changed the registration. A separate progress
         // save failure stays retryable in setupStorage without undoing it.
-        if (removed) await setupStorage.forget(agentId).catch(() => undefined);
-        return removed;
+        if (outcome.removed) {
+          await setupStorage.forget(agentId).catch(() => undefined);
+          if (outcome.keptInstallations.length)
+            setErrors((prev) => ({
+              ...prev,
+              __remove: STRINGS.agents.errors.keptInstallations(
+                outcome.keptInstallations,
+              ),
+            }));
+        }
+        return outcome;
       } catch (reason) {
         setErrorFor(agentId, uiError(reason, STRINGS.repair.requestFailed));
-        return false;
+        return null;
       } finally {
         await refresh().catch((reason) => {
           setLoadError(uiError(reason, STRINGS.repair.requestFailed));
@@ -953,10 +948,15 @@ export function useAgents(): AgentsState {
   }, [refresh]);
 
   const addCustom = useCallback(
-    async (input: { name: string; command: string; args: string[] }) => {
+    async (input: {
+      name: string;
+      command: string;
+      args: string[];
+      env?: Record<string, string>;
+    }) => {
       setErrors((prev) => ({ ...prev, __custom: null }));
       try {
-        const added = await agentAddCustom({ ...input, env: {} });
+        const added = await agentAddCustom({ ...input, env: input.env ?? {} });
         await refresh().catch((reason) => {
           setLoadError(uiError(reason, STRINGS.repair.requestFailed));
         });
@@ -1051,7 +1051,6 @@ export function useAgents(): AgentsState {
     rescan,
     connect,
     reconnect,
-    disconnect,
     remove,
     addCustom,
   };

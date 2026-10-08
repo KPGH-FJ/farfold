@@ -343,6 +343,14 @@ impl NodeRuntimeState {
         }
     }
 
+    /// Forget the cached runtime so a cleared managed directory is re-resolved
+    /// instead of leaving a dangling path for later installs.
+    pub(crate) fn reset(&self) {
+        if let Ok(mut resolved) = self.resolved.lock() {
+            *resolved = None;
+        }
+    }
+
     pub fn get(&self, job: &crate::install_job::Job) -> Result<NodeRuntime, String> {
         // A different install may be resolving Node; its work must not make
         // this install's cancellation wait for that probe or download.

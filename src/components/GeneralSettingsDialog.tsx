@@ -1,3 +1,5 @@
+import { useState, useSyncExternalStore, type RefObject } from "react";
+import { invoke } from "@tauri-apps/api/core";
 import { shortcutLabel, usesMacShortcuts } from "../runtime/platform_shortcuts";
 import {
   BookOpenIcon,
@@ -8,7 +10,27 @@ import {
 import { STRINGS } from "../runtime/strings";
 import { SETTINGS_PRESENTATION as P } from "../runtime/settings_presentation_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
-import type { RefObject } from "react";
+import { threads } from "../runtime/sessions";
+import { hasPendingRequests } from "../runtime/session_types";
+import { uiError } from "../runtime/ui_error";
+
+/** Active work, pending requests or unconfirmed outcomes keep the destructive
+ * action locked; the backend applies the same gate again before deleting. */
+function workInFlight(): boolean {
+  for (const thread of threads.getSnapshot().threads.values()) {
+    if (
+      thread.running ||
+      thread.submitting ||
+      thread.stopping ||
+      thread.stopUnconfirmed ||
+      thread.uncertainPrompt ||
+      thread.connectionOutcomeUnknown ||
+      hasPendingRequests(thread)
+    )
+      return true;
+  }
+  return false;
+}
 
 export const generalShortcuts = [
   [STRINGS.general.shortcutNew, shortcutLabel("N")],
@@ -22,6 +44,108 @@ export const generalShortcuts = [
     usesMacShortcuts() ? "⇧ Enter" : "Shift+Enter",
   ],
 ] as const;
+
+/** The danger zone inside 数据与隐私: an explicit clear of Farfold-owned data
+ *  with its deletion/preservation scope, plus complete-uninstall guidance. */
+function PrivacyDataControls() {
+  const [phase, setPhase] = useState<"idle" | "confirm" | "working" | "done">(
+    "idle",
+  );
+  const [error, setError] = useState<string | null>(null);
+  useSyncExternalStore(
+    threads.subscribe,
+    threads.getSnapshot,
+    threads.getSnapshot,
+  );
+  const clear = async () => {
+    if (phase !== "confirm") return;
+    setPhase("working");
+    setError(null);
+    try {
+      await invoke("farfold_data_clear");
+      setPhase("done");
+    } catch (reason) {
+      setError(uiError(reason, P.clearDataFailed));
+      setPhase("confirm");
+    }
+  };
+  return (
+    <>
+      <section className="settings-clear-data">
+        <div>
+          <h3>{P.clearDataTitle}</h3>
+          <p>{P.clearDataHint}</p>
+        </div>
+        {phase === "idle" && (
+          <>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={workInFlight()}
+              onClick={() => setPhase("confirm")}
+            >
+              {P.clearData}
+            </button>
+            {workInFlight() && (
+              <p className="auth-note">{P.clearDataBlocked}</p>
+            )}
+          </>
+        )}
+        {phase === "confirm" || phase === "working" ? (
+          <div className="access-confirm" role="alert">
+            <div className="settings-clear-scope">
+              <strong>{P.clearDataDeleteTitle}</strong>
+              <ul>
+                {P.clearDataDeletes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <strong>{P.clearDataKeepTitle}</strong>
+              <ul>
+                {P.clearDataKeeps.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            {error && <p role="alert">{error}</p>}
+            <div className="ac-actions">
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={phase !== "confirm"}
+                onClick={() => void clear()}
+              >
+                {phase === "working" ? P.clearDataWorking : P.clearDataConfirm}
+              </button>
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={phase === "working"}
+                onClick={() => {
+                  setError(null);
+                  setPhase("idle");
+                }}
+              >
+                {P.clearDataCancel}
+              </button>
+            </div>
+          </div>
+        ) : null}
+        {phase === "done" && (
+          <p role="status" className="auth-note">
+            {P.clearDataDone}
+          </p>
+        )}
+      </section>
+      <section className="settings-uninstall">
+        <div>
+          <h3>{P.uninstallTitle}</h3>
+          <p>{P.uninstallHint}</p>
+        </div>
+      </section>
+    </>
+  );
+}
 
 export function GeneralSettingsDialog({
   page,
@@ -65,6 +189,7 @@ export function GeneralSettingsDialog({
             );
           })}
           <p className="general-caption">{P.dataScope}</p>
+          <PrivacyDataControls />
         </div>
       )}
       <footer>

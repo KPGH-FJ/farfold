@@ -130,6 +130,26 @@ impl MetaStore {
         app_data_dir.join("farfold.sqlite3")
     }
 
+    /// Remove every Farfold-owned record in one transaction. The database file
+    /// and schema stay usable. Callers must delete secure-storage secrets and
+    /// managed roots before this reset so an interrupted clear never orphans
+    /// keychain entries or loses the receipts needed to delete owned paths.
+    pub fn clear_all(&self) -> Result<(), String> {
+        let mut connection = self.lock()?;
+        let transaction = connection
+            .transaction()
+            .map_err(|_| "无法清除数据".to_string())?;
+        transaction
+            .execute_batch(
+                "DELETE FROM dismissed_sessions; \
+                 DELETE FROM sessions; \
+                 DELETE FROM agents; \
+                 DELETE FROM settings;",
+            )
+            .and_then(|_| transaction.commit())
+            .map_err(|_| "无法清除数据".to_string())
+    }
+
     fn lock(&self) -> Result<MutexGuard<'_, Connection>, String> {
         self.connection
             .lock()

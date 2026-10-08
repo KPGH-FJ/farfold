@@ -51,6 +51,15 @@ pub(crate) fn activity() -> Result<ActivityPermit, String> {
     admission().activity()
 }
 
+/// Destructive whole-app operations (clearing all Farfold data) require the
+/// same quiescence as a managed update: no task, pending approval, install,
+/// account operation or terminal may be in flight or unconfirmed.
+pub(crate) fn exclusive() -> Result<UpdatePermit, String> {
+    admission()
+        .update()
+        .map_err(|_| "仍有进行中或结果未确认的任务、安装或账号操作，请先完成后再清除".into())
+}
+
 /// A quiet normal exit retains the same admission as installation until the
 /// process exits. A busy exit requires a separate explicit user acknowledgement.
 pub(crate) fn quiet_exit() -> Result<UpdatePermit, String> {

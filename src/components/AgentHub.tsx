@@ -599,9 +599,13 @@ export function AgentHub({
             </div>
             <p className="agent-hub-results">{S.available(visible.length)}</p>
           </div>
-          {(agents.loadError || agents.errors.__scan) && (
+          {(agents.loadError ||
+            agents.errors.__scan ||
+            agents.errors.__remove) && (
             <p className="ac-error" role="alert">
-              {agents.loadError ?? agents.errors.__scan}
+              {agents.loadError ??
+                agents.errors.__scan ??
+                agents.errors.__remove}
             </p>
           )}
           {setup.error && (

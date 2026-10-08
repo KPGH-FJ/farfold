@@ -263,7 +263,7 @@ fn selected(item: &Installation, row: Option<&AgentRow>) -> bool {
         }
     })
 }
-fn inventory(
+pub(crate) fn inventory(
     store: &MetaStore,
     catalog: &AgentCatalog,
     id: &str,
@@ -390,7 +390,7 @@ pub fn remember_before_remove(
     }
     write(store, &all)
 }
-fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
+pub(crate) fn owned_root(item: &Installation, data: &Path) -> Result<PathBuf, String> {
     let root = PathBuf::from(
         item.managed_root
             .as_ref()
@@ -423,7 +423,9 @@ pub async fn agent_installations(
             .into_iter()
             .map(|item| {
                 let selected = selected(&item, row.as_ref());
-                let can_uninstall = !selected && !connected && owned_root(&item, &data).is_ok();
+                // Idle connections end themselves during uninstall; only
+                // selection state and confirmed ownership gate the action.
+                let can_uninstall = !selected && owned_root(&item, &data).is_ok();
                 InstallationView {
                     item,
                     selected,
@@ -445,7 +447,7 @@ pub async fn agent_installation_select(
     let lease = crate::install_job::begin(&agent_id, tauri::ipc::Channel::new(|_| Ok(())))?;
     tauri::async_runtime::spawn(async move {
         let _guard = lease.job.configuration(&agent_id).await?;
-        crate::agent_install::require_disconnected(&app, &agent_id)?;
+        crate::agent_install::release_connections(&app, &agent_id).await?;
         let prepare_app = app.clone();
         let prepare_job = lease.job.clone();
         let (row, expected) = tauri::async_runtime::spawn_blocking(move || {
@@ -521,7 +523,7 @@ pub async fn agent_installation_uninstall(
     installation_id: String,
 ) -> Result<(), String> {
     let _guard = crate::install_job::configuration_guard(&agent_id).await;
-    crate::agent_install::require_disconnected(&app, &agent_id)?;
+    crate::agent_install::release_connections(&app, &agent_id).await?;
     tauri::async_runtime::spawn_blocking(move || {
         let _guard = _guard;
         let store = app.state::<MetaStore>();
@@ -531,7 +533,7 @@ pub async fn agent_installation_uninstall(
     .await
     .map_err(|_| "卸载未完成，请重试".to_string())?
 }
-fn remove_installed(
+pub(crate) fn remove_installed(
     store: &MetaStore,
     data: &Path,
     agent_id: &str,

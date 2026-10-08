@@ -46,7 +46,15 @@ pub async fn auth_end(app: AppHandle, agent_id: String, attempt_id: String) -> R
 /// Env placeholder stored on an agents row: the real value lives in the
 /// system credential store and is resolved at spawn time only. Keep the existing
 /// marker and service IDs so the platform addition does not migrate user data.
-const KEYCHAIN_MARKER: &str = "__keychain__";
+/// Env value placeholder meaning "the real value lives in system secure
+/// storage under `env_keychain_service(agent_id, name)`". Never the secret.
+pub(crate) const KEYCHAIN_MARKER: &str = "__keychain__";
+
+/// Name of the secure-storage entry holding one Agent env value. Contains no
+/// secret material; callers use it to look up or delete the stored copy.
+pub(crate) fn env_keychain_service(agent_id: &str, env_name: &str) -> String {
+    keychain_service(agent_id, env_name)
+}
 
 fn keychain_service(agent_id: &str, env_name: &str) -> String {
     format!("farfold.agent.{agent_id}.{env_name}")

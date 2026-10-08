@@ -322,7 +322,7 @@ impl ConnectionLife {
             return if idle.is_some() {
                 Ok(false)
             } else {
-                Err("请先完成任务及待处理事项，再断开此 Agent".into())
+                Err("此 Agent 仍有进行中的任务或待处理事项，请先完成后再执行此操作".into())
             };
         }
         if let Some(idle) = idle
@@ -335,6 +335,32 @@ impl ConnectionLife {
             return Ok(false);
         }
         state.close_reason = Some(reason);
+        self.state.store(CLOSING, Ordering::SeqCst);
+        self.stop.send_replace(true);
+        Ok(true)
+    }
+    /// Configuration changes (program selection, install, access removal, app
+    /// data clearing) end the process without a separate user step. Safe idle
+    /// connections are released automatically; work, account/auth operations
+    /// or opens whose remote result was never confirmed still block honestly.
+    /// Retained views and registered conversations do not: their records are
+    /// persisted already and reopen on the next launch target.
+    pub(crate) fn release_for_configuration(&self) -> Result<bool, String> {
+        let mut activity = self.activity.lock().map_err(|_| "无法读取连接状态")?;
+        if self.state.load(Ordering::SeqCst) >= CLOSED {
+            return Ok(false);
+        }
+        if self.work.load(Ordering::SeqCst) != 0
+            || !activity.operations.is_empty()
+            || !activity.closing_opens.is_empty()
+        {
+            return Err(
+                "此 Agent 仍有进行中的任务、待处理事项或未确认的操作，请先完成后再执行此操作"
+                    .into(),
+            );
+        }
+        activity.close_reason = Some(CloseReason::Configuration);
+        activity.last = Instant::now();
         self.state.store(CLOSING, Ordering::SeqCst);
         self.stop.send_replace(true);
         Ok(true)
@@ -359,6 +385,11 @@ impl ConnectionLife {
         };
         drop(closing_opens);
         self.done.send_replace(Some(outcome));
+    }
+    /// The process owner already confirmed this connection's termination
+    /// outcome, so nothing is in flight and no wait is needed.
+    pub(crate) fn finished(&self) -> bool {
+        self.done.borrow().is_some()
     }
     pub async fn closed(&self) -> Result<(), String> {
         tokio::time::timeout(Duration::from_secs(5), async {

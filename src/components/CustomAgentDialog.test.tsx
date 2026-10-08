@@ -99,6 +99,7 @@ it("submits the user's explicit command and argument lines once, and blocks clos
     name: "My Agent",
     command: "/chosen/agent",
     args: ["--flag", "argument with spaces"],
+    env: {},
   });
   (render()[0].props.onClose as () => void)();
   expect(onClose).not.toHaveBeenCalled();
@@ -162,3 +163,36 @@ it("does not submit a multiline command", () => {
   submit();
   expect(addCustom).not.toHaveBeenCalled();
 });
+
+it("passes environment pairs to the registration request", async () => {
+  addCustom.mockResolvedValue("env-id");
+  fill();
+  const env = render().filter((node) => node.type === "textarea")[1];
+  (env.props.onChange as (e: unknown) => void)({
+    target: { value: "TOKEN_VALUE=abc\n EMPTY=\n" },
+  });
+  submit();
+  await Promise.resolve();
+  expect(addCustom).toHaveBeenCalledExactlyOnceWith({
+    name: "My Agent",
+    command: "/chosen/agent",
+    args: ["--flag", "argument with spaces"],
+    env: { TOKEN_VALUE: "abc", EMPTY: "" },
+  });
+  expect(onAdded).toHaveBeenCalledExactlyOnceWith("env-id");
+});
+
+it.each(["TOKEN", "1BAD=value", "BAD-NAME=value", "A=1\nA=2"])(
+  "rejects invalid environment input: %s",
+  (envText) => {
+    fill();
+    const env = render().filter((node) => node.type === "textarea")[1];
+    (env.props.onChange as (e: unknown) => void)({
+      target: { value: envText },
+    });
+    submit();
+    expect(addCustom).not.toHaveBeenCalled();
+    const view = render();
+    expect(view.some((node) => node.props.role === "alert")).toBe(true);
+  },
+);

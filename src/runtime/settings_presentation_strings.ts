@@ -37,6 +37,33 @@ export const SETTINGS_PRESENTATION = {
     },
   ],
   dataScope: "移除接入、删除 API 配置和卸载程序各有范围，会在操作时分别说明。",
+  clearData: "清除 Farfold 数据…",
+  clearDataTitle: "清除 Farfold 数据",
+  clearDataHint:
+    "此操作删除下面列出的 Farfold 自有数据，且无法恢复。进行中或结果未确认的任务、安装与账号操作会先阻止清除。",
+  clearDataDeleteTitle: "将删除",
+  clearDataDeletes: [
+    "Farfold 的对话目录与应用设置（包含草稿与待发内容）",
+    "Farfold 安装的 Agent 程序",
+    "Farfold 在系统安全存储中保存的 API 密钥",
+    "未选文件夹的对话所用的应用对话文件夹",
+  ],
+  clearDataKeepTitle: "将保留",
+  clearDataKeeps: [
+    "各 Agent 自己的账号、配置与对话历史",
+    "你的项目文件夹",
+    "不是由 Farfold 安装的程序",
+  ],
+  clearDataBlocked:
+    "有任务进行中或结果尚未确认，请先完成或确认这些任务后再清除。",
+  clearDataConfirm: "确认清除",
+  clearDataCancel: "取消",
+  clearDataWorking: "正在清除…",
+  clearDataDone: "Farfold 数据已清除。请完全退出并重新打开应用。",
+  clearDataFailed: "清除未完成，部分数据可能仍保留。请重试。",
+  uninstallTitle: "完整卸载 Farfold",
+  uninstallHint:
+    "如需完整卸载：先在上方清除 Farfold 数据并退出应用，然后将应用程序文件夹中的 Farfold.app 移到废纸篓。各 Agent 自行安装的程序、账号与历史不受影响。",
   life: {
     sub: "由你决定哪些工作偏好值得保留。",
     title: "当前尚未启用",

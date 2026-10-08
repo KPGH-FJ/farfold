@@ -5,6 +5,7 @@ const h = vi.hoisted(() => ({
   states: [] as unknown[],
   cursor: 0,
   removed: true,
+  kept: [] as string[],
   saveFailure: false,
   refreshFailure: false,
 }));
@@ -46,10 +47,12 @@ beforeEach(async () => {
   h.states.length = 0;
   h.cursor = 0;
   h.removed = true;
+  h.kept = [];
   h.saveFailure = false;
   h.refreshFailure = false;
   h.invoke.mockReset().mockImplementation(async (command) => {
-    if (command === "agent_remove") return h.removed;
+    if (command === "agent_remove")
+      return { removed: h.removed, keptInstallations: h.kept };
     if (command === "settings_set" && h.saveFailure)
       throw new Error("preparation save failed");
     if (command === "app_initial_snapshot") {
@@ -67,7 +70,7 @@ beforeEach(async () => {
 
 it("returns the actual removal result and refreshes after preparation progress fails to save", async () => {
   h.saveFailure = true;
-  expect(await render().remove("removed-agent")).toBe(true);
+  expect((await render().remove("removed-agent"))?.removed).toBe(true);
   expect(h.invoke).toHaveBeenCalledWith("app_initial_snapshot");
   expect(h.invoke).toHaveBeenCalledWith("catalog_list");
   expect(render().errors["removed-agent"]).toBeNull();
@@ -80,15 +83,34 @@ it("returns the actual removal result and refreshes after preparation progress f
 
 it("keeps successful removal independent from a refresh failure and exposes the load error", async () => {
   h.refreshFailure = true;
-  expect(await render().remove("removed-agent")).toBe(true);
+  expect((await render().remove("removed-agent"))?.removed).toBe(true);
   expect(render().loadError).not.toBeNull();
   expect(render().errors["removed-agent"]).toBeNull();
   expect(setupStorage.completed("removed-agent")).toBe(false);
 });
 
+it("forwards requested managed uninstalls and reports kept directories", async () => {
+  const outcome = await render().remove("removed-agent", {
+    uninstall: ["a:one", "a:two"],
+  });
+  expect(outcome?.removed).toBe(true);
+  expect(h.invoke).toHaveBeenCalledWith("agent_remove", {
+    agentId: "removed-agent",
+    uninstallInstallations: ["a:one", "a:two"],
+  });
+  expect(render().errors.__remove).toBeNull();
+
+  h.kept = ["/agents/one（仍在使用）"];
+  const second = await render().remove("removed-agent", {
+    uninstall: ["a:one"],
+  });
+  expect(second?.keptInstallations).toEqual(["/agents/one（仍在使用）"]);
+  expect(render().errors.__remove).toContain("/agents/one");
+});
+
 it("retains preparation completion when the backend reports no removal", async () => {
   h.removed = false;
-  expect(await render().remove("removed-agent")).toBe(false);
+  expect((await render().remove("removed-agent"))?.removed).toBe(false);
   expect(setupStorage.completed("removed-agent")).toBe(true);
   expect(h.invoke).toHaveBeenCalledWith("app_initial_snapshot");
   expect(

@@ -17,6 +17,7 @@ import { SETUP_STORAGE_STRINGS } from "./setup_storage";
 import { AGENT_SETUP_STRINGS } from "./agent_setup_strings";
 import { THREAD_VIEW_STRINGS } from "./thread_view_strings";
 import { CUSTOM_AGENT } from "./custom_agent_strings";
+import { AGENT_DETAIL_STRINGS } from "./agent_detail_strings";
 import { SETUP_PRESENTATION } from "./setup_presentation_strings";
 import { SETTINGS_PRESENTATION } from "./settings_presentation_strings";
 import { NEW_CONVERSATION_PICKER_STRINGS } from "./new_conversation_picker_strings";
@@ -70,6 +71,7 @@ describe("strings", () => {
       AGENT_SETUP_STRINGS,
       THREAD_VIEW_STRINGS,
       CUSTOM_AGENT,
+      AGENT_DETAIL_STRINGS,
       SETUP_PRESENTATION,
       SETTINGS_PRESENTATION,
       NEW_CONVERSATION_PICKER_STRINGS,

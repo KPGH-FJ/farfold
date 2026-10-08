@@ -12,6 +12,7 @@ mod browser_sharing;
 mod browser_workspace;
 mod conversation_directory;
 mod credentials;
+mod data_reset;
 mod dependency_install;
 mod desktop_notifications;
 mod diagnostics;
@@ -192,6 +193,7 @@ pub fn run() {
                 agent_install::agent_install_rollback,
                 agent_install::agent_select_program,
                 agent_install::agent_remove,
+                data_reset::farfold_data_clear,
                 installations::agent_installations,
                 installations::agent_installation_select,
                 installations::agent_installation_uninstall,

@@ -9,6 +9,7 @@ export const IMPORT_STRINGS = {
   noAgentsTitle: "还没有已添加的 Agent",
   addAgent: "去添加 Agent",
   operationIncomplete: "本次操作尚未完成",
+  outcomeDetails: "失败详情",
   unsupportedTitle: "Agent 不提供已有对话列表",
   emptyHint: "可以选择原文件夹重新查找，或更换 Agent。",
   queryHint: "试试其他关键词，或清除搜索查看全部结果。",

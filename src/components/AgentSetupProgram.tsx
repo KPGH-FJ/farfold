@@ -18,7 +18,6 @@ export function agentSetupProgram({
   agents,
   inventory,
   installation,
-  connected,
   registered,
   needsProgramInstall,
   prerequisitesReady,
@@ -28,11 +27,8 @@ export function agentSetupProgram({
   operationPending,
   progress,
   intent,
-  removeConfirm,
-  onRemoveConfirm,
+  onRemoveAgent,
   onConnect,
-  onDisconnect,
-  onClose,
   importControl,
 }: {
   card: AgentCardModel;
@@ -40,7 +36,6 @@ export function agentSetupProgram({
   inventory: ProgramInventory;
   installation: ReturnType<typeof useInstallationReview>;
   setupStep: number;
-  connected: boolean;
   registered: boolean;
   needsProgramInstall: boolean;
   prerequisitesReady: boolean;
@@ -50,11 +45,9 @@ export function agentSetupProgram({
   operationPending: boolean;
   progress: { label: string; canCancelInstall: boolean } | null;
   intent: "use" | "manage";
-  removeConfirm: boolean;
-  onRemoveConfirm: (value: boolean) => void;
+  /** Opens the unified removal flow; the dialog itself confirms. */
+  onRemoveAgent: () => void;
   onConnect: () => Promise<void>;
-  onDisconnect: () => Promise<boolean>;
-  onClose: () => void;
   importControl: ReactNode;
 }) {
   return (
@@ -127,11 +120,9 @@ export function agentSetupProgram({
             inventory={inventory}
             prerequisitesReady={prerequisitesReady}
             onConnect={() => onConnect()}
-            onDisconnect={onDisconnect}
             connectDisabled={
               busy || authBusy || operationPending || !prerequisitesReady
             }
-            disconnectDisabled={busy || authBusy || operationPending}
             installDisabled={
               !installation.ready ||
               !installPrerequisitesReady ||
@@ -153,39 +144,14 @@ export function agentSetupProgram({
             }}
           />
         </fieldset>
-        {intent === "manage" && registered && !connected && (
-          <details className="agent-manage-actions program-remove-access">
-            <summary>{R.removeAccess}</summary>
-            <button
-              className="btn btn-text"
-              disabled={busy || authBusy || operationPending || connected}
-              onClick={() => onRemoveConfirm(true)}
-            >
-              {STRINGS.access.remove}
-            </button>
-            {removeConfirm && (
-              <div className="access-confirm" role="alert">
-                <p>{STRINGS.access.removeHint}</p>
-                <button
-                  className="btn btn-ghost"
-                  disabled={busy || authBusy || operationPending || connected}
-                  onClick={() =>
-                    void agents.remove(card.id).then((ok) => {
-                      if (ok) onClose();
-                    })
-                  }
-                >
-                  {STRINGS.access.confirmRemove}
-                </button>
-                <button
-                  className="btn btn-text"
-                  onClick={() => onRemoveConfirm(false)}
-                >
-                  {STRINGS.access.cancel}
-                </button>
-              </div>
-            )}
-          </details>
+        {intent === "manage" && registered && (
+          <button
+            className="btn btn-ghost"
+            disabled={busy || authBusy || operationPending}
+            onClick={onRemoveAgent}
+          >
+            {STRINGS.access.remove}
+          </button>
         )}
       </div>
       {intent === "manage" && importControl}

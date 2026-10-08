@@ -194,18 +194,24 @@ it("shows the current program first and puts other installations behind one mana
     true,
     false,
   ]);
+  expect(nodes.some((node) => node.props.children === S.programReady)).toBe(
+    false,
+  );
+  // Connections are transparent: no explicit disconnect affordance exists.
   expect(
     nodes.some(
       (node) =>
-        node.props.children === S.disconnected ||
-        node.props.children === S.programReady,
+        typeof node.props.children === "string" &&
+        node.props.children.includes("断开"),
     ),
   ).toBe(false);
+  // Unused managed programs stay uninstallable while connected; the
+  // backend releases safe idle connections itself.
   expect(
     nodes.some(
       (node) => node.type === "button" && node.props.children === S.uninstall,
     ),
-  ).toBe(false);
+  ).toBe(true);
   expect(choose("candidate")?.props.className).toBe("btn btn-primary");
   expect(choose("external")).toBeUndefined();
   expect(choose("component")).toBeUndefined();
@@ -292,7 +298,7 @@ it("shows downloaded bytes for this installation and retains its original cancel
   expect(select).not.toHaveBeenCalled();
 });
 
-it("shows the new program separately and requires disconnect before explicit selection", () => {
+it("shows the new program separately and offers explicit selection while connected", () => {
   const candidate = row("candidate");
   expect(
     elements(candidate.props.children as ReactNode).some(
@@ -304,7 +310,8 @@ it("shows the new program separately and requires disconnect before explicit sel
       (node) => node.props.children === S.notSelected,
     ),
   ).toBe(true);
-  expect(choose("candidate")?.props.disabled).toBe(true);
+  // Selecting releases safe idle connections itself; no disconnect step.
+  expect(choose("candidate")?.props.disabled).toBe(false);
   expect(choose("external")).toBeUndefined();
   expect(select).not.toHaveBeenCalled();
 });
@@ -449,35 +456,17 @@ it("checks the current program once and keeps a failed connection factual", asyn
   expect(select).not.toHaveBeenCalled();
 });
 
-it("retains disconnect confirmation for false or failed results and unlocks only refreshed facts", async () => {
-  const onDisconnect = vi.fn(async () => false);
-  const extra = { onDisconnect };
-  (button(R.disconnectForManagement, extra).props.onClick as () => void)();
-  (button(STRINGS.agents.disconnect, extra).props.onClick as () => void)();
+it("selects another installation while connected; safe idle connections end on the backend", async () => {
+  (choose("candidate")!.props.onClick as () => void)();
   await settled();
-  expect(button(R.keepConnection, extra)).toBeDefined();
-  expect(choose("candidate")!.props.disabled).toBe(true);
-
-  onDisconnect.mockRejectedValueOnce(new Error("尚未确认断开"));
-  (button(STRINGS.agents.disconnect, extra).props.onClick as () => void)();
-  await settled();
-  expect(button(R.keepConnection, extra)).toBeDefined();
-  expect(
-    render(extra).some((node) => node.props.children === "尚未确认断开"),
-  ).toBe(true);
-  expect(choose("candidate")!.props.disabled).toBe(true);
-
-  onDisconnect.mockResolvedValueOnce(true);
-  (button(STRINGS.agents.disconnect, extra).props.onClick as () => void)();
-  await settled();
-  expect(button(R.keepConnection, extra)).toBeUndefined();
-  expect(choose("candidate")!.props.disabled).toBe(true);
+  expect(select).toHaveBeenCalledExactlyOnceWith(card.id, "candidate");
+  expect(choose("candidate")).toBeUndefined();
+  expect(choose("external")?.props.disabled).toBe(false);
   card.status = "installed";
   inventory.loading = true;
-  expect(choose("candidate")!.props.disabled).toBe(true);
+  expect(choose("external")!.props.disabled).toBe(true);
   inventory.loading = false;
-  expect(choose("candidate")!.props.disabled).toBe(false);
-  expect(select).not.toHaveBeenCalled();
+  expect(choose("external")!.props.disabled).toBe(false);
 });
 
 it("keeps a pending uninstall confirmation from deleting a newly selected installation", () => {
@@ -496,21 +485,20 @@ it("keeps a pending uninstall confirmation from deleting a newly selected instal
   expect(choose("candidate")).toBeUndefined();
 });
 
-it("keeps a guarded disconnect available when the installation inventory cannot be read", async () => {
-  inventory.items = [];
+it("offers no disconnect affordance even when the installation inventory cannot be read", () => {
   inventory.error = "清单读取失败";
-  const onDisconnect = vi.fn(async () => false);
-  const blocked = { onDisconnect, disconnectDisabled: true };
-  expect(button(R.disconnectForManagement, blocked).props.disabled).toBe(true);
-  (button(R.disconnectForManagement, blocked).props.onClick as () => void)();
-  expect(button(STRINGS.agents.disconnect, blocked)).toBeUndefined();
-  const extra = { onDisconnect };
-  (button(R.disconnectForManagement, extra).props.onClick as () => void)();
-  expect(onDisconnect).not.toHaveBeenCalled();
-  (button(STRINGS.agents.disconnect, extra).props.onClick as () => void)();
-  await settled();
-  expect(onDisconnect).toHaveBeenCalledOnce();
-  expect(button(R.keepConnection, extra)).toBeDefined();
+  const nodes = render();
+  expect(
+    nodes.some(
+      (node) =>
+        typeof node.props.children === "string" &&
+        node.props.children.includes("断开"),
+    ),
+  ).toBe(false);
+  // The unreadable inventory still locks destructive changes.
+  expect(choose("candidate")!.props.disabled).toBe(true);
+  inventory.error = null;
+  expect(choose("candidate")!.props.disabled).toBe(false);
   expect(select).not.toHaveBeenCalled();
 });
 
@@ -550,15 +538,19 @@ it.each([true, false])(
 );
 
 it("does not mislabel a confirmed connection when a prerequisite needs preparation", () => {
-  const onDisconnect = vi.fn(async () => true);
-  const extra = { prerequisitesReady: false, onDisconnect };
+  const extra = { prerequisitesReady: false };
   const nodes = render(extra);
   expect(nodes.some((node) => node.props.children === S.connected)).toBe(true);
   expect(
     nodes.some((node) => node.props.children === R.preparationRequired),
   ).toBe(false);
-  expect(button(R.disconnectForManagement, extra).props.disabled).toBe(false);
-  expect(onDisconnect).not.toHaveBeenCalled();
+  expect(
+    nodes.some(
+      (node) =>
+        typeof node.props.children === "string" &&
+        node.props.children.includes("断开"),
+    ),
+  ).toBe(false);
 });
 
 it.each([true, false])(
@@ -585,7 +577,6 @@ it.each([true, false])(
         },
       },
       setupStep: 0,
-      connected: false,
       registered,
       needsProgramInstall: false,
       prerequisitesReady: false,
@@ -595,11 +586,8 @@ it.each([true, false])(
       operationPending: false,
       progress: null,
       intent: "manage",
-      removeConfirm: false,
-      onRemoveConfirm: () => {},
+      onRemoveAgent: () => {},
       onConnect,
-      onDisconnect: async () => true,
-      onClose: () => {},
       importControl: null,
     });
     const manager = elements(tree).find(

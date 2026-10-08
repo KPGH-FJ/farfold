@@ -20,11 +20,21 @@ export const STRINGS = {
     connect: "连接",
     chooseProject: "选择项目",
     project: "项目工作设置",
-    remove: "从 Farfold 移除",
-    confirmRemove: "确认移除接入",
+    remove: "移除 Agent…",
+    removeTitle: (name: string) => `移除 ${name}`,
+    confirmRemove: "确认移除",
     removeHint:
-      "保留程序、配置与历史；撤销此接入的密钥授权。重新添加不会自动恢复授权。",
-    disconnected: "请先完成任务并断开连接，再更换程序或移除接入。",
+      "默认只移除 Farfold 对此 Agent 的接入：撤销密钥授权并移除登记。Agent 的程序、账号、配置与已有历史保留在本机，不随之删除。",
+    removeHistoryNote:
+      "已加入的对话保留在“所有对话”，可随时重新打开；之后也可以重新添加此 Agent。",
+    removeUninstall: "同时删除 Farfold 安装的程序",
+    removeUninstallNone: "没有可由 Farfold 删除的安装目录。",
+    removeInstallKept: "保留",
+    removeSignOut: "同时退出此 Agent 的账号登录",
+    removeSignOutUnknown:
+      "退出结果未确认，接入尚未移除。请检查 Agent 状态后重试，或取消勾选。",
+    removeBusy:
+      "仍有进行中的任务、待处理事项或未确认的操作，请先完成后再移除。",
     optional: "沿用已有设置。仅在 Agent 要求时完成登录。",
     guide: "查看官方配置指引",
     retry: "刷新",
@@ -195,9 +205,8 @@ export const STRINGS = {
     program: "当前执行程序",
     bundledProgram: "接入组件随附的程序",
     pathProgram: "按系统搜索路径查找；连接后请核对版本",
-    disconnectFirst: "更换前请先结束任务并断开连接；完成后重新连接验证。",
     failed: "安装未完成或已取消，原设置保留。可重试。",
-    changeFailed: "未能更换程序，请确认已断开连接并重试",
+    changeFailed: "未能使用这份程序，请重试",
     cancelFailed: "取消请求未送达，请重试",
     downloaded: (bytes: string, total?: string) =>
       total ? `${bytes} / ${total}` : `已下载 ${bytes}`,
@@ -362,7 +371,7 @@ export const STRINGS = {
     connectionLost: "连接中断，结果未知",
     connectionIdle: "连接已结束，可重新连接后继续",
     connectionStandby: "此对话已待命，可以恢复连接后继续",
-    connectionDisconnected: "你已断开连接，可以重新连接后继续",
+    connectionDisconnected: "连接已结束，可以重新连接后继续",
     sendAfterLoss: "连接已中断，请重连后再发送",
     reconnect: "重连",
     reconnecting: "正在重连…",
@@ -511,10 +520,6 @@ export const STRINGS = {
     connect: "连接",
     connecting: "连接中…",
     installing: "安装中…",
-    disconnect: "断开",
-    disconnecting: "断开中…",
-    remove: "删除",
-    removeConfirm: "确认删除？此操作不可恢复",
     discoveredAt: (path: string) => `本机位置：${path}`,
     registryVersion: (version: string) => `可安装版本：${version}`,
     localVersion: (version: string) => `本机 Agent：${version}`,
@@ -585,6 +590,10 @@ export const STRINGS = {
       connectFailed: "连接失败",
       installFailed: "安装失败",
       scanFailed: "扫描失败",
+      keptInstallations: (items: string[] | string) =>
+        `接入已移除；以下程序目录未能删除，仍保留在本机：${
+          Array.isArray(items) ? items.join("；") : items
+        }`,
     },
   },
   lifemodel: {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { X } from "@phosphor-icons/react";
 import {
@@ -29,6 +30,7 @@ import { AgentAuthSection } from "./AgentAuthSection";
 import { useSetupAuthFocus } from "./useSetupAuthFocus";
 import { useProgramInventory } from "./ProgramManager";
 import { agentSetupProgram } from "./AgentSetupProgram";
+import { AgentRemoveDialog } from "./AgentRemoveDialog";
 import {
   agentSetupCurrentSelection,
   agentSetupModelOptions,
@@ -191,7 +193,7 @@ export function AgentSetup({
   const [connecting, setConnecting] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [modelChanging, setModelChanging] = useState(false);
-  const [removeConfirm, setRemoveConfirm] = useState(false);
+  const [removing, setRemoving] = useState(false);
   const [serviceEditing, setServiceEditing] = useState(false);
   useEffect(() => setServiceEditing(false), [card.id]);
   const modelChange = useRef(0);
@@ -620,31 +622,6 @@ export function AgentSetup({
     dialog.current?.close();
     onOpenApi(card.id);
   };
-  const disconnect = async (): Promise<boolean> => {
-    if (busy || authBusy || operationPending) return false;
-    setConnecting(true);
-    setError(null);
-    try {
-      if (
-        authenticationWorkBlockers(
-          card.id,
-          threads.getSnapshot().threads.values(),
-        ).length
-      )
-        throw new Error(STRINGS.credentials.activeTasks);
-      const disconnected = await invoke<boolean>("agent_disconnect", {
-        agentId: card.id,
-      });
-      await agents.refresh();
-      if (disconnected) controller.invalidate();
-      return disconnected;
-    } catch (reason) {
-      setError(uiError(reason, STRINGS.repair.requestFailed));
-      return false;
-    } finally {
-      setConnecting(false);
-    }
-  };
   const close = onClose;
   const prepareAgain = () => {
     if (!canReadModels) return;
@@ -882,7 +859,6 @@ export function AgentSetup({
             inventory,
             installation,
             setupStep: setupProgress.step,
-            connected,
             registered,
             needsProgramInstall,
             prerequisitesReady,
@@ -892,11 +868,8 @@ export function AgentSetup({
             operationPending,
             progress,
             intent,
-            removeConfirm,
-            onRemoveConfirm: setRemoveConfirm,
+            onRemoveAgent: () => setRemoving(true),
             onConnect: () => connect(),
-            onDisconnect: disconnect,
-            onClose: close,
             importControl,
           })}
         <fieldset
@@ -913,9 +886,8 @@ export function AgentSetup({
             onBusyChange={setPrerequisitesBusy}
             onBeforeInstall={async () => {
               controller.invalidate();
-              // This command rejects while any real task or approval is active.
-              // Do not use the display helper, which records and absorbs errors.
-              await invoke("agent_disconnect", { agentId: card.id });
+              // The install command releases safe idle connections itself and
+              // rejects while any task, approval or check is unconfirmed.
               await agents.refresh();
             }}
             onInstalled={async () => {
@@ -1423,6 +1395,31 @@ export function AgentSetup({
           )}
         </div>
       </footer>
+      {removing &&
+        createPortal(
+          <AgentRemoveDialog
+            card={card}
+            agents={agents}
+            inventory={inventory}
+            cwd={cwd}
+            canLogout={authInfo?.executionReady === true && authInfo.canLogout}
+            blocked={
+              busy ||
+              authBusy ||
+              operationPending ||
+              authenticationWorkBlockers(
+                card.id,
+                threads.getSnapshot().threads.values(),
+              ).length > 0
+            }
+            onClose={() => setRemoving(false)}
+            onRemoved={() => {
+              setRemoving(false);
+              close();
+            }}
+          />,
+          document.body,
+        )}
     </dialog>
   );
 }

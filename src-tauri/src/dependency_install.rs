@@ -343,7 +343,7 @@ pub async fn agent_dependency_install(
             &agent_id,
         );
         if !install_tool && mode == DependencyInstallMode::InstallMissing {
-            crate::agent_install::require_disconnected(&app, &agent_id)?;
+            crate::agent_install::release_connections(&app, &agent_id).await?;
         }
         let prepare_app = app.clone();
         let prepare_id = agent_id.clone();

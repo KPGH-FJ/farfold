@@ -89,8 +89,6 @@ export function ProgramManager({
   onConnect,
   connectDisabled = false,
   prerequisitesReady = true,
-  onDisconnect,
-  disconnectDisabled = false,
 }: {
   card: AgentCardModel;
   agents: AgentsState;
@@ -101,23 +99,16 @@ export function ProgramManager({
   onConnect?: () => Promise<void>;
   connectDisabled?: boolean;
   prerequisitesReady?: boolean;
-  onDisconnect?: () => Promise<boolean>;
-  disconnectDisabled?: boolean;
 }) {
   const S = STRINGS.access;
   const { items, refresh } = inventory;
-  const [busy, setBusy] = useState<
-    "check" | "remove" | "connect" | "disconnect" | null
-  >(null);
+  const [busy, setBusy] = useState<"check" | "remove" | "connect" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<string | null>(null);
-  const [disconnectConfirm, setDisconnectConfirm] = useState(false);
   const operationBusy = !!busy || !!agents.busy[card.id];
-  const locked =
-    operationBusy ||
-    card.status === "connected" ||
-    inventory.loading ||
-    !!inventory.error;
+  // Program changes end safe idle connections themselves on the backend;
+  // only in-flight operations, inventory state and explicit blockers lock.
+  const locked = operationBusy || inventory.loading || !!inventory.error;
   const act = async (
     kind: "check" | "remove" | "connect",
     fn: () => Promise<unknown>,
@@ -137,25 +128,6 @@ export function ProgramManager({
       if (kind !== "connect") setConfirm(null);
     } catch (e) {
       setError(uiError(e, S.failure));
-    } finally {
-      await refresh();
-      setBusy(null);
-    }
-  };
-  const disconnect = async () => {
-    if (
-      operationBusy ||
-      disconnectDisabled ||
-      card.status !== "connected" ||
-      !onDisconnect
-    )
-      return;
-    setBusy("disconnect");
-    setError(null);
-    try {
-      if ((await onDisconnect()) === true) setDisconnectConfirm(false);
-    } catch (reason) {
-      setError(uiError(reason, S.failure));
     } finally {
       await refresh();
       setBusy(null);
@@ -249,21 +221,6 @@ export function ProgramManager({
               {ACCESS_STRINGS.connect}
             </button>
           )}
-          {primary &&
-            card.status === "connected" &&
-            onDisconnect &&
-            !disconnectConfirm && (
-              <button
-                className="btn btn-ghost"
-                disabled={operationBusy || disconnectDisabled}
-                onClick={() => {
-                  if (!operationBusy && !disconnectDisabled)
-                    setDisconnectConfirm(true);
-                }}
-              >
-                {R.disconnectForManagement}
-              </button>
-            )}
           {!item.selected && (
             <button
               className="btn btn-primary"
@@ -279,19 +236,17 @@ export function ProgramManager({
               {S.select}
             </button>
           )}
-          {item.managedRoot &&
-            item.canUninstall &&
-            card.status !== "connected" && (
-              <button
-                className="btn btn-ghost"
-                disabled={locked}
-                onClick={() => {
-                  if (!locked && item.canUninstall) setConfirm(item.id);
-                }}
-              >
-                {S.uninstall}
-              </button>
-            )}
+          {item.managedRoot && item.canUninstall && (
+            <button
+              className="btn btn-ghost"
+              disabled={locked}
+              onClick={() => {
+                if (!locked && item.canUninstall) setConfirm(item.id);
+              }}
+            >
+              {S.uninstall}
+            </button>
+          )}
         </div>
       </div>
       {confirm === item.id && (
@@ -391,20 +346,6 @@ export function ProgramManager({
                 {ACCESS_STRINGS.connect}
               </button>
             )}
-            {card.status === "connected" &&
-              onDisconnect &&
-              !disconnectConfirm && (
-                <button
-                  className="btn btn-ghost"
-                  disabled={operationBusy || disconnectDisabled}
-                  onClick={() => {
-                    if (!operationBusy && !disconnectDisabled)
-                      setDisconnectConfirm(true);
-                  }}
-                >
-                  {R.disconnectForManagement}
-                </button>
-              )}
           </div>
         )}
       {!current &&
@@ -415,27 +356,6 @@ export function ProgramManager({
       {current && (
         <div className="program-current">
           {renderInstallation(current, true)}
-        </div>
-      )}
-      {card.status === "connected" && onDisconnect && disconnectConfirm && (
-        <div className="access-confirm program-disconnect" role="alert">
-          <p>{R.disconnectHint}</p>
-          <button
-            className="btn btn-primary"
-            disabled={operationBusy || disconnectDisabled}
-            onClick={() => void disconnect()}
-          >
-            {busy === "disconnect"
-              ? STRINGS.common.loading
-              : STRINGS.agents.disconnect}
-          </button>
-          <button
-            className="btn btn-ghost"
-            disabled={operationBusy}
-            onClick={() => setDisconnectConfirm(false)}
-          >
-            {R.keepConnection}
-          </button>
         </div>
       )}
       {externalSetup && officialGuide}

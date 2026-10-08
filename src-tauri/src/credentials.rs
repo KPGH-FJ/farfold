@@ -84,6 +84,8 @@ pub struct SaveInput {
     #[serde(default)]
     pub models: Vec<String>,
 }
+/// Secure-storage service prefix for every pooled credential entry.
+const SERVICE_PREFIX: &str = "farfold.credential.";
 trait Vault {
     fn put(&self, id: &str, key: &str) -> Result<(), String>;
     fn get(&self, id: &str) -> Option<String>;
@@ -92,13 +94,13 @@ trait Vault {
 struct Keychain;
 impl Vault for Keychain {
     fn put(&self, id: &str, key: &str) -> Result<(), String> {
-        auth::keychain_store(&format!("farfold.credential.{id}"), key)
+        auth::keychain_store(&format!("{SERVICE_PREFIX}{id}"), key)
     }
     fn get(&self, id: &str) -> Option<String> {
-        auth::keychain_lookup(&format!("farfold.credential.{id}"))
+        auth::keychain_lookup(&format!("{SERVICE_PREFIX}{id}"))
     }
     fn delete(&self, id: &str) -> Result<(), String> {
-        auth::keychain_delete(&format!("farfold.credential.{id}"))
+        auth::keychain_delete(&format!("{SERVICE_PREFIX}{id}"))
     }
 }
 fn unique() -> String {
@@ -117,6 +119,21 @@ fn read(store: &MetaStore) -> Result<Vec<Credential>, String> {
         None => Ok(vec![]),
         Some(v) => serde_json::from_value(v).map_err(|_| "无法读取密钥设置，原数据已保留".into()),
     }
+}
+
+/// Every secure-storage service owned by Farfold's credential pool: active
+/// references and retired copies still kept for in-flight use. Callers delete
+/// these entries before any metadata reset so a partial failure never orphans
+/// a vault entry whose reference was already forgotten.
+pub(crate) fn secret_services(store: &MetaStore) -> Result<Vec<String>, String> {
+    read(store).map(|pool| {
+        pool.iter()
+            .flat_map(|credential| {
+                std::iter::once(&credential.secret_ref).chain(credential.retired.iter())
+            })
+            .map(|id| format!("{SERVICE_PREFIX}{id}"))
+            .collect()
+    })
 }
 fn write(store: &MetaStore, pool: &[Credential]) -> Result<(), String> {
     store.set_setting(
