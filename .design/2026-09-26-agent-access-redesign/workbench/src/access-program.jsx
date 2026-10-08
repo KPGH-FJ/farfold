@@ -1,41 +1,53 @@
-import React, { useState } from "react";
-import {
-  ArrowClockwise,
-  DownloadSimple,
-  LinkBreak,
-  Plus,
-  Trash,
-} from "@phosphor-icons/react";
+import React, { useEffect, useRef, useState } from "react";
+import { ArrowClockwise, DownloadSimple, Plus } from "@phosphor-icons/react";
 import { Button, Badge, Notice } from "./ui.jsx";
 import {
   installationReferenceIssue,
   programAction,
   startAgentJob,
 } from "./access-jobs.js";
+import {
+  startProgramChange,
+  removableInstallations,
+  removeAgentAccess,
+  uninstallUnusedProgram,
+} from "./agent-redesign-state.js";
+import AuthenticationWorkBlockers from "./AuthenticationWorkBlockers.jsx";
 
 export default function AccessProgram({
   agent,
   allAgents = [],
   onChange,
   busyCount,
+  blockingTasks = [],
+  onOpenBlockingTask,
   outcome,
   cancelOutcome,
 }) {
   const [path, setPath] = useState("");
   const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
+  const [uninstallIds, setUninstallIds] = useState([]);
+  const confirmationRef = useRef(null);
+  useEffect(() => {
+    if (confirmation) {
+      confirmationRef.current?.focus();
+      confirmationRef.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [confirmation]);
   const [programId, setProgramId] = useState("");
-  const locked = !!busyCount || !!agent.accessJob;
-  const mutationLocked = locked || agent.connected;
+  const locked =
+    !!busyCount || !!agent.accessJob || agent.connectionState === "unknown";
   const selected = agent.installations.find(
     (item) => item.id === agent.selectedInstallationId,
   );
   const discovered =
     agent.installations.find((item) => item.id === programId) ||
     (agent.installations.length === 1 ? agent.installations[0] : null);
+  const removable = removableInstallations(agent, allAgents);
   const start = (type, options = {}) =>
     onChange(
-      startAgentJob(agent, type, {
+      startProgramChange(agent, type, {
         outcome,
         cancelOutcome,
         busyCount,
@@ -58,24 +70,37 @@ export default function AccessProgram({
       version: "未读取",
       managed: false,
     };
-    const next = { ...agent, installations: [...agent.installations, item] };
-    onChange(
-      startAgentJob(next, "select", {
-        candidateId: item.id,
-        outcome,
-        cancelOutcome,
-        busyCount,
-      }),
-    );
-    setPath("");
+    setConfirmation({ action: "select", item, label: value });
     setError("");
   };
   const apply = () => {
-    onChange(
-      programAction(agent, confirmation.action, confirmation.id, busyCount, {
-        allAgents,
-      }),
-    );
+    if (locked) return;
+    if (confirmation.action === "remove") {
+      onChange(
+        removeAgentAccess(agent, { busyCount, allAgents, uninstallIds }),
+      );
+    } else if (confirmation.action === "uninstall") {
+      onChange(
+        uninstallUnusedProgram(agent, confirmation.item.id, {
+          busyCount,
+          allAgents,
+        }),
+      );
+    } else if (confirmation.action === "select") {
+      const item = confirmation.item;
+      const next = agent.installations.some((entry) => entry.id === item.id)
+        ? agent
+        : { ...agent, installations: [...agent.installations, item] };
+      onChange(
+        startProgramChange(next, "select", {
+          candidateId: item.id,
+          outcome,
+          cancelOutcome,
+          busyCount,
+        }),
+      );
+      setPath("");
+    } else start("install");
     setConfirmation(null);
   };
   return (
@@ -85,74 +110,57 @@ export default function AccessProgram({
           <h3>程序</h3>
           <p>
             {agent.removed
-              ? "接入已移除，程序与历史保留"
+              ? "已移除接入"
               : agent.connected
-                ? "已连接"
-                : agent.registered
-                  ? "已添加，尚未连接"
-                  : agent.installations.length
-                    ? "本机发现，尚未添加"
-                    : "尚未发现程序"}
-            {selected ? ` · ${selected.version}` : ""}
+                ? "程序检查通过 · 演示"
+                : agent.accessJob
+                  ? "正在检查程序…"
+                  : agent.registered
+                    ? "已添加，等待自动检查"
+                    : agent.installations.length
+                      ? "发现本机程序"
+                      : "尚未安装"}
           </p>
-          {!agent.registered && agent.installations.length > 1 && (
-            <label className="access-field">
-              <span>选择要接入的本机程序</span>
-              <select
-                value={discovered?.id || ""}
-                disabled={locked}
-                onChange={(event) => setProgramId(event.target.value)}
-              >
-                <option value="" disabled>
-                  请选择一份程序
-                </option>
-                {agent.installations.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {`${item.version || "未读取版本"} · ${item.path}`}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
         </div>
-        {agent.connected ? (
-          <Button
-            disabled={locked}
-            onClick={() =>
-              onChange(programAction(agent, "disconnect", null, busyCount))
-            }
-          >
-            <LinkBreak size={15} />
-            断开
-          </Button>
-        ) : !agent.registered && agent.installations.length ? (
-          <Button
-            primary
-            disabled={locked || !discovered}
-            onClick={() =>
-              discovered &&
-              onChange(
-                startAgentJob(
+        {!agent.registered && agent.installations.length > 0 ? (
+          <div className="agent-program-add">
+            {agent.installations.length > 1 && (
+              <label className="access-field">
+                <span>选择本机程序</span>
+                <select
+                  value={discovered?.id || ""}
+                  disabled={locked}
+                  onChange={(event) => setProgramId(event.target.value)}
+                >
+                  <option value="" disabled>
+                    请选择一份程序
+                  </option>
+                  {agent.installations.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.version || "版本未读取"} · {item.path}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <Button
+              primary
+              disabled={locked || !discovered}
+              onClick={() =>
+                onChange(
                   programAction(agent, "register", discovered.id, busyCount),
-                  "connect",
-                  { outcome, cancelOutcome, busyCount },
-                ),
-              )
-            }
-          >
-            <Plus size={15} />
-            {agent.dependenciesMissing ? "添加本机程序" : "添加并连接"}
-          </Button>
+                )
+              }
+            >
+              <Plus size={15} />
+              添加本机程序
+            </Button>
+          </div>
         ) : agent.dependenciesMissing ? (
           <Button primary disabled={locked} onClick={() => start("dependency")}>
             补齐必要程序
           </Button>
-        ) : agent.installed && agent.registered ? (
-          <Button primary disabled={locked} onClick={() => start("connect")}>
-            <ArrowClockwise size={15} />
-            {agent.connectionState === "failed" ? "重新连接" : "连接"}
-          </Button>
-        ) : (
+        ) : !agent.installed ? (
           <Button
             primary
             disabled={locked || agent.installSupported === false}
@@ -161,27 +169,187 @@ export default function AccessProgram({
             <DownloadSimple size={15} />
             安装程序
           </Button>
-        )}
+        ) : !agent.connected &&
+          !agent.accessJob &&
+          (agent.connectionState === "failed" ||
+            agent.lastAccessResult?.type === "connect") ? (
+          <Button
+            disabled={locked}
+            onClick={() =>
+              onChange(
+                startAgentJob(agent, "connect", {
+                  outcome,
+                  cancelOutcome,
+                  busyCount,
+                }),
+              )
+            }
+          >
+            <ArrowClockwise size={15} />
+            重新检查程序
+          </Button>
+        ) : null}
       </div>
+      {selected && (
+        <dl className="agent-program-facts agent-facts">
+          <div>
+            <dt>程序版本</dt>
+            <dd>{selected.version || "未读取"}</dd>
+          </div>
+          <div>
+            <dt>安装来源</dt>
+            <dd>{selected.managed ? "Farfold 管理" : "已有本机程序"}</dd>
+          </div>
+          <div>
+            <dt>接入组件版本</dt>
+            <dd>
+              {selected.componentVersion ||
+                agent.componentVersion ||
+                "未单独提供"}
+            </dd>
+          </div>
+        </dl>
+      )}
+      <p className="access-muted">
+        打开设置时自动检查程序。这里的安装与检查均为演示，不运行本机命令。
+      </p>
       {agent.dependenciesMissing && (
-        <p className="access-warning">
-          接入组件已存在，但缺少运行所需程序。补齐后才能连接。
-        </p>
+        <p className="access-warning">缺少运行所需程序，请先补齐。</p>
       )}
       {!!busyCount && (
         <Notice title={`这个 Agent 有 ${busyCount} 项工作待处理`}>
-          先处理进行中的任务、待回应或未确认结果，再断开或更换程序。其他 Agent
-          可以继续工作。
+          完成待处理工作后可以更换程序或移除接入。
         </Notice>
       )}
+      <AuthenticationWorkBlockers
+        actionLabel="程序管理"
+        tasks={blockingTasks}
+        onOpenTask={onOpenBlockingTask}
+      />
+      {agent.connectionState === "unknown" && (
+        <Notice title="程序检查结果尚未确认">
+          请先确认上一次检查已结束，再更换程序。
+        </Notice>
+      )}
+      {confirmation ? (
+        <div
+          className="access-confirm agent-action-confirm"
+          ref={confirmationRef}
+          tabIndex={-1}
+          role="group"
+          aria-label="确认程序操作"
+        >
+          <h3>
+            {confirmation.action === "remove"
+              ? "移除此 Agent？"
+              : confirmation.action === "uninstall"
+                ? "卸载这份旧版本？"
+                : confirmation.action === "select"
+                  ? "更换所选程序？"
+                  : "检查并更新程序？"}
+          </h3>
+          {confirmation.action === "remove" ? (
+            <>
+              <p>
+                从 Farfold 移除接入，并撤回此 Agent 对已保存 API
+                服务的使用授权。
+              </p>
+              <ul>
+                <li>保留程序、账号配置和全部历史。</li>
+                <li>已有对话可在对话库查看；重新使用需再次添加。</li>
+              </ul>
+              {removable.length > 0 && (
+                <fieldset className="agent-remove-options">
+                  <legend>可选清理 · 默认保留</legend>
+                  {removable.map((item) => (
+                    <label key={item.id}>
+                      <input
+                        type="checkbox"
+                        checked={uninstallIds.includes(item.id)}
+                        onChange={(event) =>
+                          setUninstallIds(
+                            event.target.checked
+                              ? [...uninstallIds, item.id]
+                              : uninstallIds.filter((id) => id !== item.id),
+                          )
+                        }
+                      />
+                      <span>
+                        同时卸载 Farfold 管理的程序{" "}
+                        <small>
+                          {item.version} · {item.path}
+                        </small>
+                      </span>
+                    </label>
+                  ))}
+                </fieldset>
+              )}
+              <p className="access-muted">
+                外部安装不会卸载。此样例未提供退出账号能力。
+              </p>
+            </>
+          ) : confirmation.action === "uninstall" ? (
+            <>
+              <dl className="agent-facts">
+                <div>
+                  <dt>待卸载版本</dt>
+                  <dd>{confirmation.item.version || "版本未读取"}</dd>
+                </div>
+                <div>
+                  <dt>受管理路径</dt>
+                  <dd>{confirmation.item.path}</dd>
+                </div>
+              </dl>
+              <p>
+                仅删除这份未选用、未被其他 Agent 使用的 Farfold
+                受管理程序。当前程序、接入、账号配置、已保存服务与全部对话历史均保留。
+              </p>
+              <p className="access-muted">演示清理，不删除本机文件。</p>
+            </>
+          ) : (
+            <>
+              <dl className="agent-facts">
+                <div>
+                  <dt>当前程序</dt>
+                  <dd>
+                    {selected?.version || "未选择"}
+                    <small>{selected?.path || ""}</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>候选程序</dt>
+                  <dd>
+                    {confirmation.action === "select"
+                      ? confirmation.item.version
+                      : "检查可安装版本 · 演示"}
+                    <small>{confirmation.label}</small>
+                  </dd>
+                </div>
+              </dl>
+              <p>
+                闲置连接自动结束。候选检查成功且确认结束后才替换当前选择；失败、取消或结果未知时保留原程序、配置与历史。
+              </p>
+            </>
+          )}
+          <div className="access-inline">
+            <Button onClick={() => setConfirmation(null)}>取消</Button>
+            <Button primary disabled={locked} onClick={apply}>
+              {confirmation.action === "remove"
+                ? "确认移除接入"
+                : confirmation.action === "uninstall"
+                  ? "确认卸载旧版本"
+                  : "开始检查"}
+            </Button>
+          </div>
+        </div>
+      ) : null}
       <details className="access-program-details">
         <summary>
-          管理程序与接入
+          程序路径与高级管理
           {agent.installations.length
             ? ` · ${agent.installations.length} 份程序`
             : ""}
         </summary>
-        <p>更换程序前先断开。候选检查及结束确认都成功后才替换当前选择。</p>
         <div className="access-installations">
           {agent.installations.map((item) => (
             <div className="access-installation" key={item.id}>
@@ -195,88 +363,61 @@ export default function AccessProgram({
                       : "外部安装"}
                 </Badge>
                 <code>{item.path}</code>
+                {item.componentVersion && (
+                  <small>接入组件 {item.componentVersion}</small>
+                )}
                 {installationReferenceIssue(agent, item, allAgents) && (
                   <small className="access-warning">
                     {installationReferenceIssue(agent, item, allAgents)}
                   </small>
                 )}
-                {item.componentVersion && (
-                  <small>
-                    接入组件 {item.componentVersion} · 与程序版本分别记录
-                  </small>
-                )}
               </div>
-              <div className="access-inline">
-                {item.id !== agent.selectedInstallationId && (
+              {item.id !== agent.selectedInstallationId && (
+                <div className="access-inline">
                   <Button
-                    disabled={mutationLocked}
-                    onClick={() => start("select", { candidateId: item.id })}
-                  >
-                    检查并选用
-                  </Button>
-                )}
-                {item.managed && (
-                  <Button
-                    disabled={
-                      mutationLocked ||
-                      item.id === agent.selectedInstallationId ||
-                      item.inUse ||
-                      !!installationReferenceIssue(agent, item, allAgents)
-                    }
-                    title={
-                      installationReferenceIssue(agent, item, allAgents) ||
-                      "卸载这份程序"
-                    }
-                    aria-label={`卸载 ${item.version} ${item.path}`}
+                    disabled={locked}
                     onClick={() =>
                       setConfirmation({
-                        action: "uninstall",
-                        id: item.id,
+                        action: "select",
+                        item,
                         label: item.path,
                       })
                     }
                   >
-                    <Trash size={15} />
+                    检查并选用
                   </Button>
-                )}
-              </div>
+                  {item.managed && (
+                    <Button
+                      disabled={
+                        locked ||
+                        !removable.some((entry) => entry.id === item.id)
+                      }
+                      title={
+                        installationReferenceIssue(agent, item, allAgents) ||
+                        (item.inUse ? "这份程序仍在使用" : undefined)
+                      }
+                      onClick={() =>
+                        setConfirmation({ action: "uninstall", item })
+                      }
+                    >
+                      卸载旧版本
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
-        </div>
-        {agent.connected && (
-          <p className="access-muted">
-            当前仍连接着这份程序；先点击上方“断开”。
-          </p>
-        )}
-        <div className="access-inline">
-          <Button
-            disabled={mutationLocked || agent.installSupported === false}
-            onClick={() => start("install")}
-          >
-            <DownloadSimple size={15} />
-            安装另一份 / 更新
-          </Button>
-          {agent.registered && (
-            <Button
-              disabled={mutationLocked}
-              onClick={() =>
-                setConfirmation({ action: "remove", label: agent.name })
-              }
-            >
-              移除接入
-            </Button>
-          )}
         </div>
         <label className="access-field">
           <span>选择其他本机程序</span>
           <input
             value={path}
-            disabled={mutationLocked}
+            disabled={locked}
             placeholder="/完整路径/agent"
             onChange={(event) => setPath(event.target.value)}
           />
         </label>
-        <Button disabled={mutationLocked || !path.trim()} onClick={addPath}>
+        <Button disabled={locked || !path.trim()} onClick={addPath}>
           检查并使用此路径
         </Button>
         {error && (
@@ -284,36 +425,27 @@ export default function AccessProgram({
             {error}
           </p>
         )}
-        <small>
-          断开只结束连接；移除撤销 Farfold
-          中的接入许可，程序、账号设置和历史保留。外部安装不由 Farfold 卸载。
-        </small>
-        {confirmation && (
-          <div
-            className="access-confirm"
-            role="group"
-            aria-label="确认程序操作"
-          >
-            <strong>
-              {confirmation.action === "remove"
-                ? "移除此接入？"
-                : "卸载这份受管理程序？"}
-            </strong>
-            <p>{confirmation.label}</p>
-            <p>
-              {confirmation.action === "remove"
-                ? "不会删除程序、账号配置或任何历史。再次使用需要明确添加。"
-                : "仅删除这份未选用且没有工作使用的程序；不会删除历史。"}
-            </p>
-            <div className="access-inline">
-              <Button onClick={() => setConfirmation(null)}>取消</Button>
-              <Button disabled={mutationLocked} onClick={apply}>
-                确认{confirmation.action === "remove" ? "移除" : "卸载"}
-              </Button>
-            </div>
-          </div>
-        )}
       </details>
+      <div className="agent-program-actions">
+        <Button
+          disabled={locked || agent.installSupported === false}
+          onClick={() => setConfirmation({ action: "update" })}
+        >
+          <DownloadSimple size={15} />
+          检查更新 / 安装另一份
+        </Button>
+        {agent.registered && (
+          <Button
+            disabled={locked}
+            onClick={() => {
+              setUninstallIds([]);
+              setConfirmation({ action: "remove" });
+            }}
+          >
+            移除 Agent
+          </Button>
+        )}
+      </div>
     </section>
   );
 }

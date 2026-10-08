@@ -6,9 +6,15 @@ import {
   Plus,
   X,
 } from "@phosphor-icons/react";
-import { Button, AgentIcon, Empty } from "./ui";
+import { Button, AgentIcon, Empty, Modal, Badge } from "./ui";
 import { statusLabel } from "./data-v2";
-import { archiveEligibility, filterConversations } from "./history-policy.js";
+import { archiveEligibility, hasUnsentContent } from "./history-policy.js";
+import {
+  libraryProtection,
+  libraryResults,
+  deletionScope,
+} from "./settings-library-state.js";
+import "./settings-redesign.css";
 import { conversationState } from "./conversation-policy.js";
 import "./history-settings.css";
 export default function ConversationLibrary({
@@ -22,25 +28,33 @@ export default function ConversationLibrary({
   onRename,
   onNew,
   onImport,
+  onDelete,
   starred = false,
   compact = false,
 }) {
   const [manage, setManage] = useState(false),
     [selected, setSelected] = useState([]),
     [menu, setMenu] = useState(null);
+  const [deleteIds, setDeleteIds] = useState(null);
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const [deleteResult, setDeleteResult] = useState("");
+  const scope = deletionScope(tasks, deleteIds || []);
+  const askDelete = (ids) => {
+    setDeleteIds(ids);
+    setDeleteConfirmed(false);
+  };
   const query = filters.query || "";
   useEffect(() => {
     setSelected([]);
     setMenu(null);
   }, [filters.agent, filters.group, filters.state, query, starred]);
-  const shown = filterConversations(tasks, { ...filters, starred });
-  const safeArchive = (task) =>
-    task.archived || archiveEligibility(task).allowed;
+  const shown = libraryResults(tasks, { ...filters, starred });
+  const safeArchive = (task) => task.archived || !libraryProtection(task);
   const selectedTasks = tasks.filter((task) => selected.includes(task.id));
   const blocked =
     filters.state === "archived"
       ? []
-      : selectedTasks.filter((task) => !archiveEligibility(task).allowed);
+      : selectedTasks.filter((task) => !!libraryProtection(task));
   const title =
     [starred ? "收藏" : "", filters.agent, filters.group]
       .filter(Boolean)
@@ -58,7 +72,9 @@ export default function ConversationLibrary({
       s.includes(id) ? s.filter((x) => x !== id) : [...s, id],
     );
   return (
-    <div className={"v2-library " + (compact ? "compact" : "")}>
+    <div
+      className={"v2-library library-redesign " + (compact ? "compact" : "")}
+    >
       {!compact && (
         <>
           <div className="v2-page-title">
@@ -147,9 +163,13 @@ export default function ConversationLibrary({
               </Button>
             </div>
           )}
-          <div className="v2-library-tabs" role="tablist">
+          <p className="sl-search-scope">
+            搜索标题、Agent、分组与工作位置 · 不搜索对话正文
+          </p>
+          <div className="v2-library-tabs" role="tablist" aria-label="对话状态">
             {[
-              ["all", "全部"],
+              ["all", "活动对话"],
+              ["drafts", "有未发内容"],
               ["needs", "等你回应"],
               ["running", "进行中"],
               ["unread", "新回复"],
@@ -165,7 +185,13 @@ export default function ConversationLibrary({
                   setSelected([]);
                 }}
               >
-                {label}
+                {label}{" "}
+                <span className="sl-tab-count">
+                  {
+                    libraryResults(tasks, { ...filters, state: id, starred })
+                      .length
+                  }
+                </span>
               </button>
             ))}
           </div>
@@ -200,11 +226,35 @@ export default function ConversationLibrary({
           >
             {filters.state === "archived" ? "移回对话" : "归档"}
           </Button>
+          <Button
+            disabled={!selected.length || !onDelete}
+            className="set-danger-text"
+            onClick={() => askDelete(selected)}
+          >
+            删除所选
+          </Button>
           <small role="status">
             {blocked.length
               ? `已选项中有 ${blocked.length} 段还有工作或待发内容，暂不能归档。`
               : "归档只整理列表，可随时移回。"}
           </small>
+        </div>
+      )}
+      {deleteResult && (
+        <p role="status" className="sl-result">
+          {deleteResult}
+        </p>
+      )}
+      {!compact && filters.state === "archived" && shown.length > 0 && (
+        <div className="sl-archive-summary">
+          <span>已归档仍可打开和恢复，删除需另行确认。</span>
+          <Button
+            className="set-danger-text"
+            disabled={!onDelete}
+            onClick={() => askDelete(shown.map((t) => t.id))}
+          >
+            清空当前已归档范围
+          </Button>
         </div>
       )}
       <div className="v2-chat-list">
@@ -224,10 +274,15 @@ export default function ConversationLibrary({
               <span>
                 {t.agent}
                 {t.group ? " · " + t.group : ""}
-                {t.draft ? " · 有草稿" : ""}
+                {hasUnsentContent(t) ? " · 有未发内容" : ""}
+                {t.queue?.length ? ` · ${t.queue.length} 条待发` : ""}
                 {t.archived && t.archiveSource === "automatic"
                   ? " · 自动归档"
                   : ""}
+              </span>
+              <span className="sl-row-location">
+                {t.folder || "未指定工作位置"}
+                {t.archived ? " · 已归档" : ""}
               </span>
             </button>
             <span
@@ -240,7 +295,7 @@ export default function ConversationLibrary({
                     ? "仅可查看"
                     : "已带入"
                   : conversationState(t).running
-                    ? "在跑"
+                    ? "进行中"
                     : statusLabel(t)}
             </span>
             <small className="v2-row-time">{t.time}</small>
@@ -288,9 +343,7 @@ export default function ConversationLibrary({
                         <button
                           disabled={!safeArchive(t)}
                           title={
-                            !safeArchive(t)
-                              ? archiveEligibility(t).reason
-                              : undefined
+                            !safeArchive(t) ? libraryProtection(t) : undefined
                           }
                           onClick={() => {
                             onPatch(t.id, { archived: !t.archived });
@@ -299,9 +352,19 @@ export default function ConversationLibrary({
                         >
                           {t.archived ? "移回对话" : "归档"}
                         </button>
+                        <button
+                          className="set-danger-text"
+                          disabled={!onDelete || !!libraryProtection(t)}
+                          onClick={() => {
+                            setMenu(null);
+                            askDelete([t.id]);
+                          }}
+                        >
+                          删除对话…
+                        </button>
                         {!safeArchive(t) && (
                           <p className="history-menu-reason">
-                            {archiveEligibility(t).reason}
+                            {libraryProtection(t)}
                           </p>
                         )}
                       </div>
@@ -316,15 +379,27 @@ export default function ConversationLibrary({
       {!shown.length && (
         <Empty
           icon={MagnifyingGlass}
-          title={compact ? "你的对话会留在这里" : "这里还没有对话"}
+          title={
+            compact
+              ? "你的对话会留在这里"
+              : starred && !tasks.some((t) => t.pinned)
+                ? "把常用对话收藏在这里"
+                : query || filters.agent || filters.group
+                  ? "没有匹配的对话"
+                  : filters.state === "drafts"
+                    ? "没有未发内容"
+                    : "这里还没有对话"
+          }
         >
           {compact ? (
             "从一个问题或一点灵感开始。"
           ) : (
             <>
-              {filters.state === "archived"
-                ? "归档会保留对话；移回后仍是原来的对话。"
-                : "换个筛选条件，或开始聊点新的。"}
+              {starred && !tasks.some((t) => t.pinned)
+                ? "在任意对话右侧点击星标，即可加入收藏；收藏不会改变工作位置。"
+                : filters.state === "archived"
+                  ? "归档会保留对话；移回后仍是原来的对话。"
+                  : "换个筛选条件，或开始聊点新的。"}
               {(filters.agent ||
                 filters.group ||
                 query ||
@@ -334,6 +409,82 @@ export default function ConversationLibrary({
             </>
           )}
         </Empty>
+      )}
+      {deleteIds && (
+        <Modal
+          title={`删除 ${scope.selected.length} 段对话？`}
+          onClose={() => setDeleteIds(null)}
+          footer={
+            <>
+              <Button onClick={() => setDeleteIds(null)}>取消</Button>
+              <Button
+                className="set-danger"
+                disabled={
+                  !deleteConfirmed ||
+                  scope.protected.length > 0 ||
+                  !scope.allowed.length ||
+                  !onDelete
+                }
+                onClick={() => {
+                  const ids = scope.allowed.map((t) => t.id);
+                  onDelete(ids);
+                  setDeleteIds(null);
+                  setSelected([]);
+                  setDeleteResult(
+                    `已移除 ${ids.length} 段演示对话。Agent 自己的历史和项目文件没有改变。`,
+                  );
+                }}
+              >
+                删除所选演示对话
+              </Button>
+            </>
+          }
+        >
+          <p className="sl-dialog-lead">
+            请核对本次范围。这项操作不会归档，删除后不能从列表恢复。
+          </p>
+          <ul className="sl-scope-list">
+            {scope.selected.map((t) => (
+              <li key={t.id}>
+                <strong>{t.title}</strong>
+                <span>
+                  {t.agent} · {t.group || "未分组"} · {t.folder || "未指定位置"}
+                </span>
+                {libraryProtection(t) && (
+                  <p className="sl-protected">{libraryProtection(t)}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className="sl-scope-grid">
+            <section>
+              <h3>移除</h3>
+              <p>所选对话在 Farfold 中的目录、收藏、分组与界面记录。</p>
+            </section>
+            <section>
+              <h3>保留</h3>
+              <p>
+                项目文件、Agent 账号与程序。这个示例不提供 Agent
+                侧历史删除，原历史仍保留。
+              </p>
+            </section>
+          </div>
+          {scope.protected.length > 0 ? (
+            <p role="alert" className="sl-protected">
+              有 {scope.protected.length}{" "}
+              段受保护对话，请回到对话处理未完成工作或未发内容；本次不会部分删除。
+            </p>
+          ) : (
+            <label className="sl-confirm-check">
+              <input
+                type="checkbox"
+                checked={deleteConfirmed}
+                onChange={(e) => setDeleteConfirmed(e.target.checked)}
+              />
+              我已核对所选范围，理解 Agent 侧历史仍保留
+            </label>
+          )}
+        </Modal>
       )}
     </div>
   );

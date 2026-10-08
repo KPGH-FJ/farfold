@@ -4,10 +4,18 @@ export default function ReviewToolbar({ pendingSend, setModal, storageIssue }) {
   return (
     <div className="v2-review-bar">
       <div>
-        <strong>FARFOLD · 交互原型</strong>
-        <span>模拟数据 · 不执行真实安装、登录或请求</span>
+        <strong>
+          FARFOLD <span className="review-version">07</span>
+        </strong>
+        <span>全产品改版 · 模拟数据</span>
       </div>
       <div>
+        <button
+          className="review-guide-trigger"
+          onClick={() => setModal("guide")}
+        >
+          改版导览
+        </button>
         <button disabled={pendingSend} onClick={() => setModal("examples")}>
           载入示例
         </button>

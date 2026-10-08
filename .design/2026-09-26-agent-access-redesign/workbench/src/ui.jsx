@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { AGENT_CATALOG } from "./agent-catalog.js";
 import {
   X,
   Check,
@@ -26,15 +27,18 @@ export function Button({
 export function Badge({ children, tone = "" }) {
   return <span className={`badge ${tone}`}>{children}</span>;
 }
-const AGENT_ICONS = { Codex: "codex", OpenCode: "opencode", Pi: "pi-color" };
 export function AgentIcon({ name = "Codex", size = 22 }) {
-  const asset = AGENT_ICONS[name];
+  const asset = AGENT_CATALOG.find((entry) =>
+    [entry.name, entry.id, entry.directoryName, entry.directoryId].includes(
+      name,
+    ),
+  )?.icon;
   return asset ? (
     <img
       className="agent-icon"
       width={size}
       height={size}
-      src={"/assets/" + asset + ".svg"}
+      src={asset}
       alt={name}
     />
   ) : (
@@ -82,6 +86,7 @@ export function Modal({
   onClose,
   wide = false,
   footer,
+  className = "",
 }) {
   const ref = useRef(null);
   const close = useRef(onClose);
@@ -149,7 +154,7 @@ export function Modal({
         aria-label={title}
         tabIndex={-1}
         ref={ref}
-        className={`modal ${wide ? "wide" : ""}`}
+        className={`modal ${wide ? "wide" : ""} ${className}`}
       >
         <header>
           <h2>{titleContent || title}</h2>

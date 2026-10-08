@@ -9,12 +9,17 @@ import {
 // different folder or source may be tried. `ready` controls icon styling only.
 export function agentHubStatus(agent, services = []) {
   const notice = (label) => ({ label, ready: false });
-  if (agent.accessJob) return notice(agent.accessJob.label);
+  if (agent.accessJob)
+    return notice(
+      agent.accessJob.type === "connect"
+        ? "正在检查程序"
+        : agent.accessJob.label,
+    );
   if (agent.removed) return notice("已移除接入");
   if (agent.dependenciesMissing) return notice("缺少必要程序");
-  if (agent.connectionState === "failed") return notice("连接失败");
-  if (agent.connectionState === "unknown") return notice("连接状态待确认");
-  if (agent.connectionState === "connecting") return notice("连接中");
+  if (agent.connectionState === "failed") return notice("程序检查失败");
+  if (agent.connectionState === "unknown") return notice("程序检查结果待确认");
+  if (agent.connectionState === "connecting") return notice("正在检查程序");
 
   const liveServiceIds = new Set(
     services
@@ -47,9 +52,12 @@ export function agentHubStatus(agent, services = []) {
 
   if (agentProgramReady(agent))
     return agentNeedsInitialPreparation(agent)
-      ? notice("程序已连接 · 接入未完成")
-      : { label: "已连接", ready: true };
-  if (agent.registered) return notice("已添加");
+      ? notice("未完成设置")
+      : { label: "可以使用", ready: true };
+  if (agent.registered)
+    return notice(
+      agentNeedsInitialPreparation(agent) ? "未完成设置" : "等待自动检查",
+    );
   if (agent.installations?.length) return notice("本机发现");
   return notice("尚未安装");
 }

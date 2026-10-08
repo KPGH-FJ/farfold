@@ -3,7 +3,7 @@ import { ArrowLeft, Check, Robot } from "@phosphor-icons/react";
 import { Button, Modal } from "./ui.jsx";
 import "./onboarding.css";
 
-const STAGES = ["连接程序", "使用方式", "确认使用"];
+const STAGES = ["程序", "账号与服务", "模型与确认"];
 
 export default function OnboardingLayout({
   agent,
@@ -11,6 +11,8 @@ export default function OnboardingLayout({
   intent,
   children,
   onBack,
+  onNavigate,
+  programReady = false,
   onClose,
   onNext,
   nextLabel,
@@ -21,6 +23,7 @@ export default function OnboardingLayout({
   const current = step === "program" ? 0 : step === "review" ? 2 : 1;
   return (
     <Modal
+      className="agent-redesign-modal"
       wide
       title={`接入 ${agent.name}`}
       titleContent={
@@ -66,10 +69,26 @@ export default function OnboardingLayout({
               <span className="onboarding-progress-mark" aria-hidden="true">
                 {index < current ? <Check size={13} /> : index + 1}
               </span>
-              <span>{label}</span>
+              {onNavigate ? (
+                <button
+                  type="button"
+                  disabled={busy || (index > 0 && !programReady)}
+                  aria-current={index === current ? "step" : undefined}
+                  onClick={() =>
+                    onNavigate(["program", "account", "model"][index])
+                  }
+                >
+                  {label}
+                </button>
+              ) : (
+                <span>{label}</span>
+              )}
             </li>
           ))}
         </ol>
+        <p className="agent-demo-banner">
+          演示接入流程 · 不安装程序、不登录真实账号、不发送请求
+        </p>
         <div className="onboarding-content">{children}</div>
       </div>
     </Modal>

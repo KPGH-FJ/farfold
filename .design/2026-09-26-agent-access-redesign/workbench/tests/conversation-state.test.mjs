@@ -48,6 +48,23 @@ const render = (task, props = {}) =>
     }),
   );
 
+test("审批与运行的 Enter 提示和待发动作一致，停止未知只提供检查结果", () => {
+  for (const status of ["approval", "running"]) {
+    const html = render({
+      id: "keyboard-review",
+      agent: "Codex",
+      model: "A",
+      title: "输入行为",
+      status,
+      draft: "保留内容",
+      queue: [],
+    });
+    assert.match(html, /Enter 加入待发/);
+    assert.match(html, /aria-label="加入待发"/);
+    assert.doesNotMatch(html, /Enter 发送 · Shift Enter 换行/);
+  }
+});
+
 test("连接测试用统一对话展示原短句和审批，不套用普通任务示例或另起发送器", () => {
   const task = {
     id: "test-job",
@@ -628,7 +645,8 @@ test("停止未确认保留审批与问题，真正确认后才移除待办", ()
     const seed = TASKS_V2.find((item) => item.id === id);
     const unknown = render({ ...seed, stopPhase: "unknown" });
     assert.match(unknown, /停止结果未知/);
-    assert.match(unknown, /重试停止/);
+    assert.match(unknown, /检查停止结果/);
+    assert.doesNotMatch(unknown, /重试停止/);
     assert.match(unknown, id === "approval" ? /批准这一次/ : /提交回答/);
     const stopped = render({ ...seed, status: "stopped", stopPhase: null });
     assert.doesNotMatch(stopped, id === "approval" ? /批准这一次/ : /提交回答/);

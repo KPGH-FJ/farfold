@@ -1,3 +1,4 @@
+import { AGENT_DIRECTORY } from "./agent-directory.js";
 import { authenticationFolder } from "./authentication-state.js";
 import { ACCOUNT_CAPABILITIES } from "./account-capabilities.js";
 import { APPROVAL_PRESET_SAMPLE } from "./permission-fixtures.js";
@@ -160,7 +161,28 @@ const entries = [
     sourceLabel: "fast-agent 文档",
   },
 ];
-export const AGENT_CATALOG = entries.map((entry) => ({
+const directoryEntries = [...AGENT_DIRECTORY]
+  .sort((a, b) => {
+    const rank = (row) => {
+      const index = entries.findIndex((entry) => entry.id === row.id);
+      return index < 0 ? entries.length : index;
+    };
+    return rank(a) - rank(b);
+  })
+  .map((directory) => {
+    const fixture = entries.find((entry) => entry.id === directory.id);
+    return {
+      name: directory.directoryName,
+      publisher: "目录收录",
+      categories: [],
+      ...fixture,
+      ...directory,
+      // Existing conversation names are stable; the directory uses current branding.
+      name: fixture?.name || directory.directoryName,
+      fixtureProvided: Boolean(fixture),
+    };
+  });
+export const AGENT_CATALOG = directoryEntries.map((entry) => ({
   installed: false,
   connected: false,
   added: !!entry.installed,
@@ -183,11 +205,15 @@ export const AGENT_CATALOG = entries.map((entry) => ({
   sourceLabel: "接入目录",
   supportNote: "目录可发现；当前程序、认证和模型能力需分别检查。",
   ...entry,
-  accountCapabilities: ACCOUNT_CAPABILITIES[entry.id],
+  accountCapabilities: entry.fixtureProvided
+    ? ACCOUNT_CAPABILITIES[entry.id]
+    : undefined,
   authenticationDeclaration: entry.authMethods?.length
     ? "prototype-sample"
     : "not-read",
-  capabilitiesEvidence: "原型能力样例，不代表本机检查结果",
+  capabilitiesEvidence: entry.fixtureProvided
+    ? "原型能力样例，不代表本机检查结果"
+    : "仅提供目录身份；程序、认证、模型能力尚未提供",
   authenticationEvidence: entry.authMethods?.length
     ? "这里展示登录交互样例；实际方式以所连接程序提供的选项为准。"
     : "尚未核实本机程序提供的登录方式。",
@@ -234,6 +260,9 @@ export function catalogState(catalog, agents = []) {
         }
       : {}),
     ...row,
+    directoryId: catalog.directoryId,
+    directoryName: catalog.directoryName,
+    icon: catalog.icon,
     onboardingComplete: row
       ? (row.onboardingComplete ?? row.setupComplete === true)
       : false,

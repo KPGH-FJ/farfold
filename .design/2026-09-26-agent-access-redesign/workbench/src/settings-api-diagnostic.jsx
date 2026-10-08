@@ -68,8 +68,8 @@ export default function ApiDiagnostic({
   return (
     <section className="set-api-test">
       <div className="set-section-title">
-        <h3>测试一个模型</h3>
-        <small>保存前后均可测试</small>
+        <h3>测试一个模型（可选）</h3>
+        <small>只验证本次选择，不代表已被 Agent 选用</small>
       </div>
       <div className="set-test-controls">
         <Field label="测试模型">

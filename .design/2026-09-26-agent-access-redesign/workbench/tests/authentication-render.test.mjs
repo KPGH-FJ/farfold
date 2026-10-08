@@ -192,8 +192,10 @@ test("login cannot start before the program is added and connected", () => {
     { ...agent, connected: false },
   ]) {
     const html = render(item);
-    const start = html.match(/<button[^>]*>[\s\S]*?登录账号<\/button>/)?.[0];
-    assert.ok(start?.includes('disabled=""'));
+    const starts =
+      html.match(/<button[^>]*class="agent-auth-method"[^>]*>/g) || [];
+    assert.equal(starts.length, 2);
+    assert.ok(starts.every((button) => button.includes('disabled=""')));
     assert.match(html, /先(?:添加|连接)/);
   }
 });
@@ -225,7 +227,7 @@ test("source choices appear for supported API delivery or an existing API draft,
     apiFormats: ["responses"],
   });
   assert.equal((supported.match(/type="radio"/g) || []).length, 2);
-  assert.ok(supported.includes("本机配置"));
+  assert.ok(supported.includes("沿用已有设置"));
   assert.ok(supported.includes("API 服务"));
   const stale = renderSetup({
     ...agent,
@@ -439,9 +441,9 @@ test("return from registration keeps the selected account method and does not re
     },
   };
   const html = render(item);
-  assert.match(html, /<option value="b" selected="">/);
+  assert.match(html, /data-method-id="b" data-selected="true"/);
   assert.ok(!html.includes("注册与登录流程已结束"));
-  assert.ok(html.includes("登录 账号 B"));
+  assert.ok(html.includes("登录账号 · 账号 B"));
   assert.ok(!html.includes("重新登录</button>"));
 });
 
@@ -487,9 +489,8 @@ test("browser authorization exposes a normal page action and keeps simulated rec
 test("a removed saved login method does not silently select a different account", () => {
   const html = render({ ...agent, authMethodSelection: "removed" });
   assert.ok(html.includes("原登录方式不可用，请重新选择"));
-  assert.match(html, /<option value="removed"[^>]*selected=""/);
-  const start = html.match(/<button[^>]*>[\s\S]*?登录账号<\/button>/)?.[0];
-  assert.ok(start?.includes('disabled=""'));
+  assert.ok(!html.includes('data-selected="true"'));
+  assert.equal((html.match(/class="agent-auth-method"/g) || []).length, 2);
 });
 
 test("an observed Agent login error on an API choice exposes login even without a declared prerequisite", () => {
@@ -544,7 +545,7 @@ test("account summary does not borrow a completed login from another working fol
     }),
   );
   assert.ok(!html.includes("账号设置已更新，可返回使用"));
-  assert.ok(html.includes("账号与模型尚未检查"));
+  assert.ok(html.includes("Agent 未提供身份信息"));
 });
 
 test("historical test result remains in the model panel and does not claim current success", () => {

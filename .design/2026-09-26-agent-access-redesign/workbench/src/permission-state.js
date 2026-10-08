@@ -35,7 +35,7 @@ export function permissionChangeState(task = {}, context = {}) {
   )
     reason = "正在确认更改，请稍候";
   else if (task.permissionChange?.phase === "unknown")
-    reason = "权限更改结果未确认，请先重新读取";
+    reason = "权限更改结果未确认，请重新确认本次权限";
   else if (
     task.admissionUnknown ||
     task.terminalUnknown ||

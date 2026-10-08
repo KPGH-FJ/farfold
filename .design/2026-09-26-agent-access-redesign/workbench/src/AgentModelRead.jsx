@@ -38,17 +38,23 @@ export default function AgentModelRead({
           ? "已读取可选模型 · 演示"
           : read?.status === "loading"
             ? "正在读取模型选项…"
-            : null;
+            : "尚未读取模型选项；当前模型来源与已保存选择保持不变。";
   return (
     <div className="model-read-control">
       {text && (
         <p
           role="status"
           className={
-            read.status === "failed" ? "access-warning" : "access-muted"
+            read?.status === "failed" ? "access-warning" : "access-muted"
           }
         >
           {text}
+          {read?.status === "not-provided" && (
+            <span>
+              {" "}
+              这不代表模型列表为空或账号不可用；可沿用 Agent 配置继续。
+            </span>
+          )}
         </p>
       )}
       <Button

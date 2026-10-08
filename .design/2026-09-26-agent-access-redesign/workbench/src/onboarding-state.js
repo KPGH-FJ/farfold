@@ -33,9 +33,9 @@ export function usesOnboarding(context = {}, agent) {
     (context.view === "thread" && context.intent !== "use")
   )
     return false;
+  if (context.intent === "manage" || context.manage) return false;
   if (context.resumeOnboarding || agentNeedsInitialPreparation(agent))
     return true;
-  if (context.intent === "manage" || context.manage) return false;
   return (
     context.intent === "use" ||
     !["agents", "explore", "thread"].includes(context.view)

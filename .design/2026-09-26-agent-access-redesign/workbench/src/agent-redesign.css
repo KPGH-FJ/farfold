@@ -1,0 +1,493 @@
+/* Agent-area refinements. Neutral shared tokens come from the workbench shell. */
+.agent-redesign,
+.agent-redesign-modal {
+  --agent-surface: var(--card, #fff);
+  --agent-subtle: var(--card-dim, #f6f6f5);
+  --agent-border: var(--line, #dededc);
+  --agent-text: var(--ink, #242422);
+  --agent-secondary: var(--muted, #686865);
+}
+.agent-redesign .hub-eyebrow {
+  color: var(--agent-secondary);
+  font-size: 12px;
+}
+.agent-redesign .hub-heading h1 {
+  letter-spacing: -0.5px;
+  font-size: 26px;
+}
+.agent-redesign .hub-heading p {
+  max-width: 660px;
+  line-height: 1.65;
+  font-size: 13px;
+}
+.agent-redesign .hub-grid {
+  gap: 16px;
+}
+.agent-redesign .hub-card {
+  box-shadow: none;
+  border: 1px solid var(--agent-border);
+  border-radius: 14px;
+}
+.agent-redesign .hub-card-status {
+  justify-content: space-between;
+  gap: 10px;
+}
+.agent-redesign .hub-card-status small {
+  color: var(--agent-secondary);
+  font-size: 10px;
+}
+.agent-redesign .hub-card-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.agent-redesign .hub-card-actions .btn {
+  min-height: 34px;
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+}
+.agent-redesign .hub-card-actions .btn svg {
+  flex: 0 0 auto;
+}
+.agent-redesign.agent-management .hub-card-actions {
+  flex-direction: row-reverse;
+}
+.agent-redesign .hub-search {
+  background: var(--agent-surface);
+  min-width: 200px;
+}
+.agent-redesign .hub-filters button {
+  min-height: 32px;
+}
+.agent-redesign .hub-filters button.active {
+  background: #eaeae7;
+  color: var(--agent-text);
+}
+.agent-redesign-modal {
+  width: min(800px, calc(100vw - 40px));
+  color: var(--agent-text);
+}
+.agent-redesign-modal:has(.setup-layout) {
+  width: min(800px, calc(100vw - 40px));
+}
+.agent-redesign-modal.agent-custom-modal {
+  width: min(620px, calc(100vw - 40px));
+}
+.agent-redesign-modal > header {
+  align-items: center;
+}
+.agent-redesign-modal > header h2 {
+  font-size: 17px;
+}
+.agent-redesign-modal > .modal-body {
+  padding: 22px 28px;
+}
+.agent-redesign-modal > footer {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.agent-redesign-modal .access-footer-note {
+  flex: 1 1 220px;
+  line-height: 1.5;
+}
+.agent-redesign-modal .setup-context {
+  font-size: 12px;
+  margin-bottom: 18px;
+}
+.agent-redesign-modal .setup-tabs {
+  gap: 4px;
+  background: var(--agent-subtle);
+  border: 1px solid var(--agent-border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.agent-redesign-modal .setup-tabs button {
+  flex: 1;
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 12px;
+}
+.agent-redesign-modal .setup-tabs button[aria-selected="true"] {
+  color: var(--agent-text);
+  background: var(--agent-surface);
+  box-shadow: 0 1px 3px #0000000d;
+}
+.agent-redesign-modal .setup-tabs button:disabled {
+  opacity: 0.5;
+}
+.agent-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.agent-section-heading h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.agent-demo-label,
+.agent-method-type {
+  display: inline-flex;
+  align-items: center;
+  background: var(--agent-subtle);
+  color: var(--agent-secondary);
+  border: 1px solid var(--agent-border);
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.agent-demo-banner {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--agent-subtle);
+  border-radius: 8px;
+  color: var(--agent-secondary);
+  font-size: 12px;
+}
+.agent-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 22px;
+  margin: 0;
+}
+.agent-facts > div {
+  min-width: 0;
+}
+.agent-facts dt {
+  color: var(--agent-secondary);
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+.agent-facts dd {
+  margin: 0;
+  color: var(--agent-text);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.agent-facts dd small {
+  display: block;
+  color: var(--agent-secondary);
+  font-size: 11px;
+}
+.agent-current-overview {
+  border: 1px solid var(--agent-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin: 16px 0 20px;
+}
+.agent-current-overview > p {
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.agent-capability-table,
+.agent-selection-diff table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.agent-capability-table th,
+.agent-capability-table td,
+.agent-selection-diff th,
+.agent-selection-diff td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--agent-border);
+  vertical-align: top;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.agent-capability-table thead,
+.agent-selection-diff thead {
+  background: var(--agent-subtle);
+  color: var(--agent-secondary);
+}
+.agent-capability-table th:first-child {
+  width: 24%;
+}
+.agent-capability-table tbody th {
+  font-weight: 500;
+}
+.agent-capability-table td:last-child {
+  color: var(--agent-secondary);
+}
+.agent-evidence-details {
+  margin-top: 16px;
+}
+.agent-evidence-details summary,
+.agent-account-actions summary,
+.agent-redesign-modal .access-program-details > summary {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 12px 0;
+}
+.agent-evidence-details p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.agent-account-actions {
+  border-top: 1px solid var(--agent-border);
+}
+.agent-account-actions > .account-entry {
+  padding-top: 10px;
+}
+.agent-model-source {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  padding: 14px 16px;
+  background: var(--agent-subtle);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.agent-model-source > span,
+.agent-model-source > small {
+  color: var(--agent-secondary);
+  font-size: 12px;
+}
+.agent-model-source > strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.agent-model-source > small {
+  grid-column: 2;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.agent-selection-diff {
+  border: 1px solid var(--agent-border);
+  border-radius: 10px;
+  padding: 14px;
+  margin: 18px 0;
+}
+.agent-selection-diff h4 {
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.agent-selection-diff p {
+  font-size: 12px;
+  color: var(--agent-secondary);
+  margin-bottom: 0;
+}
+.agent-redesign-modal .onboarding-progress {
+  margin-bottom: 18px;
+  padding: 0;
+}
+.agent-redesign-modal .onboarding-progress li {
+  flex: 1;
+}
+.agent-redesign-modal .onboarding-progress button {
+  background: none;
+  color: inherit;
+  border: 0;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 10px 4px;
+  text-align: left;
+}
+.agent-redesign-modal .onboarding-progress button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.agent-redesign-modal .onboarding-progress li[aria-current="step"] {
+  color: var(--agent-text);
+  font-weight: 600;
+}
+.agent-redesign-modal .onboarding-content {
+  padding-top: 22px;
+}
+.agent-program-facts {
+  margin: 18px 0;
+}
+.agent-program-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid var(--agent-border);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+.agent-program-add {
+  max-width: 300px;
+}
+.agent-redesign-modal .access-program-summary h3 {
+  font-size: 16px;
+}
+.agent-redesign-modal .access-program-details {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.agent-redesign-modal .access-program-details .access-installation {
+  align-items: center;
+  gap: 12px;
+}
+.agent-redesign-modal .access-program-details code {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.agent-action-confirm {
+  background: var(--agent-subtle);
+  border-color: var(--agent-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 20px;
+}
+.agent-action-confirm h3 {
+  font-size: 15px;
+  margin-top: 0;
+}
+.agent-action-confirm p,
+.agent-action-confirm li {
+  line-height: 1.65;
+  font-size: 12px;
+}
+.agent-remove-options {
+  border: 1px solid var(--agent-border);
+  padding: 12px;
+  margin: 16px 0;
+  border-radius: 8px;
+}
+.agent-remove-options legend {
+  font-size: 12px;
+}
+.agent-remove-options label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12px;
+}
+.agent-remove-options input {
+  width: auto;
+  margin-top: 3px;
+}
+.agent-remove-options small {
+  display: block;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+  color: var(--agent-secondary);
+}
+.agent-auth-methods {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+}
+.agent-auth-method {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 7px 12px;
+  border: 1px solid var(--agent-border);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: left;
+  background: var(--agent-surface);
+  cursor: pointer;
+}
+.agent-auth-method:hover:enabled {
+  background: var(--agent-subtle);
+  border-color: #aaa9a3;
+}
+.agent-auth-method strong {
+  font-size: 13px;
+}
+.agent-auth-method small {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  color: var(--agent-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.agent-auth-method > span:last-child {
+  font-size: 11px;
+  color: var(--agent-secondary);
+}
+.agent-auth-method:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.agent-auth-type {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.agent-auth-type small {
+  color: var(--agent-secondary);
+}
+.agent-registration-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  margin: 16px 0;
+}
+.agent-registration-help a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.agent-registration-help small {
+  flex-basis: 100%;
+  color: var(--agent-secondary);
+}
+.agent-redesign-modal .model-read-control > p {
+  line-height: 1.65;
+}
+.agent-redesign-modal button:focus-visible,
+.agent-redesign button:focus-visible {
+  outline: 2px solid var(--agent-text);
+  outline-offset: 3px;
+}
+@media (max-width: 900px) {
+  .agent-redesign .hub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .agent-redesign .hub-toolbar {
+    flex-wrap: wrap;
+  }
+  .agent-redesign .hub-search {
+    flex: 1;
+  }
+}
+@media (max-width: 620px) {
+  .agent-redesign {
+    padding: 22px 16px;
+  }
+  .agent-redesign .hub-grid {
+    grid-template-columns: 1fr;
+  }
+  .agent-redesign .hub-heading {
+    align-items: flex-start;
+  }
+  .agent-redesign .hub-filters {
+    flex-wrap: wrap;
+  }
+  .agent-redesign-modal > .modal-body {
+    padding: 18px;
+  }
+  .agent-facts {
+    grid-template-columns: 1fr;
+  }
+  .agent-capability-table {
+    font-size: 11px;
+  }
+  .agent-auth-method {
+    grid-template-columns: auto 1fr;
+  }
+  .agent-auth-method > span:last-child {
+    grid-column: 2;
+  }
+  .agent-auth-method small {
+    grid-column: 2;
+  }
+}

@@ -60,12 +60,8 @@ import { AGENT_CATALOG } from "./agent-catalog.js";
 import { compatibleServices } from "./service-access.js";
 import ApiTest from "./settings-api-diagnostic.jsx";
 import "./settings-api-lifecycle.css";
-import RegistrationJourney from "./RegistrationJourney.jsx";
-import { registrationMatchesService } from "./account-handoff.js";
-import {
-  beginRegistration,
-  registrationTransition,
-} from "./registration-state.js";
+import "./settings-redesign.css";
+import { ApiServiceGuide } from "./settings-maintenance.jsx";
 const START_SERVICES = [
   {
     id: "workspace",
@@ -114,7 +110,6 @@ export function ServiceEditor({
   const item = service;
   const onClose = onCancel;
   const [saving, setSaving] = useState(false);
-  const [registration, setRegistration] = useState(null);
   const [chooseProvider, setChooseProvider] = useState(false);
   const [saveFail, setSaveFail] = useState(false);
   const originalVersion = useRef(apiRecordVersion(service));
@@ -187,26 +182,7 @@ export function ServiceEditor({
     }
     setError("");
   };
-  const startRegistration = () => {
-    if (!draft.provider.trim()) {
-      setChooseProvider(true);
-      return;
-    }
-    setChooseProvider(false);
-    setRegistration(
-      registrationMatchesService(registration, draft)
-        ? registrationTransition(registration, "resume")
-        : beginRegistration({
-            kind: "api",
-            accountLabel: draft.provider.trim(),
-            selection: {
-              name: draft.name,
-              endpoint: draft.endpoint,
-              format: draft.format,
-            },
-          }),
-    );
-  };
+  const startRegistration = () => setChooseProvider(true);
   const changedSource =
     !!item &&
     (draft.endpoint !== item.endpoint || draft.format !== item.format);
@@ -292,52 +268,27 @@ export function ServiceEditor({
     (changedSource || item.models.some((m) => !draft.models.includes(m)));
   if (chooseProvider)
     return (
-      <Modal
-        title="选择 API 服务"
+      <ApiServiceGuide
         onClose={() => setChooseProvider(false)}
-        footer={
-          <>
-            <Button onClick={() => setChooseProvider(false)}>返回配置</Button>
-            <Button
-              primary
-              disabled={!draft.provider.trim()}
-              onClick={startRegistration}
-            >
-              继续
-            </Button>
-          </>
-        }
-      >
-        <div className="set-form">
-          <Field
-            label="服务方"
-            hint="填写准备使用的服务，再继续注册或获取密钥。"
-          >
-            <input
-              autoFocus
-              value={draft.provider}
-              onChange={(e) => change("provider", e.target.value)}
-              placeholder="公司、平台或自己的服务"
-            />
-          </Field>
-          <p className="set-caption">此处演示获取流程，原配置内容保留。</p>
-        </div>
-      </Modal>
-    );
-  if (registration?.open)
-    return (
-      <Modal
-        title="API 账号与密钥"
-        onClose={() =>
-          setRegistration(registrationTransition(registration, "return"))
-        }
-        footer={<span>API 配置输入保留；没有保存或发送密钥</span>}
-      >
-        <RegistrationJourney state={registration} onChange={setRegistration} />
-      </Modal>
+        onUseSample={() => {
+          setDraft((current) => {
+            let next = current;
+            for (const [key, value] of Object.entries({
+              name: "演示模型服务",
+              provider: "示例服务方",
+              endpoint: "https://models.example.com/v1",
+              models: ["Atria Fast"],
+            })) {
+              if (!next[key]?.length) next = changeApiDraft(next, key, value);
+            }
+            return confirmDemoKey(next);
+          });
+          setChooseProvider(false);
+        }}
+      />
     );
   return (
-    <>
+    <div className="settings-redesign">
       <Modal
         wide
         title={item ? "编辑 API 配置" : "添加 API 配置"}
@@ -350,7 +301,7 @@ export function ServiceEditor({
               aria-live="polite"
             >
               {saveIssue && <span>{saveIssue}</span>}
-              <small>保存无需先测试</small>
+              <small>保存无需先测试 · 保存不会自动选用</small>
             </span>
             <Button onClick={close}>取消</Button>
             <Button
@@ -371,22 +322,19 @@ export function ServiceEditor({
           style={{ border: 0, padding: 0, margin: 0, minWidth: 0 }}
         >
           <div className="set-editor-intro">
-            <p>保存完整的模型服务，在新对话中选择来源和模型。</p>
+            <p>
+              保存到服务目录，再到 Agent
+              中选择使用。当前对话的来源不会随之切换。
+            </p>
             <Badge>演示数据</Badge>
           </div>
           <div className="registration-shortcuts">
-            <Button onClick={startRegistration}>
-              {registrationMatchesService(registration, draft)
-                ? "查看账号与密钥获取进度"
-                : "没有账号或密钥，查看获取流程"}
-            </Button>
+            <Button onClick={startRegistration}>查看账号与密钥准备步骤</Button>
             <p>
-              {registrationMatchesService(registration, draft) &&
-              registration?.status === "key-issued"
-                ? "已模拟取得密钥；请继续填写配置。没有保存，也没有向 Agent 分发。"
-                : "已有密钥直接填写下方配置。API 服务账号与 Agent 订阅分别管理。"}
+              已有密钥可直接配置。需要帮助时查看服务文档与密钥页示例，原表单保持。
             </p>
           </div>
+          <h3 className="sl-editor-section-title">1 · 服务与密钥</h3>
           <div className="set-form set-form-grid">
             <Field label="配置名称">
               <input
@@ -419,8 +367,8 @@ export function ServiceEditor({
                   placeholder="https://api.example.com/v1"
                 />
                 <small id={endpointHintId}>
-                  填写完整的 HTTPS 基础地址，不包含 /chat/completions、/responses
-                  或 /messages。
+                  填写完整的 HTTPS 基础地址，不包含
+                  /chat/completions、/responses 或 /messages。
                 </small>
                 {showEndpointIssue && (
                   <span
@@ -477,14 +425,30 @@ export function ServiceEditor({
           </div>
           {changedSource && (
             <Notice tone="warning" title="服务地址或接口已改变">
-              已有密钥不会自动发送到新地址。请重新选择演示密钥；正式产品要求为新来源重新填写密钥。
+              已有密钥不会自动交给新来源。请核对下面的变化，再为新来源选择演示密钥。
+              <dl className="sl-source-diff">
+                <div>
+                  <dt>原来源</dt>
+                  <dd>
+                    {item.endpoint}
+                    <small>{FORMAT_NAMES[item.format]}</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>本次修改</dt>
+                  <dd>
+                    {draft.endpoint || "尚未填写"}
+                    <small>{FORMAT_NAMES[draft.format]}</small>
+                  </dd>
+                </div>
+              </dl>
             </Notice>
           )}
           <section className="set-model-editor">
             <div className="set-section-title">
               <div>
                 <h3>
-                  可选模型{" "}
+                  2 · 可选模型{" "}
                   <span className="set-count">{draft.models.length}</span>
                 </h3>
                 <p>读取列表后选择需要的模型，也可以手动添加。</p>
@@ -697,14 +661,20 @@ export function ServiceEditor({
       {discard && (
         <Confirm
           title="放弃未保存的修改？"
-          confirm="放弃修改"
+          confirm={item ? "放弃修改" : "放弃新增"}
+          cancel="继续编辑"
           onClose={() => setDiscard(false)}
           onConfirm={onClose}
         >
-          <p>当前表单尚未保存。关闭后只保留上次保存的配置。</p>
+          <p>
+            {item
+              ? "当前修改尚未保存，放弃后保留原有配置。"
+              : "这是一份尚未保存的新配置，放弃后不会加入服务目录。"}
+          </p>
+          <p>留在这里可以继续编辑；当前对话和其他服务不受影响。</p>
         </Confirm>
       )}
-    </>
+    </div>
   );
 }
 
@@ -786,16 +756,29 @@ export default function Api({
     toast("配置已保存到演示列表 · 未发送给任何 Agent");
   };
   return (
-    <div className="settings-api">
+    <div className="settings-api settings-redesign">
       <PageHeading
         title="API 配置"
-        description="保存一次，在兼容的 Agent 中选择使用。"
+        description="管理服务来源、密钥与模型。保存后，在 Agent 中明确选用。"
       >
         <Button primary onClick={() => setEditor(null)}>
           <Plus size={17} />
           添加 API
         </Button>
       </PageHeading>
+      <div className="sl-api-path">
+        <span>
+          <b>1</b> 保存服务配置
+        </span>
+        <span>→</span>
+        <span>
+          <b>2</b> 在 Agent 中选用
+        </span>
+        <span>→</span>
+        <span>
+          <b>3</b> 确认模型后开始
+        </span>
+      </div>
       {fromAgent && (
         <Notice
           title="继续设置模型来源"
@@ -806,7 +789,7 @@ export default function Api({
             </Button>
           }
         >
-          保存后返回新对话选择服务。API 配置与 Agent 账号登录是两件事。
+          保存后返回原 Agent 设置，选择服务与模型；不会自动切换当前对话。
         </Notice>
       )}
       <details className="settings-api-review">
@@ -848,7 +831,7 @@ export default function Api({
         </Notice>
       ) : (
         <>
-          {(services.length > 2 || query) && (
+          {services.length > 0 && (
             <label className="set-search set-api-search">
               <MagnifyingGlass size={17} />
               <input
@@ -895,7 +878,7 @@ export default function Api({
                         {s.provider || "自定义来源"} · {FORMAT_NAMES[s.format]}
                       </p>
                     </div>
-                    <Badge tone={s.deleting ? "warning" : "purple"}>
+                    <Badge tone={s.deleting ? "warning" : ""}>
                       {s.deleting ? "删除未完成" : "已保存"}
                     </Badge>
                   </div>

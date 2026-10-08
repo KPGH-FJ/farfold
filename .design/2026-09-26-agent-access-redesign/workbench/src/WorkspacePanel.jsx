@@ -21,6 +21,7 @@ import {
 import { Badge, Button } from "./ui";
 import "./workspace.css";
 import FileFeedback from "./FileFeedback.jsx";
+import FilePreviewState, { FilePreviewReview } from "./FilePreviewState.jsx";
 
 export function diffRows(before, after) {
   const left = before.split("\n"),
@@ -169,6 +170,7 @@ export default function WorkspacePanel({
     [viewport, setViewport] = useState("wide"),
     [testFilter, setTestFilter] = useState("all"),
     [logFilter, setLogFilter] = useState("all");
+  const [showFileList, setShowFileList] = useState(false);
   const contentRef = useRef(null),
     paneRef = useRef(null),
     previewRef = useRef(null);
@@ -189,6 +191,8 @@ export default function WorkspacePanel({
       ? `// 第二版示例：已调整内容，原行位置不再直接适用\n${baseFile.after}`
       : baseFile.after,
   };
+  const filePhase = task?.filePreviewStates?.[file.path];
+  const fileBlocked = filePhase && filePhase !== "ready";
   const visibleTests =
     data.tests?.filter(
       (test) => testFilter === "all" || test.status === "failed",
@@ -198,7 +202,10 @@ export default function WorkspacePanel({
     visibleTests.find((test) => test.status === "failed") ||
     visibleTests[0];
   const finding = data.findings.find((item) => item.id === panel.finding);
-  const change = (patch) => onPanelChange({ ...panel, ...patch });
+  const change = (patch) => {
+    setShowFileList(false);
+    onPanelChange({ ...panel, ...patch });
+  };
   const tabs = {
     review: [
       { id: "diff", label: "改动" },
@@ -449,21 +456,11 @@ export default function WorkspacePanel({
           </Button>
         </div>
       )}
-      {task && isCode && (
-        <div className="workspace-version-preview">
+      {task && !["logs", "tests"].includes(tab) && (
+        <div className="cr-file-version">
           <span>{file.versionLabel}</span>
-          <Button
-            kind="text"
-            onClick={() =>
-              onTaskChange({
-                artifactVersions: {
-                  ...task.artifactVersions,
-                  [file.path]: !newerVersion,
-                },
-              })
-            }
-          >
-            {newerVersion ? "返回第一版示例" : "演示文件更新"}
+          <Button kind="text" onClick={() => setShowFileList(!showFileList)}>
+            文件列表
           </Button>
         </div>
       )}
@@ -471,135 +468,176 @@ export default function WorkspacePanel({
         className={`workspace-panel-content ${tab === "preview" && kind === "web" ? "web" : ""}`}
         ref={contentRef}
       >
-        {isCode && finding && (
-          <div className="workspace-location" role="note">
-            <WarningCircle size={15} />
-            <span>
-              {finding.title} · 第 {finding.line} 行
-            </span>
-            <Button kind="text" onClick={() => onFeedback(finding.prompt)}>
-              带回输入
-            </Button>
+        {showFileList ? (
+          <div className="cr-file-list" aria-label="文件列表">
+            {data.files.map((item) => (
+              <button key={item.id} onClick={() => change({ file: item.id })}>
+                {item.path}
+                <small>
+                  {" "}
+                  ·{" "}
+                  {task?.filePreviewStates?.[item.path] === "failed"
+                    ? "上次读取失败，可重试"
+                    : "可查看"}
+                </small>
+              </button>
+            ))}
           </div>
-        )}
-        {!data.files.length && (
-          <div className="conv-pane-empty">
-            <FileText size={28} />
-            <strong>暂无可查看的内容</strong>
-            <p>这份示例暂时没有文件。你可以关闭内容区，继续查看对话。</p>
-            <Button onClick={onClose}>返回对话</Button>
-          </div>
-        )}
-        {data.files.length > 0 && isCode && (
-          <CodeView
+        ) : fileBlocked && !["logs", "tests"].includes(tab) ? (
+          <FilePreviewState
+            task={task}
             file={file}
-            mode={tab === "source" ? "source" : diffMode}
-            focusLine={panel.line}
+            onTaskChange={onTaskChange}
+            onBack={() => setShowFileList(true)}
           />
-        )}
-        {data.files.length > 0 && kind === "web" && tab === "preview" && (
+        ) : (
           <>
-            <div className={`workspace-web-stage ${viewport}`}>
-              <iframe
-                ref={previewRef}
-                sandbox=""
-                title="周末小计划 · 本地网页预览"
-                srcDoc={srcDoc}
-              />
-            </div>
-          </>
-        )}
-        {data.files.length > 0 && kind === "document" && tab === "compare" && (
-          <div className="workspace-document-compare">
-            <section>
-              <header>原稿</header>
-              <MarkdownPreview text={file.before} />
-            </section>
-            <section>
-              <header>修改稿</header>
-              <MarkdownPreview text={file.after} />
-            </section>
-          </div>
-        )}
-        {data.files.length > 0 && kind === "document" && tab === "preview" && (
-          <MarkdownPreview text={file.after} />
-        )}
-        {data.files.length > 0 && kind === "run" && tab === "tests" && (
-          <>
-            <div className="workspace-test-list">
-              {visibleTests.map((test) => (
-                <button
-                  key={test.id}
-                  className={selectedTest?.id === test.id ? "selected" : ""}
-                  onClick={() => change({ test: test.id })}
-                >
-                  {test.status === "passed" ? (
-                    <CheckCircle size={16} className="passed" />
-                  ) : (
-                    <XCircle size={16} className="failed" />
-                  )}
-                  <span>{test.name}</span>
-                  <small>{test.duration}</small>
-                  <CaretRight size={13} />
-                </button>
-              ))}
-            </div>
-            {selectedTest && (
-              <section className="workspace-test-detail">
-                <h3>{selectedTest.name}</h3>
-                <pre>{selectedTest.detail}</pre>
-                <Button
-                  onClick={() =>
-                    change({
-                      tab: "source",
-                      file: selectedTest.fileId,
-                      line: selectedTest.line,
-                      focusTick: Date.now(),
-                    })
-                  }
-                >
-                  查看相关代码
-                  <ArrowLeft size={13} />
+            {isCode && finding && (
+              <div className="workspace-location" role="note">
+                <WarningCircle size={15} />
+                <span>
+                  {finding.title} · 第 {finding.line} 行
+                </span>
+                <Button kind="text" onClick={() => onFeedback(finding.prompt)}>
+                  带回输入
                 </Button>
-                {selectedTest.status === "failed" && (
-                  <Button
-                    kind="text"
-                    onClick={() =>
-                      onFeedback(
-                        `请分析这条测试失败：${selectedTest.name}。${selectedTest.detail.split("\n")[0]}。先讨论原因与修复方案，不要直接修改。`,
-                      )
-                    }
-                  >
-                    <ChatCircleText size={14} />
-                    带回输入
-                  </Button>
+              </div>
+            )}
+            {!data.files.length && (
+              <div className="conv-pane-empty">
+                <FileText size={28} />
+                <strong>暂无可查看的内容</strong>
+                <p>这份示例暂时没有文件。你可以关闭内容区，继续查看对话。</p>
+                <Button onClick={onClose}>返回对话</Button>
+              </div>
+            )}
+            {data.files.length > 0 && isCode && (
+              <CodeView
+                file={file}
+                mode={tab === "source" ? "source" : diffMode}
+                focusLine={panel.line}
+              />
+            )}
+            {data.files.length > 0 && kind === "web" && tab === "preview" && (
+              <>
+                <div className={`workspace-web-stage ${viewport}`}>
+                  <iframe
+                    ref={previewRef}
+                    sandbox=""
+                    title="周末小计划 · 本地网页预览"
+                    srcDoc={srcDoc}
+                  />
+                </div>
+              </>
+            )}
+            {data.files.length > 0 &&
+              kind === "document" &&
+              tab === "compare" && (
+                <div className="workspace-document-compare">
+                  <section>
+                    <header>原稿</header>
+                    <MarkdownPreview text={file.before} />
+                  </section>
+                  <section>
+                    <header>修改稿</header>
+                    <MarkdownPreview text={file.after} />
+                  </section>
+                </div>
+              )}
+            {data.files.length > 0 &&
+              kind === "document" &&
+              tab === "preview" && <MarkdownPreview text={file.after} />}
+            {data.files.length > 0 && kind === "run" && tab === "tests" && (
+              <>
+                <div className="workspace-test-list">
+                  {visibleTests.map((test) => (
+                    <button
+                      key={test.id}
+                      className={selectedTest?.id === test.id ? "selected" : ""}
+                      onClick={() => change({ test: test.id })}
+                    >
+                      {test.status === "passed" ? (
+                        <CheckCircle size={16} className="passed" />
+                      ) : (
+                        <XCircle size={16} className="failed" />
+                      )}
+                      <span>{test.name}</span>
+                      <small>{test.duration}</small>
+                      <CaretRight size={13} />
+                    </button>
+                  ))}
+                </div>
+                {selectedTest && (
+                  <section className="workspace-test-detail">
+                    <h3>{selectedTest.name}</h3>
+                    <pre>{selectedTest.detail}</pre>
+                    <Button
+                      onClick={() =>
+                        change({
+                          tab: "source",
+                          file: selectedTest.fileId,
+                          line: selectedTest.line,
+                          focusTick: Date.now(),
+                        })
+                      }
+                    >
+                      查看相关代码
+                      <ArrowLeft size={13} />
+                    </Button>
+                    {selectedTest.status === "failed" && (
+                      <Button
+                        kind="text"
+                        onClick={() =>
+                          onFeedback(
+                            `请分析这条测试失败：${selectedTest.name}。${selectedTest.detail.split("\n")[0]}。先讨论原因与修复方案，不要直接修改。`,
+                          )
+                        }
+                      >
+                        <ChatCircleText size={14} />
+                        带回输入
+                      </Button>
+                    )}
+                  </section>
                 )}
-              </section>
+              </>
+            )}
+            {data.files.length > 0 && kind === "run" && tab === "logs" && (
+              <>
+                <div className="workspace-log-list">
+                  {data.logs
+                    .filter(
+                      (log) => logFilter === "all" || log.level === logFilter,
+                    )
+                    .map((log, index) => (
+                      <div className={log.level} key={index}>
+                        <time>{log.time}</time>
+                        <span>{log.level}</span>
+                        <code>{log.text}</code>
+                      </div>
+                    ))}
+                </div>
+              </>
             )}
           </>
         )}
-        {data.files.length > 0 && kind === "run" && tab === "logs" && (
-          <>
-            <div className="workspace-log-list">
-              {data.logs
-                .filter((log) => logFilter === "all" || log.level === logFilter)
-                .map((log, index) => (
-                  <div className={log.level} key={index}>
-                    <time>{log.time}</time>
-                    <span>{log.level}</span>
-                    <code>{log.text}</code>
-                  </div>
-                ))}
-            </div>
-          </>
-        )}
       </div>
-      {task && data.files.length > 0 && !["logs", "tests"].includes(tab) && (
-        <FileFeedback
+      {task &&
+        data.files.length > 0 &&
+        !fileBlocked &&
+        !showFileList &&
+        !["logs", "tests"].includes(tab) && (
+          <FileFeedback
+            task={task}
+            file={file}
+            onTaskChange={onTaskChange}
+            toast={toast}
+          />
+        )}
+      {task && !["logs", "tests"].includes(tab) && (
+        <FilePreviewReview
           task={task}
           file={file}
           onTaskChange={onTaskChange}
-          toast={toast}
         />
       )}
       <footer className="workspace-pane-footer">

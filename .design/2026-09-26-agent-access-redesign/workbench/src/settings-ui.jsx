@@ -69,6 +69,7 @@ export function Confirm({
   title,
   children,
   confirm = "确认",
+  cancel = "取消",
   onConfirm,
   onClose,
   danger = false,
@@ -79,7 +80,7 @@ export function Confirm({
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>取消</Button>
+          <Button onClick={onClose}>{cancel}</Button>
           <Button
             primary={!danger}
             className={danger ? "set-danger" : ""}

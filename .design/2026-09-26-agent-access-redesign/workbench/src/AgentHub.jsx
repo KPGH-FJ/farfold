@@ -29,6 +29,8 @@ import {
 } from "./setup-entry.js";
 import "./agent-hub.css";
 import "./access-ui.css";
+import "./agent-redesign.css";
+import { AgentCapabilities, AgentIdentity } from "./AgentEvidence.jsx";
 
 export default function AgentHub({
   agents = [],
@@ -57,6 +59,13 @@ export default function AgentHub({
   const [setup, setSetup] = useState(null);
   const [setupIntent, setSetupIntent] = useState(null);
   const [custom, setCustom] = useState(null);
+  const [customExit, setCustomExit] = useState(false);
+  const [customDraft, setCustomDraft] = useState(null);
+  const closeCustom = () => {
+    if (custom && Object.values(custom).some((value) => String(value).trim()))
+      setCustomExit(true);
+    else setCustom(null);
+  };
   const [customError, setCustomError] = useState("");
   const [scanResult, setScanResult] = useState("");
   const seenInitial = useRef(null);
@@ -109,11 +118,12 @@ export default function AgentHub({
     });
   const prepare = (item, intent = "use") => {
     if (
-      agentNeedsInitialPreparation(item) ||
-      pendingOnboardingForEntry(item, initialSelection, {
-        ...initialContext,
-        intent,
-      })
+      intent !== "manage" &&
+      (agentNeedsInitialPreparation(item) ||
+        pendingOnboardingForEntry(item, initialSelection, {
+          ...initialContext,
+          intent,
+        }))
     )
       intent = "use";
     setDetail(null);
@@ -133,7 +143,7 @@ export default function AgentHub({
     (item) =>
       (view !== "added" || item.added || item.accessJob) &&
       (category === "全部" || item.categories?.includes(category)) &&
-      `${item.name} ${item.publisher} ${item.description}`
+      `${item.name} ${item.directoryName || ""} ${item.directoryId || ""} ${item.publisher} ${item.description}`
         .toLowerCase()
         .includes(query.trim().toLowerCase()),
   );
@@ -191,6 +201,7 @@ export default function AgentHub({
     };
     setAgents?.((previous) => [...previous, item]);
     setCustom(null);
+    setCustomDraft(null);
     setSetup(id);
     setSetupIntent("use");
     onPreparationIntent?.("use");
@@ -207,7 +218,9 @@ export default function AgentHub({
     );
   };
   return (
-    <section className="hub-shell access-hub">
+    <section
+      className={`hub-shell access-hub agent-redesign ${view === "added" ? "agent-management" : "agent-discovery"}`}
+    >
       <header className="hub-heading">
         <div>
           <div className="hub-eyebrow">
@@ -220,18 +233,18 @@ export default function AgentHub({
           </h1>
           <p>
             {view === "added"
-              ? "查看连接情况，设置账号、模型和程序。"
+              ? "按需管理程序、账号与服务、模型。已有对话保留各自设置。"
               : "选一个 Agent 开始工作，也可以在这里安装和管理。"}
           </p>
         </div>
         <Button
           onClick={() => {
-            setCustom({ name: "", command: "", args: "" });
+            setCustom(customDraft || { name: "", command: "", args: "" });
             setCustomError("");
           }}
         >
           <Plus size={16} />
-          自定义接入
+          {customDraft ? "继续自定义接入" : "自定义接入"}
         </Button>
       </header>
       <div className="hub-toolbar">
@@ -299,11 +312,11 @@ export default function AgentHub({
                 >
                   <HubIcon agent={item} size={35} />
                   <span>
-                    <strong>{item.name}</strong>
-                    <small>{item.publisher}</small>
+                    <strong>{item.directoryName || item.name}</strong>
+                    <small>{item.directoryId || item.publisher}</small>
                   </span>
                 </button>
-                <Badge tone={item.connected ? "green" : ""}>
+                <Badge>
                   {item.sourceKind === "custom" ? "自定义" : "目录条目"}
                 </Badge>
               </div>
@@ -327,10 +340,12 @@ export default function AgentHub({
                   )}
                   {status(item).label}
                 </span>
+                <small>演示状态</small>
               </div>
               <div className="hub-card-actions">
                 <Button
                   primary={
+                    view !== "added" &&
                     agentCanStartConversation(item) &&
                     !hasPendingOnboarding(item)
                   }
@@ -347,11 +362,12 @@ export default function AgentHub({
                   <ArrowRight size={14} />
                 </Button>
                 <Button
-                  kind="icon"
+                  primary={view === "added"}
                   aria-label={`管理 ${item.name}`}
                   onClick={() => prepare(item, "manage")}
                 >
                   <SlidersHorizontal size={17} />
+                  管理设置
                 </Button>
               </div>
             </article>
@@ -383,6 +399,7 @@ export default function AgentHub({
       {selected && (
         <Modal
           wide
+          className="agent-redesign-modal"
           title={`${selected.name} · 接入说明`}
           onClose={() => setDetail(null)}
           footer={
@@ -398,22 +415,26 @@ export default function AgentHub({
             <div className="access-identity">
               <HubIcon agent={selected} size={42} />
               <div>
-                <strong>{selected.name}</strong>
-                <p>{selected.publisher}</p>
+                <strong>{selected.directoryName || selected.name}</strong>
+                <p>{selected.directoryId || selected.publisher}</p>
               </div>
               <Badge>{status(selected).label}</Badge>
             </div>
             <p>{selected.description}</p>
-            <h3>接入范围</h3>
-            <p>{selected.supportNote}</p>
-            <p>
-              {selected.serviceCapabilities?.status === "implemented"
-                ? "可以在 Farfold 中选择兼容的 API 服务。"
-                : "当前请沿用 Agent 已有设置；暂不能在这里选择 API 服务。"}
-            </p>
-            <p className="access-muted">
-              {selected.capabilitiesEvidence || "当前能力尚未读取。"}
-            </p>
+            <AgentCapabilities agent={selected} />
+            {selected.added && (
+              <AgentIdentity
+                agent={selected}
+                source={
+                  selected.accessMode === "api"
+                    ? services.find(
+                        (service) => service.id === selected.serviceId,
+                      )?.name
+                    : undefined
+                }
+                model={selected.model}
+              />
+            )}
             {selected.sourceUrl && (
               <a href={selected.sourceUrl} target="_blank" rel="noreferrer">
                 {selected.sourceLabel}
@@ -463,14 +484,19 @@ export default function AgentHub({
           toast={toast}
         />
       )}
-      {custom && (
+      {custom && !customExit && (
         <Modal
+          className="agent-redesign-modal agent-custom-modal"
           title="自定义 Agent 接入"
-          onClose={() => setCustom(null)}
+          onClose={closeCustom}
           footer={
             <>
-              <Button onClick={() => setCustom(null)}>取消</Button>
-              <Button primary onClick={addCustom}>
+              <Button onClick={closeCustom}>取消</Button>
+              <Button
+                primary
+                disabled={!custom.name.trim() || !custom.command.trim()}
+                onClick={addCustom}
+              >
                 添加并检查
               </Button>
             </>
@@ -518,6 +544,41 @@ export default function AgentHub({
               这里只记录模拟配置，不会运行命令或读取任何秘密。
             </p>
           </div>
+        </Modal>
+      )}
+      {customExit && (
+        <Modal
+          className="agent-redesign-modal"
+          title="保留自定义接入草稿？"
+          onClose={() => setCustomExit(false)}
+          footer={
+            <>
+              <Button onClick={() => setCustomExit(false)}>继续填写</Button>
+              <Button
+                onClick={() => {
+                  setCustom(null);
+                  setCustomDraft(null);
+                  setCustomExit(false);
+                }}
+              >
+                放弃草稿
+              </Button>
+              <Button
+                primary
+                onClick={() => {
+                  setCustomDraft(custom);
+                  setCustom(null);
+                  setCustomExit(false);
+                }}
+              >
+                保留并返回
+              </Button>
+            </>
+          }
+        >
+          <p>
+            已填写的名称、程序与参数尚未添加。保留后可从“继续自定义接入”恢复；不会运行命令。
+          </p>
         </Modal>
       )}
     </section>

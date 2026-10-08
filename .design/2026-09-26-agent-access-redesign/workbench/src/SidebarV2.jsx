@@ -31,6 +31,9 @@ export default function SidebarV2({
   runningCount = 0,
   hasDraft = false,
   onStatus,
+  managementMode = false,
+  onManageAgents,
+  onOpenRecent,
 }) {
   const [agentsOpen, setAgentsOpen] = useState(true),
     [groupsOpen, setGroupsOpen] = useState(true);
@@ -95,16 +98,45 @@ export default function SidebarV2({
           Star,
           count((t) => t.pinned),
         )}
-        {nav("agents", "探索 Agent", Compass)}
+        {nav(
+          "agents",
+          managementMode && view === "agents" ? "管理 Agent" : "探索 Agent",
+          Compass,
+        )}
       </nav>
       <div className="v2-sidebar-scroll">
+        {tasks.some((t) => visibleInActive(t)) && (
+          <div className="sidebar-recents">
+            <div className="v2-section-label">
+              <span>最近对话</span>
+            </div>
+            {tasks
+              .filter((t) => visibleInActive(t))
+              .slice(0, 3)
+              .map((t) => (
+                <button
+                  key={t.id}
+                  title={t.title}
+                  onClick={() => onOpenRecent?.(t)}
+                >
+                  <span>{t.title}</span>
+                  {["approval", "question", "unknown", "recovery"].includes(
+                    t.status,
+                  ) && <i aria-label="需要回应" />}
+                </button>
+              ))}
+          </div>
+        )}
         <div className="v2-section-label">
-          <button onClick={() => setAgentsOpen(!agentsOpen)}>
+          <button
+            aria-expanded={agentsOpen}
+            onClick={() => setAgentsOpen(!agentsOpen)}
+          >
             {agentsOpen ? <CaretDown size={12} /> : <CaretRight size={12} />}
             我的 Agent
           </button>
-          <button aria-label="添加 Agent" onClick={() => go("agents")}>
-            <Plus size={14} />
+          <button aria-label="管理我的 Agent" onClick={onManageAgents}>
+            <Gear size={14} />
           </button>
         </div>
         {agentsOpen &&
@@ -130,7 +162,10 @@ export default function SidebarV2({
               </button>
             ))}
         <div className="v2-section-label">
-          <button onClick={() => setGroupsOpen(!groupsOpen)}>
+          <button
+            aria-expanded={groupsOpen}
+            onClick={() => setGroupsOpen(!groupsOpen)}
+          >
             {groupsOpen ? <CaretDown size={12} /> : <CaretRight size={12} />}
             分组
           </button>
@@ -178,7 +213,7 @@ export default function SidebarV2({
           <Gear size={18} />
           <span>设置</span>
         </button>
-        <small>属于你的 Agent，在一处相遇。</small>
+        <small>一个工作台，接续每段对话。</small>
       </div>
     </aside>
   );

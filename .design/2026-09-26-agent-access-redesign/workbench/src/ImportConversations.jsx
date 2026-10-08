@@ -29,6 +29,7 @@ import {
   toggleVisibleSelection,
 } from "./import-state.js";
 import "./import-conversations.css";
+import "./settings-redesign.css";
 
 export default function ImportConversations({
   open = true,
@@ -44,6 +45,13 @@ export default function ImportConversations({
 }) {
   const available = addedImportAgents(agents);
   const [agentId, setAgentId] = useState("");
+  const [agentQuery, setAgentQuery] = useState("");
+  const [previewChecks, setPreviewChecks] = useState({});
+  const filteredAgents = available.filter((item) =>
+    item.name
+      .toLocaleLowerCase()
+      .includes(agentQuery.trim().toLocaleLowerCase()),
+  );
   const [drafts, setDrafts] = useState({});
   const [busy, setBusy] = useState(null);
   const [attempts, setAttempts] = useState({});
@@ -58,17 +66,14 @@ export default function ImportConversations({
   const draft = drafts[agentId] || initialImportDraft();
   const joined = joinedImportTasks(tasks, accepted);
   const knownTasks = [...joined.values()];
-  const visible = filterImportRecords(draft.records, draft.query);
+  const matchingRecords = filterImportRecords(draft.records, draft.query);
+  const visible = matchingRecords.slice(0, draft.visibleCount || 3);
   const eligible = visible.filter((record) => isImportable(record, knownTasks));
   const selectedRecords = draft.records.filter(
     (record) =>
       draft.selected.includes(record.key) && isImportable(record, knownTasks),
   );
-  const preview = visibleImportPreview(
-    draft.records,
-    draft.query,
-    draft.previewId,
-  );
+  const preview = visibleImportPreview(visible, draft.query, draft.previewId);
   const failures = draft.outcome?.failures || [];
   const setDraft = (patch, id = agentId) =>
     setDrafts((state) => ({
@@ -274,6 +279,39 @@ export default function ImportConversations({
       450,
     );
   };
+  const loadMore = () => {
+    const owner = agentId;
+    operation.current.begin(
+      "more",
+      owner,
+      (op) => {
+        setDraft({ visibleCount: (draft.visibleCount || 3) + 3 }, owner);
+        operation.current.finish(op);
+      },
+      350,
+    );
+  };
+  const recheckPreview = () => {
+    if (!preview || !agentReady || busy) return;
+    const key = preview.key;
+    operation.current.begin(
+      "preview",
+      agentId,
+      (op) => {
+        setPreviewChecks((current) => ({
+          ...current,
+          [key]:
+            preview.status === "unreadable"
+              ? "重新读取仍未取得正文，请稍后重试；没有加入空对话。"
+              : preview.status === "missingLocation"
+                ? "正文可读，但原位置仍不可用。可只读加入，或另开一段对话。"
+                : "正文可读，仍未能确认原来源与模型；这条对话继续保持只读。",
+        }));
+        operation.current.finish(op);
+      },
+      450,
+    );
+  };
   const choose = (record) =>
     setDraft({
       selected: draft.selected.includes(record.key)
@@ -317,7 +355,7 @@ export default function ImportConversations({
                   ? "关闭"
                   : draft.outcome?.tasks?.length && !selectedRecords.length
                     ? "完成"
-                    : "取消"}
+                    : "暂时离开"}
               </Button>
               {step === 1 ? (
                 <Button
@@ -350,11 +388,11 @@ export default function ImportConversations({
         }
       >
         <div className="import-proposal">
-          <Badge>设计提案</Badge>
+          <Badge>原型示例</Badge>
           <span>本地示例数据，不读取真实 Agent 历史。</span>
         </div>
         <ol className="import-steps" aria-label="带入步骤">
-          {["选择 Agent", "查找对话", "选择并加入"].map((label, index) => (
+          {["选择 Agent", "查找", "预览与加入"].map((label, index) => (
             <li
               key={label}
               className={
@@ -404,6 +442,25 @@ export default function ImportConversations({
                 已有对话继续使用原来的 Agent 和模型，加入时不会重新发送消息。
               </p>
             </div>
+            {available.length > 0 && (
+              <label className="import-search sl-import-agent-search">
+                <MagnifyingGlass size={16} />
+                <input
+                  aria-label="搜索导入 Agent"
+                  placeholder="按名称查找 Agent"
+                  value={agentQuery}
+                  onChange={(e) => setAgentQuery(e.target.value)}
+                />
+                <span>
+                  {filteredAgents.length} / {available.length}
+                </span>
+              </label>
+            )}
+            {agent && (
+              <p className="sl-search-scope">
+                当前选择：{agent.name} · 查找后不会自动加入或发送
+              </p>
+            )}
             {!available.length ? (
               <div className="import-empty">
                 <ChatCircleText size={26} />
@@ -423,7 +480,7 @@ export default function ImportConversations({
               </div>
             ) : (
               <div className="import-agents">
-                {available.map((item) => (
+                {filteredAgents.map((item) => (
                   <button
                     key={item.id || item.name}
                     className={
@@ -447,6 +504,13 @@ export default function ImportConversations({
                     )}
                   </button>
                 ))}
+              </div>
+            )}
+            {available.length > 0 && !filteredAgents.length && (
+              <div className="import-empty compact">
+                <strong>没有匹配的 Agent</strong>
+                <p>试试名称中的其他词，当前选择仍保留。</p>
+                <Button onClick={() => setAgentQuery("")}>清除搜索</Button>
               </div>
             )}
             {agent && (
@@ -566,7 +630,7 @@ export default function ImportConversations({
                       placeholder="搜索标题、摘要或位置"
                       value={draft.query}
                       onChange={(event) =>
-                        setDraft({ query: event.target.value })
+                        setDraft({ query: event.target.value, visibleCount: 3 })
                       }
                     />
                   </label>
@@ -616,9 +680,12 @@ export default function ImportConversations({
                               })
                             }
                           />
-                          全选当前结果
+                          全选已显示的可加入项
                         </label>
-                        <span>已选 {selectedRecords.length}</span>
+                        <span>
+                          已选 {selectedRecords.length} · 显示 {visible.length}/
+                          {matchingRecords.length}
+                        </span>
                         {draft.selected.length > 0 && (
                           <button
                             onClick={() => setDraft({ selected: [] })}
@@ -704,6 +771,17 @@ export default function ImportConversations({
                           );
                         })
                       )}
+                      {visible.length < matchingRecords.length && (
+                        <Button
+                          className="sl-import-more"
+                          disabled={Boolean(busy)}
+                          onClick={loadMore}
+                        >
+                          {busy === "more"
+                            ? "加载中…"
+                            : `加载更多示例（还有 ${matchingRecords.length - visible.length} 段）`}
+                        </Button>
+                      )}
                     </section>
                     <section
                       className="import-preview"
@@ -714,9 +792,34 @@ export default function ImportConversations({
                           <div className="import-preview-title">
                             <span>正文预览</span>
                             <h3>{preview.title}</h3>
-                            <small>
-                              {preview.model} · {preview.source}
-                            </small>
+                            <dl className="sl-import-facts">
+                              <div>
+                                <dt>正文</dt>
+                                <dd>
+                                  {preview.messages?.length
+                                    ? "已读取"
+                                    : "未取得"}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt>继续能力</dt>
+                                <dd>
+                                  {preview.status === "continuable"
+                                    ? "已确认可继续（示例）"
+                                    : preview.status === "unreadable"
+                                      ? "尚未核对"
+                                      : "仅可查看，不能继续发送"}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt>原模型</dt>
+                                <dd>{preview.model}</dd>
+                              </div>
+                              <div>
+                                <dt>原来源</dt>
+                                <dd>{preview.source}</dd>
+                              </div>
+                            </dl>
                           </div>
                           <div className="import-location">
                             <FolderSimple size={14} />
@@ -727,8 +830,24 @@ export default function ImportConversations({
                           {preview.reason && (
                             <div className="import-preview-note">
                               <WarningCircle size={15} />
-                              <p>{preview.reason}</p>
+                              <div>
+                                <p>{preview.reason}</p>
+                                <Button
+                                  kind="text"
+                                  disabled={!agentReady || Boolean(busy)}
+                                  onClick={recheckPreview}
+                                >
+                                  {busy === "preview"
+                                    ? "检查中…"
+                                    : "重新检查这条对话"}
+                                </Button>
+                              </div>
                             </div>
+                          )}
+                          {previewChecks[preview.key] && (
+                            <p className="sl-preview-check" role="status">
+                              {previewChecks[preview.key]}（本地演示）
+                            </p>
                           )}
                           {preview.status === "unreadable" ? (
                             <div className="import-empty compact">
@@ -736,10 +855,10 @@ export default function ImportConversations({
                               <p>此条不能加入，也不会以空对话代替。</p>
                               <Button
                                 kind="text"
-                                onClick={() => lookup("normal")}
+                                onClick={recheckPreview}
                                 disabled={!agentReady || Boolean(busy)}
                               >
-                                重试查找
+                                重新读取这条正文
                               </Button>
                             </div>
                           ) : (
@@ -763,6 +882,25 @@ export default function ImportConversations({
                               ))}
                             </div>
                           )}
+                          {!joined.has(preview.key) &&
+                            isImportable(preview, knownTasks) && (
+                              <div className="sl-preview-action">
+                                <Button
+                                  primary
+                                  disabled={Boolean(busy) || !agentReady}
+                                  onClick={() => choose(preview)}
+                                >
+                                  {draft.selected.includes(preview.key)
+                                    ? "取消选择这条"
+                                    : preview.status === "continuable"
+                                      ? "选择这条对话"
+                                      : "选择并保留为只读"}
+                                </Button>
+                                <small>
+                                  只选择，点击底部“加入所选”后才加入列表。
+                                </small>
+                              </div>
+                            )}
                           {joined.has(preview.key) && (
                             <Button onClick={() => openJoined(preview.key)}>
                               打开已加入的对话

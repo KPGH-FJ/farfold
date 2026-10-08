@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import FileFeedback from "./FileFeedback.jsx";
+import FilePreviewState, { FilePreviewReview } from "./FilePreviewState.jsx";
 import {
   Archive,
   ArrowClockwise,
@@ -230,7 +231,13 @@ function Step({
   );
 }
 
-function Approval({ request, answer, onDecision, disabled = false }) {
+function Approval({
+  request,
+  answer,
+  onDecision,
+  disabled = false,
+  stopPhase,
+}) {
   const [decision, setDecision] = useState(
     answer ? (answer === "reject" ? "rejected" : "approved") : null,
   );
@@ -266,7 +273,13 @@ function Approval({ request, answer, onDecision, disabled = false }) {
   return (
     <section className="conv-approval">
       <div className="conv-card-label">
-        <Badge tone="amber">需要批准</Badge>
+        <Badge tone="amber">
+          {stopPhase === "waiting"
+            ? "等待停止确认"
+            : stopPhase === "unknown"
+              ? "停止结果未确认"
+              : "需要批准"}
+        </Badge>
         <span>{request.kind === "file" ? "文件修改" : "运行命令"}</span>
       </div>
       <h3>{request.title}</h3>
@@ -360,6 +373,7 @@ function ArtifactDrawer({
   scenario = null,
 }) {
   const [tab, setTab] = useState(initialTab);
+  const [showFileList, setShowFileList] = useState(false);
   const [file, setFile] = useState(initialFile);
   const [width, setWidth] = useState(510);
   const [view, setView] = useState("diff");
@@ -391,7 +405,22 @@ function ArtifactDrawer({
     window.addEventListener("pointerup", up);
   };
   const artifactFiles = scenario?.files || FILES;
-  const current = artifactFiles[file] || artifactFiles[0];
+  const baseFile = artifactFiles[file] || artifactFiles[0];
+  const current =
+    baseFile && task?.artifactVersions?.[baseFile.path]
+      ? {
+          ...baseFile,
+          lines: [
+            ["add", "第二版示例：已调整内容，原行位置需重新核对。"],
+            ...baseFile.lines,
+          ],
+        }
+      : baseFile;
+  const filePhase = task?.filePreviewStates?.[current?.path];
+  const fileBlocked = filePhase && filePhase !== "ready";
+  const versionLabel = task?.artifactVersions?.[current?.path]
+    ? "第二版示例内容"
+    : "第一版示例内容";
   const hasFiles = available && Boolean(current);
   const mode = tab === "files" && !scenario ? `files-${view}` : tab;
   const content = (current?.lines || [])
@@ -564,8 +593,11 @@ function ArtifactDrawer({
               <select
                 aria-label="选择查看的文件"
                 title={current.path}
-                value={artifactFiles.indexOf(current)}
-                onChange={(event) => setFile(Number(event.target.value))}
+                value={artifactFiles.indexOf(baseFile)}
+                onChange={(event) => {
+                  setFile(Number(event.target.value));
+                  setShowFileList(false);
+                }}
               >
                 {artifactFiles.map((item, i) => (
                   <option key={item.path} value={i}>
@@ -611,7 +643,34 @@ function ArtifactDrawer({
               复制
             </Button>
           </div>
-          {scenario ? (
+          <div className="cr-file-version">
+            <span>{versionLabel}</span>
+            <Button kind="text" onClick={() => setShowFileList(!showFileList)}>
+              文件列表
+            </Button>
+          </div>
+          {showFileList ? (
+            <div className="cr-file-list" aria-label="文件列表">
+              {artifactFiles.map((item, index) => (
+                <button
+                  key={item.path}
+                  onClick={() => {
+                    setFile(index);
+                    setShowFileList(false);
+                  }}
+                >
+                  {item.path}
+                </button>
+              ))}
+            </div>
+          ) : fileBlocked ? (
+            <FilePreviewState
+              task={task}
+              file={current}
+              onTaskChange={onTaskChange}
+              onBack={() => setShowFileList(true)}
+            />
+          ) : scenario ? (
             <article className="conv-artifact-document">
               {content
                 .split("\n")
@@ -650,22 +709,27 @@ function ArtifactDrawer({
                 ))}
             </div>
           )}
-          {task && (
+          {task && !fileBlocked && !showFileList && (
             <FileFeedback
               task={task}
               file={{
                 path: current.path,
                 content,
-                versionLabel: "本次展示的文件内容",
+                versionLabel,
               }}
               onTaskChange={onTaskChange}
               toast={toast}
             />
           )}
+          <FilePreviewReview
+            task={task}
+            file={current}
+            onTaskChange={onTaskChange}
+          />
           <footer className="conv-pane-note">
             {scenario
               ? "这是可继续讨论的示例内容，尚未写入你的文件。"
-              : "显示 Agent 报告的文件改动。文件是否在此后变化，需要重新核对。"}
+              : "示例文件改动，未写入真实文件。意见对应当前展示版本。"}
           </footer>
         </>
       )}

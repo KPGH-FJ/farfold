@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowSquareOut, Key } from "@phosphor-icons/react";
 import { Button } from "./ui.jsx";
+import { authenticationTypeLabel } from "./agent-redesign-state.js";
 import { accountCapabilities, accountRoute } from "./account-capabilities.js";
 import {
   availableAuthMethods,
@@ -416,6 +417,19 @@ export default function SetupAuthentication({
                 </select>
               </label>
             )}
+            {route && (
+              <p className="agent-auth-type">
+                <span className="agent-method-type">
+                  {authenticationTypeLabel(route)}
+                </span>
+                <small>
+                  {route.purpose === "service"
+                    ? "在 Agent 官方流程中设置服务"
+                    : "官方账号设置流程"}{" "}
+                  · 演示
+                </small>
+              </p>
+            )}
             <div className="account-entry-actions">
               <Button
                 primary={focused || required}
@@ -457,61 +471,82 @@ export default function SetupAuthentication({
         )
       ) : (
         <>
-          {(methods.length > 1 || !method) && (
-            <label className="access-field">
-              <span>账号与服务</span>
-              <select
-                value={methodId}
-                disabled={!!agent.accessJob}
-                onChange={(event) => {
-                  setMethod(event.target.value);
-                  onChange({
-                    ...agent,
-                    authMethodSelection: event.target.value,
-                  });
-                }}
-              >
-                {!method && (
-                  <option value={methodId} disabled>
-                    原登录方式不可用，请重新选择
-                  </option>
-                )}
-                {methods.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.accountLabel
-                      ? `${item.label} · ${item.accountLabel}`
-                      : item.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+          {methods.length > 1 || !method ? (
+            <div className="agent-auth-methods" aria-label="选择并开始登录">
+              {methods.map((item) => (
+                <button
+                  type="button"
+                  className="agent-auth-method"
+                  key={item.id}
+                  data-method-id={item.id}
+                  data-selected={methodId === item.id}
+                  aria-label={`登录账号 · ${item.accountLabel || item.label} · ${authenticationTypeLabel(item)}`}
+                  disabled={
+                    locked || !!authenticationStartIssue(agent, item, busyCount)
+                  }
+                  onClick={() => {
+                    setMethod(item.id);
+                    onChange({
+                      ...startAgentJob(agent, "auth", {
+                        ...loginOptions,
+                        authMethod: item,
+                      }),
+                      authMethodSelection: item.id,
+                    });
+                  }}
+                >
+                  <span className="agent-method-type">
+                    {authenticationTypeLabel(item)}
+                  </span>
+                  <strong>{item.accountLabel || item.label}</strong>
+                  <small>
+                    {item.label}
+                    {item.description ? ` · ${item.description}` : ""}
+                  </small>
+                  <span>选择并开始 →</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            method && (
+              <p className="agent-auth-type">
+                <span className="agent-method-type">
+                  {authenticationTypeLabel(method)}
+                </span>
+                <small>{method.label}</small>
+              </p>
+            )
           )}
-
+          {!method && (
+            <p className="access-warning">原登录方式不可用，请重新选择</p>
+          )}
           <div className="account-entry-actions">
-            <Button
-              primary={focused || required}
-              disabled={locked || !!blocked}
-              onClick={() =>
-                onChange(
-                  startAgentJob(agent, "auth", {
-                    authMethod: method,
-                    busyCount,
-                    outcome,
-                    cancelOutcome,
-                    selection,
-                  }),
-                )
-              }
-            >
-              <Key size={16} />
-              {flowFinishedHere
-                ? "重新登录"
-                : method?.manual
-                  ? method.label
-                  : method?.accountLabel
-                    ? `登录 ${method.accountLabel}`
-                    : "登录账号"}
-            </Button>
+            {methods.length <= 1 && method && (
+              <Button
+                primary={focused || required}
+                disabled={locked || !!blocked}
+                onClick={() =>
+                  onChange(
+                    startAgentJob(agent, "auth", {
+                      authMethod: method,
+                      busyCount,
+                      outcome,
+                      cancelOutcome,
+                      selection,
+                    }),
+                  )
+                }
+              >
+                <Key size={16} />
+                {flowFinishedHere
+                  ? "重新登录"
+                  : method?.manual
+                    ? method.label
+                    : method?.accountLabel
+                      ? `登录 ${method.accountLabel}`
+                      : "登录账号"}
+              </Button>
+            )}
 
             {method?.registration ? (
               <Button
@@ -536,6 +571,16 @@ export default function SetupAuthentication({
         </>
       )}
 
+      {!(showRoutes ? route?.registration : method?.registration) &&
+        agent.sourceUrl && (
+          <div className="agent-registration-help">
+            <span>没有账号？</span>
+            <a href={agent.sourceUrl} target="_blank" rel="noreferrer">
+              查看目录提供的说明 <ArrowSquareOut size={13} />
+            </a>
+            <small>未提供专门的注册入口；此链接是说明页。</small>
+          </div>
+        )}
       <>
         {required && (
           <Button

@@ -7,10 +7,11 @@ import {
 } from "@phosphor-icons/react";
 import { PageHeading, Badge } from "./ui.jsx";
 import "./settings-api-lifecycle.css";
+import "./settings-redesign.css";
 
 export default function LifeModel() {
   return (
-    <>
+    <div className="settings-redesign">
       <PageHeading
         title="LifeModel"
         description="由你决定哪些工作偏好值得保留。"
@@ -46,6 +47,6 @@ export default function LifeModel() {
           </article>
         </div>
       </section>
-    </>
+    </div>
   );
 }

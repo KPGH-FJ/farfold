@@ -12,12 +12,20 @@ const statusLabels = {
   unknown: "结果未知",
 };
 
-export default function AuthenticationWorkBlockers({ tasks = [], onOpenTask }) {
+export default function AuthenticationWorkBlockers({
+  tasks = [],
+  onOpenTask,
+  actionLabel = "登录",
+  heading,
+}) {
   if (!tasks.length) return null;
   return (
-    <section className="authentication-work" aria-label="登录前需要处理的工作">
+    <section
+      className="authentication-work"
+      aria-label={`${actionLabel}前需要处理的工作`}
+    >
       <div>
-        <strong>先处理这些工作，再继续登录</strong>
+        <strong>{heading || `先处理这些工作，再继续${actionLabel}`}</strong>
         <p>这些工作尚未结束。打开对应对话处理后，可返回这里继续。</p>
       </div>
       <ul>
@@ -32,8 +40,8 @@ export default function AuthenticationWorkBlockers({ tasks = [], onOpenTask }) {
             ) : (
               <span className="authentication-work-wait">
                 {task.status === "submitting"
-                  ? "等待发送结果后，再继续登录"
-                  : "请先回到原稿确认发送结果，再继续登录"}
+                  ? `等待发送结果后，再继续${actionLabel}`
+                  : `请先回到原稿确认发送结果，再继续${actionLabel}`}
               </span>
             )}
           </li>

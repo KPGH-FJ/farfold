@@ -80,7 +80,7 @@ test("a program that has not connected cannot finish or skip ahead to account ch
   });
   assert.ok(!finish(html));
   assert.ok(!html.includes('aria-label="选择使用方式"'));
-  assert.ok(html.includes("连接 示例 Agent"));
+  assert.ok(html.includes("准备 示例 Agent 程序"));
 });
 test("preparation of an established conversation makes source selection read only", () => {
   const html = render({
@@ -237,10 +237,10 @@ test("a service authentication failure found in preparation exposes a direct rep
 test("first connected entry shows three ordered stages and no parallel management panels", () => {
   const html = render();
   assert.ok(html.includes('aria-label="接入进度"'));
-  assert.ok(html.includes("连接程序"));
-  assert.ok(html.includes("使用方式"));
-  assert.ok(html.includes("确认使用"));
-  assert.ok(html.includes("沿用这台电脑上的设置"));
+  assert.ok(html.includes("程序"));
+  assert.ok(html.includes("账号与服务"));
+  assert.ok(html.includes("模型与确认"));
+  assert.ok(html.includes("沿用已有设置"));
   assert.ok(html.includes("登录账号"));
   assert.ok(!html.includes("setup-panel-account"));
   assert.ok(!html.includes("setup-tab-program"));
@@ -299,7 +299,7 @@ test("a matching API draft starts with API selected instead of silently replacin
     ),
   ].map((match) => match[0]);
   assert.equal(selectedOption.length, 1);
-  assert.ok(selectedOption[0].includes("使用 API 配置"));
+  assert.ok(selectedOption[0].includes("选择 Farfold 中保存的 API 服务"));
 });
 test("review summary does not borrow an account service from a different folder or an unfinished login", () => {
   for (const authentication of [

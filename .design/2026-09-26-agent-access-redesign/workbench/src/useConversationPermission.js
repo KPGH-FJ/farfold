@@ -27,7 +27,11 @@ export default function useConversationPermission(
   const apply = (value, reading = false) => {
     const owner = current.current;
     const base = reading
-      ? { ...owner.task, permissionChange: null }
+      ? {
+          ...owner.task,
+          permissionChange: null,
+          permissionReconfirmRequired: false,
+        }
       : owner.task;
     const gate = permissionChangeState(base, owner.context);
     if (job.current || gate.disabled)
@@ -59,7 +63,11 @@ export default function useConversationPermission(
             return;
           }
           const unavailable = permissionChangeState(
-            { ...latest.task, permissionChange: null },
+            {
+              ...latest.task,
+              permissionChange: null,
+              permissionReconfirmRequired: false,
+            },
             latest.context,
           ).disabled;
           const outcome = latest.task.permissionPreviewResult || "success";
@@ -72,9 +80,12 @@ export default function useConversationPermission(
               permissionChange: { id, phase: "unknown", requestedValue: value },
             });
             reject(
-              Object.assign(new Error("权限更改结果未确认，请先重新读取。"), {
-                code: "permission_unknown",
-              }),
+              Object.assign(
+                new Error("权限更改结果未确认，请重新确认本次权限。"),
+                {
+                  code: "permission_unknown",
+                },
+              ),
             );
           } else if (outcome === "failed") {
             latest.onTaskChange({ permissionChange: null });
@@ -82,6 +93,7 @@ export default function useConversationPermission(
           } else {
             latest.onTaskChange({
               permissionValue: value,
+              permissionReconfirmRequired: false,
               permissionCapability: structuredClone(latest.capability),
               permissionChange: null,
             });
@@ -100,5 +112,10 @@ export default function useConversationPermission(
       setReadError(error.message || "尚未读取到权限，请重试。");
     }
   };
-  return { change: apply, read, readError };
+  return {
+    change: apply,
+    read,
+    readError,
+    reconfirm: (value) => apply(value, true),
+  };
 }

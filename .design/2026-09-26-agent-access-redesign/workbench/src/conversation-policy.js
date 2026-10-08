@@ -1,5 +1,6 @@
 // Design-only rules shared by the conversation, navigation and library.
 // These objects are preview fixtures, never a second product history store.
+import { configurationReceiptMatches } from "./conversation-configuration.js";
 const IDENTITY = [
   "agent",
   "accessMode",
@@ -28,10 +29,18 @@ export function conversationState(task = {}) {
     Boolean(task.admissionUnknown);
   const permissionUnknown = task.permissionChange?.phase === "unknown";
   const permissionPending = task.permissionChange?.phase === "pending";
-  const needsAttention = attention || permissionUnknown;
+  const needsAttention =
+    attention ||
+    permissionUnknown ||
+    task.permissionReconfirmRequired ||
+    task.configurationChange?.phase === "unknown" ||
+    task.questionSubmission?.phase === "unknown";
   const running =
     !needsAttention &&
-    (["running", "submitting"].includes(task.status) || permissionPending);
+    (["running", "submitting"].includes(task.status) ||
+      permissionPending ||
+      task.configurationChange?.phase === "pending" ||
+      task.questionSubmission?.phase === "pending");
   const queue = Boolean(task.queue?.length);
   const archiveReason = needsAttention
     ? "请先处理待回应或未确认的工作"
@@ -55,6 +64,7 @@ export const canArchiveConversation = (task) =>
 
 export function applyConversationPatch(task, patch) {
   const next = { ...task, ...patch };
+  const configurationConfirmed = configurationReceiptMatches(task, patch);
   const fixed =
     task.fixedIdentity ||
     (task.status !== "draft"
@@ -62,6 +72,7 @@ export function applyConversationPatch(task, patch) {
       : null);
   if (fixed) {
     for (const key of IDENTITY) {
+      if (configurationConfirmed && ["model", "effort"].includes(key)) continue;
       const value = fixed[key];
       if (value !== undefined && value !== null && value !== "")
         next[key] = value;
@@ -73,6 +84,10 @@ export function applyConversationPatch(task, patch) {
         next[key] = task[key];
     }
     next.fixedIdentity = { ...fixed };
+    if (configurationConfirmed) {
+      next.fixedIdentity.model = next.model;
+      next.fixedIdentity.effort = next.effort;
+    }
     if (patch.confirmMissingIdentity)
       for (const key of IDENTITY) {
         if (
@@ -87,6 +102,7 @@ export function applyConversationPatch(task, patch) {
       IDENTITY.map((key) => [key, structuredClone(next[key])]),
     );
   delete next.confirmMissingIdentity;
+  delete next.confirmConfiguration;
   if (
     task.terminalConfirmed &&
     terminal(task) &&
@@ -184,6 +200,7 @@ export function recoveryPreviewEvent(
           currentModel: task.model,
           currentEffort: task.effort,
           terminalConfirmed: true,
+          permissionReconfirmRequired: true,
         }
       : {}),
   };

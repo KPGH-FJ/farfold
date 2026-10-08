@@ -54,6 +54,13 @@ import SetupTabs from "./SetupTabs.jsx";
 import AgentModelRead from "./AgentModelRead.jsx";
 import { currentModelOptions, modelReadScope } from "./model-read-state.js";
 import "./setup-layout.css";
+import "./agent-redesign.css";
+import { AgentIdentity } from "./AgentEvidence.jsx";
+import {
+  needsAutomaticProgramCheck,
+  setupSelectionChanged,
+  setupSelectionSummary,
+} from "./agent-redesign-state.js";
 
 export function HubIcon({ agent, size = 32 }) {
   return agent.icon ? (
@@ -103,6 +110,9 @@ export default function AgentSetup({
   const [draft, setDraft] = useState(() =>
     draftForEntry(agent, services, initialSelection, initialContext),
   );
+  const entryDraft = useRef(structuredClone(draft));
+  const [exitPrompt, setExitPrompt] = useState(false);
+  const autoChecked = useRef(null);
   const wasAuthenticating = useRef(agent.accessJob?.type === "auth");
   const fixedConversation =
     initialContext.view === "thread" &&
@@ -138,6 +148,7 @@ export default function AgentSetup({
   const cancelToMethod = useRef(false);
   const globalContext = ["agents", "explore"].includes(initialContext.view);
   const intent = initialContext.intent;
+  const managementContext = globalContext && intent === "manage";
   const needsAuthentication = accountRequiredForSelection(agent, draft);
   const canUseAgentAccount =
     draft.access === "existing" ||
@@ -159,6 +170,32 @@ export default function AgentSetup({
   const [cancelOutcome, setCancelOutcome] = useState("success");
   const [savedNotice, setSavedNotice] = useState("");
   const busy = !!agent.accessJob;
+  const requestClose = () => {
+    if (!busy && setupSelectionChanged(entryDraft.current, draft))
+      setExitPrompt(true);
+    else onClose("return");
+  };
+  useEffect(() => {
+    const key = `${agent.selectedInstallationId}:${agent.programRevision}:${agent.dependenciesMissing}`;
+    if (agent.removed || !agent.registered) autoChecked.current = null;
+    if (
+      needsAutomaticProgramCheck(agent, busyCount) &&
+      autoChecked.current !== key
+    ) {
+      autoChecked.current = key;
+      onChange(
+        startAgentJob(agent, "connect", { outcome, cancelOutcome, busyCount }),
+      );
+    }
+  }, [
+    agent.selectedInstallationId,
+    agent.programRevision,
+    agent.registered,
+    agent.dependenciesMissing,
+    agent.connected,
+    agent.accessJob?.id,
+    busyCount,
+  ]);
   const compatible = compatibleServices(agent, services);
   const selectedService = services.find(
     (service) => service.id === draft.serviceId,
@@ -327,7 +364,9 @@ export default function AgentSetup({
         : [...previous, service],
     );
     setEditor(null);
-    setSavedNotice(`已保存“${service.name}”，请选择服务。`);
+    setSavedNotice(
+      `已保存“${service.name}”，尚未选用。请从下方列表选择，再确认模型。`,
+    );
   };
   const test = () => {
     if (busy || issue) return;
@@ -375,8 +414,8 @@ export default function AgentSetup({
                   }
                 />
                 <span>
-                  <strong>本机配置</strong>
-                  <small>使用 Agent 自己的账号或服务</small>
+                  <strong>沿用已有设置</strong>
+                  <small>使用 Agent 自己管理的账号或服务</small>
                 </span>
               </label>
               <label
@@ -415,7 +454,7 @@ export default function AgentSetup({
         {draft.access === "api" && (
           <div className="access-service-choice">
             <label className="access-field">
-              <span>选择服务</span>
+              <span>为当前草稿选择服务</span>
               <select
                 value={draft.serviceId}
                 disabled={busy || fixedConversation}
@@ -541,43 +580,55 @@ export default function AgentSetup({
         )}
       </section>
       {!guided && draft.access === "existing" && (
-        <div className="setup-current-summary">
-          <strong>使用方式：沿用本机设置</strong>
-          <small>
-            账号服务：
-            {currentAccount
-              ? `${currentAccount} · 演示`
-              : "由 Agent 管理，未读取"}
-          </small>
-          <small>
-            {needsAuthentication
-              ? "当前工作需要登录"
-              : testValid
-                ? "当前选择已通过测试 · 演示"
-                : currentAccount
-                  ? "账号设置已更新，可返回使用"
-                  : "账号与模型尚未检查，可直接尝试使用"}
-          </small>
-        </div>
+        <AgentIdentity
+          agent={agent}
+          folder={draft.folder}
+          source={
+            currentAccount ? `沿用已有设置 · ${currentAccount}` : undefined
+          }
+          model={draft.model}
+          testValid={testValid}
+        />
       )}
       {!guided && canUseAgentAccount && (
-        <SetupAuthentication
-          agent={agent}
-          onChange={onChange}
-          busyCount={busyCount}
-          blockingTasks={blockingTasks}
-          onOpenBlockingTask={onOpenBlockingTask}
-          outcome={outcome}
-          cancelOutcome={cancelOutcome}
-          selection={draft}
-          focused={guided}
-          required={needsAuthentication}
-        />
+        <details
+          className="agent-account-actions"
+          open={needsAuthentication || undefined}
+        >
+          <summary>
+            {needsAuthentication ? "需要登录 · 查看登录方式" : "登录或更换账号"}
+          </summary>
+          <SetupAuthentication
+            agent={agent}
+            onChange={onChange}
+            busyCount={busyCount}
+            blockingTasks={blockingTasks}
+            onOpenBlockingTask={onOpenBlockingTask}
+            outcome={outcome}
+            cancelOutcome={cancelOutcome}
+            selection={draft}
+            focused={guided}
+            required={needsAuthentication}
+          />
+        </details>
       )}
     </>
   );
   const modelPanel = (
     <section className="access-model">
+      <div className="agent-model-source">
+        <span>当前来源</span>
+        <strong>
+          {draft.access === "api"
+            ? selectedService?.name || "尚未选择 API 服务"
+            : "沿用已有设置"}
+        </strong>
+        <small>
+          {draft.access === "api"
+            ? selectedService?.endpoint || "先在账号与服务中选择服务"
+            : "具体服务由 Agent 管理；尚未提供时保持未知"}
+        </small>
+      </div>
       <div className="access-form-grid">
         <label className="access-field">
           <span>模型</span>
@@ -632,6 +683,36 @@ export default function AgentSetup({
           disabled={busy || !programReady || fixedConversation}
         />
       )}
+      {setupSelectionChanged(entryDraft.current, draft) && (
+        <div className="agent-selection-diff" role="status">
+          <h4>待保存的变更</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>设置</th>
+                <th>进入时</th>
+                <th>本次选择</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["source", "来源"],
+                ["model", "模型"],
+                ["effort", "推理等级"],
+              ].map(([key, label]) => (
+                <tr key={key}>
+                  <th scope="row">{label}</th>
+                  <td>
+                    {setupSelectionSummary(entryDraft.current, services)[key]}
+                  </td>
+                  <td>{setupSelectionSummary(draft, services)[key]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p>确认后用于当前草稿与后续新对话；已有对话保持各自的来源。</p>
+        </div>
+      )}
       {(!guided || journey?.step === "review") && (
         <details className="onboarding-review-details">
           <summary>连接测试（可选）</summary>
@@ -639,7 +720,9 @@ export default function AgentSetup({
             <h3>连接测试</h3>
             <span>可选</span>
           </div>
-          <p className="access-muted">发送一条测试消息，可能消耗额度。</p>
+          <p className="access-muted">
+            本原型仅模拟测试，不发送真实消息。真实使用时测试可能消耗额度。
+          </p>
           {!agent.accessJob && agent.lastAccessResult?.type === "test" && (
             <div
               className={`setup-test-result ${testValid ? "access-success" : "access-muted"}`}
@@ -690,6 +773,34 @@ export default function AgentSetup({
       )}
     </section>
   );
+  if (exitPrompt)
+    return (
+      <Modal
+        className="agent-redesign-modal"
+        title="保留未确认的设置？"
+        onClose={() => setExitPrompt(false)}
+        footer={
+          <>
+            <Button onClick={() => setExitPrompt(false)}>继续编辑</Button>
+            <Button
+              onClick={() => {
+                onChange({ setupDraft: entryDraft.current });
+                onClose("return");
+              }}
+            >
+              放弃本次设置
+            </Button>
+            <Button primary onClick={() => onClose("return")}>
+              保留草稿并返回
+            </Button>
+          </>
+        }
+      >
+        <p>
+          来源、模型或推理等级已有变更，还未确认使用。保留后可继续编辑；程序与账号操作的进度会保留。
+        </p>
+      </Modal>
+    );
   if (editor)
     return (
       <ServiceEditor
@@ -709,7 +820,7 @@ export default function AgentSetup({
         agent={agent}
         step="account"
         intent={journey?.intent}
-        onClose={() => onClose("return")}
+        onClose={requestClose}
         showNext={false}
       >
         <SetupAuthentication
@@ -726,6 +837,7 @@ export default function AgentSetup({
       </OnboardingLayout>
     ) : (
       <Modal
+        className="agent-redesign-modal"
         title={`${agent.name} · 创建账号`}
         onClose={() =>
           onChange({
@@ -794,17 +906,16 @@ export default function AgentSetup({
         intent={journey?.intent}
         busy={authJob}
         showNext={false}
-        onClose={() => onClose("return")}
+        onClose={requestClose}
       >
         {content}
       </OnboardingLayout>
     ) : (
       <Modal
+        className="agent-redesign-modal"
         title={`${agent.name} · 登录与账号设置`}
-        onClose={() => onClose("return")}
-        footer={
-          <Button onClick={() => onClose("return")}>暂离并保留进度</Button>
-        }
+        onClose={requestClose}
+        footer={<Button onClick={requestClose}>暂离并保留进度</Button>}
       >
         {content}
       </Modal>
@@ -825,8 +936,24 @@ export default function AgentSetup({
         step={step}
         intent={journey?.intent}
         busy={busy}
-        onClose={() => onClose("return")}
+        onClose={requestClose}
         onBack={step === "program" ? undefined : () => advance("back")}
+        onNavigate={(target) => {
+          if (busy || (target !== "program" && !programReady)) return;
+          const next = {
+            ...journey,
+            step:
+              target === "account"
+                ? "method"
+                : target === "model"
+                  ? "review"
+                  : "program",
+            intent: journey?.intent || methodChoice || "existing",
+          };
+          setJourney(next);
+          onChange({ onboarding: next, setupDraft: draft });
+        }}
+        programReady={programReady}
         showNext={step !== "program" && (step !== "account" || accountReady)}
         nextLabel={step === "review" ? "进入对话" : "继续"}
         nextDisabled={busy || (step === "method" ? !methodChoice : !!stepIssue)}
@@ -848,8 +975,8 @@ export default function AgentSetup({
         {step === "program" && (
           <>
             <div className="onboarding-heading">
-              <h3>连接 {agent.name}</h3>
-              <p>先准备程序，再选择账号或模型服务。</p>
+              <h3>准备 {agent.name} 程序</h3>
+              <p>添加或安装后会自动检查，再确认账号服务与模型。</p>
             </div>
             <AccessJobStatus compact agent={agent} onChange={onChange} />
             <AccessProgram
@@ -857,6 +984,8 @@ export default function AgentSetup({
               agent={agent}
               onChange={onChange}
               busyCount={busyCount}
+              blockingTasks={blockingTasks}
+              onOpenBlockingTask={onOpenBlockingTask}
               outcome={outcome}
               cancelOutcome={cancelOutcome}
             />
@@ -993,6 +1122,7 @@ export default function AgentSetup({
   }
   return (
     <Modal
+      className="agent-redesign-modal"
       wide
       title={`${agent.name} 设置`}
       titleContent={
@@ -1001,18 +1131,20 @@ export default function AgentSetup({
           {agent.name} <span>设置</span>
         </span>
       }
-      onClose={() => onClose("return")}
+      onClose={requestClose}
       footer={
         <>
           <span className="access-footer-note">
             {completionIssue ||
               (fixedConversation
                 ? "此对话的来源与模型保持不变"
-                : returnLabel === "返回草稿"
-                  ? "完成后返回草稿"
-                  : "")}
+                : managementContext
+                  ? "保存到此 Agent，已有对话保持各自设置"
+                  : returnLabel === "返回草稿"
+                    ? "完成后返回草稿"
+                    : "")}
           </span>
-          <Button onClick={() => onClose("return")}>
+          <Button onClick={requestClose}>
             {busy ? "暂离并保留进度" : "暂时返回"}
           </Button>
           <Button primary disabled={busy || !!completionIssue} onClick={finish}>
@@ -1032,12 +1164,16 @@ export default function AgentSetup({
       <div className="access-setup setup-layout">
         <>
           <div className="setup-context">
-            <span title={draft.folder || "普通对话"}>
-              {draft.folder || "普通对话"}
+            <span
+              title={
+                managementContext ? "接入管理" : draft.folder || "普通对话"
+              }
+            >
+              {managementContext ? "接入管理" : draft.folder || "普通对话"}
             </span>
             <span className={`setup-status ${programReady ? "ready" : ""}`}>
               <i aria-hidden="true" />
-              {programReady ? "程序已连接" : "待连接"}
+              {programReady ? "程序检查通过 · 演示" : "程序待检查 · 演示"}
             </span>
           </div>
           <SetupTabs
@@ -1087,6 +1223,8 @@ export default function AgentSetup({
               agent={agent}
               onChange={onChange}
               busyCount={busyCount}
+              blockingTasks={blockingTasks}
+              onOpenBlockingTask={onOpenBlockingTask}
               outcome={outcome}
               cancelOutcome={cancelOutcome}
             />

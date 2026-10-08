@@ -58,9 +58,14 @@ import {
   permissionSelectionFor,
 } from "./agent-catalog";
 import { migrateBuiltinAccountCapabilities } from "./account-capabilities.js";
-import Api from "./SettingsApi";
-import Life from "./SettingsLife";
-import General from "./SettingsGeneral";
+import WorkbenchSettings from "./WorkbenchSettings.jsx";
+import RedesignGuide from "./RedesignGuide.jsx";
+import { currentModelOptions } from "./model-read-state.js";
+import {
+  reviewAgents,
+  managementRequest,
+  preparationSelection,
+} from "./review-navigation.js";
 import { firstUseState, exampleState } from "./scene-state.js";
 import {
   usesApi,
@@ -400,7 +405,11 @@ export default function AppV2() {
   const returnFromPreparation = (entry) => {
     const destination = preparationReturn(entry);
     setHubTarget(null);
-    setPrepareEntry(null);
+    setPrepareEntry(
+      entry?.intent === "manage" && entry?.contextView === "agents"
+        ? entry
+        : null,
+    );
     if (destination.active != null) setActive(destination.active);
     go(destination.view, { preserveFilters: true, preservePreparation: true });
     if (destination.importAgent) openImport(destination.importAgent);
@@ -423,7 +432,7 @@ export default function AppV2() {
   });
   const openSettings = (tab) => {
     if (tab === "agents") {
-      explore(null, { directoryView: "added" });
+      explore(null, managementRequest());
       return;
     }
     if (view !== "settings") {
@@ -485,6 +494,10 @@ export default function AppV2() {
     return () => document.removeEventListener("keydown", key);
   }, [modal, view, importOpen]);
   const send = () => {
+    if (!folder) {
+      setSendError("发送前请选择工作文件夹，草稿已保留。");
+      return;
+    }
     if (!hasDraftContent(draft, files) || pendingSend) return;
     if (attachmentsNeedReview && files.length) {
       setModal("restore-attachments");
@@ -776,6 +789,8 @@ export default function AppV2() {
     onPatch: patch,
     onNew: newChat,
     onImport: () => openImport(),
+    onDelete: (ids) =>
+      setTasks((previous) => previous.filter((task) => !ids.includes(task.id))),
     onMove: (ids) => {
       setMoveIds(ids);
       setModal("move");
@@ -856,6 +871,45 @@ export default function AppV2() {
     setModal(null);
     go(fresh.view);
   };
+  const navigateReview = (target) => {
+    setModal(null);
+    if (target === "new") return newChat();
+    if (target === "agents") return explore();
+    if (target === "manage") return openSettings("agents");
+    if (["general", "api", "life"].includes(target))
+      return openSettings(target);
+    if (target === "import") return openImport();
+    if (target === "search") {
+      setSearch("");
+      setModal("search");
+      return;
+    }
+    if (["conversations", "starred"].includes(target)) return go(target);
+    const demo = exampleState();
+    setTasks((existing) => [
+      ...existing,
+      ...demo.tasks.filter((t) => !existing.some((old) => old.id === t.id)),
+    ]);
+    setGroups((existing) => [...new Set([...existing, ...demo.groups])]);
+    setServices((existing) => [
+      ...existing,
+      ...demo.services.filter((s) => !existing.some((old) => old.id === s.id)),
+    ]);
+    setAgents((existing) =>
+      reviewAgents(existing, demo.agents, firstUseState().agents),
+    );
+    const task =
+      demo.tasks.find((t) =>
+        target === "workspace"
+          ? t.workspaceKind === "review" || t.id === "workspace-review"
+          : t.status === target,
+      ) ||
+      demo.tasks.find((t) => t.id.startsWith("workspace")) ||
+      demo.tasks[0];
+    setActive(task.id);
+    setOrigin("conversations");
+    go("thread");
+  };
   return (
     <div
       className={
@@ -877,6 +931,9 @@ export default function AppV2() {
       <div className="v2-layout">
         <SidebarV2
           view={view}
+          managementMode={prepareEntry?.directoryView === "added"}
+          onManageAgents={() => openSettings("agents")}
+          onOpenRecent={open}
           tasks={tasks}
           agents={agents}
           groups={groups}
@@ -928,7 +985,9 @@ export default function AppV2() {
                 </button>
                 <span>
                   {view === "agents"
-                    ? "探索 Agent"
+                    ? prepareEntry?.directoryView === "added"
+                      ? "管理 Agent"
+                      : "探索 Agent"
                     : view === "settings"
                       ? "设置"
                       : view === "conversations"
@@ -947,8 +1006,11 @@ export default function AppV2() {
               </div>
             </div>
           )}
-          {view === "new" && (
-            <div className="v2-scroll">
+          {
+            <div
+              className="v2-scroll"
+              style={{ display: view === "new" ? "block" : "none" }}
+            >
               <div className="v2-new-content">
                 <NewConversationV2
                   {...startProps}
@@ -969,7 +1031,7 @@ export default function AppV2() {
                 />
               </div>
             </div>
-          )}
+          }
           {(view === "conversations" || view === "starred") && (
             <div className="v2-scroll">
               <div className="v2-page-content">
@@ -1000,7 +1062,7 @@ export default function AppV2() {
               onOpenTest={openTest}
               toast={toast}
               initialAgent={hubTarget}
-              initialSelection={prepareEntry?.choice ?? choice}
+              initialSelection={preparationSelection(prepareEntry, choice)}
               initialContext={setupContextForEntry(
                 prepareEntry ?? { view: "agents", folder, agent: choice.agent },
               )}
@@ -1057,6 +1119,26 @@ export default function AppV2() {
                 }}
                 active={view === "thread" && active === t.id}
                 workEnabled={workPolicies[t.folder || "普通对话"] !== false}
+                configurationCapability={(() => {
+                  const a = agents.find((item) =>
+                    selectionMatchesAgent(item, t),
+                  );
+                  if (!a || usesApi(t)) return undefined;
+                  const models = currentModelOptions(a, {
+                    access: "existing",
+                    folder: t.folder,
+                    serviceId: "",
+                  });
+                  return {
+                    models: models.map((id) => ({
+                      id,
+                      label: id,
+                      efforts: a.efforts || [],
+                    })),
+                    supportsModelChange: models.length > 1,
+                    supportsEffortChange: Boolean(a.efforts?.length > 1),
+                  };
+                })()}
                 agentPermissionCapability={permissionCapabilityFor(
                   agents.find((a) => selectionMatchesAgent(a, t)),
                 )}
@@ -1104,76 +1186,30 @@ export default function AppV2() {
               />
             </div>
           ))}
-          <div
-            className="v2-settings"
-            style={{ display: view === "settings" ? "flex" : "none" }}
-            key={"settings-" + revision}
-          >
-            <nav aria-label="设置类别">
-              {[
-                ["general", "通用", Gear],
-                ["api", "API 配置", Key],
-                ["life", "LifeModel", Sparkle],
-              ].map(([id, label, Icon]) => (
-                <button
-                  key={id}
-                  className={settingsTab === id ? "selected" : ""}
-                  onClick={() => setSettingsTab(id)}
-                >
-                  <Icon size={17} />
-                  {label}
-                </button>
-              ))}
-              <button onClick={() => openSettings("agents")}>
-                <Compass size={17} />
-                Agent 与账号
-                <ArrowRight size={14} />
-              </button>
-              <button
-                className="v2-settings-back"
-                onClick={() =>
-                  go(settingsOrigin, {
-                    preserveFilters: true,
-                    preservePreparation: true,
-                  })
-                }
-              >
-                <ArrowLeft size={14} />
-                返回刚才的页面
-              </button>
-            </nav>
-            <div className="v2-settings-scroll">
-              <div hidden={settingsTab !== "api"}>
-                <Api
-                  toast={toast}
-                  tasks={tasks}
-                  agents={agents}
-                  services={services}
-                  onServicesChange={setServices}
-                />
-              </div>
-              <div hidden={settingsTab !== "life"}>
-                <Life toast={toast} />
-              </div>
-              <div hidden={settingsTab !== "general"}>
-                <General
-                  toast={toast}
-                  storageIssue={storageIssue}
-                  onManageSending={() => setModal("work-policy")}
-                  theme={theme}
-                  setTheme={setTheme}
-                  tasks={tasks}
-                  archiveDays={archiveDays}
-                  onArchiveDaysChange={(value) => commitArchive(value, true)}
-                  onRunArchive={runArchive}
-                  onOpenArchived={() => {
-                    setFilters({ ...EMPTY_FILTER, state: "archived" });
-                    go("conversations", { preserveFilters: true });
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          <WorkbenchSettings
+            {...{
+              view,
+              revision,
+              settingsTab,
+              setSettingsTab,
+              openSettings,
+              go,
+              settingsOrigin,
+              toast,
+              tasks,
+              agents,
+              services,
+              setServices,
+              storageIssue,
+              setModal,
+              theme,
+              setTheme,
+              archiveDays,
+              commitArchive,
+              runArchive,
+              setFilters,
+            }}
+          />
         </main>
       </div>
       <ImportConversations
@@ -1383,6 +1419,12 @@ export default function AppV2() {
             setModal(null);
             toast("附件记录已核对，内容仍由你发送。");
           }}
+        />
+      )}
+      {modal === "guide" && (
+        <RedesignGuide
+          onClose={() => setModal(null)}
+          onNavigate={navigateReview}
         />
       )}
       <ReviewDialogs

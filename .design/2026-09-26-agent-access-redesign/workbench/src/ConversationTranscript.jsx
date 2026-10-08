@@ -1,6 +1,6 @@
-import React from "react";
-import { Copy, Square } from "@phosphor-icons/react";
-import { AgentIcon, Badge, Button } from "./ui";
+import React, { useState } from "react";
+import { Copy, PencilSimple, Square } from "@phosphor-icons/react";
+import { AgentIcon, Badge, Button, Modal } from "./ui";
 import {
   EngineeringSteps,
   EngineeringResult,
@@ -34,15 +34,23 @@ function Requests({
   onDecision,
   onSubmitAnswer,
   onCancelQuestion,
+  onCheckQuestion,
 }) {
   const scenario = scenarioFor(task);
   const question = task.answerDraft || { choice: "existing", note: "" };
+  const answerLocked = stopping || Boolean(task.questionSubmission);
   const approvalAnswers = task.approvalAnswers || {};
   return (
     <>
       {task.status === "approval" && (
         <div className="conv-interactions">
-          <div className="conv-section-caption">有 2 项操作需要你决定</div>
+          <div className="conv-section-caption">
+            {task.stopPhase === "waiting"
+              ? "正在等待停止确认，原审批保留且暂不能操作"
+              : task.stopPhase === "unknown"
+                ? "停止结果未确认，请先检查结果；原审批仍保留"
+                : `有 ${INITIAL_APPROVALS.filter((request) => !approvalAnswers[request.id]).length} 项操作需要你决定`}
+          </div>
           {INITIAL_APPROVALS.map((request) => (
             <Approval
               key={`${task.id}-${request.id}`}
@@ -50,6 +58,7 @@ function Requests({
               answer={approvalAnswers[request.id]}
               onDecision={onDecision}
               disabled={stopping}
+              stopPhase={task.stopPhase}
             />
           ))}
         </div>
@@ -57,7 +66,15 @@ function Requests({
       {task.status === "question" && (
         <section className="conv-approval">
           <div className="conv-card-label">
-            <Badge tone="amber">需要回答</Badge>
+            <Badge tone="amber">
+              {task.stopPhase === "waiting"
+                ? "等待停止确认"
+                : task.stopPhase === "unknown"
+                  ? "停止结果未确认"
+                  : task.questionSubmission?.phase === "unknown"
+                    ? "回答提交结果未确认"
+                    : "需要回答"}
+            </Badge>
             <span>1 个问题</span>
           </div>
           <h3>{scenario?.question || "这次需要保留现有视觉风格吗？"}</h3>
@@ -85,7 +102,7 @@ function Requests({
               >
                 <input
                   type="radio"
-                  disabled={stopping}
+                  disabled={answerLocked}
                   name={`style-${task.id}`}
                   checked={question.choice === x.id}
                   onChange={() =>
@@ -105,7 +122,7 @@ function Requests({
             补充说明 <span>可选</span>
             <textarea
               value={question.note}
-              disabled={stopping}
+              disabled={answerLocked}
               onChange={(e) =>
                 onTaskChange({
                   answerDraft: {
@@ -120,13 +137,28 @@ function Requests({
             />
           </label>
           <div className="conv-card-actions">
-            <Button primary disabled={stopping} onClick={onSubmitAnswer}>
+            <Button primary disabled={answerLocked} onClick={onSubmitAnswer}>
               提交回答
             </Button>
-            <Button kind="text" disabled={stopping} onClick={onCancelQuestion}>
+            <Button
+              kind="text"
+              disabled={answerLocked}
+              onClick={onCancelQuestion}
+            >
               取消这次询问
             </Button>
           </div>
+          {task.questionSubmission?.phase === "unknown" && (
+            <div className="cr-action-state" role="status">
+              <div>
+                <strong>回答提交结果未确认</strong>
+                <p>你选择的答案和补充说明已保留。先检查结果，避免重复提交。</p>
+              </div>
+              <Button onClick={onCheckQuestion}>
+                检查回答提交结果（演示）
+              </Button>
+            </div>
+          )}
         </section>
       )}
     </>
@@ -308,7 +340,24 @@ export default function ConversationTranscript({
   onDecision,
   onSubmitAnswer,
   onCancelQuestion,
+  onCheckQuestion,
 }) {
+  const [editCandidate, setEditCandidate] = useState(null);
+  const startResend = (message) => {
+    onTaskChange({
+      draft: message.text || "",
+      attachments: [...(message.attachments || [])],
+      resendDraft: {
+        previousDraft: task.resendDraft?.previousDraft ?? task.draft ?? "",
+        previousAttachments:
+          task.resendDraft?.previousAttachments || task.attachments || [],
+      },
+    });
+    setEditCandidate(null);
+    requestAnimationFrame(() =>
+      document.querySelector('textarea[aria-label="消息内容"]')?.focus(),
+    );
+  };
   const messages = [
     {
       text: task.prompt ?? scenarioFor(task)?.prompt ?? task.title,
@@ -358,6 +407,18 @@ export default function ConversationTranscript({
             <div className="conv-user-message">
               <div className="conv-message-meta">
                 <strong>你</strong>
+                <Button
+                  kind="icon"
+                  aria-label="编辑后追加为新消息"
+                  title="编辑后追加为新消息"
+                  onClick={() =>
+                    task.draft?.trim() || task.attachments?.length
+                      ? setEditCandidate(message)
+                      : startResend(message)
+                  }
+                >
+                  <PencilSimple size={14} />
+                </Button>
                 {message.text && (
                   <Button
                     kind="icon"
@@ -391,6 +452,7 @@ export default function ConversationTranscript({
                     onDecision={onDecision}
                     onSubmitAnswer={onSubmitAnswer}
                     onCancelQuestion={onCancelQuestion}
+                    onCheckQuestion={onCheckQuestion}
                   />
                 )}
               </Reply>
@@ -398,6 +460,29 @@ export default function ConversationTranscript({
           </React.Fragment>
         );
       })}
+      {editCandidate && (
+        <Modal
+          title="编辑后追加为新消息"
+          onClose={() => setEditCandidate(null)}
+          footer={
+            <>
+              <Button onClick={() => setEditCandidate(null)}>
+                保留当前草稿
+              </Button>
+              <Button primary onClick={() => startResend(editCandidate)}>
+                暂存草稿并编辑
+              </Button>
+            </>
+          }
+        >
+          <p>
+            {task.resendDraft
+              ? "正在编辑另一条重发消息。更换后会替换这次编辑内容；先前暂存的原草稿仍会保留。"
+              : "输入框已有未发送内容。开始编辑后，会暂存当前草稿；取消重发可恢复。"}
+          </p>
+          <p>原消息和已有回答会保留，确认发送后追加一条新消息。</p>
+        </Modal>
+      )}
     </>
   );
 }

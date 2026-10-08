@@ -8,8 +8,8 @@ export default function OnboardingMethod({ agent, value, onChange }) {
   const options = [
     {
       id: "existing",
-      title: "沿用这台电脑上的设置",
-      description: "使用 Agent 已有的账号或模型服务",
+      title: "沿用已有设置",
+      description: "默认方式。使用这台电脑上已有的账号或模型服务",
       Icon: ComputerTower,
     },
     {
@@ -24,8 +24,8 @@ export default function OnboardingMethod({ agent, value, onChange }) {
       ? [
           {
             id: "api",
-            title: "使用 API 配置",
-            description: "选择已保存的服务，或添加一个新服务",
+            title: "选择 Farfold 中保存的 API 服务",
+            description: "保存不等于选用；确认后仅用于当前新对话",
             Icon: Plugs,
           },
         ]

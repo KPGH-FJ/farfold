@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Archive,
   ArrowLeft,
   SidebarSimple,
   ArrowClockwise,
@@ -9,7 +8,6 @@ import {
   ArrowUpRight,
   Check,
   Copy,
-  DotsThree,
   FileText,
   ListBullets,
   MagnifyingGlass,
@@ -21,7 +19,14 @@ import {
 import { AgentIcon, Badge, Button, Modal, Notice, Status } from "./ui";
 import "./conversation.css";
 import "./conversation-refresh.css";
+import "./conversation-redesign.css";
+import ConversationReviewPanel from "./ConversationReviewPanel.jsx";
+import ConversationActions from "./ConversationActions.jsx";
+import ConversationWebPanel from "./ConversationWebPanel.jsx";
+import ConversationPermissionRecovery from "./ConversationPermissionRecovery.jsx";
+import { webpageEvent } from "./conversation-content-state.js";
 import ConversationComposer from "./ConversationComposer.jsx";
+import useConversationFind from "./useConversationFind.js";
 import useConversationPermission from "./useConversationPermission.js";
 import { permissionChangeState } from "./permission-state.js";
 import ConversationTranscript from "./ConversationTranscript.jsx";
@@ -31,10 +36,7 @@ import {
   threadAttachmentReviewItems,
   confirmThreadAttachments,
 } from "./attachment-recovery.js";
-import ExecutionReviewControls, {
-  HistoryReading,
-  MissingIdentity,
-} from "./ExecutionReviewControls.jsx";
+import { HistoryReading, MissingIdentity } from "./ExecutionReviewControls.jsx";
 import { conversationState } from "./conversation-policy.js";
 import {
   createPreviewClock,
@@ -89,6 +91,7 @@ export default function Conversation({
   onAccessTestAction,
   onReturnToPreparation,
   agentPermissionCapability,
+  configurationCapability,
 }) {
   const onTaskChange = (patch) => {
     if (patch) publishTaskChange(patch);
@@ -101,9 +104,8 @@ export default function Conversation({
     ],
   };
   const [pane, setPane] = useState(null);
-  const [menu, setMenu] = useState(false);
   const [find, setFind] = useState(null);
-  const [findMatches, setFindMatches] = useState(0);
+
   const [rename, setRename] = useState(null);
   const [queueEdit, setQueueEdit] = useState(null);
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
@@ -117,6 +119,15 @@ export default function Conversation({
   const [unknownDemo, setUnknownDemo] = useState("unknown");
   const [showLatest, setShowLatest] = useState(false);
   const transcript = useRef(null);
+  const {
+    count: findMatches,
+    index: findIndex,
+    move: moveFind,
+  } = useConversationFind(
+    transcript,
+    find,
+    `${task.id}:${task.status}:${task.extraMessages?.length || 0}`,
+  );
   const lastContent = useRef(
     `${task.id}:${task.status}:${task.extraMessages?.length || 0}`,
   );
@@ -201,6 +212,14 @@ export default function Conversation({
     emit("反馈已带回输入框，可编辑后发送");
   };
   useEffect(() => {
+    if (
+      task.webPreview?.granted &&
+      (task.status === "recovery" ||
+        ["closed", "released"].includes(task.connectionState))
+    )
+      onTaskChange({ webPreview: webpageEvent(task.webPreview, "disconnect") });
+  }, [task.id, task.status, task.connectionState, task.webPreview?.granted]);
+  useEffect(() => {
     const content = `${task.id}:${task.status}:${task.extraMessages?.length || 0}`;
     if (content !== lastContent.current && !showLatest) {
       transcript.current?.scrollTo({
@@ -212,7 +231,6 @@ export default function Conversation({
   }, [task.id, task.status, task.extraMessages?.length, showLatest]);
   useEffect(() => {
     setPane(null);
-    setMenu(false);
     setFind(null);
     setRename(null);
     setQueueEdit(null);
@@ -306,8 +324,9 @@ export default function Conversation({
             attachments,
           },
         ],
-        draft: "",
-        attachments: [],
+        draft: task.resendDraft?.previousDraft || "",
+        attachments: task.resendDraft?.previousAttachments || [],
+        resendDraft: null,
       });
       if (isRunning && !clock.current.working) finishLater();
       emit(
@@ -321,8 +340,9 @@ export default function Conversation({
       ...resumePreview(latest.current),
       status: "running",
       recoveryRead: null,
-      draft: "",
-      attachments: [],
+      resendDraft: null,
+      draft: task.resendDraft?.previousDraft || "",
+      attachments: task.resendDraft?.previousAttachments || [],
       queuePaused: false,
       hasPresetResults: hasPresetResults(task),
       resultMode: "simulated",
@@ -453,12 +473,43 @@ export default function Conversation({
         emit("已收到模拟确认，原选择与待发消息保留；没有自动发送。");
     }, 1200);
   };
+  const checkQuestion = () => {
+    const current = latest.current;
+    if (current.questionSubmission?.phase !== "unknown") return;
+    onTaskChange({
+      questionSubmission: null,
+      answerSubmitted: true,
+      status: "running",
+      resultMode: "simulated",
+    });
+    finishLater();
+    emit("已收到模拟确认：回答已接纳，没有重复提交");
+  };
+  const checkStop = () => {
+    clock.current.dispose();
+    setStopping(false);
+    onTaskChange({
+      stopPhase: null,
+      status: "stopped",
+      terminalConfirmed: true,
+      queuePaused: true,
+    });
+    emit("已收到模拟停止确认；待发消息继续保留");
+  };
   const submitAnswer = () => {
     if (!canAnswerPreview(latest.current, "question", stopping)) return;
     const answer = latest.current.answerDraft || {
       choice: "existing",
       note: "",
     };
+    if (latest.current.questionPreviewResult === "unknown") {
+      onTaskChange({
+        questionSubmission: { phase: "unknown", answer: { ...answer } },
+        queuePaused: true,
+      });
+      emit("回答提交结果未确认；原回答已保留，不重复提交");
+      return;
+    }
     if (answer.choice === "explore") {
       clock.current.clearWork();
       onTaskChange({
@@ -519,21 +570,6 @@ export default function Conversation({
       });
     setAttachmentsOpen(false);
   };
-  useEffect(() => {
-    if (!find?.trim() || !transcript.current) {
-      setFindMatches(0);
-      return;
-    }
-    const nodes = [
-      ...transcript.current.querySelectorAll(
-        "p,code,.conv-step-title,h2,.conv-result-files button",
-      ),
-    ].filter((el) => el.textContent.toLowerCase().includes(find.toLowerCase()));
-    setFindMatches(nodes.length);
-    for (const node of nodes) node.classList.add("conv-found");
-    nodes[0]?.scrollIntoView({ block: "center", behavior: "smooth" });
-    return () => nodes.forEach((node) => node.classList.remove("conv-found"));
-  }, [find, task.id, task.status]);
   const showWork = !isDraft;
   const interactivePreview =
     task.id.startsWith("new-") || task.resultMode === "simulated";
@@ -611,6 +647,16 @@ export default function Conversation({
             </div>
             <div className="conv-header-actions">
               <Button
+                aria-label="查看网页"
+                onClick={() =>
+                  onTaskChange({
+                    webPreview: webpageEvent(task.webPreview, "open"),
+                  })
+                }
+              >
+                网页
+              </Button>
+              <Button
                 kind="icon"
                 aria-label="查找当前对话"
                 onClick={() => setFind(find === null ? "" : null)}
@@ -648,61 +694,18 @@ export default function Conversation({
                   )}
                 </Button>
               )}
-              <div className="conv-popover-wrap">
-                <Button
-                  kind="icon"
-                  aria-label="对话操作"
-                  onClick={() => setMenu((v) => !v)}
-                >
-                  <DotsThree size={23} />
-                </Button>
-                {menu && (
-                  <>
-                    <button
-                      className="conv-dismiss"
-                      aria-label="关闭菜单"
-                      onClick={() => setMenu(false)}
-                    />
-                    <div className="conv-menu">
-                      <button
-                        onClick={() => {
-                          setRename(task.title);
-                          setMenu(false);
-                        }}
-                      >
-                        <PencilSimple size={16} />
-                        重命名
-                      </button>
-                      <button
-                        onClick={() => {
-                          copy(
-                            readableTranscript(transcript.current, task.title),
-                          );
-                          setMenu(false);
-                        }}
-                      >
-                        <Copy size={16} />
-                        复制对话内容
-                      </button>
-                      <button
-                        disabled={!task.archived && !activity.canArchive}
-                        onClick={() => {
-                          onTaskChange({ archived: !task.archived });
-                          emit(
-                            task.archived
-                              ? "已移回最近对话"
-                              : "已归档，仍可在归档中找到",
-                          );
-                          setMenu(false);
-                        }}
-                      >
-                        <Archive size={16} />
-                        {task.archived ? "移回最近对话" : "归档对话"}
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
+              <ConversationActions
+                task={task}
+                transcript={transcript}
+                active={active}
+                renameOpen={rename !== null}
+                onTaskChange={onTaskChange}
+                onRename={() => setRename(task.title)}
+                onCopy={() =>
+                  copy(readableTranscript(transcript.current, task.title))
+                }
+                toast={emit}
+              />
             </div>
           </header>
           {find !== null && (
@@ -718,10 +721,26 @@ export default function Conversation({
               <span>
                 {find
                   ? findMatches
-                    ? "找到相关内容"
+                    ? `${findIndex + 1} / ${findMatches} 处匹配`
                     : "没有匹配内容"
                   : "仅搜索当前已展示内容"}
               </span>
+              <Button
+                kind="icon"
+                disabled={!findMatches}
+                aria-label="上一个匹配"
+                onClick={() => moveFind(-1)}
+              >
+                <ArrowUp size={16} />
+              </Button>
+              <Button
+                kind="icon"
+                disabled={!findMatches}
+                aria-label="下一个匹配"
+                onClick={() => moveFind(1)}
+              >
+                <ArrowDown size={16} />
+              </Button>
               <Button
                 kind="icon"
                 aria-label="关闭查找"
@@ -985,7 +1004,10 @@ export default function Conversation({
                   </div>
                   <h2>准备好开始了</h2>
                   <p>描述你想在 {projectName(task.project)} 中完成的工作。</p>
-                  <span>发送第一条消息后，这条对话的 Agent 与模型将固定。</span>
+                  <span>
+                    首发后保持 Agent
+                    与服务来源；完成后，可按支持情况调整模型与推理。
+                  </span>
                 </div>
               )}
               {showWork && task.accessTest ? (
@@ -1011,29 +1033,11 @@ export default function Conversation({
                     onTaskChange={onTaskChange}
                     onDecision={decide}
                     onSubmitAnswer={submitAnswer}
+                    onCheckQuestion={checkQuestion}
                     onCancelQuestion={cancelQuestion}
                   />
                 )
               )}
-              <ExecutionReviewControls
-                task={task}
-                permissionCapability={permissionCapability}
-                onTaskChange={onTaskChange}
-                onStopConfirmed={() => {
-                  clock.current.dispose();
-                  setStopping(false);
-                  onTaskChange({
-                    status: "stopped",
-                    stopPhase: null,
-                    terminalConfirmed: true,
-                    queuePaused: true,
-                  });
-                }}
-                beforeScenario={() => {
-                  clock.current.dispose();
-                  setStopping(false);
-                }}
-              />
             </div>
           </div>
           <div className="conv-composer-area">
@@ -1080,17 +1084,21 @@ export default function Conversation({
                 )}
               </div>
             )}
-            {task.permissionChange && (
-              <div className="conv-work-paused" role="status">
-                <span>
-                  {task.permissionChange.phase === "pending"
-                    ? "正在确认权限…"
-                    : "权限结果未确认，消息尚未发送。"}
-                </span>
-                {task.permissionChange.phase === "unknown" && (
-                  <Button onClick={permission.read}>重新读取权限</Button>
-                )}
-                {permission.readError && <small>{permission.readError}</small>}
+            <ConversationPermissionRecovery
+              task={task}
+              capability={permissionCapability}
+              permission={permission}
+            />
+            {task.configurationChange && (
+              <div className="cr-action-state" role="status">
+                <div>
+                  <strong>
+                    {task.configurationChange.phase === "pending"
+                      ? "正在确认并保存模型设置"
+                      : "模型设置结果未确认"}
+                  </strong>
+                  <p>发送已暂停；打开下方对话设置查看本次更改并核对。</p>
+                </div>
               </div>
             )}
             {queue.length > 0 && (
@@ -1235,6 +1243,10 @@ export default function Conversation({
             ) : (
               <ConversationComposer
                 task={task}
+                configurationCapability={
+                  configurationCapability || task.configurationCapability
+                }
+                onCheckStop={checkStop}
                 permissionCapability={permissionCapability}
                 permissionGate={permissionGate}
                 onPermissionChange={permission.change}
@@ -1256,9 +1268,29 @@ export default function Conversation({
                 files={attachmentFiles}
               />
             )}
+            <div className="cr-conversation-footer">
+              <span>交互原型 · 消息与结果均为示例</span>
+              <ConversationReviewPanel
+                task={task}
+                permissionCapability={permissionCapability}
+                onTaskChange={onTaskChange}
+                onStopConfirmed={checkStop}
+                beforeScenario={() => {
+                  clock.current.dispose();
+                  setStopping(false);
+                }}
+              />
+            </div>
           </div>
         </div>
-        {workspace && panelOpen && (
+        {task.webPreview?.open && (
+          <ConversationWebPanel
+            key={task.id}
+            task={task}
+            onTaskChange={onTaskChange}
+          />
+        )}
+        {!task.webPreview?.open && workspace && panelOpen && (
           <WorkspacePanel
             task={task}
             onTaskChange={onTaskChange}
@@ -1275,7 +1307,7 @@ export default function Conversation({
             toast={toast}
           />
         )}
-        {!workspace && pane && (
+        {!task.webPreview?.open && !workspace && pane && (
           <ArtifactDrawer
             key={task.id}
             task={task}

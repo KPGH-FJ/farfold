@@ -75,7 +75,9 @@ export function HistoryReading({ task, onTaskChange, onNew }) {
       </Badge>
       <h2>
         {read.phase === "complete"
-          ? "可以按原来的设置继续"
+          ? task.permissionReconfirmRequired
+            ? "历史已恢复，请确认权限后继续"
+            : "原对话已完整恢复"
           : "原内容与草稿保留，续发尚未开放"}
       </h2>
       <div className="reading-checks">
@@ -94,7 +96,9 @@ export function HistoryReading({ task, onTaskChange, onNew }) {
       )}
       <p>
         {read.phase === "complete"
-          ? "模型和推理选择保持不变，待发消息仍需你点击继续。"
+          ? task.permissionReconfirmRequired
+            ? "原模型与推理已核对。重新确认权限后，待发消息仍需你单独点击继续。"
+            : "原设置已核对，待发消息仍需你单独点击继续。"
           : "不会把部分正文当成完整历史，也不会用现在的时间代替历史时间。"}
       </p>
       <details>
@@ -363,7 +367,8 @@ export default function ExecutionReviewControls({
       )}
       {task.eventNote && <p role="status">{task.eventNote}</p>}
       <small>
-        已接纳或结果未知的对话，原 Agent、来源、模型与推理选择保持固定。
+        已接纳或结果未知的对话，Agent
+        与来源保持固定；完成后可按当前能力确认更改模型与推理。
       </small>
     </details>
   );

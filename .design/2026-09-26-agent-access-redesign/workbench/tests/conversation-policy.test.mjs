@@ -20,7 +20,7 @@ const task = {
   draft: "保留输入",
   queue: [],
 };
-test("首次接纳前可改；接纳或未知后模型推理来源都固定", () => {
+test("首次接纳前可改；之后无确认回执不能改模型推理，Agent与来源固定", () => {
   const draft = { ...task, status: "draft" };
   assert.equal(applyConversationPatch(draft, { effort: "Low" }).effort, "Low");
   for (const status of ["running", "unknown", "done", "recovery"]) {

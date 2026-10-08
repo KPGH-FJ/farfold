@@ -74,7 +74,7 @@ test("API-scoped Agent login observations ignore missing or deleting services an
     [{ ...service, deleting: true }],
   ]) {
     assert.deepEqual(agentHubStatus(agent, services), {
-      label: "已连接",
+      label: "可以使用",
       ready: true,
     });
   }
@@ -83,7 +83,7 @@ test("API-scoped Agent login observations ignore missing or deleting services an
       { ...connected, authRequiredApiSelections: ["invalid", "null", "{}"] },
       [service],
     ),
-    { label: "已连接", ready: true },
+    { label: "可以使用", ready: true },
   );
 });
 
@@ -112,7 +112,7 @@ test("deleted services, other service IDs and replaced keys do not retain a warn
     [{ ...service, deleting: true }],
   ]) {
     assert.deepEqual(agentHubStatus(agent, services), {
-      label: "已连接",
+      label: "可以使用",
       ready: true,
     });
   }
@@ -131,12 +131,15 @@ test("account and service requirements coexist without implying every route is b
 test("active operations and program failures take priority over scoped authentication warnings", () => {
   const agent = { ...connected, authRequired: true };
   for (const [state, label] of [
-    [{ accessJob: { label: "连接中" }, removed: true }, "连接中"],
+    [
+      { accessJob: { type: "connect", label: "连接中" }, removed: true },
+      "正在检查程序",
+    ],
     [{ removed: true }, "已移除接入"],
     [{ dependenciesMissing: true }, "缺少必要程序"],
-    [{ connectionState: "failed" }, "连接失败"],
-    [{ connectionState: "unknown" }, "连接状态待确认"],
-    [{ connectionState: "connecting" }, "连接中"],
+    [{ connectionState: "failed" }, "程序检查失败"],
+    [{ connectionState: "unknown" }, "程序检查结果待确认"],
+    [{ connectionState: "connecting" }, "正在检查程序"],
   ]) {
     assert.deepEqual(agentHubStatus({ ...agent, ...state }), {
       label,
@@ -147,8 +150,8 @@ test("active operations and program failures take priority over scoped authentic
 
 test("unaffected directory states retain their existing meaning", () => {
   for (const [agent, label, ready] of [
-    [connected, "已连接", true],
-    [{ registered: true }, "已添加", false],
+    [connected, "可以使用", true],
+    [{ registered: true }, "未完成设置", false],
     [{ installations: [{ id: "local" }] }, "本机发现", false],
     [{}, "尚未安装", false],
   ]) {
@@ -159,7 +162,7 @@ test("unaffected directory states retain their existing meaning", () => {
 test("a connection without first preparation completion is visible but not ready for a new conversation", () => {
   const unconfirmed = { ...connected, onboardingComplete: false };
   assert.deepEqual(agentHubStatus(unconfirmed), {
-    label: "程序已连接 · 接入未完成",
+    label: "未完成设置",
     ready: false,
   });
   assert.equal(agentCanAttempt(unconfirmed), true);

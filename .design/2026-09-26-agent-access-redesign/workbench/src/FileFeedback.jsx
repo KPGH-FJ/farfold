@@ -31,7 +31,8 @@ export default function FileFeedback({ task, file, onTaskChange, toast }) {
         </summary>
         <div className="file-feedback-body">
           <p>
-            {file.path} · {file.versionLabel || "当前内容"}
+            {file.path} · {file.versionLabel || "当前内容"} ·
+            意见对应你正在查看的版本
           </p>
           <label>
             行位置（可选）
@@ -59,7 +60,7 @@ export default function FileFeedback({ task, file, onTaskChange, toast }) {
           />
           <div className="file-feedback-actions">
             <small>
-              切文件、关闭或切换对话时保留。加入输入框后再由你发送。
+              意见只带回原对话。切文件或关闭后保留，加入输入框后再由你发送。
             </small>
             <Button disabled={!note.text.trim()} onClick={() => add(key)}>
               加入输入框
@@ -67,7 +68,7 @@ export default function FileFeedback({ task, file, onTaskChange, toast }) {
           </div>
           {previous.map(([entryKey, item]) => (
             <div key={entryKey} className="file-feedback-previous">
-              <strong>另一个内容版本的未发送意见</strong>
+              <strong>之前版本的意见已保留</strong>
               <small>
                 {item.versionLabel} {item.line ? `· 第 ${item.line} 行` : ""} ·
                 仍对应当时的位置

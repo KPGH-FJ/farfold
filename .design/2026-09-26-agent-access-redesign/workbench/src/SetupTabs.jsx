@@ -1,9 +1,9 @@
 import React from "react";
 
 const panels = [
+  ["program", "程序"],
   ["account", "账号与服务"],
   ["model", "模型"],
-  ["program", "程序"],
 ];
 
 export default function SetupTabs({ value, onChange, programReady }) {
@@ -19,7 +19,9 @@ export default function SetupTabs({ value, onChange, programReady }) {
           aria-selected={value === id}
           tabIndex={value === id ? 0 : -1}
           disabled={id !== "program" && !programReady}
-          title={id !== "program" && !programReady ? "先连接程序" : undefined}
+          title={
+            id !== "program" && !programReady ? "先完成程序检查" : undefined
+          }
           onClick={() => onChange(id)}
           onKeyDown={(event) => {
             if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))

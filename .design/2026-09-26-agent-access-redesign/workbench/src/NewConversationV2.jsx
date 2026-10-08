@@ -13,9 +13,10 @@ import {
   AirplaneTilt,
   PencilLine,
   BookOpen,
+  Globe,
 } from "@phosphor-icons/react";
 import { Button, AgentIcon, Modal, Badge } from "./ui";
-import ComposerFolder from "./ComposerFolder.jsx";
+import DraftWebPreview from "./DraftWebPreview.jsx";
 import PermissionControl from "./PermissionControl.jsx";
 import { permissionSelectionFor } from "./agent-catalog.js";
 import { currentModelOptions } from "./model-read-state.js";
@@ -61,6 +62,8 @@ export default function NewConversationV2({
   const [modal, setModal] = useState(null),
     [search, setSearch] = useState(""),
     [modelDraft, setModelDraft] = useState(null);
+  const [pendingAgent, setPendingAgent] = useState(null);
+  const [draftWeb, setDraftWeb] = useState(false);
   const current = agents.find((a) => selectionMatchesAgent(a, choice));
   const pendingPreparation =
     current &&
@@ -84,7 +87,12 @@ export default function NewConversationV2({
   const modelIssue = modelDraft
     ? serviceChoiceIssue(modelDraft, current, services)
     : null;
-  const chooseAgent = (a) => {
+  const chooseAgent = (a, confirmed = false) => {
+    if (!confirmed && hasContent && current && current.id !== a.id) {
+      setPendingAgent(a);
+      setModal("change-agent");
+      return;
+    }
     if (agentNeedsInitialPreparation(a) || hasPendingOnboarding(a)) {
       setModal(null);
       onExplore(a.id, { intent: "use" });
@@ -127,23 +135,22 @@ export default function NewConversationV2({
     setFiles((fs) => [...new Set([...fs, f])]);
     setModal(null);
   };
+  const requestSend = () => {
+    if (!ready) return onExplore(current?.id || null);
+    if (!folder) return setModal("send-folder");
+    onSend();
+  };
   return (
-    <section className="v2-start new">
+    <section className={"v2-start new" + (draftWeb ? " with-draft-web" : "")}>
       <div className="v2-start-intro">
-        <h1>想聊点什么？</h1>
-        <p>一个问题、一点灵感，或任何你想一起试试的事。</p>
+        <span className="redesign-kicker">从一个想法开始</span>
+        <h1>今天，想完成什么？</h1>
+        <p>先写下目标，再和合适的 Agent 一起推进。</p>
       </div>
       {recoveryNotice}
       <div className="v2-compose-card">
-        {(files.length > 0 || folder) && (
+        {files.length > 0 && (
           <div className="v2-attached">
-            {folder && (
-              <ComposerFolder
-                folder={folder}
-                onChoose={() => setModal("folder")}
-                onRemove={() => setFolder("")}
-              />
-            )}
             {files.map((f) => (
               <span key={f}>
                 <FileText size={14} />
@@ -160,7 +167,7 @@ export default function NewConversationV2({
         )}
         <textarea
           aria-label="新对话内容"
-          placeholder="把想法放在这里…"
+          placeholder="描述想完成的事，或添加一份资料…"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
@@ -171,7 +178,7 @@ export default function NewConversationV2({
             ) {
               e.preventDefault();
               if (!hasContent || pending || !workEnabled) return;
-              ready ? onSend() : onExplore(current?.id || null);
+              requestSend();
             }
           }}
         />
@@ -257,7 +264,7 @@ export default function NewConversationV2({
               ready ? "发送新对话" : current ? "继续设置 Agent" : "挑选 Agent"
             }
             disabled={pending || (ready && (!hasContent || !workEnabled))}
-            onClick={() => (ready ? onSend() : onExplore(current?.id || null))}
+            onClick={requestSend}
           >
             {pending ? (
               <span>发送中</span>
@@ -308,8 +315,60 @@ export default function NewConversationV2({
               : (services.find((s) => s.id === choice.serviceId)?.name ||
                   choice.source) + " · 仅本次选择的来源"}
         </span>
-        <small>Enter 发送 · Shift Enter 换行</small>
+        <small>
+          {!workEnabled
+            ? "发送已暂停 · 草稿保留"
+            : "Enter 发送 · Shift Enter 换行"}
+        </small>
       </div>
+      <div className="draft-context-row">
+        <button onClick={() => setModal("folder")}>
+          <FolderSimple size={16} />
+          <span>{folder || "选择工作文件夹"}</span>
+        </button>
+        {folder && (
+          <button
+            aria-label="移除工作文件夹"
+            onClick={() => {
+              setFolder("");
+              setDraftWeb(false);
+            }}
+          >
+            <X size={14} />
+          </button>
+        )}
+        <span>
+          {folder
+            ? "仅作为工作位置，权限另行确认"
+            : "可以先写，首次发送前再选择"}
+        </span>
+        <button
+          className="draft-web-open"
+          disabled={!ready || !folder}
+          title={
+            !ready || !folder
+              ? "选择可用 Agent 和工作文件夹后打开"
+              : "查看网页不会发送消息"
+          }
+          onClick={() => setDraftWeb(true)}
+        >
+          <Globe size={16} />
+          打开网页
+        </button>
+      </div>
+      {draftWeb && (
+        <DraftWebPreview
+          scope={JSON.stringify([
+            choice.agentId || choice.agent,
+            choice.accessMode,
+            choice.serviceId,
+            choice.serviceSnapshot?.endpoint,
+            choice.serviceSnapshot?.format,
+            folder,
+          ])}
+          onClose={() => setDraftWeb(false)}
+        />
+      )}
       <div className="v2-suggestions">
         {!draft.trim() &&
           [
@@ -340,7 +399,7 @@ export default function NewConversationV2({
         </button>
       </div>
       {modal === "agent" && (
-        <Modal title="和谁聊聊？" onClose={() => setModal(null)}>
+        <Modal title="选择 Agent" onClose={() => setModal(null)}>
           <input
             className="v2-picker-search"
             aria-label="搜索已添加的 Agent"
@@ -349,6 +408,15 @@ export default function NewConversationV2({
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="v2-picker-list">
+            {!selectable.some((a) =>
+              a.name.toLowerCase().includes(search.toLowerCase()),
+            ) && (
+              <p className="picker-empty">
+                {search
+                  ? "没有匹配的 Agent。换个名称，或前往探索添加。"
+                  : "还没有添加 Agent。先去探索，草稿会保留。"}
+              </p>
+            )}
             {selectable
               .filter((a) =>
                 a.name.toLowerCase().includes(search.toLowerCase()),
@@ -396,7 +464,7 @@ export default function NewConversationV2({
                   onExplore(current?.id || null);
                 }}
               >
-                准备与连接
+                Agent 设置
               </Button>
               <Button
                 kind="ghost"
@@ -423,6 +491,14 @@ export default function NewConversationV2({
           }
         >
           <div className="v2-model-groups">
+            <div className="selection-source-summary">
+              <small>本次草稿的服务来源</small>
+              <strong>{modelDraft.source || "沿用已有设置"}</strong>
+              <span>
+                {modelDraft.serviceSnapshot?.endpoint ||
+                  "具体账号与服务信息未提供，不推测身份"}
+              </span>
+            </div>
             <h3>{choice.agent} 的已有设置</h3>
             <p>使用 Agent 已有的账号或服务设置。</p>
             {!existingModels.length && (
@@ -492,7 +568,8 @@ export default function NewConversationV2({
             {modelIssue && <p role="alert">{modelIssue}</p>}
           </div>
           <p className="v2-help">
-            首次发送后，这段对话会保留所选的 Agent、来源和模型。
+            首次发送后，Agent 和服务来源固定。工作完成后，若 Agent
+            支持，可以更改后续请求的模型与思考深度。
           </p>
         </Modal>
       )}
@@ -503,7 +580,7 @@ export default function NewConversationV2({
             {folder || "添加文件夹"}
           </Button>
           <p className="v2-help">
-            需要处理本地文件时，再选择文件夹。分组只负责整理对话。
+            草稿可以先写。首次发送前需要选择工作文件夹；分组只负责整理对话。
           </p>
         </Modal>
       )}
@@ -521,7 +598,7 @@ export default function NewConversationV2({
               <FolderSimple size={19} />
               <span>
                 <strong>选择文件夹</strong>
-                <small>需要查看或修改本地内容时使用</small>
+                <small>首次发送前需要选择，取消后草稿保留</small>
               </span>
             </button>
             <button onClick={() => setModal("commands")}>
@@ -547,11 +624,18 @@ export default function NewConversationV2({
           </div>
         </Modal>
       )}
-      {modal === "folder" && (
-        <Modal title="选择演示文件夹" onClose={() => setModal(null)}>
+      {["folder", "send-folder"].includes(modal) && (
+        <Modal
+          title={
+            modal === "send-folder"
+              ? "发送前，选择工作文件夹"
+              : "选择演示文件夹"
+          }
+          onClose={() => setModal(null)}
+          footer={<Button onClick={() => setModal(null)}>返回草稿</Button>}
+        >
           <p className="v2-help">
-            文件夹是这段对话的工作位置，不等于访问权限边界。文件访问与命令执行仍由
-            Agent 的权限设置决定；本原型不读取本地文件。
+            文件夹是这段对话的工作位置。选择后回到草稿，由你确认发送；取消不会丢失内容。本原型只选择示例名称，不读取你的文件。
           </p>
           <div className="v2-action-list">
             {["旅行资料", "阅读笔记", "个人网站"].map((f) => (
@@ -582,7 +666,7 @@ export default function NewConversationV2({
               <button
                 key={c}
                 onClick={() => {
-                  setDraft(c + " ");
+                  setDraft((text) => `${c} ${text}`);
                   setModal(null);
                 }}
               >
@@ -592,6 +676,43 @@ export default function NewConversationV2({
                 </span>
               </button>
             ))}
+          </div>
+        </Modal>
+      )}
+      {modal === "change-agent" && pendingAgent && (
+        <Modal
+          title="把这份草稿交给另一个 Agent？"
+          onClose={() => setModal(null)}
+          footer={
+            <>
+              <Button onClick={() => setModal(null)}>保留当前选择</Button>
+              <Button primary onClick={() => chooseAgent(pendingAgent, true)}>
+                保留草稿并切换
+              </Button>
+            </>
+          }
+        >
+          <p>
+            文字、附件和工作文件夹会保留。模型与服务设置会使用新 Agent
+            的选择，内容不会自动发送。
+          </p>
+          <div className="draft-agent-comparison">
+            <div>
+              <small>当前</small>
+              <strong>{current?.name}</strong>
+              <span>
+                {choice.model || "当前模型未提供"} ·{" "}
+                {choice.source || "沿用已有设置"}
+              </span>
+            </div>
+            <div>
+              <small>切换后</small>
+              <strong>{pendingAgent.name}</strong>
+              <span>
+                {pendingAgent.model || "完成设置后选择模型"} ·{" "}
+                {pendingAgent.source || "沿用已有设置"}
+              </span>
+            </div>
           </div>
         </Modal>
       )}

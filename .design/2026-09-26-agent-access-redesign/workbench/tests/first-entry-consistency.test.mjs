@@ -41,7 +41,7 @@ after(async () => {
   await server?.close();
 });
 
-test("fresh Codex gear opens the same first preparation guide as prepare-use", () => {
+test("fresh Codex management preserves preparation while opening direct settings", () => {
   const fresh = firstUseState();
   const agent = fresh.agents.find((entry) => entry.id === "codex");
   for (const intent of ["use", "manage"]) {
@@ -55,8 +55,17 @@ test("fresh Codex gear opens the same first preparation guide as prepare-use", (
         onClose() {},
       }),
     );
-    assert.ok(html.includes('aria-label="接入进度"'), intent);
-    assert.ok(html.includes("接入 Codex"), intent);
+    assert.equal(
+      html.includes('aria-label="接入进度"'),
+      intent === "use",
+      intent,
+    );
+    assert.ok(
+      html.includes(
+        intent === "use" ? "接入 Codex" : 'aria-label="Agent 设置分类"',
+      ),
+      intent,
+    );
   }
 });
 
@@ -125,43 +134,50 @@ function roundTrip(agent) {
 }
 
 const catalogue = firstUseState().agents;
-test("the first-entry matrix covers all ten catalogue Agents", () => {
-  assert.deepEqual(
-    catalogue.map((agent) => agent.id),
-    [
-      "codex",
-      "opencode",
-      "pi",
-      "cline",
-      "qwen-code",
-      "claude-agent",
-      "gemini-cli",
-      "goose",
-      "kimi-cli",
-      "fast-agent",
-    ],
+test("the first-entry matrix covers the exact 29 current catalogue identities", () => {
+  assert.equal(catalogue.length, 29);
+  assert.equal(new Set(catalogue.map((agent) => agent.directoryId)).size, 29);
+  for (const removed of [
+    "corust-agent",
+    "junie",
+    "stakpak",
+    "auggie",
+    "glm-acp-agent",
+  ])
+    assert.ok(!catalogue.some((agent) => agent.directoryId === removed));
+  assert.ok(
+    catalogue.some(
+      (agent) => agent.id === "codex" && agent.directoryId === "codex-acp",
+    ),
   );
 });
 
 for (const fresh of catalogue) {
-  test(`${fresh.name}: fresh gear and prepare-use share the initial guide`, () => {
+  test(`${fresh.name}: management opens direct settings while first use retains preparation`, () => {
     assert.equal(setup.agentNeedsInitialPreparation(fresh), true);
     assert.equal(setup.agentCanStartConversation(fresh), false);
     assert.equal(fresh.onboardingComplete, false);
     for (const intent of ["use", "manage"]) {
       const context = prepareContext(intent);
-      assert.equal(usesOnboarding(context, fresh), true, intent);
+      assert.equal(usesOnboarding(context, fresh), intent === "use", intent);
       const draft = draftForEntry(
         fresh,
         [],
         firstUseState().draft.choice,
         context,
       );
-      assert.equal(onboardingInitial(fresh, draft, context)?.step, "program");
+      assert.equal(
+        onboardingInitial(fresh, draft, context)?.step,
+        intent === "use" ? "program" : undefined,
+      );
       const html = renderSetup(fresh, intent);
-      assert.ok(html.includes('aria-label="接入进度"'), intent);
-      assert.ok(html.includes(`接入 ${fresh.name}`), intent);
-      assert.ok(!html.includes(">保存设置</button>"), intent);
+      assert.equal(
+        html.includes('aria-label="接入进度"'),
+        intent === "use",
+        intent,
+      );
+      if (intent === "use") assert.ok(html.includes(`接入 ${fresh.name}`));
+      else assert.ok(html.includes('aria-label="Agent 设置分类"'));
     }
   });
 
@@ -186,14 +202,29 @@ for (const fresh of catalogue) {
         firstUseState().draft.choice,
         context,
       );
-      assert.equal(usesOnboarding(context, connected), true, intent);
+      assert.equal(
+        usesOnboarding(context, connected),
+        intent === "use",
+        intent,
+      );
       assert.equal(
         onboardingInitial(connected, draft, context)?.step,
-        "method",
+        intent === "use" ? "method" : undefined,
       );
       const html = renderSetup(connected, intent);
-      assert.ok(html.includes('aria-label="接入进度"'), intent);
-      assert.ok(html.includes('aria-label="选择使用方式"'), intent);
+      assert.equal(
+        html.includes('aria-label="接入进度"'),
+        intent === "use",
+        intent,
+      );
+      assert.ok(
+        html.includes(
+          intent === "use"
+            ? 'aria-label="选择使用方式"'
+            : 'aria-label="Agent 设置分类"',
+        ),
+        intent,
+      );
     }
     const state = firstUseState();
     const agents = state.agents.map((entry) =>
@@ -201,7 +232,7 @@ for (const fresh of catalogue) {
     );
     const directory = render(Hub, { agents });
     const card = directory
-      .split(`<strong>${fresh.name}</strong>`)[1]
+      .split(`<strong>${fresh.directoryName || fresh.name}</strong>`)[1]
       ?.split("</article>")[0];
     assert.ok(card?.includes("继续准备"), fresh.name);
     assert.ok(!card.includes("开始新对话"));
@@ -257,7 +288,8 @@ for (const fresh of catalogue) {
       const restored = roundTrip(candidate);
       assert.equal(setup.agentNeedsInitialPreparation(restored), true);
       assert.equal(setup.agentCanStartConversation(restored), false);
-      assert.equal(usesOnboarding(prepareContext("manage"), restored), true);
+      assert.equal(usesOnboarding(prepareContext("manage"), restored), false);
+      assert.equal(usesOnboarding(prepareContext("use"), restored), true);
       assert.deepEqual(restored.onboarding, candidate.onboarding);
       assert.deepEqual(restored.setupDraft, candidate.setupDraft);
     }

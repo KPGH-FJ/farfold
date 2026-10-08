@@ -150,6 +150,6 @@ test("successful first send settles only matching authentication and entitlement
   const only = rememberAgentAuthenticationRequirement(seed(), selected);
   assert.equal(
     agentHubStatus(firstSend.settleSuccessfulFirstSend(only, attempt)).label,
-    "已连接",
+    "可以使用",
   );
 });

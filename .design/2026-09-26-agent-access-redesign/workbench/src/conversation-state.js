@@ -51,6 +51,7 @@ export function canAnswerPreview(task, expectedStatus, stopping) {
     !stopping &&
     !task.readOnly &&
     !task.interactionExpired &&
+    !task.questionSubmission &&
     task.connectionState !== "lost" &&
     !(task.recoveryRead && task.recoveryRead.phase !== "complete") &&
     task.status === expectedStatus
@@ -68,6 +69,9 @@ export function previewConversationBlocked(task) {
     task.connectionState === "lost" ||
     task.admissionUnknown ||
     Boolean(task.permissionChange) ||
+    task.permissionReconfirmRequired ||
+    Boolean(task.configurationChange) ||
+    Boolean(task.questionSubmission) ||
     (task.recoveryRead && task.recoveryRead.phase !== "complete") ||
     ["unknown", "recovery", "submitting"].includes(task.status),
   );
@@ -176,6 +180,7 @@ export function resolvePreviewRecovery(task, expectedStatus, outcome) {
         stopPhase: null,
         admissionUnknown: false,
         recoveryResult: "matched",
+        permissionReconfirmRequired: true,
       };
     if (["mismatch", "unavailable"].includes(outcome))
       return { queuePaused: true, recoveryResult: outcome };

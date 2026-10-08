@@ -89,11 +89,17 @@ test("UI route selection cannot mutate another Agent or later registration hando
   assert.equal(next.registration.owner, "OpenAI / ChatGPT");
 });
 
-test("all ten catalog entries distinguish documented simulation routes from installed success", () => {
-  assert.equal(AGENT_CATALOG.length, 10);
+test("29 catalog identities preserve ten declared fixtures without inventing login capabilities", () => {
+  assert.equal(AGENT_CATALOG.length, 29);
+  assert.equal(AGENT_CATALOG.filter((item) => item.fixtureProvided).length, 10);
   for (const item of AGENT_CATALOG) {
     const result = accountCapabilities(item);
-    assert.ok(result.routes.length > 0, item.id);
+    if (item.fixtureProvided) assert.ok(result.routes.length > 0, item.id);
+    else {
+      assert.equal(result.routes.length, 0, item.id);
+      assert.deepEqual(item.authMethods, []);
+      assert.deepEqual(item.models, []);
+    }
     assert.equal(item.setupComplete, false);
     assert.equal(item.authentication, undefined);
     for (const route of result.routes) {

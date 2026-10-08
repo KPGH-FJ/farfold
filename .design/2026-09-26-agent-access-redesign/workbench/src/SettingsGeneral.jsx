@@ -47,6 +47,8 @@ import {
 } from "./history-policy.js";
 import { conversationState } from "./conversation-policy.js";
 import "./history-settings.css";
+import "./settings-redesign.css";
+import { DataPrivacy, DiagnosticExport } from "./settings-maintenance.jsx";
 
 export function updatePreviewIssue({
   tasks = [],
@@ -92,7 +94,6 @@ export default function General({
   const [update, setUpdate] = useState(null);
   const [updateScenario, setUpdateScenario] = useState("unconfigured");
   const [diagnostic, setDiagnostic] = useState(null);
-  const [diagnosticNote, setDiagnosticNote] = useState("");
   const [shortcut, setShortcut] = useState(false);
   const [privacy, setPrivacy] = useState(false);
   const [generalFail, setGeneralFail] = useState(false);
@@ -127,12 +128,18 @@ export default function General({
     }, 900);
   };
   return (
-    <>
+    <div className="settings-redesign">
       <PageHeading
         title="通用"
         description="让 Farfold 适合你的日常工作方式。"
       />
-      <section className="set-general-section">
+      <nav className="sl-settings-index" aria-label="通用设置分组">
+        <a href="#settings-appearance">外观</a>
+        <a href="#settings-organisation">对话整理</a>
+        <a href="#settings-maintenance">更新与诊断</a>
+        <a href="#settings-data">数据与隐私</a>
+      </nav>
+      <section id="settings-appearance" className="set-general-section">
         <div className="set-section-title">
           <h3>外观</h3>
           <span>界面配色</span>
@@ -163,13 +170,11 @@ export default function General({
           ))}
         </div>
       </section>
-      <section className="set-general-section">
+      <section id="settings-organisation" className="set-general-section">
         <h3>工作与整理</h3>
         <div className="set-setting-row">
           <div>
-            <strong>
-              自动归档
-            </strong>
+            <strong>自动归档</strong>
             <p>
               将无活动的已结束对话移到“已归档”。收藏及有待处理内容的对话保留。
             </p>
@@ -272,7 +277,7 @@ export default function General({
           </span>
         </div>
       </section>
-      <section className="set-general-section">
+      <section id="settings-maintenance" className="set-general-section">
         <h3>更新与诊断</h3>
         <div className="set-setting-row">
           <div>
@@ -286,15 +291,18 @@ export default function General({
             <strong>诊断记录</strong>
             <p>导出不含对话正文、密钥与项目内容的诊断信息。</p>
           </div>
-          <Button onClick={() => setDiagnostic("preview")}>
+          <Button onClick={() => setDiagnostic("scope")}>
             <DownloadSimple size={16} />
-            导出诊断
+            预览与导出
           </Button>
         </div>
+      </section>
+      <section id="settings-data" className="set-general-section">
+        <h3>数据与隐私</h3>
         <div className="set-setting-row">
           <div>
             <strong>你的数据如何保存</strong>
-            <p>了解会话、密钥和应用设置分别由谁管理。</p>
+            <p>查看数据归属、清除范围与完整卸载步骤。</p>
           </div>
           <Button onClick={() => setPrivacy(true)}>
             查看说明 <ArrowRight size={15} />
@@ -317,15 +325,18 @@ export default function General({
           </details>
         </section>
       )}
-      <label className="set-review set-review-check">
-        <input
-          type="checkbox"
-          checked={generalFail}
-          onChange={(e) => setGeneralFail(e.target.checked)}
-        />
-        <span>演示设置保存失败</span>
-        <small>验证原值保留与错误反馈</small>
-      </label>
+      <details className="sl-demo-tools">
+        <summary>原型状态选项</summary>
+        <label className="set-review set-review-check">
+          <input
+            type="checkbox"
+            checked={generalFail}
+            onChange={(e) => setGeneralFail(e.target.checked)}
+          />
+          <span>演示设置保存失败</span>
+          <small>验证原值保留与错误反馈</small>
+        </label>
+      </details>
       {update && (
         <Modal
           title="Farfold 更新"
@@ -343,7 +354,9 @@ export default function General({
               >
                 关闭
               </Button>
-              {update !== "busy-tasks" && update !== "installed" && (
+              {!["busy-tasks", "installed", "manual", "unconfigured"].includes(
+                update,
+              ) && (
                 <Button
                   primary
                   disabled={update === "checking"}
@@ -364,20 +377,23 @@ export default function General({
               <p>当前版本 0.1.7</p>
             </div>
           </div>
-          <ReviewScenario
-            value={updateScenario}
-            onChange={(v) => {
-              updateTicket.current++;
-              setUpdateScenario(v);
-              setUpdate("intro");
-            }}
-            items={[
-              ["unconfigured", "尚无发布通道"],
-              ["available", "发现新版本"],
-              ["current", "已是最新"],
-              ["failed", "检查失败"],
-            ]}
-          />
+          <details className="sl-demo-tools">
+            <summary>更新状态示例</summary>
+            <ReviewScenario
+              value={updateScenario}
+              onChange={(v) => {
+                updateTicket.current++;
+                setUpdateScenario(v);
+                setUpdate("intro");
+              }}
+              items={[
+                ["unconfigured", "尚无发布通道"],
+                ["available", "发现新版本"],
+                ["current", "已是最新"],
+                ["failed", "检查失败"],
+              ]}
+            />
+          </details>
           {update === "intro" && (
             <p className="set-caption">
               点击检查后显示本次结果，不把“尚未检查”当成“已是最新”。
@@ -391,8 +407,28 @@ export default function General({
           )}
           {update === "unconfigured" && (
             <Notice title="当前版本没有配置发布通道">
-              此版本不会自动检查或下载公开更新。
+              此版本不会自动检查或下载公开更新。可从最初获取安装包的渠道确认发布信息。
+              <Button onClick={() => setUpdate("manual")}>
+                查看手动更新步骤
+              </Button>
             </Notice>
+          )}
+          {update === "manual" && (
+            <div className="sl-step-list">
+              <h3>从原发布渠道获取更新</h3>
+              <ol>
+                <li>联系安装包提供方或回到原下载位置，核对版本与适用系统。</li>
+                <li>保留草稿，结束进行中和结果未知的工作。</li>
+                <li>
+                  按发布方说明更新；应用设置与 Agent
+                  数据的保留范围需在安装前确认。
+                </li>
+              </ol>
+              <p>
+                当前没有可验证的发布地址，因此原型不会打开外部链接或下载文件。
+              </p>
+              <Button onClick={() => setUpdate("intro")}>返回检查</Button>
+            </div>
           )}
           {update === "failed" && (
             <Notice tone="warning" title="检查更新失败">
@@ -463,72 +499,7 @@ export default function General({
           )}
         </Modal>
       )}
-      {diagnostic && (
-        <Modal
-          title="导出诊断"
-          onClose={() => setDiagnostic(null)}
-          footer={
-            <>
-              <Button onClick={() => setDiagnostic(null)}>关闭</Button>
-              {diagnostic === "preview" && (
-                <Button
-                  primary
-                  onClick={() => {
-                    setDiagnostic("done");
-                    toast("演示诊断包已准备 · 未读取真实日志");
-                  }}
-                >
-                  生成演示诊断包
-                </Button>
-              )}
-            </>
-          }
-        >
-          {diagnostic === "preview" ? (
-            <>
-              <p>你可以在发送给他人之前先检查内容。此处只生成界面中的示例。</p>
-              <div className="set-data-list">
-                <div>
-                  <CheckCircle size={18} />
-                  <span>包含</span>
-                  <p>应用版本、连接事件类型、耗时统计与受限设置</p>
-                </div>
-                <div>
-                  <ShieldCheck size={18} />
-                  <span>不包含</span>
-                  <p>对话正文、文件内容、API Key、命令内容与项目路径</p>
-                </div>
-              </div>
-              <Field label="本次遇到的问题（可选）">
-                <textarea
-                  rows={3}
-                  value={diagnosticNote}
-                  onChange={(event) => setDiagnosticNote(event.target.value)}
-                  placeholder="例如：恢复一个对话后无法继续发送。"
-                />
-              </Field>
-            </>
-          ) : (
-            <>
-              <Notice tone="success" title="演示诊断包已准备">
-                正式产品会在本机生成文件，由你决定是否分享。此原型不会创建或发送诊断文件。
-              </Notice>
-              <div className="set-diagnostic-result">
-                <code>farfold-diagnostics-demo.zip</code>
-                <Button onClick={() => setDiagnostic("preview")}>
-                  查看包含内容
-                </Button>
-              </div>
-              {diagnosticNote.trim() && (
-                <div className="set-impact">
-                  <strong>你填写的问题</strong>
-                  <p>{diagnosticNote}</p>
-                </div>
-              )}
-            </>
-          )}
-        </Modal>
-      )}
+      {diagnostic && <DiagnosticExport onClose={() => setDiagnostic(null)} />}
       {shortcut && (
         <Modal
           title="快捷键"
@@ -557,55 +528,12 @@ export default function General({
         </Modal>
       )}
       {privacy && (
-        <Modal
-          title="数据与隐私"
+        <DataPrivacy
           onClose={() => setPrivacy(false)}
-          footer={<Button onClick={() => setPrivacy(false)}>知道了</Button>}
-        >
-          <div className="set-privacy-list">
-            <section>
-              <Folder size={21} />
-              <div>
-                <h3>会话目录与应用设置</h3>
-                <p>由 Farfold 保存在本机。包含项目、标题、置顶、归档和设置。</p>
-              </div>
-            </section>
-            <section>
-              <BookOpen size={21} />
-              <div>
-                <h3>完整对话与工作历史</h3>
-                <p>
-                  由你选择的 Agent 管理。Farfold 恢复对话时依赖 Agent
-                  提供的历史。
-                </p>
-              </div>
-            </section>
-            <section>
-              <Key size={21} />
-              <div>
-                <h3>API Key</h3>
-                <p>
-                  正式产品保存在系统钥匙串。保存配置不会自动发送给所有
-                  Agent；使用时由你选择来源。
-                </p>
-              </div>
-            </section>
-            <section>
-              <Sparkle size={21} />
-              <div>
-                <h3>LifeModel</h3>
-                <p>
-                  当前未启用，不采集、不提供偏好。未来方案必须由你查看来源并批准。
-                </p>
-              </div>
-            </section>
-          </div>
-          <Notice title="本页没有清除历史或退出账号的快捷操作">
-            移除接入、删除 API
-            配置、卸载程序的范围分别说明，避免一项操作误伤其他数据。
-          </Notice>
-        </Modal>
+          blockedTasks={updateBlockedTasks}
+          storageIssue={storageIssue || generalFail}
+        />
       )}
-    </>
+    </div>
   );
 }

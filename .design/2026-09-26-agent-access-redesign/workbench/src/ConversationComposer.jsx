@@ -14,6 +14,7 @@ import {
 import { AgentIcon, Button } from "./ui";
 import ComposerFolder from "./ComposerFolder.jsx";
 import PermissionControl from "./PermissionControl.jsx";
+import ConversationConfiguration from "./ConversationConfiguration.jsx";
 
 const SHORTCUTS = [
   { label: "先给出计划", text: "先给出一个可讨论的计划，确认后再继续。" },
@@ -42,11 +43,14 @@ export default function ConversationComposer({
   permissionCapability,
   permissionGate,
   onPermissionChange,
+  configurationCapability,
+  onCheckStop,
 }) {
   const [menu, setMenu] = useState(null);
   const input = useRef(null);
   const queued = isRunning || pending || paused;
-  const stopWaiting = task.stopPhase === "waiting" || (!task.stopPhase && stopping);
+  const stopWaiting =
+    task.stopPhase === "waiting" || (!task.stopPhase && stopping);
   const retryStop = ["unknown", "failed"].includes(task.stopPhase);
   useEffect(() => {
     if (!active) setMenu(null);
@@ -67,7 +71,11 @@ export default function ConversationComposer({
   return (
     <>
       {task.stopPhase && (
-        <div className="conv-stop-notice" role="status" aria-label="停止确认状态">
+        <div
+          className="conv-stop-notice"
+          role="status"
+          aria-label="停止确认状态"
+        >
           <strong>
             {task.stopPhase === "failed"
               ? "停止请求未发送"
@@ -79,10 +87,44 @@ export default function ConversationComposer({
             {task.stopPhase === "failed"
               ? "原工作仍待处理。可继续处理，或重试停止；草稿与待发消息已保留。"
               : task.stopPhase === "unknown"
-                ? "尚未收到停止确认，请重试停止。发送已暂停，草稿与待发消息已保留。"
+                ? "尚未收到停止确认。请先检查结果；发送暂停，草稿与待发消息保留。"
                 : "正在等待 Agent 确认。发送已暂停，草稿与待发消息已保留。"}
           </p>
+          {task.stopPhase === "unknown" && (
+            <Button onClick={onCheckStop}>检查停止结果（演示）</Button>
+          )}
         </div>
+      )}
+      {task.resendDraft && (
+        <div className="cr-resend-notice" role="status">
+          <div>
+            <strong>编辑后作为新消息追加</strong>
+            <p>原消息与已有回答会保留。这次发送不会覆盖过去的内容。</p>
+          </div>
+          <Button
+            kind="text"
+            onClick={() =>
+              onTaskChange({
+                draft: task.resendDraft.previousDraft || "",
+                attachments: task.resendDraft.previousAttachments || [],
+                resendDraft: null,
+              })
+            }
+          >
+            取消重发
+          </Button>
+        </div>
+      )}
+      {task.webPreview?.url && (
+        <button
+          className="cr-page-chip"
+          onClick={() =>
+            onTaskChange({ webPreview: { ...task.webPreview, open: true } })
+          }
+        >
+          当前网页 ·{" "}
+          {task.webPreview.granted ? "允许读取本页" : "尚未分享给 Agent"}
+        </button>
       )}
       <div
         className={`conv-composer ${blocked ? "readonly" : ""}`}
@@ -207,67 +249,13 @@ export default function ConversationComposer({
                 </>
               )}
             </div>
-            <div className="conv-popover-wrap conv-identity-wrap">
-              <button
-                className="conv-composer-identity"
-                type="button"
-                aria-label="查看 Agent 与模型设置"
-                aria-expanded={menu === "identity"}
-                onClick={() => toggle("identity")}
-              >
-                <AgentIcon name={task.agent} size={17} />
-                <span>{task.agent}</span>
-                <span className="conv-control-divider" />
-                <span className="conv-model-name">{task.model}</span>
-                <CaretDown size={12} />
-              </button>
-              {menu === "identity" && (
-                <>
-                  <button
-                    className="conv-dismiss"
-                    aria-label="关闭会话设置"
-                    onClick={() => setMenu(null)}
-                  />
-                  <div className="conv-identity-panel conv-input-identity">
-                    <strong>当前对话设置</strong>
-                    <dl>
-                      <dt>Agent</dt>
-                      <dd>{task.agent}</dd>
-                      <dt>模型来源</dt>
-                      <dd>{task.source || "沿用 Agent 已有设置"}</dd>
-                      <dt>模型</dt>
-                      <dd>{task.model}</dd>
-                      <dt>推理等级</dt>
-                      <dd>{task.effort || "默认"}</dd>
-                    </dl>
-                    <p>
-                      <LockKey size={14} />
-                      这条对话保持创建时的设置。
-                    </p>
-                    <Button
-                      onClick={() => {
-                        setMenu(null);
-                        onNew();
-                      }}
-                    >
-                      选择其他设置新开对话
-                      <ArrowUpRight size={14} />
-                    </Button>
-                  </div>
-                </>
-              )}
-            </div>
-            {task.effort && (
-              <span
-                className="composer-effort readonly"
-                aria-label={`思考深度：${task.effort}，当前对话已固定`}
-                title="这条对话保持创建时的思考深度"
-              >
-                <span>思考</span>
-                {task.effort}
-                <LockKey size={12} aria-hidden="true" />
-              </span>
-            )}
+            <ConversationConfiguration
+              task={task}
+              capability={configurationCapability}
+              onTaskChange={onTaskChange}
+              onNew={onNew}
+              active={active}
+            />
             <PermissionControl
               key={task.id}
               active={active}
@@ -317,16 +305,27 @@ export default function ConversationComposer({
             </div>
           </div>
           <div className="conv-send-controls">
-            {(isRunning || pending || task.stopPhase) && (
-              <Button className={`conv-stop${retryStop ? " conv-stop-retry" : ""}`} disabled={stopWaiting} onClick={stop}>
-                <Square size={11} weight="fill" />
-                {stopWaiting ? "停止中" : retryStop ? "重试停止" : "停止"}
-              </Button>
-            )}
+            {(isRunning || pending || task.stopPhase) &&
+              task.stopPhase !== "unknown" && (
+                <Button
+                  className={`conv-stop${retryStop ? " conv-stop-retry" : ""}`}
+                  disabled={stopWaiting}
+                  onClick={stop}
+                >
+                  <Square size={11} weight="fill" />
+                  {stopWaiting ? "停止中" : retryStop ? "重试停止" : "停止"}
+                </Button>
+              )}
             <Button
               primary
               className="conv-send-button"
-              aria-label={queued ? "加入待发" : "发送消息"}
+              aria-label={
+                queued
+                  ? "加入待发"
+                  : task.resendDraft
+                    ? "追加为新消息"
+                    : "发送消息"
+              }
               title={
                 blocked
                   ? "发送已暂停，草稿会保留"
@@ -354,9 +353,11 @@ export default function ConversationComposer({
             ? "发送已暂停 · 草稿已保留"
             : paused
               ? "待发已暂停，由你决定何时继续"
-              : isRunning
-                ? "补充内容会排在当前工作之后"
-                : "Enter 发送 · Shift Enter 换行"}
+              : isRunning || pending
+                ? "Enter 加入待发 · Shift Enter 换行"
+                : task.resendDraft
+                  ? "Enter 追加为新消息 · Shift Enter 换行"
+                  : "Enter 发送 · Shift Enter 换行"}
         </span>
       </div>
     </>

@@ -150,7 +150,7 @@ export default function PermissionControl({
           value: selected.value,
           unknown,
           message: unknown
-            ? "权限更改结果未确认，请先重新读取。"
+            ? "权限更改结果未确认，请重新确认本次权限。"
             : "更改未完成，仍保留原权限。",
         });
         setCandidate(null);
@@ -298,7 +298,11 @@ export default function PermissionControl({
                         <small>{option.description}</small>
                       )}
                     </span>
-                    {option.value === value && <Check size={17} />}
+                    {option.value === value && (
+                      <span className="permission-current">
+                        <Check size={17} /> 当前
+                      </span>
+                    )}
                   </button>
                 ))}
               </>

@@ -266,7 +266,9 @@ test("restoration is tied to the entry while completed management, import and es
   for (const mode of [{ ...context, intent: "manage" }, { view: "explore" }]) {
     assert.equal(usesOnboarding(mode, completed), false);
     assert.equal(onboardingInitial(completed, selection, mode), null);
-    assert.notEqual(onboardingInitial(saved, selection, mode), null);
+    if (mode.intent === "manage")
+      assert.equal(onboardingInitial(saved, selection, mode), null);
+    else assert.notEqual(onboardingInitial(saved, selection, mode), null);
   }
   for (const mode of [
     { ...context, intent: "import" },

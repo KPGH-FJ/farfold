@@ -93,7 +93,7 @@ test("single declared and documented login paths share direct actions; a missing
       onChange() {},
     }),
   );
-  assert.ok(replaced.includes("<select"));
+  assert.ok(replaced.includes('class="agent-auth-method"'));
   assert.ok(replaced.includes("原登录方式不可用"));
 });
 
@@ -315,16 +315,61 @@ test("multiple discovered programs require an explicit visible target while a si
       onChange() {},
     });
   const multiple = renderProgram(installations);
-  assert.ok(multiple.includes("选择要接入的本机程序"));
+  assert.ok(multiple.includes("选择本机程序"));
   assert.ok(multiple.includes('value="" disabled="" selected=""'));
   assert.ok(multiple.includes("/old/agent"));
   assert.ok(multiple.includes("/chosen/agent"));
   const add = (html) =>
     [...html.matchAll(/<button[^>]*>[\s\S]*?<\/button>/g)]
       .map((match) => match[0])
-      .find((markup) => markup.includes("添加并连接"));
+      .find((markup) => markup.includes("添加本机程序"));
   assert.ok(add(multiple).includes('disabled=""'));
   const single = renderProgram([installations[1]]);
   assert.ok(!single.includes("请选择一份程序"));
   assert.ok(!add(single).includes('disabled=""'));
+});
+
+test("managed unused versions expose independent cleanup while selected and external programs do not", () => {
+  const installations = [
+    { id: "selected", path: "/owned/current", managed: true, version: "2" },
+    { id: "unused", path: "/owned/previous", managed: true, version: "1" },
+    { id: "external", path: "/external", managed: false, version: "3" },
+  ];
+  const agent = {
+    ...base,
+    connected: true,
+    registered: true,
+    selectedInstallationId: "selected",
+    installations,
+  };
+  const renderProgram = (changes = {}) =>
+    render(Program, { agent, onChange() {}, ...changes });
+  const cleanup = (html) =>
+    [...html.matchAll(/<button[^>]*>卸载旧版本<\/button>/g)].map(
+      (match) => match[0],
+    );
+  assert.equal(cleanup(renderProgram()).length, 1);
+  assert.ok(!cleanup(renderProgram())[0].includes('disabled=""'));
+  assert.ok(
+    cleanup(renderProgram({ busyCount: 1 }))[0].includes('disabled=""'),
+  );
+  assert.ok(
+    cleanup(
+      renderProgram({
+        allAgents: [
+          { id: "other", registered: true, command: "/owned/previous/run" },
+        ],
+      }),
+    )[0].includes('disabled=""'),
+  );
+  const blockedProgram = renderProgram({
+    busyCount: 1,
+    blockingTasks: [
+      { id: "working", title: "未完成的工作", status: "running" },
+    ],
+  });
+  assert.ok(blockedProgram.includes("程序管理前需要处理的工作"));
+  assert.ok(blockedProgram.includes("先处理这些工作，再继续程序管理"));
+  assert.ok(!blockedProgram.includes("再继续登录"));
+  assert.ok(renderProgram().includes("移除 Agent"));
 });
