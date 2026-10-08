@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-08",
+  "sourceBase": "d2fdda6f",
+  "receiptKind": "summary_of_terminal_results_in_this_task",
+  "installedSource": "d7e454ac",
+  "installedContainsFixes": false,
+  "checks": [
+    { "command": "corepack pnpm format:check", "exitCode": 0 },
+    { "command": "corepack pnpm typecheck", "exitCode": 0 },
+    {
+      "command": "corepack pnpm test",
+      "exitCode": 0,
+      "files": 209,
+      "passed": 2450
+    },
+    { "command": "corepack pnpm build", "exitCode": 0 },
+    {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+      "exitCode": 0,
+      "passed": 1039,
+      "ignored": 4
+    },
+    { "command": "git diff --check", "exitCode": 0 }
+  ],
+  "redBeforeFix": [
+    "late old snapshots were accepted after clear",
+    "partial directory deletion erased metadata needed for retry",
+    "dialog busy and repeated-clear protections were absent",
+    "changed service source adopted current revision in same-settings selection"
+  ],
+  "independentReview": {
+    "serviceIdentity": "no remaining blockers",
+    "clearRestartAndConcurrency": "no remaining blockers",
+    "screenshots": 14
+  },
+  "warnings": [
+    "Vite chunk larger than 500 kB",
+    "Existing test-only unused std::io::Write import in agent_install/archive.rs"
+  ],
+  "boundaries": [
+    "Temporary data and simulated secret storage only",
+    "No real data clear",
+    "No app replacement",
+    "No live service modification or model request",
+    "UI screenshots cover installed d7e454ac, not the new fixes"
+  ]
+}

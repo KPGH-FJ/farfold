@@ -94,9 +94,7 @@
     "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-07-bd0bf1cb/Farfold-0.1.7-bd0bf1cb.zip",
     "sha256": "51e4a7cf0cdca376f692a1a718fff8662e1dcc4d18f14d1a4e12b587472e383a"
   },
-  "applicationsFarfoldEntries": [
-    "/Applications/Farfold.app"
-  ],
+  "applicationsFarfoldEntries": ["/Applications/Farfold.app"],
   "diskFreeBytesBefore": 50807037952,
   "sourceInputScope": {
     "recursive": [
@@ -125,13 +123,7 @@
       "src-tauri/tauri.conf.json",
       "src-tauri/tauri.windows.conf.json"
     ],
-    "excluded": [
-      "target",
-      "node_modules",
-      "dist",
-      "output",
-      ".DS_Store"
-    ],
+    "excluded": ["target", "node_modules", "dist", "output", ".DS_Store"],
     "claim": "Repository application build sources and existing source/test files in these roots; not an inventory of every CI/test fixture or external toolchain/dependency input."
   },
   "buildPid": 95777,

@@ -131,7 +131,9 @@ impl MetaStore {
     }
 
     /// Remove every Farfold-owned record in one transaction. The database file
-    /// and schema stay usable. Callers must delete secure-storage secrets and
+    /// and schema stay readable, but this process can no longer write old
+    /// in-memory snapshots. Reopening the app creates a fresh writable connection.
+    /// Callers must delete secure-storage secrets and
     /// managed roots before this reset so an interrupted clear never orphans
     /// keychain entries or loses the receipts needed to delete owned paths.
     pub fn clear_all(&self) -> Result<(), String> {
@@ -147,7 +149,12 @@ impl MetaStore {
                  DELETE FROM settings;",
             )
             .and_then(|_| transaction.commit())
-            .map_err(|_| "无法清除数据".to_string())
+            .map_err(|_| "无法清除数据".to_string())?;
+        // Keep the same mutex through sealing: writers already queued on this
+        // connection must not restore pre-clear settings or registration data.
+        connection
+            .pragma_update(None, "query_only", true)
+            .map_err(|_| "数据已清除，请退出并重新打开应用".to_string())
     }
 
     fn lock(&self) -> Result<MutexGuard<'_, Connection>, String> {

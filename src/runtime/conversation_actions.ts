@@ -10,7 +10,10 @@ import { THREAD_VIEW_STRINGS as T } from "./thread_view_strings";
 
 export type StoredServiceRecord =
   | { kind: "existing" }
-  | { kind: "configured"; identity?: { id?: string; model?: string } };
+  | {
+      kind: "configured";
+      identity?: { id?: string; model?: string; fingerprint?: string };
+    };
 
 /** Read `configOptions` recorded on an index row into the draft-selection
  *  shape (`initialSelection`/`PreparedSelection`) used by the new-conversation
@@ -51,14 +54,22 @@ export function storedConversationSelection(
     typeof source.identity?.id === "string" &&
     typeof source.identity.model === "string"
   ) {
-    // The credential may have changed or been removed; an unknown revision
-    // keeps the stale selection visible in preparation instead of silently
-    // applying it (see W3-1 admission rules).
+    // A revision also changes on key rotation and model-list edits. Reuse the
+    // backend's address/format identity to distinguish those from a different
+    // source; only an unchanged source with the saved model can adopt today's
+    // revision. Otherwise keep the old choice visible for explicit reselection.
     const current = credentials.find((item) => item.id === source.identity!.id);
+    const sameSource =
+      typeof source.identity.fingerprint === "string" &&
+      !!source.identity.fingerprint &&
+      current?.fingerprint === source.identity.fingerprint &&
+      current.complete &&
+      !current.deleting &&
+      current.models.includes(source.identity.model);
     service = {
       id: source.identity.id,
       model: source.identity.model,
-      revision: current?.revision ?? "",
+      revision: sameSource ? current.revision : "",
     };
   }
   return { service, config };

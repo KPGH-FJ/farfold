@@ -141,7 +141,16 @@ vi.mock("./runtime/setup_storage", () => ({
 }));
 vi.mock("./runtime/performance-trace", () => ({ traceAfterPaint: vi.fn() }));
 vi.mock("./runtime/drafts", () => ({
-  composerDrafts: { read: () => h.draft, clear: h.clearDraft },
+  composerDrafts: {
+    read: () => h.draft,
+    clear: h.clearDraft,
+    update: (
+      _key: string,
+      update: (draft: typeof h.draft) => typeof h.draft,
+    ) => {
+      h.draft = update(h.draft);
+    },
+  },
   newConversationChoice: h.choice,
 }));
 vi.mock("./runtime/collections", async (original) => ({

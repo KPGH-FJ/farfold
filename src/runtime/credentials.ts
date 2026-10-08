@@ -15,6 +15,8 @@ export interface Credential {
   apiType: string;
   models: string[];
   revision: string;
+  /** Address/format identity from the backend; absent for non-service keys. */
+  fingerprint?: string;
   complete: boolean;
   deleting: boolean;
   grants: CredentialGrant[];

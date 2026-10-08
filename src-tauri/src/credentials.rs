@@ -46,6 +46,8 @@ pub struct View {
     api_type: String,
     models: Vec<String>,
     revision: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    fingerprint: Option<String>,
     complete: bool,
     grants: Vec<Grant>,
     deleting: bool,
@@ -65,6 +67,10 @@ impl From<&Credential> for View {
             } else {
                 service_revision(&c.endpoint, &c.api_type, &c.models, &c.secret_ref)
             },
+            fingerprint: validate_endpoint(&c.endpoint)
+                .ok()
+                .filter(|_| validate_api_type(&c.api_type).is_ok())
+                .map(|endpoint| service_fingerprint(&endpoint, &c.api_type)),
             complete: complete_service(c),
             grants: c.grants.clone(),
             deleting: c.deleting,
@@ -257,6 +263,10 @@ fn service_revision(endpoint: &str, api_type: &str, models: &[String], secret_re
     digest(&(&endpoint, api_type, models, secret_ref))
 }
 
+fn service_fingerprint(endpoint: &str, api_type: &str) -> String {
+    digest(&(endpoint, api_type))
+}
+
 fn snapshot_with(
     store: &MetaStore,
     selection: &ServiceSelection,
@@ -275,7 +285,7 @@ fn snapshot_with(
     }
     let identity = ServiceIdentity {
         id: item.id,
-        fingerprint: digest(&(&endpoint, &item.api_type)),
+        fingerprint: service_fingerprint(&endpoint, &item.api_type),
         model: selection.model.clone(),
     };
     if expected.is_some_and(|expected| expected != &identity) {
@@ -317,7 +327,7 @@ pub(crate) fn validate_service_identity(
         .ok_or("此对话使用的 API 配置已移除")?;
     let endpoint = validate_endpoint(&item.endpoint)?;
     validate_api_type(&item.api_type)?;
-    if digest(&(&endpoint, &item.api_type)) != expected.fingerprint
+    if service_fingerprint(&endpoint, &item.api_type) != expected.fingerprint
         || !validate_models(&item.models, true)?.contains(&expected.model)
     {
         return Err("此对话的 API 来源或模型已改变，请检查设置".into());
@@ -441,6 +451,7 @@ pub(crate) fn save_auth_key(
     label: &str,
     key: &str,
 ) -> Result<View, String> {
+    let _activity = crate::managed_update::activity()?;
     let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
     save_auth_key_with(store, &Keychain, provider, label, key)
 }
@@ -646,9 +657,11 @@ pub async fn credential_list(app: AppHandle) -> Result<Vec<View>, String> {
 }
 #[tauri::command]
 pub async fn credential_save(app: AppHandle, input: SaveInput) -> Result<View, String> {
+    let activity = crate::managed_update::activity()?;
     let store = app.state::<MetaStore>().inner().clone();
     store
         .run(move |store| {
+            let _activity = activity;
             let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
             save(store, &Keychain, input)
         })
@@ -671,9 +684,11 @@ async fn revoke_grant(
     agent_id: String,
     env_name: String,
 ) -> Result<(), String> {
+    let activity = crate::managed_update::activity()?;
     let _configuration = crate::install_job::configuration_guard(&agent_id).await;
     store
         .run(move |store| {
+            let _activity = activity;
             let _configuration = _configuration;
             let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
             let mut pool = read(store)?;
@@ -686,9 +701,11 @@ async fn revoke_grant(
 }
 #[tauri::command]
 pub async fn credential_delete(app: AppHandle, id: String) -> Result<(), String> {
+    let activity = crate::managed_update::activity()?;
     let store = app.state::<MetaStore>().inner().clone();
     store
         .run(move |store| {
+            let _activity = activity;
             let _lock = MUTATION.lock().map_err(|_| "密钥设置暂时不可用")?;
             remove(store, &Keychain, &id)
         })
@@ -811,6 +828,7 @@ mod tests {
         .await;
         let stayed_locked = after.is_err();
         drop(after);
+        let clear_blocked = crate::managed_update::exclusive().is_err();
         release.send(()).unwrap();
         blocker.join().unwrap();
         tokio::time::timeout(Duration::from_secs(2), async {
@@ -831,6 +849,10 @@ mod tests {
         assert!(
             stayed_locked,
             "cancelling the caller must not release a still-running worker's guard"
+        );
+        assert!(
+            clear_blocked,
+            "clearing data must wait for the credential worker"
         );
         let _guard = tokio::time::timeout(
             Duration::from_secs(2),
@@ -992,6 +1014,48 @@ mod tests {
             "a changed source must be rejected before reading its Key"
         );
         assert!(validate_service_identity(&store, &original.identity).is_err());
+    }
+
+    #[test]
+    fn public_service_fingerprint_matches_history_without_reading_secrets() {
+        let (_dir, store) = store();
+        let vault = Fake::default();
+        let saved = save(&store, &vault, input(None, "initial-secret")).unwrap();
+        let selection = ServiceSelection {
+            id: saved.id.clone(),
+            model: "fixture-model".into(),
+        };
+        let original = snapshot_with(&store, &selection, None, &vault).unwrap();
+        let reads = vault.reads.get();
+        let view = serde_json::to_value(View::from(&read(&store).unwrap()[0])).unwrap();
+        assert_eq!(view["fingerprint"], original.identity.fingerprint);
+        assert_eq!(
+            vault.reads.get(),
+            reads,
+            "listing identity never reads a Key"
+        );
+        assert!(!view.to_string().contains("initial-secret"));
+
+        let mut equivalent = read(&store).unwrap().remove(0);
+        equivalent.endpoint = "https://EXAMPLE.test:443/api/".into();
+        equivalent.label = "Renamed".into();
+        equivalent.secret_ref = "rotated-key-reference".into();
+        let same = serde_json::to_value(View::from(&equivalent)).unwrap();
+        assert_eq!(same["fingerprint"], original.identity.fingerprint);
+        assert_ne!(same["revision"], view["revision"]);
+
+        let mut changed = equivalent.clone();
+        changed.endpoint = "https://other.test/api".into();
+        assert_ne!(
+            serde_json::to_value(View::from(&changed)).unwrap()["fingerprint"],
+            view["fingerprint"]
+        );
+        changed = equivalent;
+        changed.api_type = "messages".into();
+        assert_ne!(
+            serde_json::to_value(View::from(&changed)).unwrap()["fingerprint"],
+            view["fingerprint"]
+        );
     }
 
     #[test]

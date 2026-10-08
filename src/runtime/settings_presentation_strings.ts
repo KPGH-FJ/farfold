@@ -56,10 +56,10 @@ export const SETTINGS_PRESENTATION = {
   ],
   clearDataBlocked:
     "有任务进行中或结果尚未确认，请先完成或确认这些任务后再清除。",
-  clearDataConfirm: "确认清除",
+  clearDataConfirm: "清除并重新打开",
   clearDataCancel: "取消",
   clearDataWorking: "正在清除…",
-  clearDataDone: "Farfold 数据已清除。请完全退出并重新打开应用。",
+  clearDataDone: "Farfold 数据已清除，正在重新打开应用…",
   clearDataFailed: "清除未完成，部分数据可能仍保留。请重试。",
   uninstallTitle: "完整卸载 Farfold",
   uninstallHint:

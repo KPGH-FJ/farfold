@@ -83,9 +83,8 @@ pub(crate) fn clear_owned(
             kept.push(name.display().to_string());
         }
     }
-    store.clear_all()?;
     if kept.is_empty() {
-        Ok(())
+        store.clear_all()
     } else {
         Err(format!(
             "部分 Farfold 数据未能删除，保留在: {}",
@@ -102,7 +101,9 @@ pub(crate) fn clear_owned(
 /// and user project folders are never touched.
 #[tauri::command]
 pub async fn farfold_data_clear(app: AppHandle) -> Result<(), String> {
-    let _permit = crate::managed_update::exclusive()?;
+    let permit = crate::managed_update::exclusive()?;
+    let exit = app.state::<crate::draft_exit::DraftExit>();
+    let _clearing = exit.begin_data_clear();
     let data_dir = app.path().app_data_dir().map_err(|_| "无法读取数据目录")?;
     let connections: Vec<_> = {
         let manager = app.state::<crate::acp_client::manager::AcpManager>();
@@ -128,7 +129,13 @@ pub async fn farfold_data_clear(app: AppHandle) -> Result<(), String> {
         clear_owned(&data_dir, &store, &crate::auth::keychain_delete)
     })
     .await
-    .map_err(|_| "清除未完成，请重试".to_string())?
+    .map_err(|_| "清除未完成，请重试".to_string())??;
+    // The user explicitly discarded unsent work. Never run the normal save
+    // barrier with the renderer's old caches after clearing the database.
+    app.state::<crate::draft_exit::DraftExit>()
+        .prepare_cleared_restart(permit);
+    app.request_restart();
+    Ok(())
 }
 
 #[cfg(test)]
@@ -217,6 +224,33 @@ mod tests {
     }
 
     #[test]
+    fn cleared_store_rejects_late_old_snapshots_until_reopened() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("meta.db");
+        let store = MetaStore::open(&path).unwrap();
+        let old_snapshot = serde_json::json!({"composers": {"new": {"text": "old draft"}}});
+        store.set_setting("unsentWork.v1", &old_snapshot).unwrap();
+        let old_writer = store.clone();
+        clear_owned(directory.path(), &store, &|_| Ok(())).unwrap();
+
+        assert!(
+            old_writer
+                .set_setting("unsentWork.v1", &old_snapshot)
+                .is_err()
+        );
+        assert!(old_writer.insert_custom_agent(agent(vec![])).is_err());
+        assert!(store.list_settings().unwrap().is_empty());
+        assert!(store.list_agents().unwrap().is_empty());
+        drop(old_writer);
+        drop(store);
+        let reopened = MetaStore::open(&path).unwrap();
+        assert!(reopened.list_settings().unwrap().is_empty());
+        reopened
+            .set_setting("new", &serde_json::json!(true))
+            .unwrap();
+    }
+
+    #[test]
     fn clear_owned_stops_before_namespaces_when_secret_deletion_fails() {
         let directory = tempfile::tempdir().unwrap();
         let data = directory.path().join("data");
@@ -259,16 +293,26 @@ mod tests {
         std::fs::set_permissions(&locked, permissions).unwrap();
         let store = MetaStore::open(&data.join("meta.db")).unwrap();
 
+        store
+            .set_setting("retained", &serde_json::json!(true))
+            .unwrap();
+
         let result = clear_owned(&data, &store, &|_| Ok(()));
 
-        let mut permissions = std::fs::metadata(&locked).unwrap().permissions();
-        #[allow(clippy::permissions_set_readonly_false)]
-        permissions.set_readonly(false);
-        let _ = std::fs::set_permissions(&locked, permissions);
+        if let Ok(metadata) = std::fs::metadata(&locked) {
+            let mut permissions = metadata.permissions();
+            #[allow(clippy::permissions_set_readonly_false)]
+            permissions.set_readonly(false);
+            let _ = std::fs::set_permissions(&locked, permissions);
+        }
         match result {
             Err(message) => {
                 assert!(message.contains("conversations"), "{message}");
                 assert!(store.get_setting("missing").unwrap().is_none());
+                assert_eq!(
+                    store.get_setting("retained").unwrap(),
+                    Some(serde_json::json!(true))
+                );
             }
             // Some filesystems still delete readonly directories' contents;
             // success is acceptable only if the path itself is gone.

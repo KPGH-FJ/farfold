@@ -9,11 +9,37 @@ use tauri::{AppHandle, Emitter, Manager};
 #[derive(Default)]
 pub struct DraftExit {
     ready: AtomicBool,
+    clearing: AtomicBool,
     serial: AtomicU64,
     pending: Mutex<Option<(u64, i32, bool)>>,
     exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
+pub(crate) struct ClearExitGuard<'a>(&'a DraftExit);
+impl Drop for ClearExitGuard<'_> {
+    fn drop(&mut self) {
+        self.0.clearing.store(false, Ordering::SeqCst);
+    }
+}
 impl DraftExit {
+    pub(crate) fn begin_data_clear(&self) -> ClearExitGuard<'_> {
+        self.clearing.store(true, Ordering::SeqCst);
+        ClearExitGuard(self)
+    }
+    /// A successful data clear has already sealed the old database connection.
+    /// Retain admission until process exit and invalidate any earlier save owner.
+    /// The new renderer will load only the empty store after restart.
+    pub(crate) fn prepare_cleared_restart(&self, permit: crate::managed_update::UpdatePermit) {
+        self.ready.store(false, Ordering::SeqCst);
+        *self
+            .pending
+            .lock()
+            .unwrap_or_else(|error| error.into_inner()) = None;
+        *self
+            .exit_admission
+            .lock()
+            .unwrap_or_else(|error| error.into_inner()) = Some(permit);
+    }
+
     #[cfg(target_os = "macos")]
     pub(crate) fn external_owner(&self) -> u64 {
         if !self.ready.load(Ordering::SeqCst) {
@@ -55,6 +81,9 @@ impl DraftExit {
         let mut pending = self.pending.lock().map_err(|_| "暂时无法关闭，请重试")?;
         match *pending {
             Some((current, code, false)) if current == token => {
+                if self.clearing.load(Ordering::SeqCst) {
+                    return Err("正在清除数据，请等待完成后重新打开应用".into());
+                }
                 if installing {
                     return Err("更新正在安装，请稍后再试".into());
                 }
@@ -96,7 +125,7 @@ impl DraftExit {
             return (None, None);
         };
         match *pending {
-            Some((token, code, true)) if installing => {
+            Some((token, code, true)) if installing || self.clearing.load(Ordering::SeqCst) => {
                 *pending = Some((token, code, false));
                 (None, Some(token))
             }
@@ -130,7 +159,7 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
             api.prevent_exit();
             // Installation owns the on-disk app until it finishes. Its restart
             // will request the save barrier explicitly after the swap.
-            if installing {
+            if installing || state.clearing.load(Ordering::SeqCst) {
                 if let Some(token) = deferred {
                     let _ = app.emit("app:exit-deferred", token);
                 }
@@ -212,6 +241,36 @@ pub fn app_exit_cancel(app: AppHandle, token: u64) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn data_clear_blocks_quit_then_restarts_without_saving_old_drafts() {
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let state = DraftExit::default();
+        state.ready.store(true, Ordering::SeqCst);
+        let owner = state.request(0).unwrap();
+        state.complete(owner, false, || Ok(None)).unwrap();
+        let clearing = state.begin_data_clear();
+        assert_eq!(state.take_allowed(false), (None, Some(owner)));
+        assert!(state.complete(owner, false, || Ok(None)).is_err());
+        state.prepare_cleared_restart(gate.update().unwrap());
+        assert!(!state.ready.load(Ordering::SeqCst));
+        assert!(state.complete(owner, false, || Ok(None)).is_err());
+        assert!(gate.activity().is_err());
+        drop(clearing);
+        assert!(
+            gate.activity().is_err(),
+            "restart keeps admission until process exit"
+        );
+    }
+
+    #[test]
+    fn failed_clear_releases_its_quit_barrier() {
+        let state = DraftExit::default();
+        let owner = state.request(0).unwrap();
+        let clearing = state.begin_data_clear();
+        assert!(state.complete(owner, false, || Ok(None)).is_err());
+        drop(clearing);
+        assert_eq!(state.complete(owner, false, || Ok(None)).unwrap(), 0);
+    }
     #[test]
     #[cfg(target_os = "macos")]
     fn apple_event_owner_requires_ready_and_reuses_only_unconfirmed_normal_exit() {

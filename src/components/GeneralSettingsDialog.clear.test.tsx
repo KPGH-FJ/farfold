@@ -27,6 +27,10 @@ vi.mock("react", async (original) => ({
     ];
   },
   useSyncExternalStore: (_subscribe: unknown, get: () => unknown) => get(),
+  useRef: (initial: unknown) => {
+    const slot = (h.slots[h.cursor++] ??= { value: { current: initial } });
+    return slot.value;
+  },
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
 vi.mock("@tauri-apps/api/event", () => ({ listen: vi.fn() }));
@@ -61,6 +65,7 @@ vi.mock("../runtime/sessions", () => ({
 }));
 import { GeneralSettingsDialog } from "./GeneralSettingsDialog";
 import { SETTINGS_PRESENTATION as P } from "../runtime/settings_presentation_strings";
+import { WorkspaceDialog } from "./WorkspaceDialog";
 
 type Element = ReactElement<Record<string, unknown>>;
 function render() {
@@ -169,4 +174,33 @@ it("locks the action while work or unconfirmed results are in flight", () => {
   expect(nodes.some((node) => node.props.children === P.clearDataConfirm)).toBe(
     false,
   );
+});
+
+it("locks the entire dialog and footer until clear and restart complete", async () => {
+  let finish!: () => void;
+  h.invoke.mockReturnValueOnce(
+    new Promise<void>((resolve) => {
+      finish = resolve;
+    }),
+  );
+  (button(P.clearData)!.props.onClick as () => void)();
+  const confirm = button(P.clearDataConfirm)!.props.onClick as () => void;
+  confirm();
+  confirm();
+  expect(h.invoke).toHaveBeenCalledOnce();
+  expect(
+    render().find((node) => node.type === WorkspaceDialog)?.props.busy,
+  ).toBe(true);
+  expect(button(P.understood)?.props.disabled).toBe(true);
+  finish();
+  await vi.waitFor(() =>
+    expect(
+      render().some((node) => node.props.children === P.clearDataDone),
+    ).toBe(true),
+  );
+  // Successful clear must not return the user to stores from before the clear.
+  expect(
+    render().find((node) => node.type === WorkspaceDialog)?.props.busy,
+  ).toBe(true);
+  expect(button(P.understood)?.props.disabled).toBe(true);
 });

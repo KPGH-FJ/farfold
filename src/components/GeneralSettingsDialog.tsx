@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore, type RefObject } from "react";
+import { useRef, useState, useSyncExternalStore, type RefObject } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { shortcutLabel, usesMacShortcuts } from "../runtime/platform_shortcuts";
 import {
@@ -48,24 +48,31 @@ export const generalShortcuts = [
 
 /** The danger zone inside 数据与隐私: an explicit clear of Farfold-owned data
  *  with its deletion/preservation scope, plus complete-uninstall guidance. */
-function PrivacyDataControls() {
-  const [phase, setPhase] = useState<"idle" | "confirm" | "working" | "done">(
-    "idle",
-  );
+type ClearPhase = "idle" | "confirm" | "working" | "done";
+function PrivacyDataControls({
+  phase,
+  setPhase,
+}: {
+  phase: ClearPhase;
+  setPhase: (phase: ClearPhase) => void;
+}) {
   const [error, setError] = useState<string | null>(null);
+  const clearing = useRef(false);
   useSyncExternalStore(
     threads.subscribe,
     threads.getSnapshot,
     threads.getSnapshot,
   );
   const clear = async () => {
-    if (phase !== "confirm") return;
+    if (phase !== "confirm" || clearing.current) return;
+    clearing.current = true;
     setPhase("working");
     setError(null);
     try {
       await invoke("farfold_data_clear");
       setPhase("done");
     } catch (reason) {
+      clearing.current = false;
       setError(uiError(reason, P.clearDataFailed));
       setPhase("confirm");
     }
@@ -147,11 +154,17 @@ export function GeneralSettingsDialog({
   onClose: () => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
+  const [phase, setPhase] = useState<ClearPhase>("idle");
+  const busy = phase === "working" || phase === "done";
+  const close = () => {
+    if (!busy) onClose();
+  };
   const icons = [FolderIcon, BookOpenIcon, KeyIcon, SparkleIcon];
   return (
     <WorkspaceDialog
       title={page === "shortcuts" ? STRINGS.general.shortcuts : P.privacy}
-      onClose={onClose}
+      onClose={close}
+      busy={busy}
       returnFocusRef={returnFocusRef}
     >
       {page === "shortcuts" ? (
@@ -180,11 +193,16 @@ export function GeneralSettingsDialog({
             );
           })}
           <p className="general-caption">{P.dataScope}</p>
-          <PrivacyDataControls />
+          <PrivacyDataControls phase={phase} setPhase={setPhase} />
         </div>
       )}
       <footer>
-        <button type="button" className="btn btn-primary" onClick={onClose}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={busy}
+          onClick={close}
+        >
           {page === "shortcuts" ? P.close : P.understood}
         </button>
       </footer>
