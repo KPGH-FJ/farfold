@@ -445,6 +445,7 @@ export function Sidebar({
       {editing && (
         <WorkspaceDialog
           returnFocusRef={editorReturnFocus}
+          busy={saving || data.saving}
           title={editing === "new" ? LIBRARY.createGroup : LIBRARY.renameGroup}
           onClose={closeEditor}
         >
@@ -490,7 +491,7 @@ export function Sidebar({
                 {LIBRARY.cancel}
               </button>
               <button
-                className="btn btn-primary"
+                className={`btn ${removing ? "btn-danger" : "btn-primary"}`}
                 disabled={saving || data.saving || (!removing && !name.trim())}
               >
                 {removing ? LIBRARY.removeGroup : LIBRARY.save}

@@ -155,7 +155,7 @@
 
 .product-app .workspace-thread .thread-title > span {
   margin-top: 3px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .product-app :is(.workspace-start, .workspace-thread) .icon-button {
@@ -315,7 +315,7 @@
 
 .product-app :is(.workspace-start, .workspace-thread) .composer-footer {
   padding-top: 8px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .product-app :is(.workspace-start, .workspace-thread) .c-chip {
@@ -390,17 +390,17 @@
   background: var(--card-dim);
   color: var(--ink-2);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .browser-share-controls {
   flex: 1 1 240px;
   min-width: 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
 }
 .browser-share-controls .btn {
-  font-size: 11px;
+  font-size: 12px;
   min-height: 28px;
   padding: 4px 9px;
 }
@@ -452,7 +452,7 @@
 }
 .browser-read-request-url {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .browser-read-request-actions {
   display: flex;

@@ -3,6 +3,7 @@ import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { SENDING_STRINGS as SEND } from "../runtime/sending_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { DangerConfirmDialog } from "./DangerConfirm";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import {
   queueEditorKey,
@@ -839,31 +840,18 @@ export function Composer({
         </div>
       )}
       {abandonPending && (
-        <WorkspaceDialog
+        <DangerConfirmDialog
           title={DRAFT_STRINGS.abandonPending}
-          onClose={() => setAbandonPending(null)}
+          confirmLabel={DRAFT_STRINGS.abandonPending}
+          onConfirm={() => {
+            abandonPendingConversation(storageKey, abandonPending);
+            setAbandonPending(null);
+          }}
+          cancelLabel={LIBRARY.cancel}
+          onCancel={() => setAbandonPending(null)}
         >
           <p>{DRAFT_STRINGS.abandonPendingNote}</p>
-          <div className="workspace-dialog-actions">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => setAbandonPending(null)}
-            >
-              {LIBRARY.cancel}
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => {
-                abandonPendingConversation(storageKey, abandonPending);
-                setAbandonPending(null);
-              }}
-            >
-              {DRAFT_STRINGS.abandonPending}
-            </button>
-          </div>
-        </WorkspaceDialog>
+        </DangerConfirmDialog>
       )}
       {thread && editingDraft.queueEdit && (
         <div className="auth-note">
@@ -1042,7 +1030,7 @@ export function Composer({
             </button>
             <button
               type="button"
-              className="btn btn-ghost"
+              className="btn btn-danger"
               disabled={!uncertainCurrent}
               onClick={() => abandonUncertain(false)}
             >

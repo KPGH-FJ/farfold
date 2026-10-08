@@ -1,5 +1,13 @@
 # Farfold 当前状态
 
+## UI/UX 产品化 W5：底座（2026-10-08，源码完成，未安装）
+
+四项全部落地：①对话框基座统一——新 `useModalDialog` hook 收敛全部 modal 生命周期（showModal/close、opener 焦点捕获与归还、首字段聚焦、Escape、backdrop 点击关闭），带 `busy` 锁（Escape/backdrop/关闭按钮在途工作时禁用）、`deferFocusReturn` 供嵌套对话框；`WorkspaceDialog` 接入并加 `busy` prop，CommandPalette、NewConversationPickers、AgentSetup、AgentDetails、CredentialSettings 私有 Dialog 全部迁移；`ModelPicker` 补齐 focusin/scroll/resize 关闭语义与 WorkspacePopover 对齐。②危险确认统一——新 `DangerConfirm`（内联面板）与 `DangerConfirmDialog`（模态）：删除对话、清除数据、卸载安装、退出/切换账号、清存储、丢弃待发/草稿全部走 `btn-danger` 确认；更富语义的流程（移除 Agent 勾选、凭据删除影响预览、三方处置）保留专用结构但同用 danger 风格。③术语收敛——`strings.test.ts` 扫描面扩到全部 46 个字符串对象；修复 1 处真实违规（"核对账号"含禁用"对账"→"检查账号"），散落组件内的内联文案集中进 strings 模块。④设计 token——新增 `--on-accent/--shadow-sm-md-lg/--backdrop/--focus-ring(-soft)`，硬编码颜色字面量 73→46（余下为主题色板、终端/代码配色与一次性 alpha，刻意保留），font-size <12px 声明 191→11（剩余为角标/图标字形等固定尺寸例外，已记录）。
+
+已知边角：`farfold_data_clear` 执行期间 Escape 仍可关闭外层设置对话框（内部 DangerConfirm 已锁自身按钮，清除操作本身不受影响继续完成）。
+
+前端 208 文件 / 2438 项、Rust 1035 项/4 原忽略，七项检查通过。未安装复测——W3+W4+W5 待用户确认换包后一并实机验证。
+
 ## UI/UX 产品化 W4：生命周期（2026-10-08，源码完成，未安装）
 
 五项全部落地：①移除 Agent 合并为单一危险流程——`AgentRemoveDialog`：默认从列表移除（吊销凭据授权、删除登记行），可勾选逐份卸载 Farfold 登记安装（显示版本与路径；使用中/选中的安装列为"保留"并写明原因，未登记的安装 id 后端一律拒绝），可勾选退出 Agent 账号（仅当声明支持且连接可执行时显示，登出先于移除执行，结果未知如实报错）；固定说明"对话历史保留在所有对话"；有进行中或未确认工作、账号操作、版本检查在途时门禁阻止。②用户面"断开"删除——后端 `require_disconnected` 改 `release_connections`：配置变更自动结束安全空闲连接并等确认终止，工作/待办/未确认仍如实拦截；`AgentBusy` 移除 disconnect。③设置→数据与隐私新增"清除 Farfold 数据"（列出删除/保留两栏：删对话目录与设置含草稿待发、Farfold 安装的程序、安全存储 API 密钥、应用对话文件夹；留 Agent 自身账号配置历史与用户项目文件夹）与"完整卸载"说明；前后端双层 quiescence 门禁（`workInFlight` + `managed_update::exclusive`），新后端 `farfold_data_clear` 先断全部连接等确认，再删密钥→owning 命名空间（符号链接按链接删不跟随）→`meta_store.clear_all()` 事务删四表；任一步失败保留可重试的一致状态并如实报告保留路径。④Agent 详情改能力页：按声明快照显示登录方式（计数+名称）、内容能力（图片/音频/上下文）、能否带入历史、服务配置，各给"未声明"诚实态；两行免责收敛为一行"以实际连接为准"；"返回目录"→"关闭"。⑤自定义接入补齐"选择程序文件…"按钮（系统选文件回填命令）、环境变量 KEY=VALUE 每行文本域（严格校验名/重复/格式，提交进 `env`）、一句接入条件说明。⑥带入已有对话结果面收敛三态：已带入/未能完全带入（技术原因收进折叠详情）/没有可带入，内部复核机制不变。

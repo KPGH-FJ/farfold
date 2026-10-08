@@ -8,6 +8,7 @@ import { uiError } from "../runtime/ui_error";
 import { installProgressLabel } from "../runtime/program_progress";
 import { ACCESS_STRINGS } from "../runtime/access_strings";
 import { R5_PROGRAM_STRINGS as R } from "../runtime/r5_program_strings";
+import { DangerConfirm } from "./DangerConfirm";
 import "../r5-program-access.css";
 export interface Installation {
   id: string;
@@ -250,32 +251,25 @@ export function ProgramManager({
         </div>
       </div>
       {confirm === item.id && (
-        <div className="access-confirm" role="alert">
+        <DangerConfirm
+          busy={!!busy}
+          confirmLabel={S.uninstallConfirm}
+          confirmDisabled={locked || !item.canUninstall}
+          onConfirm={() => {
+            if (!item.canUninstall) return;
+            void act("remove", () =>
+              invoke("agent_installation_uninstall", {
+                agentId: card.id,
+                installationId: item.id,
+              }),
+            );
+          }}
+          cancelLabel={S.cancel}
+          onCancel={() => setConfirm(null)}
+        >
           <p>{S.uninstallHint}</p>
           <p className="installation-path">{item.path}</p>
-          <button
-            className="btn btn-ghost"
-            disabled={locked || !item.canUninstall}
-            onClick={() => {
-              if (!item.canUninstall) return;
-              void act("remove", () =>
-                invoke("agent_installation_uninstall", {
-                  agentId: card.id,
-                  installationId: item.id,
-                }),
-              );
-            }}
-          >
-            {S.uninstallConfirm}
-          </button>
-          <button
-            className="btn btn-text"
-            disabled={!!busy}
-            onClick={() => setConfirm(null)}
-          >
-            {S.cancel}
-          </button>
-        </div>
+        </DangerConfirm>
       )}
     </div>
   );

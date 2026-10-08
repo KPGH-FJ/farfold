@@ -993,7 +993,11 @@ export function ConversationLibrary({
         />
       )}
       {active && editing && (
-        <WorkspaceDialog title={LIBRARY.rename} onClose={closeEditor}>
+        <WorkspaceDialog
+          title={LIBRARY.rename}
+          busy={busy}
+          onClose={closeEditor}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();

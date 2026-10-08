@@ -19,6 +19,7 @@ import {
 import { uiError } from "../runtime/ui_error";
 import { NEW_CONVERSATION_PICKER_STRINGS as S } from "../runtime/new_conversation_picker_strings";
 import { agentStatus } from "../runtime/agent_status";
+import { useModalDialog } from "./useModalDialog";
 import { AgentLogo } from "./AgentLogo";
 import { usableAgents } from "./AgentPick";
 import type { ServiceChoice } from "./ServicePicker";
@@ -46,34 +47,22 @@ function PickerDialog({
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  useEffect(() => {
-    const element = dialog.current;
-    // A pointer click on macOS need not focus its button. Keep the actual opener.
-    const previous = returnFocusRef?.current ?? document.activeElement;
-    element?.showModal();
-    // React autoFocus runs before showModal, while the input is still hidden.
-    initialFocusRef?.current?.focus();
-    return () => {
-      element?.close();
-      if (
-        previous instanceof HTMLElement &&
-        previous.isConnected &&
-        !previous.closest("[hidden], [inert]") &&
-        previous.getClientRects().length
-      )
-        previous.focus();
-    };
-  }, []);
+  const { onCancel, onClick } = useModalDialog({
+    dialogRef: dialog,
+    busy,
+    onDismiss: onClose,
+    returnFocusRef,
+    initialFocusRef,
+    backdropDismiss: true,
+  });
   const content = (
     <dialog
       ref={dialog}
       className="new-choice-dialog"
       aria-labelledby={titleId}
       aria-busy={busy}
-      onCancel={(event) => {
-        event.preventDefault();
-        if (!busy) onClose();
-      }}
+      onCancel={onCancel}
+      onClick={onClick}
       onKeyDown={(event) => {
         if (event.key === "Escape" && event.nativeEvent.isComposing) {
           event.preventDefault();

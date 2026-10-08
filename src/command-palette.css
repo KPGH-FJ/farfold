@@ -9,11 +9,11 @@
   border-radius: 16px;
   background: var(--card);
   color: var(--ink);
-  box-shadow: 0 24px 80px #0003;
+  box-shadow: 0 24px 80px var(--shadow-lg);
   overflow: hidden;
 }
 .command-palette-dialog::backdrop {
-  background: #0004;
+  background: var(--backdrop);
   backdrop-filter: blur(3px);
 }
 .conversation-search-title {
@@ -92,7 +92,7 @@
 .conversation-search-results > p,
 .conversation-search-hint {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
 }
 .conversation-search-results small {

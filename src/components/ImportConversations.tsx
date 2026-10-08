@@ -515,6 +515,7 @@ export function ImportConversations({
   return open ? (
     <WorkspaceDialog
       title={S.title}
+      busy={busy}
       onClose={close}
       returnFocusRef={returnFocusRef}
     >

@@ -24,6 +24,7 @@ export function MoveConversationsDialog({
   return (
     <WorkspaceDialog
       title={LIBRARY.moveTitle(count)}
+      busy={busy}
       onClose={onClose}
       returnFocusRef={returnFocusRef}
     >

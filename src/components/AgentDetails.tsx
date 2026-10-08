@@ -11,6 +11,7 @@ import { agentStatus, type AgentStatus } from "../runtime/agent_status";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
 import { AgentLogo } from "./AgentLogo";
+import { useModalDialog } from "./useModalDialog";
 import {
   agentDirectoryDescription,
   agentDirectorySource,
@@ -89,22 +90,13 @@ export function AgentDetails({
   const [error, setError] = useState<string | null>(null);
   const officialUrl =
     card.presentation?.sourceUrl || card.sourceUrl || card.installGuide;
-  useEffect(() => {
-    const element = dialog.current;
-    const previous = returnFocusRef?.current ?? document.activeElement;
-    if (active) element?.showModal();
-    else element?.close();
-    return () => {
-      element?.close();
-      if (
-        previous instanceof HTMLElement &&
-        previous.isConnected &&
-        !previous.closest("[hidden], [inert]") &&
-        previous.getClientRects().length
-      )
-        previous.focus();
-    };
-  }, [active]);
+  const { onCancel, onClick } = useModalDialog({
+    dialogRef: dialog,
+    open: active,
+    onDismiss: onClose,
+    returnFocusRef,
+    backdropDismiss: true,
+  });
   useEffect(() => {
     let live = true;
     void getServiceCapabilities(card.id)
@@ -131,10 +123,8 @@ export function AgentDetails({
       ref={dialog}
       className="agent-setup-dialog agent-detail-dialog"
       aria-labelledby="agent-detail-title"
-      onCancel={(event) => {
-        event.preventDefault();
-        onClose();
-      }}
+      onCancel={onCancel}
+      onClick={onClick}
     >
       <header className="agent-setup-header">
         <h2 id="agent-detail-title">{D.title(card.name)}</h2>

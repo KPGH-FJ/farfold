@@ -46,6 +46,20 @@ function elements(tree: ReactNode): Element[] {
   const nodes: Element[] = [];
   Children.forEach(tree, (child) => {
     if (!isValidElement<Record<string, unknown>>(child)) return;
+    if (
+      typeof child.type === "function" &&
+      child.type.name === "DangerConfirm"
+    ) {
+      nodes.push(
+        child,
+        ...elements(
+          (child.type as (p: Record<string, unknown>) => ReactNode)(
+            child.props,
+          ) as ReactNode,
+        ),
+      );
+      return;
+    }
     nodes.push(child, ...elements(child.props.children as ReactNode));
   });
   return nodes;

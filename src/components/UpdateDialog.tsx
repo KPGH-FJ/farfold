@@ -356,7 +356,7 @@ export function UpdateDialogContent({
       : null;
 
   return (
-    <WorkspaceDialog title={STRINGS.update.title} onClose={onClose}>
+    <WorkspaceDialog title={STRINGS.update.title} busy={busy} onClose={onClose}>
       <div className="workspace-dialog-body update-dialog-content">
         <div className="gen-row">
           <div>{STRINGS.update.currentVersion}</div>

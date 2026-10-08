@@ -69,7 +69,7 @@ select:focus-visible {
 .draft-badge {
   color: var(--accent);
   background: var(--accent-soft);
-  font-size: 10px;
+  font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
@@ -82,7 +82,7 @@ select:focus-visible {
   color: var(--ink-2);
   background: var(--card);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .thread-title > span {
@@ -209,7 +209,7 @@ select:focus-visible {
 }
 .product-sidebar small {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .product-sidebar .active {
   background: var(--accent-soft);
@@ -263,7 +263,7 @@ select:focus-visible {
   gap: 6px;
   color: var(--ink-3);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 4px;
 }
 .product-agent {
@@ -303,7 +303,7 @@ select:focus-visible {
   background: transparent;
   color: var(--ink-3);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
   padding: 4px 14px 6px;
 }
@@ -351,7 +351,7 @@ select:focus-visible {
 .product-sidebar .product-signature {
   display: block;
   margin-top: 7px;
-  font-size: 10px;
+  font-size: 12px;
   text-align: center;
   opacity: 0.75;
 }
@@ -366,7 +366,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-3);
   background: transparent;
   border: 0;
@@ -405,7 +405,7 @@ select:focus-visible {
 }
 .workspace-topbar > div > span {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   display: block;
   margin-top: 4px;
 }
@@ -423,7 +423,7 @@ select:focus-visible {
   gap: 9px;
   margin: 0 24px 10px;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .thread-find input {
   flex: 1;
@@ -518,7 +518,7 @@ select:focus-visible {
     calc(100% - 8px) 50%;
   background-size: 4px 4px;
   background-repeat: no-repeat;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 16px;
   max-width: 220px;
 }
@@ -592,7 +592,7 @@ select:focus-visible {
 }
 .library-bulk > small {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
 }
 .library-page input[type="checkbox"] {
   accent-color: var(--accent);
@@ -643,20 +643,20 @@ select:focus-visible {
   display: block;
   color: var(--ink-3);
   margin-top: 7px;
-  font-size: 10px;
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .library-row time {
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 12px;
   flex-shrink: 0;
   min-width: 54px;
   text-align: right;
 }
 .library-status {
-  font-size: 10px;
+  font-size: 12px;
   white-space: nowrap;
   color: var(--accent);
 }
@@ -705,11 +705,11 @@ select:focus-visible {
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 16px;
-  box-shadow: 0 24px 90px #0003;
+  box-shadow: 0 24px 90px var(--shadow-lg);
   padding: 0;
 }
 .workspace-dialog::backdrop {
-  background: #0004;
+  background: var(--backdrop);
   backdrop-filter: blur(3px);
 }
 .workspace-dialog-title {
@@ -804,7 +804,7 @@ select:focus-visible {
   margin: 0;
   padding: 2px 10px 8px;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .workspace-dialog:has(.custom-agent-fields) {
@@ -818,7 +818,7 @@ select:focus-visible {
   color: var(--ink-2);
 }
 .custom-agent-fields label {
-  font-size: 11px;
+  font-size: 12px;
 }
 .custom-agent-fields textarea {
   width: 100%;
@@ -915,7 +915,7 @@ select:focus-visible {
   white-space: nowrap;
 }
 .history-row small {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
   display: block;
   overflow-wrap: anywhere;
@@ -928,7 +928,7 @@ select:focus-visible {
   user-select: text;
 }
 .history-preview h3 {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
   font-weight: 400;
   margin-bottom: 12px;
@@ -947,13 +947,13 @@ select:focus-visible {
   background: var(--card-dim);
 }
 .history-message > small {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .history-close-hint {
   margin-right: auto;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   max-width: 55%;
   line-height: 1.6;
 }

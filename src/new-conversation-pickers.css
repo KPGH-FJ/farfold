@@ -7,7 +7,7 @@
   border-radius: 14px;
   background: var(--card);
   color: var(--ink);
-  box-shadow: 0 20px 70px #0003;
+  box-shadow: 0 20px 70px var(--shadow-lg);
 }
 .new-choice-dialog[open] {
   display: flex;
@@ -109,7 +109,7 @@
   display: block;
   margin-top: 5px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 .new-agent-discover {
   display: flex;
@@ -134,14 +134,14 @@
 }
 .new-model-groups p {
   margin: 4px 0 9px;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   color: var(--ink-2);
 }
 .new-model-groups section > small {
   display: block;
   margin: 12px 0 5px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
 }
 .new-model-groups > button,
@@ -180,7 +180,7 @@
 .new-choice-empty {
   margin-top: 15px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .new-choice-trigger {
@@ -194,7 +194,7 @@
   background: transparent;
   color: var(--ink-2);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .new-choice-trigger:hover:not(:disabled) {

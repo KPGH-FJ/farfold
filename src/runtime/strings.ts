@@ -281,6 +281,7 @@ export const STRINGS = {
     noResultQueue:
       "本次未收到可展示结果，待发消息已暂停。检查对话后可决定是否继续。",
     sendFailed: "消息未发送，请检查连接后重试",
+    queuedEditBlocked: "这条待发消息暂时无法编辑，请先检查发送结果",
     interactionSubmitting: "正在提交…",
     interactionRetryable: "回复未提交，请检查后重试",
     interactionExpired: "请求已结束，无需再次处理",

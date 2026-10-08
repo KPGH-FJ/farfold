@@ -108,7 +108,7 @@
 .conversation-workspace .c-hint {
   display: block;
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .composer-footer {
@@ -117,7 +117,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 2px 0;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
   color: var(--ink-3);
 }
@@ -134,7 +134,7 @@
 .composer-shortcuts-title {
   padding: 6px 10px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 .composer-add-list {
   display: flex;
@@ -193,7 +193,7 @@
 }
 .composer-add-list small,
 .composer-add-list > p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
   line-height: 1.5;
 }
@@ -204,7 +204,7 @@
   width: auto;
   padding: 0 10px;
   gap: 5px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .workspace-start .composer-footer {
   padding-top: 10px;
@@ -231,7 +231,7 @@
 }
 .workspace-suggestions button {
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -369,7 +369,7 @@
   color: var(--ink-2);
   padding: 6px;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   min-width: 0;
   max-width: 100%;
   cursor: pointer;
@@ -439,7 +439,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--card);
-  box-shadow: 0 12px 44px #0000001a;
+  box-shadow: 0 12px 44px var(--shadow-md);
   color: var(--ink);
 }
 .workspace-control-title {
@@ -473,7 +473,7 @@
 }
 .workspace-control-note {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   margin: 12px 0 0;
 }
@@ -563,7 +563,7 @@
 }
 .workspace-message-agent .who {
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0;
 }
 .workspace-message-agent .who .agent-logo {
@@ -582,7 +582,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
 }
 .message-copy button {
@@ -649,7 +649,7 @@
   background: var(--card);
   color: var(--ink-3);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -677,11 +677,11 @@
   display: none;
 }
 .workspace-steps > summary > small {
-  font-size: 10px;
+  font-size: 12px;
   opacity: 0.75;
 }
 .workspace-steps > summary > span:not(:first-of-type) {
-  font-size: 11px;
+  font-size: 12px;
 }
 .workspace-step-caret {
   transition: transform 0.15s ease;
@@ -784,7 +784,7 @@
   background: transparent;
   color: var(--ink-3);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   border: none;
   border-radius: 4px;
   box-shadow: none;
@@ -822,7 +822,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .artifact-file-picker > svg {
   flex-shrink: 0;
@@ -857,7 +857,7 @@
   padding: 8px 16px;
   border-bottom: 1px solid var(--line);
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .artifact-round-scope button {
   padding: 0;
@@ -888,7 +888,7 @@
   background: transparent;
   color: var(--ink-3);
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   padding: 4px 5px;
   border-radius: 4px;
   cursor: pointer;
@@ -896,7 +896,7 @@
 .artifact-view-toolbar button.selected {
   color: var(--ink);
   background: var(--card);
-  box-shadow: 0 1px 4px #0000000a;
+  box-shadow: 0 1px 4px var(--shadow-sm);
 }
 .artifact-view-toolbar .artifact-icon-button {
   width: 28px;
@@ -912,7 +912,7 @@
   gap: 2px;
   padding: 8px 14px;
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 .artifact-provenance .failed {
@@ -949,7 +949,7 @@
   border: none;
   background: transparent;
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   text-align: right;
   padding: 0 9px 0 4px;
   cursor: pointer;
@@ -1031,7 +1031,7 @@
   border: none;
   color: var(--accent);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   padding: 10px 15px;
   cursor: pointer;
 }
@@ -1055,7 +1055,7 @@
 .artifact-document-compare h3 {
   margin: 0;
   padding: 10px 16px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-3);
   border-bottom: 1px solid var(--line);
   font-weight: 400;
@@ -1092,7 +1092,7 @@
 .artifact-preview-note {
   flex-shrink: 0;
   padding: 8px 12px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .artifact-feedback {
@@ -1111,7 +1111,7 @@
   flex: 1;
   min-width: 0;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 .artifact-feedback-line-input input,
 .artifact-feedback-line-input select {
@@ -1123,12 +1123,12 @@
   background: var(--card);
   color: var(--ink);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
 }
 .artifact-feedback-line-hint {
   margin: 5px 0 8px;
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .artifact-feedback textarea {
@@ -1155,7 +1155,7 @@
 }
 .artifact-feedback > div:last-child > span {
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: 12px;
   flex: 1;
 }
 .artifact-feedback > div:last-child > button {
@@ -1165,7 +1165,7 @@
   border-radius: 6px;
   padding: 6px 10px;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .artifact-feedback > div:last-child > button:disabled {
@@ -1176,7 +1176,7 @@
   display: flex;
   gap: 8px;
   color: var(--ink-2);
-  font-size: 10px;
+  font-size: 12px;
   margin-bottom: 7px;
 }
 .artifact-feedback-location button {

@@ -1,3 +1,5 @@
+import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
+
 /** Owns a single login terminal across async startup, cancellation and exit. */
 export class LoginTerminal {
   private starting: Promise<string> | null = null;
@@ -22,7 +24,7 @@ export class LoginTerminal {
   start(): Promise<string> {
     if (this.starting) return this.starting;
     this.starting = this.ports.start().then((id) => {
-      if (!id) throw new Error("终端未能启动");
+      if (!id) throw new Error(AUTH_ACTIVITY_STRINGS.terminalStartFailed);
       this.id = id;
       if (!this.disposed) this.ports.ready(id);
       this.waiting = this.ports.wait(id);
@@ -55,7 +57,8 @@ export class LoginTerminal {
       // If await already consumed the owner, its response still carries the
       // actual exit code. Never manufacture a failed exit for a late success.
       const actual = code ?? (await this.waiting);
-      if (actual === null) throw new Error("终端退出结果尚未确认");
+      if (actual === null)
+        throw new Error(AUTH_ACTIVITY_STRINGS.terminalExitUnknown);
       this.finish(actual);
     })().finally(() => {
       this.closing = null;

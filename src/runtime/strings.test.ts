@@ -2,12 +2,15 @@ import { BROWSER_WORKSPACE_STRINGS } from "./browser_workspace_strings";
 import { describe, expect, it } from "vitest";
 import { COMPOSER_CONTROLS } from "./composer_strings";
 import { DRAFT_STRINGS } from "./draft_storage";
+import { IMAGE_INPUT_STRINGS } from "./draft_images";
+import { IMAGE_BYTES_STRINGS } from "./image_bytes";
 import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
 import { LIBRARY } from "./library_strings";
 import { ACCESS_STRINGS } from "./access_strings";
 import { IMPORT_STRINGS } from "./import_strings";
 import { STRINGS } from "./strings";
 import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
+import { FILE_OPEN_STRINGS } from "./file_open_strings";
 import { WORKSPACE_STRINGS } from "./workspace_strings";
 import { PREPARATION_STRINGS } from "./preparation_strings";
 import { PREPARATION_ACTION_STRINGS } from "./preparation_action_strings";
@@ -26,6 +29,22 @@ import { CONNECTION_STRINGS } from "./r5_auth_strings";
 import { R5_SERVICE_STRINGS } from "./r5_service_strings";
 import { R5_PROGRAM_STRINGS } from "./r5_program_strings";
 import { R5_SETUP_STRINGS } from "./r5_setup_strings";
+import { ACCOUNT_GUIDE_STRINGS } from "./account_guide_strings";
+import { ARCHIVE_STRINGS } from "./auto_archive";
+import { ARTIFACT_OUTPUT } from "./artifact_output_strings";
+import { ATTACHMENT_REVIEW } from "./attachment_review_strings";
+import { BROWSER_SHARING_STRINGS } from "./browser_sharing_strings";
+import { CREDENTIAL_IMPACT_STRINGS } from "./credential_impact_strings";
+import { NOTIFICATION_STRINGS } from "./desktop_notifications";
+import { DIAGNOSTIC_STRINGS } from "./diagnostics";
+import { ERROR_STRINGS } from "./error_strings";
+import { EXIT_IMPACT } from "./exit_impact";
+import { FEEDBACK_STRINGS } from "./feedback_strings";
+import { MESSAGE_ATTACHMENTS } from "./message_attachment_strings";
+import { SENDING_STRINGS } from "./sending_strings";
+import { UPDATE_IMPACT } from "./update_impact";
+import { CONNECTION_ACCOUNT_STRINGS } from "./connection_account_strings";
+import { SIDEBAR_STRINGS } from "./sidebar_strings";
 
 // PRODUCT.md §5 禁用词：不得出现在任何用户可见字符串中。
 const FORBIDDEN =
@@ -80,6 +99,25 @@ describe("strings", () => {
       R5_SERVICE_STRINGS,
       R5_PROGRAM_STRINGS,
       R5_SETUP_STRINGS,
+      ACCOUNT_GUIDE_STRINGS,
+      ARCHIVE_STRINGS,
+      ARTIFACT_OUTPUT,
+      ATTACHMENT_REVIEW,
+      BROWSER_SHARING_STRINGS,
+      CREDENTIAL_IMPACT_STRINGS,
+      NOTIFICATION_STRINGS,
+      DIAGNOSTIC_STRINGS,
+      ERROR_STRINGS,
+      EXIT_IMPACT,
+      FEEDBACK_STRINGS,
+      FILE_OPEN_STRINGS,
+      IMAGE_INPUT_STRINGS,
+      IMAGE_BYTES_STRINGS,
+      MESSAGE_ATTACHMENTS,
+      SENDING_STRINGS,
+      UPDATE_IMPACT,
+      CONNECTION_ACCOUNT_STRINGS,
+      SIDEBAR_STRINGS,
     },
     [],
   );

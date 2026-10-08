@@ -21,7 +21,7 @@
 .journey-method-group {
   margin: 6px 0 -2px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 .journey-method-group:first-of-type {
   margin-top: 0;
@@ -139,7 +139,7 @@
   height: 21px;
   border: 1px solid var(--line);
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 12px;
 }
 .terminal-steps li[aria-current] {
   color: var(--ink);

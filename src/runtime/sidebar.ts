@@ -1,4 +1,5 @@
 import { fileBasename } from "./file_paths";
+import { SIDEBAR_STRINGS } from "./sidebar_strings";
 /**
  * Sidebar view-model helpers (pure, unit-tested): row shape, per-project
  * grouping, and relative-time display. Lives apart from the thread store
@@ -120,7 +121,7 @@ export function groupSidebarRows(
     push(
       {
         key: row.id,
-        title: row.title || "未命名会话",
+        title: row.title || SIDEBAR_STRINGS.untitled,
         agentId: row.agentId,
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
@@ -150,7 +151,7 @@ export function groupSidebarRows(
     push(
       {
         key: row.key,
-        title: row.title || "未命名会话",
+        title: row.title || SIDEBAR_STRINGS.untitled,
         agentId: row.agentId,
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,
@@ -188,13 +189,13 @@ export function relativeTime(millis: number, now = Date.now()): string {
   if (!millis) return "";
   const diff = Math.max(0, now - millis);
   const min = Math.floor(diff / 60_000);
-  if (min < 1) return "刚刚";
-  if (min < 60) return `${min} 分钟前`;
+  if (min < 1) return SIDEBAR_STRINGS.justNow;
+  if (min < 60) return SIDEBAR_STRINGS.minutesAgo(min);
   const hours = Math.floor(min / 60);
-  if (hours < 24) return `${hours} 小时前`;
+  if (hours < 24) return SIDEBAR_STRINGS.hoursAgo(hours);
   const days = Math.floor(hours / 24);
-  if (days < 30) return `${days} 天前`;
+  if (days < 30) return SIDEBAR_STRINGS.daysAgo(days);
   const months = Math.floor(days / 30);
-  if (months < 12) return `${months} 个月前`;
-  return `${Math.floor(months / 12)} 年前`;
+  if (months < 12) return SIDEBAR_STRINGS.monthsAgo(months);
+  return SIDEBAR_STRINGS.yearsAgo(Math.floor(months / 12));
 }

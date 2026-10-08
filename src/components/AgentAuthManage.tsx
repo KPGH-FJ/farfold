@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { AUTH_ACTIVITY_STRINGS as S } from "../runtime/auth_strings";
 import type { AuthenticationWorkBlocker } from "../runtime/auth_blockers";
 import type { AgentConnectionPresentation } from "./agent_auth_types";
+import { DangerConfirm } from "./DangerConfirm";
 import { STRINGS } from "../runtime/strings";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 
@@ -127,21 +128,17 @@ export function AgentAccountExit({
 }) {
   return (
     <section aria-label={intent === "switch" ? S.switchAccount : A.logout}>
-      <p className="auth-note">
-        {intent === "switch" ? S.switchHint : S.logoutHint}
-      </p>
-      <div className="auth-actions">
-        <button className="btn btn-ghost" onClick={onCancel}>
-          {STRINGS.access.cancel}
-        </button>
-        <button
-          className="btn btn-primary"
-          disabled={!available}
-          onClick={onConfirm}
-        >
-          {intent === "switch" ? S.switchConfirm : S.confirmLogout}
-        </button>
-      </div>
+      <DangerConfirm
+        confirmLabel={intent === "switch" ? S.switchConfirm : S.confirmLogout}
+        confirmDisabled={!available}
+        onConfirm={onConfirm}
+        cancelLabel={STRINGS.access.cancel}
+        onCancel={onCancel}
+      >
+        <p className="auth-note">
+          {intent === "switch" ? S.switchHint : S.logoutHint}
+        </p>
+      </DangerConfirm>
     </section>
   );
 }

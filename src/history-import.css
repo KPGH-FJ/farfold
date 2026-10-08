@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
 }
 .history-steps li span {
@@ -90,7 +90,7 @@
 .history-agent-grid small {
   display: block;
   margin-top: 5px;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-2);
 }
 .history-agent-check {

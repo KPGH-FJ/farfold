@@ -3,6 +3,9 @@ export const THREAD_VIEW_STRINGS = {
   copyMessage: "复制消息",
   copied: "已复制",
   copyFailed: "复制失败，请重试",
+  copy: "复制",
+  copyCode: "复制代码",
+  copiedCode: "已复制代码",
   /** W3-6 用户消息操作 */
   messageActions: "消息操作",
   editResend: "编辑后重发",

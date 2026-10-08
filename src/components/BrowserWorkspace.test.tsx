@@ -120,6 +120,19 @@ function find(
   if (!tree || typeof tree !== "object") throw new Error("Element not found");
   const element = tree as ReactElement<Record<string, any>>;
   if (predicate(element)) return element;
+  if (
+    typeof element.type === "function" &&
+    element.type.name === "DangerConfirm"
+  ) {
+    try {
+      return find(
+        (element.type as (p: Record<string, any>) => unknown)(element.props),
+        predicate,
+      );
+    } catch {
+      /* Continue through children. */
+    }
+  }
   for (const child of [element.props?.children].flat(Infinity)) {
     try {
       return find(child, predicate);

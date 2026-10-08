@@ -47,6 +47,7 @@ import {
 import { CREDENTIAL_IMPACT_STRINGS as I } from "../runtime/credential_impact_strings";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 import { ApiAccountGuide } from "./ApiAccountGuide";
+import { useModalDialog } from "./useModalDialog";
 const S = STRINGS.credentials;
 const formats = Object.entries(S.formats);
 const isFormat = (value: string) => formats.some(([id]) => id === value);
@@ -76,52 +77,22 @@ function Dialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
-  useEffect(() => {
-    const element = ref.current;
-    const previous = returnFocusRef?.current ?? document.activeElement;
-    if (active) element?.showModal();
-    else element?.close();
-    if (active)
-      element
-        ?.querySelector<HTMLInputElement>(
-          'input:not([disabled]):not([type="hidden"])',
-        )
-        ?.focus();
-    return () => {
-      element?.close();
-      // Wait until nested discard dialogs have also closed before returning
-      // focus. A newly opened dialog or hidden Settings page keeps ownership.
-      queueMicrotask(() => {
-        const target =
-          previous instanceof HTMLElement && previous.isConnected
-            ? previous
-            : fallbackFocusRef?.current;
-        if (
-          !(target instanceof HTMLElement) ||
-          !target.isConnected ||
-          target.closest("[hidden], [inert]") ||
-          !target.getClientRects().length
-        )
-          return;
-        const modal = Array.from(
-          document.querySelectorAll<HTMLDialogElement>("dialog[open]"),
-        );
-        if (modal.some((dialog) => !dialog.contains(target))) return;
-        target.focus();
-      });
-    };
-  }, [active]);
+  const { onCancel } = useModalDialog({
+    dialogRef: ref,
+    open: active,
+    busy,
+    onDismiss: () => onClose(),
+    returnFocusRef,
+    fallbackFocusRef,
+    focusSelector: 'input:not([disabled]):not([type="hidden"])',
+    deferFocusReturn: true,
+  });
   return (
     <dialog
       className={`api-dialog${compact ? " api-dialog-compact" : ""}`}
       ref={ref}
       aria-labelledby={titleId}
-      onCancel={(event) => {
-        if (event.target !== event.currentTarget) return;
-        event.preventDefault();
-        event.stopPropagation();
-        if (!busy) onClose();
-      }}
+      onCancel={onCancel}
     >
       <header>
         <h2 id={titleId}>{title}</h2>
@@ -724,7 +695,7 @@ function Editor({
             >
               {S.cancel}
             </button>
-            <button className="btn btn-primary" onClick={onClose}>
+            <button className="btn btn-danger" onClick={onClose}>
               {A.discardChanges}
             </button>
           </footer>

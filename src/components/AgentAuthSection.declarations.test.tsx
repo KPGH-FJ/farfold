@@ -108,6 +108,7 @@ import {
   AgentAuthManage,
   AgentAuthWorkBlockers,
 } from "./AgentAuthManage";
+import { DangerConfirm } from "./DangerConfirm";
 import { CONNECTION_STRINGS as R } from "../runtime/r5_auth_strings";
 import { AgentConnectionPicker } from "./AgentConnectionPicker";
 import { AgentAccountLinks } from "./AgentAccountLinks";
@@ -150,6 +151,10 @@ function render(flushEffects = true) {
           AgentAccountExit(
             child.props as Parameters<typeof AgentAccountExit>[0],
           ),
+        );
+      if (child.type === DangerConfirm)
+        visit(
+          DangerConfirm(child.props as Parameters<typeof DangerConfirm>[0]),
         );
       if (child.type === AgentAuthWorkBlockers)
         visit(

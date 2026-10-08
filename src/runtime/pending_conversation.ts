@@ -5,6 +5,7 @@ import {
   type PendingConversation,
 } from "./drafts";
 import { threads, type ThreadState } from "./sessions";
+import { SENDING_STRINGS } from "./sending_strings";
 
 export interface PendingAttempt {
   draftKey: string;
@@ -21,7 +22,7 @@ export async function rememberPendingConversation(
 ): Promise<PendingAttempt> {
   const current = composerDrafts.read(draftKey);
   if (!current.sendPending || current.pendingConversation)
-    throw new Error("输入状态已变化，消息尚未发送，请检查后再试");
+    throw new Error(SENDING_STRINGS.inputChanged);
   const target: PendingConversation = {
     agentId: state.agentId,
     cwd: state.cwd,
@@ -46,7 +47,7 @@ export async function rememberPendingConversation(
   try {
     await draftPersistence.flush();
     if (composerDrafts.read(draftKey).pendingConversation !== target)
-      throw new Error("输入状态已变化，消息尚未发送，请检查后再试");
+      throw new Error(SENDING_STRINGS.inputChanged);
     return attempt;
   } catch (error) {
     finishPendingConversation(attempt, "rejected");

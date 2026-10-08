@@ -77,4 +77,9 @@ export const AUTH_ACTIVITY_STRINGS = {
   logoutNotConfirmed:
     "连接已重新检查，退出结果仍未确认。请按官方方式确认账号后重试。",
   logoutFailed: "退出未完成，请检查账号状态后重试",
+  busyOther: "此 Agent 的账号或服务设置尚未结束，请返回查看",
+  apiSource: "当前使用 API 配置，请返回 API 设置检查此服务",
+  terminalStartFailed: "终端未能启动",
+  terminalExitUnknown: "终端退出结果尚未确认",
+  loginIncomplete: (code: number) => `登录未完成（退出码 ${code}）`,
 } as const;

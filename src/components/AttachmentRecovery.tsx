@@ -100,7 +100,7 @@ export function AttachmentRecovery({
         review &&
         review.draftKey === draftKey &&
         review.thread === thread && (
-          <WorkspaceDialog title={S.title} onClose={close}>
+          <WorkspaceDialog title={S.title} busy={checking} onClose={close}>
             <div className="workspace-dialog-body">
               <p>{S.details}</p>
               <p>{S.emptyQueue}</p>

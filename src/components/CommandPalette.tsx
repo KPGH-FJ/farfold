@@ -18,6 +18,7 @@ import { STRINGS } from "../runtime/strings";
 import { useCollections } from "../runtime/collections";
 import { LIBRARY } from "../runtime/library_strings";
 import { AgentLogo } from "./AgentLogo";
+import { useModalDialog } from "./useModalDialog";
 import "../command-palette.css";
 
 function fuzzyMatch(query: string, text: string): boolean {
@@ -53,23 +54,13 @@ export function CommandPalette({
   const titleId = useId();
   const snapshot = useThreadsSnapshot();
   const collections = useCollections();
-
-  useEffect(() => {
-    const previous = returnFocusRef?.current ?? document.activeElement;
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    inputRef.current?.focus();
-    return () => {
-      dialog?.close();
-      if (
-        previous instanceof HTMLElement &&
-        previous.isConnected &&
-        !previous.closest("[hidden], [inert]") &&
-        previous.getClientRects().length > 0
-      )
-        previous.focus();
-    };
-  }, []);
+  const { onCancel, onClick } = useModalDialog({
+    dialogRef,
+    onDismiss: onClose,
+    returnFocusRef,
+    initialFocusRef: inputRef,
+    backdropDismiss: true,
+  });
 
   const entries = useMemo(
     () =>
@@ -130,10 +121,7 @@ export function CommandPalette({
       ref={dialogRef}
       className="command-palette-dialog"
       aria-labelledby={titleId}
-      onCancel={(event) => {
-        event.preventDefault();
-        onClose();
-      }}
+      onCancel={onCancel}
       onKeyDown={(event) => {
         if (
           !event.nativeEvent.isComposing &&
@@ -144,17 +132,7 @@ export function CommandPalette({
           onClose();
         }
       }}
-      onClick={(event) => {
-        if (event.target !== event.currentTarget) return;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        if (
-          event.clientX < bounds.left ||
-          event.clientX > bounds.right ||
-          event.clientY < bounds.top ||
-          event.clientY > bounds.bottom
-        )
-          onClose();
-      }}
+      onClick={onClick}
     >
       <header className="conversation-search-title">
         <h2 id={titleId}>{STRINGS.palette.title}</h2>

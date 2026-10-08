@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
 import { LIBRARY } from "../runtime/library_strings";
-import { WorkspaceDialog } from "./WorkspaceDialog";
+import { DangerConfirmDialog } from "./DangerConfirm";
 import "../library-dialogs.css";
 
 /**
@@ -27,34 +27,18 @@ export function DeleteConversationsDialog({
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   return (
-    <WorkspaceDialog
+    <DangerConfirmDialog
       title={title}
-      onClose={onClose}
+      busy={busy}
+      error={error}
+      confirmLabel={LIBRARY.deleteConfirm}
+      onConfirm={onDelete}
+      cancelLabel={LIBRARY.cancel}
+      onCancel={onClose}
       returnFocusRef={returnFocusRef}
     >
-      <div className="workspace-dialog-body">
-        <p>{hint}</p>
-        <p>{LIBRARY.deleteAgentNote}</p>
-        {error && <p role="alert">{error}</p>}
-      </div>
-      <footer>
-        <button
-          type="button"
-          className="btn btn-ghost"
-          disabled={busy}
-          onClick={onClose}
-        >
-          {LIBRARY.cancel}
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={busy}
-          onClick={onDelete}
-        >
-          {LIBRARY.deleteConfirm}
-        </button>
-      </footer>
-    </WorkspaceDialog>
+      <p>{hint}</p>
+      <p>{LIBRARY.deleteAgentNote}</p>
+    </DangerConfirmDialog>
   );
 }

@@ -1,4 +1,5 @@
 import { STRINGS } from "./strings";
+import { ERROR_STRINGS } from "./error_strings";
 /** Only present short app-authored, user-language errors; never raw transport diagnostics. */
 export function uiError(reason: unknown, fallback: string): string {
   const raw = String(reason);
@@ -6,13 +7,13 @@ export function uiError(reason: unknown, fallback: string): string {
   // remain behind the caller's fallback rather than exposing transport text.
   switch (raw.replace(/^Error: /, "")) {
     case "AGENT_INITIALIZE_FAILED":
-      return "连接检查未完成，请检查程序或启动设置后重试";
+      return ERROR_STRINGS.agentInitializeFailed;
     case "AGENT_INITIALIZE_TIMEOUT":
-      return "等待连接检查超时，请稍后重试";
+      return ERROR_STRINGS.agentInitializeTimeout;
     case "AGENT_CONNECTION_ENDED":
-      return "连接在检查完成前结束，请检查程序后重试";
+      return ERROR_STRINGS.agentConnectionEnded;
     case "AGENT_START_FAILED":
-      return "程序未能启动，请检查程序文件和资料文件夹后重试";
+      return ERROR_STRINGS.agentStartFailed;
   }
   if (/AGENT_(?:INITIALIZE_|CONNECTION_|START_)/i.test(raw)) return fallback;
   if (raw.replace(/^Error:\s*/, "") === "AUTH_REQUIRED")

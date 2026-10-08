@@ -10,6 +10,7 @@ import {
 import { STRINGS } from "../runtime/strings";
 import { SETTINGS_PRESENTATION as P } from "../runtime/settings_presentation_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { DangerConfirm } from "./DangerConfirm";
 import { threads } from "../runtime/sessions";
 import { hasPendingRequests } from "../runtime/session_types";
 import { uiError } from "../runtime/ui_error";
@@ -92,7 +93,19 @@ function PrivacyDataControls() {
           </>
         )}
         {phase === "confirm" || phase === "working" ? (
-          <div className="access-confirm" role="alert">
+          <DangerConfirm
+            busy={phase === "working"}
+            error={error}
+            confirmLabel={
+              phase === "working" ? P.clearDataWorking : P.clearDataConfirm
+            }
+            onConfirm={() => void clear()}
+            cancelLabel={P.clearDataCancel}
+            onCancel={() => {
+              setError(null);
+              setPhase("idle");
+            }}
+          >
             <div className="settings-clear-scope">
               <strong>{P.clearDataDeleteTitle}</strong>
               <ul>
@@ -107,29 +120,7 @@ function PrivacyDataControls() {
                 ))}
               </ul>
             </div>
-            {error && <p role="alert">{error}</p>}
-            <div className="ac-actions">
-              <button
-                type="button"
-                className="btn btn-primary"
-                disabled={phase !== "confirm"}
-                onClick={() => void clear()}
-              >
-                {phase === "working" ? P.clearDataWorking : P.clearDataConfirm}
-              </button>
-              <button
-                type="button"
-                className="btn btn-text"
-                disabled={phase === "working"}
-                onClick={() => {
-                  setError(null);
-                  setPhase("idle");
-                }}
-              >
-                {P.clearDataCancel}
-              </button>
-            </div>
-          </div>
+          </DangerConfirm>
         ) : null}
         {phase === "done" && (
           <p role="status" className="auth-note">

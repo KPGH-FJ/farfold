@@ -1,4 +1,5 @@
 import { BufferedLoginTerminal } from "./login_terminal";
+import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
 import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
 
 export type AuthOperation =
@@ -77,9 +78,8 @@ export class AuthActivity {
   }
   begin(target: AuthTarget, operation: AuthOperation, attemptId: string) {
     if (authActive(this.value))
-      throw new Error("此 Agent 的账号或服务设置尚未结束，请返回查看");
-    if (target.source)
-      throw new Error("当前使用 API 配置，请返回 API 设置检查此服务");
+      throw new Error(AUTH_ACTIVITY_STRINGS.busyOther);
+    if (target.source) throw new Error(AUTH_ACTIVITY_STRINGS.apiSource);
     this.value = {
       target: { ...target },
       operation: Object.freeze({ ...operation }),
@@ -165,7 +165,7 @@ export class AuthActivity {
               ? null
               : this.value?.operation.kind === "preparation"
                 ? P.exitFailed(code)
-                : `登录未完成（退出码 ${code}）`,
+                : AUTH_ACTIVITY_STRINGS.loginIncomplete(code),
           });
       },
     });

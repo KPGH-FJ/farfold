@@ -166,7 +166,7 @@
 .browser-workspace-snapshot time,
 .browser-workspace-help {
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .browser-workspace-help summary {
@@ -327,7 +327,7 @@
   min-height: 32px;
   padding: 4px 6px;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .browser-request-input {

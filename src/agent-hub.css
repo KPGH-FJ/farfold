@@ -40,7 +40,7 @@
 }
 .agent-hub-eyebrow {
   color: var(--accent);
-  font-size: 11px;
+  font-size: 12px;
   margin-bottom: 10px;
 }
 .agent-hub-heading h1 {
@@ -109,7 +109,7 @@
   padding: 2px 5px;
   border-radius: 4px;
   background: var(--sidebar);
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-hub-search {
   display: flex;
@@ -130,7 +130,7 @@
   color: var(--ink);
   outline: 0;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
 }
 .agent-hub-search button {
   width: auto;
@@ -157,18 +157,18 @@
   background: transparent;
   color: var(--ink-2);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
 }
 .agent-hub-category.active {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .agent-hub-results {
   margin: 0;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
   text-align: right;
   white-space: nowrap;
 }
@@ -227,7 +227,7 @@
 }
 .agent-hub-brand small {
   color: var(--ink-2);
-  font-size: 10px;
+  font-size: 12px;
   overflow-wrap: anywhere;
 }
 .agent-hub-card .agent-hub-badge {
@@ -253,7 +253,7 @@
   background: transparent;
   color: var(--ink-2);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   text-align: left;
   overflow-wrap: anywhere;
@@ -279,7 +279,7 @@
   min-height: 24px;
   margin-top: auto;
   color: var(--ink-2);
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-hub-card-state > span {
   display: flex;
@@ -333,7 +333,7 @@
   height: auto;
   min-height: 31px;
   padding: 6px 10px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 550;
 }
 .agent-hub-card-actions .agent-hub-start.btn-ghost {
@@ -359,11 +359,11 @@
   padding-top: 17px;
   border-top: 1px solid var(--line);
   color: var(--ink-2);
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-hub-footer .btn {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-hub-empty {
   padding: 58px 20px;
@@ -444,7 +444,7 @@
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 0;
-  box-shadow: 0 20px 70px #0003;
+  box-shadow: 0 20px 70px var(--shadow-lg);
 }
 .agent-setup-dialog[open] {
   display: flex;
@@ -472,7 +472,7 @@
   font-weight: 600;
 }
 .agent-setup-identity p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
   margin-top: 5px;
   line-height: 1.6;
@@ -491,7 +491,7 @@
   align-items: center;
   gap: 7px;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
 }
 .agent-setup-steps li > span {
   display: flex;
@@ -501,7 +501,7 @@
   height: 22px;
   border: 1px solid var(--line);
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-setup-steps .current {
   color: var(--accent);
@@ -546,12 +546,12 @@
 .agent-setup-program p,
 .agent-setup-program small {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
   margin-top: 6px;
 }
 .agent-setup-note {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
   line-height: 1.8;
   margin: 17px 0;
@@ -610,7 +610,7 @@
 .agent-access-choices small {
   display: block;
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   margin-top: 5px;
 }
@@ -703,7 +703,7 @@
   font-size: 13px;
 }
 .agent-setup-context p {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--ink-2);
   margin-top: 4px;
 }
@@ -717,7 +717,7 @@
 }
 .agent-setup-steps li {
   flex: 1;
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-setup-steps li:not(:last-child)::after {
   content: "";
@@ -799,7 +799,7 @@
 }
 .agent-detail-identity p,
 .agent-detail-body section > p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-2);
   line-height: 1.8;
   margin-top: 5px;
@@ -823,7 +823,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  font-size: 10px;
+  font-size: 12px;
 }
 .agent-detail-body section > p {
   margin-top: 8px;

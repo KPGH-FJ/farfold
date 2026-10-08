@@ -19,4 +19,5 @@ export const SENDING_STRINGS = {
   resumeLocation: "恢复此位置的发送",
   back: "返回",
   done: "完成",
+  inputChanged: "输入状态已变化，消息尚未发送，请检查后再试",
 } as const;

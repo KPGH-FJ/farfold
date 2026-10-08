@@ -517,6 +517,7 @@ export function ThreadPage({
       {active && rename && (
         <WorkspaceDialog
           title={LIBRARY.rename}
+          busy={saving}
           onClose={closeDialog}
           returnFocusRef={menuAnchor}
         >

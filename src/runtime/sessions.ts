@@ -1108,7 +1108,7 @@ class ThreadsStore {
       (s.submitting && index === 0) ||
       blocks === s.uncertainPrompt
     )
-      throw new Error("这条待发消息暂时无法编辑，请先检查发送结果");
+      throw new Error(STRINGS.repair.queuedEditBlocked);
     pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
     this.emit(key);
     return blocks;
@@ -1128,7 +1128,7 @@ class ThreadsStore {
       (s.submitting && index === 0) ||
       original === s.uncertainPrompt
     )
-      throw new Error("这条待发消息暂时无法编辑，请先检查发送结果");
+      throw new Error(STRINGS.repair.queuedEditBlocked);
     s.queued[index] = structuredClone(replacement);
     pauseQueue(s, s.uncertainPrompt ? "uncertain" : "stopped");
     this.emit(key);

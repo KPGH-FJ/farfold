@@ -76,7 +76,8 @@ function render() {
       // Expand the colocated controls; other nested components stay opaque.
       if (
         typeof child.type === "function" &&
-        child.type.name === "PrivacyDataControls"
+        (child.type.name === "PrivacyDataControls" ||
+          child.type.name === "DangerConfirm")
       ) {
         visit(
           (child.type as (p: Record<string, unknown>) => ReactNode)(

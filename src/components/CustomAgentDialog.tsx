@@ -74,6 +74,7 @@ export function CustomAgentDialog({
   return (
     <WorkspaceDialog
       title={CUSTOM_AGENT.title}
+      busy={submitting}
       onClose={close}
       returnFocusRef={returnFocusRef}
     >

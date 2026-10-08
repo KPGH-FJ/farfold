@@ -88,6 +88,7 @@ export function AgentRemoveDialog({
   return (
     <WorkspaceDialog
       title={STRINGS.access.removeTitle(card.name)}
+      busy={working}
       onClose={() => {
         if (!working) onClose();
       }}
@@ -160,7 +161,7 @@ export function AgentRemoveDialog({
         </button>
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-danger"
           disabled={disabled}
           onClick={() => void confirm()}
         >

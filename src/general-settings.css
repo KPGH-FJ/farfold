@@ -36,7 +36,7 @@
   margin: 0;
 }
 .general-section-title > span {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .general-appearance {
@@ -68,7 +68,7 @@
   align-items: center;
   gap: 7px;
   padding: 12px 1px 0;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .general-theme-card > span:last-child svg {
@@ -153,7 +153,7 @@
   font-weight: 550;
 }
 .general-setting-row p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
   line-height: 1.8;
   margin: 6px 0 0;
@@ -161,7 +161,7 @@
   overflow-wrap: anywhere;
 }
 .general-setting-row .btn {
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   flex-shrink: 0;
   padding: 8px 12px;
@@ -172,7 +172,7 @@
   border-radius: 6px;
   background-color: var(--card);
   color: var(--ink-2);
-  font-size: 11px;
+  font-size: 12px;
   padding: 8px 28px 8px 10px;
   appearance: none;
   -webkit-appearance: none;
@@ -196,7 +196,7 @@
 }
 .general-unavailable {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
 }
 .general-shortcuts {
@@ -204,7 +204,7 @@
   gap: 18px 26px;
   flex-wrap: wrap;
   margin: 18px 0;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .general-shortcuts > div {
@@ -226,7 +226,7 @@
 .general-caption,
 .general-feedback {
   color: var(--ink-3);
-  font-size: 11px;
+  font-size: 12px;
 }
 .general-page .ac-error {
   margin: 12px 0;
@@ -240,7 +240,7 @@
   }
   .general-theme-card > span:last-child {
     gap: 4px;
-    font-size: 10px;
+    font-size: 12px;
   }
   .general-theme-swatch {
     height: 62px;
@@ -287,7 +287,7 @@
 .diagnostics-entry pre {
   max-height: 260px;
   overflow: auto;
-  font-size: 11px;
+  font-size: 12px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -373,7 +373,7 @@
   font-weight: 600;
 }
 .general-section-title > .btn {
-  font-size: 11px;
+  font-size: 12px;
 }
 .general-setting-row > .btn {
   gap: 7px;

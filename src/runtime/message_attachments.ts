@@ -1,4 +1,5 @@
 import type { Attachment, ThreadItem } from "./session_types";
+import { MESSAGE_ATTACHMENTS } from "./message_attachment_strings";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -22,7 +23,10 @@ export function normalizeMessageAttachment(
     if (!data || !mimeType) return null;
     return {
       kind: c.type,
-      name: c.type === "image" ? "图片" : "音频",
+      name:
+        c.type === "image"
+          ? MESSAGE_ATTACHMENTS.kindNames.image
+          : MESSAGE_ATTACHMENTS.kindNames.audio,
       data,
       mimeType,
       uri: nonempty(c.uri),

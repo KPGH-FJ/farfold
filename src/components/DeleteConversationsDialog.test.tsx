@@ -8,11 +8,22 @@ import { expect, it, vi } from "vitest";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
 import { LIBRARY } from "../runtime/library_strings";
 
+const EXPAND = new Set(["DangerConfirm", "DangerConfirmDialog"]);
 function collect(node: ReactNode): ReactElement<Record<string, unknown>>[] {
   const out: ReactElement<Record<string, unknown>>[] = [];
   Children.forEach(node, (child) => {
     if (!isValidElement<Record<string, unknown>>(child)) return;
     out.push(child);
+    if (typeof child.type === "function" && EXPAND.has(child.type.name)) {
+      out.push(
+        ...collect(
+          (child.type as (p: Record<string, unknown>) => ReactNode)(
+            child.props,
+          ) as ReactNode,
+        ),
+      );
+      return;
+    }
     out.push(...collect(child.props.children as ReactNode));
   });
   return out;

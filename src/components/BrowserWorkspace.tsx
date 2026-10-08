@@ -36,6 +36,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
+import { DangerConfirm } from "./DangerConfirm";
 import "../browser-workspace.css";
 
 export interface BrowserWorkspaceProps {
@@ -1174,19 +1175,16 @@ export function BrowserWorkspace({
               {S.clearStorage}
             </button>
             {clearConfirmation === scope.current && (
-              <div>
+              <DangerConfirm
+                busy={operation !== null}
+                confirmLabel={S.clearStorageAction}
+                confirmDisabled={blocked || !visible}
+                onConfirm={() => void clearHtmlStorage()}
+                cancelLabel={S.clearStorageCancel}
+                onCancel={() => setClearPrompt(null)}
+              >
                 <p>{S.clearStorageConfirm(visibleState.localFileName!)}</p>
-                <button
-                  type="button"
-                  onClick={() => void clearHtmlStorage()}
-                  disabled={operation !== null || blocked || !visible}
-                >
-                  {S.clearStorageAction}
-                </button>{" "}
-                <button type="button" onClick={() => setClearPrompt(null)}>
-                  {S.clearStorageCancel}
-                </button>
-              </div>
+              </DangerConfirm>
             )}
           </div>
         )}

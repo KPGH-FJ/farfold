@@ -27,6 +27,7 @@ import {
 } from "../runtime/credentials";
 import { uiError } from "../runtime/ui_error";
 import { AgentAuthSection } from "./AgentAuthSection";
+import { useModalDialog } from "./useModalDialog";
 import { useSetupAuthFocus } from "./useSetupAuthFocus";
 import { useProgramInventory } from "./ProgramManager";
 import { agentSetupProgram } from "./AgentSetupProgram";
@@ -546,22 +547,11 @@ export function AgentSetup({
       controller.invalidate();
   }, [sameSource, choice, capability, modelValid, controller]);
 
-  useEffect(() => {
-    const element = dialog.current;
-    const previous = document.activeElement;
-    if (active) element?.showModal();
-    else element?.close();
-    return () => {
-      element?.close();
-      if (
-        previous instanceof HTMLElement &&
-        previous.isConnected &&
-        !previous.closest("[hidden], [inert]") &&
-        previous.getClientRects().length
-      )
-        previous.focus();
-    };
-  }, [active]);
+  const { onCancel } = useModalDialog({
+    dialogRef: dialog,
+    open: active,
+    onDismiss: onClose,
+  });
   useEffect(() => {
     let active = true;
     const agentId = card.id;
@@ -757,12 +747,7 @@ export function AgentSetup({
       className="agent-setup-dialog"
       data-intent={intent}
       aria-labelledby="agent-setup-title"
-      onCancel={(event) => {
-        if (event.target !== event.currentTarget) return;
-        event.preventDefault();
-        event.stopPropagation();
-        close();
-      }}
+      onCancel={onCancel}
     >
       <header className="agent-setup-header">
         <h2 id="agent-setup-title">

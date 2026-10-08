@@ -21,6 +21,13 @@
   --red: #b64c47;
   --card: #ffffff;
   --card-dim: #fafaf9;
+  --on-accent: #fff;
+  --shadow-sm: rgba(0, 0, 0, 0.04);
+  --shadow-md: rgba(0, 0, 0, 0.1);
+  --shadow-lg: rgba(0, 0, 0, 0.2);
+  --backdrop: rgba(0, 0, 0, 0.27);
+  --focus-ring: rgba(79, 70, 229, 0.45);
+  --focus-ring-soft: rgba(79, 70, 229, 0.08);
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
   --sans:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
@@ -40,6 +47,8 @@
   --accent-soft: rgba(124, 116, 242, 0.14);
   --card: #252523;
   --card-dim: #21211f;
+  --focus-ring: rgba(124, 116, 242, 0.55);
+  --focus-ring-soft: rgba(124, 116, 242, 0.15);
 }
 
 * {
@@ -87,7 +96,7 @@ body {
   justify-content: center;
   font-size: 8.5px;
   font-weight: 600;
-  color: #fff;
+  color: var(--on-accent);
 }
 .id.c0 {
   background: var(--id-0);
@@ -145,12 +154,12 @@ body {
 }
 .nav-row .nav-count {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .nav-row .kbd-hint {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 .nav-row.disabled {
@@ -182,7 +191,7 @@ body {
 }
 .side-search .kbd-hint {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
 }
 .side-search.disabled {
   cursor: default;
@@ -192,7 +201,7 @@ body {
   margin-top: 22px;
 }
 .sec-label {
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ink-3);
   letter-spacing: 0.06em;
@@ -262,7 +271,7 @@ body {
 }
 .topbar .esc {
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--ink-3);
 }
 
@@ -326,9 +335,16 @@ body {
 }
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .btn-primary:hover:not(:disabled) {
+  filter: brightness(0.93);
+}
+.btn-danger {
+  background: var(--red);
+  color: var(--on-accent);
+}
+.btn-danger:hover:not(:disabled) {
   filter: brightness(0.93);
 }
 .btn-ghost {
@@ -353,7 +369,7 @@ body {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--card);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px var(--shadow-sm);
   padding: 10px 12px 9px;
 }
 .composer-box.disabled {

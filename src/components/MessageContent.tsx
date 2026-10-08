@@ -12,6 +12,7 @@ import { inlineFilePath, messageLink } from "../runtime/message-link";
 import type { Attachment } from "../runtime/session_types";
 import { attachmentMedia } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
+import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
 
 export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
@@ -196,10 +197,12 @@ function CodeBlock({ children }: { children?: ReactNode }) {
             window.setTimeout(() => setCopied(false), 1_500);
           });
         }}
-        aria-label={copied ? "已复制代码" : "复制代码"}
+        aria-label={
+          copied ? THREAD_VIEW_STRINGS.copiedCode : THREAD_VIEW_STRINGS.copyCode
+        }
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
-        {copied ? "已复制" : "复制"}
+        {copied ? THREAD_VIEW_STRINGS.copied : THREAD_VIEW_STRINGS.copy}
       </button>
       <FileOpenContext.Provider value={null}>
         <pre>{children}</pre>
