@@ -1,0 +1,29 @@
+{
+  "method": "TypeScript AST kind/text/child tree, ignoring redundant parentheses, empty statements and whitespace-only JSX text; HTML inline script similarly checked. Not a browser rerun.",
+  "results": [
+    {
+      "file": "fixture.tsx",
+      "normalizedSyntaxTreeEqual": true
+    },
+    {
+      "file": "run.mjs",
+      "normalizedSyntaxTreeEqual": true
+    },
+    {
+      "file": "run-final.mjs",
+      "normalizedSyntaxTreeEqual": true
+    },
+    {
+      "file": "run-keyboard.mjs",
+      "normalizedSyntaxTreeEqual": true
+    },
+    {
+      "file": "serve.mjs",
+      "normalizedSyntaxTreeEqual": true
+    },
+    {
+      "file": "index.html",
+      "inlineScriptSyntaxTreeEqual": true
+    }
+  ]
+}

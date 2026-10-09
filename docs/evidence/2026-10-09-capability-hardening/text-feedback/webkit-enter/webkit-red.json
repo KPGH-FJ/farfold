@@ -1,0 +1,1358 @@
+{
+  "name": "webkit-red",
+  "engine": "webkit",
+  "startedAt": "2026-10-09T22:49:12.997Z",
+  "before": {
+    "src/components/SourceTextSelection.tsx": "9afdcd68898a1424e0e2b84516e65f662f55dbcb87884491b4f1e93e7df93af3",
+    "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8"
+  },
+  "scenarios": [
+    {
+      "scenario": "click",
+      "passed": true,
+      "staged": {
+        "state": {
+          "focused": "BUTTON:button:对此选段提意见",
+          "rangeCount": 1,
+          "collapsed": false,
+          "text": "第三行😀末尾\r\n",
+          "anchor": "#text",
+          "anchorOffset": 23,
+          "focus": "#text",
+          "focusOffset": 32,
+          "confirmDisabled": false,
+          "confirmations": []
+        },
+        "events": [
+          {
+            "type": "focusout",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click",
+            "target": "BUTTON:submit:选择这些行",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit",
+            "target": "FORM::起始行结束行选择这些行",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": true,
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          }
+        ]
+      },
+      "confirmed": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": [
+          {
+            "kind": "text-range",
+            "byteStart": 25,
+            "byteEnd": 46,
+            "startLine": 3,
+            "endLine": 3
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "last-input-enter",
+      "passed": false,
+      "staged": {
+        "state": {
+          "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+          "rangeCount": 0,
+          "collapsed": true,
+          "text": "",
+          "anchor": null,
+          "anchorOffset": 0,
+          "focus": null,
+          "focusOffset": 0,
+          "confirmDisabled": true,
+          "confirmations": []
+        },
+        "events": [
+          {
+            "type": "keydown",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keydown:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click",
+            "target": "BUTTON:submit:选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit",
+            "target": "FORM::起始行结束行选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": true,
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": false,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup",
+            "target": "BUTTON:button:对此选段提意见",
+            "key": "Enter",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          }
+        ]
+      },
+      "confirmed": null
+    },
+    {
+      "scenario": "first-input-enter",
+      "passed": false,
+      "staged": {
+        "state": {
+          "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+          "rangeCount": 0,
+          "collapsed": true,
+          "text": "",
+          "anchor": null,
+          "anchorOffset": 0,
+          "focus": null,
+          "focusOffset": 0,
+          "confirmDisabled": true,
+          "confirmations": []
+        },
+        "events": [
+          {
+            "type": "focusout",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keydown",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keydown:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click",
+            "target": "BUTTON:submit:选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit",
+            "target": "FORM::起始行结束行选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::起始行",
+              "anchorOffset": 1,
+              "focus": "LABEL::起始行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": true,
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "第三行😀末尾\r\n",
+              "anchor": "#text",
+              "anchorOffset": 23,
+              "focus": "#text",
+              "focusOffset": 32,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": false,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup",
+            "target": "BUTTON:button:对此选段提意见",
+            "key": "Enter",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          }
+        ]
+      },
+      "confirmed": null
+    },
+    {
+      "scenario": "block-input-enter",
+      "passed": false,
+      "staged": {
+        "state": {
+          "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+          "rangeCount": 0,
+          "collapsed": true,
+          "text": "",
+          "anchor": null,
+          "anchorOffset": 0,
+          "focus": null,
+          "focusOffset": 0,
+          "confirmDisabled": true,
+          "confirmations": []
+        },
+        "events": [
+          {
+            "type": "keydown",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keydown:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress",
+            "target": "INPUT:number:",
+            "key": "Enter",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keypress:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click",
+            "target": "BUTTON:submit:选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "click:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit",
+            "target": "FORM::起始行结束行选择这些行",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "submit:microtask",
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": true,
+              "text": "",
+              "anchor": "LABEL::结束行",
+              "anchorOffset": 1,
+              "focus": "LABEL::结束行",
+              "focusOffset": 1,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": true,
+            "state": {
+              "focused": "INPUT:number:",
+              "rangeCount": 1,
+              "collapsed": false,
+              "text": "当前长行片段😀",
+              "anchor": "#text",
+              "anchorOffset": 0,
+              "focus": "#text",
+              "focusOffset": 8,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "INPUT:number:",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusin:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange",
+            "target": null,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "selectionchange:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "availability",
+            "available": false,
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": false,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup",
+            "target": "BUTTON:button:对此选段提意见",
+            "key": "Enter",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "keyup:microtask",
+            "state": {
+              "focused": "BUTTON:button:对此选段提意见",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout",
+            "target": "BUTTON:button:对此选段提意见",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          },
+          {
+            "type": "focusout:microtask",
+            "state": {
+              "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+              "rangeCount": 0,
+              "collapsed": true,
+              "text": "",
+              "anchor": null,
+              "anchorOffset": 0,
+              "focus": null,
+              "focusOffset": 0,
+              "confirmDisabled": true,
+              "confirmations": []
+            }
+          }
+        ]
+      },
+      "confirmed": null
+    }
+  ],
+  "network": [],
+  "errors": [],
+  "after": {
+    "src/components/SourceTextSelection.tsx": "9afdcd68898a1424e0e2b84516e65f662f55dbcb87884491b4f1e93e7df93af3",
+    "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8"
+  },
+  "finishedAt": "2026-10-09T22:49:17.138Z"
+}

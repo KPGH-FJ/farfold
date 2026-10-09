@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/OpenedFileView.text-feedback.test.tsx" "src/runtime/text_feedback_persistence.test.ts" "src/runtime/strings.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  3 passed (3)
+      Tests  14 passed (14)
+   Start at  06:52:44
+   Duration  986ms (transform 532ms, setup 0ms, import 768ms, tests 689ms, environment 0ms)
+

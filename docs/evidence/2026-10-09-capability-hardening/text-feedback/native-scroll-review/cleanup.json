@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-09T23:08:13.110579+00:00",
+  "ownedServerPid": 6712,
+  "exactCommandConfirmedBeforeSignal": "node docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/serve.mjs",
+  "action": "SIGTERM exact owned PID",
+  "serverSession": 78891,
+  "sessionExitCode": 143,
+  "pidCheckExit": 1,
+  "pidOutput": "",
+  "portListenCheckExit": 1,
+  "portListenOutput": "",
+  "browserCleanup": "Each task-owned runner awaited browser.close in finally; no formal App or user profile launched.",
+  "correction": "初稿误填 0；实际 write_stdin 会话结束回执为 143，现按真实回执记录。初稿保留 cleanup-initial.raw.txt。"
+}

@@ -1,0 +1,96 @@
+{
+  "name": "webkit-red",
+  "engine": "webkit",
+  "checks": [
+    {
+      "scenario": "click",
+      "passed": true,
+      "state": {
+        "focused": "BUTTON:button:对此选段提意见",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "confirmed": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": [
+          {
+            "kind": "text-range",
+            "byteStart": 25,
+            "byteEnd": 46,
+            "startLine": 3,
+            "endLine": 3
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "last-input-enter",
+      "passed": false,
+      "state": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "confirmed": null
+    },
+    {
+      "scenario": "first-input-enter",
+      "passed": false,
+      "state": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "confirmed": null
+    },
+    {
+      "scenario": "block-input-enter",
+      "passed": false,
+      "state": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "confirmed": null
+    }
+  ],
+  "errors": [],
+  "network": [],
+  "sourceUnchanged": true
+}

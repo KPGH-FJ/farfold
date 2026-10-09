@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+[warn] docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.json
+[warn] docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/index.html
+[warn] docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/serve.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/receipt.json
+[warn] Code style issues found in 6 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

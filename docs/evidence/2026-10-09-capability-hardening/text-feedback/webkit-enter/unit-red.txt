@@ -1,0 +1,38 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/SourceTextSelection.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SourceTextSelection.test.tsx (8 tests | 1 failed) 12ms
+   × restores the chosen DOM range after WebKit clears selection while a number input loses focus 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SourceTextSelection.test.tsx > restores the chosen DOM range after WebKit clears selection while a number input loses focus
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/components/SourceTextSelection.test.tsx:229:18
+    227|   (form.props.onSubmit as (e: unknown) => void)({ preventDefault: vi.f…
+    228|   render();
+    229|   expect(ranges).toHaveLength(1);
+       |                  ^
+    230|   expect(ranges[0].startOffset).toBe(5);
+    231|   expect(ranges[0].endOffset).toBe(props.source.text.length);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  06:50:25
+   Duration  157ms (transform 52ms, setup 0ms, import 72ms, tests 12ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

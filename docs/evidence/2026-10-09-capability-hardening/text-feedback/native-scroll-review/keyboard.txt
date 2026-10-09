@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "engine": "webkit",
+      "passed": true,
+      "checks": 6
+    },
+    {
+      "engine": "chromium",
+      "passed": true,
+      "checks": 6
+    }
+  ]
+}

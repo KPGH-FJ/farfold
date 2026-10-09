@@ -1,0 +1,569 @@
+{
+  "scope": "NEW-02：完整 App 文件片段与意见区域溢出引起整页焦点滚动；只改 TextBlockPreview.css 两条规则。",
+  "sealedAt": "2026-10-09T23:10:30.720000+00:00",
+  "status": "implemented_and_controlled_full_app_verified_native_retest_pending",
+  "nativeObservationBoundary": {
+    "observer": "root only; this investigator did not operate the formal app or witness its native pixels",
+    "reported": "Installed cd66, approximately 1280×820 CSS window, block2, two feedback paragraphs already in composer; end-line numeric focus observed alongside app body moving upward.",
+    "notProven": "Native exact preceding focus event sequence and exact displacement are not reconstructed by source review. Controlled reproduction first moves at feedback textarea focus, not the first numeric focus."
+  },
+  "rootCause": {
+    "confirmedControlledSequence": "Full actual App/Thread/Composer/ArtifactPane/OpenedFileView/TextBlockPreview/SourceTextSelection in React StrictMode and original production global CSS order. A 640-character synthetic composer and controlled 2MiB file receipt; open block2 → line form → two Enter confirmations → production feedback textarea autofocus → refocus number input.",
+    "effectiveRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.json",
+      "sourceUnchanged": true,
+      "initialNumberFocusWindowY": 0,
+      "feedbackFocusWindowY": 296,
+      "appY": -296,
+      "documentScrollHeight": 1116,
+      "viewportHeight": 820
+    },
+    "earlierDirectFocus": "full-app-baseline completes with number focus windowY 0, but overflowing document height 920. It is not the effective red sequence.",
+    "layoutChain": [
+      "src/conversation-workspace.css:833 .file-artifact-view is a column flex container with min-height:0",
+      "src/components/OpenedFileView.tsx:920 renders TextBlockPreview directly before the feedback form",
+      "src/components/TextBlockPreview.css:1 previously had natural auto minimum height and visible overflow",
+      "src/conversation-workspace.css:1098 feedback form does not shrink",
+      "src/components/OpenedFileView.tsx:654 autofocuses the feedback textarea; overflowing ancestors allow HTML focus scrolling"
+    ],
+    "counterfactual": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.json",
+      "testOnlyRule": ".text-block-preview { min-height: 0; overflow: auto; }",
+      "sameProductionSourceAsRed": true,
+      "allWindowYZero": true,
+      "allDocumentHeight820": true
+    }
+  },
+  "fix": {
+    "file": "src/components/TextBlockPreview.css",
+    "sha256": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7",
+    "beforeSha256": "96aa9b06d66e1818e6b492fe96cc6ea574b9389d400aff713903ce0712f469e6",
+    "rules": ["min-height: 0", "overflow: auto"],
+    "behavior": "Allow this direct flex child to shrink and retain overflowing fragment controls/text in its own scroll area. Existing inner pre scrolling, original text, sticky selection controls, header, and feedback form remain intact. No body/root clamp, no hidden overflow, no TSX changes."
+  },
+  "verification": {
+    "kind": "Controlled full-App browser with synthetic in-memory thread/draft data and mocked IPC; no actual filesystem capture/native IPC/Agent dispatch.",
+    "finalScenarios": 10,
+    "finalChecks": 156,
+    "webkit": {
+      "file": "final-webkit.json",
+      "scenarios": 4,
+      "checks": 72,
+      "sourceUnchanged": true
+    },
+    "chromium": {
+      "file": "final-chromium.json",
+      "scenarios": 4,
+      "checks": 72,
+      "sourceUnchanged": true
+    },
+    "keyboard": {
+      "file": "keyboard.json",
+      "scenarios": 2,
+      "checks": 12,
+      "passed": true
+    },
+    "viewports": [
+      {
+        "width": 1280,
+        "height": 820
+      },
+      {
+        "width": 900,
+        "height": 620,
+        "source": "tauri.conf.json configured minimum window"
+      }
+    ],
+    "cases": [
+      "long source block2 and short text at both widths",
+      "last-number Enter stages, second Enter opens editable feedback; root remains at y0",
+      "refocus numeric control after feedback opens, root remains y0",
+      "outer fragment local scroll and inner original text local scroll remain available",
+      "copy full current block exactly, previous block and ordinal jump remain reachable",
+      "feedback survives fragment controls; adding it preserves original composer and includes feedback exactly once",
+      "no unexpected IPC or Agent send commands",
+      "narrow window Tab stays inside fragment controls or pre; numeric Enter handoff, PageDown original text and return to ordinal control remain local"
+    ],
+    "browserReuse": "Existing peer-owned Playwright WebKit 2336 binary reused read-only; installed Chrome launched with task-owned temporary profile. No browser/system preference changed.",
+    "sourceFiles": {
+      "src/App.tsx": "66b6ef0729e07736d7ea9d39fd05fd0b8584d3c97ce5fecb36dbc95774ed75e0",
+      "src/components/ThreadPage.tsx": "ccdc0618c3355575a859c0ce8d2fdcae56a9ffbe4d7ddfcd2f913f1d18d20a5d",
+      "src/components/ThreadView.tsx": "d7a41fddde72901da4bf983c5e1db7f6ec0a481e0740606959b4d55d13adfa06",
+      "src/components/Composer.tsx": "840e4cc70329eaa7adc04fe90a18a0067aae13e54873685511d8936623025075",
+      "src/components/ArtifactPane.tsx": "cfed4403a9070469930c66c8388709b62625f74f39627390d49ea0bbdb483c33",
+      "src/components/OpenedFileView.tsx": "9152f33eba0d8d458366bee976345e129c90f76fb2b4722ce1095e21f8e3417f",
+      "src/components/TextBlockPreview.tsx": "2796f949a58f757cce453f8f0ee482b0af25727ae4d3079dba6895337ad52977",
+      "src/components/TextBlockPreview.css": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7",
+      "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+      "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8",
+      "src/styles.css": "348b4467d75e40afeab15495360243fe6e7ef626c683e265323f37bdcbda2d19",
+      "src/styles-settings.css": "b94f0e508f2d6122dc5ff64ce08fe339a058f9c3ef334c9d8e432adaef781325",
+      "src/styles-content.css": "063be3a6a9e860567d872b0a75e9d2afddb795ed51a78bcd8c47ef8b2377f441",
+      "src/styles-thread.css": "f91a36084736da8c983d1bd4ec99f30bb907753cc920478e17227956424dfb01",
+      "src/styles-artifact.css": "577f12c405866c85a96f776d3bca14f179c5d3d1aa631a18f8fff3b5b16cd780",
+      "src/product-shell.css": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8",
+      "src/conversation-workspace.css": "a6f6f686ff0031ba66a54dee3b198ea3a552fb3641e5c0546c914cb8fc3839f2",
+      "src/history-import.css": "4b0e1971afcfe8f5ca11d753377d10ce14a6739b2fd649d59e3aa4a00060bdc1",
+      "src/desktop-workbench.css": "4ea973fb9582c3abe5eee7d966e1e22a788207102997985306d14881cb137609"
+    }
+  },
+  "harnessFailuresRetained": [
+    {
+      "file": "full-app-first.json",
+      "classification": "harness wrong role for file button; did not reach product sequence"
+    },
+    {
+      "file": "full-app-controls-ready.json",
+      "classification": "harness missing file_delivery_inspect_selected mock; did not reach product sequence"
+    },
+    {
+      "file": "keyboard-first.json",
+      "classification": "test incorrectly assumed both engines Tab to the submit button; actual WebKit focus moved to tabbable pre, root stayed y0/document620. Corrected assertion checks local focus, then explicitly focuses numeric input before Enter; no source change."
+    }
+  ],
+  "screenshotsActuallyViewed": [
+    "full-app-baseline-focused.png",
+    "full-app-feedback-sequence-feedback-focused.png",
+    "full-app-feedback-sequence-last-with-feedback.png",
+    "webkit-long-900-feedback.png",
+    "webkit-long-1280-feedback.png",
+    "chromium-short-900-final.png",
+    "chromium-long-1280-feedback.png"
+  ],
+  "adjacentEnterFixIndependentReview": {
+    "sourceReceipt": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/receipt.json",
+    "receiptSha256": "02bc0346c24205fc88e1a58f4f50d24b3f365b98e5e43a83ceec6a2f4af4e03a",
+    "sourceHashes": {
+      "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+      "src/components/SourceTextSelection.test.tsx": "0ca1a0b7aaf6d2d8f5c0b106c3c1e0bf3eb4637bc7cf99ca7a7e32456514280a"
+    },
+    "result": "no new blocker found by read-only diff/guard review and final full-App Enter sequences",
+    "review": "Same candidate object and exact source/DOM endpoints are revalidated before and after focus; visible Range is installed only after confirmed focus handoff. Ordinary empty Selection invalidation remains. Read peer 73-test/9+9 controlled browser evidence; did not rerun peer suite.",
+    "boundary": "Installed numeric Enter repair remains for root native retest."
+  },
+  "formatting": {
+    "jsonRawPairs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json",
+        "sha256": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.raw.txt",
+        "rawSha256": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.json",
+        "sha256": "66b50742ce61c3e4912c6e114b50b8f794e2fe15b2b5ff9506fce5afcb84f5a9",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.raw.txt",
+        "rawSha256": "66b50742ce61c3e4912c6e114b50b8f794e2fe15b2b5ff9506fce5afcb84f5a9",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.json",
+        "sha256": "82b734264b85a5ca4cee00959ad5490181d9fab2f849c88e9ca4aa5d3ff9629d",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.raw.txt",
+        "rawSha256": "82b734264b85a5ca4cee00959ad5490181d9fab2f849c88e9ca4aa5d3ff9629d",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.json",
+        "sha256": "c0ced5291a8e18e0d4884a206752dfddb0a9826f2b1017c96e40574da2385117",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.raw.txt",
+        "rawSha256": "c0ced5291a8e18e0d4884a206752dfddb0a9826f2b1017c96e40574da2385117",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.json",
+        "sha256": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.raw.txt",
+        "rawSha256": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.json",
+        "sha256": "cbbfa9e8830b46c5bce0e730987a3361605a8abc64944e9a0ca1d9d46dec48ac",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.raw.txt",
+        "rawSha256": "cbbfa9e8830b46c5bce0e730987a3361605a8abc64944e9a0ca1d9d46dec48ac",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.json",
+        "sha256": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.raw.txt",
+        "rawSha256": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.json",
+        "sha256": "eff04f3f913147fab062db8a540eda95afa5ac2cf317a24a7a2f00c464c09e08",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.raw.txt",
+        "rawSha256": "40ccbe2c2f042b22922192a1704be4fed3dc3ec20dd0b6c98db37540277bf06c",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.json",
+        "sha256": "1f8e7ebb5c2b6082b833c1bf8b3b1bb2a7fe569d838fe4e132b6b485b68e5f89",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.raw.txt",
+        "rawSha256": "1f8e7ebb5c2b6082b833c1bf8b3b1bb2a7fe569d838fe4e132b6b485b68e5f89",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.json",
+        "sha256": "6f276c5288bea0ec0cffedaa3ea49fb5b17dca41a9be49253aa20f136d8e88e4",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.raw.txt",
+        "rawSha256": "6f276c5288bea0ec0cffedaa3ea49fb5b17dca41a9be49253aa20f136d8e88e4",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/native-observation.json",
+        "sha256": "78262d32a100c4b2d002d705350bfe7ec7a1c12b02cad2700e44470835e5fa6d",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/native-observation.raw.txt",
+        "rawSha256": "78262d32a100c4b2d002d705350bfe7ec7a1c12b02cad2700e44470835e5fa6d",
+        "semanticMatch": true
+      }
+    ],
+    "harnessOriginalBytes": "*.pre-format.raw.txt retain executed pre-format harness; initial run/fixture earlier versions retained separately.",
+    "structuralComparison": "format-structure.json records normalized TypeScript syntax equality for 5 script files and inline HTML script. Formatter only; no browser rerun after formatting.",
+    "cleanupCorrection": "cleanup initial draft wrongly copied exit0; actual session returned143 after SIGTERM. Corrected receipt retains cleanup-initial.raw.txt and actual result.",
+    "finalCheck": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "exitCode": 0
+    }
+  },
+  "boundaries": [
+    "No formal Farfold launch/quit, user database access, user document read, Agent prompt or system permission changes by this investigator.",
+    "Initial native failure remains historical; no installed fix claim. Root must rebuild/install and retest formal WKWebView.",
+    "No general claim that all arbitrary viewport/content combinations cannot overflow; covered exact reported shape and configured minimum with long/short text.",
+    "Clipboard is controlled in-memory; copy assertion proves original full fragment text passed to clipboard API, not system clipboard integration.",
+    "Sidebar-to-preview responsive takeover at 900px is existing product behavior; not changed by this CSS.",
+    "No broad test/build repeated here; root owns integration checks."
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json",
+    "sha256": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb",
+    "ownServerStopped": true,
+    "portVacant": true
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-long-1280-feedback.png",
+      "sha256": "636647ed5a2e82c88f86bf2862cacabd31eee71c33372045e0babf6b76e03bcf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-long-1280-final.png",
+      "sha256": "2633a8116b5519e4e6c080598ecdf51481e4645fbe10493797745406a70a919c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-long-900-feedback.png",
+      "sha256": "8590b164d60bcfcb99b4a0888495b695a0fbec5e607bd6ca6fda4999de52d359"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-long-900-final.png",
+      "sha256": "c82d6865fec962ebfdb881a309031f70865338c00992e7812a3e9fbf58112a1f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-short-1280-feedback.png",
+      "sha256": "2358a857c7c2412b5b3871fcdf475b2eb3150a93fb88c43ed46b0bf9e32a4147"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-short-1280-final.png",
+      "sha256": "1af5c74af6731c557e1ba440040a1c1c80db20dba9761e2966c37eca4153ebea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-short-900-feedback.png",
+      "sha256": "d79e00714ce0a2a3c67cd48f54924a89da0a945146c13ca0561ae2d9efe40c2f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/chromium-short-900-final.png",
+      "sha256": "9d6cb38fd78e45103cb0f1666d87cfba1842d4cbfaba372fc01b7587bdafcde8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup-initial.raw.txt",
+      "sha256": "ecebdec193c516bf377a236c425d36adfa8d8b9e5565d2ff0cd2c367fe18ac8f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json",
+      "sha256": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.raw.txt",
+      "sha256": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.json",
+      "sha256": "66b50742ce61c3e4912c6e114b50b8f794e2fe15b2b5ff9506fce5afcb84f5a9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.raw.txt",
+      "sha256": "66b50742ce61c3e4912c6e114b50b8f794e2fe15b2b5ff9506fce5afcb84f5a9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.txt",
+      "sha256": "292aa020cc0ccf29b9b17776ca1b6720cffe770464008135a91992ab38ac2e12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.json",
+      "sha256": "82b734264b85a5ca4cee00959ad5490181d9fab2f849c88e9ca4aa5d3ff9629d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.raw.txt",
+      "sha256": "82b734264b85a5ca4cee00959ad5490181d9fab2f849c88e9ca4aa5d3ff9629d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.txt",
+      "sha256": "607bc49b345dbc3ea823a1dd7b648a7929e769099de3d54b32faea6762fd5398"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx",
+      "sha256": "673fea2f9003af077db53ba9621f227fd4fadc6e9fbc5c30474d405099a41355"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx.initial.raw.txt",
+      "sha256": "b5eb55127540e3b6e8e009ec124fb7918814127b9f0d22b6db0cb1a640349c7f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx.pre-format.raw.txt",
+      "sha256": "cc487b70cc5889174ea96705a64da4daadfa9b3afb39518b8c58c7f7fc7f5ac4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/format-addendum.txt",
+      "sha256": "c90e121959f1cba421f29da92f25ab18c76c97cb0a2a7a661563659d18e1fd3f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/format-structure.json",
+      "sha256": "6c0375fe890fcb1e71948239944f057df88c6f165b5bd065abe86dc3b435f78a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/format.txt",
+      "sha256": "e7115a127e97d66ea1ac7e636ae51595e5b913bae5cb9bb51f2680d9fbe87e32"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline-before.png",
+      "sha256": "3949da1fc7dc5b5d03249dca01e50ee0a19630eb755c77ea82197eceaf2a4e99"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline-focused.png",
+      "sha256": "c529c481e64646e9f4f6544519ce50efccfa46de1a508dd9a2a0a51cc4ea7ae6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.json",
+      "sha256": "c0ced5291a8e18e0d4884a206752dfddb0a9826f2b1017c96e40574da2385117"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.raw.txt",
+      "sha256": "c0ced5291a8e18e0d4884a206752dfddb0a9826f2b1017c96e40574da2385117"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.txt",
+      "sha256": "c0ced5291a8e18e0d4884a206752dfddb0a9826f2b1017c96e40574da2385117"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll-before.png",
+      "sha256": "06875aeecd89444f771d460dab585d3712a2acbcd4a050401dd084911920e04c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll-feedback-focused.png",
+      "sha256": "55e10a0253a019c6ff5c56b81427d604d25acefa16f783497a1e1cf216a3edcc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll-focused.png",
+      "sha256": "4f2b7cec7d23b1f182513feddb426b8dd4ed38e42ce389fc46572cba5ce59a66"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll-last-with-feedback.png",
+      "sha256": "10deaec2251059f7b9d0b77dfbf1934af0064fdb69c6fc48dadec929e55dfe7d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.json",
+      "sha256": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.raw.txt",
+      "sha256": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.txt",
+      "sha256": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready-interrupted.png",
+      "sha256": "2b197ddfe5293cee71f003910235696d6d8adf07a8bff939d559962586ab703c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.json",
+      "sha256": "cbbfa9e8830b46c5bce0e730987a3361605a8abc64944e9a0ca1d9d46dec48ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.raw.txt",
+      "sha256": "cbbfa9e8830b46c5bce0e730987a3361605a8abc64944e9a0ca1d9d46dec48ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.txt",
+      "sha256": "cbbfa9e8830b46c5bce0e730987a3361605a8abc64944e9a0ca1d9d46dec48ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence-before.png",
+      "sha256": "6316eeaf946d49c163a47bfe71fff7c570963c8e8dab590e7f215f5ae7ea3567"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence-feedback-focused.png",
+      "sha256": "9e220d7242a4affff6722069a996ee05cded1c80b088e03dee8ddb443a2d70ff"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence-focused.png",
+      "sha256": "6c6e369be79a3e94698affe6c7eb426926e82491bf9fccc2b5034228a9027af2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence-last-with-feedback.png",
+      "sha256": "4c89ce6f50049fbb1c329d918787b93768cf25c88e8971d4658640a24fefa6fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.json",
+      "sha256": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.raw.txt",
+      "sha256": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.txt",
+      "sha256": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first-interrupted.png",
+      "sha256": "20c72a3b1357fa47450b914a9571ddcb66ea5759dd9493a6c1de2b73ce964321"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.json",
+      "sha256": "eff04f3f913147fab062db8a540eda95afa5ac2cf317a24a7a2f00c464c09e08"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.raw.txt",
+      "sha256": "40ccbe2c2f042b22922192a1704be4fed3dc3ec20dd0b6c98db37540277bf06c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.txt",
+      "sha256": "40ccbe2c2f042b22922192a1704be4fed3dc3ec20dd0b6c98db37540277bf06c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/index.html",
+      "sha256": "d11c50096114b8f7f299e6bd24c686df2bba84f4e326fe868571cc188a4b4480"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/index.html.pre-format.raw.txt",
+      "sha256": "7dc6c978e7ffda0d07e9afbfb7bfe77792f1fd88e5dddb5c30235dfc76804443"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-chromium.png",
+      "sha256": "c86eb5234e659374e0c1e3ed48e3fa115d6e425725eefd6220ac5fe81259c999"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.json",
+      "sha256": "1f8e7ebb5c2b6082b833c1bf8b3b1bb2a7fe569d838fe4e132b6b485b68e5f89"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.raw.txt",
+      "sha256": "1f8e7ebb5c2b6082b833c1bf8b3b1bb2a7fe569d838fe4e132b6b485b68e5f89"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.txt",
+      "sha256": "46d1feeecafef2e4075b370a93eaaafa5fd8e0e7aa762d426757b0507fd74445"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-webkit.png",
+      "sha256": "1ccfffae09bdb3f56b9f5011ea0fccfb77b3aa9e13400fcdcb20fff386123e42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.json",
+      "sha256": "6f276c5288bea0ec0cffedaa3ea49fb5b17dca41a9be49253aa20f136d8e88e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.raw.txt",
+      "sha256": "6f276c5288bea0ec0cffedaa3ea49fb5b17dca41a9be49253aa20f136d8e88e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.txt",
+      "sha256": "acde8d16d399ac1de866801b89c8b67b1b2e384dbdfc1f263ff532aa376c4317"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/native-observation.json",
+      "sha256": "78262d32a100c4b2d002d705350bfe7ec7a1c12b02cad2700e44470835e5fa6d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/native-observation.raw.txt",
+      "sha256": "78262d32a100c4b2d002d705350bfe7ec7a1c12b02cad2700e44470835e5fa6d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-final.mjs",
+      "sha256": "7bf35cd57d2deefa350656e2eca608943ec7091ebe1a156dad35aa42b0f91f5b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-final.mjs.pre-format.raw.txt",
+      "sha256": "014a27fd3acb08c691204e21398d2b05c3287adb81e51ca226bc606bb4ff43c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-keyboard.mjs",
+      "sha256": "daeba3c23176bb52ed0de7fe37d64ca9d178ce035abe255f751fdc3d36326f79"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-keyboard.mjs.pre-format.raw.txt",
+      "sha256": "3ee12888b3bc6ce0e96fee6f18e07e451039ea856994e51521ee6cf7f42098b8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run.mjs",
+      "sha256": "0ff8f44c6c577fac739bb04a638ff7d885b21b1a33d4eeb392f96fbe2d63f687"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run.mjs.initial.raw.txt",
+      "sha256": "a0b395aaeda7aaacdfdb960366fec72f70eee31e291266727465ce05e19364b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run.mjs.pre-format.raw.txt",
+      "sha256": "a0b395aaeda7aaacdfdb960366fec72f70eee31e291266727465ce05e19364b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/serve.mjs",
+      "sha256": "223821fd4ba93ab9a768e8756feada4e7e69c2507843ce06af1a9903e1148e0e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/serve.mjs.pre-format.raw.txt",
+      "sha256": "90274e9536bf5a68fa0a8151cf5f2e669a5dcab78469c5db377d60aff66779a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/server.txt",
+      "sha256": "ea8a8a27c4b689c2964690cd7253d1751a7c5bd06dda81a8f6c69cdf6be41cce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-long-1280-feedback.png",
+      "sha256": "819f780d26afe5a29e11dacfeec70dbbce9b30431b92fc916fbbc70781915e01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-long-1280-final.png",
+      "sha256": "533d8b464019c87a8aeb2e34d29a0aeef37a4ca872435604837cc76289142072"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-long-900-feedback.png",
+      "sha256": "35660bdd19a990c1e86c3e13e01fddaebb31502047cfd47d03f8d4851030da46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-long-900-final.png",
+      "sha256": "1439a93bec634a9fbdcdc26027b4d25e496d02b5e3d609aa5ddfe427dfc5423b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-short-1280-feedback.png",
+      "sha256": "b0c403bb8b7df7896ffb64e38b45e74f8258fea6bf7494005bc268006d0e7bf2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-short-1280-final.png",
+      "sha256": "732fb1fbc2b3aeb0c643d6cf5cc68431f806ce2917a6300ff55123cfaefa43da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-short-900-feedback.png",
+      "sha256": "4ea6de5b3eb10dfaa2a30c022f9c24d8bdd299657cda199510bb930621b76655"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-short-900-final.png",
+      "sha256": "8d9e04dbf28c808885c36d6c5e2ae972e9172a014d2581d8855b5678d35eea55"
+    }
+  ]
+}

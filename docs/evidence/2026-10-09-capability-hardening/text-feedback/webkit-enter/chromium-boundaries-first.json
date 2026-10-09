@@ -1,0 +1,149 @@
+{
+  "engine": "chromium",
+  "before": "8f30a18efe0eeba5a8e47abb1c1720ce55098d5cac9cb543ce351378e9690a4a",
+  "checks": [
+    {
+      "scenario": "empty-selection",
+      "staged": {
+        "focused": "BUTTON:button:对此选段提意见",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "final": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 0,
+        "collapsed": true,
+        "text": "",
+        "anchor": null,
+        "anchorOffset": 0,
+        "focus": null,
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "passed": true
+    },
+    {
+      "scenario": "outside",
+      "staged": {
+        "focused": "BUTTON:button:对此选段提意见",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "final": {
+        "focused": "BUTTON::外部控件",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "passed": true
+    },
+    {
+      "scenario": "changed-before-confirm",
+      "staged": {
+        "focused": "BUTTON:button:对此选段提意见",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "final": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 1,
+        "collapsed": true,
+        "text": "",
+        "anchor": "#text",
+        "anchorOffset": 0,
+        "focus": "#text",
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "passed": true
+    },
+    {
+      "scenario": "changed-during-focus",
+      "staged": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 1,
+        "collapsed": true,
+        "text": "",
+        "anchor": "#text",
+        "anchorOffset": 0,
+        "focus": "#text",
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "final": {
+        "focused": "BODY::\n    当前原文测试选择原文后，可对此选段提意见。按行选择",
+        "rangeCount": 1,
+        "collapsed": true,
+        "text": "",
+        "anchor": "#text",
+        "anchorOffset": 0,
+        "focus": "#text",
+        "focusOffset": 0,
+        "confirmDisabled": true,
+        "confirmations": []
+      },
+      "passed": true
+    },
+    {
+      "scenario": "redirected-focus",
+      "staged": {
+        "focused": "BUTTON::外部控件",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "final": {
+        "focused": "BUTTON::外部控件",
+        "rangeCount": 1,
+        "collapsed": false,
+        "text": "第三行😀末尾\r\n",
+        "anchor": "#text",
+        "anchorOffset": 23,
+        "focus": "#text",
+        "focusOffset": 32,
+        "confirmDisabled": false,
+        "confirmations": []
+      },
+      "passed": false
+    }
+  ],
+  "errors": [],
+  "network": [],
+  "after": "8f30a18efe0eeba5a8e47abb1c1720ce55098d5cac9cb543ce351378e9690a4a"
+}

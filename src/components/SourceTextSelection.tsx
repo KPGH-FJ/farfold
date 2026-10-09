@@ -131,7 +131,26 @@ export function SourceTextSelection(props: SourceTextSelectionProps) {
   useLayoutEffect(() => {
     if (shownCandidate && focusAction.current) {
       focusAction.current = false;
-      action.current?.focus();
+      if (candidate.current !== shownCandidate) return;
+      const button = action.current;
+      if (!button || !validate(shownCandidate.range, shownCandidate.source)) {
+        publish(null);
+        return;
+      }
+      button.focus();
+      if (candidate.current !== shownCandidate) return;
+      // WebKit clears the page selection when a number input loses focus.
+      // Recheck the same candidate after our focus handoff, then display it.
+      // Ordinary empty selections still clear candidates in capture().
+      const next = validate(shownCandidate.range, shownCandidate.source);
+      const doc = pre.current?.ownerDocument;
+      const selection = doc?.getSelection();
+      if (!next || !selection || doc?.activeElement !== button) {
+        publish(null);
+        return;
+      }
+      selection.removeAllRanges();
+      selection.addRange(next.range);
     }
   }, [shownCandidate]);
   const available = props.enabled && shownCandidate?.source === props.source;
@@ -186,7 +205,6 @@ export function SourceTextSelection(props: SourceTextSelectionProps) {
                 return;
               }
               selection.removeAllRanges();
-              selection.addRange(next.range);
               focusAction.current = true;
               publish(next);
               setError(false);

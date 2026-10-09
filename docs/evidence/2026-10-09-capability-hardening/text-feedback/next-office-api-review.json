@@ -1,0 +1,192 @@
+{
+  "recordedAtUtc": "2026-10-09T23:00:13.186349+00:00",
+  "kind": "Read-only API and ownership review; implementation handoff, not an active plan",
+  "sourceBase": "7f3583c076bf1e5580815871a063959f349fa580",
+  "inputDesign": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/office-next-design.json",
+    "sha256": "7343ce916a5cfc93b1bdb5594cde2f111447a75646a520d3630aadf1b6631e93"
+  },
+  "conclusion": "Proceed first with existing XLSX cell and whole merged-range locations. No XLSX parser or Rust expansion is needed for this target. DOCX source-position production/validation can proceed independently, but its UI feedback cannot start from block-N/story-N. Keep arbitrary workbook rectangles and DOCX text/run/cell ranges outside the minimal first increment and explicitly unfinished.",
+  "confirmedEntrypoints": [
+    {
+      "file": "src/runtime/xlsx_parse.ts:192",
+      "fact": "Sheet id comes from the actual workbook sheet r:id and is resolved against its worksheet relationship. File version plus this id identifies the sheet; name/index alone cannot."
+    },
+    {
+      "file": "src/runtime/workbook_view.ts:49",
+      "fact": "WorkbookPosition separates displayed row/column from original merge bounds and hiddenAnchor. The view has an exact bounded window.positions list."
+    },
+    {
+      "file": "src/components/WorkbookFilePreview.tsx:465",
+      "fact": "Existing detail selection is a real WorkbookPosition. Selection currently resets on window/hidden changes; this is the place for a separate explicit feedback action."
+    },
+    {
+      "file": "src/runtime/docx_xml.ts:142",
+      "fact": "compatible returns original selected Choice/Fallback child node objects. A source map indexed before compatibility/filtering can retain their actual XML ancestor path."
+    },
+    {
+      "file": "src/runtime/docx_parse.ts:414",
+      "fact": "Supported paragraph/table branches still have their original DocxXml node and ctx.source part; this is where source metadata must be emitted."
+    },
+    {
+      "file": "src/runtime/docx_validation.ts:193",
+      "fact": "Worker response uses closed block/story key sets. New source fields must be explicitly checked before reaching the DOM; changing types/parser alone will fail this boundary."
+    },
+    {
+      "file": "src/components/DocxDocumentView.tsx:391",
+      "fact": "BlockSequence mounts a limited segment, Paragraph slices runs, and Table has a separate clipped view. UI segment/page numbers cannot become document source coordinates."
+    }
+  ],
+  "ownershipProposal": [
+    {
+      "ownerRole": "coordinate/persistence owner",
+      "exclusiveFiles": [
+        "src/runtime/workbook_feedback_target.ts (new)",
+        "src/runtime/workbook_feedback_target.test.ts (new)",
+        "src/runtime/office_feedback_target.ts (new shared callback types and dispatcher)",
+        "src/runtime/file_feedback_anchor.ts",
+        "src/runtime/feedback_strings.ts",
+        "src/runtime/file_feedback_anchor.office.test.ts (new)",
+        "src/runtime/office_feedback_persistence.test.ts (new)"
+      ],
+      "notes": "Own the union/parser/formatter insertion once for both formats. drafts.ts already uses FileFeedbackAnchor and normally needs no production change; retain existing unsent snapshot v1 and take behavior. Do not have the DOCX parser owner also edit the union."
+    },
+    {
+      "ownerRole": "XLSX component owner",
+      "exclusiveFiles": [
+        "src/components/WorkbookFilePreview.tsx",
+        "src/components/WorkbookFilePreview.test.tsx",
+        "src/components/WorkbookFilePreview.feedback.test.tsx (new)",
+        "src/runtime/workbook_strings.ts",
+        "src/components/WorkbookFilePreview.css (only if required)"
+      ],
+      "notes": "Use current loaded/capture/operation ownership and existing Grid detail. Add explicit cell/merged-range action; availability belongs to the actual current window and selected WorkbookPosition. No parser/source field work is required for XLSX."
+    },
+    {
+      "ownerRole": "DOCX source-position prerequisite owner, parallel with XLSX",
+      "exclusiveFiles": [
+        "src/runtime/docx_source_position.ts (new)",
+        "src/runtime/docx_source_position.test.ts (new)",
+        "src/runtime/docx_types.ts",
+        "src/runtime/docx_package.ts",
+        "src/runtime/docx_parse.ts",
+        "src/runtime/docx_validation.ts",
+        "src/runtime/docx_preview.ts",
+        "src/runtime/docx_source_wire.test.ts (new)"
+      ],
+      "notes": "Retain original part and bounded element-child path on supported blocks; add closed Worker validation and real worker fixture proof. docx_xml.ts need not change if the source map is built on cached part roots. Coordinate signature/type changes once before others consume them."
+    },
+    {
+      "ownerRole": "parent/root integrator",
+      "exclusiveFiles": [
+        "src/components/OpenedFileView.tsx",
+        "src/components/OpenedFileView.office-feedback.test.tsx (new)",
+        "src/runtime/file_open_strings.ts",
+        "src/runtime/strings.test.ts",
+        "src/components/FileFeedbackDrafts.tsx (only if presentation adaptation required)"
+      ],
+      "notes": "One shared Office availability/confirmation route; same file/version/thread checks, actual ready capture and current child owner, no replacement operation. Retained drafts and explicit whole-file retarget follow P21 text semantics. Keep OpenedFileView below 1500 lines; current inspected count1207."
+    },
+    {
+      "ownerRole": "DOCX component follow-up, after prerequisite DTO freezes",
+      "exclusiveFiles": [
+        "src/runtime/docx_feedback_target.ts (new)",
+        "src/runtime/docx_feedback_target.test.ts (new)",
+        "src/components/DocxFilePreview.tsx",
+        "src/components/DocxDocumentView.tsx",
+        "src/components/DocxDocumentView.feedback.test.tsx (new)",
+        "src/runtime/document_strings.ts"
+      ],
+      "notes": "Reuse the same parent contract after source metadata passes Worker validation. May be assigned to the XLSX component owner sequentially to avoid shared parent/type collisions. First only whole paragraph/table targets actually mounted."
+    }
+  ],
+  "minimalSharedApi": {
+    "anchors": {
+      "XlsxRangeAnchor": "{kind:'xlsx-range'; sheetId:string; sheetName:string; fromRow:number; toRow:number; fromColumn:number; toColumn:number}",
+      "DocxBlockAnchor": "{kind:'docx-block'; part:string; elementPath:readonly number[]; blockKind:'paragraph'|'table'}"
+    },
+    "transientTypes": {
+      "WorkbookFeedbackSource": "Opaque live factory object retaining exact file, successful preview/sheet and current window references. Construct using actual capture.file + parsed preview; retain no copied capture body. Recreate when sheet/window/showHidden changes.",
+      "DocumentFeedbackSource": "Opaque live factory object retaining exact successful DocxPreview and currently mounted source-backed supported block reference. A notice block cannot produce it.",
+      "OfficeFeedbackTarget": "{source:WorkbookFeedbackSource; anchor:XlsxRangeAnchor} | {source:DocumentFeedbackSource; anchor:DocxBlockAnchor}",
+      "callbacks": [
+        "onOfficeTargetAvailability(value:{source:OfficeFeedbackSource; available:boolean}):void",
+        "onOfficeTargetConfirm(value:OfficeFeedbackTarget):void"
+      ]
+    },
+    "runtimeFunctions": [
+      "createWorkbookFeedbackSource(capture, preview, window, showHidden, expectedFile): WorkbookFeedbackSource|null; caller supplies only current successful objects",
+      "workbookFeedbackTarget(source, position:WorkbookPosition): XlsxRangeAnchor|null; position must belong by reference to current window.positions; validate selected sheet and original merge membership",
+      "officeFeedbackTargetMatches(target:OfficeFeedbackTarget): boolean; checks coordinates against its live source, not source freshness or parent ownership",
+      "createDocumentFeedbackSource(preview, block): DocumentFeedbackSource|null; only a real parsed source-backed block of that preview",
+      "documentFeedbackTarget(source): DocxBlockAnchor|null"
+    ],
+    "parentResponsibility": "Tag withdrawal with retiring source. Confirm requires same registered source object, current thread/selection identity, same seven file fields/version, current child readiness/active/attempt and no in-flight replacement. A shape-valid anchor is never a current read receipt. Merely selecting a cell/block never mutates opinion target."
+  },
+  "xlsxDetails": {
+    "limits": "Rows1..1048576, columns1..16384, ordered inclusive range; sheetName bound128 as existing parser. relationship id bound must match existing XML attribute limit rather than restrict to rId followed by digits. Persist no value, formula, run or capture.",
+    "single": "Use actual visible empty or present cell coordinate. Numeric0/false/empty/missing-cache display state remains unchanged.",
+    "merged": "Use the exact original sheet.merges object, not clipped WorkbookPosition.row/column or visible spans. hiddenAnchor forbids feedback until explicit show-hidden. A clipped merge may target its whole original range only with an explicit whole-merge label and existing partial view warning.",
+    "rectangle": "Not needed for the requested first cell/merge slice. If subsequently included, require the full requested rectangle in current visible window, reject hidden gaps, define partial-merge policy explicitly; no auto-expansion or silent offscreen coverage."
+  },
+  "docxMetadata": {
+    "workerDelta": "Supported DocxParagraph/DocxTable gain source:{part:string;elementPath:number[]}; source on notice is invalid. Block kind is already in the discriminant; saved anchor copies it explicitly. Optionally add DocxStory.part for exact story display, but block source remains authoritative.",
+    "pathDefinition": "Zero-based index among actual XML element children, beginning at the parsed part root. The root itself is []; body/header/footer/note containers, ignored markers and Choice/Fallback wrappers remain in the path. XML comments/text nodes are not element children. Never derive from output order or decrement indices after filters.",
+    "implementation": "Build one bounded WeakMap from original node to {parent,index} when each cached part root is first read. Resolve/copy only emitted supported block paths by walking parents, O(nodes + emittedBlocks*depth). Do not copy a full path array onto every one of up to500000 raw nodes. Preserve original node identity through compatible().",
+    "validation": "Add closed source fields in checkedDocxDocument and call with the current capture part-name allowlist. Validate part against existing OPC rules (max1024, no absolute/traversal/backslash/percent/control forms), exact allowed captured part membership, array length at most existing depth64 and safe nonnegative indices bounded by nodes500000. Include total emitted coordinate indices/part-label budget. These are shape/membership checks, not independent reconstruction of the Worker tree; real Worker literal path tests supply the derivation proof.",
+    "wholeBlockBoundary": "Part/path permits whole supported paragraph/table even if its display is segmented/clipped; label that scope. Header/footer/footnote/endnote use actual part/container path; noteId is optional literal display context, never page placement. Unsupported notice or invisible block offers no action.",
+    "noBackendDelta": "Current VerifiedFile-bound DOCX capture already includes the source package parts. No new IPC, OS read, permission or Rust change is needed for coordinates."
+  },
+  "specificAcceptance": [
+    {
+      "domain": "xlsx",
+      "case": "Sheet directories with nonsequential arbitrary r:id and renamed/reordered tabs; id comes from actual parsed directory, same-path newfile with reused id invalidates old candidates."
+    },
+    {
+      "domain": "xlsx",
+      "case": "Visible empty cell,0,false,missing formula cache; clicked clipped merge retains original full bounds; hidden anchor cannot be silently selected."
+    },
+    {
+      "domain": "xlsx",
+      "case": "Candidate then change sheet/window/showHidden, hide/retry/refresh, or late old callback; no old coordinates saved. Pointer and real keyboard explicit actions preserve original opinion text."
+    },
+    {
+      "domain": "docx",
+      "case": "Equal text paragraphs separated by ignored bookmark/proof markers; emitted paths follow original XML element ordinals, not filtered block-N."
+    },
+    {
+      "domain": "docx",
+      "case": "AlternateContent chosen branch includes its wrapper path; body/header/footer and two notes with identical text yield distinct part/path; original note id remains literal."
+    },
+    {
+      "domain": "docx",
+      "case": "Long paragraph split and clipped/nested table target whole supported source block only; notice/hidden/unmounted content cannot produce a live target."
+    },
+    {
+      "domain": "shared",
+      "case": "Malformed future anchor/extra fields atomically reject cold snapshot; valid cold coordinates remain historical; one take preserves other drafts/attachments/pending queues and write failure does not overwrite saved original."
+    }
+  ],
+  "scopeDecisionsRetained": [
+    "This record refines the existing Office proposal; it is not authorization to edit current frozen source or a second active plan.",
+    "No Office editing, formula execution, external loading, Agent changes, body ledger, automatic sending or claims of Word/Excel screen-page fidelity.",
+    "No capability is marked implemented by this design. Browser/WK native readiness and actual pointer/input-Enter behavior must be tested separately; current native P21 Enter repair is higher priority."
+  ],
+  "sourceHashes": {
+    "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+    "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+    "src/runtime/workbook_view.ts": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129",
+    "src/components/WorkbookFilePreview.tsx": "b7fdaa790abc7e35c15c2a7395ed723ed279c4a6b9ca335196feb2dc248d8ca4",
+    "src/runtime/docx_types.ts": "16bea742e8cff97150ecbe98c7403df03ef93d125172bdcb0a67b140b0934c24",
+    "src/runtime/docx_xml.ts": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+    "src/runtime/docx_package.ts": "d05f6baced64a5bd8d60a96f2155a768866653d44f5e66744bcc08e1751d69e9",
+    "src/runtime/docx_parse.ts": "55a34ca12f9bade4fa1199a530e30498ce383ba73032cf73abfbfa4af8853cd4",
+    "src/runtime/docx_validation.ts": "6f4b3f1ea92bcf14f57c8fea573cbb6f1d73af15a1341ea54a7ee855a877d598",
+    "src/runtime/docx_preview.ts": "61f8fa651241a8193b7697c5c902ad6a4d9d15bd26ae648ac96be962fbbd445d",
+    "src/components/DocxDocumentView.tsx": "48d9d9582bd9c4d9580698c098d64d517475a571f4b8068ed4c2d06a150a33e9",
+    "src/components/DocxFilePreview.tsx": "5df10bbe06a6aa08da75107d90c216c423839c2424dd80782a1a703d37fabc3f",
+    "src/components/OpenedFileView.tsx": "9152f33eba0d8d458366bee976345e129c90f76fb2b4722ce1095e21f8e3417f",
+    "src/runtime/file_feedback_anchor.ts": "48535fcbb992954196066d2194cdf81442eb4ba39ba2374181509312f38bb9b3"
+  },
+  "productionChanged": false
+}

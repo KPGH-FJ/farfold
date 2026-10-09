@@ -1,0 +1,8 @@
+{
+  "ownedVitePid": 3651,
+  "terminate": "SIGTERM after all fixture runners exited",
+  "toolSessionExitCode": 143,
+  "remainingOwnedProcesses": [],
+  "port1462Listening": false,
+  "browserCleanup": "Every runner awaited browser.close() in finally; no persistent user profile was used."
+}

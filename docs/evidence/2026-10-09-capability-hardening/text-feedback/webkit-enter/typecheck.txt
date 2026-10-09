@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/SourceTextSelection.test.tsx(235,51): error TS2550: Property 'findLast' does not exist on type 'any[][]'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2023' or later.
+src/components/SourceTextSelection.test.tsx(236,7): error TS7031: Binding element 'name' implicitly has an 'any' type.
+ ELIFECYCLE  Command failed with exit code 1.

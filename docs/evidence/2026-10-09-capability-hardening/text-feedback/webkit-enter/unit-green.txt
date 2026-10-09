@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/SourceTextSelection.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  06:50:49
+   Duration  141ms (transform 51ms, setup 0ms, import 70ms, tests 9ms, environment 0ms)
+

@@ -1,0 +1,18 @@
+src/components/TextBlockPreview.css 14ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json 7ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.json 112ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.json 68ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-baseline.json 8ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.json 11ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-controls-ready.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.json 12ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-first.json 1ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.json 9ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.json 24ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/native-observation.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx 33ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/index.html 15ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-final.mjs 14ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-keyboard.mjs 6ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run.mjs 7ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/serve.mjs 1ms

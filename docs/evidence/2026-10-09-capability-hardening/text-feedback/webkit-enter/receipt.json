@@ -1,0 +1,249 @@
+{
+  "scope": "P21：修复数字输入框按 Return 提交按行选择后，WebKit 清空选区并撤回候选；只改共享组件和专属测试。",
+  "sealedAt": "2026-10-09T22:57:50.914636+00:00",
+  "status": "implemented_and_controlled_browser_verified_native_retest_pending",
+  "rootCause": {
+    "confirmed": "实际 WebKit 26.5：隐式 form submit 成功产生候选，但 number input 在 action.focus() 时 blur 清空 document Selection；之后 selectionchange rangeCount=0 撤回候选并禁用确认。按钮点击先完成 blur，所以同坐标可成功。",
+    "effectiveRed": "webkit-red.json：按钮对照通过；首输入、末输入、块输入 Enter 3 项失败。事件包括真实 keydown/keypress/submit/focus/selectionchange/keyup，未假定驱动错误。",
+    "sourceUnchangedDuringRed": true
+  },
+  "fix": [
+    "仅在按行候选的 layout focus 交接中装入可见 Range，submit 只撤旧选区并登记候选。",
+    "focus 前后核同一次候选对象，重新核当前 enabled/source、pre 全文和 DOM 端点，且焦点仍在确认按钮才展示选区。",
+    "没有放宽普通 rangeCount=0 门禁；未自动确认、修改意见或发送。"
+  ],
+  "secondaryCounterexample": {
+    "file": "chromium-boundaries-first.json",
+    "result": "4 绿 / 1 红：focus 中重定向到外部后，过早装入的选区被迟到 selectionchange 再接纳。",
+    "resolved": "装入 Range 移至交接成功后并补同候选引用守卫；同 runner 5/5 绿。"
+  },
+  "sourceHashes": {
+    "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+    "src/components/SourceTextSelection.test.tsx": "0ca1a0b7aaf6d2d8f5c0b106c3c1e0bf3eb4637bc7cf99ca7a7e32456514280a"
+  },
+  "tests": {
+    "effectiveUnitRed": "unit-red.txt：7 绿 / 1 红，预期 Range 长度 1，实际 0。",
+    "final": "targeted-final-handoff.txt：7 文件 / 73 项，exit 0。",
+    "typecheck": "typecheck-final-handoff.txt：全项目 exit 0。",
+    "scope": [
+      "SourceTextSelection.test.tsx",
+      "source_text_dom.test.ts",
+      "TextBlockPreview.test.tsx",
+      "text_feedback_range.test.ts",
+      "OpenedFileView.text-feedback.test.tsx",
+      "text_feedback_persistence.test.ts",
+      "strings.test.ts"
+    ]
+  },
+  "browser": {
+    "framework": "真实 React StrictMode 组件和 production styles；固定自创读取形状，无文件/Agent/持久化 IPC。",
+    "webkit": "bundled Playwright 1.62.1 的固定 WebKit 26.5 / revision 2336，mac-15-arm64；官网下载至独立 output，不改产品依赖/配置。",
+    "download": "https://cdn.playwright.dev/dbazure/download/playwright/builds/webkit/2336/webkit-mac-15-arm64.zip",
+    "chromium": "本机 Google Chrome，经 Playwright 独立临时 profile。",
+    "finalScenarioCount": 18,
+    "normalScenarios": [
+      {
+        "engine": "webkit",
+        "scenario": "click",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "webkit",
+        "scenario": "last-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "webkit",
+        "scenario": "first-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "webkit",
+        "scenario": "block-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 0,
+          "byteEnd": 22,
+          "startLine": 1,
+          "endLine": 1
+        }
+      },
+      {
+        "engine": "chromium",
+        "scenario": "click",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "chromium",
+        "scenario": "last-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "chromium",
+        "scenario": "first-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 25,
+          "byteEnd": 46,
+          "startLine": 3,
+          "endLine": 3
+        }
+      },
+      {
+        "engine": "chromium",
+        "scenario": "block-input-enter",
+        "candidateOnlyOnFirstEnter": true,
+        "secondEnterExactAnchor": {
+          "kind": "text-range",
+          "byteStart": 0,
+          "byteEnd": 22,
+          "startLine": 1,
+          "endLine": 1
+        }
+      }
+    ],
+    "boundaryScenarios": [
+      "主动清空 Selection",
+      "外部控件焦点",
+      "确认前正文变化",
+      "focus 中正文变化",
+      "focus 中重定向到外部"
+    ],
+    "networkAndPageErrors": 0,
+    "screenshotsViewed": [
+      "webkit-red-last-input-enter.png",
+      "webkit-green-last-input-enter.png",
+      "webkit-final-block-input-enter.png"
+    ],
+    "allBrowsersClosed": true,
+    "ownedViteStopped": true,
+    "cleanup": "cleanup.json"
+  },
+  "evidenceBoundaries": [
+    "不代表正式安装版本回归通过；root 仍须重新打包并在正式 WKWebView 验证。",
+    "未运行正式 Farfold、真实 Agent、用户账号或用户文件。",
+    "root 观察到的数值输入聚焦导致外层滚动，属于独立布局问题，本修复没有宣称解决。",
+    "fixture-import-failure 是首轮 harness 相对导入多一级，未进入产品测试，不计有效红。",
+    "typecheck.txt 为测试使用 findLast 超出项目 target 的中间错误；已换为既有语言级别实现，未更改编译配置。",
+    "既有组件/鼠标修复/独立回执均保留原 hash；本回执不覆盖旧结论。"
+  ],
+  "jsonRawPairs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries-first.json",
+      "sha256": "1c71e420403d9dc2c8fd5b79df433a351e4766dc35fcce350f9a888b99ce9ed5",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries-first.raw.txt",
+      "rawSha256": "1c71e420403d9dc2c8fd5b79df433a351e4766dc35fcce350f9a888b99ce9ed5",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-green.json",
+      "sha256": "b72b472066ad3513e7dd04b5a4666f4a844e7f84798f9fe773c3841d3518a502",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-green.raw.txt",
+      "rawSha256": "b72b472066ad3513e7dd04b5a4666f4a844e7f84798f9fe773c3841d3518a502",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries.json",
+      "sha256": "7e0be13de19759bbd8dd76854d93e4793f1b2d0b7a6757d7f2d6a970c6df670d",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries.raw.txt",
+      "rawSha256": "7e0be13de19759bbd8dd76854d93e4793f1b2d0b7a6757d7f2d6a970c6df670d",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-red.json",
+      "sha256": "7656c11bec915798eae49c4f9433e28676395b4509b2691e3630e110c7d5d8c4",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-red.raw.txt",
+      "rawSha256": "7656c11bec915798eae49c4f9433e28676395b4509b2691e3630e110c7d5d8c4",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries.json",
+      "sha256": "93743f9c89b3a75ef4cffcece1c48acb3fb0720af48aae2e57ee7ef232b27968",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries.raw.txt",
+      "rawSha256": "93743f9c89b3a75ef4cffcece1c48acb3fb0720af48aae2e57ee7ef232b27968",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-green.json",
+      "sha256": "a27d3016ddc0563dcf7877fa0b527093671a09f582ed442a0e78162da143e6d0",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-green.raw.txt",
+      "rawSha256": "a27d3016ddc0563dcf7877fa0b527093671a09f582ed442a0e78162da143e6d0",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture-import-failure.json",
+      "sha256": "78663fa0b406d53e9d5ca724fbcc929796d5d750be08a7f587c06eb940e56ca4",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture-import-failure.raw.txt",
+      "rawSha256": "78663fa0b406d53e9d5ca724fbcc929796d5d750be08a7f587c06eb940e56ca4",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-final.json",
+      "sha256": "1ed1de0449f365ecfc40cd5227856588cbc19b46d6352ec6c85dc8a18530a75e",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-final.raw.txt",
+      "rawSha256": "1ed1de0449f365ecfc40cd5227856588cbc19b46d6352ec6c85dc8a18530a75e",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-final.json",
+      "sha256": "c748bc1cc1a9dc52f240c3500e52b0b3e37662872f6bb13da96e0c1e498610f2",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-final.raw.txt",
+      "rawSha256": "c748bc1cc1a9dc52f240c3500e52b0b3e37662872f6bb13da96e0c1e498610f2",
+      "semanticMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries-first.json",
+      "sha256": "2ae5c6d7637482f16ff7a1d6c2be907f96f5796e7c1837fd649137aea0c2df8a",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries-first.raw.txt",
+      "rawSha256": "2ae5c6d7637482f16ff7a1d6c2be907f96f5796e7c1837fd649137aea0c2df8a",
+      "semanticMatch": true
+    }
+  ],
+  "artifacts": {
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture.tsx": "29bfb3d2b2818b774ca39e97a1b5d9aff0f236411e2f2557f6cdd7c3ac9b21bd",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/run.mjs": "d6efe7e09dd48d2a59bf9e92a6c85f801664bb88efc545e720b4196e5b9b1423",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/boundaries.mjs": "71de3121462f1c52950fa28460d2b2fbf1d88ba3343a87a68002ca417c710401",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/serve.mjs": "1b73a7426f455c9e9fd5924966055b438f1b2c63cd693e039d232f714995c770",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/unit-red.txt": "8e80ff5c3732bc4b25c1470ae0116a1faace4da7a74509fa26aa7f7078cab40d",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/targeted-final-handoff.txt": "9d25e8b092d650549516b5da09619d8e92ebe2edff7e42dd65fd1cb2ff412837",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/typecheck-final-handoff.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/cleanup.json": "35bc11f58645c3d67fdbd4156f9314e5a902de8f4af76591992f6926ed60e697"
+  }
+}

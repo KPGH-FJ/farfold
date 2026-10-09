@@ -1,0 +1,8 @@
+Owned full-app layout Vite PID 6712
+6:58:28 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+6:59:31 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+7:00:38 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+7:01:39 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+7:04:06 AM [vite] (client) hmr update /src/components/TextBlockPreview.css
+7:04:42 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx
+7:05:31 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx

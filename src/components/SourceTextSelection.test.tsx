@@ -72,9 +72,13 @@ const pre = {
   },
   contains: (v: unknown) => v === node || v === pre,
 };
+let clearSelectionOnFocus = false;
+let afterFocus: (() => void) | null = null;
 const action = {
   focus: () => {
+    if (clearSelectionOnFocus) ranges = [];
     doc.activeElement = action;
+    afterFocus?.();
   },
 };
 const container = {
@@ -161,6 +165,8 @@ beforeEach(() => {
   h.slots = [];
   h.effects = [];
   ranges = [];
+  clearSelectionOnFocus = false;
+  afterFocus = null;
   doc.activeElement = null;
   props = {
     source: source(),
@@ -213,6 +219,56 @@ it("keyboard line controls produce a real range and focus the separate confirmat
   expect(props.onConfirm).not.toHaveBeenCalled();
   expect(confirm(nodes).props.disabled).toBe(false);
 });
+it("restores the chosen DOM range after WebKit clears selection while a number input loses focus", () => {
+  render();
+  for (const index of [0, 1]) {
+    const input = render().filter((n) => n.type === "input")[index];
+    (input.props.onChange as (e: unknown) => void)({ target: { value: "2" } });
+  }
+  clearSelectionOnFocus = true;
+  const form = render().find((n) => n.type === "form")!;
+  (form.props.onSubmit as (e: unknown) => void)({ preventDefault: vi.fn() });
+  render();
+  expect(ranges).toHaveLength(1);
+  expect(ranges[0].startOffset).toBe(5);
+  expect(ranges[0].endOffset).toBe(props.source.text.length);
+  const capture = [...doc.addEventListener.mock.calls]
+    .reverse()
+    .find(([name]) => name === "selectionchange")![1] as () => void;
+  capture();
+  expect(confirm().props.disabled).toBe(false);
+  expect(doc.activeElement).toBe(action);
+  expect(props.onConfirm).not.toHaveBeenCalled();
+  (confirm().props.onClick as () => void)();
+  expect(props.onConfirm).toHaveBeenCalledOnce();
+});
+it.each(["changed DOM", "redirected focus", "withdrawn candidate"])(
+  "does not restore a line candidate after %s during the focus handoff",
+  (cause) => {
+    render();
+    clearSelectionOnFocus = true;
+    afterFocus = () => {
+      if (cause === "changed DOM") node.textContent = "different";
+      else if (cause === "redirected focus") doc.activeElement = {};
+      else {
+        const blur = [...doc.defaultView.addEventListener.mock.calls]
+          .reverse()
+          .find(([name]) => name === "blur")![1] as () => void;
+        blur();
+      }
+    };
+    const form = render().find((n) => n.type === "form")!;
+    (form.props.onSubmit as (e: unknown) => void)({ preventDefault: vi.fn() });
+    render();
+    expect(ranges).toHaveLength(0);
+    const capture = [...doc.addEventListener.mock.calls]
+      .reverse()
+      .find(([name]) => name === "selectionchange")![1] as () => void;
+    capture();
+    expect(confirm().props.disabled).toBe(true);
+    expect(props.onConfirm).not.toHaveBeenCalled();
+  },
+);
 it("a late action cannot confirm after hide or replacement with the same text", () => {
   render();
   const old = confirm(select(5, 7));

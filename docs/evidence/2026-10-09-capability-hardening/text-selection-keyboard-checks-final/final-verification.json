@@ -1,0 +1,81 @@
+{
+  "checkedAtUtc": "2026-10-09T23:11:37.232979+00:00",
+  "sourceBase": "7f3583c076bf1e5580815871a063959f349fa580",
+  "inputCount": 1116,
+  "sourceStable": true,
+  "changedInputsSinceFullFrontendCheck": [
+    "src/components/TextBlockPreview.css"
+  ],
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/receipt.json",
+    "sha256": "6afc8a426151c86bfcdb35eb891b040f798d4797571c1dbcde72ee321adf5bfa"
+  },
+  "originalFormatFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/format-receipt.json",
+    "sha256": "89d6543767e904809b8f830125e9bc89d253448b7f0845275532bda7399dfcfb"
+  },
+  "checks": [
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/build.txt",
+      "sha256": "f8b69128dcebd943024bfaba634a7b263e55840ea9b8819a5bf6805920b7641a"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 31.976,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/frontend.txt",
+      "sha256": "97275ea10d79be275a6440bd95fd850bad496ea1b8f22de88419cdcbfa6af8eb",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 17.751,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Engineering checks only. CSS was rebuilt; unchanged frontend/type/Rust results are explicitly reused. Original in-progress evidence formatting failure remains retained. Controlled-browser and native receipts are separate."
+}

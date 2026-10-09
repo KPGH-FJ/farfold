@@ -1,0 +1,78 @@
+{
+  "checkedAtUtc": "2026-10-09T22:57:26.137623+00:00",
+  "sourceBase": "7f3583c076bf1e5580815871a063959f349fa580",
+  "inputCount": 1116,
+  "sourceStable": true,
+  "formatDeferredUntilEvidenceFreeze": true,
+  "changedInputsFromPreviousCheck": [
+    "src/components/SourceTextSelection.test.tsx",
+    "src/components/SourceTextSelection.tsx"
+  ],
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "exitCode": 0,
+      "seconds": 31.976,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/frontend.txt",
+      "sha256": "97275ea10d79be275a6440bd95fd850bad496ea1b8f22de88419cdcbfa6af8eb",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "seconds": 17.751,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "exitCode": 0,
+      "seconds": 7.258,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/build.txt",
+      "sha256": "ef08c50c1027929d7745036b2e7cdd3050f1310a5c0e36212fcb4c6537c9013b",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs."
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Frontend source and test checks rerun; identical Rust checks explicitly reused. Whole-repository formatting is deferred until concurrent evidence writers finish and is not included in allPassed here. No installed interaction or real Agent claim."
+}

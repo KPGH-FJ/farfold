@@ -1,0 +1,13 @@
+{
+  "checkedAtUtc": "2026-10-09T22:52:29.454542+00:00",
+  "issueId": "NEW-02",
+  "sourceCommit": "cd66aae74480a2f30a982775adafbfbb6562ec32",
+  "observedBy": "root via native cua_repl AX and screenshots",
+  "status": "observed_not_yet_localized",
+  "context": "Formal macOS app, controlled P21 conversation, two joined unsent feedback messages in composer; large file block 2; numeric end-line input focused through AX click.",
+  "before": "Window screenshot had navigation logo and top toolbar visible; input had not been focused.",
+  "after": "Whole web content visually shifted upward around 290 screenshot pixels, including left navigation and top conversation toolbar. macOS title bar remained. Input showed caret and focus ring; lower empty area appeared.",
+  "evidenceBoundary": "Viewed actual tool screenshot, not standalone exported image. Unknown whether app layout, WebKit focus scroll, or automation-specific interaction contributed. Not equated with separately reproduced Enter-selection failure.",
+  "originalUserDataChanged": false,
+  "investigation": "Independent verification agent to compare full-app layout and controlled WebKit; source not changed for this observation."
+}

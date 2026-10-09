@@ -1,0 +1,77 @@
+{
+  "reviewedAt": "2026-10-09T23:12:07.844687+00:00",
+  "reviewer": "architecture independent read-only review",
+  "status": "no_blocking_findings_in_reviewed_new02_fix",
+  "scope": "仅 TextBlockPreview.css 的 min-height:0 / overflow:auto，以及既有完整 App 受控浏览器结果；没有重跑浏览器/工程检查或操作正式应用。",
+  "ownerReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json",
+    "sha256": "e3ddc66e8d7881e4594460150e4b40d2da5dda45bf6ce1a2b4d12f31a08a7519"
+  },
+  "sourceHashes": {
+    "src/App.tsx": "66b6ef0729e07736d7ea9d39fd05fd0b8584d3c97ce5fecb36dbc95774ed75e0",
+    "src/components/ThreadPage.tsx": "ccdc0618c3355575a859c0ce8d2fdcae56a9ffbe4d7ddfcd2f913f1d18d20a5d",
+    "src/components/ThreadView.tsx": "d7a41fddde72901da4bf983c5e1db7f6ec0a481e0740606959b4d55d13adfa06",
+    "src/components/Composer.tsx": "840e4cc70329eaa7adc04fe90a18a0067aae13e54873685511d8936623025075",
+    "src/components/ArtifactPane.tsx": "cfed4403a9070469930c66c8388709b62625f74f39627390d49ea0bbdb483c33",
+    "src/components/OpenedFileView.tsx": "9152f33eba0d8d458366bee976345e129c90f76fb2b4722ce1095e21f8e3417f",
+    "src/components/TextBlockPreview.tsx": "2796f949a58f757cce453f8f0ee482b0af25727ae4d3079dba6895337ad52977",
+    "src/components/TextBlockPreview.css": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7",
+    "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+    "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8",
+    "src/styles.css": "348b4467d75e40afeab15495360243fe6e7ef626c683e265323f37bdcbda2d19",
+    "src/styles-settings.css": "b94f0e508f2d6122dc5ff64ce08fe339a058f9c3ef334c9d8e432adaef781325",
+    "src/styles-content.css": "063be3a6a9e860567d872b0a75e9d2afddb795ed51a78bcd8c47ef8b2377f441",
+    "src/styles-thread.css": "f91a36084736da8c983d1bd4ec99f30bb907753cc920478e17227956424dfb01",
+    "src/styles-artifact.css": "577f12c405866c85a96f776d3bca14f179c5d3d1aa631a18f8fff3b5b16cd780",
+    "src/product-shell.css": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8",
+    "src/conversation-workspace.css": "a6f6f686ff0031ba66a54dee3b198ea3a552fb3641e5c0546c914cb8fc3839f2",
+    "src/history-import.css": "4b0e1971afcfe8f5ca11d753377d10ce14a6739b2fd649d59e3aa4a00060bdc1",
+    "src/desktop-workbench.css": "4ea973fb9582c3abe5eee7d966e1e22a788207102997985306d14881cb137609"
+  },
+  "minimalDiffVerified": "相对 HEAD，TextBlockPreview.css 唯一变化是 .text-block-preview 新增两条声明，全部其他字节不变。未改键盘交互或全局 body/root 样式。",
+  "layoutReview": [
+    "长文本 section 是 OpenedFileView flex 列的直接子项；旧 min-height:auto + overflow:visible 无法为下方不收缩的意见区让出空间。上级 min-height:0 不会自动消除该子项的自然最小高度。",
+    "新增 min-height:0 允许 section 缩至剩余高度，overflow:auto 将内容保留在该区域可滚动，而不是把溢出传播到 HTML 根。现有 pre 的局部滚动、tabIndex 和原文保持。",
+    "短文本使用既有 .artifact-file-content 的独立滚动，新增选择器不作用于其容器；意见区、头部和根区域未被隐藏裁切。",
+    "fixture 导入真实 App，其生产 ThreadPage/ThreadView/Composer/ArtifactPane/OpenedFileView/TextBlockPreview 路径实际挂载；全局 CSS 顺序与 main.tsx 一致。绕过 StorageStartup/DraftStartup 并以内存状态/IPC替身准备数据，不能称真实启动或文件读取证明。"
+  ],
+  "evidenceChecked": {
+    "hashCounts": {
+      "productionFiles": 19,
+      "ownerEvidenceReferences": 80,
+      "jsonRawSemanticPairs": 11
+    },
+    "redCounterfactual": "旧生产输入前后及两次对照相同；有效红在意见 textarea 自动聚焦后 windowY=296、appY=-296、documentHeight=1116/viewport820。之前数字输入直接聚焦 windowY=0，不以其代替有效红。仅注入相同两条规则的对照全程 windowY=0/document820。",
+    "productionFinal": "最终 19 个输入与当前源一致且执行前后稳定；WebKit 与 Chromium 各 4 场景/72 断言全部通过，覆盖 1280×820 和 900×620 的长块/短文、焦点、局部滚动、复制参数、导航、意见保留及仅加入一次。原始错误和阻断外部请求数组均为空。",
+    "keyboardFinal": "两引擎窄窗各 6 断言通过：Tab 保持局部、数字 Enter 候选交接、意见阶段、pre 焦点与 PageDown 局部滚动及返回片段控件。总计 10 场景/156 断言，不宣称全部可访问性或所有视口组合已验证。",
+    "keyboardHarnessCorrection": "keyboard-first 的 WebKit 失败来自假定 Tab 必到按钮；真实焦点落在可聚焦 pre，根位置仍正常。最后只改夹具预期为本区非输入控件并明确重新聚焦数字框进行 Enter；没有为此改生产或把该失败记作产品红。",
+    "formatBoundary": "原始 JSON 保留为 raw，11 对独立解析语义相同；已读格式化 AST 对照记录，未再次执行浏览器。",
+    "cleanupBoundary": "最终 cleanup 准确记录自有服务器 SIGTERM 后 exit143，而非初稿 exit0；保留原初稿。没有据此声称操作过正式应用。"
+  },
+  "screenshotsPersonallyViewed": [
+    "full-app-feedback-sequence-feedback-focused.png",
+    "webkit-long-900-feedback.png"
+  ],
+  "evidenceHashes": {
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence.json": "c3e107c0f87a04ab7f994e46fdb9c749afe985121dd73f55331135d1b02a0daf",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-candidate-scroll.json": "76da341648b28cab1eca61d0af7e4c5eb3a8b9a9db62e73a0d0356574c2f594a",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-webkit.json": "82b734264b85a5ca4cee00959ad5490181d9fab2f849c88e9ca4aa5d3ff9629d",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/final-chromium.json": "66b50742ce61c3e4912c6e114b50b8f794e2fe15b2b5ff9506fce5afcb84f5a9",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard.json": "6f276c5288bea0ec0cffedaa3ea49fb5b17dca41a9be49253aa20f136d8e88e4",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/keyboard-first.json": "1f8e7ebb5c2b6082b833c1bf8b3b1bb2a7fe569d838fe4e132b6b485b68e5f89",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/fixture.tsx": "673fea2f9003af077db53ba9621f227fd4fadc6e9fbc5c30474d405099a41355",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-final.mjs": "7bf35cd57d2deefa350656e2eca608943ec7091ebe1a156dad35aa42b0f91f5b",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/run-keyboard.mjs": "daeba3c23176bb52ed0de7fe37d64ca9d178ce035abe255f751fdc3d36326f79",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/format-structure.json": "6c0375fe890fcb1e71948239944f057df88c6f165b5bd065abe86dc3b435f78a",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json": "9af01f332ebd02a5e58f20ccd055dd1030f843cc59a045d5ac3cda6fa4373bfb",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/full-app-feedback-sequence-feedback-focused.png": "9e220d7242a4affff6722069a996ee05cded1c80b088e03dee8ddb443a2d70ff",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/webkit-long-900-feedback.png": "35660bdd19a990c1e86c3e13e01fddaebb31502047cfd47d03f8d4851030da46"
+  },
+  "remainingBoundaries": [
+    "正式已安装 cd66 的原问题由 root 观测；本 reviewer 没有亲历其像素。受控复现明确触发于意见框聚焦，不反推正式当时全部事件顺序。",
+    "正式修复候选的 WKWebView 安装后复验仍待 root；本结论不替代正式包、数据保留或真实用户旅程。",
+    "当前复制测试只核传给受控 clipboard API 的完整片段；不证明系统剪贴板集成。文件、持久化与 Agent IPC 均为受控替身，没有真实 Agent 发送。",
+    "全仓工程整合由 root 执行，本次没有重新运行；后续源变化需要对应增量复核。"
+  ],
+  "writes": "仅本 independent-review.json；源、原始日志、owner receipt 与既有独立回执均未改动。"
+}

@@ -2,7 +2,7 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：文字选段分项实测，修正行号 Enter 选择
+## 当前衔接：选段与局部滚动修复已测，待正式复验
 
 当前正式应用为 `cd66aae7` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`；P21候选独立9/9、安装前后三份217,400条数据一致，[实机初轮](text-feedback-candidate/installed-text-feedback-initial.json)已完成分项核验，行号Enter失选待修。前一版本 `e8d76d4c` 的[修复复验](inspection-limit-candidate/installed-inspection-limit.json)确认大小限制提示、无效编码独立提示及16 MiB首段读取正常。候选独立核验9/9、安装10/10，三份217,400条数据一致；正常退出后原7项未发内容保持，无新Agent请求或权限变更。重复应用产物已精确移除。原[初轮失败](large-file-candidate/installed-large-file-initial.json)保留。前一P20版本 `fa235998` 的[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
 
@@ -135,3 +135,5 @@ P09 用户模板已补创建、编辑、保存、删除和加入当前草稿，�
 第五片实机增量：[模板](fifth-candidate/installed-templates.json)创建/编辑/保存/复用、关闭和重启恢复、已有文字及附件保留且不自动发送；[预览](fifth-candidate/installed-visual-preview.json)临时受控副本显示两页图文、Type3中文单字与PNG，密码和损坏文件有反馈。桌面路径在文件读取阶段15秒返回等待提示，系统记录匹配当前正式进程的桌面文件夹授权等待，尚未解决；临时副本成功不关闭NEW-01，也不证明普通中文字体或Office。新增一段自有检查对话，正式侧112段，未扩大Agent或系统权限。接续P12查找折叠内容及P35已加载对话导出保真。
 
 第五片验证后已正常退出，精确正式进程与浏览器助手均为0。通过安装前备份与退出后私有捕获副本只读比较，原3条输入、1组文件反馈、3组待发共7项逐值不变；未将真实请求产生的新对话或用量变化误报为“全数据未变”。当前正式版仍为ce9659d1，P12/P35开发与定向验证进行中。
+
+文字选段实机后的修复：行号Enter焦点交接与大文件预览局部滚动已完成，分别有[独立键盘复核](text-feedback/webkit-enter/independent-review.json)和[完整App原反例及156项检查](text-feedback/native-scroll-review/receipt.json)。[最终整合](text-selection-keyboard-checks-final/final-verification.json)七项要求具备成功证据，前端3,349项、1,116输入保持；最终仅CSS增量，打包和全仓格式重跑，其余相同输入结果复用。正式应用仍为cd66，不把工程结果记作已安装；下一步替换并重测真实WKWebView。

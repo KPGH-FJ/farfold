@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/SourceTextSelection.test.tsx" "src/components/source_text_dom.test.ts" "src/components/TextBlockPreview.test.tsx" "src/runtime/text_feedback_range.test.ts" "src/components/OpenedFileView.text-feedback.test.tsx" "src/runtime/text_feedback_persistence.test.ts" "src/runtime/strings.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  7 passed (7)
+      Tests  72 passed (72)
+   Start at  06:53:23
+   Duration  1.05s (transform 1.03s, setup 0ms, import 1.49s, tests 840ms, environment 0ms)
+

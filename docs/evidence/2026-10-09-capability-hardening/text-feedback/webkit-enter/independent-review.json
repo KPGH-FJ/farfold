@@ -1,0 +1,156 @@
+{
+  "reviewedAt": "2026-10-09T23:05:03.903085+00:00",
+  "reviewer": "architecture independent read-only review",
+  "status": "no_blocking_findings_in_reviewed_keyboard_fix",
+  "scope": "仅 SourceTextSelection 按行选择的键盘焦点交接最小修复、专属测试及已存在的受控浏览器证据；没有执行新测试或操作正式应用。",
+  "productReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/receipt.json",
+    "sha256": "02bc0346c24205fc88e1a58f4f50d24b3f365b98e5e43a83ceec6a2f4af4e03a",
+    "note": "此前报告的 02bc0346c24205fc88e1a58f4f50d24b3f365b98e5e43a83ceec6a2f4af4e03a 属于产品 owner 的 receipt.json，不是本独立审查文件。"
+  },
+  "sourceHashes": {
+    "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+    "src/components/SourceTextSelection.test.tsx": "0ca1a0b7aaf6d2d8f5c0b106c3c1e0bf3eb4637bc7cf99ca7a7e32456514280a"
+  },
+  "codeReview": [
+    {
+      "path": "src/components/SourceTextSelection.tsx",
+      "lines": "61-74, 131-155",
+      "finding": "focus 前后检查同一个候选对象；validate 重读当前 enabled、source 引用、pre 全文和 DOM 端点，focus 后还要求焦点仍属于确认按钮。只有交接成功才放入 Range。未放宽普通 rangeCount=0 的撤回规则。"
+    },
+    {
+      "path": "src/components/SourceTextSelection.tsx",
+      "lines": "107-130, 164-170, 182-212, 267-285",
+      "finding": "source/enabled 切换与离开会撤回；form submit 只登记候选，确认按钮仍再次校验后调用 onConfirm。失效候选不能因旧焦点交接重新进入。"
+    },
+    {
+      "path": "src/components/SourceTextSelection.test.tsx",
+      "lines": "222-271",
+      "finding": "新增受控 WebKit 风格失焦清空 Selection 回归，以及 focus 中正文变化、焦点重定向和候选撤回反例；保留原选择及隐藏换源断言。"
+    }
+  ],
+  "evidenceReview": {
+    "performed": "读取最终 diff、完整相关组件与 DOM helper、浏览器 runner/fixture 和原始结果；独立重算 2 个源码及 8 个 artifact SHA，核 10 组 JSON/raw SHA 与语义一致。",
+    "effectiveRed": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-red.json",
+        "summary": "原实现按钮对照通过；首输入、末输入和块输入 Enter 三项失败。"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries-first.json",
+        "summary": "中间修复四项通过，一项 focus 重定向后迟到 selectionchange 重新接纳失败。此失败没有混入最终通过结论。"
+      }
+    ],
+    "finalBrowsers": "直接核对 WebKit/Chromium 各 4 项原始结果：第一次操作没有确认，第二次显式 Enter 各仅产生一个准确 anchor，之后按钮禁用；两引擎各 5 项撤回边界通过，共 18 个受控场景。source before/after 均为最终源码；这些最终结果中错误及外部网络记录为空。",
+    "expectedAnchors": {
+      "ordinaryLine3": {
+        "kind": "text-range",
+        "byteStart": 25,
+        "byteEnd": 46,
+        "startLine": 3,
+        "endLine": 3
+      },
+      "authoredBlockLine1": {
+        "kind": "text-range",
+        "byteStart": 0,
+        "byteEnd": 22,
+        "startLine": 1,
+        "endLine": 1
+      }
+    },
+    "existingTargetedLog": "targeted-final-handoff.txt：7 文件 / 73 项通过；typecheck-final-handoff.txt 全项目类型检查通过。均为 owner 已运行的原始日志，本次未重复执行。",
+    "artifacts": {
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture.tsx": "29bfb3d2b2818b774ca39e97a1b5d9aff0f236411e2f2557f6cdd7c3ac9b21bd",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/run.mjs": "d6efe7e09dd48d2a59bf9e92a6c85f801664bb88efc545e720b4196e5b9b1423",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/boundaries.mjs": "71de3121462f1c52950fa28460d2b2fbf1d88ba3343a87a68002ca417c710401",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/serve.mjs": "1b73a7426f455c9e9fd5924966055b438f1b2c63cd693e039d232f714995c770",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/unit-red.txt": "8e80ff5c3732bc4b25c1470ae0116a1faace4da7a74509fa26aa7f7078cab40d",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/targeted-final-handoff.txt": "9d25e8b092d650549516b5da09619d8e92ebe2edff7e42dd65fd1cb2ff412837",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/typecheck-final-handoff.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/cleanup.json": "35bc11f58645c3d67fdbd4156f9314e5a902de8f4af76591992f6926ed60e697"
+    },
+    "jsonRawPairs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries-first.json",
+        "sha256": "1c71e420403d9dc2c8fd5b79df433a351e4766dc35fcce350f9a888b99ce9ed5",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries-first.raw.txt",
+        "rawSha256": "1c71e420403d9dc2c8fd5b79df433a351e4766dc35fcce350f9a888b99ce9ed5",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-green.json",
+        "sha256": "b72b472066ad3513e7dd04b5a4666f4a844e7f84798f9fe773c3841d3518a502",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-green.raw.txt",
+        "rawSha256": "b72b472066ad3513e7dd04b5a4666f4a844e7f84798f9fe773c3841d3518a502",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries.json",
+        "sha256": "7e0be13de19759bbd8dd76854d93e4793f1b2d0b7a6757d7f2d6a970c6df670d",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-boundaries.raw.txt",
+        "rawSha256": "7e0be13de19759bbd8dd76854d93e4793f1b2d0b7a6757d7f2d6a970c6df670d",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-red.json",
+        "sha256": "7656c11bec915798eae49c4f9433e28676395b4509b2691e3630e110c7d5d8c4",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-red.raw.txt",
+        "rawSha256": "7656c11bec915798eae49c4f9433e28676395b4509b2691e3630e110c7d5d8c4",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries.json",
+        "sha256": "93743f9c89b3a75ef4cffcece1c48acb3fb0720af48aae2e57ee7ef232b27968",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries.raw.txt",
+        "rawSha256": "93743f9c89b3a75ef4cffcece1c48acb3fb0720af48aae2e57ee7ef232b27968",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-green.json",
+        "sha256": "a27d3016ddc0563dcf7877fa0b527093671a09f582ed442a0e78162da143e6d0",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-green.raw.txt",
+        "rawSha256": "a27d3016ddc0563dcf7877fa0b527093671a09f582ed442a0e78162da143e6d0",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture-import-failure.json",
+        "sha256": "78663fa0b406d53e9d5ca724fbcc929796d5d750be08a7f587c06eb940e56ca4",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/fixture-import-failure.raw.txt",
+        "rawSha256": "78663fa0b406d53e9d5ca724fbcc929796d5d750be08a7f587c06eb940e56ca4",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-final.json",
+        "sha256": "1ed1de0449f365ecfc40cd5227856588cbc19b46d6352ec6c85dc8a18530a75e",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-final.raw.txt",
+        "rawSha256": "1ed1de0449f365ecfc40cd5227856588cbc19b46d6352ec6c85dc8a18530a75e",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-final.json",
+        "sha256": "c748bc1cc1a9dc52f240c3500e52b0b3e37662872f6bb13da96e0c1e498610f2",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/webkit-final.raw.txt",
+        "rawSha256": "c748bc1cc1a9dc52f240c3500e52b0b3e37662872f6bb13da96e0c1e498610f2",
+        "semanticMatch": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries-first.json",
+        "sha256": "2ae5c6d7637482f16ff7a1d6c2be907f96f5796e7c1837fd649137aea0c2df8a",
+        "raw": "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/chromium-boundaries-first.raw.txt",
+        "rawSha256": "2ae5c6d7637482f16ff7a1d6c2be907f96f5796e7c1837fd649137aea0c2df8a",
+        "semanticMatch": true
+      }
+    ]
+  },
+  "reviewScriptCorrection": {
+    "initialResult": "首次只读校验脚本在读取 raw confirmed.confirmations 时假定每项为 {anchor: ...}，实际 fixture 保存直接 anchor 对象，触发 KeyError: anchor。",
+    "correction": "查明真实 fixture push(value.anchor) 及 raw 结构后，仅修改独立校验脚本的取值方式；再次核对所有源哈希、raw 对、18 项结果和准确坐标均通过。",
+    "classification": "审查脚本的结构假设错误，不是产品或受测用例失败；没有改动任何产品、测试或原始证据。"
+  },
+  "remainingBoundaries": [
+    "正式安装后的 WKWebView 键盘修复复验仍待 root；受控 Playwright WebKit 与 Chromium 成功不等于正式应用通过。",
+    "NEW-02 外层滚动/根区域上移由独立布局调查处理，本审查没有覆盖或宣称解决；后续 CSS 修复及完整布局证据仍待单独复核。",
+    "固定作者读取形状只验证组件交互；不代表本次新执行 Rust 读取、真实文件版本核验、Agent、账号或完整用户旅程。"
+  ],
+  "mutations": "仅新建本 independent-review.json；源、测试、产品回执及 raw 均未改动。"
+}

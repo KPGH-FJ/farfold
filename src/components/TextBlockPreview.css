@@ -1,6 +1,8 @@
 .text-block-preview {
   padding: 16px;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 .text-block-preview p {
   font-size: 12px;

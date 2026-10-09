@@ -1,0 +1,110 @@
+{
+  "reviewedAt": "2026-10-09T23:13:54.975223+00:00",
+  "reviewer": "architecture independent integration review",
+  "status": "seven_requirements_verified_with_explicit_reuse_no_blocking_findings",
+  "sourceBase": "7f3583c076bf1e5580815871a063959f349fa580",
+  "scope": "只读核最终整合回执、当前输入全集、原始日志和两项独立交互审查；没有重跑已通过的工程或浏览器测试。",
+  "conditions": {
+    "inputInventory": "独立调用无执行检查副作用的 inputs() 清单函数重新枚举与 SHA 核对，当前 1,116 项键和值完全等于 final/inputs.json，无新增/缺失/变化。",
+    "keyboardDelta": "上一 text-feedback-checks-final → 本轮完整前端检查仅 SourceTextSelection.tsx 和专属 test 两项变化；两项最终哈希与键盘 owner/独立审查一致。",
+    "layoutDelta": "本轮 302 文件 / 3,349 前端测试和全项目类型检查成功后的唯一输入变化是 TextBlockPreview.css；相对 HEAD 精确新增 min-height:0 和 overflow:auto。当前 JS/TS/测试输入未变化。",
+    "rustReuse": "当前与原 large-file-checks 成功基线的全部 436 个非 src/ 输入完全一致，包含 Rust/配置/依赖及外置共享样本、真实 wire 夹具；Rust 1,230 通过 / 6 忽略、cargo-fmt/clippy 原日志哈希匹配。明确没有在本轮重新执行它们。",
+    "finalBuildAndFormat": "CSS 后 build 和全仓 format 实际重新执行且 exit0，原始日志 SHA 与最终回执匹配。build 的既有大 chunk 警告保留，不将其写成零警告。",
+    "sevenRequirements": "7 个唯一要求均 exit0；build/format 为最终新执行，frontend/typecheck 复用本轮未变输入，Rust三项复用相同后端及外置输入。allPassed 不被解读为最终重跑七项。",
+    "formatHistory": "首轮格式检查 exit1 的 6 个证据/维护文件列表与其原 log/format-receipt 哈希仍存在；prior receipt 的 raw 与格式后 JSON 语义一致，未用最终通过覆盖原失败。",
+    "ownerEvidence": "键盘两源码、NEW-02 的 19 生产输入均与最终 inputs 匹配；原键盘两引擎18场景及完整布局两引擎10场景/156断言由各独立 review 分层说明。",
+    "protectedFiles": "两份用户受保护历史 README 的原始 SHA 均保持。"
+  },
+  "changedSourceHashes": {
+    "src/components/SourceTextSelection.tsx": "57fa72fc888eadebd0a6792faa003ced876ec19896144ef5e7958ffdf142149f",
+    "src/components/SourceTextSelection.test.tsx": "0ca1a0b7aaf6d2d8f5c0b106c3c1e0bf3eb4637bc7cf99ca7a7e32456514280a",
+    "src/components/TextBlockPreview.css": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7"
+  },
+  "requiredChecks": [
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/build.txt",
+      "sha256": "f8b69128dcebd943024bfaba634a7b263e55840ea9b8819a5bf6805920b7641a"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 31.976,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/frontend.txt",
+      "sha256": "97275ea10d79be275a6440bd95fd850bad496ea1b8f22de88419cdcbfa6af8eb",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 17.751,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "Only the verified TextBlockPreview.css delta changed since these successful inputs; all TS/TSX, Rust, configuration and shared fixtures match exactly."
+    }
+  ],
+  "evidenceHashes": {
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/final-verification.json": "5501ec0ea30a997f891d8a1badc197e1e9f6c916d0e5c11e230ac734872aaed7",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/inputs.json": "ae81a68f668d6b5ece8d5e58b922063cfe20f9e273d0b75c61eceedbc28cd3de",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/receipt.json": "6afc8a426151c86bfcdb35eb891b040f798d4797571c1dbcde72ee321adf5bfa",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/inputs.json": "bf75b54e7d46b013c1bd7f5a966922fd0dffe2506250c012b360dca5aa9528a7",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/receipt.raw.txt": "b2a982773be4ef60fd8ef2046644389aacd2e6836d72ec3e43bdb21dc4cb26c6",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/format-receipt.json": "89d6543767e904809b8f830125e9bc89d253448b7f0845275532bda7399dfcfb",
+    "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks/format.txt": "39a22c0df93af160c0944d75858f01363ae4512b15feeeaa31b2f888e23a88a4",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/inputs.json": "f3f7bc10f7b1fbd9db865ea702672b8aac5be56de881dd556382db11abc6a31c",
+    "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/receipt.json": "02bc0346c24205fc88e1a58f4f50d24b3f365b98e5e43a83ceec6a2f4af4e03a",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/independent-review.json": "2fcb091ae089c68086a2652e4d7958ada383bf782119e00c2d74252d9c81bf3d",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json": "e3ddc66e8d7881e4594460150e4b40d2da5dda45bf6ce1a2b4d12f31a08a7519",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/independent-review.json": "9142dbfa87d12e82e5880d16ce234aced264c76e8773d75144537de34224711c"
+  },
+  "protectedReadmes": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "boundaries": [
+    "工程与受控浏览器证据均不等于正式安装/原生 WKWebView 验收；键盘 Enter 与 NEW-02 修复的正式应用复验仍待 root。",
+    "没有操作正式应用、用户数据库/文件、Agent 或账号；没有新增测试、改源、改已有回执。",
+    "本独立文件在 root 最终全仓格式检查完成后创建，已单独 Prettier 格式化；不反称该旧全仓命令已覆盖本新文件。"
+  ],
+  "writes": "仅新增本 integration-independent.json；前面的键盘与 NEW-02 独立回执保持原字节。"
+}

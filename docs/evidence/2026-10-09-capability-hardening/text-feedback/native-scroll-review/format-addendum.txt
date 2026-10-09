@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/cleanup.json 10ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/format-structure.json 1ms (unchanged)

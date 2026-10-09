@@ -1,0 +1,265 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review";
+const engine = process.argv[2] ?? "webkit";
+const inputs = Object.keys(
+  JSON.parse(fs.readFileSync(`${base}/full-app-candidate-scroll.json`)).before,
+);
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  at: new Date().toISOString(),
+  before: hashes(),
+  cases: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+try {
+  for (const scenario of ["long", "short"])
+    for (const viewport of [
+      { width: 1280, height: 820 },
+      { width: 900, height: 620 },
+    ]) {
+      const name = `${engine}-${scenario}-${viewport.width}`;
+      const item = {
+        name,
+        viewport,
+        scenario,
+        checks: [],
+        checkpoints: [],
+        errors: [],
+        blockedNetwork: [],
+      };
+      result.cases.push(item);
+      const page = await browser.newPage({ viewport });
+      page.setDefaultTimeout(10000);
+      const check = (name, pass, detail) => {
+        item.checks.push({ name, pass, detail });
+        if (!pass) throw new Error(name);
+      };
+      await page.route("**/*", (route) => {
+        if (!route.request().url().startsWith("http://127.0.0.1:1463/")) {
+          item.blockedNetwork.push(route.request().url());
+          return route.abort();
+        }
+        return route.continue();
+      });
+      page.on("pageerror", (e) => item.errors.push(String(e)));
+      await page.addInitScript(() => {
+        window.copied = [];
+        Object.defineProperty(navigator, "clipboard", {
+          value: {
+            writeText: async (text) => {
+              window.copied.push(text);
+            },
+          },
+        });
+      });
+      const record = async (label) => {
+        const m = await page.evaluate(() => window.fixture.metrics());
+        item.checkpoints.push({ label, ...m });
+        check(
+          label + " root stays at viewport",
+          m.windowY === 0 &&
+            m.elements[".app"].y === 0 &&
+            m.elements.html.scrollHeight <= viewport.height,
+          {
+            windowY: m.windowY,
+            appY: m.elements[".app"].y,
+            documentHeight: m.elements.html.scrollHeight,
+          },
+        );
+      };
+      try {
+        await page.goto(
+          `http://127.0.0.1:1463/${base}/index.html?length=640&scenario=${scenario}`,
+          { waitUntil: "networkidle" },
+        );
+        await page
+          .getByText("CONTROLLED_SCROLL_LAYOUT", { exact: true })
+          .first()
+          .click();
+        const original = await page.evaluate(
+          () => window.fixture.composer().text,
+        );
+        await page
+          .getByRole("button", { name: "大文本选段", exact: true })
+          .click();
+        await page.getByText("按行选择", { exact: true }).waitFor();
+        await record("file-open");
+        if (scenario === "long") {
+          await page
+            .getByRole("button", { name: "下一片段", exact: true })
+            .click();
+          await page.waitForTimeout(100);
+          await record("block2");
+        }
+        await page.getByText("按行选择", { exact: true }).click();
+        await record("line-controls-open");
+        await page.getByLabel("起始行", { exact: true }).fill("1");
+        await page.getByLabel("结束行", { exact: true }).click();
+        await record("last-focused");
+        await page.keyboard.press("Enter");
+        await page.waitForTimeout(50);
+        await record("line-staged");
+        check(
+          "confirmation button actually focused",
+          await page
+            .getByRole("button", { name: "对此选段提意见", exact: true })
+            .evaluate((e) => document.activeElement === e),
+        );
+        await page.keyboard.press("Enter");
+        await page.getByLabel("补充给 Agent 的意见", { exact: true }).waitFor();
+        await page.waitForTimeout(50);
+        await record("feedback-focused");
+        check(
+          "feedback actually focused",
+          await page
+            .getByLabel("补充给 Agent 的意见", { exact: true })
+            .evaluate((e) => document.activeElement === e),
+        );
+        await page
+          .getByLabel("补充给 Agent 的意见", { exact: true })
+          .fill("受控意见保持可编辑，不发送。");
+        await record("feedback-edited");
+        await page.getByLabel("结束行", { exact: true }).click();
+        await record("last-focused-with-feedback");
+        await page.screenshot({ path: `${base}/${name}-feedback.png` });
+        if (scenario === "long") {
+          const local = await page
+            .locator(".text-block-preview")
+            .evaluate((e) => {
+              e.scrollTop = e.scrollHeight;
+              return {
+                top: e.scrollTop,
+                height: e.clientHeight,
+                full: e.scrollHeight,
+              };
+            });
+          check("outer block owns local overflow", local.top > 0, local);
+          await record("block-local-scroll");
+          const inner = await page
+            .locator(".text-block-content")
+            .evaluate((e) => {
+              e.scrollTop = e.scrollHeight;
+              return { top: e.scrollTop, length: e.textContent.length };
+            });
+          check(
+            "long original text remains scrollable and complete",
+            inner.top > 0 && inner.length > 131000,
+            inner,
+          );
+          await record("text-local-scroll");
+          await page
+            .getByRole("button", { name: "复制当前片段", exact: true })
+            .click();
+          await page.waitForTimeout(50);
+          check(
+            "copy full current block remains reachable",
+            await page.evaluate(
+              () =>
+                window.copied[0] ===
+                document.querySelector(".text-block-content").textContent,
+            ),
+          );
+          await record("copy-control");
+          await page
+            .getByRole("button", { name: "上一片段", exact: true })
+            .click();
+          await page.waitForTimeout(50);
+          await record("previous-control");
+          await page.getByLabel("片段序号", { exact: true }).fill("2");
+          await page.getByRole("button", { name: "前往", exact: true }).click();
+          await page.waitForTimeout(50);
+          await record("jump-control");
+          check(
+            "feedback draft retained during block controls",
+            (await page
+              .getByLabel("补充给 Agent 的意见", { exact: true })
+              .inputValue()) === "受控意见保持可编辑，不发送。",
+          );
+        }
+        await page
+          .getByRole("button", { name: "加入对话", exact: true })
+          .click();
+        await record("feedback-taken");
+        const composer = await page.evaluate(
+          () => window.fixture.composer().text,
+        );
+        check(
+          "original composer preserved and feedback added once",
+          composer.startsWith(original) &&
+            composer.split("受控意见保持可编辑，不发送。").length === 2,
+        );
+        const commands = await page.evaluate(() => ({
+          calls: window.calls,
+          unexpected: window.unexpected,
+        }));
+        check(
+          "no agent send or unexpected IPC",
+          commands.unexpected.length === 0 &&
+            !commands.calls.some(
+              (c) =>
+                /prompt|session_send/.test(c) && c !== "prompt_templates_list",
+            ),
+          commands,
+        );
+        check("no browser error", item.errors.length === 0, item.errors);
+        await page.screenshot({ path: `${base}/${name}-final.png` });
+        item.completed = true;
+      } catch (e) {
+        item.failure = String(e);
+        item.completed = false;
+        await page
+          .screenshot({ path: `${base}/${name}-failure.png` })
+          .catch(() => {});
+      }
+      await page.close();
+    }
+} finally {
+  await browser.close();
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed =
+    result.sourceUnchanged &&
+    result.cases.every((c) => c.completed && c.checks.every((t) => t.pass));
+  fs.writeFileSync(
+    `${base}/final-${engine}.json`,
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify(
+      {
+        passed: result.passed,
+        sourceUnchanged: result.sourceUnchanged,
+        cases: result.cases.map((c) => ({
+          name: c.name,
+          completed: c.completed,
+          failure: c.failure,
+          checks: c.checks.length,
+        })),
+      },
+      null,
+      2,
+    ),
+  );
+}
+process.exitCode = result.passed ? 0 : 1;
