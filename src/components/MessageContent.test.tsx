@@ -53,44 +53,45 @@ it("preserves Markdown after remount and renders new text for the same streaming
 });
 
 it("renders actual image, audio, file and text-resource messages without raw or executable markup", () => {
-  const html = renderToStaticMarkup(
-    <MessageContent
-      source={{}}
-      text=""
-      attachments={[
-        {
-          name: "图片",
-          kind: "image",
-          data: "aW1hZ2U=",
-          mimeType: "image/png",
-        },
-        {
-          name: "音频",
-          kind: "audio",
-          data: "YXVkaW8=",
-          mimeType: "audio/wav",
-        },
-        {
-          name: "notes.md",
-          kind: "resource",
-          uri: "file:///notes.md",
-          text: "<script>not executable</script>",
-        },
-        {
-          name: "external",
-          kind: "resource_link",
-          uri: "https://example.com/file",
-        },
-        {
-          name: "unsupported",
-          kind: "resource",
-          uri: "javascript:alert(1)",
-          data: "eA==",
-          mimeType: "text/html",
-        },
-      ]}
-    />,
-  );
+  const attachments = [
+    {
+      name: "图片",
+      kind: "image",
+      data: "aW1hZ2U=",
+      mimeType: "image/png",
+    },
+    {
+      name: "音频",
+      kind: "audio",
+      data: "YXVkaW8=",
+      mimeType: "audio/wav",
+    },
+    {
+      name: "notes.md",
+      kind: "resource",
+      uri: "file:///notes.md",
+      text: "<script>not executable</script>",
+    },
+    {
+      name: "external",
+      kind: "resource_link",
+      uri: "https://example.com/file",
+    },
+    {
+      name: "unsupported",
+      kind: "resource",
+      uri: "javascript:alert(1)",
+      data: "eA==",
+      mimeType: "text/html",
+    },
+  ] satisfies import("../runtime/session_types").Attachment[];
+  const html = attachments
+    .map((attachment) =>
+      renderToStaticMarkup(
+        <MessageContent source={{}} text="" attachments={[attachment]} />,
+      ),
+    )
+    .join("");
   expect(html).toContain("<img");
   expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
   expect(html).toContain('<audio controls="" preload="none"');
@@ -141,17 +142,28 @@ it("starts structured attachments as compact file items while retaining the orig
 });
 
 it("keeps attachment keyboard actions from triggering conversation approval without preventing expansion or media controls", () => {
-  const element = MessageAttachments({
-    attachments: [
-      { name: "notes.md", kind: "resource_link", uri: "file:///notes.md" },
-    ],
-  });
-  const handler = element?.props.onKeyDown;
+  let handler:
+    | ((event: {
+        key: string;
+        stopPropagation: () => void;
+        preventDefault: () => void;
+      }) => void)
+    | undefined;
+  function Capture() {
+    const element = MessageAttachments({
+      attachments: [
+        { name: "notes.md", kind: "resource_link", uri: "file:///notes.md" },
+      ],
+    });
+    handler = element?.props.onKeyDown;
+    return element;
+  }
+  renderToStaticMarkup(<Capture />);
   expect(handler).toBeTypeOf("function");
   for (const key of ["Enter", "Backspace", "Escape", "Tab", " "]) {
     let stopped = false;
     let prevented = false;
-    handler({
+    handler!({
       key,
       stopPropagation: () => {
         stopped = true;

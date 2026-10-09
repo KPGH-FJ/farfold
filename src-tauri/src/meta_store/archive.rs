@@ -137,7 +137,7 @@ fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, String> {
     let composers = saved["composers"].as_object().ok_or(unreadable)?;
     let feedback = saved["feedback"].as_object().ok_or(unreadable)?;
     let queues = saved["queues"].as_object().ok_or(unreadable)?;
-    for prefix in ["session:", "queue-edit:"] {
+    for prefix in ["session:", "queue-edit:", "resend:"] {
         if let Some(draft) = composers.get(&format!("{prefix}{}", row.id)) {
             let draft = draft.as_object().ok_or(unreadable)?;
             let text = draft
@@ -215,7 +215,9 @@ mod tests {
             json!({"text":"", "attachments":[{"kind":"image","data":"image"}]}),
             json!({"text":"", "attachments":[], "sendPending":true}),
         ] {
-            examples.push(json!({"version":1,"composers":{format!("session:{key}"):draft},"feedback":{},"queues":{}}));
+            for prefix in ["session", "resend"] {
+                examples.push(json!({"version":1,"composers":{format!("{prefix}:{key}"):draft},"feedback":{},"queues":{}}));
+            }
         }
         examples.extend([
             json!({"version":1,"composers":{format!("queue-edit:{key}"):{"text":"", "attachments":[],"queueEdit":{"index":0,"original":[]}}},"feedback":{},"queues":{}}),

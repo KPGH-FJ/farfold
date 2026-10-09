@@ -1,3 +1,4 @@
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 
 export function ApiAccountGuide({
@@ -31,11 +32,16 @@ export function ApiAccountGuide({
         ) : (
           <>
             <div className="api-guide-heading">
-              <h3>{provider.trim()}</h3>
+              <h3>{provider.trim() || R.apiPreparationTitle}</h3>
               <span>{G.apiKind}</span>
             </div>
             <h4>{G.prepareKey}</h4>
-            <p>{G.prepareHint}</p>
+            <ol>
+              {R.apiPreparation.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+            <p>{R.apiPreparationHint}</p>
             <p className="api-muted">{G.destination}</p>
           </>
         )}

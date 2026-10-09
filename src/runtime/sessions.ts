@@ -649,7 +649,14 @@ class ThreadsStore {
         cwd: input.cwd,
         nativeSessionId: input.nativeSessionId ?? null,
         configOptions: input.configOptions ?? null,
-        service: input.service ?? null,
+        service: input.service
+          ? {
+              ...input.service,
+              revision:
+                input.serviceRevision ??
+                (input.service as { revision?: string }).revision,
+            }
+          : null,
         openToken,
         channel,
       });

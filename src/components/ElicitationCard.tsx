@@ -190,9 +190,11 @@ export function ElicitationCard({
   onChange,
   onRespond,
   disabled = false,
+  statusLabel,
 }: {
   request: PendingElicitation;
   disabled?: boolean;
+  statusLabel?: string;
   onChange: (name: string, value: unknown) => void;
   onRespond: (
     action: "accept" | "cancel",
@@ -232,7 +234,7 @@ export function ElicitationCard({
     <div className="approval elicitation">
       <div className="tag">
         <i />
-        {STRINGS.elicitation.needYou}
+        {statusLabel ?? STRINGS.elicitation.needYou}
       </div>
       <div className="ap-title">
         {elicitation.message || STRINGS.elicitation.untitled}

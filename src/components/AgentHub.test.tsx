@@ -93,19 +93,19 @@ describe("Agent discovery and preparation", () => {
       onOpenApi: () => {},
     };
     const discover = renderToStaticMarkup(<AgentHub {...props} />);
-    expect(discover).not.toContain("管理 Agent · Unreviewed");
-    expect(discover).not.toContain("管理 Agent · Deferred");
-    expect(discover).toContain("管理 Agent · Custom");
-    expect(discover).toContain("管理 Agent · Cline");
-    expect(discover).toContain("管理 Agent · Fast");
-    expect(discover).toContain("管理 Agent · Local");
+    expect(discover).not.toContain("管理设置 · Unreviewed");
+    expect(discover).not.toContain("管理设置 · Deferred");
+    expect(discover).toContain("管理设置 · Custom");
+    expect(discover).toContain("管理设置 · Cline");
+    expect(discover).toContain("管理设置 · Fast");
+    expect(discover).toContain("管理设置 · Local");
     const added = renderToStaticMarkup(
       <AgentHub {...props} initialView="added" />,
     );
-    expect(added).not.toContain("管理 Agent · Deferred");
-    expect(added).not.toContain("管理 Agent · Unreviewed");
-    expect(added).toContain("管理 Agent · Custom");
-    expect(added).toContain("管理 Agent · Local");
+    expect(added).not.toContain("管理设置 · Deferred");
+    expect(added).not.toContain("管理设置 · Unreviewed");
+    expect(added).toContain("管理设置 · Custom");
+    expect(added).toContain("管理设置 · Local");
     expect(agents.cards).toContain(deferred);
     expect(agents.install).not.toHaveBeenCalled();
     expect(agents.remove).not.toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe("Agent discovery and preparation", () => {
     expect(html).toContain("未完成设置");
     expect(html).toContain("继续准备");
     expect(html).not.toContain("开始新对话");
-    expect(html).toContain("管理 Agent · Ready");
+    expect(html).toContain("管理设置 · Ready");
     expect(html).not.toContain(">开始对话<");
     expect(html).not.toContain("测试通过");
     expect(html).not.toContain("演示");
@@ -167,9 +167,9 @@ describe("Agent discovery and preparation", () => {
     expect(html).not.toContain("<span>研究</span>");
     expect(html).not.toContain("agent-hub-heading-stat");
     expect(html).not.toContain("btn-primary");
-    expect(html).toContain('aria-label="管理 Agent · Example"');
-    expect(html).not.toMatch(
-      /<button[^>]*agent-hub-detail-button[^>]*>[^]*?管理<\/button>/,
+    expect(html).toContain('aria-label="管理设置 · Example"');
+    expect(html).toMatch(
+      /<button[^>]*agent-hub-detail-button[^>]*>[^]*?管理设置<\/button>/,
     );
   });
   it("restores a category with its search and shows only matching reviewed cards", () => {

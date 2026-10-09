@@ -15,6 +15,11 @@ const h = vi.hoisted(() => ({
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
+  useRef: (initial: unknown) => {
+    const index = h.cursor++;
+    if (!(index in h.slots)) h.slots[index] = { current: initial };
+    return h.slots[index];
+  },
   useState: (initial: unknown) => {
     const index = h.cursor++;
     if (!(index in h.slots)) h.slots[index] = initial;
@@ -37,6 +42,8 @@ import {
 } from "./ProgramManager";
 import { agentSetupProgram } from "./AgentSetupProgram";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
+import { ProgramChangeReview } from "./ProgramChangeReview";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { STRINGS } from "../runtime/strings";
 import { ACCESS_STRINGS } from "../runtime/access_strings";
 import { R5_PROGRAM_STRINGS as R } from "../runtime/r5_program_strings";
@@ -122,6 +129,16 @@ function button(
   return render(extra).find(
     (node) => node.type === "button" && node.props.children === label,
   )!;
+}
+function review(extra: Partial<ComponentProps<typeof ProgramManager>> = {}) {
+  return render(extra).find((node) => node.type === ProgramChangeReview)!;
+}
+function confirmChange(
+  extra: Partial<ComponentProps<typeof ProgramManager>> = {},
+) {
+  const confirm = review(extra);
+  expect(confirm).toBeDefined();
+  (confirm.props.onConfirm as () => void)();
 }
 async function settled() {
   for (let i = 0; i < 8; i++) {
@@ -273,6 +290,8 @@ it("uses the shared reviewed installation action and respects its missing-input 
   expect(agents.install).not.toHaveBeenCalled();
   expect(update(false).props.disabled).toBe(false);
   (update(false).props.onClick as () => void)();
+  expect(onInstall).not.toHaveBeenCalled();
+  confirmChange({ onInstall });
   expect(onInstall).toHaveBeenCalledTimes(1);
   expect(agents.install).not.toHaveBeenCalled();
 });
@@ -341,6 +360,7 @@ it("keeps the original selected until checking completes and supports explicit s
     },
   );
   (choose("candidate")!.props.onClick as () => void)();
+  confirmChange();
   expect(select).toHaveBeenCalledExactlyOnceWith(card.id, "candidate");
   expect(choose("external")).toBeUndefined();
   expect(choose("candidate")?.props.disabled).toBe(true);
@@ -349,6 +369,7 @@ it("keeps the original selected until checking completes and supports explicit s
   expect(choose("candidate")).toBeUndefined();
   expect(choose("external")?.props.disabled).toBe(false);
   (choose("external")!.props.onClick as () => void)();
+  confirmChange();
   await settled();
   expect(select).toHaveBeenLastCalledWith(card.id, "external");
   expect(choose("external")).toBeUndefined();
@@ -359,6 +380,7 @@ it("keeps both programs and the old selection when checking a candidate fails", 
   card.status = "installed";
   select.mockRejectedValueOnce(new Error("候选程序检查未完成，原选择已保留"));
   (choose("candidate")!.props.onClick as () => void)();
+  confirmChange();
   await settled();
   expect(
     render().some(
@@ -429,6 +451,7 @@ it("preserves the selected program and the explicit confirmation when selection 
     return false;
   });
   (choose("candidate")!.props.onClick as () => void)();
+  confirmChange();
   await settled();
   expect(choose("external")).toBeUndefined();
   expect(choose("candidate")!.props.disabled).toBe(false);
@@ -445,14 +468,14 @@ it("checks the current program once and keeps a failed connection factual", asyn
     throw new Error("连接检查未完成");
   });
   const connect = (disabled = false) =>
-    button(ACCESS_STRINGS.connect, {
+    button(U.programCheck, {
       onConnect,
       connectDisabled: disabled,
       showHeading: false,
     });
   expect(
     render({ onConnect }).filter(
-      (node) => node.props.children === ACCESS_STRINGS.connect,
+      (node) => node.props.children === U.programCheck,
     ),
   ).toHaveLength(1);
   (connect(true).props.onClick as () => void)();
@@ -472,6 +495,7 @@ it("checks the current program once and keeps a failed connection factual", asyn
 
 it("selects another installation while connected; safe idle connections end on the backend", async () => {
   (choose("candidate")!.props.onClick as () => void)();
+  confirmChange();
   await settled();
   expect(select).toHaveBeenCalledExactlyOnceWith(card.id, "candidate");
   expect(choose("candidate")).toBeUndefined();
@@ -532,7 +556,7 @@ it.each([true, false])(
     expect(nodes.some((node) => node.props.children === S.prepared)).toBe(
       false,
     );
-    const connect = button(ACCESS_STRINGS.connect, extra);
+    const connect = button(U.programCheck, extra);
     expect(connect.props.disabled).toBe(true);
     expect(connect.props.className).toBe("btn btn-ghost");
     (connect.props.onClick as () => void)();
@@ -542,10 +566,12 @@ it.each([true, false])(
     expect(inventory.refresh).toHaveBeenCalledOnce();
     expect(button(S.componentUpdate, extra).props.disabled).toBe(false);
     (button(S.componentUpdate, extra).props.onClick as () => void)();
+    confirmChange(extra);
     expect(onInstall).toHaveBeenCalledOnce();
+    await settled();
     const prepared = { ...extra, prerequisitesReady: true };
-    expect(button(ACCESS_STRINGS.connect, prepared).props.disabled).toBe(false);
-    (button(ACCESS_STRINGS.connect, prepared).props.onClick as () => void)();
+    expect(button(U.programCheck, prepared).props.disabled).toBe(false);
+    (button(U.programCheck, prepared).props.onClick as () => void)();
     await settled();
     expect(onConnect).toHaveBeenCalledOnce();
   },
@@ -554,7 +580,9 @@ it.each([true, false])(
 it("does not mislabel a confirmed connection when a prerequisite needs preparation", () => {
   const extra = { prerequisitesReady: false };
   const nodes = render(extra);
-  expect(nodes.some((node) => node.props.children === S.connected)).toBe(true);
+  expect(nodes.some((node) => node.props.children === U.programReady)).toBe(
+    true,
+  );
   expect(
     nodes.some((node) => node.props.children === R.preparationRequired),
   ).toBe(false);
@@ -625,3 +653,48 @@ it.each([true, false])(
     }
   },
 );
+
+it("requires a target comparison before selecting and cancellation leaves the program intact", () => {
+  (choose("candidate")!.props.onClick as () => void)();
+  expect(select).not.toHaveBeenCalled();
+  const confirmation = review();
+  expect(confirmation.props.change).toMatchObject({
+    current: "0.80.5 · /programs/external",
+    candidate: "0.81.0 · /programs/candidate",
+  });
+  (confirmation.props.onClose as () => void)();
+  expect(review()).toBeUndefined();
+  expect(selectedId).toBe("external");
+  expect(select).not.toHaveBeenCalled();
+});
+
+it("rejects an old program confirmation after the inventory changes", () => {
+  (choose("candidate")!.props.onClick as () => void)();
+  const stale = review();
+  inventory.items = inventory.items.map((item) =>
+    item.id === "candidate" ? { ...item, version: "0.82.0" } : item,
+  );
+  expect(review().props.valid).toBe(false);
+  (stale.props.onConfirm as () => void)();
+  expect(select).not.toHaveBeenCalled();
+  expect(selectedId).toBe("external");
+});
+
+it("does not execute the same confirmation twice before a render", async () => {
+  const check = deferred();
+  select.mockReturnValue(check.promise);
+  (choose("candidate")!.props.onClick as () => void)();
+  const confirmed = review().props.onConfirm as () => void;
+  confirmed();
+  confirmed();
+  expect(select).toHaveBeenCalledExactlyOnceWith(card.id, "candidate");
+  check.resolve();
+  await settled();
+});
+
+it("hides a program confirmation with its inactive Agent surface", () => {
+  (choose("candidate")!.props.onClick as () => void)();
+  expect(review()).toBeDefined();
+  expect(review({ active: false })).toBeUndefined();
+  expect(select).not.toHaveBeenCalled();
+});

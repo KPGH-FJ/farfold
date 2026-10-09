@@ -1,0 +1,63 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/CollectionActions.test.tsx (23 tests | 3 failed) 346ms
+   × counts each blocked selection once and keeps restoration available 10ms
+   × reports the entire controlled filter when one dimension changes and clears an empty scope explicitly 2ms
+   × clears every archived conversation with an in-place confirmation naming the scope 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CollectionActions.test.tsx > counts each blocked selection once and keeps restoration available
+AssertionError: expected undefined to be defined
+ ❯ click src/components/CollectionActions.test.tsx:125:19
+    123|   )!;
+    124| const click = (element: Element) => {
+    125|   expect(element).toBeDefined();
+       |                   ^
+    126|   expect(element.props.disabled).not.toBe(true);
+    127|   const target = {
+ ❯ src/components/CollectionActions.test.tsx:645:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/CollectionActions.test.tsx > reports the entire controlled filter when one dimension changes and clears an empty scope explicitly
+AssertionError: expected undefined to be defined
+ ❯ click src/components/CollectionActions.test.tsx:125:19
+    123|   )!;
+    124| const click = (element: Element) => {
+    125|   expect(element).toBeDefined();
+       |                   ^
+    126|   expect(element.props.disabled).not.toBe(true);
+    127|   const target = {
+ ❯ src/components/CollectionActions.test.tsx:760:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/CollectionActions.test.tsx > clears every archived conversation with an in-place confirmation naming the scope
+AssertionError: expected '将删除当前筛选中的 2 段已归档对话；其他对话及工作文件不受影响。该操作不…' to be '将删除全部 2 段已归档对话；其他对话不受影响。工作位置与磁盘文件不受影响…' // Object.is equality
+
+Expected: "将删除全部 2 段已归档对话；其他对话不受影响。工作位置与磁盘文件不受影响，该操作不可撤销。"
+Received: "将删除当前筛选中的 2 段已归档对话；其他对话及工作文件不受影响。该操作不可撤销。"
+
+ ❯ src/components/CollectionActions.test.tsx:880:29
+    878|   )!;
+    879|   expect(dialog.props.title).toBe(LIBRARY.clearArchivedTitle);
+    880|   expect(dialog.props.hint).toBe(LIBRARY.clearArchivedHint(2));
+       |                             ^
+    881|   (dialog.props.onDelete as () => void)();
+    882|   await vi.waitFor(() =>
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 214 passed (215)
+      Tests  3 failed | 2502 passed (2505)
+   Start at  12:00:51
+   Duration  28.46s (transform 7.54s, setup 0ms, import 184.85s, tests 35.53s, environment 17ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -28,6 +28,8 @@ import {
   useAutoArchive,
 } from "../runtime/auto_archive";
 import "../general-settings.css";
+import "../settings-library-redesign.css";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import {
   GeneralSettingsDialog,
   generalShortcuts,
@@ -167,14 +169,38 @@ export function GeneralSettings({
   };
 
   return (
-    <div className="general-page">
+    <div className="general-page settings-redesign">
       <header className="general-heading">
         <h1>{STRINGS.general.heading}</h1>
         <p>{STRINGS.general.sub}</p>
       </header>
+      <nav className="settings-section-index" aria-label={R.pageIndex}>
+        {[
+          ["general-appearance", STRINGS.general.appearance],
+          ["general-organization", STRINGS.general.organization],
+          ["general-notifications", R.notifications],
+          ["general-shortcuts", STRINGS.general.shortcuts],
+          ["general-maintenance", STRINGS.general.maintenance],
+          ["general-privacy", R.privacy],
+        ].map(([id, label]) => (
+          <button
+            type="button"
+            key={id}
+            onClick={() => {
+              const target = document.getElementById(id);
+              target?.scrollIntoView({ block: "start" });
+              target?.focus({ preventScroll: true });
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
       <section className="general-section" aria-labelledby="general-appearance">
         <div className="general-section-title">
-          <h2 id="general-appearance">{STRINGS.general.appearance}</h2>
+          <h2 id="general-appearance" tabIndex={-1}>
+            {STRINGS.general.appearance}
+          </h2>
           <span>{STRINGS.general.appearanceDesc}</span>
         </div>
         <div className="general-appearance">
@@ -246,7 +272,9 @@ export function GeneralSettings({
         className="general-section"
         aria-labelledby="general-organization"
       >
-        <h2 id="general-organization">{STRINGS.general.organization}</h2>
+        <h2 id="general-organization" tabIndex={-1}>
+          {STRINGS.general.organization}
+        </h2>
         <div className="general-setting-row">
           <div>
             <strong>{STRINGS.general.autoArchive}</strong>
@@ -332,6 +360,14 @@ export function GeneralSettings({
             </button>
           </div>
         )}
+      </section>
+      <section
+        className="general-section"
+        aria-labelledby="general-notifications"
+      >
+        <h2 id="general-notifications" tabIndex={-1}>
+          {R.notifications}
+        </h2>
         <div className="general-setting-row">
           <div>
             <strong>
@@ -375,14 +411,17 @@ export function GeneralSettings({
         >
           {N.retry}
         </button>
-        <p className="auth-note">{N.navigationHint}</p>
-        {notifications.clickRequiresRunning && (
-          <p className="auth-note">{N.runningNavigationHint}</p>
-        )}
-        {(notifications.systemAlert === null ||
-          notifications.systemSound === null) && (
-          <p className="auth-note">{N.systemOptionsUnknown}</p>
-        )}
+        <details className="general-archive-rules">
+          <summary>{R.notificationDetails}</summary>
+          <p className="auth-note">{N.navigationHint}</p>
+          {notifications.clickRequiresRunning && (
+            <p className="auth-note">{N.runningNavigationHint}</p>
+          )}
+          {(notifications.systemAlert === null ||
+            notifications.systemSound === null) && (
+            <p className="auth-note">{N.systemOptionsUnknown}</p>
+          )}
+        </details>
         {notifications.error && (
           <div className="ac-error" role="alert">
             {notifications.error}
@@ -416,7 +455,7 @@ export function GeneralSettings({
       </section>
       <section className="general-section" aria-labelledby="general-shortcuts">
         <div className="general-section-title">
-          <h2 id="general-shortcuts">
+          <h2 id="general-shortcuts" tabIndex={-1}>
             <KeyboardIcon size={18} />
             {STRINGS.general.shortcuts}
           </h2>
@@ -446,7 +485,9 @@ export function GeneralSettings({
         className="general-section"
         aria-labelledby="general-maintenance"
       >
-        <h2 id="general-maintenance">{STRINGS.general.maintenance}</h2>
+        <h2 id="general-maintenance" tabIndex={-1}>
+          {STRINGS.general.maintenance}
+        </h2>
         <div className="general-setting-row">
           <div>
             <strong>Farfold {version || "—"}</strong>
@@ -487,6 +528,12 @@ export function GeneralSettings({
               : STRINGS.general.exportDiagnostics}
           </button>
         </div>
+      </section>
+      <section className="general-section" aria-labelledby="general-privacy">
+        <h2 id="general-privacy" tabIndex={-1}>
+          {R.privacy}
+        </h2>
+        <p className="general-caption">{R.privacySummary}</p>
         <div className="general-setting-row">
           <div>
             <strong>{P.privacyTitle}</strong>

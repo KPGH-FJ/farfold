@@ -5,7 +5,9 @@ import {
   component,
   h,
   resetHarness,
+  render,
 } from "./App.test-harness";
+import { REDESIGN as R } from "./runtime/redesign_strings";
 import { invoke } from "@tauri-apps/api/core";
 
 beforeEach(resetHarness);
@@ -57,11 +59,20 @@ it.each(["library", "conversation", "message"] as const)(
           attachments: [],
         });
     }
+    await vi.waitFor(() =>
+      expect(component("WorkspaceDialog").title).toBe(R.newWithSettings),
+    );
+    const confirm = render().find(
+      (node) =>
+        node.type === "button" && node.props.children === R.newDraftReady,
+    )!;
+    await (confirm.props.onClick as () => Promise<void>)();
     await vi.waitFor(() => {
       expect(component("EmptyState").active).toBe(true);
       expect(component("EmptyState").initialSelection).toEqual({
         service: { id: "api", model: "m", revision: "" },
         config: { reasoning: "ultra" },
+        requiresReview: true,
       });
     });
     expect(h.choice.cwd).toBe("/old-A");

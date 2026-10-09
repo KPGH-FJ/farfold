@@ -1,3 +1,5 @@
+import { ConversationExportDialog } from "./ConversationExportDialog";
+import { ConversationFind } from "./ConversationFind";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
@@ -6,7 +8,6 @@ import {
   useVisibleConversation,
 } from "../runtime/conversation_read_state";
 import { NOTIFICATION_STRINGS as NOTICES } from "../runtime/desktop_notifications";
-import { save } from "@tauri-apps/plugin-dialog";
 import {
   ArrowLeftIcon,
   MagnifyingGlassIcon,
@@ -114,8 +115,10 @@ export function ThreadPage({
       thread.pendingElicitations.length > 0);
   const [contentMode, setContentMode] = useState<"files" | "browser">("files");
   const [finding, setFinding] = useState(false);
-  const [query, setQuery] = useState("");
-  const [matches, setMatches] = useState(0);
+  const [exported, setExported] = useState<{
+    text: string;
+    name: string;
+  } | null>(null);
   const host = useRef<HTMLElement>(null);
   const artifactReturnFocus = useRef<HTMLElement | null>(null);
   const [menu, setMenu] = useState(false);
@@ -134,6 +137,7 @@ export function ThreadPage({
     setRename(false);
     setMoving(false);
     setDeleting(false);
+    setExported(null);
     setError(null);
   };
   useEffect(() => {
@@ -146,20 +150,6 @@ export function ThreadPage({
       success: closeDialog,
       failure: (reason) => setError(uiError(reason, LIBRARY.error)),
     });
-  useEffect(() => {
-    const nodes = [
-      ...(host.current?.querySelectorAll<HTMLElement>(
-        ".msg-user, .assistant, .thinking-block, .steps",
-      ) ?? []),
-    ];
-    const needle = query.trim().toLocaleLowerCase();
-    const found = nodes.filter(
-      (n) => !!needle && n.textContent?.toLocaleLowerCase().includes(needle),
-    );
-    nodes.forEach((n) => n.classList.toggle("search-match", found.includes(n)));
-    setMatches(found.length);
-    found[0]?.scrollIntoView({ block: "center" });
-  }, [query, thread?.items.length]);
   const header = (
     <>
       <header className="workspace-topbar thread-topbar">
@@ -250,34 +240,12 @@ export function ThreadPage({
           <DotsThreeIcon size={22} />
         </button>
       </header>
-      {finding && (
-        <div className="thread-find">
-          <input
-            autoFocus
-            aria-label={LIBRARY.find}
-            placeholder={LIBRARY.findPlaceholder}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <span>
-            {query
-              ? matches
-                ? LIBRARY.findCount(matches)
-                : LIBRARY.findEmpty
-              : ""}
-          </span>
-          <button
-            type="button"
-            className="icon-button"
-            aria-label={LIBRARY.cancel}
-            onClick={() => {
-              setFinding(false);
-              setQuery("");
-            }}
-          >
-            ×
-          </button>
-        </div>
+      {active && finding && (
+        <ConversationFind
+          host={host}
+          revision={snapshot.version}
+          onClose={() => setFinding(false)}
+        />
       )}
     </>
   );
@@ -289,7 +257,9 @@ export function ThreadPage({
           onContentModeChange={setContentMode}
           key={thread.key}
           thread={thread}
-          active={active && !menu && !rename && !moving && !deleting}
+          active={
+            active && !menu && !rename && !moving && !deleting && !exported
+          }
           agents={agents.cards}
           onGoSettings={onGoSettings}
           onOpened={onOpened}
@@ -395,22 +365,19 @@ export function ThreadPage({
                   (item) => item.kind === "user" || item.kind === "agent",
                 )
               }
-              onClick={() =>
-                void mutate(async () => {
-                  if (!thread) return;
-                  const text = transcriptMarkdown(
+              onClick={() => {
+                if (!thread) return;
+                setExported({
+                  text: transcriptMarkdown(
                     thread,
                     title,
-                    agents.cards.find((a) => a.id === thread.agentId)?.name ??
-                      thread.agentId,
-                  );
-                  const destination = await save({
-                    defaultPath: exportFileName(title),
-                  });
-                  if (!destination) return;
-                  await fileDelivery.exportText(text, destination);
-                })
-              }
+                    agents.cards.find((agent) => agent.id === thread.agentId)
+                      ?.name ?? thread.agentId,
+                  ),
+                  name: exportFileName(title),
+                });
+                setMenu(false);
+              }}
             >
               {LIBRARY.exportMarkdown}
             </button>
@@ -485,9 +452,19 @@ export function ThreadPage({
           </div>
         </WorkspaceActionMenu>
       )}
+      {active && exported && (
+        <ConversationExportDialog
+          {...exported}
+          returnFocusRef={menuAnchor}
+          onClose={() => setExported(null)}
+        />
+      )}
       {active && moving && row && (
         <MoveConversationsDialog
           count={1}
+          rows={[
+            { title, groupId: collectionsData.assignments[viewKey] ?? "" },
+          ]}
           returnFocusRef={menuAnchor}
           groups={collectionsData.groups}
           busy={saving || !collectionsData.ready || collectionsData.saving}
@@ -501,6 +478,7 @@ export function ThreadPage({
       {active && deleting && row && (
         <DeleteConversationsDialog
           title={LIBRARY.deleteTitle(1)}
+          targets={[title]}
           hint={LIBRARY.deleteHintOne(title)}
           busy={saving}
           error={error}

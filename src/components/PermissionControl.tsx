@@ -1,3 +1,4 @@
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { useEffect, useState } from "react";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
@@ -138,23 +139,36 @@ export function PermissionControl({
                 {error}
               </p>
             )}
-            {!unavailable &&
-              option?.options.map((item) => (
-                <button
-                  type="button"
-                  key={item.value}
-                  className="permission-choice"
-                  onClick={() => {
-                    setChoice(item);
-                    setReviewedOptions(optionsIdentity);
-                    setError(null);
-                    close();
-                  }}
-                >
-                  <strong>{item.name}</strong>
-                  {item.description && <span>{item.description}</span>}
-                </button>
-              ))}
+            <div role="radiogroup" aria-label={C.permission}>
+              {!unavailable &&
+                option?.options.map((item) => (
+                  <button
+                    type="button"
+                    key={item.value}
+                    className="permission-choice"
+                    role="radio"
+                    aria-checked={
+                      thread.permissionState === "ready" &&
+                      item.value === option.currentValue
+                    }
+                    onClick={() => {
+                      setChoice(item);
+                      setReviewedOptions(optionsIdentity);
+                      setError(null);
+                      close();
+                    }}
+                  >
+                    <strong>
+                      {item.name}
+                      {thread.permissionState === "ready" &&
+                        item.value === option.currentValue && (
+                          <small> ✓ {R.currentPermission}</small>
+                        )}
+                    </strong>
+                    {item.description && <span>{item.description}</span>}
+                  </button>
+                ))}
+            </div>
             <p className="workspace-control-note">{C.permissionScope}</p>
           </>
         )}

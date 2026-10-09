@@ -1,3 +1,5 @@
+import { ComposerAttachments } from "./ComposerAttachments";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
@@ -67,10 +69,7 @@ import {
   addClipboardImages,
   addPickedAttachments,
 } from "../runtime/composer_attachment_import";
-import {
-  IMAGE_INPUT_STRINGS,
-  draftImagePreview,
-} from "../runtime/draft_images";
+import { IMAGE_INPUT_STRINGS } from "../runtime/draft_images";
 import { queuedAttachmentsNeedReview } from "../runtime/recovered_attachments";
 import { AttachmentRecovery } from "./AttachmentRecovery";
 import {
@@ -106,6 +105,7 @@ export function Composer({
   caption,
   contextChips,
   queueEditing = false,
+  sendActionLabel,
 }: {
   thread: ThreadState | null;
   imageEnabled: boolean;
@@ -147,6 +147,7 @@ export function Composer({
   caption?: ReactNode;
   contextChips?: ReactNode;
   queueEditing?: boolean;
+  sendActionLabel?: string;
 }) {
   const storageKey = draftKey ?? (thread ? `session:${thread.key}` : "new");
   const errorContext = errorContextKey ?? storageKey;
@@ -180,6 +181,7 @@ export function Composer({
   const plusAnchor = useRef<HTMLButtonElement>(null);
   const plusOwner = useRef<string | null>(null);
   plusOwner.current = active && plusOpen ? storageKey : null;
+  const [commandQuery, setCommandQuery] = useState("");
   const [shortcutScope, setShortcutScope] = useState<string | null>(null);
   const shortcutAnchor = useRef<HTMLButtonElement>(null);
   const shortcutOwner = useRef<string | null>(null);
@@ -216,6 +218,7 @@ export function Composer({
   useEffect(() => {
     setPlusOpen(false);
     setShortcutScope(null);
+    setCommandQuery("");
     setUncertainReview(null);
     setUncertainError(null);
     setMentionAt(-1);
@@ -280,6 +283,7 @@ export function Composer({
       ? thread.openError !== null ||
         thread.reconnecting ||
         thread.configuring ||
+        Boolean(thread.configError) ||
         thread.modelDrift ||
         Boolean(
           thread.permissionConfigId && thread.permissionState !== "ready",
@@ -298,6 +302,15 @@ export function Composer({
   // Slash popup: whole input is a single `/token` and the agent declared
   // commands. Mention popup: live query after the `@` anchor.
   const commands = thread?.availableCommands ?? [];
+  const commandNeedle = commandQuery.trim().toLocaleLowerCase();
+  const searchedCommands = commands.filter((command) =>
+    `${command.name} ${command.description ?? ""}`
+      .toLocaleLowerCase()
+      .includes(commandNeedle),
+  );
+  const searchedTemplates = C.shortcuts.filter((item) =>
+    `${item.label} ${item.text}`.toLocaleLowerCase().includes(commandNeedle),
+  );
   const inputHint = commandInputHint(commands, text);
   const liveCommands = useRef(commands);
   liveCommands.current = commands;
@@ -1202,29 +1215,13 @@ export function Composer({
       )}
       <div className={`composer-box${focus ? " focus" : ""}`}>
         {contextChips}
-        {chips.length > 0 && (
-          <div className="c-chips">
-            {chips.map((chip, i) => {
-              const preview = draftImagePreview(chip);
-              return (
-                <span key={chip.id} className="c-chip">
-                  {preview && <img src={preview} alt="" />}
-                  {chip.name}
-                  <button
-                    type="button"
-                    className="x"
-                    aria-label={W.removeAttachment(chip.name)}
-                    onClick={() =>
-                      setChips((prev) => prev.filter((_, j) => j !== i))
-                    }
-                  >
-                    ×
-                  </button>
-                </span>
-              );
-            })}
-          </div>
-        )}
+        <ComposerAttachments
+          key={storageKey}
+          items={chips}
+          onRemove={(id) =>
+            setChips((previous) => previous.filter((chip) => chip.id !== id))
+          }
+        />
         <textarea
           ref={areaRef}
           className="c-input"
@@ -1318,8 +1315,12 @@ export function Composer({
               <button
                 type="button"
                 className={`c-send${willQueue ? " c-send-queued" : ""}${canSend ? "" : " empty"}`}
-                title={sendLabel}
-                aria-label={sendLabel}
+                title={
+                  !willQueue && sendActionLabel ? sendActionLabel : sendLabel
+                }
+                aria-label={
+                  !willQueue && sendActionLabel ? sendActionLabel : sendLabel
+                }
                 disabled={!canSend}
                 onClick={() => void doSend()}
               >
@@ -1337,8 +1338,21 @@ export function Composer({
           onClose={() => setShortcutScope(null)}
         >
           <div className="workspace-action-body composer-shortcuts">
+            <input
+              type="search"
+              aria-label={R.commandSearch}
+              placeholder={R.commandSearch}
+              value={commandQuery}
+              onChange={(event) => setCommandQuery(event.target.value)}
+            />
+            <p className="composer-shortcuts-note">{R.commandNote}</p>
+            {commandNeedle &&
+              !searchedCommands.length &&
+              !searchedTemplates.length && (
+                <p role="status">{R.commandEmpty}</p>
+              )}
             <span className="composer-shortcuts-title">{C.agentCommands}</span>
-            {commands.map((command) => (
+            {searchedCommands.map((command) => (
               <button
                 key={command.name}
                 type="button"
@@ -1356,7 +1370,7 @@ export function Composer({
               </p>
             )}
             <span className="composer-shortcuts-title">{C.shortcutsHint}</span>
-            {C.shortcuts.map((shortcut) => (
+            {searchedTemplates.map((shortcut) => (
               <button
                 key={shortcut.label}
                 type="button"
@@ -1379,7 +1393,9 @@ export function Composer({
               ? C.stopSendingPaused
               : running
                 ? STRINGS.composer.hintQueue
-                : W.keyboardSend}
+                : sendActionLabel
+                  ? R.keyboardAction(sendActionLabel)
+                  : W.keyboardSend}
         </span>
       </div>
       {active && plusOpen && (

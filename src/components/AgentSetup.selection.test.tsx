@@ -20,6 +20,7 @@ const h = vi.hoisted(() => ({
   needsAuth: false,
   authJob: null as unknown,
   refresh: vi.fn(async () => {}),
+  close: vi.fn(),
   getCapabilities: vi.fn(),
   listCredentials: vi.fn(),
 }));
@@ -58,6 +59,10 @@ vi.mock("react", async (original) => ({
       });
     }
   },
+}));
+vi.mock("react-dom", async (original) => ({
+  ...(await original<typeof import("react-dom")>()),
+  createPortal: (node: ReactNode) => node,
 }));
 vi.mock("../runtime/agent_preparation", async (original) => {
   const actual =
@@ -101,6 +106,7 @@ vi.mock("./ProgramManager", () => ({
   ProgramManager: () => null,
 }));
 vi.mock("./AgentAuthSection", () => ({ AgentAuthSection: () => null }));
+import { AgentSetupExitReview } from "./AgentSetupExitReview";
 import { AgentSetup, type AgentSetupProgress } from "./AgentSetup";
 import {
   AgentPreparation,
@@ -165,7 +171,7 @@ function render(active = true) {
       active,
       progress,
       onProgress: changed,
-      onClose() {},
+      onClose: h.close,
       onStart() {},
       onOpenApi() {},
     }),
@@ -204,6 +210,7 @@ beforeEach(() => {
   h.needsAuth = false;
   h.authJob = null;
   h.refresh.mockClear();
+  h.close.mockClear();
   h.getCapabilities.mockReset().mockResolvedValue({
     apiTypes: [],
     validatedApiTypes: [],
@@ -1230,3 +1237,80 @@ it.each([
     expect(h.start).not.toHaveBeenCalled();
   },
 );
+
+it.each(["keep", "discard"])(
+  "offers an explicit %s exit after source or model choices change",
+  (decision) => {
+    render();
+    progress = {
+      ...progress,
+      selection: { service: null, config: { model: "C" } },
+    };
+    const changedView = render();
+    const close = changedView.find(
+      (node) =>
+        node.type === "button" &&
+        node.props["aria-label"] === ACCESS_STRINGS.close,
+    )!;
+    (close.props.onClick as () => void)();
+    expect(h.close).not.toHaveBeenCalled();
+    const confirmation = render().find(
+      (node) => node.type === AgentSetupExitReview,
+    )!;
+    expect(confirmation).toBeDefined();
+    (
+      confirmation.props[
+        decision === "keep" ? "onKeep" : "onDiscard"
+      ] as () => void
+    )();
+    expect(h.close).toHaveBeenCalledOnce();
+    expect(progress.selection?.config).toEqual({
+      model: decision === "keep" ? "C" : "A",
+    });
+    expect(h.start).not.toHaveBeenCalled();
+  },
+);
+
+it("continues editing without changing choices or closing when the exit review is dismissed", () => {
+  render();
+  progress = {
+    ...progress,
+    selection: { service: null, config: { model: "C" } },
+  };
+  const close = render().find(
+    (node) =>
+      node.type === "button" &&
+      node.props["aria-label"] === ACCESS_STRINGS.close,
+  )!;
+  (close.props.onClick as () => void)();
+  const confirmation = render().find(
+    (node) => node.type === AgentSetupExitReview,
+  )!;
+  (confirmation.props.onContinue as () => void)();
+  expect(
+    render().find((node) => node.type === AgentSetupExitReview),
+  ).toBeUndefined();
+  expect(progress.selection?.config).toEqual({ model: "C" });
+  expect(h.close).not.toHaveBeenCalled();
+});
+
+it("hides the nested exit review when the Agent surface is no longer active", () => {
+  render();
+  progress = {
+    ...progress,
+    selection: { service: null, config: { model: "C" } },
+  };
+  const close = render().find(
+    (node) =>
+      node.type === "button" &&
+      node.props["aria-label"] === ACCESS_STRINGS.close,
+  )!;
+  (close.props.onClick as () => void)();
+  expect(
+    render().find((node) => node.type === AgentSetupExitReview),
+  ).toBeDefined();
+  expect(
+    render(false).find((node) => node.type === AgentSetupExitReview),
+  ).toBeUndefined();
+  expect(progress.selection?.config).toEqual({ model: "C" });
+});

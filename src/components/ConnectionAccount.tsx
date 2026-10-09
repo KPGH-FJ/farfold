@@ -1,5 +1,6 @@
 import { useConnectionAccount } from "../runtime/connection_account";
 import { CONNECTION_ACCOUNT_STRINGS as S } from "../runtime/connection_account_strings";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import type { AccountIdentity } from "../runtime/agents";
 
 const labels = S.kinds as Record<AccountIdentity["kind"], string>;
@@ -25,23 +26,43 @@ export function ConnectionAccount({
     active,
     connectionId,
   );
-  if (source || !account) return null;
+  if (source || !active) return null;
   return (
     <div
       className="journey-connection-summary connection-account-summary"
       aria-label={S.ariaLabel}
     >
-      <strong>{labels[account.kind]}</strong>
-      {account.email && <span>{account.email}</span>}
-      {account.displayName && <span>{account.displayName}</span>}
-      {account.plan && <span>{`${S.planPrefix}${account.plan}`}</span>}
-      <span className="auth-note">
-        {["credential", "missing_credential", "not_required"].includes(
-          account.kind,
-        )
-          ? S.noteAgentChecked
-          : S.noteAgentReported}
-      </span>
+      <dl className="agent-current-facts">
+        <div>
+          <dt>{U.identity}</dt>
+          <dd>
+            {[account?.email, account?.displayName]
+              .filter(Boolean)
+              .join(" · ") || U.identityUnknown}
+          </dd>
+        </div>
+        <div>
+          <dt>{U.authentication}</dt>
+          <dd>{account ? labels[account.kind] : U.notRead}</dd>
+        </div>
+        <div>
+          <dt>{U.accountPlan}</dt>
+          <dd>{account?.plan || U.planUnknown}</dd>
+        </div>
+      </dl>
+      <details className="agent-evidence-details">
+        <summary>{U.evidenceScope}</summary>
+        <p className="auth-note">{U.identityUnknownHint}</p>
+        {account && (
+          <p className="auth-note">
+            {["credential", "missing_credential", "not_required"].includes(
+              account.kind,
+            )
+              ? S.noteAgentChecked
+              : S.noteAgentReported}
+          </p>
+        )}
+      </details>
     </div>
   );
 }

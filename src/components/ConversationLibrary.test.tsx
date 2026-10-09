@@ -4,6 +4,7 @@ import type { AgentCardModel } from "../runtime/agents";
 import { agentBrand } from "../runtime/agent_brands";
 import type { LibraryFilter } from "../runtime/collections";
 import { groupSidebarRows, type SidebarRow } from "../runtime/sidebar";
+import { composerDrafts } from "../runtime/drafts";
 import { LIBRARY } from "../runtime/library_strings";
 import { STRINGS } from "../runtime/strings";
 import { ConversationLibrary } from "./ConversationLibrary";
@@ -133,6 +134,8 @@ function addUnconfirmedToolTail(status: "stopped" | "failed") {
 }
 
 beforeEach(() => {
+  composerDrafts.clear("session:idle");
+  composerDrafts.clear("resend:waiting");
   liveThreads = new Map();
   rows = [
     row("idle", "idle", true),
@@ -346,7 +349,7 @@ it("starts in browsing mode with Agent artwork and explicit organize and new-con
   expect(html).not.toContain('type="checkbox"');
   expect(html).not.toContain(`>${LIBRARY.archive}</button>`);
   expect(html).toContain(`aria-label="${LIBRARY.query}"`);
-  expect(html.match(/role="tab"/g)).toHaveLength(5);
+  expect(html.match(/role="tab"/g)).toHaveLength(6);
   expect(html).toContain("新回复");
   expect(html).not.toContain("已完成");
 });
@@ -461,7 +464,9 @@ it.each([
       `${key === "waiting" ? "busy" : "waiting"} conversation`,
     );
     expect(html).toMatch(
-      new RegExp(`role="tab" aria-selected="true"[^>]*>${label}</button>`),
+      new RegExp(
+        `role="tab" aria-selected="true"[^>]*>${label}<span class="library-tab-count">1</span></button>`,
+      ),
     );
   },
 );
@@ -545,4 +550,41 @@ it("hides 最近 when only unsent drafts or no conversations exist", () => {
   expect(renderSidebar()).not.toContain(LIBRARY.recent);
   rows = [];
   expect(renderSidebar()).not.toContain(LIBRARY.recent);
+});
+
+it("filters all forms of retained unsent work without searching conversation bodies", () => {
+  composerDrafts.update("session:idle", () => ({
+    text: "body-only-search-marker",
+    attachments: [],
+  }));
+  composerDrafts.update("resend:waiting", () => ({
+    text: "retained input",
+    attachments: [],
+  }));
+  const busy = freshThreadState("busy", agent.id, "/ordinary", "busy");
+  busy.queued = [[{ type: "text", text: "paused message" }]];
+  liveThreads.set("busy", busy);
+  const filter: LibraryFilter = {
+    kind: "selection",
+    state: "drafts",
+    agent: "",
+    group: "",
+    query: "",
+    favorites: false,
+  };
+  const html = renderLibrary(filter);
+  for (const key of ["idle", "waiting", "busy"])
+    expect(html).toContain(`${key} conversation`);
+  expect(html).toContain("待发 1 条");
+  expect(
+    renderLibrary({ ...filter, query: "body-only-search-marker" }),
+  ).not.toContain("idle conversation");
+  expect(composerDrafts.read("resend:waiting").text).toBe("retained input");
+});
+
+it("explains how to collect favorites in the empty state", () => {
+  rows = [row("unstarred", "idle")];
+  const html = renderLibrary({ kind: "favorites" });
+  expect(html).toContain("还没有收藏对话");
+  expect(html).toContain("点击对话右侧的星标收藏");
 });

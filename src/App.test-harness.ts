@@ -35,6 +35,7 @@ const h = vi.hoisted(() => ({
   >(),
   open: vi.fn(),
   clearDraft: vi.fn(),
+  preserveDraft: vi.fn(),
   reconnect: vi.fn(),
   index: [] as {
     agentId: string;
@@ -144,6 +145,12 @@ vi.mock("./runtime/drafts", () => ({
   composerDrafts: {
     read: () => h.draft,
     clear: h.clearDraft,
+    preserveNew: h.preserveDraft,
+    clearPreservedNew: (ticket: { draft: typeof h.draft }) => {
+      if (h.draft !== ticket.draft) throw new Error("changed");
+      h.clearDraft("new");
+      h.draft = { text: "", attachments: [] };
+    },
     update: (
       _key: string,
       update: (draft: typeof h.draft) => typeof h.draft,
@@ -261,6 +268,9 @@ export async function resetHarness() {
   h.pending = [];
   h.open.mockReset();
   h.clearDraft.mockReset();
+  h.preserveDraft
+    .mockReset()
+    .mockImplementation(async () => ({ draft: h.draft }));
   h.reconnect.mockReset();
   h.index = [];
   h.notification = null;
@@ -268,6 +278,7 @@ export async function resetHarness() {
   h.draft = { text: "OWN-ORIGINAL-DRAFT", attachments: [] };
   Object.assign(h.choice, {
     agentId: "A",
+    reviewRequired: false,
     cwd: "/draft-A",
     service: null,
     config: { model: "model-A", reasoning: "ultra" },

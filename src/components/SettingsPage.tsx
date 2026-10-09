@@ -15,6 +15,7 @@ import {
 } from "./GeneralSettings";
 import { CredentialSettings } from "./CredentialSettings";
 import { LifeModelSettings } from "./LifeModelSettings";
+import "../settings-library-redesign.css";
 import { ResumeDraftButton } from "./ResumeDraftButton";
 
 export type SettingsTab = "keys" | "lifemodel" | "general";
@@ -78,7 +79,10 @@ export function SettingsPage({
   }, [tab]);
 
   return (
-    <main className="main settings-page" hidden={!active}>
+    <main
+      className="main settings-page settings-redesign-page"
+      hidden={!active}
+    >
       <div className="topbar settings-topbar">
         <div className="title">{STRINGS.settings.title}</div>
         <ResumeDraftButton onClick={onResumeDraft} />

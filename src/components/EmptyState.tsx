@@ -3,6 +3,9 @@
  * 消息栏。Agent 选定后预开草稿会话以拿到模型选项；发送即把草稿变成
  * 真会话并切到会话页。
  */
+import { PreservedDrafts } from "./PreservedDrafts";
+import { REDESIGN as R } from "../runtime/redesign_strings";
+import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
 import { chooseDirectory } from "../runtime/dialogs";
 import { toUiNotice, type UiNotice } from "../runtime/ui_error";
@@ -111,7 +114,9 @@ export function EmptyState({
   active = true,
   onPreparedKey,
   composerTarget,
+  onRestoreDraft,
 }: {
+  onRestoreDraft?: (key: string) => Promise<void>;
   onPreparedKey?: (key: string | null) => void;
   composerTarget?: HTMLElement | null;
   header?: ReactNode;
@@ -123,6 +128,7 @@ export function EmptyState({
   initialAgentId?: string | null;
   initialAgentRevision?: number;
   initialSelection?: {
+    requiresReview?: boolean;
     service: ServiceChoice | null;
     config: Record<string, unknown>;
   };
@@ -140,6 +146,15 @@ export function EmptyState({
   useEffect(() => {
     newConversationChoice.cwd = folder;
   }, [folder]);
+  const [selectionNeedsReview, setSelectionNeedsReview] = useState(
+    newConversationChoice.reviewRequired === true ||
+      Boolean(
+        newConversationChoice.service &&
+        !newConversationChoice.service.revision,
+      ),
+  );
+  const selectionReviewRef = useRef(selectionNeedsReview);
+  selectionReviewRef.current = selectionNeedsReview;
   const work = useWorkPolicy(cwd);
   const requestCwd = cwd ? (work.cwd ?? cwd) : null;
   const preparedForConversation = useConversationAgentReadiness(agents);
@@ -300,6 +315,24 @@ export function EmptyState({
   } | null>(null);
   const currentPair = useRef(pair);
   currentPair.current = pair;
+  const selectionEpoch = useRef(0);
+  const requireCurrentService = async () => {
+    if (!service) return;
+    const epoch = selectionEpoch.current;
+    const items = await listCredentials().catch(() => []);
+    if (
+      !mounted.current ||
+      currentPair.current !== pair ||
+      selectionEpoch.current !== epoch
+    )
+      throw new Error(R.selectionReview);
+    if (!serviceSelectionIsCurrent(service, items)) {
+      selectionReviewRef.current = true;
+      setSelectionNeedsReview(true);
+      newConversationChoice.reviewRequired = true;
+      throw new Error(R.selectionReview);
+    }
+  };
   const requestedAgent = useRef<{ id: string | null; revision: number }>({
     id: null,
     revision: -1,
@@ -316,10 +349,18 @@ export function EmptyState({
       id: initialAgentId,
       revision: initialAgentRevision,
     };
+    selectionEpoch.current++;
     // Do not let the previous prepared conversation copy its options over a
     // newly confirmed selection while the replacement is opening.
     setDraftKey(null);
+    setFolder(newConversationChoice.cwd);
     if (initialSelection) {
+      const review =
+        initialSelection.requiresReview === true ||
+        Boolean(initialSelection.service && !initialSelection.service.revision);
+      selectionReviewRef.current = review;
+      setSelectionNeedsReview(review);
+      newConversationChoice.reviewRequired = review;
       setAgentId(initialAgentId);
       setService(initialSelection.service);
       newConversationChoice.config = { ...initialSelection.config };
@@ -348,7 +389,7 @@ export function EmptyState({
       setOpening(false);
       return;
     }
-    if (!candidateSelected || !connectionAllowed) {
+    if (!candidateSelected || !connectionAllowed || selectionNeedsReview) {
       setOpening(false);
       return;
     }
@@ -384,14 +425,22 @@ export function EmptyState({
       }
       setOpening(true);
       setDraftError(null);
-      threads
-        .open({
+      (async () => {
+        await requireCurrentService();
+        if (
+          cancelled ||
+          selectionReviewRef.current ||
+          currentPair.current !== pair
+        )
+          throw new Error(R.selectionReview);
+        return threads.open({
           agentId,
           cwd: requestCwd!,
           service,
           serviceRevision: service?.revision,
           fresh: handedOffKeys.current.size > 0,
-        })
+        });
+      })()
         .then(async (state) => {
           openedKey = state.key;
           if (
@@ -479,6 +528,7 @@ export function EmptyState({
     };
   }, [
     draftRevision,
+    selectionNeedsReview,
     agentId,
     candidateSelected,
     connectionAllowed,
@@ -583,7 +633,16 @@ export function EmptyState({
     };
     if (!mounted.current || !activeRef.current || currentPair.current !== pair)
       throw new Error(STRINGS.repair.sendFailed);
+    if (selectionReviewRef.current) throw new Error(R.selectionReview);
     if (readRequired()) throw new Error(C.readRequired);
+    if (service) await requireCurrentService();
+    if (
+      !mounted.current ||
+      !activeRef.current ||
+      currentPair.current !== pair ||
+      selectionReviewRef.current
+    )
+      throw new Error(R.selectionReview);
     if (
       !agentId ||
       !isAutomaticConnectionAllowed(agentId) ||
@@ -634,12 +693,14 @@ export function EmptyState({
         authenticationBlocked(key)
       )
         throw new Error(STRINGS.repair.sendFailed);
+      if (selectionReviewRef.current) throw new Error(R.selectionReview);
       if (readRequired()) throw new Error(C.readRequired);
       pending = await rememberPendingConversation(
         "new",
         submittedDraft,
         target,
       );
+      if (service) await requireCurrentService();
       if (
         !isCurrentCandidate(agentId) ||
         !isAutomaticConnectionAllowed(agentId) ||
@@ -647,6 +708,7 @@ export function EmptyState({
         authenticationBlocked(key)
       )
         throw new Error(STRINGS.repair.sendFailed);
+      if (selectionReviewRef.current) throw new Error(R.selectionReview);
       if (readRequired()) throw new Error(C.readRequired);
       await sendNewConversation(key, blocks);
       finishPendingConversation(
@@ -748,6 +810,7 @@ export function EmptyState({
   ): Promise<boolean> => {
     // A direct send consumes any armed one-shot so it cannot fire twice.
     sendAfterFolder.current = null;
+    if (selectionReviewRef.current) throw new Error(R.selectionReview);
     if (requestCwd) {
       await send(blocks, submittedDraft);
       return true;
@@ -797,6 +860,7 @@ export function EmptyState({
     cwd && agentId && work.ready && !work.enabled(agentId),
   );
   const note =
+    (selectionNeedsReview ? R.selectionReview : null) ??
     (explicitReadRequired ? C.readRequired : null) ??
     (!connectionAllowed ? A.disconnectedHint : null) ??
     work.error ??
@@ -839,6 +903,8 @@ export function EmptyState({
       onGoSettings(id);
       return;
     }
+    setSelectionNeedsReview(false);
+    newConversationChoice.reviewRequired = false;
     setDraftKey(null);
     setService(selection.service);
     setAgentId(id);
@@ -866,11 +932,13 @@ export function EmptyState({
     )
       throw new Error(STRINGS.repair.configFailed);
     const request = requestedAgent.current;
+    const epoch = selectionEpoch.current;
     const ownsApplication = () =>
       mounted.current &&
       isCurrentCandidate(agentId) &&
       !readRequired() &&
       currentPair.current === pair &&
+      selectionEpoch.current === epoch &&
       requestedAgent.current === request;
     const sameService =
       (!choice.service && !service) ||
@@ -881,7 +949,16 @@ export function EmptyState({
         choice.service.revision === service.revision);
     if (sameService) {
       if (readRequired()) throw new Error(C.readRequired);
-      if (service || choice.modelValue === null) return;
+      // An explicit source choice releases the missing-history guard. Do not
+      // apply unknown historical options; the next preparation reads real ones.
+      if (selectionReviewRef.current) {
+        setDraftKey(null);
+        newConversationChoice.config = {};
+        setDraftError(null);
+        failedPairRef.current = null;
+        return true;
+      }
+      if (service || choice.modelValue === null) return true;
       if (
         !draft ||
         !modelOption ||
@@ -889,7 +966,8 @@ export function EmptyState({
         !modelOption.options.some((item) => item.value === choice.modelValue)
       )
         throw new Error(STRINGS.repair.configFailed);
-      if (modelOption.currentValue === choice.modelValue && !draftError) return;
+      if (modelOption.currentValue === choice.modelValue && !draftError)
+        return true;
       const expected = {
         ...newConversationChoice.config,
         [modelOption.id]: choice.modelValue,
@@ -898,7 +976,7 @@ export function EmptyState({
       try {
         if (modelOption.currentValue !== choice.modelValue)
           await threads.setConfig(draft.key, modelOption.id, choice.modelValue);
-        if (!ownsApplication()) return;
+        if (!ownsApplication()) return false;
         if (
           threads
             .thread(draft.key)
@@ -907,7 +985,7 @@ export function EmptyState({
         )
           throw new Error(STRINGS.repair.configFailed);
         for (const [id, value] of Object.entries(expected)) {
-          if (!ownsApplication()) return;
+          if (!ownsApplication()) return false;
           const current = threads.thread(draft.key);
           const option = current?.configOptions.find((item) => item.id === id);
           if (
@@ -957,7 +1035,7 @@ export function EmptyState({
       } finally {
         if (applyingModel.current === draft.key) applyingModel.current = null;
       }
-      return;
+      return ownsApplication();
     }
     // Choosing a different source only replaces the unsent draft's selection.
     // The normal preparation path checks it before sending is allowed.
@@ -967,6 +1045,7 @@ export function EmptyState({
     setDraftError(null);
     failedPairRef.current = null;
     setChoiceDialog(null);
+    return true;
   };
   const agentChoiceTrigger = useRef<HTMLButtonElement>(null);
   const modelChoiceTrigger = useRef<HTMLButtonElement>(null);
@@ -1029,9 +1108,13 @@ export function EmptyState({
       )}
       {candidateSelected && draft && sessionOptions(draft, true).length > 0 && (
         <WorkspacePopover
-          label={<SlidersHorizontalIcon size={17} />}
-          title={W.options}
-          iconOnly
+          label={
+            <>
+              <span>{R.moreSettings}</span>
+              <SlidersHorizontalIcon size={15} />
+            </>
+          }
+          title={R.moreSettings}
           disabled={!active}
         >
           <SessionOptionsList thread={draft} composer />
@@ -1042,45 +1125,32 @@ export function EmptyState({
 
   const editor = (
     <>
+      {onRestoreDraft && (
+        <PreservedDrafts
+          onRestore={async (key) => {
+            selectionEpoch.current++;
+            await onRestoreDraft(key);
+            const restored = newConversationChoice;
+            setFolder(restored.cwd);
+            setAgentId(restored.agentId);
+            setService(restored.service);
+            const review =
+              restored.reviewRequired === true ||
+              Boolean(restored.service && !restored.service.revision);
+            selectionReviewRef.current = review;
+            setSelectionNeedsReview(review);
+            newConversationChoice.reviewRequired = review;
+            setDraftKey(null);
+            setDraftError(null);
+            failedPairRef.current = null;
+            setDraftRevision((value) => value + 1);
+          }}
+        />
+      )}
       <div className="workspace-start-intro" hidden={!!composerTarget}>
-        <h1>{W.startTitle}</h1>
-        <p>{W.startSubtitle}</p>
-      </div>
-      <div className="workspace-folder-bar">
-        <span className="workspace-folder-label">{W.workingFolder}</span>
-        <button
-          type="button"
-          className={`workspace-folder-button${folder ? " selected" : ""}`}
-          aria-label={folder ? W.changeFolder : W.folder}
-          title={folder ?? undefined}
-          disabled={
-            picking ||
-            !!unsent.pendingConversation ||
-            draft?.submitting ||
-            draft?.running
-          }
-          onClick={() => void pickProject()}
-        >
-          <FolderSimpleIcon size={18} />
-          <span>{folder ? basename(folder) : W.folder}</span>
-          <CaretDownIcon size={12} />
-        </button>
-        {folder && (
-          <button
-            type="button"
-            className="workspace-folder-clear icon-btn"
-            aria-label={W.clearFolder}
-            disabled={
-              picking ||
-              !!unsent.pendingConversation ||
-              draft?.submitting ||
-              draft?.running
-            }
-            onClick={() => setFolder(null)}
-          >
-            <XIcon size={14} />
-          </button>
-        )}
+        <span className="workspace-start-kicker">{R.startKicker}</span>
+        <h1>{R.startTitle}</h1>
+        <p>{R.startSubtitle}</p>
       </div>
       {!hasMyAgent && (
         <div className="workspace-welcome">
@@ -1141,7 +1211,8 @@ export function EmptyState({
         disabled={
           !(ready || (agentSendable && !cwd)) ||
           draftError !== null ||
-          needsPreparation
+          needsPreparation ||
+          selectionNeedsReview
         }
         editableWhenDisabled
         prepareAction={
@@ -1167,6 +1238,43 @@ export function EmptyState({
         autofocus={active}
         fit
       />
+      <div className="workspace-folder-bar">
+        <span className="workspace-folder-label">{W.workingFolder}</span>
+        <button
+          type="button"
+          className={`workspace-folder-button${folder ? " selected" : ""}`}
+          aria-label={folder ? W.changeFolder : W.folder}
+          title={folder ?? undefined}
+          disabled={
+            picking ||
+            !!unsent.pendingConversation ||
+            draft?.submitting ||
+            draft?.running
+          }
+          onClick={() => void pickProject()}
+        >
+          <FolderSimpleIcon size={18} />
+          <span>{folder ? basename(folder) : W.folder}</span>
+          <CaretDownIcon size={12} />
+        </button>
+        {folder && (
+          <button
+            type="button"
+            className="workspace-folder-clear icon-btn"
+            aria-label={W.clearFolder}
+            disabled={
+              picking ||
+              !!unsent.pendingConversation ||
+              draft?.submitting ||
+              draft?.running
+            }
+            onClick={() => setFolder(null)}
+          >
+            <XIcon size={14} />
+          </button>
+        )}
+        <span className="workspace-folder-hint">{R.folderHint}</span>
+      </div>
       {(draftError ||
         draft?.connectionLost ||
         draft?.sourceError ||
@@ -1241,7 +1349,21 @@ export function EmptyState({
             }}
             existingOption={service ? null : modelOption}
             readingModels={opening || !!draft?.configuring}
-            onApply={applyModel}
+            onApply={async (choice) => {
+              const request = requestedAgent.current;
+              const epoch = selectionEpoch.current;
+              const applied = await applyModel(choice);
+              if (
+                !applied ||
+                requestedAgent.current !== request ||
+                selectionEpoch.current !== epoch ||
+                currentPair.current !== pair
+              )
+                return;
+              selectionReviewRef.current = false;
+              setSelectionNeedsReview(false);
+              newConversationChoice.reviewRequired = false;
+            }}
             onPrepare={() => prepareFromChoice(agentId ?? undefined)}
             onManageServices={
               onManageServices

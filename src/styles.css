@@ -1,54 +1,60 @@
 /* Farfold · F 稿设计 token + 壳层样式（纸白为默认主题） */
 
 :root {
-  --bg: #ffffff;
-  --sidebar: #f6f6f3;
-  --row-hover: #efefec;
-  --row-active: #e9e9e5;
-  --ink: #292a28;
-  --ink-2: #797c74;
-  --ink-3: #8a8a83;
-  --line: #e8e9e3;
-  --accent: #6655bd;
-  --accent-soft: #efedf8;
+  --bg: #fff;
+  --card: #fff;
+  --card-dim: #f8f9fa;
+  --sidebar: #f5f6f7;
+  --row-hover: #eceff2;
+  --row-active: #e9ecef;
+  --ink: #24272b;
+  --ink-2: #646b73;
+  --ink-3: #6b737c;
+  --line: #e3e6e9;
+  --accent: #292d33;
+  --accent-soft: #e9ecef;
+  --on-accent: #fff;
   --id-0: #6655bd;
   --id-1: #15803d;
   --id-2: #b45309;
   --id-3: #0369a1;
   --id-4: #9a9a92;
-  --amber: #996121;
-  --green: #327259;
-  --red: #b64c47;
-  --card: #ffffff;
-  --card-dim: #fafaf9;
-  --on-accent: #fff;
-  --shadow-sm: rgba(0, 0, 0, 0.04);
-  --shadow-md: rgba(0, 0, 0, 0.1);
-  --shadow-lg: rgba(0, 0, 0, 0.2);
-  --backdrop: rgba(0, 0, 0, 0.27);
-  --focus-ring: rgba(79, 70, 229, 0.45);
-  --focus-ring-soft: rgba(79, 70, 229, 0.08);
+  --amber: #95601c;
+  --green: #28745a;
+  --red: #b44343;
+  --shadow-sm: #1725350a;
+  --shadow-md: #1725351a;
+  --shadow-lg: #17253533;
+  --backdrop: #17253545;
+  --focus-ring: #3c7a9799;
+  --focus-ring-soft: #3c7a9714;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
   --sans:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
     "PingFang SC", sans-serif;
+  --desktop-send: var(--accent);
+  --desktop-on-send: var(--on-accent);
+  --desktop-shadow: var(--shadow-sm);
 }
-
 :root[data-theme="dark"] {
-  --bg: #1e1e1b;
-  --sidebar: #232320;
-  --row-hover: #2c2c28;
-  --row-active: #33332e;
-  --ink: #ecebe6;
-  --ink-2: #a9a8a1;
-  --ink-3: #7e7d76;
-  --line: #343431;
-  --accent: #7c74f2;
-  --accent-soft: rgba(124, 116, 242, 0.14);
-  --card: #252523;
-  --card-dim: #21211f;
-  --focus-ring: rgba(124, 116, 242, 0.55);
-  --focus-ring-soft: rgba(124, 116, 242, 0.15);
+  --bg: #202226;
+  --card: #25282d;
+  --card-dim: #23262a;
+  --sidebar: #1c1f23;
+  --row-hover: #30353c;
+  --row-active: #353b43;
+  --ink: #eef0f2;
+  --ink-2: #b4bac2;
+  --ink-3: #a6afba;
+  --line: #3c4148;
+  --accent: #e8ebef;
+  --accent-soft: #353b43;
+  --on-accent: #202226;
+  --green: #83c7ad;
+  --amber: #e3b46e;
+  --red: #ef9696;
+  --focus-ring: #8fbad4;
+  --focus-ring-soft: #8fbad422;
 }
 
 * {

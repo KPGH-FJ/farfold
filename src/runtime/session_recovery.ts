@@ -183,7 +183,11 @@ function emptyFailedPlaceholder(state: ThreadState): boolean {
   return (
     unchanged &&
     !hasUnsentWork(state.key) &&
-    [`session:${state.key}`, `queue-edit:${state.key}`].every((key) => {
+    [
+      `session:${state.key}`,
+      `queue-edit:${state.key}`,
+      `resend:${state.key}`,
+    ].every((key) => {
       const draft = composerDrafts.read(key);
       return !draft.sendPending && !draft.pendingConversation;
     })

@@ -6,8 +6,9 @@ import type { AgentCardModel, AgentsState } from "../runtime/agents";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
 import { installProgressLabel } from "../runtime/program_progress";
-import { ACCESS_STRINGS } from "../runtime/access_strings";
 import { R5_PROGRAM_STRINGS as R } from "../runtime/r5_program_strings";
+import { ProgramChangeReview, type ProgramChange } from "./ProgramChangeReview";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { DangerConfirm } from "./DangerConfirm";
 import "../r5-program-access.css";
 export interface Installation {
@@ -81,6 +82,7 @@ export function programSummary(
   return `${label} · ${S.installedCount(programs.length)}`;
 }
 export function ProgramManager({
+  active = true,
   card,
   agents,
   inventory,
@@ -91,6 +93,7 @@ export function ProgramManager({
   connectDisabled = false,
   prerequisitesReady = true,
 }: {
+  active?: boolean;
   card: AgentCardModel;
   agents: AgentsState;
   inventory: ProgramInventory;
@@ -106,6 +109,8 @@ export function ProgramManager({
   const [busy, setBusy] = useState<"check" | "remove" | "connect" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<string | null>(null);
+  const operationPending = useRef(false);
+  const [change, setChange] = useState<ProgramChange | null>(null);
   const operationBusy = !!busy || !!agents.busy[card.id];
   // Program changes end safe idle connections themselves on the backend;
   // only in-flight operations, inventory state and explicit blockers lock.
@@ -115,23 +120,31 @@ export function ProgramManager({
     fn: () => Promise<unknown>,
   ) => {
     if (
+      operationPending.current ||
       locked ||
       (kind === "connect" && (connectDisabled || !prerequisitesReady))
     )
-      return;
+      return false;
+    operationPending.current = true;
     setBusy(kind);
     setError(null);
     try {
       const result = await fn();
-      if (result === false) return;
+      if (result === false) return false;
       await agents.refresh();
       // Connection display follows the refreshed card, including failed checks.
       if (kind !== "connect") setConfirm(null);
+      return true;
     } catch (e) {
       setError(uiError(e, S.failure));
+      return false;
     } finally {
-      await refresh();
-      setBusy(null);
+      try {
+        await refresh();
+      } finally {
+        operationPending.current = false;
+        setBusy(null);
+      }
     }
   };
   const progress = agents.installProgress[card.id];
@@ -142,11 +155,38 @@ export function ProgramManager({
   const ready = card.status === "connected" || prerequisitesReady;
   const currentStatus =
     card.status === "connected"
-      ? S.connected
+      ? U.programReady
       : prerequisitesReady
         ? S.prepared
         : R.preparationRequired;
   const otherItems = items.filter((item) => item.id !== current?.id);
+  const changeScope = JSON.stringify([
+    card.id,
+    card.status,
+    card.programPath,
+    items,
+    locked,
+    installDisabled,
+  ]);
+  const latestChangeScope = useRef(changeScope);
+  latestChangeScope.current = changeScope;
+  const reviewChange = (
+    candidate: string,
+    apply: ProgramChange["apply"],
+    update = false,
+  ) => {
+    if (locked || (update && installDisabled)) return;
+    setChange({
+      scope: changeScope,
+      current: current
+        ? `${current.version ?? S.unknownVersion} · ${current.path}`
+        : (card.programPath ?? card.name),
+      candidate,
+      apply,
+      update,
+    });
+  };
+
   const externalSetup =
     card.status === "none" && !card.installable && !card.registerable;
   const officialUrl =
@@ -219,7 +259,7 @@ export function ProgramManager({
               disabled={locked || connectDisabled || !prerequisitesReady}
               onClick={() => void act("connect", onConnect)}
             >
-              {ACCESS_STRINGS.connect}
+              {U.programCheck}
             </button>
           )}
           {!item.selected && (
@@ -229,8 +269,9 @@ export function ProgramManager({
                 locked || card.status === "none" || card.status === "discovered"
               }
               onClick={() =>
-                void act("check", () =>
-                  agents.selectInstallation(card.id, item.id),
+                reviewChange(
+                  `${item.version ?? S.unknownVersion} · ${item.path}`,
+                  () => agents.selectInstallation(card.id, item.id),
                 )
               }
             >
@@ -337,7 +378,7 @@ export function ProgramManager({
                 disabled={locked || connectDisabled || !prerequisitesReady}
                 onClick={() => void act("connect", onConnect)}
               >
-                {ACCESS_STRINGS.connect}
+                {U.programCheck}
               </button>
             )}
           </div>
@@ -367,7 +408,8 @@ export function ProgramManager({
                 className="btn btn-ghost"
                 disabled={locked || installDisabled || !onInstall}
                 onClick={() => {
-                  if (!locked && !installDisabled) void onInstall?.();
+                  if (onInstall)
+                    reviewChange(U.candidateUpdate, onInstall, true);
                 }}
               >
                 {card.programEnv ? S.componentUpdate : STRINGS.install.update}
@@ -387,7 +429,7 @@ export function ProgramManager({
                         multiple: false,
                       });
                       if (typeof path === "string")
-                        await act("check", () =>
+                        reviewChange(path, () =>
                           agents.selectProgram(card.id, path),
                         );
                     } catch (e) {
@@ -404,7 +446,9 @@ export function ProgramManager({
                 className="btn btn-text"
                 disabled={locked}
                 onClick={() =>
-                  void act("check", () => agents.selectProgram(card.id, null))
+                  reviewChange(U.candidateBundled, () =>
+                    agents.selectProgram(card.id, null),
+                  )
                 }
               >
                 {STRINGS.install.bundled}
@@ -412,6 +456,21 @@ export function ProgramManager({
             )}
           </div>
         </details>
+      )}
+      {active && change && (
+        <ProgramChangeReview
+          change={change}
+          busy={operationBusy}
+          error={error ?? agents.errors[card.id]}
+          valid={!locked && change.scope === changeScope}
+          onClose={() => setChange(null)}
+          onConfirm={() => {
+            if (locked || change.scope !== latestChangeScope.current) return;
+            void act("check", change.apply).then((saved) => {
+              if (saved) setChange(null);
+            });
+          }}
+        />
       )}
     </section>
   );

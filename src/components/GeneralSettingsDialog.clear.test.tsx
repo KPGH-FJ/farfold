@@ -102,6 +102,14 @@ function button(label: string) {
     (node) => node.type === "button" && node.props.children === label,
   );
 }
+function acknowledge() {
+  const checkbox = render().find(
+    (node) => node.type === "input" && node.props.type === "checkbox",
+  )!;
+  (checkbox.props.onChange as (event: unknown) => void)({
+    target: { checked: true },
+  });
+}
 beforeEach(() => {
   h.slots = [];
   h.running = false;
@@ -133,6 +141,7 @@ it("offers the clear action with its scope only after an explicit confirmation",
     expect(confirm.some((node) => node.props.children === item)).toBe(true);
   for (const item of P.clearDataKeeps)
     expect(confirm.some((node) => node.props.children === item)).toBe(true);
+  acknowledge();
   (button(P.clearDataConfirm)!.props.onClick as () => void)();
   await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledOnce());
   expect(h.invoke).toHaveBeenCalledWith("farfold_data_clear");
@@ -146,6 +155,7 @@ it("offers the clear action with its scope only after an explicit confirmation",
 it("keeps the confirmation open and reports a partial failure honestly", async () => {
   h.invoke.mockRejectedValueOnce(new Error("keychain refused"));
   (button(P.clearData)!.props.onClick as () => void)();
+  acknowledge();
   (button(P.clearDataConfirm)!.props.onClick as () => void)();
   await vi.waitFor(() =>
     expect(
@@ -184,6 +194,7 @@ it("locks the entire dialog and footer until clear and restart complete", async 
     }),
   );
   (button(P.clearData)!.props.onClick as () => void)();
+  acknowledge();
   const confirm = button(P.clearDataConfirm)!.props.onClick as () => void;
   confirm();
   confirm();
@@ -203,4 +214,17 @@ it("locks the entire dialog and footer until clear and restart complete", async 
     render().find((node) => node.type === WorkspaceDialog)?.props.busy,
   ).toBe(true);
   expect(button(P.understood)?.props.disabled).toBe(true);
+});
+
+it("requires scope acknowledgement and rechecks work before a stale clear handler can run", () => {
+  (button(P.clearData)!.props.onClick as () => void)();
+  expect(button(P.clearDataConfirm)!.props.disabled).toBe(true);
+  (button(P.clearDataConfirm)!.props.onClick as () => void)();
+  expect(h.invoke).not.toHaveBeenCalled();
+  acknowledge();
+  const stale = button(P.clearDataConfirm)!.props.onClick as () => void;
+  h.running = true;
+  stale();
+  expect(h.invoke).not.toHaveBeenCalled();
+  expect(button(P.clearDataConfirm)!.props.disabled).toBe(true);
 });

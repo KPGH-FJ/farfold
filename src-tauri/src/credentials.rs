@@ -228,6 +228,7 @@ fn complete_service(item: &Credential) -> bool {
 pub(crate) struct ServiceSelection {
     pub id: String,
     pub model: String,
+    pub revision: Option<String>,
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
@@ -291,12 +292,19 @@ fn snapshot_with(
     if expected.is_some_and(|expected| expected != &identity) {
         return Err("此对话的 API 来源已改变，无法继续使用原设置".into());
     }
+    let connection_revision =
+        service_revision(&endpoint, &item.api_type, &models, &item.secret_ref);
+    if selection
+        .revision
+        .as_ref()
+        .is_some_and(|revision| revision != &connection_revision)
+    {
+        return Err("此服务的配置已改变，请重新选择服务和模型后再使用".into());
+    }
     let secret = vault
         .get(&item.secret_ref)
         .ok_or("无法读取 API Key，请检查系统钥匙串后重试")?;
     validate_secret(&secret)?;
-    let connection_revision =
-        service_revision(&endpoint, &item.api_type, &models, &item.secret_ref);
     Ok(ServiceSnapshot {
         identity,
         endpoint,
@@ -960,6 +968,7 @@ mod tests {
         let saved = save(&store, &vault, input(None, "service-secret")).unwrap();
         legacy_grant(&store, &saved.id, "a", "TOKEN", true);
         let selection = ServiceSelection {
+            revision: None,
             id: saved.id.clone(),
             model: "fixture-model".into(),
         };
@@ -1022,6 +1031,7 @@ mod tests {
         let vault = Fake::default();
         let saved = save(&store, &vault, input(None, "initial-secret")).unwrap();
         let selection = ServiceSelection {
+            revision: None,
             id: saved.id.clone(),
             model: "fixture-model".into(),
         };
@@ -1064,6 +1074,7 @@ mod tests {
         let vault = Fake::default();
         let saved = save(&store, &vault, input(None, "first")).unwrap();
         let selection = ServiceSelection {
+            revision: None,
             id: saved.id.clone(),
             model: "fixture-model".into(),
         };
@@ -1078,6 +1089,42 @@ mod tests {
             read(&store).unwrap()[0].grants.is_empty(),
             "saving is not authorization to an Agent"
         );
+    }
+
+    #[test]
+    fn selected_service_revision_is_checked_before_reading_any_key() {
+        for change in ["unconfirmed", "endpoint", "format", "models", "key"] {
+            let (_dir, store) = store();
+            let vault = Fake::default();
+            let saved = save(&store, &vault, input(None, "original-secret")).unwrap();
+            let revision = View::from(&read(&store).unwrap()[0]).revision;
+            let selection: ServiceSelection = serde_json::from_value(serde_json::json!({
+                "id": saved.id, "model": "fixture-model",
+                "revision": if change == "unconfirmed" { "" } else { &revision }
+            }))
+            .unwrap();
+            if change != "unconfirmed" {
+                assert!(snapshot_with(&store, &selection, None, &vault).is_ok());
+                let mut edit = input(Some(saved.id), "new-secret");
+                match change {
+                    "endpoint" => edit.endpoint = "https://different.test/api".into(),
+                    "format" => edit.api_type = "responses".into(),
+                    "models" => edit.models.push("another-model".into()),
+                    _ => {}
+                }
+                save(&store, &vault, edit).unwrap();
+            }
+            let reads = vault.reads.get();
+            assert!(
+                snapshot_with(&store, &selection, None, &vault).is_err(),
+                "{change}"
+            );
+            assert_eq!(
+                vault.reads.get(),
+                reads,
+                "{change} must fail before Key access"
+            );
+        }
     }
 
     #[test]

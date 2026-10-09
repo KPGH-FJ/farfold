@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
+import "../conversation-redesign.css";
 /**
  * 会话选项列表：渲染 Agent 声明的全部 configOptions——select 用分组
  * 下拉（复用 ModelPicker），boolean 用开关，未知类型只读。模型选项仍
@@ -7,7 +10,10 @@
 import { ModelPicker } from "./ModelPicker";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { isReasoningOption } from "./ReasoningControl";
-import { configOptionChangeBlocked } from "../runtime/protected_config";
+import {
+  configOptionChangeBlocked,
+  protectedConfigIds,
+} from "../runtime/protected_config";
 import { useAuthenticationActivity } from "../runtime/authentication";
 import { STRINGS } from "../runtime/strings";
 import {
@@ -34,52 +40,126 @@ function OptionRow({
   option: ConfigOptionView;
 }) {
   useAuthenticationActivity(thread.agentId);
-  const disabled = configOptionChangeBlocked(thread, option.id);
-  const change = (value: unknown) => {
+  const [selection, setSelection] = useState<{
+    value: unknown;
+    baseline: unknown;
+  } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const recorded = protectedConfigIds(
+    thread.configOptions,
+    thread.configCheck?.protectedIds,
+  ).has(option.id);
+  const disabled = saving || configOptionChangeBlocked(thread, option.id);
+  const known =
+    option.type === "boolean" ||
+    (option.type === "select" && option.options.length > 0);
+  const pending =
+    selection && Object.is(selection.baseline, option.currentValue)
+      ? selection
+      : null;
+  const proposed = pending?.value ?? option.currentValue;
+  const on = proposed === true || proposed === "true";
+  const label = optionLabel(option);
+  const choose = (value: unknown) => {
     if (configOptionChangeBlocked(thread, option.id)) return;
-    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
-    void threads.setConfig(thread.key, option.id, value).catch(() => undefined);
+    setFailed(false);
+    setSelection(
+      Object.is(value, option.currentValue)
+        ? null
+        : { value, baseline: option.currentValue },
+    );
   };
-  if (option.type === "select" && option.options.length > 0) {
-    return (
-      <div className="so-row">
-        <span className="so-name" title={option.description ?? option.id}>
-          {optionLabel(option)}
-        </span>
-        <ModelPicker
-          option={option}
-          label={optionLabel(option)}
-          disabled={disabled}
-          onPick={change}
-        />
-      </div>
-    );
-  }
-  if (option.type === "boolean") {
-    const on = option.currentValue === true || option.currentValue === "true";
-    return (
-      <div className="so-row">
-        <span className="so-name" title={option.description ?? option.id}>
-          {optionLabel(option)}
-        </span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={on}
-          className={`so-toggle${on ? " on" : ""}`}
-          disabled={disabled}
-          onClick={() => change(!on)}
-        />
-      </div>
-    );
-  }
+  const change = async () => {
+    if (!pending || configOptionChangeBlocked(thread, option.id)) return;
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
+    if (
+      option.type === "select" &&
+      !option.options.some((item) => item.value === pending.value)
+    )
+      return;
+    setSaving(true);
+    setFailed(false);
+    try {
+      await threads.setConfig(thread.key, option.id, pending.value);
+      setSelection(null);
+    } catch {
+      setFailed(true);
+    } finally {
+      setSaving(false);
+    }
+  };
   return (
-    <div className="so-row">
-      <span className="so-name" title={option.description ?? option.id}>
-        {optionLabel(option)}
-      </span>
-      <span className="so-value">{configValueLabel(option)}</span>
-    </div>
+    <section className="conversation-option">
+      <div className="so-row">
+        <span className="so-name">{label}</span>
+        {option.type === "select" && option.options.length > 0 ? (
+          <ModelPicker
+            option={{ ...option, currentValue: proposed }}
+            label={label}
+            disabled={disabled}
+            onPick={choose}
+          />
+        ) : option.type === "boolean" ? (
+          <button
+            type="button"
+            role="switch"
+            aria-label={label}
+            aria-checked={on}
+            className={`so-toggle${on ? " on" : ""}`}
+            disabled={disabled}
+            onClick={() => choose(!on)}
+          />
+        ) : (
+          <span className="so-value">{configValueLabel(option)}</span>
+        )}
+      </div>
+      <p className="conversation-option-description">
+        {option.description || R.descriptionUnknown}
+      </p>
+      <details className="conversation-option-details">
+        <summary>{R.optionDetails}</summary>
+        <p>{R.optionScope}</p>
+        <p>{recorded ? R.optionTiming : R.optionTimingTransient}</p>
+      </details>
+      {!known && <p className="conversation-option-note">{R.optionReadOnly}</p>}
+      {disabled && !saving && (
+        <p className="conversation-option-note">{R.optionLocked}</p>
+      )}
+      {pending && (
+        <div className="conversation-option-review">
+          <dl>
+            <dt>{R.currentValue}</dt>
+            <dd>{configValueLabel(option)}</dd>
+            <dt>{R.selectedValue}</dt>
+            <dd>{configValueLabel({ ...option, currentValue: proposed })}</dd>
+          </dl>
+          <div>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={saving}
+              onClick={() => setSelection(null)}
+            >
+              {R.optionCancel}
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={disabled}
+              onClick={() => void change()}
+            >
+              {saving
+                ? R.optionChanging
+                : recorded
+                  ? R.optionChange
+                  : R.optionApply}
+            </button>
+          </div>
+        </div>
+      )}
+      {failed && <p role="alert">{R.optionSaveError}</p>}
+    </section>
   );
 }
 

@@ -941,6 +941,7 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
             Arc::new(|_| {}),
             &f.store,
             Some(ServiceSelection {
+                revision: None,
                 id: "same-service".into(),
                 model: "model".into(),
             }),

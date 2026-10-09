@@ -1,0 +1,361 @@
+/* Agent area: the same real controls, grouped into neutral workbench surfaces. */
+.agent-redesign.agent-hub-main .agent-hub-shell {
+  max-width: 1120px;
+  padding: 30px 34px 40px;
+}
+.agent-redesign.agent-hub-main .agent-hub-heading {
+  margin-bottom: 26px;
+}
+.agent-redesign.agent-hub-main .agent-hub-heading h1 {
+  font-size: 26px;
+  letter-spacing: -0.5px;
+}
+.agent-redesign.agent-hub-main .agent-hub-heading p {
+  max-width: 660px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.agent-redesign.agent-hub-main .agent-hub-eyebrow {
+  color: var(--ink-2);
+}
+.agent-redesign.agent-hub-main .agent-hub-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 16px;
+}
+.agent-redesign.agent-hub-main .agent-hub-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: none;
+  padding: 20px;
+}
+.agent-redesign.agent-hub-main .agent-hub-card-description {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.agent-redesign.agent-hub-main .agent-hub-card-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.agent-redesign.agent-hub-main .agent-hub-card-actions .btn {
+  flex: 1 1 auto;
+  width: auto;
+  min-height: 36px;
+  height: auto;
+  gap: 7px;
+  justify-content: center;
+  padding: 8px 10px;
+  font-size: 12px;
+  white-space: normal;
+}
+.agent-redesign.agent-hub-main[data-view="added"] .agent-hub-card-actions {
+  flex-direction: row-reverse;
+}
+.agent-redesign.agent-hub-main .agent-hub-toolbar {
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.agent-redesign.agent-hub-main .agent-hub-search {
+  min-width: min(210px, 100%);
+}
+.agent-redesign.agent-hub-main .agent-hub-filter-row {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.agent-redesign.agent-hub-main .agent-hub-categories {
+  flex-wrap: wrap;
+}
+.agent-redesign.agent-hub-main .agent-hub-category.active {
+  background: var(--card-dim);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.agent-redesign.agent-hub-main .agent-hub-card-actions svg {
+  flex-shrink: 0;
+}
+
+.agent-setup-dialog[data-agent-redesign].agent-setup-dialog[data-agent-redesign] {
+  width: min(800px, calc(100vw - 40px));
+  max-height: calc(100dvh - 40px);
+  border-radius: 16px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-header {
+  padding: 20px 26px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-header h2 {
+  font-size: 18px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-context {
+  padding: 16px 26px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-tabs {
+  margin: 0 26px;
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card-dim);
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-tabs button {
+  flex: 1;
+  padding: 10px 8px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--ink-2);
+}
+.agent-setup-dialog[data-agent-redesign]
+  .agent-setup-tabs
+  button[aria-selected="true"] {
+  color: var(--ink);
+  background: var(--card);
+  box-shadow: 0 1px 3px var(--shadow-sm);
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-tabs button:disabled {
+  opacity: 0.55;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-body {
+  padding: 24px 26px;
+  scrollbar-gutter: stable;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-body h3 {
+  font-size: 17px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-footer {
+  padding: 16px 26px;
+  flex-wrap: wrap;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-footer > div {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-detail-body h4 {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-detail-description {
+  font-size: 13px;
+  line-height: 1.7;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-detail-identity h3 {
+  margin: 0;
+}
+.agent-capability-table,
+.agent-selection-diff table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
+}
+.agent-capability-table th,
+.agent-capability-table td,
+.agent-selection-diff th,
+.agent-selection-diff td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.agent-capability-table thead,
+.agent-selection-diff thead {
+  background: var(--card-dim);
+  color: var(--ink-2);
+}
+.agent-capability-table th:first-child {
+  width: 23%;
+}
+.agent-capability-table tbody th,
+.agent-selection-diff tbody th {
+  font-weight: 500;
+}
+.agent-capability-table td:last-child {
+  color: var(--ink-2);
+}
+.agent-evidence-details {
+  margin-top: 14px;
+}
+.agent-evidence-details summary {
+  color: var(--ink-2);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.agent-current-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px 20px;
+  margin: 0;
+}
+.agent-current-facts > div {
+  min-width: 0;
+}
+.agent-current-facts dt {
+  color: var(--ink-2);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.agent-current-facts dd {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.agent-setup-dialog[data-agent-redesign] .connection-account-summary {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--card);
+}
+.agent-model-source {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 14px;
+  padding: 14px 16px;
+  margin: 18px 0;
+  border-radius: 10px;
+  background: var(--card-dim);
+  font-size: 13px;
+}
+.agent-model-source > span,
+.agent-model-source > small {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.agent-model-source > strong {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.agent-model-source > small {
+  grid-column: 2;
+}
+.agent-model-source > details {
+  grid-column: 1 / -1;
+}
+.agent-selection-diff {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  margin: 18px 0;
+}
+.agent-selection-diff h4 {
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+.agent-selection-diff p {
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-management {
+  margin-top: 0;
+}
+.agent-setup-dialog[data-agent-redesign] .program-current {
+  border-radius: 12px;
+}
+.agent-setup-dialog[data-agent-redesign] .program-installation-management {
+  border: 0;
+  padding-inline: 0;
+  background: none;
+}
+.agent-setup-dialog[data-agent-redesign] .agent-setup-management > .btn {
+  margin-top: 18px;
+}
+.agent-setup-dialog[data-agent-redesign] .journey-method-card {
+  border-radius: 10px;
+  padding: 15px 16px;
+}
+.agent-setup-dialog[data-agent-redesign] .journey-method-card strong {
+  font-size: 14px;
+}
+.agent-setup-dialog[data-agent-redesign] .journey-method-card small {
+  line-height: 1.6;
+  font-size: 12px;
+}
+.agent-program-change p,
+.agent-custom-exit p {
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.agent-program-change summary {
+  font-size: 12px;
+  cursor: pointer;
+}
+.workspace-dialog[open]:has(> .agent-custom-layout) {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 64px);
+  overflow: hidden;
+}
+.workspace-dialog:has(> .agent-custom-layout) > .workspace-dialog-title {
+  flex-shrink: 0;
+}
+.agent-custom-layout {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.agent-custom-layout > .workspace-dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.agent-custom-layout > footer {
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.agent-custom-exit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.agent-redesign.agent-hub-main button:focus-visible,
+.agent-setup-dialog[data-agent-redesign] button:focus-visible,
+.agent-setup-dialog[data-agent-redesign] summary:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .agent-redesign.agent-hub-main .agent-hub-shell {
+    padding: 24px 18px;
+  }
+  .agent-redesign.agent-hub-main .agent-hub-heading {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .agent-redesign.agent-hub-main .agent-hub-search {
+    flex: 1 1 190px;
+  }
+  .agent-setup-dialog[data-agent-redesign].agent-setup-dialog[data-agent-redesign] {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-header,
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-context,
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-body,
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-footer {
+    padding: 18px;
+  }
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-tabs {
+    margin-inline: 18px;
+  }
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-context {
+    flex-wrap: wrap;
+  }
+  .agent-setup-dialog[data-agent-redesign] .agent-setup-tabs button {
+    padding-inline: 6px;
+  }
+  .agent-capability-table th,
+  .agent-capability-table td {
+    padding: 10px 6px;
+  }
+}

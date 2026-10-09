@@ -19,6 +19,7 @@ import {
 // authentication snapshot without requiring a mounted React dispatcher here.
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
+  useState: (initial: unknown) => [initial, () => {}],
   useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
 }));
 

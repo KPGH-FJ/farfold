@@ -34,6 +34,8 @@ vi.mock("react", async (original) => ({
     }
   },
 }));
+import { customAgentDraft } from "../runtime/custom_agent_draft";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { CustomAgentDialog } from "./CustomAgentDialog";
 import { CUSTOM_AGENT } from "../runtime/custom_agent_strings";
 type Element = ReactElement<Record<string, unknown>>;
@@ -76,6 +78,7 @@ function unmount() {
   for (const slot of h.slots) slot.cleanup?.();
 }
 beforeEach(() => {
+  customAgentDraft.clear();
   h.slots = [];
   h.effects = [];
   addCustom.mockReset();
@@ -196,3 +199,57 @@ it.each(["TOKEN", "1BAD=value", "BAD-NAME=value", "A=1\nA=2"])(
     expect(view.some((node) => node.props.role === "alert")).toBe(true);
   },
 );
+
+it("keeps all input when closing is cancelled, including environment lines", () => {
+  fill();
+  const env = render().filter((node) => node.type === "textarea")[1];
+  (env.props.onChange as (e: unknown) => void)({
+    target: { value: "LOCAL_VALUE=do-not-persist" },
+  });
+  (render()[0].props.onClose as () => void)();
+  expect(onClose).not.toHaveBeenCalled();
+  const resume = render().find(
+    (node) => node.props.children === U.customContinue,
+  )!;
+  (resume.props.onClick as () => void)();
+  expect(
+    render().filter((node) => node.type === "textarea")[1].props.value,
+  ).toBe("LOCAL_VALUE=do-not-persist");
+  expect(addCustom).not.toHaveBeenCalled();
+});
+
+it("retains a custom form only by explicit in-memory choice and restores it on reopening", () => {
+  fill();
+  (render()[0].props.onClose as () => void)();
+  expect(customAgentDraft.read()).toBeNull();
+  (
+    render().find((node) => node.props.children === U.customKeep)!.props
+      .onClick as () => void
+  )();
+  expect(onClose).toHaveBeenCalledOnce();
+  unmount();
+  h.slots = [];
+  h.effects = [];
+  const values = render()
+    .filter((node) => node.type === "input")
+    .map((node) => node.props.value);
+  expect(values).toEqual([" My Agent ", "/chosen/agent"]);
+  expect(addCustom).not.toHaveBeenCalled();
+});
+
+it("discards a retained custom draft only after the explicit discard choice", () => {
+  customAgentDraft.keep({
+    name: "old",
+    command: "/old/program",
+    args: "",
+    envText: "",
+  });
+  (render()[0].props.onClose as () => void)();
+  expect(customAgentDraft.read()).not.toBeNull();
+  (
+    render().find((node) => node.props.children === U.customDiscard)!.props
+      .onClick as () => void
+  )();
+  expect(customAgentDraft.read()).toBeNull();
+  expect(onClose).toHaveBeenCalledOnce();
+});

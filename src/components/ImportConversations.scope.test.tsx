@@ -66,6 +66,7 @@ vi.mock("../runtime/sessions", () => ({
   threads: { getSnapshot: () => ({ index: [] }), refreshIndex: h.refresh },
 }));
 import { ImportConversations } from "./ImportConversations";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import type { AgentCardModel } from "../runtime/agents";
 import type { DiscoveredConversation } from "../runtime/history_import";
@@ -760,4 +761,61 @@ it("ignores a preparation handoff whose lookup changed during preview release", 
   await idle();
   expect(props.onPrepare).not.toHaveBeenCalled();
   expect(h.discover).toHaveBeenCalledTimes(1);
+});
+
+it("filters Agent names without changing the selected Agent or starting a lookup", async () => {
+  const search = () =>
+    render().find((node) => node.props["aria-label"] === R.searchAgents)!;
+  (search().props.onChange as (event: unknown) => void)({
+    target: { value: "Agent B" },
+  });
+  expect(
+    render().some(
+      (node) => node.type === "strong" && node.props.children === "Agent A",
+    ),
+  ).toBe(false);
+  expect(
+    render().some(
+      (node) => node.type === "strong" && node.props.children === "Agent B",
+    ),
+  ).toBe(true);
+  expect(h.discover).not.toHaveBeenCalled();
+  (search().props.onChange as (event: unknown) => void)({
+    target: { value: "no-such-agent" },
+  });
+  expect(render().some((node) => node.props.children === R.noAgents)).toBe(
+    true,
+  );
+  click(R.clearSearch);
+  click(S.search);
+  await idle();
+  expect(h.discover).toHaveBeenCalledWith("a", undefined, null);
+});
+
+it("rechecks the selected original history without saving it or promoting read-only conditions", async () => {
+  click(S.search);
+  await idle();
+  const result = render().find(
+    (node) =>
+      node.type === "button" &&
+      Children.toArray(node.props.children as ReactNode).some(
+        (child) =>
+          isValidElement<{ children: ReactNode }>(child) &&
+          child.props.children === row.title,
+      ),
+  )!;
+  (result.props.onClick as () => void)();
+  await idle();
+  click(R.previewRecheck);
+  await idle();
+  expect(h.preview).toHaveBeenCalledTimes(2);
+  expect(h.preview).toHaveBeenLastCalledWith("a", row);
+  expect(h.closePreview).toHaveBeenCalledWith(
+    expect.objectContaining({ nativeSessionId: "original" }),
+  );
+  expect(render().some((node) => node.props.children === "Read only")).toBe(
+    true,
+  );
+  expect(h.commit).not.toHaveBeenCalled();
+  expect(props.onOpen).not.toHaveBeenCalled();
 });

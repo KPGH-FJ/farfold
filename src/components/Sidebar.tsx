@@ -1,3 +1,4 @@
+import { REDESIGN as R } from "../runtime/redesign_strings";
 import { shortcutLabel } from "../runtime/platform_shortcuts";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -262,6 +263,14 @@ export function Sidebar({
                         row.status === "run" ||
                         row.unread) && (
                         <i
+                          role="img"
+                          aria-label={
+                            row.status === "need"
+                              ? STRINGS.thread.needYou
+                              : row.status === "run"
+                                ? LIBRARY.running
+                                : LIBRARY.unread
+                          }
                           className={
                             row.status === "need" ? "attention-dot" : ""
                           }
@@ -301,10 +310,11 @@ export function Sidebar({
             <button
               type="button"
               className="icon-button"
-              aria-label={LIBRARY.explore}
-              onClick={onExplore}
+              aria-label={R.manageAgents}
+              title={R.manageAgents}
+              onClick={onAllAgents}
             >
-              <PlusIcon size={16} />
+              <GearSixIcon size={16} />
             </button>
           </div>
           {agentsExpanded &&

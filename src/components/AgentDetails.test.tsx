@@ -7,6 +7,7 @@ vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: vi.fn() }));
 
 import { AgentDetails, declaredCapabilities } from "./AgentDetails";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { AGENT_DETAIL_STRINGS as D } from "../runtime/agent_detail_strings";
 
 const base: AgentCardModel = {
@@ -106,6 +107,6 @@ it("presents declared capabilities honestly without protocol internals", () => {
 it("falls back to unknown wording when no declaration exists", () => {
   const markup = html(base);
   expect(markup).toContain(D.capabilityAuthUnknown);
-  expect(markup).toContain(D.capabilityHistoryUnknown);
+  expect(markup).toContain(U.historyUnread);
   expect(markup).toContain(D.capabilityContentNone);
 });

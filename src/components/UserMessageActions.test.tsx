@@ -32,6 +32,7 @@ vi.mock("react", async (original) => ({
     (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
 }));
 import { UserMessageActions } from "./UserMessageActions";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 
 type Props = ComponentProps<typeof UserMessageActions>;
@@ -79,17 +80,22 @@ it("offers copy, edit-resend, send-again, and new-conversation in one menu", () 
   };
   let tree = render(props);
   // Only the trigger until the menu opens.
-  expect(button(tree, T.editResend)).toBeUndefined();
+  expect(button(tree, R.editMessage)).toBeUndefined();
   click(button(tree, T.messageActions)!);
   tree = render(props);
-  for (const label of [T.copyMessage, T.editResend, T.sendAgain, T.newFromHere])
+  for (const label of [
+    T.copyMessage,
+    R.editMessage,
+    R.prepareAgain,
+    T.newFromHere,
+  ])
     expect(button(tree, label), label).toBeDefined();
 
   click(button(tree, T.copyMessage)!);
   expect(writeText).toHaveBeenCalledWith("原始消息");
-  click(button(tree, T.editResend)!);
+  click(button(tree, R.editMessage)!);
   expect(props.onEditResend).toHaveBeenCalledTimes(1);
-  click(button(tree, T.sendAgain)!);
+  click(button(tree, R.prepareAgain)!);
   expect(props.onSendAgain).toHaveBeenCalledTimes(1);
   click(button(tree, T.newFromHere)!);
   expect(props.onNewFromMessage).toHaveBeenCalledTimes(1);
@@ -106,8 +112,8 @@ it("hides actions that are not wired and keeps the trigger disabled", () => {
   expect(trigger.props.disabled).toBe(true);
   click(trigger);
   tree = render(props);
-  expect(button(tree, T.copyMessage)).toBeDefined();
-  expect(button(tree, T.sendAgain)).toBeDefined();
-  expect(button(tree, T.editResend)).toBeUndefined();
+  expect(button(tree, T.copyMessage)).toBeUndefined();
+  expect(button(tree, R.prepareAgain)).toBeUndefined();
+  expect(button(tree, R.editMessage)).toBeUndefined();
   expect(button(tree, T.newFromHere)).toBeUndefined();
 });

@@ -1417,6 +1417,15 @@ it("isolates simultaneous drafts and event channels by selected API and key revi
   const rotated = await threads.open({ ...a, serviceRevision: "new-key" });
   expect(rotated.key).not.toBe(first.key);
   expect(next).toBe(3);
+  expect(
+    h.invoke.mock.calls
+      .filter(([command]) => command === "session_open")
+      .map(([, input]) => input.service),
+  ).toEqual([
+    { id: "api-a", model: "same-model", revision: "old-key" },
+    { id: "api-b", model: "same-model", revision: "old-key" },
+    { id: "api-a", model: "same-model", revision: "new-key" },
+  ]);
   const defaultSource = await threads.open(base);
   expect(defaultSource.service).toBeUndefined();
   expect(defaultSource.key).not.toBe(other.key);

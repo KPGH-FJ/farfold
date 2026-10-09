@@ -63,6 +63,7 @@ pub(crate) fn selection_for_open(
             }
             Ok((
                 Some(ServiceSelection {
+                    revision: None,
                     id: identity.id.clone(),
                     model: identity.model.clone(),
                 }),
@@ -245,6 +246,7 @@ mod tests {
                     true,
                     Some(&record),
                     Some(ServiceSelection {
+                        revision: None,
                         id: id.into(),
                         model: model.into()
                     })
@@ -258,6 +260,7 @@ mod tests {
                     true,
                     record.as_ref(),
                     Some(ServiceSelection {
+                        revision: None,
                         id: "service-a".into(),
                         model: "model-a".into()
                     })

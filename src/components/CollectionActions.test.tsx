@@ -82,6 +82,7 @@ import { MoveConversationsDialog } from "./MoveConversationsDialog";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
 import { collections } from "../runtime/collections";
 import { threads, type IndexRow } from "../runtime/sessions";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { LIBRARY } from "../runtime/library_strings";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -119,7 +120,10 @@ const button = (tree: Element[], text: string) =>
   tree.find(
     (e) =>
       e.type === "button" &&
-      (e.props.children === text || e.props["aria-label"] === text),
+      (e.props.children === text ||
+        e.props["aria-label"] === text ||
+        (e.props.role === "tab" &&
+          Children.toArray(e.props.children as ReactNode)[0] === text)),
   )!;
 const click = (element: Element) => {
   expect(element).toBeDefined();
@@ -863,6 +867,16 @@ it("clears every archived conversation with an in-place confirmation naming the 
     { ...row("second"), archived: true },
     { ...row("third"), archived: true },
   ];
+  const snapshot = threads.getSnapshot();
+  vi.spyOn(threads, "getSnapshot").mockImplementation(() => ({
+    ...snapshot,
+    index: h.rows.map((item) => ({
+      ...item,
+      id: item.key,
+      createdAt: 1,
+      configOptions: null,
+    })),
+  }));
   libraryProps.filter = {
     kind: "selection",
     favorites: false,
@@ -877,7 +891,7 @@ it("clears every archived conversation with an in-place confirmation naming the 
     (element) => element.type === DeleteConversationsDialog,
   )!;
   expect(dialog.props.title).toBe(LIBRARY.clearArchivedTitle);
-  expect(dialog.props.hint).toBe(LIBRARY.clearArchivedHint(2));
+  expect(dialog.props.hint).toBe(R.archivedScope(2));
   (dialog.props.onDelete as () => void)();
   await vi.waitFor(() =>
     expect(

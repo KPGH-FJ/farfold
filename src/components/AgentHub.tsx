@@ -45,6 +45,8 @@ import {
   type AgentSetupSelection,
 } from "./AgentSetup";
 import "../agent-hub.css";
+import "../agent-redesign.css";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import {
   preparationFor,
   pendingPreparationRead,
@@ -507,7 +509,11 @@ export function AgentHub({
     });
 
   return (
-    <main className="main agent-hub-main" hidden={!active}>
+    <main
+      className="main agent-hub-main agent-redesign"
+      data-view={view}
+      hidden={!active}
+    >
       <div className="topbar">
         <div className="title">
           {view === "added" ? S.myAgents : S.exploreTitle}
@@ -675,7 +681,7 @@ export function AgentHub({
                   </div>
                   <div className="agent-hub-card-actions">
                     <button
-                      className={`btn agent-hub-start ${canStart(card) ? "btn-primary" : "btn-ghost"}`}
+                      className={`btn agent-hub-start ${canStart(card) && view !== "added" ? "btn-primary" : "btn-ghost"}`}
                       disabled={!setup.ready}
                       onClick={() =>
                         programStatus(card)
@@ -697,12 +703,13 @@ export function AgentHub({
                       <ArrowRight size={14} />
                     </button>
                     <button
-                      className="btn btn-ghost agent-hub-detail-button"
-                      aria-label={`${S.manage} · ${card.name}`}
+                      className={`btn agent-hub-detail-button ${view === "added" ? "btn-primary" : "btn-ghost"}`}
+                      aria-label={`${U.manage} · ${card.name}`}
                       disabled={!setup.ready}
                       onClick={() => prepare(card.id, "manage")}
                     >
-                      <SlidersHorizontal size={17} />
+                      <SlidersHorizontal size={16} />
+                      {U.manage}
                     </button>
                   </div>
                   {agents.errors[card.id] && (

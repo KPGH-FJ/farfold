@@ -1,0 +1,180 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.service-review.test.tsx (6 tests | 6 failed) 12ms
+   × blocks eager preparation and direct send of a cold saved API choice with revision "" 6ms
+   × blocks eager preparation and direct send of a cold saved API choice with revision "old" 1ms
+   × blocks preparation when the current service is model-removed even if its revision matches 1ms
+   × blocks preparation when the current service is deleting even if its revision matches 1ms
+   × blocks preparation when the current service is incomplete even if its revision matches 1ms
+   × blocks preparation when the current service is missing even if its revision matches 1ms
+ ❯ src/components/EmptyState.selection.test.tsx (56 tests | 1 failed) 53ms
+   × does not overwrite a newer explicit same-Agent selection when an older application finishes 4ms
+ ❯ src/App.conversation-settings.test.tsx (3 tests | 3 failed) 3174ms
+   × keeps changed API settings unconfirmed when starting from library 1062ms
+   × keeps changed API settings unconfirmed when starting from conversation 1055ms
+   × keeps changed API settings unconfirmed when starting from message 1056ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.conversation-settings.test.tsx > keeps changed API settings unconfirmed when starting from library
+ FAIL  src/App.conversation-settings.test.tsx > keeps changed API settings unconfirmed when starting from conversation
+ FAIL  src/App.conversation-settings.test.tsx > keeps changed API settings unconfirmed when starting from message
+AssertionError: expected { service: { id: 'api', …(2) }, …(2) } to deeply equal { service: { id: 'api', …(2) }, …(2) }
+
+- Expected
++ Received
+
+@@ -1,10 +1,10 @@
+  {
+    "config": {
+      "reasoning": "ultra",
+    },
+-   "requiresReview": true,
++   "requiresReview": false,
+    "service": {
+      "id": "api",
+      "model": "m",
+      "revision": "",
+    },
+
+ ❯ src/App.conversation-settings.test.tsx:72:56
+     70|     await vi.waitFor(() => {
+     71|       expect(component("EmptyState").active).toBe(true);
+     72|       expect(component("EmptyState").initialSelection).toEqual({
+       |                                                        ^
+     73|         service: { id: "api", model: "m", revision: "" },
+     74|         config: { reasoning: "ultra" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not overwrite a newer explicit same-Agent selection when an older application finishes
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/EmptyState.selection.test.tsx:1166:48
+    1164|   });
+    1165|   expect(h.setConfig).toHaveBeenCalledTimes(1);
+    1166|   expect(newConversationChoice.reviewRequired).toBe(true);
+       |                                                ^
+    1167| });
+    1168|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks eager preparation and direct send of a cold saved API choice with revision ""
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "",
+        },
+        "serviceRevision": "",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.service-review.test.tsx:81:22
+     79|   composer();
+     80|   await vi.advanceTimersByTimeAsync(300);
+     81|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+     82|   const view = composer();
+     83|   expect(view.props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks eager preparation and direct send of a cold saved API choice with revision "old"
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "old",
+        },
+        "serviceRevision": "old",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.service-review.test.tsx:81:22
+     79|   composer();
+     80|   await vi.advanceTimersByTimeAsync(300);
+     81|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+     82|   const view = composer();
+     83|   expect(view.props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks preparation when the current service is model-removed even if its revision matches
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks preparation when the current service is deleting even if its revision matches
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks preparation when the current service is incomplete even if its revision matches
+ FAIL  src/components/EmptyState.service-review.test.tsx > blocks preparation when the current service is missing even if its revision matches
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.service-review.test.tsx:93:22
+     91|   composer();
+     92|   await vi.advanceTimersByTimeAsync(300);
+     93|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+     94|   expect(composer().props.disabled).toBe(true);
+     95| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  10 failed | 55 passed (65)
+   Start at  12:12:33
+   Duration  4.56s (transform 737ms, setup 0ms, import 4.05s, tests 3.24s, environment 0ms)
+

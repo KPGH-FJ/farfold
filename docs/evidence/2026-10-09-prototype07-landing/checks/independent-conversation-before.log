@@ -1,0 +1,54 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ConversationInteractions.review.test.tsx (4 tests | 4 failed) 110ms
+   × refreshes visible search matches after toggle without changing the query or thread revision 4ms
+   × refreshes visible search matches after mutate without changing the query or thread revision 1ms
+   × keeps the export dialog open during the write and shows the saved receipt 53ms
+   × keeps the export dialog open during the write and shows the failed receipt 51ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after toggle without changing the query or thread revision
+ FAIL  src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after mutate without changing the query or thread revision
+AssertionError: expected '没有匹配内容' to be '1 / 1' // Object.is equality
+
+Expected: "1 / 1"
+Received: "没有匹配内容"
+
+ ❯ src/components/ConversationInteractions.review.test.tsx:125:19
+    123|   expect(count()).toBe(LIBRARY.findEmpty);
+    124|   fixture[kind](true);
+    125|   expect(count()).toBe(R.findPosition(1, 1));
+       |                   ^
+    126|   fixture[kind](false);
+    127|   expect(count()).toBe(LIBRARY.findEmpty);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/ConversationInteractions.review.test.tsx > keeps the export dialog open during the write and shows the saved receipt
+ FAIL  src/components/ConversationInteractions.review.test.tsx > keeps the export dialog open during the write and shows the failed receipt
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/ConversationInteractions.review.test.tsx:148:74
+    146|   await vi.waitFor(() => expect(h.write).toHaveBeenCalledWith("Reviewe…
+    147|   let view = render(read);
+    148|   expect(view.find((node) => node.type === WorkspaceDialog)!.props.bus…
+       |                                                                          ^
+    149|   expect(view.find((node) => node.props.children === R.exportClose)!.p…
+    150|   finish();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  12:01:28
+   Duration  238ms (transform 49ms, setup 0ms, import 69ms, tests 110ms, environment 0ms)
+

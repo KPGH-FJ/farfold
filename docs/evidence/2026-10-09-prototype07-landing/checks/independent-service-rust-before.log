@@ -1,0 +1,31 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.35s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-bc6b4ff3bfd9658e)
+
+running 1 test
+test credentials::tests::selected_service_revision_is_checked_before_reading_any_key ... FAILED
+
+failures:
+
+---- credentials::tests::selected_service_revision_is_checked_before_reading_any_key stdout ----
+
+thread 'credentials::tests::selected_service_revision_is_checked_before_reading_any_key' (18251945) panicked at src/credentials.rs:1105:13:
+unconfirmed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    credentials::tests::selected_service_revision_is_checked_before_reading_any_key
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1043 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

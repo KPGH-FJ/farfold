@@ -13,12 +13,14 @@ export {
   markConfigurationPause,
 } from "./configuration_pause";
 export function configurationInputBusy(s: ThreadState): boolean {
-  return [`session:${s.key}`, `queue-edit:${s.key}`].some((key) => {
-    const draft = composerDrafts.read(key);
-    return Boolean(
-      draft.sendPending || draft.queueEdit || draft.pendingConversation,
-    );
-  });
+  return [`session:${s.key}`, `queue-edit:${s.key}`, `resend:${s.key}`].some(
+    (key) => {
+      const draft = composerDrafts.read(key);
+      return Boolean(
+        draft.sendPending || draft.queueEdit || draft.pendingConversation,
+      );
+    },
+  );
 }
 export function sameConfigurationSnapshot(
   left: unknown,

@@ -3,6 +3,7 @@ import type { Credential } from "./credentials";
 import type { ThreadState } from "./sessions";
 import {
   exportFileName,
+  historicalSelectionNeedsReview,
   storedConversationSelection,
   transcriptMarkdown,
 } from "./conversation_actions";
@@ -209,3 +210,41 @@ it("names export files safely from the conversation title", () => {
   expect(exportFileName("x".repeat(100)).endsWith(".md")).toBe(true);
   expect(exportFileName("x".repeat(100)).length).toBe(63);
 });
+
+it.each([
+  null,
+  {},
+  [],
+  { _farfoldConfig: 2, choices: [] },
+  {
+    _farfoldConfig: 2,
+    choices: [],
+    _farfoldService: {
+      kind: "configured",
+      identity: { id: "gone", model: "m" },
+    },
+  },
+])(
+  "requires explicit confirmation when historical source metadata is incomplete: %j",
+  (value) => {
+    expect(historicalSelectionNeedsReview(value)).toBe(true);
+  },
+);
+it.each([
+  { kind: "existing" },
+  {
+    kind: "configured",
+    identity: { id: "api", model: "m", fingerprint: "saved-source" },
+  },
+])(
+  "recognizes a complete saved source without inventing metadata: %j",
+  (source) => {
+    expect(
+      historicalSelectionNeedsReview({
+        _farfoldConfig: 2,
+        choices: [],
+        _farfoldService: source,
+      }),
+    ).toBe(false);
+  },
+);

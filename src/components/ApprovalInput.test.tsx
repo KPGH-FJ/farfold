@@ -60,7 +60,7 @@ afterEach(() => {
   h.invoke.mockReset();
 });
 
-it("disables the original approval options while stop is waiting, then restores them if the result is unknown", () => {
+it("keeps the original approval visible and disabled until stop is confirmed", () => {
   const s = state("stop-approval");
   channel.applyChannelEvent(s.key, {
     kind: "permissionRequest",
@@ -78,7 +78,8 @@ it("disables the original approval options while stop is waiting, then restores 
   expect(s.pendingPermissions[0]).toBe(original);
   s.stopping = false;
   s.stopUnconfirmed = true;
-  expect(render(s)).not.toContain('class="btn btn-primary" disabled=""');
+  expect(render(s)).toContain('class="btn btn-primary" disabled=""');
+  expect(approval(render(s))).toContain("停止结果未确认");
   expect(s.pendingPermissions[0].options).toEqual(options);
   expect(h.invoke).not.toHaveBeenCalled();
 });

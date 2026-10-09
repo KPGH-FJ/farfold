@@ -1,3 +1,6 @@
+import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
+import { MessageResendDialog } from "./MessageResendDialog";
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { ConnectionAccount } from "./ConnectionAccount";
 import { ErrorNotice } from "./ErrorNotice";
 import { BrowserReadRequest } from "./BrowserReadRequest";
@@ -49,12 +52,7 @@ import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
 import { FailedToolQueueHint } from "./FailedToolQueueHint";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
-import { draftPersistence } from "../runtime/draft_storage";
-import { toUiNotice, type UiNotice } from "../runtime/ui_error";
-import {
-  userMessageBlocks,
-  userMessageDraftAttachments,
-} from "../runtime/message_actions";
+import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
@@ -401,47 +399,22 @@ export function ThreadView({
   };
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
-  const [messageError, setMessageError] = useState<UiNotice | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
   // W3-6 用户消息操作。写回草稿/发送都走既有的草稿与发送归属保护。
-  const messageDraftKey =
-    draftComposerRef && thread.identity === "draft"
-      ? "new"
-      : `session:${thread.key}`;
-  const focusComposerInput = () => {
-    requestAnimationFrame(() => {
-      bodyRef.current?.querySelector("textarea")?.focus();
-    });
-  };
-  const editResend = (item: { text: string; attachments: Attachment[] }) => {
+  const [resendOpen, setResendOpen] = useState(false);
+  const [resendContinued, setResendContinued] = useState(false);
+  const prepareResend = (item: { text: string; attachments: Attachment[] }) => {
     if (!activeRef.current) return;
-    const additions = userMessageDraftAttachments(item.attachments);
-    composerDrafts.update(messageDraftKey, (draft) => ({
-      ...draft,
-      // Never clobber an existing unsent draft; append on a new line.
-      text: draft.text
-        ? `${draft.text}${draft.text.endsWith("\n") ? "" : "\n"}${item.text}`
-        : item.text,
-      attachments: [...draft.attachments, ...additions],
-    }));
-    focusComposerInput();
-  };
-  const sendAgain = (item: { text: string; attachments: Attachment[] }) => {
-    if (!activeRef.current) return;
-    if (thread.identity === "draft" && pendingPreparationRead(thread)) {
-      setMessageError({ message: C.readRequired });
-      return;
-    }
-    const key = thread.key;
-    void draftPersistence
-      .flush()
-      .then(() =>
-        threads.send(key, userMessageBlocks(item.text, item.attachments)),
-      )
-      .catch((reason) => {
-        if (mounted.current && activeRef.current)
-          setMessageError(toUiNotice(reason, STRINGS.repair.sendFailed));
-      });
+    const key = `resend:${thread.key}`;
+    const existing = composerDrafts.read(key);
+    const continued = Boolean(existing.text || existing.attachments.length);
+    if (!continued)
+      composerDrafts.update(key, () => ({
+        text: item.text,
+        attachments: userMessageDraftAttachments(item.attachments),
+      }));
+    setResendContinued(continued);
+    setResendOpen(true);
   };
   const newFromMessage = (item: {
     text: string;
@@ -523,6 +496,7 @@ export function ThreadView({
     requestId: string,
     option: PermissionOption,
   ) => {
+    if (!activeRef.current || thread.stopping || thread.stopUnconfirmed) return;
     const label =
       option.kind === "allow_once"
         ? STRINGS.thread.approved(option.name)
@@ -554,7 +528,7 @@ export function ThreadView({
       );
     if (!permission || permission.decision) return;
     const onKey = (e: KeyboardEvent) => {
-      if (thread.stopping) return;
+      if (thread.stopping || thread.stopUnconfirmed) return;
       if (scrollRef.current?.closest("[inert]")) return;
       const option = permissionShortcut(
         e,
@@ -588,7 +562,19 @@ export function ThreadView({
     permissions.length === 0 &&
     !thread.connectionLost;
 
+  const [modelSelection, setModelSelection] = useState<{
+    id: string;
+    previous: unknown;
+    value: string;
+  } | null>(null);
   const modelOption = modelConfigOption(thread.configOptions);
+  const selectedModel =
+    modelSelection &&
+    modelOption?.id === modelSelection.id &&
+    modelOption.currentValue === modelSelection.previous &&
+    modelOption.options.some((item) => item.value === modelSelection.value)
+      ? modelSelection
+      : null;
   const draftChoices = thread.identity === "draft" && !thread.resumed;
   const choicesUnchecked =
     thread.modelDrift ||
@@ -878,8 +864,8 @@ export function ThreadView({
                           <UserMessageActions
                             text={first.text}
                             disabled={!active}
-                            onEditResend={() => editResend(first)}
-                            onSendAgain={() => sendAgain(first)}
+                            onEditResend={() => prepareResend(first)}
+                            onSendAgain={() => prepareResend(first)}
                             onNewFromMessage={
                               onNewFromMessage
                                 ? () => newFromMessage(first)
@@ -906,6 +892,20 @@ export function ThreadView({
                         {agent?.name ?? thread.agentId} ·{" "}
                         {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
+                        {onNewFromMessage &&
+                          (first.text ||
+                            (first.attachments?.length ?? 0) > 0) && (
+                            <UserMessageActions
+                              text={first.text}
+                              disabled={!active}
+                              onNewFromMessage={() =>
+                                newFromMessage({
+                                  text: first.text,
+                                  attachments: first.attachments ?? [],
+                                })
+                              }
+                            />
+                          )}
                       </div>
                       <div className="assistant">
                         <MessageContent
@@ -1014,7 +1014,14 @@ export function ThreadView({
                     />
                   ) : (
                     <ApprovalCard
-                      disabled={thread.stopping}
+                      disabled={thread.stopping || thread.stopUnconfirmed}
+                      statusLabel={
+                        thread.stopping
+                          ? R.stopWaiting
+                          : thread.stopUnconfirmed
+                            ? R.stopUnknown
+                            : undefined
+                      }
                       title={permission.title}
                       kind={permission.kind}
                       locations={permission.locations}
@@ -1033,7 +1040,14 @@ export function ThreadView({
               ))}
               {thread.pendingElicitations.map((request) => (
                 <ElicitationCard
-                  disabled={thread.stopping}
+                  disabled={thread.stopping || thread.stopUnconfirmed}
+                  statusLabel={
+                    thread.stopping
+                      ? R.stopWaiting
+                      : thread.stopUnconfirmed
+                        ? R.stopUnknown
+                        : undefined
+                  }
                   key={request.requestId}
                   request={request}
                   onChange={(name, value) =>
@@ -1059,7 +1073,13 @@ export function ThreadView({
         </div>
         {pendingCount > 0 && (
           <div className="workspace-request-alert" role="status">
-            <span>{W.requestPending(pendingCount)}</span>
+            <span>
+              {thread.stopping
+                ? R.stopWaiting
+                : thread.stopUnconfirmed
+                  ? R.stopUnknown
+                  : W.requestPending(pendingCount)}
+            </span>
             <button type="button" onClick={viewRequests}>
               {W.viewRequests}
             </button>
@@ -1151,9 +1171,7 @@ export function ThreadView({
               onGoSettings={onGoSettings}
               suppressThreadOpenError={Boolean(thread.openError)}
               disabled={draftReadRequired}
-              note={
-                draftReadRequired ? C.readRequired : (messageError ?? undefined)
-              }
+              note={draftReadRequired ? C.readRequired : undefined}
               prepareAction={draftReadRequired ? onGoSettings : undefined}
               onSend={
                 thread.identity === "draft"
@@ -1206,7 +1224,14 @@ export function ThreadView({
                     )}
                     {!draftReadRequired && !choicesUnchecked && modelOption && (
                       <ModelPicker
-                        option={modelOption}
+                        option={
+                          selectedModel
+                            ? {
+                                ...modelOption,
+                                currentValue: selectedModel.value,
+                              }
+                            : modelOption
+                        }
                         disabled={configOptionChangeBlocked(
                           thread,
                           modelOption.id,
@@ -1215,12 +1240,30 @@ export function ThreadView({
                           if (pendingPreparationRead(thread)) return;
                           if (configOptionChangeBlocked(thread, modelOption.id))
                             return;
-                          void threads
-                            .setConfig(thread.key, modelOption.id, value)
-                            .catch(() => undefined);
+                          setModelSelection(
+                            value === modelOption.currentValue
+                              ? null
+                              : {
+                                  id: modelOption.id,
+                                  previous: modelOption.currentValue,
+                                  value,
+                                },
+                          );
                         }}
                       />
                     )}
+                    {!draftReadRequired &&
+                      !choicesUnchecked &&
+                      modelOption &&
+                      selectedModel && (
+                        <ConfigurationChangeReview
+                          thread={thread}
+                          option={modelOption}
+                          value={selectedModel.value}
+                          onCancel={() => setModelSelection(null)}
+                          onSaved={() => setModelSelection(null)}
+                        />
+                      )}
                     {!draftReadRequired && (
                       <SessionOptionsList thread={thread} composer />
                     )}
@@ -1256,6 +1299,16 @@ export function ThreadView({
           )}
         </div>
       </div>
+      {active && resendOpen && (
+        <MessageResendDialog
+          thread={thread}
+          imageEnabled={imageOk}
+          embedContext={embedContext}
+          continued={resendContinued}
+          onClose={() => setResendOpen(false)}
+          onGoSettings={onGoSettings}
+        />
+      )}
       <ArtifactPane
         thread={thread}
         active={active}

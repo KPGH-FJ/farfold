@@ -440,3 +440,33 @@ it("keeps the unified entry on opened drafts but off the pre-open and queue-edit
     render().some((node) => node.props["aria-label"] === "命令与模板"),
   ).toBe(false);
 });
+
+it("searches declared command descriptions and keeps the complete long command plus existing draft", () => {
+  const name = "review-project-accessibility-and-keyboard-navigation";
+  const description =
+    "逐项检查键盘导航和各个交互入口的状态；完整长说明保持可见。";
+  props.thread!.availableCommands = [
+    { name, description },
+    { name: "help", description: "Help" },
+  ];
+  const before = composerDrafts.read("session:shortcut-a");
+  open();
+  const input = render().find(
+    (node) => node.type === "input" && node.props.type === "search",
+  )!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "键盘导航" },
+  });
+  expect(buttonNamed("/help")).toBeUndefined();
+  expect(render().some((node) => node.props.children === description)).toBe(
+    true,
+  );
+  (buttonNamed(`/${name}`)!.props.onClick as () => void)();
+  expect(composerDrafts.read("session:shortcut-a").text).toBe(
+    `/${name} ${before.text}`,
+  );
+  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+    before.attachments,
+  );
+  expect(threads.send).not.toHaveBeenCalled();
+});

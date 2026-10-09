@@ -45,6 +45,7 @@ it("states the deleted scope, what stays, and the agent-side handling before con
     DeleteConversationsDialog({
       title: LIBRARY.deleteTitle(2),
       hint: LIBRARY.deleteHint,
+      targets: ["具体对话一", "具体对话二"],
       busy: false,
       error: null,
       onDelete,
@@ -57,6 +58,8 @@ it("states the deleted scope, what stays, and the agent-side handling before con
     tree.find((node) => node.props.className === "workspace-dialog-body")?.props
       .children as ReactNode,
   );
+  expect(body).toContain("具体对话一");
+  expect(body).toContain("具体对话二");
   expect(body).toContain("从列表移除");
   expect(body).toContain("磁盘文件不受影响");
   expect(body).toContain("不可撤销");

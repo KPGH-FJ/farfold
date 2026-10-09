@@ -1,3 +1,4 @@
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { AGENT_SETUP_STRINGS as M } from "../runtime/agent_setup_strings";
 import { STRINGS } from "../runtime/strings";
@@ -71,32 +72,39 @@ export function agentSetupCurrentSelection({
   apiChoice,
   serviceLabel,
   displayLocation,
+  showLocation = true,
 }: {
   name: string;
+  showLocation?: boolean;
   apiChoice: boolean;
   serviceLabel?: string;
   displayLocation?: string | null;
 }) {
   return (
-    <details className="journey-details">
-      <summary>{R.currentSelection}</summary>
-      <dl className="agent-setup-review">
-        <div>
-          <dt>{S.title}</dt>
-          <dd>{name}</dd>
-        </div>
-        <div>
-          <dt>{S.source}</dt>
-          <dd>{apiChoice ? (serviceLabel ?? S.chooseService) : S.existing}</dd>
-        </div>
-        <div>
-          <dt>{S.workFolder}</dt>
-          <dd title={displayLocation ?? ""}>
-            {displayLocation ?? S.defaultDirectoryError}
-          </dd>
-        </div>
-      </dl>
-    </details>
+    <div className="agent-model-source" aria-label={U.source}>
+      <span>{U.source}</span>
+      <strong>
+        {apiChoice ? (serviceLabel ?? S.chooseService) : U.existingSource}
+      </strong>
+      {!apiChoice && <small>{U.sourceUnknown}</small>}
+      {showLocation && (
+        <details className="journey-details">
+          <summary>{R.currentSelection}</summary>
+          <dl className="agent-setup-review">
+            <div>
+              <dt>{S.title}</dt>
+              <dd>{name}</dd>
+            </div>
+            <div>
+              <dt>{S.workFolder}</dt>
+              <dd title={displayLocation ?? ""}>
+                {displayLocation ?? S.defaultDirectoryError}
+              </dd>
+            </div>
+          </dl>
+        </details>
+      )}
+    </div>
   );
 }
 

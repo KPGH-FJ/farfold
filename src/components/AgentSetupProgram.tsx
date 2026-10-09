@@ -14,6 +14,7 @@ import { R5_PROGRAM_STRINGS as R } from "../runtime/r5_program_strings";
 
 /** Present the shared program controls; execution and ownership stay in setup. */
 export function agentSetupProgram({
+  active = true,
   card,
   agents,
   inventory,
@@ -31,6 +32,7 @@ export function agentSetupProgram({
   onConnect,
   importControl,
 }: {
+  active?: boolean;
   card: AgentCardModel;
   agents: AgentsState;
   inventory: ProgramInventory;
@@ -115,6 +117,7 @@ export function agentSetupProgram({
           disabled={authBusy || operationPending}
         >
           <ProgramManager
+            active={active}
             card={card}
             agents={agents}
             inventory={inventory}

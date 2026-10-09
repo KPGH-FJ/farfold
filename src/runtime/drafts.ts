@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import type { ServiceSelection } from "./credentials";
 import type { PromptBlock } from "./session_types";
 import { draftPersistence } from "./draft_storage";
+import { REDESIGN } from "./redesign_strings";
 import { archiveActivity } from "./archive_activity";
 export { draftPersistence } from "./draft_storage";
 
@@ -26,6 +27,8 @@ export interface ComposerDraft {
   sendPending?: boolean;
   queueEdit?: { index: number; original: PromptBlock[] };
   pendingConversation?: PendingConversation;
+  /** A user-owned unsent draft retained before starting a different conversation. */
+  savedChoice?: ConversationChoice;
 }
 
 /** Target of an unconfirmed first message; never a copy of Agent history. */
@@ -41,13 +44,16 @@ const empty: ComposerDraft = { text: "", attachments: [] };
 const values = new Map<string, ComposerDraft>();
 const listeners = new Set<() => void>();
 const generations = new Map<string, number>();
+let draftRevision = 0;
 
 function conversationKey(key: string): string | undefined {
   if (key.startsWith("session:")) return key.slice("session:".length);
   if (key.startsWith("queue-edit:")) return key.slice("queue-edit:".length);
+  if (key.startsWith("resend:")) return key.slice("resend:".length);
   return undefined;
 }
 function changed(threadKey?: string) {
+  draftRevision++;
   if (threadKey) archiveActivity.stageDraftEdit(threadKey);
   listeners.forEach((fn) => fn());
   draftPersistence.changed();
@@ -55,8 +61,95 @@ function changed(threadKey?: string) {
     void archiveActivity.flush().catch(() => undefined);
 }
 
+type PreservedNew = {
+  draft: ComposerDraft;
+  generation: number;
+  selection: string;
+};
+function assertPreservedNew(ticket: PreservedNew) {
+  if (
+    composerDrafts.read("new") !== ticket.draft ||
+    composerDrafts.generation("new") !== ticket.generation ||
+    JSON.stringify(choice) !== ticket.selection
+  )
+    throw new Error(REDESIGN.draftChanged);
+  if (
+    ticket.draft.sendPending ||
+    ticket.draft.pendingConversation ||
+    ticket.draft.attachments.some((a) => a.loading)
+  )
+    throw new Error(REDESIGN.pendingDraft);
+}
+
 /** Only unsent input. No Agent transcript, events, auth forms or secrets. */
 export const composerDrafts = {
+  revision: () => draftRevision,
+  preserved() {
+    return [...values].filter(
+      ([key, draft]) => key.startsWith("saved-new:") && !!draft.savedChoice,
+    );
+  },
+  /** Persist the original before the caller replaces the active input. */
+  async preserveNew() {
+    await draftPersistence.flush();
+    const current = this.read("new");
+    if (
+      current.sendPending ||
+      current.pendingConversation ||
+      current.attachments.some((a) => a.loading)
+    )
+      throw new Error(REDESIGN.pendingDraft);
+    const ticket = {
+      draft: current,
+      generation: this.generation("new"),
+      selection: JSON.stringify(choice),
+    };
+    if (!this.hasContent("new")) return ticket;
+    const key = `saved-new:${crypto.randomUUID()}`;
+    values.set(key, {
+      ...structuredClone(current),
+      savedChoice: structuredClone(choice),
+    });
+    changed();
+    await draftPersistence.flush();
+    assertPreservedNew(ticket);
+    return ticket;
+  },
+  clearPreservedNew(ticket: PreservedNew) {
+    assertPreservedNew(ticket);
+    this.clear("new");
+  },
+  async restorePreserved(key: string) {
+    const saved = values.get(key);
+    if (!key.startsWith("saved-new:") || !saved?.savedChoice) return false;
+    const ticket = await this.preserveNew();
+    assertPreservedNew(ticket);
+    const { savedChoice, ...content } = structuredClone(saved);
+    values.set("new", {
+      ...content,
+      attachments: content.attachments.map((a) => ({
+        ...a,
+        recovered: true,
+        imageChecked: undefined,
+      })),
+    });
+    Object.assign(choice, savedChoice);
+    generations.set("new", this.generation("new") + 1);
+    changed();
+    // Publish the restored choice to the UI immediately. A failed save keeps
+    // both retained copies and the global save-error guard; it must not leave
+    // restored text displayed under the previous Agent selection.
+    void draftPersistence
+      .flush()
+      .then(() => {
+        if (values.get(key) === saved) {
+          values.delete(key);
+          changed();
+        }
+      })
+      .catch(() => undefined);
+    return true;
+  },
   read(key: string): ComposerDraft {
     return values.get(key) ?? empty;
   },
@@ -125,15 +218,17 @@ export function useComposerDraft(key: string): ComposerDraft {
   );
 }
 
-type ConversationChoice = {
+export type ConversationChoice = {
   agentId: string | null;
   cwd: string | null;
+  reviewRequired?: boolean;
   service: (ServiceSelection & { revision: string }) | null;
   config: Record<string, unknown>;
 };
 const choice: ConversationChoice = {
   agentId: null,
   cwd: null,
+  reviewRequired: false,
   service: null,
   config: {},
 };
@@ -274,6 +369,8 @@ export const draftQueues = {
 export function hasUnsentWork(threadKey: string) {
   return (
     composerDrafts.hasContent(`session:${threadKey}`) ||
+    composerDrafts.hasContent(`resend:${threadKey}`) ||
+    Boolean(composerDrafts.read(`resend:${threadKey}`).sendPending) ||
     Boolean(composerDrafts.read(`queue-edit:${threadKey}`).queueEdit) ||
     Object.values(feedbackValues.get(threadKey) ?? {}).some((v) =>
       v.text.trim(),
@@ -289,6 +386,7 @@ export function unsentConversationKeys(): string[] {
     if (key.startsWith("session:")) keys.add(key.slice("session:".length));
     if (key.startsWith("queue-edit:"))
       keys.add(key.slice("queue-edit:".length));
+    if (key.startsWith("resend:")) keys.add(key.slice("resend:".length));
   }
   return [...keys].filter((key) => hasUnsentWork(key));
 }
@@ -320,6 +418,41 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
       return false;
     })
   );
+}
+function parseChoice(value: unknown): ConversationChoice {
+  const selected = record(value);
+  if (
+    (selected.agentId !== null && typeof selected.agentId !== "string") ||
+    (selected.cwd !== null && typeof selected.cwd !== "string")
+  )
+    throw new Error("invalid choice");
+  const config = record(selected.config);
+  if (
+    Object.values(config).some(
+      (v) =>
+        !["string", "number", "boolean"].includes(typeof v) ||
+        (typeof v === "number" && !Number.isFinite(v)),
+    )
+  )
+    throw new Error("invalid option");
+  if (selected.service !== null) {
+    const service = record(selected.service);
+    if (
+      ![service.id, service.model, service.revision].every(
+        (v) => typeof v === "string",
+      )
+    )
+      throw new Error("invalid source");
+  }
+  if (
+    selected.reviewRequired !== undefined &&
+    typeof selected.reviewRequired !== "boolean"
+  )
+    throw new Error("invalid review state");
+  return {
+    ...selected,
+    reviewRequired: selected.reviewRequired === true,
+  } as ConversationChoice;
 }
 function parseComposer(value: unknown): ComposerDraft {
   const raw = record(value);
@@ -362,6 +495,9 @@ function parseComposer(value: unknown): ComposerDraft {
   }
   return {
     text: raw.text,
+    ...(raw.savedChoice === undefined
+      ? {}
+      : { savedChoice: parseChoice(raw.savedChoice) }),
     pendingConversation: pending as unknown as PendingConversation | undefined,
     queueEdit: editing as ComposerDraft["queueEdit"],
     sendPending: raw.sendPending === true,
@@ -388,6 +524,7 @@ function parseComposer(value: unknown): ComposerDraft {
 function serializeComposer(value: ComposerDraft): ComposerDraft {
   return {
     text: value.text,
+    ...(value.savedChoice ? { savedChoice: value.savedChoice } : {}),
     pendingConversation: value.pendingConversation,
     queueEdit: value.queueEdit,
     sendPending: value.sendPending,
@@ -412,7 +549,9 @@ draftPersistence.configure(
           ([key]) =>
             key === "new" ||
             key.startsWith("session:") ||
-            key.startsWith("queue-edit:"),
+            key.startsWith("queue-edit:") ||
+            key.startsWith("resend:") ||
+            key.startsWith("saved-new:"),
         )
         .map(([key, value]) => [key, serializeComposer(value)]),
     ),
@@ -443,28 +582,7 @@ draftPersistence.configure(
     const composers = Object.entries(record(raw.composers)).map(
       ([key, item]) => [key, parseComposer(item)] as const,
     );
-    const selected = record(raw.choice);
-    if (
-      (selected.agentId !== null && typeof selected.agentId !== "string") ||
-      (selected.cwd !== null && typeof selected.cwd !== "string")
-    )
-      throw new Error("invalid choice");
-    const config = record(selected.config);
-    if (
-      Object.values(config).some(
-        (v) => !["string", "number", "boolean"].includes(typeof v),
-      )
-    )
-      throw new Error("invalid option");
-    if (selected.service !== null) {
-      const service = record(selected.service);
-      if (
-        ![service.id, service.model, service.revision].every(
-          (v) => typeof v === "string",
-        )
-      )
-        throw new Error("invalid source");
-    }
+    const selected = parseChoice(raw.choice);
     const feedback = Object.entries(record(raw.feedback)).map(
       ([key, items]) => {
         const entries = Object.entries(record(items)).map(
@@ -547,6 +665,7 @@ draftPersistence.configure(
       if (!feedbackValues.has(key)) feedbackValues.set(key, data);
     for (const [key, data] of queues)
       if (!queueValues.has(key)) queueValues.set(key, data);
+    draftRevision++;
     listeners.forEach((fn) => fn());
   },
 );

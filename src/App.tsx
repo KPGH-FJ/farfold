@@ -1,3 +1,4 @@
+import { REDESIGN as R } from "./runtime/redesign_strings";
 import type { BrowserWorkspaceState } from "./runtime/browser_workspace";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
@@ -52,7 +53,10 @@ import {
 } from "./runtime/sessions";
 import { STRINGS } from "./runtime/strings";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
-import { storedConversationSelection } from "./runtime/conversation_actions";
+import {
+  historicalSelectionNeedsReview,
+  storedConversationSelection,
+} from "./runtime/conversation_actions";
 import { listCredentials } from "./runtime/credentials";
 import { historyFailureKey } from "./runtime/session_recovery";
 import { useThemePreference } from "./runtime/theme";
@@ -86,6 +90,7 @@ type View = (
   | { kind: "settings"; tab?: SettingsTab }
 ) & { historyImport?: true };
 type PreparedSelection = {
+  requiresReview?: boolean;
   service: ServiceChoice | null;
   config: Record<string, unknown>;
 };
@@ -110,8 +115,8 @@ export default function App() {
   const currentAgentCards = useRef(agents.cards);
   currentAgentCards.current = agents.cards;
   const unreadyCandidate = (id: string) =>
-    currentAgentCards.current.some(
-      (card) => card.id === id && !currentReadiness.current(id),
+    !currentAgentCards.current.some(
+      (card) => card.id === id && currentReadiness.current(id),
     );
   const authentication = useAuthentication();
   useEffect(startWorkEvents, []);
@@ -237,7 +242,10 @@ export default function App() {
     cwd?: string;
     /** W3-6：从某条消息开新对话时，待回填为新草稿的文字与附件。 */
     seed?: { text: string; attachments: DraftAttachment[] };
+    history?: boolean;
   } | null>(null);
+  const [preservingDraft, setPreservingDraft] = useState(false);
+  const [draftActionError, setDraftActionError] = useState<string | null>(null);
   const [importOpen, setImportOpen] = useState(false);
   const [importMounted, setImportMounted] = useState(false);
   const [importAgent, setImportAgent] = useState<string | null>(null);
@@ -583,29 +591,24 @@ export default function App() {
         .catch(() => [])
         .then((credentials) => {
           if (unreadyCandidate(row.agentId)) return;
-          const selection = storedConversationSelection(
-            indexRow?.configOptions ?? null,
-            credentials,
-          );
-          const draft = composerDrafts.read("new");
-          if (
-            (draft.text.trim() || draft.attachments.length) &&
-            draft !== originatingDraft.current &&
-            replacesDraftChoice(newConversationChoice, row.agentId, selection)
-          ) {
-            setPendingAgent({
-              id: row.agentId,
-              selection,
-              cwd: row.cwd,
-            });
-            return;
-          }
-          newConversationChoice.cwd = row.cwd;
-          allowAutomaticConnection(row.agentId);
-          setNewAgent(row.agentId);
-          setPreparedSelection(selection);
-          setAgentRequest((n) => n + 1);
-          goNew();
+          const selection = {
+            ...storedConversationSelection(
+              indexRow?.configOptions ?? null,
+              credentials,
+            ),
+            requiresReview: historicalSelectionNeedsReview(
+              indexRow?.configOptions,
+              credentials,
+            ),
+          };
+
+          setDraftActionError(null);
+          setPendingAgent({
+            id: row.agentId,
+            selection,
+            cwd: row.cwd,
+            history: true,
+          });
         });
     },
   );
@@ -656,31 +659,20 @@ export default function App() {
                   : null,
                 config: {},
               };
-          const draft = composerDrafts.read("new");
-          if (
-            (draft.text.trim() || draft.attachments.length) &&
-            draft !== originatingDraft.current &&
-            replacesDraftChoice(
-              newConversationChoice,
-              thread.agentId,
-              selection,
-            )
-          ) {
-            setPendingAgent({
-              id: thread.agentId,
-              selection,
-              cwd: thread.cwd,
-              seed,
-            });
-            return;
-          }
-          seedMessageDraft(seed);
-          newConversationChoice.cwd = thread.cwd;
-          allowAutomaticConnection(thread.agentId);
-          setNewAgent(thread.agentId);
-          setPreparedSelection(selection);
-          setAgentRequest((n) => n + 1);
-          goNew();
+          setDraftActionError(null);
+          setPendingAgent({
+            id: thread.agentId,
+            selection: {
+              ...selection,
+              requiresReview: historicalSelectionNeedsReview(
+                indexRow?.configOptions,
+                credentials,
+              ),
+            },
+            cwd: thread.cwd,
+            seed,
+            history: true,
+          });
         });
     },
   );
@@ -858,6 +850,9 @@ export default function App() {
                 openAgents(agentId, "use", repair)
               }
               onManageServices={() => openSettings("keys")}
+              onRestoreDraft={async (key) => {
+                await composerDrafts.restorePreserved(key);
+              }}
               onStarted={opened}
             />
           )}
@@ -1086,18 +1081,73 @@ export default function App() {
       )}
       {pendingAgent && (
         <WorkspaceDialog
-          title={LIBRARY.draftConflict}
-          onClose={() => setPendingAgent(null)}
+          title={
+            pendingAgent.history ? R.newWithSettings : LIBRARY.draftConflict
+          }
+          busy={preservingDraft}
+          onClose={() => {
+            if (!preservingDraft) {
+              setPendingAgent(null);
+              setDraftActionError(null);
+            }
+          }}
         >
-          <div className="workspace-dialog-body">
-            <p>{LIBRARY.draftConflictHint}</p>
+          <div className="workspace-dialog-body new-draft-review">
+            <p>{R.newWithSettingsHint}</p>
+            <section>
+              <h3>{R.nextDraft}</h3>
+              <strong>
+                {agents.cards.find((card) => card.id === pendingAgent.id)
+                  ?.name ?? pendingAgent.id}
+              </strong>
+              <dl>
+                <dt>{R.source}</dt>
+                <dd>
+                  {pendingAgent.selection?.requiresReview
+                    ? R.unknownSource
+                    : pendingAgent.selection?.service
+                      ? `${W.savedSource} · ${pendingAgent.selection.service.model}`
+                      : R.existing}
+                </dd>
+                <dt>{R.folder}</dt>
+                <dd>
+                  {pendingAgent.cwd ?? newConversationChoice.cwd ?? R.noFolder}
+                </dd>
+              </dl>
+              <p>{R.savedConfig}</p>
+            </section>
+            {(composerDrafts.read("new").text ||
+              composerDrafts.read("new").attachments.length > 0) && (
+              <section>
+                <h3>{R.currentDraft}</h3>
+                <p className="new-draft-preview">
+                  {composerDrafts.read("new").text}
+                </p>
+                <p>
+                  {R.attachmentCount(
+                    composerDrafts.read("new").attachments.length,
+                  )}
+                </p>
+                <p>{R.preserveHint}</p>
+              </section>
+            )}
+            {pendingAgent.seed && (
+              <section>
+                <h3>{R.includedMessage}</h3>
+                <p className="new-draft-preview">{pendingAgent.seed.text}</p>
+                <p>{R.attachmentCount(pendingAgent.seed.attachments.length)}</p>
+              </section>
+            )}
+            {draftActionError && <p role="alert">{draftActionError}</p>}
           </div>
           <footer>
             <button
               type="button"
               className="btn btn-ghost"
+              disabled={preservingDraft}
               onClick={() => {
                 setPendingAgent(null);
+                setDraftActionError(null);
                 goNew();
               }}
             >
@@ -1106,26 +1156,43 @@ export default function App() {
             <button
               type="button"
               className="btn btn-primary"
-              disabled={unreadyCandidate(pendingAgent.id)}
-              onClick={() => {
-                if (unreadyCandidate(pendingAgent.id)) {
+              disabled={preservingDraft || unreadyCandidate(pendingAgent.id)}
+              onClick={async () => {
+                if (preservingDraft || unreadyCandidate(pendingAgent.id))
+                  return;
+                setPreservingDraft(true);
+                setDraftActionError(null);
+                try {
+                  const preserved = await composerDrafts.preserveNew();
+                  if (unreadyCandidate(pendingAgent.id))
+                    throw new Error(R.restoreUnavailable);
+                  composerDrafts.clearPreservedNew(preserved);
+                  allowAutomaticConnection(pendingAgent.id);
+                  if (pendingAgent.seed) seedMessageDraft(pendingAgent.seed);
+                  if (pendingAgent.cwd !== undefined)
+                    newConversationChoice.cwd = pendingAgent.cwd;
+                  newConversationChoice.reviewRequired =
+                    pendingAgent.selection?.requiresReview === true;
+                  setNewAgent(pendingAgent.id);
+                  setPreparedSelection(pendingAgent.selection);
+                  setAgentRequest((n) => n + 1);
                   setPendingAgent(null);
                   goNew();
-                  return;
+                } catch (reason) {
+                  setDraftActionError(
+                    reason instanceof Error ? reason.message : R.saveFailed,
+                  );
+                } finally {
+                  setPreservingDraft(false);
                 }
-                allowAutomaticConnection(pendingAgent.id);
-                composerDrafts.clear("new");
-                if (pendingAgent.seed) seedMessageDraft(pendingAgent.seed);
-                if (pendingAgent.cwd !== undefined)
-                  newConversationChoice.cwd = pendingAgent.cwd;
-                setNewAgent(pendingAgent.id);
-                setPreparedSelection(pendingAgent.selection);
-                setAgentRequest((n) => n + 1);
-                setPendingAgent(null);
-                goNew();
               }}
             >
-              {LIBRARY.clearDraft}
+              {preservingDraft
+                ? R.preservingDraft
+                : composerDrafts.read("new").text ||
+                    composerDrafts.read("new").attachments.length
+                  ? R.preserveDraft
+                  : R.newDraftReady}
             </button>
           </footer>
         </WorkspaceDialog>

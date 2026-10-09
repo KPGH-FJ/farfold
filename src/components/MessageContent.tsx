@@ -1,8 +1,10 @@
+import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import {
   createContext,
   memo,
   useContext,
   useState,
+  useId,
   type ReactNode,
 } from "react";
 import { CaretDown, Check, Copy, Paperclip } from "@phosphor-icons/react";
@@ -77,6 +79,8 @@ export function MessageAttachments({
   attachments: readonly Attachment[];
   onOpenFile?: OpenMessageFile;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
   if (!attachments.length) return null;
   const content = (
     <div
@@ -90,51 +94,72 @@ export function MessageAttachments({
           event.stopPropagation();
       }}
     >
-      {attachments.map((attachment, index) => {
-        const media = attachmentMedia(attachment);
-        return (
-          <details className="message-attachment" key={index}>
-            <summary title={attachment.uri ?? attachment.name}>
-              <Paperclip size={14} aria-hidden="true" />
-              <span className="message-attachment-name">
-                {messageLink(attachment.uri).kind === "file" ? (
-                  <MessageResultLink href={attachment.uri}>
-                    {attachment.name}
-                  </MessageResultLink>
-                ) : (
-                  attachment.name
-                )}
-              </span>
-              <CaretDown
-                className="message-attachment-chevron"
-                size={12}
-                aria-hidden="true"
-              />
-            </summary>
-            <figure className="message-attachment-content">
-              <figcaption>
-                <MessageResultLink href={attachment.uri}>
-                  {attachment.name}
-                </MessageResultLink>
-                {attachment.mimeType && <small> · {attachment.mimeType}</small>}
-              </figcaption>
-              {media?.kind === "image" && (
-                <img src={media.src} alt={attachment.name} />
-              )}
-              {media?.kind === "audio" && (
-                <audio controls preload="none" src={media.src}>
-                  {A.audioUnavailable}
-                </audio>
-              )}
-              {attachment.uri && (
-                <div className="message-file-link">{attachment.uri}</div>
-              )}
-              {attachment.text !== undefined && <pre>{attachment.text}</pre>}
-              {!media && attachment.data && <p>{A.previewUnavailable}</p>}
-            </figure>
-          </details>
-        );
-      })}
+      {attachments.length > 3 && (
+        <button
+          type="button"
+          className="message-attachments-toggle"
+          aria-expanded={expanded}
+          aria-controls={listId}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded
+            ? R.collapseAttachments
+            : R.expandAttachments(attachments.length)}
+        </button>
+      )}
+      <div id={listId}>
+        {(expanded ? attachments : attachments.slice(0, 3)).map(
+          (attachment, index) => {
+            const media = attachmentMedia(attachment);
+            return (
+              <details className="message-attachment" key={index}>
+                <summary title={attachment.uri ?? attachment.name}>
+                  <Paperclip size={14} aria-hidden="true" />
+                  <span className="message-attachment-name">
+                    {messageLink(attachment.uri).kind === "file" ? (
+                      <MessageResultLink href={attachment.uri}>
+                        {attachment.name}
+                      </MessageResultLink>
+                    ) : (
+                      attachment.name
+                    )}
+                  </span>
+                  <CaretDown
+                    className="message-attachment-chevron"
+                    size={12}
+                    aria-hidden="true"
+                  />
+                </summary>
+                <figure className="message-attachment-content">
+                  <figcaption>
+                    <MessageResultLink href={attachment.uri}>
+                      {attachment.name}
+                    </MessageResultLink>
+                    {attachment.mimeType && (
+                      <small> · {attachment.mimeType}</small>
+                    )}
+                  </figcaption>
+                  {media?.kind === "image" && (
+                    <img src={media.src} alt={attachment.name} />
+                  )}
+                  {media?.kind === "audio" && (
+                    <audio controls preload="none" src={media.src}>
+                      {A.audioUnavailable}
+                    </audio>
+                  )}
+                  {attachment.uri && (
+                    <div className="message-file-link">{attachment.uri}</div>
+                  )}
+                  {attachment.text !== undefined && (
+                    <pre>{attachment.text}</pre>
+                  )}
+                  {!media && attachment.data && <p>{A.previewUnavailable}</p>}
+                </figure>
+              </details>
+            );
+          },
+        )}
+      </div>
     </div>
   );
   return onOpenFile ? (

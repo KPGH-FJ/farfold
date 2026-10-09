@@ -171,7 +171,18 @@ beforeEach(() => {
   h.setConfig.mockReset();
   h.discardDraft.mockReset();
   h.hold.mockClear();
-  h.credentials.mockReset().mockResolvedValue([]);
+  h.credentials.mockReset().mockImplementation(async () =>
+    newConversationChoice.service
+      ? [
+          {
+            ...newConversationChoice.service,
+            complete: true,
+            deleting: false,
+            models: [newConversationChoice.service.model],
+          },
+        ]
+      : [],
+  );
   h.credentialListeners.clear();
   h.live = null;
   h.portalTargets = [];
@@ -183,6 +194,7 @@ beforeEach(() => {
     config: { model: "current-A", reasoning: "ultra" },
   });
   h.chooseDirectory.mockReset().mockResolvedValue(null);
+  newConversationChoice.reviewRequired = false;
   newConversationChoice.agentId = "A";
   newConversationChoice.cwd = "/work";
   newConversationChoice.service = null;
@@ -921,7 +933,11 @@ it.each(["existing", "api"])(
         composer().props.onSend as (...args: unknown[]) => Promise<void>
       )([], composerDrafts.read("new"));
       const rejected = expect(sent).rejects.toThrow(STRINGS.repair.sendFailed);
-      expect(composerDrafts.read("new").pendingConversation?.agentId).toBe("A");
+      await vi.waitFor(() =>
+        expect(composerDrafts.read("new").pendingConversation?.agentId).toBe(
+          "A",
+        ),
+      );
       observeAuthentication("A", cwd, "AUTH_REQUIRED", context, "request");
       // No render: the action must read the latest authentication observation itself.
       finish();
@@ -1150,6 +1166,7 @@ it("does not overwrite a newer explicit same-Agent selection when an older appli
   props.initialAgentId = "A";
   props.initialAgentRevision = 1;
   props.initialSelection = {
+    requiresReview: true,
     service: null,
     config: { model: "newer-A", reasoning: "ultra" },
   };
@@ -1161,6 +1178,7 @@ it("does not overwrite a newer explicit same-Agent selection when an older appli
     reasoning: "ultra",
   });
   expect(h.setConfig).toHaveBeenCalledTimes(1);
+  expect(newConversationChoice.reviewRequired).toBe(true);
 });
 
 function startDynamicDraft() {
@@ -1432,4 +1450,29 @@ it("skips onboarding once an Agent belongs to me", () => {
   expect(
     render().find((node) => node.props.className === "workspace-welcome"),
   ).toBeUndefined();
+});
+
+it("holds unknown historical sources until the user explicitly chooses the existing source", async () => {
+  vi.useFakeTimers();
+  h.enabled = true;
+  newConversationChoice.reviewRequired = true;
+  newConversationChoice.config = { model: "unknown-old-model" };
+  expect(composer().props.disabled).toBe(true);
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).not.toHaveBeenCalled();
+  await expect(
+    (composer().props.onSend as Function)([], composerDrafts.read("new")),
+  ).rejects.toThrow("尚未确认");
+  h.live = freshThreadState("confirmed", "A", "/work", "native");
+  h.open.mockResolvedValue(h.live);
+  await (modelPicker().props.onApply as Function)({
+    service: null,
+    modelValue: null,
+  });
+  composer();
+  expect(newConversationChoice.reviewRequired).toBe(false);
+  expect(newConversationChoice.config).toEqual({});
+  await vi.advanceTimersByTimeAsync(300);
+  expect(h.open).toHaveBeenCalledTimes(1);
+  expect(composerDrafts.read("new").text).toBe("Keep my draft");
 });

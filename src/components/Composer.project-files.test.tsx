@@ -60,6 +60,8 @@ vi.mock("../runtime/work_policy", () => ({
 
 import { invoke } from "@tauri-apps/api/core";
 import { Composer } from "./Composer";
+import { ComposerAttachments } from "./ComposerAttachments";
+import { draftImagePreview } from "../runtime/draft_images";
 import { composerDrafts } from "../runtime/drafts";
 import { threads } from "../runtime/sessions";
 import { freshThreadState } from "../runtime/session_projection";
@@ -211,9 +213,14 @@ it("uses the existing add-file menu to import an image without changing text or 
   expect(threads.open).not.toHaveBeenCalled();
   expect(threads.send).not.toHaveBeenCalled();
   expect(props.onSend).not.toHaveBeenCalled();
-  expect(render().find((node) => node.type === "img")?.props.src).toBe(
-    `data:image/png;base64,${PNG_IMAGE_TEST_DATA}`,
-  );
+  const attachmentProps = render().find(
+    (node) => node.type === ComposerAttachments,
+  )!.props;
+  expect(
+    (
+      attachmentProps.items as import("../runtime/drafts").DraftAttachment[]
+    ).map(draftImagePreview),
+  ).toContain(`data:image/png;base64,${PNG_IMAGE_TEST_DATA}`);
 });
 
 function tooWidePng() {

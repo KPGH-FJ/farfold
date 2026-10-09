@@ -19,6 +19,7 @@ import { observeAuthentication } from "./runtime/authentication";
 import { freshThreadState } from "./runtime/session_projection";
 import { threads } from "./runtime/sessions";
 import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
+import { REDESIGN as R } from "./runtime/redesign_strings";
 import { LIBRARY } from "./runtime/library_strings";
 import { preparationFor } from "./runtime/agent_preparation";
 import { requireReadableHistory } from "./runtime/session_recovery";
@@ -638,6 +639,8 @@ it("keeps the originating draft and location when adding an Agent inside its dis
     service: null,
     config: { model: "custom-model", reasoning: "ultra" },
   };
+  h.cards.push({ id: "new-custom", name: "Custom", status: "connected" });
+  h.prepared.add("new-custom");
   call("AgentHub", "onStart", "new-custom", selection, "new-conversation");
   expect(component("EmptyState").active).toBe(true);
   expect(component("EmptyState").initialSelection).toEqual(selection);
@@ -832,7 +835,7 @@ it.each(["before-start", "before-confirm"] as const)(
       start(...args);
       confirm = render().find(
         (node) =>
-          node.type === "button" && node.props.children === LIBRARY.clearDraft,
+          node.type === "button" && node.props.children === R.preserveDraft,
       )!.props.onClick as () => void;
     }
     Object.assign(h.cards[1], { source: "registry", firstBatchVisible: false });

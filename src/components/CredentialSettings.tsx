@@ -45,6 +45,8 @@ import {
   useStoredConversationIndex,
 } from "../runtime/conversation_impacts";
 import { CREDENTIAL_IMPACT_STRINGS as I } from "../runtime/credential_impact_strings";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import "../settings-library-redesign.css";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 import { ApiAccountGuide } from "./ApiAccountGuide";
 import { useModalDialog } from "./useModalDialog";
@@ -327,9 +329,7 @@ function Editor({
           stage={guide}
           provider={draft.provider}
           onProvider={(value) => change("provider", value)}
-          onContinue={() => {
-            if (draft.provider.trim()) setGuide("prepare");
-          }}
+          onContinue={() => setGuide("prepare")}
           onReturn={() => setGuide(null)}
         />
       </Dialog>
@@ -355,7 +355,7 @@ function Editor({
                 if (savePending.current) return;
                 fetchScope.invalidate();
                 setFetching(false);
-                setGuide(draft.provider.trim() ? "prepare" : "provider");
+                setGuide("prepare");
               }}
             >
               {E.accountHelp}
@@ -371,6 +371,26 @@ function Editor({
             <p role="status" className="api-muted">
               {S.editImpact}
             </p>
+          )}
+          {item && !sameSavedSource && (
+            <section
+              className="api-source-comparison"
+              aria-label={R.sourceComparison}
+            >
+              <strong>{R.sourceComparison}</strong>
+              <dl>
+                <dt>{R.sourceBefore}</dt>
+                <dd>
+                  {item.endpoint} · {formatName(item.apiType)}
+                </dd>
+                <dt>{R.sourceAfter}</dt>
+                <dd>
+                  {draft.endpoint || R.emptyValue} ·{" "}
+                  {formatName(draft.apiType) || R.emptyValue}
+                </dd>
+              </dl>
+              <p>{R.sourceComparisonHint}</p>
+            </section>
           )}
           <fieldset disabled={saving}>
             <div className="api-field-grid">
@@ -686,7 +706,7 @@ function Editor({
           onClose={() => setConfirmDiscard(false)}
         >
           <div className="api-dialog-body">
-            <p className="api-muted">{A.discardHint}</p>
+            <p className="api-muted">{item ? A.discardHint : R.discardNew}</p>
           </div>
           <footer>
             <button
@@ -876,6 +896,14 @@ export function CredentialSettings({
           <Plus size={16} />
           {S.add}
         </button>
+      </div>
+      <div className="api-use-boundary">
+        <ol aria-label={R.apiStepsLabel}>
+          {R.apiSteps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+        <p>{R.apiStepsHint}</p>
       </div>
       {(items.length > 2 || query !== "") && (
         <div className="api-search">

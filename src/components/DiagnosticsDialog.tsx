@@ -3,6 +3,8 @@ import {
   useDiagnosticsReview,
   DIAGNOSTIC_STRINGS as S,
 } from "../runtime/diagnostics";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import "../settings-library-redesign.css";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 
 export function DiagnosticsDialog({ onClose }: { onClose: () => void }) {
@@ -44,7 +46,13 @@ export function DiagnosticsDialog({ onClose }: { onClose: () => void }) {
                   className="diagnostics-entry"
                   open={entry.name === "user-note.txt"}
                 >
-                  <summary>{entry.name}</summary>
+                  <summary>
+                    {R.diagnosticCategories[entry.name] ??
+                      (entry.name.startsWith("logs/")
+                        ? R.diagnosticLogs
+                        : R.diagnosticOther)}{" "}
+                    <small>{entry.name}</small>
+                  </summary>
                   <pre>{entry.text}</pre>
                 </details>
               ))}

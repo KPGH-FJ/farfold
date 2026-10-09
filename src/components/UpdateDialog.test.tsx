@@ -292,3 +292,15 @@ it("displays save recovery and account blockers without losing the installed can
     ),
   );
 });
+
+it("offers actionable manual-update steps without an invented download link when no channel exists", () => {
+  const html = render({
+    ...snapshot,
+    configuration: "unconfigured",
+    blockers: ["release_infrastructure_unconfigured"],
+  });
+  expect(html).toContain("如何手动更新");
+  expect(html).toContain("原发布渠道");
+  expect(html).toContain("正常退出 Farfold");
+  expect(html).not.toContain("href=");
+});

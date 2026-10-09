@@ -485,8 +485,10 @@ export function ApprovalCard({
   options,
   onPick,
   disabled = false,
+  statusLabel,
 }: {
   title: string;
+  statusLabel?: string;
   kind: string;
   locations: { path: string }[];
   rawInput?: unknown;
@@ -502,7 +504,7 @@ export function ApprovalCard({
     <div className="approval">
       <div className="tag">
         <i />
-        {T.approval}
+        {statusLabel ?? T.approval}
       </div>
       <div className="ap-title">{title || STRINGS.thread.permissionOther}</div>
       <div className="ap-sub">{permissionSubtitle(kind, locations)}</div>

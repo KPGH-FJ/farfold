@@ -74,6 +74,9 @@ import { setupStorage } from "../runtime/setup_storage";
 import type { InstallationInput } from "../runtime/installation_input";
 import { useInstallationReview } from "./AgentInstallOptions";
 import "../agent-setup-presentation.css";
+import "../agent-redesign.css";
+import { AgentSetupExitReview } from "./AgentSetupExitReview";
+import { AgentSelectionReview } from "./AgentSelectionReview";
 
 export interface AgentSetupSelection {
   service: ServiceChoice | null;
@@ -163,6 +166,9 @@ export function AgentSetup({
         : {}),
     });
   const selection = setupProgress.selection ?? EMPTY_SELECTION;
+  const entrySelection = useRef(structuredClone(selection));
+  const entryProgress = useRef(structuredClone(setupProgress));
+  const [confirmExit, setConfirmExit] = useState(false);
   const installation = useInstallationReview(setupProgress, onProgress);
   const setChoice = (
     value: AccessChoice,
@@ -547,10 +553,18 @@ export function AgentSetup({
       controller.invalidate();
   }, [sameSource, choice, capability, modelValid, controller]);
 
+  const close = () => {
+    const changed =
+      JSON.stringify(entrySelection.current) !== JSON.stringify(selection) ||
+      entryProgress.current.choice !== choice;
+    if (!conversation && changed && !authBusy && !operationPending && !busy)
+      setConfirmExit(true);
+    else onClose();
+  };
   const { onCancel } = useModalDialog({
     dialogRef: dialog,
     open: active,
-    onDismiss: onClose,
+    onDismiss: close,
   });
   useEffect(() => {
     let active = true;
@@ -612,7 +626,6 @@ export function AgentSetup({
     dialog.current?.close();
     onOpenApi(card.id);
   };
-  const close = onClose;
   const prepareAgain = () => {
     if (!canReadModels) return;
     const input = preparationInput();
@@ -744,6 +757,7 @@ export function AgentSetup({
   return (
     <dialog
       ref={dialog}
+      data-agent-redesign="true"
       className="agent-setup-dialog"
       data-intent={intent}
       aria-labelledby="agent-setup-title"
@@ -839,6 +853,7 @@ export function AgentSetup({
         )}
         {step === 0 &&
           agentSetupProgram({
+            active,
             card,
             agents,
             inventory,
@@ -1079,13 +1094,19 @@ export function AgentSetup({
                 disabled={busy || authBusy || operationPending || modelChanging}
               />
             )}
-            {intent === "use" &&
-              agentSetupCurrentSelection({
-                name: card.name,
-                apiChoice: choice === "api",
-                serviceLabel: selectedService?.label,
-                displayLocation,
-              })}
+            {agentSetupCurrentSelection({
+              name: card.name,
+              apiChoice: choice === "api",
+              serviceLabel: selectedService?.label,
+              displayLocation,
+              showLocation: intent === "use",
+            })}
+            <AgentSelectionReview
+              before={entrySelection.current}
+              after={selection}
+              services={services}
+              options={testThread?.configOptions ?? []}
+            />
             {!sourceValid && (
               <div role="alert" className="agent-setup-notice">
                 <p>{S.chooseCompatibleApi}</p>
@@ -1340,13 +1361,13 @@ export function AgentSetup({
                     return;
                   }
                   if (intent === "manage") {
-                    if (conversation || !onConfirmManagement) close();
+                    if (conversation || !onConfirmManagement) onClose();
                     else {
                       setFinishing(true);
                       setError(null);
                       try {
                         if (await onConfirmManagement(card.id, selection))
-                          close();
+                          onClose();
                       } catch (reason) {
                         setError(uiError(reason, S.loadFailed));
                       } finally {
@@ -1400,7 +1421,33 @@ export function AgentSetup({
             onClose={() => setRemoving(false)}
             onRemoved={() => {
               setRemoving(false);
-              close();
+              onClose();
+            }}
+          />,
+          document.body,
+        )}
+      {active &&
+        confirmExit &&
+        createPortal(
+          <AgentSetupExitReview
+            onContinue={() => setConfirmExit(false)}
+            onKeep={onClose}
+            onDiscard={() => {
+              if (authBusy || operationPending || busy) {
+                setConfirmExit(false);
+                return;
+              }
+              const previous = entryProgress.current;
+              controller.invalidate();
+              onProgress({
+                ...latestProgress.current,
+                choice: previous.choice,
+                selection: structuredClone(entrySelection.current),
+                accessStage: previous.accessStage,
+                authMethodId: previous.authMethodId,
+                preparationActionId: previous.preparationActionId,
+              });
+              onClose();
             }}
           />,
           document.body,

@@ -1,0 +1,71 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/additional-observations.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/data.js
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/data.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/index.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/input-agents.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/input-conversation.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/input-settings_library.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/inventory.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/preview/browser-qa.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/qa-independent.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/report.js
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-adjustments.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-agents-summary.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-agents.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-conversation.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-settings_library.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/review-supplement.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/all-pages/style.css
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/01-account-key.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/02-terminal-api.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/03-three-methods.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/04-account-summary.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/05-terminal-summary.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/06-service-step.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/07-service-summary.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/08-model-step.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/09-model-selected.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/10-program-list.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/11-program-connected.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/12-service-editing.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/13-single-terminal.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/14-key-detail.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/15-api-old-auth.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/16-program-ready.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/agent-setup/17-program-missing.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/composer/01-start-light.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/composer/02-start-dark.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/composer/03-thread-light.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/composer/04-thread-dark.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/composer/05-running-light.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/screenshots/manifest.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states-screenshots.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/01-approval-pending.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/02-approval-stop-waiting.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/03-question-pending.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/04-question-uncertain.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/05-queue-paused.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/06-queue-editing.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/07-stop-unknown.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/08-work-read-error.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/09-diff-fragment.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/10-diff-split.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/11-media-collapsed.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/12-media-expanded.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/manifest.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/controlled-views/states/README.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/coverage-ledger.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/fixtures/sample.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/index.html
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/observations.json
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/README.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/review.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/state-coverage-options.md
+[warn] docs/evidence/2026-10-08-ui-coverage-audit/full-review/verification.json
+[warn] Code style issues found in 64 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

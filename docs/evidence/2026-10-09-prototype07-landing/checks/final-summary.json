@@ -1,0 +1,66 @@
+{
+  "scope": "final production source increment; controlled fixtures are not installed verification",
+  "checks": [
+    {
+      "command": "corepack pnpm format:check",
+      "exitCode": 0,
+      "log": "format-final.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": "typecheck-final.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "command": "corepack pnpm test",
+      "exitCode": 0,
+      "log": "frontend-test-final.log",
+      "sha256": "96a61bca940f366af728c35767468b0a02c41123f7b435f4f3e0c30913ec9fe4"
+    },
+    {
+      "command": "corepack pnpm build",
+      "exitCode": 0,
+      "log": "frontend-build-final.log",
+      "sha256": "5b891ff1f3541d37a751ddffbc7aebf45898ca826d748ebe9092b380c6a9200f"
+    },
+    {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "log": "rust-format.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "log": "rust-clippy.log",
+      "sha256": "994cf74e828fa9d28881adc628da39e6350c9ea84bf6f0d2a6dd7daf6044bf76"
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+      "exitCode": 0,
+      "log": "rust-test.log",
+      "sha256": "b12224ef441b3cbf9b17d96e2260712deb5f3ad15da5d9394a37dc280f561597"
+    }
+  ],
+  "frontend": {
+    "filesPassed": 218,
+    "testsPassed": 2523
+  },
+  "rust": {
+    "passed": 1040,
+    "failed": 0,
+    "ignored": 4
+  },
+  "lastSourceChange": "CustomAgentDialog.tsx and agent-redesign.css; frontend full suite/type/build repeated, Rust unchanged since full Rust checks",
+  "controlledRender": {
+    "generatorTestsPassed": 3,
+    "runtimeDesktopCalls": 0
+  },
+  "warnings": [
+    "Frontend main chunk remains above the build size warning threshold; production build completed."
+  ],
+  "installed": false,
+  "realAgentTested": false
+}

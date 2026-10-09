@@ -16,6 +16,8 @@ import {
   agentDirectoryDescription,
   agentDirectorySource,
 } from "../runtime/agent_directory";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
+import "../agent-redesign.css";
 import { AGENT_DETAIL_STRINGS as D } from "../runtime/agent_detail_strings";
 
 /** Public capability snapshot shape (`Handshake::public_json`, camelCase). */
@@ -121,6 +123,7 @@ export function AgentDetails({
   return (
     <dialog
       ref={dialog}
+      data-agent-redesign="true"
       className="agent-setup-dialog agent-detail-dialog"
       aria-labelledby="agent-detail-title"
       onCancel={onCancel}
@@ -150,49 +153,67 @@ export function AgentDetails({
           {agentDirectoryDescription(card)}
         </p>
         <section className="agent-detail-capabilities">
-          <h4>{D.capabilities}</h4>
-          <dl>
-            <div>
-              <dt>{D.capabilityAuth}</dt>
-              <dd>
-                {declared.known
-                  ? declared.authMethods.length
-                    ? `${D.capabilityAuthCount(declared.authMethods.length)}：${declared.authMethods
-                        .map((method) => method.name ?? method.id ?? "")
-                        .filter(Boolean)
-                        .join("、")}`
-                    : D.capabilityAuthNone
-                  : D.capabilityAuthUnknown}
-              </dd>
-            </div>
-            <div>
-              <dt>{D.capabilityContent}</dt>
-              <dd>
-                {promptItems.length
-                  ? D.capabilityContentList(promptItems)
-                  : D.capabilityContentNone}
-              </dd>
-            </div>
-            <div>
-              <dt>{D.capabilityHistory}</dt>
-              <dd>
-                {declared.loadSession === true
-                  ? D.capabilityHistoryDeclared
-                  : D.capabilityHistoryUnknown}
-              </dd>
-            </div>
-            <div>
-              <dt>{D.capabilityApi}</dt>
-              <dd>
-                {capability
-                  ? capability.apiTypes.length
-                    ? D.capabilityApiYes
-                    : D.capabilityApiNo
-                  : D.capabilityApiUnknown}
-              </dd>
-            </div>
-          </dl>
-          <p className="auth-note">{D.capabilityHonesty}</p>
+          <h4>{U.capabilities}</h4>
+          <table className="agent-capability-table">
+            <thead>
+              <tr>
+                <th scope="col">{U.capability}</th>
+                <th scope="col">{U.currentInformation}</th>
+                <th scope="col">{U.evidenceScope}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                [
+                  D.capabilityAuth,
+                  declared.known
+                    ? declared.authMethods.length
+                      ? `${D.capabilityAuthCount(declared.authMethods.length)}：${declared.authMethods
+                          .map((method) => method.name ?? method.id ?? "")
+                          .filter(Boolean)
+                          .join("、")}`
+                      : D.capabilityAuthNone
+                    : D.capabilityAuthUnknown,
+                  declared.known ? U.declaredEvidence : U.notRead,
+                ],
+                [
+                  D.capabilityContent,
+                  promptItems.length
+                    ? D.capabilityContentList(promptItems)
+                    : D.capabilityContentNone,
+                  declared.known ? U.declaredEvidence : U.notRead,
+                ],
+                [
+                  D.capabilityHistory,
+                  declared.loadSession === true
+                    ? D.capabilityHistoryDeclared
+                    : declared.loadSession === null
+                      ? U.historyUnread
+                      : D.capabilityHistoryUnknown,
+                  declared.known ? U.declaredEvidence : U.notRead,
+                ],
+                [
+                  D.capabilityApi,
+                  capability
+                    ? capability.apiTypes.length
+                      ? D.capabilityApiYes
+                      : D.capabilityApiNo
+                    : D.capabilityApiUnknown,
+                  capability ? U.apiEvidence : U.notRead,
+                ],
+              ].map(([label, value, evidence]) => (
+                <tr key={label}>
+                  <th scope="row">{label}</th>
+                  <td>{value}</td>
+                  <td>{evidence}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <details className="agent-evidence-details">
+            <summary>{U.evidenceDetails}</summary>
+            <p className="auth-note">{D.capabilityHonesty}</p>
+          </details>
         </section>
         {officialUrl && (
           <div className="agent-detail-links">

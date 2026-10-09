@@ -1,3 +1,7 @@
+import { REDESIGN } from "./redesign_strings";
+import { AGENT_REDESIGN } from "./agent_redesign_strings";
+import { SETTINGS_REDESIGN } from "./settings_redesign_strings";
+import { CONVERSATION_REDESIGN } from "./conversation_redesign_strings";
 import { BROWSER_WORKSPACE_STRINGS } from "./browser_workspace_strings";
 import { describe, expect, it } from "vitest";
 import { COMPOSER_CONTROLS } from "./composer_strings";
@@ -73,6 +77,11 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      REDESIGN,
+      AGENT_REDESIGN,
+      SETTINGS_REDESIGN,
+      CONVERSATION_REDESIGN,
+
       FILE_DELIVERY_STRINGS,
       BROWSER_WORKSPACE_STRINGS,
       COMPOSER_CONTROLS,

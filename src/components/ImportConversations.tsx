@@ -18,6 +18,8 @@ import {
   type DiscoveredConversation,
   type HistoryPreview,
 } from "../runtime/history_import";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import "../settings-library-redesign.css";
 import { IMPORT_STRINGS as S } from "../runtime/import_strings";
 import { LIBRARY } from "../runtime/library_strings";
 import { MessageContent } from "./MessageContent";
@@ -105,6 +107,12 @@ export function ImportConversations({
 }) {
   const available = agents.filter(
     (a) => a.status === "installed" || a.status === "connected",
+  );
+  const [agentQuery, setAgentQuery] = useState("");
+  const visibleAgents = available.filter((card) =>
+    card.name
+      .toLocaleLowerCase()
+      .includes(agentQuery.trim().toLocaleLowerCase()),
   );
   const [agentId, setAgentId] = useState(
     initialAgentId ?? available[0]?.id ?? "",
@@ -563,8 +571,32 @@ export function ImportConversations({
           <>
             <h3>{S.chooseHeading}</h3>
             <p className="history-hint">{S.preserveHint}</p>
+            <div className="history-agent-search">
+              <input
+                type="search"
+                aria-label={R.searchAgents}
+                placeholder={R.searchAgents}
+                value={agentQuery}
+                onChange={(event) => setAgentQuery(event.target.value)}
+              />
+              <span>
+                {R.agentCount(visibleAgents.length, available.length)}
+              </span>
+            </div>
+            {available.length > 0 && visibleAgents.length === 0 && (
+              <div className="history-empty" role="status">
+                <strong>{R.noAgents}</strong>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => setAgentQuery("")}
+                >
+                  {R.clearSearch}
+                </button>
+              </div>
+            )}
             <div className="history-agent-grid">
-              {available.map((card) => (
+              {visibleAgents.map((card) => (
                 <button
                   key={card.id}
                   type="button"
@@ -822,6 +854,34 @@ export function ImportConversations({
                 {previewRow ? (
                   <>
                     <h4>{previewRow.title ?? S.unknownTitle}</h4>
+                    {!previewRow.alreadyAddedId &&
+                      !added[previewRow.nativeSessionId] && (
+                        <div className="history-recheck">
+                          <p>
+                            {R.body}：
+                            {preview?.nativeSessionId ===
+                              previewRow.nativeSessionId &&
+                            preview.replayComplete
+                              ? R.bodyReceived
+                              : R.bodyUnknown}
+                          </p>
+                          {previewRow.canLoad &&
+                            previewRow.locationAvailable &&
+                            !previewRow.isOpen && (
+                              <>
+                                <button
+                                  type="button"
+                                  className="btn btn-ghost"
+                                  disabled={busy}
+                                  onClick={() => void view(previewRow)}
+                                >
+                                  {R.previewRecheck}
+                                </button>
+                                <small>{R.previewRecheckHint}</small>
+                              </>
+                            )}
+                        </div>
+                      )}
                     {previewRow.alreadyAddedId ||
                     added[previewRow.nativeSessionId] ? (
                       <button
@@ -899,7 +959,7 @@ export function ImportConversations({
         {!choosing && searched && !unsupported && cursor && (
           <button
             type="button"
-            className="btn btn-ghost"
+            className="btn btn-ghost history-load-more"
             disabled={busy}
             onClick={() => void discover(true)}
           >

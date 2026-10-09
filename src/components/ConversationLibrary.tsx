@@ -49,7 +49,7 @@ import { hasReadableMessages } from "../runtime/message_attachments";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { AgentLogo } from "./AgentLogo";
-import { composerDrafts } from "../runtime/drafts";
+import { composerDrafts, hasUnsentWork } from "../runtime/drafts";
 import { ResumeDraftButton } from "./ResumeDraftButton";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
@@ -58,8 +58,12 @@ import {
   useConversationReadState,
 } from "../runtime/conversation_read_state";
 
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import "../settings-library-redesign.css";
+
 const LIBRARY_TABS = [
   ["all", LIBRARY.allTab],
+  ["drafts", R.unsent],
   ["need", LIBRARY.attention],
   ["run", LIBRARY.running],
   ["unread", LIBRARY.unread],
@@ -140,8 +144,8 @@ export function ConversationLibrary({
     changeFilter({ agent: "", group: "", query: "", state: "all" });
   const archived = tab === "archived";
   const allRows = useLibraryRows(archived);
-  /** 清空已归档的实际范围：只含归档标记仍为 true 的行。 */
-  const archivedRows = allRows.filter((row) => row.archived);
+  // Keep tab counts aligned with the same protected archive projection.
+  const otherRows = useLibraryRows(!archived);
   const snapshot = useThreadsSnapshot();
   const index = snapshot.index;
   const agentOptions = useMemo(() => {
@@ -170,13 +174,13 @@ export function ConversationLibrary({
   const draftKeys = useSyncExternalStore(
     composerDrafts.subscribe,
     () =>
-      allRows
-        .filter((row) => composerDrafts.hasContent(`session:${row.key}`))
+      [...allRows, ...otherRows]
+        .filter((row) => hasUnsentWork(row.key))
         .map((row) => row.key)
         .join("\n"),
     () =>
-      allRows
-        .filter((row) => composerDrafts.hasContent(`session:${row.key}`))
+      [...allRows, ...otherRows]
+        .filter((row) => hasUnsentWork(row.key))
         .map((row) => row.key)
         .join("\n"),
   );
@@ -190,7 +194,7 @@ export function ConversationLibrary({
   const [actions, setActions] = useState<SidebarRow | null>(null);
   const [moving, setMoving] = useState<string[] | null>(null);
   const [deleting, setDeleting] = useState<SidebarRow[] | null>(null);
-  const [clearing, setClearing] = useState(false);
+  const [clearing, setClearing] = useState<SidebarRow[] | null>(null);
   const actionAnchor = useRef<HTMLButtonElement | null>(null);
   const moveAnchor = useRef<HTMLButtonElement | null>(null);
   const deleteAnchor = useRef<HTMLElement | null>(null);
@@ -202,7 +206,7 @@ export function ConversationLibrary({
       setEditing(null);
       setMoving(null);
       setDeleting(null);
-      setClearing(false);
+      setClearing(null);
     }
   }, [active]);
   useEffect(() => {
@@ -215,7 +219,7 @@ export function ConversationLibrary({
     setActions(null);
     setMoving(null);
     setDeleting(null);
-    setClearing(false);
+    setClearing(null);
   }, [filter]);
   useEffect(() => {
     if (
@@ -239,7 +243,12 @@ export function ConversationLibrary({
               : data.assignments[r.key] === dimensions.group)) &&
           (tab === "all" ||
             tab === "archived" ||
-            (tab === "unread" ? r.unread : r.status === tab)) &&
+            (tab === "drafts"
+              ? rowsWithDraft.has(r.key) ||
+                Boolean(snapshot.threads.get(r.key)?.queued.length)
+              : tab === "unread"
+                ? r.unread
+                : r.status === tab)) &&
           (!query.trim() ||
             `${r.title} ${r.cwd} ${agents.find((a) => a.id === r.agentId)?.name ?? r.agentId} ${data.groups.find((g) => g.id === data.assignments[r.key])?.name ?? ""}`
               .toLocaleLowerCase()
@@ -254,8 +263,40 @@ export function ConversationLibrary({
       agents,
       tab,
       query,
+      draftKeys,
+      snapshot.threads,
     ],
   );
+  const archivedRows = rows.filter((row) => row.archived);
+  const archivedKeys = new Set(
+    (archived ? allRows : otherRows).map((row) => row.key),
+  );
+  const stateCounts = new Map(LIBRARY_TABS.map(([id]) => [id, 0]));
+  for (const row of [...allRows, ...otherRows]) {
+    const matches =
+      (!dimensions.favorites || row.pinned) &&
+      (!dimensions.agent || row.agentId === dimensions.agent) &&
+      (!dimensions.group ||
+        (dimensions.group === "none"
+          ? !data.assignments[row.key]
+          : data.assignments[row.key] === dimensions.group)) &&
+      (!query.trim() ||
+        `${row.title} ${row.cwd} ${agents.find((a) => a.id === row.agentId)?.name ?? row.agentId} ${data.groups.find((g) => g.id === data.assignments[row.key])?.name ?? ""}`
+          .toLocaleLowerCase()
+          .includes(query.trim().toLocaleLowerCase()));
+    if (!matches) continue;
+    const increment = (id: LibraryTab) =>
+      stateCounts.set(id, (stateCounts.get(id) ?? 0) + 1);
+    if (archivedKeys.has(row.key)) {
+      increment("archived");
+      continue;
+    }
+    increment("all");
+    if (hasUnsentWork(row.key) || snapshot.threads.get(row.key)?.queued.length)
+      increment("drafts");
+    if (row.unread) increment("unread");
+    if (row.status === "need" || row.status === "run") increment(row.status);
+  }
   const visibleSelected = selectedLibraryRows(rows, selected);
   const actionRow = actions && allRows.find((row) => row.key === actions.key);
   const actionArchiveReason =
@@ -333,14 +374,26 @@ export function ConversationLibrary({
   // W3-9：删除（单个/批量/清空归档共用确认）、导出、位置显示、相同设置再开。
   const deleteRows = (targets: SidebarRow[]) =>
     perform(
-      () => Promise.all(targets.map((row) => threads.delete(row))),
+      () => {
+        for (const row of targets) {
+          const reason = threads.archiveBlockReason(row.key);
+          if (reason) throw new Error(LIBRARY.deleteReasons[reason]);
+          if (
+            clearing &&
+            !threads.getSnapshot().index.find((item) => item.id === row.key)
+              ?.archived
+          )
+            throw new Error(R.archivedChanged);
+        }
+        return Promise.all(targets.map((row) => threads.delete(row)));
+      },
       (outcomes) => {
         const remaining = outcomes.filter(
           (outcome) => outcome !== "deleted",
         ).length;
         setSelected(new Set());
         setDeleting(null);
-        setClearing(false);
+        setClearing(null);
         setActions(null);
         setError(remaining ? LIBRARY.deletePartial(remaining) : null);
         // Deleting a conversation also drops its grouping link.
@@ -410,6 +463,7 @@ export function ConversationLibrary({
             </button>
           </div>
         </div>
+        <p className="library-search-boundary">{R.searchBoundary}</p>
         <div className="library-tools">
           <label className="library-search">
             <MagnifyingGlassIcon size={16} />
@@ -466,7 +520,7 @@ export function ConversationLibrary({
                 operation.current.invalidate();
                 setError(null);
                 deleteAnchor.current = event.currentTarget;
-                setClearing(true);
+                setClearing([...archivedRows]);
               }}
             >
               {LIBRARY.clearArchived}
@@ -570,6 +624,9 @@ export function ConversationLibrary({
               }}
             >
               {label}
+              <span className="library-tab-count">
+                {stateCounts.get(id) ?? 0}
+              </span>
             </button>
           ))}
         </div>
@@ -723,7 +780,7 @@ export function ConversationLibrary({
                   )}
                   <span>
                     <strong>{row.title}</strong>
-                    <small>
+                    <small title={row.cwd}>
                       {agentCard?.name ?? row.agentId} ·{" "}
                       {row.cwd === defaultCwd
                         ? LIBRARY.ordinary
@@ -761,6 +818,14 @@ export function ConversationLibrary({
                 )}
                 {rowsWithDraft.has(row.key) && (
                   <span className="draft-badge">{LIBRARY.draft}</span>
+                )}
+                {!!loaded?.queued.length && (
+                  <span className="draft-badge">
+                    {R.queued(loaded.queued.length)}
+                  </span>
+                )}
+                {row.archived && (
+                  <span className="library-status">{LIBRARY.archived}</span>
                 )}
                 <time>{relativeTime(row.updatedAt)}</time>
                 <button
@@ -801,13 +866,27 @@ export function ConversationLibrary({
         {rows.length === 0 && (
           <div className="library-empty">
             <ChatCircleIcon size={32} />
-            <h2>{filtered ? LIBRARY.noResults : LIBRARY.empty}</h2>
-            <p>
-              {tab === "archived"
-                ? LIBRARY.archivedHint
+            <h2>
+              {dimensions.favorites &&
+              !query &&
+              !dimensions.agent &&
+              !dimensions.group
+                ? R.favoritesEmpty
                 : filtered
-                  ? LIBRARY.filteredHint
-                  : LIBRARY.emptyHint}
+                  ? LIBRARY.noResults
+                  : LIBRARY.empty}
+            </h2>
+            <p>
+              {dimensions.favorites &&
+              !query &&
+              !dimensions.agent &&
+              !dimensions.group
+                ? R.favoritesHint
+                : tab === "archived"
+                  ? LIBRARY.archivedHint
+                  : filtered
+                    ? LIBRARY.filteredHint
+                    : LIBRARY.emptyHint}
             </p>
             {filtered && (
               <button
@@ -944,6 +1023,12 @@ export function ConversationLibrary({
       {active && moving && (
         <MoveConversationsDialog
           count={moving.length}
+          rows={allRows
+            .filter((row) => moving.includes(row.key))
+            .map((row) => ({
+              title: row.title,
+              groupId: data.assignments[row.key] ?? "",
+            }))}
           returnFocusRef={moveAnchor}
           groups={data.groups}
           busy={busy || !data.ready || data.saving}
@@ -963,6 +1048,7 @@ export function ConversationLibrary({
       {active && deleting && (
         <DeleteConversationsDialog
           title={LIBRARY.deleteTitle(deleting.length)}
+          targets={deleting.map((row) => row.title)}
           hint={
             deleting.length === 1
               ? LIBRARY.deleteHintOne(deleting[0].title)
@@ -981,15 +1067,16 @@ export function ConversationLibrary({
       {active && clearing && (
         <DeleteConversationsDialog
           title={LIBRARY.clearArchivedTitle}
-          hint={LIBRARY.clearArchivedHint(archivedRows.length)}
+          hint={R.archivedScope(clearing.length)}
+          targets={clearing.map((row) => row.title)}
           busy={busy}
           error={error}
           returnFocusRef={deleteAnchor}
           onClose={() => {
             operation.current.invalidate();
-            setClearing(false);
+            setClearing(null);
           }}
-          onDelete={() => void deleteRows(archivedRows)}
+          onDelete={() => void deleteRows(clearing)}
         />
       )}
       {active && editing && (

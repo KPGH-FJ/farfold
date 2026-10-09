@@ -22,7 +22,7 @@ export interface LibrarySelection {
   agent: string;
   group: string;
   favorites: boolean;
-  state: "all" | "need" | "run" | "unread" | "archived";
+  state: "all" | "drafts" | "need" | "run" | "unread" | "archived";
   query: string;
 }
 export type LibraryFilter =
@@ -309,6 +309,7 @@ export function matchesLibraryFilter(
   row: SidebarRow,
   filter: LibraryFilter,
   data: CollectionData,
+  hasUnsentContent = false,
 ) {
   const selected = normalizeLibraryFilter(filter);
   return (
@@ -321,9 +322,11 @@ export function matchesLibraryFilter(
     (selected.state === "all" ||
       (selected.state === "archived"
         ? row.archived
-        : selected.state === "unread"
-          ? !!row.unread
-          : row.status === selected.state)) &&
+        : selected.state === "drafts"
+          ? hasUnsentContent
+          : selected.state === "unread"
+            ? !!row.unread
+            : row.status === selected.state)) &&
     (!selected.query.trim() ||
       `${row.title} ${row.cwd} ${row.agentId} ${data.groups.find((group) => group.id === data.assignments[row.key])?.name ?? ""}`
         .toLocaleLowerCase()

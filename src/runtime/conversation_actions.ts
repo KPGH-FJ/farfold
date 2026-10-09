@@ -15,6 +15,51 @@ export type StoredServiceRecord =
       identity?: { id?: string; model?: string; fingerprint?: string };
     };
 
+/** Missing historical source data must not silently become today's defaults. */
+export function historicalSelectionNeedsReview(
+  value: unknown,
+  credentials?: readonly Credential[],
+): boolean {
+  if (!value || typeof value !== "object") return true;
+  const record = value as {
+    _farfoldConfig?: unknown;
+    choices?: unknown;
+    _farfoldService?: StoredServiceRecord;
+  };
+  if (record._farfoldConfig !== 2 || !Array.isArray(record.choices))
+    return true;
+  const source = record._farfoldService;
+  if (source?.kind === "existing") return false;
+  const incomplete =
+    source?.kind !== "configured" ||
+    !source.identity?.id ||
+    !source.identity?.model ||
+    !source.identity?.fingerprint;
+  return (
+    incomplete ||
+    (credentials !== undefined &&
+      !storedConversationSelection(value, credentials).service?.revision)
+  );
+}
+
+/** Only the user's still-current non-secret service choice may prepare a new conversation. */
+export function serviceSelectionIsCurrent(
+  selection: ServiceSelection & { revision: string },
+  credentials: readonly Credential[],
+): boolean {
+  return (
+    !!selection.revision &&
+    credentials.some(
+      (item) =>
+        item.id === selection.id &&
+        item.revision === selection.revision &&
+        item.complete &&
+        !item.deleting &&
+        item.models.includes(selection.model),
+    )
+  );
+}
+
 /** Read `configOptions` recorded on an index row into the draft-selection
  *  shape (`initialSelection`/`PreparedSelection`) used by the new-conversation
  *  flow. Unknown or older record shapes degrade to empty config rather than

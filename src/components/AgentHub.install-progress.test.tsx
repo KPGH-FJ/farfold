@@ -55,6 +55,7 @@ import { AgentHub, type AgentHubProps } from "./AgentHub";
 import { AgentSetup } from "./AgentSetup";
 import { AgentDetails } from "./AgentDetails";
 import type { AgentCardModel, AgentsState } from "../runtime/agents";
+import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
 import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { STRINGS } from "../runtime/strings";
 import { setupStorage } from "../runtime/setup_storage";
@@ -269,7 +270,7 @@ it.each(["install", "connect"] as const)(
     (setup.props.onProgress as (value: unknown) => void)(useProgress);
     (setup.props.onClose as () => void)();
     const manage = nodes(article()).find(
-      (node) => node.props["aria-label"] === `${S.manage} · ${card.name}`,
+      (node) => node.props["aria-label"] === `${U.manage} · ${card.name}`,
     )!;
     (manage.props.onClick as () => void)();
     setup = render().find((node) => node.type === AgentSetup)!;

@@ -13,6 +13,8 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import { DangerConfirm } from "./DangerConfirm";
 import { threads } from "../runtime/sessions";
 import { hasPendingRequests } from "../runtime/session_types";
+import "../settings-library-redesign.css";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { uiError } from "../runtime/ui_error";
 
 /** Active work, pending requests or unconfirmed outcomes keep the destructive
@@ -58,13 +60,20 @@ function PrivacyDataControls({
 }) {
   const [error, setError] = useState<string | null>(null);
   const clearing = useRef(false);
+  const [acknowledged, setAcknowledged] = useState(false);
   useSyncExternalStore(
     threads.subscribe,
     threads.getSnapshot,
     threads.getSnapshot,
   );
   const clear = async () => {
-    if (phase !== "confirm" || clearing.current) return;
+    if (
+      phase !== "confirm" ||
+      clearing.current ||
+      !acknowledged ||
+      workInFlight()
+    )
+      return;
     clearing.current = true;
     setPhase("working");
     setError(null);
@@ -102,6 +111,7 @@ function PrivacyDataControls({
         {phase === "confirm" || phase === "working" ? (
           <DangerConfirm
             busy={phase === "working"}
+            confirmDisabled={!acknowledged || workInFlight()}
             error={error}
             confirmLabel={
               phase === "working" ? P.clearDataWorking : P.clearDataConfirm
@@ -111,6 +121,7 @@ function PrivacyDataControls({
             onCancel={() => {
               setError(null);
               setPhase("idle");
+              setAcknowledged(false);
             }}
           >
             <div className="settings-clear-scope">
@@ -126,6 +137,16 @@ function PrivacyDataControls({
                   <li key={item}>{item}</li>
                 ))}
               </ul>
+              <label className="settings-clear-acknowledgement">
+                <input
+                  type="checkbox"
+                  checked={acknowledged}
+                  disabled={phase === "working"}
+                  onChange={(event) => setAcknowledged(event.target.checked)}
+                />
+                <span>{R.clearAcknowledgement}</span>
+              </label>
+              {workInFlight() && <p role="status">{P.clearDataBlocked}</p>}
             </div>
           </DangerConfirm>
         ) : null}
@@ -138,7 +159,10 @@ function PrivacyDataControls({
       <section className="settings-uninstall">
         <div>
           <h3>{P.uninstallTitle}</h3>
-          <p>{P.uninstallHint}</p>
+          <details>
+            <summary>{R.uninstallDetails}</summary>
+            <p>{P.uninstallHint}</p>
+          </details>
         </div>
       </section>
     </>

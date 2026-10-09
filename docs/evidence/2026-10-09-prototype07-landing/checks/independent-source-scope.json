@@ -1,0 +1,426 @@
+{
+  "sourceBase": "da7551d937fc33aab3286560478be3050c462f51",
+  "scope": ["src", "docs/evidence/2026-10-09-prototype07-landing"],
+  "checkedTsFiles": 94,
+  "over1500": [],
+  "largest": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "lines": 1480
+    },
+    {
+      "path": "src/runtime/sessions.regression.test.ts",
+      "lines": 1457
+    },
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "lines": 1457
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "lines": 1413
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "lines": 1394
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "lines": 1331
+    },
+    {
+      "path": "src/components/AgentSetup.selection.test.tsx",
+      "lines": 1316
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "lines": 1274
+    },
+    {
+      "path": "src/App.tsx",
+      "lines": 1202
+    }
+  ],
+  "all": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "lines": 1480
+    },
+    {
+      "path": "src/runtime/sessions.regression.test.ts",
+      "lines": 1457
+    },
+    {
+      "path": "src/components/AgentSetup.tsx",
+      "lines": 1457
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "lines": 1413
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "lines": 1394
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "lines": 1331
+    },
+    {
+      "path": "src/components/AgentSetup.selection.test.tsx",
+      "lines": 1316
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "lines": 1274
+    },
+    {
+      "path": "src/App.tsx",
+      "lines": 1202
+    },
+    {
+      "path": "src/components/CredentialSettings.tsx",
+      "lines": 1194
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "lines": 1131
+    },
+    {
+      "path": "src/components/CredentialSettings.lifecycle.test.tsx",
+      "lines": 1020
+    },
+    {
+      "path": "src/components/ImportConversations.tsx",
+      "lines": 1012
+    },
+    {
+      "path": "src/components/CollectionActions.test.tsx",
+      "lines": 939
+    },
+    {
+      "path": "src/components/AgentHub.tsx",
+      "lines": 876
+    },
+    {
+      "path": "src/components/ImportConversations.scope.test.tsx",
+      "lines": 821
+    },
+    {
+      "path": "src/components/ProgramManager.selection.test.tsx",
+      "lines": 700
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "lines": 684
+    },
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "lines": 613
+    },
+    {
+      "path": "src/components/GeneralSettings.tsx",
+      "lines": 609
+    },
+    {
+      "path": "src/components/ConversationLibrary.test.tsx",
+      "lines": 590
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "lines": 537
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "lines": 534
+    },
+    {
+      "path": "src/components/Sidebar.tsx",
+      "lines": 515
+    },
+    {
+      "path": "src/components/UpdateDialog.tsx",
+      "lines": 504
+    },
+    {
+      "path": "src/components/ProgramManager.tsx",
+      "lines": 477
+    },
+    {
+      "path": "src/components/Composer.shortcuts.test.tsx",
+      "lines": 472
+    },
+    {
+      "path": "src/components/AgentHub.install-progress.test.tsx",
+      "lines": 460
+    },
+    {
+      "path": "docs/evidence/2026-10-09-prototype07-landing/controlled-render/conversation-render.test.tsx",
+      "lines": 433
+    },
+    {
+      "path": "src/components/AgentHub.test.tsx",
+      "lines": 414
+    },
+    {
+      "path": "docs/evidence/2026-10-09-prototype07-landing/controlled-render/agent-render.test.tsx",
+      "lines": 362
+    },
+    {
+      "path": "src/runtime/collections.ts",
+      "lines": 335
+    },
+    {
+      "path": "src/runtime/draft_preservation.test.ts",
+      "lines": 328
+    },
+    {
+      "path": "src/components/MessageContent.test.tsx",
+      "lines": 323
+    },
+    {
+      "path": "docs/evidence/2026-10-09-prototype07-landing/controlled-render/settings-render.test.tsx",
+      "lines": 323
+    },
+    {
+      "path": "src/App.test-harness.ts",
+      "lines": 317
+    },
+    {
+      "path": "src/components/UpdateDialog.test.tsx",
+      "lines": 306
+    },
+    {
+      "path": "src/components/ConversationInteractions.review.test.tsx",
+      "lines": 297
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "lines": 288
+    },
+    {
+      "path": "src/components/ElicitationCard.tsx",
+      "lines": 283
+    },
+    {
+      "path": "src/components/AgentSetupModels.tsx",
+      "lines": 278
+    },
+    {
+      "path": "src/components/ConversationRedesign.test.tsx",
+      "lines": 268
+    },
+    {
+      "path": "src/runtime/session_recovery.ts",
+      "lines": 260
+    },
+    {
+      "path": "src/components/CustomAgentDialog.test.tsx",
+      "lines": 255
+    },
+    {
+      "path": "src/components/CustomAgentDialog.tsx",
+      "lines": 252
+    },
+    {
+      "path": "src/components/AgentDetails.tsx",
+      "lines": 252
+    },
+    {
+      "path": "src/runtime/conversation_actions.test.ts",
+      "lines": 250
+    },
+    {
+      "path": "src/components/GeneralSettingsDialog.tsx",
+      "lines": 235
+    },
+    {
+      "path": "src/components/GeneralSettingsDialog.clear.test.tsx",
+      "lines": 230
+    },
+    {
+      "path": "src/components/EmptyState.service-review.test.tsx",
+      "lines": 228
+    },
+    {
+      "path": "src/components/PermissionControl.tsx",
+      "lines": 216
+    },
+    {
+      "path": "src/components/ConversationLibrary.deletion.test.tsx",
+      "lines": 216
+    },
+    {
+      "path": "src/components/ApprovalInput.test.tsx",
+      "lines": 199
+    },
+    {
+      "path": "src/components/SessionOptionsMenu.tsx",
+      "lines": 194
+    },
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "lines": 187
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "lines": 173
+    },
+    {
+      "path": "src/components/ThreadView.shortcuts.test.tsx",
+      "lines": 169
+    },
+    {
+      "path": "src/components/AgentSetupProgram.tsx",
+      "lines": 163
+    },
+    {
+      "path": "src/components/Workbench.landing-render.test.tsx",
+      "lines": 158
+    },
+    {
+      "path": "src/components/SettingsPage.tsx",
+      "lines": 147
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "lines": 145
+    },
+    {
+      "path": "src/components/SessionOptionsMenu.categories.test.tsx",
+      "lines": 138
+    },
+    {
+      "path": "src/components/DiagnosticsDialog.tsx",
+      "lines": 129
+    },
+    {
+      "path": "src/components/UserMessageActions.tsx",
+      "lines": 119
+    },
+    {
+      "path": "src/components/UserMessageActions.test.tsx",
+      "lines": 119
+    },
+    {
+      "path": "src/runtime/config_check.ts",
+      "lines": 118
+    },
+    {
+      "path": "src/components/AgentDetails.test.tsx",
+      "lines": 112
+    },
+    {
+      "path": "src/components/ReasoningControl.tsx",
+      "lines": 111
+    },
+    {
+      "path": "src/components/MoveConversationsDialog.tsx",
+      "lines": 104
+    },
+    {
+      "path": "src/components/DeleteConversationsDialog.test.tsx",
+      "lines": 99
+    },
+    {
+      "path": "src/components/AgentSelectionReview.tsx",
+      "lines": 94
+    },
+    {
+      "path": "src/components/MessageResendDialog.tsx",
+      "lines": 87
+    },
+    {
+      "path": "src/components/ConfigurationChangeReview.tsx",
+      "lines": 87
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "lines": 82
+    },
+    {
+      "path": "src/App.conversation-settings.test.tsx",
+      "lines": 82
+    },
+    {
+      "path": "src/components/MoveConversationsDialog.test.tsx",
+      "lines": 81
+    },
+    {
+      "path": "src/components/AgentSelectionReview.test.tsx",
+      "lines": 74
+    },
+    {
+      "path": "src/components/ApiAccountGuide.tsx",
+      "lines": 72
+    },
+    {
+      "path": "src/runtime/settings_redesign_strings.ts",
+      "lines": 71
+    },
+    {
+      "path": "src/components/ProgramChangeReview.tsx",
+      "lines": 70
+    },
+    {
+      "path": "src/components/ComposerAttachments.tsx",
+      "lines": 69
+    },
+    {
+      "path": "src/components/ConnectionAccount.tsx",
+      "lines": 68
+    },
+    {
+      "path": "src/components/PreservedDrafts.tsx",
+      "lines": 60
+    },
+    {
+      "path": "src/runtime/agent_redesign_strings.ts",
+      "lines": 59
+    },
+    {
+      "path": "src/components/DeleteConversationsDialog.tsx",
+      "lines": 55
+    },
+    {
+      "path": "src/runtime/conversation_redesign_strings.ts",
+      "lines": 51
+    },
+    {
+      "path": "src/runtime/transcript_find.ts",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/redesign_strings.ts",
+      "lines": 38
+    },
+    {
+      "path": "src/components/ConnectionAccount.test.tsx",
+      "lines": 37
+    },
+    {
+      "path": "src/runtime/transcript_find.test.ts",
+      "lines": 31
+    },
+    {
+      "path": "src/components/AgentSetupExitReview.tsx",
+      "lines": 30
+    },
+    {
+      "path": "src/runtime/custom_agent_draft.ts",
+      "lines": 19
+    },
+    {
+      "path": "docs/evidence/2026-10-09-prototype07-landing/controlled-render/vitest.config.ts",
+      "lines": 13
+    }
+  ]
+}

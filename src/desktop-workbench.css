@@ -1,44 +1,4 @@
 /* Approved desktop presentation. Existing actions and capability visibility stay in JSX. */
-.product-app
-  :is(.product-sidebar, .collapsed-nav, .workspace-start, .workspace-thread) {
-  --bg: #ffffff;
-  --sidebar: #f7f7f7;
-  --row-hover: #eeeeee;
-  --row-active: #e8e8e8;
-  --ink: #202020;
-  --ink-2: #616161;
-  --ink-3: #757575;
-  --line: #e6e6e6;
-  --accent: #292929;
-  --accent-soft: #efefef;
-  --card: #ffffff;
-  --card-dim: #f5f5f5;
-  --desktop-send: #202020;
-  --desktop-on-send: #ffffff;
-  --desktop-shadow: #00000007;
-  color: var(--ink);
-}
-
-:root[data-theme="dark"]
-  .product-app
-  :is(.product-sidebar, .collapsed-nav, .workspace-start, .workspace-thread) {
-  --bg: #212121;
-  --sidebar: #181818;
-  --row-hover: #303030;
-  --row-active: #383838;
-  --ink: #eeeeee;
-  --ink-2: #b7b7b7;
-  --ink-3: #a0a0a0;
-  --line: #3d3d3d;
-  --accent: #d0d0d0;
-  --accent-soft: #333333;
-  --card: #292929;
-  --card-dim: #303030;
-  --desktop-send: #eeeeee;
-  --desktop-on-send: #191919;
-  --desktop-shadow: #00000020;
-}
-
 .product-app :is(.workspace-start, .workspace-thread) {
   background: var(--bg);
 }
@@ -506,4 +466,202 @@
 .artifact-opened-file-body .artifact-file-content > .a-term {
   max-height: none;
   overflow: visible;
+}
+
+/* Prototype 07: one shared vocabulary across the real product. */
+.product-app .product-sidebar {
+  width: 216px;
+  padding: 0 12px 14px;
+}
+.product-app .product-brand {
+  height: 72px;
+}
+.product-app .product-brand-lockup {
+  width: 124px;
+  height: 66px;
+}
+.product-app .product-new {
+  height: 40px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 1px 3px var(--shadow-sm);
+  border-radius: 9px;
+}
+.product-app .product-new[aria-current="page"] {
+  border-color: var(--line);
+  background: var(--card);
+}
+.product-app .product-search {
+  min-height: 40px;
+}
+.product-app .workspace-start .empty-wrap {
+  padding: clamp(38px, 8vh, 96px) 40px 48px;
+}
+.product-app .workspace-start .empty-col {
+  width: 820px;
+}
+.product-app .workspace-start-intro {
+  text-align: left;
+  margin-bottom: 28px;
+}
+.product-app .workspace-start-intro h1 {
+  font-size: 34px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -1.2px;
+  margin: 10px 0;
+}
+.product-app .workspace-start-intro p {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.workspace-start-kicker {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+.product-app .workspace-start .composer-box {
+  border-radius: 18px;
+}
+.product-app .workspace-start .c-input {
+  min-height: 104px;
+}
+.product-app .workspace-start .workspace-folder-bar {
+  margin: 10px 0 0;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.product-app .workspace-start .workspace-folder-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.workspace-folder-hint {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.product-app .workspace-start .workspace-folder-button {
+  max-width: 100%;
+  font-size: 13px;
+}
+.product-app .workspace-start .workspace-suggestions {
+  margin-top: 24px;
+  justify-content: flex-start;
+}
+.product-app
+  .workspace-start
+  .empty-wrap:has(.composer-attachments, .composer-chips) {
+  padding-top: 32px;
+}
+.product-app :is(.btn, .workspace-control, .new-choice-trigger) {
+  font-size: 13px;
+}
+.product-app :is(.workspace-dialog, .new-choice-dialog) {
+  border-radius: 14px;
+}
+.product-app :focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.product-app .composer-box:has(.c-input:focus-visible) {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+.product-app .composer-box .c-input:focus-visible {
+  outline: none;
+}
+.preserved-drafts {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  font-size: 13px;
+}
+.preserved-drafts summary {
+  min-height: 28px;
+  cursor: pointer;
+}
+.preserved-drafts > p {
+  color: var(--ink-2);
+  margin: 8px 0;
+}
+.preserved-drafts article {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.preserved-drafts article > div {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.preserved-drafts small {
+  display: block;
+  color: var(--ink-2);
+  margin-top: 5px;
+}
+.new-draft-review section {
+  padding: 14px;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.new-draft-review h3 {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+.new-draft-review p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.new-draft-review dl {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.new-draft-review dt {
+  color: var(--ink-2);
+}
+.new-draft-review dd {
+  overflow-wrap: anywhere;
+}
+.new-draft-preview {
+  max-height: 140px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 900px) {
+  .product-app .workspace-start .empty-wrap {
+    padding: 36px 24px 36px;
+  }
+  .product-app .workspace-start-intro h1 {
+    font-size: 29px;
+  }
+  .product-app .workspace-start .c-input {
+    min-height: 88px;
+  }
+}
+@media (max-width: 600px) {
+  .product-app .product-sidebar {
+    width: 190px;
+  }
+  .product-app .workspace-start .empty-wrap {
+    padding: 24px 16px;
+  }
+  .product-app .workspace-start-intro h1 {
+    font-size: 25px;
+  }
+  .workspace-folder-hint {
+    flex-basis: 100%;
+  }
+  .preserved-drafts article {
+    flex-wrap: wrap;
+  }
 }

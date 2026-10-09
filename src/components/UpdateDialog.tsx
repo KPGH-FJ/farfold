@@ -31,6 +31,8 @@ import {
   authenticationActivity,
   useAuthenticationActivity,
 } from "../runtime/authentication";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import "../settings-library-redesign.css";
 import { authActive } from "../runtime/auth_activity";
 
 interface UpdateDialogProps {
@@ -366,6 +368,14 @@ export function UpdateDialogContent({
         {snapshot?.blockers.includes("release_infrastructure_unconfigured") && (
           <div className="ac-error" role="status">
             {STRINGS.update.unconfigured}
+            <details className="settings-manual-update">
+              <summary>{R.manualUpdate}</summary>
+              <ol>
+                {R.manualUpdateSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </details>
           </div>
         )}
         {snapshot?.blockers.includes("release_infrastructure_invalid") && (

@@ -77,6 +77,7 @@ vi.mock("../runtime/credentials", async (original) => ({
 import { CredentialSettings } from "./CredentialSettings";
 import { STRINGS } from "../runtime/strings";
 import { invoke } from "@tauri-apps/api/core";
+import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
 import { API_EDITOR_STRINGS as E } from "../runtime/api_editor_strings";
 import { ACCOUNT_GUIDE_STRINGS as G } from "../runtime/account_guide_strings";
 import { ACCESS_STRINGS as A } from "../runtime/access_strings";
@@ -852,7 +853,7 @@ it("opens the API account subpage and returns to the exact unsaved form without 
   await newReadyEditor();
   click(button(editorView(), E.accountHelp));
   let guide = byComponent(editorView(), "ApiAccountGuide");
-  expect(guide.props.stage).toBe("provider");
+  expect(guide.props.stage).toBe("prepare");
   (guide.props.onProvider as (value: string) => void)("My service");
   guide = byComponent(editorView(), "ApiAccountGuide");
   (guide.props.onContinue as () => void)();
@@ -912,7 +913,7 @@ it("cannot open or change the account guide during a pending save, including a s
   expect(field(editorView(), S.secret).props.value).toBe("test-only-a-key");
   click(button(editorView(), E.accountHelp));
   expect(byComponent(editorView(), "ApiAccountGuide").props.stage).toBe(
-    "provider",
+    "prepare",
   );
 });
 
@@ -997,3 +998,23 @@ it.each(["edit", "delete"] as const)(
     expect(h.remove).not.toHaveBeenCalled();
   },
 );
+
+it("compares actual service locations without retaining the prior key after a source edit", async () => {
+  await openEditor(saved);
+  input(field(editorView(), S.endpoint), "https://changed.example.test/v1");
+  const nodes = editorView();
+  const comparison = nodes.find(
+    (node) => node.props["aria-label"] === R.sourceComparison,
+  );
+  expect(comparison).toBeDefined();
+  const values = nodes
+    .filter((node) => node.type === "dd")
+    .map((node) => Children.toArray(node.props.children as ReactNode).join(""));
+  expect(values.some((value) => value.includes(saved.endpoint))).toBe(true);
+  expect(
+    values.some((value) => value.includes("https://changed.example.test/v1")),
+  ).toBe(true);
+  expect(button(nodes, S.save).props.disabled).toBe(true);
+  expect(field(nodes, S.secret).props.value).toBe("");
+  expect(h.save).not.toHaveBeenCalled();
+});

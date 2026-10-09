@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { WorkspaceDialog } from "./WorkspaceDialog";
+import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 import { useAuthenticationActivity } from "../runtime/authentication";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
@@ -5,11 +8,7 @@ import {
   configOptionChangeBlocked,
   isThoughtConfigOption,
 } from "../runtime/protected_config";
-import {
-  threads,
-  configValueLabel,
-  type ThreadState,
-} from "../runtime/sessions";
+import { configValueLabel, type ThreadState } from "../runtime/sessions";
 import { ModelPicker } from "./ModelPicker";
 
 export const isReasoningOption = isThoughtConfigOption;
@@ -25,32 +24,61 @@ export function ReasoningControl({
   inactive?: boolean;
 }) {
   useAuthenticationActivity(thread.agentId);
+  const [pending, setPending] = useState<{
+    id: string;
+    previous: unknown;
+    value: unknown;
+  } | null>(null);
   const option = thread.configOptions.find(isReasoningOption);
   if (!option) return null;
   const blocked = inactive || configOptionChangeBlocked(thread, option.id);
+  const select = (value: unknown) => {
+    if (inactive || configOptionChangeBlocked(thread, option.id)) return;
+    if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
+    setPending(
+      value === option.currentValue
+        ? null
+        : { id: option.id, previous: option.currentValue, value },
+    );
+  };
+  const review =
+    !inactive &&
+    pending &&
+    pending.id === option.id &&
+    pending.previous === option.currentValue ? (
+      <WorkspaceDialog title={C.reasoning} onClose={() => setPending(null)}>
+        <div className="conversation-message-editor">
+          <ConfigurationChangeReview
+            thread={thread}
+            option={option}
+            value={pending.value}
+            onCancel={() => setPending(null)}
+            onSaved={() => setPending(null)}
+          />
+        </div>
+      </WorkspaceDialog>
+    ) : null;
   if (option.type === "boolean") {
     const enabled =
       option.currentValue === true || option.currentValue === "true";
     return (
-      <label className="composer-reasoning">
-        <span>{C.thinking}</span>
-        <button
-          type="button"
-          role="switch"
-          aria-label={C.reasoning}
-          aria-checked={enabled}
-          className="so-toggle"
-          disabled={blocked}
-          onClick={() => {
-            if (blocked) return;
-            if (thread.identity === "draft" && pendingPreparationRead(thread))
-              return;
-            void threads
-              .setConfig(thread.key, option.id, !enabled)
-              .catch(() => undefined);
-          }}
-        />
-      </label>
+      <>
+        <label className="composer-reasoning">
+          <span>{C.thinking}</span>
+          <button
+            type="button"
+            role="switch"
+            aria-label={C.reasoning}
+            aria-checked={enabled}
+            className="so-toggle"
+            disabled={blocked}
+            onClick={() => {
+              select(!enabled);
+            }}
+          />
+        </label>
+        {review}
+      </>
     );
   }
   if (option.type !== "select" || !option.options.length)
@@ -65,21 +93,19 @@ export function ReasoningControl({
       </span>
     );
   return (
-    <label className="composer-reasoning">
-      <span>{C.thinking}</span>
-      <ModelPicker
-        option={option}
-        label={C.reasoning}
-        disabled={blocked}
-        onPick={(value) => {
-          if (blocked) return;
-          if (thread.identity === "draft" && pendingPreparationRead(thread))
-            return;
-          void threads
-            .setConfig(thread.key, option.id, value)
-            .catch(() => undefined);
-        }}
-      />
-    </label>
+    <>
+      <label className="composer-reasoning">
+        <span>{C.thinking}</span>
+        <ModelPicker
+          option={option}
+          label={C.reasoning}
+          disabled={blocked}
+          onPick={(value) => {
+            select(value);
+          }}
+        />
+      </label>
+      {review}
+    </>
   );
 }
