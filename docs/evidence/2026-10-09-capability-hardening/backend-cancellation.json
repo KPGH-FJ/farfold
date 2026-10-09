@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-09",
+  "scope": "ARCH-28/41/45：停止已派发后、原请求终态前到达的审批与表单；仅受控协议对端及临时存储，不是真实Agent验收。",
+  "recordedHead": "847f248778b301db07d662f70a4315da89a7137c",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256AtRecording": "abd876543a6e92013e7ed6794564eaca8ff51f65d7c267e62bba0fb051fd9369"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256AtRecording": "9970b5fad1f891cc6df8a720366008caa2eb3e7b5631c6d1375b92e4fd04f0c9"
+    },
+    {
+      "path": "src-tauri/src/acp_client/cancellation_tests.rs",
+      "sha256AtRecording": "5fbdf482da7d0377395a3a66d93a5e158749532aef477caec308890943750149"
+    }
+  ],
+  "sourceIdentityBoundary": "本记录时HEAD和工作树文件摘要，不冒充每一次红/绿运行时的完整冻结快照；测试输出说明来自本任务工具返回。",
+  "defect": "Cancel仅清理当时已登记的交互，随后到达的同轮审批或表单仍被登记和推送到UI，令取消流程再次等待用户回应。",
+  "fix": "pump增加仅本轮有效的取消等待状态；成功派发cancel后到原prompt终态前，迟到permission返回cancelled、迟到elicitation返回cancel，后续updates继续原样转发。",
+  "evidenceKind": "tool_output_summary_only",
+  "rawLogsRetained": false,
+  "rawLogBoundary": "原始运行输出未另存文件。本JSON为真实工具输出摘要，未重造stdout/stderr或伪装为原始日志。",
+  "runs": [
+    {
+      "stage": "initial_test_compile",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked cancellation_tests -- --nocapture",
+      "exitCode": 101,
+      "result": "测试代码elicitation_respond参数顺序错误，编译失败；已仅修测试参数。此轮不算行为红测。"
+    },
+    {
+      "stage": "red",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked cancellation_tests -- --nocapture",
+      "exitCode": 101,
+      "passed": 0,
+      "failed": 2,
+      "ignored": 0,
+      "filteredOut": 1044,
+      "durationSeconds": 0.48,
+      "failures": [
+        {
+          "test": "late_permission_after_cancel_is_cancelled_without_affecting_other_or_next_turn",
+          "observedEvent": "permissionRequest"
+        },
+        {
+          "test": "late_form_after_cancel_is_cancelled_without_affecting_other_or_next_turn",
+          "observedEvent": "elicitation"
+        }
+      ],
+      "assertion": "stopping must not reopen a late interaction"
+    },
+    {
+      "stage": "green",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked cancellation_tests -- --nocapture",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "filteredOut": 1044,
+      "durationSeconds": 0.48,
+      "coverage": [
+        "cancel已上线路径后才交付迟到审批/表单",
+        "对端收到取消回复后才回原prompt cancelled",
+        "停止后原始updates和_meta保留并先于turnEnd",
+        "另一对话已有请求可正常回复",
+        "本对话下一轮新请求可正常回复"
+      ]
+    },
+    {
+      "stage": "acp_client_regression",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib acp_client::",
+      "exitCode": 0,
+      "passed": 485,
+      "failed": 0,
+      "ignored": 2,
+      "filteredOut": 559,
+      "durationSeconds": 15.16,
+      "boundary": "合成协议、临时进程与单元回归；2项原有ignored未运行，不算真实Agent通过。"
+    },
+    {
+      "stage": "format",
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0
+    },
+    {
+      "stage": "diff_whitespace",
+      "command": "git diff --check -- src-tauri/src/acp_client/pump.rs src-tauri/src/acp_client/mod.rs src-tauri/src/acp_client/cancellation_tests.rs",
+      "exitCode": 0
+    }
+  ],
+  "warningObserved": "当时cargo输出包含src/agent_install/archive.rs:97未使用std::io::Write导入警告，不属本增量且未修改。",
+  "officialSources": [
+    {
+      "title": "ACP v1 Prompt Turn — Cancellation",
+      "url": "https://agentclientprotocol.com/protocol/v1/prompt-turn#cancellation",
+      "consulted": "2026-10-09",
+      "summary": "客户端须对待处理权限请求回复取消；Agent完成中止和待发更新后以cancelled结束原prompt；停止派发后仍接收后续更新。表单取消沿用已接入协议动作，未将其误称同一权限条文。"
+    }
+  ],
+  "notProven": [
+    "历史四家外部命令残留的责任层和修复",
+    "任意Agent或全部29家停止能力",
+    "客户端已发cancel等于实际外部工作已停止",
+    "持续事件流造成cancel饥饿的实际pump反例"
+  ],
+  "notPerformed": [
+    "真实Agent/账号/模型调用",
+    "正式应用启动或替换",
+    "中断用户进程",
+    "第三方修改",
+    "提交"
+  ]
+}

@@ -456,7 +456,11 @@ function parseChoice(value: unknown): ConversationChoice {
 }
 function parseComposer(value: unknown): ComposerDraft {
   const raw = record(value);
-  if (typeof raw.text !== "string" || !Array.isArray(raw.attachments))
+  if (
+    typeof raw.text !== "string" ||
+    !Array.isArray(raw.attachments) ||
+    (raw.sendPending !== undefined && typeof raw.sendPending !== "boolean")
+  )
     throw new Error("invalid draft");
   const editing =
     raw.queueEdit === undefined ? undefined : record(raw.queueEdit);
@@ -506,7 +510,11 @@ function parseComposer(value: unknown): ComposerDraft {
       if (
         typeof a.id !== "string" ||
         typeof a.name !== "string" ||
-        !["file", "image"].includes(String(a.kind))
+        typeof a.kind !== "string" ||
+        !["file", "image"].includes(a.kind) ||
+        ["uri", "data", "mimeType"].some(
+          (key) => a[key] !== undefined && typeof a[key] !== "string",
+        )
       )
         throw new Error("invalid attachment");
       return {

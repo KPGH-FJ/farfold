@@ -922,6 +922,7 @@ class ThreadsStore {
     )
       return { status: "queued" };
     const blocks = s.queued[0];
+    const finishPreparation = this.stopConfirmation.prepare(s);
     s.submitting = true;
     s.running = true;
     const firstPrompt = s.identity === "draft";
@@ -987,6 +988,7 @@ class ThreadsStore {
         if (firstPrompt) s.identity = "draft";
         return { status: "rejected", reason: "unavailable" };
       }
+      finishPreparation();
       dispatched = true;
       const result = await invoke<PromptAdmission>("session_prompt", {
         agentId: s.agentId,
@@ -1011,6 +1013,11 @@ class ThreadsStore {
           s.connectionOutcomeUnknown = true;
           pauseQueue(s, "uncertain");
         } else {
+          // Rejected admission proves this prompt never began; no completion
+          // can arrive to settle a stop requested while its reply was pending.
+          this.stopConfirmation.clear(key);
+          s.stopping = false;
+          s.stopUnconfirmed = false;
           s.items = s.items.filter((i) => i !== item);
           pauseQueue(
             s,
@@ -1052,6 +1059,7 @@ class ThreadsStore {
       pauseQueue(s, "uncertain");
       return { status: "unknown" };
     } finally {
+      finishPreparation();
       s.submitting = false;
       this.emit();
       this.finishArchiveActivity(s);
@@ -1190,44 +1198,11 @@ class ThreadsStore {
   private stopConfirmation = new StopConfirmation();
 
   async cancel(key: string): Promise<void> {
-    const s = this.threads.get(key);
-    if (
-      !s ||
-      (!s.running && !s.connectionOutcomeUnknown) ||
-      s.connectionLost ||
-      s.stopping
-    )
-      return;
-    pauseQueue(s, "stopped");
-    for (const request of s.pendingPermissions)
-      if (request.status === "pending") request.decision = null;
-    s.stopping = true;
-    const isCurrentStop = this.stopConfirmation.start(
-      s,
+    return this.stopConfirmation.cancel(
+      this.thread(key),
       () => this.threads.get(key),
       () => this.emit(),
     );
-    this.emit();
-    try {
-      await invoke("session_cancel", {
-        agentId: s.agentId,
-        cwd: s.cwd,
-        sessionId: s.nativeSessionId,
-      });
-    } catch {
-      if (
-        !isCurrentStop() ||
-        this.thread(key) !== s ||
-        (!s.running && !s.connectionOutcomeUnknown)
-      )
-        return;
-      this.stopConfirmation.clear(key);
-      s.stopping = false;
-      s.stopUnconfirmed = true;
-      pauseQueue(s, "uncertain");
-      this.emit();
-    }
-    // "停止中…" until turnEnd settles the round — do not flip running here.
   }
 
   /** Round entry points replace their target; the top-level entry keeps its

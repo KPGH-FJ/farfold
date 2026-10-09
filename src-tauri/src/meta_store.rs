@@ -10,9 +10,12 @@ use std::sync::{Arc, Mutex, MutexGuard};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+
+#[cfg(test)]
+mod recovery_tests;
 
 fn now_millis() -> i64 {
     SystemTime::now()
@@ -727,6 +730,23 @@ fn replace_agent_launch_row(connection: &Connection, agent: &AgentRow) -> Result
     Ok(())
 }
 
+/// Invalid saved choices must remain unreadable, never become empty launch
+/// arguments, a different inherited environment, or an absent model baseline.
+fn decode_saved_json<T: DeserializeOwned>(raw: &str, column: usize) -> rusqlite::Result<T> {
+    serde_json::from_str(raw).map_err(|_| invalid_saved_json(column))
+}
+
+fn invalid_saved_json(column: usize) -> rusqlite::Error {
+    rusqlite::Error::FromSqlConversionFailure(
+        column,
+        rusqlite::types::Type::Text,
+        Box::new(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            "保存的设置无法读取，请检查后重试",
+        )),
+    )
+}
+
 fn row_to_agent(row: &rusqlite::Row<'_>) -> rusqlite::Result<AgentRow> {
     let args_raw: String = row.get(4)?;
     let env_raw: String = row.get(5)?;
@@ -736,16 +756,18 @@ fn row_to_agent(row: &rusqlite::Row<'_>) -> rusqlite::Result<AgentRow> {
         name: row.get(1)?,
         source: row.get(2)?,
         command: row.get(3)?,
-        args: serde_json::from_str(&args_raw).unwrap_or_default(),
-        env: serde_json::from_str::<serde_json::Map<String, serde_json::Value>>(&env_raw)
-            .map(|map| {
-                map.into_iter()
-                    .filter_map(|(key, value)| value.as_str().map(|v| (key, v.to_string())))
-                    .collect()
+        args: decode_saved_json(&args_raw, 4)?,
+        env: decode_saved_json::<serde_json::Map<String, serde_json::Value>>(&env_raw, 5)?
+            .into_iter()
+            .map(|(key, value)| match value {
+                serde_json::Value::String(value) => Ok((key, value)),
+                _ => Err(invalid_saved_json(5)),
             })
-            .unwrap_or_default(),
+            .collect::<rusqlite::Result<_>>()?,
         version: row.get(6)?,
-        handshake: handshake_raw.and_then(|raw| serde_json::from_str(&raw).ok()),
+        handshake: handshake_raw
+            .map(|raw| decode_saved_json(&raw, 7))
+            .transpose()?,
         created_at: row.get(8)?,
         updated_at: row.get(9)?,
     })
@@ -759,7 +781,9 @@ fn row_to_session(row: &rusqlite::Row<'_>) -> rusqlite::Result<SessionRow> {
         cwd: row.get(2)?,
         native_session_id: row.get(3)?,
         title: row.get(4)?,
-        config_options: config_options_raw.and_then(|raw| serde_json::from_str(&raw).ok()),
+        config_options: config_options_raw
+            .map(|raw| decode_saved_json(&raw, 5))
+            .transpose()?,
         pinned: row.get::<_, i64>(6)? != 0,
         archived: row.get::<_, i64>(7)? != 0,
         created_at: row.get(8)?,

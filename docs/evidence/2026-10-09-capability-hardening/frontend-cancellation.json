@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-09",
+  "scope": "Frontend prompt preparation, cancellation, queue retention and admission-result races; ARCH-25–ARCH-30 / P03 subset only.",
+  "evidenceKind": "tool-output-summary",
+  "rawLogFiles": [],
+  "provenance": "Results are summaries of actual exec tool output from this task. No original log file was retained for these runs; this JSON is not a reconstructed raw log.",
+  "sourceIdentityBoundary": "File hashes identify the working tree when this receipt was written, not a complete frozen snapshot of each earlier red or green run.",
+  "changedFiles": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "0dc4a16c1b00bf9a9b01713d3efc2fb4ff9fc4e4aa2dee8c95c90ef0415b7f51",
+      "lines": 1475
+    },
+    {
+      "path": "src/runtime/stop_confirmation.ts",
+      "sha256": "f9077d37e76ad15a21b2e41d64cca44f0acad41685af8df93e1919712aa4c35c",
+      "lines": 93
+    },
+    {
+      "path": "src/runtime/sessions.cancellation.test.ts",
+      "sha256": "dc6fbb7b326b1019ec36b5923443be1fc2800fd22b9af33d2f4479aa2d32466b",
+      "lines": 262
+    }
+  ],
+  "findings": [
+    {
+      "id": "cancel-before-dispatch",
+      "ownership": "Farfold frontend",
+      "observedFailure": "Stopping while attachment validation, draft persistence or archive activity persistence awaited left running=false and stopping=true permanently. No session_prompt had been dispatched, so no completion receipt could settle the stop; the timer skipped a no-longer-running request.",
+      "fix": "Track only in-memory preparation with a WeakSet. A local stop pauses and preserves queued input without sending session_cancel. Submission remains guarded until the preflight completes. Remove preparation marker immediately before session_prompt dispatch.",
+      "coverage": "Three awaited preparation stages for both draft and established conversations; original attachment and later queued input retained; no phantom prompt/cancel; explicit continue sends original once."
+    },
+    {
+      "id": "cancel-rejected-admission",
+      "ownership": "Farfold frontend",
+      "observedFailure": "Stopping after session_prompt dispatch but before explicit rejected admission left stopping or stopUnconfirmed set, although that prompt could not later complete.",
+      "fix": "Only an explicit rejected admission retires its stop timer and stopping/stopUnconfirmed state. Existing independent connection-outcome protection is not cleared.",
+      "coverage": "Successful and failed cancellation reply, with delayed explicit work_disabled rejection; both queued inputs retained."
+    }
+  ],
+  "redRuns": [
+    {
+      "stage": "Before preparation fix",
+      "result": "failed-as-expected",
+      "failingTests": 3,
+      "coverage": [
+        "attachment validation await",
+        "draft persistence await",
+        "archive activity persistence await"
+      ],
+      "assertion": "Expected stopping=false; actual stopping=true after cancellation and preflight completion.",
+      "command": null,
+      "commandNote": "Full original command and raw output were not retained as files; contemporaneous task summary records three failing preparation-stage cases."
+    },
+    {
+      "stage": "After preparation fix; before rejected-admission fix",
+      "result": "failed-as-expected",
+      "failingTests": 2,
+      "coverage": [
+        "explicit rejection after cancellation acknowledgement",
+        "explicit rejection after cancellation reply failure"
+      ],
+      "assertion": "Actual stopping=true in acknowledgement case, or stopUnconfirmed=true after cancellation reply failure.",
+      "command": null,
+      "commandNote": "Full original command and raw output were not retained as files; contemporaneous task summary records both failures."
+    }
+  ],
+  "greenRuns": [
+    {
+      "stage": "After both fixes and initial boundary coverage",
+      "result": "passed",
+      "testFiles": 9,
+      "tests": 127,
+      "reportedStart": "16:21:57",
+      "reportedDuration": "860ms",
+      "note": "Superseded by final 129-test run after two additional unknown-admission stop cases."
+    },
+    {
+      "stage": "Final targeted frontend verification",
+      "result": "passed",
+      "testFiles": 9,
+      "tests": 129,
+      "reportedStart": "16:24:30",
+      "reportedDuration": "643ms",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.cancellation.test.ts src/runtime/sessions.outcomes.test.ts src/runtime/sessions.regression.test.ts src/runtime/sessions.tool_activity.test.ts src/runtime/interaction_actions.stop.test.ts src/runtime/sessions.queue-images.test.ts src/runtime/sessions.queue-edit.test.ts src/runtime/sessions.work_policy.test.ts src/runtime/sessions.connection-lifecycle.test.ts",
+      "exitCode": 0,
+      "newCancellationTests": 11
+    },
+    {
+      "stage": "Final TypeScript validation",
+      "result": "passed",
+      "command": "corepack pnpm typecheck",
+      "observedOutput": "farfold@0.1.7 typecheck; tsc -b --pretty false",
+      "exitCode": 0
+    },
+    {
+      "stage": "Changed-file whitespace validation",
+      "result": "passed",
+      "command": "git diff --check -- src/runtime/sessions.ts src/runtime/stop_confirmation.ts src/runtime/sessions.cancellation.test.ts",
+      "exitCode": 0
+    }
+  ],
+  "preservedBoundaries": [
+    "After actual dispatch, a cancellation acknowledgement is not prompt completion. The delayed accepted-admission test remains protected after the 30-second stop timeout until a real cancelled turnEnd is delivered.",
+    "Unknown admission and lost IPC reply while stopping retain uncertainPrompt, connectionOutcomeUnknown and stopUnconfirmed. Explicit continue does not dispatch either queued input again.",
+    "Tests mock Tauri calls, persistence boundaries and timing; no real Agent, account, model, external service or installed application was invoked.",
+    "No source outside the three listed frontend files was modified by this subtask; no new persistent ledger, contract change, application replacement or commit.",
+    "This proves the controlled frontend races only. It does not establish 29-Agent acceptance, installed UI behavior, full stop/recovery coverage or a fix for historical external commands surviving cancellation.",
+    "Full seven-check integration is a separate parent-run verification and is not claimed by this receipt."
+  ]
+}

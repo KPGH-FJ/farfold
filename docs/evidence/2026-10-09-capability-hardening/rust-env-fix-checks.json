@@ -1,0 +1,44 @@
+[
+  {
+    "name": "rust-test-env-fix",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked"
+    ],
+    "exitCode": 0,
+    "seconds": 41.262,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-test-env-fix.txt"
+  },
+  {
+    "name": "rust-clippy-env-fix",
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "seconds": 3.244,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-clippy-env-fix.txt"
+  },
+  {
+    "name": "rust-fmt-env-fix",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "exitCode": 0,
+    "seconds": 0.694,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-fmt-env-fix.txt"
+  }
+]

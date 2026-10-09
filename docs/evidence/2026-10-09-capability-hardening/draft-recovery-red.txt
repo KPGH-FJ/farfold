@@ -1,0 +1,65 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/draft_storage.recovery.test.ts (7 tests | 6 failed) 37ms
+   × does not turn an unreadable pending-send marker "unknown" into confirmed editable input 32ms
+   × does not turn an unreadable pending-send marker 1 into confirmed editable input 1ms
+   × does not turn an unreadable pending-send marker null into confirmed editable input 1ms
+   × preserves unreadable saved attachment uri instead of discarding it during recovery 1ms
+   × preserves unreadable saved attachment data instead of discarding it during recovery 1ms
+   × preserves unreadable saved attachment mimeType instead of discarding it during recovery 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/draft_storage.recovery.test.ts > does not turn an unreadable pending-send marker "unknown" into confirmed editable input
+ FAIL  src/runtime/draft_storage.recovery.test.ts > does not turn an unreadable pending-send marker 1 into confirmed editable input
+ FAIL  src/runtime/draft_storage.recovery.test.ts > does not turn an unreadable pending-send marker null into confirmed editable input
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/draft_storage.recovery.test.ts:29:44
+     27|     });
+     28|     const d = await import("./drafts");
+     29|     await expect(d.draftPersistence.load()).rejects.toThrow();
+       |                                            ^
+     30|     expect(d.draftPersistence.snapshot().ready).toBe(false);
+     31|     expect(d.composerDrafts.read("session:previous").text).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/draft_storage.recovery.test.ts > preserves unreadable saved attachment uri instead of discarding it during recovery
+ FAIL  src/runtime/draft_storage.recovery.test.ts > preserves unreadable saved attachment data instead of discarding it during recovery
+ FAIL  src/runtime/draft_storage.recovery.test.ts > preserves unreadable saved attachment mimeType instead of discarding it during recovery
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/draft_storage.recovery.test.ts:53:44
+     51|     });
+     52|     const d = await import("./drafts");
+     53|     await expect(d.draftPersistence.load()).rejects.toThrow();
+       |                                            ^
+     54|     expect(d.draftPersistence.snapshot().ready).toBe(false);
+     55|     expect(d.composerDrafts.read("session:previous").text).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  16:18:17
+   Duration  115ms (transform 35ms, setup 0ms, import 18ms, tests 37ms, environment 0ms)
+

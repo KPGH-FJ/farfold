@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/draft_storage.recovery.test.ts (8 tests | 1 failed | 7 skipped) 32ms
+   × rejects an attachment kind that only stringifies to a supported kind 31ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/draft_storage.recovery.test.ts > rejects an attachment kind that only stringifies to a supported kind
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/draft_storage.recovery.test.ts:26:42
+     24|   }));
+     25|   const d = await import("./drafts");
+     26|   await expect(d.draftPersistence.load()).rejects.toThrow();
+       |                                          ^
+     27|   expect(d.draftPersistence.snapshot().ready).toBe(false);
+     28|   expect(d.composerDrafts.read("session:previous").text).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  16:21:25
+   Duration  112ms (transform 37ms, setup 0ms, import 23ms, tests 32ms, environment 0ms)
+

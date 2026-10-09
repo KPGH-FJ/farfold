@@ -77,6 +77,9 @@ mod permission_guard_tests;
 mod permission_request_tests;
 
 #[cfg(test)]
+mod cancellation_tests;
+
+#[cfg(test)]
 mod archive_tests;
 
 #[cfg(test)]

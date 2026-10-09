@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-09",
+  "status": "source_and_primary_documentation_hypothesis_only",
+  "implementedOrReproduced": false,
+  "scope": "按整合冻结要求，仅只读当前代码与官方规范；未改src/src-tauri或注册新测试，未运行真实Agent。",
+  "observations": [
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:738",
+      "fact": "主会话循环使用tokio::select! biased。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:740",
+      "fact": "session inbox先于control.recv轮询，注释明确要求已收到更新先于turnEnd。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:1022",
+      "fact": "取消与普通控制共用较后顺序的control.recv分支。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/session.rs:522",
+      "fact": "session_cancel提交控制并等待最多10秒结果。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:236",
+      "fact": "控制在取出时若过期或调用者已离开则abandoned；已延迟的取消可能不再上线路径。"
+    },
+    {
+      "evidence": "src-tauri/Cargo.lock:4527",
+      "fact": "当前锁定Tokio 1.53.1。"
+    }
+  ],
+  "officialSource": {
+    "title": "Tokio 1.53.1 select macro — Fairness",
+    "url": "https://docs.rs/tokio/1.53.1/tokio/macro.select.html#fairness",
+    "consulted": "2026-10-09",
+    "summary": "biased按自上而下轮询；高流量且持续ready的前置流可能让后面的停止类future无法得到轮询，公平性由调用者负责。"
+  },
+  "hypothesis": "若Agent事件进入inbox的速率持续超过sink处理速率，inbox始终ready，取消控制可能一直等到队列空，乃至跨过调用截止。此处是源码与规范推断，尚未证明实际pump会在隔离协议对端触发。",
+  "deterministicCounterexampleDesign": [
+    "只启动测试拥有的合成stdio协议peer及临时MetaStore，用唯一会话和精确归属回收；不运行Agent、模型或真实项目命令。",
+    "peer在新prompt后送出一个有界编号更新批次；测试sink以信号量/屏障控制消费，先确认第一条已到且其后更新进入路由队列，不用大sleep猜队列状态。",
+    "第一条sink释放前直接将Cancel控制排入该会话控制队列并保留结果接收者；以测试消息/屏障保证控制已经排队，而非仅spawn但尚未poll。",
+    "释放第一条后记录每个后续更新被消费的顺序与peer实际收到session/cancel的顺序；对照重点是取消能否在仍有持续就绪更新时推进，不把普通进程shutdown的前置分支当成session/cancel。",
+    "必要时增加有界较慢sink消费，以当前10秒实际控制期限证明超时与取消未上线路径；实验超时不直接归因，必须同时保留排队、消费、peer收包三层时间和顺序。",
+    "始终有独立释放全部屏障的清理保护；不能用受测cancel作为唯一退出实验途径，也不终止不属测试的进程。",
+    "若确证，下一片再落生产最小修复，同时保持原更新在turnEnd前递交、配置/权限变更保护、取消只到目标会话。不能简单删除biased或把所有控制无条件前置而不验证这些顺序依赖。"
+  ],
+  "notRun": [
+    "调度简化模型",
+    "当前真实pump持续事件协议反例",
+    "实际取消截止超时实验"
+  ],
+  "conclusion": "尚无可靠运行反例，不将此项写为已定位缺陷或已修复；下一片先完成上述受控因果实验。"
+}

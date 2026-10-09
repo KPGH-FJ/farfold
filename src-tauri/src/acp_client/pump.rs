@@ -506,6 +506,7 @@ struct DispatchContext<'a> {
     elicitation_ids: &'a mut Vec<String>,
     expirations: &'a mpsc::UnboundedSender<String>,
     tools: &'a mut super::tool_activity::ToolActivity,
+    prompt_cancelling: bool,
 }
 
 fn observe_cancellation(
@@ -554,6 +555,22 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
         Dispatch::Request(message, responder) => {
             let method = message.method();
             let params = message.params().clone();
+            // An interaction already in transit can arrive after session/cancel.
+            // Resolve it without reopening a decision while the original prompt
+            // is still acknowledging cancellation. Updates continue unchanged.
+            if ctx.prompt_cancelling {
+                let cancelled = match method {
+                    "session/request_permission" => {
+                        Some(serde_json::json!({"outcome":{"outcome":"cancelled"}}))
+                    }
+                    "elicitation/create" => Some(serde_json::json!({"action":"cancel"})),
+                    _ => None,
+                };
+                if let Some(cancelled) = cancelled {
+                    let _ = responder.respond(cancelled);
+                    return;
+                }
+            }
             match method {
                 "session/request_permission" => {
                     let request_id = next_request_id();
@@ -696,6 +713,7 @@ async fn session_pump(
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
+    let mut prompt_cancelling = false;
     let mut prompt_lease = None;
     let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
     let mut failures = super::failures::FailureTracker::default();
@@ -711,6 +729,7 @@ async fn session_pump(
             elicitation_ids: &mut elicitation_ids,
             expirations: &expiry_tx,
             tools: &mut tools,
+            prompt_cancelling,
         };
         tokio::select! {
             // `biased` polls in order: queued session messages are always
@@ -821,6 +840,7 @@ async fn session_pump(
                     ops.life.touch();
                     if prompt_in_flight {
                         prompt_in_flight = false;
+                        prompt_cancelling = false;
                         prompt_lease.take();
                     }
                     cancel_permissions(&pending, &mut permission_ids);
@@ -1129,6 +1149,7 @@ async fn session_pump(
                         )
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
+                        prompt_cancelling = prompt_in_flight;
                         cancel_permissions(&pending, &mut permission_ids);
                         cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
                         if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }

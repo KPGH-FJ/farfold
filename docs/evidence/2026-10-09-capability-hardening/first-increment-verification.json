@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-10-09T08:32:07.045926+00:00",
+  "sourceBase": "847f248778b301db07d662f70a4315da89a7137c",
+  "initialInputCount": 741,
+  "changedAfterInitialFreeze": {
+    "src-tauri/src/meta_store.rs": {
+      "before": "c3fd0fc65cd6d14648dcde94dfc8efe55b7c217b8ee4843dd47d3be04e3ce393",
+      "after": "bbd90799234e5d7eb44389ebc0abd4f18d3fbf206e00409f6171a401ee319b33"
+    }
+  },
+  "lockfile": {
+    "path": "src-tauri/Cargo.lock",
+    "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+  },
+  "protectedDirtyHashes": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "planIds": {
+    "total": 122,
+    "unique": 122
+  },
+  "frontend": {
+    "files": 220,
+    "passed": 2542,
+    "evidence": "frontend-checks.json"
+  },
+  "rust": {
+    "passed": 1045,
+    "ignored": 4,
+    "failed": 0,
+    "evidence": "rust-env-fix-checks.json",
+    "firstRunFailuresRetained": "rust-test.txt"
+  },
+  "independentReview": {
+    "frontendAndStorage": "architecture agent read-only review; env ordering correction reviewed by verification agent",
+    "backend": "verification agent read-only review; no blocking findings"
+  },
+  "notVerified": [
+    "installed app",
+    "real agents/accounts/models",
+    "physical disk full",
+    "whole database recovery",
+    "historical external command cancellation",
+    "Windows runtime"
+  ],
+  "format": {
+    "exitCode": 0,
+    "evidence": "format-check.txt"
+  }
+}

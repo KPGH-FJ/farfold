@@ -1,0 +1,44 @@
+[
+  {
+    "name": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--check",
+      "--manifest-path",
+      "src-tauri/Cargo.toml"
+    ],
+    "exitCode": 0,
+    "seconds": 0.921,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-fmt.txt"
+  },
+  {
+    "name": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "seconds": 4.806,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-clippy.txt"
+  },
+  {
+    "name": "test",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked"
+    ],
+    "exitCode": 101,
+    "seconds": 29.663,
+    "log": "docs/evidence/2026-10-09-capability-hardening/rust-test.txt"
+  }
+]
