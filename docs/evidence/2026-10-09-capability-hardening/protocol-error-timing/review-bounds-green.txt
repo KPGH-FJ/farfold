@@ -1,0 +1,23 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.82s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 9 tests
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_initialize_null_is_observation_not_request_match ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_pre_dispatch_admission_wait_is_not_a_response_timeout ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1175 filtered out; finished in 1.49s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

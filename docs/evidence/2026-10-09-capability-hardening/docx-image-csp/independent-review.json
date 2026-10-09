@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-09T16:45:43.200600+00:00",
+  "reviewer": "verification",
+  "status": "completed_no_new_blocker_in_reviewed_csp_fix_scope",
+  "baselineCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "scope": "Independent read-only review of production CSP delta, regression test, original same-origin WKWebView red/green probe, unchanged DOCX image byte/lifecycle chain, and next candidate/install script scopes. No production/test mutation, native app/browser/helper execution, build or duplicate tests by reviewer.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/receipt.json",
+    "sha256": "eff4332171275f4c7f592b618aca96c16f145f8ad4e69e4cc4fb2dd6b67eb35a"
+  },
+  "ownedInputs": [
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "8a32fbe08167dddd18459289443b6761fd7eb0b8040b8eb54ba4beec72bb821d",
+      "bytes": 1300
+    },
+    {
+      "path": "src/runtime/document_image_csp.test.ts",
+      "sha256": "0a2bec9fce0ec04054223d0eeaabf8d8e079cb8ba86af3cc9f074932d6c6b346",
+      "bytes": 1199
+    }
+  ],
+  "configurationReview": {
+    "onlyJsonValueChange": "app.security.csp img-src gains the explicit blob: source. Full parsed configuration otherwise equals baseline.",
+    "priorImageSourcesPreserved": true,
+    "otherDirectivesByteIdentical": true,
+    "scriptWorkerConnectDefaultNotExpanded": true,
+    "noDependencyOrEnvironmentSwitch": true,
+    "testReview": "New two-case test checks exact image allowlist, no Blob permission in any other existing directive, and preserved default/connect sources. Actual config red 1 failure/1 pass; final targeted two files/11 pass with typecheck/format pass; reviewer read original logs, did not rerun."
+  },
+  "controlledCounterexample": {
+    "inputDifferenceOnlyCsp": true,
+    "redCspExactlyBaselineProduction": true,
+    "greenCspExactlyCurrentProduction": true,
+    "document": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx",
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5"
+    },
+    "imageBytes": "Both base64 image specimens independently compared byte-for-byte with PNG/JPEG entries in the unchanged ordinary writer DOCX ZIP.",
+    "origin": "tauri://localhost",
+    "location": "tauri://localhost/index.html",
+    "platform": "Version 15.6 (Build 24G84)",
+    "harness": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/probe.swift",
+      "sha256": "17efbd0e212b2d55434c652b43d61b91aa7406d5389cffa07f460f20b473491b"
+    },
+    "rawEvidence": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/red.raw.txt",
+        "sha256": "b6ab1785d926afcc7227f8cc5020333056dd13af72b8e333de9fbde218f672e4"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/green.raw.txt",
+        "sha256": "b771174c32953ca7a2d1b8d0dac1aacd8804c19576dafe09a5da2adcd1c6af20"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/red-input.json",
+        "sha256": "ed5823da918ecec73a084af4e3960f87cc9b3ba88f9d19ca2123c4e5bb2bc9ee"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/green-input.json",
+        "sha256": "7d7999d8fb001c196839fbe40414237897a075626d3847503b31bce88bc21c01"
+      }
+    ],
+    "observed": {
+      "redBlobImages": "Both error/0x0; two enforced img-src violations with blockedURI blob.",
+      "greenBlobImages": "Both load/160x96; no blob violations.",
+      "unchangedSources": "data PNG, tauri same-origin and asset scheme load/160x96 in both.",
+      "externalImages": "Reserved .invalid HTTP and HTTPS both error with enforced img-src violations in red and green, not merely timeout.",
+      "timeouts": false,
+      "blobUrlsHeldUntilAllResults": 2
+    },
+    "harnessReview": "Standalone AppKit/WKWebView process with nonPersistent store, no window, actual tauri custom-scheme response and exact production CSP header. Packaged same-origin probe.js is permitted without relaxing script-src. WK receipt message handler is probe-only, not the Farfold IPC bridge. Object URLs are revoked after results.",
+    "conclusion": "This controlled WebKit result isolates missing image Blob permission as a sufficient failure cause for the exact two native-failing image bytes. It does not itself demonstrate repaired installed Farfold UI."
+  },
+  "lifecycleAlternatives": {
+    "sourceFiles": [
+      {
+        "path": "src/runtime/document_images.ts",
+        "sha256": "a69af9b0e4b1e8b137351c9b5ccc7758bf8c2bb88e0ca994812b28972cf94d38",
+        "bytes": 1277
+      },
+      {
+        "path": "src/components/DocxDocumentView.tsx",
+        "sha256": "58e0d21e97699df1f314a801584e6ecb48287c403e5ba1ed91e1823161362d2b",
+        "bytes": 14897
+      }
+    ],
+    "reviewedRelated": [
+      "src/runtime/docx_package.ts",
+      "src/runtime/docx_decode.ts",
+      "src/workers/docx_preview.worker.ts",
+      "src/runtime/docx_validation.ts",
+      "src/runtime/docx_preview.ts",
+      "src/components/DocxFilePreview.tsx"
+    ],
+    "findings": "No definite byte-corruption or premature-first-render-revoke path found. Package parts have separate Uint8Array bytes; Worker bitmap decode precedes ready and main-thread validation checks bytes/MIME/dimensions; UI copies typed bytes into Blob. Document key includes resolved path/version/hash, story has separate key, pool is private per document and reference-counted until final consumer release. These source checks do not claim exhaustive lifecycle correctness.",
+    "originalProofGap": "Prior Chromium 39-case fixture did not install production CSP; prior ordinary image/browser success therefore could not establish native-policy compatibility. Its historical receipt remains unchanged."
+  },
+  "candidateScriptAudit": {
+    "executed": false,
+    "sourceInventories": {
+      "runChecks": 1059,
+      "prepare": 1059,
+      "verify": 1059,
+      "privateInstaller": 1059,
+      "allExactSetsEqual": true,
+      "sameAsCurrentFrozenInputs": true,
+      "currentHashesAllMatch": true,
+      "symlinkInputs": 0
+    },
+    "frozenInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/inputs.json",
+      "sha256": "e38874d31e6f0d4aca14ed32eeca0974e123ddb8a1d0c604ee5f753b272283c1"
+    },
+    "scripts": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/run-docx-image-fix-checks.py",
+        "sha256": "f4134c8d00f664f2968c925b0115551393f9ce582270be7d1739c74dc161fc31"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/prepare-candidate.py",
+        "sha256": "dd92c8c154c49f7e87f897237dd630aeb282bf81c111a0775fdd1812cdbf093b"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/verify-candidate.py",
+        "sha256": "4154d34698f91884c3be8b2f4a2964035d17ecec8c3204222b6f0febcc861ffb"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/verify-data-retention.py",
+        "sha256": "a74735b9d52b347ac29276b7a378966db259df1bd433ca9652f0089d7498b1c8"
+      },
+      {
+        "path": "output/2026-10-10-docx-image-fix-install/install_verified_candidate.py",
+        "sha256": "ca06364fad64001bf61e61ed504cf36c3f47b0c516d3bd4f9df071f7203a2924"
+      }
+    ],
+    "copyDelta": "Prepare/verify only archive date prefix changed from 2026-10-09 to 2026-10-10. Retention verifier only private directory changed. Private installer only output/evidence directory and matching archive date changed; original strict guards retained.",
+    "fixedPathsConsistent": true,
+    "candidateChecksDirectoryExists": true,
+    "exitObservationSchema": "New private normal-exit observation already carries required true authorization/normalQuitObserved, forcedQuit=false and formalProcessCountAfter=0; no repetition of eighth preflight key-name mismatch. This is record-schema review, not a fresh exit/app observation.",
+    "phaseBoundary": "Full root engineering checks were in progress when this review was written. Candidate build/install not executed or accepted here."
+  },
+  "limitations": [
+    "No installed product fix acceptance yet; root must rebuild/install and verify DOCX ordinary PNG/JPEG and EXIF in native UI.",
+    "Probe is not React lifecycle, Tauri IPC, all formats or full P16 acceptance.",
+    "HTTP asset.localhost allowlist was preserved statically; Windows transport was not executed.",
+    "No claim that unrelated Desktop TCC waits were fixed, or that external Agent/model/account behavior changed."
+  ],
+  "findings": []
+}

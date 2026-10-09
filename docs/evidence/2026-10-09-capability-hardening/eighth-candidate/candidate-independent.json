@@ -1,0 +1,122 @@
+{
+  "sourceCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "startedAt": "2026-10-09T16:23:09.530407+00:00",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "candidateReceipts": {
+      "passed": true
+    },
+    "exactSource": {
+      "passed": true,
+      "inputCount": 1058,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed"
+    },
+    "bundleFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "d3b021883112992a0a571a9e8f438ed6d14b71a8ae08f28c229ee72dd98a3b94",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "plistAndEmbeddedManifest": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7"
+    },
+    "architecture": {
+      "passed": true,
+      "architecture": "arm64"
+    },
+    "signature": {
+      "passed": true,
+      "strictVerification": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+      "details": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=232211 flags=0x10002(adhoc,runtime) hashes=7250+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=711362ad4c58b014954a67a423239662d05460e2\nCandidateCDHashFull sha256=711362ad4c58b014954a67a423239662d05460e2c8e5fc097f1c4c344f042a59\nHash choices=sha256\nCMSDigest=711362ad4c58b014954a67a423239662d05460e2c8e5fc097f1c4c344f042a59\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=23347200\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=711362ad4c58b014954a67a423239662d05460e2\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+      "distribution": "ad-hoc; not notarized or publicly signed"
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "2e1c646f17fa5c0598a7288b38f4121f1a26d9b6fef871e1dfffe8169e3a9eeb",
+      "bytes": 12791220,
+      "fileModes": {
+        "Contents/_CodeSignature/CodeResources": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/Info.plist": "0o644"
+      }
+    },
+    "formalAppUnchanged": {
+      "passed": true,
+      "formalAppReplaced": false
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "installed": false,
+  "launched": false,
+  "realAgentInvoked": false,
+  "claim": "Independent filesystem/source/signature/archive inspection only; no installed-app or real-Agent acceptance",
+  "inputReceipts": {
+    "candidateJsonSha256": "e86d703e705599bc60935a13f6e5fffb0e8100c4b8a727e2971f430e80381b14",
+    "candidateInputsJsonSha256": "cbaa7d5d18d17c8c26725370baa23a7e0882f02d26bf3e65c6f7ae1e48482808"
+  },
+  "completedAt": "2026-10-09T16:23:09.871716+00:00",
+  "metadataOrderingAddendum": {
+    "atUtc": "2026-10-09T16:23:59.673707+00:00",
+    "firstVerification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/candidate-independent.raw.txt",
+      "sha256": "5c6a5d737bee2f0872a6fb0fd01ce2b5a41f35cb0395fce24bc4e5214c0429e0",
+      "result": "passed",
+      "checks": 9
+    },
+    "reason": "Formatting-order reminder crossed the first completed verifier invocation. Root explicitly authorized one additional read-only verifier after retaining original bytes and running Prettier on the referenced candidate JSONs.",
+    "normalization": [
+      {
+        "name": "candidate",
+        "originalSha256": "e86d703e705599bc60935a13f6e5fffb0e8100c4b8a727e2971f430e80381b14",
+        "currentSha256": "e86d703e705599bc60935a13f6e5fffb0e8100c4b8a727e2971f430e80381b14",
+        "semanticEqual": true,
+        "bytesChanged": false
+      },
+      {
+        "name": "candidate-inputs",
+        "originalSha256": "cbaa7d5d18d17c8c26725370baa23a7e0882f02d26bf3e65c6f7ae1e48482808",
+        "currentSha256": "cbaa7d5d18d17c8c26725370baa23a7e0882f02d26bf3e65c6f7ae1e48482808",
+        "semanticEqual": true,
+        "bytesChanged": false
+      }
+    ],
+    "normalizationActualResult": "Prettier reported unchanged for both referenced candidate JSONs; original and current bytes and semantics are identical. No source, bundle, archive or original build log was changed.",
+    "secondVerification": "Current nine checks are the authorized repeated read-only invocation. Only this independent receipt is formatted after verification; referenced candidate objects remain unchanged.",
+    "buildOrTestsRepeated": false
+  },
+  "preinstallSnapshotReview": {
+    "method": "Read-only digest and root/kind count validation of retained private full manifests; no source app-data/database access. No installation or launch.",
+    "manifests": [
+      {
+        "phase": "before",
+        "sha256": "6c91d311cac2045599aa93bcedda85dc3161ab94fdd9f28c39872c9ab08b797b",
+        "entries": 217400,
+        "mode": "0o600",
+        "summarySha256": "1ab67ba9b5e9ba18243056987b6b51cdf825c8f71013a0ac0d3342c1adecbb7d"
+      },
+      {
+        "phase": "preinstall",
+        "sha256": "6c91d311cac2045599aa93bcedda85dc3161ab94fdd9f28c39872c9ab08b797b",
+        "entries": 217400,
+        "mode": "0o600",
+        "summarySha256": "1ab67ba9b5e9ba18243056987b6b51cdf825c8f71013a0ac0d3342c1adecbb7d"
+      }
+    ],
+    "beforeEqualsPreinstall": true,
+    "scope": "217400 appData/WebKit/cache entries; this is the retained pre-install baseline, not after-install retention proof.",
+    "normalExitObservationReceiptSha256": "3b428f7d637cd39f51f135ef37b3ecdf77a449cce80e291e99a668056ca089a9",
+    "metadataBackupReceiptSha256": "ef6cbc327f21ab0b02571dc6cca91a4bf0084714d1eb96ec086d208a7d2c2bad",
+    "backupReviewBoundary": "Read the retained backup receipt describing original main/WAL/SHM capture and backup from second private working copy; independent backup integrity/source-capture chain will be inspected with the subsequent installation receipt."
+  }
+}

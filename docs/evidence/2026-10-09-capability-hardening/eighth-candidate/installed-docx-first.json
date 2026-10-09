@@ -1,0 +1,106 @@
+{
+  "checkedAtUtc": "2026-10-09T16:41:24.667613+00:00",
+  "sourceCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "surface": "/Applications/Farfold.app / native WebKit / CUA accessibility and screenshots",
+  "result": "partial_pass_with_installed_image_failure",
+  "observationRecords": "CUA observations in this task; no separate screenshot files claimed",
+  "initialConversations": 113,
+  "finalConversations": 114,
+  "realAgentBoundary": {
+    "ownedConversationPrefix": "FARFOLD_DOCX_AF66F006_20261010",
+    "selectedAgent": "Codex",
+    "service": "Existing Agent settings",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "permissionChanged": false,
+    "prompt": "Exactly six Markdown links to owned temporary copies; requested no tools or file reads/writes.",
+    "observedReply": "Six file link buttons, completed, no tool activity displayed.",
+    "newRequestCount": 1,
+    "fullAgentAcceptance": false
+  },
+  "passed": {
+    "unicodeLists": "Chinese/Greek/Latin, bold/italic, spaces, zero/false, numbered 1/2/3 and bullets visibly rendered.",
+    "table": "4 by 3 table with horizontal/vertical merge and empty cell visible; detail activation not tested here.",
+    "stories": "Header and footer independently selected and correct contents shown, explicit non-pagination description.",
+    "longContent": "Two content segments: records01-16 then17-32, correct order and end accessible.",
+    "malformed": "CRC-invalid file displays fixed unreadable structure error; no preceding document content.",
+    "hidden": "Visible before/after retained; hidden omission and partial-preview notices shown in position.",
+    "versions": "Owned unicode file title changed to VERSION_AFTER_AF66, explicit reread showed new title; source copy restored byte-identically and reread returned original title.",
+    "hideShow": "Collapse removes preview subtree; re-expand restores correct document."
+  },
+  "failed": [
+    {
+      "scope": "Embedded DOCX PNG/JPEG",
+      "samples": ["tables-images.docx", "rotated-image.docx"],
+      "observed": "Both image slots show imageFailed; actual EXIF visual orientation cannot be accepted.",
+      "causeStatus": "Current production img-src omits blob while renderer uses Blob URL; architecture obtained independent real WKWebView enforced img-src blob violations. Minimum policy fix and installed retest pending.",
+      "notAttributedTo": "Agent/model, corrupt fixture or image lifecycle without evidence."
+    }
+  ],
+  "fixtureIntegrity": {
+    "allSixCopiesRestoredAndMatchSources": true,
+    "files": [
+      {
+        "name": "unicode-lists.docx",
+        "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861"
+      },
+      {
+        "name": "tables-images.docx",
+        "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5"
+      },
+      {
+        "name": "sections.docx",
+        "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d"
+      },
+      {
+        "name": "damaged.docx",
+        "sha256": "7caa3700f83a8de60a3182f4520ed88e7d81a35cd27e5c98e04a44122c7bd8f8"
+      },
+      {
+        "name": "hidden.docx",
+        "sha256": "23b8b4a2f7770b9f3540a8d8667440136d23edf4745ad6bbf27f72cae59e9060"
+      },
+      {
+        "name": "rotated-image.docx",
+        "sha256": "619b244d8a97b54a6ecb2c7aa6e745aa132f8f7d9e2e55bd47dae04c9513201b"
+      }
+    ],
+    "privateVersionChangeSha256": "42b5b166ac2f024bc3c18450b7faef6c316c70dcc8080e63380277ec511f090f"
+  },
+  "normalExit": {
+    "observedCommand": "Cmd-Q",
+    "cuaResult": "App quit",
+    "formalAndBundledHelperProcessesAfter": 0,
+    "forcedQuit": false
+  },
+  "unsentRetention": {
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "differences": [],
+    "sourceAndFirstCaptureUnchanged": true,
+    "privateReceiptSha256": "141c7edc87d1fa0b95128032dc24a6dc084fccea5bc932c6720a8e380d52c619",
+    "boundary": "Original unsent entries compared; own new conversation/history/cache changes expected."
+  },
+  "remaining": [
+    "Installed image fix/retest including EXIF and resource lifecycle",
+    "DOCX full fidelity, cell detail native activation, native cancellation while parsing",
+    "Full Office/P16/P21 and remaining122 items",
+    "ARCH43 real accounts/29 Agent acceptance",
+    "Desktop access NEW-01 and public distribution deferred"
+  ]
+}

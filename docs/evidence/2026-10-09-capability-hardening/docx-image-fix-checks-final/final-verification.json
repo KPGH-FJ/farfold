@@ -1,0 +1,132 @@
+{
+  "checkedAtUtc": "2026-10-09T19:44:54.225345+00:00",
+  "sourceBase": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "passed": true,
+  "inputCount": 1059,
+  "sourceMatchesFinalChecks": true,
+  "inputsSha256": "4a27e3bb2a8e55f408af0f75a8dff9460499cf4a7b7f0c99f9585971c21110bc",
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 18.034,
+      "log": "format.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.8,
+      "log": "cargo-fmt.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.622,
+      "log": "clippy.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/clippy.txt",
+      "sha256": "0b9c85a57402765a9638848a90eec54abbd9a68f42a071a97aaa9d8acc5ba131"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 37.051,
+      "log": "rust.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/rust.txt",
+      "sha256": "e8ea113faba73e2364d1a6349ea5d9d90259f072e916ca02d23db9e051c0d022"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.413,
+      "log": "typecheck.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 34.937,
+      "log": "frontend.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/frontend.txt",
+      "sha256": "58e5b30ff889923fdd653930b5c802afa8c666505a06c402d2fef6fd7476cf87"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 6.992,
+      "log": "build.txt",
+      "logPath": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/build.txt",
+      "sha256": "8b2b9a12f88aa1dc32d6b50e5c0d1b98066812d12af3e66846e9098928de14c6"
+    }
+  ],
+  "counts": {
+    "frontendFiles": 280,
+    "frontendPassed": 3123,
+    "rustPassed": 1179,
+    "rustIgnored": 5
+  },
+  "ownedFiles": [
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "8a32fbe08167dddd18459289443b6761fd7eb0b8040b8eb54ba4beec72bb821d"
+    },
+    {
+      "path": "src/runtime/document_image_csp.test.ts",
+      "sha256": "0a2bec9fce0ec04054223d0eeaabf8d8e079cb8ba86af3cc9f074932d6c6b346"
+    },
+    {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "sha256": "495435504d77ba33eceab2e96d0d43400064753c997bee0601fa60aab2bb5430"
+    }
+  ],
+  "checkReuse": {
+    "changedSinceFirstFullRun": [
+      "src-tauri/src/acp_client/protocol_error_tests.rs"
+    ],
+    "basis": "Only Rust test-only fixture changed. Frontend/type/build source and config exactly match earlier passed checks. Final full format and Rust fmt/clippy/test rerun; this is a combined validated checkpoint, not seven newly executed commands in one run."
+  },
+  "failuresPreserved": {
+    "initialFullChecks": "../docx-image-fix-checks/receipt.json",
+    "protocolRepair": "../protocol-error-timing/receipt.json",
+    "productionPolicyRepair": "../docx-image-csp/receipt.json",
+    "installedOldImageFailure": "../eighth-candidate/installed-docx-first.json",
+    "extraCheck": "Optional cargo clippy --tests found two pre-existing test-only lints; not the required clippy command. Original failure retained in protocol-error-timing/clippy.txt."
+  },
+  "notEstablished": [
+    "New fix candidate/installation or native image success",
+    "Full Office/P16/P21",
+    "29 Agent standards or market readiness"
+  ]
+}

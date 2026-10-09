@@ -1,0 +1,109 @@
+{
+  "policyOnlyImgBlobChanged": true,
+  "documentBytesUnchanged": true,
+  "red": [
+    {
+      "name": "blob:word/media/image1.png",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    },
+    {
+      "name": "blob:word/media/image2.jpg",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    },
+    {
+      "name": "data-png",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "same-origin",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "asset",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "external-https",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    },
+    {
+      "name": "external-http",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    }
+  ],
+  "green": [
+    {
+      "name": "blob:word/media/image1.png",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "blob:word/media/image2.jpg",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "data-png",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "same-origin",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "asset",
+      "ok": true,
+      "reason": "load",
+      "width": 160,
+      "height": 96
+    },
+    {
+      "name": "external-https",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    },
+    {
+      "name": "external-http",
+      "ok": false,
+      "reason": "error",
+      "width": 0,
+      "height": 0
+    }
+  ],
+  "os": "Version 15.6 (Build 24G84)",
+  "origin": "tauri://localhost",
+  "invariants": "data/self/asset load; external HTTP/HTTPS rejected by enforced img-src in both; no timeout; no revoke before results"
+}

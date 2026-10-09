@@ -1,0 +1,172 @@
+{
+  "task": "DOCX local Blob image production CSP repair",
+  "recordedAt": "2026-10-09T16:42:24.812314+00:00",
+  "baselineCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "status": "controlled_webkit_root_cause_and_fix_verified; installed_product_fix_pending_root",
+  "failure": {
+    "installedObservation": "Root reported af66f006 ordinary writer DOCX text/table successful but PNG/JPEG imageFailed; see eighth-candidate/installed-docx-first.json. This agent did not operate the installed application.",
+    "sourceChain": [
+      "src/runtime/document_images.ts:25 creates Blob URL from image bytes",
+      "src/components/DocxDocumentView.tsx:69 renders that URL in img",
+      "src-tauri/tauri.conf.json:26 omitted blob from img-src"
+    ],
+    "priorEvidenceGap": "The earlier 39-case Chromium React/Worker fixture did not inject the production Tauri CSP (confirmed by its author). It was not production-CSP or installed-WebKit evidence."
+  },
+  "change": {
+    "summary": "Only add blob: to img-src. Keep every other directive and prior image source unchanged. DocumentImages and component lifecycle untouched.",
+    "allowedImageSources": [
+      "'self'",
+      "data:",
+      "blob:",
+      "asset:",
+      "http://asset.localhost"
+    ],
+    "newDependencies": false,
+    "credentialsOrUserDataTouched": false
+  },
+  "controlledWebKit": {
+    "harness": "probe.swift; compiled as a standalone CLI in output/2026-10-10-docx-image-csp/probe, not an app bundle",
+    "platform": "macOS 15.6 (24G84), system WKWebView",
+    "origin": "tauri://localhost",
+    "dataStore": "nonPersistent",
+    "noWindow": true,
+    "farfoldIpcBridge": false,
+    "sameInput": "Images extracted byte-for-byte from the existing controlled ordinary writer document 02-table-images-stories.docx. Red/green use identical fixture/harness/image bytes, varying only production CSP.",
+    "policy": "Exact app.security.csp supplied as Content-Security-Policy response header for the custom scheme",
+    "lifecycle": "Both object URLs held until every load/error result; no premature revoke can explain red.",
+    "red": "PNG/JPEG both img error, naturalWidth/Height 0; two securitypolicyviolation records with directive img-src, blockedURI blob, disposition enforce",
+    "green": "PNG/JPEG both load at 160x96; zero blob policy violations",
+    "unchanged": "Same-image data URL, tauri same-origin and asset custom scheme load in both. External reserved .invalid HTTP and HTTPS sources fail with enforced img-src violation in both; no timeout.",
+    "assertionEvidence": "results.json summarizes actual raw receipts; assertions compared exact policy delta and identical image data."
+  },
+  "checks": [
+    {
+      "name": "config-red",
+      "result": "1 failed / 1 passed before fix",
+      "log": "config-red.txt"
+    },
+    {
+      "name": "targeted regression",
+      "result": "2 actual test files / 11 passed after fix; command also named nonexistent DocxFilePreview.test.tsx but no component test is claimed",
+      "log": "targeted-green.txt"
+    },
+    {
+      "name": "final formatted-source targeted regression",
+      "command": "corepack pnpm exec vitest run src/runtime/document_image_csp.test.ts src/runtime/document_view.test.ts",
+      "result": "2 files / 11 passed",
+      "log": "final-targeted-green.txt"
+    },
+    {
+      "name": "typecheck",
+      "command": "corepack pnpm typecheck",
+      "result": "passed",
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "targeted format",
+      "result": "passed",
+      "log": "format.txt"
+    }
+  ],
+  "limitations": [
+    "The WK helper proves production policy and image decode behavior for these exact PNG/JPEG bytes at the same URL scheme/origin, not a Tauri installed UI journey or React lifecycle test.",
+    "HTTP asset.localhost remains exactly allowlisted in configuration; its Windows transport was not executed here.",
+    "No other image formats or EXIF orientation are claimed by this probe. Root must rebuild/reinstall and repeat installed document images/EXIF checks.",
+    "No production process was started, stopped, or altered by this agent; no Agent/model/account operation."
+  ],
+  "primarySources": [
+    "https://v2.tauri.app/security/csp/",
+    "https://v2.tauri.app/reference/config/#securityconfig"
+  ],
+  "ownedSource": [
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "8a32fbe08167dddd18459289443b6761fd7eb0b8040b8eb54ba4beec72bb821d",
+      "bytes": 1300
+    },
+    {
+      "path": "src/runtime/document_image_csp.test.ts",
+      "sha256": "0a2bec9fce0ec04054223d0eeaabf8d8e079cb8ba86af3cc9f074932d6c6b346",
+      "bytes": 1199
+    }
+  ],
+  "unchangedLifecycleSource": [
+    {
+      "path": "src/runtime/document_images.ts",
+      "sha256": "a69af9b0e4b1e8b137351c9b5ccc7758bf8c2bb88e0ca994812b28972cf94d38",
+      "bytes": 1277
+    },
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "58e0d21e97699df1f314a801584e6ecb48287c403e5ba1ed91e1823161362d2b",
+      "bytes": 14897
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/probe.swift",
+      "sha256": "17efbd0e212b2d55434c652b43d61b91aa7406d5389cffa07f460f20b473491b",
+      "bytes": 5190
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/red-input.json",
+      "sha256": "ed5823da918ecec73a084af4e3960f87cc9b3ba88f9d19ca2123c4e5bb2bc9ee",
+      "bytes": 6222
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/green-input.json",
+      "sha256": "7d7999d8fb001c196839fbe40414237897a075626d3847503b31bce88bc21c01",
+      "bytes": 6228
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/red.raw.txt",
+      "sha256": "b6ab1785d926afcc7227f8cc5020333056dd13af72b8e333de9fbde218f672e4",
+      "bytes": 2378
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/red.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/green.raw.txt",
+      "sha256": "b771174c32953ca7a2d1b8d0dac1aacd8804c19576dafe09a5da2adcd1c6af20",
+      "bytes": 2250
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/green.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/results.json",
+      "sha256": "ef0a4fe4add0c46e788b1ac9fae5a99a0856ffd6861d2edc34ae02b43c26eabe",
+      "bytes": 2080
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/config-red.txt",
+      "sha256": "fcdaef03afce5bb6c845b342861e3add43dd76bbfc4bbd8c8733a0c09c745867",
+      "bytes": 1257
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/targeted-green.txt",
+      "sha256": "14f8c71e16c6573904b0ef3d8a1ca9cbab5e8077e4bf5d3c576e824596517b71",
+      "bytes": 208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/final-targeted-green.txt",
+      "sha256": "79b2c5c4bdf1e5d54732218aae803a83b24718d69c0d61dc06980e97129d52f3",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-csp/format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

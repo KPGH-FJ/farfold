@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-09T16:34:44.135418+00:00",
+  "reviewer": "verification",
+  "status": "passed_for_installation_and_retained_data_scope",
+  "sourceCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "scope": "Independent read-only installed bundle, signature/archive/source hashes, three private retained full manifests, private backup/capture chain, original failed preflight and exit-record alignment. No app launch, Agent, install, cleanup, source database access or user text/key queries.",
+  "receipts": {
+    "candidate": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/candidate.json",
+      "sha256": "e86d703e705599bc60935a13f6e5fffb0e8100c4b8a727e2971f430e80381b14"
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/candidate-inputs.json",
+      "sha256": "cbaa7d5d18d17c8c26725370baa23a7e0882f02d26bf3e65c6f7ae1e48482808"
+    },
+    "candidateIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/candidate-independent.json",
+      "sha256": "b2f3cf8430afedd9bcec50be9ac32f515ca22e48d588f49d7a6b081d59e63aa2"
+    },
+    "installedRetention": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/installed-data-retention.json",
+      "sha256": "5820f381a40221e4a17e672029aba7084098ed1688690ae82704d6d8f0dbdb6c"
+    },
+    "successfulOperation": {
+      "path": "output/2026-10-09-eighth-install/install-operation.json",
+      "sha256": "88cdafcb1c40760c9a3c7d436d7ab21a68013cb859b8c22e045f2cab9ce16a31"
+    }
+  },
+  "application": {
+    "formalPath": "/Applications/Farfold.app",
+    "phase": "installedVerifiedNotLaunched",
+    "exactFiveFilesEqualAcrossFormalCandidateArchive": true,
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "d3b021883112992a0a571a9e8f438ed6d14b71a8ae08f28c229ee72dd98a3b94",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "passed independently with codesign --verify --deep --strict",
+    "signature": "ad-hoc; not notarized or publicly distribution-signed",
+    "archive": {
+      "sha256": "2e1c646f17fa5c0598a7288b38f4121f1a26d9b6fef871e1dfffe8169e3a9eeb",
+      "bytes": 12791220,
+      "crcPassed": true,
+      "fiveUniqueNonMetadataMembers": true
+    },
+    "currentFormalAndBundledHelperProcessCount": 0,
+    "source": {
+      "headEqualsCandidateCommit": true,
+      "inputs": 1058,
+      "allCurrentDiskSha256Match": true,
+      "commitBlobCorrespondence": "All 1058 were independently compared with exact commit blobs before candidate and in candidate verification; current HEAD and bytes remain matched."
+    },
+    "embeddedManifestBoundary": "Embedded release-manifest.json has version 0.1.7 and historical generatedAt 2026-09-19, not a commit field. Exact commit attribution comes from the frozen-source/build/candidate hash chain, not this embedded timestamp."
+  },
+  "retainedData": {
+    "phases": ["before", "preinstall", "after"],
+    "entriesPerManifest": 217400,
+    "countsPerManifest": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256Each": "6c91d311cac2045599aa93bcedda85dc3161ab94fdd9f28c39872c9ab08b797b",
+    "allThreeRawManifestBytesHaveSameHash": true,
+    "eachSummaryHashAndRootKindCountRecomputed": true,
+    "allThreeRootDirectoryEntriesPresent": true,
+    "manifestModeEach": "0600",
+    "privateParentMode": "0700",
+    "mainWalShmFileHashesInEveryManifestEqualPreservedCapture": true,
+    "method": "Read all retained JSONL bytes to recompute hash/counts; inspect only exact database main/WAL/SHM hash entries for capture linkage. No user paths/content/keys emitted. No fresh source-data scan run by this reviewer.",
+    "evidence": [
+      {
+        "path": "output/2026-10-09-eighth-install/install-data-before-summary.json",
+        "sha256": "1ab67ba9b5e9ba18243056987b6b51cdf825c8f71013a0ac0d3342c1adecbb7d"
+      },
+      {
+        "path": "output/2026-10-09-eighth-install/install-data-preinstall-summary.json",
+        "sha256": "1ab67ba9b5e9ba18243056987b6b51cdf825c8f71013a0ac0d3342c1adecbb7d"
+      },
+      {
+        "path": "output/2026-10-09-eighth-install/install-data-after-summary.json",
+        "sha256": "1ab67ba9b5e9ba18243056987b6b51cdf825c8f71013a0ac0d3342c1adecbb7d"
+      }
+    ]
+  },
+  "metadataBackup": {
+    "method": "Original main/WAL/SHM copied to two private directories; SQLite backup and original integrity check operate only on the second working copy and recovery destination. The original capture is not opened by SQLite.",
+    "script": {
+      "path": "output/2026-10-09-eighth-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    "receipt": {
+      "path": "output/2026-10-09-eighth-install/metadata-backup-receipt.json",
+      "sha256": "ef6cbc327f21ab0b02571dc6cca91a4bf0084714d1eb96ec086d208a7d2c2bad"
+    },
+    "originalSourceProtection": "Script checks regular-file identity/mtime/ctime/size plus digest before/after capture and after backup. Current independent proof compares preserved capture hashes with original receipt and all three retained installation manifests; source DB was not opened.",
+    "capturedFiles": {
+      "farfold.sqlite3": "c5e1610d7f333007db282aef96e1f922667c4bc18c3c24827fc7ed7dd4bca7df",
+      "farfold.sqlite3-wal": "f6e41a13c64e8d94e2b0a57af4f3c720d902e176e25a563dd10f61d7c8d1657c",
+      "farfold.sqlite3-shm": "b487efaeafe096806b5fed1dfb775ee84459277eb3afb42b082b4f51dc209e73"
+    },
+    "capturedFilesMatchCurrentPrivateCapture": true,
+    "capturedFilesMode": "0600",
+    "backupSha256": "8ae211ce77702174ca64eb95742268453d307fa906a174a9b03a0e5f27a41357",
+    "backupMode": "0600",
+    "independentIntegrity": "ok",
+    "independentIntegrityMethod": "sqlite3 read-only immutable URI for metadata-before.sqlite3; only PRAGMA integrity_check, no content queries.",
+    "backupMainAndAllPresentBackupSideFileHashesUnchangedAfterIntegrity": true,
+    "workingCopyMayChangeByDesign": "SQLite can process WAL/SHM in metadata-working; its hashes are not falsely required to remain identical to captured originals.",
+    "boundary": "Integrity and preserved file/hash chain are established; this is not a physical-disk-failure or full restore-operation test."
+  },
+  "normalExitAndPreflightRepair": {
+    "originalObservation": {
+      "path": "output/2026-10-09-eighth-install/normal-exit-observation.initial.json",
+      "sha256": "3b428f7d637cd39f51f135ef37b3ecdf77a449cce80e291e99a668056ca089a9"
+    },
+    "alignedObservation": {
+      "path": "output/2026-10-09-eighth-install/normal-exit-observation.json",
+      "sha256": "560c03c5696dcc52a9b07ce689b49e2ade80e3fcee5ee31bc269dd58cde44ff2"
+    },
+    "originalFailure": {
+      "path": "output/2026-10-09-eighth-install/install-operation.failed-preflight.json",
+      "sha256": "1380bf491a3363ee3810e9cd752538b6d8673feaba7fd8a9d4f7fa522c7eacce"
+    },
+    "originalExitSource": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/seventh-candidate/installed-preview-feedback.json",
+      "sha256": "bc7e8aece90b3902d80381215dffdfdca26a0894d77d698da22135437fde0dce"
+    },
+    "originalExitSourceObservedValues": {
+      "observedCommand": "Cmd-Q",
+      "cuaResult": "App quit",
+      "formalAndBundledHelperProcessesAfter": 0,
+      "forcedQuit": false
+    },
+    "failedBeforeAnyCopy": true,
+    "firstGateFailure": "Installer required userAuthorizedContinuousDevelopment/normalQuitObserved/formalProcessCountAfter while original record used normalExitWasObservedByRootInSeventhInstalledUi/formalBundleProcesses.",
+    "classification": "Root installation-evidence schema mismatch; not an application runtime failure.",
+    "alignment": "Every original field retained unchanged; explicit true/zero fields added from current authorization and existing observed normal-exit evidence. Current exact formal process count independently remains zero.",
+    "installerGuardReview": "Strict authorization, normal exit, forcedQuit=false, zero processes, candidate receipts, source/package/archive/snapshot checks retained; immediate pre-copy package and process rechecks remain before the sole ditto mutation. No installer guard relaxed.",
+    "successfulOperationPhase": "installedVerifiedNotLaunched",
+    "successfulOperationLaunched": false,
+    "successfulOperationProcessesBefore": 0,
+    "successfulOperationProcessesAfter": 0
+  },
+  "methodReceipts": [
+    {
+      "path": "output/2026-10-09-eighth-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-09-eighth-install/install_verified_candidate.py",
+      "sha256": "d4baf00a50a66796e2ea301230839544b4d816d43c4222725122fa1bb528ef7c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/verify-data-retention.py",
+      "sha256": "6c2df45acb5c0246f51fc1a6593f0a93cff53180b3517cecb4a3837aadf60c47"
+    }
+  ],
+  "evidenceAccuracy": {
+    "publicPrivateEvidenceHashesAllMatched": true,
+    "candidateAndIndependentReceiptCrossHashesMatched": true,
+    "original9Of9AndAuthorizedRepeatPreserved": "candidate-independent.raw.txt retains first passed verification; current candidate-independent metadata addendum explains authorized ordering repeat. Candidate/inputs Prettier was unchanged; no build/tests repeated.",
+    "successfulOperationPendingFlag": "install-operation dataRetentionComparisonPending=true is its historical pre-after-snapshot state. Later installed-data-retention and this review establish comparison completion; original operation receipt was not rewritten.",
+    "stdout": "Independent shell/tool outputs were observed directly, not retroactively fabricated as raw log files."
+  },
+  "notEstablished": [
+    "Native DOCX/URL-inquiry UI or real Agent/account acceptance for this installed candidate.",
+    "Windows, full Office/P16/P21, all 29 x 8 or all 122 capability closure.",
+    "Desktop TCC access issue resolution, physical disk-full/power-failure or full restoration verification.",
+    "Any post-launch data state; app was still not launched at this checkpoint."
+  ],
+  "findings": []
+}

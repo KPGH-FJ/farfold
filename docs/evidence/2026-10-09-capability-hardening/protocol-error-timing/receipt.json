@@ -1,0 +1,168 @@
+{
+  "task": "Protocol error fixture dispatch/readiness measurement repair",
+  "recordedAt": "2026-10-09T19:42:56.926904+00:00",
+  "baselineCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "status": "targeted_tests_passed; required_clippy_and_owned_fmt_passed; independent_review_and_root_full_suite_pending",
+  "scope": {
+    "changedProductionCode": false,
+    "changedSource": [
+      {
+        "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+        "sha256": "495435504d77ba33eceab2e96d0d43400064753c997bee0601fa60aab2bb5430",
+        "bytes": 15343
+      }
+    ],
+    "baselineTestSha256": "96ebb66f41034ae4e50b2b93ed46a60fead9fc44b69a64ee4404d9bd5d347f42",
+    "noAgentAccountOrInstalledAppOperation": true,
+    "initialTargetedSourceSha256": "ec5984d2c15ef280e0ce7b457ca2bea19e1dfba3d1539888c25f3e84e5e44e96"
+  },
+  "trigger": {
+    "log": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/rust.txt",
+      "sha256": "7427fc0f00596d4e761dbdb7605a74922574a10e5c7f554fd27f681c06075525",
+      "bytes": 129365
+    },
+    "observed": "1177 passed / 1 failed / 5 ignored; protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors failed session_requested at original line205",
+    "originalFailureExactScheduling": "unknown; fixture-specific temporary logs were not retained by that whole-suite run. No claim that this exact observed failure was conclusively caused by configuration lock contention."
+  },
+  "investigation": {
+    "isolatedOriginal": "Unchanged original test passed 1/1 on one targeted run; not evidence that the whole-suite failure was harmless.",
+    "sourceFacts": [
+      "Fixture::connect creates a preparation connection, not the later conversation process.",
+      "open_session uses connect_selected(conversation=true), which awaits the real per-Agent configuration_guard and creates a new conversation connection before sending session/new.",
+      "Lifecycle fixtures share agent id lifecycle-fixture, so independent parallel tests can contend on that same admission lock.",
+      "The old outer300ms covered admission, database reads, process startup and initialize, yet later asserted session/new had been dispatched. Its assertion also accepted any outer timeout as if it exercised decode/EOF."
+    ],
+    "sourcePointers": [
+      "src-tauri/src/acp_client/lifecycle_tests.rs:75",
+      "src-tauri/src/acp_client/lifecycle_tests.rs:108",
+      "src-tauri/src/acp_client/manager.rs:293",
+      "src-tauri/src/acp_client/service_connection.rs:89",
+      "src-tauri/src/acp_client/service_connection.rs:151",
+      "src-tauri/src/acp_client/session.rs:361"
+    ],
+    "deterministicCounterexample": "Temporarily hold the actual same-agent configuration_guard over the original300ms open_session call. It returned outer_timeout=true without session/new; the unchanged original session_requested assertion failed. controlled-red.patch records the only diagnostic injection; it is not the final implementation."
+  },
+  "repair": {
+    "summary": "Only this fixture test changed. Establish actual peer session/new receipt plus the existing outgoing diagnostic under a separate3s startup bound before releasing the peer response. Preserve original session_requested and all incoming error/class/responseIdNull/beforeInitializeAccepted assertions.",
+    "peerBarrier": "Python with-open writes and closes requested marker before decode/EOF/no-response action; peer then awaits test-owned release marker.",
+    "timeoutCase": "After dispatch and release, original300ms remains and must return actual outerElapsed; peer must have written waiting. An early innerErr no longer satisfies timeout case.",
+    "decodeAndEofCases": "Await actual Ok(Err) under3s failure bound; caller timeout is a test failure.",
+    "regression": "A second test holds the same real admission guard across300ms while open remains pending, verifies peer has not received the request, releases admission, then completes actual dispatch and decode error. The300ms timer here deliberately exercises the old deadline boundary, not a retry/sleep added to make scheduling pass.",
+    "cleanup": "Each fixture disconnects its exact manager-owned connections; existing Fixture Drop remains. No global process cleanup or production Fixture id changes.",
+    "independentReviewIncrement": "Reviewer correctly noted that initial helper setup connect, explicit guard acquisition and disconnect were outside the dispatch timer. Each is now separately bounded by3s in this helper; response timeout remains300ms. Fixture-owned cleanup Drop remains as fallback. No claim of a single3s bound for the whole test."
+  },
+  "validation": [
+    {
+      "name": "original isolated",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors -- --exact --nocapture",
+      "result": "1 passed",
+      "raw": "isolated-original.txt"
+    },
+    {
+      "name": "controlled original counterexample",
+      "command": "same exact test command, with controlled-red.patch temporarily applied",
+      "result": "1 failed at preserved session_requested, outer_timeout=true",
+      "raw": "controlled-original-red.txt"
+    },
+    {
+      "name": "final protocol error module",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::lifecycle_tests::protocol_error_tests -- --nocapture",
+      "result": "9 passed; no ignored in targeted module",
+      "raw": "targeted-green.txt"
+    },
+    {
+      "name": "owned format",
+      "command": "rustfmt --edition 2024 --check src-tauri/src/acp_client/protocol_error_tests.rs",
+      "result": "passed",
+      "raw": "fmt.txt"
+    },
+    {
+      "name": "required clippy",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "result": "passed",
+      "raw": "clippy-required.txt"
+    },
+    {
+      "name": "additional test-target clippy",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked --tests -- -D warnings",
+      "result": "failed on two unchanged test-only lints: installed_initialize_probe.rs:78 needless_borrows_for_generic_args; pty.rs:729 collapsible_if. Not repaired in this narrow change; root notified.",
+      "raw": "clippy.txt"
+    },
+    {
+      "name": "reviewed final protocol error module",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::lifecycle_tests::protocol_error_tests -- --nocapture",
+      "result": "9 passed after all local helper wait bounds",
+      "raw": "review-bounds-green.txt"
+    },
+    {
+      "name": "final owned format",
+      "command": "rustfmt --edition 2024 --check src-tauri/src/acp_client/protocol_error_tests.rs",
+      "result": "passed",
+      "raw": "final-fmt.txt"
+    },
+    {
+      "name": "final required clippy",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "result": "passed",
+      "raw": "final-clippy-required.txt"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/isolated-original.txt",
+      "sha256": "32bacdba38e77cabec056d6c54305ad3d337365d0d97071e38b9b91606991399",
+      "bytes": 623
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/controlled-red.patch",
+      "sha256": "a5ac71c2fea89b185f2502a7027fc6ae2226e6722e3df32e0cf8e54ababe1a5d",
+      "bytes": 1211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/controlled-original-red.txt",
+      "sha256": "5d23320d2afbfdcf0841f2b9cff7b82f94a2c067baa4cdc360c20a71dd57fb9c",
+      "bytes": 1069
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/targeted-green.txt",
+      "sha256": "cee8e4d4005b17cd93039960abfef63a71e8681b8122b94fac00644c3c2dd71f",
+      "bytes": 1735
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/clippy-required.txt",
+      "sha256": "a8dd5b4f852b782842253d071162bc7c3c44c3a9a07131cd1159e45bbb802a10",
+      "bytes": 72
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/clippy.txt",
+      "sha256": "fa114f2454e108f6cd3493046e1b15ff7fa05581fbb8697c2be308ada018c76d",
+      "bytes": 2488
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/review-bounds-green.txt",
+      "sha256": "cf5c2f6a49cc7401510eb2bf88238ffcb967dd5c796cd8a029b787d103289522",
+      "bytes": 1734
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/final-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/final-clippy-required.txt",
+      "sha256": "7ea9ff7442106040f95bc079f85de985b086e1fed897d88dec87dd8425c35ee1",
+      "bytes": 72
+    }
+  ],
+  "remaining": [
+    "Root will run whole-suite/integration checks on the final combined source. This agent did not repeat whole-suite tests.",
+    "The original whole-suite failure had no preserved per-fixture trace; controlled reproduction proves the flawed timing assumption, not its unique historical cause.",
+    "These tests exercise controlled Python protocol peers only; no real Agent/authentication acceptance."
+  ]
+}

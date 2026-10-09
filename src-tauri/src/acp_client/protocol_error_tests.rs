@@ -151,6 +151,115 @@ async fn protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_paylo
     );
 }
 
+fn local_failure_records(f: &Fixture) -> Vec<Value> {
+    std::fs::read_dir(f.cwd.join("logs"))
+        .unwrap()
+        .flat_map(|entry| {
+            std::fs::read_to_string(entry.unwrap().path())
+                .unwrap()
+                .lines()
+                .map(|line| serde_json::from_str(line).unwrap())
+                .collect::<Vec<Value>>()
+        })
+        .collect()
+}
+
+async fn assert_local_failure_diagnostics(action: &str, delay_admission: bool) {
+    let f = Fixture::new();
+    let original = " elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})";
+    let peer = PEER.replace(original, &format!(" elif method=='session/new':\n  with open(sys.argv[1]+'_requested','w') as marker: marker.write('requested')\n  while not os.path.exists(sys.argv[1]+'_release'): time.sleep(.005)\n  {action}"));
+    assert_ne!(peer, PEER);
+    std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+    tokio::time::timeout(Duration::from_secs(3), f.connect())
+        .await
+        .expect("bounded fixture preparation connection");
+    let admission = if delay_admission {
+        Some(
+            tokio::time::timeout(
+                Duration::from_secs(3),
+                crate::install_job::configuration_guard(&f.row.id),
+            )
+            .await
+            .expect("bounded controlled admission acquisition"),
+        )
+    } else {
+        None
+    };
+    let mut opening =
+        Box::pin(
+            f.manager
+                .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store),
+        );
+    // connect() prepared a different process. A conversation still needs its
+    // own admission, startup and initialize; none is a session/new timeout.
+    tokio::time::timeout(Duration::from_secs(3), async {
+        if let Some(admission) = admission {
+            tokio::select! {
+                _ = tokio::time::sleep(Duration::from_millis(300)) => {}
+                _ = &mut opening => panic!("open completed while admission was held"),
+            }
+            assert!(!f.cwd.join("listed_requested").exists());
+            drop(admission);
+        }
+        tokio::select! {
+            _ = &mut opening => panic!("open completed before the peer released its response"),
+            _ = until(|| {
+                f.cwd.join("listed_requested").exists()
+                    && local_failure_records(&f).iter().any(|value| {
+                        value["dir"] == "out" && value["event"] == "session/new"
+                    })
+            }) => {}
+        }
+    })
+    .await
+    .expect("bounded startup and actual peer session/new dispatch");
+    std::fs::write(f.cwd.join("listed_release"), "release").unwrap();
+    if action.starts_with("open(") {
+        assert!(
+            tokio::time::timeout(Duration::from_millis(300), opening)
+                .await
+                .is_err(),
+            "the already-dispatched request must reach the caller timeout"
+        );
+        assert_eq!(
+            std::fs::read_to_string(f.cwd.join("listed")).unwrap(),
+            "waiting"
+        );
+    } else {
+        let result = tokio::time::timeout(Duration::from_secs(3), opening)
+            .await
+            .expect("decode/EOF must produce an actual error, not a caller timeout");
+        assert!(
+            result.is_err(),
+            "the local decode/EOF failure must reach its caller"
+        );
+    }
+    tokio::time::timeout(
+        Duration::from_secs(3),
+        f.manager.disconnect(&f.row.id, &f.cwd),
+    )
+    .await
+    .expect("bounded fixture disconnect")
+    .unwrap();
+    until(|| {
+        local_failure_records(&f)
+            .iter()
+            .any(|value| value["event"] == "startup" && value["connectionRemoved"] == true)
+    })
+    .await;
+    let mut session_requested = false;
+    for value in local_failure_records(&f) {
+        session_requested |= value["dir"] == "out" && value["event"] == "session/new";
+        if value["version"] == 1 && value["dir"] == "in" {
+            assert_ne!(value["error"], "protocol");
+            assert!(value.get("protocolErrorClass").is_none());
+            assert!(value.get("responseIdNull").is_none());
+            assert!(value.get("beforeInitializeAccepted").is_none());
+        }
+    }
+    assert!(session_requested);
+}
+
 #[tokio::test(flavor = "multi_thread")]
 async fn protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors() {
     for action in [
@@ -158,52 +267,13 @@ async fn protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_er
         "sys.exit(0)",
         "open(sys.argv[1],'w').write('waiting')",
     ] {
-        let f = Fixture::new();
-        let original = " elif method=='session/new': reply(m,{'sessionId':os.environ.get('FIXTURE_SESSION','fixture'),'configOptions':[]})";
-        let peer = PEER.replace(original, &format!(" elif method=='session/new': {action}"));
-        assert_ne!(peer, PEER);
-        std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
-        f.connect().await;
-        let result = tokio::time::timeout(
-            Duration::from_millis(300),
-            f.manager
-                .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store),
-        )
-        .await;
-        assert!(!matches!(result, Ok(Ok(_))));
-        if action.starts_with("open(") {
-            assert!(f.cwd.join("listed").exists());
-        }
-        f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
-        until(|| {
-            std::fs::read_dir(f.cwd.join("logs")).unwrap().any(|entry| {
-                std::fs::read_to_string(entry.unwrap().path())
-                    .unwrap()
-                    .lines()
-                    .any(|line| {
-                        serde_json::from_str::<Value>(line).is_ok_and(|v| {
-                            v["event"] == "startup" && v["connectionRemoved"] == true
-                        })
-                    })
-            })
-        })
-        .await;
-        let mut session_requested = false;
-        for entry in std::fs::read_dir(f.cwd.join("logs")).unwrap() {
-            let text = std::fs::read_to_string(entry.unwrap().path()).unwrap();
-            for line in text.lines() {
-                let value: Value = serde_json::from_str(line).unwrap();
-                session_requested |= value["dir"] == "out" && value["event"] == "session/new";
-                if value["version"] == 1 && value["dir"] == "in" {
-                    assert_ne!(value["error"], "protocol");
-                    assert!(value.get("protocolErrorClass").is_none());
-                    assert!(value.get("responseIdNull").is_none());
-                    assert!(value.get("beforeInitializeAccepted").is_none());
-                }
-            }
-        }
-        assert!(session_requested);
+        assert_local_failure_diagnostics(action, false).await;
     }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn protocol_errors_pre_dispatch_admission_wait_is_not_a_response_timeout() {
+    assert_local_failure_diagnostics("reply(m,{})", true).await;
 }
 
 #[tokio::test(flavor = "multi_thread")]

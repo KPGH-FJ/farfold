@@ -1,0 +1,9 @@
+{
+  "checkedAtUtc": "2026-10-09T16:35:26.814031+00:00",
+  "sourceCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalAppUnchanged": true,
+  "archiveRetainedSha256": "2e1c646f17fa5c0598a7288b38f4121f1a26d9b6fef871e1dfffe8169e3a9eeb",
+  "installIndependentSha256": "047c57c2533871dcb4840998e355d668d3566cf31333203b166ecb140b5d2a6c",
+  "scope": "Only regenerated duplicate bundle; verified matching formal app and ZIP retained; no application data removed."
+}

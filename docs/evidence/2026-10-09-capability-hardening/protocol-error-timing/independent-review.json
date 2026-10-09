@@ -1,0 +1,155 @@
+{
+  "task": "Independent review of protocol error fixture dispatch/readiness measurement repair",
+  "recordedAt": "2026-10-09T19:45:23.399360+00:00",
+  "status": "completed_no_new_blocker_in_reviewed_test_repair_scope",
+  "reviewer": "verification; not the repair author",
+  "method": {
+    "readOnlySourceAndEvidence": true,
+    "testsRerunByReviewer": false,
+    "buildOrCandidateRunByReviewer": false,
+    "formalAppOrAgentOperation": false,
+    "writtenFiles": [
+      "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/independent-review.json"
+    ]
+  },
+  "inputs": {
+    "baselineCommit": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+    "source": {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "sha256": "495435504d77ba33eceab2e96d0d43400064753c997bee0601fa60aab2bb5430",
+      "bytes": 15343
+    },
+    "baselineSourceSha256": "96ebb66f41034ae4e50b2b93ed46a60fead9fc44b69a64ee4404d9bd5d347f42",
+    "authorReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/receipt.json",
+      "sha256": "5cad2d5c105f0ea1f83d1df1e60910ab050f55be2fdaaef844f3d2c5a8840dee",
+      "bytes": 9767
+    },
+    "allAuthorSourceTriggerAndEvidenceHashesRecomputed": true
+  },
+  "findings": [
+    {
+      "id": "pre_dispatch_waits_outside_timer",
+      "initialStatus": "changes_required",
+      "initialSourceSha256": "ec5984d2c15ef280e0ce7b457ca2bea19e1dfba3d1539888c25f3e84e5e44e96",
+      "problem": "Initial helper left preparation connect, controlled configuration_guard acquisition and disconnect outside the dispatch deadline; they could await the same admission lock without a local bound.",
+      "status": "resolved",
+      "resolution": "Final helper separately bounds each of these three awaits to 3 seconds. The existing 3-second dispatch barrier and 3-second connectionRemoved wait remain, and the post-dispatch response timeout stays 300 milliseconds. This is not a single 3-second whole-test deadline.",
+      "sourceLines": [173, 178, 237],
+      "validation": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/review-bounds-green.txt",
+        "sha256": "cf5c2f6a49cc7401510eb2bf88238ffcb967dd5c796cd8a029b787d103289522",
+        "bytes": 1734
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "scope",
+      "result": "passed",
+      "detail": "Diff only changes a module registered under cfg(test). No production protocol/control implementation change in this repair."
+    },
+    {
+      "name": "actual dispatch barrier",
+      "result": "passed",
+      "detail": "Peer writes and closes its requested marker before waiting on test-owned release. The test requires both that marker and outgoing session/new diagnostic within 3 seconds, and rejects early completion."
+    },
+    {
+      "name": "response classification assertions preserved or strengthened",
+      "result": "passed",
+      "detail": "Original three actions and final session_requested assertion remain. Every incoming version-1 record still excludes error=protocol and protocolErrorClass/responseIdNull/beforeInitializeAccepted fields. Timeout must be outer Elapsed after dispatch and peer waiting marker; decode/EOF must be actual Ok(Err), not a caller timeout."
+    },
+    {
+      "name": "controlled admission regression",
+      "result": "passed",
+      "detail": "New test acquires the real same-agent configuration_guard, polls open_session while holding it across 300 milliseconds, asserts no peer request receipt, then releases it and requires actual dispatch and decode failure. It preserves production Agent id/guard behavior."
+    },
+    {
+      "name": "resource ownership and local wait bounds",
+      "result": "passed_in_test_fixture_scope",
+      "detail": "Fixture has its own temporary directory/store/manager. Explicit disconnect is bounded and must succeed; connectionRemoved diagnostic is awaited with existing bounded until helper. Fixture Drop retains stop_for_shutdown fallback. The peer release wait belongs to the exact fixture process; no global cleanup or real Agent is introduced."
+    },
+    {
+      "name": "additional clippy failure attribution",
+      "result": "preserved_not_fixed",
+      "detail": "Optional clippy --tests failed on installed_initialize_probe.rs:78 and pty.rs:729. Both files currently have no HEAD diff. Required clippy succeeded. This review does not label the optional test-target lint check passed."
+    }
+  ],
+  "observedEvidence": {
+    "originalWholeSuite": {
+      "result": "1177 passed / 1 failed / 5 ignored; preserved session_requested assertion failed",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-checks/rust.txt",
+        "sha256": "7427fc0f00596d4e761dbdb7605a74922574a10e5c7f554fd27f681c06075525",
+        "bytes": 129365
+      }
+    },
+    "isolatedOriginal": {
+      "result": "1 passed",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/isolated-original.txt",
+        "sha256": "32bacdba38e77cabec056d6c54305ad3d337365d0d97071e38b9b91606991399",
+        "bytes": 623
+      }
+    },
+    "controlledOriginal": {
+      "result": "1 failed at session_requested, outer_timeout=true",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/controlled-original-red.txt",
+        "sha256": "5d23320d2afbfdcf0841f2b9cff7b82f94a2c067baa4cdc360c20a71dd57fb9c",
+        "bytes": 1069
+      },
+      "patch": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/controlled-red.patch",
+        "sha256": "a5ac71c2fea89b185f2502a7027fc6ae2226e6722e3df32e0cf8e54ababe1a5d",
+        "bytes": 1211
+      }
+    },
+    "initialRepair": {
+      "result": "9 passed",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/targeted-green.txt",
+        "sha256": "cee8e4d4005b17cd93039960abfef63a71e8681b8122b94fac00644c3c2dd71f",
+        "bytes": 1735
+      }
+    },
+    "finalRepair": {
+      "result": "9 passed / 0 failed / 0 ignored; 1175 filtered out",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/review-bounds-green.txt",
+        "sha256": "cf5c2f6a49cc7401510eb2bf88238ffcb967dd5c796cd8a029b787d103289522",
+        "bytes": 1734
+      }
+    },
+    "finalRequiredClippy": {
+      "result": "passed per author command receipt; raw output finished without diagnostic",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/final-clippy-required.txt",
+        "sha256": "7ea9ff7442106040f95bc079f85de985b086e1fed897d88dec87dd8425c35ee1",
+        "bytes": 72
+      }
+    },
+    "finalOwnedFormat": {
+      "result": "passed per author command receipt; empty raw stdout",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/final-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "additionalTestTargetClippy": {
+      "result": "failed; two unchanged test-only lints retained",
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/protocol-error-timing/clippy.txt",
+        "sha256": "fa114f2454e108f6cd3493046e1b15ff7fa05581fbb8697c2be308ada018c76d",
+        "bytes": 2488
+      }
+    }
+  },
+  "boundaries": [
+    "The original whole-suite failure did not preserve its per-fixture trace. Controlled guard reproduction proves the old measurement premise was unsound, not the unique historical scheduling cause of that failure.",
+    "Review did not repeat tests, whole-suite checks, builds or installation; final combined integration remains root-owned.",
+    "Explicit async waits in this revised helper are separately bounded; this is not a hard real-time bound on filesystem operations or the complete test module.",
+    "Controlled Python peers establish test behavior only; no real Agent, authentication, installed-product or user-value acceptance follows from these results."
+  ]
+}

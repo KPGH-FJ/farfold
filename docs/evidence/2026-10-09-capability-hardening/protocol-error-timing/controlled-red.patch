@@ -1,0 +1,22 @@
+diff --git a/src-tauri/src/acp_client/protocol_error_tests.rs b/src-tauri/src/acp_client/protocol_error_tests.rs
+index 94e82728..3f0790c0 100644
+--- a/src-tauri/src/acp_client/protocol_error_tests.rs
++++ b/src-tauri/src/acp_client/protocol_error_tests.rs
+@@ -164,12 +164,17 @@ async fn protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_er
+         assert_ne!(peer, PEER);
+         std::fs::write(f.cwd.join("peer.py"), peer).unwrap();
+         f.connect().await;
++        // Controlled counterexample: another configuration operation owns
++        // the same real per-Agent admission lock before open is dispatched.
++        let admission = crate::install_job::configuration_guard(&f.row.id).await;
+         let result = tokio::time::timeout(
+             Duration::from_millis(300),
+             f.manager
+                 .open_session(&f.row, &f.cwd, None, vec![], Arc::new(|_| {}), &f.store),
+         )
+         .await;
++        drop(admission);
++        eprintln!("controlled pre-dispatch admission hold: outer_timeout={}", result.is_err());
+         assert!(!matches!(result, Ok(Ok(_))));
+         if action.starts_with("open(") {
+             assert!(f.cwd.join("listed").exists());

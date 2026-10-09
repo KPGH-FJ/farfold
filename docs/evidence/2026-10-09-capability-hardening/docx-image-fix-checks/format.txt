@@ -1,0 +1,12 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/pptx-research/browser-probe.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/pptx-research/generate-writer.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/pptx-research/probe-node.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/pptx-research/serve-probe.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/pptx-research/writer/expectations.json
+[warn] Code style issues found in 5 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

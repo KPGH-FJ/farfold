@@ -1,0 +1,94 @@
+{
+  "checkedAt": "2026-10-09T19:44:21.906089+00:00",
+  "sourceBase": "af66f006a05b6b3670486f1f7fcc5cf2a19cd9a1",
+  "inputCount": 1059,
+  "sourceUnchanged": true,
+  "inputScope": {
+    "directories": [
+      "src",
+      "src-tauri/src",
+      "src-tauri/native",
+      "src-tauri/capabilities",
+      "src-tauri/resources",
+      "src-tauri/icons",
+      "scripts",
+      "assets",
+      "public",
+      "docs/evidence/2026-10-09-capability-hardening/docx-fixtures",
+      "docs/evidence/2026-10-09-capability-hardening/docx/public-samples"
+    ],
+    "top": [
+      "docs/evidence/2026-10-09-capability-hardening/docx/browser/authored-portrait.jpg",
+      ".prettierignore",
+      "package.json",
+      "pnpm-lock.yaml",
+      "index.html",
+      "tsconfig.json",
+      "tsconfig.app.json",
+      "tsconfig.node.json",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "src-tauri/Cargo.toml",
+      "src-tauri/Cargo.lock",
+      "src-tauri/build.rs",
+      "src-tauri/Info.plist",
+      "src-tauri/tauri.conf.json",
+      "src-tauri/tauri.windows.conf.json"
+    ],
+    "compatibility": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/*.docx and expectations.json",
+    "boundary": "Source/config/test fixtures; excludes dependencies and toolchain. Logs retain original bytes outside frozen fixture paths."
+  },
+  "changedInputs": [],
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 18.034,
+      "log": "format.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.8,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.622,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 37.051,
+      "log": "rust.txt"
+    }
+  ],
+  "passed": true
+}

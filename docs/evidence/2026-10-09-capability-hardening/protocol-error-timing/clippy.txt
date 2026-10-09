@@ -1,0 +1,54 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: the borrowed expression implements the required traits
+  --> src/acp_client/installed_initialize_probe.rs:78:21
+   |
+78 | /                     &json!({
+79 | |                         "protocolVersion":1,
+80 | |                         "clientInfo":{"name":"farfold","version":"0.1.7"},
+81 | |                         "clientCapabilities":{
+...  |
+90 | |                     }),
+   | |______________________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#needless_borrows_for_generic_args
+   = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+help: change this to
+   |
+78 ~                     json!({
+79 +                         "protocolVersion":1,
+80 +                         "clientInfo":{"name":"farfold","version":"0.1.7"},
+81 +                         "clientCapabilities":{
+82 +                             "fs":{"readTextFile":false,"writeTextFile":false},
+83 +                             "terminal":false,
+84 +                             "session":{"configOptions":{"boolean":{}}},
+85 +                             "elicitation":{"form":{}},"auth":{"terminal":true},
+86 +                             "_meta":{"terminal-auth":true,"jetbrains":{"air":{
+87 +                                 "version":1,"capabilities":["sessionFailure"]
+88 +                             }}}
+89 +                         }
+90 ~                     }),
+   |
+
+error: this `if` statement can be collapsed
+   --> src/pty.rs:729:9
+    |
+729 | /         if !reaped {
+730 | |             if let Some(pid) = session.pid {
+731 | |                 crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
+732 | |             }
+733 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+729 ~         if !reaped
+730 ~             && let Some(pid) = session.pid {
+731 |                 crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
+732 ~             }
+    |
+
+error: could not compile `farfold` (lib test) due to 2 previous errors
