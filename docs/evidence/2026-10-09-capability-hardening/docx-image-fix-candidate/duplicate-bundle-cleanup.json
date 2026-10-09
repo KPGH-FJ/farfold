@@ -1,0 +1,32 @@
+{
+  "checkedAtUtc": "2026-10-09T19:57:59.801441+00:00",
+  "sourceCommit": "6c36cae0fc1e88a26e88ba95a2fe758e8038656c",
+  "status": "completed",
+  "authorization": "Parent explicitly authorized removal of only the exact duplicate after independent installation/data and candidate/formal/archive matching.",
+  "deletedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "deletedDirectoryIdentity": {
+    "device": 16777234,
+    "inode": 70104389
+  },
+  "matchedBeforeRemoval": {
+    "candidateAndFormalFiveFiles": true,
+    "archiveCrcAndContents": true,
+    "installIndependentSha256": "0d78d202ef76b6909f4a2857c06762d49e0b886ae3123fa682fe8ec1c5458315"
+  },
+  "candidateBundleAbsent": true,
+  "formalAppRetained": "/Applications/Farfold.app",
+  "formalFilesUnchanged": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "057e20c40354e65c366b2035ac044cc6fa77374b20e59bce1e8d52e2727448c4",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "formalStrictCodesignAfterRemoval": "passed",
+  "archiveRetained": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-6c36cae0/Farfold-0.1.7-6c36cae0.zip",
+  "archiveSha256": "829b9db83c2ee1002d6c0b9ba5422d164c61658fa680f0764b68202290dc2f02",
+  "archiveBytes": 12791177,
+  "noAppLaunchedOrAgentInvoked": true,
+  "nativeReady": true,
+  "boundary": "Packaging and saved-data evidence only; installed image rendering remains for root native verification."
+}

@@ -1,18 +1,18 @@
 # 能力补强：2026-10-09
 
-目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表安装版或 29 家真实接入已通过。
+目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：第八片已安装，修复实机图片失败
+## 当前衔接：正式图片修复已复验，继续文件自动刷新
 
-最新衔接：第八片 `af66f006` 已提交并安装，[候选核验](eighth-candidate/candidate-independent.json)9/9、[安装独立复核](eighth-candidate/install-independent.json)通过，三份217,400条快照一致。首次安装preflight因退出记录字段名不同而拒绝，复制未开始；保留原记录并核实实际正常退出后对齐字段，门禁未改。唯一正式应用仍为 `/Applications/Farfold.app`，重复包已精确移除。[第一次DOCX实机](eighth-candidate/installed-docx-first.json)确认文字/列表/合并表格/区域/分段/错误提示/换版重读，但内嵌PNG/JPEG被正式图片策略拒绝，正在最小修复。原7项未发内容逐值保留且已正常退出。全部122项及29家八项标准保持，阶段交付不结束计划。
+最新衔接：图片修复 `6c36cae0` 已提交并安装，[候选独立核验](docx-image-fix-candidate/candidate-independent.json)9/9、[安装独立核验](docx-image-fix-candidate/install-independent.json)通过，三份217,400条数据一致。[正式图片复验](docx-image-fix-candidate/installed-docx-images.json)确认PNG/JPEG、EXIF6方向、重读及收起重开成功，合并单元格详情可打开返回。复用已有受控对话，没有新请求或权限变更；正常退出后原7项未发内容保持。唯一正式应用为 `/Applications/Farfold.app`，重复包已精确移除。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)原文保留。全部122项及29家八项标准保持；继续P20自动检查/刷新，PPTX方案验证仍有真实显示与生命周期缺口。
 
-2026-10-10 图片修复衔接：[同源WebKit反例与修复](docx-image-csp/receipt.json)及[独立复核](docx-image-csp/independent-review.json)已完成，生产配置仅在图片源增加本地blob，其他来源和指令保持。正式应用图片复验尚未进行，当前仍为af66f006且正常关闭。修复首轮[全仓检查](docx-image-fix-checks/receipt.json)1,059输入未变，前端280文件/3,123项及类型/打包/Rust静态检查通过；Rust1,177通过、1项协议分类测试失败、5项忽略，另有并行PPTX研究文件排版待整理。其后[真实配置锁反例与夹具修正](protocol-error-timing/receipt.json)保留原错误分类断言，并使派发前等待与响应超时分别有界；原失败具体调度未捕获。[最终整合](docx-image-fix-checks-final/final-verification.json)已七项通过，前端3,123项、Rust1,179项/5项忽略，1,059输入匹配。只有Rust测试文件在首轮后变化，因此前端/类型/打包复用字节相同输入的成功记录，最终重跑全仓格式及Rust检查。修复安装的私有退出记录、元数据恢复副本和217,400条新基线已完成，准备构建新候选。
+2026-10-10 图片修复衔接：[同源WebKit反例与修复](docx-image-csp/receipt.json)及[独立复核](docx-image-csp/independent-review.json)已完成，生产配置仅在图片源增加本地blob，其他来源和指令保持。该轮修复前正式应用为af66f006，图片失败保留；其后6c36安装及分项成功见首段。修复首轮[全仓检查](docx-image-fix-checks/receipt.json)1,059输入未变，前端280文件/3,123项及类型/打包/Rust静态检查通过；Rust1,177通过、1项协议分类测试失败、5项忽略，当时另有并行PPTX研究文件排版问题。其后[真实配置锁反例与夹具修正](protocol-error-timing/receipt.json)保留原错误分类断言，并使派发前等待与响应超时分别有界；原失败具体调度未捕获。[最终整合](docx-image-fix-checks-final/final-verification.json)已七项通过，前端3,123项、Rust1,179项/5项忽略，1,059输入匹配。只有Rust测试文件在首轮后变化，因此前端/类型/打包复用字节相同输入的成功记录，最终重跑全仓格式及Rust检查。修复安装的私有退出记录、元数据恢复副本和217,400条新基线已完成；之后候选、安装及实机结果见首段。
 
 第七片完成目录读取修复及[独立复核](directory-search-independent.json)、[PDF/图片版本意见](visual-feedback/receipt.json)和受限XLSX只读预览。PDF/图片关联179项、开发与打包Chromium各20项、坏PDF/取消5项通过，[独立复核](visual-feedback/independent-review.json)保留范围；修正PDF解析器动态加载竞态，同文件从15秒超时到成功绘制。XLSX[底层48项](xlsx-core.json)、界面关联63项、[真实Chromium38项](xlsx/independent-review.json)及[独立源码复核](xlsx/source-independent-review.json)通过。另修复第六片实机发现的查找说明样式、关闭焦点和导出隐私文案，已在第七片正式WebKit分项复验。
 
 2026-10-10 接续：第八片首轮七项检查输入未变，格式、类型、打包及两项Rust静态检查通过；前端两项失败、Rust一项失败已保留在[eighth-checks](eighth-checks/receipt.json)。恢复时未知询问被吞与停止未知态负向答复被误挡分别修复；Rust旧夹具错误响应假设已修，生产后端未改。三项修正均已定向复验及独立复核；第二轮前端279文件/3,121项、Rust1,178项/5项忽略通过，1,058个输入稳定。第二轮仅格式检查发现首轮新生成回执排版不合规；两轮原始JSON字节另存receipt.raw.txt，规范后的JSON语义保持，单独复验全仓格式。最终证据汇总见[整合回执](eighth-checks-final/final-verification.json)。DOCX的[实现](docx/implementation.json)及[独立复核](docx-independent-review/receipt.json)、外部确认的[实现与两轮独立复核](nonform-interaction.json)均有分项成功证据，安装后的成功与图片失败另见首节，不把分项工程成功当实机全通过。
 
-第八片DOCX分项记录：[后端独立复核](docx-backend-independent.json)核对版本化捕获、ZIP边界与原XLSX行为；[界面实现记录](docx-ui-implementation.json)保留入口失败/修复、负缩进裁切及重复图片资源反例。普通文档来自[独立写出器](docx-compatibility/receipt.json)，另用公开许可样本检查兼容性；浏览器成功不等于正式应用验证。外部确认已补会话打开期间、取消、迟到完成及未知请求归属；本片已提交安装并完成第一轮分项实测；当前正式应用正常关闭，准备图片修复及复验。
+第八片DOCX分项记录：[后端独立复核](docx-backend-independent.json)核对版本化捕获、ZIP边界与原XLSX行为；[界面实现记录](docx-ui-implementation.json)保留入口失败/修复、负缩进裁切及重复图片资源反例。普通文档来自[独立写出器](docx-compatibility/receipt.json)，另用公开许可样本检查兼容性；浏览器成功不等于正式应用验证。外部确认已补会话打开期间、取消、迟到完成及未知请求归属；本片已提交安装并完成第一轮分项实测；当时正式应用正常关闭；随后图片修复及分项复验见首段。
 
 [最终工程整合](seventh-checks-final/final-verification.json)覆盖962个最终输入，七项检查通过：前端267文件/2,983项，Rust1,153项/5项忽略。首轮管道关闭测试失败、3处Rust导入排序和4份冻结JSON排版问题保留原始记录；只精确排除原始JSON，不改写证据。原失败实际干扰进程未捕获，受控fork反例说明即时管道断言需要进程隔离，原六处故障注入及即时断言未削弱。独立复核再发现测试输出可能无限等待EOF，已改为匿名文件和有界读取，新增反例及7项定向通过，见[修复](stdio-output-capture.json)和[保留旧问题并追加关闭结果的复核](stdio-preparation-independent.json)。最后仅该Rust测试文件变化，因此重跑全部Rust检查和全仓格式，前端/类型/打包引用字节相同输入的完整检查，不混称同一轮执行。
 
@@ -22,13 +22,13 @@
 
 [导出](conversation-export-review.json)保留已加载正文空白、仅媒体消息的附件来源、真实工具状态和流式片段标记，完整说明排除范围及本地路径风险；失败或取消不保留旧成功提示。元数据采用文本转义，实际渲染发现的首字符标题、列表、分隔线与代码围栏反例已补修；正文仍保留Markdown。最终关联72项、类型和格式检查通过；[独立实际渲染](conversation-export-independent.json)12项通过，无未关闭阻断。附件实体打包和完整迁移归档仍未完成。
 
-以上检索/导出为第六片历史证据，第七片当前进展见本页开头；定向测试不替代正式WebKit或真实Agent验收。
+以上检索/导出为第六片历史证据，最新进展见本页开头；定向测试不替代正式WebKit或真实Agent验收。
 
 第六片[首次全仓](sixth-checks/receipt.json)932个输入未变，6项通过；前端2,886项通过、1项旧SSR测试失败。旧夹具强制所有React useState为true，但展开状态已由独立内存模型管理；修正只让该测试指定真实模型的初始状态，原命令/目录断言保留且增加展开状态断言，生产源码未改。关联6文件46项通过，原始失败及修复记录见检索回执；其后最终全仓复验已通过，见下段。
 
 第六片[最终工程检查](sixth-checks-final/final-verification.json)已通过：932输入未变，前端260文件/2,887项、Rust1,134项/5项忽略，七项检查全部具备成功结果。末轮格式失败仅首轮生成回执的排版，修正后单独复验全仓格式；原始失败记录不覆盖。随后已依赖闭合提交413226dc并完成正式安装及分项实测，见下段。
 
-第六片已提交 `413226dc` 并更新唯一正式应用；[候选独立核验](sixth-candidate/candidate-independent.json)9项通过，[替换前后](sixth-candidate/installed-data-retention.json)217,400数据条目一致；后续已启动并完成分项实测，再正常退出。一次过早调用安装检查在读取尚未完成的快照摘要时失败，复制未开始、旧应用未变；原失败回执保留，待快照进程成功结束且前后相等后才重新安装。安装独立复核与实机查找/导出已完成；当前推进目录读取、PDF/图片意见和Office预览，阶段交付不结束计划。
+第六片已提交 `413226dc` 并更新唯一正式应用；[候选独立核验](sixth-candidate/candidate-independent.json)9项通过，[替换前后](sixth-candidate/installed-data-retention.json)217,400数据条目一致；后续已启动并完成分项实测，再正常退出。一次过早调用安装检查在读取尚未完成的快照摘要时失败，复制未开始、旧应用未变；原失败回执保留，待快照进程成功结束且前后相等后才重新安装。安装独立复核与实机查找/导出已完成；该片之后接续目录读取、PDF/图片意见和Office预览；最新进展见首段，阶段交付不结束计划。
 
 ## 第一批：停止竞态与保存保护
 

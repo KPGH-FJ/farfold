@@ -1,0 +1,230 @@
+{
+  "task": "Independent installed candidate and data-retention verification",
+  "checkedAtUtc": "2026-10-09T19:57:20.049426+00:00",
+  "status": "passed",
+  "sourceCommit": "6c36cae0fc1e88a26e88ba95a2fe758e8038656c",
+  "phase": "installedVerifiedNotLaunched",
+  "method": {
+    "newBuildOrTests": false,
+    "appLaunchedOrAgentInvoked": false,
+    "originalDatabaseOpenedWithSQLite": false,
+    "databaseReads": "Only immutable readonly private backup copies; integrity and exact pre-existing unsent entry comparison. No content or keys emitted."
+  },
+  "publicReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/installed-data-retention.json",
+    "sha256": "34c64263f4da283ff1f29560d78c7372cf9c4f927a01fb854a07f6e054699a9f",
+    "bytes": 3144
+  },
+  "candidateIndependent": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/candidate-independent.json",
+    "sha256": "9b8553c193476f2c0511b24e0c4113c8c3b8bfe2f21e237a957ae9487d051209",
+    "bytes": 3624
+  },
+  "candidateMetadata": {
+    "candidateJson": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/candidate.json",
+      "sha256": "3cdef1773cdbeb04e303f8e45af0429c2fb95904f6c944a39ed1386d7fc47240",
+      "bytes": 4828
+    },
+    "candidateInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/candidate-inputs.json",
+      "sha256": "95efd0fa45155223a0de4abd8741f100fd2b810f3d3f96005135361262efef5e",
+      "bytes": 119690
+    },
+    "current1059InputsMatch": true
+  },
+  "installation": {
+    "privateOperation": {
+      "path": "output/2026-10-10-docx-image-fix-install/install-operation.json",
+      "sha256": "6263b2ba312d1e5ca4c1b0d147326e620bcdbd38b1f47234d7fd8ff5b73a45a2",
+      "bytes": 2871
+    },
+    "installer": {
+      "path": "output/2026-10-10-docx-image-fix-install/install_verified_candidate.py",
+      "sha256": "ca06364fad64001bf61e61ed504cf36c3f47b0c516d3bd4f9df071f7203a2924",
+      "bytes": 14236
+    },
+    "onlyFormalAppReplaced": true,
+    "formalAppProcessesNow": 0,
+    "candidateAppProcessesNow": 0,
+    "formalAndCandidateExactlyMatch": true,
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "057e20c40354e65c366b2035ac044cc6fa77374b20e59bce1e8d52e2727448c4",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "passed",
+    "signature": "ad-hoc; not notarized",
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-10-6c36cae0/Farfold-0.1.7-6c36cae0.zip",
+      "sha256": "829b9db83c2ee1002d6c0b9ba5422d164c61658fa680f0764b68202290dc2f02",
+      "bytes": 12791177
+    },
+    "archiveContentsAndCrcMatch": true
+  },
+  "normalExit": {
+    "record": {
+      "path": "output/2026-10-10-docx-image-fix-install/normal-exit-observation.json",
+      "sha256": "bb196b66e68a3c394402054ef51c83018e7c82467bed28baa0a8fcd9819d3936",
+      "bytes": 439
+    },
+    "priorInstalledUiEvidence": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/installed-docx-first.json",
+      "sha256": "5ac85a4e6e7f5a11cdce9a387d7a81e8e8fddba9a694f15d203237b36711e39a",
+      "bytes": 4675
+    },
+    "normalQuitObservedByRoot": true,
+    "forcedQuit": false,
+    "restartedSinceObservedExit": false,
+    "directReviewerObservation": "No formal or bundled helper process now; prior normal UI quit is supported by root receipt, not newly observed by reviewer."
+  },
+  "dataRetention": {
+    "allThreeCompleteManifestsEqual": true,
+    "snapshots": [
+      {
+        "phase": "before",
+        "sha256": "0bf3f0b1468a275f810e590f767c20106ecb1bca2769052e6a86c111d8f18310",
+        "entries": 217400,
+        "bytes": 59360437,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      },
+      {
+        "phase": "preinstall",
+        "sha256": "0bf3f0b1468a275f810e590f767c20106ecb1bca2769052e6a86c111d8f18310",
+        "entries": 217400,
+        "bytes": 59360437,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      },
+      {
+        "phase": "after",
+        "sha256": "0bf3f0b1468a275f810e590f767c20106ecb1bca2769052e6a86c111d8f18310",
+        "entries": 217400,
+        "bytes": 59360437,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      }
+    ],
+    "publicPrivateEvidenceHashesAllMatch": true,
+    "sourceMainWalShmMatchCaptureInEachManifest": true,
+    "scope": "Complete saved appData/WebKit/cache manifests; no user paths or bodies reproduced here."
+  },
+  "recoveryBackup": {
+    "receipt": {
+      "path": "output/2026-10-10-docx-image-fix-install/metadata-backup-receipt.json",
+      "sha256": "380584038d9a2422855f9e336087fe69dd212328d824d5dcb08dc605a75c6cbb",
+      "bytes": 636
+    },
+    "script": {
+      "path": "output/2026-10-10-docx-image-fix-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    "methodReviewed": "Original regular main/WAL/SHM captured and signature/hash checked; SQLite backup only opens the second private working copy. The original and first capture are not passed to SQLite.",
+    "firstCaptureHashesMatchReceipt": true,
+    "backup": {
+      "sha256": "865b16eb0cc4d94809e773507ffb9d0e0ab2730726073a46c4c051d8fd37c1c4",
+      "bytes": 327680,
+      "mode": "0o600"
+    },
+    "independentCopyIntegrity": "ok",
+    "copiesAndExistingSideFilesUnchangedByReview": true,
+    "sourceAndCaptureUnchangedClaim": "Root actual capture/backup receipt, plus source file hashes cross-checked against all three independent full manifests; reviewer did not reread source DB."
+  },
+  "originalUnsentBaseline": {
+    "referenceBackupSha256": "8ae211ce77702174ca64eb95742268453d307fa906a174a9b03a0e5f27a41357",
+    "currentBackupSha256": "865b16eb0cc4d94809e773507ffb9d0e0ab2730726073a46c4c051d8fd37c1c4",
+    "groups": {
+      "composers": {
+        "originalEntries": 3,
+        "currentBaselineEntries": 3,
+        "originalEntriesUnchanged": 3
+      },
+      "feedback": {
+        "originalEntries": 1,
+        "currentBaselineEntries": 1,
+        "originalEntriesUnchanged": 1
+      },
+      "queues": {
+        "originalEntries": 3,
+        "currentBaselineEntries": 3,
+        "originalEntriesUnchanged": 3
+      }
+    },
+    "originalEntriesTotal": 7,
+    "allOriginalEntryValuesEqual": true,
+    "installationRetentionBasis": "Current backup main/WAL/SHM capture equals every saved installation manifest; identical installation manifests preserve that baseline without opening live DB."
+  },
+  "boundaries": [
+    "Historical install-operation dataRetentionComparisonPending=true describes the moment installation finished. Later completed manifests and this receipt establish data comparison; old operation bytes are preserved.",
+    "No installed image rendering or user interaction verified by this receipt; root must perform native DOCX image/EXIF checks.",
+    "Not all Office/P16/P21, real Agent standards, TCC permission or public distribution acceptance.",
+    "Duplicate candidate bundle still exists at this receipt checkpoint; exact authorized cleanup will be a separate receipt."
+  ]
+}
