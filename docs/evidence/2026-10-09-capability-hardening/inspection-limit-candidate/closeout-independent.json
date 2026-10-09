@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-10-09T22:05:07.939576+00:00",
+  "status": "completed_no_blocker",
+  "sourceCommit": "e8d76d4cfb15b043ac82073458cda7d896952842",
+  "reviewer": "verification; independent read-only disk/document check, not a second native observer",
+  "candidateAndInstall": {
+    "candidateChecks": {
+      "passed": 9,
+      "total": 9,
+      "basis": "Retained result flags and complete referenced receipt hashes checked; no verifier or build rerun."
+    },
+    "installationChecks": {
+      "passed": 10,
+      "total": 10,
+      "basis": "Retained flags/hash chain plus formal/archive/frozen source/manifest and copied-data checks below."
+    },
+    "frozenInputs": {
+      "count": 1105,
+      "allMatchCommittedBlobBytes": true,
+      "workingTreeBoundary": "Current P21 working changes excluded; installed baseline remains exact e8d76d4c."
+    },
+    "formalFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "8c953cec7aee592e5b448ab2974aab20f076e29ef85cc69c914e31f12e905b84",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "archive": {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-e8d76d4c/Farfold-0.1.7-e8d76d4c.zip",
+      "sha256": "af8758ea17a3658c8056b0278189c6d2518b24c70035420b5a1c88b5dd882618",
+      "bytes": 12848543
+    },
+    "duplicateBundle": {
+      "exactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+      "absentNow": true,
+      "formalAndArchiveRetained": true
+    },
+    "signatureBoundary": "Existing strict ad-hoc signature record remains tied to same five bundle files. No new codesign run/public signing/notarization claim."
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "phase": "before",
+        "entries": 217400,
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61"
+      },
+      {
+        "phase": "preinstall",
+        "entries": 217400,
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61"
+      },
+      {
+        "phase": "after",
+        "entries": 217400,
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61"
+      }
+    ],
+    "postUiReceipt": {
+      "path": "output/2026-10-10-inspection-limit-install/post-ui-draft-retention.json",
+      "sha256": "a9e1b5ea20d0b0cf38053acd36f974de5a3b19f873a3571d58f216d5f5e1772d"
+    },
+    "originalUnsentGroups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "allSevenOriginalValuesEqual": true,
+    "capturedMainWalShmHashesMatch": true,
+    "beforeBackupAndIsolatedPostCopyIntegrity": "ok",
+    "protectedCopiesUnchangedAfterRead": true,
+    "privacy": "Only retained metadata backup and isolated copied capture opened in SQLite. No original live DB opened; no user keys/text emitted. Root source-protection claim checked against retained script and capture hashes, not a new live-tree recapture."
+  },
+  "nativeClaimScope": {
+    "observer": "root only via CUA; no standalone native screenshots saved",
+    "thisReviewerObservedNativeUi": false,
+    "retainedSuccesses": [
+      "257 MiB initial failure explains256 MiB limit and keeps unverified-location fallback; no full-copy action/stale content.",
+      "Invalid UTF-8 tail stays separately classified.",
+      "16 MiB first block reads with existing bounds.",
+      "Normal Cmd-Q and original7 unsent values retained."
+    ],
+    "historicalFailurePreserved": true,
+    "earlierCancellationResult": "completed-before-cancellation-confirmation; not accepted as native cancellation success",
+    "noNewAgentOrPermissionClaim": "Root receipt records zero new requests/tools and no permission/model/service change in repair retest; not independently witnessed by this reviewer.",
+    "remaining": "Native confirmed cancellation, unknown/blocked-IO/exit behavior, Windows, full P17/P21/P22 and29x8 are not closed."
+  },
+  "documents": {
+    "currentBaselineConsistent": true,
+    "originalIds": {
+      "expected": 122,
+      "found": 122,
+      "unique": 122,
+      "sameSetAsOriginalAudit": true,
+      "allSpecificConditionsUnchangedFromInstalledCommit": true
+    },
+    "agentStandards": {
+      "agents": 29,
+      "each": 8,
+      "cells": 232,
+      "notAssertedComplete": true
+    },
+    "hashes": {
+      "docs/status.md": "12aee385af89c37d69dafc71317210fac4ff74c3868010854ee64d25db846dca",
+      "plans/agent-access.md": "8373c655f0115c378e7f32b00e7119d7098794464e51d8aa05764dc5096aa4cd",
+      "docs/evidence/2026-10-09-capability-hardening/README.md": "2bc122c2da44f47d9453f4f20ca43be7b2bdea3cf159d0ec57f312fabf97c44d"
+    },
+    "historicalTense": "Earlier candidate/install pending fields remain historical receipts; current docs and installed repair receipt supersede them without rewriting raw evidence."
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate.json",
+      "sha256": "f6175a9416fd7ee92e606c3a0c822aa1a5acda8161a4daa6fba495d009ec9cde"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate-inputs.json",
+      "sha256": "66d0d130cbeb70f2bcf444423b968fea0775a24e99cc7d6cd05876a33ee16581"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate-independent.json",
+      "sha256": "afb858632ea3911fb47525ab90985a7afef0934a78373c7b15b319fef88f6d86"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/install-independent.json",
+      "sha256": "95e9ec1671e42afed16e58efca29339edaa9408aa2bfd1bb25742472dae37296"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/installed-data-retention.json",
+      "sha256": "e99632bec75b625451c02ee262b16c0c30f57919b479b839685541fb2312364f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "8004aed3e56c164639fc949be5698bc7f4d5d3ae0d9bbb7c762ab99275e3cacf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/installed-inspection-limit.json",
+      "sha256": "aef3eaca0971ff589e35b1a9fc467f59a90afe3d68e7dc2c96e19fa402ba4c11"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-candidate/installed-large-file-initial.json",
+      "sha256": "ce9058865d321816d1cdc7f7eb11b2974551a23f16b1852a303abea90f8dd36f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/final-verification.json",
+      "sha256": "0e134dd988c41a2bbda951edf3ed88b70cea153b20a76bf24fbfdd2d0a0faa19"
+    }
+  ],
+  "operations": {
+    "sourceEdited": false,
+    "testsOrBuildRun": false,
+    "appLaunchedOrStopped": false,
+    "agentInvoked": false,
+    "filesWritten": ["inspection-limit-candidate/closeout-independent.json"]
+  },
+  "next": "Prepare independent P21 actual-component/browser cases from existing18-case matrix after owner API/source stabilization; no new native app or Agent action."
+}

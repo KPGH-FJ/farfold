@@ -1,0 +1,132 @@
+{
+  "checkedAtUtc": "2026-10-09T21:56:47.274982+00:00",
+  "sourceCommit": "e8d76d4cfb15b043ac82073458cda7d896952842",
+  "result": "passed",
+  "reviewer": "architecture",
+  "phase": "installed_verified_not_launched",
+  "checks": {
+    "candidateAndInstallReceiptChain": true,
+    "formalFiveFilesEqualCandidateAndArchive": true,
+    "formalPlistArm64AndStrictAdhocSignature": true,
+    "zipCrcAndFileModes": true,
+    "installerOnlyExpectedDirectoryChanges": true,
+    "allThreePrivateManifestCountsAndHashes": true,
+    "privateEvidenceHashesMatchPublicRecord": true,
+    "metadataCaptureHashesAndReadOnlyBackupIntegrity": true,
+    "formalProcessesZero": true,
+    "verificationInputsStable": true
+  },
+  "evidence": {
+    "candidate.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate.json",
+      "sha256": "f6175a9416fd7ee92e606c3a0c822aa1a5acda8161a4daa6fba495d009ec9cde"
+    },
+    "candidate-inputs.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate-inputs.json",
+      "sha256": "66d0d130cbeb70f2bcf444423b968fea0775a24e99cc7d6cd05876a33ee16581"
+    },
+    "candidate-independent.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/candidate-independent.json",
+      "sha256": "afb858632ea3911fb47525ab90985a7afef0934a78373c7b15b319fef88f6d86"
+    },
+    "installed-data-retention.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/installed-data-retention.json",
+      "sha256": "e99632bec75b625451c02ee262b16c0c30f57919b479b839685541fb2312364f"
+    }
+  },
+  "privateOperation": {
+    "path": "output/2026-10-10-inspection-limit-install/install-operation.json",
+    "sha256": "40eec0ffe6f3b37b5f76e6a68b4c7ac7ad554a337e70e2136cac3a3db218e6cc"
+  },
+  "privateInstaller": {
+    "path": "output/2026-10-10-inspection-limit-install/install_verified_candidate.py",
+    "sha256": "a8f9506adda9d600a76347b75d2fc488151f29d40bf4896ff57e14a5570ed087"
+  },
+  "normalExitBoundary": "Normal Cmd-Q is a root observation recorded before installation, not independently witnessed by this reviewer or a new user saved-work confirmation. Current process absence independently checked.",
+  "operationBoundary": "Earlier install-operation dataRetentionComparisonPending=true retained; subsequent public receipt and this full retained-manifest recomputation establish comparison completion.",
+  "installedBundle": {
+    "path": "/Applications/Farfold.app",
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "8c953cec7aee592e5b448ab2974aab20f076e29ef85cc69c914e31f12e905b84",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictSignature": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+    "signatureDetails": "Executable=/Applications/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=232947 flags=0x10002(adhoc,runtime) hashes=7273+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=fc5c240d022712b2e23526a2011c31f098844a3e\nCandidateCDHashFull sha256=fc5c240d022712b2e23526a2011c31f098844a3e5f6cb6ffa8db74aafc697796\nHash choices=sha256\nCMSDigest=fc5c240d022712b2e23526a2011c31f098844a3e5f6cb6ffa8db74aafc697796\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=23429120\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=fc5c240d022712b2e23526a2011c31f098844a3e\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+    "signatureBoundary": "Ad-hoc internal package, public signing/notarization not claimed."
+  },
+  "archive": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-e8d76d4c/Farfold-0.1.7-e8d76d4c.zip",
+    "sha256": "af8758ea17a3658c8056b0278189c6d2518b24c70035420b5a1c88b5dd882618",
+    "bytes": 12848543,
+    "exactContentsAndModes": true
+  },
+  "dataRetention": {
+    "entriesPerSnapshot": 217400,
+    "allThreeEqual": true,
+    "manifests": [
+      {
+        "phase": "before",
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61",
+        "entries": 217400,
+        "bytes": 59360435,
+        "privateMode": "0600",
+        "stableWhileReading": true
+      },
+      {
+        "phase": "preinstall",
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61",
+        "entries": 217400,
+        "bytes": 59360435,
+        "privateMode": "0600",
+        "stableWhileReading": true
+      },
+      {
+        "phase": "after",
+        "sha256": "24553798216877cc5c1721fc0881b1a5e492a16a93b6755616421edbf8e92a61",
+        "entries": 217400,
+        "bytes": 59360435,
+        "privateMode": "0600",
+        "stableWhileReading": true
+      }
+    ],
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": { "directory": 8, "file": 2, "special": 0, "symlink": 0 },
+      "webkit": { "directory": 152, "file": 100, "special": 0, "symlink": 0 }
+    },
+    "boundary": "Read and count every retained before/preinstall/after record; no recapture of live data tree and no private entry paths or content published."
+  },
+  "metadataRecovery": {
+    "receipt": {
+      "path": "output/2026-10-10-inspection-limit-install/metadata-backup-receipt.json",
+      "sha256": "ac7eb8a2a1c17ed9d34169df189559669ebec7423105a2c87284304f22bcf856"
+    },
+    "backupSha256": "243b2c5bfd58f98769ac30c3051c3e6a008bc144d4d97cdd0c846a555fdbf877",
+    "capturedThreeFileHashesMatch": true,
+    "readOnlyImmutableIntegrity": "ok",
+    "backupUnchangedAfterCheck": true
+  },
+  "formalProcessCount": 0,
+  "installed": true,
+  "launchedByReviewer": false,
+  "realAgentInvoked": false,
+  "sourceModified": false,
+  "duplicateBundleDeleted": false,
+  "remaining": [
+    "Root may remove only the verified duplicate bundle",
+    "Installed oversized initial notice and neighboring error/fallback retest",
+    "Other capability and platform evidence remain separate"
+  ],
+  "claim": "Physical installation and retained data verification; no installed interaction or real-Agent acceptance."
+}

@@ -1,0 +1,10 @@
+{
+  "checkedAtUtc": "2026-10-09T21:57:09.858836+00:00",
+  "sourceCommit": "e8d76d4cfb15b043ac82073458cda7d896952842",
+  "removedExactDuplicate": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalAppPreserved": true,
+  "archivePreserved": true,
+  "allFiveHashesRechecked": true,
+  "installIndependentSha256": "95e9ec1671e42afed16e58efca29339edaa9408aa2bfd1bb25742472dae37296",
+  "archiveSha256": "af8758ea17a3658c8056b0278189c6d2518b24c70035420b5a1c88b5dd882618"
+}

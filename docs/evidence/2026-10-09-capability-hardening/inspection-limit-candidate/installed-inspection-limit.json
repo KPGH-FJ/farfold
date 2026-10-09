@@ -1,0 +1,91 @@
+{
+  "recordedAtUtc": "2026-10-09T22:02:21.294952+00:00",
+  "sourceCommit": "e8d76d4cfb15b043ac82073458cda7d896952842",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "evidenceKind": "Root-observed installed native UI via CUA accessibility and screenshots; disk receipts for data retention",
+  "observer": "root",
+  "standaloneNativeScreenshotSaved": false,
+  "candidateIndependentSha256": "afb858632ea3911fb47525ab90985a7afef0934a78373c7b15b319fef88f6d86",
+  "installIndependentSha256": "95e9ec1671e42afed16e58efca29339edaa9408aa2bfd1bb25742472dae37296",
+  "precedingFailureReceiptSha256": "ce9058865d321816d1cdc7f7eb11b2974551a23f16b1852a303abea90f8dd36f",
+  "interaction": {
+    "existingConversationReused": true,
+    "conversationCountAfterLoad": 115,
+    "newAgentRequests": 0,
+    "newToolCalls": 0,
+    "permissionGranted": false,
+    "modelOrServiceChanged": false,
+    "coldPermissionNoticeLeftUnconfirmed": true
+  },
+  "checks": [
+    {
+      "case": "257 MiB initial inspection failure",
+      "result": "passed",
+      "filename": "oversize-257.txt",
+      "observedNotice": "文件超过 256 MiB 的分段查看限制。",
+      "fallbackActions": ["打开所选位置", "显示所选位置", "重新打开"],
+      "scopeNotice": "尚未核实文件内容；以下操作只打开或显示当前所选位置。",
+      "staleContentVisible": false,
+      "completeCopyActionVisible": false,
+      "externalActionInvokedThisIteration": false
+    },
+    {
+      "case": "Invalid UTF-8 tail remains separately classified",
+      "result": "passed",
+      "filename": "invalid-tail.txt",
+      "observedNotice": "完整文件不是受支持的 UTF-8 文字，不能按片段显示。",
+      "misclassifiedAsSizeLimit": false
+    },
+    {
+      "case": "16 MiB ordinary block reading",
+      "result": "passed",
+      "filename": "large-16.md",
+      "blockIndex": 1,
+      "blockCount": 129,
+      "startLine": 1,
+      "endLine": 1660,
+      "byteStart": 0,
+      "byteEndExclusive": 131071,
+      "limitsVisible": ["256 MiB", "128 KiB", "2000 lines"],
+      "continuationVisible": true,
+      "firstPreviousDisabled": true
+    },
+    {
+      "case": "Normal application exit and existing unsent data retention",
+      "result": "passed",
+      "normalCmdQ": true,
+      "forcedQuit": false,
+      "formalAppRunningAfter": false,
+      "groups": {
+        "composers": {
+          "beforeEntries": 3,
+          "afterEntries": 3,
+          "existingEntriesUnchanged": 3
+        },
+        "feedback": {
+          "beforeEntries": 1,
+          "afterEntries": 1,
+          "existingEntriesUnchanged": 1
+        },
+        "queues": {
+          "beforeEntries": 3,
+          "afterEntries": 3,
+          "existingEntriesUnchanged": 3
+        }
+      },
+      "differences": [],
+      "privateReceiptPath": "output/2026-10-10-inspection-limit-install/post-ui-draft-retention.json",
+      "privateReceiptSha256": "a9e1b5ea20d0b0cf38053acd36f974de5a3b19f873a3571d58f216d5f5e1772d"
+    }
+  ],
+  "limitations": [
+    "Only the repaired initial size notice and neighboring paths were retested in this installation.",
+    "Earlier complete-copy, Finder reveal and cancellation-attempt facts remain scoped to their original receipt.",
+    "The earlier cancellation attempt finished copying; native confirmed cancellation and unknown-result exit protections remain unproven.",
+    "No new real-Agent rework journey, Windows validation, or 29 by 8 acceptance was performed.",
+    "Cold restored permissions remain unconfirmed; no settings or user files were changed."
+  ],
+  "next": "P21 exact text-selection feedback for supported plain text, Markdown source and current large-file block; broader format anchors and P22 remain open."
+}
