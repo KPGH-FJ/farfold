@@ -1,5 +1,7 @@
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
+import { readElicitation } from "./elicitation";
+import { INQUIRY } from "./elicitation_strings";
 import {
   applyCompaction,
   loseCompactionObservation,
@@ -881,22 +883,26 @@ export function applyElicitation(
     s.pendingElicitations.some((p) => p.requestId === requestId)
   )
     return;
-  s.pendingElicitations = [
-    ...s.pendingElicitations,
-    {
-      requestId,
-      status: "pending",
-      error: null,
-      message: String(event.message ?? ""),
-      schema:
-        event.schema && typeof event.schema === "object"
-          ? (event.schema as Record<string, unknown>)
-          : null,
-      toolCallId:
-        typeof event.toolCallId === "string" ? event.toolCallId : null,
-      values: {},
-    },
-  ];
+  const request = readElicitation(event);
+  if (request) s.pendingElicitations = [...s.pendingElicitations, request];
+}
+
+export function completeElicitation(
+  s: ThreadState,
+  event: Record<string, unknown>,
+): void {
+  const id = String(event.requestId ?? "");
+  if (
+    !s.pendingElicitations.some((p) => p.requestId === id && p.mode === "url")
+  )
+    return;
+  removePendingRequest(s, id);
+  s.items.push({
+    kind: "notice",
+    id: nextItemId(),
+    message: INQUIRY.complete,
+    time: Date.now(),
+  });
 }
 
 export function clearPendingRequests(s: ThreadState): void {

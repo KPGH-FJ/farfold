@@ -1,0 +1,12 @@
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/mod.rs:19:
+ pub(crate) mod auth_route;
+ pub(crate) mod browser_capability;
+ mod dependency_environment;
+-mod elicitation;
+ pub(crate) mod directory_presentation;
++mod elicitation;
+ mod failures;
+ pub(crate) mod first_release;
+ pub(crate) mod handshake;
+
+exit 1

@@ -166,6 +166,12 @@ export interface PendingRequest {
 }
 
 export interface PendingElicitation extends PendingRequest {
+  mode?: "form" | "url";
+  url?: string;
+  owner?: Record<string, unknown>;
+  requestSnapshot?: unknown;
+  opening?: boolean;
+  handoff?: "waiting";
   message: string;
   schema: Record<string, unknown> | null;
   toolCallId: string | null;

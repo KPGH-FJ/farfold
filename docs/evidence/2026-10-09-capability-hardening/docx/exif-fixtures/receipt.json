@@ -1,0 +1,15 @@
+{
+  "file": "asymmetric-exif6.docx",
+  "sha256": "619b244d8a97b54a6ecb2c7aa6e745aa132f8f7d9e2e55bd47dae04c9513201b",
+  "bytes": 2919,
+  "publicAuthored": true,
+  "originalJpegSof": [80, 120],
+  "exifOrientation": 6,
+  "expectedDecodedDimensions": [120, 80],
+  "expectedJpegQuadrants": ["blue", "red", "yellow", "green"],
+  "quadrantOrder": "top-left, top-right, bottom-left, bottom-right",
+  "drawingFrameEmu": [1371600, 914400],
+  "source": "Existing public authored 05 DOCX plus Pillow-authored four-color JPEG. Original fixture preserved.",
+  "executed": false,
+  "qualification": "Prepared complete ZIP/CRC-valid DOCX; real native file delivery not executed by this subagent."
+}

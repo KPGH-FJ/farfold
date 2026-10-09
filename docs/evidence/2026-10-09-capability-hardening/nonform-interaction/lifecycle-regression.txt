@@ -1,0 +1,103 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 80 tests
+test acp_client::lifecycle_tests::abandoned_mode_change_keeps_ownership_but_does_not_block_stop ... ok
+test acp_client::lifecycle_tests::abandoned_restore_blocks_other_service_until_actual_load_finishes ... ok
+test acp_client::lifecycle_tests::account_logout_tests::a_custom_program_name_does_not_authorize_an_official_supplement ... ok
+test acp_client::lifecycle_tests::account_logout_tests::cancelled_fresh_check_never_starts_a_late_logout ... ok
+test acp_client::lifecycle_tests::account_logout_tests::late_logout_keeps_shared_scope_until_real_reply_and_never_retries ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::query_declaration_does_not_authorize_an_early_undeclared_account_push ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::same_process_authentication_check_preserves_memory_and_keeps_new_child_distinct ... ok
+test acp_client::lifecycle_tests::account_logout_tests::standard_declaration_keeps_the_standard_logout_route ... ok
+test acp_client::lifecycle_tests::account_query_wire_tests::undeclared_query_never_runs_and_malformed_query_never_becomes_login ... ok
+test acp_client::lifecycle_tests::account_recheck_preserves_an_unfinished_effectful_operation ... ok
+test acp_client::lifecycle_tests::account_recheck_keeps_other_directories_and_api_work_connected ... ok
+test acp_client::lifecycle_tests::account_scope_tests::alias_candidate_in_flight_prevents_account_change ... ok
+test acp_client::lifecycle_tests::account_recheck_refuses_work_in_its_exact_connection_without_closing_it ... ok
+test acp_client::lifecycle_tests::account_scope_tests::aliases_share_account_admission_and_busy_api_work_blocks_changes ... ok
+test acp_client::lifecycle_tests::account_scope_tests::authentication_unknown_result_keeps_alias_launches_reserved_until_reply ... ok
+test acp_client::lifecycle_tests::account_scope_tests::different_python_scripts_remain_independent_during_account_change ... ok
+test acp_client::lifecycle_tests::account_scope_tests::explicit_login_entry_also_protects_a_registered_companion ... ok
+test acp_client::lifecycle_tests::account_status_tests::immediate_identity_push_logout_unknown_and_connection_scope_are_real_wire_events ... ok
+test acp_client::lifecycle_tests::account_status_tests::undeclared_notifications_never_become_a_reported_identity ... ok
+test acp_client::lifecycle_tests::account_logout_tests::empty_ack_or_remote_error_does_not_invent_a_signed_out_state ... ok
+test acp_client::lifecycle_tests::auth_cleanup_retries_only_after_late_close_unregisters_the_route ... ok
+test acp_client::lifecycle_tests::cancelled_candidate_reaps_child_before_allowing_another_launch ... ok
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::cancelled_dispatched_logout_keeps_account_scope_until_real_reply_and_reap ... ok
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::review_regression_logout_reaps_idle_account_copies_and_preserves_api_and_history ... ok
+test acp_client::lifecycle_tests::candidate_probe_uses_candidate_without_replacing_registered_launch ... ok
+test acp_client::lifecycle_tests::closing_process_keeps_its_session_owner_until_reaped ... ok
+test acp_client::lifecycle_tests::account_logout_tests::official_logout_uses_fresh_status_and_confirms_local_credential_removal ... ok
+test acp_client::lifecycle_tests::confirmed_cancel_clears_every_pending_form ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::colliding_native_id_cannot_replace_existing_route_or_index ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::cold_new_collision_preserves_history_and_keeps_remote_creation_owned ... ok
+test acp_client::lifecycle_tests::disconnect_interrupts_hung_list_and_reaps_its_exact_child ... ok
+test acp_client::lifecycle_tests::expired_queued_prompt_never_reaches_the_agent ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::failed_new_validation_keeps_known_identity_until_exact_process_reaping ... ok
+test acp_client::lifecycle_tests::failed_process_registration_still_reaps_the_exact_child ... ok
+test acp_client::lifecycle_tests::first_prompt_never_reaches_agent_when_source_metadata_cannot_be_saved ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::precise_view_hold_and_restore_keep_connection_purposes_separate ... ok
+test acp_client::lifecycle_tests::forms_validate_before_consuming_and_expire_individually ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::pending_new_retains_its_process_and_blocks_another_new_until_response ... ok
+test acp_client::lifecycle_tests::local_close_checks_live_prompt_in_pump_before_releasing_route ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::same_agent_directory_and_source_isolate_processes_stop_and_preparation ... ok
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::logout_dispatched_errors_reap_affected_account_copies ... ok
+open-delivery fixture pid=20331 reaped=true
+open-delivery fixture pid=20335 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_failure_releases_both_reservations_before_actual_reply ... ok
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_abandoned_caller_keeps_native_reservation_until_actual_process_reaping ... ok
+open-delivery fixture pid=20332 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_buffered_success_is_owned_until_consumed_or_dropped ... ok
+open-delivery fixture pid=20340 reaped=true
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::logout_not_sent_preserves_account_conversation ... ok
+open-delivery fixture pid=20336 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_receiver_drops_during_notification_retains_identity_until_reaping ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_initialize_null_is_observation_not_request_match ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_invalid_request_keeps_only_fixed_class ... ok
+open-delivery fixture pid=20337 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_success_releases_both_reservations_before_actual_reply ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_legal_unknown_method_with_null_id_is_not_parse_failure ... ok
+open-delivery fixture pid=20346 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_unstarted_expired_or_closed_queue_never_sends_load ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_unknown_method_does_not_store_nonnull_id_or_payload ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_malformed_frame_keeps_parse_class_without_line ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_null_and_custom_code_are_not_payloads ... ok
+test acp_client::lifecycle_tests::retention_tests::exact_page_hold_does_not_retain_another_directory_or_service ... ok
+test acp_client::lifecycle_tests::retention_tests::initialization_failure_publishes_its_startup_reason ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_actual_signal_is_distinct_from_our_cleanup_request ... ok
+test acp_client::lifecycle_tests::app_exit_waits_for_exact_owner_and_term_ignoring_descendant ... ok
+test acp_client::lifecycle_tests::retention_tests::idle_recycling_does_not_assume_load_capability_proves_recovery ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_error_response_has_no_error_body ... ok
+test acp_client::lifecycle_tests::retention_tests::explicit_and_unexpected_close_reasons_reach_status_and_the_conversation ... ok
+test acp_client::lifecycle_tests::retention_tests::idle_status_is_published_before_replacement_ready_and_keeps_exact_scope ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_instant_result_is_matched_and_decode_is_separate ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_spawn_failure_is_not_reap_or_signal ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_observes_actual_exit_code_without_stderr ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_malformed_result_is_observed_but_not_accepted ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_eof_before_response_has_safe_ended_code ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_malformed_result_is_not_claimed_remote_rejection ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_spawn_is_classified_at_actual_spawn ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_remote_error_is_safe_and_candidate_can_retry ... ok
+test acp_client::lifecycle_tests::stdout_eof_does_not_wait_for_stderr_or_a_living_child ... ok
+open-delivery fixture pid=20338 reaped=true
+test acp_client::lifecycle_tests::open_delivery_tests::open_delivery_timeout_keeps_native_reservation_until_actual_process_reaping ... ok
+test acp_client::lifecycle_tests::account_logout_tests::stale_permission_cannot_logout_an_external_or_unconfirmed_credential ... ok
+test acp_client::lifecycle_tests::two_service_connections_route_stop_and_interactions_to_their_own_session ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_real_bridge_retains_only_fixed_classes ... ok
+test acp_client::lifecycle_tests::protocol_error_tests::protocol_errors_incoming_local_decode_eof_and_timeout_are_not_remote_errors ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_reusing_ready_connection_does_not_create_another_tap ... ok
+test acp_client::lifecycle_tests::account_logout_tests::connection_tests::logout_acknowledged_but_unconfirmed_status_reaps_old_account_copies ... ok
+test acp_client::lifecycle_tests::startup_diagnostics_tests::startup_diagnostics_cancel_is_not_changed_by_late_reply_or_kill ... ok
+test acp_client::lifecycle_tests::startup_tests::startup_failure_cancel_wins_and_late_success_does_not_select_candidate ... ok
+
+test result: ok. 80 passed; 0 failed; 0 ignored; 0 measured; 1101 filtered out; finished in 7.94s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit 0

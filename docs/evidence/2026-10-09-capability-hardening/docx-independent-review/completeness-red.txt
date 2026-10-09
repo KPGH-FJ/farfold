@@ -1,0 +1,48 @@
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic' }`
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stdout | docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx > marks the actual position of omitted hidden run content without exposing its text
+HIDDEN_POSITION {"blocks":[{"kind":"paragraph","id":"block-1","runs":[{"kind":"text","text":"before","style":{}},{"kind":"text","text":"after","style":{}}],"style":{}}],"stories":[],"images":[],"warnings":[{"code":"continuousLayout","count":1},{"code":"hiddenContent","count":1}],"partial":false}
+
+stdout | docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx > shares the retained image resource rather than cloning its bytes per repeated reference
+IMAGE_RESOURCE_COPIES {"uniqueResources":1,"displayReferences":3,"sourceBytes":74,"blobs":3,"totalBlobBytes":222,"revoked":3}
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx (2 tests | 2 failed) 17ms
+   × marks the actual position of omitted hidden run content without exposing its text 7ms
+   × shares the retained image resource rather than cloning its bytes per repeated reference 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx > marks the actual position of omitted hidden run content without exposing its text
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx:24:26
+     22|   console.log("HIDDEN_POSITION", JSON.stringify(result));
+     23|   expect(JSON.stringify(result)).not.toContain("HIDDEN-CONTROLLED");
+     24|   expect(result.partial).toBe(true);
+       |                          ^
+     25|   expect(result.blocks[0]).toMatchObject({ runs: [{ kind: "text", text…
+     26| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx > shares the retained image resource rather than cloning its bytes per repeated reference
+AssertionError: expected "createObjectURL" to be called 1 times, but got 3 times
+ ❯ docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness.test.tsx:43:18
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  23:36:10
+   Duration  183ms (transform 70ms, setup 0ms, import 104ms, tests 17ms, environment 0ms)
+

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { AuthElicitationList } from "./AuthElicitationList";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import {
@@ -1205,6 +1206,11 @@ export function AgentAuthSection({
                   : S.hide}
               </button>
             )}
+            <AuthElicitationList
+              activity={activity}
+              job={job}
+              agentName={card?.name ?? agentId}
+            />
             {job.terminal && !hidden && (
               <InlineTerminal
                 session={job.terminal}

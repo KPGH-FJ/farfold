@@ -1,0 +1,10 @@
+Both esbuild and oxc options were set. oxc options will be used and esbuild options will be ignored. The following esbuild options were set: `{ jsx: 'automatic' }`
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:38:54
+   Duration  193ms (transform 75ms, setup 0ms, import 110ms, tests 21ms, environment 0ms)
+

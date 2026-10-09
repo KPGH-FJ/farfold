@@ -1,0 +1,85 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_images.test.ts (14 tests | 10 failed) 8ms
+     × accounts for orientation 5 while preserving the pixel budget 3ms
+     × accounts for orientation 6 while preserving the pixel budget 1ms
+     × accounts for orientation 7 while preserving the pixel budget 1ms
+     × accounts for orientation 8 while preserving the pixel budget 0ms
+     × reads big-endian TIFF 1ms
+     × rejects invalid orientation 0 0ms
+     × rejects invalid orientation 9 0ms
+     × rejects invalid orientation 65535 0ms
+     × rejects duplicate EXIF packets and duplicate orientation tags 0ms
+     × rejects out-of-range IFD pointers and non-SHORT orientation 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > accounts for orientation 5 while preserving the pixel budget
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > accounts for orientation 6 while preserving the pixel budget
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > accounts for orientation 7 while preserving the pixel budget
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > accounts for orientation 8 while preserving the pixel budget
+AssertionError: expected [ 80, 120 ] to deeply equal [ 120, 80 ]
+
+- Expected
++ Received
+
+  [
+-   120,
+    80,
++   120,
+  ]
+
+ ❯ src/runtime/docx_images.test.ts:14:89
+     12| describe('DOCX private bounded EXIF orientation',()=>{
+     13|  it.each([1,2,3,4,5,6,7,8])('accounts for orientation %d while preserv…
+     14|   const result=inspectDocxImage(withExif(exif(n)));expect([result.widt…
+       |                                                                                         ^
+     15|  });
+     16|  it('reads big-endian TIFF',()=>expect(inspectDocxImage(withExif(exif(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > reads big-endian TIFF
+AssertionError: expected 80 to be 120 // Object.is equality
+
+- Expected
++ Received
+
+- 120
++ 80
+
+ ❯ src/runtime/docx_images.test.ts:16:89
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > rejects invalid orientation 0
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > rejects invalid orientation 9
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > rejects invalid orientation 65535
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_images.test.ts:17:107
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > rejects duplicate EXIF packets and duplicate orientation tags
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_images.test.ts:18:130
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX private bounded EXIF orientation > rejects out-of-range IFD pointers and non-SHORT orientation
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_images.test.ts:20:110
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 4 passed (14)
+   Start at  23:45:04
+   Duration  131ms (transform 27ms, setup 0ms, import 37ms, tests 8ms, environment 0ms)
+

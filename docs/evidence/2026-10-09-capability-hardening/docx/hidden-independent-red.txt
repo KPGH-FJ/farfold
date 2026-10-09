@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_boundaries.test.ts (13 tests | 3 failed) 37ms
+     × keeps webHidden and vanish independent of XML property order 7ms
+     × allows direct webHidden=false to override inherited webHidden=true 3ms
+     × does not mistake paragraph-mark specVanish for hidden body text 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > keeps webHidden and vanish independent of XML property order
+AssertionError: expected '{"blocks":[{"kind":"paragraph","id":"…' not to contain 'HIDDEN-COMBINATION'
+
+Expected: "HIDDEN-COMBINATION"
+Received: "{"blocks":[{"kind":"paragraph","id":"block-1","runs":[{"kind":"text","text":"HIDDEN-COMBINATION","style":{}}],"style":{}}],"stories":[],"images":[],"warnings":[{"code":"continuousLayout","count":1}],"partial":false}"
+
+ ❯ src/runtime/docx_boundaries.test.ts:16:42
+     14|     for (const properties of ['<w:webHidden/><w:vanish w:val="false"/>…
+     15|       const result=parseDocx(body(`<w:p><w:r><w:rPr>${properties}</w:r…
+     16|       expect(JSON.stringify(result)).not.toContain("HIDDEN-COMBINATION…
+       |                                          ^
+     17|     }
+     18|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > allows direct webHidden=false to override inherited webHidden=true
+AssertionError: expected '[{"kind":"paragraph","id":"block-1","…' to contain ' direct bold off'
+
+Expected: " direct bold off"
+Received: "[{"kind":"paragraph","id":"block-1","runs":[{"kind":"notice","code":"hiddenContent"},{"kind":"notice","code":"hiddenContent"}],"style":{"alignment":"center"}}]"
+
+ ❯ src/runtime/docx_boundaries.test.ts:22:73
+     20|     let input=replaceDocxPart(docxFixture("02-style-inheritance"),"wor…
+     21|     input=replaceDocxPart(input,"word/document.xml",(s)=>s.replace('<w…
+     22|     const result=parseDocx(input);expect(JSON.stringify(result.blocks)…
+       |                                                                         ^
+     23|   });
+     24|   it("does not mistake paragraph-mark specVanish for hidden body text"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > does not mistake paragraph-mark specVanish for hidden body text
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:25:107
+     23|   });
+     24|   it("does not mistake paragraph-mark specVanish for hidden body text"…
+     25|     expect(()=>parseDocx(body('<w:p><w:r><w:rPr><w:specVanish/></w:rPr…
+       |                                                                                                           ^
+     26|   });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 10 passed (13)
+   Start at  23:41:05
+   Duration  180ms (transform 56ms, setup 0ms, import 74ms, tests 37ms, environment 0ms)
+

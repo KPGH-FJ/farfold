@@ -1,0 +1,7 @@
+{
+  "kind": "controlled-interim-design-counterexample",
+  "change": "Remove only received-session-URL bookkeeping branch; no original baseline claim",
+  "finalSourceSha256": "342f3a01bc63443ecfc7ef82c15fd3b9a83ff29a58169dd0761bc4d813e7120d",
+  "withoutPrefixSha256": "1e87dd51f5707079e1205b5cf53f7809a06ef996e33a014232755e135943f674",
+  "restoredIdentical": true
+}

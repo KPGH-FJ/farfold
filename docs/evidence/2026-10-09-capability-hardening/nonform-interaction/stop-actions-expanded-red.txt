@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/interaction_actions.stop.test.ts (12 tests | 5 failed) 9ms
+   × blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery 5ms
+   × allows an explicit form inquiry decline after stop becomes unknown without resuming work 1ms
+   × allows an explicit form inquiry cancel after stop becomes unknown without resuming work 0ms
+   × allows an explicit url inquiry decline after stop becomes unknown without resuming work 0ms
+   × allows an explicit url inquiry cancel after stop becomes unknown without resuming work 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "session_elicitation_respond",
++   "session_permission_respond",
+    {
+-     "action": "cancel",
+-     "content": null,
+-     "requestId": "question",
++     "optionId": "once",
++     "requestId": "permission",
+      "sessionId": "native",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:84:18
+     82|     optionId: "once",
+     83|   });
+     84|   expect(invoke).toHaveBeenCalledWith("session_elicitation_respond", {
+       |                  ^
+     85|     sessionId: "native",
+     86|     requestId: "question",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit form inquiry decline after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit form inquiry cancel after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit url inquiry decline after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit url inquiry cancel after stop becomes unknown without resuming work
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Number of calls: 0
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:137:20
+    135|     state.stopUnconfirmed = true;
+    136|     await actions.respondElicitation(state.key, question.requestId, ac…
+    137|     expect(invoke).toHaveBeenCalledExactlyOnceWith(
+       |                    ^
+    138|       "session_elicitation_respond",
+    139|       {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 7 passed (12)
+   Start at  00:05:39
+   Duration  150ms (transform 60ms, setup 0ms, import 78ms, tests 9ms, environment 0ms)
+
+
+exit 1

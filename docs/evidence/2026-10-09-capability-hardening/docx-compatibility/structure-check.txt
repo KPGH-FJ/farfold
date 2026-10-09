@@ -1,0 +1,109 @@
+{
+  "method": "stdlib zipfile + ElementTree; no Farfold or python-docx readback",
+  "samples": [
+    {
+      "file": "01-unicode-lists.docx",
+      "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+      "zipEntries": 17,
+      "crc": "all entries passed",
+      "externalRelationships": [],
+      "bodyText": "matches authored expectations",
+      "bodyParagraphs": 15,
+      "sections": 1,
+      "stories": {
+        "headers": [],
+        "footers": []
+      },
+      "lists": [
+        {
+          "kind": "numbered",
+          "format": "decimal",
+          "items": [
+            {
+              "text": "收集材料",
+              "style": "ListNumber",
+              "numId": "5"
+            },
+            {
+              "text": "核对数值",
+              "style": "ListNumber",
+              "numId": "5"
+            },
+            {
+              "text": "保存结果",
+              "style": "ListNumber",
+              "numId": "5"
+            }
+          ]
+        },
+        {
+          "kind": "bullet",
+          "format": "bullet",
+          "items": [
+            {
+              "text": "不自动发送",
+              "style": "ListBullet",
+              "numId": "1"
+            },
+            {
+              "text": "不读取外部文件",
+              "style": "ListBullet",
+              "numId": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "02-table-images-stories.docx",
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5",
+      "zipEntries": 21,
+      "crc": "all entries passed",
+      "externalRelationships": [],
+      "bodyText": "matches authored expectations",
+      "bodyParagraphs": 8,
+      "sections": 1,
+      "stories": {
+        "headers": [
+          "公开兼容性样本 页眉"
+        ],
+        "footers": [
+          "公开兼容性样本 页脚"
+        ]
+      },
+      "table": "4 rows, 3-column grid, horizontal/vertical merges, empty cell verified",
+      "images": [
+        {
+          "part": "word/media/image1.png",
+          "sha256": "552c0f1bc605ee307cf847786ae061e157f0f249450ab11962ef2cd2ea31cefd",
+          "authoredAsset": "authored-red.png"
+        },
+        {
+          "part": "word/media/image2.jpg",
+          "sha256": "f8cd6bc1fb4cae98f062d68d3a740926fa435b61c0e91e45a52f2fd63116387e",
+          "authoredAsset": "authored-blue.jpg"
+        }
+      ]
+    },
+    {
+      "file": "03-sections.docx",
+      "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d",
+      "zipEntries": 21,
+      "crc": "all entries passed",
+      "externalRelationships": [],
+      "bodyText": "matches authored expectations",
+      "bodyParagraphs": 36,
+      "sections": 2,
+      "stories": {
+        "headers": [
+          "第一节页眉",
+          "第二节页眉"
+        ],
+        "footers": [
+          "第一节页脚",
+          "第二节页脚"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.selection.test.tsx (56 tests | 1 failed) 107ms
+   × opens a saved offline Agent on selection without changing its source or sending the draft 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > opens a saved offline Agent on selection without changing its source or sending the draft
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/EmptyState.selection.test.tsx:637:41
+    635|   composer();
+    636|   expect(inquiry.inquiryCurrent()).toBe(false);
+    637|   expect(inquiry.inquirySignal.aborted).toBe(true);
+       |                                         ^
+    638|   expect(composerDrafts.read("new").text).toBe("Keep my draft");
+    639|   expect(props.onStarted).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 111 passed (112)
+   Start at  23:50:50
+   Duration  1.60s (transform 1.08s, setup 0ms, import 4.84s, tests 164ms, environment 0ms)
+
+
+exit 1

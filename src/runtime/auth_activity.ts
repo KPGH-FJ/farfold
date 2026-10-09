@@ -1,3 +1,6 @@
+import type { PendingElicitation } from "./session_types";
+import { readElicitation, replyToElicitation } from "./elicitation";
+import { INQUIRY } from "./elicitation_strings";
 import { BufferedLoginTerminal } from "./login_terminal";
 import { AUTH_ACTIVITY_STRINGS } from "./auth_strings";
 import { PREPARATION_ACTION_STRINGS as P } from "./preparation_action_strings";
@@ -33,6 +36,9 @@ export type AuthPhase =
   | "cancelled"
   | "failed";
 export interface AuthActivitySnapshot {
+  inquiries?: PendingElicitation[];
+  inquiryNotice?: string;
+  inquiryDetail?: unknown;
   attemptId: string;
   target: AuthTarget;
   operation: Readonly<AuthOperation>;
@@ -97,6 +103,83 @@ export class AuthActivity {
     this.cancelOperation = null;
     this.endOperation = null;
     this.listeners.forEach((listener) => listener());
+  }
+  inquiryEvent(attemptId: string, raw: unknown) {
+    if (
+      !raw ||
+      typeof raw !== "object" ||
+      Array.isArray(raw) ||
+      this.value?.attemptId !== attemptId ||
+      !authActive(this.value)
+    )
+      return;
+    const event = raw as Record<string, unknown>;
+    const inquiries = this.value.inquiries ?? [];
+    if (
+      event.kind === "elicitation" &&
+      !this.startCancelled &&
+      !["cancelling", "checking"].includes(this.value.phase)
+    ) {
+      const request = readElicitation(event);
+      if (request && !inquiries.some((p) => p.requestId === request.requestId))
+        this.update({ inquiries: [...inquiries, request] });
+    } else if (
+      event.kind === "elicitationComplete" ||
+      event.kind === "interactionExpired"
+    ) {
+      if (!inquiries.some((p) => p.requestId === event.requestId)) return;
+      this.update({
+        inquiries: inquiries.filter((p) => p.requestId !== event.requestId),
+        inquiryNotice:
+          event.kind === "elicitationComplete"
+            ? INQUIRY.complete
+            : INQUIRY.expired,
+      });
+    } else if (event.kind === "elicitationUnavailable")
+      this.update({
+        inquiryNotice: INQUIRY.unavailable,
+        inquiryDetail: event.params,
+      });
+  }
+  editInquiry(requestId: string, name: string, value: unknown) {
+    const request = this.value?.inquiries?.find(
+      (p) => p.requestId === requestId,
+    );
+    if (
+      !request ||
+      request.status !== "pending" ||
+      !this.value ||
+      !this.canStart(this.value.attemptId) ||
+      !authActive(this.value) ||
+      ["checking", "cancelling"].includes(this.value.phase)
+    )
+      return;
+    request.values = { ...request.values, [name]: value };
+    this.update({ inquiries: [...this.value!.inquiries!] });
+  }
+  async replyInquiry(
+    requestId: string,
+    action: "accept" | "decline" | "cancel",
+    values?: Record<string, unknown>,
+  ) {
+    const job = this.value;
+    const request = job?.inquiries?.find((p) => p.requestId === requestId);
+    if (!job || !request) return;
+    await replyToElicitation(request, action, values, {
+      current: () =>
+        this.canStart(job.attemptId) &&
+        this.value?.attemptId === job.attemptId &&
+        authActive(this.value) &&
+        !["cancelling", "checking"].includes(this.value.phase) &&
+        !!this.value.inquiries?.includes(request),
+      changed: () =>
+        this.update({ inquiries: [...(this.value?.inquiries ?? [])] }),
+      remove: (notice) =>
+        this.update({
+          inquiries: this.value?.inquiries?.filter((p) => p !== request),
+          ...(notice ? { inquiryNotice: notice } : {}),
+        }),
+    });
   }
   async protocol(ports: {
     run: (unknown: () => void) => Promise<unknown>;

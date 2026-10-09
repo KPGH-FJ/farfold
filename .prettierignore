@@ -228,3 +228,9 @@ docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-first.json
 docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-first.diagnostics.json
 docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-realtime.json
 docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-realtime.diagnostics.json
+
+# Executed DOCX/inquiry browser fixtures, captures and observations retain their
+# evidence bytes. Maintained product code and tests remain under src/.
+docs/evidence/2026-10-09-capability-hardening/docx/browser/
+docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/
+docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/

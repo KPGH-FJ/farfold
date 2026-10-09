@@ -1,0 +1,50 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/opening_inquiries.test.ts (5 tests | 2 failed) 6ms
+   × presents the actual pending session_open inquiry before that command resolves 4ms
+   × invalidated preparation cannot answer or open a late URL 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/opening_inquiries.test.ts > presents the actual pending session_open inquiry before that command resolves
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/opening_inquiries.test.ts:17:71
+     15|   const opening = threads.open({ agentId: "opening-inquiry", cwd: "/co…
+     16|   try {
+     17|     expect(openingInquiries.getSnapshot().flatMap((o) => o.requests)).…
+       |                                                                       ^
+     18|     expect([...threads.getSnapshot().threads.values()].some((s) => s.a…
+     19|   } finally { resolve({ cwd: "/controlled", nativeSessionId: "opened" …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/opening_inquiries.test.ts > invalidated preparation cannot answer or open a late URL
+TypeError: Cannot read properties of undefined (reading 'catch')
+ ❯ OpeningInquiryOwner.cancelReply src/runtime/opening_inquiries.ts:52:170
+     50|   private cancelReply(p: PendingElicitation) {
+     51|     // Explicit abandonment of this local opening never invents an acc…
+     52|     void invoke("session_elicitation_respond", { requestId: p.requestI…
+       |                                                                                                                                                                          ^
+     53|   }
+     54|   retire() {
+ ❯ OpeningInquiryOwner.receive src/runtime/opening_inquiries.ts:35:35
+ ❯ src/runtime/opening_inquiries.test.ts:36:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  23:38:17
+   Duration  231ms (transform 131ms, setup 0ms, import 166ms, tests 6ms, environment 0ms)
+
+
+exit 1

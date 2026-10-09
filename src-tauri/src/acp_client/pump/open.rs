@@ -78,14 +78,26 @@ pub(crate) async fn open_session_on_connection(
     let (inbox_tx, inbox_rx) = mpsc::unbounded_channel::<Dispatch>();
     let (control_tx, control_rx) = mpsc::unbounded_channel::<SessionControl>();
 
+    // Questions required by load cannot wait in the pump inbox until load
+    // itself returns. Their owner exists only for this opening operation.
+    let _inquiries = native_session_id.as_ref().map(|id| {
+        ops.inquiries
+            .opening_session(id, &operation, events.clone())
+    });
     let resumed = native_session_id.is_some();
     let (session_id, mut response, guard, retention, identity) = match native_session_id {
         None => {
             let params = super::super::transient_mcp::session_params(cwd, None, mcp.as_ref());
             let request =
                 UntypedMessage::new("session/new", &params).map_err(describe_open_error)?;
-            let response = operation
-                .request(cx, cx.send_request_to(Agent, request))
+            let response = ops
+                .inquiries
+                .request(
+                    &operation,
+                    cx,
+                    || cx.send_request_to(Agent, request),
+                    events.clone(),
+                )
                 .await
                 .map_err(describe_open_error)?;
             // The remote conversation now exists even if response validation or
@@ -129,8 +141,14 @@ pub(crate) async fn open_session_on_connection(
             let params = super::super::transient_mcp::session_params(cwd, Some(&id), mcp.as_ref());
             let request =
                 UntypedMessage::new("session/load", &params).map_err(describe_open_error)?;
-            match operation
-                .request(cx, cx.send_request_to(Agent, request))
+            match ops
+                .inquiries
+                .request(
+                    &operation,
+                    cx,
+                    || cx.send_request_to(Agent, request),
+                    events.clone(),
+                )
                 .await
             {
                 Ok(response) => {

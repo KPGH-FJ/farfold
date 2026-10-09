@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "verification",
+  "reviewedAt": "2026-10-09T15:55:55.721412+00:00",
+  "status": "completed_no_new_blocker_in_reviewed_backend_scope",
+  "independence": {
+    "authoredReviewedProduction": false,
+    "productionOrTestFilesModified": false,
+    "testsRunByReviewer": false,
+    "browserOrFormalAppOperated": false,
+    "realAgentOrAccountUsed": false,
+    "method": "Read-only final source/diff and original controlled-peer outputs; one targeted official specification check. Frontend is separately reviewed by product_coverage."
+  },
+  "sources": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/elicitation",
+      "checked": "2026-10-09",
+      "relevance": "requestId is for an interaction outside a session; accept is consent, external completion is distinct; unknown/completed IDs are ignored."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/agent-client-protocol/7e87dc205a7325bd07d0249fd20bb7486ee6ba95/agent-client-protocol-schema/src/v1/elicitation.rs",
+      "checked": "2026-10-09",
+      "relevance": "Official schema corresponding to the recorded installed schema surface; source reference, not execution evidence."
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "id": "rejected-id-reuse",
+      "origin": "verification static challenge, reproduced and fixed by architecture",
+      "before": "An invalid first URL could leave queued completion state, then a later inquiry using the same elicitationId could become associated with that old completion.",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rejected-reuse-red.txt",
+        "failed": 1,
+        "passed": 0,
+        "observed": "Expected no inquiry for a retired ID, observed one."
+      },
+      "after": "First connection dispatch retires every well-shaped URL ID before later validity checks. Reuse is rejected. QueuedGuard removes queued entries on every create exit; cancelling prompt dispatch discards its queued prefix.",
+      "green": "Included in the final 14-test protocol output.",
+      "status": "resolved"
+    },
+    {
+      "id": "owned-unknown-method-details",
+      "origin": "architecture additional counterexample during review",
+      "before": "An unknown request with a valid parent returned an error without preserving its original details for that owner.",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/unknown-owned-request-red.txt",
+        "failed": 1,
+        "passed": 0,
+        "observed": "Expected one unavailable event, observed zero."
+      },
+      "after": "Only a live parent matched by exact serialized requestId on this connection receives the original method/params unavailable event. The response remains method_not_found; no executable action or responder is registered.",
+      "green": "Included in final 14-test protocol output; exact method_not_found code is confirmed statically, while this fixture asserts the failed parent and retained raw details.",
+      "status": "resolved"
+    }
+  ],
+  "reviewedInvariants": [
+    "Synchronous send and parent request registration share a short mutex interval; the receive lookup shares that mutex. RequestGuard removes parent ownership and expires only entries matching that connection and parent.",
+    "OpeningGuard enables session/load reverse questions before load responds. Its cleanup checks the exact Operation abandonment Arc, so an older opening cannot remove a newer owner for the same native ID.",
+    "Both completion lookup and queued-prefix extraction take pending before queued. create retains pending until insertion; completion cannot pass through a missing-owner interval.",
+    "A completion before consent expires the obsolete protocol responder without constructing accept. Complete never resolves authenticate or another parent request; parent errors remain errors.",
+    "URL accept omits form content and keeps the temporary lease until completion or parent end. Form content uses the existing response shape. Decline/cancel/late answer do not manufacture external completion.",
+    "Operation abandonment, reverse-request cancellation, prompt cancellation and exact connection cleanup remove applicable pending entries. Late completion after cancellation has no live entry to mutate.",
+    "Pending URL state is in memory, connection-local, bounded by 32 pending entries and 4096 retired URL IDs. Accepted URLs require https with a host, no credentials, control characters, whitespace framing or backslash. No backend URL opening/fetch was introduced.",
+    "Existing DebugTap reconstructs a fixed content-free record; reviewed inquiry code has no database or log write of URLs, form values or raw request content."
+  ],
+  "excludedHypotheses": [
+    {
+      "hypothesis": "Normal prompt/config requests must be registered under requestId too.",
+      "result": "Not a supported defect: the official v1 page defines requestId for interactions outside a session; normal session traffic uses sessionId. This does not prove every other outside-session method is implemented."
+    }
+  ],
+  "verificationRead": {
+    "protocolFinal": {
+      "passed": 14,
+      "failed": 0,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-complete-final.txt"
+    },
+    "clippyFinal": {
+      "exitCode": 0,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/clippy-complete-final.txt"
+    },
+    "priorAssociatedRegressions": {
+      "cancellation": 2,
+      "lifecycle": 80,
+      "qualification": "Read original prior logs; not re-run by this reviewer and not substituted for integration tests after final changes."
+    }
+  },
+  "limits": [
+    "Only authenticate/session new/load currently register request-scoped parent ownership. Initialize and other outside-session operations are not proven or universally supported; unowned inquiries reject instead of being assigned to the current UI.",
+    "Only advertised form and URL modes are supported; unknown modes or extension methods are not executable. External URL handling is https-only in this increment.",
+    "No real Agent, login/provider, remote authorization, installed UI, Windows or all-Agent acceptance was exercised by this review.",
+    "This receipt does not independently endorse the frontend, user consent/opening flow, or full application integration; those have separate reviews/tests.",
+    "The protocol fixtures execute the real manager/stdio path with synthetic peers. Their outcomes are not evidence that a real third-party endpoint completes successfully."
+  ],
+  "reviewedProductionSources": [
+    {
+      "path": "src-tauri/src/acp_client/elicitation.rs",
+      "sha256": "8643692757557a8020d99355c2078cee0e39cee27b651fde122d13c4c6895a12",
+      "bytes": 22626
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "4513d99aad462a5da03981839b9e5e791eccb1fcc74b0dafae707448bc560d06",
+      "bytes": 50826
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "e46f9cc19da8f9c68afd72df34c9917f1d8c6136d144973f1f16297280acacff",
+      "bytes": 16297
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "17526375e4a757be187783a31dde42f96f7b771e750a137bfae1547a020b0aea",
+      "bytes": 70427
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/open.rs",
+      "sha256": "c2c701bda7597a21a59ef7034a112cbfd3654990d2bd894420e9b6d6c3a9fa33",
+      "bytes": 13907
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "5ef6d861006927dd824c026e037c9d932870bf33c016fbcfbeeb1be7504d65ce",
+      "bytes": 38470
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "a6ee961acd2ec5d3b7a247d2618e414578043dc42b17643ec4f67da37e17a8ac",
+      "bytes": 20392
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9",
+      "bytes": 47716
+    }
+  ],
+  "reviewedTestSources": [
+    {
+      "path": "src-tauri/src/acp_client/elicitation_request_tests.rs",
+      "sha256": "a0447568391b5c357668d98ff2c23c85d2c58e4cd17ade04061f76d1996149cf",
+      "bytes": 12789
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation_wire_tests.rs",
+      "sha256": "5e2050cd47250429d0955bce5af5566d7f4c270f5eaf3b8ec72f803ae3e633a6",
+      "bytes": 13860
+    }
+  ],
+  "diagnosticBoundarySource": {
+    "path": "src-tauri/src/acp_client/tap.rs",
+    "sha256": "5106bf33514aaeb3ee6bd6e2fd7e13599b22500d37d48c5bf29158e6a3583e2d",
+    "bytes": 15143
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rejected-reuse-red.txt",
+      "sha256": "15f7bfc980ba5a1006f5ace907634d89874001974198a5d141091bca79c76168",
+      "bytes": 972
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rejected-reuse-green.txt",
+      "sha256": "ee3b416da8245aa5f276bb43411a243d3d5bcd40933b7263e4e22b99914757e0",
+      "bytes": 1447
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-terminal-final.txt",
+      "sha256": "d1fd77d983f78bf13e6ba9cefe4da3306d283d9be311583aa1573448d153df9e",
+      "bytes": 2030
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/unknown-owned-request-red.txt",
+      "sha256": "4d68e09d26451e6838757a7d60c56c197defce06b6bb2bb51a15b86e3e3d1de8",
+      "bytes": 1065
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-complete-final.txt",
+      "sha256": "dbf19b9bb1fdab58d541e87c9a4c9685ec3d1adf9d506b209124fe630163c67b",
+      "bytes": 2157
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/clippy-complete-final.txt",
+      "sha256": "e2f114c33cc9ce4f19db0342a54fcff6c806309ec1f03f5b39891e80275f404c",
+      "bytes": 146
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/cancellation-regression.txt",
+      "sha256": "e28bce2f75e87ca61874324a6ea019b7d8d5d1240bfea4c99f126274389379ce",
+      "bytes": 733
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/lifecycle-regression.txt",
+      "sha256": "a426de56eab9bb17789a897b04d347c0df4008e2b781a690651488e1f8543fc9",
+      "bytes": 10748
+    }
+  ]
+}

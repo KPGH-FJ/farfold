@@ -1,0 +1,8 @@
+{
+  "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/local-font-cache",
+  "createdFor": "This task FONTCONFIG_FILE local offline reference rendering only",
+  "fileCount": 5,
+  "bytes": 5087592,
+  "systemFontFilesCopied": false,
+  "action": "Removed only this newly created reproducible font metadata cache after all child renderers exited"
+}

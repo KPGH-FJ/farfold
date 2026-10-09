@@ -1,0 +1,23 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.02s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::elicitation_wire_tests::rejected_url_id_cannot_be_reused_by_a_later_inquiry' (20076192) panicked at src/acp_client/elicitation_wire_tests.rs:176:5:
+assertion `left == right` failed: a retired ID cannot identify a different inquiry
+  left: 1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::elicitation_wire_tests::rejected_url_id_cannot_be_reused_by_a_later_inquiry ... FAILED
+
+failures:
+
+failures:
+    acp_client::elicitation_wire_tests::rejected_url_id_cannot_be_reused_by_a_later_inquiry
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1176 filtered out; finished in 0.48s
+
+error: test failed, to rerun pass `--lib`
+
+exit 101

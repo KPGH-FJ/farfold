@@ -1,4 +1,6 @@
 import { REDESIGN } from "./redesign_strings";
+import { DOCUMENT_STRINGS, DOCUMENT_WARNINGS } from "./document_strings";
+import { INQUIRY } from "./elicitation_strings";
 import { AGENT_REDESIGN } from "./agent_redesign_strings";
 import { SETTINGS_REDESIGN } from "./settings_redesign_strings";
 import { CONVERSATION_REDESIGN } from "./conversation_redesign_strings";
@@ -78,6 +80,9 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      DOCUMENT_STRINGS,
+      DOCUMENT_WARNINGS,
+      INQUIRY,
       WORKBOOK_STRINGS,
       WORKBOOK_WARNINGS,
       REDESIGN,

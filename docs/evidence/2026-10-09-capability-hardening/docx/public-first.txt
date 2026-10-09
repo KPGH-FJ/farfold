@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_public_samples.test.ts (5 tests | 1 failed) 28ms
+     × tiny-picture.docx 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_public_samples.test.ts > unchanged maintainer-published DOCX samples > tiny-picture.docx
+Error: invalid stored block lengths
+ ❯ docxFixture src/runtime/docx_fixture.ts:15:19
+     13|     const local = data.readUInt32LE(at + 42), packed = data.readUInt32…
+     14|     const start = local + 30 + data.readUInt16LE(local + 26) + data.re…
+     15|     const bytes = inflateRawSync(data.subarray(start, start + packed),…
+       |                   ^
+     16|     entries.push(name);
+     17|     if (/\.(xml|rels|png|jpg)$/.test(name)) parts.push({ name, data: b…
+ ❯ src/runtime/docx_public_samples.test.ts:9:46
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:27:41
+   Duration  168ms (transform 57ms, setup 0ms, import 76ms, tests 28ms, environment 0ms)
+

@@ -1,0 +1,26 @@
+export const INQUIRY = {
+  open: "同意并打开",
+  opening: "正在打开浏览器…",
+  decline: "拒绝",
+  cancel: "取消",
+  external: "将在系统浏览器中打开。此处不会读取网页或你填写的内容。",
+  consentOnly: "打开网页不代表外部步骤已经完成。",
+  waiting: "已交给浏览器，正在等待外部步骤的结果。",
+  complete: "Agent 已报告外部步骤结束，原操作的结果另行确认。",
+  closed: "已关闭此处的询问，原操作的结果仍待确认。",
+  expired: "这次询问已结束，不能再答复。",
+  unavailable: "这次询问暂时无法在这里处理，请查看详情或取消原操作。",
+  unsafe: "这个地址暂时不能在这里打开。",
+  openFailed: "浏览器未能确认打开，请重试或取消。",
+  openUnknown: "尚未确认浏览器是否已打开，请检查浏览器或取消原操作。",
+  suspicious: "这个地址包含国际化域名编码，请仔细核对目标网站。",
+  replyUnknown: "答复结果尚未确认，请等待或取消原操作。",
+  replyRetry: "答复未提交，请检查后重试。",
+  openEnded:
+    "这次打开未完成，请查看原操作的错误。外部步骤的报告不代表打开成功。",
+  openingCancel:
+    "关闭此窗口后不再答复这里的询问；已交给浏览器的步骤仍以 Agent 报告及原操作结果为准。",
+  openingTitle: "打开对话需要你的答复",
+  dismiss: "关闭提示",
+  details: "询问详情",
+} as const;

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AuthElicitationList.test.tsx (2 tests | 2 failed) 7ms
+   × keeps questions disabled after cancel cannot confirm its outcome 6ms
+   × keeps questions disabled after endConnection cannot confirm its outcome 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AuthElicitationList.test.tsx > keeps questions disabled after cancel cannot confirm its outcome
+ FAIL  src/components/AuthElicitationList.test.tsx > keeps questions disabled after endConnection cannot confirm its outcome
+AssertionError: Target cannot be null or undefined.
+ ❯ src/components/AuthElicitationList.test.tsx:21:52
+     19|     expect(activity.getSnapshot()?.phase).toBe("unknown");
+     20|     const html = renderToStaticMarkup(<AuthElicitationList activity={a…
+     21|     expect(html.match(/<button[^>]*disabled=""/g)).toHaveLength(3);
+       |                                                    ^
+     22|     activity.editInquiry("q", "value", "must not change");
+     23|     expect(activity.getSnapshot()?.inquiries?.[0].values).toEqual({});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  23:57:34
+   Duration  139ms (transform 45ms, setup 0ms, import 71ms, tests 7ms, environment 0ms)
+
+
+exit 1

@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/interaction_actions.stop.test.ts (16 tests | 1 failed) 36ms
+   × blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "host_performance_origin",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:76:22
+     74|   );
+     75|   await vi.runAllTimersAsync();
+     76|   expect(invoke).not.toHaveBeenCalled();
+       |                      ^
+     77|   expect(permission.decision).toBeNull();
+     78|   expect(state.pendingElicitations[0]).toBe(question);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ReferenceError: document is not defined
+ ❯ src/runtime/performance-trace.ts:24:5
+     22| void origin.then((nativeOrigin) => {
+     23|   if (nativeOrigin !== null) {
+     24|     document.addEventListener("visibilitychange", () => visibilityRevi…
+       |     ^
+     25|   }
+     26| });
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+This error originated in "src/runtime/interaction_actions.stop.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 63 passed (64)
+     Errors  1 error
+   Start at  00:08:18
+   Duration  1.66s (transform 1.56s, setup 0ms, import 4.12s, tests 132ms, environment 0ms)
+
+
+exit 1

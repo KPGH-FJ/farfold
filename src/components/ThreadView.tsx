@@ -1064,7 +1064,8 @@ export function ThreadView({
               ))}
               {thread.pendingElicitations.map((request) => (
                 <ElicitationCard
-                  disabled={thread.stopping || thread.stopUnconfirmed}
+                  disabled={thread.stopping}
+                  acceptanceDisabled={thread.stopUnconfirmed}
                   statusLabel={
                     thread.stopping
                       ? R.stopWaiting
@@ -1074,6 +1075,7 @@ export function ThreadView({
                   }
                   key={request.requestId}
                   request={request}
+                  agentName={agent?.name ?? thread.agentId}
                   onChange={(name, value) =>
                     threads.setElicitationValue(
                       thread.key,

@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/interaction_actions.stop.test.ts (3 tests | 1 failed) 6ms
+   × blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "session_elicitation_respond",
++   "session_permission_respond",
+    {
+-     "action": "cancel",
+-     "content": null,
+-     "requestId": "question",
++     "optionId": "once",
++     "requestId": "permission",
+      "sessionId": "native",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:82:18
+     80|     optionId: "once",
+     81|   });
+     82|   expect(invoke).toHaveBeenCalledWith("session_elicitation_respond", {
+       |                  ^
+     83|     sessionId: "native",
+     84|     requestId: "question",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  00:04:39
+   Duration  135ms (transform 57ms, setup 0ms, import 74ms, tests 6ms, environment 0ms)
+
+
+exit 1

@@ -157,6 +157,11 @@ async fn read(
                     connection_id: "preparation-fixture".into(),
                     verify_identity: Arc::new(|_, _| Ok(None)),
                     elicitations: Arc::new(Mutex::new(HashMap::new())),
+                    inquiries: super::super::elicitation::ConnectionElicitations::new(
+                        Default::default(),
+                        life.clone(),
+                        "preparation-fixture".into(),
+                    ),
                     life,
                 },
                 operation.clone(),

@@ -1,0 +1,143 @@
+{
+  "checkedAtUtc": "2026-10-09T15:14:30.269945+00:00",
+  "sourceCommit": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "surface": "Installed /Applications/Farfold.app; native accessibility and rendered screenshots observed through CUA",
+  "result": "listed-controlled-installed-checks-passed",
+  "observationRecords": "CUA tool observations in this task; no separate screenshot files claimed",
+  "initialConversations": 112,
+  "finalConversations": 113,
+  "realAgentBoundary": {
+    "agent": "Codex",
+    "modelShown": "6 Astra",
+    "reasoningShown": "Ultra",
+    "source": "Existing Agent settings, observed selected in model picker; unchanged",
+    "requests": 1,
+    "instruction": "No tools, no file reads, no link checks; return exactly four provided Markdown links",
+    "observed": "One completed reply with four file-link buttons; no tool steps, permission expansion or new account flow observed",
+    "notClaimed": "No Agent file understanding, cold permission approval, 29-Agent completion or general model acceptance"
+  },
+  "searchAndExport": {
+    "passed": [
+      "Loaded-only scope remains exposed to accessibility but is visually hidden in compact toolbar",
+      "Search 临时两页 produced 1 / 2 in existing owned conversation",
+      "Escape returned focus to 查找当前对话",
+      "Export privacy details explicitly distinguish stripped attachment/tool URL metadata from unchanged message body",
+      "Closing export returned focus to conversation action trigger"
+    ],
+    "notRepeated": "No new export file save; exact saved-file checks are retained in sixth installed receipt"
+  },
+  "pdfFeedback": {
+    "passed": [
+      "Existing temporary two-page PDF rendered actual page 1 title and colored rectangles; navigation displayed page 2",
+      "Page 1 opinion persisted while navigating to page 2",
+      "Explicitly choosing page 2 then returning to page 1 retained opinion target 第 2 / 2 页",
+      "加入对话 placed exact page plus SHA-256 and authored text in composer without sending",
+      "PNG provided whole-file feedback without page controls",
+      "Damaged PDF showed failure and disabled new feedback, without stale prior image",
+      "Changing only owned synthetic PDF then rereading retained original opinion under 其他内容版本的意见 with old page and old SHA",
+      "Taking old opinion to composer retained old version warning; root cleared only its authored draft"
+    ],
+    "versionChangeEvidenceSha256": "7248a1339cb65f743a5aa55dae386173bf2ecf74f9986b7fc4ef52d919233c84",
+    "remaining": [
+      "No rectangle/region annotation",
+      "No user-document or ordinary embedded Chinese font corpus claim"
+    ]
+  },
+  "xlsx": {
+    "passed": [
+      "Actual native WebKit reads both authored XLSX files",
+      "12.00%, serial-60 1900-02-29, 0, FALSE, empty text and missing formula cache remain distinct",
+      "Keyboard Tab/Return reaches cells; E2 inspector shows 空文本 / EMPTY(), F2 shows 未保存计算结果 / NOT_CALCULATED()",
+      "Closing cell inspector restores focus to the originating cell button",
+      "Merged A4:C5 has original text and accessibility row/column spans",
+      "Hidden row 6 absent initially; explicit checkbox shows 隐藏行内容",
+      "Next rows shows A101–F105 and row105 text; next disabled at end",
+      "Hidden sheet explicitly labeled Hidden · 隐藏, selected content visible with range reset A1–A1",
+      "Controlled invalid workbook bytes produce bounded unsupported feedback without old cells",
+      "Restoring file then selecting 重新预览 reports 文件已变化; explicit 重新读取 restores correct content"
+    ],
+    "failureFixtureEvidenceSha256": "8e38c6251c3a82a903fdaa6e7f5ef36bd0348af978d09fb14f04ff40be7bf012",
+    "notInstalledTested": [
+      "Mid-parse cancellation timing",
+      "Chart/image rendering in XLSX",
+      "DOCX/PPTX",
+      "Large real user spreadsheets",
+      "Windows"
+    ]
+  },
+  "automationObservations": [
+    "Initial CUA typeText of Chinese produced no input; paste entered query correctly, not classified as product failure",
+    "Native AX click on table cell selected/scrolled its container; keyboard reached actual nested button and opened detail. Pointer activation not asserted from that failed automation attempt."
+  ],
+  "fixtureIntegrity": {
+    "temporaryMode": "0700",
+    "fileMode": "0600",
+    "allAuthoredCopiesRestoredToOriginalContentHashes": true,
+    "files": [
+      {
+        "name": "xlsx-basic.xlsx",
+        "source": "src/runtime/fixtures/xlsx-basic.xlsx",
+        "sha256": "7d531400913c9cbc21af93a3dd81b646941693ea8875debe778d11f63492b586"
+      },
+      {
+        "name": "mixed-two-pages.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+        "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a"
+      },
+      {
+        "name": "password.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/password.pdf",
+        "sha256": "4185a72bd0969f39ced917e2fb20a28329824a9d4e385df6c49c4a1aa370efbc"
+      },
+      {
+        "name": "damaged.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/damaged.pdf",
+        "sha256": "27791e883da34365bf2b5f07a8b48636861a75f5d6a1fd41f52775a1df1f49e3"
+      },
+      {
+        "name": "xlsx-pages.xlsx",
+        "source": "Authored extension of xlsx-basic.xlsx; adds one merge, hidden row/sheet and row 105",
+        "sha256": "e2aae9d415af8cb5eea3f1367ee4d01d8fbe1a86144038f0e8d2f5486cdcae92"
+      },
+      {
+        "name": "mixed-1.png",
+        "source": "docs/evidence/2026-10-09-capability-hardening/visual-preview-renders/mixed-1.png",
+        "sha256": "266425f22f934eb472be8ab5df73272ea64be68dd4621a94e1b427be242430ab"
+      }
+    ]
+  },
+  "normalExit": {
+    "observedCommand": "Cmd-Q",
+    "cuaResult": "App quit",
+    "formalAndBundledHelperProcessesAfter": 0,
+    "forcedQuit": false
+  },
+  "unsentRetention": {
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "differences": [],
+    "sourceAndFirstCaptureUnchanged": true,
+    "privateReceiptSha256": "4ab767298efd0694beca7964456d38ec5ce0c0e24be147d7566adb992f1c61d9",
+    "boundary": "Only original unsent entries compared after actual use; new conversation/history/cache changes are expected, no all-data-unchanged-after-use claim"
+  },
+  "remaining": [
+    "Desktop folder TCC wait NEW-01 remains unresolved; tests used controlled temporary copies",
+    "All uncovered P16/P21/P35 and 122 plan entries remain",
+    "Next source increment is independent of this installed commit"
+  ]
+}

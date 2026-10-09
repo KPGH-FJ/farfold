@@ -1,0 +1,528 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+(node:14286) PromiseRejectionHandledWarning: Promise rejection was handled asynchronously (rejection id: 38)
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ src/runtime/docx_preview.test.ts (21 tests | 20 failed) 21ms
+     × requires the exact file version and preserves it on successful output 4ms
+     × normalizes changed without private text 1ms
+     × normalizes unreadable without private text 1ms
+     × normalizes encrypted without private text 0ms
+     × normalizes invalid without private text 0ms
+     × normalizes limit without private text 0ms
+     × normalizes readPending without private text 1ms
+     × normalizes readBusy without private text 1ms
+     × cancels a pending capture wait without pretending to terminate OS work 1ms
+     × rejects pre-abort without IPC or Worker creation 0ms
+     × blocks concurrent parsing but abort releases immediately and old messages stay old 0ms
+     × deadline and constructor failure both release the worker slot 2ms
+     × refuses malformed/unbounded worker structures before exposing them to the UI 0ms
+     × refuses malformed/unbounded worker structures before exposing them to the UI 0ms
+     × refuses malformed/unbounded worker structures before exposing them to the UI 0ms
+     × refuses malformed/unbounded worker structures before exposing them to the UI 0ms
+     × refuses malformed/unbounded worker structures before exposing them to the UI 0ms
+     × requires a decoder when images exist but allows text-only environments 5ms
+     × closes each bitmap before continuing and rejects damaged image payloads 1ms
+     × refuses mismatched decoded dimensions and always closes the bitmap 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > requires the exact file version and preserves it on successful output
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'changed' }
+
+- Expected
++ Received
+
+- {
+-   "code": "changed",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:21:70
+     19|   it("requires the exact file version and preserves it on successful o…
+     20|     invoke.mockResolvedValue({ ...capture, file: { ...file, version: "…
+     21|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     22|     invoke.mockResolvedValue(capture);
+     23|     expect(await readDocxCapture(file, new AbortController().signal)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes changed without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'changed', message: 'changed' }
+
+- Expected
++ Received
+
+- {
+-   "code": "changed",
+-   "message": "changed",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes unreadable without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'unreadable', …(1) }
+
+- Expected
++ Received
+
+- {
+-   "code": "unreadable",
+-   "message": "unreadable",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes encrypted without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'encrypted', …(1) }
+
+- Expected
++ Received
+
+- {
+-   "code": "encrypted",
+-   "message": "encrypted",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes invalid without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'invalid', message: 'invalid' }
+
+- Expected
++ Received
+
+- {
+-   "code": "invalid",
+-   "message": "invalid",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes limit without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'limit', message: 'limit' }
+
+- Expected
++ Received
+
+- {
+-   "code": "limit",
+-   "message": "limit",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes readPending without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'readPending', …(1) }
+
+- Expected
++ Received
+
+- {
+-   "code": "readPending",
+-   "message": "readPending",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > normalizes readBusy without private text
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'readBusy', …(1) }
+
+- Expected
++ Received
+
+- {
+-   "code": "readBusy",
+-   "message": "readBusy",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:32:70
+     30|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     31|     invoke.mockRejectedValue({ code, message: "PRIVATE-ERROR" });
+     32|     await expect(readDocxCapture(file, new AbortController().signal)).…
+       |                                                                      ^
+     33|   });
+     34|   it("cancels a pending capture wait without pretending to terminate O…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > cancels a pending capture wait without pretending to terminate OS work
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'cancelled' }
+
+- Expected
++ Received
+
+- {
+-   "code": "cancelled",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:38:43
+     36|     invoke.mockImplementation(() => new Promise((r) => { finish = r; }…
+     37|     const control = new AbortController(), pending = readDocxCapture(f…
+     38|     control.abort(); await expect(pending).rejects.toMatchObject({ cod…
+       |                                           ^
+     39|     finish(capture); expect(invoke).toHaveBeenCalledTimes(1);
+     40|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > rejects pre-abort without IPC or Worker creation
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'cancelled' }
+
+- Expected
++ Received
+
+- {
+-   "code": "cancelled",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:43:56
+     41|   it("rejects pre-abort without IPC or Worker creation", async () => {
+     42|     vi.stubGlobal("Worker", ControlledWorker); const control = new Abo…
+     43|     await expect(readDocxCapture(file, control.signal)).rejects.toMatc…
+       |                                                        ^
+     44|     await expect(readDocxPreview(capture, control.signal)).rejects.toM…
+     45|     expect(invoke).not.toHaveBeenCalled(); expect(ControlledWorker.ins…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > blocks concurrent parsing but abort releases immediately and old messages stay old
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'busy' }
+
+- Expected
++ Received
+
+- {
+-   "code": "busy",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:50:73
+     48|     vi.stubGlobal("Worker", ControlledWorker);
+     49|     const control = new AbortController(), first = readDocxPreview(cap…
+     50|     await expect(readDocxPreview(capture, new AbortController().signal…
+       |                                                                         ^
+     51|     const rejected = expect(first).rejects.toMatchObject({ code: "canc…
+     52|     const next = readDocxPreview(capture, new AbortController().signal…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > deadline and constructor failure both release the worker slot
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'timeout' }
+
+- Expected
++ Received
+
+- {
+-   "code": "timeout",
++ DocxError {
++   "code": "unsupported",
+  }
+
+ ❯ src/runtime/docx_preview.test.ts:58:101
+     56|   it("deadline and constructor failure both release the worker slot", …
+     57|     vi.useFakeTimers(); vi.stubGlobal("Worker", ControlledWorker);
+     58|     const result = readDocxPreview(capture, new AbortController().sign…
+       |                                                                                                     ^
+     59|     await vi.advanceTimersByTimeAsync(10000); await rejected;
+     60|     expect(ControlledWorker.instances[0].terminate).toHaveBeenCalledOn…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > refuses malformed/unbounded worker structures before exposing them to the UI
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > refuses malformed/unbounded worker structures before exposing them to the UI
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > refuses malformed/unbounded worker structures before exposing them to the UI
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > refuses malformed/unbounded worker structures before exposing them to the UI
+ FAIL  src/runtime/docx_preview.test.ts > DOCX capture and exclusive disposable worker > refuses malformed/unbounded worker structures before exposing them to the UI
+TypeError: Cannot read properties of undefined (reading 'ready')
+ ❯ src/runtime/docx_preview.test.ts:74:35
+     72|   ])("refuses malformed/unbounded worker structures before exposing th…
+     73|     vi.stubGlobal("Worker", ControlledWorker); const pending = readDoc…
+     74|     ControlledWorker.instances[0].ready(change(parseDocx(input)));
+       |                                   ^
+     75|     await expect(pending).rejects.toMatchObject({ code: "invalid" });
+     76|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX actual image decode gate > requires a decoder when images exist but allows text-only environments
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/docx_preview.test.ts:81:81
+     79|   it("requires a decoder when images exist but allows text-only enviro…
+     80|     vi.stubGlobal("createImageBitmap", undefined);
+     81|     await expect(decodeDocxImages(parseDocx(docxFixture("05-inline-png…
+       |                                                                                 ^
+     82|     await decodeDocxImages(parseDocx(input));
+     83|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX actual image decode gate > closes each bitmap before continuing and rejects damaged image payloads
+AssertionError: expected "vi.fn()" to be called 2 times, but got 0 times
+ ❯ src/runtime/docx_preview.test.ts:87:20
+     85|     const close = vi.fn(), decode = vi.fn().mockResolvedValue({ width:…
+     86|     await decodeDocxImages(parseDocx(docxFixture("05-inline-png-jpeg")…
+     87|     expect(decode).toHaveBeenCalledTimes(2); expect(close).toHaveBeenC…
+       |                    ^
+     88|     decode.mockRejectedValue(Error("codec failure"));
+     89|     await expect(decodeDocxImages(parseDocx(docxFixture("06-bad-image-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/20]⎯
+
+ FAIL  src/runtime/docx_preview.test.ts > DOCX actual image decode gate > refuses mismatched decoded dimensions and always closes the bitmap
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/docx_preview.test.ts:93:81
+     91|   it("refuses mismatched decoded dimensions and always closes the bitm…
+     92|     const close = vi.fn(); vi.stubGlobal("createImageBitmap", vi.fn().…
+     93|     await expect(decodeDocxImages(parseDocx(docxFixture("05-inline-png…
+       |                                                                                 ^
+     94|   });
+     95| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/20]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 7 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:49:52
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+ ❯ runWithTimeout node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2272:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deadline and constructor failure both release the worker slot". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+AssertionError: expected Error: unsupported { code: 'unsuppor…' } to match object { code: 'timeout' }
+ ❯ _Assertion.__VITEST_REJECTS__ node_modules/.pnpm/@vitest+expect@4.1.11/node_modules/@vitest/expect/dist/index.js:1747:17
+ ❯ _Assertion.propertyGetter node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1570:27
+ ❯ Object.proxyGetter [as get] node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1659:22
+ ❯ src/runtime/docx_preview.test.ts:58:101
+     56|   it("deadline and constructor failure both release the worker slot", …
+     57|     vi.useFakeTimers(); vi.stubGlobal("Worker", ControlledWorker);
+     58|     const result = readDocxPreview(capture, new AbortController().sign…
+       |                                                                                                     ^
+     59|     await vi.advanceTimersByTimeAsync(10000); await rejected;
+     60|     expect(ControlledWorker.instances[0].terminate).toHaveBeenCalledOn…
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deadline and constructor failure both release the worker slot". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:73:64
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:73:64
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:73:64
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:73:64
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: unsupported
+ ❯ Module.readDocxPreview src/runtime/docx_preview.ts:4:114
+      2| import { DocxError, type DocxCapture, type DocxPreview } from "./docx_…
+      3| export async function readDocxCapture(_file: VerifiedFile, _signal: Ab…
+      4| export async function readDocxPreview(_capture: DocxCapture, _signal: …
+       |                                                                                                                  ^
+      5|
+ ❯ src/runtime/docx_preview.test.ts:73:64
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2027:60
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+ ❯ runWithCancel node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10
+ ❯ node_modules/.pnpm/@vitest+runner@4.1.11/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'unsupported' }
+This error originated in "src/runtime/docx_preview.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  20 failed | 1 passed (21)
+     Errors  7 errors
+   Start at  23:20:24
+   Duration  173ms (transform 57ms, setup 0ms, import 78ms, tests 21ms, environment 0ms)
+

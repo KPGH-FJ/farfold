@@ -1,3 +1,6 @@
+import { openingInquiries } from "./opening_inquiries";
+import { draftGroup, type OpenInput } from "./session_open_input";
+export type { OpenInput } from "./session_open_input";
 import { observeAuthentication } from "./authentication";
 import {
   discardEmptyDraft,
@@ -113,6 +116,7 @@ export * from "./session_types";
 export {
   freshThreadState,
   applyElicitation,
+  completeElicitation,
   applyUpdate,
   applyTurnEnd,
   applyConnectionLost,
@@ -127,6 +131,7 @@ export {
 import {
   freshThreadState,
   applyElicitation,
+  completeElicitation,
   clearPendingRequests,
   expirePendingRequest,
   applyUpdate,
@@ -158,22 +163,6 @@ export interface ThreadsSnapshot {
 
 /** Default auto-archive window when the setting is unset (days). */
 export const DEFAULT_AUTO_ARCHIVE_DAYS = 30;
-
-export interface OpenInput {
-  agentId: string;
-  cwd: string;
-  nativeSessionId?: string;
-  configOptions?: Record<string, unknown> | null;
-  fresh?: boolean;
-  /** Separate preparation drafts from the ordinary unsent conversation. Memory only. */
-  draftScope?: string;
-  service?: import("./credentials").ServiceSelection | null;
-  serviceRevision?: string;
-}
-
-function draftGroup(input: OpenInput): string {
-  return `${input.agentId}|${input.cwd}|${JSON.stringify(input.service ?? null)}|${input.serviceRevision ?? ""}|${input.draftScope ?? ""}`;
-}
 
 export type SendAdmission = PromptAdmission | { status: "queued" };
 
@@ -491,6 +480,8 @@ class ThreadsStore {
     } else if (e.kind === "elicitationUnavailable") {
       pushRaw(s, e.params, STRINGS.repair.unsupportedInquiry);
       pauseQueue(s, "unavailable");
+    } else if (e.kind === "elicitationComplete") {
+      completeElicitation(s, e);
     } else if (e.kind === "elicitation") {
       applyElicitation(s, e);
     } else if (e.kind === "toolOutput") {
@@ -594,7 +585,15 @@ class ThreadsStore {
     }
     const openingKey = `${draftGroup(input)} ${input.nativeSessionId ?? (input.fresh ? "fresh" : "-")}`;
     const pending = this.openings.get(openingKey);
-    if (pending) return pending;
+    if (pending) {
+      openingInquiries.join(
+        openingKey,
+        input.inquiryCurrent,
+        input.inquirySignal,
+      );
+      return pending;
+    }
+    const inquiry = openingInquiries.begin(openingKey, input);
 
     let opened: OpenResult | undefined;
     let routePrepared = false;
@@ -622,6 +621,7 @@ class ThreadsStore {
           recheckObserver = undefined;
         };
       channel.onmessage = (event) => {
+        if (!boundKey && inquiry.receive(event)) return;
         recheckObserver?.observe(event);
         const received = event as {
           kind?: unknown;
@@ -789,6 +789,7 @@ class ThreadsStore {
       return state;
     })()
       .catch((error: unknown) => {
+        inquiry.finish(true);
         if (recheck && this.thread(recheck.original.key) !== recheck.original) {
           abandonRecheck?.();
           throw error;
@@ -835,6 +836,7 @@ class ThreadsStore {
         throw error;
       })
       .finally(() => {
+        inquiry.finish();
         this.openings.delete(openingKey);
       });
     this.openings.set(openingKey, promise);

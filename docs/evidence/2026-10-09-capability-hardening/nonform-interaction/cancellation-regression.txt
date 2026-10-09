@@ -1,0 +1,17 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+test acp_client::cancellation_tests::late_form_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+test acp_client::cancellation_tests::late_permission_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1179 filtered out; finished in 0.40s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit 0

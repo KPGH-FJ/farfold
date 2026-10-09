@@ -27,6 +27,7 @@ pub(crate) use open_result::OpenDelivery;
 pub(crate) struct Operation {
     pub abandoned: Arc<AtomicBool>,
     cancel: watch::Sender<bool>,
+    events: Option<pump::SessionSink>,
 }
 
 impl Operation {
@@ -34,7 +35,12 @@ impl Operation {
         Self {
             abandoned: Arc::new(AtomicBool::new(false)),
             cancel: watch::channel(false).0,
+            events: None,
         }
+    }
+    pub(crate) fn with_events(mut self, events: pump::SessionSink) -> Self {
+        self.events = Some(events);
+        self
     }
     pub fn abandon(&self) {
         self.abandoned.store(true, Ordering::SeqCst);
@@ -282,8 +288,9 @@ pub(crate) async fn run(
                         Some(key) => key.into_request(method_id),
                         None => AuthenticateRequest::new(method_id),
                     };
-                    operation
-                        .request(&cx, cx.send_request(request))
+                    let events = operation.events.clone().unwrap_or_else(|| Arc::new(|_| {}));
+                    ops.inquiries
+                        .request(&operation, &cx, || cx.send_request(request), events)
                         .await
                         .map(|_| ())
                         .map_err(authentication_error)

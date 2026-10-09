@@ -15,8 +15,8 @@ use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
     AuthCapabilities, BooleanConfigOptionCapabilities, ClientCapabilities,
     ClientSessionCapabilities, CompactionCapabilities, ElicitationCapabilities,
-    ElicitationFormCapabilities, Implementation, InitializeRequest, Meta,
-    SessionConfigOptionsCapabilities,
+    ElicitationFormCapabilities, ElicitationUrlCapabilities, Implementation, InitializeRequest,
+    Meta, SessionConfigOptionsCapabilities,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -479,11 +479,17 @@ impl AcpManager {
         let pending_permissions = self.pending_permissions.clone();
         let child_pid = process.pid.clone();
         let connection_id = next_connection_id();
+        let inquiries = super::elicitation::ConnectionElicitations::new(
+            self.pending_elicitations.clone(),
+            life.clone(),
+            connection_id.clone(),
+        );
         let ops = SessionOps {
             opening: None,
             connection_id: connection_id.clone(),
             verify_identity: self.session_identity_check(&key, &life),
             elicitations: self.pending_elicitations.clone(),
+            inquiries: inquiries.clone(),
             life: life.clone(),
         };
         let cwd_for_task = cwd.to_path_buf();
@@ -563,6 +569,10 @@ impl AcpManager {
                         if receive_observer.observe(&dispatch) {
                             return Ok(Handled::Yes);
                         }
+                        let dispatch = match inquiries.dispatch(dispatch)? {
+                            Handled::Yes => return Ok(Handled::Yes),
+                            Handled::No { message, .. } => message,
+                        };
                         // Session-scoped traffic can arrive before the
                         // per-session dynamic handler is registered (right
                         // after session/new resolves, or as session/load
@@ -593,7 +603,7 @@ impl AcpManager {
                                 )
                                 .elicitation(
                                     ElicitationCapabilities::new()
-                                        .form(ElicitationFormCapabilities::new()),
+                                        .form(ElicitationFormCapabilities::new()).url(ElicitationUrlCapabilities::new()),
                                 )
                                 .auth(AuthCapabilities::new().terminal(true))
                                 // Pre-standard signal some agents still gate

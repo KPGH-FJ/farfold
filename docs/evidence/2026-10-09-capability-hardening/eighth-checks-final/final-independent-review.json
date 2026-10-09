@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-09T16:19:12.226074+00:00",
+  "reviewer": "verification",
+  "status": "completed_no_new_blocker_in_eighth_integration_scope",
+  "sourceBase": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "method": "Independent read-only source/diff, exact filesystem hashes, original check outputs and evidence-boundary review. No duplicate tests/build, no candidate operation, no app/Agent/user-data access; only this JSON created and formatted.",
+  "independence": "DOCX Rust capture was authored by this reviewer and is not self-endorsed as independent. Its implementation review is by root in docx-backend-independent.json; DOCX frontend and ARCH43 backend reviews here were by non-authors. Integration scope/hash/log checks are independent of the root integration runner.",
+  "combinedVerification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/final-verification.json",
+    "sha256": "2b49f0c2c070720da51cde108b7dc2e229af663f5cba0552b9c024b65057bedc"
+  },
+  "frozenInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/inputs.json",
+    "sha256": "b61f43cfadbeec80d106ecb11d2475fb5317417b9fd5cb87157e4a193a322b60",
+    "count": 1058,
+    "everyCurrentShaMatches": true,
+    "noInputSymlinks": true,
+    "firstToFinalChangedInputs": [
+      "src-tauri/src/acp_client/regression_tests.rs",
+      "src/components/ElicitationCard.tsx",
+      "src/components/ThreadView.tsx",
+      "src/components/UrlElicitationCard.tsx",
+      "src/runtime/interaction_actions.stop.test.ts",
+      "src/runtime/interaction_actions.ts",
+      "src/runtime/opening_inquiries.test.ts",
+      "src/runtime/opening_inquiries.ts"
+    ],
+    "ownedCurrentHashesMatchCombinedReceipt": true
+  },
+  "scope": {
+    "sourceConfigCount": 77,
+    "exactUnion": "DOCX parser/worker 20 + backend 7 + root UI 10 + ARCH43 original owned 37 + .prettierignore + interaction_actions stop regression test + Rust regression test (77 unique).",
+    "unlistedDirtySource": [],
+    "listedCleanOrMissing": [],
+    "maximumOwnedLines": {
+      "path": "src/components/AgentAuthSection.tsx",
+      "lines": 1492
+    },
+    "lineLimit": 1500,
+    "protectedHistoricalReadmes": [
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+        "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+        "unchangedFromPriorIndependentCheckpoint": true
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+        "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+        "unchangedFromPriorIndependentCheckpoint": true
+      }
+    ],
+    "protectedFilesRemainOutsideThisSlice": true,
+    "otherHistoricalUntrackedFilesNotTouched": true
+  },
+  "sevenChecks": {
+    "observedFromOriginalLogs": [
+      {
+        "name": "format",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/format-repaired.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "typecheck",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "frontend",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/frontend.txt",
+        "sha256": "9015bc7508eaf47903d91b0f341146624512f006db46c1cbe6ed8d162a36ca9c"
+      },
+      {
+        "name": "build",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/build.txt",
+        "sha256": "c82f9937f1e665be45a9974fcd054b5b58c06936c6ea11dd6324292724af9635"
+      },
+      {
+        "name": "cargo-fmt",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "clippy",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/clippy.txt",
+        "sha256": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0"
+      },
+      {
+        "name": "rust",
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/rust.txt",
+        "sha256": "fa4c3ef9694fc5b32bace5c40e4b4c893cc2ad845f0ae1c906552e80807fa5ba"
+      }
+    ],
+    "frontendFiles": 279,
+    "frontendPassed": 3121,
+    "frontendFailed": 0,
+    "rustPassed": 1178,
+    "rustFailed": 0,
+    "rustIgnored": 5,
+    "repeatedByReviewer": false,
+    "formatQualification": "Final seven-check runner itself retained passed=false because its format step found the newly generated first receipt. Root preserved raw bytes, formatted only receipt JSON and current docs, then full format-repaired.txt passed; six unchanged-source checks are reused accurately."
+  },
+  "receiptPreservation": [
+    {
+      "directory": "eighth-checks",
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/receipt.raw.txt",
+        "sha256": "0833cd7f7dba37c1f8a7e04802878f6fe1f506e0be814dcc84136a7f61809f0f"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/receipt.json",
+        "sha256": "dd0edfa743034ab01d52da70111ca1e496d32d57c002b0bd146a030ffbfce02b"
+      },
+      "semanticEqual": true
+    },
+    {
+      "directory": "eighth-checks-final",
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/receipt.raw.txt",
+        "sha256": "6e1f6eb789f1a6108ee7c3c23a46cb0d242c17b2ecf489c804e02d37df1da014"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks-final/receipt.json",
+        "sha256": "a4d2ca0e0c50c4bbf0e04d2005be146fac234f1a06bdb476f9aff1f97866195a"
+      },
+      "semanticEqual": true
+    }
+  ],
+  "originalFailuresAndRepairs": [
+    {
+      "area": "opening unsupported inquiry",
+      "classification": "Product regression",
+      "original": "First full frontend config-recheck test failed: real unavailable inquiry during reload was consumed by transient opening UI.",
+      "repair": "OpeningInquiryOwner still publishes notice/details but returns false, preserving channel buffering, raw details and non-configuration pause. ConfigurationRecheck and original config-recheck tests unchanged.",
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/config-recheck-final-tests-red.txt",
+          "sha256": "9e6287cf4d2bb468f7a87be578761f2ec4136f4760406be11c66a0250ab157f4"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/config-recheck-green.txt",
+          "sha256": "caf2bbc2078f8468a44f74d7cefa14f2a5d92e2b29aea01277eb35cb3ac6ccc7"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/config-recheck-regression.txt",
+          "sha256": "468f6b81299a4bc50c8ffc5e956253182db86d3ff3fa9db7936781bfb47d84e2"
+        }
+      ],
+      "observed": "35 pass / 3 fail expanded red; 38/38 green; associated 141/141 green. Source chain independently read."
+    },
+    {
+      "area": "negative inquiry response after unknown stop",
+      "classification": "Product regression",
+      "original": "Shared reply current guard blocked explicit cancellation of an existing pending inquiry after stop became unknown.",
+      "repair": "stopping blocks every action; unknown stop permits only pending original decline/cancel, retaining exact thread/request identity. Accept/open URL and late opener accept remain blocked. Actual ThreadView exposes this same split and disables fields/accept only under unknown.",
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/stop-actions-repair.json",
+          "sha256": "9cfacefb75b8bb651c68598b0b456482c2d6d50ec3afe6802394e5b4ac8f7385"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/stop-actions-final-green.txt",
+          "sha256": "471043da89db3e7b1603455783f96b7b3463730373861c4b51c2a0cb20e7e011"
+        }
+      ],
+      "observed": "Original 3 assertions preserved; stop test only adds 168 lines. Expanded negative/accept/submitting/uncertain/late-opener and actual card/ThreadView SSR cases; associated 64/64 green. Separate SSR performance-trace mock fixes an unrelated harness side effect without relaxing zero-IPC assertions."
+    },
+    {
+      "area": "protocol regression synthetic peer",
+      "classification": "Obsolete fixture response assumption, supported by source and controlled replay; original child stderr was not captured",
+      "original": "Backtrace places timeout at turnEnd wait. Synthetic peer omitted required elicitationId but expected result.action=cancel.",
+      "repair": "Only peer assertion/comment changed to require no result and exact JSON-RPC -32602. Malformed request bytes, 5-second event bound, multiple permissions, invalid/wrong-owner/duplicate response, model/prompt gating, history/restore and cancellation assertions retained. No production backend changed for this failure.",
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust-regression-repair.json",
+          "sha256": "fb640f0738c64e6b41bb630886ce760b5c0f9135641513be6822f6893efc4af2"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust-regression-fixture-fixed.txt",
+          "sha256": "d678f4c0bca14c5394bfc598918e9643f6e89a9f4a58c8eccf9649816bad4de4"
+        }
+      ],
+      "observed": "3/3 related tests pass; no claim of captured original child stderr."
+    }
+  ],
+  "firstFullRunRetained": {
+    "frontendPassed": 3104,
+    "frontendFailed": 2,
+    "rustPassed": 1177,
+    "rustFailed": 1,
+    "rustIgnored": 5,
+    "sourceUnchanged": true,
+    "evidence": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/frontend.txt",
+        "sha256": "45f9f65f25e98667dd6c37d1b76285a6473cb1b23dd065c9f208dfb29008ec23"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust.txt",
+        "sha256": "c9041da622687914203497b74658b46c603869672b1a21294cdb739013e3e9b2"
+      }
+    ]
+  },
+  "capabilityAndDocs": {
+    "originalAuditIds": 122,
+    "currentPlanRows": 122,
+    "uniqueIds": 122,
+    "sameExactSet": true,
+    "newIssuesSeparate": true,
+    "currentDocuments": [
+      {
+        "path": "docs/status.md",
+        "sha256": "3fe90a5ee084b625d21651a71de8266c97123e0a34cadc2949d36f4b8a44448b"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "27632aba432b4a15fe73d152df7ca40ce76d9e9f03cc7d9fca26d71ca156dbd6"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "sha256": "008ba816a1ea365f07ef67fe644a81d019f0c58af8793e6a285cfae5bf68c246"
+      }
+    ],
+    "localLinkTargetsChecked": 127,
+    "missingLocalTargets": [],
+    "statementReview": "Current docs distinguish eighth implementation/controlled evidence from pending candidate/install acceptance. P16 retains DOCX native/complete Office boundary, P21 remains partial, ARCH43 still needs per-Agent proof; 29 x 8 exit standards and all original 122 items retained.",
+    "priorIndependentReceipts": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-independent.json",
+        "sha256": "ff47c4afe38cc86e178fb3b4fc3aa72207a51fe0a2429b21d35d8d4cfb16c516"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-independent-review/receipt.json",
+        "sha256": "7c75a5d88a185e9a331d8dda945fbbea6da505b1b539b3409dfb2241fb8888fe"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/independent-backend/receipt.json",
+        "sha256": "1d84335e61a9c50d36275bb19719a630b05f48ed0cdb2a0533a57770d36241f2"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/independent-frontend.json",
+        "sha256": "aa0d2aa67f5362103ac5f138ebb95b5726e37545a65dfc5cb1527983ac5551e1"
+      }
+    ],
+    "checkpointQualification": "Pre-repair ARCH43 frontend checkpoint remains historical; later stop-actions repair is explicitly recorded rather than rewriting old SHA claims."
+  },
+  "privacyReview": {
+    "scope": "334 new eighth evidence files (9,981,920 bytes) observed before final receipt creation, excluding historical seventh-candidate and then-running final logs; final checks/raw receipts/documents additionally inspected. Source/owned diff reviewed.",
+    "method": "Scoped text scan for credential prefixes, literal Authorization secrets and private app-data paths, followed by context checks; provenance/hash checks and prior visual review for controlled binary samples/screenshots. This is not a guarantee that arbitrary secrets are mathematically absent.",
+    "noKnownSecretOrPrivateUserContentFound": true,
+    "resolvedPatternMatches": [
+      "Bundled document-tool script and runtime paths only, not credentials/config contents.",
+      "Retention verifier references exact private output directory but includes no private manifest or user database content."
+    ],
+    "largeCaptureBoundary": "docx/browser/captures.json contains 27 controlled packages: 19 authored boundary documents, 3 independent python-docx documents, 5 BSD-licensed maintainer samples; synthetic /authored paths. It is not user transcript/history capture.",
+    "licenses": "Independent writer corpus retains python-docx MIT and CC0 synthetic content; public Mammoth samples retain BSD-2-Clause provenance/license. No bundled/network font redistribution.",
+    "formatIgnoreBoundary": "Three explicit browser evidence directories retain executed bytes; src product/tests remain formatted."
+  },
+  "candidatePreparationReview": {
+    "executed": false,
+    "runnerPrepareVerifyInventoryExactlyEqualsFinal1058": true,
+    "scripts": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/run-eighth-checks.py",
+        "sha256": "ecfd76306f1ba347ecf0ef48af70a0a16ed5ac138a3fe6d7642d40e1ddf1f3fd"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/prepare-candidate.py",
+        "sha256": "0a85583737d5e53a780432a75ef03c1373f7392f8b8fec7dd18dfed05871f0e0"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/eighth-candidate/verify-candidate.py",
+        "sha256": "a8c9cad2762273ac5ec665cea931206da28ef5d2e4b0062d236227ed97e70a33"
+      }
+    ],
+    "checksDirectoryExists": true,
+    "next": "Wait for root successful exact-commit candidate preparation before invoking independent verifier."
+  },
+  "notEstablished": [
+    "Eighth candidate, installed application, Tauri IPC or native WebKit acceptance.",
+    "Full Office/P16/P21, Word layout fidelity, all Agent non-form requests or real account flows.",
+    "Windows operation, all 29 x 8 standards, all 122 items or market readiness."
+  ],
+  "findings": []
+}

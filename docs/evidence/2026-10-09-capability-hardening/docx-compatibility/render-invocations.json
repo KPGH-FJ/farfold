@@ -1,0 +1,44 @@
+[
+  {
+    "sample": "01-unicode-lists.docx",
+    "exitCode": 0,
+    "command": [
+      "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx",
+      "--output_dir",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-01-unicode-lists",
+      "--emit_pdf"
+    ],
+    "log": "01-unicode-lists-render.txt",
+    "logSha256": "466a55ecd2dcf9b1ba947d93be965e997a7c27e7ae151b30648fb2e238d72518"
+  },
+  {
+    "sample": "02-table-images-stories.docx",
+    "exitCode": 0,
+    "command": [
+      "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx",
+      "--output_dir",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-02-table-images-stories",
+      "--emit_pdf"
+    ],
+    "log": "02-table-images-stories-render.txt",
+    "logSha256": "8d144d4afe0e320d484d5b587d79710b521183fe06101ebddf80a93004f359c0"
+  },
+  {
+    "sample": "03-sections.docx",
+    "exitCode": 0,
+    "command": [
+      "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx",
+      "--output_dir",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-03-sections",
+      "--emit_pdf"
+    ],
+    "log": "03-sections-render.txt",
+    "logSha256": "ce1e4e5c4745808668b72ddbb776fbcc738ac75d9ada4de5c14ad8955dc78cf8"
+  }
+]

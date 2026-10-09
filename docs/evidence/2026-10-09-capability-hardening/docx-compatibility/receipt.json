@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T15:29:15.342150+00:00",
+  "status": "independent_writer_samples_and_offline_reference_complete",
+  "scope": "Three ordinary independent-writer DOCX compatibility inputs; Farfold parser/Worker/UI results remain separate proof layers",
+  "formalApplicationOrAgentStarted": false,
+  "userDocumentsRead": false,
+  "cloudUpload": false,
+  "newDependencies": false,
+  "downloadedFonts": false,
+  "samples": [
+    {
+      "file": "01-unicode-lists.docx",
+      "bytes": 37156,
+      "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+      "expectedContentFile": "expectations.json"
+    },
+    {
+      "file": "02-table-images-stories.docx",
+      "bytes": 42364,
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5",
+      "expectedContentFile": "expectations.json"
+    },
+    {
+      "file": "03-sections.docx",
+      "bytes": 39253,
+      "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d",
+      "expectedContentFile": "expectations.json"
+    }
+  ],
+  "writer": {
+    "name": "python-docx",
+    "version": "1.2.0",
+    "method": "Bundled existing writer high-level APIs; normal default template/styles/theme retained; no authored OOXML",
+    "license": "MIT default-template material; CC0-1.0 newly authored synthetic text/images/scripts; see LICENSE-NOTICE.txt and python-docx-LICENSE.txt",
+    "sourceAndLocalHashes": "provenance.json",
+    "generationEvidence": "Generation command tool output reported the three file names/bytes/SHA values; no standalone raw generation stdout was saved. generate.py and post-generation file checks are retained; no reconstructed log is presented as raw."
+  },
+  "independentExpectedValues": {
+    "basis": "Authored semantic inputs before serialization, not Farfold parser output",
+    "structure": {
+      "status": "passed",
+      "method": "Python stdlib zipfile CRC for all entries plus ElementTree; no Farfold/parser or python-docx readback",
+      "rawStdout": "structure-check.txt",
+      "coverage": [
+        "Exact authored nonempty body paragraph order and empty paragraph",
+        "Direct bold/italic run flags",
+        "Numbered/bullet paragraph styles resolve to the same list instance, decimal %1. starts at 1",
+        "Table 4 rows/3-column grid, horizontal span 2, vertical restart/continuation, empty cell",
+        "Image bytes exactly equal independently authored PNG/JPEG",
+        "Explicit per-section header/footer relationship targets and exact stories",
+        "No external relationships, traversal parts, duplicate entries, VBA/ActiveX names"
+      ]
+    },
+    "visual": {
+      "status": "passed_with_environment_qualification",
+      "renderer": "Bundled LibreOffice 25.2-headless-codex.1 via documents render_docx.py; never Microsoft Word or Farfold",
+      "allFinalPagesPersonallyViewed": true,
+      "finalPageCount": 4,
+      "samples": [
+        {
+          "sample": "01-unicode-lists.docx",
+          "pages": ["render-01-local-font-probe/page-1.png"],
+          "observed": "Chinese title/body, bold/italic, café/Greek, 0, false, blank paragraph, visible extra spacing, decimal 1/2/3 and both round bullets"
+        },
+        {
+          "sample": "02-table-images-stories.docx",
+          "pages": ["render-02-table-images-stories-local-fonts/page-1.png"],
+          "observed": "Chinese header/footer, merged grid and empty cell, 0/false/12.50, red square PNG and blue circle JPEG, captions"
+        },
+        {
+          "sample": "03-sections.docx",
+          "pages": [
+            "render-03-sections-local-fonts/page-1.png",
+            "render-03-sections-local-fonts/page-2.png"
+          ],
+          "observed": "First section records 01–16 and first header/footer; next page second section records 17–32 with distinct second header/footer"
+        }
+      ],
+      "initialFailureRetained": {
+        "artifacts": [
+          "render-01-unicode-lists/",
+          "render-02-table-images-stories/",
+          "render-03-sections/"
+        ],
+        "finding": "All three conversions exited 0 but Chinese glyphs were absent/tofu in initial PNGs; visual success was not inferred from process exit. Latin/Greek, numbering, table layout and images were visible. These first four pages are retained unchanged.",
+        "followup": "Only a dedicated child FONTCONFIG_FILE was changed to reference existing system and bundled fonts plus a task-local cache; original DOCX was unchanged and all four repeated pages showed Chinese. This establishes the reference-render environment dependency, not a Farfold defect."
+      },
+      "fontConfiguration": "local-font-probe.conf",
+      "invocations": [
+        "render-invocations.json",
+        "local-font-probe.json",
+        "local-fonts-invocations.json"
+      ],
+      "cleanup": "font-cache-cleanup.json",
+      "qualification": "Exact Microsoft Word pagination/layout/font fidelity and other writers are not established. This corpus uses one independent writer in three ordinary feature combinations."
+    }
+  },
+  "farfoldFirstCheckpoint": {
+    "status": "pure_parser_three_passed_as_reported_by_peer_and_raw_log_reviewed",
+    "rawLog": "docs/evidence/2026-10-09-capability-hardening/docx/compatibility-first.txt",
+    "rawLogSha256": "8d5741110f0b8ba936ca5bdb6fa919b546d2e8da1deff9469761e6d432faee1f",
+    "runBy": "product_coverage",
+    "reviewerDidNotRerun": true,
+    "observedCoverage": [
+      "Exact body text/order, empty paragraphs, decimal labels, image dimensions and MIME, expected story text"
+    ],
+    "notEstablishedByInitialThreeTests": [
+      "Actual Worker image decoding",
+      "Browser visual bullet shape (default template uses Symbol U+F0B7)",
+      "Merge span correctness",
+      "Direct bold/italic style values",
+      "Story kind/section ownership",
+      "Installed desktop IPC/UI"
+    ],
+    "followup": "Peer was asked to add missing semantic assertions and real browser/Worker checks; its later receipts must retain failures and identify final source/input hashes."
+  },
+  "boundaries": [
+    "Only files under this docx-compatibility directory were authored by this subtask. No frozen backend changes.",
+    "No malicious active content, external image requests, macros or user-authored data were introduced.",
+    "These ordinary writer inputs complement the manually authored 28 edge-case DOCX fixtures; neither corpus implies arbitrary DOCX or editing support.",
+    "Farfold parser first checkpoint does not establish Worker/native IPC/installed UI, or full fidelity."
+  ],
+  "retainedFiles": [
+    {
+      "path": "01-unicode-lists-render.txt",
+      "bytes": 133,
+      "sha256": "466a55ecd2dcf9b1ba947d93be965e997a7c27e7ae151b30648fb2e238d72518"
+    },
+    {
+      "path": "01-unicode-lists.docx",
+      "bytes": 37156,
+      "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861"
+    },
+    {
+      "path": "02-table-images-stories-local-fonts.txt",
+      "bytes": 794,
+      "sha256": "ff173584c4b79b47eb4a2ca916a62d8c17a4e4a73aa89117a8ec5dba68c63412"
+    },
+    {
+      "path": "02-table-images-stories-render.txt",
+      "bytes": 140,
+      "sha256": "8d144d4afe0e320d484d5b587d79710b521183fe06101ebddf80a93004f359c0"
+    },
+    {
+      "path": "02-table-images-stories.docx",
+      "bytes": 42364,
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5"
+    },
+    {
+      "path": "03-sections-local-fonts.txt",
+      "bytes": 746,
+      "sha256": "d74585d3c18a84b7e11fc6c1b09e8966cdb8ef5c49880f3f9d42c53429e7aaeb"
+    },
+    {
+      "path": "03-sections-render.txt",
+      "bytes": 128,
+      "sha256": "ce1e4e5c4745808668b72ddbb776fbcc738ac75d9ada4de5c14ad8955dc78cf8"
+    },
+    {
+      "path": "03-sections.docx",
+      "bytes": 39253,
+      "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d"
+    },
+    {
+      "path": "LICENSE-NOTICE.txt",
+      "bytes": 733,
+      "sha256": "50ccb562efdcbc274d0f3697209e8f0ce5a9f27a402dbfd4c47d95a3f58e3eff"
+    },
+    {
+      "path": "authored-blue.jpg",
+      "bytes": 3714,
+      "sha256": "f8cd6bc1fb4cae98f062d68d3a740926fa435b61c0e91e45a52f2fd63116387e"
+    },
+    {
+      "path": "authored-red.png",
+      "bytes": 336,
+      "sha256": "552c0f1bc605ee307cf847786ae061e157f0f249450ab11962ef2cd2ea31cefd"
+    },
+    {
+      "path": "check_structure.py",
+      "bytes": 7146,
+      "sha256": "a4f0a4676561e4279800348138fe44ea4a3370f6d7173419e42ceba50122b1c7"
+    },
+    {
+      "path": "expectations.json",
+      "bytes": 4868,
+      "sha256": "f4c22011acfcea6097225c223879faaa2b2655f2be8a0a8b0d291fc1f1487120"
+    },
+    {
+      "path": "font-cache-cleanup.json",
+      "bytes": 393,
+      "sha256": "769afe5328df67a6ef58cf3b9f36418cc88a4533f7c8b1b8b5234ed1e360cc5b"
+    },
+    {
+      "path": "generate.py",
+      "bytes": 7324,
+      "sha256": "ffd39cb8b9631668c63914d56f451393cbe3014f083716ec6cf3a8543581acb5"
+    },
+    {
+      "path": "local-font-probe.conf",
+      "bytes": 382,
+      "sha256": "ef8c1d9e74facd5b45cde3e2923dbf8046caf8bcdaba2ae9751f479ccb113325"
+    },
+    {
+      "path": "local-font-probe.json",
+      "bytes": 867,
+      "sha256": "932a1134815b9c9eab7762573cea0d7fb57c064b26f742c862f73a37cb985e7b"
+    },
+    {
+      "path": "local-font-probe.txt",
+      "bytes": 757,
+      "sha256": "d4567e6df805171231fb48595e4a63cad7c9c55a94b1ee733e263aec8ba2d78f"
+    },
+    {
+      "path": "local-fonts-invocations.json",
+      "bytes": 1519,
+      "sha256": "18518ae2c979d7d8a1e1531b1eff610f3f6926e8844dcc6e427e1d8bda54b3dd"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 2362,
+      "sha256": "6961bcf8039584494839bfd9b684cd6f68affb9449488a1fd4e5806390b975ea"
+    },
+    {
+      "path": "python-docx-LICENSE.txt",
+      "bytes": 1104,
+      "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132"
+    },
+    {
+      "path": "render-01-local-font-probe/01-unicode-lists.pdf",
+      "bytes": 108049,
+      "sha256": "901687e899b8629e6d289a34cb2c8a4969146f7a979b447a0fc57f60b224dbab"
+    },
+    {
+      "path": "render-01-local-font-probe/page-1.png",
+      "bytes": 105898,
+      "sha256": "2c98499ac1b866e69258dd6aea058fee8ca9a7cedf8d6132e01a759646229ac5"
+    },
+    {
+      "path": "render-01-unicode-lists/01-unicode-lists.pdf",
+      "bytes": 44123,
+      "sha256": "08c46ad31297bf60e5f85a85091212b3d4894b394c37fe2449b780bdbe6fd21d"
+    },
+    {
+      "path": "render-01-unicode-lists/page-1.png",
+      "bytes": 27238,
+      "sha256": "55baf0789a2335b9919d6903cfb6bbb32341da692b607b53be0b444f4d0a1f4f"
+    },
+    {
+      "path": "render-02-table-images-stories/02-table-images-stories.pdf",
+      "bytes": 31858,
+      "sha256": "8e486bc7dd53ba65320b93542dd94a6ff324293a0fb36663e42a65efaf653563"
+    },
+    {
+      "path": "render-02-table-images-stories/page-1.png",
+      "bytes": 45538,
+      "sha256": "d86155af04b1edfe37c0330b2add7f3309f7d6c10160a39e7b39b0bd357158e8"
+    },
+    {
+      "path": "render-02-table-images-stories-local-fonts/02-table-images-stories.pdf",
+      "bytes": 78860,
+      "sha256": "5d855f754509908d68176ab958aeee966718ad4d53063560ada9a825a7570372"
+    },
+    {
+      "path": "render-02-table-images-stories-local-fonts/page-1.png",
+      "bytes": 121414,
+      "sha256": "80960642b9dcdec0c80f05be2e0e9666aa9b0dd002196fc94ffd8bb835fc478a"
+    },
+    {
+      "path": "render-03-sections/03-sections.pdf",
+      "bytes": 41082,
+      "sha256": "1b62d21bb7632c6dc3f16d339db22b7021456e1582f9048e8a18c31068e19a4e"
+    },
+    {
+      "path": "render-03-sections/page-1.png",
+      "bytes": 79890,
+      "sha256": "9f1836ff7526f5690b9ce8b62a1190707e3b688b793ca1ee21c60cfa540d9443"
+    },
+    {
+      "path": "render-03-sections/page-2.png",
+      "bytes": 29922,
+      "sha256": "b40e6d0243fb60c74f827c5572307b0675c6ae7530915e8de117aa8bd45cd5f6"
+    },
+    {
+      "path": "render-03-sections-local-fonts/03-sections.pdf",
+      "bytes": 77031,
+      "sha256": "6b8218929ae87784508c40b72df8eede91e5550f7e98929db0d93e4d3df13cb6"
+    },
+    {
+      "path": "render-03-sections-local-fonts/page-1.png",
+      "bytes": 221768,
+      "sha256": "00ca428dc6cbc1ee1e62c79ec415b602d8abd210247490b4a84559d159b7dbd8"
+    },
+    {
+      "path": "render-03-sections-local-fonts/page-2.png",
+      "bytes": 179772,
+      "sha256": "7e063f7b5e4a256d8dc0b4ef9c6a949a57cb0d769c8c0c010d740b72996a43cf"
+    },
+    {
+      "path": "render-invocations.json",
+      "bytes": 2165,
+      "sha256": "4f4658876604185dac2eb01c21add3f547ee72fb5fb64bf6e05303c3831b00e8"
+    },
+    {
+      "path": "structure-check.txt",
+      "bytes": 2970,
+      "sha256": "885937a8de1ba9b5f1c6efb47e942b73ab7a69dfed25d856c4756d48ecbc4035"
+    }
+  ],
+  "productionSourceFilesModified": false
+}

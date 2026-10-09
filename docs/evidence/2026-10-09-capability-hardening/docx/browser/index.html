@@ -1,0 +1,257 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>DOCX controlled Worker fixture</title>
+    <style>
+      body {
+        font: 14px system-ui;
+        margin: 32px;
+        background: #fafafa;
+        color: #222;
+      }
+      img {
+        width: 120px;
+        margin: 16px;
+        border: 1px solid #bbb;
+      }
+      pre {
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DOCX — controlled actual Worker</h1>
+    <p>
+      Public authored content, actual parser and image decoder. No native app or
+      user document.
+    </p>
+    <main></main>
+    <pre id="result"></pre>
+    <script type="module">
+      import { readDocxPreview } from "/src/runtime/docx_preview.ts";
+      const checks = [],
+        start = performance.now();
+      let ipcCalls = 0;
+      window.__TAURI_INTERNALS__ = {
+        invoke() {
+          ipcCalls++;
+          throw Error("unexpected IPC");
+        },
+      };
+      const check = (name, ok) => {
+        checks.push({ name, passed: !!ok });
+        if (!ok) throw Error(name);
+      };
+      const render = (capture) =>
+        readDocxPreview(capture, new AbortController().signal);
+      const text = (blocks) =>
+        blocks.flatMap((b) =>
+          b.kind === "paragraph"
+            ? [b.runs.map((r) => (r.kind === "text" ? r.text : "")).join("")]
+            : b.kind === "table"
+              ? b.rows.flatMap((r) => r.cells.flatMap((c) => text(c.blocks)))
+              : [],
+        );
+      try {
+        const captures = await (await fetch("./captures.json")).json();
+        const get = (name) => captures["docx-fixtures/" + name];
+        const backend = await (
+          await fetch("../../docx-backend-capture.json")
+        ).json();
+        const result = await render(backend);
+        check(
+          "actual Rust capture to actual Worker returns two decoded resources",
+          result.images.length === 2 &&
+            result.images.every((i) => i.width === 8 && i.height === 8),
+        );
+        check(
+          "same VerifiedFile receipt preserved",
+          result.file.sha256 === backend.file.sha256 &&
+            result.file.version === backend.file.version,
+        );
+        for (const image of result.images) {
+          const el = document.createElement("img");
+          const url = URL.createObjectURL(
+            new Blob([image.bytes], { type: image.mimeType }),
+          );
+          el.src = url;
+          el.alt = "public fixture " + image.mimeType;
+          document.querySelector("main").append(el);
+          await el.decode();
+          URL.revokeObjectURL(url);
+          check("DOM decoded " + image.mimeType, el.naturalWidth === 8);
+        }
+        document.documentElement.dataset.capture = "docx-worker-pixels";
+        for (
+          let i = 0;
+          i < 100 &&
+          document.documentElement.dataset.captured !== "docx-worker-pixels";
+          i++
+        )
+          await new Promise((r) => setTimeout(r, 50));
+        check(
+          "zero false empty and spaces retained",
+          JSON.stringify(text((await render(get("01-text-values"))).blocks)) ===
+            JSON.stringify([
+              "0",
+              "false",
+              "",
+              "  kept  spaces  ",
+              "中文 A & B < C",
+              "after empty",
+            ]),
+        );
+        check(
+          "styles true and direct false retained",
+          (await render(get("02-style-inheritance"))).blocks[0].runs[1].style
+            .bold === false,
+        );
+        check(
+          "list restart retained",
+          JSON.stringify(
+            (await render(get("03-list-restart"))).blocks.map(
+              (p) => p.list.label,
+            ),
+          ) === JSON.stringify(["1.", "2.", "1.", "2."]),
+        );
+        check(
+          "table merge retained",
+          (await render(get("04-table-merges"))).blocks[0].rows[1].cells[0]
+            .rowSpan === 2,
+        );
+        for (const [name, code] of [
+          ["06-png-pixels-invalid", "invalid"],
+          ["10-altchunk-html", "unsupported"],
+          ["11-macro-content-type", "unsupported"],
+          ["12-vba-marker-entry", "unsupported"],
+          ["13-revisions", "unsupported"],
+          ["15-unknown-body-element", "unsupported"],
+          ["17-doctype", "unsupported"],
+          ["18-style-cycle", "invalid"],
+        ]) {
+          try {
+            await render(get(name));
+            check(name + " rejected", false);
+          } catch (error) {
+            check(name + " rejected", error.code === code);
+          }
+        }
+        check(
+          "stories retained",
+          (await render(get("07-header-footer-footnote"))).stories.length === 3,
+        );
+        check(
+          "missing field cache is explicit",
+          (await render(get("08-field-caches"))).warnings.some(
+            (w) => w.code === "missingFieldResult",
+          ),
+        );
+        const ext = await render(get("09-external-relationships"));
+        check(
+          "external images never returned",
+          ext.partial &&
+            ext.images.length === 0 &&
+            !JSON.stringify(ext).includes("docx-fixture.invalid"),
+        );
+        check(
+          "hidden excluded",
+          !JSON.stringify(await render(get("14-hidden-run"))).includes(
+            "HIDDEN public marker",
+          ),
+        );
+        check(
+          "one compatibility branch",
+          text((await render(get("16-alternate-content"))).blocks)[0] ===
+            "SUPPORTED FALLBACK",
+        );
+        check(
+          "missing image explicit",
+          (await render(get("19-missing-image-part"))).warnings.some(
+            (w) => w.code === "missingImage",
+          ),
+        );
+        for (const [key, capture] of Object.entries(captures).filter(([k]) =>
+          k.startsWith("docx-compatibility/"),
+        )) {
+          const d = await render(capture);
+          check(
+            "independent writer " + capture.file.name,
+            d.blocks.length > 0 && d.file.sha256 === capture.file.sha256,
+          );
+        }
+        for (const [key, capture] of Object.entries(captures).filter(([k]) =>
+          k.startsWith("docx/public-samples/"),
+        )) {
+          const d = await render(capture);
+          check(
+            "unchanged maintainer sample " + capture.file.name,
+            d.blocks.length > 0 &&
+              d.file.sha256 === capture.file.sha256 &&
+              (capture.file.name !== "tiny-picture.docx" ||
+                d.images.length === 1),
+          );
+        }
+        const control = new AbortController(),
+          pending = readDocxPreview(get("01-text-values"), control.signal);
+        const rejected = pending.then(
+          () => false,
+          (e) => e.code === "cancelled",
+        );
+        control.abort();
+        const next = render(get("01-text-values"));
+        check("immediate cancel", await rejected);
+        check("new worker after cancel", (await next).blocks.length === 6);
+        const busy = render(get("01-text-values"));
+        try {
+          await render(get("01-text-values"));
+          check("busy rejected", false);
+        } catch (e) {
+          check("busy rejected", e.code === "busy");
+        }
+        await busy;
+        const NativeWorker = window.Worker;
+        window.Worker = class extends NativeWorker {
+          constructor(_url, opts) {
+            super(new URL("./idle.worker.js", import.meta.url), opts);
+          }
+        };
+        const since = performance.now();
+        try {
+          await render(get("01-text-values"));
+          check("deadline", false);
+        } catch (e) {
+          check(
+            "real idle Worker deadline",
+            e.code === "timeout" && performance.now() - since >= 9900,
+          );
+        } finally {
+          window.Worker = NativeWorker;
+        }
+        check(
+          "deadline slot recovery",
+          (await render(get("01-text-values"))).blocks.length === 6,
+        );
+        check("no native IPC", ipcCalls === 0);
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: true,
+          checks,
+          elapsedMs: performance.now() - start,
+          ipcCalls,
+          scope:
+            "Chromium real Worker with actual Rust capture JSON, authored captures, and explicit idle Worker for deadline. Not installed WebKit/Tauri IPC or Word pagination.",
+        });
+      } catch (error) {
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: false,
+          checks,
+          error: String(error),
+          stack: error.stack,
+          ipcCalls,
+        });
+      } finally {
+        document.documentElement.dataset.done = "true";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{
+  "repository": "mwilliamson/mammoth.js",
+  "tag": "1.13.0",
+  "source": "Maintainer-published test documents, retrieved unchanged. Original authoring application not assumed. Two network transfers truncated and discarded; final bytes verified against git blobs from official API.",
+  "license": "BSD-2-Clause, LICENSE retained",
+  "files": [
+    {
+      "file": "footnotes.docx",
+      "url": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/test/test-data/footnotes.docx",
+      "gitBlob": "3228e74b1c5b596a3b4d46b5110a57fb8105c4d5",
+      "bytes": 15936,
+      "sha256": "a3d786ba3ad53833dd3d5e01bd55e93b628c1287d8f9210eb94cb7533f270306",
+      "sourceTextNodes": ["Ouch", "."]
+    },
+    {
+      "file": "simple-list.docx",
+      "url": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/test/test-data/simple-list.docx",
+      "gitBlob": "c2cd5ae96ebaf909db41c7c852a643cbcc9d9950",
+      "bytes": 13887,
+      "sha256": "ed3c015cf411d07b08bf34264ff709363740b0747af355479088079d0796dfb3",
+      "sourceTextNodes": ["Apple", "Banana"]
+    },
+    {
+      "file": "single-paragraph.docx",
+      "url": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/test/test-data/single-paragraph.docx",
+      "gitBlob": "09caf9a2e3c12900479ffd18706f204677447307",
+      "bytes": 12773,
+      "sha256": "7d89bf44b4d6940234efb6973d24706c881aa875bb794bfbe54efd92f9c6cf3e",
+      "sourceTextNodes": ["Walking on imported air"]
+    },
+    {
+      "file": "tables.docx",
+      "url": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/test/test-data/tables.docx",
+      "gitBlob": "86009a786ec1065aa7a121d2e7f0bc52ff0acf18",
+      "bytes": 13087,
+      "sha256": "9f75a82d36530d91989a43fcb8940f2e753051787714cecbf6a1f49a22e58ded",
+      "sourceTextNodes": [
+        "Above",
+        "Top left",
+        "Top right",
+        "Bottom left",
+        "Bottom right",
+        "Below"
+      ]
+    },
+    {
+      "file": "tiny-picture.docx",
+      "url": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/test/test-data/tiny-picture.docx",
+      "gitBlob": "d45bb9e1bf21081332384acbc891ffdaddee05fe",
+      "bytes": 13699,
+      "sha256": "791b57c038328560d710c33c5b53bc3ea67a6c08bd9fa0fce0770883e39228d8",
+      "sourceTextNodes": []
+    }
+  ]
+}

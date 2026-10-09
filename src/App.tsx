@@ -1,3 +1,5 @@
+import { OpeningElicitationList } from "./components/OpeningElicitationList";
+import { openingInquiries } from "./runtime/opening_inquiries";
 import { REDESIGN as R } from "./runtime/redesign_strings";
 import type { BrowserWorkspaceState } from "./runtime/browser_workspace";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
@@ -129,6 +131,7 @@ export default function App() {
   const currentView = useRef(view);
   const historyOpen = useRef(0);
   const setView = (next: View) => {
+    openingInquiries.retireAll();
     currentView.current = next;
     updateView(next);
   };
@@ -1012,6 +1015,7 @@ export default function App() {
           />
         )}
       </div>
+      <OpeningElicitationList agents={agents.cards} />
       {customAgentOpen && (
         <CustomAgentDialog
           agents={agents}

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.config-recheck.test.ts (28 tests | 1 failed) 16ms
+   × does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true) 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/sessions.config-recheck.test.ts > does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true)
+AssertionError: expected null to be 'unavailable' // Object.is equality
+
+- Expected:
+"unavailable"
+
++ Received:
+null
+
+ ❯ src/runtime/sessions.config-recheck.test.ts:470:35
+    468|     const recovered = await threads.recheckConfig(old.key);
+    469|     expect(recovered.configCheck?.status).toBe("ready");
+    470|     expect(recovered.queuePaused).toBe("unavailable");
+       |                                   ^
+    471|     expect(
+    472|       h.invoke.mock.calls.some(([command]) => command === "session_pro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 passed (28)
+   Start at  00:06:37
+   Duration  360ms (transform 223ms, setup 0ms, import 271ms, tests 16ms, environment 0ms)
+

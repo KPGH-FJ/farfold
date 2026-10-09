@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (56 tests | 1 failed) 3627ms
+   × opens only the inspected DOCX version and refreshes it without handing the file to another app 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > opens only the inspected DOCX version and refreshes it without handing the file to another app
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'data-document-version="v1"'
+
+Expected: "data-document-version="v1""
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.DOCX">result.DOCX</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">/work/result.DOCX</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-text">用默认应用打开</button><button type="button" class="btn btn-text">在文件夹中显示</button><button type="button" class="btn btn-text">另存为…</button></div><p role="status">此文件可用默认应用打开。</p></div></section>"
+
+ ❯ src/components/OpenedFileView.test.tsx:268:25
+    266|   h.inspectLink.mockResolvedValueOnce(file);
+    267|   await ready();
+    268|   expect(render().html).toContain('data-document-version="v1"');
+       |                         ^
+    269|   expect(h.readText).not.toHaveBeenCalled();
+    270|   expect(h.readVisual).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 63 passed (64)
+   Start at  23:23:30
+   Duration  3.94s (transform 168ms, setup 0ms, import 313ms, tests 3.63s, environment 0ms)
+

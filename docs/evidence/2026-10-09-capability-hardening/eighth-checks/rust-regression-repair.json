@@ -1,0 +1,34 @@
+{
+  "checkedAtUtc": "2026-10-09T16:10:11.415709+00:00",
+  "status": "fixture_contract_corrected_targeted_passed_full_integration_pending",
+  "source": "src-tauri/src/acp_client/regression_tests.rs",
+  "beforeSha256": "0b72cbcb8d50fa074803f6e71684b6e77046a1655c0334bf8894f5fa6132bd2b",
+  "afterSha256": "9ebeb61beb81c838e56259d4c2ef38a825fd7541687daa4497d4c7c741518a07",
+  "failure": "Original synthetic peer sends URL inquiry without required elicitationId, then incorrectly requires a user cancel result. Targeted backtrace establishes timeout at the subsequent turnEnd wait (line 205).",
+  "change": "Only fixture assertion and explanatory comment changed: require no result and JSON-RPC -32602 invalid_params. Production backend is unchanged.",
+  "preserved": [
+    "Malformed request bytes, unavailable mode assertion and original 5-second event bound.",
+    "Multiple independent approvals, invalid option/wrong owner/duplicate reply outcomes.",
+    "Concurrent prompt and model changes blocked; history preservation, restore configuration checks and cancel response."
+  ],
+  "verification": {
+    "isolatedOriginal": "0 passed, 1 failed at 5.45s",
+    "fixedRelated": "3 passed, 0 failed",
+    "originalChildStderrCaptured": false,
+    "qualification": "The stale child assertion is inferred from source and the backtrace; the fixed peer strictly observed the actual -32602 wire response. No claim to have captured the original child stderr."
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust.txt",
+      "sha256": "c9041da622687914203497b74658b46c603869672b1a21294cdb739013e3e9b2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust-regression-reproduced.txt",
+      "sha256": "a6b8595977ebfd284db0fc725a04205b4c897e687221d1d868c77f16412b1989"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/eighth-checks/rust-regression-fixture-fixed.txt",
+      "sha256": "d678f4c0bca14c5394bfc598918e9643f6e89a9f4a58c8eccf9649816bad4de4"
+    }
+  ]
+}

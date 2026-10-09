@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "completedAtUTC": "2026-10-09T15:01:53.269932+00:00",
+  "kind": "public-synthetic-docx-fixture-corpus",
+  "ownedDirectory": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures",
+  "fixtureCount": 28,
+  "compressedDocxBytes": 662898,
+  "largestDocxBytes": 230276,
+  "selfChecks": {
+    "passed": true,
+    "count": 38,
+    "raw": "verify-reproduced.txt",
+    "notProductTests": true
+  },
+  "reproducibility": "Same bundled Python runtime rerun produced 28 byte-identical DOCX files; regeneration and verification both exit 0.",
+  "initialFailure": {
+    "raw": "verify-first.txt",
+    "repair": "fixture-repair.json",
+    "meaning": "Fixture JPEG transcription omitted 3 bytes; corrected from authored synthetic RGB pixels. No Farfold test or implementation changed."
+  },
+  "writeScope": "Only this evidence directory; no production or test inputs changed by this task.",
+  "toolsUsed": "Bundled Python 3.12 with standard ZIP/XML/hash primitives; bundled Pillow only verifies synthetic image bytes. Generator itself is standard-library-only.",
+  "notPerformed": [
+    "No network resource was fetched by a fixture.",
+    "No app, Agent, Word, LibreOffice, Quick Look or macro was started.",
+    "No DOCX layout was rendered; no Word-pagination or complete visual-fidelity claim.",
+    "No user document, conversation, credential or account data was read."
+  ],
+  "safeUse": "Resource files expand to up to 64 MiB + 1; validate serially through a bounded reader. Do not indiscriminately extract or open active/corrupt fixtures in general-purpose apps.",
+  "nextStep": "After root releases source freeze, import selected fixture inputs into focused tests and compare actual parser/rendering outcomes with manifest expectations. This evidence alone does not mark DOCX support implemented.",
+  "files": {
+    "fixture-repair.json": {
+      "bytes": 793,
+      "sha256": "077d65f8141de6c8bc3f2db1ce9435210df36fb5cef6533b3350dea87d5fd2e4"
+    },
+    "generate.py": {
+      "bytes": 25145,
+      "sha256": "adec47602c43b233c3e67474e696331ad4da86b69fad1240dce11affe50af43e"
+    },
+    "manifest.json": {
+      "bytes": 731979,
+      "sha256": "bb666368826f63695cb3b667b90ecebd372376b49e03cae402cf055dd96d8e78"
+    },
+    "regenerate.txt": {
+      "bytes": 74,
+      "sha256": "73301eacd0b8d6be8107edbd256de39866af0d807ccff18ed8c555629226ae26"
+    },
+    "reproducibility.json": {
+      "bytes": 3020,
+      "sha256": "17f82b2620320d126021be08ff3028fb1ece26b3f822e856fb4c25b474c52657"
+    },
+    "verification.json": {
+      "bytes": 6433,
+      "sha256": "26819e15c41723a6eb70f8eac144efb473ba4762a5ea6aaee4b1a1c7075d88f6"
+    },
+    "verify-final.txt": {
+      "bytes": 104,
+      "sha256": "35857bb2e7f3f284b7c5dc8cc4ad14171088e3f7d5c1f4b9a0e0cf12f668e545"
+    },
+    "verify-first.txt": {
+      "bytes": 754,
+      "sha256": "52cbd1090e4e3ee6fd75dfbf1e2a905246c8d3eb8a9d794e04828e728e92e638"
+    },
+    "verify-reproduced.txt": {
+      "bytes": 104,
+      "sha256": "35857bb2e7f3f284b7c5dc8cc4ad14171088e3f7d5c1f4b9a0e0cf12f668e545"
+    },
+    "verify.py": {
+      "bytes": 10309,
+      "sha256": "753e680417e23726347f17ef23395a34d8b34da9f0086f850454475aae8091b4"
+    }
+  }
+}

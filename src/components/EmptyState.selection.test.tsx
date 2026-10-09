@@ -626,7 +626,15 @@ it("opens a saved offline Agent on selection without changing its source or send
     service: null,
     serviceRevision: undefined,
     fresh: false,
+    inquiryCurrent: expect.any(Function),
+    inquirySignal: expect.any(AbortSignal),
   });
+  const inquiry = h.open.mock.calls[0][0];
+  expect(inquiry.inquiryCurrent()).toBe(true);
+  props.active = false;
+  composer();
+  expect(inquiry.inquiryCurrent()).toBe(false);
+  expect(inquiry.inquirySignal.aborted).toBe(true);
   expect(composerDrafts.read("new").text).toBe("Keep my draft");
   expect(props.onStarted).not.toHaveBeenCalled();
   expect(props.onGoSettings).not.toHaveBeenCalled();

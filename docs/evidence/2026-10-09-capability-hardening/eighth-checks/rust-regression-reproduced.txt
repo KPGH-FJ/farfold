@@ -1,0 +1,61 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions' (20147530) panicked at src/acp_client/regression_tests.rs:105:14:
+bounded event: Timeout
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/std/src/panicking.rs:689:5
+   1: core::panicking::panic_fmt
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/panicking.rs:80:14
+   2: core::result::unwrap_failed
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:1867:5
+   3: core::result::Result<T,E>::expect
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:1185:23
+   4: farfold_lib::acp_client::regression_tests::next
+             at ./src/acp_client/regression_tests.rs:105:14
+   5: farfold_lib::acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions::{{closure}}
+             at ./src/acp_client/regression_tests.rs:205:16
+   6: <core::pin::Pin<P> as core::future::future::Future>::poll
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/future/future.rs:133:9
+   7: tokio::runtime::park::CachedParkThread::block_on::{{closure}}
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/park.rs:284:71
+   8: tokio::task::coop::with_budget
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/task/coop/mod.rs:167:5
+   9: tokio::task::coop::budget
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/task/coop/mod.rs:133:5
+  10: tokio::runtime::park::CachedParkThread::block_on
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/park.rs:284:31
+  11: tokio::runtime::context::blocking::BlockingRegionGuard::block_on
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/context/blocking.rs:66:14
+  12: tokio::runtime::scheduler::multi_thread::MultiThread::block_on::{{closure}}
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/scheduler/multi_thread/mod.rs:92:22
+  13: tokio::runtime::context::runtime::enter_runtime
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/context/runtime.rs:65:16
+  14: tokio::runtime::scheduler::multi_thread::MultiThread::block_on
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/scheduler/multi_thread/mod.rs:91:9
+  15: tokio::runtime::runtime::Runtime::block_on_inner
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/runtime.rs:376:50
+  16: tokio::runtime::runtime::Runtime::block_on
+             at /Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.1/src/runtime/runtime.rs:343:18
+  17: farfold_lib::acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions
+             at ./src/acp_client/regression_tests.rs:293:6
+  18: farfold_lib::acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions::{{closure}}
+             at ./src/acp_client/regression_tests.rs:112:74
+  19: core::ops::function::FnOnce::call_once
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/ops/function.rs:250:5
+  20: <fn() -> core::result::Result<(), alloc::string::String> as core::ops::function::FnOnce<()>>::call_once
+             at /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/ops/function.rs:250:5
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+test acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions ... FAILED
+
+failures:
+
+failures:
+    acp_client::regression_tests::protocol_round_trip_locks_model_and_keeps_multiple_permissions
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1182 filtered out; finished in 5.45s
+
+error: test failed, to rerun pass `--lib`

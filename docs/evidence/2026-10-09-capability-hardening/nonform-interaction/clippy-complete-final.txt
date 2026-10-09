@@ -1,0 +1,4 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.72s
+
+exit 0

@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_budget.test.ts (3 tests | 1 failed) 68ms
+     × renders ordinary Unicode bullets without an rFonts node 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_budget.test.ts > DOCX aggregate image presentation budget > renders ordinary Unicode bullets without an rFonts node
+TypeError: Cannot read properties of undefined (reading 'attrs')
+ ❯ attr src/runtime/docx_xml.ts:27:12
+     25| }
+     26| export function attr(n: DocxXml, name: string, uri = W): string | unde…
+     27|   return n.attrs[uri ? `${uri}#${name}` : name];
+       |            ^
+     28| }
+     29| export function children(n: DocxXml, name: string, uri = W): DocxXml[]…
+ ❯ DocxNumbering.next src/runtime/docx_numbering.ts:95:20
+ ❯ parseBlocks src/runtime/docx_parse.ts:431:32
+ ❯ parseStory src/runtime/docx_parse.ts:490:20
+ ❯ parseDocx src/runtime/docx_parse.ts:506:18
+ ❯ src/runtime/docx_budget.test.ts:35:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  23:37:30
+   Duration  193ms (transform 51ms, setup 0ms, import 68ms, tests 68ms, environment 0ms)
+

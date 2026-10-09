@@ -1,0 +1,487 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "recordedAt": "2026-10-09T16:00:22.543112+00:00",
+  "planIds": ["ARCH-43"],
+  "status": "implemented-controlled-validation; overall capability remains partial",
+  "scope": "官方 ACP v1 form/URL 共用询问与 transient connection/request/session 归属；没有修改 Agent、账号配置、凭据或持久正文。",
+  "research": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction-research.json",
+    "sha256": "65fca5914ab913d4eede7474f6ce805d81a78f8f55b1801a8abed5aab1d5a63c"
+  },
+  "official": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/elicitation",
+      "verified": "2026-10-09",
+      "sections": [
+        "Creating an elicitation",
+        "URL mode",
+        "Responses",
+        "URL completion",
+        "URL security"
+      ],
+      "meaning": "requestId 适用 outside a session；已有对话使用 sessionId。accept 只表示同意交接。complete 是可选外部步骤通知，不是认证或原操作成功。"
+    },
+    {
+      "url": "https://github.com/agentclientprotocol/agent-client-protocol/blob/7e87dc205a7325bd07d0249fd20bb7486ee6ba95/agent-client-protocol-schema/src/v1/elicitation.rs",
+      "localSchema": "agent-client-protocol-schema 1.9.1",
+      "lines": "1492–1494、1538–1540",
+      "meaning": "已装 v1 Request scope 定义为会话以外请求。"
+    },
+    {
+      "url": "https://github.com/agentclientprotocol/rust-sdk/blob/2a78849d3eb3dcb140dade3b8fc938cf1e2b9ce5/src/agent-client-protocol/src/jsonrpc/incoming_actor.rs",
+      "localSdk": "2.2.0",
+      "meaning": "全局 handler 先于 dynamic handler；pending 重投只经过新登记的 dynamic handler，不再次经过全局 ID 退休分支。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/CodexAcpClient.ts",
+      "meaning": "官方固定源码显示 URL completion 可以早于 consent reply，且登录结果仍可失败；这不是对已装旧版能力或真实登录的实测。"
+    }
+  ],
+  "implemented": [
+    "initialize 显式声明 form/url；标准 mode 未声明或无效请求用 Invalid params，未知反向方法用 Method not found，不伪造用户拒绝或授权。",
+    "authenticate、session/new、session/load 的 request-scoped 询问绑定本连接对象及实际 SentRequest.id。global receipt 与注册持同一短锁，parent 结束后清理自己的 pending。",
+    "已打开对话承接 session-scoped form/URL；session/load 尚未返回时由临时 opening owner 即时承接问题，避免把问题排在它等待的恢复结果后面。",
+    "收到 session URL 时先记住已知且待派发的问题，complete 可保留到 creation 之后；不缓存未知 complete。所有拒绝/取消路径清理 queued。",
+    "URL ID 在连接存续期内退休，拒绝同 ID 再次使用，避免无法区分的迟到 complete 结束另一问题。此策略比协议只要求 outstanding unique 更保守，明确拒绝而不假装支持合法复用。",
+    "URL 仅允许明确 HTTPS 无凭据形状；展示完整地址、目标域名、Punycode 提示、Agent 名称和原始详情，外部 opener 只由用户明确动作触发。",
+    "opener 失败可明确重试；15秒未回执为 unknown，迟到 opener 不能送 accept。提交 IPC 回执丢失不自动重试。accept 不含表单 content，并保留等待外部通知状态。",
+    "complete 可以先于 consent：终止已过期的反向协议请求而不制造 accept；通知、原始请求结果、后续认证校验仍独立。",
+    "打开期间用单独临时询问 UI，在原 session_open Promise 未返回时可答复；正文和历史仍由原 replay buffer 处理。不会创建伪对话或补历史。",
+    "取消、切页、准备失效及迟到答复按原 owner 失效；取消 IPC 结果未知后表单/按钮仍禁用。询问内容只在内存中保留。",
+    "已知 request owner 下的未知 method 保留原 method/params 为不可执行详情，响应 Method not found；普通 session route 同样保留未知请求。"
+  ],
+  "limits": {
+    "pendingPerConnection": 32,
+    "paramsBytes": 262144,
+    "urlLengthCharactersUpperBound": 16384,
+    "urlIdsPerConnection": 4096,
+    "urlIdBytes": 4096,
+    "completedOpeningNoticesRetained": 16,
+    "note": "限制只覆盖新增询问 owner；不是整个 ACP transport、浏览器或 Agent 的全局硬内存上限。"
+  },
+  "unresolved": [
+    "ARCH43 整项不关闭；29 家官方接口逐项实测、未知扩展及 Qwen authenticate/update 等仍待验证。",
+    "request-scoped 当前登记 authenticate/new/load；prompt/config 使用 session-scoped，不声称 request-scoped prompt 已覆盖。",
+    "initialize、其他无会话服务配置/列表请求目前没有已登记 request owner；requestId 询问会被 Invalid params 拒绝，不呈现或自动授权。这些官方阶段是否实际需要仍待逐家核查。",
+    "系统 opener 真实权限/默认浏览器失败、真实账号/敏感授权、已安装 Agent 版本兼容、Windows/WebKit 及正式安装尚未在本片实测。",
+    "关闭临时询问只停止本地答复并尝试 cancel，不证明原操作已取消，也不能撤回已交给浏览器的外部步骤。",
+    "不新增 client fs/terminal、Agent loop、认证状态推断、敏感表单收集、网站读取权限、持久事件账本或安装依赖。"
+  ],
+  "verification": [
+    {
+      "name": "original-session-mode-red",
+      "result": "2 failed on pre-change behavior",
+      "log": "session-url-red.txt"
+    },
+    {
+      "name": "queued-complete-intermediate-design-counterexample",
+      "result": "removing only our queued-prefix branch produces 1 failure; original final bytes restored by finally",
+      "log": "queue-order-without-prefix-red.txt",
+      "input": "queue-counterexample-input.json",
+      "boundary": "这是被否定的中间设计反例，不宣称原始 HEAD 已有此新设计。"
+    },
+    {
+      "name": "rejected-A-completeA-reused-B",
+      "result": "1 effective failure then fixed",
+      "log": "rejected-reuse-red.txt"
+    },
+    {
+      "name": "opening-frontend",
+      "result": "1 effective failure/4 passed then 5 passed",
+      "log": "opening-ui-valid-red.txt",
+      "excluded": "opening-ui-red.txt 的第二项为 mock 未返回 Promise，不是产品缺陷。"
+    },
+    {
+      "name": "session-scoped-load-before-response",
+      "result": "bounded deterministic deadlock failure then fixed",
+      "log": "opening-wire-valid-red.txt",
+      "excluded": "opening-wire-red.txt 为测试 Debug 格式编译失败，不计有效红。"
+    },
+    {
+      "name": "unknown-owned-method",
+      "result": "expected raw event absent, 1 failure then fixed",
+      "log": "unknown-owned-request-red.txt"
+    },
+    {
+      "name": "final-wire",
+      "result": "14 passed",
+      "log": "wire-complete-final.txt",
+      "boundary": "专用 Python stdio peer，非真实 Agent/账号。"
+    },
+    {
+      "name": "existing-cancellation-lifecycle",
+      "result": "2/2 and 80/80 passed",
+      "logs": ["cancellation-regression.txt", "lifecycle-regression.txt"]
+    },
+    {
+      "name": "frontend-regression",
+      "result": "10 files / 127 passed",
+      "log": "frontend-final.txt",
+      "boundary": "与下面入口/认证回归有重叠，不合并相加。"
+    },
+    {
+      "name": "opening-entry-regression",
+      "result": "5 files / 112 passed",
+      "log": "opening-entry-abort-green.txt",
+      "notes": "opening-entry-final 首失败是旧严格参数断言新增字段；opening-entry-fixed 进一步实际证明 inactive 不触发旧 effect cleanup。新增独立询问 abort effect 修复，不改变保留草稿的 effect 依赖。"
+    },
+    {
+      "name": "auth-cancellation-unknown-ui",
+      "result": "2 effective failures then 5 files / 58 passed",
+      "logs": ["auth-cancel-ui-red.txt", "auth-cancel-ui-green.txt"]
+    },
+    {
+      "name": "browser",
+      "result": "20/20 passed; 70 observed requests all same local Vite origin; zero remote requests/errors/exceptions",
+      "log": "browser/browser-first.json",
+      "render": "browser/inquiry-disclosure.png",
+      "boundary": "真实 Chromium + React + StrictMode + production CSS；IPC 和系统 opener 为受控 mock。本人目视截图，未运行登录或原生系统浏览器。"
+    },
+    {
+      "name": "clippy",
+      "result": "passed -D warnings after local collapsible-if correction",
+      "log": "clippy-complete-final.txt"
+    },
+    {
+      "name": "typecheck",
+      "result": "passed",
+      "log": "typecheck-owned-final.txt"
+    },
+    {
+      "name": "format",
+      "result": "Prettier owned source passed; Rust owned passed after mod declaration ordering only",
+      "logs": ["format-owned.txt", "rustfmt-owned-fixed.txt"],
+      "boundary": "mod.rs 排序发生在定向 Rust 运行后；root 全仓检查将覆盖该最终格式。"
+    },
+    {
+      "name": "typecheck-after-final-auth-ui-fix",
+      "result": "passed exit 0",
+      "evidence": "exec session 51855 tool stdout; no separate raw log saved",
+      "boundary": "此前 typecheck-owned-final.txt 是其真实时点结果；root最终七项将统一覆盖最新37文件。"
+    }
+  ],
+  "evidencePolicy": "日志为实际保存 stdout/stderr + exit，不把编译错误、fixture错误或0项过滤当成功/有效产品红测。红测源未全部独立归档；最终 source hash 仅证明当前最终输入，不倒推历史输入。browser 执行过的 harness 原始字节另保留 .executed-source.txt。",
+  "ownedInputs": [
+    {
+      "path": "src-tauri/src/acp_client/elicitation.rs",
+      "sha256": "8643692757557a8020d99355c2078cee0e39cee27b651fde122d13c4c6895a12"
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation_request_tests.rs",
+      "sha256": "a0447568391b5c357668d98ff2c23c85d2c58e4cd17ade04061f76d1996149cf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation_wire_tests.rs",
+      "sha256": "5e2050cd47250429d0955bce5af5566d7f4c270f5eaf3b8ec72f803ae3e633a6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "4513d99aad462a5da03981839b9e5e791eccb1fcc74b0dafae707448bc560d06"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "011c0aa13c04de597091d4e19513331f657d36c0ecd4b5ef26d027f680b05b27"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "e46f9cc19da8f9c68afd72df34c9917f1d8c6136d144973f1f16297280acacff"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+      "sha256": "4807723a1d506f853a847e9685594950c522c34a0ff1a3229dcc70808f2bd6ae"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "17526375e4a757be187783a31dde42f96f7b771e750a137bfae1547a020b0aea"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/open.rs",
+      "sha256": "c2c701bda7597a21a59ef7034a112cbfd3654990d2bd894420e9b6d6c3a9fa33"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "5ef6d861006927dd824c026e037c9d932870bf33c016fbcfbeeb1be7504d65ce"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "a6ee961acd2ec5d3b7a247d2618e414578043dc42b17643ec4f67da37e17a8ac"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "66b6ef0729e07736d7ea9d39fd05fd0b8584d3c97ce5fecb36dbc95774ed75e0"
+    },
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "782e59511825e99dcbfca1a9eb608d97cf5972a238dabbac7b01f73e5a03751b"
+    },
+    {
+      "path": "src/components/AuthElicitationList.test.tsx",
+      "sha256": "2dee62a29a599e38dedae47b226d3e79a232ae263378006fc04567b079036609"
+    },
+    {
+      "path": "src/components/AuthElicitationList.tsx",
+      "sha256": "ba1fd8489e6b940677d14ece4a25adc0ff5e3a112f77800ed5fb269daa55fc89"
+    },
+    {
+      "path": "src/components/ElicitationCard.test.tsx",
+      "sha256": "2122f3e858782a73bc5972304d1f728f78251b0e4394ef18fcee2b7e68b15635"
+    },
+    {
+      "path": "src/components/ElicitationCard.tsx",
+      "sha256": "6fae5897a8d7e3a6a18d0a7ea38bf1bca4269b0bb41f50bc4825f51c12c3be7e"
+    },
+    {
+      "path": "src/components/ElicitationCard.url.test.tsx",
+      "sha256": "7b6c68e89a0d05985bfe33d3be4ff18c3e139055444ce7a4a80d5521aa94e216"
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "24ae32844447a387f35c85803c73e7bcd06355b92256d1a7a092dc70bdac28f4"
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "d8b6622e6665ad142833db9b14b84ff7ffd032e325030318e39ce79ee2301700"
+    },
+    {
+      "path": "src/components/OpeningElicitationList.tsx",
+      "sha256": "b693706fa6f24c0678fa1ae5b4d0f71c6e156da0f433d65e924f6b6bef85a917"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "5f834c0807d20cc62f1a0a4fe9fc35ec68ad75171ec2fa12c6b35b5a31213273"
+    },
+    {
+      "path": "src/components/UrlElicitationCard.tsx",
+      "sha256": "cd30ce776796f7d72fe047e36c48e120d3687f4bf0fd2005b754cd1496ae69df"
+    },
+    {
+      "path": "src/runtime/agent_preparation.ts",
+      "sha256": "263c604e9deb6a61d57cf71fe6797c0289687720814a5221b436de98c89cc1e9"
+    },
+    {
+      "path": "src/runtime/auth_actions.ts",
+      "sha256": "00b238e90f22c9d22978d59f47f8eaa104d6be8b555a6f8e7a07020951a099ca"
+    },
+    {
+      "path": "src/runtime/auth_activity.ts",
+      "sha256": "a5526991d36d792ed457b8e5c9a993717d999462c01ffdbc5ae0175a22e912f2"
+    },
+    {
+      "path": "src/runtime/elicitation.test.ts",
+      "sha256": "037c2a667299e923023cff7820103dec8b5fc7369d5abd8ccfe55e6749d30967"
+    },
+    {
+      "path": "src/runtime/elicitation.ts",
+      "sha256": "603bfb313bd79aa3d1010e74f670df97e0622bbfed1a269b6f7e4cd1b202fe11"
+    },
+    {
+      "path": "src/runtime/elicitation_strings.ts",
+      "sha256": "1cf43e8e31c91bde1d3952c15a70ae90fa221c2687db8346ff9aef8f9bc1daf1"
+    },
+    {
+      "path": "src/runtime/interaction_actions.ts",
+      "sha256": "49122af045b6982bf0ed96cb35132cb263cc2f0a518842ff99e611d9f4d04aab"
+    },
+    {
+      "path": "src/runtime/opening_inquiries.test.ts",
+      "sha256": "1923e405b74bb1ef754d19c0ca157ad671f7d52e46260c55c9e67f3df223e689"
+    },
+    {
+      "path": "src/runtime/opening_inquiries.ts",
+      "sha256": "1c6633863d04adf3059d8d93701008b1a811dbc418978a7c28b3a97eaa2a7e4c"
+    },
+    {
+      "path": "src/runtime/session_open_input.ts",
+      "sha256": "f9d2fb8f77060d411268e4908870ce8d2803dc333a2de7c73c3ec18d52844441"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "6bb6c650e4327ee0797b837adfb9e33e14c7bb722b5716bb1332ac2c27a2437b"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "c00e3eadbbb77324088916fca0b3bf2c0fc30e0400f8fd53d476111069228c8b"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "341980835d24e924963d0acd1ed9aa19330c46e320a371697d8c696bf6c78432"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/session-url-red.txt",
+      "sha256": "ef7912a4f04e3244da07fda049a54733c54882ba05b8d3a8ae1d27203027ac2d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/session-url-first.txt",
+      "sha256": "97f1edb967db3071a01bc40dbdc58f0ea5f9a7301216ec63d591d1ce2150ea7d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/url-card-red.txt",
+      "sha256": "d64a1d66b00d4488b4429498cc6700237dbfadd7296e0bb985c4161e32842667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/request-scope-first.txt",
+      "sha256": "dd4dbd696304eda975265f41619455d8a11fae94557f248190cbe0f7def21ca9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/frontend-first.txt",
+      "sha256": "808fe14b49442f0ff2a89783dfc6ed7f4fc02eb68d4d39f502e699a0f4797d8a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/queue-order-first.txt",
+      "sha256": "a083c1b4e23fdca6027bc6121dcb1439eb9520d8c0f490ecc4395f47cc346f64"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/queue-order-without-prefix-red.txt",
+      "sha256": "b353da2002bed7fa676363ea85af831c98a7f2c748d1aebafff3460141b09ff7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/queue-counterexample-input.json",
+      "sha256": "af5d338345ab9280f971d16286adedeff5093975e15ec412dd31f21743ac78da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rejected-reuse-red.txt",
+      "sha256": "15f7bfc980ba5a1006f5ace907634d89874001974198a5d141091bca79c76168"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rejected-reuse-green.txt",
+      "sha256": "ee3b416da8245aa5f276bb43411a243d3d5bcd40933b7263e4e22b99914757e0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-ui-red.txt",
+      "sha256": "355faff667dffb62bcc3b2d50e742d65a0638536b81cf2a2bc12fe07c01bc43c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-ui-valid-red.txt",
+      "sha256": "b8d5225f73f977663836b3a7fe89756756a9e3628051b2194fdca5380b435dc9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-ui-first-green.txt",
+      "sha256": "ecc4c21f31b42ff7108edf5d735b2e766a27b0b5d969faa57baf7431c8504e15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-wire-red.txt",
+      "sha256": "c77896d8e54644e7bec04e73f4cd12d131eceb42b7d09ca3c9494310e9eb6a98"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-wire-valid-red.txt",
+      "sha256": "11541582646b610370db4c482100b1c429298415957adc597a6893ffe7e9ab53"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-wire-green.txt",
+      "sha256": "1d1cd00d695b1c18f1d0ccb309300a633452abcd6929a8fcccad7fdf249ff066"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-final.txt",
+      "sha256": "5df549a5ca3dae25cb1799527bcfe1d25023cec940b7b522e7700e89147b730b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/cancellation-regression.txt",
+      "sha256": "e28bce2f75e87ca61874324a6ea019b7d8d5d1240bfea4c99f126274389379ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/lifecycle-regression.txt",
+      "sha256": "a426de56eab9bb17789a897b04d347c0df4008e2b781a690651488e1f8543fc9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-terminal-final.txt",
+      "sha256": "d1fd77d983f78bf13e6ba9cefe4da3306d283d9be311583aa1573448d153df9e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/clippy-first.txt",
+      "sha256": "473b866a389cd0b222d5649bfe934d027954fc246a7ffb543d64285f27e4de03"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/clippy-final.txt",
+      "sha256": "713dc81683f2fb1d21c43b05d111ec086771cc491e2c20353fafd9785a25d0d2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/frontend-final.txt",
+      "sha256": "87d91a1564d4f7a8dd40f24b23c28234c720d68699e5371a455801e88ed79df9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-entry-final.txt",
+      "sha256": "9fb34fa1070c024e90ff89dc1070db5e121bf55c3b56353bf76dd363354f6058"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-entry-fixed.txt",
+      "sha256": "1a98e2a5f675f6659a1f3770b5c763f95a2d2a493f3ea4a1a3194bb1c8048f42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-entry-abort-green.txt",
+      "sha256": "5bbbf1c8ce120e37abc328a3733a0710a0630e5e49269cc1f7e401c86c52be96"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/unknown-owned-request-red.txt",
+      "sha256": "4d68e09d26451e6838757a7d60c56c197defce06b6bb2bb51a15b86e3e3d1de8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/wire-complete-final.txt",
+      "sha256": "dbf19b9bb1fdab58d541e87c9a4c9685ec3d1adf9d506b209124fe630163c67b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/clippy-complete-final.txt",
+      "sha256": "e2f114c33cc9ce4f19db0342a54fcff6c806309ec1f03f5b39891e80275f404c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/auth-cancel-ui-red.txt",
+      "sha256": "93b9608caa2f8861e947fca0bc12c15fa30769f55280663631bee6cec8367c7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/auth-cancel-ui-green.txt",
+      "sha256": "78bc29a076956d7d776bd663c014f1185a93961abf049208682efe933ad20b79"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/typecheck-owned-final.txt",
+      "sha256": "3a184af08f1767d407a9e30f0659655faeb53ebc450f3715f915d9aeda56dfc9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/format-owned.txt",
+      "sha256": "d8eab509314f6507dd10a8a0039850ac289aca5fb2bfea56ed7cbc73decb7088"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rustfmt-owned.txt",
+      "sha256": "f1b14a72a91fa67a34376402e88c1644133f7693a2525be82f16461b8ae1b51b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/rustfmt-owned-fixed.txt",
+      "sha256": "f891dbdfc0402cd4ba60fab1be3245dfec559c5d7afc7e21b87e795a73d05e5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser-harness-format.json",
+      "sha256": "d42919b0a0837fe53cac32c66b4f217ffae642a60facac7dcd3aaa6d229bec15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/browser-first.json",
+      "sha256": "5c5bd28c86ab1609efe91f0550a8edbff5cb4002b9c2b093dba68b2282557677"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/browser-first.txt",
+      "sha256": "62b19856379a194573c25860acb5d0bd575cd068151dda684d2844e48f9d828b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/browser-first.diagnostics.json",
+      "sha256": "1fef72bf633c5840f9b27e5cda714afb762ceebb8d8aa88909fac6e1c44344d2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/inquiry-disclosure.png",
+      "sha256": "0085431469c1119ac1a279801653213410410fcca96233fbfec51144a2f7de98"
+    }
+  ],
+  "independentBackend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/independent-backend/receipt.json",
+    "sha256": "1d84335e61a9c50d36275bb19719a630b05f48ed0cdb2a0533a57770d36241f2"
+  },
+  "independentFrontend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/independent-frontend.json",
+    "sha256": "aa0d2aa67f5362103ac5f138ebb95b5726e37545a65dfc5cb1527983ac5551e1",
+    "result": "只读独立复核无未关闭阻断；已核最终3文件门禁增量、2有效红→58绿。"
+  },
+  "integration": "root 将运行最终七项、提交及安装。本人未打包、提交、替换、启动或退出正式 app；未运行真实 Agent/账号/模型。"
+}

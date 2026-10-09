@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "full URL visible before consent",
+      "ok": true
+    },
+    {
+      "name": "agent and working location disclosed",
+      "ok": true
+    },
+    {
+      "name": "punycode warning is visible",
+      "ok": true
+    },
+    {
+      "name": "no clickable remote link or embed",
+      "ok": true
+    },
+    {
+      "name": "no open or IPC before choice",
+      "ok": true
+    },
+    {
+      "name": "URL card has no form controls",
+      "ok": true
+    },
+    {
+      "name": "dialog fits viewport",
+      "ok": true
+    },
+    {
+      "name": "enabled explicit action: 同意并打开",
+      "ok": true
+    },
+    {
+      "name": "one explicit opener delivery",
+      "ok": true
+    },
+    {
+      "name": "accept omits form content",
+      "ok": true
+    },
+    {
+      "name": "waiting is separate from completion",
+      "ok": true
+    },
+    {
+      "name": "unknown completion ignored",
+      "ok": true
+    },
+    {
+      "name": "actual complete does not claim parent result",
+      "ok": true
+    },
+    {
+      "name": "enabled explicit action: 同意并打开",
+      "ok": true
+    },
+    {
+      "name": "failed opener has visible error and no accept",
+      "ok": true
+    },
+    {
+      "name": "enabled explicit action: 拒绝",
+      "ok": true
+    },
+    {
+      "name": "enabled explicit action: 同意并打开",
+      "ok": true
+    },
+    {
+      "name": "enabled explicit action: 取消",
+      "ok": true
+    },
+    {
+      "name": "late browser return does not submit consent",
+      "ok": true
+    },
+    {
+      "name": "all dialogs close after their owners finish",
+      "ok": true
+    }
+  ],
+  "calls": [
+    {
+      "command": "plugin:opener|open_url",
+      "args": {
+        "url": "https://xn--bcher-kva.example.test/confirm?step=controlled-only"
+      }
+    },
+    {
+      "command": "session_elicitation_respond",
+      "args": {
+        "requestId": "one",
+        "sessionId": null,
+        "requestOwner": {
+          "connectionId": "controlled",
+          "requestId": "one"
+        },
+        "action": "accept",
+        "content": null
+      }
+    },
+    {
+      "command": "plugin:opener|open_url",
+      "args": {
+        "url": "https://xn--bcher-kva.example.test/confirm?step=controlled-only"
+      }
+    },
+    {
+      "command": "session_elicitation_respond",
+      "args": {
+        "requestId": "two",
+        "sessionId": null,
+        "requestOwner": {
+          "connectionId": "controlled",
+          "requestId": "two"
+        },
+        "action": "decline",
+        "content": null
+      }
+    },
+    {
+      "command": "plugin:opener|open_url",
+      "args": {
+        "url": "https://xn--bcher-kva.example.test/confirm?step=controlled-only"
+      }
+    },
+    {
+      "command": "session_elicitation_respond",
+      "args": {
+        "requestId": "three",
+        "sessionId": null,
+        "requestOwner": {
+          "connectionId": "controlled",
+          "requestId": "three"
+        },
+        "action": "cancel",
+        "content": null
+      }
+    }
+  ],
+  "boundary": "Controlled Chromium React/DOM with mocked IPC and browser opener; no external login, Agent, real native opener or installed app."
+}

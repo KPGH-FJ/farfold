@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_images.test.ts (17 tests | 3 failed) 12ms
+     × classifies valid PNG 4097x4096 as limit 7ms
+     × classifies valid PNG 8193x1 as limit 1ms
+     × classifies PNG animation declaration as unsupported 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX raster errors preserve their actual profile boundary > classifies valid PNG 4097x4096 as limit
+ FAIL  src/runtime/docx_images.test.ts > DOCX raster errors preserve their actual profile boundary > classifies valid PNG 8193x1 as limit
+AssertionError: expected error to match asymmetric matcher
+
+- Expected
++ Received
+
+- ObjectContaining {
+-   "code": "limit",
++ DocxError {
++   "message": "invalid",
++   "code": "invalid",
+  }
+
+ ❯ src/runtime/docx_images.test.ts:80:62
+     78| describe("DOCX raster errors preserve their actual profile boundary",(…
+     79|   it.each([[4097,4096],[8193,1]])("classifies valid PNG %dx%d as limit…
+     80|     const bytes=png(w,h);expect(()=>inspectDocxImage(bytes)).toThrowEr…
+       |                                                              ^
+     81|     const input=docxFixture("05-inline-png-jpeg");input.parts.find(p=>…
+     82|     expect(()=>parseDocx(input)).toThrowError(expect.objectContaining(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/docx_images.test.ts > DOCX raster errors preserve their actual profile boundary > classifies PNG animation declaration as unsupported
+AssertionError: expected error to match asymmetric matcher
+
+- Expected
++ Received
+
+- ObjectContaining {
+-   "code": "unsupported",
++ DocxError {
++   "message": "invalid",
++   "code": "invalid",
+  }
+
+ ❯ src/runtime/docx_images.test.ts:84:108
+     82|     expect(()=>parseDocx(input)).toThrowError(expect.objectContaining(…
+     83|   });
+     84|   it("classifies PNG animation declaration as unsupported",()=>expect(…
+       |                                                                                                            ^
+     85| });
+     86|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+   Start at  23:50:02
+   Duration  156ms (transform 57ms, setup 0ms, import 76ms, tests 12ms, environment 0ms)
+

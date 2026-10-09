@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/opening_inquiries.test.ts (5 tests | 1 failed) 6ms
+   × presents the actual pending session_open inquiry before that command resolves 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/opening_inquiries.test.ts > presents the actual pending session_open inquiry before that command resolves
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/opening_inquiries.test.ts:17:71
+     15|   const opening = threads.open({ agentId: "opening-inquiry", cwd: "/co…
+     16|   try {
+     17|     expect(openingInquiries.getSnapshot().flatMap((o) => o.requests)).…
+       |                                                                       ^
+     18|     expect([...threads.getSnapshot().threads.values()].some((s) => s.a…
+     19|   } finally { resolve({ cwd: "/controlled", nativeSessionId: "opened" …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:38:32
+   Duration  227ms (transform 127ms, setup 0ms, import 161ms, tests 6ms, environment 0ms)
+
+
+exit 1

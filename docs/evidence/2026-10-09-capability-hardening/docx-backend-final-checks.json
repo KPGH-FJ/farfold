@@ -1,0 +1,121 @@
+{
+  "checkedAtUtc": "2026-10-09T15:13:35.036081+00:00",
+  "sourceAndFixturesUnchanged": true,
+  "changed": [],
+  "checks": [
+    {
+      "name": "delivery",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-delivery.txt",
+      "sha256": "ff3c71574df379ae6e26a7ed101d4e9d778556ed0308ffc939e2731f54e93c9d"
+    },
+    {
+      "name": "read-check",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_read_check::"
+      ],
+      "exitCode": 0,
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-read-check.txt",
+      "sha256": "683351e25409048c0f576ac031808938c77c5cd2dc215be127ed5d0f9ef324f0"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-clippy.txt",
+      "sha256": "d76d3cc1a950be2d54456923788606499a3906e1d676198b387e4936a4aa5a4e"
+    },
+    {
+      "name": "format",
+      "argv": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "src-tauri/src/file_delivery/document.rs",
+        "src-tauri/src/file_delivery/document_tests.rs",
+        "src-tauri/src/file_delivery/ooxml_archive.rs",
+        "src-tauri/src/file_delivery/workbook.rs",
+        "src-tauri/src/file_delivery.rs",
+        "src-tauri/src/file_delivery_commands.rs",
+        "src-tauri/src/lib.rs",
+        "src-tauri/src/file_delivery/workbook_tests.rs"
+      ],
+      "exitCode": 0,
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inputs": {
+    "src-tauri/src/file_delivery/document.rs": "5c137b693bf13a682aabef6ef5039c2410224508ffa0828b032ccca529635407",
+    "src-tauri/src/file_delivery/document_tests.rs": "7828515625859534bf00dc4d8487dd5929a098be284af353e1397fca206c489d",
+    "src-tauri/src/file_delivery/ooxml_archive.rs": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8",
+    "src-tauri/src/file_delivery/workbook.rs": "794bf33ca5f98f2c03be0c1dfbcc5e67f677a1a06509f02fbbf59c54d8384579",
+    "src-tauri/src/file_delivery.rs": "7709e329d935f2678aab364741148e0317327d809effe66eaaacad12ae752728",
+    "src-tauri/src/file_delivery_commands.rs": "a91faa72a355df17489c777d7aa366176fa08796765fff7569b4c8e88c50f968",
+    "src-tauri/src/lib.rs": "62e23fd15a7d64bf1a645ffeacfcdffc21e2b014ff129418c9a33d1dc05ac644",
+    "src-tauri/src/file_delivery/workbook_tests.rs": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/09-external-relationships.docx": "3fba7f693585fe095b1c1fe96609a470c96511edb3ad65243bf403537e3d1f87",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/17-doctype.docx": "30a6d42da87fb9692f35fa71fd1456599c8dc3107a46063b569570773067fd5a",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/12-vba-marker-entry.docx": "166c0d9448ea1fd988a5bfb22b85632e82ae77d5a433901d9f45456a6e06ac75",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/14-hidden-run.docx": "23b8b4a2f7770b9f3540a8d8667440136d23edf4745ad6bbf27f72cae59e9060",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx": "2130989594b41858cde823e016e84f04840095a1765761e38a0d7f68d3826096",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/18-style-cycle.docx": "727fd0daf24c87be67d43f0df74324c974854096a19d65714d851189fcea51e1",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/21-duplicate-entry.docx": "24976bcc11deb7d6eb8aa74c62f2bb221f0d02565a1b2c13df056b06491a7321",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/05-inline-png-jpeg.docx": "d14e7f84d192205de37cc66be17de8ed50a773b759b3fb6335ca6e9d719e7f2b",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/10-altchunk-html.docx": "40229ca1ca3c2a5b0b6a017fe5fa9a6601fc3376ba7fcdbc6cbf043f7ef47ba8",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/generate.py": "adec47602c43b233c3e67474e696331ad4da86b69fad1240dce11affe50af43e",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/27-total-size-at.docx": "92f239c7a3fbb42aff60f51bab449c179d9447f48c3cd98a4489165d94bb15a3",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/20-zip-crc-invalid.docx": "7caa3700f83a8de60a3182f4520ed88e7d81a35cd27e5c98e04a44122c7bd8f8",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/11-macro-content-type.docx": "ec03390a77c517fdcedd7302a03dd22414711f880d8f3f77bf8c3cfe05bc92d9",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/19-missing-image-part.docx": "f47854c65bacd45948790eaf56e835f6ff55d2435498f2b5aefa994c64fcc575",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/15-unknown-body-element.docx": "4763c95b57a4e71fbadf8392a28322ed4feb9b440513406239a0a70f819ccbc7",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/02-style-inheritance.docx": "964c01b4f2b8ac1e85fe54839b7a6812090c64f5100a0b70c471c97a15d6e5da",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/25-part-size-at.docx": "697bee4f4493f2b9e65368f4519dabcfd5e44577ded2cf6818d09a3de447f7e9",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/13-revisions.docx": "550ed23069312a26e2acba080d6f27272538cec4e3cbe67c055fc8ead285e04e",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/28-total-size-over.docx": "2fd69f0ae1b68d34a76b5cbfe7bd6f006ff646fd97b567f69d1e478261d1cc39",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/23-entry-count-at.docx": "bb15d24d99318ef58a1914e9f544bfb4524da8aeca377e7448f310918a9110df",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/24-entry-count-over.docx": "899f20474e94400c11047972dd4dd60dced2c49336269fbd1df63548da2d58b5",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/03-list-restart.docx": "8c32827acceadd667a8e0f4cf473923f7a51505ade531185a73bb00457e4da1b",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx": "0ce678ba6eb2757323e56c598771e63d2dc1f0b150e83ad8f8503eb0213baaef",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/manifest.json": "bb666368826f63695cb3b667b90ecebd372376b49e03cae402cf055dd96d8e78",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/fixture-repair.json": "077d65f8141de6c8bc3f2db1ce9435210df36fb5cef6533b3350dea87d5fd2e4",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/verification.json": "26819e15c41723a6eb70f8eac144efb473ba4762a5ea6aaee4b1a1c7075d88f6",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/06-png-pixels-invalid.docx": "e3f94f3df80461591c2591556fd6fb73cda1921a69d3aea9b23d53d03e7f63fc",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/verify.py": "753e680417e23726347f17ef23395a34d8b34da9f0086f850454475aae8091b4",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/08-field-caches.docx": "e7666fcd3f8cc0149c372bfdf047b94a2ee622ca4b91918e374bec002d76d3e9",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/reproducibility.json": "17f82b2620320d126021be08ff3028fb1ece26b3f822e856fb4c25b474c52657",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/22-path-escape-entry.docx": "c7e53458723aea47b0d34c0235cf0437f799338ad7fbdd697370c699d3081e61",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/04-table-merges.docx": "5f309bb66499e1d427745e06a4c8af471bd679692634282a822126a75de3ada2",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/01-text-values.docx": "0f6d5eae8a7d5d26e807eff7a9823a21bd93997a3f19e03295f753e3465399fd",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/26-part-size-over.docx": "10840b8bb9bb1f6151dd4e8e8c032d1a39d97d1bf0b90a43c55b13324958b129",
+    "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/receipt.json": "40d6201569491a1820f2b6ccf3967a6e733643fdecf7ba3cb3fa02ba65ebca44"
+  },
+  "passed": true
+}

@@ -1,0 +1,28 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this `if` statement can be collapsed
+   --> src/acp_client/elicitation.rs:425:9
+    |
+425 | /         if let Ok(mut openings) = self.hub.openings.lock() {
+426 | |             if openings
+427 | |                 .get(&self.id)
+428 | |                 .is_some_and(|owner| Arc::ptr_eq(&owner.operation.abandoned, &self.abandoned))
+...   |
+432 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+425 ~         if let Ok(mut openings) = self.hub.openings.lock()
+426 ~             && openings
+427 |                 .get(&self.id)
+...
+430 |                 openings.remove(&self.id);
+431 ~             }
+    |
+
+error: could not compile `farfold` (lib) due to 1 previous error
+
+exit 101

@@ -464,5 +464,38 @@
     "No user database body, draft body or credential read.",
     "No source or existing hashed receipt change.",
     "No seventh candidate build/verification/installation; wait for root candidate-ready notice."
-  ]
+  ],
+  "postCommitResearchSupplement": {
+    "checkedAtUtc": "2026-10-09T14:55:37.424357+00:00",
+    "baseReviewSha256": "309da3c574c8a70dfde30f39477ce3b8a91460a9f1e27ae37ad05b9097f8d7ea",
+    "commit": "0de05b0a41209d78761bb283917ea067a350cb10",
+    "commitScope": {
+      "sourceAndConfigFiles": 52,
+      "documentationFiles": 3,
+      "newEvidenceFiles": 284,
+      "exactProposedSourceSet": true,
+      "outputProtectedReadmesAndDocxFixturesExcluded": true
+    },
+    "scope": "Static privacy and evidence-level review of three research JSONs. No independent web/source fact verification, implementation or runtime test of these proposed features.",
+    "research": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-screenshot-research.json",
+        "sha256": "ca386bb7a518687e10c18101b38571071de9a9bd041e33fe0d65912fae76182a",
+        "result": "No credential-pattern finding; explicit research-only status and untested boundaries preserved."
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-preview-research.json",
+        "sha256": "e782fdd8a8f03a1ce3bf42acf3a16bb24301521cf20b2dd3a9d3829a5ed06110",
+        "result": "No credential-pattern finding; explicit research-only status and untested boundaries preserved."
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-research.json",
+        "sha256": "9f00065d0ba859d008b373431b72992b710c220dd071b547c70cc131341f8042",
+        "result": "No credential-pattern finding; explicit research-only status and untested boundaries preserved."
+      }
+    ],
+    "largePdfDiagnostics": "Both retained diagnostics files contain 395 local Network.responseReceived and 4 console events; URL values target controlled 127.0.0.1:1458. Credential-header fields were absent. Original hashes/bytes were not changed.",
+    "findings": [],
+    "versionBoundary": "This supplement is written after the stage commit and remains a later evidence-only change; it does not alter frozen source, tests, current HEAD or candidate inputs."
+  }
 }

@@ -46,6 +46,17 @@ vi.mock("./WorkbookFilePreview", () => ({
     active: boolean;
   }) => <div data-workbook-version={file.version} data-active={active} />,
 }));
+vi.mock("./DocxFilePreview", () => ({
+  DocxFilePreview: ({
+    file,
+    active,
+  }: {
+    file: { version: string };
+    active: boolean;
+  }) => (
+    <div data-document-version={file.version} data-document-active={active} />
+  ),
+}));
 vi.mock("react", async (original) => {
   const effect = (callback: () => void | (() => void), deps: unknown[]) => {
     const index = h.cursor++;
@@ -255,6 +266,46 @@ it("does not send unsupported spreadsheet formats into the XLSX parser", async (
   expect(render().html).toContain(S.other);
   expect(h.open).not.toHaveBeenCalled();
 });
+
+it("opens only the inspected DOCX version and refreshes it without handing the file to another app", async () => {
+  const file = {
+    ...receipt,
+    name: "result.DOCX",
+    path: "/work/result.DOCX",
+    resolvedPath: "/work/result.DOCX",
+  };
+  props.path = "result.DOCX";
+  h.inspectLink.mockResolvedValueOnce(file);
+  await ready();
+  expect(render().html).toContain('data-document-version="v1"');
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readVisual).not.toHaveBeenCalled();
+  expect(h.open).not.toHaveBeenCalled();
+  expect(button(S.feedback)).toBeUndefined();
+  h.inspectLink.mockResolvedValueOnce({
+    ...file,
+    version: "v2",
+    sha256: "sha-b",
+  });
+  click(S.refresh);
+  expect(render().html).not.toContain("data-document-version");
+  await drain();
+  expect(render().html).toContain('data-document-version="v2"');
+  expect(render({ ...props, active: false }).html).toContain(
+    'data-document-active="false"',
+  );
+});
+
+it.each(["legacy.doc", "macros.docm", "slides.pptx"])(
+  "does not interpret %s as DOCX",
+  async (name) => {
+    h.inspectLink.mockResolvedValueOnce({ ...receipt, name });
+    await ready();
+    expect(render().html).not.toContain("data-document-version");
+    expect(render().html).toContain(S.other);
+    expect(h.open).not.toHaveBeenCalled();
+  },
+);
 
 it("does not load links, images or raw HTML from a Markdown file", async () => {
   h.readText.mockResolvedValue({

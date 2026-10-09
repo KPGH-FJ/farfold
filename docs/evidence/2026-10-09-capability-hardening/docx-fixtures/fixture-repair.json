@@ -1,0 +1,18 @@
+{
+  "scope": "Fixture-only failure and correction, no Farfold source/test change.",
+  "initialFailure": "verify-first.txt: synthetic JPEG was not identifiable by Pillow; PNG positive decoded.",
+  "rootCause": "Hand-transcribed base64 constant omitted three bytes compared with the original generated JPEG.",
+  "oldBytes": 631,
+  "newBytes": 634,
+  "byteDiff": [
+    {
+      "operation": "insert",
+      "oldRange": [108, 108],
+      "newRange": [108, 111]
+    }
+  ],
+  "oldSha256": "57f9db3777f7c399f06b12fdef393787c52a7ed79f4f13108070f8b9e5de018a",
+  "newSha256": "ddbc7ea2252e42c994d627317fa9659eba2a887857d3130338a89591cc341647",
+  "fix": "Replace the constant programmatically from the same synthetic RGB image; generator remains standard-library-only.",
+  "notAProductRegression": true
+}

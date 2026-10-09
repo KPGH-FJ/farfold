@@ -19,6 +19,9 @@ use sha2::{Digest, Sha256};
 
 mod visual;
 pub use visual::{VisualPreview, read_visual};
+mod document;
+mod ooxml_archive;
+pub use document::{DocxCapture, DocxReadFailure, read_docx};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
 

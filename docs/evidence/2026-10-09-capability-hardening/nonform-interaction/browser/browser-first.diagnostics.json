@@ -1,0 +1,608 @@
+[
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/index.html"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/@vite/client"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/fixture.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/@react-refresh"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/OpeningElicitationList.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/opening_inquiries.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-settings.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-content.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-thread.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-artifact.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/product-shell.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/conversation-workspace.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/desktop-workbench.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/client/env.mjs"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4"
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791560862518.411,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/elicitation_strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/ElicitationCard.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/WorkspaceDialog.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_core.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/elicitation.ts"
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791560862520.702,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/core-DEJe340b.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_surface.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/library_strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/useModalDialog.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/UrlElicitationCard.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_plugin-opener.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_event.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_surface_guard.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_workspace.ts"
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "info",
+      "args": [
+        {
+          "type": "string",
+          "value": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"
+        },
+        {
+          "type": "string",
+          "value": "font-weight:bold"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791560862553.151,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14335,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14372,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14377,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14380,
+            "columnNumber": 15
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/index.html"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/@vite/client"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/fixture.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/@react-refresh"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/OpeningElicitationList.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/opening_inquiries.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-settings.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-content.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-thread.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/styles-artifact.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/product-shell.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/conversation-workspace.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/desktop-workbench.css"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/client/env.mjs"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/elicitation_strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/ElicitationCard.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/WorkspaceDialog.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_core.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/elicitation.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/core-DEJe340b.js?v=4b6750d4"
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1791560862623.877,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_surface.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/library_strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/useModalDialog.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_plugin-opener.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/components/UrlElicitationCard.tsx"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/strings.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_event.js?v=4b6750d4"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_surface_guard.ts"
+  },
+  {
+    "method": "Network.requestWillBeSent",
+    "url": "http://127.0.0.1:1458/src/runtime/browser_workspace.ts"
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "info",
+      "args": [
+        {
+          "type": "string",
+          "value": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"
+        },
+        {
+          "type": "string",
+          "value": "font-weight:bold"
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1791560862633.535,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14335,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14372,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14377,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=4b6750d4",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=4b6750d4",
+            "lineNumber": 14380,
+            "columnNumber": 15
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1791560862648.888,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  }
+]

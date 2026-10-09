@@ -1,0 +1,93 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/interaction_actions.stop.test.ts (14 tests | 7 failed) 14ms
+   × blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery 5ms
+   × allows an explicit form inquiry decline after stop becomes unknown without resuming work 0ms
+   × allows an explicit form inquiry cancel after stop becomes unknown without resuming work 0ms
+   × allows an explicit url inquiry decline after stop becomes unknown without resuming work 0ms
+   × allows an explicit url inquiry cancel after stop becomes unknown without resuming work 0ms
+   × keeps explicit negative actions reachable for form while acceptance is disabled 4ms
+   × keeps explicit negative actions reachable for url while acceptance is disabled 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "session_elicitation_respond",
++   "session_permission_respond",
+    {
+-     "action": "cancel",
+-     "content": null,
+-     "requestId": "question",
++     "optionId": "once",
++     "requestId": "permission",
+      "sessionId": "native",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:87:18
+     85|     optionId: "once",
+     86|   });
+     87|   expect(invoke).toHaveBeenCalledWith("session_elicitation_respond", {
+       |                  ^
+     88|     sessionId: "native",
+     89|     requestId: "question",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit form inquiry decline after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit form inquiry cancel after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit url inquiry decline after stop becomes unknown without resuming work
+ FAIL  src/runtime/interaction_actions.stop.test.ts > allows an explicit url inquiry cancel after stop becomes unknown without resuming work
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Number of calls: 0
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:140:20
+    138|     state.stopUnconfirmed = true;
+    139|     await actions.respondElicitation(state.key, question.requestId, ac…
+    140|     expect(invoke).toHaveBeenCalledExactlyOnceWith(
+       |                    ^
+    141|       "session_elicitation_respond",
+    142|       {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > keeps explicit negative actions reachable for form while acceptance is disabled
+ FAIL  src/runtime/interaction_actions.stop.test.ts > keeps explicit negative actions reachable for url while acceptance is disabled
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:239:61
+    237|       );
+    238|     const unknown = card(false);
+    239|     expect(unknown.match(/<button[^>]*disabled=""/g) ?? []).toHaveLeng…
+       |                                                             ^
+    240|     expect(unknown).toMatch(/<button(?![^>]*disabled)[^>]*>拒绝<\/button…
+    241|     expect(unknown).toMatch(/<button(?![^>]*disabled)[^>]*>取消<\/button…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 7 passed (14)
+   Start at  00:06:30
+   Duration  176ms (transform 71ms, setup 0ms, import 100ms, tests 14ms, environment 0ms)
+
+
+exit 1

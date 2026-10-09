@@ -1,0 +1,318 @@
+{
+  "checkedAtUtc": "2026-10-09T15:15:19.686754+00:00",
+  "status": "backend_implemented_targeted_verified_independent_review_pending",
+  "sourceBase": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "scope": "DOCX passive version-checked bounded package capture and main-view IPC; frontend OPC/document semantics, image decoding/rendering and installed acceptance are separate.",
+  "implementation": [
+    "New file_delivery_read_docx command uses the existing main-webview caller guard and file_read_check::run. It delegates exact VerifiedFile validation to capture_expected; no path/file URL is returned beyond the existing receipt.",
+    "Mechanically extracted the existing XLSX ZIP directory, limits and CRC reader into ooxml_archive.rs. Workbook XML/.rels selection remains unchanged; original workbook_tests.rs is byte-identical. Shared structures and fixed error codes are reused without a new dependency.",
+    "DOCX includes XML/.rels plus inert PNG eight-byte signature or JPEG FF D8 FF candidates, regardless of extension. Unsupported binaries remain in entries and are still actually decompressed, counted and CRC checked. No file extraction, linked fetch, external viewer, macro execution or Agent invocation.",
+    "Each retained candidate image is at most 8 MiB and there are at most 256. Signatures only select bytes: frontend must validate OPC content types/relations, actual image container/pixels and successful decoding."
+  ],
+  "contract": {
+    "command": "file_delivery_read_docx",
+    "input": "{file: VerifiedFile}",
+    "success": "{file: VerifiedFile, parts: {name, data(base64)}[], entries: string[], inflatedBytes: number}",
+    "failureCodes": [
+      "changed",
+      "limit",
+      "encrypted",
+      "unsupported",
+      "invalid",
+      "unreadable",
+      "readPending",
+      "readBusy"
+    ],
+    "formatIdentity": "Backend captures a structurally valid bounded ZIP package; worker must establish DOCX OPC identity and reject active/unsupported relationships. Extension alone is not format proof."
+  },
+  "limits": {
+    "compressedBytes": 16777216,
+    "eachPartBytes": 16777216,
+    "totalInflatedBytes": 67108864,
+    "entries": 2048,
+    "candidateImageBytes": 8388608,
+    "candidateImages": 256,
+    "sharedOsReadSlots": 2,
+    "sharedReplyTimeoutSeconds": 15,
+    "timeoutQualification": "A timed-out/dropped reply does not abort an OS read or release its slot before the blocking operation actually exits.",
+    "memoryQualification": "Logical archive/retained-data budgets; temporary decompression buffers, base64 and IPC clones are not an OS hard heap cap."
+  },
+  "redGreen": {
+    "baseline": "Initial DOCX wrapper used existing XML-only workbook capture. Version/no-extraction case passed; retention of two byte-recognized images and image count/size requirements failed. This is a new-capability baseline, not a claim that existing supported XLSX behavior was faulty.",
+    "red": {
+      "passed": 1,
+      "failed": 3,
+      "proof": "docs/evidence/2026-10-09-capability-hardening/docx-backend-red.txt"
+    },
+    "firstGreen": {
+      "passed": 35,
+      "failed": 0,
+      "scope": "10 DOCX plus existing file delivery tests"
+    },
+    "final": {
+      "fileDelivery": {
+        "passed": 36,
+        "failed": 0,
+        "docx": 11,
+        "unchangedXlsx": 8,
+        "otherExisting": 17
+      },
+      "fileReadCheck": {
+        "passed": 5,
+        "failed": 0
+      },
+      "clippy": "passed -D warnings",
+      "ownedRustfmt": "passed edition 2024",
+      "ownedAndFixtureInputs": 43,
+      "sourceAndFixturesUnchanged": true
+    }
+  },
+  "covered": [
+    "Exact file/version rejection and unchanged original bytes; no extraction files created.",
+    "Extension-independent PNG/JPEG candidates, ignored mislabeled image/SVG/binary entries, exact at/over 8MiB and 256-image budgets.",
+    "Actual authored PNG/JPEG package; cross-format capture preserves same VerifiedFile/entry list/inflated count while XLSX stays XML-only.",
+    "CRC failure for ignored binary and candidate raster; original XLSX encrypted/header/path/overlap/symlink/actual-decompression counterexamples remain.",
+    "Authored duplicate/path/CRC failures, 2048 entries / 16MiB part / 64MiB total exact and over boundaries, all through actual versioned file capture.",
+    "Fixed serializable error mapping and identical DOCX/XLSX invalid/limit classification; arbitrary internal error text becomes unreadable.",
+    "External relationship/altChunk/macro marker/DTD/bad PNG/missing image packages are captured only as inert data. Tests intentionally do not treat capture success as semantic/visual acceptance."
+  ],
+  "extractionVerification": {
+    "centralDirectoryValidation": "All u16/u32/name/directory checks match prior workbook statements after generic error rename and whitespace normalization.",
+    "originalXlsxTests": {
+      "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+      "sha256": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608",
+      "byteIdenticalToSourceBase": true
+    }
+  },
+  "frontendHandoff": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-capture.json",
+    "sha256": "49680d26b1c78d09b3477606fc7108d9cd40b5b5e44923874f5876fad4bf69e1",
+    "provenance": "Parsed the single DOCX_BACKEND_CAPTURE line from final-delivery raw stdout; this is actual Rust capture of authored fixture 05. JSON formatting is derived representation; raw stdout is untouched.",
+    "qualification": "VerifiedFile identifies the test temporary source, already disposed. Frontend may mock receipt delivery using these exact bytes; that is not native Tauri IPC or installed-app proof."
+  },
+  "ownedSources": [
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "sha256": "5c137b693bf13a682aabef6ef5039c2410224508ffa0828b032ccca529635407",
+      "lines": 35
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_tests.rs",
+      "sha256": "7828515625859534bf00dc4d8487dd5929a098be284af353e1397fca206c489d",
+      "lines": 305
+    },
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8",
+      "lines": 280
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "sha256": "794bf33ca5f98f2c03be0c1dfbcc5e67f677a1a06509f02fbbf59c54d8384579",
+      "lines": 28
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "7709e329d935f2678aab364741148e0317327d809effe66eaaacad12ae752728",
+      "lines": 430
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "a91faa72a355df17489c777d7aa366176fa08796765fff7569b4c8e88c50f968",
+      "lines": 341
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "62e23fd15a7d64bf1a645ffeacfcdffc21e2b014ff129418c9a33d1dc05ac644",
+      "lines": 387
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/09-external-relationships.docx",
+      "sha256": "3fba7f693585fe095b1c1fe96609a470c96511edb3ad65243bf403537e3d1f87"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/17-doctype.docx",
+      "sha256": "30a6d42da87fb9692f35fa71fd1456599c8dc3107a46063b569570773067fd5a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/12-vba-marker-entry.docx",
+      "sha256": "166c0d9448ea1fd988a5bfb22b85632e82ae77d5a433901d9f45456a6e06ac75"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/14-hidden-run.docx",
+      "sha256": "23b8b4a2f7770b9f3540a8d8667440136d23edf4745ad6bbf27f72cae59e9060"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx",
+      "sha256": "2130989594b41858cde823e016e84f04840095a1765761e38a0d7f68d3826096"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/18-style-cycle.docx",
+      "sha256": "727fd0daf24c87be67d43f0df74324c974854096a19d65714d851189fcea51e1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/21-duplicate-entry.docx",
+      "sha256": "24976bcc11deb7d6eb8aa74c62f2bb221f0d02565a1b2c13df056b06491a7321"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/05-inline-png-jpeg.docx",
+      "sha256": "d14e7f84d192205de37cc66be17de8ed50a773b759b3fb6335ca6e9d719e7f2b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/10-altchunk-html.docx",
+      "sha256": "40229ca1ca3c2a5b0b6a017fe5fa9a6601fc3376ba7fcdbc6cbf043f7ef47ba8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/generate.py",
+      "sha256": "adec47602c43b233c3e67474e696331ad4da86b69fad1240dce11affe50af43e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/27-total-size-at.docx",
+      "sha256": "92f239c7a3fbb42aff60f51bab449c179d9447f48c3cd98a4489165d94bb15a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/20-zip-crc-invalid.docx",
+      "sha256": "7caa3700f83a8de60a3182f4520ed88e7d81a35cd27e5c98e04a44122c7bd8f8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/11-macro-content-type.docx",
+      "sha256": "ec03390a77c517fdcedd7302a03dd22414711f880d8f3f77bf8c3cfe05bc92d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/19-missing-image-part.docx",
+      "sha256": "f47854c65bacd45948790eaf56e835f6ff55d2435498f2b5aefa994c64fcc575"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/15-unknown-body-element.docx",
+      "sha256": "4763c95b57a4e71fbadf8392a28322ed4feb9b440513406239a0a70f819ccbc7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/02-style-inheritance.docx",
+      "sha256": "964c01b4f2b8ac1e85fe54839b7a6812090c64f5100a0b70c471c97a15d6e5da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/25-part-size-at.docx",
+      "sha256": "697bee4f4493f2b9e65368f4519dabcfd5e44577ded2cf6818d09a3de447f7e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/13-revisions.docx",
+      "sha256": "550ed23069312a26e2acba080d6f27272538cec4e3cbe67c055fc8ead285e04e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/28-total-size-over.docx",
+      "sha256": "2fd69f0ae1b68d34a76b5cbfe7bd6f006ff646fd97b567f69d1e478261d1cc39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/23-entry-count-at.docx",
+      "sha256": "bb15d24d99318ef58a1914e9f544bfb4524da8aeca377e7448f310918a9110df"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/24-entry-count-over.docx",
+      "sha256": "899f20474e94400c11047972dd4dd60dced2c49336269fbd1df63548da2d58b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/03-list-restart.docx",
+      "sha256": "8c32827acceadd667a8e0f4cf473923f7a51505ade531185a73bb00457e4da1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx",
+      "sha256": "0ce678ba6eb2757323e56c598771e63d2dc1f0b150e83ad8f8503eb0213baaef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/manifest.json",
+      "sha256": "bb666368826f63695cb3b667b90ecebd372376b49e03cae402cf055dd96d8e78"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/fixture-repair.json",
+      "sha256": "077d65f8141de6c8bc3f2db1ce9435210df36fb5cef6533b3350dea87d5fd2e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/verification.json",
+      "sha256": "26819e15c41723a6eb70f8eac144efb473ba4762a5ea6aaee4b1a1c7075d88f6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/06-png-pixels-invalid.docx",
+      "sha256": "e3f94f3df80461591c2591556fd6fb73cda1921a69d3aea9b23d53d03e7f63fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/verify.py",
+      "sha256": "753e680417e23726347f17ef23395a34d8b34da9f0086f850454475aae8091b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/08-field-caches.docx",
+      "sha256": "e7666fcd3f8cc0149c372bfdf047b94a2ee622ca4b91918e374bec002d76d3e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/reproducibility.json",
+      "sha256": "17f82b2620320d126021be08ff3028fb1ece26b3f822e856fb4c25b474c52657"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/22-path-escape-entry.docx",
+      "sha256": "c7e53458723aea47b0d34c0235cf0437f799338ad7fbdd697370c699d3081e61"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/04-table-merges.docx",
+      "sha256": "5f309bb66499e1d427745e06a4c8af471bd679692634282a822126a75de3ada2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/01-text-values.docx",
+      "sha256": "0f6d5eae8a7d5d26e807eff7a9823a21bd93997a3f19e03295f753e3465399fd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/26-part-size-over.docx",
+      "sha256": "10840b8bb9bb1f6151dd4e8e8c032d1a39d97d1bf0b90a43c55b13324958b129"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/receipt.json",
+      "sha256": "40d6201569491a1820f2b6ccf3967a6e733643fdecf7ba3cb3fa02ba65ebca44"
+    }
+  ],
+  "fixtureFreeze": "28 DOCX packages and 7 static JSON/Python support files are included in this checkpoint. Root agreed to add this external fixture directory to eighth-increment final inputs; stdout logs are outside it.",
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-red.txt",
+      "sha256": "75af8fc1a62370d66617dd84dea0870e245c003c08d2f41e6daf088f9956f2d8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-green.txt",
+      "sha256": "c492cde4e22fc8ffc0d164af48d305ba4600784f27c47ad3313425e69a5beee0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-checks.json",
+      "sha256": "a3f18b417ef232ba510ba6824595dcc503008a05ddd51d423bbf422bb45b8288"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-delivery.txt",
+      "sha256": "ff3c71574df379ae6e26a7ed101d4e9d778556ed0308ffc939e2731f54e93c9d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-read-check.txt",
+      "sha256": "683351e25409048c0f576ac031808938c77c5cd2dc215be127ed5d0f9ef324f0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-clippy.txt",
+      "sha256": "d76d3cc1a950be2d54456923788606499a3906e1d676198b387e4936a4aa5a4e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-final-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-backend-capture.json",
+      "sha256": "49680d26b1c78d09b3477606fc7108d9cd40b5b5e44923874f5876fad4bf69e1"
+    }
+  ],
+  "independentReview": {
+    "status": "pending",
+    "owner": "root or separately assigned reviewer"
+  },
+  "notEstablished": [
+    "No actual native IPC/UI, installed WebKit, Agent or user document acceptance.",
+    "No DOCX semantic acceptance, font/layout/pagination fidelity, image decode success or P16 completion from backend tests alone.",
+    "No added privilege, dependency, environment switch, credentials, user configuration or real-data modification.",
+    "No macOS/Windows resource exhaustion or pathological filesystem timing guarantee; other platforms not run.",
+    "This slice does not fix a previously unknown common ZIP defect; the shared validation logic is preserved rather than newly certified for every possible archive."
+  ]
+}

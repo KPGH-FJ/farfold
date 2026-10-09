@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/docx/browser/exif.html 51ms
+docs/evidence/2026-10-09-capability-hardening/docx/browser/run-exif.mjs 11ms (unchanged)

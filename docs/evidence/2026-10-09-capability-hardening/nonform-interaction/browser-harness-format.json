@@ -1,0 +1,23 @@
+{
+  "note": "Only harness formatting after the 20-check browser run; original executed source bytes retained. Product component source was not changed by this formatting.",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/fixture.tsx",
+      "executedSha256": "4e2285f32d5cae90f0d4f15b6d851c12e3a98441f09b6315b200ddbc2a87e8c0",
+      "formattedSha256": "4e2285f32d5cae90f0d4f15b6d851c12e3a98441f09b6315b200ddbc2a87e8c0",
+      "executedCopy": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/fixture.tsx.executed-source.txt"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/index.html",
+      "executedSha256": "5f87d0e01ed5e4622bf6afe2f8ab5badc7c5ce0e048895504246f5f6222da803",
+      "formattedSha256": "5f87d0e01ed5e4622bf6afe2f8ab5badc7c5ce0e048895504246f5f6222da803",
+      "executedCopy": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/index.html.executed-source.txt"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/run.mjs",
+      "executedSha256": "e5cd89d995f5e220cdde8519db2d609f1380fe7458c7314f3099a51070c0bd20",
+      "formattedSha256": "e5cd89d995f5e220cdde8519db2d609f1380fe7458c7314f3099a51070c0bd20",
+      "executedCopy": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/run.mjs.executed-source.txt"
+    }
+  ]
+}

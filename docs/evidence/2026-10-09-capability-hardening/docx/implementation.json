@@ -1,0 +1,299 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-09T15:55:18.560762+00:00",
+  "scope": "P16 DOCX bounded continuous document preview: parser/typed client/Worker and controlled browser verification; root owns production UI; verification owns Rust capture.",
+  "status": "implemented-and-controlled-tests-passed-not-native-installed-acceptance",
+  "ownedSources": [
+    {
+      "path": "src/runtime/docx_boundaries.test.ts",
+      "sha256": "3afe0fafd83dbb7866a8800b43df44db4bf7ff3d3ff98452c793e96d9af74a0a",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/docx_budget.test.ts",
+      "sha256": "a70ff841e0abef8f87471059b2bb4562d5e8f91baa31de32fe684fcfd01c8ff9",
+      "lines": 83
+    },
+    {
+      "path": "src/runtime/docx_compatibility.test.ts",
+      "sha256": "3da943203bf2506a47cd767386f38f810fec1d30bc9455c8e69e3d3ddd3f4ee3",
+      "lines": 121
+    },
+    {
+      "path": "src/runtime/docx_decode.ts",
+      "sha256": "3e3deef54779ae2184976b0424a2f36b9ea098c0ab301da31a0c21cd46fcc5e6",
+      "lines": 21
+    },
+    {
+      "path": "src/runtime/docx_fixture.ts",
+      "sha256": "7e75c1439b316568716a2e1db1bb28685c868b81385070ca5bd38e7026cd3c5d",
+      "lines": 64
+    },
+    {
+      "path": "src/runtime/docx_images.test.ts",
+      "sha256": "d9790bd3d96c90fb3f451a704f7f2faac4c5680428df85de80966aac2f72c051",
+      "lines": 124
+    },
+    {
+      "path": "src/runtime/docx_images.ts",
+      "sha256": "4c44858caf1f0385726925754911b42e1491e0786834ab64fcd7b1e6937a28e7",
+      "lines": 118
+    },
+    {
+      "path": "src/runtime/docx_numbering.ts",
+      "sha256": "bc975850b2573eeb9aab75e73bdc43793580dd16028159dbe272da567a6ee5e6",
+      "lines": 165
+    },
+    {
+      "path": "src/runtime/docx_package.ts",
+      "sha256": "d05f6baced64a5bd8d60a96f2155a768866653d44f5e66744bcc08e1751d69e9",
+      "lines": 238
+    },
+    {
+      "path": "src/runtime/docx_parse.test.ts",
+      "sha256": "8933680415aafaf533152e40401d5113ec0defdd64f599309e37e62395543857",
+      "lines": 155
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "55a34ca12f9bade4fa1199a530e30498ce383ba73032cf73abfbfa4af8853cd4",
+      "lines": 538
+    },
+    {
+      "path": "src/runtime/docx_preview.test.ts",
+      "sha256": "13448c34379cd66131bc902da6d6758f1183e1f729bc696a70fbc5e32db9c716",
+      "lines": 230
+    },
+    {
+      "path": "src/runtime/docx_preview.ts",
+      "sha256": "61f8fa651241a8193b7697c5c902ad6a4d9d15bd26ae648ac96be962fbbd445d",
+      "lines": 169
+    },
+    {
+      "path": "src/runtime/docx_public_samples.test.ts",
+      "sha256": "6016baf7a57d8237c8ad0cb0dd7ed6fd5a6e5b0d818e2e3e082dcb2b44c22ef7",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/docx_styles.ts",
+      "sha256": "63ccce9b7e79754c21b1b2eec332b7312eb48ce002feb0b7786bed120342cd00",
+      "lines": 376
+    },
+    {
+      "path": "src/runtime/docx_table.ts",
+      "sha256": "2db9eacc788acda33d54fb6a76afad00d7de33674e1d429a9a358218e06db62e",
+      "lines": 236
+    },
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "16bea742e8cff97150ecbe98c7403df03ef93d125172bdcb0a67b140b0934c24",
+      "lines": 157
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "6f4b3f1ea92bcf14f57c8fea573cbb6f1d73af15a1341ea54a7ee855a877d598",
+      "lines": 284
+    },
+    {
+      "path": "src/runtime/docx_xml.ts",
+      "sha256": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+      "lines": 160
+    },
+    {
+      "path": "src/workers/docx_preview.worker.ts",
+      "sha256": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+      "lines": 30
+    }
+  ],
+  "interfaces": {
+    "ipc": "file_delivery_read_docx, immutable VerifiedFile + entries + inert base64 parts + inflatedBytes",
+    "worker": "Dedicated module Worker: bounded OPC/XML parse, PNG/JPEG image decode, closed typed data; fixed error codes only",
+    "client": "Exact VerifiedFile ownership, immediate abort/release, 10-second deadline, ignore late Worker results, validate closed response before UI"
+  },
+  "dependencyChanges": "None; existing saxes and image_bytes reused without global behavior changes.",
+  "capability": "Body source order; literal zero/false/empty/space; basic style inheritance; list start/restart; ordinary and nested bounded tables with horizontal/vertical merges; package PNG/JPEG including EXIF 1–8; explicit header/footer/footnote/endnote stories; cached field results with missing/unsupported notices.",
+  "resourceLimits": {
+    "compressedBytes": 16777216,
+    "inflatedBytes": 67108864,
+    "entries": 2048,
+    "partBytes": 16777216,
+    "nodes": 500000,
+    "xmlDepth": 64,
+    "textChars": 4194304,
+    "blocks": 10000,
+    "runs": 100000,
+    "cells": 20000,
+    "tableColumns": 512,
+    "tableDepth": 8,
+    "images": 256,
+    "imageBytes": 8388608,
+    "uniqueImagePixels": 33554432,
+    "repeatedDisplayPixels": 33554432,
+    "jpegSegments": 4096,
+    "exifIfdTags": 512
+  },
+  "targetedValidation": {
+    "log": "docs/evidence/2026-10-09-capability-hardening/docx/core-final.txt",
+    "files": 7,
+    "passed": 82,
+    "typecheck": "docs/evidence/2026-10-09-capability-hardening/docx/type-final.txt",
+    "format": "docs/evidence/2026-10-09-capability-hardening/docx/format-check-final.txt",
+    "allExitCode": 0,
+    "qualification": "Run by this subagent. No repeated full repository checks or production build."
+  },
+  "browserValidation": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/browser/worker-sealed.json",
+      "passed": 36,
+      "sha256": "2630683d51a58153c6a00f2328efe1a8bf22595b43d7571f257f201db85361dc",
+      "scope": "Chromium real Worker with actual Rust capture JSON, authored captures, and explicit idle Worker for deadline. Not installed WebKit/Tauri IPC or Word pagination."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/ui-sealed.json",
+      "passed": 39,
+      "sha256": "4c4e7222b0ee5706dea0a475e8484f929e150b3562d8e4c4cf97de861db6dd3d",
+      "scope": "React StrictMode production DOCX UI, real Chromium Worker and codecs, controlled IPC captures. Not installed app."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/browser/exif-eight-green.json",
+      "passed": 24,
+      "sha256": "06b3a0e167abd8b060a1d49bed605a21468653c221c729d9c84ca6e2d1e740c6",
+      "scope": "Actual Chromium Worker and HTML image decode, asymmetric RGBY quadrant pixel checks for Exif1..8. No user image/native app."
+    }
+  ],
+  "browserSourceStability": "docs/evidence/2026-10-09-capability-hardening/docx/sealed-browser-inputs.json",
+  "browserBoundaries": [
+    "Real Chromium module Worker, codecs and React StrictMode; controlled Tauri invoke/opener only; no formal app, Agent or account.",
+    "Worker starts from separately recorded actual Rust read_docx capture for authored sample 05; its temporary file no longer exists. Other inputs are test-only capture conversion; not real Tauri IPC.",
+    "Five unchanged maintainer public DOCX fixtures and three unchanged python-docx writer documents parsed successfully; rejection fixtures are not counted as normal document support.",
+    "WebKit/native installed DOCX remains untested here. Continuous block/table windows are not Word page layout."
+  ],
+  "visuallyInspected": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/browser/docx-worker-pixels.png",
+      "sha256": "c2314f1c20adf26290fa44bf91c2312d357eab93ddfff2e1a01e241e0c4b3c2c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/docx-writer-lists-before.png",
+      "sha256": "05ebdbe62f466f37c2ab6eab9fbd9537e282d1b1439e4176ae6b1e7cde865bf9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/docx-writer-lists.png",
+      "sha256": "a220f15d57c5ca4bc13f1318537d4b2cc42fce2f8d7ace9fb33bb865a4741024"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/docx-writer-table-images.png",
+      "sha256": "bbb6afe4e67524dbe9d26c9bdf73ce8d959e7f60341f04e38e32801b121c6b7d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/docx-writer-jpeg.png",
+      "sha256": "4e582baa68cabc3c08bcc9fb19948a3f1116941787272199c6ce49f37dd51a0b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/docx-cross-window-table.png",
+      "sha256": "e1e4ce0b8923761071f7fe5d848491d232e83ff132d97c0d2d9f05167c7c5192"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/browser/docx-exif-eight-directions.png",
+      "sha256": "19ef0c7b4756994d01d01b1679f9095d920801130a4f0c7401991e9dee553da9"
+    }
+  ],
+  "redGreenHistory": [
+    {
+      "red": "parser-red.txt",
+      "finding": "19 failures against initial unimplemented parser; now covered in final 82."
+    },
+    {
+      "red": "controller-red.txt",
+      "finding": "20 failed/1 passed plus unhandled errors from empty stub; not a clean 21-case valid-red claim."
+    },
+    {
+      "red": "boundaries-red.txt",
+      "finding": "9 failed/1 passed; namespace/unknown-content/bounds counterexamples corrected."
+    },
+    {
+      "red": "public-first.txt",
+      "finding": "4 passed/1 test ZIP helper failure; not product incompatibility."
+    },
+    {
+      "red": "public-second.txt",
+      "finding": "Valid public tiny-picture neutral DrawingML wrongly unsupported; corrected, public-green 5 passed."
+    },
+    {
+      "red": "bullet-red.txt; ui-browser/ui-first.json",
+      "finding": "Default writer Symbol U+F0B7 not visibly represented; exact known font/code-point mapping now yields visible bullet."
+    },
+    {
+      "red": "bullet-missing-font-red.txt",
+      "finding": "Missing optional rFonts guard fixed."
+    },
+    {
+      "red": "ui-browser/ui-second.json; ui-browser/ui-third.json",
+      "finding": "Harness expectation typo then spread-argument overflow; preserved and not attributed to product."
+    },
+    {
+      "red": "ui-browser/negative-indent-red.json",
+      "finding": "First character left=-215 while surface left=86; root constrained preview margins/hanging indent, final UI passes."
+    },
+    {
+      "red": "hidden-independent-red.txt",
+      "finding": "Independent webHidden/vanish inheritance and ordering; specVanish paragraph-mark semantics. Separated flags; explicit unsupported specVanish; hidden content receives location notice without raw hidden text."
+    },
+    {
+      "red": "browser/exif-red.json; exif-unit-red.txt",
+      "finding": "Valid portrait EXIF6 decoded with swapped dimensions rejected. Private bounded EXIF helper + actual 1–8 quadrant pixel verification passes."
+    },
+    {
+      "red": "image-profile-red.txt",
+      "finding": "Three limit/animated error-classification counterexamples; fixed limit/unsupported mapping and preserve DocxError through parser."
+    },
+    {
+      "red": "../docx-independent-review/completeness-red.txt",
+      "finding": "Hidden omission notice and repeated-image Blob resource amplification; parser and root shared URL pool corrected, final real UI verifies reuse/release/reveal."
+    }
+  ],
+  "rootUiLogCorrection": {
+    "docx-ui-entry-green.txt": "Despite filename: 1 failed, 65 passed; not green.",
+    "docx-ui-entry-fixed.txt": "66 passed.",
+    "docx-ui-refinements.txt": "67 passed.",
+    "qualification": "Read raw root logs, not re-run here. Later root checks may extend the set."
+  },
+  "testFixtureDependencies": {
+    "authored": "docx-fixtures/01–19 DOCX referenced by test helpers (all original 28 retained unchanged).",
+    "independentWriter": [
+      "docx-compatibility/01-unicode-lists.docx",
+      "docx-compatibility/02-table-images-stories.docx",
+      "docx-compatibility/03-sections.docx",
+      "docx-compatibility/expectations.json"
+    ],
+    "public": "docx/public-samples/*.docx + provenance.json; unchanged maintainer git blobs; license retained.",
+    "jpeg": "docx/browser/authored-portrait.jpg (docx_images.test.ts).",
+    "nativePrepared": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/exif-fixtures/asymmetric-exif6.docx",
+      "sha256": "619b244d8a97b54a6ecb2c7aa6e745aa132f8f7d9e2e55bd47dae04c9513201b",
+      "sourceTestsDependOnThis": false,
+      "nativeExecuted": false
+    }
+  },
+  "unsupportedAndPartial": [
+    "No Word pagination or full typography fidelity; local font substitutions and continuous layout disclosed.",
+    "Only Transitional DOCX profile; strict namespace, macros, active content, altChunk, revisions/unsupported structure explicitly rejected or positioned notices according to profile.",
+    "No field/formula execution, external link/image/font loading, arbitrary HTML/CSS, editing, or automatic send.",
+    "Complex DrawingML/layout/formatting uses explicit unsupported/partial notices; unknown substantive content is not silently dropped.",
+    "Malformed, duplicate, ambiguous or out-of-profile EXIF metadata rejected; ordinary orientations 1–8 supported with original byte/pixel limits."
+  ],
+  "officialReferences": [
+    "https://www.unicode.org/Public/MAPPINGS/VENDORS/ADOBE/symbol.txt",
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.specvanish?view=openxml-3.0.1",
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.webhidden?view=openxml-3.0.1",
+    "https://cipa.jp/std/documents/e/DC-X010-2017.pdf",
+    "https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#dom-createimagebitmap"
+  ],
+  "processCleanup": {
+    "ownedViteSession": 21052,
+    "normalSigintExitCode": 130,
+    "port1458Closed": true,
+    "browser": "Each runner terminates its own process group/profile in finally; no formal application process changed."
+  },
+  "independentReview": "verification owns docx-independent-review; root owns docx-backend-independent.json. Final receipt handoff requested; no native acceptance implied."
+}

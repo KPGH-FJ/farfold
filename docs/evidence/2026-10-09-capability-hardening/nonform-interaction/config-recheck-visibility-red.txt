@@ -1,0 +1,74 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/opening_inquiries.test.ts (10 tests | 2 failed) 8ms
+   × shows an unavailable inquiry while preserving normal channel delivery 3ms
+   × retains unavailable details and the queue pause when an opening completes 1ms
+ ❯ src/runtime/sessions.config-recheck.test.ts (28 tests | 1 failed) 16ms
+   × does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/opening_inquiries.test.ts > shows an unavailable inquiry while preserving normal channel delivery
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/opening_inquiries.test.ts:75:20
+     73|     requests: [],
+     74|   });
+     75|   expect(consumed).toBe(false);
+       |                    ^
+     76|   expect(h.invoke).not.toHaveBeenCalled();
+     77| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/opening_inquiries.test.ts > retains unavailable details and the queue pause when an opening completes
+AssertionError: expected null to be 'unavailable' // Object.is equality
+
+- Expected:
+"unavailable"
+
++ Received:
+null
+
+ ❯ src/runtime/opening_inquiries.test.ts:105:29
+    103|   }
+    104|   const state = await opening;
+    105|   expect(state.queuePaused).toBe("unavailable");
+       |                             ^
+    106|   expect(state.items).toContainEqual(
+    107|     expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/sessions.config-recheck.test.ts > does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true)
+AssertionError: expected null to be 'unavailable' // Object.is equality
+
+- Expected:
+"unavailable"
+
++ Received:
+null
+
+ ❯ src/runtime/sessions.config-recheck.test.ts:470:35
+    468|     const recovered = await threads.recheckConfig(old.key);
+    469|     expect(recovered.configCheck?.status).toBe("ready");
+    470|     expect(recovered.queuePaused).toBe("unavailable");
+       |                                   ^
+    471|     expect(
+    472|       h.invoke.mock.calls.some(([command]) => command === "session_pro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 35 passed (38)
+   Start at  00:07:27
+   Duration  261ms (transform 289ms, setup 0ms, import 368ms, tests 24ms, environment 0ms)
+

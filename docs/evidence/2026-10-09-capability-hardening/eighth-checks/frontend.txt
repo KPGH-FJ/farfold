@@ -1,0 +1,73 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/sessions.config-recheck.test.ts (28 tests | 1 failed) 46ms
+   × does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true) 6ms
+ ❯ src/runtime/interaction_actions.stop.test.ts (3 tests | 1 failed) 12ms
+   × blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/interaction_actions.stop.test.ts > blocks new decisions only while waiting for stop and preserves the original requests for unknown recovery
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'session_elicitation_respond', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "session_elicitation_respond",
++   "session_permission_respond",
+    {
+-     "action": "cancel",
+-     "content": null,
+-     "requestId": "question",
++     "optionId": "once",
++     "requestId": "permission",
+      "sessionId": "native",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/interaction_actions.stop.test.ts:82:18
+     80|     optionId: "once",
+     81|   });
+     82|   expect(invoke).toHaveBeenCalledWith("session_elicitation_respond", {
+       |                  ^
+     83|     sessionId: "native",
+     84|     requestId: "question",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/sessions.config-recheck.test.ts > does not consume an identical unavailable pause from a real unsupported inquiry (during reload: true)
+AssertionError: expected null to be 'unavailable' // Object.is equality
+
+- Expected:
+"unavailable"
+
++ Received:
+null
+
+ ❯ src/runtime/sessions.config-recheck.test.ts:470:35
+    468|     const recovered = await threads.recheckConfig(old.key);
+    469|     expect(recovered.configCheck?.status).toBe("ready");
+    470|     expect(recovered.queuePaused).toBe("unavailable");
+       |                                   ^
+    471|     expect(
+    472|       h.invoke.mock.calls.some(([command]) => command === "session_pro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 277 passed (279)
+      Tests  2 failed | 3104 passed (3106)
+   Start at  00:01:56
+   Duration  31.85s (transform 9.50s, setup 0ms, import 203.30s, tests 39.26s, environment 23ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

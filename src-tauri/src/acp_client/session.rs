@@ -931,48 +931,14 @@ impl AcpManager {
         action: &str,
         content: Option<Value>,
     ) -> Result<InteractionReply, String> {
-        if !["accept", "decline", "cancel"].contains(&action)
-            || (action == "accept" && content.as_ref().is_some_and(|v| !v.is_object()))
-        {
-            return Ok(InteractionReply::new(
-                "retryable",
-                Some("请检查填写内容后重试"),
-            ));
-        }
-        let mut map = self
-            .pending_elicitations
-            .lock()
-            .map_err(|_| "无法读取待处理事项")?;
-        let Some(entry) = map.get_mut(request_id) else {
-            return Ok(InteractionReply::new("expired", None));
-        };
-        if entry.cancelled.is_cancelled() {
-            map.remove(request_id);
-            return Ok(InteractionReply::new("expired", None));
-        }
-        if entry.session_id != session_id {
-            return Ok(InteractionReply::new("expired", None));
-        }
-        let Some(responder) = entry.responder.take() else {
-            return Ok(InteractionReply::new(
-                "uncertain",
-                Some("答复结果尚未确认，请等待"),
-            ));
-        };
-        let mut outcome = serde_json::json!({"action":action});
-        if action == "accept" {
-            outcome["content"] = content.unwrap_or_else(|| serde_json::json!({}));
-        }
-        match responder.respond(outcome) {
-            Ok(()) => {
-                map.remove(request_id);
-                Ok(InteractionReply::new("submitted", None))
-            }
-            Err(_) => Ok(InteractionReply::new(
-                "uncertain",
-                Some("答复结果尚未确认，请等待"),
-            )),
-        }
+        super::elicitation::respond(
+            &self.pending_elicitations,
+            request_id,
+            Some(session_id),
+            None,
+            action,
+            content,
+        )
     }
 
     pub(crate) fn permission_respond(
@@ -1041,7 +1007,7 @@ pub struct InteractionReply {
     pub message: Option<&'static str>,
 }
 impl InteractionReply {
-    fn new(status: &'static str, message: Option<&'static str>) -> Self {
+    pub(super) fn new(status: &'static str, message: Option<&'static str>) -> Self {
         Self { status, message }
     }
 }

@@ -797,7 +797,12 @@ pub async fn auth_run(
     let app = app.clone();
     tauri::async_runtime::spawn(async move {
         let (_configuration, _scope) = (_configuration, scope);
-        let operation = attempt.operation();
+        let inquiry_output = on_output.clone();
+        let operation = attempt
+            .operation()
+            .with_events(std::sync::Arc::new(move |event| {
+                let _ = inquiry_output.send(event);
+            }));
         let _attempt = attempt;
         let on_unknown = std::sync::Arc::new(move || {
             let _ = on_output.send(serde_json::json!({"authStatus":"unknown"}));

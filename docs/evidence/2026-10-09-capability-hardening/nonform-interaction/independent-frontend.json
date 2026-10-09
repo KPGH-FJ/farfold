@@ -1,0 +1,212 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-09T15:59:40.041025+00:00",
+  "reviewer": "product_coverage independent from ARCH43 implementation",
+  "scope": "Read-only frontend ownership, request/session presentation, URL consent/completion, authentication/opening cancellation and late callbacks. No product/test edits and no tests/browser rerun by reviewer.",
+  "conclusion": "No remaining blocking finding in the reviewed frontend scope after the cancellation-unknown enabled-card issue was fixed and rechecked.",
+  "sourceHashes": [
+    {
+      "path": "src/runtime/elicitation.ts",
+      "sha256": "603bfb313bd79aa3d1010e74f670df97e0622bbfed1a269b6f7e4cd1b202fe11"
+    },
+    {
+      "path": "src/runtime/opening_inquiries.ts",
+      "sha256": "1c6633863d04adf3059d8d93701008b1a811dbc418978a7c28b3a97eaa2a7e4c"
+    },
+    {
+      "path": "src/runtime/session_open_input.ts",
+      "sha256": "f9d2fb8f77060d411268e4908870ce8d2803dc333a2de7c73c3ec18d52844441"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "341980835d24e924963d0acd1ed9aa19330c46e320a371697d8c696bf6c78432"
+    },
+    {
+      "path": "src/runtime/agent_preparation.ts",
+      "sha256": "263c604e9deb6a61d57cf71fe6797c0289687720814a5221b436de98c89cc1e9"
+    },
+    {
+      "path": "src/runtime/auth_actions.ts",
+      "sha256": "00b238e90f22c9d22978d59f47f8eaa104d6be8b555a6f8e7a07020951a099ca"
+    },
+    {
+      "path": "src/runtime/auth_activity.ts",
+      "sha256": "a5526991d36d792ed457b8e5c9a993717d999462c01ffdbc5ae0175a22e912f2"
+    },
+    {
+      "path": "src/runtime/interaction_actions.ts",
+      "sha256": "49122af045b6982bf0ed96cb35132cb263cc2f0a518842ff99e611d9f4d04aab"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "6bb6c650e4327ee0797b837adfb9e33e14c7bb722b5716bb1332ac2c27a2437b"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "c00e3eadbbb77324088916fca0b3bf2c0fc30e0400f8fd53d476111069228c8b"
+    },
+    {
+      "path": "src/runtime/elicitation_strings.ts",
+      "sha256": "1cf43e8e31c91bde1d3952c15a70ae90fa221c2687db8346ff9aef8f9bc1daf1"
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "d8b6622e6665ad142833db9b14b84ff7ffd032e325030318e39ce79ee2301700"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "66b6ef0729e07736d7ea9d39fd05fd0b8584d3c97ce5fecb36dbc95774ed75e0"
+    },
+    {
+      "path": "src/components/AuthElicitationList.tsx",
+      "sha256": "ba1fd8489e6b940677d14ece4a25adc0ff5e3a112f77800ed5fb269daa55fc89"
+    },
+    {
+      "path": "src/components/OpeningElicitationList.tsx",
+      "sha256": "b693706fa6f24c0678fa1ae5b4d0f71c6e156da0f433d65e924f6b6bef85a917"
+    },
+    {
+      "path": "src/components/UrlElicitationCard.tsx",
+      "sha256": "cd30ce776796f7d72fe047e36c48e120d3687f4bf0fd2005b754cd1496ae69df"
+    },
+    {
+      "path": "src/components/ElicitationCard.tsx",
+      "sha256": "6fae5897a8d7e3a6a18d0a7ea38bf1bca4269b0bb41f50bc4825f51c12c3be7e"
+    },
+    {
+      "path": "src/components/AgentAuthSection.tsx",
+      "sha256": "782e59511825e99dcbfca1a9eb608d97cf5972a238dabbac7b01f73e5a03751b"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "5f834c0807d20cc62f1a0a4fe9fc35ec68ad75171ec2fa12c6b35b5a31213273"
+    },
+    {
+      "path": "src/runtime/elicitation.test.ts",
+      "sha256": "037c2a667299e923023cff7820103dec8b5fc7369d5abd8ccfe55e6749d30967"
+    },
+    {
+      "path": "src/runtime/opening_inquiries.test.ts",
+      "sha256": "1923e405b74bb1ef754d19c0ca157ad671f7d52e46260c55c9e67f3df223e689"
+    },
+    {
+      "path": "src/components/ElicitationCard.url.test.tsx",
+      "sha256": "7b6c68e89a0d05985bfe33d3be4ff18c3e139055444ce7a4a80d5521aa94e216"
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "24ae32844447a387f35c85803c73e7bcd06355b92256d1a7a092dc70bdac28f4"
+    },
+    {
+      "path": "src/components/AuthElicitationList.test.tsx",
+      "sha256": "2dee62a29a599e38dedae47b226d3e79a232ae263378006fc04567b079036609"
+    }
+  ],
+  "covered": [
+    {
+      "evidence": [
+        "src/runtime/elicitation.ts:45",
+        "src/components/UrlElicitationCard.tsx:17"
+      ],
+      "finding": "URL shape gate requires HTTPS host, no credentials/control characters/backslash; host/full URL and punycode notice displayed as text. No prefetch, remote anchor/embed or opener before explicit choice."
+    },
+    {
+      "evidence": [
+        "src/runtime/elicitation.ts:70",
+        "src/runtime/interaction_actions.ts:150"
+      ],
+      "finding": "Opener pending, submitted reply, external completion and parent outcome remain separate. Current object/owner checked before opener and after await; one response in flight; timeout/unknown receipt does not auto-repeat. Stopping/stopUnconfirmed blocks thread replies."
+    },
+    {
+      "evidence": [
+        "src/runtime/auth_activity.ts:107",
+        "src/runtime/auth_activity.ts:160",
+        "src/runtime/auth_actions.ts:122"
+      ],
+      "finding": "Authentication Channel stays attached to initiating attempt. An inquiry completion only removes its card and adds a qualified notice; it does not set operationConfirmed/checked. Parent cancellation/end and late callbacks retain attempt checks."
+    },
+    {
+      "evidence": [
+        "src/runtime/opening_inquiries.ts:40",
+        "src/runtime/opening_inquiries.ts:107",
+        "src/runtime/opening_inquiries.ts:135",
+        "src/runtime/sessions.ts:589",
+        "src/App.tsx:133"
+      ],
+      "finding": "Before session_open result, inquiries go to a transient opening owner; same pending open joins current interests. Abort epoch prevents an old opener acknowledgement being accepted by a new caller. Retire attempts cancellation and states original outcome still unknown; parent finish/normal channel handoff remain distinct."
+    },
+    {
+      "evidence": [
+        "src/components/EmptyState.tsx:298",
+        "src/components/EmptyState.tsx:445",
+        "src/runtime/agent_preparation.ts:340"
+      ],
+      "finding": "Final dedicated active/unmount abort path withdraws opening inquiry without changing existing prepared-draft lifetime. Preparation ticket/phase and send fallback dynamic active/pair guard prevent stale consent. App navigation synchronously retires opening owners."
+    },
+    {
+      "evidence": [
+        "src/components/OpeningElicitationList.tsx:17",
+        "src/components/AuthElicitationList.tsx:18",
+        "src/components/ElicitationCard.tsx:211"
+      ],
+      "finding": "One generic form/URL card is used in opening, authentication and conversation locations. Unknown request details remain inert text and in-memory only; no Agent brand UI branch introduced."
+    }
+  ],
+  "findingClosed": {
+    "id": "auth-cancel-unknown-card-enabled",
+    "prior": "cancel/endConnection set startCancelled=true then failed IPC yields phase unknown. Runtime correctly refused replies, but AuthElicitationList only checked checking/cancelling and re-enabled the pending card, leaving inert enabled actions. editInquiry also lacked matching cancellation guard.",
+    "fix": "AuthElicitationList disabled now checks activity.canStart(job.attemptId); editInquiry checks current attempt, authActive and phase.",
+    "validRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/auth-cancel-ui-red.txt",
+      "failed": 2,
+      "why": "Actual rendered buttons had no disabled attribute after either cancellation failure."
+    },
+    "green": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/auth-cancel-ui-green.txt",
+      "files": 5,
+      "passed": 58,
+      "review": "Read new test and production diff, verified raw exit 0; not rerun by reviewer."
+    }
+  },
+  "peerLogsRead": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/frontend-final.txt",
+      "files": 10,
+      "passed": 127
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/opening-entry-abort-green.txt",
+      "files": 5,
+      "passed": 112
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/auth-cancel-ui-green.txt",
+      "files": 5,
+      "passed": 58
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/typecheck-owned-final.txt",
+      "exit": 0
+    }
+  ],
+  "browserEvidence": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/browser-first.json",
+    "checks": 20,
+    "runBy": "architecture",
+    "reviewerExecuted": false,
+    "reviewerViewedScreenshot": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/inquiry-disclosure.png",
+    "screenshotSha256": "0085431469c1119ac1a279801653213410410fcca96233fbfec51144a2f7de98",
+    "diagnostics": "docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/browser-first.diagnostics.json",
+    "networkEvents": 70,
+    "observedNetworkHosts": ["127.0.0.1:1458"],
+    "consoleErrors": 0,
+    "runtimeExceptions": 0,
+    "qualification": "Chromium React StrictMode and actual generic UI; native IPC/opener mocked. This log does not execute actual browser authorization, native app, account, Agent or installed binary. Later change was cancellation-disabled guard plus dedicated source/SSR regression; browser was not rerun for it."
+  },
+  "remainingBoundaries": [
+    "Backend/wire independent review belongs to root; limited producer/helper reads here only checked frontend identity assumptions.",
+    "Standard form/URL scope support is not proof of every Agent login surface or private authentication extension.",
+    "No native account/Agent journey or installed-product URL acceptance claimed.",
+    "Read-only review does not replace root frozen-input full checks or final installation verification."
+  ]
+}

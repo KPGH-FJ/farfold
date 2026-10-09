@@ -1,0 +1,18 @@
+{
+  "exitCode": 0,
+  "command": [
+    "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+    "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx",
+    "--output_dir",
+    "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-01-local-font-probe",
+    "--emit_pdf",
+    "--verbose"
+  ],
+  "childEnvironmentOverride": {
+    "FONTCONFIG_FILE": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/local-font-probe.conf"
+  },
+  "systemFontsModified": false,
+  "networkFonts": false,
+  "sampleSha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861"
+}

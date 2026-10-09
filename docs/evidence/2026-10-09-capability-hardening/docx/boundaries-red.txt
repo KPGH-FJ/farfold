@@ -1,0 +1,143 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_boundaries.test.ts (10 tests | 9 failed) 38ms
+     × refuses unsupported children between table rows instead of dropping their content 5ms
+     × refuses unexpected text in body and run containers 1ms
+     × enforces a logical 512-column profile before creating UI grid coordinates 4ms
+     × enforces eight nested tables independently from XML depth 2ms
+     × does not present web-hidden content as ordinary visible text 2ms
+     × warns when a referenced paragraph style is absent 1ms
+     × refuses fractional outline and list levels instead of inventing labels 1ms
+     × refuses ambiguous case-fold package aliases 1ms
+     × acknowledges inline picture effects instead of showing an unchanged image as complete 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > refuses unsupported children between table rows instead of dropping their content
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:10:149
+      8| describe("DOCX completeness and allocation boundaries", () => {
+      9|   it("refuses unsupported children between table rows instead of dropp…
+     10|     expect(() => parseDocx(body(table(paragraph).replace('</w:tbl>', '…
+       |                                                                                                                                                     ^
+     11|   });
+     12|   it("refuses unexpected text in body and run containers", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > refuses unexpected text in body and run containers
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:13:55
+     11|   });
+     12|   it("refuses unexpected text in body and run containers", () => {
+     13|     expect(() => parseDocx(body('LOST' + paragraph))).toThrow(DocxErro…
+       |                                                       ^
+     14|     expect(() => parseDocx(body('<w:p><w:r>LOST<w:t>retained</w:t></w:…
+     15|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > enforces a logical 512-column profile before creating UI grid coordinates
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:17:194
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > enforces eight nested tables independently from XML depth
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:22:49
+     20|     let value = paragraph; for (let i = 0; i < 8; i++) value = table(v…
+     21|     expect(() => parseDocx(body(value))).not.toThrow();
+     22|     expect(() => parseDocx(body(table(value)))).toThrow(DocxError);
+       |                                                 ^
+     23|   });
+     24|   it("does not present web-hidden content as ordinary visible text", (…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > does not present web-hidden content as ordinary visible text
+AssertionError: expected '{"blocks":[{"kind":"paragraph","id":"…' not to contain 'HIDDEN'
+
+Expected: "HIDDEN"
+Received: "{"blocks":[{"kind":"paragraph","id":"block-1","runs":[{"kind":"text","text":"HIDDEN","style":{}}],"style":{}}],"stories":[],"images":[],"warnings":[{"code":"continuousLayout","count":1}],"partial":false}"
+
+ ❯ src/runtime/docx_boundaries.test.ts:26:40
+     24|   it("does not present web-hidden content as ordinary visible text", (…
+     25|     const result = parseDocx(body('<w:p><w:r><w:rPr><w:webHidden/></w:…
+     26|     expect(JSON.stringify(result)).not.toContain('HIDDEN'); expect(res…
+       |                                        ^
+     27|   });
+     28|   it("warns when a referenced paragraph style is absent", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > warns when a referenced paragraph style is absent
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/docx_boundaries.test.ts:30:77
+     28|   it("warns when a referenced paragraph style is absent", () => {
+     29|     const result = parseDocx(body('<w:p><w:pPr><w:pStyle w:val="not-th…
+     30|     expect(result.warnings.some((w) => w.code === 'unsupportedFormatti…
+       |                                                                             ^
+     31|   });
+     32|   it("refuses fractional outline and list levels instead of inventing …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > refuses fractional outline and list levels instead of inventing labels
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:33:92
+     31|   });
+     32|   it("refuses fractional outline and list levels instead of inventing …
+     33|     expect(() => parseDocx(body('<w:p><w:pPr><w:outlineLvl w:val="1.5"…
+       |                                                                                            ^
+     34|   });
+     35|   it("refuses ambiguous case-fold package aliases", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > refuses ambiguous case-fold package aliases
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_boundaries.test.ts:37:36
+     35|   it("refuses ambiguous case-fold package aliases", () => {
+     36|     const input = docxFixture('01-text-values'); input.entries.push('w…
+     37|     expect(() => parseDocx(input)).toThrow(DocxError);
+       |                                    ^
+     38|   });
+     39|   it("acknowledges inline picture effects instead of showing an unchan…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/runtime/docx_boundaries.test.ts > DOCX completeness and allocation boundaries > acknowledges inline picture effects instead of showing an unchanged image as complete
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/docx_boundaries.test.ts:41:61
+     39|   it("acknowledges inline picture effects instead of showing an unchan…
+     40|     const input = replaceDocxPart(docxFixture('05-inline-png-jpeg'), '…
+     41|     const result = parseDocx(input); expect(result.partial).toBe(true)…
+       |                                                             ^
+     42|   });
+     43|   it("caps repeated image presentation even though resources are dedup…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 1 passed (10)
+   Start at  23:23:44
+   Duration  179ms (transform 56ms, setup 0ms, import 74ms, tests 38ms, environment 0ms)
+

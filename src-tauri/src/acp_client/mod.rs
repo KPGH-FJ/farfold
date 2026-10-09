@@ -20,6 +20,7 @@ pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
+mod elicitation;
 mod failures;
 pub(crate) mod first_release;
 pub(crate) mod handshake;
@@ -73,6 +74,12 @@ mod history_replay_identity_tests;
 
 #[cfg(test)]
 mod usage_wire_tests;
+
+#[cfg(test)]
+mod elicitation_wire_tests;
+
+#[cfg(test)]
+mod elicitation_request_tests;
 
 #[cfg(test)]
 mod route_registration_tests;

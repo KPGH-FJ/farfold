@@ -5,6 +5,8 @@
  */
 import { useMemo } from "react";
 import type { PendingElicitation } from "../runtime/session_types";
+import { UrlElicitationCard } from "./UrlElicitationCard";
+import { INQUIRY } from "../runtime/elicitation_strings";
 import { STRINGS } from "../runtime/strings";
 
 interface FieldSpec {
@@ -190,14 +192,19 @@ export function ElicitationCard({
   onChange,
   onRespond,
   disabled = false,
+  acceptanceDisabled = false,
   statusLabel,
+  agentName,
 }: {
   request: PendingElicitation;
   disabled?: boolean;
+  /** Keep explicit decline/cancel available without authorizing new work. */
+  acceptanceDisabled?: boolean;
   statusLabel?: string;
+  agentName?: string;
   onChange: (name: string, value: unknown) => void;
   onRespond: (
-    action: "accept" | "cancel",
+    action: "accept" | "decline" | "cancel",
     values?: Record<string, unknown>,
   ) => void;
 }) {
@@ -205,6 +212,17 @@ export function ElicitationCard({
     () => fieldsFromSchema(elicitation?.schema ?? null),
     [elicitation?.schema],
   );
+  if (elicitation.mode === "url")
+    return (
+      <UrlElicitationCard
+        request={elicitation}
+        disabled={disabled}
+        acceptanceDisabled={acceptanceDisabled}
+        statusLabel={statusLabel}
+        agentName={agentName}
+        onRespond={onRespond}
+      />
+    );
   const values = elicitation.values;
   const locked = disabled || elicitation.status !== "pending";
 
@@ -218,8 +236,8 @@ export function ElicitationCard({
           (values[f.name] as unknown[]).length === 0)),
   );
 
-  const respond = (action: "accept" | "cancel") => {
-    if (locked) return;
+  const respond = (action: "accept" | "decline" | "cancel") => {
+    if (locked || (action === "accept" && acceptanceDisabled)) return;
     const content: Record<string, unknown> = {};
     for (const field of fields) {
       const v = values[field.name];
@@ -232,6 +250,7 @@ export function ElicitationCard({
 
   return (
     <div className="approval elicitation">
+      {agentName && <div className="tag">{agentName}</div>}
       <div className="tag">
         <i />
         {statusLabel ?? STRINGS.elicitation.needYou}
@@ -246,7 +265,7 @@ export function ElicitationCard({
       )}
       <fieldset
         className="el-form"
-        disabled={locked}
+        disabled={locked || acceptanceDisabled}
         style={{ margin: 0, padding: 0, border: 0, minWidth: 0 }}
       >
         {fields.map((field) => (
@@ -262,7 +281,7 @@ export function ElicitationCard({
         <button
           type="button"
           className="btn btn-primary"
-          disabled={locked || missingRequired}
+          disabled={locked || acceptanceDisabled || missingRequired}
           onClick={() => respond("accept")}
         >
           {elicitation.status === "submitting"
@@ -273,11 +292,27 @@ export function ElicitationCard({
           type="button"
           className="btn btn-text"
           disabled={locked}
+          onClick={() => respond("decline")}
+        >
+          {INQUIRY.decline}
+        </button>
+        <button
+          type="button"
+          className="btn btn-text"
+          disabled={locked}
           onClick={() => respond("cancel")}
         >
           {STRINGS.elicitation.cancel}
         </button>
       </div>
+      {elicitation.requestSnapshot !== undefined && (
+        <details>
+          <summary>{INQUIRY.details}</summary>
+          <pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
+            {JSON.stringify(elicitation.requestSnapshot, null, 2)}
+          </pre>
+        </details>
+      )}
     </div>
   );
 }

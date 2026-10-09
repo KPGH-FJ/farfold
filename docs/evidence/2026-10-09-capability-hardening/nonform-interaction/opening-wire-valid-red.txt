@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.80s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::elicitation_wire_tests::session_scoped_load_inquiry_is_answerable_before_load_returns' (20091256) panicked at src/acp_client/elicitation_wire_tests.rs:202:14:
+load must not park its required question behind its own response: Elapsed(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::elicitation_wire_tests::session_scoped_load_inquiry_is_answerable_before_load_returns ... FAILED
+
+failures:
+
+failures:
+    acp_client::elicitation_wire_tests::session_scoped_load_inquiry_is_answerable_before_load_returns
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1177 filtered out; finished in 3.47s
+
+error: test failed, to rerun pass `--lib`
+
+exit 101

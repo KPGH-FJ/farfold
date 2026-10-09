@@ -1,3 +1,4 @@
+import { replyToElicitation } from "./elicitation";
 import { invoke } from "@tauri-apps/api/core";
 import type {
   PendingElicitation,
@@ -156,9 +157,18 @@ export class InteractionActions {
     const s = this.get(key);
     const p = s?.pendingElicitations.find((p) => p.requestId === requestId);
     if (!s || !p) return;
-    await this.submit(s, p, "session_elicitation_respond", {
-      action,
-      content: action === "accept" ? (values ?? p.values) : null,
+    await replyToElicitation(p, action, values, {
+      sessionId: s.nativeSessionId,
+      current: () =>
+        !s.stopping &&
+        (!s.stopUnconfirmed || action !== "accept") &&
+        this.current(s, p),
+      changed: () => this.publish(s),
+      remove: (notice) => {
+        if (notice) expirePendingRequest(s, p.requestId);
+        else removePendingRequest(s, p.requestId);
+        this.publish(s);
+      },
     });
   }
 }

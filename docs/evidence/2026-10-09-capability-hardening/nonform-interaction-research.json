@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-09",
+  "kind": "read-only-official-interface-research",
+  "planIds": ["ARCH-43", "ARCH-42", "ARCH-39"],
+  "sourceCommit": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "authorization": "研究阶段仅写本文件；生产/tests/PRODUCT/计划未改，未调用真实Agent、账号、模型或正式应用。研究收口后root另授权标准request/session elicitation实现，后续结果另记。",
+  "conclusion": "标准v1 URL询问已有可实现官方接口，无需升级现有crate或改Agent。最小完整闭环必须同时补原请求与对话归属、连接级complete及安全外部打开；只增卡片不足以宣告支持。",
+  "proofLevel": {
+    "performed": [
+      "当前源码与安装crate/schema只读核查",
+      "官方发布文档和固定版本源码核查",
+      "verification对子流程归属/accept语义的独立设计挑战"
+    ],
+    "notPerformed": [
+      "生产改动",
+      "受控协议执行",
+      "真实登录或授权",
+      "真实Agent会话",
+      "Windows或已安装应用操作"
+    ]
+  },
+  "sources": {
+    "acpV1": {
+      "url": "https://agentclientprotocol.com/protocol/v1/elicitation",
+      "kind": "official-protocol",
+      "finding": "显式form/url能力；sessionId或requestId归属；accept仅表示同意；complete可选且仅含elicitationId；URL须用户同意，禁止预取或供客户端/模型读取。"
+    },
+    "pinnedDesign": {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/agent-client-protocol/7e87dc205a7325bd07d0249fd20bb7486ee6ba95/docs/rfds/elicitation.mdx",
+      "kind": "official-design-at-installed-schema-commit",
+      "finding": "RFD设计说明用于补充已发布v1文档，不将提案状态当独立生产验证。"
+    },
+    "schema": {
+      "url": "https://github.com/agentclientprotocol/agent-client-protocol/blob/7e87dc205a7325bd07d0249fd20bb7486ee6ba95/agent-client-protocol-schema/src/v1/elicitation.rs",
+      "kind": "installed-official-schema-1.9.1",
+      "finding": "ElicitationScope、UrlMode、CompleteElicitationNotification已有正式类型；无第三种可执行内置模式；Other保留扩展，不给予通用执行含义。"
+    },
+    "rustSdk": {
+      "url": "https://github.com/agentclientprotocol/rust-sdk/blob/2a78849d3eb3dcb140dade3b8fc938cf1e2b9ce5/src/agent-client-protocol/src/jsonrpc/incoming_actor.rs",
+      "kind": "installed-official-sdk-2.2.0",
+      "finding": "没有handler且无retry时：请求method_not_found，通知忽略；已核本机源码602–622。"
+    },
+    "codexServer": {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/CodexAcpServer.ts",
+      "kind": "official-acp-adapter-tagged-source",
+      "lines": "987–1024",
+      "finding": "authenticate的原requestId进入URL询问；要求client.url；complete仅发送elicitationId；authenticate依据独立布尔结果决定成功或错误。"
+    },
+    "codexClient": {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/CodexAcpClient.ts",
+      "kind": "official-acp-adapter-tagged-source",
+      "lines": "212–252",
+      "finding": "设备码登录在elicitUrl与loginCompleted之间竞速。登录可先完成；收到complete不代表success=true；拒绝/取消通过官方accountLoginCancel处理。"
+    },
+    "qwen": {
+      "url": "https://raw.githubusercontent.com/QwenLM/qwen-code/v0.25.0/packages/cli/src/acp-integration/acpAgent.ts",
+      "kind": "official-agent-tagged-source",
+      "lines": "5332–5390",
+      "finding": "独立authenticate/update扩展通知的_meta.authUri来自verification_uri_complete；无elicitationId/requestId，不等同标准URL询问。最终结果来自authenticate完成。不能猜测授权已成功，也不能为迁就客户端改其认证行为。"
+    }
+  },
+  "currentFindings": [
+    {
+      "id": "NF01",
+      "status": "missing",
+      "capability": "标准URL询问未承接",
+      "detail": "manager只声明form；session elicitation mode不是form时被当作cancel。未知或未声明mode按官方v1应返回Invalid params并保留原因，不能冒称用户取消。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:594",
+        "src-tauri/src/acp_client/pump.rs:629"
+      ],
+      "officialSource": "acpV1"
+    },
+    {
+      "id": "NF02",
+      "status": "missing",
+      "capability": "原请求归属的form与URL询问均无入口",
+      "detail": "SessionRoute只认sessionId；manager只为sessionId重试。requestId scope落SDK无handler回退。即使form已声明，登录阶段form也尚不能展示。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump.rs:333",
+        "src-tauri/src/acp_client/manager.rs:557"
+      ],
+      "officialSource": "rustSdk"
+    },
+    {
+      "id": "NF03",
+      "status": "missing",
+      "capability": "连接级完成通知被忽略",
+      "detail": "AccountObserver只消费_auth/status_update；elicitation/complete不含sessionId，当前没有业务handler并最终忽略。不是已有对话普通raw通知即可解决。",
+      "evidence": [
+        "src-tauri/src/acp_client/account_observer.rs:60",
+        "src-tauri/src/acp_client/manager.rs:568"
+      ],
+      "officialSource": "schema"
+    },
+    {
+      "id": "NF04",
+      "status": "partial",
+      "capability": "答复与外部完成生命周期必须拆分",
+      "detail": "后端成功提交答复后删除pending；前端submitted也删除卡；accept默认附空content。URL需省略form内容并另保留只在本连接内的交接状态。",
+      "evidence": [
+        "src-tauri/src/acp_client/session.rs:927",
+        "src/runtime/interaction_actions.ts:64",
+        "src/runtime/session_types.ts:168"
+      ],
+      "officialSource": "acpV1"
+    },
+    {
+      "id": "NF05",
+      "status": "partial",
+      "capability": "任意未知反向请求缺可定位说明",
+      "detail": "session其他request目前仅internal_error，没有原始请求详情事件；request scope则method_not_found。补语义准确错误及有界内存详情，不把未知字段变执行权限。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump.rs:677",
+        "src/runtime/sessions.ts:491"
+      ],
+      "officialSource": "rustSdk"
+    },
+    {
+      "id": "NF06",
+      "status": "partial",
+      "capability": "账号流程可复用现有取消和未知保护",
+      "detail": "Operation保存原SentRequest.id并可发取消；auth未知继续持有lease直到终态/连接关闭，AuthActivity跨页面存活。但当前Channel只有unknown提示，没有询问投递或答复入口。",
+      "evidence": [
+        "src-tauri/src/acp_client/operations.rs:53",
+        "src-tauri/src/acp_client/operations.rs:202",
+        "src-tauri/src/auth.rs:789",
+        "src/runtime/auth_activity.ts:37"
+      ],
+      "officialSource": "codexServer"
+    },
+    {
+      "id": "NF07",
+      "status": "missing",
+      "capability": "官方旧式登录URL扩展另有缺口",
+      "detail": "Qwen所列通知无标准scope字段，会落无handler忽略。须单独核实际SDK wire名和官方能力/当前认证owner再接入；本片不从品牌或URL字符串推断，不与标准complete混用。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:557",
+        "docs/evidence/2026-10-09-capability-hardening/official-capabilities.json:1388"
+      ],
+      "officialSource": "qwen"
+    }
+  ],
+  "priorityObjects": [
+    {
+      "agent": "codex-acp",
+      "version": "v2.1.1 official source",
+      "route": "标准request-scoped URL设备码登录",
+      "priority": "首个协议fixture依据",
+      "limit": "当前公开源码不等于已安装1.13.1支持；不升级/调用本机Agent，不做品牌UI。"
+    },
+    {
+      "agent": "Qwen Code",
+      "version": "v0.25.0 official source",
+      "route": "authenticate/update扩展",
+      "priority": "标准闭环后独立承接研究",
+      "limit": "未确认本版本实际SDK wire名/能力声明；缺标准ID不能从同URL猜归属。"
+    },
+    {
+      "agent": "其余首批Agent",
+      "route": "复用官方能力基线逐项后续核对",
+      "priority": "保持29家八标准",
+      "limit": "本次没有重新遍历29家，不据一次源码搜索无结果判不支持；代表接口实现不关闭整项ARCH43。"
+    }
+  ],
+  "minimumImplementation": {
+    "backend": [
+      "在acp_client新增共享elicitation处理器，form/url为显式variant；原params与_meta仅有界内存保留。未知mode拒绝并可看未承接原因。",
+      "连接handler在session分发前承接create/complete；session owner包含确切连接对象、session及可选toolCallId；request owner包含确切连接、JSON-RPC原ID和现有Operation/账号attempt。字符串ID与数字ID不同。",
+      "将发送+登记原requestId置于同一个短临界区，收消息侧查同一登记；不能把已经send后异步登记当无竞态。SentRequest.id是已有官方接口，无需猜ID。登记移除须依真实response/cancel/断连，不按URL或Agent名。",
+      "session/new/load中间请求及账号认证尚无session时仍可投递到原operation入口；无法确切归属的请求拒绝且不猜测当前界面。旧对象迟到不能更新新对象。",
+      "独立记录答复提交与外部complete；答复只一次。complete按连接+elicitationId处理，未知/已完成忽略。不得把complete当认证/工具成功，父请求结果和身份复查仍独立。",
+      "complete早于accept时不自动打开或补accept；取消可操作入口，保留原请求处理权直到取消/父请求终态，不发明用户同意。相同ID在同连接再次使用与旧迟到complete不可区分时保持不确定，不能自动完成新请求。",
+      "复用RequestCancellation、Operation和WorkLease。accept后不存在第二次elicitation cancel答复；用户中止改走官方父operation取消/目标session停止，并区分仅本地不再等待与远端已结束。",
+      "超时、IPC答复未知、连接丢失不自动重发/重新开URL；有界计数与字节限制明确报未承接，不能靠无限重试或丢弃变成功。"
+    ],
+    "frontend": [
+      "同一询问卡共用于对话与账号准备；类型/源scope驱动，不写Agent专属UI。URL卡用独立集中字符串，完整URL、突出目标host、Agent和原因可审。message作为纯文字，不自动链接其他字段。",
+      "用户明确点击才调用默认外部浏览器；优先保持现有https-only权限。不复用可被Agent读取的browser_workspace，不fetch、不预览站点、不读Cookie/密码/页面。",
+      "opened只说明系统接纳打开。then后单次accept无content；打开失败允许显式重试/拒绝/取消，不自动accept。IPC未知后不可重试同答复；按钮禁用和归属核验在异步边界再次执行。",
+      "展示分离状态：待用户决定、打开失败、答复未确认、等待外部完成、Agent已报告外部步骤结束、原操作失败/未确认。前台focus只可触发已有只读账号复查，不是complete证据。",
+      "用户关闭设置、切任务不默认cancel；显式取消原流程按现有保护执行。重启不恢复URL或自动打开，仅可重新读真实账号/会话状态。"
+    ],
+    "dependencies": [
+      "无新增库、无环境开关、无持久正文/事件表。",
+      "保留SDK2.2.0/schema1.9.1、protocolVersion1；不混用v2或MCP inputRequired/retry语义。",
+      "现opener权限只https。HTTP开发回环或其他scheme未纳入本增量；若合法官方流程必须使用，继续作为未支持条件，不静默扩权限。",
+      "共用pump接近1500行，提取模块而非继续堆分支。"
+    ],
+    "errorBoundary": "未知JSON-RPC method用method_not_found；已知elicitation无效/未声明mode用invalid_params；用户真实decline/cancel与协议取消/失效分开；敏感payload不进入日志/数据库。"
+  },
+  "contractTestsNotYetRun": [
+    "声明form/url仅在实际两种scope接通后；旧未声明URL反例返回-32602，raw详情仍可见。",
+    "无session的authenticate收到requestId scope form和URL，答复抵达原responder；相同Agent不同连接互不串。",
+    "原request ID为数字1与字符串1、伪造或已结束ID拒绝；send后立即反向请求不丢首事件。",
+    "已有session/toolCallId归属准确，UI导航和重连旧请求无法答复新连接。",
+    "accept只提交一次且URL无content；form原内容校验不变。",
+    "完整URL安全门：无用户动作0打开/0网络；https允许，file/javascript/data/custom/userinfo/控制字符拒绝；Punycode可辨；非url字段链接不自动点击。",
+    "系统open失败不发accept；取消发生于open Promise期间或回应前不继续答复；已打开不冒充网站完成。",
+    "accept写入结果未知：保留未知，不自动再答复；complete后仍不能将原authenticate错误变成功。",
+    "complete早于accept/父response之前/之后均无自动打开或同意；父response失败不显示登录完成。",
+    "未知ID、重复complete、取消后的complete、旧连接同ID、同URL不同ID不改变当前询问；重复ID歧义不猜。",
+    "complete缺失直到超时：显示未确认并保留取消路线，不自动续发prompt/队列/认证。",
+    "用户decline/cancel、Agent $/cancel_request、session/cancel、断线和进程终结都只影响自身；父operation lease保留到真实终结。",
+    "多条同时询问、超量和超大payload受控拒绝；无未拥有的会话/账号状态或秘密持久化。",
+    "未知反向method和unknown mode保留固定未完成原因/内存详情，无自动工具或网页动作。",
+    "协议fixture先红后绿；后续实际账号和安装结果独立记，不把fixture/源码当真实29家通过。"
+  ],
+  "openDecisions": [
+    "不凭安全URL格式推断站点值得信任；用户明确同意仍必需。",
+    "complete仅标示外部步骤结束；原操作成功、身份、模型可用需各自真实回执。",
+    "同连接已退役elicitationId重用的迟到通知无额外序号可区分，需采用保守有界本地规则并如实标歧义，不能更改协议或制造持久ledger。",
+    "Qwen及其他自定义交接需官方方法和作用域进一步明确，标准URL闭环不等于扩展全覆盖。"
+  ],
+  "sourceHashes": {
+    "src-tauri/Cargo.toml": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b",
+    "src-tauri/Cargo.lock": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08",
+    "src-tauri/src/acp_client/manager.rs": "4e944aed7f2c5bc7c7ab6ed3445a9488fe5ba57018939f02398475eb030a8cd4",
+    "src-tauri/src/acp_client/pump.rs": "79f04df315b65a613b5b97f90c4e723471bae226a7c5f8eaac9e3ddcc23fd555",
+    "src-tauri/src/acp_client/pump/open.rs": "ae7e3ec5ba4f85b54a2a1b0ce7e6c03529e48adb728835ed2313aabeccbcfb78",
+    "src-tauri/src/acp_client/session.rs": "a3ef9611cd870bccf5fe0e0aed0baba393b34468bccc33fc2c14518e703e6d46",
+    "src-tauri/src/acp_client/operations.rs": "eb95fea126f341e67575ec6b23e0f21c5ec37b2de3e9c7320f33ce90c7379878",
+    "src-tauri/src/acp_client/account_observer.rs": "7cf2f87fbb4c76b5c7b5332c9a0bc42baf37f66920b5620150fa104849f90942",
+    "src-tauri/src/auth.rs": "137d3aa7ef42490857912afa589d318bec5763ab5046d209565ea280ce3b920f",
+    "src/runtime/interaction_actions.ts": "cf55b59bfeba6a7d88c039aa0b3b3c43a860a35ee44947c29d6ea3cde73911b4",
+    "src/runtime/auth_activity.ts": "cf0880b7dad86b95502a3978cb7d3eb87f207999fedf4b883ee7a260f98328bf",
+    "src/runtime/auth_actions.ts": "395a24567c36915f8fc9b5d7d7ed58be975f7edc77fc8d852886b2a2a85107ea",
+    "src/runtime/session_types.ts": "09c0a69ee302bc3414961b6323c2798318149f1b655c501a0d3f74b6cac5c762",
+    "src/runtime/sessions.ts": "24d9bcba59106dd2b5757139157b4f12492144535c105ce7e4f0561fdcb74413",
+    "src-tauri/capabilities/default.json": "8983a9f23d15bf8b29700d730398ebbb1c21111f232825b4edc88ca287d691c6"
+  }
+}

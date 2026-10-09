@@ -20,6 +20,7 @@ import {
 } from "../runtime/visual_preview";
 import { VisualFilePreview } from "./VisualFilePreview";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
+import { DocxFilePreview } from "./DocxFilePreview";
 import {
   fileFeedbackDrafts,
   fileFeedbackKey,
@@ -132,6 +133,9 @@ function isHtml(file: VerifiedFile) {
 }
 function isWorkbook(file: VerifiedFile) {
   return /\.xlsx$/i.test(file.name);
+}
+function isDocument(file: VerifiedFile) {
+  return /\.docx$/i.test(file.name);
 }
 function isText(file: VerifiedFile) {
   return (
@@ -279,7 +283,7 @@ export function OpenedFileView({
               setView({ identity, phase: "ready", file, note: V.failed });
           }
         }
-      } else if (isWorkbook(file)) {
+      } else if (isWorkbook(file) || isDocument(file)) {
         setView({ identity, phase: "ready", file });
       } else if (isText(file) && file.size <= MAX_TEXT_BYTES) {
         const preview = await fileDelivery.readText(file);
@@ -435,7 +439,8 @@ export function OpenedFileView({
               )}
               {(shown.text !== undefined ||
                 visualFileKind(file.name) ||
-                isWorkbook(file)) && (
+                isWorkbook(file) ||
+                isDocument(file)) && (
                 <button
                   type="button"
                   className="btn btn-ghost"
@@ -539,6 +544,13 @@ export function OpenedFileView({
       )}
       {file && shown.phase === "ready" && isWorkbook(file) && (
         <WorkbookFilePreview
+          key={`${identity}:${file.version}:${file.sha256}`}
+          file={file}
+          active={active}
+        />
+      )}
+      {file && shown.phase === "ready" && isDocument(file) && (
+        <DocxFilePreview
           key={`${identity}:${file.version}:${file.sha256}`}
           file={file}
           active={active}

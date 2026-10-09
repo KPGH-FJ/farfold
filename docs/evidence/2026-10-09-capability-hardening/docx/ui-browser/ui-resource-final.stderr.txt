@@ -1,0 +1,16 @@
+
+DevTools listening on ws://127.0.0.1:53426/devtools/browser/e8d19358-725c-4b18-ae8b-72d751e88222
+Trying to load the allocator multiple times. This is *not* supported.
+[18370:20088589:1009/234027.530816:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.530997:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088589:1009/234027.532778:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.532816:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088589:1009/234027.533294:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.533321:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088589:1009/234027.533393:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.533422:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088589:1009/234027.533494:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.533540:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088589:1009/234027.541014:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18370:20088661:1009/234027.541057:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[18364:20088520:1009/234029.179764:ERROR:content/browser/gpu/gpu_process_host.cc:1130] GPU process exited unexpectedly: exit_code=15

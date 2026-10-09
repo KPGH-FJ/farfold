@@ -318,12 +318,25 @@ pub fn session_permission_respond(
 pub fn session_elicitation_respond(
     app: AppHandle,
     request_id: String,
-    session_id: String,
+    session_id: Option<String>,
+    request_owner: Option<Value>,
     action: String,
     content: Option<Value>,
 ) -> Result<InteractionReply, String> {
-    app.state::<AcpManager>()
-        .elicitation_respond(&request_id, &session_id, &action, content)
+    let manager = app.state::<AcpManager>();
+    if request_owner.is_none()
+        && let Some(session_id) = session_id.as_deref()
+    {
+        return manager.elicitation_respond(&request_id, session_id, &action, content);
+    }
+    super::elicitation::respond(
+        &manager.pending_elicitations,
+        &request_id,
+        session_id.as_deref(),
+        request_owner.as_ref(),
+        &action,
+        content,
+    )
 }
 
 /// Agent-side `session/list` merged with Farfold's session index rows for

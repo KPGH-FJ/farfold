@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-09T16:10:11.453997+00:00",
+  "status": "fixed-targeted-green-source-frozen-pending-independent-review",
+  "trigger": "Eighth frozen-input full frontend failed original interaction_actions.stop.test.ts cancellation assertion; original eighth-checks/frontend.txt retained.",
+  "rootCause": "Real regression: shared reply introduction added stopUnconfirmed to every action current gate, blocking explicit cancellation of a still-pending original inquiry after stopping timed out. Fixture already had status pending and exact identity; not a malformed fixture.",
+  "repair": [
+    "Retain stopping as all-action gate. While stopUnconfirmed, permit only explicit decline/cancel for same current thread object and pending request; accept (including external URL open/late accept) stays blocked.",
+    "Introduce one generic acceptanceDisabled card prop. ThreadView keeps all actions disabled while stopping; unknown status disables fields/accept only, so explicit negative actions remain reachable. Auth/Opening disabled still disables all actions.",
+    "No changes to queue, running, stop result, model, Agent configuration, new-message admission or automatic retries. Reply status pending/unknown and exact object guards remain in shared reply."
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/runtime/interaction_actions.ts",
+      "sha256": "5bd95b92eedb27911a74de505be0127ede12ab2980e337e5459cfce2816a5cb5"
+    },
+    {
+      "path": "src/runtime/interaction_actions.stop.test.ts",
+      "sha256": "63b7fc1593e18891d4ba8026371c04572a70a16fdc29a9caabbb1c5984b90b4c"
+    },
+    {
+      "path": "src/components/ElicitationCard.tsx",
+      "sha256": "b5984f1c18cb4fcd4a6d60078a38694e75aacccacc00454e9d0d96b357e73861"
+    },
+    {
+      "path": "src/components/UrlElicitationCard.tsx",
+      "sha256": "250be4a3fd45e4e7850b98621a532aace625e7ec5be629bee0895b1cccb3b900"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "d7a41fddde72901da4bf983c5e1db7f6ec0a481e0740606959b4d55d13adfa06"
+    }
+  ],
+  "redEvidence": [
+    {
+      "log": "stop-actions-original-red.txt",
+      "failed": 1,
+      "passed": 2,
+      "kind": "Original failure reproduced unchanged."
+    },
+    {
+      "log": "stop-actions-expanded-red.txt",
+      "failed": 5,
+      "passed": 7,
+      "kind": "Original plus form/URL decline/cancel all blocked; positive gates pass."
+    },
+    {
+      "log": "stop-actions-ui-red.txt",
+      "failed": 7,
+      "passed": 7,
+      "kind": "Plus form/URL separate acceptance-disabled UI policy unavailable."
+    }
+  ],
+  "harnessCorrection": {
+    "log": "stop-actions-final.txt",
+    "failed": 1,
+    "passed": 63,
+    "unhandledErrors": 1,
+    "cause": "New real ThreadView SSR import initialized unrelated performance-trace IPC; default invoke mock returned a submitted object as a native performance origin, causing document-not-defined.",
+    "fix": "Mock only performance-trace.traceAfterPaint at module boundary. Original zero-invoke assertions preserved; no production diagnostics changed.",
+    "notProductRegression": true
+  },
+  "finalValidation": {
+    "log": "stop-actions-final-green.txt",
+    "files": 8,
+    "passed": 64,
+    "testFileCases": 16,
+    "originalCasesPreserved": 3,
+    "addedCases": 13,
+    "typecheck": "stop-actions-final-typecheck.txt",
+    "format": "stop-actions-format.txt",
+    "allExitCodes": 0
+  },
+  "counterexamples": [
+    "Form/URL explicit decline and cancel only after unknown; exact one response, no open, no queue/state resumption.",
+    "Form/URL accept blocked while unknown.",
+    "Submitting/uncertain prior response cannot send another cancellation.",
+    "Opener started before stop then returns after unknown: no accept.",
+    "Actual shared cards and actual ThreadView SSR: negative buttons reachable under unknown, every button disabled under stopping; form fields remain disabled."
+  ],
+  "boundaries": [
+    "Controlled unit/SSR only, no native app, opener, external network or Agent.",
+    "Prior independent-frontend.json is a preserved pre-repair checkpoint and its broad stopUnconfirmed statement no longer describes the negative-action exception. This receipt records the subsequent integration regression and exact correction.",
+    "No full repository tests rerun here; root coordinates final frozen checks."
+  ],
+  "independentReview": "Requested verification agent to review current five-file diff and raw logs; not self-claimed independent."
+}

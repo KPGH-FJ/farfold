@@ -2,15 +2,19 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表安装版或 29 家真实接入已通过。
 
-## 第七片当前衔接：文件读取、预览与版本意见
+## 当前衔接：第七片安装完成，第八片待打包
 
-最新衔接：第七片源码已冻结，正在依赖闭合提交和准备正式安装；当前正式应用413226dc已正常退出，替换前私有快照217,400项及元数据备份已完成。全部122项及29家八项标准保持，阶段交付不结束计划。
+最新衔接：第七片 `0de05b0a` 已提交并安装，[候选核验](seventh-candidate/candidate-independent.json)、[安装独立复核](seventh-candidate/install-independent.json)和[分项界面实测](seventh-candidate/installed-preview-feedback.json)已完成；替换前后217,400条数据一致，实机后正常退出且原7项未发内容逐值保留。唯一正式应用仍为 `/Applications/Farfold.app`，重复打包应用已核对后移除。第八片已实现DOCX预览及官方请求级/URL询问，准备打包安装；全部122项及29家八项标准保持，阶段交付不结束计划。
 
-本片完成目录读取修复及[独立复核](directory-search-independent.json)、[PDF/图片版本意见](visual-feedback/receipt.json)和受限XLSX只读预览。PDF/图片关联179项、开发与打包Chromium各20项、坏PDF/取消5项通过，[独立复核](visual-feedback/independent-review.json)保留范围；修正PDF解析器动态加载竞态，同文件从15秒超时到成功绘制。XLSX[底层48项](xlsx-core.json)、界面关联63项、[真实Chromium38项](xlsx/independent-review.json)及[独立源码复核](xlsx/source-independent-review.json)通过。另修复第六片实机发现的查找说明样式、关闭焦点和导出隐私文案，仍待本版正式WebKit验证。
+第七片完成目录读取修复及[独立复核](directory-search-independent.json)、[PDF/图片版本意见](visual-feedback/receipt.json)和受限XLSX只读预览。PDF/图片关联179项、开发与打包Chromium各20项、坏PDF/取消5项通过，[独立复核](visual-feedback/independent-review.json)保留范围；修正PDF解析器动态加载竞态，同文件从15秒超时到成功绘制。XLSX[底层48项](xlsx-core.json)、界面关联63项、[真实Chromium38项](xlsx/independent-review.json)及[独立源码复核](xlsx/source-independent-review.json)通过。另修复第六片实机发现的查找说明样式、关闭焦点和导出隐私文案，已在第七片正式WebKit分项复验。
+
+2026-10-10 接续：第八片首轮七项检查输入未变，格式、类型、打包及两项Rust静态检查通过；前端两项失败、Rust一项失败已保留在[eighth-checks](eighth-checks/receipt.json)。恢复时未知询问被吞与停止未知态负向答复被误挡分别修复；Rust旧夹具错误响应假设已修，生产后端未改。三项修正均已定向复验及独立复核；第二轮前端279文件/3,121项、Rust1,178项/5项忽略通过，1,058个输入稳定。第二轮仅格式检查发现首轮新生成回执排版不合规；两轮原始JSON字节另存receipt.raw.txt，规范后的JSON语义保持，单独复验全仓格式。最终证据汇总见[整合回执](eighth-checks-final/final-verification.json)。DOCX的[实现](docx/implementation.json)及[独立复核](docx-independent-review/receipt.json)、外部确认的[实现与两轮独立复核](nonform-interaction.json)均有分项成功证据，尚无本片正式安装证明。
+
+第八片DOCX分项记录：[后端独立复核](docx-backend-independent.json)核对版本化捕获、ZIP边界与原XLSX行为；[界面实现记录](docx-ui-implementation.json)保留入口失败/修复、负缩进裁切及重复图片资源反例。普通文档来自[独立写出器](docx-compatibility/receipt.json)，另用公开许可样本检查兼容性；浏览器成功不等于正式应用验证。外部确认已补会话打开期间、取消、迟到完成及未知请求归属；本片尚未提交与安装。第八片替换前私有数据快照及元数据备份已完成，正式应用仍正常关闭。
 
 [最终工程整合](seventh-checks-final/final-verification.json)覆盖962个最终输入，七项检查通过：前端267文件/2,983项，Rust1,153项/5项忽略。首轮管道关闭测试失败、3处Rust导入排序和4份冻结JSON排版问题保留原始记录；只精确排除原始JSON，不改写证据。原失败实际干扰进程未捕获，受控fork反例说明即时管道断言需要进程隔离，原六处故障注入及即时断言未削弱。独立复核再发现测试输出可能无限等待EOF，已改为匿名文件和有界读取，新增反例及7项定向通过，见[修复](stdio-output-capture.json)和[保留旧问题并追加关闭结果的复核](stdio-preparation-independent.json)。最后仅该Rust测试文件变化，因此重跑全部Rust检查和全仓格式，前端/类型/打包引用字节相同输入的完整检查，不混称同一轮执行。
 
-第六片[正式实机](sixth-candidate/installed-search-export.json)已完成受控查找与真实导出，退出后原7项未发内容逐值一致。本片仍不关闭桌面文件夹许可等待、完整Office、区域标注或其他未覆盖条目，也未扩大Agent权限。
+第六片[正式实机](sixth-candidate/installed-search-export.json)已完成受控查找与真实导出，退出后原7项未发内容逐值一致。当前仍不关闭桌面文件夹许可等待、完整Office、区域标注或其他未覆盖条目，也未扩大Agent权限。
 
 [检索](transcript-search/receipt.json)在原显示树纳入折叠文字、工具详情、长差异、计划、整理摘要与已接收附件文字；只临时展开当前命中，关闭后恢复并保留明确的手动选择。查找不读取外部文件、解码隐藏媒体或创建持久正文索引。29文件203项、生产样式/StrictMode受控Chrome31项通过；16万命中曾触发参数数量上限，改为逐项高亮后通过，实测成本和平台限制保留。右侧内容栏独立于检索范围。
 

@@ -124,6 +124,7 @@ export function beginAuthentication(input: {
         const channel = new Channel<PtyChunk>();
         channel.onmessage = (chunk) => {
           if (chunk.authStatus === "unknown") unknown();
+          activity.inquiryEvent(attemptId, chunk);
         };
         const options = {
           ...target,

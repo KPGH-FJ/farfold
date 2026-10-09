@@ -1,0 +1,32 @@
+[
+  {
+    "sample": "02-table-images-stories.docx",
+    "exitCode": 0,
+    "command": [
+      "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx",
+      "--output_dir",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-02-table-images-stories-local-fonts",
+      "--emit_pdf",
+      "--verbose"
+    ],
+    "log": "02-table-images-stories-local-fonts.txt",
+    "logSha256": "ff173584c4b79b47eb4a2ca916a62d8c17a4e4a73aa89117a8ec5dba68c63412"
+  },
+  {
+    "sample": "03-sections.docx",
+    "exitCode": 0,
+    "command": [
+      "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx",
+      "--output_dir",
+      "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-compatibility/render-03-sections-local-fonts",
+      "--emit_pdf",
+      "--verbose"
+    ],
+    "log": "03-sections-local-fonts.txt",
+    "logSha256": "d74585d3c18a84b7e11fc6c1b09e8966cdb8ef5c49880f3f9d42c53429e7aaeb"
+  }
+]

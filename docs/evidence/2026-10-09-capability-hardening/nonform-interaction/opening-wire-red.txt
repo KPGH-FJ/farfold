@@ -1,0 +1,22 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0277]: `pump::OpenedSession` doesn't implement `Debug`
+   --> src/acp_client/elicitation_wire_tests.rs:198:76
+    |
+198 |                 result = &mut run => panic!("load must first ask the user: {result:?}"),
+    |                                                                            ^^^^^^^^^^ `pump::OpenedSession` cannot be formatted using `{:?}` because it doesn't implement `Debug`
+    |
+help: the trait `Debug` is not implemented for `pump::OpenedSession`
+   --> src/acp_client/pump.rs:246:1
+    |
+246 | pub(crate) struct OpenedSession {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: add `#[derive(Debug)]` to `pump::OpenedSession` or manually `impl Debug for pump::OpenedSession`
+help: the trait `Debug` is implemented for `Result<T, E>`
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:552:15
+    = note: required for `Result<pump::OpenedSession, std::string::String>` to implement `Debug`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `farfold` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+
+exit 101

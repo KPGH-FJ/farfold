@@ -1,0 +1,69 @@
+{
+  "before": {
+    "src/runtime/docx_boundaries.test.ts": "3afe0fafd83dbb7866a8800b43df44db4bf7ff3d3ff98452c793e96d9af74a0a",
+    "src/runtime/docx_budget.test.ts": "a70ff841e0abef8f87471059b2bb4562d5e8f91baa31de32fe684fcfd01c8ff9",
+    "src/runtime/docx_compatibility.test.ts": "3da943203bf2506a47cd767386f38f810fec1d30bc9455c8e69e3d3ddd3f4ee3",
+    "src/runtime/docx_decode.ts": "3e3deef54779ae2184976b0424a2f36b9ea098c0ab301da31a0c21cd46fcc5e6",
+    "src/runtime/docx_fixture.ts": "7e75c1439b316568716a2e1db1bb28685c868b81385070ca5bd38e7026cd3c5d",
+    "src/runtime/docx_images.test.ts": "d9790bd3d96c90fb3f451a704f7f2faac4c5680428df85de80966aac2f72c051",
+    "src/runtime/docx_images.ts": "4c44858caf1f0385726925754911b42e1491e0786834ab64fcd7b1e6937a28e7",
+    "src/runtime/docx_numbering.ts": "bc975850b2573eeb9aab75e73bdc43793580dd16028159dbe272da567a6ee5e6",
+    "src/runtime/docx_package.ts": "d05f6baced64a5bd8d60a96f2155a768866653d44f5e66744bcc08e1751d69e9",
+    "src/runtime/docx_parse.test.ts": "8933680415aafaf533152e40401d5113ec0defdd64f599309e37e62395543857",
+    "src/runtime/docx_parse.ts": "55a34ca12f9bade4fa1199a530e30498ce383ba73032cf73abfbfa4af8853cd4",
+    "src/runtime/docx_preview.test.ts": "13448c34379cd66131bc902da6d6758f1183e1f729bc696a70fbc5e32db9c716",
+    "src/runtime/docx_preview.ts": "61f8fa651241a8193b7697c5c902ad6a4d9d15bd26ae648ac96be962fbbd445d",
+    "src/runtime/docx_public_samples.test.ts": "6016baf7a57d8237c8ad0cb0dd7ed6fd5a6e5b0d818e2e3e082dcb2b44c22ef7",
+    "src/runtime/docx_styles.ts": "63ccce9b7e79754c21b1b2eec332b7312eb48ce002feb0b7786bed120342cd00",
+    "src/runtime/docx_table.ts": "2db9eacc788acda33d54fb6a76afad00d7de33674e1d429a9a358218e06db62e",
+    "src/runtime/docx_types.ts": "16bea742e8cff97150ecbe98c7403df03ef93d125172bdcb0a67b140b0934c24",
+    "src/runtime/docx_validation.ts": "6f4b3f1ea92bcf14f57c8fea573cbb6f1d73af15a1341ea54a7ee855a877d598",
+    "src/runtime/docx_xml.ts": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+    "src/workers/docx_preview.worker.ts": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+    "src/components/DocxFilePreview.tsx": "678a79834c1d4fdc93380d09d4d2039df99b395c3efd66f5126ca7d04dfcb1be",
+    "src/components/DocxDocumentView.tsx": "58e0d21e97699df1f314a801584e6ecb48287c403e5ba1ed91e1823161362d2b",
+    "src/components/DocxFilePreview.css": "0a2ff167c1ca6e31b8c26c2030df5429a7d349bf5130fe919a9ae7971c9d0360",
+    "src/runtime/document_view.ts": "19dcee8248aa737a76e99a3c2100243c5111132a623dd281f098fe9f8c4d936d",
+    "src/runtime/document_images.ts": "a69af9b0e4b1e8b137351c9b5ccc7758bf8c2bb88e0ca994812b28972cf94d38",
+    "src/runtime/document_strings.ts": "fca76a0cfcd4977dd699529708fff492d930193406bb3bb98ddd2bc16e7a5113"
+  },
+  "after": {
+    "src/runtime/docx_boundaries.test.ts": "3afe0fafd83dbb7866a8800b43df44db4bf7ff3d3ff98452c793e96d9af74a0a",
+    "src/runtime/docx_budget.test.ts": "a70ff841e0abef8f87471059b2bb4562d5e8f91baa31de32fe684fcfd01c8ff9",
+    "src/runtime/docx_compatibility.test.ts": "3da943203bf2506a47cd767386f38f810fec1d30bc9455c8e69e3d3ddd3f4ee3",
+    "src/runtime/docx_decode.ts": "3e3deef54779ae2184976b0424a2f36b9ea098c0ab301da31a0c21cd46fcc5e6",
+    "src/runtime/docx_fixture.ts": "7e75c1439b316568716a2e1db1bb28685c868b81385070ca5bd38e7026cd3c5d",
+    "src/runtime/docx_images.test.ts": "d9790bd3d96c90fb3f451a704f7f2faac4c5680428df85de80966aac2f72c051",
+    "src/runtime/docx_images.ts": "4c44858caf1f0385726925754911b42e1491e0786834ab64fcd7b1e6937a28e7",
+    "src/runtime/docx_numbering.ts": "bc975850b2573eeb9aab75e73bdc43793580dd16028159dbe272da567a6ee5e6",
+    "src/runtime/docx_package.ts": "d05f6baced64a5bd8d60a96f2155a768866653d44f5e66744bcc08e1751d69e9",
+    "src/runtime/docx_parse.test.ts": "8933680415aafaf533152e40401d5113ec0defdd64f599309e37e62395543857",
+    "src/runtime/docx_parse.ts": "55a34ca12f9bade4fa1199a530e30498ce383ba73032cf73abfbfa4af8853cd4",
+    "src/runtime/docx_preview.test.ts": "13448c34379cd66131bc902da6d6758f1183e1f729bc696a70fbc5e32db9c716",
+    "src/runtime/docx_preview.ts": "61f8fa651241a8193b7697c5c902ad6a4d9d15bd26ae648ac96be962fbbd445d",
+    "src/runtime/docx_public_samples.test.ts": "6016baf7a57d8237c8ad0cb0dd7ed6fd5a6e5b0d818e2e3e082dcb2b44c22ef7",
+    "src/runtime/docx_styles.ts": "63ccce9b7e79754c21b1b2eec332b7312eb48ce002feb0b7786bed120342cd00",
+    "src/runtime/docx_table.ts": "2db9eacc788acda33d54fb6a76afad00d7de33674e1d429a9a358218e06db62e",
+    "src/runtime/docx_types.ts": "16bea742e8cff97150ecbe98c7403df03ef93d125172bdcb0a67b140b0934c24",
+    "src/runtime/docx_validation.ts": "6f4b3f1ea92bcf14f57c8fea573cbb6f1d73af15a1341ea54a7ee855a877d598",
+    "src/runtime/docx_xml.ts": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+    "src/workers/docx_preview.worker.ts": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+    "src/components/DocxFilePreview.tsx": "678a79834c1d4fdc93380d09d4d2039df99b395c3efd66f5126ca7d04dfcb1be",
+    "src/components/DocxDocumentView.tsx": "58e0d21e97699df1f314a801584e6ecb48287c403e5ba1ed91e1823161362d2b",
+    "src/components/DocxFilePreview.css": "0a2ff167c1ca6e31b8c26c2030df5429a7d349bf5130fe919a9ae7971c9d0360",
+    "src/runtime/document_view.ts": "19dcee8248aa737a76e99a3c2100243c5111132a623dd281f098fe9f8c4d936d",
+    "src/runtime/document_images.ts": "a69af9b0e4b1e8b137351c9b5ccc7758bf8c2bb88e0ca994812b28972cf94d38",
+    "src/runtime/document_strings.ts": "fca76a0cfcd4977dd699529708fff492d930193406bb3bb98ddd2bc16e7a5113"
+  },
+  "sourceUnchanged": true,
+  "runs": [
+    {
+      "log": "browser/worker-sealed.txt",
+      "exitCode": 0
+    },
+    {
+      "log": "ui-browser/ui-sealed.txt",
+      "exitCode": 0
+    }
+  ]
+}

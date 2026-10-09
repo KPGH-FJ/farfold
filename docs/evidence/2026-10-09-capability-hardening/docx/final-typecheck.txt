@@ -1,0 +1,9 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/docx_numbering.ts(95,25): error TS2345: Argument of type 'DocxXml | undefined' is not assignable to parameter of type 'DocxXml'.
+  Type 'undefined' is not assignable to type 'DocxXml'.
+src/runtime/docx_numbering.ts(95,49): error TS2345: Argument of type 'DocxXml | undefined' is not assignable to parameter of type 'DocxXml'.
+  Type 'undefined' is not assignable to type 'DocxXml'.
+ ELIFECYCLE  Command failed with exit code 1.

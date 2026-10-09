@@ -1,0 +1,24 @@
+src/runtime/docx_boundaries.test.ts 37ms
+src/runtime/docx_budget.test.ts 9ms
+src/runtime/docx_compatibility.test.ts 15ms
+src/runtime/docx_decode.ts 4ms
+src/runtime/docx_fixture.ts 6ms
+src/runtime/docx_numbering.ts 16ms
+src/runtime/docx_package.ts 15ms
+src/runtime/docx_parse.test.ts 7ms
+src/runtime/docx_parse.ts 24ms
+src/runtime/docx_preview.test.ts 10ms
+src/runtime/docx_preview.ts 5ms
+src/runtime/docx_public_samples.test.ts 1ms
+src/runtime/docx_styles.ts 14ms
+src/runtime/docx_table.ts 9ms
+src/runtime/docx_types.ts 3ms
+src/runtime/docx_validation.ts 9ms
+src/runtime/docx_xml.ts 9ms
+src/workers/docx_preview.worker.ts 2ms
+docs/evidence/2026-10-09-capability-hardening/docx/browser/index.html 45ms
+docs/evidence/2026-10-09-capability-hardening/docx/browser/run.mjs 7ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/index.html 1ms
+docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/fixture.tsx 16ms
+docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/run.mjs 8ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx/public-samples/provenance.json 1ms

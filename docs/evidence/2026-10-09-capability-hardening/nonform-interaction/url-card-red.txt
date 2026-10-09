@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ElicitationCard.url.test.tsx (1 test | 1 failed) 8ms
+   × shows the full URL and target host separately from form input 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ElicitationCard.url.test.tsx > shows the full URL and target host separately from form input
+AssertionError: expected '<div class="approval elicitation"><di…' to contain 'https://example.test/connect?step=rev…'
+
+Expected: "https://example.test/connect?step=review"
+Received: "<div class="approval elicitation"><div class="tag"><i></i>需要你</div><div class="ap-title">Review https://other.test/ as plain text</div><fieldset class="el-form" style="margin:0;padding:0;border:0;min-width:0"></fieldset><div class="ap-actions"><button type="button" class="btn btn-primary">提交</button><button type="button" class="btn btn-text">取消</button></div></div>"
+
+ ❯ src/components/ElicitationCard.url.test.tsx:13:16
+     11|   } as PendingElicitation;
+     12|   const html = renderToStaticMarkup(<ElicitationCard request={request}…
+     13|   expect(html).toContain("https://example.test/connect?step=review");
+       |                ^
+     14|   expect(html).toContain("example.test");
+     15|   expect(html).not.toContain("<fieldset");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:15:35
+   Duration  132ms (transform 32ms, setup 0ms, import 56ms, tests 8ms, environment 0ms)
+

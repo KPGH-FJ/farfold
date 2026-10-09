@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        font: 14px system-ui;
+        margin: 25px;
+      }
+      .samples {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+      .sample {
+        border: 1px solid #aaa;
+        padding: 12px;
+        width: 170px;
+      }
+      img {
+        display: block;
+        max-width: 160px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>DOCX EXIF — asymmetric pixels</h1>
+    <p>
+      Public authored JPEG. Top-left/source red, top-right green, bottom-left
+      blue, bottom-right yellow.
+    </p>
+    <div class="samples"></div>
+    <pre id="result"></pre>
+    <script type="module">
+      import { readDocxPreview } from "/src/runtime/docx_preview.ts";
+      const checks = [];
+      const check = (name, passed, detail) => {
+        checks.push({
+          name,
+          passed,
+          ...(detail === undefined ? {} : { detail }),
+        });
+        if (!passed) throw Error(name);
+      };
+      try {
+        const variants = await (await fetch("./exif-variants.json")).json(),
+          captures = await (await fetch("./captures.json")).json();
+        const expected = [
+          ["R", "G", "B", "Y"],
+          ["G", "R", "Y", "B"],
+          ["Y", "B", "G", "R"],
+          ["B", "Y", "R", "G"],
+          ["R", "B", "G", "Y"],
+          ["B", "R", "Y", "G"],
+          ["Y", "G", "B", "R"],
+          ["G", "Y", "R", "B"],
+        ];
+        for (const variant of variants) {
+          const capture = structuredClone(
+            captures["docx-fixtures/05-inline-png-jpeg"],
+          );
+          capture.parts.find((p) => p.name.endsWith(".jpg")).data =
+            variant.base64;
+          const result = await readDocxPreview(
+              capture,
+              new AbortController().signal,
+            ),
+            image = result.images.find((i) => i.mimeType === "image/jpeg");
+          check(
+            "Worker accepts orientation " + variant.orientation,
+            image.width === (variant.orientation >= 5 ? 120 : 80) &&
+              image.height === (variant.orientation >= 5 ? 80 : 120),
+          );
+          const element = document.createElement("img"),
+            url = URL.createObjectURL(
+              new Blob([image.bytes], { type: image.mimeType }),
+            );
+          element.src = url;
+          await element.decode();
+          check(
+            "DOM decoder dimensions " + variant.orientation,
+            element.naturalWidth === image.width &&
+              element.naturalHeight === image.height,
+          );
+          const canvas = document.createElement("canvas");
+          canvas.width = element.naturalWidth;
+          canvas.height = element.naturalHeight;
+          const context = canvas.getContext("2d", { willReadFrequently: true });
+          context.drawImage(element, 0, 0);
+          const colors = [
+            [0.25, 0.25],
+            [0.75, 0.25],
+            [0.25, 0.75],
+            [0.75, 0.75],
+          ].map(([x, y]) => {
+            const [r, g, b] = context.getImageData(
+              Math.floor(x * canvas.width),
+              Math.floor(y * canvas.height),
+              1,
+              1,
+            ).data;
+            return r > 150 && g > 150 && b < 60
+              ? "Y"
+              : r > 150 && g < 60 && b < 60
+                ? "R"
+                : g > 150 && r < 60 && b < 60
+                  ? "G"
+                  : b > 150 && r < 60 && g < 60
+                    ? "B"
+                    : "?";
+          });
+          check(
+            "asymmetric orientation pixels " + variant.orientation,
+            JSON.stringify(colors) ===
+              JSON.stringify(expected[variant.orientation - 1]),
+            colors,
+          );
+          const section = document.createElement("div");
+          section.className = "sample";
+          section.textContent =
+            "EXIF " + variant.orientation + " " + colors.join(" ");
+          section.append(element);
+          document.querySelector(".samples").append(section);
+          URL.revokeObjectURL(url);
+        }
+        document.documentElement.dataset.capture = "docx-exif-eight-directions";
+        for (
+          let i = 0;
+          i < 100 &&
+          document.documentElement.dataset.captured !==
+            "docx-exif-eight-directions";
+          i++
+        )
+          await new Promise((r) => setTimeout(r, 50));
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: true,
+          checks,
+          scope:
+            "Actual Chromium Worker and HTML image decode, asymmetric RGBY quadrant pixel checks for Exif1..8. No user image/native app.",
+        });
+      } catch (error) {
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: false,
+          checks,
+          error: String(error),
+          stack: error.stack,
+        });
+      } finally {
+        document.documentElement.dataset.done = "true";
+      }
+    </script>
+  </body>
+</html>

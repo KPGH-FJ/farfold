@@ -1,0 +1,134 @@
+{
+  "checkedAtUtc": "2026-10-09T15:41:38.737940+00:00",
+  "status": "implemented_targeted_verified; parser independent refinements and final integration pending",
+  "sourceBase": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "sourceFiles": [
+    {
+      "path": "src/components/DocxFilePreview.tsx",
+      "sha256": "678a79834c1d4fdc93380d09d4d2039df99b395c3efd66f5126ca7d04dfcb1be"
+    },
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "58e0d21e97699df1f314a801584e6ecb48287c403e5ba1ed91e1823161362d2b"
+    },
+    {
+      "path": "src/components/DocxFilePreview.css",
+      "sha256": "0a2ff167c1ca6e31b8c26c2030df5429a7d349bf5130fe919a9ae7971c9d0360"
+    },
+    {
+      "path": "src/runtime/document_view.ts",
+      "sha256": "19dcee8248aa737a76e99a3c2100243c5111132a623dd281f098fe9f8c4d936d"
+    },
+    {
+      "path": "src/runtime/document_view.test.ts",
+      "sha256": "fd25fb13af931f45d52f71943b877715bdf873b34eaf33415d80ac9d82ee6539"
+    },
+    {
+      "path": "src/runtime/document_images.ts",
+      "sha256": "a69af9b0e4b1e8b137351c9b5ccc7758bf8c2bb88e0ca994812b28972cf94d38"
+    },
+    {
+      "path": "src/runtime/document_strings.ts",
+      "sha256": "fca76a0cfcd4977dd699529708fff492d930193406bb3bb98ddd2bc16e7a5113"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "e4caaf569b989ad2ca9623caefaf79294d56bc84f9b386b17c87dff0358fe0ca"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "1c101ffb42919ad895bf41981de29cfe07c500297eb0dc6907adb7c664c12243"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "3e3e8381b85839edf8ef6d0bf1d90bcf580cd32822c68cb9cbcc80769f9e2bdd"
+    }
+  ],
+  "implementation": [
+    "Only .docx links enter passive versioned document preview. Legacy .doc/.docm and presentations retain existing explicit external-open behavior. Refresh checks the exact current file receipt.",
+    "Same readonly renderer for every Agent; no new dependency or product environment flag. No remote fetching or executing document content.",
+    "Continuous body, separate headers/footers/notes, supported run/paragraph styles, list labels, bounded table windows with merged source ownership, local PNG/JPEG bytes. No Word pagination claim.",
+    "20 top blocks per page; paragraphs split at 1000 runs/40000 UTF-16 units without splitting surrogate pairs; tables show 20 rows by 12 columns, with bounded cell excerpts and explicit full-cell detail/focus return.",
+    "Per-file capture/parse AbortController plus operation ownership suppress stale/cancelled results. Hiding stops active frontend work and releases rendered resources; a completed exact-file parse may remain cached. No claim of cancelling the operating-system read.",
+    "Each displayed document owns a reference-counted image URL pool. Repeated references share one encoded resource; last visible consumer release revokes it, independently across files.",
+    "Outdents beyond preview start adapt to keep first characters reachable; ordinary hanging indents remain. Sizes/spacing adaptation is disclosed."
+  ],
+  "verification": {
+    "entryInitialRed": {
+      "passed": 63,
+      "failed": 1
+    },
+    "misnamedGreenLogActuallyFailed": {
+      "path": "docx-ui-entry-green.txt",
+      "passed": 65,
+      "failed": 1,
+      "cause": "Refresh button initially omitted DOCX; original raw file retained."
+    },
+    "entryFixed": {
+      "files": 3,
+      "passed": 66
+    },
+    "uiRefinements": {
+      "files": 3,
+      "passed": 67
+    },
+    "typecheck": "exit 0 after resource-pool implementation",
+    "browser": "product-owned actual Chromium UI 38/38; controlled backend delivery and real Worker/codecs, not installed app",
+    "independent": "verification-owned original 2-failure resource/hidden-content counterexamples; 6/6 after fixes, including pool isolation and last-consumer release; full review ongoing",
+    "browserResourceFollowup": "39/39, including shared src and last-consumer release in actual DOM; earlier 38/38 retained separately",
+    "centralStrings": "INQUIRY now included alongside document strings; dedicated root strings test exit 0",
+    "ownedFormat": "exit 0, all ten UI-related source files checked"
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-entry-red.txt",
+      "sha256": "358d2365ec82afe9faa5428048d4d89de8055db22353efa62380c65d3552ed54"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-entry-green.txt",
+      "sha256": "7054dead085760d17801b2eb3decd223af1d512dfc8a3011bc4e3723d9ba8d13"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-entry-fixed.txt",
+      "sha256": "7796e639ddd6d787df7e73b5b881254aa2e980bdc0bf440885f432b982808d7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-refinements.txt",
+      "sha256": "6f33afaf42a0e28c27f4ca55070eaefaf52959c7241765e0fd6579398c89cc7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-typecheck-refinements.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/negative-indent-red.json",
+      "sha256": "0f08b694fef3707d7bd1ec96a37208272da732924ff61021975166c88ac44366"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/ui-final.json",
+      "sha256": "c2bcdf56ea3e2c2277b01d2d989b01184fcb08287528a9aa4b91abcc8983bb4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness-red.txt",
+      "sha256": "0e932fb4717c087ad983bf7140ed985174449cc4b0fae34887ec154185a63c92"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-independent-review/completeness-green.txt",
+      "sha256": "ac8f51109751e2ca9c5b57d208aaf110e0bdc0c2b60648a9b6b931a556763693"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/ui-resource-final.json",
+      "sha256": "4c4e7222b0ee5706dea0a475e8484f929e150b3562d8e4c4cf97de861db6dd3d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-ui-final-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "notEstablished": [
+    "No eighth-increment whole-project checks, commit, native installation or real DOCX IPC yet.",
+    "No full Word layout, arbitrary drawing/chart/vector support, password decryption, full Office preview or P16 completion.",
+    "DOCX version comments and text/region anchors not implemented by this increment; P21 remains open.",
+    "Logical budgets do not establish an OS hard memory bound."
+  ]
+}

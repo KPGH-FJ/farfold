@@ -1,0 +1,285 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_parse.test.ts (19 tests | 19 failed) 15ms
+     × preserves literal zero, false, empty and source spaces 4ms
+     × applies inherited paragraph styles and direct false without dropping text 1ms
+     × honors restart per numbering instance 1ms
+     × retains a table's cells and horizontal/vertical merge anchors 1ms
+     × keeps internal PNG/JPEG as inert bounded resources 1ms
+     × retains referenced header/footer/footnote stories without inventing pages 1ms
+     × distinguishes empty cached fields from missing results without executing instructions 1ms
+     × preserves external hyperlink labels but never returns active URLs 1ms
+     × keeps hidden text out of default output and acknowledges it 1ms
+     × selects one supported compatibility branch 0ms
+     × makes a missing image explicit instead of a complete empty preview 1ms
+     × rejects 10-altchunk-html with no silent content loss 0ms
+     × rejects 11-macro-content-type with no silent content loss 0ms
+     × rejects 12-vba-marker-entry with no silent content loss 0ms
+     × rejects 13-revisions with no silent content loss 0ms
+     × rejects 15-unknown-body-element with no silent content loss 0ms
+     × rejects 17-doctype with no silent content loss 0ms
+     × rejects 18-style-cycle with no silent content loss 1ms
+     × rejects malformed and escaped internal part relationships 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > preserves literal zero, false, empty and source spaces
+AssertionError: expected [] to deeply equal [ '0', 'false', '', …(3) ]
+
+- Expected
++ Received
+
+- [
+-   "0",
+-   "false",
+-   "",
+-   "  kept  spaces  ",
+-   "中文 A & B < C",
+-   "after empty",
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:11:37
+      9| describe("DOCX bounded readable content", () => {
+     10|   it("preserves literal zero, false, empty and source spaces", () => {
+     11|     expect(texts("01-text-values")).toEqual(["0", "false", "", "  kept…
+       |                                     ^
+     12|   });
+     13|   it("applies inherited paragraph styles and direct false without drop…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > applies inherited paragraph styles and direct false without dropping text
+TypeError: Cannot read properties of undefined (reading 'style')
+ ❯ src/runtime/docx_parse.test.ts:15:14
+     13|   it("applies inherited paragraph styles and direct false without drop…
+     14|     const [p] = paragraphs("02-style-inheritance");
+     15|     expect(p.style.alignment).toBe("center");
+       |              ^
+     16|     expect(p.runs).toMatchObject([
+     17|       { kind: "text", style: { bold: true, italic: true, color: "#1234…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > honors restart per numbering instance
+AssertionError: expected [] to deeply equal [ '1.', '2.', '1.', '2.' ]
+
+- Expected
++ Received
+
+- [
+-   "1.",
+-   "2.",
+-   "1.",
+-   "2.",
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:22:69
+     20|   });
+     21|   it("honors restart per numbering instance", () => {
+     22|     expect(paragraphs("03-list-restart").map((p) => p.list?.label)).to…
+       |                                                                     ^
+     23|   });
+     24|   it("retains a table's cells and horizontal/vertical merge anchors", …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > retains a table's cells and horizontal/vertical merge anchors
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ src/runtime/docx_parse.test.ts:26:18
+     24|   it("retains a table's cells and horizontal/vertical merge anchors", …
+     25|     const table = parseDocx(docxFixture("04-table-merges")).blocks[0];
+     26|     expect(table.kind).toBe("table");
+       |                  ^
+     27|     if (table.kind !== "table") throw new Error("table missing");
+     28|     expect(table.columnsPt).toEqual([100, 100, 100]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > keeps internal PNG/JPEG as inert bounded resources
+AssertionError: expected [] to deeply equal [ [ 'image/png', 8, 8 ], …(1) ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "image/png",
+-     8,
+-     8,
+-   ],
+-   [
+-     "image/jpeg",
+-     8,
+-     8,
+-   ],
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:33:71
+     31|   it("keeps internal PNG/JPEG as inert bounded resources", () => {
+     32|     const result = parseDocx(docxFixture("05-inline-png-jpeg"));
+     33|     expect(result.images.map((i) => [i.mimeType, i.width, i.height])).…
+       |                                                                       ^
+     34|     expect(result.blocks.filter((b) => b.kind === "paragraph").flatMap…
+     35|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > retains referenced header/footer/footnote stories without inventing pages
+AssertionError: expected [] to deeply equal [ 'footer', 'footnote', 'header' ]
+
+- Expected
++ Received
+
+- [
+-   "footer",
+-   "footnote",
+-   "header",
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:38:54
+     36|   it("retains referenced header/footer/footnote stories without invent…
+     37|     const result = parseDocx(docxFixture("07-header-footer-footnote"));
+     38|     expect(result.stories.map((s) => s.kind).sort()).toEqual(["footer"…
+       |                                                      ^
+     39|     expect(result.stories.find((s) => s.kind === "footnote")?.noteId).…
+     40|     expect(result.warnings).toContainEqual({ code: "continuousLayout",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > distinguishes empty cached fields from missing results without executing instructions
+AssertionError: expected [] to deeply equal [ '0', 'false', '' ]
+
+- Expected
++ Received
+
+- [
+-   "0",
+-   "false",
+-   "",
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:44:140
+     42|   it("distinguishes empty cached fields from missing results without e…
+     43|     const result = parseDocx(docxFixture("08-field-caches"));
+     44|     expect((result.blocks as DocxParagraph[]).slice(0, 3).map((p) => p…
+       |                                                                                                                                            ^
+     45|     expect(result.warnings.find((w) => w.code === "missingFieldResult"…
+     46|     expect(JSON.stringify(result)).not.toContain("INCLUDETEXT");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > preserves external hyperlink labels but never returns active URLs
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/docx_parse.test.ts:50:28
+     48|   it("preserves external hyperlink labels but never returns active URL…
+     49|     const result = parseDocx(docxFixture("09-external-relationships"));
+     50|     expect(result.partial).toBe(true);
+       |                            ^
+     51|     expect(JSON.stringify(result)).toContain("public link label");
+     52|     expect(JSON.stringify(result)).not.toContain("docx-fixture.invalid…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > keeps hidden text out of default output and acknowledges it
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/docx_parse.test.ts:59:69
+     57|     const result = parseDocx(docxFixture("14-hidden-run"));
+     58|     expect(JSON.stringify(result)).not.toContain("HIDDEN public marker…
+     59|     expect(result.warnings.some((w) => w.code === "hiddenContent")).to…
+       |                                                                     ^
+     60|   });
+     61|   it("selects one supported compatibility branch", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > selects one supported compatibility branch
+AssertionError: expected [] to deeply equal [ 'SUPPORTED FALLBACK' ]
+
+- Expected
++ Received
+
+- [
+-   "SUPPORTED FALLBACK",
+- ]
++ []
+
+ ❯ src/runtime/docx_parse.test.ts:62:43
+     60|   });
+     61|   it("selects one supported compatibility branch", () => {
+     62|     expect(texts("16-alternate-content")).toEqual(["SUPPORTED FALLBACK…
+       |                                           ^
+     63|   });
+     64|   it("makes a missing image explicit instead of a complete empty previ…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > makes a missing image explicit instead of a complete empty preview
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/docx_parse.test.ts:66:28
+     64|   it("makes a missing image explicit instead of a complete empty previ…
+     65|     const result = parseDocx(docxFixture("19-missing-image-part"));
+     66|     expect(result.partial).toBe(true);
+       |                            ^
+     67|     expect(result.warnings.some((w) => w.code === "missingImage")).toB…
+     68|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 10-altchunk-html with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 11-macro-content-type with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 12-vba-marker-entry with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 13-revisions with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 15-unknown-body-element with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 17-doctype with no silent content loss
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects 18-style-cycle with no silent content loss
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_parse.test.ts:70:48
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  src/runtime/docx_parse.test.ts > DOCX bounded readable content > rejects malformed and escaped internal part relationships
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_parse.test.ts:74:36
+     72|   it("rejects malformed and escaped internal part relationships", () =…
+     73|     const input = replaceDocxPart(docxFixture("01-text-values"), "_rel…
+     74|     expect(() => parseDocx(input)).toThrow(DocxError);
+       |                                    ^
+     75|   });
+     76| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  19 failed (19)
+   Start at  23:08:23
+   Duration  123ms (transform 21ms, setup 0ms, import 28ms, tests 15ms, environment 0ms)
+

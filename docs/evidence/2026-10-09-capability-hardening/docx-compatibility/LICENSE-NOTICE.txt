@@ -1,0 +1,8 @@
+These compatibility fixtures contain only synthetic public text and locally generated raster artwork.
+
+New synthetic text, artwork, expectations and fixture scripts in this directory are dedicated to the public domain under CC0 1.0 Universal (CC0-1.0):
+https://creativecommons.org/publicdomain/zero/1.0/
+
+The DOCX files were serialized by python-docx 1.2.0 from its bundled default template. Library and template-derived portions remain under the MIT license reproduced verbatim in python-docx-LICENSE.txt, with the upstream copyright notice retained.
+
+These are not Microsoft Word-authored examples or user documents. No system font files are included. Offline reference PDF/PNG files are derived only from these synthetic samples.

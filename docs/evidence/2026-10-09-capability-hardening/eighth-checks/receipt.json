@@ -1,0 +1,115 @@
+{
+  "checkedAt": "2026-10-09T16:02:35.313426+00:00",
+  "sourceBase": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "inputCount": 1058,
+  "sourceUnchanged": true,
+  "inputScope": {
+    "directories": [
+      "src",
+      "src-tauri/src",
+      "src-tauri/native",
+      "src-tauri/capabilities",
+      "src-tauri/resources",
+      "src-tauri/icons",
+      "scripts",
+      "assets",
+      "public",
+      "docs/evidence/2026-10-09-capability-hardening/docx-fixtures",
+      "docs/evidence/2026-10-09-capability-hardening/docx/public-samples"
+    ],
+    "top": [
+      "docs/evidence/2026-10-09-capability-hardening/docx/browser/authored-portrait.jpg",
+      ".prettierignore",
+      "package.json",
+      "pnpm-lock.yaml",
+      "index.html",
+      "tsconfig.json",
+      "tsconfig.app.json",
+      "tsconfig.node.json",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "src-tauri/Cargo.toml",
+      "src-tauri/Cargo.lock",
+      "src-tauri/build.rs",
+      "src-tauri/Info.plist",
+      "src-tauri/tauri.conf.json",
+      "src-tauri/tauri.windows.conf.json"
+    ],
+    "compatibility": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/*.docx and expectations.json",
+    "boundary": "Source/config/test fixtures; excludes dependencies and toolchain. Logs retain original bytes outside frozen fixture paths."
+  },
+  "changedInputs": [],
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 19.936,
+      "log": "format.txt"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.936,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 1,
+      "seconds": 32.402,
+      "log": "frontend.txt"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 7.007,
+      "log": "build.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.028,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 6.073,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 101,
+      "seconds": 52.167,
+      "log": "rust.txt"
+    }
+  ],
+  "passed": false
+}

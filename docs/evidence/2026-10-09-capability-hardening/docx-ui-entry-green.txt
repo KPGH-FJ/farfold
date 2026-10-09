@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (56 tests | 1 failed) 3700ms
+   × opens only the inspected DOCX version and refreshes it without handing the file to another app 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > opens only the inspected DOCX version and refreshes it without handing the file to another app
+AssertionError: 重新读取: expected undefined to be defined
+ ❯ click src/components/OpenedFileView.test.tsx:138:24
+    136| function click(label: string) {
+    137|   const found = button(label);
+    138|   expect(found, label).toBeDefined();
+       |                        ^
+    139|   (found!.props.onClick as () => void)();
+    140| }
+ ❯ src/components/OpenedFileView.test.tsx:290:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 65 passed (66)
+   Start at  23:24:11
+   Duration  3.97s (transform 365ms, setup 0ms, import 579ms, tests 3.72s, environment 0ms)
+

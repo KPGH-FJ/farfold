@@ -1,0 +1,56 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.selection.test.tsx (56 tests | 1 failed) 113ms
+   × opens a saved offline Agent on selection without changing its source or sending the draft 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > opens a saved offline Agent on selection without changing its source or sending the draft
+AssertionError: expected "vi.fn()" to be called with arguments: [ Array(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
+      "agentId": "B",
+      "cwd": "/work",
+      "fresh": false,
++     "inquiryCurrent": [Function inquiryCurrent],
++     "inquirySignal": AbortSignal {
++       Symbol(kEvents): Map {},
++       Symbol(events.maxEventTargetListeners): 0,
++       Symbol(events.maxEventTargetListenersWarned): false,
++       Symbol(kHandlers): Map {},
++       Symbol(kAborted): false,
++       Symbol(kReason): undefined,
++       Symbol(kComposite): false,
++     },
+      "service": null,
+      "serviceRevision": undefined,
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.selection.test.tsx:623:18
+    621|   await vi.advanceTimersByTimeAsync(251);
+    622|   expect(h.open).toHaveBeenCalledOnce();
+    623|   expect(h.open).toHaveBeenCalledWith({
+       |                  ^
+    624|     agentId: "B",
+    625|     cwd: "/work",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 111 passed (112)
+   Start at  23:49:36
+   Duration  2.09s (transform 1.88s, setup 0ms, import 6.55s, tests 185ms, environment 0ms)
+
+
+exit 1

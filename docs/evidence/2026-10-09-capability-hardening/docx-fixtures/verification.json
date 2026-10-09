@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "scope": "Fixture archive/XML/optional image self-verification only, not product or Word rendering.",
+  "passed": true,
+  "checkCount": 38,
+  "fixtureCount": 28,
+  "archiveBytesTotal": 662898,
+  "python": "3.12.14",
+  "zlib": "1.2.12",
+  "usedPillow": true,
+  "networkOrAppsOrAgentsRun": false,
+  "checks": [
+    {
+      "check": "manifest-case-identities",
+      "passed": true,
+      "details": 28
+    },
+    {
+      "check": "01-text-values",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2027,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "02-style-inheritance",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2806,
+        "xmlPartsParsed": 5
+      }
+    },
+    {
+      "check": "03-list-restart",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 3058,
+        "xmlPartsParsed": 5
+      }
+    },
+    {
+      "check": "04-table-merges",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2605,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "05-inline-png-jpeg",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 4098,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "06-png-pixels-invalid",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2721,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "07-header-footer-footnote",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 3791,
+        "xmlPartsParsed": 7
+      }
+    },
+    {
+      "check": "08-field-caches",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2653,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "09-external-relationships",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 3355,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "10-altchunk-html",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2218,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "11-macro-content-type",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1676,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "12-vba-marker-entry",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2111,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "13-revisions",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1937,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "14-hidden-run",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1799,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "15-unknown-body-element",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1822,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "16-alternate-content",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1881,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "17-doctype",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1740,
+        "xmlPartsParsed": 0
+      }
+    },
+    {
+      "check": "18-style-cycle",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2430,
+        "xmlPartsParsed": 5
+      }
+    },
+    {
+      "check": "19-missing-image-part",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2605,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "20-zip-crc-invalid",
+      "passed": true,
+      "details": {
+        "expectedCrcFailureObserved": true
+      }
+    },
+    {
+      "check": "21-duplicate-entry",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 2441,
+        "xmlPartsParsed": 4
+      }
+    },
+    {
+      "check": "22-path-escape-entry",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1716,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "23-entry-count-at",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1697,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "24-entry-count-over",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 1697,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "25-part-size-at",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 16778913,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "26-part-size-over",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 16778914,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "27-total-size-at",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 67108864,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "28-total-size-over",
+      "passed": true,
+      "details": {
+        "actualInflatedBytes": 67108865,
+        "xmlPartsParsed": 3
+      }
+    },
+    {
+      "check": "literal-zero-false-empty-and-whitespace",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "style-source-structure-not-rendered-inheritance",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "numbering-restart-source-structure",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "table-merge-source-structure",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "header-footer-footnote-relations-and-content",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "field-cache-empty-versus-missing",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "active-and-container-counterexamples-remain-present",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "invalid-pixel-png-has-valid-container-and-zlib",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "bundled-pillow-real-image-decode",
+      "passed": true,
+      "details": {
+        "images": [
+          {
+            "part": "word/media/red.png",
+            "size": [8, 8],
+            "sampleRGB": [180, 50, 30]
+          },
+          {
+            "part": "word/media/blue.jpg",
+            "size": [8, 8],
+            "sampleRGB": [30, 90, 160]
+          }
+        ],
+        "badPngDecodeFailed": true,
+        "notBrowserDecodeEvidence": true
+      }
+    }
+  ]
+}

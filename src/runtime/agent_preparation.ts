@@ -209,6 +209,7 @@ export class AgentPreparation {
   private revision = 0;
   private attempt: Attempt | null = null;
   private unsubscribe: (() => void) | undefined;
+  private inquiryAbort: AbortController | null = null;
   private opening: Promise<void> | null = null;
   private marker = "";
   constructor(
@@ -336,6 +337,9 @@ export class AgentPreparation {
     }
     if (this.attempt?.sending || outstanding(existing))
       return Promise.resolve();
+    this.inquiryAbort?.abort();
+    const inquiryAbort = new AbortController();
+    this.inquiryAbort = inquiryAbort;
     const ticket = ++this.revision;
     const readTargets = this.snapshot.explicitReadTargets;
     if (this.attempt) this.attempt.cancelled = true;
@@ -358,6 +362,9 @@ export class AgentPreparation {
     const request = (async () => {
       try {
         const thread = await this.port.open({
+          inquirySignal: inquiryAbort.signal,
+          inquiryCurrent: () =>
+            ticket === this.revision && this.snapshot.phase === "opening",
           agentId: input.agentId,
           cwd: input.cwd,
           service: input.service,
@@ -610,6 +617,7 @@ export class AgentPreparation {
 
   /** Invalidate success synchronously, but retain execution ownership until it settles. */
   invalidate = (discardDraft = true): void => {
+    this.inquiryAbort?.abort();
     // Account changes retain an in-flight preview so their owner can await
     // its actual close acknowledgment instead of losing it to best-effort cleanup.
     if (discardDraft || !this.opening) ++this.revision;

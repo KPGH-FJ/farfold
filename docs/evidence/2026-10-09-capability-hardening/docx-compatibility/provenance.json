@@ -1,0 +1,39 @@
+{
+  "sampleKind": "Public synthetic documents serialized by an independent existing writer; not hand-written OOXML and not Microsoft Word output",
+  "writer": {
+    "name": "python-docx",
+    "version": "1.2.0",
+    "installedPackage": "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/docx",
+    "defaultTemplate": {
+      "path": "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/docx/templates/default.docx",
+      "bytes": 38116,
+      "sha256": "2094b5bddffe9cf973d61fe03388413804f034160718494a65db7e98da40d35d"
+    },
+    "license": "MIT",
+    "retainedLicense": "python-docx-LICENSE.txt",
+    "licenseSource": "https://raw.githubusercontent.com/python-openxml/python-docx/v1.2.0/LICENSE"
+  },
+  "authoringBasis": [
+    "https://python-docx.readthedocs.io/en/latest/user/quickstart.html",
+    "https://python-docx.readthedocs.io/en/latest/api/section.html"
+  ],
+  "renderer": {
+    "bundleManifest": {
+      "name": "libreoffice-headless",
+      "version": "25.2-headless-codex.1",
+      "targetPlatform": "darwin",
+      "targetArch": "arm64",
+      "sourceRef": "2c87e51eeaa2b413ff4ae097b2705eea1995d8e5",
+      "patchSha256": "d330c2d95fee832c67c2146ddae2ab52daae1968dc8ef9ca6559ecc1841362d1"
+    },
+    "script": {
+      "path": "/Users/tw/.codex/plugins/cache/openai-primary-runtime/documents/26.1007.11041/skills/documents/render_docx.py",
+      "bytes": 19702,
+      "sha256": "876d5993324e2faaaa96a68a4f7504642e9a07e6df265b385b2baa03b231369e"
+    },
+    "method": "Dedicated headless conversion profile, local PDF/PNG only; no system application launch, cloud upload, network fonts, or user documents"
+  },
+  "inputs": "Fixed authored text, simple locally generated raster artwork, high-level python-docx APIs, bundled unedited default template/styles/theme",
+  "expectationIndependence": "Authored API arguments are retained in generate.py/expectations.json; stdlib ZIP+XML checker and LibreOffice render are independent of Farfold parser. Parser success is reported separately and cannot define expected output.",
+  "licenseQualification": "New synthetic text/artwork and test scripts are CC0-1.0. Bundled template/library-derived portions retain the included python-docx MIT notice. No system or bundled font files are redistributed."
+}

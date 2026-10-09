@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_public_samples.test.ts (5 tests | 1 failed) 31ms
+     × tiny-picture.docx 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_public_samples.test.ts > unchanged maintainer-published DOCX samples > tiny-picture.docx
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/docx_public_samples.test.ts:11:69
+      9|   const result=checkedDocxDocument(parseDocx(docxFixture(sample.file.r…
+     10|   for(const text of sample.sourceTextNodes)expect(JSON.stringify(resul…
+     11|   if(sample.file==='tiny-picture.docx')expect(result.images.length).to…
+       |                                                                     ^
+     12|   if(sample.file==='footnotes.docx')expect(result.stories.length).toBe…
+     13|   if(sample.file==='simple-list.docx')expect(result.blocks.filter(b=>b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:28:13
+   Duration  165ms (transform 55ms, setup 0ms, import 72ms, tests 31ms, environment 0ms)
+

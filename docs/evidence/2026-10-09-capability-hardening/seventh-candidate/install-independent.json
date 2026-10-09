@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-10-09T15:02:01.971717+00:00",
+  "reviewer": "verification",
+  "mode": "independent_read_only_artifact_private_manifest_and_backup_script_review",
+  "result": "passed_with_recorded_execution_boundaries",
+  "installedCommit": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "formalMatchesExactCandidateFiles": true,
+  "formalChecks": {
+    "signature": {
+      "exitCode": 0,
+      "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+    },
+    "architecture": {
+      "exitCode": 0,
+      "output": "arm64"
+    }
+  },
+  "archiveMatchesFormal": true,
+  "archiveSha256": "dd6d19996ee33a3ed9b071e597a2d161d03eb9be85e5f44633d2a1f4a3de237e",
+  "archiveBytes": 12697332,
+  "archiveFileModes": {
+    "Contents/_CodeSignature/CodeResources": "0o644",
+    "Contents/MacOS/farfold": "0o755",
+    "Contents/Resources/icon.icns": "0o644",
+    "Contents/Resources/release-manifest.json": "0o644",
+    "Contents/Info.plist": "0o644"
+  },
+  "frozenCandidateReceiptsUnchanged": true,
+  "sourceInputs": {
+    "count": 962,
+    "currentDiskAndCommitAndCandidateAllMatch": true
+  },
+  "formalProcessCountNow": 0,
+  "privateDirectoryMode": "0700",
+  "manifestChecks": [
+    {
+      "phase": "before",
+      "entries": 217400,
+      "sha256": "4b5a0fc3fedfb7acce98bd9c56091212fad30c6d7d14fa1b6eb96826668f5c9d",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    },
+    {
+      "phase": "preinstall",
+      "entries": 217400,
+      "sha256": "4b5a0fc3fedfb7acce98bd9c56091212fad30c6d7d14fa1b6eb96826668f5c9d",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    },
+    {
+      "phase": "after",
+      "entries": 217400,
+      "sha256": "4b5a0fc3fedfb7acce98bd9c56091212fad30c6d7d14fa1b6eb96826668f5c9d",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    }
+  ],
+  "capturedFiles": {
+    "farfold.sqlite3": {
+      "bytes": 323584,
+      "sha256": "c5e1610d7f333007db282aef96e1f922667c4bc18c3c24827fc7ed7dd4bca7df",
+      "mode": "0600"
+    },
+    "farfold.sqlite3-wal": {
+      "bytes": 4140632,
+      "sha256": "96352a52167b91b9298b89c3b45a8f0d0f5a341e54ce8b35e37ee1d45ea26f1e",
+      "mode": "0600"
+    },
+    "farfold.sqlite3-shm": {
+      "bytes": 32768,
+      "sha256": "4baae903ff63cfae4f118240580cb8ca4574c011b2f422ec6098009c1619381e",
+      "mode": "0600"
+    }
+  },
+  "backup": {
+    "sha256": "760aa245a08aa7316176f3f7fed2ab393038d14573d178f232a96eaa245151a2",
+    "mode": "0600",
+    "integrity": "ok",
+    "readMode": "Private standalone backup opened mode=ro&immutable=1; PRAGMA integrity_check only, no table rows/settings queried.",
+    "unchangedAfterIntegrity": true
+  },
+  "backupMethodEvidence": {
+    "retainedScript": "output/2026-10-09-seventh-install/backup_metadata.py",
+    "scriptReview": "Requires no exact formal process; lstat regular files plus source identity/hash before and after; copies existing main/WAL/SHM to first capture and second private working directories and compares hashes; SQLite opens only the second working copy and creates a standalone exclusive backup. First capture remains byte-identical.",
+    "independentlyEstablished": "All three full manifests parsed independently; exact main/WAL/SHM set and hashes match the untouched retained capture. No journal appears in these inventories. Backup hash and immutable integrity_check match.",
+    "executionBoundary": "Root executed backup and snapshots; reviewer inspected scripts/receipts/materials without repeating source capture, opening live source DB or rerunning installation. Integrity is structural, not semantic recovery of every historical conversation; this closed-app operation is not an adversarial filesystem-race guarantee."
+  },
+  "privateEvidenceSha256": {
+    "normal-exit-observation.json": "a7452720ea97ba7369f89adcd779f69c6047ccc96503641d7ab5ee3b91ec8186",
+    "metadata-backup-receipt.json": "42b3a81b155a74cddd3a4b73f582a628765f564fef9b721eff191425a03c1aad",
+    "backup_metadata.py": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+    "install_data_snapshot.py": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+    "install_verified_candidate.py": "a79bc0c54a7f78fe1659c843f84751502e0144c8d92bc182a24d93f40d12b81d",
+    "install-operation.json": "b5d37aeb5ed25f301e6f6574be11a410a319456fd0e4fd88f95eeca27ba8098e",
+    "install-data-before-summary.json": "bde8db05a7cf7887c5823f7aa1dfe46c0e4fbf2d629b3ae720aa96c9831267e4",
+    "install-data-preinstall-summary.json": "bde8db05a7cf7887c5823f7aa1dfe46c0e4fbf2d629b3ae720aa96c9831267e4",
+    "install-data-after-summary.json": "bde8db05a7cf7887c5823f7aa1dfe46c0e4fbf2d629b3ae720aa96c9831267e4"
+  },
+  "publicEvidenceSha256": {
+    "candidate.json": "ac1a0ecbc4ec7a34471aea9be72390ef75f864e3299973d2e762cf4516a10562",
+    "candidate-inputs.json": "935ba88edfc597f176e8ea471ff47a79fd6e1ecfe1a460d5add76101b83ed1a1",
+    "candidate-independent.json": "e3265e5617ead9cad65f89a9aa244b019ccf4174631e218e5d830287642ecd5d",
+    "installed-data-retention.json": "c63cabf5223d101e4ecfe60013c22a427ef5930d5e86e2cdaf47c85f9473e309"
+  },
+  "sourceProtectionReview": [
+    "Snapshot script uses O_NOFOLLOW directory descriptors, hashes regular file bytes and records symlink targets without following them; opened identities/stability are checked. Manifests are created exclusively as 0600.",
+    "Installer validates stopped formal process, exact old/new five-file bundles, candidate source and ZIP before its sole ditto mutation. It then verifies exact installed bytes/signature and no process.",
+    "Three complete 217400-entry inventories are byte-identical with matching counts and no duplicate root/path pairs. User paths, keys and contents were not printed or copied to public evidence.",
+    "Normal quit is the root observation linked by hash; reviewer freshly confirmed exact formal executable process count zero."
+  ],
+  "claimReview": {
+    "installedBundle": "Current formal app equals verified 0de05b0a arm64 candidate and ZIP with strict ad-hoc signature.",
+    "dataRetention": "Recorded whole data inventories and retained raw SQLite set are identical over the normal-exit/prelaunch install window; no claim about subsequent launch writes.",
+    "capabilities": "Seventh installed XLSX/PDF feedback/search interactions are still pending at this checkpoint. No real Agent, Desktop permission, corrupt-database recovery, power-loss/full-disk, DOCX/PPTX or Windows acceptance.",
+    "signing": "Ad-hoc; not public signing or notarization."
+  },
+  "actions": "Read retained scripts/receipts/manifests, hash artifacts, inspect source/formal/candidate/signature/ZIP, immutable integrity_check on private backup, write this receipt. No live source database access, UI, Agent, install, launch, quit, deletion, source/status/plan or existing candidate receipt changes."
+}

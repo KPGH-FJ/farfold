@@ -102,29 +102,7 @@ fn model_ids(options: &Value) -> Vec<String> {
         .collect()
 }
 
-/// requestId → responder for pending `elicitation/create` calls. Same
-/// lifecycle as [`PendingPermissions`].
-pub(crate) struct PendingElicitation {
-    pub responder: Option<Responder<Value>>,
-    pub cancelled: RequestCancellation,
-    _completed: oneshot::Sender<()>,
-    pub session_id: String,
-    /// The owning connection's open-request gauge (see PendingPermission).
-    pub lease: WorkLease,
-}
-pub(crate) type PendingElicitations = Arc<Mutex<HashMap<String, PendingElicitation>>>;
-
-fn cancel_elicitations(pending: &PendingElicitations, ids: &mut Vec<String>) {
-    if let Ok(mut map) = pending.lock() {
-        for id in ids.drain(..) {
-            if let Some(request) = map.remove(&id)
-                && let Some(responder) = request.responder
-            {
-                let _ = responder.respond(serde_json::json!({"action":"cancel"}));
-            }
-        }
-    }
-}
+pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicitations};
 
 /// Per-connection state shared by session pumps. Admission and idle recycling
 /// use one lifecycle owner; unknown operations retain their reservation.
@@ -134,6 +112,7 @@ pub(crate) struct SessionOps {
     pub(crate) connection_id: String,
     pub(crate) verify_identity: super::manager::SessionIdentityCheck,
     pub elicitations: PendingElicitations,
+    pub(crate) inquiries: super::elicitation::ConnectionElicitations,
     /// Unanswered permission/elicitation requests plus in-flight prompts —
     /// while >0 the connection is mid-interaction and must not be reaped.
     pub life: Arc<ConnectionLife>,
@@ -282,7 +261,7 @@ pub(crate) struct OpenedSession {
 
 static REQUEST_COUNTER: AtomicU64 = AtomicU64::new(1);
 
-fn next_request_id() -> String {
+pub(super) fn next_request_id() -> String {
     format!(
         "req-{}-{}",
         super::tap::now_millis(),
@@ -570,6 +549,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     _ => None,
                 };
                 if let Some(cancelled) = cancelled {
+                    ctx.ops.inquiries.discard_queued(&params);
                     let _ = responder.respond(cancelled);
                     return;
                 }
@@ -627,58 +607,21 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                     }
                 }
                 "elicitation/create" => {
-                    let mode = params.get("mode").and_then(Value::as_str);
-                    if mode != Some("form") {
-                        (ctx.events)(
-                            serde_json::json!({"kind":"elicitationUnavailable","params":params}),
-                        );
-                        let _ = responder.respond(serde_json::json!({"action":"cancel"}));
-                        return;
-                    }
-                    let request_id = next_request_id();
-                    match ctx.ops.elicitations.lock() {
-                        Ok(mut map) => {
-                            let Ok(lease) = ctx.ops.life.work() else {
-                                let _ = responder.respond_with_error(
-                                    agent_client_protocol::Error::request_cancelled(),
-                                );
-                                return;
-                            };
-                            let (cancelled, completed) =
-                                observe_cancellation(&responder, &request_id, ctx.expirations);
-                            map.insert(
-                                request_id.clone(),
-                                PendingElicitation {
-                                    responder: Some(responder),
-                                    cancelled,
-                                    _completed: completed,
-                                    session_id: ctx.session_id.to_owned(),
-                                    lease,
-                                },
-                            );
-                            ctx.elicitation_ids.push(request_id.clone());
-                            (ctx.events)(serde_json::json!({
-                                "kind": "elicitation",
-                                "requestId": request_id,
-                                "message": params.get("message").cloned().unwrap_or(Value::Null),
-                                "schema": params.get("requestedSchema").cloned().unwrap_or(Value::Null),
-                                "toolCallId": params.get("toolCallId").cloned().unwrap_or(Value::Null),
-                            }));
-                        }
-                        Err(_) => {
-                            let _ = responder.respond_with_error(
-                                agent_client_protocol::util::internal_error(
-                                    "elicitation map lock poisoned",
-                                ),
-                            );
-                        }
+                    if let Some(id) = ctx.ops.inquiries.create(
+                        params,
+                        responder,
+                        ctx.session_id,
+                        ctx.events.clone(),
+                    ) {
+                        ctx.elicitation_ids.push(id);
                     }
                 }
                 _ => {
-                    let _ =
-                        responder.respond_with_error(agent_client_protocol::util::internal_error(
-                            format!("farfold does not implement {method}"),
-                        ));
+                    (ctx.events)(
+                        serde_json::json!({"kind":"elicitationUnavailable","params":{"method":method,"params":params},"reason":"unknown_method"}),
+                    );
+                    let _ = responder
+                        .respond_with_error(agent_client_protocol::Error::method_not_found());
                 }
             }
         }

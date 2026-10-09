@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.48s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+thread 'acp_client::elicitation_wire_tests::session_url_is_presented_and_accept_has_no_form_content' (20000901) panicked at src/acp_client/elicitation_wire_tests.rs:78:5:
+assertion `left == right` failed: a known URL mode must reach the user
+  left: String("elicitationUnavailable")
+ right: "elicitation"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::elicitation_wire_tests::unadvertised_mode_is_invalid_params_not_a_user_cancel' (20000902) panicked at src/acp_client/elicitation_wire_tests.rs:105:13:
+assertion `left == right` failed
+  left: None
+ right: Some(Number(-32602))
+test acp_client::elicitation_wire_tests::session_url_is_presented_and_accept_has_no_form_content ... FAILED
+test acp_client::elicitation_wire_tests::unadvertised_mode_is_invalid_params_not_a_user_cancel ... FAILED
+
+failures:
+
+failures:
+    acp_client::elicitation_wire_tests::session_url_is_presented_and_accept_has_no_form_content
+    acp_client::elicitation_wire_tests::unadvertised_mode_is_invalid_params_not_a_user_cancel
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1168 filtered out; finished in 0.42s
+
+error: test failed, to rerun pass `--lib`

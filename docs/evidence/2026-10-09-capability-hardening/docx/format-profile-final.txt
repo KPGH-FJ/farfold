@@ -1,0 +1,5 @@
+src/runtime/docx_images.ts 41ms
+src/runtime/docx_images.test.ts 17ms
+src/runtime/docx_parse.ts 38ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx/browser/exif-before.html 21ms
+docs/evidence/2026-10-09-capability-hardening/docx/exif-fixtures/receipt.json 1ms

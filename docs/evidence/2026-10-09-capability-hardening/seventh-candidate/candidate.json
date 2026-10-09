@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "0de05b0a41209d78761bb283917ea067a350cb10",
+  "startedAt": "2026-10-09T14:55:02.933697+00:00",
+  "formalAppReplaced": false,
+  "installed": false,
+  "realAgentInvoked": false,
+  "command": "corepack pnpm tauri:build:internal",
+  "sourceInputCount": 962,
+  "sourceScope": {
+    "directories": [
+      "src/",
+      "assets/",
+      "public/",
+      "scripts/",
+      "src-tauri/src/",
+      "src-tauri/native/",
+      "src-tauri/capabilities/",
+      "src-tauri/icons/",
+      "src-tauri/resources/"
+    ],
+    "files": [
+      "index.html",
+      "package.json",
+      "pnpm-lock.yaml",
+      "tsconfig.app.json",
+      "tsconfig.json",
+      "tsconfig.node.json",
+      "vite.config.ts",
+      "vitest.config.ts",
+      "src-tauri/Cargo.toml",
+      "src-tauri/Cargo.lock",
+      "src-tauri/build.rs",
+      "src-tauri/Info.plist",
+      "src-tauri/tauri.conf.json",
+      "src-tauri/tauri.windows.conf.json"
+    ],
+    "claim": "Application source/configuration inputs and tests in those scopes, excluding dependencies/toolchain and document-only visual fixtures"
+  },
+  "buildExitCode": 0,
+  "sourceMatchesCommitBeforeAndAfter": true,
+  "architecture": "arm64",
+  "codesignVerify": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+  "codesignDetails": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=230803 flags=0x10002(adhoc,runtime) hashes=7206+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=d67a67a14091fc4dbc7ea2e1a6802b10e7e7686f\nCandidateCDHashFull sha256=d67a67a14091fc4dbc7ea2e1a6802b10e7e7686f293271283ca25efae708248e\nHash choices=sha256\nCMSDigest=d67a67a14091fc4dbc7ea2e1a6802b10e7e7686f293271283ca25efae708248e\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=23199744\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=d67a67a14091fc4dbc7ea2e1a6802b10e7e7686f\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+  "candidateFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "39ec35f484aef14077ebc4b9aa2e946099af398f614956090e62b2acc2829077",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "bundleIdentifier": "ai.farfold.desktop",
+  "version": "0.1.7",
+  "candidateApp": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "signature": "ad-hoc; not notarized or public distribution signed",
+  "phase": "internalCandidatePreparedNotInstalled",
+  "formalFilesUnchanged": true,
+  "formalFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "a802f488cb97db4c5bdc9f11b3d5836de018eba6874a96bf9a97cdc5d836c550",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archive": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-09-0de05b0a/Farfold-0.1.7-0de05b0a.zip",
+  "archiveSha256": "dd6d19996ee33a3ed9b071e597a2d161d03eb9be85e5f44633d2a1f4a3de237e",
+  "archiveBytes": 12697332,
+  "archiveMatchesBundle": true,
+  "completedAt": "2026-10-09T14:56:10.016363+00:00"
+}

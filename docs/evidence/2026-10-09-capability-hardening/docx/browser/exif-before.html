@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <body>
+    <pre id="result"></pre>
+    <script type="module">
+      import { readDocxPreview } from "/src/runtime/docx_preview.ts";
+      const checks = [];
+      const check = (name, passed, detail) => {
+        checks.push({ name, passed, detail });
+        if (!passed) throw Error(name);
+      };
+      try {
+        const input = await (await fetch("./exif-fixture.json")).json();
+        const bytes = Uint8Array.from(atob(input.base64), (c) =>
+          c.charCodeAt(0),
+        );
+        const image = await createImageBitmap(
+          new Blob([bytes], { type: "image/jpeg" }),
+        );
+        check(
+          "browser applies EXIF6 rotation",
+          image.width === 12 && image.height === 8,
+          { width: image.width, height: image.height },
+        );
+        image.close();
+        const captures = await (await fetch("./captures.json")).json(),
+          capture = captures["docx-fixtures/05-inline-png-jpeg"];
+        capture.parts.find((p) => p.name.endsWith(".jpg")).data = input.base64;
+        try {
+          await readDocxPreview(capture, new AbortController().signal);
+          check("unsupported orientation is explicit", false);
+        } catch (error) {
+          check(
+            "unsupported orientation is explicit",
+            error.code === "unsupported",
+            { code: error.code },
+          );
+        }
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: true,
+          checks,
+        });
+      } catch (error) {
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: false,
+          checks,
+          error: String(error),
+          stack: error.stack,
+        });
+      } finally {
+        document.documentElement.dataset.done = "true";
+      }
+    </script>
+  </body>
+</html>

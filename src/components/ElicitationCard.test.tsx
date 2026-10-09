@@ -40,7 +40,7 @@ it("renders each request's saved values and keeps an uncertain reply read-only",
   expect(second).toContain("回复结果未知");
 });
 
-it("keeps the same pending answer visible but disables the form and both actions during stop confirmation", () => {
+it("keeps the same pending answer visible but disables the form and all actions during stop confirmation", () => {
   const request: PendingElicitation = {
     requestId: "stop-question",
     status: "pending",
@@ -60,6 +60,6 @@ it("keeps the same pending answer visible but disables the form and both actions
   );
   expect(html).toContain('value="Keep unsent answer"');
   expect(html).toContain('<fieldset class="el-form" disabled=""');
-  expect(html.match(/<button[^>]*disabled=""/g)).toHaveLength(2);
+  expect(html.match(/<button[^>]*disabled=""/g)).toHaveLength(3);
   expect(request.status).toBe("pending");
 });

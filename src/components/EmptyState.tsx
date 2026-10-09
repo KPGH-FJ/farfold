@@ -295,6 +295,11 @@ export function EmptyState({
   // 草稿不写索引；切换/离开时丢弃并记墓碑（B1：不再产生幽灵会话）。
   // 选择变化防抖 250ms（划选项不起进程）；打开失败的组合不自动重试。
   const failedPairRef = useRef<string | null>(null);
+  const pendingInquiryAbort = useRef<AbortController | null>(null);
+  useEffect(() => {
+    if (!active) pendingInquiryAbort.current?.abort();
+    return () => pendingInquiryAbort.current?.abort();
+  }, [active]);
   const activeRef = useRef(active);
   activeRef.current = active;
   const mounted = useRef(true);
@@ -410,6 +415,8 @@ export function EmptyState({
       return;
     }
     let cancelled = false;
+    const inquiryAbort = new AbortController();
+    pendingInquiryAbort.current = inquiryAbort;
     let openedKey: string | null = null;
     const requestedConfig = { ...newConversationChoice.config };
     setDraftKey(null);
@@ -434,6 +441,12 @@ export function EmptyState({
         )
           throw new Error(R.selectionReview);
         return threads.open({
+          inquirySignal: inquiryAbort.signal,
+          inquiryCurrent: () =>
+            !cancelled &&
+            mounted.current &&
+            activeRef.current &&
+            currentPair.current === pair,
           agentId,
           cwd: requestCwd!,
           service,
@@ -517,6 +530,7 @@ export function EmptyState({
     }, 250);
     return () => {
       cancelled = true;
+      inquiryAbort.abort();
       clearTimeout(timer);
       if (
         openedKey &&
@@ -673,6 +687,10 @@ export function EmptyState({
       // Stale/discarded draft or the eager open still in flight — the
       // store dedupes a concurrent open for the same pair.
       const state = await threads.open({
+        inquiryCurrent: () =>
+          mounted.current &&
+          activeRef.current &&
+          currentPair.current === sentPair,
         agentId,
         cwd: requestCwd,
         service,

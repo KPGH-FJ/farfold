@@ -28,7 +28,8 @@ for line in sys.stdin:
   if prompt: reply(prompt,{'stopReason':'cancelled'}); prompt=None
  elif method=='session/close': reply(m,{})
  elif method is None and m.get('id')==102:
-  assert m.get('result',{}).get('action')=='cancel'
+  # Missing elicitationId is a malformed URL inquiry, not a user's choice.
+  assert 'result' not in m and m.get('error',{}).get('code')==-32602
  elif method is None and m.get('id') in waiting:
   waiting.remove(m['id'])
   if not waiting and prompt: reply(prompt,{'stopReason':'end_turn'}); prompt=None

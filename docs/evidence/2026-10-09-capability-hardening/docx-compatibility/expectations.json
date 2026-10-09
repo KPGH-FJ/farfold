@@ -1,0 +1,135 @@
+{
+  "writer": "python-docx 1.2.0",
+  "basis": "Authored API inputs before serialization, independent of Farfold parser",
+  "samples": [
+    {
+      "file": "01-unicode-lists.docx",
+      "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+      "bytes": 37156,
+      "requiredBodyTextInOrder": [
+        "兼容性纪要",
+        "这份公开样本用于检查普通文档的文字与列表。",
+        "文本与样式",
+        "普通文字 加粗文字 与 斜体 café 和普通结尾。",
+        "Unicode café naïve Ελληνικά 中文",
+        "0",
+        "false",
+        "  保留  两处空格  ",
+        "准备步骤",
+        "收集材料",
+        "核对数值",
+        "保存结果",
+        "不自动发送",
+        "不读取外部文件"
+      ],
+      "emptyParagraphs": 1,
+      "numberedItems": ["收集材料", "核对数值", "保存结果"],
+      "numberLabels": ["1.", "2.", "3."],
+      "bulletItems": ["不自动发送", "不读取外部文件"],
+      "directRunFormatting": {
+        "加粗文字": "bold",
+        "斜体 café": "italic"
+      }
+    },
+    {
+      "file": "02-table-images-stories.docx",
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5",
+      "bytes": 42364,
+      "requiredText": [
+        "表格与图片记录",
+        "横向合并",
+        "说明",
+        "纵向合并",
+        "0",
+        "false",
+        "中文",
+        "尾行",
+        "12.50",
+        "结束",
+        "红色方块",
+        "PNG 红色方块说明",
+        "蓝色圆形",
+        "JPEG 蓝色圆形说明"
+      ],
+      "tables": [
+        {
+          "rows": 4,
+          "gridColumns": 3,
+          "horizontalSpan": {
+            "row": 0,
+            "column": 0,
+            "span": 2
+          },
+          "verticalSpan": {
+            "row": 1,
+            "column": 0,
+            "span": 2
+          },
+          "emptyCell": [2, 1]
+        }
+      ],
+      "header": "公开兼容性样本 页眉",
+      "footer": "公开兼容性样本 页脚",
+      "images": [
+        {
+          "asset": "authored-red.png",
+          "width": 160,
+          "height": 96,
+          "mime": "image/png"
+        },
+        {
+          "asset": "authored-blue.jpg",
+          "width": 160,
+          "height": 96,
+          "mime": "image/jpeg"
+        }
+      ]
+    },
+    {
+      "file": "03-sections.docx",
+      "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d",
+      "bytes": 39253,
+      "requiredBodyTextInOrder": [
+        "分节项目记录",
+        "第一组记录",
+        "记录 01 中文与 Unicode café 内容保持顺序。",
+        "记录 02 中文与 Unicode café 内容保持顺序。",
+        "记录 03 中文与 Unicode café 内容保持顺序。",
+        "记录 04 中文与 Unicode café 内容保持顺序。",
+        "记录 05 中文与 Unicode café 内容保持顺序。",
+        "记录 06 中文与 Unicode café 内容保持顺序。",
+        "记录 07 中文与 Unicode café 内容保持顺序。",
+        "记录 08 中文与 Unicode café 内容保持顺序。",
+        "记录 09 中文与 Unicode café 内容保持顺序。",
+        "记录 10 中文与 Unicode café 内容保持顺序。",
+        "记录 11 中文与 Unicode café 内容保持顺序。",
+        "记录 12 中文与 Unicode café 内容保持顺序。",
+        "记录 13 中文与 Unicode café 内容保持顺序。",
+        "记录 14 中文与 Unicode café 内容保持顺序。",
+        "记录 15 中文与 Unicode café 内容保持顺序。",
+        "记录 16 中文与 Unicode café 内容保持顺序。",
+        "第二组记录",
+        "记录 17 第二节保留正文和结尾。",
+        "记录 18 第二节保留正文和结尾。",
+        "记录 19 第二节保留正文和结尾。",
+        "记录 20 第二节保留正文和结尾。",
+        "记录 21 第二节保留正文和结尾。",
+        "记录 22 第二节保留正文和结尾。",
+        "记录 23 第二节保留正文和结尾。",
+        "记录 24 第二节保留正文和结尾。",
+        "记录 25 第二节保留正文和结尾。",
+        "记录 26 第二节保留正文和结尾。",
+        "记录 27 第二节保留正文和结尾。",
+        "记录 28 第二节保留正文和结尾。",
+        "记录 29 第二节保留正文和结尾。",
+        "记录 30 第二节保留正文和结尾。",
+        "记录 31 第二节保留正文和结尾。",
+        "记录 32 第二节保留正文和结尾。"
+      ],
+      "sections": 2,
+      "headers": ["第一节页眉", "第二节页眉"],
+      "footers": ["第一节页脚", "第二节页脚"],
+      "qualification": "Section ownership and visible stories are separate from exact Word pagination."
+    }
+  ]
+}

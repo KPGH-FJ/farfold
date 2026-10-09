@@ -1,0 +1,25 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_compatibility.test.ts (3 tests | 1 failed) 162ms
+     × 01-unicode-lists.docx 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_compatibility.test.ts > independent python-docx writer compatibility > 01-unicode-lists.docx
+AssertionError: expected '' to be '•' // Object.is equality
+
+Expected: "•"
+Received: ""
+
+ ❯ src/runtime/docx_compatibility.test.ts:21:157
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  23:30:15
+   Duration  307ms (transform 59ms, setup 0ms, import 78ms, tests 162ms, environment 0ms)
+
