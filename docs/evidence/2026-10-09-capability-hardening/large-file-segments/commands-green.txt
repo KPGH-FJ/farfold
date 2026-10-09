@@ -1,0 +1,17 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 4 tests
+test file_delivery_commands::tests::automatic_system_open_is_limited_to_document_types ... ok
+test file_delivery_commands::tests::review_regression_delivery_accepts_windows_packaged_main_origin ... ok
+test file_delivery_commands::tests::remote_content_and_other_webviews_cannot_use_delivery_commands ... ok
+test file_delivery_commands::tests::main_caller_uses_exact_platform_and_configured_protocol ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1232 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

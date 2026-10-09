@@ -1,0 +1,86 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "paused-flight-cancel",
+      "name": "paused presentation must not admit an overlapping whole-file read",
+      "ok": true,
+      "detail": {
+        "mode": "cancel",
+        "before": 2,
+        "after": 2,
+        "firstPromiseStillUnsettled": true
+      }
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "name": "paused presentation must not admit an overlapping whole-file read",
+      "ok": true,
+      "detail": {
+        "mode": "hide",
+        "before": 2,
+        "after": 2,
+        "firstPromiseStillUnsettled": true
+      }
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 32
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 33
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 33
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 62
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 299
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 299
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 300
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 326
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 535,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}
+{"diagnosticEvents":79}

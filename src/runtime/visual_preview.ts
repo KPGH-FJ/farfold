@@ -18,7 +18,7 @@ export const VISUAL_PREVIEW_STRINGS = {
   previous: "上一页",
   next: "下一页",
   page: (page: number, total: number) => `第 ${page} / ${total} 页`,
-  snapshot: "显示本次读取的文件版本；文件修改后请重新读取。",
+  snapshot: "当前显示的是已读取的文件版本。",
 } as const;
 export const MAX_VISUAL_BYTES = 32 * 1024 * 1024;
 export const MAX_PDF_PAGES = 1000;

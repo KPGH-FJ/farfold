@@ -119,13 +119,22 @@ export const fileDelivery = {
     invoke<TextPreview>("file_delivery_read_text", { file }),
   readVisual: (file: VerifiedFile) =>
     invoke<VisualPreview>("file_delivery_read_visual", { file }),
-  copy: (file: VerifiedFile, destination: string) =>
-    invoke<DeliveryReceipt>("file_delivery_copy", { file, destination }),
   exportText: (text: string, destination: string) =>
     invoke<DeliveryReceipt>("file_delivery_export_text", { text, destination }),
   open: (file: VerifiedFile) => invoke<void>("file_delivery_open", { file }),
   reveal: (file: VerifiedFile) =>
     invoke<void>("file_delivery_reveal", { file }),
+  /** Explicit failure fallback. This opens a location, never a verified revision. */
+  openSelectedLocation: (root: string, path: string) =>
+    invoke<void>(
+      "file_delivery_open_selected_location",
+      isAbsoluteFilePath(path) ? { path } : { path, root },
+    ),
+  revealSelectedLocation: (root: string, path: string) =>
+    invoke<void>(
+      "file_delivery_reveal_selected_location",
+      isAbsoluteFilePath(path) ? { path } : { path, root },
+    ),
   /** Show a recorded working directory in the file manager. */
   revealLocation: (path: string) =>
     invoke<void>("file_delivery_reveal_location", { path }),

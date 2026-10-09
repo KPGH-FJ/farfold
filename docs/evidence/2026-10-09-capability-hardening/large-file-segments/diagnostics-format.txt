@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/browser-first.diagnostics.json 52ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/browser-final.diagnostics.json 49ms (unchanged)

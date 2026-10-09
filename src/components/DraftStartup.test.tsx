@@ -11,6 +11,8 @@ const h = vi.hoisted(() => ({
   readFlush: vi.fn(),
   lock: vi.fn(),
   active: false,
+  copying: false,
+  unknownCopy: false,
   stateCursor: 0,
   refCursor: 0,
   refs: [] as { current: unknown }[],
@@ -57,6 +59,17 @@ vi.mock("../runtime/sessions", () => ({
 vi.mock("../runtime/authentication", () => ({
   hasActiveAuthentication: () => false,
 }));
+vi.mock("../runtime/file_copy_jobs", () => ({
+  hasUnsettledFileCopies: () => h.copying,
+  fileCopyJobs: {
+    getSnapshot: () =>
+      h.unknownCopy
+        ? [{ phase: "uncertain", status: { state: "unknown", settled: true } }]
+        : [],
+  },
+  useFileCopyJobs: () => [],
+}));
+vi.mock("./FileCopyJobsStatus", () => ({ FileCopyJobsStatus: () => null }));
 vi.mock("../runtime/update_impact", () => ({
   updateConversationBlocker: (thread: { running: boolean }) =>
     thread.running ? "仍在执行" : null,
@@ -115,10 +128,78 @@ beforeEach(async () => {
   h.readFlush.mockReset().mockResolvedValue(undefined);
   h.lock.mockReset();
   h.active = false;
+  h.copying = false;
+  h.unknownCopy = false;
   render();
   h.effects[0]();
   await vi.waitFor(() =>
     expect(h.listeners.has("app:exit-deferred")).toBe(true),
+  );
+});
+
+it("does not let confirmation or restart interrupt an unsettled file save", async () => {
+  h.copying = true;
+  h.listeners.get("app:save-before-exit")!({ payload: 70 });
+  click(EXIT_IMPACT.exit);
+  h.listeners.get("app:save-before-restart")!({ payload: 71 });
+  await Promise.resolve();
+  expect(h.flush).not.toHaveBeenCalled();
+  expect(
+    h.invoke.mock.calls.some(([name]) => name === "app_exit_after_save"),
+  ).toBe(false);
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+});
+
+it("rechecks file saves after metadata flush before acknowledging exit", async () => {
+  const saving = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 72 });
+  h.copying = true;
+  saving.resolve();
+  await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalled());
+  await Promise.resolve();
+  expect(
+    h.invoke.mock.calls.some(([name]) => name === "app_exit_after_save"),
+  ).toBe(false);
+  h.copying = false;
+  click(EXIT_IMPACT.exit);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+      token: 72,
+      confirmActivity: true,
+    }),
+  );
+});
+
+it("keeps backend-only file activity in a cancellable exit review", async () => {
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_after_save"
+      ? Promise.reject("FILE_COPY_EXIT_BLOCKED")
+      : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 73 });
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 73 }),
+  );
+  await Promise.resolve();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_cancel", { token: 73 }),
+  );
+});
+
+it("requires explicit confirmation for finished unknown copies, including restart", async () => {
+  h.unknownCopy = true;
+  h.listeners.get("app:save-before-restart")!({ payload: 74 });
+  expect(h.flush).not.toHaveBeenCalled();
+  click(EXIT_IMPACT.exit);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", {
+      token: 74,
+      confirmActivity: true,
+    }),
   );
 });
 
@@ -195,7 +276,7 @@ it("keeps an unconfirmed cancel visible and permits an explicit retry", async ()
   );
   h.listeners.get("app:save-before-exit")!({ payload: 63 });
   click(EXIT_IMPACT.stay);
-  await vi.waitFor(() => expect(h.states.at(-1)).toBe(true));
+  await vi.waitFor(() => expect(h.states[7]).toBe(true));
   expect(h.lock).not.toHaveBeenCalledWith(false);
   h.invoke.mockResolvedValue(undefined);
   click(EXIT_IMPACT.stay);

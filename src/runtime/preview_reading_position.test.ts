@@ -121,3 +121,19 @@ it("does not auto-open a sheet newly hidden by a revision without explicit hidde
   workbook.sheets[0].name = "Reused";
   expect(restoredWorkbookSheet(file, workbook, position)).toBeUndefined();
 });
+
+it("restores only same-path text block index without carrying contents or other preview formats", async () => {
+  const { restoredTextBlock, saveReadingPosition } =
+    await import("./preview_reading_position");
+  const ref: PreviewReadingPositionRef = { current: null };
+  saveReadingPosition(ref, file, { kind: "text", blockIndex: 900 });
+  expect(restoredTextBlock({ ...file, version: "2", size: 0 }, ref)).toBe(900);
+  expect(restoredTextBlock({ ...file, resolvedPath: "/other" }, ref)).toBe(0);
+  expect(restoredPdfPage(file, ref)).toBe(1);
+  expect(Object.keys(ref.current!)).toEqual([
+    "root",
+    "resolvedPath",
+    "kind",
+    "blockIndex",
+  ]);
+});

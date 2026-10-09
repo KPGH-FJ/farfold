@@ -19,6 +19,8 @@ mod diagnostics;
 mod draft_attachment;
 mod draft_exit;
 mod file_access;
+mod file_copy_commands;
+mod file_copy_jobs;
 mod file_delivery;
 mod file_delivery_commands;
 mod file_read_check;
@@ -107,6 +109,7 @@ pub fn run() {
         .manage(browser_sharing::BrowserSharing::default())
         .manage(pty::PtyManager::default())
         .manage(draft_exit::DraftExit::default())
+        .manage(file_copy_jobs::FileCopyJobs::default())
         .manage(desktop_notifications::DesktopNotifications::default())
         .manage(diagnostics::DiagnosticsState::default())
         .manage(managed_update::ManagedUpdateAuthority::default())
@@ -284,12 +287,19 @@ pub fn run() {
                 file_delivery_commands::file_delivery_inspect_selected,
                 file_delivery_commands::file_delivery_check_revision,
                 file_delivery_commands::file_delivery_read_text,
+                file_delivery_commands::file_delivery_read_text_block,
                 file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_read_workbook,
                 file_delivery_commands::file_delivery_read_docx,
-                file_delivery_commands::file_delivery_copy,
+                file_copy_commands::file_copy_prepare,
+                file_copy_commands::file_copy_start,
+                file_copy_commands::file_copy_status,
+                file_copy_commands::file_copy_cancel,
+                file_copy_commands::file_copy_release,
                 file_delivery_commands::file_delivery_export_text,
                 file_delivery_commands::file_delivery_open,
+                file_delivery_commands::file_delivery_open_selected_location,
+                file_delivery_commands::file_delivery_reveal_selected_location,
                 file_delivery_commands::file_delivery_reveal,
                 file_delivery_commands::file_delivery_reveal_location,
                 draft_attachment::draft_attachment_check,

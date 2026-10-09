@@ -1,0 +1,15 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `release` profile [optimized] target(s) in 44.40s
+     Running unittests src/lib.rs (src-tauri/target/release/deps/farfold_lib-cc8fa3e2901345d8)
+
+running 1 test
+before_ru_maxrss=5144576
+inspect_ms=123
+first_block_ms=708 blocks=2048 returned_bytes=131072
+last_block_ms=702 last_index=2047
+copy_ms=740 copied_bytes=268435456
+after_ru_maxrss=10698752
+test file_delivery::stream_tests::ordinary_256_mib_streaming_benchmark ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1227 filtered out; finished in 2.53s
+

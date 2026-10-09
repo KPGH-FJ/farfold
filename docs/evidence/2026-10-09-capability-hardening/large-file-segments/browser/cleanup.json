@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-10-09T21:16:25.930983+00:00",
+  "server": {
+    "pid": 60687,
+    "verifiedCommand": "node docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/serve.mjs",
+    "signal": "SIGTERM",
+    "execSession": 38941,
+    "execExitCode": 143,
+    "port1460Empty": true,
+    "exitNote": "Owned listener received requested SIGTERM; tool session reported 143, not 0."
+  },
+  "ownChromeRemaining": [],
+  "peerConfirmedDone": true,
+  "otherProcessesTouched": false,
+  "processCheck": "Matched executable paths first, then only task-specific Chrome profile arguments; excluded the observer shell itself."
+}

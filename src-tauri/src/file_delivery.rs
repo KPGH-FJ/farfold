@@ -26,8 +26,23 @@ mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
 mod revision;
 pub use revision::{RevisionCheck, RevisionFailure, RevisionMode, check_revision};
+mod stream;
+mod text_blocks;
+pub use text_blocks::{TextBlock, TextBlockFailure, read_text_block};
+mod copy_stream;
+pub(crate) use copy_stream::{CopyOutcome, stream_copy};
+mod selected_location;
+pub(crate) use selected_location::{document_extension, selected_location};
+
+#[cfg(test)]
+#[path = "file_delivery/stream_tests.rs"]
+mod stream_tests;
+#[cfg(test)]
+#[path = "file_delivery/text_blocks_independent_tests.rs"]
+mod text_blocks_independent_tests;
 
 pub const MAX_FILE_BYTES: u64 = 32 * 1024 * 1024;
+pub const MAX_VERIFIED_FILE_BYTES: u64 = 256 * 1024 * 1024;
 pub const MAX_TEXT_BYTES: u64 = 1024 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -41,6 +56,7 @@ pub enum DeliveryError {
     Unreadable,
     UnsupportedText,
     UnsupportedVisual,
+    UnsupportedOpen,
     AlreadyExists,
     InvalidDestination,
     DestinationChanged,
@@ -59,6 +75,7 @@ impl DeliveryError {
             Self::Unreadable => "文件已无法读取，请检查位置和访问权限",
             Self::UnsupportedText => "此文件无法作为文字预览，请另存或使用其他应用打开",
             Self::UnsupportedVisual => "此文件无法在这里预览，请另存或使用其他应用打开",
+            Self::UnsupportedOpen => "此文件请先定位到文件夹，再选择打开方式",
             Self::AlreadyExists => "目标位置已有同名文件，请使用其他名称",
             Self::InvalidDestination => "保存位置无效，请重新选择",
             Self::DestinationChanged => "保存位置已变化，请先检查目标文件，勿重复保存",
@@ -302,7 +319,9 @@ fn capture_opened(
 }
 
 pub fn inspect(root: &Path, path: &Path) -> Result<VerifiedFile, DeliveryError> {
-    capture(root, path, MAX_FILE_BYTES).map(|(file, _)| file)
+    stream::verify(open_source(root, path, MAX_VERIFIED_FILE_BYTES)?, |_, _| {
+        Ok(())
+    })
 }
 
 /// Recheck one explicit unsent attachment using the same safe path handling.
@@ -369,7 +388,7 @@ pub fn read_text(file: &VerifiedFile) -> Result<TextPreview, DeliveryError> {
 /// The caller must invoke the existing platform opener immediately; validation
 /// cannot promise that another process will not change a path afterwards.
 pub fn revalidate_for_open(file: &VerifiedFile) -> Result<String, DeliveryError> {
-    capture_expected(file, MAX_FILE_BYTES)?;
+    stream::expected(file, |_, _| Ok(()))?;
     Ok(file.resolved_path.clone())
 }
 
@@ -451,14 +470,14 @@ fn write_new(
     })
 }
 
+#[cfg(test)]
 pub fn copy(file: &VerifiedFile, destination: &Path) -> Result<DeliveryReceipt, DeliveryError> {
-    let bytes = capture_expected(file, MAX_FILE_BYTES)?;
-    write_new(
-        &bytes,
-        destination,
-        DeliveryKind::FileCopy,
-        Some(file.version.clone()),
-    )
+    match stream_copy(file, destination, || false, || true, |_| {}) {
+        CopyOutcome::Completed(receipt) => Ok(receipt),
+        CopyOutcome::Failed(error) | CopyOutcome::Unknown(error) => Err(error),
+        CopyOutcome::Cancelled => Err(DeliveryError::Unavailable),
+        CopyOutcome::CleanupUnknown => Err(DeliveryError::DestinationChanged),
+    }
 }
 
 /// Exports exactly the text the user chose. It neither reads a disk source nor

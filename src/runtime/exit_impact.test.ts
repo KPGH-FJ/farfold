@@ -5,6 +5,9 @@ import type { ThreadState } from "./session_types";
 const h = vi.hoisted(() => ({
   threads: new Map<string, ThreadState>(),
   account: false,
+  copying: false,
+  unknownCopy: false,
+  absentCopy: false,
 }));
 vi.mock("./sessions", () => ({
   threads: { getSnapshot: () => ({ threads: h.threads }) },
@@ -12,11 +15,42 @@ vi.mock("./sessions", () => ({
 vi.mock("./authentication", () => ({
   hasActiveAuthentication: () => h.account,
 }));
+vi.mock("./file_copy_jobs", () => ({
+  hasUnsettledFileCopies: () => h.copying,
+  fileCopyJobs: {
+    getSnapshot: () =>
+      h.absentCopy
+        ? [{ phase: "uncertain", absence: true }]
+        : h.unknownCopy
+          ? [
+              {
+                phase: "uncertain",
+                status: { state: "unknown", settled: true },
+              },
+            ]
+          : [],
+  },
+}));
 import { exitNeedsReview } from "./exit_impact";
 
 beforeEach(() => {
   h.threads.clear();
   h.account = false;
+  h.copying = false;
+  h.unknownCopy = false;
+  h.absentCopy = false;
+});
+it("reviews file saves even after the file view is gone", () => {
+  h.copying = true;
+  expect(exitNeedsReview()).toBe(true);
+});
+it("reviews an ended save with an unknown result before exiting", () => {
+  h.unknownCopy = true;
+  expect(exitNeedsReview()).toBe(true);
+});
+it("does not silently dismiss a missing operation as a successful copy", () => {
+  h.absentCopy = true;
+  expect(exitNeedsReview()).toBe(true);
 });
 it.each([
   { running: true },

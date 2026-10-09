@@ -1,0 +1,20 @@
+src/runtime/text_block_preview.ts 37ms
+src/runtime/text_block_preview.test.ts 8ms
+src/runtime/text_block_reader.ts 8ms
+src/runtime/text_block_reader.test.ts 7ms
+src/runtime/text_block_strings.ts 4ms
+src/runtime/file_copy_types.ts 5ms
+src/runtime/file_copy_jobs.ts 20ms
+src/runtime/file_copy_jobs.test.ts 12ms
+src/runtime/file_copy_strings.ts 2ms
+src/runtime/file_delivery.ts 6ms (unchanged)
+src/runtime/file_delivery.test.ts 6ms (unchanged)
+src/runtime/preview_reading_position.ts 6ms
+src/runtime/preview_reading_position.test.ts 6ms
+src/components/TextBlockPreview.tsx 7ms
+src/components/TextBlockPreview.css 12ms
+src/components/FileCopyJobsStatus.tsx 4ms
+src/components/OpenedFileView.tsx 30ms
+src/components/OpenedFileView.test.tsx 49ms
+src/components/FileDeliveryActions.tsx 9ms
+src/components/FileDeliveryActions.test.tsx 18ms

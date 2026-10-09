@@ -24,6 +24,12 @@ const h = vi.hoisted(() => ({
   reveal: vi.fn(),
 }));
 
+vi.mock("../runtime/file_copy_jobs", () => ({
+  fileCopyJobs: { begin: h.copy },
+}));
+vi.mock("./FileCopyJobsStatus", () => ({
+  FileCopyJobsStatus: () => <div data-copy-jobs />,
+}));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ open: h.open, save: h.save }));
 vi.mock("../runtime/file_delivery", () => ({
   fileDelivery: {
@@ -72,6 +78,7 @@ import {
   FileDeliveryControls,
   reportedArtifactPath,
 } from "./FileDeliveryActions";
+import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_DELIVERY_STRINGS as S } from "../runtime/file_delivery_strings";
 import type { FileArtifact } from "../runtime/artifact_view";
 
@@ -204,9 +211,9 @@ it("waits for a verified receipt and uses its exact version for open, reveal and
   expect(h.reveal).toHaveBeenCalledWith(verified);
   h.save.mockResolvedValue("/delivery/copy.md");
   h.copy.mockResolvedValue({ destination: "/delivery/copy.md" });
-  click(S.save);
+  click(T.save);
   await vi.waitFor(() =>
-    expect(text()).toContain(S.copied("/delivery/copy.md")),
+    expect(h.copy).toHaveBeenCalledWith(verified, "/delivery/copy.md"),
   );
   expect(h.copy).toHaveBeenCalledWith(verified, "/delivery/copy.md");
 });
@@ -276,8 +283,8 @@ it("cancelled selection and save dialogs cause no file operations", async () => 
   expect(h.inspectSelected).not.toHaveBeenCalled();
   await checkFile();
   h.save.mockResolvedValue(null);
-  click(S.save);
-  await vi.waitFor(() => expect(button(S.save)?.props.disabled).toBe(false));
+  click(T.save);
+  await vi.waitFor(() => expect(button(T.save)?.props.disabled).toBe(false));
   expect(h.copy).not.toHaveBeenCalled();
   expect(button(S.open)).toBeDefined();
 });
@@ -343,7 +350,7 @@ it("does not copy after a save dialog returns to an unmounted revision", async (
   await checkFile();
   const dialog = deferred<string>();
   h.save.mockReturnValue(dialog.promise);
-  click(S.save);
+  click(T.save);
   unmount();
   dialog.resolve("/delivery/late.md");
   await Promise.resolve();
@@ -367,7 +374,7 @@ it("does not copy after its page becomes inactive while a save dialog is pending
   await checkFile();
   const dialog = deferred<string>();
   h.save.mockReturnValue(dialog.promise);
-  click(S.save);
+  click(T.save);
   h.active = false;
   render();
   dialog.resolve("/delivery/hidden.md");
@@ -428,18 +435,18 @@ it("keeps an already submitted copy busy until it settles without claiming cance
   const copying = deferred<{ destination: string }>();
   h.save.mockResolvedValue("/delivery/submitted.md");
   h.copy.mockReturnValue(copying.promise);
-  click(S.save);
+  click(T.save);
   await vi.waitFor(() => expect(h.copy).toHaveBeenCalledTimes(1));
   h.active = false;
   render();
   h.active = true;
   render();
-  expect(button(S.save)?.props.disabled).toBe(true);
-  click(S.save);
+  expect(button(T.save)?.props.disabled).toBe(true);
+  click(T.save);
   expect(h.copy).toHaveBeenCalledTimes(1);
   expect(h.save).toHaveBeenCalledTimes(1);
   copying.resolve({ destination: "/delivery/submitted.md" });
-  await vi.waitFor(() => expect(button(S.save)?.props.disabled).toBe(false));
+  await vi.waitFor(() => expect(button(T.save)?.props.disabled).toBe(false));
   expect(text()).not.toContain(S.copied("/delivery/submitted.md"));
   expect(text()).not.toContain("取消");
 });
@@ -452,7 +459,7 @@ it("clears old verification and preview when a submitted copy fails while its pa
   const copying = deferred<{ destination: string }>();
   h.save.mockResolvedValue("/delivery/failed.md");
   h.copy.mockReturnValue(copying.promise);
-  click(S.save);
+  click(T.save);
   await vi.waitFor(() => expect(h.copy).toHaveBeenCalledTimes(1));
   h.active = false;
   render();

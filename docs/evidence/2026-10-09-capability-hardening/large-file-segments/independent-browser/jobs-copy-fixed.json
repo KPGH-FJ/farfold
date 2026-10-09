@@ -1,0 +1,178 @@
+{
+  "mode": "jobs-copy",
+  "passed": true,
+  "checks": [
+    {
+      "name": "saving remains reachable from global activity after preview closes",
+      "ok": true,
+      "atMs": 46
+    },
+    {
+      "name": "copying disables quit while cancel remains reachable inside exit dialog",
+      "ok": true,
+      "atMs": 73
+    },
+    {
+      "name": "confirmed cancellation unlocks quit only after actual terminal receipt",
+      "ok": true,
+      "atMs": 232
+    },
+    {
+      "name": "stay cancels the exact exit and restores global access",
+      "ok": true,
+      "atMs": 258
+    },
+    {
+      "name": "finished unknown permits only explicit reviewed exit and never renders success",
+      "ok": true,
+      "atMs": 285
+    },
+    {
+      "name": "unknown result exit uses explicit confirmation without repeat save",
+      "ok": true,
+      "atMs": 369
+    },
+    {
+      "name": "only controlled settings, file-copy and exit IPC used with no unhandled errors",
+      "ok": true,
+      "detail": {
+        "unexpected": [],
+        "unhandled": []
+      },
+      "atMs": 369
+    }
+  ],
+  "calls": [
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "unsentWork.v1"
+      },
+      "atMs": 5
+    },
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "agentSetup.v1"
+      },
+      "atMs": 5
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "app:save-before-exit",
+        "target": {
+          "kind": "Any"
+        },
+        "handler": 1
+      },
+      "atMs": 6
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "app:save-before-restart",
+        "target": {
+          "kind": "Any"
+        },
+        "handler": 2
+      },
+      "atMs": 6
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "app:exit-deferred",
+        "target": {
+          "kind": "Any"
+        },
+        "handler": 3
+      },
+      "atMs": 6
+    },
+    {
+      "cmd": "app_drafts_ready",
+      "args": {},
+      "atMs": 6
+    },
+    {
+      "cmd": "file_copy_prepare",
+      "args": {
+        "file": {
+          "root": "/controlled",
+          "path": "/controlled/complete-original.txt",
+          "resolvedPath": "/controlled/complete-original.txt",
+          "name": "complete-original.txt",
+          "size": 2097152,
+          "version": "controlled-v1",
+          "sha256": "controlled-complete-digest"
+        },
+        "destination": "/controlled-output/complete-original.txt"
+      },
+      "atMs": 32
+    },
+    {
+      "cmd": "file_copy_start",
+      "args": {
+        "operationId": "controlled-save-17"
+      },
+      "atMs": 34
+    },
+    {
+      "cmd": "file_copy_cancel",
+      "args": {
+        "operationId": "controlled-save-17"
+      },
+      "atMs": 203
+    },
+    {
+      "cmd": "app_exit_cancel",
+      "args": {
+        "token": 118
+      },
+      "atMs": 232
+    },
+    {
+      "cmd": "file_copy_release",
+      "args": {
+        "operationId": "controlled-save-17"
+      },
+      "atMs": 258
+    },
+    {
+      "cmd": "file_copy_prepare",
+      "args": {
+        "file": {
+          "root": "/controlled",
+          "path": "/controlled/complete-original.txt",
+          "resolvedPath": "/controlled/complete-original.txt",
+          "name": "complete-original.txt",
+          "size": 2097152,
+          "version": "controlled-v1",
+          "sha256": "controlled-complete-digest"
+        },
+        "destination": "/controlled-output/complete-original.txt"
+      },
+      "atMs": 259
+    },
+    {
+      "cmd": "file_copy_start",
+      "args": {
+        "operationId": "controlled-save-17"
+      },
+      "atMs": 259
+    },
+    {
+      "cmd": "app_exit_after_save",
+      "args": {
+        "token": 120,
+        "confirmActivity": true
+      },
+      "atMs": 341
+    }
+  ],
+  "unhandled": [],
+  "unexpected": [],
+  "realElapsedMs": 369,
+  "boundary": "Actual Chromium StrictMode DraftStartup/FileCopyActivity/FileCopyJobsStatus and production singleton. Synthetic Tauri IPC and events; no OS copy, native quit, actual Agent or user data. Timers and clock unmodified."
+}

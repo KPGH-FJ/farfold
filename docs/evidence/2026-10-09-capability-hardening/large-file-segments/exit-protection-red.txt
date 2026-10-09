@@ -1,0 +1,141 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/exit_impact.test.ts (10 tests | 2 failed) 6ms
+   × reviews file saves even after the file view is gone 3ms
+   × reviews an ended save with an unknown result before exiting 0ms
+ ❯ src/components/DraftStartup.test.tsx (14 tests | 4 failed) 1465ms
+   × does not let confirmation or restart interrupt an unsettled file save 56ms
+   × rechecks file saves after metadata flush before acknowledging exit 105ms
+   × keeps backend-only file activity in a cancellable exit review 106ms
+   × requires explicit confirmation for finished unknown copies, including restart 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > does not let confirmation or restart interrupt an unsettled file save
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DraftStartup.test.tsx:107:20
+    105|   };
+    106|   const callback = find(render());
+    107|   expect(callback).toBeDefined();
+       |                    ^
+    108|   callback!();
+    109| }
+ ❯ src/components/DraftStartup.test.tsx:143:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > rechecks file saves after metadata flush before acknowledging exit
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/DraftStartup.test.tsx:160:80
+    158|   await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalled());
+    159|   await Promise.resolve();
+    160|   expect(h.invoke.mock.calls.some(([name]) => name === "app_exit_after…
+       |                                                                                ^
+    161|   h.copying = false;
+    162|   click(EXIT_IMPACT.exit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > keeps backend-only file activity in a cancellable exit review
+AssertionError: expected "vi.fn()" to not be called with arguments: [ false ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   false,
++   true,
+  ]
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 2
+
+ ❯ src/components/DraftStartup.test.tsx:171:22
+    169|   await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledWith("app_ex…
+    170|   await Promise.resolve();
+    171|   expect(h.lock).not.toHaveBeenCalledWith(false);
+       |                      ^
+    172|   click(EXIT_IMPACT.stay);
+    173|   await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledWith("app_ex…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > requires explicit confirmation for finished unknown copies, including restart
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/components/DraftStartup.test.tsx:179:23
+    177|   h.unknownCopy = true;
+    178|   h.listeners.get("app:save-before-restart")!({ payload: 74 });
+    179|   expect(h.flush).not.toHaveBeenCalled();
+       |                       ^
+    180|   click(EXIT_IMPACT.exit);
+    181|   await vi.waitFor(() => expect(h.invoke).toHaveBeenCalledWith("app_ex…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/exit_impact.test.ts > reviews file saves even after the file view is gone
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/exit_impact.test.ts:36:29
+     34| it("reviews file saves even after the file view is gone", () => {
+     35|   h.copying = true;
+     36|   expect(exitNeedsReview()).toBe(true);
+       |                             ^
+     37| });
+     38| it("reviews an ended save with an unknown result before exiting", () =…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/exit_impact.test.ts > reviews an ended save with an unknown result before exiting
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/exit_impact.test.ts:40:29
+     38| it("reviews an ended save with an unknown result before exiting", () =…
+     39|   h.unknownCopy = true;
+     40|   expect(exitNeedsReview()).toBe(true);
+       |                             ^
+     41| });
+     42| it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 18 passed (24)
+   Start at  04:59:18
+   Duration  1.67s (transform 192ms, setup 0ms, import 252ms, tests 1.47s, environment 0ms)
+

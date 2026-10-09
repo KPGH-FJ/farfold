@@ -1,0 +1,80 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.14s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 66 tests
+test file_delivery::document::tests::docx_failures_return_fixed_codes_without_raw_io_details ... ok
+test file_delivery::document::tests::docx_capture_retains_only_xml_and_byte_recognized_png_jpeg_candidates ... ok
+test file_delivery::revision::tests::deleted_selected_file_reports_missing_without_searching_for_its_rename ... ok
+test file_delivery::document::tests::docx_capture_validates_ignored_binary_and_candidate_image_crc ... ok
+test file_delivery::document::tests::docx_capture_checks_exact_version_and_does_not_extract ... ok
+test file_delivery::document::tests::docx_real_authored_rasters_reach_capture_and_xlsx_stays_xml_only ... ok
+test file_delivery::revision::tests::directory_and_fifo_replacements_do_not_enter_content_capture ... ok
+test file_delivery::revision::tests::full_mode_returns_verified_content_even_when_metadata_is_unchanged ... ok
+test file_delivery::revision::tests::full_fallback_detects_bytes_even_with_an_equivalent_metadata_hint ... ok
+test file_delivery::revision::tests::read_check_failures_are_exact_code_objects_without_raw_messages ... ok
+test file_delivery::revision::tests::missing_root_and_missing_leaf_are_not_conflated_with_other_io_failures ... ok
+test file_delivery::revision::tests::oversized_replacement_does_not_enter_content_capture ... ok
+test file_delivery::revision::tests::replacement_after_metadata_observation_cannot_return_wrong_bytes ... ok
+test file_delivery::revision::tests::root_redirect_is_rejected_before_a_leaf_is_read ... ok
+test file_delivery::revision::tests::redirected_alias_is_not_adopted_as_a_new_selected_file ... ok
+test file_delivery::revision::tests::replacing_the_root_cannot_match_the_old_hint_even_with_the_same_leaf_handle_identity ... ok
+test file_delivery::revision::tests::unchanged_hint_is_not_a_fresh_content_receipt ... ok
+test file_delivery::revision::tests::same_length_edit_is_fully_captured_once_before_returning_a_receipt ... ok
+test file_delivery::revision::tests::unchanged_hint_never_enters_the_content_reader ... ok
+test file_delivery::revision::tests::same_path_atomic_replacement_can_refresh_but_old_explicit_reads_still_fail ... ok
+test file_delivery::stream_tests::ordinary_256_mib_streaming_benchmark ... ignored, explicit 256 MiB performance and memory measurement, not a routine fixture
+test file_delivery::revision::tests::wire_modes_and_results_preserve_the_hint_content_distinction ... ok
+test file_delivery::document::tests::docx_capture_does_not_confuse_inert_bytes_with_semantic_acceptance ... ok
+test file_delivery::tests::destination_parent_replacement_and_alias_redirect_have_distinct_post_commit_error ... ok
+test file_delivery::document::tests::docx_and_xlsx_report_the_same_container_failure_codes ... ok
+test file_delivery::tests::binary_is_copyable_without_claiming_text_preview ... ok
+test file_delivery::tests::destination_symlink_is_not_followed_or_replaced ... ok
+test file_delivery::tests::directory_and_fifo_are_not_files_and_do_not_block ... ok
+test file_delivery::document::tests::docx_capture_rejects_excess_candidate_image_count ... ok
+test file_delivery::tests::missing_parent_failure_keeps_source_and_creates_nothing ... ok
+test file_delivery::tests::refuses_absolute_and_parent_escape ... ok
+test file_delivery::tests::file_size_and_text_preview_have_separate_bounds ... ok
+test file_delivery::tests::existing_destination_is_never_overwritten_and_source_remains ... ok
+test file_delivery::tests::replacing_file_with_identical_bytes_invalidates_receipt ... ok
+test file_delivery::tests::redirected_symlink_invalidates_receipt ... ok
+test file_delivery::tests::replaced_root_during_read_is_rejected ... ok
+test file_delivery::tests::symlink_must_resolve_inside_authorized_root ... ok
+test file_delivery::tests::verifies_disk_bytes_and_previews_same_version ... ok
+test file_delivery::tests::same_length_edit_rejects_old_read_and_copy ... ok
+test file_delivery::tests::text_snapshot_is_distinct_from_disk_copy_and_never_overwrites ... ok
+test file_delivery::text_blocks::tests::empty_bom_and_all_line_endings_are_exact ... ok
+test file_delivery::text_blocks::tests::navigation_is_strict_but_verified_new_version_restore_clamps ... ok
+test file_delivery::text_blocks_independent_tests::independent_atomic_replacement_with_equal_bytes_is_not_the_previous_version ... ok
+test file_delivery::text_blocks_independent_tests::independent_crlf_display_boundary_and_line_budget_are_lossless ... ok
+test file_delivery::text_blocks_independent_tests::independent_combining_text_bom_and_lone_cr_preserve_original_bytes ... ok
+test file_delivery::text_blocks_independent_tests::independent_root_replacement_rejects_even_the_same_open_leaf ... ok
+test file_delivery::text_blocks::tests::invalid_utf8_outside_selected_block_and_incomplete_suffix_are_rejected ... ok
+test file_delivery::text_blocks_independent_tests::independent_full_stream_rejects_a_same_length_tail_changed_after_first_chunk ... ok
+test file_delivery::text_blocks::tests::boundaries_do_not_split_utf8_or_crlf_and_blocks_reconstruct_bytes ... ok
+test file_delivery::visual::tests::visual_bytes_belong_to_the_verified_revision_not_the_current_path ... ok
+test file_delivery::text_blocks_independent_tests::independent_same_bytes_symlink_retarget_cannot_reuse_old_receipt ... ok
+test file_delivery::workbook::tests::authored_ooxml_fixture_produces_the_browser_capture_contract ... ok
+test file_delivery::workbook::tests::rejects_duplicate_names_and_path_aliases_before_zip_indexing ... ok
+test file_delivery::workbook::tests::rejects_encryption_truncation_header_mismatch_and_excess_entry_count ... ok
+test file_delivery::workbook::tests::captures_one_verified_version_without_extracting_files ... ok
+test file_delivery::workbook::tests::rejects_symlink_and_overlapping_local_records ... ok
+test file_delivery::workbook::tests::validates_crc_even_for_ignored_binary_entries ... ok
+test file_delivery::workbook::tests::workbook_failure_receipts_only_contain_fixed_codes ... ok
+test file_delivery::text_blocks_independent_tests::independent_every_utf8_suffix_length_survives_the_real_read_buffer ... ok
+test file_delivery::text_blocks::tests::limits_and_fixed_failure_objects_are_not_mixed_with_media_limits ... ok
+test file_delivery::document::tests::docx_capture_rejects_over_budget_image_candidates ... ok
+test file_delivery::visual::tests::visual_read_refuses_active_content_and_over_limit_images ... ok
+test file_delivery::document::tests::docx_capture_image_budgets_accept_the_exact_boundaries ... ok
+test file_delivery::stream_tests::generic_inspection_can_verify_a_file_above_the_binary_preview_limit ... ok
+test file_delivery::document::tests::docx_authored_container_boundaries_are_enforced_without_extraction ... ok
+test file_delivery::workbook::tests::declared_sizes_do_not_authorize_unbounded_decompression ... ok
+
+test result: ok. 65 passed; 0 failed; 1 ignored; 0 measured; 1162 filtered out; finished in 0.44s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

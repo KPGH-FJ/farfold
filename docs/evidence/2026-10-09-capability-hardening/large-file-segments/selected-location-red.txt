@@ -1,0 +1,40 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `selected_location::selected_location`
+  --> src/file_delivery.rs:35:16
+   |
+35 | pub(crate) use selected_location::selected_location;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `selected_location` is never used
+ --> src/file_delivery/selected_location.rs:4:15
+  |
+4 | pub(crate) fn selected_location(root: &Path, path: &Path, _document_only: bool) -> Result<String, DeliveryError> {
+  |               ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 2 warnings (run `cargo fix --lib -p farfold` to apply 1 suggestion)
+warning: `farfold` (lib test) generated 1 warning (1 duplicate)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.77s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+test file_delivery::selected_location::tests::oversized_selected_document_has_a_location_without_claiming_a_content_receipt ... FAILED
+
+failures:
+
+---- file_delivery::selected_location::tests::oversized_selected_document_has_a_location_without_claiming_a_content_receipt stdout ----
+
+thread 'file_delivery::selected_location::tests::oversized_selected_document_has_a_location_without_claiming_a_content_receipt' (21546953) panicked at src/file_delivery/selected_location.rs:18:73:
+called `Result::unwrap()` on an `Err` value: TooLarge
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    file_delivery::selected_location::tests::oversized_selected_document_has_a_location_without_claiming_a_content_receipt
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1232 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

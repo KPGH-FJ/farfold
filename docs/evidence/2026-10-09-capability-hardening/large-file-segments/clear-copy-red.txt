@@ -1,0 +1,22 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.98s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+test data_reset::tests::prepared_copy_blocks_data_clear_before_any_deletion ... FAILED
+
+failures:
+
+---- data_reset::tests::prepared_copy_blocks_data_clear_before_any_deletion stdout ----
+
+thread 'data_reset::tests::prepared_copy_blocks_data_clear_before_any_deletion' (21528455) panicked at src/data_reset.rs:159:9:
+an acknowledged data clear must not silently discard a prepared save
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    data_reset::tests::prepared_copy_blocks_data_clear_before_any_deletion
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1229 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

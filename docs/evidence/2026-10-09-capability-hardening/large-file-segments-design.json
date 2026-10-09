@@ -1,0 +1,115 @@
+{
+  "status": "Read-only implementation proposal; no source, contract, dependencies or existing fixtures changed; no new runtime experiment.",
+  "checkedAt": "2026-10-09T20:38:07.386876+00:00",
+  "currentFacts": [
+    {
+      "finding": "Text preview is capped at 1 MiB in both UI and backend. It loads the entire file and accepts only strict UTF-8. The UI does not currently page oversized text.",
+      "evidence": [
+        "src/components/OpenedFileView.tsx:77",
+        "src/components/OpenedFileView.tsx:356",
+        "src-tauri/src/file_delivery.rs:359"
+      ]
+    },
+    {
+      "finding": "32 MiB is the shared verification boundary, not only a preview limit: inspect, open/reveal revalidation, exact source copy and full revision checks allocate/read the whole source. Over-limit selection fails before the normal verified-file external-open buttons become available.",
+      "evidence": [
+        "src-tauri/src/file_delivery.rs:30",
+        "src-tauri/src/file_delivery.rs:270",
+        "src-tauri/src/file_delivery.rs:304",
+        "src-tauri/src/file_delivery.rs:371",
+        "src-tauri/src/file_delivery.rs:454",
+        "src-tauri/src/file_delivery/revision.rs:63",
+        "src/components/OpenedFileView.tsx:316"
+      ]
+    },
+    {
+      "finding": "Attachment links intentionally have no content-size limit; embedded attachment text retains 256 KiB. PDF is 32 MiB, images 8 MiB, Office compressed archives 16 MiB. These are separate limits and should not expand merely because generic verification changes.",
+      "evidence": [
+        "src-tauri/src/file_delivery.rs:308",
+        "src-tauri/src/file_delivery/visual.rs:31",
+        "src-tauri/src/file_delivery/ooxml_archive.rs:10"
+      ]
+    },
+    {
+      "finding": "Text export is an explicit <=1 MiB text snapshot; source copy publishes a new exact verified file through TemporaryExport without overwriting an existing destination. Writes do not use the read timeout wrapper.",
+      "evidence": [
+        "src-tauri/src/file_delivery.rs:403",
+        "src-tauri/src/file_delivery.rs:454",
+        "src-tauri/src/file_delivery.rs:466",
+        "src-tauri/src/file_delivery_commands.rs:114"
+      ]
+    },
+    {
+      "finding": "Read replies time out after 15 seconds, but a blocked OS operation retains its admission permit until it actually finishes; there are two global read slots. Metadata hints are explicitly not content verification.",
+      "evidence": [
+        "src-tauri/src/file_read_check.rs:16",
+        "src-tauri/src/file_read_check.rs:59",
+        "src-tauri/src/file_delivery/revision.rs:83"
+      ]
+    }
+  ],
+  "recommendedSlice": {
+    "candidateLimits": "Validate ordinary files and copy up to 256 MiB using bounded streaming; preserve all format-specific current limits. Large UTF-8 text uses at most 128 KiB or 2000 logical line breaks per displayed block, whichever comes first. These proposed limits require measured acceptance before being advertised.",
+    "backend": "Extract a bounded streaming verifier using the existing open_source, same-handle stamps, root/path recheck, SHA256 and opaque version derivation. Keep capture_expected for small binary formats. Generic inspect/open/copy/revision must use the new explicit generic bound rather than raising the visual/archive constants.",
+    "request": "read_text_block(file: VerifiedFile, blockIndex: nonnegative integer) -> {file, blockIndex, blockCount, byteStart, byteEnd, startLine, endLine, startsMidLine, endsMidLine, text}. Bounds and line coordinates are computed by the backend, not trusted from the caller.",
+    "versionProof": "For the first implementation, each independent block request streams and hashes the complete bounded file, retaining only the selected block and small decoder state. Recheck the opened handle and requested path, compare the full VerifiedFile, and publish nothing on mismatch. Deterministic block boundaries are computed from the start of that same version. This is O(file size) per navigation and must be measured honestly; do not replace it with metadata-only equality or an unbounded byte cache.",
+    "ui": "A single current block with previous/next and explicit byte/line range, total file size and continued-line markers. Keep at most the current version and a small bounded block cache; discard old-version navigation results by exact selection/file/request ownership. New revision resets or clamps position only after new content is verified. Large Markdown is explicitly shown as source text; do not independently render clipped fences/tables as a complete Markdown document.",
+    "copyAndExport": "Browser selection/current-block copy or export must say that only the displayed block/range is included. Full-file Save As streams original bytes, including encoding/BOM/newlines, through an unpublished TemporaryExport, verifies source hash/version, syncs, then uses existing no-overwrite publication and post-publication identity checks. Keep generic text-snapshot export semantics unchanged.",
+    "overLimitFallback": "Do not manufacture VerifiedFile for a file that was never content-verified. For files above the chosen generic bound, provide an explicit current-location open/reveal action using the exact user-selected root/path, current canonicalization/regular-file/root checks and existing executable/extension protection. This is an external application action on the current location, not a claim that a displayed version or full content was verified.",
+    "dependencies": "No new third-party dependency, persisted source snapshot, Agent read/decode capability, project-wide permission, or content ledger is required."
+  },
+  "encodingAndLines": [
+    "Use strict incremental UTF-8. Carry only the incomplete 1-3 byte suffix when Utf8Error.error_len() is None; a definite invalid sequence or incomplete suffix at EOF is unsupported encoding, not replacement-character success. UTF-16/legacy encodings are explicit unsupported cases for this slice.",
+    "Never cut a UTF-8 scalar or CRLF pair. Count CRLF once, LF once, and define lone-CR handling explicitly. Keep original bytes unchanged. A very long logical line may span blocks, with start/end continuation flags; soft wrapping does not increment line numbers. Define empty file and trailing-newline line counts in fixtures.",
+    "BOM bytes remain in the original hash and copied file; any display treatment must be explicit and consistent. Do not invent grapheme-column anchors from byte offsets or JavaScript UTF-16 string length."
+  ],
+  "cancellationAndUnknown": [
+    "Each view keeps one pending block operation. Hiding/cancelling presentation can discard later UI publication, but it does not claim to interrupt a blocked OS read. Await the bounded native receipt; pending/busy stops automatic next-block requests and automatic refresh. No retry loop on the same block or visibility change.",
+    "Large streaming copy needs a separately owned, bounded native operation and cooperative cancellation checks between chunks and immediately before publication. Keep the read-only 15-second timeout wrapper away from writes. An outstanding read/write syscall may still be blocked after cancellation was requested.",
+    "Before publication, a confirmed cancelled operation removes only its own unpublished temporary file. After publication, report the actual completed receipt or unknown destination state; never claim cancellation or definite failure merely because UI wait ended. Preserve original source and published target on unknown outcome. No duplicate save until completion or explicit destination verification resolves the result.",
+    "Copy cancellation, close/quit protection and a late/missing write receipt are implementation dependencies of the large-file copy path, not evidence that an AbortSignal already provides native cancellation."
+  ],
+  "acceptanceCounterexamples": [
+    "At/over 1 MiB, 32 MiB and proposed 256 MiB; zero bytes, sparse files and unexpectedly growing streams; all existing PDF/image/Office limits unchanged.",
+    "2/3/4-byte UTF-8 characters split at every buffer boundary, invalid interior byte, truncated EOF, UTF-8 BOM, CRLF split at the limit, lone CR and trailing newline.",
+    "A line larger than the block budget, many empty lines, emoji/combining text, exact global line numbers, no dropped or duplicated bytes when concatenating returned blocks.",
+    "Replace, truncate, append, mutate same-size bytes, retarget a symlink or replace an ancestor/root during a block read and between navigation requests. No mixed-version body or reused old anchors.",
+    "Slow read reaches pending; hide/show and next/previous do not start another OS operation; late successful or failed results cannot replace a newer file/selection.",
+    "Current-block clipboard/export has exactly that range; Save As has the complete original byte count and SHA256; partial text is never labelled a complete disk file.",
+    "Short reads/writes and Interrupted handling; disk full, denied destination, existing target, parent replacement and source mutation during streaming copy; no false saved receipt.",
+    "Cancellation before first chunk, during a blocked read/write, after last source byte but before publish, concurrent with publish, and after publish. Verify source, private temp and final destination ownership separately.",
+    "StrictMode/rapid navigation yields one owner, bounded mounted text and bounded retained block data. Measure initial open plus multiple forward/backward requests on representative 16/64/256 MiB fixtures, not only tiny samples.",
+    "Native macOS and relevant Windows file semantics remain separately tested. Performance/unknown behavior on network or external volumes is not inferred from local SSD success."
+  ],
+  "implementationDecisionGate": "Before extending the cap, prove useful latency, bounded heap and correct cancellation at the declared maximum. If whole-file verification on every block is too expensive, evaluate a separately authorized bounded immutable snapshot design; do not silently relax version proof or introduce durable content storage.",
+  "officialSources": [
+    {
+      "url": "https://doc.rust-lang.org/std/str/struct.Utf8Error.html",
+      "checked": "error_len(None) distinguishes a potentially valid incomplete multibyte suffix from a definite invalid sequence; valid_up_to identifies the validated prefix."
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/io/trait.Read.html",
+      "checked": "Read may return fewer bytes than requested; streaming code must handle short reads and actual EOF."
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/io/trait.Write.html",
+      "checked": "Write/write_all distinguish partial writes, interrupted operations and write failures; write completion alone is not atomic file publication."
+    }
+  ],
+  "contractEvidence": [
+    "plans/agent-access.md:173",
+    "PRODUCT.md:183",
+    "PRODUCT.md:184",
+    "PRODUCT.md:186",
+    "PRODUCT.md:193"
+  ],
+  "peerChallenge": "architecture independently emphasized native pending-slot lifetime, cross-version block mixing, and commit-aware copy cancellation; incorporated above.",
+  "sourceSha256": {
+    "src-tauri/src/file_delivery.rs": "350ee62688e1ffd07cd7c2c56ccdda93ca843cf8cd94288b992ca60c46a04214",
+    "src-tauri/src/file_delivery_commands.rs": "8b5bc32ddd410fb41bc20f27ef181794f775900651f9a2c31a143969d082665d",
+    "src-tauri/src/file_read_check.rs": "e33af48eb0dd66ae42db93d245058a9bc888a060e7da0d6f4091378802c08c67",
+    "src-tauri/src/file_delivery/revision.rs": "1ad628841a419a954e328766cff1195124a268183664d69a294a2b7229cc6d1c",
+    "src/components/OpenedFileView.tsx": "f8ba73b3902fd18500a1241a31ed8d6e41efcdd163c7ca5191d25c5045b72d37",
+    "src/runtime/file_delivery.ts": "41179e6a2aa0785f64a8e7c8b652cca0edd4a4db1e5250461f59dea99338ee5d"
+  }
+}

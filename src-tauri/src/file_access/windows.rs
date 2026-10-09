@@ -370,21 +370,35 @@ impl TemporaryExport {
         self.published = true;
         Ok(())
     }
+    pub fn discard(&mut self) -> io::Result<()> {
+        if self.published {
+            return Err(invalid());
+        }
+        self.published = true;
+        let disposition = FILE_DISPOSITION_INFO { DeleteFile: true };
+        if unsafe {
+            SetFileInformationByHandle(
+                handle(&self.file),
+                FileDispositionInfo,
+                (&disposition as *const FILE_DISPOSITION_INFO).cast(),
+                size_of::<FILE_DISPOSITION_INFO>() as u32,
+            )
+        } == 0
+        {
+            return Err(io::Error::last_os_error());
+        }
+        Ok(())
+    }
+    pub fn retain_unknown(&mut self) {
+        self.published = true;
+    }
 }
 impl Drop for TemporaryExport {
     fn drop(&mut self) {
         if !self.published {
             // Delete only the exact temporary object we own, even if its parent
             // was replaced or renamed. A failed delete is never widened to a path sweep.
-            let disposition = FILE_DISPOSITION_INFO { DeleteFile: true };
-            unsafe {
-                SetFileInformationByHandle(
-                    handle(&self.file),
-                    FileDispositionInfo,
-                    (&disposition as *const FILE_DISPOSITION_INFO).cast(),
-                    size_of::<FILE_DISPOSITION_INFO>() as u32,
-                );
-            }
+            let _ = self.discard();
         }
     }
 }

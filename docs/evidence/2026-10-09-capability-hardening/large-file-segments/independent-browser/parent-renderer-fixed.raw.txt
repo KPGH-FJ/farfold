@@ -1,0 +1,203 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "navigation",
+      "name": "large Markdown is exact bounded source text rather than rendered partial Markdown",
+      "ok": true,
+      "elapsedMs": 77
+    },
+    {
+      "scenario": "navigation",
+      "name": "navigation keeps old block and gates revision work while native receipt is pending",
+      "ok": true,
+      "elapsedMs": 230
+    },
+    {
+      "scenario": "navigation",
+      "name": "cancelled late successful block never replaces displayed block",
+      "ok": true,
+      "elapsedMs": 231
+    },
+    {
+      "scenario": "navigation",
+      "name": "explicit retry publishes next block with continuation and global line range",
+      "ok": true,
+      "elapsedMs": 286
+    },
+    {
+      "scenario": "navigation",
+      "name": "hide and reopen retain old block after a late navigation receipt",
+      "ok": true,
+      "elapsedMs": 501
+    },
+    {
+      "scenario": "navigation",
+      "name": "manual reread stages a new complete receipt without erasing old content",
+      "ok": true,
+      "elapsedMs": 530
+    },
+    {
+      "scenario": "navigation",
+      "name": "manual reread publishes the new verified version and preserves reading position",
+      "ok": true,
+      "elapsedMs": 556
+    },
+    {
+      "scenario": "replacement",
+      "name": "a late old-file read cannot publish into a new selected file",
+      "ok": true,
+      "elapsedMs": 714
+    },
+    {
+      "scenario": "manual-pending",
+      "name": "manual readPending retains old block and halts automatic reads and checks",
+      "ok": true,
+      "elapsedMs": 6051,
+      "detail": {
+        "pendingReads": 2,
+        "pendingChecks": 0,
+        "afterReads": 2,
+        "afterChecks": 0
+      }
+    },
+    {
+      "scenario": "manual-pending",
+      "name": "manual readPending has no unhandled promise rejection",
+      "ok": true,
+      "elapsedMs": 6051,
+      "detail": []
+    },
+    {
+      "scenario": "manual-pending",
+      "name": "no small-text/full-file/Agent/open/save IPC substituted for block reads",
+      "ok": true,
+      "elapsedMs": 6135,
+      "detail": []
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 31
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 31
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 32
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 77
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 257
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "v1",
+      "atMs": 267
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 2,
+      "restore": false,
+      "atMs": 366
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 501
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v2",
+      "index": 1,
+      "restore": true,
+      "atMs": 502
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v2",
+      "index": 2,
+      "restore": false,
+      "atMs": 556
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 585
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 585
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 585
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 744
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 744
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 744
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 770
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 771
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 6135,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}

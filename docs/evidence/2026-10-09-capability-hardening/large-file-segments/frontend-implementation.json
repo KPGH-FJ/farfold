@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T21:14:16.589033+00:00",
+  "scope": "P17 frontend, transient segmented text viewing and one shared observable full-file copy facility. No formal app/Agent/account activity.",
+  "status": "sourceFrozenTargetedVerifiedNotInstalled",
+  "sourceFiles": [
+    {
+      "path": "src/runtime/text_block_preview.ts",
+      "sha256": "7f322eb76119e053d52627de1756d30ca4a514488d210a12cc87fd29eb83dade",
+      "lines": 135
+    },
+    {
+      "path": "src/runtime/text_block_preview.test.ts",
+      "sha256": "c3402c835d0ff20a166768d4c3daab83b48376d3e50d6de166518fd178697eee",
+      "lines": 87
+    },
+    {
+      "path": "src/runtime/text_block_reader.ts",
+      "sha256": "06230c5115eb85e8ef93f48e91ba2791622e9fdd1f15356b8ebb11445fd94110",
+      "lines": 91
+    },
+    {
+      "path": "src/runtime/text_block_reader.test.ts",
+      "sha256": "24d9ca16a449c333faf242b5b28f9dc213fe3678bc42b87e88c184af033fe73d",
+      "lines": 119
+    },
+    {
+      "path": "src/runtime/text_block_strings.ts",
+      "sha256": "0a2012f691dbf8b97cd12a1d95cb3b070505494dbadd5e43524e522e54cd85fc",
+      "lines": 51
+    },
+    {
+      "path": "src/runtime/text_block_strings.test.ts",
+      "sha256": "85b4e5cb33c698bd800684c5736980e9e29df4d31143c7c7113bb91d91dcee5d",
+      "lines": 42
+    },
+    {
+      "path": "src/runtime/text_block_wire.test.ts",
+      "sha256": "d1ee57b2e280611faa83662048d61a4d80c4785a3efb491a4986e7a38f49482f",
+      "lines": 31
+    },
+    {
+      "path": "src/runtime/file_copy_types.ts",
+      "sha256": "44f073e8b478699362135752fdcd426dcfdf45ed48072b725ff80982ede02d89",
+      "lines": 136
+    },
+    {
+      "path": "src/runtime/file_copy_jobs.ts",
+      "sha256": "7cdc564ded5db85a4801bfc05519cbd9b68101cdb2c877c59e31ae5fd206b2ff",
+      "lines": 433
+    },
+    {
+      "path": "src/runtime/file_copy_jobs.test.ts",
+      "sha256": "0156ad8b8aca79080eacfa5e1a268062bc0d9ca0cb623f5807ea861d945efd5a",
+      "lines": 268
+    },
+    {
+      "path": "src/runtime/file_copy_strings.ts",
+      "sha256": "20cd1dec1b786d84f4027d5e4832ba50319de39553b4b2f800c5c4b9491296b9",
+      "lines": 47
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "f83fdfe9dfb75202b3f8c62130c647b04dcc9c8680b89fc157897f794576664e",
+      "lines": 190
+    },
+    {
+      "path": "src/runtime/file_delivery.test.ts",
+      "sha256": "321ef25435263052b085cd3b0d1465ec892c6e201373ad409a5c94d6c582be72",
+      "lines": 222
+    },
+    {
+      "path": "src/runtime/preview_reading_position.ts",
+      "sha256": "6e928a9a6cfba4c7187560b44a6e19a2356b428e732d52b3faab0be6e3c85168",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/preview_reading_position.test.ts",
+      "sha256": "697f98ff584d11917ed775053497d5e6a7daaf5172dc2451fa31b6994bd7e67a",
+      "lines": 139
+    },
+    {
+      "path": "src/runtime/preview_capture.ts",
+      "sha256": "c19dd9ee241a34fc85fad97b23ff132e8de859dea7db1280c76f319dd73fa996",
+      "lines": 81
+    },
+    {
+      "path": "src/components/TextBlockPreview.tsx",
+      "sha256": "f9ae66b090594199e665ab6a289e33dd45a694c57831d9c4608ce3c4036f4e50",
+      "lines": 200
+    },
+    {
+      "path": "src/components/TextBlockPreview.css",
+      "sha256": "96aa9b06d66e1818e6b492fe96cc6ea574b9389d400aff713903ce0712f469e6",
+      "lines": 32
+    },
+    {
+      "path": "src/components/TextBlockPreview.test.tsx",
+      "sha256": "9f17ea70b7176dd4471a8b27acce882147486fdd202ab80a65a58757b20bae87",
+      "lines": 139
+    },
+    {
+      "path": "src/components/FileCopyJobsStatus.tsx",
+      "sha256": "1e05e8eab374061e7a3bc422aa0d9fbd071ec7c9da2e1cf34dab28feb69bfdbb",
+      "lines": 95
+    },
+    {
+      "path": "src/components/FileCopyJobsStatus.test.tsx",
+      "sha256": "4630a9fc6acf7fa739cbbe21d5f339dc90066d0caf88dcde3e8949bf06c752ce",
+      "lines": 122
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f027e7e0b62ea36322923a35328e719bb423b3fd7662fee82b86599a96fad4ad",
+      "lines": 1048
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "4154a9b9b40578b8e8702491cf6b6bd5d4b5e58d8efff67eae3a5d8b36b00a06",
+      "lines": 1257
+    },
+    {
+      "path": "src/components/FileDeliveryActions.tsx",
+      "sha256": "623684eab18ab6ceef5bb56b5a05824fc8d73daae86c211b2a80ddfeca0ee88f",
+      "lines": 335
+    },
+    {
+      "path": "src/components/FileDeliveryActions.test.tsx",
+      "sha256": "02e69a6af5c5384b492d6e6d9ce562d77033d336688895983b4fb1ee20ec5d3e",
+      "lines": 552
+    }
+  ],
+  "changes": [
+    "Large supported text uses strictly checked 128KiB/2000-line UTF-8 block receipts; ordinary <=1MiB text and Markdown retain their previous full-view route. Large Markdown is literal source.",
+    "Exact byte and whole-file line ranges, mid-line continuation, navigation, fragment-only clipboard, reading position restored only after a verified replacement block succeeds.",
+    "Actual bounded read waits are independent of hide/cancel presentation. The child reports readInFlight; parent prevents overlapping refresh. Manual pending/failure retains old text, shows a fixed notice and stops auto checks.",
+    "Only file-version feedback is offered for segmented text. No partial text is stored as full file text; old feedback/drafts remain owned by their original version.",
+    "All former file-copy callers use shared in-memory prepare/start/status/cancel/release jobs. No per-entry copy controller, file body ledger or new Agent behavior.",
+    "Preparation accepts ready only. A 10s observation expiry withdraws unsent start intent, may close safely, and still cancels/releases exact late reservations. Started-but-unconfirmed work is not restarted.",
+    "Trusted settled unknown and exact-ID absence remain unknown results and require explicit acknowledgement to close. Null, wrong identity and IPC failures are never treated as no-IO proof.",
+    "Inspection failure provides explicitly clicked current-location open/reveal only, without a forged VerifiedFile. Known large-text decode/read failures keep independent verified-file actions."
+  ],
+  "validation": {
+    "targeted": {
+      "command": "corepack pnpm exec vitest run src/runtime/text_block_preview.test.ts src/runtime/text_block_reader.test.ts src/runtime/text_block_wire.test.ts src/runtime/text_block_strings.test.ts src/runtime/file_copy_jobs.test.ts src/runtime/file_copy_jobs.independent.test.ts src/components/FileCopyJobsStatus.test.tsx src/runtime/preview_reading_position.test.ts src/runtime/file_delivery.test.ts src/components/FileDeliveryActions.test.tsx src/components/TextBlockPreview.test.tsx src/components/OpenedFileView.test.tsx src/components/OpenedFileView.revision-review.test.tsx",
+      "files": 13,
+      "passed": 178,
+      "failed": 0,
+      "log": "frontend-final.txt"
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": "frontend-typecheck-final.txt"
+    },
+    "format": {
+      "scope": "25 owned source/test files only plus this task maintained evidence",
+      "log": "frontend-format-final.txt"
+    },
+    "actualRustWire": {
+      "passed": 2,
+      "log": "frontend-native-wire.txt",
+      "fixtures": ["text-block-wire.json", "copy-status-wire.json"],
+      "origin": "Peer actual Rust test stdout wire-contract.txt; TS parsed original receipts, reconstructed text digest, checked exact completed receipt. This is not a live Tauri UI call."
+    },
+    "browser": {
+      "passed": 19,
+      "failed": 0,
+      "receipt": "browser/browser-final.json",
+      "raw": "browser/browser-final.txt",
+      "runtimeExceptions": 0,
+      "localPageResponses": 59,
+      "externalPageResponses": [],
+      "scope": "Actual React StrictMode/Chromium; fixed synthetic IPC/clipboard, no native file IO or Agent.",
+      "screenshotsPersonallyViewed": [
+        "browser/fragment-initial.png",
+        "browser/copy-unconfirmed.png",
+        "browser/copy-completed.png"
+      ]
+    },
+    "independentRenderer": "verification owns actual parent pending/paused, final fallback/global exit browser and independent receipts. This receipt does not count those tests as my runs."
+  },
+  "redEvidence": [
+    {
+      "path": "blocks-red.txt",
+      "scope": "3 expected feature failures from initial compiling parser stub; not an existing product regression"
+    },
+    {
+      "path": "frontend-second.txt",
+      "scope": "1 effective old fragment removed before refreshed block finished"
+    },
+    {
+      "path": "same-receipt-red.txt",
+      "scope": "2 effective same-version reader reset / old clipboard acknowledgement failures"
+    },
+    {
+      "path": "independent-prepare-red.txt",
+      "scope": "peer effective 3 invalid prepare-state publications"
+    },
+    {
+      "path": "independent-prepare-timeout-red.txt",
+      "scope": "peer 2 effective no-ID preparation recovery failures"
+    },
+    {
+      "path": "independent-browser/parent-third.json",
+      "scope": "peer actual manual pending unhandled rejection and continued checks"
+    },
+    {
+      "path": "independent-browser/paused-flight-red.json",
+      "scope": "peer actual 2 overlapping parent refresh attempts while child read still pending"
+    },
+    {
+      "path": "location-ui-red.txt",
+      "scope": "missing explicit-location fallback feature before implementation"
+    },
+    {
+      "path": "settled-regression-red.txt",
+      "scope": "redundant status query after trustworthy settled unknown; no false claim that an observed state regressed"
+    }
+  ],
+  "historicalFailuresNotClaimedAsProductRegressions": [
+    "frontend-first.txt: previous large-file fixture did not stub new block API",
+    "reader-owner-first.txt: test mistakenly expected readInFlight in reader snapshot instead of onStatus",
+    "frontend-fourth.txt/owned-associated-first.txt: compatibility assertion and unsolicited selected-path routing were corrected; no old safety assertion dropped",
+    "independent-browser/parent-first.json and parent-second.json: peer identified fixture sequencing/unsupported-prop mistakes"
+  ],
+  "limits": [
+    "No native installed P17 UI proof in this receipt; root owns subsequent candidate/full checks/native validation.",
+    "128KiB mock browser text is actual DOM; native file IO, clipboard OS permission and backend copy syscall failures are independently tested elsewhere.",
+    "Every block requires full-version verification; no promise of instant navigation on large/slow storage.",
+    "Other text encodings remain unsupported; PDF/image/Office format caps are unchanged.",
+    "No content search index, persisted file bodies, line/region feedback anchor, or Agent read capability was introduced."
+  ],
+  "cleanup": {
+    "browser": "Each own Chromium runner exited and removed its temporary profile",
+    "server": "Verification peer confirmed completion; owned listener PID60687 received SIGTERM, tool exit143, port1460 empty. browser/cleanup.json records exact scope.",
+    "receipt": "browser/cleanup.json"
+  },
+  "evidenceHashes": {
+    "frontend-final.txt": "84e64e142e7403d48c6e78674664564f57cffa850a8cbc4aa4e49ca3fd5d5ad7",
+    "frontend-typecheck-final.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "frontend-native-wire.txt": "06da24c1508ef4ef5dfc00630ba52f70871b79547147d3e817b9d29d3b968979",
+    "text-block-wire.json": "cb059ca99ab226a866b2b362bafa0788a0ef00800b7cb221b1f716be96de5106",
+    "copy-status-wire.json": "1e05b07c5c0838ef9db6785217312219ef7417403a0ea115320f46011e672ed4",
+    "browser/browser-final.json": "c46e779e3739bafedcc8fdd15ff8706b843e0693f971840c51d1244bbfdb1007",
+    "browser/browser-final.txt": "6518ab70184bb86f2fbc8ff9bd4f52084dbbee7e7d02ff76901e04f2fb13d64d",
+    "browser/browser-final.diagnostics.json": "c8501e9536230fb7a233ac63967f772932c6f9bd037eef5a7ed5ddff12e4bcde",
+    "browser/fragment-initial.png": "5cd971633cda9c4ff36b258857061370b57ed16fe10e497208dd7ccae5f2e326",
+    "browser/copy-unconfirmed.png": "9312418a0cf822a77c5d2f2f3a4e6d30b881f8cb3b49c5dd4185fbf05394e5a2",
+    "browser/copy-completed.png": "ccd7f5c6a445b243aa1b18a3f7e4ee3e42cb51bbee74c85105ec10acacfdb411",
+    "browser/browser-first.diagnostics.raw.txt": "cfc65ebe6a59db608e19d01dc73b23d84a6d9012576c8fe64ebaff8c82f5461b",
+    "browser/browser-final.diagnostics.raw.txt": "ae65358fc43a4593d9a49ab65c92f7dd30a19062aba0e9b77d8d089cb17a1dfa",
+    "browser/cleanup.json": "77688d211e8c1bcf13ee7492e05a2ce98255e8126f31c89d4bc3fbcb42609683"
+  },
+  "diagnosticBytePreservation": {
+    "first": "Copied browser-first.diagnostics.json to browser-first.diagnostics.raw.txt before formatting.",
+    "final": "final JSON had already been formatted while collecting this receipt. Reconstructed exact original write bytes from the intact final stdout diagnostics line, using the same JSON.stringify(diagnostics,null,2) without newline expression as run.mjs; saved browser-final.diagnostics.raw.txt. No original stdout bytes were changed.",
+    "maintainedJson": "Formatted JSON semantics unchanged; evidenceHashes reference the maintained formatted JSON and separate original-byte raw copies."
+  }
+}

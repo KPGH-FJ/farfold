@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  295 passed (295)
+      Tests  3251 passed (3251)
+   Start at  05:14:07
+   Duration  33.70s (transform 15.51s, setup 0ms, import 212.87s, tests 44.47s, environment 20ms)
+

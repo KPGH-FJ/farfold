@@ -1,0 +1,129 @@
+{
+  "checkedAtUtc": "2026-10-09T21:07:24.918493+00:00",
+  "status": "incremental_review_findings_pending_final_verification",
+  "scope": "P17 independent source challenges and controlled tests; no production edits, formal app actions or user-data reads.",
+  "ownedTests": [
+    {
+      "path": "src/runtime/file_copy_jobs.independent.test.ts",
+      "sha256": "a61c14d972b630d1f2a15ad9ac077b738f9644d359d7aec8f3ba9849947b17d7",
+      "bytes": 3990
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_blocks_independent_tests.rs",
+      "sha256": "fc248c64f7ebf8ece6578e7fce6b8b7f4547da6d879988a8f570cce920e34cb0",
+      "bytes": 6378
+    },
+    {
+      "path": "src-tauri/src/file_copy_jobs_independent_tests.rs",
+      "sha256": "c9310de8ed590e0987df6f2097f0ad4b13139ee3a488399f5b6352ae735d3c88",
+      "bytes": 8255
+    }
+  ],
+  "findings": [
+    {
+      "id": "prepare-stage",
+      "problem": "Non-ready prepare reply was published before stage validation, including false completed status without a start call.",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-red.txt",
+        "sha256": "6632d09ce588e195a3b15a945c3ca9b1f3164728437708f992df3c4b8937f2d7",
+        "bytes": 2691
+      },
+      "redResult": "3 failures, exit 1",
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/prepare-green.txt",
+        "sha256": "358e749a9ab3c3bc08224bb94b642036e5ba8612b0cd2c1a48d3b9abfbbb05c7",
+        "bytes": 209
+      },
+      "greenResult": "Author ran 14/14 including independent 3; reviewer read original log; production stage validation now precedes publication."
+    },
+    {
+      "id": "prepare-timeout",
+      "problem": "Never-settled no-IO prepare trapped UI in preparing without dismissal or exit recovery.",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-timeout-red.txt",
+        "sha256": "ad9359b72661a39a4c9e855d5ab9bcdeaf64c3bd3a03d02e90c4d3c65bf0782d",
+        "bytes": 2280
+      },
+      "redResult": "2 failures and 3 passes, exit 1. Late-ready test originally failed at inability to dismiss before exercising later cancel.",
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-timeout-settled-first.txt",
+        "sha256": "5727011783206e47c7330745ac5d29def4ce014848fa861b6043458c5002b447",
+        "bytes": 211
+      },
+      "greenResult": "Author ran 18/18 including independent tests after adding settled field and withdrawn-prepare cleanup; final late cleanup/exit integration still to review."
+    },
+    {
+      "id": "copy-path-and-growth",
+      "problem": "Canonical destination receipt disagreed with explicit selected alias; growing source could emit progress above verified total.",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-independent-red.txt",
+        "sha256": "31e4f91dbaab9d7e61eb7feb9bd3273e8b92ebf36a23f9d3047b84797666ecd2",
+        "bytes": 2565
+      },
+      "redResult": "Independent 8: 2 failures, 6 passes; run by backend owner.",
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-jobs-green.txt",
+        "sha256": "0236df87b16b61b0ddadbd27887c8c268f5c29fa349c44b3ccc1bb70014a3223",
+        "bytes": 2544
+      },
+      "greenResult": "14/14 including independent 8; owner run, original log inspected."
+    },
+    {
+      "id": "manual-block-read-pending",
+      "problem": "Actual parent manual reread with pending error emitted an unhandled rejection, gave no error notice and resumed revision checks.",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.json",
+        "sha256": "a472c52332703793c690465fd5ba7a0c4f5931e6cfb3f74689192380da7e2de9",
+        "bytes": 6063
+      },
+      "status": "Reported to frontend owner; final repair pending."
+    },
+    {
+      "id": "paused-block-inflight",
+      "problem": "Cancelled or hidden presentation was treated as no native operation; whole-file reread admitted a second unresolved read.",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.json",
+        "sha256": "1c671f30ed54a2b03570aae7fae91e3358881d3ce8a897ccc0d5b09564b1f9ca",
+        "bytes": 2699
+      },
+      "result": "2/2 effective failures in actual Chromium/StrictMode parent with controlled IPC. Each read count grew from 2 to 3 while first promise remained unresolved.",
+      "status": "Reported to frontend owner; final repair pending."
+    },
+    {
+      "id": "expired-known-copy-id",
+      "problem": "Authoritative absence after ready TTL needs an explicit no-current-IO result; generic null/IPC failure must remain unknown.",
+      "status": "Root requested challenge; DTO being coordinated, no new test run yet."
+    }
+  ],
+  "browserHarnessFailures": [
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.json",
+        "sha256": "64dbd9b565e390db92cc6efe9391a64c745ea2bbd344bafd383655b2275d4065",
+        "bytes": 1563
+      },
+      "classification": "Harness clicked retry before the cancelled native promise finally released its slot; 3 checks had passed."
+    },
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.json",
+        "sha256": "52065c3a8a940a1b92aba2a7e8271a865cb46f86b3d6e31db9a5f6fdb0b9a116",
+        "bytes": 3441
+      },
+      "classification": "Harness passed a non-existent parent readingPosition prop; actual DOM correctly navigated, but assertion waited on an unused local ref. Replaced with visible DOM assertions, no product change."
+    }
+  ],
+  "browserSourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.json",
+    "sha256": "e369b9773c3ddfb97ade5c80e8a30bcf26a749cbb0be54d54bb5b22235ec6e32",
+    "bytes": 769
+  },
+  "sourceBoundary": "Seven targeted renderer sources remained identical through the effective red scenarios; later owner fixes are not covered until final rerun.",
+  "limitations": [
+    "Mock IPC tests do not prove native OS scheduling, blocked syscalls or Tauri behavior.",
+    "Rust copy publication callbacks deterministically model before/after publication ownership; they are not a simultaneous multithread CAS stress test.",
+    "No Windows runtime, hostile same-user last-instruction pathname race or remote-volume durability claim.",
+    "Actual 256 MiB benchmark belongs to backend owner evidence and has not yet been independently reviewed here.",
+    "Do not treat this checkpoint as a final approval or installation acceptance."
+  ]
+}

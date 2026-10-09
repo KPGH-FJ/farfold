@@ -1,0 +1,442 @@
+{
+  "recordedAt": "2026-10-09T21:15:18.579356+00:00",
+  "scope": "P17 大文件后端增量；仅临时自有文件与受控函数/协议边界，未启动真实 Agent、系统 opener 或正式应用。",
+  "status": "后端实现与定向验证完成；独立复核、全仓整合和安装验收由根任务分别记录。",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-source-checkpoint.json",
+    "sha256": "1a9b9480659e796571029eb744e4f25323ffe016f82131d368b2b922d9758f61"
+  },
+  "implemented": [
+    "普通文件核验/既有外部打开版本复核改为64KiB流式SHA与同句柄身份、根目录、原路径最终复核；普通文件上限256MiB。PDF/图片/Office/附件/小文本各自限额未抬高。",
+    "read_text_block完整扫描并验证全文件UTF8与原VerifiedFile后返回一块；128KiB或2000逻辑换行；不拆Unicode标量和CRLF；保留BOM、孤CR、原始字节范围与行号；空文件一块，末尾换行不多造空块。手动越界拒绝，恢复位置显式clamp。最多保留目标块、最近完整块、当前块及固定读取缓冲，无正文索引或持久缓存。",
+    "纯内存copy prepare不触盘；start同ID幂等，单实际线程；容量64、ready10分钟过期，执行中不淘汰，终态显式release。保留原文件完整字节，写入受保护临时文件后完整SHA/版本通过才竞争发布，无覆盖。",
+    "取消与发布用单AtomicU8裁决；取消赢且确切临时文件清理确认后才cancelled，发布赢则按实际completed/unknown，不以取消请求冒充停止。发布/清理未知保留材料，不自动重试。线程实际结束才settled=true；未知结果和当前仍在IO严格区分。",
+    "copy prepare/start/status/cancel/release仅主窗口；未知或已释放ID不重建。start/status/cancel的成功缺失回执为精确operationId+absent:true+settled:true，仅证明当前进程该ID无在途IO，不证明历史成功/取消。旧无归属copy IPC删除。",
+    "真实文件操作期间持ManagedUpdate活动许可及独立copy许可；退出确认不能绕过在途/ready；结束unknown未明确确认时需review；最终退出许可继续封住新copy。清除数据开始前也检查并保留双门禁到重启，错误映射固定中文；未ack重启请求允许留在应用撤回，已安装状态不撤销，已ack退出仍不能撤销。",
+    "超限显式位置open/reveal只核当前regular/根与路径身份，不读取正文、不签发VerifiedFile。默认打开沿原document扩展allowlist并在Unix拒绝执行位，reveal仅定位；主窗口且用户显式动作，未放宽预览或Agent访问。"
+  ],
+  "actualRedEvidence": [
+    {
+      "log": "generic-limit-red.txt",
+      "result": "1失败；普通文件32MiB+1被旧媒体限额拒绝。首次generic-limit-first为0项过滤，不计红。"
+    },
+    {
+      "log": "copy-independent-red.txt",
+      "result": "6过2失败；目录别名完成路径与请求不等、增长源进度超过已核总量。分别改为后置路径/对象核验后回原选择路径、超过预期size的块不写不报进度。"
+    },
+    {
+      "log": "clear-copy-red.txt",
+      "result": "1失败；提取且保持原managed-update-only准入语义的清理门禁放过ready复制；没有删除真实资料。"
+    },
+    {
+      "log": "restart-cancel-red.txt",
+      "result": "1失败；未确认重启无法撤回。"
+    },
+    {
+      "log": "selected-location-red.txt",
+      "result": "1失败；位置入口委托既有完整hash流程时仍因超限没有退路。"
+    }
+  ],
+  "greenChecks": [
+    {
+      "log": "delivery-final.txt",
+      "result": "file_delivery全域65过、1个显式256MiB benchmark默认忽略；此后新增wire和位置用例另有回执，不混称已在本次65项中。"
+    },
+    {
+      "log": "text-blocks-after-clippy.txt",
+      "result": "12项文字分块/独立挑战通过。"
+    },
+    {
+      "log": "copy-final.txt",
+      "result": "14项copy，包括独立8项通过；新增wire用例另测。"
+    },
+    {
+      "log": "clear-copy-green.txt",
+      "result": "data_reset6项通过。"
+    },
+    {
+      "log": "restart-cancel-green.txt",
+      "result": "draft_exit12项通过。"
+    },
+    {
+      "log": "read-check-final.txt",
+      "result": "read_check5项通过。"
+    },
+    {
+      "log": "directory-final.txt",
+      "result": "directory_search8项通过。"
+    },
+    {
+      "log": "selected-location-green.txt",
+      "result": "3项超限位置与拒绝/重定向检查通过，未调用系统opener。"
+    },
+    {
+      "log": "commands-green.txt",
+      "result": "4项主窗口/来源与document allowlist通过。"
+    },
+    {
+      "log": "copy-wire-green.txt",
+      "result": "1项精确absence/error序列化通过。"
+    },
+    {
+      "log": "wire-contract.txt",
+      "result": "2项真实Rust输出，已提取text-block-wire.json与copy-status-wire.json供独立TS解析合同测试；不是手造mock，也不是Tauri E2E。"
+    },
+    {
+      "log": "exit-clippy-green.txt",
+      "result": "cargo clippy --locked -- -D warnings通过；owned rustfmt检查见checkpoint和backend-format.txt。"
+    }
+  ],
+  "performance": {
+    "log": "benchmark-256-final.txt",
+    "build": "cargo test --release --lib，仅显式ignored目标，实际完整写入256MiB临时UTF8文件并最终清理；非正式应用。",
+    "inspectMs": 123,
+    "firstBlockMs": 708,
+    "lastBlockMs": 702,
+    "copyMs": 740,
+    "blocks": 2048,
+    "returnedBlockBytes": 131072,
+    "macosProcessPeakBytesBefore": 5144576,
+    "macosProcessPeakBytesAfter": 10698752,
+    "boundary": "单次本机样本，非硬堆内存上限、非网络盘/移动介质/Windows性能证明。最终基准后增加独立退出与位置接口/序列化测试，未改变受测流式与分块算法。"
+  },
+  "historicalNonPasses": [
+    "stream-block-first/second是新SHA格式化/类型推断编译错误，未计功能红；stream-block-third为63过2旧阈值断言失败，普通文件断言随后改用MAX_VERIFIED_FILE_BYTES，格式上限未降。",
+    "copy-jobs-green有unused name warning，已删除无用绑定；clippy-final捕获or_else风格警告，修成or后clippy-green与exit-clippy-green通过。原日志未覆盖改写。"
+  ],
+  "boundaries": [
+    "复制没有伪OS取消/写入超时。真实读写syscall未返回时仍在途、保持门禁；只读block沿既有15秒等待/2槽保护，超时不释放实际OS槽，不自动重试。",
+    "复制发布确认与文件sync不承诺断电持久化；未做磁盘耗尽、网络文件系统、故障注入到真实内核write/fsync、Windows实机或系统opener/安装版验收。",
+    "Unix临时文件清理增加同对象与unlink后链接数检查，失败不重复Drop删除。未宣称能防止同uid外部进程在最后检查与路径操作之间持续恶意竞态。Windows沿确切句柄disposition，尚未实机验证。",
+    "独立cancel/publication用真实stream_copy可控回调确认边界；AtomicU8单赢家另有真实cancel方法单元测试，不冒称内核调度竞态实测。",
+    "Job仅当前进程内存，无重启恢复账本。unknown/absence不推断原文件保存已成功；unknown可在显式知晓后解除UI记录，后台真实在途仍不可退出。",
+    "新增位置入口不证明文件是此前预览版本；OS opener后外部路径仍可变化，未自动打开外链、执行命令或修改Agent访问。"
+  ],
+  "rawLogs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/benchmark-256-final.txt",
+      "sha256": "dab729b5ee47502dc23be11bc857564e888293f2acc22264d522211ce52569bf",
+      "bytes": 604
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/benchmark-256-release.txt",
+      "sha256": "94bb05b2ded5e8a02aa846a7b23a105e9bc17739a6786589e79357fa28b0ffe8",
+      "bytes": 1683
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/blocks-green.txt",
+      "sha256": "a663e4a39a71fb82990d5904fd56475a1e69ae16ad7fa8963d9aedcdee68377d",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/blocks-red.txt",
+      "sha256": "e2b8d303bef6f68336e2eff403971542a21e81166f6c08b996e9564128d4aa7e",
+      "bytes": 2153
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/clear-copy-green.txt",
+      "sha256": "523bcc9954eee83f0457b1b88c8c0304ed385a26fa33f1b284a84d4c6f9f6b1e",
+      "bytes": 1097
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/clear-copy-red.txt",
+      "sha256": "f24eca277627c6b9e8b002eaaa81ef1b61235f607e2a6ee7b551b1e626a40cc7",
+      "bytes": 944
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/clippy-final.txt",
+      "sha256": "05562df5244548734b5bc5959016c558954c3e4c203eb4d8ebb1e0cd836a3cb0",
+      "bytes": 979
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/clippy-green.txt",
+      "sha256": "bdddf3bf46254b5ebcd2fff956fe75dcf4691dca5882f065dcc128189bf1750d",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/commands-green.txt",
+      "sha256": "c57d9336af2f240656c471d01c83b06497b933fd5b37addcaec00129d8717837",
+      "bytes": 891
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-final.txt",
+      "sha256": "075123435154d5ad02aa36a4a2d414b6d3e058076625904e7855ad0885eb7d2c",
+      "bytes": 2015
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-independent-red.txt",
+      "sha256": "31e4f91dbaab9d7e61eb7feb9bd3273e8b92ebf36a23f9d3047b84797666ecd2",
+      "bytes": 2565
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-jobs-first.txt",
+      "sha256": "8d291b61086268f40940dc24fc3350d48569def23a0db59efa1aadbe60af1cd8",
+      "bytes": 970
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-jobs-green.txt",
+      "sha256": "0236df87b16b61b0ddadbd27887c8c268f5c29fa349c44b3ccc1bb70014a3223",
+      "bytes": 2544
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-status-green.txt",
+      "sha256": "5218fe7da9a7e982f8a8e443490f9b99f3a5f53a20a1c7de2b7803c3487aee1a",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-timeout-settled-first.txt",
+      "sha256": "5727011783206e47c7330745ac5d29def4ce014848fa861b6043458c5002b447",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-wire-green.txt",
+      "sha256": "bb8002e3104e0e2205b7c793cea4e1bf38934c21a2ab51a51cf28a6d1ed872d2",
+      "bytes": 589
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/delivery-final.txt",
+      "sha256": "9f80f434c8b90c12c5060b62788e1fb838be6a50a6a1710cec70adf2d406499f",
+      "bytes": 7354
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/diagnostics-format.txt",
+      "sha256": "2fe5f53ec1c63b88cf6c231bb70246f343bad86de7212b9f83031752633442cb",
+      "bytes": 232
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/directory-final.txt",
+      "sha256": "d24c22ca6d826465e0971e4255b52f1ba3020409b80f5740680a48f4e833ebdc",
+      "bytes": 1514
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/evidence-format.txt",
+      "sha256": "257abfa94a47bf0ca7d93e6c3669b1e94ca5d1273939153d3990f97cb86a7237",
+      "bytes": 321
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/exit-clippy-green.txt",
+      "sha256": "8b8b86a24b60fa58d48c3f916664dc68c4e27704c7e6e759e527ea1b54e0ed0a",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/exit-final.txt",
+      "sha256": "7f7cb3b3f4c41b4de5dce61e8be755c7387d31f2ed77a8cf3fae9e5a70a8a39b",
+      "bytes": 1473
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/exit-protection-absence-green.txt",
+      "sha256": "c9117bd9c1da6b66425ba29de322f197e0ff4ddd26835fbb8280880a5e4aef83",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/exit-protection-green.txt",
+      "sha256": "6426ccf66bfebb17d993726761f925c02f68786cb06172c32f15b78c5b32b0b4",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/exit-protection-red.txt",
+      "sha256": "e4e8829f73035afdff1810c498eccf5a678d35f372bbd72fbadb76a023fb00dd",
+      "bytes": 4789
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/format-first.txt",
+      "sha256": "d7573fd816d5fb88bef9e7b6bcd30d23d67f6b269389b21b5582b29539f0c752",
+      "bytes": 832
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-final.txt",
+      "sha256": "84e64e142e7403d48c6e78674664564f57cffa850a8cbc4aa4e49ca3fd5d5ad7",
+      "bytes": 216
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-first.txt",
+      "sha256": "846161bc3ea286e95ac41abc47ca75e818a259d53f4b96309ac026bbe23a110c",
+      "bytes": 1015
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-format-final.txt",
+      "sha256": "392bea8853b6ff809ddec6e88316b6e968e27839303667ce02b415107f285aca",
+      "bytes": 1356
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-fourth.txt",
+      "sha256": "4a641aaef006714d256d88022af6f9e40c011bead32524e7d6cbc74ac5907958",
+      "bytes": 1245
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-native-wire.txt",
+      "sha256": "06da24c1508ef4ef5dfc00630ba52f70871b79547147d3e817b9d29d3b968979",
+      "bytes": 205
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-second.txt",
+      "sha256": "f109091cdd8f5ae72db852096a2aa0dab075e3466b84089c42a897157d219c24",
+      "bytes": 1788
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-third.txt",
+      "sha256": "e79a6a23d8d89b1281aaa1055d752d20299e15fb0cb8d78ad1301006bc7527e3",
+      "bytes": 214
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/generic-limit-first.txt",
+      "sha256": "2d7780bf01e4e8e4f0dc9247963de998d7faecce7f109e0cef68144cdc6cb5aa",
+      "bytes": 552
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/generic-limit-red.txt",
+      "sha256": "dbda74073c16d888fc355cd1f4113b0bc6aab5d7c04e9f2a8841f216891072eb",
+      "bytes": 1014
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-absence-current.txt",
+      "sha256": "9266b3bbec10a6a4d1548ec6f6164b24596a7b62068153d21e4fb88f77d883d7",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-red.txt",
+      "sha256": "6632d09ce588e195a3b15a945c3ca9b1f3164728437708f992df3c4b8937f2d7",
+      "bytes": 2691
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-timeout-red.txt",
+      "sha256": "ad9359b72661a39a4c9e855d5ab9bcdeaf64c3bd3a03d02e90c4d3c65bf0782d",
+      "bytes": 2280
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/location-ui-green.txt",
+      "sha256": "14b370f397519932da7b57ea8f7d79e8bb36704998760b3d9eafd1aac10d2439",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/location-ui-red.txt",
+      "sha256": "820432b0ef0b42465d6b12e783c4d94d753e69a97f1b94af050d2d8e9a147096",
+      "bytes": 2379
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/owned-associated-first.txt",
+      "sha256": "328a9e59c1c3cdbf9d546d895b93e0e9dca0c912738d282cd861f6da08a75415",
+      "bytes": 1220
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/owned-associated-green.txt",
+      "sha256": "de771e48860666dc3db60577ad54a16892c95879442a6e91c5e68f3d53047b0c",
+      "bytes": 216
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/prepare-green.txt",
+      "sha256": "358e749a9ab3c3bc08224bb94b642036e5ba8612b0cd2c1a48d3b9abfbbb05c7",
+      "bytes": 209
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/read-check-final.txt",
+      "sha256": "4b2b22505fd6532cda4ec75ccd7a82bfad82f9cf9c3ff892f648722ee88a6704",
+      "bytes": 967
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/reader-owner-first.txt",
+      "sha256": "96d5e986fe3f98f2ed2a91f2d7712546265a0aa834a68f5a9e04b5c1b5cf2a01",
+      "bytes": 1190
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/reader-owner-green.txt",
+      "sha256": "b9ed886464a5282d607eb87673a22bb16702cde6844b7cae14f660bf0c4361d4",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/restart-cancel-green.txt",
+      "sha256": "1488439994ef937b43e518f266d5bb4d9e643dc70feae39b75f71a4c8b15bc15",
+      "bytes": 1568
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/restart-cancel-red.txt",
+      "sha256": "a20c5205d66f09296fbbdd5ad0ea8be284a39b64c9b0f8da656fc770084dda35",
+      "bytes": 892
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/same-receipt-red.txt",
+      "sha256": "2f16794e97105946b9f4a22f442ed6aa948f17ab78f09d24af2f0027b545f394",
+      "bytes": 3874
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/selected-location-green.txt",
+      "sha256": "b7e01fa807147fa81bb25c17269025b03fc06a22263df2d579e8d4c7fadf71a5",
+      "bytes": 918
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/selected-location-red.txt",
+      "sha256": "9f8f431481144bb48114e81f4b4e28137bb3005be77343cca6018437b3348124",
+      "bytes": 1947
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/settled-regression-red.txt",
+      "sha256": "f33f3b5dfd19eb7fd6797252c6cb5c3daad8a3280316710246c9b2e6358372ab",
+      "bytes": 882
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/stream-block-first.txt",
+      "sha256": "ad43167c7b0a08145fbb0e354802f4180fd9c104f083b153b4edd25f8182fa42",
+      "bytes": 2441
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/stream-block-second.txt",
+      "sha256": "6d8788c9e520230fab27a5263dcd849ae08b852b9435461520def58110e8551b",
+      "bytes": 3075
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/stream-block-third.txt",
+      "sha256": "2834984e90db116e34bbf6866df9af0e4c8dc158c4f5e0529a1bf79ea3435604",
+      "bytes": 8359
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/text-blocks-after-clippy.txt",
+      "sha256": "3fd3b5041354551ee29a2fe080a0324a7af6c19cf3f39163f08ed49b000142ce",
+      "bytes": 1975
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-associated.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-first.txt",
+      "sha256": "9722d4e840883db71ef6b50b420c58334f71ad86fe27943b805d7e1802d631da",
+      "bytes": 304
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-fourth.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-owner-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-second.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/typecheck-third.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/wire-contract.txt",
+      "sha256": "98ecd406b09046ad923568dd4426d858adbd5a12d8e4f351c88dcafd75ff1bb4",
+      "bytes": 266195
+    }
+  ]
+}

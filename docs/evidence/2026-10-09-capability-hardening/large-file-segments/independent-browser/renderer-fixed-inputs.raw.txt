@@ -1,0 +1,9 @@
+{
+  "src/components/OpenedFileView.tsx": "3fe86a5672d8d6a6005a599553ea5864fb6f9c46a4ee87d4bb8dd9c3fc2431aa",
+  "src/components/TextBlockPreview.tsx": "2354d2be0ed493cbfd03cb3002027144ed37556f3a51f2b67ef16c09e4139fcb",
+  "src/runtime/text_block_reader.ts": "06230c5115eb85e8ef93f48e91ba2791622e9fdd1f15356b8ebb11445fd94110",
+  "src/runtime/text_block_preview.ts": "7f322eb76119e053d52627de1756d30ca4a514488d210a12cc87fd29eb83dade",
+  "src/components/useFileRevisionMonitor.ts": "206a87308d8fc07b85d71580e951a92a8b346e3acaec357667d74db3a35d7093",
+  "src/runtime/file_revision_monitor.ts": "f917385e2f39e26b2f5f52500d9b24a5255f037f965fdc0e314937c8b67cf451",
+  "src/runtime/preview_reading_position.ts": "6e928a9a6cfba4c7187560b44a6e19a2356b428e732d52b3faab0be6e3c85168"
+}

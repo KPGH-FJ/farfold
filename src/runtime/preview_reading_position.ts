@@ -12,6 +12,7 @@ interface FilePosition {
 export type PreviewReadingPosition = FilePosition &
   (
     | { kind: "pdf"; page: number }
+    | { kind: "text"; blockIndex: number }
     | {
         kind: "workbook";
         sheet: { id: string; name: string; hiddenSelected?: boolean };
@@ -47,6 +48,18 @@ export function restoredPdfPage(
   return p?.kind === "pdf" && sameReadingFile(p, file)
     ? clamp(p.page, 1, MAX_PDF_PAGES)
     : 1;
+}
+export function restoredTextBlock(
+  file: VerifiedFile,
+  ref?: PreviewReadingPositionRef,
+): number {
+  const p = ref?.current;
+  return p?.kind === "text" &&
+    sameReadingFile(p, file) &&
+    Number.isSafeInteger(p.blockIndex) &&
+    p.blockIndex >= 0
+    ? p.blockIndex
+    : 0;
 }
 export function savedWorkbookPosition(
   file: VerifiedFile,
@@ -118,6 +131,10 @@ export function saveReadingPosition(
   file: VerifiedFile,
   position:
     | Omit<Extract<PreviewReadingPosition, { kind: "pdf" }>, keyof FilePosition>
+    | Omit<
+        Extract<PreviewReadingPosition, { kind: "text" }>,
+        keyof FilePosition
+      >
     | Omit<
         Extract<PreviewReadingPosition, { kind: "workbook" }>,
         keyof FilePosition

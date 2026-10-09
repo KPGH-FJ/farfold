@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_copy_jobs.test.ts (14 tests | 1 failed) 10ms
+   × a trustworthy settled unknown cannot regress to active work via later status checks 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_copy_jobs.test.ts > a trustworthy settled unknown cannot regress to active work via later status checks
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "op-1",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/file_copy_jobs.test.ts:236:275
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  05:02:53
+   Duration  118ms (transform 27ms, setup 0ms, import 41ms, tests 10ms, environment 0ms)
+

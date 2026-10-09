@@ -1,0 +1,917 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T21:17:57.518387+00:00",
+  "status": "completed_no_remaining_blocker_in_reviewed_scope",
+  "reviewer": "verification: did not author production implementation; authored the three named independent tests and browser harness. Architecture executed Rust tests; reviewer read original logs and did not rerun Cargo.",
+  "scope": "P17 full-stream/block/copy ownership, parent read lifecycle, global saving and exit protection. Synthetic temporary inputs only; not installed/native acceptance.",
+  "sourceIdentity": {
+    "backendFilesMatched": 21,
+    "frontendOwnerFilesMatched": 25,
+    "backendCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-source-checkpoint.json",
+      "sha256": "1a9b9480659e796571029eb744e4f25323ffe016f82131d368b2b922d9758f61",
+      "bytes": 4758
+    },
+    "backendImplementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-implementation.json",
+      "sha256": "894f703c224660c7f394c1b0392f1597d22da6ba57bd19af48d968867cae12b9",
+      "bytes": 22008
+    },
+    "frontendImplementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-implementation.json",
+      "sha256": "7b51b7741b2197f5a634ed5d7ccdd5e00a13f4f7fd1b568d13e0d1ad92fee161",
+      "bytes": 13141
+    },
+    "rootIntegrationFiles": [
+      {
+        "path": "src/components/DraftStartup.tsx",
+        "sha256": "a39534b0d9052188bb3fc198a75a0f9cfc6fa6ba014de18e4ffb585f3bd7ca1f",
+        "bytes": 10044
+      },
+      {
+        "path": "src/components/FileCopyActivity.tsx",
+        "sha256": "7233bda938e08d6309790601d214327164b2ecf4d414aaafe32e98d86e6bf718",
+        "bytes": 1492
+      },
+      {
+        "path": "src/components/Sidebar.tsx",
+        "sha256": "a8972f13bfb17df47b357233eb04a6d995b4ae9d6befa12b8382eba7cda39ebe",
+        "bytes": 17337
+      },
+      {
+        "path": "src/runtime/exit_impact.ts",
+        "sha256": "e84e900662dcc3675ff36b688d305371419176105029480aa9d2bb573ce812f1",
+        "bytes": 1650
+      }
+    ],
+    "browserBefore": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-before.json",
+      "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+      "bytes": 73302
+    },
+    "browserAfter": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-after.json",
+      "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+      "bytes": 73302
+    },
+    "browserSourceCount": 668,
+    "browserSourceUnchanged": true
+  },
+  "independentTests": [
+    {
+      "file": {
+        "path": "src-tauri/src/file_delivery/text_blocks_independent_tests.rs",
+        "sha256": "fc248c64f7ebf8ece6578e7fce6b8b7f4547da6d879988a8f570cce920e34cb0",
+        "bytes": 6378
+      },
+      "passed": 7,
+      "executor": "architecture",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/delivery-final.txt",
+        "sha256": "9f80f434c8b90c12c5060b62788e1fb838be6a50a6a1710cec70adf2d406499f",
+        "bytes": 7354
+      },
+      "coverage": "UTF8 suffixes at64KiB; CRLF128KiB/2000-line boundary; BOM/loneCR/combining bytes; mutation/equal-byte replacement/retarget/root replacement rejected"
+    },
+    {
+      "file": {
+        "path": "src-tauri/src/file_copy_jobs_independent_tests.rs",
+        "sha256": "c9310de8ed590e0987df6f2097f0ad4b13139ee3a488399f5b6352ae735d3c88",
+        "bytes": 8255
+      },
+      "passed": 8,
+      "executor": "architecture",
+      "effectiveRed": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-independent-red.txt",
+        "sha256": "31e4f91dbaab9d7e61eb7feb9bd3273e8b92ebf36a23f9d3047b84797666ecd2",
+        "bytes": 2565
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-final.txt",
+        "sha256": "075123435154d5ad02aa36a4a2d414b6d3e058076625904e7855ad0885eb7d2c",
+        "bytes": 2015
+      },
+      "coverage": "cancel/publication boundary, non-overwrite, original destination spelling, source mutation/growth bounded progress, ready expiry. Actual stream_copy controlled callbacks, not kernel scheduling stress."
+    },
+    {
+      "file": {
+        "path": "src/runtime/file_copy_jobs.independent.test.ts",
+        "sha256": "50ff856b190ce50c5366f3644a73f0da17e49ef88f76bca46870170f20ad4468",
+        "bytes": 6416
+      },
+      "passed": 10,
+      "executor": "verification",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-absence-current.txt",
+        "sha256": "9266b3bbec10a6a4d1548ec6f6164b24596a7b62068153d21e4fb88f77d883d7",
+        "bytes": 207
+      },
+      "priorReds": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-red.txt",
+          "sha256": "6632d09ce588e195a3b15a945c3ca9b1f3164728437708f992df3c4b8937f2d7",
+          "bytes": 2691
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-timeout-red.txt",
+          "sha256": "ad9359b72661a39a4c9e855d5ab9bcdeaf64c3bd3a03d02e90c4d3c65bf0782d",
+          "bytes": 2280
+        }
+      ],
+      "coverage": "ready-only prepare; withdrawn preparation and precise late cancel; exact absence requires acknowledgment; null/wrongID/false settled/additional completed field/IPC rejection preserve unsettled. No repeat start. New absence tests first-run green."
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "finding": "manual reread pending had no failure UI, leaked rejection and resumed checks",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.raw.txt",
+        "sha256": "a472c52332703793c690465fd5ba7a0c4f5931e6cfb3f74689192380da7e2de9",
+        "bytes": 6063
+      },
+      "green": "parent-final11/11; old block retained, actual5.25s no check/read, no unhandled rejection"
+    },
+    {
+      "finding": "paused/hide presentation allowed overlapping whole-file read before original promise completed",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.raw.txt",
+        "sha256": "1c671f30ed54a2b03570aae7fae91e3358881d3ce8a897ccc0d5b09564b1f9ca",
+        "bytes": 2699
+      },
+      "green": "paused-flight-final2/2; readInFlight survives presentation pause"
+    },
+    {
+      "finding": "non-ready prepare receipt could publish started/completed",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-red.txt",
+        "sha256": "6632d09ce588e195a3b15a945c3ca9b1f3164728437708f992df3c4b8937f2d7",
+        "bytes": 2691
+      },
+      "green": "ready-only admission; independent10/10 final"
+    },
+    {
+      "finding": "never-returning preparation trapped exit; late ready cleanup needed explicit ownership",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-prepare-timeout-red.txt",
+        "sha256": "ad9359b72661a39a4c9e855d5ab9bcdeaf64c3bd3a03d02e90c4d3c65bf0782d",
+        "bytes": 2280
+      },
+      "green": "real10.257second browser; notStarted closes; late ready exact cancel/release without start"
+    },
+    {
+      "finding": "canonical destination mismatched requested path; source growth overreported progress",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-independent-red.txt",
+        "sha256": "31e4f91dbaab9d7e61eb7feb9bd3273e8b92ebf36a23f9d3047b84797666ecd2",
+        "bytes": 2565
+      },
+      "green": "all8 independent Rust cases passed; original path after identity checks, growth rejected before write/progress"
+    }
+  ],
+  "browser": {
+    "environment": "Actual Chromium/ReactStrictMode, production components and main stylesheet layers. Synthetic Tauri invoke/events; clock/timers unmodified. Actual DraftStartup/FileCopyActivity, not full Sidebar navigation.",
+    "finalChecksPassed": 33,
+    "finalChecksFailed": 0,
+    "runs": [
+      {
+        "name": "parent-final",
+        "checksPassed": 11,
+        "realElapsedMs": 6156,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.json",
+          "sha256": "b82eed0234b513caf9c12674f808ef02525483ad907fa45a867d2f70a70ab9df",
+          "bytes": 5024
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.raw.txt",
+          "sha256": "b82eed0234b513caf9c12674f808ef02525483ad907fa45a867d2f70a70ab9df",
+          "bytes": 5024
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.txt",
+          "sha256": "9c80cef6accd1f340127274f5526d8458eafdfae07af0e00f1ab051db22fa5e1",
+          "bytes": 5049
+        }
+      },
+      {
+        "name": "paused-flight-final",
+        "checksPassed": 2,
+        "realElapsedMs": 534,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.json",
+          "sha256": "69127245a8cfe6bc010b2a216fe1bfd57253ada7a9d148bb59138769beac2c50",
+          "bytes": 2088
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.raw.txt",
+          "sha256": "69127245a8cfe6bc010b2a216fe1bfd57253ada7a9d148bb59138769beac2c50",
+          "bytes": 2088
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.txt",
+          "sha256": "9172e153c6501cbad522c9088108b999038013c3099418826e0168616255b5db",
+          "bytes": 2112
+        }
+      },
+      {
+        "name": "fallback-styled-final",
+        "checksPassed": 3,
+        "realElapsedMs": 282,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.json",
+          "sha256": "69e346cbd1261581cad39b0de6f6269013c07897576703f931b3bbd1acb692dd",
+          "bytes": 1332
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.raw.txt",
+          "sha256": "69e346cbd1261581cad39b0de6f6269013c07897576703f931b3bbd1acb692dd",
+          "bytes": 1332
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.txt",
+          "sha256": "5e97cd8215e97cf5e7d244ac096733b73c9072d08f9e17aea5af678fe03389ec",
+          "bytes": 1356
+        }
+      },
+      {
+        "name": "jobs-copy-final",
+        "checksPassed": 7,
+        "realElapsedMs": 373,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.json",
+          "sha256": "4bebccb7ba359227a5f5bc5268f1c3c664a21fc09dcb04ab9a65184691fa5526",
+          "bytes": 4100
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.raw.txt",
+          "sha256": "4bebccb7ba359227a5f5bc5268f1c3c664a21fc09dcb04ab9a65184691fa5526",
+          "bytes": 4100
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.txt",
+          "sha256": "a52e90cdce14275a917c25def3d0b2f57c57a8de9a54b67fd3f60edb946f9cbb",
+          "bytes": 4125
+        }
+      },
+      {
+        "name": "jobs-prepare-styled-final",
+        "checksPassed": 5,
+        "realElapsedMs": 10257,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.json",
+          "sha256": "05d04929d4acb0d967480fa1feea5fe19448d960f7643afd0620b947a1555c31",
+          "bytes": 2932
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.raw.txt",
+          "sha256": "05d04929d4acb0d967480fa1feea5fe19448d960f7643afd0620b947a1555c31",
+          "bytes": 2932
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.txt",
+          "sha256": "36ccb10335b642f85560a5c0670c613b708acd02aafe821955c88359cc5676cb",
+          "bytes": 2957
+        }
+      },
+      {
+        "name": "jobs-absence-styled-final",
+        "checksPassed": 5,
+        "realElapsedMs": 204,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.json",
+          "sha256": "870ac9e9d36d3af6048075569bab73583bda1a8314edb2519b15b0455d9be392",
+          "bytes": 2949
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.raw.txt",
+          "sha256": "870ac9e9d36d3af6048075569bab73583bda1a8314edb2519b15b0455d9be392",
+          "bytes": 2949
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.txt",
+          "sha256": "b1d576020d47b1ab0f7c062c8417a278d06666c005585d8c33bb1fa9674f43af",
+          "bytes": 2974
+        }
+      }
+    ],
+    "screenshotsActuallyViewed": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/bounded-source-navigation.png",
+        "sha256": "602e6847bb72a41bfc62750d03a439cba1fddaa4fddad681dc5fc5471ec04c48",
+        "bytes": 70452
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/manual-pending-retained.png",
+        "sha256": "5c0bac2308524b7ac629412a3c94701c352eedb8759e8daa3e807cb22bd9d45b",
+        "bytes": 81286
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/unverified-location-fallback.png",
+        "sha256": "d26b10453180e63845121f767308907af8ccf68dddfba39f63ff86b1d8d0a4e3",
+        "bytes": 32419
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copying-exit-blocked.png",
+        "sha256": "54303e2356c4b312e3e2350c48ec7fe51c40b709a0c0ed2792b1e68e2ca5cba8",
+        "bytes": 102076
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-finished-unknown-review.png",
+        "sha256": "c13cbe3cfee8bdb6e9ce51866da6f31554b0acffe734e27eacec548a6d2efdfe",
+        "bytes": 111571
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absent-exit-review.png",
+        "sha256": "9dceab896787c56223db9b7da488336871d4d6fd28c7a58f80d76b4f285e27d1",
+        "bytes": 105617
+      }
+    ],
+    "observations": [
+      "Bounded plain Markdown source and visible byte/line bounds; old/new/late-file ownership correct.",
+      "Unverified-location fallback is explicit, never auto-opens or invents content proof.",
+      "Global save survives preview close; copying blocks quit while cancel is reachable in exit dialog.",
+      "Settled unknown/exact absence require explicit acknowledgment, never claim saved or restart.",
+      "Real prepare timeout can quit; late ready cancelled/released after card close."
+    ],
+    "ownedBrowserProcessesRemaining": 0,
+    "sharedVite": "Owned product_coverage server1460; owner reported exactPID60687 SIGTERM exit143 and port empty in its cleanup receipt. Reviewer did not stop shared process."
+  },
+  "backendReview": {
+    "conclusion": "no additional blocker in final reviewed production diff",
+    "checks": [
+      "64KiB full-stream SHA and final root/path/leaf version proof; entire UTF8 validated, bounded retained blocks.",
+      "Publication CAS selects one owner; unknown publish/cleanup preserves materials, never claims cancellation.",
+      "Working job cannot expire/release; settled only after stream_copy returns. Successful exact-ID absence proves current noIO only.",
+      "Copy gate spans exit/data-clear/restart; unacknowledged exact restart owner may stay, acknowledged exit cannot.",
+      "Metadata-only selected-location regular/allowlist/executable/root/identity checks preserve explicit-action boundary."
+    ],
+    "authorLogSummary": {
+      "deliveryPassed": 65,
+      "explicitBenchmarkIgnoredByDefault": 1,
+      "copy": 14,
+      "dataClear": 6,
+      "draftExitAfterRepair": 12,
+      "readCheck": 5,
+      "directory": 8,
+      "selectedLocation": 3,
+      "absenceSerialization": 1
+    },
+    "benchmark": {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/benchmark-256-final.txt",
+        "sha256": "dab729b5ee47502dc23be11bc857564e888293f2acc22264d522211ce52569bf",
+        "bytes": 604
+      },
+      "inputBytes": 268435456,
+      "firstBlockMs": 708,
+      "lastBlockMs": 702,
+      "copyMs": 740,
+      "processMaxRssBytesAfter": 10698752,
+      "boundary": "Single author-run local release sample read from raw stdout; no native/Windows/network-disk or general hard-memory guarantee."
+    }
+  },
+  "harnessNonProductFailures": [
+    "parent-first clicked retry before actual flight finally released; harness now waits enabled button.",
+    "parent-second waited unsupported external position prop; replaced with actual displayed range.",
+    "jobs-copy-first role selector missed native dialog and asserted before stay unlocked; now waits actual usable global button.",
+    "Initial screenshots omitted product-shell CSS; preserved -before-style originals, final33 checks import production main styles.",
+    "Receipt process query first matched its own shell command text; final check matches actual executable command prefix and found zero owned Chrome."
+  ],
+  "jsonPreservation": [
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.diagnostics.json",
+        "sha256": "fa646a18b44fd8f9fae43d69f225d3416a844b71fdfb89b31caea2a160fb834b",
+        "bytes": 297625
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.diagnostics.raw.txt",
+        "sha256": "022adc39d2042486df33f600e157a0c109cdf55fd221bdefcfe47779c552a147",
+        "bytes": 297624
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.json",
+        "sha256": "debfd2517be6fa31d5db03ad057f0d0f43af0a02187a178fdbcabc0192e64dec",
+        "bytes": 1334
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.raw.txt",
+        "sha256": "debfd2517be6fa31d5db03ad057f0d0f43af0a02187a178fdbcabc0192e64dec",
+        "bytes": 1334
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.diagnostics.json",
+        "sha256": "66c996914e78ecf3640d13513218949e65e6741bd74c6147530c44ad9c0cadfa",
+        "bytes": 169803
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.diagnostics.raw.txt",
+        "sha256": "8fde70dcd542abeff51af11e354286c374a16d99450e3c0763147fc2f66aeffa",
+        "bytes": 169802
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.json",
+        "sha256": "69e346cbd1261581cad39b0de6f6269013c07897576703f931b3bbd1acb692dd",
+        "bytes": 1332
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.raw.txt",
+        "sha256": "69e346cbd1261581cad39b0de6f6269013c07897576703f931b3bbd1acb692dd",
+        "bytes": 1332
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-after.json",
+        "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+        "bytes": 73302
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-after.raw.txt",
+        "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+        "bytes": 73302
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-before.json",
+        "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+        "bytes": 73302
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-before.raw.txt",
+        "sha256": "d7d072e8f7e57689dc8b70bb2f17541c581db308e5b464c2fdc4e9cd007b4f29",
+        "bytes": 73302
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.diagnostics.json",
+        "sha256": "8f75f9c35ffed6c2f88f61f762a25bab5e910bf1335dd172199573f494d63645",
+        "bytes": 215285
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.diagnostics.raw.txt",
+        "sha256": "149cac74eb84a47965331e1d8701d047fecc034eb32a42f5e00117a63f292526",
+        "bytes": 215284
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.json",
+        "sha256": "88d7b7fced96a15ac098841a251da5fc703718380cf6bad5bad7953b88fee5ca",
+        "bytes": 2949
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.raw.txt",
+        "sha256": "88d7b7fced96a15ac098841a251da5fc703718380cf6bad5bad7953b88fee5ca",
+        "bytes": 2949
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.diagnostics.json",
+        "sha256": "31e48cf956f929b2362f8e6a968b9ae7211281500529fea4b06b5d912d82a89f",
+        "bytes": 229039
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.diagnostics.raw.txt",
+        "sha256": "d3d8040cb1e18ab0e35a0e693d51b059b47bd7386db185f5e78016a2d215953e",
+        "bytes": 229038
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.json",
+        "sha256": "870ac9e9d36d3af6048075569bab73583bda1a8314edb2519b15b0455d9be392",
+        "bytes": 2949
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.raw.txt",
+        "sha256": "870ac9e9d36d3af6048075569bab73583bda1a8314edb2519b15b0455d9be392",
+        "bytes": 2949
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.diagnostics.json",
+        "sha256": "4240c620a726dcf618320bf2b0525959576f773c83efc0528463c772b5429b13",
+        "bytes": 229006
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.diagnostics.raw.txt",
+        "sha256": "44e10be795861e9a384e3248594ae983c6cbd4661c8caf40dfdc5fdba5ee90cf",
+        "bytes": 229005
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.json",
+        "sha256": "4bebccb7ba359227a5f5bc5268f1c3c664a21fc09dcb04ab9a65184691fa5526",
+        "bytes": 4100
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.raw.txt",
+        "sha256": "4bebccb7ba359227a5f5bc5268f1c3c664a21fc09dcb04ab9a65184691fa5526",
+        "bytes": 4100
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.diagnostics.json",
+        "sha256": "01588e7c4e89f59cf474bb8bddb984b25e03ab425433e337614c92748325d9ff",
+        "bytes": 281862
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.diagnostics.raw.txt",
+        "sha256": "8066e3fa94cd0c8b702d0663e95ea3990243a66eb0c19d875014ea5e860db6c7",
+        "bytes": 281861
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.json",
+        "sha256": "a47dbf97fd832b98f71bf030b4691c0cad5336cc7d22d5af0a9f6516e87e5046",
+        "bytes": 2842
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.raw.txt",
+        "sha256": "a47dbf97fd832b98f71bf030b4691c0cad5336cc7d22d5af0a9f6516e87e5046",
+        "bytes": 2842
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.diagnostics.json",
+        "sha256": "44204c0b02e962a061857535a09d7035c1991193c95bf95cc3a6f31abefab74a",
+        "bytes": 215187
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.diagnostics.raw.txt",
+        "sha256": "eca34333fe533958d80f6fc18a4dc67e2eb17c5d1d5cb381398a92b57835871e",
+        "bytes": 215186
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.json",
+        "sha256": "21b3f6a5fb945d95898906fb7c36f259680bcd0c191034cffee08449aba35e84",
+        "bytes": 4100
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.raw.txt",
+        "sha256": "21b3f6a5fb945d95898906fb7c36f259680bcd0c191034cffee08449aba35e84",
+        "bytes": 4100
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.diagnostics.json",
+        "sha256": "be4ecd323868e28355dbddc87bb27ade5d343c4545c9d907317183d2e923c91d",
+        "bytes": 215231
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.diagnostics.raw.txt",
+        "sha256": "b80faca0c31c8daf7c166cff877923ff8c1514299b24dfa27ea94d3be210a5e7",
+        "bytes": 215230
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.json",
+        "sha256": "f859486696244c991e31fa2e4c4341acbb58436ff4c5e619b6674c0675f8fbe2",
+        "bytes": 2932
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.raw.txt",
+        "sha256": "f859486696244c991e31fa2e4c4341acbb58436ff4c5e619b6674c0675f8fbe2",
+        "bytes": 2932
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.diagnostics.json",
+        "sha256": "33e009d8deb6bc094599b8c442fbdb50fae4a9b91c13122f1f6132a5fce3b0e1",
+        "bytes": 228974
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.diagnostics.raw.txt",
+        "sha256": "abf7baae06c50495e78d0c7894273db687cfb48d492d717c05f65c6bd59adc60",
+        "bytes": 228973
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.json",
+        "sha256": "05d04929d4acb0d967480fa1feea5fe19448d960f7643afd0620b947a1555c31",
+        "bytes": 2932
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.raw.txt",
+        "sha256": "05d04929d4acb0d967480fa1feea5fe19448d960f7643afd0620b947a1555c31",
+        "bytes": 2932
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.diagnostics.json",
+        "sha256": "b488cf905b78a379a1d0c79dc5dcbe6476d6881de30ce795e87a5b645284949e",
+        "bytes": 255599
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.diagnostics.raw.txt",
+        "sha256": "2fc07f7698a11329fd40764c72769f46983cbbc9e3d48a51955d84d6fe3fc0e8",
+        "bytes": 255598
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.json",
+        "sha256": "b82eed0234b513caf9c12674f808ef02525483ad907fa45a867d2f70a70ab9df",
+        "bytes": 5024
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.raw.txt",
+        "sha256": "b82eed0234b513caf9c12674f808ef02525483ad907fa45a867d2f70a70ab9df",
+        "bytes": 5024
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.json",
+        "sha256": "e369b9773c3ddfb97ade5c80e8a30bcf26a749cbb0be54d54bb5b22235ec6e32",
+        "bytes": 769
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.raw.txt",
+        "sha256": "e369b9773c3ddfb97ade5c80e8a30bcf26a749cbb0be54d54bb5b22235ec6e32",
+        "bytes": 769
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.diagnostics.json",
+        "sha256": "3aecb7fd64f8bacad744aa8c68ac1033cda00cd4a5d7220418046e9f663f718a",
+        "bytes": 210661
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.diagnostics.raw.txt",
+        "sha256": "903bcc54537d7991ad354c8a62833f72d8b3aec5a7e1cc276887d62a1d8c57f4",
+        "bytes": 210660
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.json",
+        "sha256": "64dbd9b565e390db92cc6efe9391a64c745ea2bbd344bafd383655b2275d4065",
+        "bytes": 1563
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.raw.txt",
+        "sha256": "64dbd9b565e390db92cc6efe9391a64c745ea2bbd344bafd383655b2275d4065",
+        "bytes": 1563
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.diagnostics.json",
+        "sha256": "55f805e47ba828ea846cdca803f0b63161cdcf3e8828e98309a24036373e90be",
+        "bytes": 297996
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.diagnostics.raw.txt",
+        "sha256": "9c0d3bbb7d58cea8160b6181630d270158cc76e8b207bdb8e7a9702920811910",
+        "bytes": 297995
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.json",
+        "sha256": "7c504e7133466d8982af199d2b3155a1d509fce2aaae9f377c887d25e398225f",
+        "bytes": 5024
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.raw.txt",
+        "sha256": "7c504e7133466d8982af199d2b3155a1d509fce2aaae9f377c887d25e398225f",
+        "bytes": 5024
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.diagnostics.json",
+        "sha256": "82e260982c8730ed9b5d8dce98964c3886b81664f8a355f18339fe80e63bbe5c",
+        "bytes": 205378
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.diagnostics.raw.txt",
+        "sha256": "2c7fa60af17400cb577abd2f98e4d6060c9b9a2bbe1f208d8ba2d77b5dd2229f",
+        "bytes": 205377
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.json",
+        "sha256": "52065c3a8a940a1b92aba2a7e8271a865cb46f86b3d6e31db9a5f6fdb0b9a116",
+        "bytes": 3441
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.raw.txt",
+        "sha256": "52065c3a8a940a1b92aba2a7e8271a865cb46f86b3d6e31db9a5f6fdb0b9a116",
+        "bytes": 3441
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.diagnostics.json",
+        "sha256": "95b9cfa41b36d3528ee2910c42644031c203be766e81037c66201545bfbadb9c",
+        "bytes": 298477
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.diagnostics.raw.txt",
+        "sha256": "2686aa7fe7ab769f6b80433c1e7fdc8f5af68189ac23106741ff291b428d3fec",
+        "bytes": 298476
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.json",
+        "sha256": "155ce9bfdac13a7f2d17d0b4999f59da5a4d6c038afc1557a0ac30a1acde9eb5",
+        "bytes": 6055
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.raw.txt",
+        "sha256": "a472c52332703793c690465fd5ba7a0c4f5931e6cfb3f74689192380da7e2de9",
+        "bytes": 6063
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.diagnostics.json",
+        "sha256": "e2893043d17c5719464b788da6f42495bd1053d3332504dc1d37e2cb65e86b08",
+        "bytes": 169716
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.diagnostics.raw.txt",
+        "sha256": "5eae4fa253d75e31056f6dc17c68a231c7ef868f42c3d0226f1e80177381744e",
+        "bytes": 169715
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.json",
+        "sha256": "69127245a8cfe6bc010b2a216fe1bfd57253ada7a9d148bb59138769beac2c50",
+        "bytes": 2088
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.raw.txt",
+        "sha256": "69127245a8cfe6bc010b2a216fe1bfd57253ada7a9d148bb59138769beac2c50",
+        "bytes": 2088
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.diagnostics.json",
+        "sha256": "9693c7db5149a74641a7c12b7bdb7309129a6b4acb8ce6f6963227fabc78c18e",
+        "bytes": 155991
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.diagnostics.raw.txt",
+        "sha256": "921b57904f37103c8b0f7235660b8c6e791e0e33d58302fdabf88dfd64c0a7c7",
+        "bytes": 155990
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.json",
+        "sha256": "3f05ef92b9de9ed554fec193faa9199463dcc0d38c43351727b81546d973a8ef",
+        "bytes": 2088
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.raw.txt",
+        "sha256": "3f05ef92b9de9ed554fec193faa9199463dcc0d38c43351727b81546d973a8ef",
+        "bytes": 2088
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.diagnostics.json",
+        "sha256": "093407b7a1c55f3b9fc6ea34389c8628ec40bc690483a9d878637b2772655d16",
+        "bytes": 295279
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.diagnostics.raw.txt",
+        "sha256": "10eb2b5a8c84e18a43d427d4e3e71e31875dde0578182c5c98748402546ec8f5",
+        "bytes": 295278
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.json",
+        "sha256": "1c671f30ed54a2b03570aae7fae91e3358881d3ce8a897ccc0d5b09564b1f9ca",
+        "bytes": 2699
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.raw.txt",
+        "sha256": "1c671f30ed54a2b03570aae7fae91e3358881d3ce8a897ccc0d5b09564b1f9ca",
+        "bytes": 2699
+      },
+      "semanticallyEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/renderer-fixed-inputs.json",
+        "sha256": "61c6cf0e8e0f1a19bea9279642d05c3683655ebfa42991072faf8b34e91a1db8",
+        "bytes": 769
+      },
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/renderer-fixed-inputs.raw.txt",
+        "sha256": "61c6cf0e8e0f1a19bea9279642d05c3683655ebfa42991072faf8b34e91a1db8",
+        "bytes": 769
+      },
+      "semanticallyEqual": true
+    }
+  ],
+  "limitations": [
+    "No P17 native/WebKit install, actual OS opener/quit, Agent/model or user-data operation. Root owns later native validation.",
+    "Synthetic browser copy state does not prove OS copy; Rust temporary-file evidence is separate.",
+    "Windows, network/removable disks, power loss/disk full and continuously adversarial sameUID path replacement not proven.",
+    "No persisted copy recovery ledger: process death cannot reconstruct outcome. Unknown stays unknown.",
+    "Vitest units use fake timers; final browser uses real timers. No token savings or whole-project completion claim."
+  ],
+  "historicalReferenceResolution": {
+    "checkpointPreservedUnmodified": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-checkpoint.json",
+      "sha256": "8fc7882ee515787be7db6f8777739974c983cc832b6037d136b0c2574421690c"
+    },
+    "note": "Root requested JSON formatting after original checkpoint. These historical hashes resolve to exact original .raw.txt bytes; semantic content is unchanged in formatted .json. Source hashes in the earlier checkpoint are historical, before authorized repairs/independent absence tests.",
+    "mapping": [
+      {
+        "historicalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.json",
+        "historicalSha256": "a472c52332703793c690465fd5ba7a0c4f5931e6cfb3f74689192380da7e2de9",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.raw.txt"
+      },
+      {
+        "historicalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.json",
+        "historicalSha256": "1c671f30ed54a2b03570aae7fae91e3358881d3ce8a897ccc0d5b09564b1f9ca",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.raw.txt"
+      },
+      {
+        "historicalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.json",
+        "historicalSha256": "64dbd9b565e390db92cc6efe9391a64c745ea2bbd344bafd383655b2275d4065",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.raw.txt"
+      },
+      {
+        "historicalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.json",
+        "historicalSha256": "52065c3a8a940a1b92aba2a7e8271a865cb46f86b3d6e31db9a5f6fdb0b9a116",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.raw.txt"
+      },
+      {
+        "historicalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.json",
+        "historicalSha256": "e369b9773c3ddfb97ade5c80e8a30bcf26a749cbb0be54d54bb5b22235ec6e32",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.raw.txt"
+      }
+    ]
+  }
+}

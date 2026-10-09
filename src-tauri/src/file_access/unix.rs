@@ -209,13 +209,37 @@ impl TemporaryExport {
         self.published = true;
         Ok(())
     }
+    /// Report cleanup of the exact owned temporary object. On uncertainty do
+    /// not let Drop retry against a possibly replaced directory entry.
+    pub fn discard(&mut self) -> io::Result<()> {
+        if self.published {
+            return Err(invalid());
+        }
+        self.published = true;
+        let current = open_at(
+            &self.directory,
+            OsStr::new(self.name.to_str().map_err(|_| invalid())?),
+            false,
+        )?;
+        if !super::same_object(&self.file, &current)? {
+            return Err(invalid());
+        }
+        if unsafe { libc::unlinkat(self.directory.as_raw_fd(), self.name.as_ptr(), 0) } != 0 {
+            return Err(io::Error::last_os_error());
+        }
+        if super::stamp(&self.file)?.links != 0 {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    pub fn retain_unknown(&mut self) {
+        self.published = true;
+    }
 }
 impl Drop for TemporaryExport {
     fn drop(&mut self) {
         if !self.published {
-            unsafe {
-                libc::unlinkat(self.directory.as_raw_fd(), self.name.as_ptr(), 0);
-            }
+            let _ = self.discard();
         }
     }
 }

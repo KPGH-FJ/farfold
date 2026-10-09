@@ -210,7 +210,7 @@ fn file_size_and_text_preview_have_separate_bounds() {
     file.set_len(MAX_TEXT_BYTES + 1).unwrap();
     let verified = inspect(root.path(), &path).unwrap();
     assert!(matches!(read_text(&verified), Err(DeliveryError::TooLarge)));
-    file.set_len(MAX_FILE_BYTES + 1).unwrap();
+    file.set_len(MAX_VERIFIED_FILE_BYTES + 1).unwrap();
     assert_eq!(inspect(root.path(), &path), Err(DeliveryError::TooLarge));
 }
 

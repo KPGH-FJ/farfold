@@ -13,6 +13,7 @@ pub struct DraftExit {
     serial: AtomicU64,
     pending: Mutex<Option<(u64, i32, bool)>>,
     exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
+    copy_exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
 pub(crate) struct ClearExitGuard<'a>(&'a DraftExit);
 impl Drop for ClearExitGuard<'_> {
@@ -28,7 +29,11 @@ impl DraftExit {
     /// A successful data clear has already sealed the old database connection.
     /// Retain admission until process exit and invalidate any earlier save owner.
     /// The new renderer will load only the empty store after restart.
-    pub(crate) fn prepare_cleared_restart(&self, permit: crate::managed_update::UpdatePermit) {
+    pub(crate) fn prepare_cleared_restart(
+        &self,
+        permit: crate::managed_update::UpdatePermit,
+        copy_permit: crate::managed_update::UpdatePermit,
+    ) {
         self.ready.store(false, Ordering::SeqCst);
         *self
             .pending
@@ -38,6 +43,10 @@ impl DraftExit {
             .exit_admission
             .lock()
             .unwrap_or_else(|error| error.into_inner()) = Some(permit);
+        *self
+            .copy_exit_admission
+            .lock()
+            .unwrap_or_else(|error| error.into_inner()) = Some(copy_permit);
     }
 
     #[cfg(target_os = "macos")]
@@ -108,9 +117,9 @@ impl DraftExit {
             .lock()
             .map_err(|_| "暂时无法取消退出，请重试")?;
         match *pending {
-            Some((current, code, false))
-                if current == token && code != tauri::RESTART_EXIT_CODE =>
-            {
+            Some((current, _, false)) if current == token => {
+                // Only withdraw this unacknowledged request. The installed
+                // update and ManagedUpdateAuthority's restart admission stay.
                 *pending = None;
                 Ok(())
             }
@@ -141,6 +150,23 @@ impl DraftExit {
 pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
     let state = app.state::<DraftExit>();
     if !state.ready.load(Ordering::SeqCst) {
+        // A copy admitted before renderer startup acknowledgement still owns
+        // real OS work. Never rely solely on the renderer's exit UI.
+        if let tauri::RunEvent::ExitRequested { api, .. } = event {
+            let mut held = state
+                .copy_exit_admission
+                .lock()
+                .unwrap_or_else(|error| error.into_inner());
+            if held.is_none() {
+                match app
+                    .state::<crate::file_copy_jobs::FileCopyJobs>()
+                    .seal_exit()
+                {
+                    Ok(permit) => *held = Some(permit),
+                    Err(_) => api.prevent_exit(),
+                }
+            }
+        }
         return;
     }
     match event {
@@ -149,6 +175,13 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
                 .state::<crate::managed_update::ManagedUpdateAuthority>()
                 .is_installing();
             let (allowed, deferred) = state.take_allowed(installing);
+            if deferred.is_some() {
+                state
+                    .copy_exit_admission
+                    .lock()
+                    .unwrap_or_else(|error| error.into_inner())
+                    .take();
+            }
             if let Some(owner) = allowed {
                 #[cfg(target_os = "macos")]
                 crate::macos_quit::reply_allowed(owner);
@@ -215,6 +248,11 @@ pub fn app_exit_after_save(
     token: u64,
     confirm_activity: Option<bool>,
 ) -> Result<(), String> {
+    // Separate from confirm_activity: confirmed Agent interruption never
+    // cancels a filesystem write, nor permits a late copy after this point.
+    let copy_permit = app
+        .state::<crate::file_copy_jobs::FileCopyJobs>()
+        .seal_exit_with_confirmation(confirm_activity == Some(true))?;
     let installing = app
         .state::<crate::managed_update::ManagedUpdateAuthority>()
         .is_installing();
@@ -225,6 +263,10 @@ pub fn app_exit_after_save(
             Err(error) => Err(error),
         }
     })?;
+    *app.state::<DraftExit>()
+        .copy_exit_admission
+        .lock()
+        .unwrap_or_else(|error| error.into_inner()) = Some(copy_permit);
     if code == tauri::RESTART_EXIT_CODE {
         app.request_restart();
     } else {
@@ -245,6 +287,19 @@ pub fn app_exit_cancel(app: AppHandle, token: u64) -> Result<(), String> {
 mod tests {
     use super::*;
     #[test]
+    fn unacknowledged_restart_can_stay_in_app_without_allowing_exit() {
+        let state = DraftExit::default();
+        let token = state.request(tauri::RESTART_EXIT_CODE).unwrap();
+        assert!(
+            state.cancel(token).is_ok(),
+            "the user can withdraw this save/restart request"
+        );
+        assert!(state.complete(token, false, || Ok(None)).is_err());
+        assert_eq!(state.take_allowed(false), (None, None));
+        let next = state.request(tauri::RESTART_EXIT_CODE).unwrap();
+        assert_ne!(next, token);
+    }
+    #[test]
     fn data_clear_blocks_quit_then_restarts_without_saving_old_drafts() {
         let gate = crate::managed_update::UpdateAdmission::default();
         let state = DraftExit::default();
@@ -254,7 +309,12 @@ mod tests {
         let clearing = state.begin_data_clear();
         assert_eq!(state.take_allowed(false), (None, Some(owner)));
         assert!(state.complete(owner, false, || Ok(None)).is_err());
-        state.prepare_cleared_restart(gate.update().unwrap());
+        let copies = crate::file_copy_jobs::FileCopyJobs::default();
+        state.prepare_cleared_restart(gate.update().unwrap(), copies.seal_exit().unwrap());
+        assert!(
+            copies.seal_exit().is_err(),
+            "copy admission is retained until the cleared restart"
+        );
         assert!(!state.ready.load(Ordering::SeqCst));
         assert!(state.complete(owner, false, || Ok(None)).is_err());
         assert!(gate.activity().is_err());
@@ -352,16 +412,16 @@ mod tests {
     }
 
     #[test]
-    fn installed_restart_keeps_its_own_admission_and_cannot_be_cancelled() {
+    fn acknowledged_restart_keeps_its_own_admission_and_cannot_be_cancelled() {
         let state = DraftExit::default();
         let token = state.request(tauri::RESTART_EXIT_CODE).unwrap();
-        assert!(state.cancel(token).is_err());
         assert_eq!(
             state
                 .complete(token, false, || panic!("restart admission already held"))
                 .unwrap(),
             tauri::RESTART_EXIT_CODE
         );
+        assert!(state.cancel(token).is_err());
     }
     #[test]
     fn repeated_exit_keeps_one_owner_and_stale_save_cannot_authorize_exit() {

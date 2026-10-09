@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/FileDeliveryActions.test.tsx (24 tests | 1 failed) 1621ms
+   × opens a reported file directly but never falls back to it after a chosen file fails 62ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > opens a reported file directly but never falls back to it after a chosen file fails
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  className="btn btn-ghost"
+  disabled={false}
+  onClick={[Function onClick]}
+  type="button"
+>
+  打开文件
+</button>
+
+ ❯ src/components/FileDeliveryActions.test.tsx:550:26
+    548|   click(S.choose);
+    549|   await vi.waitFor(() => expect(text()).toContain("file missing"));
+    550|   expect(button(S.open)).toBeUndefined();
+       |                          ^
+    551|   expect(open).toHaveBeenCalledTimes(1);
+    552| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 10 passed (11)
+      Tests  1 failed | 95 passed (96)
+   Start at  05:09:37
+   Duration  1.84s (transform 446ms, setup 0ms, import 851ms, tests 1.71s, environment 1ms)
+

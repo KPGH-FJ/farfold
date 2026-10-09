@@ -1,0 +1,27 @@
+src/runtime/text_block_preview.ts 35ms (unchanged)
+src/runtime/text_block_preview.test.ts 9ms (unchanged)
+src/runtime/text_block_reader.ts 10ms (unchanged)
+src/runtime/text_block_reader.test.ts 7ms (unchanged)
+src/runtime/text_block_strings.ts 4ms (unchanged)
+src/runtime/text_block_strings.test.ts 2ms
+src/runtime/text_block_wire.test.ts 3ms
+src/runtime/file_copy_types.ts 5ms
+src/runtime/file_copy_jobs.ts 21ms
+src/runtime/file_copy_jobs.test.ts 10ms
+src/runtime/file_copy_strings.ts 2ms (unchanged)
+src/runtime/file_delivery.ts 6ms
+src/runtime/file_delivery.test.ts 5ms
+src/runtime/preview_reading_position.ts 7ms (unchanged)
+src/runtime/preview_reading_position.test.ts 4ms (unchanged)
+src/runtime/preview_capture.ts 4ms (unchanged)
+src/components/TextBlockPreview.tsx 9ms
+src/components/TextBlockPreview.css 10ms (unchanged)
+src/components/TextBlockPreview.test.tsx 9ms
+src/components/FileCopyJobsStatus.tsx 4ms
+src/components/FileCopyJobsStatus.test.tsx 5ms
+src/components/OpenedFileView.tsx 31ms
+src/components/OpenedFileView.test.tsx 46ms
+src/components/FileDeliveryActions.tsx 9ms (unchanged)
+src/components/FileDeliveryActions.test.tsx 20ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-owned.json 4ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/fixture.tsx 10ms (unchanged)

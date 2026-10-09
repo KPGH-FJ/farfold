@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_copy_jobs.independent.test.ts (5 tests | 2 failed) 8ms
+   × withdraws a never-settled preparation without permanently trapping exit 4ms
+   × cancels the precise late ready reservation even after its withdrawn card closed 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_copy_jobs.independent.test.ts > withdraws a never-settled preparation without permanently trapping exit
+AssertionError: expected 'preparing' to be 'notStarted' // Object.is equality
+
+Expected: "notStarted"
+Received: "preparing"
+
+ ❯ src/runtime/file_copy_jobs.independent.test.ts:54:39
+     52|   await begin;
+     53|   expect(port.start).not.toHaveBeenCalled();
+     54|   expect(jobs.getSnapshot()[0].phase).toBe("notStarted");
+       |                                       ^
+     55|   expect(jobs.hasUnsettled()).toBe(false);
+     56|   await jobs.dismiss(jobs.getSnapshot()[0].id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/file_copy_jobs.independent.test.ts > cancels the precise late ready reservation even after its withdrawn card closed
+AssertionError: expected [ { id: 1, file: { …(7) }, …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "checking": false,
++     "destination": "/controlled-output/copy.txt",
++     "file": {
++       "name": "source.txt",
++       "path": "/controlled/source.txt",
++       "resolvedPath": "/controlled/source.txt",
++       "root": "/controlled",
++       "sha256": "controlled-digest",
++       "size": 6,
++       "version": "source-v1",
++     },
++     "id": 1,
++     "phase": "preparing",
++   },
++ ]
+
+ ❯ src/runtime/file_copy_jobs.independent.test.ts:69:30
+     67|   await begin;
+     68|   await jobs.dismiss(jobs.getSnapshot()[0].id);
+     69|   expect(jobs.getSnapshot()).toEqual([]);
+       |                              ^
+     70|   pending.resolve(ready);
+     71|   await vi.advanceTimersByTimeAsync(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  04:58:25
+   Duration  106ms (transform 22ms, setup 0ms, import 35ms, tests 8ms, environment 0ms)
+

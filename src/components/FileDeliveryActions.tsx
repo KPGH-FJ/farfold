@@ -6,6 +6,11 @@ import {
   type TextPreview,
   type VerifiedFile,
 } from "../runtime/file_delivery";
+import { FILE_COPY_STRINGS as C } from "../runtime/file_copy_strings";
+import { copyFailureCode } from "../runtime/file_copy_types";
+import { fileCopyJobs } from "../runtime/file_copy_jobs";
+import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
+import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_DELIVERY_STRINGS as S } from "../runtime/file_delivery_strings";
 
 export interface FileDeliveryActionsProps {
@@ -148,12 +153,16 @@ export function FileDeliveryControls({
     const value = file;
     return run(S.deliveryPending, async (token) => {
       const destination = await save({
-        title: S.saveTitle,
+        title: T.saveTitle,
         defaultPath: value.name,
       });
       if (!current(token) || !destination) return;
-      const receipt = await fileDelivery.copy(value, destination);
-      if (current(token)) setResult(S.copied(receipt.destination));
+      try {
+        await fileCopyJobs.begin(value, destination);
+      } catch (error) {
+        if (copyFailureCode(error) !== "busy") throw error;
+        if (current(token)) setError(C.failures.busy);
+      }
     });
   };
 
@@ -261,7 +270,7 @@ export function FileDeliveryControls({
               disabled={disabled}
               onClick={() => void copy()}
             >
-              {S.save}
+              {T.save}
             </button>
             <button
               type="button"
@@ -302,6 +311,7 @@ export function FileDeliveryControls({
           {result}
         </span>
       )}
+      {file && <FileCopyJobsStatus file={file} />}
       {preview && (
         <details open>
           <summary>{S.currentTitle}</summary>

@@ -1,0 +1,37 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.95s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 8 tests
+test file_copy_jobs::independent_tests::independent_cancel_before_io_creates_no_private_or_final_file ... ok
+test file_copy_jobs::independent_tests::independent_expired_reservation_cannot_restart_and_releases_only_its_gate ... ok
+test file_copy_jobs::independent_tests::independent_cancel_after_final_chunk_wins_before_publication ... ok
+test file_copy_jobs::independent_tests::independent_same_length_source_change_never_publishes_partial_bytes ... ok
+test file_copy_jobs::independent_tests::independent_publication_winner_is_not_reported_cancelled_afterwards ... ok
+test file_copy_jobs::independent_tests::independent_destination_created_at_publication_is_preserved_exactly ... ok
+test file_copy_jobs::independent_tests::independent_source_growth_never_reports_progress_beyond_the_verified_total ... FAILED
+test file_copy_jobs::independent_tests::independent_completed_copy_retains_the_explicit_destination_identity ... FAILED
+
+failures:
+
+---- file_copy_jobs::independent_tests::independent_source_growth_never_reports_progress_beyond_the_verified_total stdout ----
+
+thread 'file_copy_jobs::independent_tests::independent_source_growth_never_reports_progress_beyond_the_verified_total' (21511890) panicked at src/file_copy_jobs_independent_tests.rs:205:5:
+assertion failed: maximum.load(Ordering::SeqCst) <= file.size
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- file_copy_jobs::independent_tests::independent_completed_copy_retains_the_explicit_destination_identity stdout ----
+
+thread 'file_copy_jobs::independent_tests::independent_completed_copy_retains_the_explicit_destination_identity' (21511885) panicked at src/file_copy_jobs_independent_tests.rs:57:5:
+assertion `left == right` failed
+  left: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpbaOn37/actual-parent/result.txt"
+ right: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpbaOn37/selected-parent/result.txt"
+
+
+failures:
+    file_copy_jobs::independent_tests::independent_completed_copy_retains_the_explicit_destination_identity
+    file_copy_jobs::independent_tests::independent_source_growth_never_reports_progress_beyond_the_verified_total
+
+test result: FAILED. 6 passed; 2 failed; 0 ignored; 0 measured; 1218 filtered out; finished in 0.10s
+
+error: test failed, to rerun pass `--lib`

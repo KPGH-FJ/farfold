@@ -1,0 +1,439 @@
+{
+  "passed": true,
+  "checks": 19,
+  "results": [
+    {
+      "name": "StrictMode initial block uses supplied receipt and performs zero IPC",
+      "ok": true
+    },
+    {
+      "name": "large Markdown remains literal source without fragment parsing",
+      "ok": true
+    },
+    {
+      "name": "exact global lines, byte interval and continuation visible",
+      "ok": true
+    },
+    {
+      "name": "long line remains inside fixed content pane",
+      "ok": true
+    },
+    {
+      "name": "clipboard receives current fragment only",
+      "ok": true
+    },
+    {
+      "name": "next navigation sends exact file and ordinary non-restoring index",
+      "ok": true
+    },
+    {
+      "name": "only block position retained without content or version ledger",
+      "ok": true
+    },
+    {
+      "name": "in-flight read retains old text",
+      "ok": true
+    },
+    {
+      "name": "cancel reports pending OS read and disables overlapping navigation",
+      "ok": true
+    },
+    {
+      "name": "hide/show does not start another block request",
+      "ok": true
+    },
+    {
+      "name": "cancelled late success never replaces old block",
+      "ok": true
+    },
+    {
+      "name": "explicit retry restores navigation",
+      "ok": true
+    },
+    {
+      "name": "late hidden native pending retained and no automatic retry",
+      "ok": true
+    },
+    {
+      "name": "new verified version resets current content without old details",
+      "ok": true
+    },
+    {
+      "name": "lost start receipt visible as unknown instead of saved",
+      "ok": true
+    },
+    {
+      "name": "uncertain save cannot start duplicate writer",
+      "ok": true
+    },
+    {
+      "name": "publishing cancellation shows actual completed result",
+      "ok": true
+    },
+    {
+      "name": "explicit record close releases only terminal backend job",
+      "ok": true
+    },
+    {
+      "name": "no Agent or unexpected file action used",
+      "ok": true
+    }
+  ],
+  "calls": [
+    {
+      "cmd": "file_delivery_read_text_block",
+      "args": {
+        "file": {
+          "root": "/fixture",
+          "path": "/fixture/large.md",
+          "resolvedPath": "/fixture/large.md",
+          "name": "large.md",
+          "size": 2097152,
+          "version": "1",
+          "sha256": "synthetic-v1"
+        },
+        "blockIndex": 1,
+        "restorePosition": false
+      }
+    },
+    {
+      "cmd": "file_delivery_read_text_block",
+      "args": {
+        "file": {
+          "root": "/fixture",
+          "path": "/fixture/large.md",
+          "resolvedPath": "/fixture/large.md",
+          "name": "large.md",
+          "size": 2097152,
+          "version": "1",
+          "sha256": "synthetic-v1"
+        },
+        "blockIndex": 2,
+        "restorePosition": false
+      }
+    },
+    {
+      "cmd": "file_delivery_read_text_block",
+      "args": {
+        "file": {
+          "root": "/fixture",
+          "path": "/fixture/large.md",
+          "resolvedPath": "/fixture/large.md",
+          "name": "large.md",
+          "size": 2097152,
+          "version": "1",
+          "sha256": "synthetic-v1"
+        },
+        "blockIndex": 2,
+        "restorePosition": false
+      }
+    },
+    {
+      "cmd": "file_delivery_read_text_block",
+      "args": {
+        "file": {
+          "root": "/fixture",
+          "path": "/fixture/large.md",
+          "resolvedPath": "/fixture/large.md",
+          "name": "large.md",
+          "size": 2097152,
+          "version": "1",
+          "sha256": "synthetic-v1"
+        },
+        "blockIndex": 3,
+        "restorePosition": false
+      }
+    },
+    {
+      "cmd": "file_copy_prepare",
+      "args": {
+        "file": {
+          "root": "/fixture",
+          "path": "/fixture/large.md",
+          "resolvedPath": "/fixture/large.md",
+          "name": "large.md",
+          "size": 2097152,
+          "version": "1",
+          "sha256": "synthetic-v1"
+        },
+        "destination": "/fixture/out.md"
+      }
+    },
+    {
+      "cmd": "file_copy_start",
+      "args": {
+        "operationId": "controlled-copy"
+      }
+    },
+    {
+      "cmd": "file_copy_status",
+      "args": {
+        "operationId": "controlled-copy"
+      }
+    },
+    {
+      "cmd": "file_copy_cancel",
+      "args": {
+        "operationId": "controlled-copy"
+      }
+    },
+    {
+      "cmd": "file_copy_release",
+      "args": {
+        "operationId": "controlled-copy"
+      }
+    }
+  ],
+  "statuses": [
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "loading",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "loading",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "paused",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "paused",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "paused",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "paused",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "loading",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "ready",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "loading",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "paused",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "failed",
+      "code": "pending",
+      "readInFlight": true
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "1",
+        "sha256": "synthetic-v1"
+      },
+      "state": "failed",
+      "code": "pending",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "2",
+        "sha256": "v2"
+      },
+      "state": "ready",
+      "readInFlight": false
+    },
+    {
+      "file": {
+        "root": "/fixture",
+        "path": "/fixture/large.md",
+        "resolvedPath": "/fixture/large.md",
+        "name": "large.md",
+        "size": 2097152,
+        "version": "2",
+        "sha256": "v2"
+      },
+      "state": "ready",
+      "readInFlight": false
+    }
+  ],
+  "scope": "Actual React StrictMode/Chromium; fixed synthetic IPC/clipboard, no native file IO or Agent."
+}

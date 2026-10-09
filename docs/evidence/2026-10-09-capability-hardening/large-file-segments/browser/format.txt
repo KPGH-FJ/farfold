@@ -1,0 +1,4 @@
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/fixture.tsx 108ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/index.html 20ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/run.mjs 33ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/serve.mjs 4ms

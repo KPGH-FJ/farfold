@@ -1,0 +1,38 @@
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.diagnostics.json 96ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.diagnostics.json 35ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/fallback-styled-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-after.json 4ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/final-source-before.json 3ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.diagnostics.json 26ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.diagnostics.json 26ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-absence-styled-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.diagnostics.json 26ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.diagnostics.json 33ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.diagnostics.json 24ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.diagnostics.json 42ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-prepare-styled-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.diagnostics.json 29ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first-inputs.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.diagnostics.json 39ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.diagnostics.json 40ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.json 1ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.diagnostics.json 26ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-final.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.diagnostics.json 21ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.diagnostics.json 34ms
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/renderer-fixed-inputs.json 0ms (unchanged)

@@ -1,0 +1,18 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/browser-final.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/browser/browser-first.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-first.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/jobs-copy-fixed.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-first.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-renderer-fixed.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-second.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/parent-third.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-green.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-browser/paused-flight-red.diagnostics.json
+[warn] Code style issues found in 11 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

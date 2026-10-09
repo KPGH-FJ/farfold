@@ -213,7 +213,7 @@ fn oversized_replacement_does_not_enter_content_capture() {
     let (_root, path, file) = fixture();
     let replacement = fs::File::create(&path).unwrap();
     replacement
-        .set_len(super::super::MAX_FILE_BYTES + 1)
+        .set_len(super::super::MAX_VERIFIED_FILE_BYTES + 1)
         .unwrap();
     drop(replacement);
     assert_eq!(

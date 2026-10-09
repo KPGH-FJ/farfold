@@ -1,0 +1,86 @@
+{
+  "checkedAtUtc": "2026-10-09T21:21:22.126923+00:00",
+  "status": "seven_checks_passed_after_evidence_only_formatting",
+  "sourceBase": "7d2bbba48ff91ee517366e7d0212bbf675a5009b",
+  "inputCount": 1104,
+  "sourceUnchangedFromAllSixCodeChecks": true,
+  "inputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json",
+    "sha256": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12"
+  },
+  "checks": [
+    {
+      "name": "format",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "frontend",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/frontend.txt",
+      "sha256": "8c6b9becdd0efae86b047ad146508ae896dcd5736d797cae30bd45feae6d7449"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/build.txt",
+      "sha256": "9d00054ac26cbb27bbb96d8a5c8adfc15e3e29205d93141f1f01132354b0066a"
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e"
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b"
+    }
+  ],
+  "tests": {
+    "frontend": {
+      "files": 295,
+      "passed": 3251
+    },
+    "rust": {
+      "passed": 1230,
+      "ignored": 6,
+      "newIgnored": "Explicit 256MiB performance test, separately run in release. Existing real-Agent/Keychain ignored tests remain unclaimed."
+    }
+  },
+  "firstNonPass": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/receipt.json",
+    "sha256": "658cb1369008b8a8f5e420948b3326177a908df69540af7e89c937cc3d1f7e58",
+    "originalBytes": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/receipt.raw.txt",
+    "reason": "Eleven browser-evidence JSON files were not formatted; six code checks passed on unchanged source. Owners retained original or explicitly reconstructed raw bytes, then normalized JSON without semantic changes. See independent and frontend implementation receipts."
+  },
+  "retestBoundary": "Only evidence JSON changed; all1104 source/config/test fixtures match the successful six code checks exactly. Re-ran repository format check, did not rerun unchanged code tests.",
+  "buildWarning": "Existing larger-than-500kB chunk warning retained; not a failed build or proof of measured UI performance.",
+  "independentCapabilityReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-review.json",
+    "sha256": "a234fdbc6de48e141c99261acb025c6e535c654474837b24f19c2f57054b63c0"
+  },
+  "installed": false,
+  "realAgentAcceptance": false,
+  "remaining": [
+    "Exact-commit candidate build and independent inspection",
+    "Sole formal application replacement with fresh data retention comparison",
+    "Native file reading/copy/fallback and exit interaction checks",
+    "Windows and all remaining original capability/Agent standards"
+  ]
+}

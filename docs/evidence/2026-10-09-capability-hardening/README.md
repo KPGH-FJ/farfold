@@ -8,7 +8,7 @@
 
 P20 [七项工程检查](file-refresh-checks/final-verification.json)通过：1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。子预览受控浏览器23项、[父层实际浏览器](file-preview-refresh/parent-browser-independent.json)28项通过；后者为实际组件/Office解析器与模拟Tauri接口，不代替上述正式WebKit证据。隐藏、迟到读取和旧状态覆盖新预览的有效反例已修正。其他格式、真实Agent改写、Windows和全量122项/29家八项标准保持各自证据边界。
 
-下一片P17大文件流式核验、分块查看、可取消另存及退出保护正在开发；源码变化不代表已进入当前正式安装。PPTX与工作树设计研究仍有未关闭条件。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)和[6c36图片修复成功](docx-image-fix-candidate/installed-docx-images.json)保留，均为当时范围。
+P17大文件流式核验、分块查看、可取消完整另存、退出/重启/清数据保护及超限位置退路已完成源码与[独立复核](large-file-segments/independent-review.json)。实际浏览器最终33项通过，原pending和隐藏/取消后重复读取反例已修复；[七项工程整合](large-file-checks-final/final-verification.json)通过（1,104输入稳定，前端3,251项、Rust1,230项/6项忽略；其中新增256MiB性能项已单独执行）。首轮仅证据JSON格式失败，保留原始记录并规范后单独复验全仓格式。P17尚未安装，下一步为精确提交候选、数据保留及正式应用分项验证。PPTX与工作树设计研究仍有未关闭条件。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)和[6c36图片修复成功](docx-image-fix-candidate/installed-docx-images.json)保留，均为当时范围。
 
 2026-10-10 图片修复衔接：[同源WebKit反例与修复](docx-image-csp/receipt.json)及[独立复核](docx-image-csp/independent-review.json)已完成，生产配置仅在图片源增加本地blob，其他来源和指令保持。该轮修复前正式应用为af66f006，图片失败保留；其后6c36安装及分项成功见首段。修复首轮[全仓检查](docx-image-fix-checks/receipt.json)1,059输入未变，前端280文件/3,123项及类型/打包/Rust静态检查通过；Rust1,177通过、1项协议分类测试失败、5项忽略，当时另有并行PPTX研究文件排版问题。其后[真实配置锁反例与夹具修正](protocol-error-timing/receipt.json)保留原错误分类断言，并使派发前等待与响应超时分别有界；原失败具体调度未捕获。[最终整合](docx-image-fix-checks-final/final-verification.json)已七项通过，前端3,123项、Rust1,179项/5项忽略，1,059输入匹配。只有Rust测试文件在首轮后变化，因此前端/类型/打包复用字节相同输入的成功记录，最终重跑全仓格式及Rust检查。修复安装的私有退出记录、元数据恢复副本和217,400条新基线已完成；之后候选、安装及实机结果见首段。
 

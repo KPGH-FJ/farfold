@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (64 tests | 1 failed) 5019ms
+   × offers manual delivery for a text file above the reader limit 1008ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > offers manual delivery for a text file above the reader limit
+AssertionError: expected undefined to be defined
+ ❯ src/components/OpenedFileView.test.tsx:161:49
+    159| async function ready() {
+    160|   render();
+    161|   await vi.waitFor(() => expect(button(S.open)).toBeDefined());
+       |                                                 ^
+    162| }
+    163| const drain = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 131 passed (132)
+   Start at  04:51:13
+   Duration  5.40s (transform 593ms, setup 0ms, import 827ms, tests 6.63s, environment 0ms)
+

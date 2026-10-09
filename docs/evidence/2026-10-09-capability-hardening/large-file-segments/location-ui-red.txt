@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (69 tests | 2 failed | 63 skipped) 245ms
+   × provides only explicit location actions when inspection is too large, without inventing a verified file 13ms
+   × a stale location fallback callback cannot open another selected file 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > provides only explicit location actions when inspection is too large, without inventing a verified file
+AssertionError: expected '<section class="file-artifact-view" a…' to contain '尚未核实文件内容；以下操作只打开或显示当前所选位置。'
+
+Expected: "尚未核实文件内容；以下操作只打开或显示当前所选位置。"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新打开</button></div><p role="status">文件超过 256 MiB 的分段查看限制。</p></div></section>"
+
+ ❯ src/components/OpenedFileView.test.tsx:1225:25
+    1223|   h.inspectLink.mockRejectedValue({ code: "tooLarge" }); render(); awa…
+    1224|   expect(render().html).toContain(T.failures.tooLarge);
+    1225|   expect(render().html).toContain(T.locationScope);
+       |                         ^
+    1226|   expect(h.openLocation).not.toHaveBeenCalled(); expect(h.revealLocati…
+    1227|   click(T.openLocation); await drain(); expect(h.openLocation).toHaveB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > a stale location fallback callback cannot open another selected file
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/OpenedFileView.test.tsx:1232:185
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed | 63 skipped (69)
+   Start at  05:11:39
+   Duration  526ms (transform 114ms, setup 0ms, import 222ms, tests 245ms, environment 0ms)
+

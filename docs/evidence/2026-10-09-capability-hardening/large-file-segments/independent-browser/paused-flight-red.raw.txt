@@ -1,0 +1,111 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "paused-flight-cancel",
+      "name": "paused presentation must not admit an overlapping whole-file read",
+      "ok": false,
+      "detail": {
+        "mode": "cancel",
+        "before": 2,
+        "after": 3,
+        "firstPromiseStillUnsettled": true
+      }
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "name": "paused presentation must not admit an overlapping whole-file read",
+      "ok": false,
+      "detail": {
+        "mode": "hide",
+        "before": 2,
+        "after": 3,
+        "firstPromiseStillUnsettled": true
+      }
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 45
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 45
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 46
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 94
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 96
+    },
+    {
+      "scenario": "paused-flight-cancel",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 98
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 331
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 331
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 332
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 359
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 364
+    },
+    {
+      "scenario": "paused-flight-hide",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 367
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 572,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}

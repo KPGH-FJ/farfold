@@ -1,0 +1,72 @@
+{
+  "updatedAtUtc": "2026-10-09T21:22:22.745798+00:00",
+  "objective": "Continue all authorized capability hardening against the active 122-item plan and 29-by-8 standards; do not mark market readiness from this slice.",
+  "installed": "fa235998 / 0.1.7 arm64, P20 native validation and original seven unsent items preserved; formal app normally quit and remains closed",
+  "head": "7d2bbba4 (P20 documentation and evidence only); P17 source remains uncommitted",
+  "rootImplemented": [
+    "File-copy activity available from Sidebar after closing preview",
+    "Unsettled file I/O blocks both ordinary and confirmed/restart quit; recheck after metadata save and backend gate handling",
+    "Authoritative settled-unknown or exact absent-ID result requires explicit quit review; not treated as saved",
+    "Shared copy query/cancel controls stay usable inside the quit review",
+    "PDF hint no longer incorrectly says every change requires manual rereading (next source only)"
+  ],
+  "rootChecks": {
+    "red": "exit-protection-red.txt: six effective pre-fix failures, eighteen passes",
+    "green": "exit-protection-green.txt:26 passes",
+    "absenceGreen": "exit-protection-absence-green.txt:27 passes, final root source",
+    "boundary": "Mocked React hook/IPC tests; actual browser and native UI are not implied"
+  },
+  "ownerWork": {
+    "architecture": "Streaming verification, full UTF-8 blocks, in-memory copy jobs, cancellation/publication ownership, metadata-only fallback, quit/restart/data-clear protection; final independent review pending",
+    "product_coverage": "Partial text reader and shared copy UI, authoritative absence/unknown handling, pending/hide duplicate-read fix and fallback; source not yet frozen",
+    "verification": "P20 document/hash closeout done; P17 browser effective pending/hide failures retained, final rerun and root activity/quit checks pending"
+  },
+  "next": [
+    "Independent final check receipt, scoped P17 local commit",
+    "Build and independently verify exact-commit sole candidate",
+    "Replace sole formal app only after source/candidate/data checks, then native file interactions and post-quit unsent preservation",
+    "Continue remaining active-plan capabilities; no global completion claim"
+  ],
+  "privatePreparation": {
+    "directory": "output/2026-10-10-large-file-install",
+    "normalQuitAndMetadataBackupVerified": true,
+    "beforeManifestEntries": 217400,
+    "beforeManifestSha256": "dd70970cd1803d248263ab56ceec98f542e1e8e8c321d226b4c73ca2e0fd0a34",
+    "fixtures": "native-fixtures.json: owned16MiB Markdown,256MiB text,invalid UTF8 suffix,257MiB sparse oversize",
+    "newCandidateBuilt": false,
+    "newCandidateInstalled": false
+  },
+  "rootSourceSha256": {
+    "src/runtime/exit_impact.ts": "e84e900662dcc3675ff36b688d305371419176105029480aa9d2bb573ce812f1",
+    "src/runtime/exit_impact.test.ts": "5a162142a95de54d75f267328d0eb8053bd2369bb294b3ff67a65a1b60fa83c7",
+    "src/components/DraftStartup.tsx": "a39534b0d9052188bb3fc198a75a0f9cfc6fa6ba014de18e4ffb585f3bd7ca1f",
+    "src/components/DraftStartup.test.tsx": "57414396a98dae9334dceaa792c01859ea069d4fdbfc7cdfb63e551dcc2e6f37",
+    "src/components/DraftStartup.restore.test.tsx": "239e8c578b66cee27c27e5957c6415367d03c0b2d1b80dcc797489e27c239f81",
+    "src/components/FileCopyActivity.tsx": "7233bda938e08d6309790601d214327164b2ecf4d414aaafe32e98d86e6bf718",
+    "src/components/Sidebar.tsx": "a8972f13bfb17df47b357233eb04a6d995b4ae9d6befa12b8382eba7cda39ebe",
+    "src/runtime/visual_preview.ts": "4dfc24d0c69496bd4e93bf4e6211d144b97af1e8d411a0a3451b6538db196141"
+  },
+  "doNotTouch": [
+    "Two protected historical reliability README edits",
+    "User Agent configs, credentials, history and original unsent values",
+    "src-tauri/target as a whole; it contains historical backups"
+  ],
+  "openGlobalConditions": [
+    "All original item IDs remain; source/browser/installed/Agent evidence separate",
+    "Desktop access NEW-01 unknown; no permission expansion",
+    "Windows, remaining official Agent capabilities, full Office/PPTX, worktree lifecycle and real Agent journeys remain open",
+    "Public distribution/signing/notarization/updater deferred by user"
+  ],
+  "sourceFreeze": "All P17 sources frozen; 1104 source/config/test-fixture inputs unchanged throughout the integration run. Two actual Rust DTO fixtures included.",
+  "firstIntegration": {
+    "record": "../large-file-checks/receipt.json",
+    "frontend": "295 files / 3251 passed",
+    "rust": "1230 passed / 6 ignored, one newly ignored 256MiB benchmark explicitly run in release",
+    "passed": ["typecheck", "frontend", "build", "cargo-fmt", "clippy", "rust"],
+    "failed": "Original evidence-only format failure retained; owners preserved raw bytes and normalized JSON; later full format passed."
+  },
+  "finalIntegration": {
+    "path": "../large-file-checks-final/final-verification.json",
+    "status": "seven checks passed, 1104 input hashes unchanged; waiting for independent final receipt"
+  }
+}

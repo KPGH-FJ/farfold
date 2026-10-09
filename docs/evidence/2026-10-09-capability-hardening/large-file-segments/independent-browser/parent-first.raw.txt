@@ -1,0 +1,61 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "navigation",
+      "name": "large Markdown is exact bounded source text rather than rendered partial Markdown",
+      "ok": true,
+      "elapsedMs": 106
+    },
+    {
+      "scenario": "navigation",
+      "name": "navigation keeps old block and gates revision work while native receipt is pending",
+      "ok": true,
+      "elapsedMs": 260
+    },
+    {
+      "scenario": "navigation",
+      "name": "cancelled late successful block never replaces displayed block",
+      "ok": true,
+      "elapsedMs": 262
+    },
+    {
+      "scenario": "navigation",
+      "name": "sequence failure",
+      "ok": false,
+      "error": "Error: unavailable button 重新读取此片段"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 37
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 37
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 38
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 107
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 262,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}

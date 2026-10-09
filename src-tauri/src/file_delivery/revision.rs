@@ -65,7 +65,7 @@ pub fn check_revision(
     mode: RevisionMode,
 ) -> Result<RevisionCheck, RevisionFailure> {
     check_with_capture(file, mode, |opened| {
-        super::capture_opened(opened, super::MAX_FILE_BYTES).map(|(file, _bytes)| file)
+        super::stream::verify(opened, |_, _| Ok(()))
     })
 }
 
@@ -77,7 +77,7 @@ fn check_with_capture(
     let opened = super::open_source_detailed(
         Path::new(&file.root),
         Path::new(&file.path),
-        super::MAX_FILE_BYTES,
+        super::MAX_VERIFIED_FILE_BYTES,
         Some(file),
     )?;
     // Reuse the opaque version calculation with the PREVIOUS content digest.

@@ -44,8 +44,14 @@ vi.mock("../runtime/conversation_read_state", () => ({
 }));
 vi.mock("../runtime/exit_impact", () => ({
   exitNeedsReview: () => false,
+  hasUnknownFinishedFileCopies: () => false,
   EXIT_IMPACT: {},
 }));
+vi.mock("../runtime/file_copy_jobs", () => ({
+  hasUnsettledFileCopies: () => false,
+  useFileCopyJobs: () => [],
+}));
+vi.mock("./FileCopyJobsStatus", () => ({ FileCopyJobsStatus: () => null }));
 vi.mock("./StorageRecovery", () => ({ StorageRecovery: () => null }));
 import { DraftStartup } from "./DraftStartup";
 import { StorageRecovery } from "./StorageRecovery";

@@ -180,13 +180,8 @@ describe("selected result verification", () => {
     expect(selection.current).toBeNull();
   });
 
-  it("sends the exact verified revision to copy, and exports a snapshot through a separate command", async () => {
+  it("exports a reported text snapshot through its separate command", async () => {
     vi.mocked(invoke).mockResolvedValue(undefined);
-    await fileDelivery.copy(result, "/chosen/copy.md");
-    expect(invoke).toHaveBeenLastCalledWith("file_delivery_copy", {
-      file: result,
-      destination: "/chosen/copy.md",
-    });
     await fileDelivery.exportText("reported fragment", "/chosen/snapshot.txt");
     expect(invoke).toHaveBeenLastCalledWith("file_delivery_export_text", {
       text: "reported fragment",
@@ -211,4 +206,17 @@ it("inspects clicked exact absolute files separately from relative workspace lin
     root: "/work",
     path: "../outside.md",
   });
+});
+it("failure fallback distinguishes an explicit absolute selection from a relative workspace target without fabricating a receipt", async () => {
+  vi.mocked(invoke).mockClear();
+  await fileDelivery.openSelectedLocation("/work", "/chosen/huge.log");
+  expect(invoke).toHaveBeenLastCalledWith(
+    "file_delivery_open_selected_location",
+    { path: "/chosen/huge.log" },
+  );
+  await fileDelivery.revealSelectedLocation("/work", "huge.log");
+  expect(invoke).toHaveBeenLastCalledWith(
+    "file_delivery_reveal_selected_location",
+    { root: "/work", path: "huge.log" },
+  );
 });

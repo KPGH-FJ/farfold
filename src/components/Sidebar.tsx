@@ -29,6 +29,7 @@ import { STRINGS } from "../runtime/strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { AgentLogo } from "./AgentLogo";
 import { useComposerDraft } from "../runtime/drafts";
+import { FileCopyActivity } from "./FileCopyActivity";
 
 export function Sidebar({
   agents,
@@ -442,6 +443,7 @@ export function Sidebar({
             )}
           </div>
         )}
+        <FileCopyActivity />
         <button
           type="button"
           className={`product-settings ${active === "settings" ? "active" : ""}`}

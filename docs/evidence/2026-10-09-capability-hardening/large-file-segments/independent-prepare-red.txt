@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_copy_jobs.independent.test.ts (3 tests | 3 failed) 7ms
+   × never publishes a copying prepare reply as evidence that a writer was started 4ms
+   × never publishes a publishing prepare reply as evidence that a writer was started 1ms
+   × never publishes a completed prepare reply as evidence that a writer was started 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_copy_jobs.independent.test.ts > never publishes a copying prepare reply as evidence that a writer was started
+AssertionError: expected [ undefined, 'copying', 'copying' ] to not include 'copying'
+ ❯ src/runtime/file_copy_jobs.independent.test.ts:61:29
+     59|       await jobs.begin(file, destination);
+     60|       expect(port.start).not.toHaveBeenCalled();
+     61|       expect(published).not.toContain(state);
+       |                             ^
+     62|       expect(jobs.getSnapshot()[0].phase).toBe("notStarted");
+     63|       expect(jobs.hasUnsettled()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/file_copy_jobs.independent.test.ts > never publishes a publishing prepare reply as evidence that a writer was started
+AssertionError: expected [ undefined, 'publishing', …(1) ] to not include 'publishing'
+ ❯ src/runtime/file_copy_jobs.independent.test.ts:61:29
+     59|       await jobs.begin(file, destination);
+     60|       expect(port.start).not.toHaveBeenCalled();
+     61|       expect(published).not.toContain(state);
+       |                             ^
+     62|       expect(jobs.getSnapshot()[0].phase).toBe("notStarted");
+     63|       expect(jobs.hasUnsettled()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/file_copy_jobs.independent.test.ts > never publishes a completed prepare reply as evidence that a writer was started
+AssertionError: expected [ undefined, 'completed' ] to not include 'completed'
+ ❯ src/runtime/file_copy_jobs.independent.test.ts:61:29
+     59|       await jobs.begin(file, destination);
+     60|       expect(port.start).not.toHaveBeenCalled();
+     61|       expect(published).not.toContain(state);
+       |                             ^
+     62|       expect(jobs.getSnapshot()[0].phase).toBe("notStarted");
+     63|       expect(jobs.hasUnsettled()).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  04:54:36
+   Duration  222ms (transform 77ms, setup 0ms, import 102ms, tests 7ms, environment 0ms)
+

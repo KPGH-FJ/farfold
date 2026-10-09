@@ -1,0 +1,81 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "navigation",
+      "name": "large Markdown is exact bounded source text rather than rendered partial Markdown",
+      "ok": true,
+      "elapsedMs": 89
+    },
+    {
+      "scenario": "navigation",
+      "name": "navigation keeps old block and gates revision work while native receipt is pending",
+      "ok": true,
+      "elapsedMs": 244
+    },
+    {
+      "scenario": "navigation",
+      "name": "cancelled late successful block never replaces displayed block",
+      "ok": true,
+      "elapsedMs": 245
+    },
+    {
+      "scenario": "navigation",
+      "name": "sequence failure",
+      "ok": false,
+      "error": "Error: timeout navigation: navigation.md文件位置/controlled/navigation.md重新读取修改意见用默认应用打开在文件夹中显示完整文件另存为…分段显示已核实文件的文字，不代表一次显示了全文。Markdown 按源码显示。第 2 / 11 片段 · 原文件第 3–3 行 · 字节 131,072–262,144（末位不含）开头承接上一片段的同一行；末行在下一片段继续上一片段下一片段片段序号前往复制当前片段AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 39
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 39
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 40
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 90
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 271
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "v1",
+      "atMs": 283
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "v1",
+      "atMs": 5284
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 8278,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}

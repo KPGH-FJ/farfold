@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/FileDeliveryActions.test.tsx (24 tests | 1 failed) 1600ms
+   × clears old verification and preview when a submitted copy fails while its page is inactive 172ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/FileDeliveryActions.test.tsx > clears old verification and preview when a submitted copy fails while its page is inactive
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  className="btn btn-ghost"
+  disabled={false}
+  onClick={[Function onClick]}
+  type="button"
+>
+  打开文件
+</button>
+
+ ❯ src/components/FileDeliveryActions.test.tsx:471:26
+    469|   h.active = true;
+    470|   render();
+    471|   expect(button(S.open)).toBeUndefined();
+       |                          ^
+    472|   expect(text()).not.toContain("OLD DISK PREVIEW");
+    473|   expect(text()).not.toContain("hidden delivery failure");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 156 passed (157)
+   Start at  05:00:35
+   Duration  4.66s (transform 792ms, setup 0ms, import 1.41s, tests 6.32s, environment 0ms)
+

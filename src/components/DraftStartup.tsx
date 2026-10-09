@@ -6,7 +6,16 @@ import { DRAFT_STRINGS, useDraftSaveStatus } from "../runtime/draft_storage";
 import { threads } from "../runtime/sessions";
 import { StorageRecovery } from "./StorageRecovery";
 import { conversationReadState } from "../runtime/conversation_read_state";
-import { exitNeedsReview, EXIT_IMPACT as E } from "../runtime/exit_impact";
+import {
+  exitNeedsReview,
+  hasUnknownFinishedFileCopies,
+  EXIT_IMPACT as E,
+} from "../runtime/exit_impact";
+import {
+  hasUnsettledFileCopies,
+  useFileCopyJobs,
+} from "../runtime/file_copy_jobs";
+import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import {
   setupStorage,
@@ -18,6 +27,10 @@ import {
 export function DraftStartup({ children }: { children: ReactNode }) {
   const status = useDraftSaveStatus();
   const setup = useSetupStorage();
+  // Subscribe even when the underlying file view is closed or inert for quit.
+  useFileCopyJobs();
+  const copying = hasUnsettledFileCopies();
+  const unknownCopy = hasUnknownFinishedFileCopies();
   const [connected, setConnected] = useState(false);
   const [exitError, setExitError] = useState(false);
   const [exitToken, setExitToken] = useState<number | null>(null);
@@ -30,6 +43,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [exitReview, setExitReview] = useState<number | null>(null);
   const [cancelError, setCancelError] = useState(false);
   const [readsSettled, setReadsSettled] = useState(false);
+  const [backendCopyReview, setBackendCopyReview] = useState(false);
   const cancelExit = async (token: number) => {
     if (currentExit.current !== token) return;
     const attempt = ++saveAttempt.current;
@@ -62,12 +76,14 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setExitError(false);
     setExitReadError(null);
     setCancelError(false);
+    setBackendCopyReview(false);
     threads.pauseQueuesForExit();
     draftPersistence.lockInteraction(true);
     if (
-      restartingExit.current !== token &&
-      !confirmActivity &&
-      exitNeedsReview()
+      hasUnsettledFileCopies() ||
+      (!confirmActivity &&
+        (hasUnknownFinishedFileCopies() ||
+          (restartingExit.current !== token && exitNeedsReview())))
     ) {
       setExitReview(token);
       return;
@@ -84,6 +100,15 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       });
       if (currentExit.current !== token || saveAttempt.current !== attempt)
         return;
+      // A save may have started while metadata was flushing. The backend
+      // repeats admission atomically through the actual native quit.
+      if (
+        hasUnsettledFileCopies() ||
+        (!confirmActivity && hasUnknownFinishedFileCopies())
+      ) {
+        setExitReview(token);
+        return;
+      }
       await invoke("app_exit_after_save", {
         token,
         ...(confirmActivity ? { confirmActivity: true } : {}),
@@ -91,10 +116,12 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     } catch (reason) {
       if (currentExit.current !== token || saveAttempt.current !== attempt)
         return;
+      const code = String(reason).replace(/^Error:\s*/, "");
       if (
-        String(reason).replace(/^Error:\s*/, "") ===
-        "EXIT_CONFIRMATION_REQUIRED"
+        code === "EXIT_CONFIRMATION_REQUIRED" ||
+        code === "FILE_COPY_EXIT_BLOCKED"
       ) {
+        setBackendCopyReview(code === "FILE_COPY_EXIT_BLOCKED");
         setExitReview(token);
         return;
       }
@@ -172,6 +199,14 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               <p>{E.work}</p>
               <p>{E.consequence}</p>
               <p>{E.saved}</p>
+              {copying ? (
+                <p role="status">{E.copying}</p>
+              ) : unknownCopy ? (
+                <p role="status">{E.copyUnknown}</p>
+              ) : backendCopyReview ? (
+                <p role="status">{E.copyReview}</p>
+              ) : null}
+              <FileCopyJobsStatus />
               {cancelError && <p role="alert">{E.cancelFailed}</p>}
             </div>
             <footer>
@@ -185,6 +220,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 className="btn btn-primary"
+                disabled={copying}
                 onClick={() => void saveAndExit(exitReview, true)}
               >
                 {E.exit}

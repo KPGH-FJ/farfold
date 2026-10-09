@@ -4,6 +4,8 @@ export interface PreviewContentStatus {
   file: VerifiedFile;
   state: "loading" | "ready" | "failed" | "paused";
   code?: string;
+  /** The view still awaits its bounded native receipt; hiding is not cancellation. */
+  readInFlight?: boolean;
 }
 
 export function samePreviewFile(a: VerifiedFile, b: VerifiedFile): boolean {

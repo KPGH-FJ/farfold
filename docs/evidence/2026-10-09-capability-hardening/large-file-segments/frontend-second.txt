@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (67 tests | 1 failed) 4000ms
+   × retains old large-file text until a complete replacement block succeeds, then restores approximate position 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > retains old large-file text until a complete replacement block succeeds, then restores approximate position
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'contents-v1'
+
+Expected: "contents-v1"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"></div><p role="status">正在打开文件…</p></div></section>"
+
+ ❯ src/components/OpenedFileView.test.tsx:1116:88
+    1114|   (child.props.readingPosition as {current:unknown}).current = {root:f…
+    1115|   const next = largeBlock("v2", 4),pending = deferred<typeof next>();h…
+    1116|   expect(h.readBlock).toHaveBeenLastCalledWith(next.file,9,true);expec…
+       |                                                                                        ^
+    1117|   pending.resolve(next);await drain();expect(render().html).toContain(…
+    1118| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 137 passed (138)
+   Start at  04:53:36
+   Duration  4.37s (transform 498ms, setup 0ms, import 806ms, tests 5.59s, environment 0ms)
+

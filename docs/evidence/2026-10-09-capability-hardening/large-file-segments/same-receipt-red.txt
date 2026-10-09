@@ -1,0 +1,42 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/TextBlockPreview.test.tsx (3 tests | 2 failed) 23ms
+   × successful same-version reload replaces prior failed reader state 19ms
+   × a late clipboard result cannot label a subsequently reloaded fragment 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/TextBlockPreview.test.tsx > successful same-version reload replaces prior failed reader state
+AssertionError: expected '<section class="text-block-preview" a…' not to contain '文件读取仍在等待，已暂停后续读取和自动检查。请查看系统访问提示，再明确重试。'
+
+Expected: "文件读取仍在等待，已暂停后续读取和自动检查。请查看系统访问提示，再明确重试。"
+Received: "<section class="text-block-preview" aria-label="文件片段"><p>分段显示已核实文件的文字，不代表一次显示了全文。Markdown 按源码显示。</p><p data-block-range="true">第 1 / 2 片段 · 原文件第 1–1 行 · 字节 0–3（末位不含）</p><p>末行在下一片段继续</p><div class="text-block-controls"><button type="button" class="btn btn-text" disabled="">上一片段</button><button type="button" class="btn btn-text">下一片段</button><form><label>片段序号<input type="number" min="1" max="2" step="1" value="1"/></label><button type="submit" class="btn btn-text">前往</button></form><button type="button" class="btn btn-text">复制当前片段</button><button type="button" class="btn btn-text">重新读取此片段</button></div><p role="status">文件读取仍在等待，已暂停后续读取和自动检查。请查看系统访问提示，再明确重试。</p><pre class="a-term text-block-content" tabindex="0">abc</pre></section>"
+
+ ❯ src/components/TextBlockPreview.test.tsx:22:88
+     20| it("successful same-version reload replaces prior failed reader state"…
+     21|  render();h.invoke.mockRejectedValue({code:"pending"});click(S.next);a…
+     22|  const loaded={...initial};render({...props,initial:loaded});expect(re…
+       |                                                                                        ^
+     23| });
+     24| it("a late clipboard result cannot label a subsequently reloaded fragm…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/TextBlockPreview.test.tsx > a late clipboard result cannot label a subsequently reloaded fragment
+AssertionError: expected '<section class="text-block-preview" a…' not to contain '当前片段已复制；未复制其余文件内容。'
+
+Expected: "当前片段已复制；未复制其余文件内容。"
+Received: "<section class="text-block-preview" aria-label="文件片段"><p>分段显示已核实文件的文字，不代表一次显示了全文。Markdown 按源码显示。</p><p data-block-range="true">第 1 / 2 片段 · 原文件第 1–1 行 · 字节 0–3（末位不含）</p><p>末行在下一片段继续</p><div class="text-block-controls"><button type="button" class="btn btn-text" disabled="">上一片段</button><button type="button" class="btn btn-text">下一片段</button><form><label>片段序号<input type="number" min="1" max="2" step="1" value="1"/></label><button type="submit" class="btn btn-text">前往</button></form><button type="button" class="btn btn-text">复制当前片段</button></div><p role="status">当前片段已复制；未复制其余文件内容。</p><pre class="a-term text-block-content" tabindex="0">abc</pre></section>"
+
+ ❯ src/components/TextBlockPreview.test.tsx:25:195
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  05:01:29
+   Duration  165ms (transform 51ms, setup 0ms, import 77ms, tests 23ms, environment 0ms)
+

@@ -16,10 +16,19 @@ const h = vi.hoisted(() => ({
   prepareOffice: vi.fn(),
   readText: vi.fn(),
   readVisual: vi.fn(),
+  readBlock: vi.fn(),
   open: vi.fn(),
   reveal: vi.fn(),
+  openLocation: vi.fn(),
+  revealLocation: vi.fn(),
   copy: vi.fn(),
   save: vi.fn(),
+}));
+vi.mock("../runtime/file_copy_jobs", () => ({
+  fileCopyJobs: { begin: h.copy },
+}));
+vi.mock("./FileCopyJobsStatus", () => ({
+  FileCopyJobsStatus: () => <div data-copy-jobs />,
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ save: h.save }));
 vi.mock("../runtime/office_preview_prepare", () => ({
@@ -33,8 +42,23 @@ vi.mock("../runtime/file_delivery", () => ({
     readVisual: h.readVisual,
     open: h.open,
     reveal: h.reveal,
+    openSelectedLocation: h.openLocation,
+    revealSelectedLocation: h.revealLocation,
     copy: h.copy,
   },
+}));
+vi.mock("../runtime/text_block_preview", async (original) => ({
+  ...(await original<typeof import("../runtime/text_block_preview")>()),
+  readTextBlock: h.readBlock,
+}));
+vi.mock("./TextBlockPreview", () => ({
+  TextBlockPreview: ({
+    initial,
+  }: {
+    initial: { text: string; file: { version: string } };
+  }) => (
+    <div data-text-block-version={initial.file.version}>{initial.text}</div>
+  ),
 }));
 vi.mock("./VisualFilePreview", () => ({
   VisualFilePreview: ({
@@ -102,6 +126,7 @@ vi.mock("react", async (original) => {
 });
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
+import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -174,8 +199,11 @@ beforeEach(() => {
     h.prepareOffice,
     h.readText,
     h.readVisual,
+    h.readBlock,
     h.open,
     h.reveal,
+    h.openLocation,
+    h.revealLocation,
     h.copy,
     h.save,
   ])
@@ -493,10 +521,27 @@ it("does not automatically launch another application for binary or executable f
   await vi.waitFor(() => expect(render().html).toContain(S.opened));
 });
 
-it("offers manual delivery for a text file above the reader limit", async () => {
-  h.inspectLink.mockResolvedValue({ ...receipt, size: 1024 * 1024 + 1 });
+it("routes large Markdown to an explicit source fragment, retaining verified file actions", async () => {
+  const file = { ...receipt, size: 1024 * 1024 + 1 };
+  h.inspectLink.mockResolvedValue(file);
+  h.readBlock.mockResolvedValue({
+    file,
+    blockIndex: 0,
+    blockCount: 10,
+    byteStart: 0,
+    byteEnd: 18,
+    startLine: 1,
+    endLine: 1,
+    startsMidLine: false,
+    endsMidLine: true,
+    text: "# partial Markdown",
+  });
   await ready();
-  expect(render().html).toContain(S.large);
+  expect(h.readBlock).toHaveBeenCalledWith(file, 0, true);
+  expect(render().html).toContain("# partial Markdown");
+  expect(render().html).not.toContain("<h1>");
+  expect(button(S.feedback)).toBeDefined();
+  expect(button(T.save)).toBeDefined();
   expect(h.readText).not.toHaveBeenCalled();
   expect(h.open).not.toHaveBeenCalled();
 });
@@ -592,22 +637,23 @@ it("discards a delayed text result on unmount", async () => {
 it("copies only after explicit destination selection and passes the exact receipt", async () => {
   await ready();
   h.save.mockResolvedValue("/out/copy.md");
-  click(S.save);
+  click(T.save);
   await vi.waitFor(() =>
     expect(h.copy).toHaveBeenCalledWith(receipt, "/out/copy.md"),
   );
   expect(h.save).toHaveBeenCalledWith({
-    title: S.saveTitle,
+    title: T.saveTitle,
     defaultPath: "result.md",
   });
-  expect(render().html).toContain(S.saved);
+  expect(render().html).toContain("data-copy-jobs");
+  expect(render().html).not.toContain(S.saved);
 });
 
 it("never copies after the destination picker returns to a hidden view", async () => {
   await ready();
   const destination = deferred<string | null>();
   h.save.mockReturnValueOnce(destination.promise);
-  click(S.save);
+  click(T.save);
   const active = props;
   render({ ...active, active: false });
   render(active);
@@ -1088,4 +1134,124 @@ it("withdraws stale current-page actions while hidden and retains a blank select
   expect(Object.values(fileFeedbackDrafts.entries(props.threadKey))[0]).toBe(
     draft,
   );
+});
+
+function largeBlock(version = "v1", blockIndex = 0) {
+  const file = {
+    ...receipt,
+    size: 2 * 1024 * 1024,
+    version,
+    sha256: `sha-${version}`,
+  };
+  return {
+    file,
+    blockIndex,
+    blockCount: 20,
+    byteStart: blockIndex * 10,
+    byteEnd: blockIndex * 10 + 10,
+    startLine: 1,
+    endLine: 1,
+    startsMidLine: blockIndex > 0,
+    endsMidLine: true,
+    text: `contents-${version}`,
+  };
+}
+it("retains old large-file text until a complete replacement block succeeds, then restores approximate position", async () => {
+  const first = largeBlock();
+  h.inspectLink.mockResolvedValue(first.file);
+  h.readBlock.mockResolvedValue(first);
+  await ready();
+  const child = render().nodes.find((n) => n.props.initial === first)!;
+  (child.props.readingPosition as { current: unknown }).current = {
+    root: first.file.root,
+    resolvedPath: first.file.resolvedPath,
+    kind: "text",
+    blockIndex: 9,
+  };
+  const next = largeBlock("v2", 4),
+    pending = deferred<typeof next>();
+  h.inspectLink.mockResolvedValue(next.file);
+  h.readBlock.mockReturnValue(pending.promise);
+  click(S.refresh);
+  await drain();
+  expect(h.readBlock).toHaveBeenLastCalledWith(next.file, 9, true);
+  expect(render().html).toContain(first.text);
+  expect(render().html).not.toContain(next.text);
+  pending.resolve(next);
+  await drain();
+  expect(render().html).toContain(next.text);
+  expect(render().html).not.toContain(first.text);
+});
+it("keeps file-level feedback and its original version when navigating and refreshing fragments", async () => {
+  const first = largeBlock();
+  h.inspectLink.mockResolvedValue(first.file);
+  h.readBlock.mockResolvedValue(first);
+  await ready();
+  editFeedback("review whole file");
+  expect(render().html).toContain(T.feedback);
+  const old = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  expect(old.scope).toBe("file");
+  expect(old.selection).toBeNull();
+  expect(old.anchor).toBeUndefined();
+  const next = largeBlock("v2");
+  h.inspectLink.mockResolvedValue(next.file);
+  h.readBlock.mockResolvedValue(next);
+  click(S.refresh);
+  await drain();
+  render();
+  expect(Object.values(fileFeedbackDrafts.entries(props.threadKey))).toContain(
+    old,
+  );
+  expect(old.contentId).toContain("v1");
+  expect(old.contentId).not.toContain("v2");
+});
+it("does not replace old fragment on failed revision reading and exposes fixed unsupported-text notice initially", async () => {
+  const first = largeBlock();
+  h.inspectLink.mockResolvedValue(first.file);
+  h.readBlock.mockRejectedValue({
+    code: "unsupportedText",
+    message: "PRIVATE OS DATA",
+  });
+  render();
+  await drain();
+  expect(render().html).toContain(T.failures.unsupportedText);
+  expect(render().html).not.toContain("PRIVATE OS DATA");
+  expect(h.readText).not.toHaveBeenCalled();
+});
+
+it("provides only explicit location actions when inspection is too large, without inventing a verified file", async () => {
+  h.inspectLink.mockRejectedValue({ code: "tooLarge" });
+  render();
+  await drain();
+  expect(render().html).toContain(T.failures.tooLarge);
+  expect(render().html).toContain(T.locationScope);
+  expect(h.openLocation).not.toHaveBeenCalled();
+  expect(h.revealLocation).not.toHaveBeenCalled();
+  expect(h.readBlock).not.toHaveBeenCalled();
+  expect(button(T.save)).toBeUndefined();
+  click(T.openLocation);
+  await drain();
+  expect(h.openLocation).toHaveBeenCalledWith(
+    props.workingDirectory,
+    props.path,
+  );
+  expect(h.open).not.toHaveBeenCalled();
+  expect(render().html).toContain(T.openedLocation);
+  click(T.revealLocation);
+  await drain();
+  expect(h.revealLocation).toHaveBeenCalledWith(
+    props.workingDirectory,
+    props.path,
+  );
+});
+it("a stale location fallback callback cannot open another selected file", async () => {
+  h.inspectLink.mockRejectedValue({ code: "tooLarge" });
+  render();
+  await drain();
+  const old = button(T.openLocation)!;
+  render({ ...props, path: "other.txt", selectionKey: "new" });
+  await drain();
+  (old.props.onClick as () => void)();
+  await drain();
+  expect(h.openLocation).not.toHaveBeenCalled();
 });

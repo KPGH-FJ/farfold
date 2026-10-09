@@ -1,0 +1,163 @@
+{
+  "checkedAtUtc": "2026-10-09T21:22:58.723094+00:00",
+  "status": "no_blocker_in_independently_verified_engineering_evidence",
+  "reviewer": "architecture",
+  "reviewBoundary": "Read original root-run integration logs, reconstruct frozen input inventory and hashes, verify owner/evidence references and active-document scope. Did not rerun passing checks, change source, inspect a new candidate, install or operate the formal application. This reviewer authored the P17 backend; independent backend/code/browser challenge is attributed separately to verification.",
+  "finalVerification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks-final/final-verification.json",
+    "sha256": "2c0d67ee95fb30685e1f6cff50bdc776cd871882389460b66ab76e131fa4a5b6"
+  },
+  "originalIntegrationReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/receipt.json",
+    "sha256": "658cb1369008b8a8f5e420948b3326177a908df69540af7e89c937cc3d1f7e58"
+  },
+  "originalReceiptRaw": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/receipt.raw.txt",
+    "sha256": "9d20a86b9753899ba3841f2c9ded53e105d9dfd80f156908090ff6c61efce08f"
+  },
+  "integrationRunner": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/run-large-file-checks.py",
+    "sha256": "f5d25b74ee04e7c4c0934437f9ea7011fa18f85d50d8fa3aa869d36daf827fe9"
+  },
+  "sourceIdentity": {
+    "base": "7d2bbba48ff91ee517366e7d0212bbf675a5009b",
+    "inputCount": 1104,
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json",
+      "sha256": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12"
+    },
+    "pathSetAndAllSha256Recomputed": true,
+    "missing": [],
+    "extra": [],
+    "changed": [],
+    "symlinks": [],
+    "actualRustTextAndCopyDtoFixturesIncluded": true,
+    "backendOwnerFilesMatched": 21,
+    "frontendOwnerFilesMatched": 25,
+    "rootOwnerFilesMatched": 8
+  },
+  "checks": [
+    {
+      "name": "format",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "frontend",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/frontend.txt",
+      "sha256": "8c6b9becdd0efae86b047ad146508ae896dcd5736d797cae30bd45feae6d7449"
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/build.txt",
+      "sha256": "9d00054ac26cbb27bbb96d8a5c8adfc15e3e29205d93141f1f01132354b0066a"
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e"
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b"
+    }
+  ],
+  "observedResults": {
+    "frontendFiles": 295,
+    "frontendPassed": 3251,
+    "rustPassed": 1230,
+    "rustIgnored": 6,
+    "separateBenchmark": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/benchmark-256-final.txt",
+      "sha256": "dab729b5ee47502dc23be11bc857564e888293f2acc22264d522211ce52569bf"
+    },
+    "ignoredBoundary": "Five real-Agent/Keychain cases remain ignored and unclaimed. The added256MiB performance fixture was run separately in release; one local sample is not a hard memory or cross-platform guarantee.",
+    "buildWarning": "Existing chunk-size over500kB warning retained; build exit0 is not measured UI performance."
+  },
+  "formatRepair": {
+    "firstRunExit": 1,
+    "firstRunEvidenceJsonWarnings": 11,
+    "originalFailureRetained": true,
+    "normalizedJsonValuesEqualPreservedRaw": true,
+    "rawBoundary": "Browser evidence retained raw counterparts before normalization; product final diagnostics explicitly reconstructs the original JSON.stringify bytes from preserved stdout. Do not relabel reconstructed bytes as an original direct copy. Exact per-file provenance is in owner receipts.",
+    "finalFormatExit": 0,
+    "noProductionOrTestFixtureChanges": true
+  },
+  "ownerEvidence": {
+    "backendImplementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-implementation.json",
+      "sha256": "894f703c224660c7f394c1b0392f1597d22da6ba57bd19af48d968867cae12b9"
+    },
+    "backendSourceCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/backend-source-checkpoint.json",
+      "sha256": "1a9b9480659e796571029eb744e4f25323ffe016f82131d368b2b922d9758f61"
+    },
+    "backendRawLogReferencesMatched": 65,
+    "frontendImplementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/frontend-implementation.json",
+      "sha256": "7b51b7741b2197f5a634ed5d7ccdd5e00a13f4f7fd1b568d13e0d1ad92fee161"
+    },
+    "frontendEvidenceReferencesMatched": 14,
+    "independentCodeAndBrowserReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/independent-review.json",
+      "sha256": "a234fdbc6de48e141c99261acb025c6e535c654474837b24f19c2f57054b63c0"
+    },
+    "independentReviewReferencesMatched": 125,
+    "independentBrowserFinalChecks": 33
+  },
+  "scopeRetention": {
+    "plan": {
+      "path": "plans/agent-access.md",
+      "sha256": "9d51f9d7f67e0b6fd06f7825943c931dc29cd72eddbec6c737f6b4467cadc922"
+    },
+    "status": {
+      "path": "docs/status.md",
+      "sha256": "4608117e50aebb2ca4879c8a7fbfcafcf7e27e49c6c29b0fb4254ea669a869ef"
+    },
+    "evidenceReadme": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "f178324c9868edf045933e4f51c5317940f856b0a363a61dd43913f3edd346c5"
+    },
+    "uniqueAuditIds": 122,
+    "planRows": 122,
+    "missingIds": [],
+    "extraIds": [],
+    "duplicateIds": [],
+    "originalIdSetMatches": true,
+    "allCompletionCriteriaUnchangedFromHead": true,
+    "onlyRowStatusChanged": "P17: 部分；待补齐 → 源码已补；待安装实测",
+    "classificationRetained": "109 implementation/verification +10 scope decisions +3 deferred/excluded; no scope decision or deferred item counted complete.",
+    "docsBoundary": "Current formal application remains P20fa235998; P17 source/engineering results are explicitly pending exact candidate, installation and native checks."
+  },
+  "protectedReadmeSha256": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "protectedReadmeUnchangedFromPriorVerifiedCheckpoint": true,
+  "protectedReadmeStaged": false,
+  "limitations": [
+    "Source/test/controlled-browser evidence only; exact committed candidate and installed P17 native behavior remain pending.",
+    "No actual OS opener, formal file-save/exit interaction, real Agent request or credentials used by this review.",
+    "Windows, network/removable storage, crash/power-loss/disk-exhaustion and every original capability remain separate requirements.",
+    "Capability code review was independently done by verification; this evidence audit does not claim author independence for this reviewer's backend implementation."
+  ],
+  "next": "Root scoped commit and exact-commit candidate preparation, followed by independent candidate inspection before any authorized installation."
+}

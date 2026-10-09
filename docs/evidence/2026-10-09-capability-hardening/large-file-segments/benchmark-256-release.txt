@@ -1,0 +1,47 @@
+   Compiling objc2-exception-helper v0.1.1
+   Compiling ring v0.17.14
+   Compiling libsqlite3-sys v0.38.2
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+   Compiling objc2 v0.6.4
+   Compiling block2 v0.6.2
+   Compiling objc2-core-foundation v0.3.2
+   Compiling dispatch2 v0.3.1
+   Compiling rustls v0.23.43
+   Compiling objc2-foundation v0.3.2
+   Compiling rustls-webpki v0.103.15
+   Compiling tokio-rustls v0.26.5
+   Compiling rustls-platform-verifier v0.7.0
+   Compiling hyper-rustls v0.27.9
+   Compiling reqwest v0.13.4
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling tao v0.35.3
+   Compiling muda v0.19.3
+   Compiling window-vibrancy v0.6.0
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.11.3
+   Compiling wry v0.55.1
+   Compiling tauri-runtime-wry v2.11.4
+   Compiling tauri v2.11.5
+   Compiling rusqlite v0.40.2
+   Compiling tauri-plugin-fs v2.5.1
+   Compiling tauri-plugin-opener v2.5.4
+   Compiling tauri-plugin-single-instance v2.4.4
+   Compiling tauri-plugin-updater v2.10.1
+   Compiling tauri-plugin-dialog v2.7.2
+    Finished `release` profile [optimized] target(s) in 1m 08s
+     Running unittests src/lib.rs (src-tauri/target/release/deps/farfold_lib-cc8fa3e2901345d8)
+
+running 1 test
+before_ru_maxrss=5095424
+inspect_ms=158
+first_block_ms=714 blocks=2048 returned_bytes=131072
+last_block_ms=707 last_index=2047
+copy_ms=336 copied_bytes=268435456
+after_ru_maxrss=9764864
+test file_delivery::stream_tests::ordinary_256_mib_streaming_benchmark ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1217 filtered out; finished in 2.74s
+

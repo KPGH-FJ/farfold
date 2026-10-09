@@ -18,6 +18,18 @@ import {
   visualFileKind,
   VISUAL_PREVIEW_STRINGS as V,
 } from "../runtime/visual_preview";
+import { TextBlockPreview } from "./TextBlockPreview";
+import {
+  readTextBlock,
+  textBlockFailure,
+  type TextBlockPreview as TextBlock,
+} from "../runtime/text_block_preview";
+import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
+import { restoredTextBlock } from "../runtime/preview_reading_position";
+import { FILE_COPY_STRINGS as C } from "../runtime/file_copy_strings";
+import { copyFailureCode } from "../runtime/file_copy_types";
+import { fileCopyJobs } from "../runtime/file_copy_jobs";
+import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
 import { VisualFilePreview } from "./VisualFilePreview";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import { DocxFilePreview } from "./DocxFilePreview";
@@ -63,6 +75,7 @@ type View = {
   phase: "loading" | "ready" | "failed" | "paused";
   file?: VerifiedFile;
   text?: string;
+  block?: TextBlock;
   visual?: VisualPreview;
   office?: PreparedOfficePreview;
   note?: string;
@@ -176,6 +189,8 @@ function openFailureNotice(error: unknown): string {
   // Only the fixed read-check notices are safe to show. Never expose a raw
   // rejection, file path or OS error through this recovery view.
   const message = error instanceof Error ? error.message : error;
+  if (error && typeof error === "object" && "code" in error)
+    return T.failures[textBlockFailure(error)];
   return message === D.checkWaitExpired || message === D.checkBusy
     ? message
     : S.failed;
@@ -202,6 +217,7 @@ export function OpenedFileView({
   currentProps.current = { identity, active, onOpenHtml };
   const mounted = useRef(true);
   const operation = useRef<Operation | null>(null);
+  const blockReadFlight = useRef<Operation | null>(null);
   const [view, setView] = useState<View>({ identity, phase: "loading" });
   const latestView = useRef(view);
   latestView.current = view;
@@ -226,6 +242,21 @@ export function OpenedFileView({
       latestView.current.file === status.file
     )
       setOfficeStatus(status);
+  };
+  const [blockStatus, setBlockStatus] = useState<PreviewContentStatus | null>(
+    null,
+  );
+  const latestBlockStatus = useRef(blockStatus);
+  const reportBlockStatus = (status: PreviewContentStatus) => {
+    if (
+      mounted.current &&
+      currentProps.current.identity === identity &&
+      latestView.current.file &&
+      sameFile(latestView.current.file, status.file)
+    ) {
+      latestBlockStatus.current = status;
+      setBlockStatus(status);
+    }
   };
   const latestReadiness = useRef(visualReadiness);
   // Event handlers withdraw eligibility synchronously; a queued render must not
@@ -295,9 +326,11 @@ export function OpenedFileView({
       !mounted.current ||
       !currentProps.current.active ||
       currentProps.current.identity !== identity ||
-      operation.current
+      operation.current ||
+      (latestView.current.block && latestBlockStatus.current?.readInFlight)
     )
       return false;
+    if (blockReadFlight.current?.identity === identity) return false;
     const owner: Operation = {
       identity,
       kind: preserve ? "refresh" : undefined,
@@ -306,6 +339,8 @@ export function OpenedFileView({
     };
     operation.current = owner;
     let applied = false;
+    let blockAttempt = false;
+    let inspected: VerifiedFile | undefined;
     if (!preserve) {
       latestReadiness.current = null;
       setVisualReadiness(null);
@@ -321,6 +356,7 @@ export function OpenedFileView({
       const file =
         verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
       if (!current(owner)) return false;
+      inspected = file;
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
         currentProps.current.onOpenHtml(file);
@@ -363,24 +399,69 @@ export function OpenedFileView({
           file: preview.file,
           text: preview.text,
         });
+      } else if (isText(file)) {
+        blockAttempt = true;
+        blockReadFlight.current = owner;
+        const block = await readTextBlock(
+          file,
+          restoredTextBlock(file, readingPosition),
+          true,
+        );
+        if (!current(owner)) return false;
+        latestBlockStatus.current = {
+          file,
+          state: "ready",
+          readInFlight: false,
+        };
+        setBlockStatus(latestBlockStatus.current);
+        setView({ identity, phase: "ready", file, block });
       } else {
         setView({
           identity,
           phase: "ready",
           file,
-          note: isText(file) ? S.large : S.other,
+          note: S.other,
         });
       }
       applied = true;
       return true;
     } catch (error) {
-      if (current(owner))
+      const ownsHiddenBlock =
+        blockAttempt &&
+        mounted.current &&
+        currentProps.current.identity === identity &&
+        blockReadFlight.current === owner;
+      if (current(owner) || ownsHiddenBlock) {
+        if (preserve && previous.block) {
+          const status: PreviewContentStatus = {
+            file: previous.block.file,
+            state: "failed",
+            code: textBlockFailure(error),
+            readInFlight: false,
+          };
+          latestBlockStatus.current = status;
+          setBlockStatus(status);
+        }
         setView(
           preserve
-            ? { ...previous, pending: false }
-            : { identity, phase: "failed", note: openFailureNotice(error) },
+            ? {
+                ...previous,
+                pending: false,
+                note: previous.block
+                  ? T.failures[textBlockFailure(error)]
+                  : previous.note,
+              }
+            : inspected && isText(inspected) && inspected.size > MAX_TEXT_BYTES
+              ? {
+                  identity,
+                  phase: "ready",
+                  file: inspected,
+                  note: openFailureNotice(error),
+                }
+              : { identity, phase: "failed", note: openFailureNotice(error) },
         );
-      if (preserve) {
+      }
+      if (preserve && valid) {
         const message = error instanceof Error ? error.message : error;
         if (message === D.checkWaitExpired) throw { code: "pending" };
         if (message === D.checkBusy) throw { code: "busy" };
@@ -390,9 +471,15 @@ export function OpenedFileView({
             : undefined;
         if (code === "readPending") throw { code: "pending" };
         if (code === "readBusy") throw { code: "busy" };
+        if (code === "pending" || code === "busy") throw { code };
       }
       return false;
     } finally {
+      if (blockReadFlight.current === owner) {
+        blockReadFlight.current = null;
+        if (mounted.current && currentProps.current.identity === identity)
+          setView((latest) => ({ ...latest }));
+      }
       if (operation.current === owner) {
         operation.current = null;
         // Window visibility can invalidate publication without active=false.
@@ -457,10 +544,47 @@ export function OpenedFileView({
     }
   }
 
+  async function actOnLocation(reveal: boolean) {
+    if (
+      !mounted.current ||
+      !currentProps.current.active ||
+      currentProps.current.identity !== identity ||
+      view.identity !== identity ||
+      view.phase !== "failed" ||
+      view.file ||
+      operation.current
+    )
+      return;
+    const owner: Operation = { identity };
+    operation.current = owner;
+    setView({ ...view, pending: true });
+    try {
+      if (reveal)
+        await fileDelivery.revealSelectedLocation(workingDirectory, path);
+      else await fileDelivery.openSelectedLocation(workingDirectory, path);
+      if (current(owner))
+        setView({
+          ...view,
+          pending: false,
+          note: reveal ? T.revealedLocation : T.openedLocation,
+        });
+    } catch {
+      if (current(owner))
+        setView({ ...view, pending: false, note: T.locationFailed });
+    } finally {
+      if (operation.current === owner) operation.current = null;
+    }
+  }
+
   const shown =
     view.identity === identity ? view : { identity, phase: "loading" as const };
   const file = shown.file;
-  const disabled = !active || shown.pending || shown.phase === "loading";
+  const disabled =
+    !active ||
+    shown.pending ||
+    shown.phase === "loading" ||
+    Boolean(shown.block && blockStatus?.readInFlight) ||
+    blockReadFlight.current?.identity === identity;
   const name = file?.name || fileBasename(path);
   const markdown = file && /^(md|markdown)$/i.test(extension(file.name));
   // Draft identity contains only disk revision metadata, never the displayed body.
@@ -480,7 +604,9 @@ export function OpenedFileView({
       ? visualReadiness.location
       : null;
   const supportsFeedback =
-    shown.text !== undefined || Boolean(file && visualFileKind(file.name));
+    shown.text !== undefined ||
+    Boolean(shown.block) ||
+    Boolean(file && visualFileKind(file.name));
   const hasRetainedFeedback = () => {
     const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
     return Boolean(saved.text || saved.anchor);
@@ -493,6 +619,7 @@ export function OpenedFileView({
     !operation.current &&
     shown.phase === "ready" &&
     (shown.text !== undefined ||
+      Boolean(shown.block) ||
       (latestReadiness.current?.source === shown.visual &&
         Boolean(latestReadiness.current?.location)) ||
       (supportsFeedback && hasRetainedFeedback())) &&
@@ -512,12 +639,26 @@ export function OpenedFileView({
     active:
       active &&
       shown.phase === "ready" &&
+      (!shown.block ||
+        Boolean(
+          blockStatus?.file &&
+          sameFile(blockStatus.file, shown.block.file) &&
+          blockStatus.state === "ready",
+        )) &&
       (!file ||
         (!isWorkbook(file) && !isDocument(file)) ||
         (officeStatus?.file === file && officeStatus.state === "ready")),
-    blocked: Boolean(shown.pending),
+    blocked:
+      Boolean(shown.pending) ||
+      Boolean(shown.block && blockStatus?.readInFlight) ||
+      blockReadFlight.current?.identity === identity,
     apply: async (next, valid) => {
-      if (!valid() || operation.current) return "deferred";
+      if (
+        !valid() ||
+        operation.current ||
+        (shown.block && latestBlockStatus.current?.readInFlight)
+      )
+        return "deferred";
       // Do not replace the text beneath an opinion the user is editing.
       if (feedbackOpen) return "deferred";
       if (await load(next, true, valid)) return "applied";
@@ -562,7 +703,9 @@ export function OpenedFileView({
                   {S.openHtml}
                 </button>
               )}
-              {(shown.text !== undefined ||
+              {(isText(file) ||
+                shown.text !== undefined ||
+                shown.block ||
                 visualFileKind(file.name) ||
                 isWorkbook(file) ||
                 isDocument(file)) && (
@@ -570,7 +713,7 @@ export function OpenedFileView({
                   type="button"
                   className="btn btn-ghost"
                   disabled={disabled}
-                  onClick={() => void load()}
+                  onClick={() => void load(undefined, Boolean(shown.block))}
                 >
                   {S.refresh}
                 </button>
@@ -623,16 +766,42 @@ export function OpenedFileView({
                 onClick={() =>
                   void act(async (value, valid) => {
                     const destination = await save({
-                      title: S.saveTitle,
+                      title: T.saveTitle,
                       defaultPath: value.name,
                     });
                     if (!valid() || !destination) return null;
-                    await fileDelivery.copy(value, destination);
-                    return S.saved;
+                    try {
+                      await fileCopyJobs.begin(value, destination);
+                    } catch (error) {
+                      return C.failures[
+                        copyFailureCode(error) ?? "unavailable"
+                      ];
+                    }
+                    return null;
                   })
                 }
               >
-                {S.save}
+                {T.save}
+              </button>
+            </>
+          )}
+          {shown.phase === "failed" && !file && (
+            <>
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={disabled}
+                onClick={() => void actOnLocation(false)}
+              >
+                {T.openLocation}
+              </button>
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={disabled}
+                onClick={() => void actOnLocation(true)}
+              >
+                {T.revealLocation}
               </button>
             </>
           )}
@@ -640,7 +809,9 @@ export function OpenedFileView({
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={!active}
+              disabled={
+                !active || blockReadFlight.current?.identity === identity
+              }
               onClick={() => void load()}
             >
               {S.retry}
@@ -659,10 +830,23 @@ export function OpenedFileView({
           </p>
         )}
       </div>
+      {shown.phase === "failed" && !file && (
+        <p className="artifact-provenance">{T.locationScope}</p>
+      )}
       {revisionNotice && (
         <p className="artifact-provenance" role="status">
           {S.revisionNotices[revisionNotice]}
         </p>
+      )}
+      {file && <FileCopyJobsStatus file={file} />}
+      {shown.block && (
+        <TextBlockPreview
+          key={`${identity}:${shown.block.file.version}:${shown.block.file.sha256}`}
+          initial={shown.block}
+          active={active && !shown.pending}
+          readingPosition={readingPosition}
+          onStatus={reportBlockStatus}
+        />
       )}
       {shown.visual && (
         <VisualFilePreview
@@ -820,6 +1004,7 @@ export function OpenedFileView({
               {feedback.anchor && <p>{F.retained}</p>}
             </div>
           )}
+          {shown.block && <p>{T.feedback}</p>}
           <textarea
             ref={feedbackInput}
             aria-label={W.feedbackLabel}

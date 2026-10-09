@@ -1,0 +1,192 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "navigation",
+      "name": "large Markdown is exact bounded source text rather than rendered partial Markdown",
+      "ok": true,
+      "elapsedMs": 67
+    },
+    {
+      "scenario": "navigation",
+      "name": "navigation keeps old block and gates revision work while native receipt is pending",
+      "ok": true,
+      "elapsedMs": 221
+    },
+    {
+      "scenario": "navigation",
+      "name": "cancelled late successful block never replaces displayed block",
+      "ok": true,
+      "elapsedMs": 223
+    },
+    {
+      "scenario": "navigation",
+      "name": "explicit retry publishes next block with continuation and global line range",
+      "ok": true,
+      "elapsedMs": 280
+    },
+    {
+      "scenario": "navigation",
+      "name": "hide and reopen retain old block after a late navigation receipt",
+      "ok": true,
+      "elapsedMs": 496
+    },
+    {
+      "scenario": "navigation",
+      "name": "manual reread stages a new complete receipt without erasing old content",
+      "ok": true,
+      "elapsedMs": 525
+    },
+    {
+      "scenario": "navigation",
+      "name": "manual reread publishes the new verified version and preserves reading position",
+      "ok": true,
+      "elapsedMs": 551
+    },
+    {
+      "scenario": "replacement",
+      "name": "a late old-file read cannot publish into a new selected file",
+      "ok": true,
+      "elapsedMs": 711
+    },
+    {
+      "scenario": "manual-pending",
+      "name": "sequence failure",
+      "ok": false,
+      "error": "Error: timeout manual-pending: manual-pending.md文件位置/controlled/manual-pending.md重新读取修改意见用默认应用打开在文件夹中显示完整文件另存为…分段显示已核实文件的文字，不代表一次显示了全文。Markdown 按源码显示。第 1 / 11 片段 · 原文件第 1–3 行 · 字节 0–131,072（末位不含）末行在下一片段继续上一片段下一片段片段序号前往复制当前片段# manual-pending.md v1\n<script>controlled_not_executed</script>\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 34
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 35
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 35
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 68
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 1,
+      "restore": false,
+      "atMs": 251
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "v1",
+      "atMs": 263
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 2,
+      "restore": false,
+      "atMs": 361
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 496
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v2",
+      "index": 1,
+      "restore": true,
+      "atMs": 497
+    },
+    {
+      "scenario": "navigation",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v2",
+      "index": 2,
+      "restore": false,
+      "atMs": 551
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 580
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 580
+    },
+    {
+      "scenario": "replacement",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 580
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 740
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 740
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 740
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 767
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "v1",
+      "index": 0,
+      "restore": true,
+      "atMs": 769
+    },
+    {
+      "scenario": "manual-pending",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "v1",
+      "atMs": 5773
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [
+    "pending"
+  ],
+  "realElapsedMs": 8788,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}
+{"diagnosticEvents":157}

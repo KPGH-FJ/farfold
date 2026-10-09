@@ -73,6 +73,25 @@ pub async fn file_delivery_read_text(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_text_block(
+    webview: Webview,
+    file: VerifiedFile,
+    block_index: u64,
+    restore_position: Option<bool>,
+) -> Result<file_delivery::TextBlock, file_delivery::TextBlockFailure> {
+    require_main(&webview).map_err(|_| file_delivery::TextBlockFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || {
+        Ok(file_delivery::read_text_block(
+            &file,
+            block_index,
+            restore_position.unwrap_or(false),
+        ))
+    })
+    .await
+    .map_err(|message| file_delivery::TextBlockFailure::check(&message))?
+}
+
+#[tauri::command]
 pub async fn file_delivery_read_visual(
     webview: Webview,
     file: VerifiedFile,
@@ -108,21 +127,6 @@ pub async fn file_delivery_read_docx(
 }
 
 #[tauri::command]
-pub async fn file_delivery_copy(
-    webview: Webview,
-    file: VerifiedFile,
-    destination: String,
-) -> Result<DeliveryReceipt, String> {
-    require_main(&webview)?;
-    tauri::async_runtime::spawn_blocking(move || {
-        file_delivery::copy(&file, Path::new(&destination))
-    })
-    .await
-    .map_err(|_| display_error(DeliveryError::Unavailable))?
-    .map_err(display_error)
-}
-
-#[tauri::command]
 pub async fn file_delivery_export_text(
     webview: Webview,
     text: String,
@@ -138,30 +142,55 @@ pub async fn file_delivery_export_text(
 }
 
 fn document_extension(path: &Path) -> bool {
-    matches!(
-        path.extension()
-            .and_then(|value| value.to_str())
-            .map(str::to_ascii_lowercase)
-            .as_deref(),
-        Some(
-            "txt"
-                | "html"
-                | "htm"
-                | "md"
-                | "markdown"
-                | "mdown"
-                | "pdf"
-                | "png"
-                | "jpg"
-                | "jpeg"
-                | "gif"
-                | "webp"
-                | "docx"
-                | "xlsx"
-                | "pptx"
-                | "csv"
-        )
-    )
+    file_delivery::document_extension(path)
+}
+
+async fn selected_location_action(
+    webview: Webview,
+    root: Option<String>,
+    path: String,
+    open: bool,
+) -> Result<(), String> {
+    require_main(&webview)?;
+    // Do not put an opener inside the read timeout: its late continuation must
+    // not open another application after reporting an expired read.
+    tauri::async_runtime::spawn_blocking(move || {
+        let target = Path::new(&path);
+        let root = root
+            .as_deref()
+            .map(Path::new)
+            .or_else(|| target.parent())
+            .ok_or_else(|| display_error(DeliveryError::InvalidPath))?;
+        let location =
+            file_delivery::selected_location(root, target, open).map_err(display_error)?;
+        if open {
+            tauri_plugin_opener::open_path(location, None::<&str>)
+                .map_err(|_| "打开未完成，请先定位到文件夹".to_owned())
+        } else {
+            tauri_plugin_opener::reveal_item_in_dir(location)
+                .map_err(|_| "无法定位文件，请重新检查".to_owned())
+        }
+    })
+    .await
+    .map_err(|_| display_error(DeliveryError::Unavailable))?
+}
+
+#[tauri::command]
+pub async fn file_delivery_open_selected_location(
+    webview: Webview,
+    root: Option<String>,
+    path: String,
+) -> Result<(), String> {
+    selected_location_action(webview, root, path, true).await
+}
+
+#[tauri::command]
+pub async fn file_delivery_reveal_selected_location(
+    webview: Webview,
+    root: Option<String>,
+    path: String,
+) -> Result<(), String> {
+    selected_location_action(webview, root, path, false).await
 }
 
 #[tauri::command]

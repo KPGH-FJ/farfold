@@ -1,0 +1,82 @@
+[
+  {
+    "name": "delivery-final",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "file_delivery::"
+    ],
+    "exitCode": 0,
+    "seconds": 6.901
+  },
+  {
+    "name": "copy-final",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "file_copy_jobs::"
+    ],
+    "exitCode": 0,
+    "seconds": 1.501
+  },
+  {
+    "name": "exit-final",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "draft_exit::"
+    ],
+    "exitCode": 0,
+    "seconds": 0.208
+  },
+  {
+    "name": "read-check-final",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "file_read_check::"
+    ],
+    "exitCode": 0,
+    "seconds": 0.229
+  },
+  {
+    "name": "directory-final",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "directory_search"
+    ],
+    "exitCode": 0,
+    "seconds": 0.217
+  },
+  {
+    "name": "clippy-final",
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 101,
+    "seconds": 7.119
+  }
+]

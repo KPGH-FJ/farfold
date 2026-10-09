@@ -1,0 +1,32 @@
+.text-block-preview {
+  padding: 16px;
+  min-width: 0;
+}
+.text-block-preview p {
+  font-size: 12px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.text-block-controls,
+.text-block-controls form,
+.text-block-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.text-block-controls input {
+  width: 90px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #ddd);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+.text-block-content {
+  max-height: 560px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

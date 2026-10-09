@@ -1,0 +1,43 @@
+[
+  {
+    "operationId": "7629f81f306dea8e2051332bd4d9fcc4d0eaf21eb7ead522",
+    "file": {
+      "root": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc",
+      "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/source.txt",
+      "resolvedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/source.txt",
+      "name": "source.txt",
+      "size": 13,
+      "sha256": "e87366262871808bf3853aba8e87efd8d6881894a0ad3b3e5deb5bb8b8effd2d",
+      "version": "68befd539df975c4b6888fb83f4b98f8fae1776e91ab02d99d88b0cbee4f5ced"
+    },
+    "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/result.txt",
+    "state": "ready",
+    "settled": false,
+    "bytesCopied": 0,
+    "total": 13
+  },
+  {
+    "operationId": "7629f81f306dea8e2051332bd4d9fcc4d0eaf21eb7ead522",
+    "file": {
+      "root": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc",
+      "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/source.txt",
+      "resolvedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/source.txt",
+      "name": "source.txt",
+      "size": 13,
+      "sha256": "e87366262871808bf3853aba8e87efd8d6881894a0ad3b3e5deb5bb8b8effd2d",
+      "version": "68befd539df975c4b6888fb83f4b98f8fae1776e91ab02d99d88b0cbee4f5ced"
+    },
+    "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/result.txt",
+    "state": "completed",
+    "settled": true,
+    "bytesCopied": 13,
+    "total": 13,
+    "receipt": {
+      "kind": "fileCopy",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpjZNzgc/result.txt",
+      "size": 13,
+      "sha256": "e87366262871808bf3853aba8e87efd8d6881894a0ad3b3e5deb5bb8b8effd2d",
+      "sourceVersion": "68befd539df975c4b6888fb83f4b98f8fae1776e91ab02d99d88b0cbee4f5ced"
+    }
+  }
+]

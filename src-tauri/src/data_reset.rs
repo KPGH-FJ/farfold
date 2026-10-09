@@ -101,7 +101,7 @@ pub(crate) fn clear_owned(
 /// and user project folders are never touched.
 #[tauri::command]
 pub async fn farfold_data_clear(app: AppHandle) -> Result<(), String> {
-    let permit = crate::managed_update::exclusive()?;
+    let (permit, copy_permit) = admit_clear(&app.state::<crate::file_copy_jobs::FileCopyJobs>())?;
     let exit = app.state::<crate::draft_exit::DraftExit>();
     let _clearing = exit.begin_data_clear();
     let data_dir = app.path().app_data_dir().map_err(|_| "无法读取数据目录")?;
@@ -133,9 +133,28 @@ pub async fn farfold_data_clear(app: AppHandle) -> Result<(), String> {
     // The user explicitly discarded unsent work. Never run the normal save
     // barrier with the renderer's old caches after clearing the database.
     app.state::<crate::draft_exit::DraftExit>()
-        .prepare_cleared_restart(permit);
+        .prepare_cleared_restart(permit, copy_permit);
     app.request_restart();
     Ok(())
+}
+
+fn admit_clear(
+    copies: &crate::file_copy_jobs::FileCopyJobs,
+) -> Result<
+    (
+        crate::managed_update::UpdatePermit,
+        crate::managed_update::UpdatePermit,
+    ),
+    String,
+> {
+    let copy_permit = copies.seal_exit().map_err(|code| {
+        if code == "EXIT_CONFIRMATION_REQUIRED" {
+            "有结果未知的文件保存，请先查看并确认".to_owned()
+        } else {
+            "文件保存仍未结束，请先核对保存状态".to_owned()
+        }
+    })?;
+    Ok((crate::managed_update::exclusive()?, copy_permit))
 }
 
 #[cfg(test)]
@@ -143,6 +162,31 @@ mod tests {
     use super::*;
     use crate::meta_store::AgentRow;
     use std::sync::{Arc, Mutex};
+
+    #[test]
+    fn prepared_copy_blocks_data_clear_before_any_deletion() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("source.txt");
+        std::fs::write(&path, "keep").unwrap();
+        let file = crate::file_delivery::inspect(directory.path(), &path).unwrap();
+        let copies = crate::file_copy_jobs::FileCopyJobs::default();
+        copies
+            .prepare(
+                file,
+                directory
+                    .path()
+                    .join("out.txt")
+                    .to_str()
+                    .unwrap()
+                    .to_owned(),
+            )
+            .unwrap();
+        assert!(
+            admit_clear(&copies).is_err(),
+            "an acknowledged data clear must not silently discard a prepared save"
+        );
+        assert_eq!(std::fs::read_to_string(path).unwrap(), "keep");
+    }
 
     fn agent(env: Vec<(String, String)>) -> AgentRow {
         AgentRow {

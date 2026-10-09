@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "unverified-location",
+      "name": "failed inspection exposes an explicit location fallback without auto-opening",
+      "ok": true,
+      "elapsedMs": 142
+    },
+    {
+      "scenario": "unverified-location",
+      "name": "explicit open requests only the selected location without inventing a verified file",
+      "ok": true,
+      "elapsedMs": 181
+    },
+    {
+      "scenario": "unverified-location",
+      "name": "explicit reveal remains distinct from content verification",
+      "ok": true,
+      "elapsedMs": 208
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "unverified-location",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 10
+    },
+    {
+      "scenario": "unverified-location",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 11
+    },
+    {
+      "scenario": "unverified-location",
+      "cmd": "file_delivery_open_selected_location",
+      "atMs": 143
+    },
+    {
+      "scenario": "unverified-location",
+      "cmd": "file_delivery_reveal_selected_location",
+      "atMs": 181
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "realElapsedMs": 287,
+  "boundary": "Actual Chromium StrictMode parent component and real text-block DTO parser. Controlled IPC; no native OS read or Agent call. Unmodified clock and timers."
+}

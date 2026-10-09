@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/text_block_reader.test.ts (5 tests | 1 failed) 7ms
+   × keeps late hidden pending evidence and never retries on visibility 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/text_block_reader.test.ts > keeps late hidden pending evidence and never retries on visibility
+AssertionError: expected { …(4) } to match object { …(4) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -19,7 +19,6 @@
+      "startsMidLine": false,
+      "text": "abc",
+    },
+    "code": "pending",
+    "phase": "failed",
+-   "readInFlight": false,
+  }
+
+ ❯ src/runtime/text_block_reader.test.ts:96:24
+     94|   r.setActive(true);
+     95|   expect(read).toHaveBeenCalledTimes(1);
+     96|   expect(r.snapshot()).toMatchObject({
+       |                        ^
+     97|     block: initial,
+     98|     phase: "failed",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 81 passed (82)
+   Start at  05:06:29
+   Duration  4.65s (transform 382ms, setup 0ms, import 740ms, tests 4.75s, environment 0ms)
+
