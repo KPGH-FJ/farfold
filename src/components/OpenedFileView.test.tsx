@@ -5,13 +5,15 @@ import {
   type ReactNode,
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { beforeEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 const h = vi.hoisted(() => ({
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   cursor: 0,
   effects: [] as (() => void)[],
   inspectLink: vi.fn(),
+  checkRevision: vi.fn(),
+  prepareOffice: vi.fn(),
   readText: vi.fn(),
   readVisual: vi.fn(),
   open: vi.fn(),
@@ -20,9 +22,13 @@ const h = vi.hoisted(() => ({
   save: vi.fn(),
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ save: h.save }));
+vi.mock("../runtime/office_preview_prepare", () => ({
+  prepareOfficePreview: h.prepareOffice,
+}));
 vi.mock("../runtime/file_delivery", () => ({
   fileDelivery: {
     inspectLink: h.inspectLink,
+    checkRevision: h.checkRevision,
     readText: h.readText,
     readVisual: h.readVisual,
     open: h.open,
@@ -164,6 +170,8 @@ beforeEach(() => {
   h.cursor = 0;
   for (const mock of [
     h.inspectLink,
+    h.checkRevision,
+    h.prepareOffice,
     h.readText,
     h.readVisual,
     h.open,
@@ -173,6 +181,7 @@ beforeEach(() => {
   ])
     mock.mockReset();
   h.inspectLink.mockResolvedValue(receipt);
+  h.checkRevision.mockResolvedValue({ kind: "hintUnchanged" });
   h.readText.mockResolvedValue({ file: receipt, text: "# Real disk content" });
   props = {
     threadKey: "opened-file-test",
@@ -182,6 +191,142 @@ beforeEach(() => {
     selectionKey: "task-a:1",
     onOpenHtml: vi.fn(),
   };
+});
+
+afterEach(() => {
+  for (const slot of h.slots) slot.cleanup?.();
+  vi.useRealTimers();
+});
+
+it("automatically displays a newly verified file without a second pathname inspection", async () => {
+  vi.useFakeTimers();
+  await ready();
+  const next = { ...receipt, version: "auto-new", sha256: "new-hash" };
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });
+  h.readText.mockResolvedValueOnce({
+    file: next,
+    text: "# Automatically updated",
+  });
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(render().html).toContain("Automatically updated");
+  expect(render().html).not.toContain("Real disk content");
+  expect(h.readText).toHaveBeenLastCalledWith(next);
+  expect(h.inspectLink).toHaveBeenCalledOnce();
+});
+
+it("retains old contents with an explicit warning after automatic reread failure", async () => {
+  vi.useFakeTimers();
+  await ready();
+  h.checkRevision.mockResolvedValueOnce({
+    kind: "verified",
+    file: { ...receipt, version: "auto-new" },
+  });
+  h.readText.mockRejectedValueOnce(new Error("private-file-error"));
+  await vi.advanceTimersByTimeAsync(5000);
+  const result = render().html;
+  expect(result).toContain("Real disk content");
+  expect(result).toContain(S.revisionNotices.refreshFailed);
+  expect(result).not.toContain("private-file-error");
+  await vi.advanceTimersByTimeAsync(120000);
+  expect(h.checkRevision).toHaveBeenCalledOnce();
+});
+
+it("does not replace the content under an open version-specific opinion", async () => {
+  vi.useFakeTimers();
+  await ready();
+  click(S.feedback);
+  render();
+  h.checkRevision.mockResolvedValueOnce({
+    kind: "verified",
+    file: { ...receipt, version: "auto-new" },
+  });
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(render().html).toContain("Real disk content");
+  expect(render().html).toContain(S.revisionNotices.newVersion);
+  expect(h.readText).toHaveBeenCalledOnce();
+});
+
+it("checks for a changed file when the content panel becomes active again", async () => {
+  vi.useFakeTimers();
+  await ready();
+  render({ ...props, active: false });
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  render({ ...props, active: true });
+  await vi.advanceTimersByTimeAsync(0);
+  expect(h.checkRevision).toHaveBeenCalledWith(receipt, "content");
+});
+
+it("leaves selected HTML loading under explicit user control", async () => {
+  vi.useFakeTimers();
+  h.inspectLink.mockResolvedValue({ ...receipt, name: "page.html" });
+  await ready();
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  await vi.advanceTimersByTimeAsync(120000);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  expect(props.onOpenHtml).toHaveBeenCalledOnce();
+});
+
+it("keeps a deletion warning and does not automatically retry when the panel reopens", async () => {
+  vi.useFakeTimers();
+  await ready();
+  h.checkRevision.mockRejectedValueOnce({ code: "missing" });
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(render().html).toContain(S.revisionNotices.missing);
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(h.checkRevision).toHaveBeenCalledOnce();
+});
+
+it("waits for actual Office readiness, then stages replacement before retiring the old document", async () => {
+  vi.useFakeTimers();
+  const file = { ...receipt, name: "result.docx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  const child = render().nodes.find(
+    (node) => typeof node.props.onStatus === "function",
+  )!;
+  (child.props.onStatus as (s: unknown) => void)({ file, state: "ready" });
+  render();
+  const next = { ...file, version: "new-document" };
+  const pending = deferred<unknown>();
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });
+  h.prepareOffice.mockReturnValueOnce(pending.promise);
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain('data-document-version="v1"');
+  expect(render().html).not.toContain('data-document-version="new-document"');
+  pending.resolve({ kind: "docx", file: next, value: { file: next } });
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain('data-document-version="new-document"');
+  expect(h.prepareOffice).toHaveBeenCalledOnce();
+});
+
+it("retains the old document and stops automatic checking when Office staging reports pending", async () => {
+  vi.useFakeTimers();
+  const file = { ...receipt, name: "result.docx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  const child = render().nodes.find(
+    (node) => typeof node.props.onStatus === "function",
+  )!;
+  (child.props.onStatus as (s: unknown) => void)({ file, state: "ready" });
+  render();
+  h.checkRevision.mockResolvedValueOnce({
+    kind: "verified",
+    file: { ...file, version: "new-document" },
+  });
+  h.prepareOffice.mockRejectedValueOnce({ code: "readPending" });
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain('data-document-version="v1"');
+  expect(render().html).toContain(S.revisionNotices.pending);
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(h.checkRevision).toHaveBeenCalledOnce();
 });
 
 it("opens the exact clicked path through the common inspector and renders verified Markdown", async () => {

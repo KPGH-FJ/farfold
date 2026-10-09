@@ -49,6 +49,20 @@ pub async fn file_delivery_inspect_selected(
 }
 
 #[tauri::command]
+pub async fn file_delivery_check_revision(
+    webview: Webview,
+    file: VerifiedFile,
+    mode: file_delivery::RevisionMode,
+) -> Result<file_delivery::RevisionCheck, file_delivery::RevisionFailure> {
+    require_main(&webview).map_err(|_| file_delivery::RevisionFailure { code: "unreadable" })?;
+    // No retry: a pending OS read retains its real admission slot after the
+    // bounded reply expires. The caller must stop automatic checks on pending.
+    crate::file_read_check::run(move || Ok(file_delivery::check_revision(&file, mode)))
+        .await
+        .map_err(|message| file_delivery::RevisionFailure::check(&message))?
+}
+
+#[tauri::command]
 pub async fn file_delivery_read_text(
     webview: Webview,
     file: VerifiedFile,

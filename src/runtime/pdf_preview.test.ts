@@ -151,3 +151,51 @@ it("gives an explicit unsupported-environment outcome and allocates nothing for 
   await expect(start()).rejects.toThrow(S.unsupported);
   expect(FakeWorker.instances).toHaveLength(0);
 });
+
+it("accepts an explicitly restored clamped page only with the exact page receipt", async () => {
+  const target = canvas(),
+    ready = vi.fn();
+  const pending = renderPdfPage(
+    new Uint8Array([1]),
+    target,
+    9,
+    800,
+    new AbortController().signal,
+    ready,
+    true,
+  );
+  const worker = FakeWorker.instances[0];
+  expect(worker.postMessage.mock.calls[0][0]).toMatchObject({
+    pageNumber: 9,
+    restorePage: true,
+  });
+  worker.receive({
+    kind: "ready",
+    pages: 3,
+    pageNumber: 3,
+    bitmap: new Bitmap(),
+  });
+  await pending;
+  expect(ready).toHaveBeenCalledWith(3, 3);
+  for (const actual of [undefined, 1, 2, 4, NaN]) {
+    const refused = expect(
+      renderPdfPage(
+        new Uint8Array([1]),
+        canvas(),
+        9,
+        800,
+        new AbortController().signal,
+        ready,
+        true,
+      ),
+    ).rejects.toThrow(S.failed);
+    FakeWorker.instances.at(-1)!.receive({
+      kind: "ready",
+      pages: 3,
+      pageNumber: actual,
+      bitmap: new Bitmap(),
+    });
+    await refused;
+  }
+  expect(ready).toHaveBeenCalledOnce();
+});

@@ -1,0 +1,28 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OfficePreview.revision-review.test.tsx (2 tests | 2 failed) 8ms
+   × docx does not automatically recapture after readPending on hide/show 6ms
+   × xlsx does not automatically recapture after readPending on hide/show 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OfficePreview.revision-review.test.tsx > docx does not automatically recapture after readPending on hide/show
+ FAIL  src/components/OfficePreview.revision-review.test.tsx > xlsx does not automatically recapture after readPending on hide/show
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/components/OfficePreview.revision-review.test.tsx:121:21
+    119|     await settle();
+    120|     render(() => component({ file: source, active: true }));
+    121|     expect(capture).toHaveBeenCalledOnce();
+       |                     ^
+    122|   },
+    123| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  04:21:00
+   Duration  162ms (transform 62ms, setup 0ms, import 91ms, tests 8ms, environment 0ms)
+

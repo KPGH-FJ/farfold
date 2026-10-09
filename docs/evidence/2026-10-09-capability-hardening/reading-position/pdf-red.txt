@@ -1,0 +1,48 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualFilePreview.test.tsx (11 tests | 1 failed) 33ms
+   × restores the last verified same-path PDF page after a revision remount without publishing stale readiness 3ms
+ ❯ src/runtime/pdf_render_core.test.ts (8 tests | 1 failed) 161ms
+   × restores a formerly valid page to the new last page only when restoration was requested 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualFilePreview.test.tsx > restores the last verified same-path PDF page after a revision remount without publishing stale readiness
+AssertionError: expected 1 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 1
+
+ ❯ src/components/VisualFilePreview.test.tsx:329:37
+    327|   h.render.mockReturnValue(pending.promise);
+    328|   render();
+    329|   expect(h.render.mock.calls[0][2]).toBe(3);
+       |                                     ^
+    330|   expect(report).toHaveBeenLastCalledWith({ source: props.preview, loc…
+    331|   h.render.mock.calls[0][5](2, 2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/pdf_render_core.test.ts > restores a formerly valid page to the new last page only when restoration was requested
+Error: unsupported
+ ❯ renderPdfPixels src/runtime/pdf_render_core.ts:150:13
+    148|       pdf.isPureXfa
+    149|     )
+    150|       throw new Error("unsupported");
+       |             ^
+    151|     const page = await pdf.getPage(pageNumber);
+    152|     const initial = page.getViewport({ scale: 1 });
+ ❯ src/runtime/pdf_render_core.test.ts:161:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 17 passed (19)
+   Start at  04:08:30
+   Duration  759ms (transform 183ms, setup 0ms, import 615ms, tests 193ms, environment 0ms)
+

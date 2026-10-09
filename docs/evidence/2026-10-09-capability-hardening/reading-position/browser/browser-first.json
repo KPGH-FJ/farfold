@@ -1,0 +1,32 @@
+{
+  "passed": false,
+  "results": [
+    {
+      "name": "StrictMode surviving effect captures once",
+      "ok": true,
+      "detail": [
+        {
+          "capture": "v1",
+          "aborted": false
+        }
+      ]
+    },
+    {
+      "name": "saved worksheet and row/column window restored",
+      "ok": true
+    },
+    {
+      "name": "old cell detail is actually open",
+      "ok": false
+    }
+  ],
+  "error": "Error: old cell detail is actually open",
+  "calls": [
+    {
+      "capture": "v1",
+      "aborted": false
+    }
+  ],
+  "ready": [],
+  "boundary": "Real React StrictMode and PDF worker; Office parser/IPC mocked. No native app or Agent."
+}

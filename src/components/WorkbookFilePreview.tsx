@@ -1,3 +1,4 @@
+import { XlsxError } from "../runtime/xlsx_types";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import {
@@ -25,6 +26,18 @@ import {
   WORKBOOK_WINDOW,
   type WorkbookPosition,
 } from "../runtime/workbook_view";
+import {
+  restoredWorkbookSheet,
+  restoredWorkbookWindow,
+  saveReadingPosition,
+  type PreviewReadingPositionRef,
+} from "../runtime/preview_reading_position";
+import {
+  PreviewCapture,
+  samePreviewFile,
+  type PreviewContentStatus,
+} from "../runtime/preview_capture";
+import type { PreparedWorkbookPreview } from "../runtime/office_preview_prepare";
 import "./WorkbookFilePreview.css";
 
 function cellValue(cell: XlsxCell | undefined): string {
@@ -59,22 +72,37 @@ function mergeDescription(position: WorkbookPosition): string | undefined {
     : undefined;
 }
 
-/** A file-version snapshot. Only an explicit refresh in the parent rereads disk. */
+/** A verified file-version snapshot; the parent stages refreshed contents. */
 export function WorkbookFilePreview({
   file,
   active,
+  readingPosition,
+  prepared,
+  onStatus,
 }: {
   file: VerifiedFile;
   active: boolean;
+  readingPosition?: PreviewReadingPositionRef;
+  prepared?: PreparedWorkbookPreview;
+  onStatus?: (status: PreviewContentStatus) => void;
 }) {
   const capture = useRef<{ file: VerifiedFile; value: WorkbookCapture } | null>(
     null,
   );
+  const status = useRef(onStatus);
+  status.current = onStatus;
   const current = useRef<AbortController | null>(null);
+  const captureReader = useRef(new PreviewCapture<WorkbookCapture>());
   const props = useRef({ file, active });
   props.current = { file, active };
-  const [sheetId, setSheetId] = useState<string>();
+  const [selection, setSelection] = useState<{
+    file: VerifiedFile;
+    id: string;
+  } | null>(null);
+  const sheetId = selection?.file === file ? selection.id : undefined;
   const [retry, setRetry] = useState(0);
+  const attempt = useRef({ retry, prepared });
+  attempt.current = { retry, prepared };
   const [state, setState] = useState<"loading" | "ready" | "failed" | "paused">(
     "loading",
   );
@@ -92,33 +120,67 @@ export function WorkbookFilePreview({
       props.current.active &&
       props.current.file === file;
     if (!active) {
+      status.current?.({ file, state: "paused" });
       setState("paused");
       setMessage(S.paused);
       return () => operation.abort();
     }
     setState("loading");
     setMessage(S.loading);
+    status.current?.({ file, state: "loading" });
     void (async () => {
       // A replaced mount must not start an OS read. In development, StrictMode
       // replays effects synchronously; only the surviving owner crosses IPC.
       await Promise.resolve();
       if (!owns()) return;
+      const staged =
+        prepared &&
+        samePreviewFile(prepared.file, file) &&
+        samePreviewFile(prepared.capture.file, file)
+          ? prepared
+          : null;
       const stored =
-        capture.current?.file === file ? capture.current.value : null;
+        staged?.capture ??
+        (capture.current?.file === file ? capture.current.value : null);
       const value = await (stored ??
-        readWorkbookCapture(file, operation.signal));
+        captureReader.current.read(file, retry, readWorkbookCapture));
       if (!owns()) return;
       capture.current = { file, value };
-      const workbook = await readWorkbookPreview(
-        value,
-        sheetId,
-        operation.signal,
-      );
+      let workbook =
+        staged && (sheetId === undefined || staged.value.sheet?.id === sheetId)
+          ? staged.value
+          : await readWorkbookPreview(value, sheetId, operation.signal);
       if (!owns()) return;
+      // Resolve a stored location against the new workbook's actual directory.
+      // Never ask the parser to guess a removed or recycled sheet ID.
+      if (sheetId === undefined) {
+        const restored =
+          restoredWorkbookSheet(file, workbook, readingPosition) ??
+          (staged
+            ? workbook.sheets.find((item) => item.state === "visible")?.id
+            : undefined);
+        if (restored && restored !== workbook.sheet?.id) {
+          workbook = await readWorkbookPreview(
+            value,
+            restored,
+            operation.signal,
+          );
+          if (!owns()) return;
+        }
+      }
       setLoaded({ file, value: workbook });
       setState("ready");
+      status.current?.({ file, state: "ready" });
       setMessage(S.snapshot);
     })().catch((error) => {
+      const code = error instanceof XlsxError ? error.code : undefined;
+      if (
+        props.current.file === file &&
+        attempt.current.retry === retry &&
+        attempt.current.prepared === prepared &&
+        (owns() || code === "readPending" || code === "readBusy")
+      )
+        status.current?.({ file, state: "failed", ...(code ? { code } : {}) });
       if (!owns()) return;
       setState("failed");
       setMessage(workbookFailure(error));
@@ -127,7 +189,7 @@ export function WorkbookFilePreview({
       operation.abort();
       if (current.current === operation) current.current = null;
     };
-  }, [file, active, sheetId, retry]);
+  }, [file, active, sheetId, retry, readingPosition, prepared]);
   const workbook = loaded?.file === file ? loaded.value : null;
   const selectedId = sheetId ?? workbook?.sheet?.id;
   return (
@@ -144,7 +206,9 @@ export function WorkbookFilePreview({
               aria-label={S.sheet}
               value={selectedId}
               disabled={!active || state === "loading"}
-              onChange={(event) => setSheetId(event.target.value)}
+              onChange={(event) =>
+                setSelection({ file, id: event.target.value })
+              }
             >
               {workbook.sheets.map((sheet) => (
                 <option key={sheet.id} value={sheet.id}>
@@ -165,6 +229,7 @@ export function WorkbookFilePreview({
               current.current?.abort();
               setState("paused");
               setMessage(S.cancelled);
+              status.current?.({ file, state: "paused" });
             }}
           >
             {S.cancel}
@@ -186,16 +251,62 @@ export function WorkbookFilePreview({
         active &&
         workbook?.sheet &&
         (sheetId === undefined || workbook.sheet.id === sheetId) && (
-          <WorkbookGrid key={workbook.sheet.id} workbook={workbook} />
+          <WorkbookGrid
+            key={`${file.root}:${file.resolvedPath}:${file.version}:${file.sha256}:${workbook.sheet.id}`}
+            workbook={workbook}
+            file={file}
+            explicitSheetSelection={sheetId === workbook.sheet.id}
+            readingPosition={readingPosition}
+          />
         )}
     </section>
   );
 }
 
-function WorkbookGrid({ workbook }: { workbook: WorkbookPreview }) {
+function WorkbookGrid({
+  file,
+  workbook,
+  readingPosition,
+  explicitSheetSelection,
+}: {
+  file: VerifiedFile;
+  workbook: WorkbookPreview;
+  explicitSheetSelection: boolean;
+  readingPosition?: PreviewReadingPositionRef;
+}) {
   const sheet = workbook.sheet!;
-  const [start, setStart] = useState({ row: 1, column: 1 });
-  const [showHidden, setShowHidden] = useState(false);
+  const restored = restoredWorkbookWindow(file, workbook, readingPosition);
+  const [start, setStart] = useState({
+    row: restored.row,
+    column: restored.column,
+  });
+  const [showHidden, setShowHidden] = useState(restored.showHidden);
+  useLayoutEffect(() => {
+    const info = workbook.sheets.find((item) => item.id === sheet.id);
+    if (info)
+      saveReadingPosition(readingPosition, file, {
+        kind: "workbook",
+        sheet: {
+          id: info.id,
+          name: info.name,
+          hiddenSelected:
+            info.state !== "visible" &&
+            (explicitSheetSelection ||
+              restoredWorkbookSheet(file, workbook, readingPosition) ===
+                info.id),
+        },
+        ...start,
+        showHidden,
+      });
+  }, [
+    file,
+    workbook,
+    sheet,
+    start,
+    showHidden,
+    readingPosition,
+    explicitSheetSelection,
+  ]);
   const [address, setAddress] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [selection, setSelection] = useState<WorkbookPosition | null>(null);

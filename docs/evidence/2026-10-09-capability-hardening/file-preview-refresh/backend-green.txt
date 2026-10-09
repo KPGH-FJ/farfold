@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.19s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 14 tests
+test file_delivery::revision::tests::read_check_failures_are_exact_code_objects_without_raw_messages ... ok
+test file_delivery::revision::tests::missing_root_and_missing_leaf_are_not_conflated_with_other_io_failures ... ok
+test file_delivery::revision::tests::deleted_selected_file_reports_missing_without_searching_for_its_rename ... ok
+test file_delivery::revision::tests::same_length_edit_is_fully_captured_once_before_returning_a_receipt ... ok
+test file_delivery::revision::tests::root_redirect_is_rejected_before_a_leaf_is_read ... ok
+test file_delivery::revision::tests::replacement_after_metadata_observation_cannot_return_wrong_bytes ... ok
+test file_delivery::revision::tests::full_mode_returns_verified_content_even_when_metadata_is_unchanged ... ok
+test file_delivery::revision::tests::directory_and_oversized_replacement_do_not_enter_content_capture ... ok
+test file_delivery::revision::tests::redirected_alias_is_not_adopted_as_a_new_selected_file ... ok
+test file_delivery::revision::tests::full_fallback_detects_bytes_even_with_an_equivalent_metadata_hint ... ok
+test file_delivery::revision::tests::unchanged_hint_never_enters_the_content_reader ... ok
+test file_delivery::revision::tests::unchanged_hint_is_not_a_fresh_content_receipt ... ok
+test file_delivery::revision::tests::same_path_atomic_replacement_can_refresh_but_old_explicit_reads_still_fail ... ok
+test file_delivery::revision::tests::wire_modes_and_results_preserve_the_hint_content_distinction ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 1184 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -24,6 +24,8 @@ mod ooxml_archive;
 pub use document::{DocxCapture, DocxReadFailure, read_docx};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
+mod revision;
+pub use revision::{RevisionCheck, RevisionFailure, RevisionMode, check_revision};
 
 pub const MAX_FILE_BYTES: u64 = 32 * 1024 * 1024;
 pub const MAX_TEXT_BYTES: u64 = 1024 * 1024;
@@ -126,10 +128,46 @@ struct OpenedFile {
     before: Stamp,
 }
 
+/// Preserve the OS error kind only for callers that need a precise read outcome.
+/// Existing explicit readers keep their original DeliveryError mapping.
+struct SourceOpenError {
+    delivery: DeliveryError,
+    cause: Option<std::io::ErrorKind>,
+}
+impl From<DeliveryError> for SourceOpenError {
+    fn from(delivery: DeliveryError) -> Self {
+        Self {
+            delivery,
+            cause: None,
+        }
+    }
+}
+fn source_open_error(error: std::io::Error, delivery: DeliveryError) -> SourceOpenError {
+    SourceOpenError {
+        delivery,
+        cause: Some(error.kind()),
+    }
+}
+
 fn open_source(root: &Path, path: &Path, max: u64) -> Result<OpenedFile, DeliveryError> {
+    open_source_detailed(root, path, max, None).map_err(|error| error.delivery)
+}
+
+fn open_source_detailed(
+    root: &Path,
+    path: &Path,
+    max: u64,
+    expected_location: Option<&VerifiedFile>,
+) -> Result<OpenedFile, SourceOpenError> {
     absolute(root)?;
-    let root = root.canonicalize().map_err(|_| DeliveryError::Unreadable)?;
-    let root_handle = open_directory(&root)?;
+    let root = root
+        .canonicalize()
+        .map_err(|error| source_open_error(error, DeliveryError::Unreadable))?;
+    if expected_location.is_some_and(|expected| root != Path::new(&expected.root)) {
+        return Err(DeliveryError::OutsideRoot.into());
+    }
+    let root_handle = file_access::open_directory(&root)
+        .map_err(|error| source_open_error(error, DeliveryError::Changed))?;
     let requested = if path.is_absolute() {
         path.to_owned()
     } else {
@@ -138,21 +176,27 @@ fn open_source(root: &Path, path: &Path, max: u64) -> Result<OpenedFile, Deliver
     absolute(&requested)?;
     let resolved = requested
         .canonicalize()
-        .map_err(|_| DeliveryError::Unreadable)?;
+        .map_err(|error| source_open_error(error, DeliveryError::Unreadable))?;
     if !resolved.starts_with(&root) || resolved == root {
-        return Err(DeliveryError::OutsideRoot);
+        return Err(DeliveryError::OutsideRoot.into());
+    }
+    if expected_location.is_some_and(|expected| {
+        requested != Path::new(&expected.path) || resolved != Path::new(&expected.resolved_path)
+    }) {
+        return Err(DeliveryError::OutsideRoot.into());
     }
     let relative = resolved
         .strip_prefix(&root)
         .map_err(|_| DeliveryError::OutsideRoot)?;
-    let file =
-        file_access::open_relative(&root_handle, relative).map_err(|_| DeliveryError::Changed)?;
-    let before = file_access::stamp(&file).map_err(|_| DeliveryError::Unreadable)?;
+    let file = file_access::open_relative(&root_handle, relative)
+        .map_err(|error| source_open_error(error, DeliveryError::Changed))?;
+    let before = file_access::stamp(&file)
+        .map_err(|error| source_open_error(error, DeliveryError::Unreadable))?;
     if !before.regular {
-        return Err(DeliveryError::NotFile);
+        return Err(DeliveryError::NotFile.into());
     }
     if before.size > max {
-        return Err(DeliveryError::TooLarge);
+        return Err(DeliveryError::TooLarge.into());
     }
     Ok(OpenedFile {
         root,
@@ -220,7 +264,13 @@ fn version(opened: &OpenedFile, sha256: &str) -> Result<String, DeliveryError> {
 }
 
 fn capture(root: &Path, path: &Path, max: u64) -> Result<(VerifiedFile, Vec<u8>), DeliveryError> {
-    let mut opened = open_source(root, path, max)?;
+    capture_opened(open_source(root, path, max)?, max)
+}
+
+fn capture_opened(
+    mut opened: OpenedFile,
+    max: u64,
+) -> Result<(VerifiedFile, Vec<u8>), DeliveryError> {
     let mut bytes = Vec::with_capacity(opened.before.size as usize);
     (&mut opened.file)
         .take(max + 1)

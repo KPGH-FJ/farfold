@@ -1,0 +1,10 @@
+{
+  "serverPid": 49689,
+  "signal": "SIGTERM",
+  "observedExit": 143,
+  "listen1458": false,
+  "ownedChromeRemaining": [],
+  "sourceUnchanged": true,
+  "sourceChanged": [],
+  "serverPidExists": false
+}

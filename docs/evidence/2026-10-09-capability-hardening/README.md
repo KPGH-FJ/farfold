@@ -6,6 +6,8 @@
 
 最新衔接：图片修复 `6c36cae0` 已提交并安装，[候选独立核验](docx-image-fix-candidate/candidate-independent.json)9/9、[安装独立核验](docx-image-fix-candidate/install-independent.json)通过，三份217,400条数据一致。[正式图片复验](docx-image-fix-candidate/installed-docx-images.json)确认PNG/JPEG、EXIF6方向、重读及收起重开成功，合并单元格详情可打开返回。复用已有受控对话，没有新请求或权限变更；正常退出后原7项未发内容保持。唯一正式应用为 `/Applications/Farfold.app`，重复包已精确移除。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)原文保留。全部122项及29家八项标准保持；继续P20自动检查/刷新，PPTX方案验证仍有真实显示与生命周期缺口。
 
+P20 自动检查、刷新与阅读位置保留已完成源码整合及独立复核，隐藏、迟到读取、旧状态覆盖新预览的有效反例已修正。[七项工程检查](file-refresh-checks/final-verification.json)通过：1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。子预览受控浏览器23项通过；父层实际浏览器与正式安装复验接续，未关闭P20。
+
 2026-10-10 图片修复衔接：[同源WebKit反例与修复](docx-image-csp/receipt.json)及[独立复核](docx-image-csp/independent-review.json)已完成，生产配置仅在图片源增加本地blob，其他来源和指令保持。该轮修复前正式应用为af66f006，图片失败保留；其后6c36安装及分项成功见首段。修复首轮[全仓检查](docx-image-fix-checks/receipt.json)1,059输入未变，前端280文件/3,123项及类型/打包/Rust静态检查通过；Rust1,177通过、1项协议分类测试失败、5项忽略，当时另有并行PPTX研究文件排版问题。其后[真实配置锁反例与夹具修正](protocol-error-timing/receipt.json)保留原错误分类断言，并使派发前等待与响应超时分别有界；原失败具体调度未捕获。[最终整合](docx-image-fix-checks-final/final-verification.json)已七项通过，前端3,123项、Rust1,179项/5项忽略，1,059输入匹配。只有Rust测试文件在首轮后变化，因此前端/类型/打包复用字节相同输入的成功记录，最终重跑全仓格式及Rust检查。修复安装的私有退出记录、元数据恢复副本和217,400条新基线已完成；之后候选、安装及实机结果见首段。
 
 第七片完成目录读取修复及[独立复核](directory-search-independent.json)、[PDF/图片版本意见](visual-feedback/receipt.json)和受限XLSX只读预览。PDF/图片关联179项、开发与打包Chromium各20项、坏PDF/取消5项通过，[独立复核](visual-feedback/independent-review.json)保留范围；修正PDF解析器动态加载竞态，同文件从15秒超时到成功绘制。XLSX[底层48项](xlsx-core.json)、界面关联63项、[真实Chromium38项](xlsx/independent-review.json)及[独立源码复核](xlsx/source-independent-review.json)通过。另修复第六片实机发现的查找说明样式、关闭焦点和导出隐私文案，已在第七片正式WebKit分项复验。

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/preview_reading_position.test.ts (4 tests | 1 failed) 4ms
+   × does not auto-open a sheet newly hidden by a revision without explicit hidden selection 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/preview_reading_position.test.ts > does not auto-open a sheet newly hidden by a revision without explicit hidden selection
+AssertionError: expected '2' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"2"
+
+ ❯ src/runtime/preview_reading_position.test.ts:101:59
+     99|   const workbook = { sheets: [{id:"2",name:"Saved",state:"hidden"}], s…
+    100|   const position: PreviewReadingPositionRef = {current:{root:file.root…
+    101|   expect(restoredWorkbookSheet(file, workbook, position)).toBeUndefine…
+       |                                                           ^
+    102|   if(position.current?.kind === "workbook") position.current.sheet = {…
+    103|   expect(restoredWorkbookSheet(file, workbook, position)).toBe("2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  04:17:47
+   Duration  103ms (transform 30ms, setup 0ms, import 40ms, tests 4ms, environment 0ms)
+

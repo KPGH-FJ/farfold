@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "architecture",
+  "reviewedAtUtc": "2026-10-09T20:29:33.752405+00:00",
+  "capability": "P20",
+  "status": "no_unresolved_blocking_findings_in_reviewed_source; full_integration_and_installed_product_unverified",
+  "scope": [
+    "只读核当前自动检查controller/hook、父层替换/隐藏/反馈归属、已准备Office结果与子组件捕获等待、阅读位置增量。",
+    "新增独立parent 7项及Office 2项反例；不修改root/product生产文件，不重复其关联/全仓测试。",
+    "本回执sourceHash为最终只读复核时点，不冒充最初红测源码快照。"
+  ],
+  "closedFindings": [
+    {
+      "id": "P20-REVIEW-01",
+      "detail": "自动二次读取期间隐藏内容栏曾丢失已核验旧正文；窗口隐藏后迟到正文曾发布。",
+      "evidence": "independent-parent-red-final.txt 的前4项，修复以refresh owner的valid及保留旧ready视图为准。",
+      "current": "失效结果不发布，旧快照保留，cancelled与failed区分。"
+    },
+    {
+      "id": "P20-REVIEW-02",
+      "detail": "自动正文readPending曾被当作普通refreshFailed。",
+      "evidence": "independent-parent-red-final.txt 第5项；隐藏时pending亦有首组覆盖。",
+      "current": "固定read wait/busy及Office typed pending/busy传给controller，保留halt，不因focus/hide恢复自动重试。"
+    },
+    {
+      "id": "P20-REVIEW-03",
+      "detail": "失败自动PDF刷新曾清除旧页readiness；若仍浏览旧页，不能恢复错误页号。",
+      "evidence": "independent-readiness-first-green.txt；2项首次实跑即绿，未取得独立红。",
+      "current": "preserve刷新不清旧readiness，同source页切换可更新；刷新操作期间反馈仍禁用。"
+    },
+    {
+      "id": "P20-REVIEW-04",
+      "detail": "Office父层曾先替换file卸载旧正文，再由子组件捕获/解析；readPending后hide/show实际重复捕获。",
+      "evidence": "independent-office-pending-red.txt 两项有效红；父提前交换为源码发现。",
+      "current": "父层先完整capture+validated parse再交换，失败保留旧snapshot；leaf PreviewCapture保持同一有界Promise，失败须明确retry。"
+    },
+    {
+      "id": "P20-REVIEW-05",
+      "detail": "root后续挑战：同file旧capture晚readPending可盖掉新prepared ready。",
+      "evidence": "reading-position/status-owner-red.txt为product实际2红；status-owner-green.txt为16绿。",
+      "current": "最终两个leaf除file外还匹配retry及prepared身份；hidden同一次capture的pending仍能回报。"
+    }
+  ],
+  "executedByReviewer": [
+    {
+      "log": "file-preview-refresh/independent-parent-red.txt",
+      "result": "初次3条行为断言失败，其中第3项另有harness double-cleanup导致document未定义；不把cleanup作为产品问题。"
+    },
+    {
+      "log": "file-preview-refresh/independent-parent-red-final.txt",
+      "command": "corepack pnpm exec vitest run src/components/OpenedFileView.revision-review.test.tsx",
+      "result": "5项行为断言有效红，无harness错误，exit1。"
+    },
+    {
+      "log": "file-preview-refresh/independent-office-pending-red.txt",
+      "command": "corepack pnpm exec vitest run src/components/OfficePreview.revision-review.test.tsx",
+      "result": "2项有效红，DOCX/XLSX readPending后hide/show capture调用1→2，exit1。"
+    },
+    {
+      "log": "file-preview-refresh/independent-readiness-first-green.txt",
+      "command": "corepack pnpm exec vitest run src/components/OpenedFileView.revision-review.test.tsx -t 'retains the visible old PDF'",
+      "result": "2 passed/5 skipped，exit0；运行前root已修复，因此仅首轮绿。日志从误命名red改为first-green，保留原始字节。"
+    }
+  ],
+  "otherAgentLogsRead": [
+    {
+      "log": "reading-position/office-pending-green.txt",
+      "result": "2文件9项通过；非本reviewer执行。"
+    },
+    {
+      "log": "reading-position/status-owner-red.txt",
+      "result": "14项中2失败，证明旧状态覆盖ready；非本reviewer执行。"
+    },
+    {
+      "log": "reading-position/status-owner-green.txt",
+      "result": "2文件16项通过；非本reviewer执行。"
+    },
+    {
+      "log": "reading-position/targeted-owner-final.txt",
+      "result": "12文件115项通过；非本reviewer执行。",
+      "command": "corepack pnpm exec vitest run src/components/PreviewReadingPosition.test.tsx src/components/VisualFilePreview.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/preview_reading_position.test.ts src/runtime/preview_capture.test.ts src/runtime/pdf_render_core.test.ts src/runtime/pdf_preview.test.ts src/runtime/workbook_view.test.ts src/runtime/document_view.test.ts src/runtime/visual_preview.test.ts src/runtime/docx_preview.test.ts src/runtime/xlsx_preview.test.ts"
+    },
+    {
+      "log": "reading-position/typecheck-owner-final.txt",
+      "result": "已读无diagnostic的tsc输出；product报告工具session44955 exit0。"
+    }
+  ],
+  "parentCheckReported": {
+    "result": "root报告父/controller/helper共5文件89项绿；当前未收到原始log路径，本reviewer未将其计为已读日志。",
+    "rawLogInspected": false
+  },
+  "reviewChecks": [
+    "未变hint不会替换file对象或正文；每5秒metadata、60秒及focus/恢复完整捕获，只有单次在途。",
+    "HTML不进入普通文件自动检查；显式读/导出仍走已有exact VerifiedFile。",
+    "旧版本意见按原file版本保留，编辑时发现变化暂停替换；位置ref只存显示位置，不改变正文/反馈身份。",
+    "Office捕获等待不使用隐藏/解析AbortSignal；解析可终止，晚回执仍只能影响当前文件与当前尝试。",
+    "PDF恢复页可按实际新页数缩减，成功回报实际页；新工作表/正文区域按新内容目录恢复或回退。"
+  ],
+  "limits": [
+    "独立组件反例为hook-slot/SSR受控调度，捕获/解析边界mock；不是浏览器或已安装Farfold测试。",
+    "本reviewer未运行真实Agent、正式app、Windows或TCC/外部磁盘测试。",
+    "图片/PDF解码仍保留各自既有错误反馈；本片不是全部格式视觉保真证明。",
+    "完整工程检查、生产构建及正式安装由root后续记录，不能由源码hash或定向通过代替。"
+  ],
+  "sourceSha256": {
+    "src/components/OpenedFileView.tsx": "f8ba73b3902fd18500a1241a31ed8d6e41efcdd163c7ca5191d25c5045b72d37",
+    "src/components/useFileRevisionMonitor.ts": "206a87308d8fc07b85d71580e951a92a8b346e3acaec357667d74db3a35d7093",
+    "src/runtime/file_revision_monitor.ts": "f917385e2f39e26b2f5f52500d9b24a5255f037f965fdc0e314937c8b67cf451",
+    "src/runtime/file_delivery.ts": "41179e6a2aa0785f64a8e7c8b652cca0edd4a4db1e5250461f59dea99338ee5d",
+    "src/runtime/file_open_strings.ts": "2753f8c53b33a9328722ea808dc454be76654e261deead144d1298b6c896befa",
+    "src/runtime/office_preview_prepare.ts": "327f597f0ef376784cc7c36ce663620a8a6d562935ee3d52cf28b4f68ec65106",
+    "src/runtime/preview_capture.ts": "d8b055191154c4e7e67a2c2a3ea59a9cf93dc396ae8cde698bf7b12f2148d7c4",
+    "src/components/DocxFilePreview.tsx": "5df10bbe06a6aa08da75107d90c216c423839c2424dd80782a1a703d37fabc3f",
+    "src/components/WorkbookFilePreview.tsx": "b7fdaa790abc7e35c15c2a7395ed723ed279c4a6b9ca335196feb2dc248d8ca4",
+    "src/runtime/preview_reading_position.ts": "4bed3f1d14c02d7bd5d6fbb6c8c2b414c8080e3d15e4734d2a015cc28f876bab",
+    "src/components/DocxDocumentView.tsx": "48d9d9582bd9c4d9580698c098d64d517475a571f4b8068ed4c2d06a150a33e9",
+    "src/components/VisualFilePreview.tsx": "b6cf6df1172ee5af245621b3168203b81961b82fdfeba5e85ac47b4c53a47571",
+    "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+    "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+    "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+    "src/components/OpenedFileView.revision-review.test.tsx": "86f29e44d7bb89c2888eda19b47aec9f1aa227300e7465862ee27ddf729ef1dc",
+    "src/components/OfficePreview.revision-review.test.tsx": "302fcfe6b0423f9ee5f4480fc9c3b80f2d50bff469f65389408fff5e65e8881c",
+    "src/components/OpenedFileView.test.tsx": "54b22cef17936ca94d3fb1a1a46d487c6ca5699bef4e0dbf7b8fb1904b838980",
+    "src/runtime/file_revision_monitor.test.ts": "0f3955d3a0047f8280b06f83185dd0a0a9b8330a975f7ce04fea11ab75966112",
+    "src/runtime/office_preview_prepare.test.ts": "523bdc2ac0054852c5497a3e5a250c69e26ca2d1352941496d249fc6690967dd",
+    "src/components/PreviewReadingPosition.test.tsx": "8a50c6b17a66cecc160d1917b3ec2620c0ac2e37d2aed9def5d4909951173dd5",
+    "src/runtime/preview_capture.test.ts": "f5a492df2ea0f7a11c20db9eff5f4f86b2b17cbde9838bfb65f7cb4150cf5e54"
+  },
+  "evidenceSha256": {
+    "file-preview-refresh/independent-parent-red.txt": "db1d6283606005b2a90a8b434306983dfe690956cfe36dd9580179703ad487c6",
+    "file-preview-refresh/independent-parent-red-final.txt": "77532228d3f3299ecc6fdc1650f026374540f5d47e012f65b64f7a7d717c94a5",
+    "file-preview-refresh/independent-office-pending-red.txt": "3f0b12768d6a3532a853ddb84ad8c2d1d1f7a14995fe208309c603f18db412b2",
+    "file-preview-refresh/independent-readiness-first-green.txt": "f22e64ce502d099f60c4252e439dc505a9c8199ae8cc29819b375df9dd3d2438",
+    "reading-position/office-pending-green.txt": "37aee2741a791f7e57bf958173b10cfb2c3bf4974ff932e0e778f3329e1baa4e",
+    "reading-position/status-owner-red.txt": "09675bfddaa60b7a62a229b46a14182d627a304ac384fc673680e6e2cd19c7e8",
+    "reading-position/status-owner-green.txt": "6d146e2745f709b69f208288c98d1343b76a2cdf92660c33f1d270d13c5dfb5a",
+    "reading-position/targeted-owner-final.txt": "82a4ab47fcc5f1376838e3acc61f93e3097411002b96d0d2ebe5f5f514ff3b3b",
+    "reading-position/typecheck-owner-final.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "reading-position/source-checkpoint.json": "bb32b291fb445d46af6a69a32a77c563782a2e66f0ed6f6c2c6f51efaa3a42bd"
+  }
+}

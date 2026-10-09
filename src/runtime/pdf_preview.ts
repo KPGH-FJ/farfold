@@ -15,7 +15,8 @@ export async function renderPdfPage(
   pageNumber: number,
   displayWidth: number,
   signal: AbortSignal,
-  documentReady: (pages: number) => void,
+  documentReady: (pages: number, actualPage?: number) => void,
+  restorePage = false,
 ): Promise<void> {
   if (signal.aborted) throw new Error(S.cancelled);
   if (
@@ -74,7 +75,14 @@ export async function renderPdfPage(
             signal.aborted ||
             !Number.isSafeInteger(value.pages) ||
             value.pages < 1 ||
-            value.pages < pageNumber ||
+            (!restorePage && value.pages < pageNumber) ||
+            (restorePage &&
+              value.pageNumber !== Math.min(pageNumber, value.pages)) ||
+            (value.pageNumber !== undefined &&
+              value.pageNumber !==
+                (restorePage
+                  ? Math.min(pageNumber, value.pages)
+                  : pageNumber)) ||
             value.pages > MAX_PDF_PAGES ||
             bitmap.width < 1 ||
             bitmap.height < 1 ||
@@ -88,7 +96,8 @@ export async function renderPdfPage(
           const context = canvas.getContext("2d", { alpha: false });
           if (!context) throw new Error();
           context.drawImage(bitmap, 0, 0);
-          documentReady(value.pages);
+          if (restorePage) documentReady(value.pages, value.pageNumber);
+          else documentReady(value.pages);
           settled = true;
           resolve();
         } catch {
@@ -98,7 +107,15 @@ export async function renderPdfPage(
         }
       });
       const data = bytes.slice();
-      worker.postMessage({ data, pageNumber, displayWidth }, [data.buffer]);
+      worker.postMessage(
+        {
+          data,
+          pageNumber,
+          displayWidth,
+          ...(restorePage ? { restorePage: true } : {}),
+        },
+        [data.buffer],
+      );
     });
   } catch (error) {
     canvas.width = 0;

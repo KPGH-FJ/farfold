@@ -1,0 +1,9 @@
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-final.diagnostics.json 70ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-final.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-first.diagnostics.json 21ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-first.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-fixed.diagnostics.json 32ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-status.diagnostics.json 19ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/browser-status.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/reading-position/source-checkpoint.json 1ms (unchanged)

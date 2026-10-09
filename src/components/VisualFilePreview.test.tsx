@@ -317,3 +317,78 @@ it("ignores an old image load when the same file is refreshed to a new read-resu
     true,
   );
 });
+
+it("restores the last verified same-path PDF page after a revision remount without publishing stale readiness", async () => {
+  const readingPosition = {
+    current: {
+      root: source.root,
+      resolvedPath: source.resolvedPath,
+      kind: "pdf",
+      page: 3,
+    },
+  };
+  const report = vi.fn();
+  Object.assign(props, { readingPosition, onReadiness: report });
+  const pending = deferred<void>();
+  h.render.mockReturnValue(pending.promise);
+  render();
+  expect(h.render.mock.calls[0][2]).toBe(3);
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  h.render.mock.calls[0][5](2, 2);
+  expect(report.mock.calls.some(([v]) => v.location !== null)).toBe(false);
+  pending.resolve();
+  await drain();
+  expect(render().html).toContain("第 2 / 2 页");
+  expect(readingPosition.current).toEqual({
+    root: source.root,
+    resolvedPath: source.resolvedPath,
+    kind: "pdf",
+    page: 2,
+  });
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: { kind: "pdf", page: 2, pageCount: 2 },
+  });
+});
+
+it("does not let a failed or superseded revision overwrite the last successfully drawn reading position", async () => {
+  const readingPosition = {
+    current: {
+      root: source.root,
+      resolvedPath: source.resolvedPath,
+      kind: "pdf",
+      page: 3,
+    },
+  };
+  const report = vi.fn();
+  Object.assign(props, { readingPosition, onReadiness: report });
+  const old = deferred<void>(),
+    next = deferred<void>();
+  h.render.mockReturnValueOnce(old.promise).mockReturnValueOnce(next.promise);
+  render();
+  const previous = props.preview;
+  props.preview = {
+    ...previous,
+    file: { ...source, version: "v2", sha256: "h2" },
+  };
+  render();
+  h.render.mock.calls[0][5](9, 3);
+  old.resolve();
+  await drain();
+  expect(readingPosition.current.page).toBe(3);
+  expect(report.mock.calls.filter(([v]) => v.location !== null)).toHaveLength(
+    0,
+  );
+  click(S.cancel);
+  h.render.mock.calls[1][5](2, 2);
+  next.resolve();
+  await drain();
+  render();
+  expect(readingPosition.current.page).toBe(3);
+  expect(report.mock.calls.filter(([v]) => v.location !== null)).toHaveLength(
+    0,
+  );
+});

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/PreviewReadingPosition.test.tsx (7 tests | 1 failed) 152ms
+   × does not carry a selected cell's old value or detail into the next verified revision 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PreviewReadingPosition.test.tsx > does not carry a selected cell's old value or detail into the next verified revision
+AssertionError: expected undefined to be defined
+ ❯ src/components/PreviewReadingPosition.test.tsx:360:16
+    358|     (n) => n.type === "button" && n.props["aria-label"] === W.selected…
+    359|   );
+    360|   expect(cell).toBeDefined();
+       |                ^
+    361|   (cell!.props.onClick as () => void)();
+    362|   view = render(node);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 41 passed (42)
+   Start at  04:13:43
+   Duration  539ms (transform 486ms, setup 0ms, import 713ms, tests 366ms, environment 0ms)
+

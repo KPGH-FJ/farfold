@@ -30,6 +30,12 @@ import {
   type DocumentCellPosition,
 } from "../runtime/document_view";
 
+import {
+  restoredDocumentPosition,
+  saveReadingPosition,
+  type PreviewReadingPositionRef,
+} from "../runtime/preview_reading_position";
+
 type Images = DocumentImages;
 function DocumentImage({
   image,
@@ -385,11 +391,18 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
 function BlockSequence({
   blocks,
   images,
+  initialSegment = 0,
+  onPosition,
 }: {
   blocks: DocxBlock[];
   images: Images;
+  initialSegment?: number;
+  onPosition?: (segment: number) => void;
 }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(initialSegment);
+  useLayoutEffect(() => {
+    onPosition?.(page);
+  }, [page, onPosition]);
   const region = useRef<HTMLDivElement | null>(null);
   const pages = Math.max(1, Math.ceil(blocks.length / DOCUMENT_WINDOW.blocks));
   const show = (next: number) => {
@@ -435,8 +448,20 @@ function BlockSequence({
   );
 }
 
-export function DocxDocumentView({ document }: { document: DocxPreview }) {
-  const [story, setStory] = useState("");
+export function DocxDocumentView({
+  document,
+  readingPosition,
+}: {
+  document: DocxPreview;
+  readingPosition?: PreviewReadingPositionRef;
+}) {
+  const restored = restoredDocumentPosition(document, readingPosition);
+  const [choice, setChoice] = useState<{
+    source: DocxPreview;
+    id: string;
+  } | null>(null);
+  const story =
+    choice?.source === document ? choice.id : (restored.story?.id ?? "");
   const images = useMemo(() => new DocumentImages(document.images), [document]);
   const selected = document.stories.find((item) => item.id === story);
   return (
@@ -469,7 +494,9 @@ export function DocxDocumentView({ document }: { document: DocxPreview }) {
           <select
             aria-label={S.sections}
             value={story}
-            onChange={(event) => setStory(event.target.value)}
+            onChange={(event) =>
+              setChoice({ source: document, id: event.target.value })
+            }
           >
             <option value="">{S.body}</option>
             {document.stories.map((item, i) => (
@@ -483,9 +510,29 @@ export function DocxDocumentView({ document }: { document: DocxPreview }) {
       )}
       {selected && <p className="document-scope">{S.separateStory}</p>}
       <BlockSequence
-        key={selected?.id ?? "body"}
+        key={`${document.file.root}:${document.file.resolvedPath}:${document.file.version}:${document.file.sha256}:${selected?.id ?? "body"}`}
         blocks={selected?.blocks ?? document.blocks}
         images={images}
+        initialSegment={
+          (selected?.id ?? "") === (restored.story?.id ?? "")
+            ? restored.segment
+            : 0
+        }
+        onPosition={(segment) =>
+          saveReadingPosition(readingPosition, document.file, {
+            kind: "document",
+            story: selected
+              ? {
+                  id: selected.id,
+                  kind: selected.kind,
+                  ...(selected.noteId === undefined
+                    ? {}
+                    : { noteId: selected.noteId }),
+                }
+              : null,
+            segment,
+          })
+        }
       />
     </>
   );

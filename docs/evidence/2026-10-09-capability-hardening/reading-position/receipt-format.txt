@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/reading-position/implementation.json 12ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/cleanup.json 1ms (unchanged)

@@ -20,6 +20,8 @@
 
 图片最小修复的[工程收口](evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/final-verification.json)已完成：生产策略仅新增本地Blob图片来源，独立WebKit由失败转成功，外部图片仍拦截。协议测试的受控配置锁反例证实派发前等待不应当作响应超时；修正测试边界后Rust1,179项通过，生产协议未改。原失败具体调度未捕获，额外测试lint检查的两项既有问题单列保留；修复已提交 `6c36cae0` 并安装，[正式图片复验](evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/installed-docx-images.json)确认普通PNG/JPEG、EXIF6方向、同版本重读及收起重开均成功，合并单元格详情可打开和返回。本次沿用已有受控对话，没有新请求或权限变更；正常退出后原7项未发内容保持。P16完整Office仍未完成，接续P20自动检查与刷新。
 
+P20 自动刷新已完成源码及独立复核：保护单文件版本，刷新失败保留旧快照并明确提示，编辑意见时延后替换，保留PDF页、工作表窗口和DOCX区域位置。隐藏与迟到结果竞态已有有效反例及修复；[七项检查](evidence/2026-10-09-capability-hardening/file-refresh-checks/final-verification.json)通过，1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。当前尚未安装此增量，正式应用仍为6c36cae0。
+
 ## 全量盘点与完成口径
 
 [能力审查报告](evidence/2026-10-09-host-capability-audit/index.html)保留 ARCH-01–ARCH-50、P01–P50、H01–H22 共 **122 项**。原分类为源码具备 51、部分具备 37、缺少 13、待实证 8、范围待定 10、明确后置/契约排除 3。

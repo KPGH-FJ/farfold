@@ -93,6 +93,7 @@ export async function renderPdfPixels(
   displayWidth: number,
   parserPort: Worker | undefined,
   failed: () => boolean,
+  restorePage = false,
 ) {
   const api = await import("pdfjs-dist/legacy/build/pdf.mjs");
   if (failed()) throw new Error("incomplete");
@@ -144,11 +145,14 @@ export async function renderPdfPixels(
     if (
       !Number.isInteger(pageNumber) ||
       pageNumber < 1 ||
-      pageNumber > pdf.numPages ||
+      (!restorePage && pageNumber > pdf.numPages) ||
       pdf.isPureXfa
     )
       throw new Error("unsupported");
-    const page = await pdf.getPage(pageNumber);
+    const renderedPage = restorePage
+      ? Math.min(pageNumber, pdf.numPages)
+      : pageNumber;
+    const page = await pdf.getPage(renderedPage);
     const initial = page.getViewport({ scale: 1 });
     const size = pdfCanvasSize(initial.width, initial.height, displayWidth);
     const { canvas, context } = new CanvasFactory().create(
@@ -187,7 +191,11 @@ export async function renderPdfPixels(
     };
     inspectFonts(operators);
     if (failed()) throw new Error("incomplete");
-    return { bitmap: canvas.transferToImageBitmap(), pages: pdf.numPages };
+    return {
+      bitmap: canvas.transferToImageBitmap(),
+      pages: pdf.numPages,
+      pageNumber: renderedPage,
+    };
   } finally {
     resources.abort();
     try {

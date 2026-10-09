@@ -1,0 +1,62 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx (3 tests | 3 failed) 194ms
+   × keeps the previous verified snapshot if hidden during automatic reread (success) 75ms
+   × keeps the previous verified snapshot if hidden during automatic reread (failure) 60ms
+   × does not publish an automatic reread after window visibility invalidates its owner 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the previous verified snapshot if hidden during automatic reread (success)
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the previous verified snapshot if hidden during automatic reread (failure)
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'Real disk content'
+
+Expected: "Real disk content"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新打开</button></div><p role="status">此次打开已暂停。</p></div></section>"
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:218:21
+    216|     await vi.advanceTimersByTimeAsync(0);
+    217|     const current = render().html;
+    218|     expect(current).toContain("Real disk content");
+       |                     ^
+    219|     expect(current).not.toContain("late version two");
+    220|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > does not publish an automatic reread after window visibility invalidates its owner
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'Real disk content'
+
+Expected: "Real disk content"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">/work/result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新读取</button><button type="button" class="btn btn-text" aria-expanded="false">修改意见</button><button type="button" class="btn btn-text">用默认应用打开</button><button type="button" class="btn btn-text">在文件夹中显示</button><button type="button" class="btn btn-text">另存为…</button></div></div><div class="artifact-file-content"><div class="artifact-document markdown-body"><p>late version two</p></div></div></section>"
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:251:21
+    249|     await vi.advanceTimersByTimeAsync(0);
+    250|     const current = render().html;
+    251|     expect(current).toContain("Real disk content");
+       |                     ^
+    252|     expect(current).not.toContain("late version two");
+    253|   } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > does not publish an automatic reread after window visibility invalidates its owner
+ReferenceError: document is not defined
+ ❯ Object.cleanup src/components/useFileRevisionMonitor.ts:57:7
+     55|     window.addEventListener("focus", focus);
+     56|     return () => {
+     57|       document.removeEventListener("visibilitychange", visibility);
+       |       ^
+     58|       window.removeEventListener("focus", focus);
+     59|       monitor.dispose();
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:192:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  04:13:55
+   Duration  635ms (transform 159ms, setup 0ms, import 367ms, tests 194ms, environment 0ms)
+

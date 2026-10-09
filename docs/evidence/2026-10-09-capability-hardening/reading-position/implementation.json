@@ -1,0 +1,154 @@
+{
+  "scope": "P20 child preview reading positions, prepared content adoption, owned Office capture and status. Not whole P20 or installed-product acceptance.",
+  "checkedAt": "2026-10-09T20:30:09.848319+00:00",
+  "implemented": [
+    "Transient parent ref retains PDF page, workbook sheet/window/explicit hidden selection, and DOCX story/top-level 20-block segment. No persisted content or position ledger.",
+    "Clamp to actual new content bounds. Missing sheet/story resets safely. Never carry old cell detail, selection or feedback readiness.",
+    "PDF restoration receives and validates actual rendered page from the real worker; readiness is reported only after pixels are drawn.",
+    "Matching prepared Office data avoids duplicate OS capture. If reading position changes during preparation, reparse the desired sheet from the same capture.",
+    "Initial Office capture keeps its single bounded receipt independently of presentation cancellation. Hide/show does not retry readPending/readBusy. Explicit retry still shares a capture that has not ended.",
+    "Hidden pending status requires matching file, retry and prepared owner. A superseded capture cannot overwrite newer prepared readiness."
+  ],
+  "notExpanded": [
+    "No DOCX/XLSX feedback, area anchors, Word page numbers, nested table-detail position or paragraph inner-part position.",
+    "HTML contract unchanged.",
+    "No real Agent, account, installed app or native WebKit check.",
+    "Office browser data uses simulated capture and typed parser results, not real Tauri IPC."
+  ],
+  "checks": {
+    "targeted": {
+      "command": "corepack pnpm exec vitest run src/components/PreviewReadingPosition.test.tsx src/components/VisualFilePreview.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/preview_reading_position.test.ts src/runtime/preview_capture.test.ts src/runtime/pdf_render_core.test.ts src/runtime/pdf_preview.test.ts src/runtime/workbook_view.test.ts src/runtime/document_view.test.ts src/runtime/visual_preview.test.ts src/runtime/docx_preview.test.ts src/runtime/xlsx_preview.test.ts",
+      "files": 12,
+      "passed": 115,
+      "exitCode": 0,
+      "raw": "targeted-owner-final.txt"
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "raw": "typecheck-owner-final.txt"
+    },
+    "browser": {
+      "command": "node docs/evidence/2026-10-09-capability-hardening/reading-position/browser/run.mjs browser-final",
+      "passed": 23,
+      "exitCode": 0,
+      "runtimeExceptions": 0,
+      "responses": 85,
+      "externalResponses": 0,
+      "implementation": "Real React StrictMode. PDF uses real workers, fonts and Canvas. Office parser and capture are mocked.",
+      "screenshot": "browser/position-pdf.png",
+      "screenshotInspected": true
+    },
+    "independentReview": "architecture read final retry/prepared status guards and core; no new blocker. Root/peer owns whole-P20 review receipt.",
+    "format": {
+      "scope": "15 owned source/test files and maintained reading-position evidence JSON/TSX/MJS/HTML only",
+      "exitCode": 0,
+      "raw": "format-final.txt"
+    }
+  },
+  "redEvidence": [
+    {
+      "file": "pdf-red.txt",
+      "failed": 2,
+      "meaning": "PDF position not restored and restored page out of shortened bounds."
+    },
+    {
+      "file": "office-red.txt",
+      "failed": 3,
+      "meaning": "Workbook/story positions and hidden document position were not retained."
+    },
+    {
+      "file": "hidden-sheet-red.txt",
+      "failed": 1,
+      "meaning": "A previously visible sheet newly hidden by a revision was still automatically restored."
+    },
+    {
+      "file": "status-red.txt",
+      "failed": 1,
+      "meaning": "Missing actual readiness status callback."
+    },
+    {
+      "file": "status-owner-red.txt",
+      "failed": 2,
+      "meaning": "Late same-file capture pending overwrote newer prepared readiness."
+    },
+    {
+      "file": "../file-preview-refresh/independent-office-pending-red.txt",
+      "failed": 2,
+      "meaning": "Independent peer red: pending capture retried on hide/show; now included in passing targeted run."
+    }
+  ],
+  "historicalFixtureCorrections": [
+    {
+      "raw": "expanded.txt",
+      "meaning": "41 pass / 1 fixture selector failure. Actual cell aria-label includes its value; fixture corrected."
+    },
+    {
+      "raw": "typecheck-first.txt",
+      "meaning": "Intermediate implementation type errors, including WorkbookPreview lacking file; final typecheck passes."
+    },
+    {
+      "raw": "browser/browser-first.json",
+      "meaning": "2 pass / 1 fixture class selector mismatch: actual class workbook-cell-detail. No product failure."
+    },
+    {
+      "raw": "browser/browser-fixed.json",
+      "meaning": "20 passing checks before status extension."
+    },
+    {
+      "raw": "browser/browser-status.json",
+      "meaning": "23 passing checks before final retry/prepared owner guard; browser-final reruns final source."
+    }
+  ],
+  "ownership": {
+    "sourceSha256": {
+      "src/runtime/preview_reading_position.ts": "4bed3f1d14c02d7bd5d6fbb6c8c2b414c8080e3d15e4734d2a015cc28f876bab",
+      "src/runtime/preview_reading_position.test.ts": "e783a8055f1a10acb3a584b7ed1e307e428f571a2493d177e7cbba859f7a0a47",
+      "src/runtime/preview_capture.ts": "d8b055191154c4e7e67a2c2a3ea59a9cf93dc396ae8cde698bf7b12f2148d7c4",
+      "src/runtime/preview_capture.test.ts": "f5a492df2ea0f7a11c20db9eff5f4f86b2b17cbde9838bfb65f7cb4150cf5e54",
+      "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+      "src/runtime/pdf_preview.test.ts": "f65ca5d5eb0aea45edfe46b84c1b093a2aedb3448fef98e4db663696f6c09ccf",
+      "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+      "src/runtime/pdf_render_core.test.ts": "d0ab572ccaae07cf61f32dbcd0d1bf6905281f02561e388f81f3f23dd63d6d87",
+      "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+      "src/components/VisualFilePreview.tsx": "b6cf6df1172ee5af245621b3168203b81961b82fdfeba5e85ac47b4c53a47571",
+      "src/components/VisualFilePreview.test.tsx": "85ff24c6cd548cf0e20237d60f063f3f2f86a913761c1b059d520deb02cc1654",
+      "src/components/WorkbookFilePreview.tsx": "b7fdaa790abc7e35c15c2a7395ed723ed279c4a6b9ca335196feb2dc248d8ca4",
+      "src/components/DocxFilePreview.tsx": "5df10bbe06a6aa08da75107d90c216c423839c2424dd80782a1a703d37fabc3f",
+      "src/components/DocxDocumentView.tsx": "48d9d9582bd9c4d9580698c098d64d517475a571f4b8068ed4c2d06a150a33e9",
+      "src/components/PreviewReadingPosition.test.tsx": "8a50c6b17a66cecc160d1917b3ec2620c0ac2e37d2aed9def5d4909951173dd5"
+    },
+    "parentOwnedDependencies": [
+      "src/runtime/office_preview_prepare.ts",
+      "src/components/OpenedFileView.tsx",
+      "src/runtime/file_delivery.ts"
+    ],
+    "peerOwnedTests": ["src/components/OfficePreview.revision-review.test.tsx"]
+  },
+  "finalEvidenceSha256": {
+    "targeted-owner-final.txt": "82a4ab47fcc5f1376838e3acc61f93e3097411002b96d0d2ebe5f5f514ff3b3b",
+    "typecheck-owner-final.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "pdf-red.txt": "38b598445b73c79188f6abeb784f30e595b911036f9a78f6608f59c21630f959",
+    "office-red.txt": "105b7b9a6d04039675eff1db01f2adf935e3cadf78fcdfe9ac9e36194e4e8a83",
+    "hidden-sheet-red.txt": "cad38454636e0d82706cb4e670f68b27b8a2afd25960f44890ca86849b882f89",
+    "status-red.txt": "8e95661fa55b8cc39457ecc0b3dcfd989d133f62fbd264988608a739a840d55d",
+    "status-owner-red.txt": "09675bfddaa60b7a62a229b46a14182d627a304ac384fc673680e6e2cd19c7e8",
+    "status-owner-green.txt": "6d146e2745f709b69f208288c98d1343b76a2cdf92660c33f1d270d13c5dfb5a",
+    "browser/browser-final.json": "d14cbe4a2c2f4cd2f490ef74509d1f3566f147d3a46be868973b2e8b0fa194a4",
+    "browser/browser-final.txt": "4da060a3dd98dc030fc07bceae3a5e38bf5ba6a790ef6c4e571ba682bf2a4109",
+    "browser/browser-final.diagnostics.json": "511ff4f10952c562b9bc5df83cd261d1f170f52e35a6a2ce7409d41535950eee",
+    "browser/position-pdf.png": "e0da76b114baa1cac7b333301a25859d69a33406d98c78b9fa105b23f85146af",
+    "cleanup.json": "0c98b271f21659cc12c6d66edaafe907ac91cbce114db0a529f14a882b2ac41a",
+    "format-final.txt": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "cleanup": {
+    "serverPid": 49689,
+    "signal": "SIGTERM",
+    "observedExit": 143,
+    "listen1458": false,
+    "ownedChromeRemaining": [],
+    "sourceUnchanged": true,
+    "sourceChanged": [],
+    "serverPidExists": false
+  }
+}

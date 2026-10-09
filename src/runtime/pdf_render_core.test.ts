@@ -155,3 +155,26 @@ it("refuses a malformed embedded font and an image beyond the parser's pixel lim
     ),
   ).toBe("failed");
 });
+
+it("restores a formerly valid page to the new last page only when restoration was requested", async () => {
+  const result = await renderPdfPixels(
+    await bytes("mixed-two-pages.pdf"),
+    99,
+    360,
+    undefined,
+    () => warned,
+    true,
+  );
+  expect(result.pages).toBe(2);
+  expect(result.pageNumber).toBe(2);
+  result.bitmap.close();
+  await expect(
+    renderPdfPixels(
+      await bytes("mixed-two-pages.pdf"),
+      99,
+      360,
+      undefined,
+      () => warned,
+    ),
+  ).rejects.toThrow("unsupported");
+});

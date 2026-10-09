@@ -1,0 +1,48 @@
+{
+  "scope": "Independent read-only review of engineering receipts, logs, input hashes and protected documents. No repeated tests, build or formal app actions.",
+  "checkedAt": "2026-10-09T20:36:24.858783+00:00",
+  "sourceBase": "5ecbbd0b06e64becc82e50d621be77c331fb762a",
+  "expectedSourceBase": "5ecbbd0b06e64becc82e50d621be77c331fb762a",
+  "inputCount": 1073,
+  "sourceUnchanged": true,
+  "changedInputs": [],
+  "scopeExtraFiles": [],
+  "scopeMissingFiles": [],
+  "logHashMismatches": [],
+  "rawLogSha256": {
+    "format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "frontend.txt": "6c019a6c3186225a9d566b0e311b8362705f8bd79c21d6ebc464d6409aee30c7",
+    "build.txt": "390b9292908fb969b8b6ec47bcbf09a9947c76b38d1d2e167c409d17954d6845",
+    "cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clippy.txt": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91",
+    "rust.txt": "2ba1edbecb1ef8a83a780b6149df74f6bc9aed1a7f469a824f7691035cc3d416"
+  },
+  "receiptAgreement": true,
+  "observedCounts": {
+    "frontendFiles": 287,
+    "frontendPassed": 3183,
+    "rustPassed": 1195,
+    "rustFailed": 0,
+    "rustIgnored": 5
+  },
+  "protectedReadmeSha256": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "protectedReadmeUnchanged": true,
+  "reviewedReceiptSha256": {
+    "receipt.json": "6e7ff51d13e156c0bdb9309c69027915049c318087642bad8a2b2cc2bf1ae233",
+    "final-verification.json": "f8c75c0c14f47493d9530544e23d5b41fd6838cbd0fb0771f464a7cf55512bb3",
+    "inputs.json": "37ce96bad0219c4b9c236057ccdd7136805b774c7e24d6cb8377e230cbbb67c2"
+  },
+  "details": [
+    "All seven named checks have exitCode zero in the original runner receipt; log contents support their result. Cargo fmt is an empty successful log.",
+    "Frontend raw summary is 287 files / 3183 passing. Rust library summary is 1195 passing / 0 failing / 5 ignored; main and doctest summaries are both zero-test passes.",
+    "Build retains a bundle-size warning; it is not a failed build.",
+    "Source/config/test-fixture hash scope excludes dependencies and toolchain, as declared in the runner receipt.",
+    "Earlier 89-case tool-only output has not been reconstructed or replaced; final whole-project logs cover the integrated source.",
+    "No installed-product, native UI, real-Agent, Windows or external-volume acceptance is inferred."
+  ],
+  "passed": true
+}

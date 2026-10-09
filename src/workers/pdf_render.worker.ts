@@ -17,7 +17,7 @@ globalThis.onmessage = async (event: MessageEvent) => {
   try {
     if (typeof OffscreenCanvas === "undefined" || typeof Path2D === "undefined")
       throw new Error("unsupported");
-    const { data, pageNumber, displayWidth } = event.data;
+    const { data, pageNumber, displayWidth, restorePage } = event.data;
     if (!(data instanceof Uint8Array)) throw new Error("invalid");
     parser = new Worker(new URL("./pdf_preview.worker.ts", import.meta.url), {
       type: "module",
@@ -32,6 +32,7 @@ globalThis.onmessage = async (event: MessageEvent) => {
       displayWidth,
       parser,
       () => failed,
+      restorePage === true,
     );
     if (!failed)
       globalThis.postMessage(

@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/PreviewReadingPosition.test.tsx (14 tests | 2 failed) 218ms
+   × docx does not let an obsolete capture failure replace same-file prepared readiness 8ms
+   × workbook does not let an obsolete capture failure replace same-file prepared readiness 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PreviewReadingPosition.test.tsx > docx does not let an obsolete capture failure replace same-file prepared readiness
+ FAIL  src/components/PreviewReadingPosition.test.tsx > workbook does not let an obsolete capture failure replace same-file prepared readiness
+AssertionError: expected last "vi.fn()" call to have been called with [ { …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
++     "code": "readPending",
+      "file": {
+        "name": "a.xlsx",
+        "path": "/work/a.xlsx",
+        "resolvedPath": "/work/a.xlsx",
+        "root": "/work",
+        "sha256": "h1",
+        "size": 32,
+        "version": "v1",
+      },
+-     "state": "ready",
++     "state": "failed",
+    },
+  ]
+
+ ❯ src/components/PreviewReadingPosition.test.tsx:609:17
+    607|  const ErrorClass=kind==="docx"?(await import("../runtime/docx_types")…
+    608|  reject(new ErrorClass("readPending"));await drain();
+    609|  expect(status).toHaveBeenLastCalledWith({file:source,state:"ready"});
+       |                 ^
+    610| });
+    611|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  04:26:31
+   Duration  382ms (transform 79ms, setup 0ms, import 108ms, tests 218ms, environment 0ms)
+

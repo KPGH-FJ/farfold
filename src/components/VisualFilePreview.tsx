@@ -8,15 +8,22 @@ import {
   checkedVisualPreview,
   VISUAL_PREVIEW_STRINGS as S,
 } from "../runtime/visual_preview";
+import {
+  restoredPdfPage,
+  saveReadingPosition,
+  type PreviewReadingPositionRef,
+} from "../runtime/preview_reading_position";
 import "./VisualFilePreview.css";
 
 export function VisualFilePreview({
   preview,
   active,
   onReadiness,
+  readingPosition,
 }: {
   preview: VisualPreview;
   active: boolean;
+  readingPosition?: PreviewReadingPositionRef;
   onReadiness?: (value: VisualPreviewReadiness) => void;
 }) {
   const canvas = useRef<HTMLCanvasElement | null>(null);
@@ -25,7 +32,23 @@ export function VisualFilePreview({
   report.current = onReadiness;
   const source = useRef({ preview, active });
   source.current = { preview, active };
-  const [page, setPage] = useState(1);
+  const [requested, setRequested] = useState<{
+    source: VisualPreview;
+    page: number;
+  } | null>(null);
+  const initialPage = useRef({
+    source: preview,
+    page: restoredPdfPage(preview.file, readingPosition),
+  });
+  if (initialPage.current.source !== preview)
+    initialPage.current = {
+      source: preview,
+      page: restoredPdfPage(preview.file, readingPosition),
+    };
+  const restorePage = requested?.source !== preview;
+  const page =
+    requested?.source === preview ? requested.page : initialPage.current.page;
+  const [displayedPage, setDisplayedPage] = useState(page);
   const [pages, setPages] = useState<number | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "failed" | "paused">(
     "loading",
@@ -41,6 +64,7 @@ export function VisualFilePreview({
     current.current = operation;
     report.current?.({ source: preview, location: null });
     setImage(null);
+    setPages(null);
     if (!active) {
       setState("paused");
       setMessage(S.paused);
@@ -54,6 +78,7 @@ export function VisualFilePreview({
       source.current.preview === preview &&
       source.current.active;
     let renderedPages: number | null = null;
+    let renderedPage = page;
     void (async () => {
       const checked = checkedVisualPreview(preview.file, preview);
       if (checked.kind === "image") {
@@ -73,12 +98,14 @@ export function VisualFilePreview({
           Math.max(1, canvas.current.parentElement?.clientWidth ?? 800) *
             Math.min(window.devicePixelRatio || 1, 2),
           operation.signal,
-          (total) => {
-            if (owns() && validPdfPage(page, total)) {
+          (total, actual = page) => {
+            if (owns() && validPdfPage(actual, total)) {
+              renderedPage = actual;
               renderedPages = total;
               setPages(total);
             }
           },
+          restorePage,
         );
       }
       if (owns()) {
@@ -86,11 +113,21 @@ export function VisualFilePreview({
           throw new Error(S.failed);
         setState("ready");
         setMessage(S.snapshot);
-        if (checked.kind === "pdf")
+        if (checked.kind === "pdf") {
+          setDisplayedPage(renderedPage);
+          saveReadingPosition(readingPosition, preview.file, {
+            kind: "pdf",
+            page: renderedPage,
+          });
           report.current?.({
             source: preview,
-            location: { kind: "pdf", page, pageCount: renderedPages! },
+            location: {
+              kind: "pdf",
+              page: renderedPage,
+              pageCount: renderedPages!,
+            },
           });
+        }
       }
     })().catch((error) => {
       if (!owns()) return;
@@ -115,7 +152,7 @@ export function VisualFilePreview({
         report.current?.({ source: preview, location: null });
       }
     };
-  }, [preview, active, page]);
+  }, [preview, active, page, restorePage, readingPosition]);
   const pdf = preview.mimeType === "application/pdf";
   const displayedOperation = image?.owner ?? null;
   const ownsImage = () =>
@@ -129,22 +166,26 @@ export function VisualFilePreview({
   return (
     <div className="visual-file-preview" aria-busy={state === "loading"}>
       <div className="visual-file-controls">
-        {pdf && pages !== null && (
+        {pdf && pages !== null && state === "ready" && (
           <>
             <button
               type="button"
               className="btn btn-text"
-              disabled={!active || state === "loading" || page <= 1}
-              onClick={() => setPage((value) => value - 1)}
+              disabled={!active || displayedPage <= 1}
+              onClick={() =>
+                setRequested({ source: preview, page: displayedPage - 1 })
+              }
             >
               {S.previous}
             </button>
-            <span>{S.page(page, pages)}</span>
+            <span>{S.page(displayedPage, pages)}</span>
             <button
               type="button"
               className="btn btn-text"
-              disabled={!active || state === "loading" || page >= pages}
-              onClick={() => setPage((value) => value + 1)}
+              disabled={!active || displayedPage >= pages}
+              onClick={() =>
+                setRequested({ source: preview, page: displayedPage + 1 })
+              }
             >
               {S.next}
             </button>
@@ -170,7 +211,9 @@ export function VisualFilePreview({
         <canvas
           ref={canvas}
           hidden={state !== "ready" || !active}
-          aria-label={pages === null ? "PDF 预览" : S.page(page, pages)}
+          aria-label={
+            pages === null ? "PDF 预览" : S.page(displayedPage, pages)
+          }
         />
       )}
       {image && image.source === preview && state === "ready" && active && (

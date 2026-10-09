@@ -1,0 +1,17 @@
+{
+  "src/runtime/preview_reading_position.ts": "4bed3f1d14c02d7bd5d6fbb6c8c2b414c8080e3d15e4734d2a015cc28f876bab",
+  "src/runtime/preview_reading_position.test.ts": "e783a8055f1a10acb3a584b7ed1e307e428f571a2493d177e7cbba859f7a0a47",
+  "src/runtime/preview_capture.ts": "d8b055191154c4e7e67a2c2a3ea59a9cf93dc396ae8cde698bf7b12f2148d7c4",
+  "src/runtime/preview_capture.test.ts": "f5a492df2ea0f7a11c20db9eff5f4f86b2b17cbde9838bfb65f7cb4150cf5e54",
+  "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+  "src/runtime/pdf_preview.test.ts": "f65ca5d5eb0aea45edfe46b84c1b093a2aedb3448fef98e4db663696f6c09ccf",
+  "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+  "src/runtime/pdf_render_core.test.ts": "d0ab572ccaae07cf61f32dbcd0d1bf6905281f02561e388f81f3f23dd63d6d87",
+  "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+  "src/components/VisualFilePreview.tsx": "b6cf6df1172ee5af245621b3168203b81961b82fdfeba5e85ac47b4c53a47571",
+  "src/components/VisualFilePreview.test.tsx": "85ff24c6cd548cf0e20237d60f063f3f2f86a913761c1b059d520deb02cc1654",
+  "src/components/WorkbookFilePreview.tsx": "b7fdaa790abc7e35c15c2a7395ed723ed279c4a6b9ca335196feb2dc248d8ca4",
+  "src/components/DocxFilePreview.tsx": "5df10bbe06a6aa08da75107d90c216c423839c2424dd80782a1a703d37fabc3f",
+  "src/components/DocxDocumentView.tsx": "48d9d9582bd9c4d9580698c098d64d517475a571f4b8068ed4c2d06a150a33e9",
+  "src/components/PreviewReadingPosition.test.tsx": "8a50c6b17a66cecc160d1917b3ec2620c0ac2e37d2aed9def5d4909951173dd5"
+}

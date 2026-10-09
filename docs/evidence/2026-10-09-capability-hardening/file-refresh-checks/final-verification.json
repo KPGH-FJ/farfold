@@ -1,0 +1,111 @@
+{
+  "checkedAt": "2026-10-09T20:35:27.239079+00:00",
+  "scope": "P20 source integration; installed validation pending",
+  "sourceBase": "5ecbbd0b06e64becc82e50d621be77c331fb762a",
+  "inputCount": 1073,
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 19.128,
+      "log": "format.txt"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.849,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 33.613,
+      "log": "frontend.txt"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 7.269,
+      "log": "build.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.016,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.777,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 45.306,
+      "log": "rust.txt"
+    }
+  ],
+  "counts": {
+    "frontendFiles": 287,
+    "frontendPassed": 3183,
+    "rustPassed": 1195,
+    "rustIgnored": 5
+  },
+  "implemented": [
+    "One selected file: protected metadata hints every 5 seconds; full content checks on focus/reactivation and a 60-second fallback. HTML retains explicit reload.",
+    "Automatic replacement is owned by the selected file and operation. Office content is captured and parsed before replacing the visible snapshot.",
+    "Read errors retain the prior snapshot with an explicit stale notice and halt checks. Unknown OS reads are not retried by hiding and reopening.",
+    "Editing feedback defers replacement; prior-version feedback stays separate. Reading position is transient and clamped to new content."
+  ],
+  "evidence": {
+    "backend": "../file-preview-refresh/backend-receipt.json",
+    "backendReview": "../file-preview-refresh/backend-independent-review.json",
+    "frontendReview": "../file-preview-refresh/independent-frontend-review.json",
+    "positions": "../reading-position/implementation.json"
+  },
+  "limits": [
+    "Not formal-app, real-Agent, Windows, external-volume or TCC acceptance.",
+    "Reading positions cover PDF pages, workbook sheet/window and DOCX story/top-level segments, not nested details or exact Word pagination.",
+    "Complete Office formats, region feedback and the other product requirements remain open."
+  ],
+  "rawLogSha256": {
+    "format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "frontend.txt": "6c019a6c3186225a9d566b0e311b8362705f8bd79c21d6ebc464d6409aee30c7",
+    "build.txt": "390b9292908fb969b8b6ec47bcbf09a9947c76b38d1d2e167c409d17954d6845",
+    "cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clippy.txt": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91",
+    "rust.txt": "2ba1edbecb1ef8a83a780b6149df74f6bc9aed1a7f469a824f7691035cc3d416"
+  }
+}

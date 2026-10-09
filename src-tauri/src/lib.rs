@@ -282,6 +282,7 @@ pub fn run() {
                 project_index::project_file_read,
                 file_delivery_commands::file_delivery_inspect,
                 file_delivery_commands::file_delivery_inspect_selected,
+                file_delivery_commands::file_delivery_check_revision,
                 file_delivery_commands::file_delivery_read_text,
                 file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_read_workbook,

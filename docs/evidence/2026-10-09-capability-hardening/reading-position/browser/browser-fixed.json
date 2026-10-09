@@ -1,0 +1,221 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "StrictMode surviving effect captures once",
+      "ok": true,
+      "detail": [
+        {
+          "capture": "v1",
+          "aborted": false
+        },
+        {
+          "capture": "v2",
+          "aborted": false
+        },
+        {
+          "capture": "v3",
+          "aborted": false
+        },
+        {
+          "capture": "v1",
+          "aborted": false
+        },
+        {
+          "capture": "v2",
+          "aborted": false
+        }
+      ]
+    },
+    {
+      "name": "saved worksheet and row/column window restored",
+      "ok": true
+    },
+    {
+      "name": "old cell detail is actually open",
+      "ok": true
+    },
+    {
+      "name": "new shorter revision clamps actual bounds",
+      "ok": true,
+      "detail": {
+        "root": "/fixture",
+        "resolvedPath": "/fixture/sample.xlsx",
+        "kind": "workbook",
+        "sheet": {
+          "id": "second",
+          "name": "Second",
+          "hiddenSelected": false
+        },
+        "row": 8,
+        "column": 4,
+        "showHidden": false
+      }
+    },
+    {
+      "name": "version change clears old cell detail and contents",
+      "ok": true
+    },
+    {
+      "name": "hidden workbook withdraws grid",
+      "ok": true
+    },
+    {
+      "name": "hide/show retains valid window",
+      "ok": true
+    },
+    {
+      "name": "cancelled late workbook does not display or overwrite location",
+      "ok": true
+    },
+    {
+      "name": "document story and segment restored",
+      "ok": true
+    },
+    {
+      "name": "hidden document removes content",
+      "ok": true
+    },
+    {
+      "name": "document hide/show retains segment",
+      "ok": true
+    },
+    {
+      "name": "shortened story clamps and never shows old text",
+      "ok": true
+    },
+    {
+      "name": "PDF readiness absent until real worker pixels",
+      "ok": true
+    },
+    {
+      "name": "real PDF worker restores second page",
+      "ok": true
+    },
+    {
+      "name": "unmount withdraws PDF feedback readiness",
+      "ok": true
+    },
+    {
+      "name": "revised PDF withdraws readiness before rendering",
+      "ok": true
+    },
+    {
+      "name": "real PDF worker clamps to actual one-page revision",
+      "ok": true,
+      "detail": {
+        "version": "p2",
+        "location": {
+          "kind": "pdf",
+          "page": 1,
+          "pageCount": 1
+        }
+      }
+    },
+    {
+      "name": "hidden PDF clears pixels/readiness but retains location",
+      "ok": true
+    },
+    {
+      "name": "shown PDF redraws before ready",
+      "ok": true
+    },
+    {
+      "name": "final PDF unmount revokes readiness",
+      "ok": true
+    }
+  ],
+  "calls": [
+    {
+      "capture": "v1",
+      "aborted": false
+    },
+    {
+      "capture": "v2",
+      "aborted": false
+    },
+    {
+      "capture": "v3",
+      "aborted": false
+    },
+    {
+      "capture": "v1",
+      "aborted": false
+    },
+    {
+      "capture": "v2",
+      "aborted": false
+    }
+  ],
+  "ready": [
+    {
+      "version": "p1",
+      "location": null
+    },
+    {
+      "version": "p1",
+      "location": null
+    },
+    {
+      "version": "p1",
+      "location": null
+    },
+    {
+      "version": "p1",
+      "location": {
+        "kind": "pdf",
+        "page": 2,
+        "pageCount": 2
+      }
+    },
+    {
+      "version": "p1",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": {
+        "kind": "pdf",
+        "page": 1,
+        "pageCount": 1
+      }
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": null
+    },
+    {
+      "version": "p2",
+      "location": {
+        "kind": "pdf",
+        "page": 1,
+        "pageCount": 1
+      }
+    },
+    {
+      "version": "p2",
+      "location": null
+    }
+  ],
+  "boundary": "Real React StrictMode and PDF worker; Office parser/IPC mocked. No native app or Agent."
+}

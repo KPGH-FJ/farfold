@@ -1,0 +1,61 @@
+{
+  "checkedAtUtc": "2026-10-09T20:32:52.856431+00:00",
+  "status": "completed_no_blocker_in_reviewed_backend_scope",
+  "reviewer": "verification; non-author",
+  "method": "Read source/diff/16 revision tests and raw regression receipts; no repeated cargo run, formal app, Agent or user data operation.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-receipt.json",
+    "sha256": "75b7c110c26894a22f781f75e76fbcdf53c2ffb5121dd553e0bfe092ec81b6c6"
+  },
+  "ownedSources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "350ee62688e1ffd07cd7c2c56ccdda93ca843cf8cd94288b992ca60c46a04214"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/revision.rs",
+      "sha256": "1ad628841a419a954e328766cff1195124a268183664d69a294a2b7229cc6d1c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/revision_tests.rs",
+      "sha256": "d9894c4eba3eba4137bbe3f8ff920b98c3231e3efe22dbc79ac87d2a1e86b326"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "8b5bc32ddd410fb41bc20f27ef181794f775900651f9a2c31a143969d082665d"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "e48b65cd6e9cbcdf06f4b756ad8985a29447d5f859f534538999c7e396f682b4"
+    }
+  ],
+  "allSourceAndEvidenceHashesMatch": true,
+  "findings": [],
+  "reviewedBoundaries": [
+    "hintUnchanged compares exact requested/root/resolved locations and opaque metadata version, then rechecks identity; it does not read bytes or provide a fresh content receipt.",
+    "content and changed hint consume the same protected open handle; full digest/size/read-after/path/root identity checks remain. Same selected pathname replacement obtains a new receipt; redirected alias/root targets are rejected.",
+    "Original explicit open/read/copy callers use unchanged DeliveryError mapping; OS ErrorKind is retained only for typed revision errors. Missing is not PermissionDenied.",
+    "Global bounded file_read_check and main-webview admission remain; pending/busy return without backend retry. Pending does not claim the OS operation stopped.",
+    "16 controlled tests cover hint/no body, change/atomic replacement, metadata-equivalent forced content, root identity replacement, redirects, read race, Unix FIFO/directory, limits and wire mapping. Metadata-equivalent test is a model, not proof ctime can be forged on this Mac."
+  ],
+  "observedTests": {
+    "fileDelivery": {
+      "passed": 56,
+      "failed": 0,
+      "log": "backend-file-delivery-regression.txt"
+    },
+    "fileReadCheck": {
+      "passed": 5,
+      "failed": 0,
+      "log": "backend-read-check-regression.txt"
+    },
+    "requiredClippy": "passed per original receipt/log",
+    "ownedFormat": "passed per original receipt/log",
+    "initialRed": "3 failed / 2 passed retained; original exit code not captured, not invented"
+  },
+  "limitations": [
+    "No Windows or alternate filesystem/TCC denial/native IPC experiment performed by this reviewer.",
+    "Parent browser verification is separate and controlled IPC cannot validate real OS slots or filesystem event timing.",
+    "Backend metadata observation alone does not close P20; no full Agent/workflow acceptance."
+  ]
+}

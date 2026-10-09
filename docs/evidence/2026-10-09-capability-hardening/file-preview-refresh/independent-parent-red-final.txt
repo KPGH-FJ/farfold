@@ -1,0 +1,68 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx (5 tests | 5 failed) 299ms
+   × keeps the previous verified snapshot if hidden during automatic reread (success) 69ms
+   × keeps the previous verified snapshot if hidden during automatic reread (failure) 58ms
+   × keeps the previous verified snapshot if hidden during automatic reread (pending) 57ms
+   × does not publish an automatic reread after window visibility invalidates its owner 55ms
+   × keeps the pending outcome of an automatic content read distinct from a finished failure 60ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the previous verified snapshot if hidden during automatic reread (success)
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the previous verified snapshot if hidden during automatic reread (failure)
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the previous verified snapshot if hidden during automatic reread (pending)
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'Real disk content'
+
+Expected: "Real disk content"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新打开</button></div><p role="status">此次打开已暂停。</p></div></section>"
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:226:21
+    224|     await vi.advanceTimersByTimeAsync(0);
+    225|     const current = render().html;
+    226|     expect(current).toContain("Real disk content");
+       |                     ^
+    227|     expect(current).not.toContain("late version two");
+    228|     if (outcome === "pending") {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > does not publish an automatic reread after window visibility invalidates its owner
+AssertionError: expected '<section class="file-artifact-view" a…' to contain 'Real disk content'
+
+Expected: "Real disk content"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">/work/result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新读取</button><button type="button" class="btn btn-text" aria-expanded="false">修改意见</button><button type="button" class="btn btn-text">用默认应用打开</button><button type="button" class="btn btn-text">在文件夹中显示</button><button type="button" class="btn btn-text">另存为…</button></div></div><div class="artifact-file-content"><div class="artifact-document markdown-body"><p>late version two</p></div></div></section>"
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:266:21
+    264|     await vi.advanceTimersByTimeAsync(0);
+    265|     const current = render().html;
+    266|     expect(current).toContain("Real disk content");
+       |                     ^
+    267|     expect(current).not.toContain("late version two");
+    268|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/components/OpenedFileView.revision-review.test.tsx > keeps the pending outcome of an automatic content read distinct from a finished failure
+AssertionError: expected '<section class="file-artifact-view" a…' to contain '文件检查仍在等待，已暂停自动检查。当前内容可能已过期。'
+
+Expected: "文件检查仍在等待，已暂停自动检查。当前内容可能已过期。"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="result.md">result.md</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">/work/result.md</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-ghost">重新读取</button><button type="button" class="btn btn-text" aria-expanded="false">修改意见</button><button type="button" class="btn btn-text">用默认应用打开</button><button type="button" class="btn btn-text">在文件夹中显示</button><button type="button" class="btn btn-text">另存为…</button></div></div><p class="artifact-provenance" role="status">新内容未能读取，当前仍是之前的版本。请重新读取。</p><div class="artifact-file-content"><div class="artifact-document markdown-body"><h1>Real disk content</h1></div></div></section>"
+
+ ❯ src/components/OpenedFileView.revision-review.test.tsx:279:25
+    277|   await vi.advanceTimersByTimeAsync(5000);
+    278|   expect(render().html).toContain("Real disk content");
+    279|   expect(render().html).toContain(S.revisionNotices.pending);
+       |                         ^
+    280|   render({ ...props, active: false });
+    281|   render({ ...props, active: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  04:14:31
+   Duration  516ms (transform 79ms, setup 0ms, import 156ms, tests 299ms, environment 0ms)
+

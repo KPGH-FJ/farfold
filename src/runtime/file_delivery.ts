@@ -24,6 +24,21 @@ export interface TextPreview {
   text: string;
 }
 
+/** A metadata hint is not a fresh content-verification receipt. */
+export type FileRevisionCheck =
+  { kind: "hintUnchanged" } | { kind: "verified"; file: VerifiedFile };
+
+export type FileRevisionFailureCode =
+  | "missing"
+  | "redirected"
+  | "changing"
+  | "notFile"
+  | "tooLarge"
+  | "unreadable"
+  | "pending"
+  | "busy"
+  | "unavailable";
+
 export interface VisualPreview {
   file: VerifiedFile;
   mimeType: string;
@@ -98,6 +113,8 @@ export const fileDelivery = {
       : fileDelivery.inspect(root, path),
   inspect: (root: string, path: string) =>
     invoke<VerifiedFile>("file_delivery_inspect", { root, path }),
+  checkRevision: (file: VerifiedFile, mode: "hint" | "content") =>
+    invoke<FileRevisionCheck>("file_delivery_check_revision", { file, mode }),
   readText: (file: VerifiedFile) =>
     invoke<TextPreview>("file_delivery_read_text", { file }),
   readVisual: (file: VerifiedFile) =>

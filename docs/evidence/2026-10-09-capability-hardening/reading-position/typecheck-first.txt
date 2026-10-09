@@ -1,0 +1,20 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/PreviewReadingPosition.test.tsx(143,10): error TS2352: Conversion of type '{ file: VerifiedFile; date1904: false; sheets: { id: string; name: string; state: "visible"; }[]; styles: { font: {}; borders: {}; }[]; warnings: never[]; sheet: { id: string; cells: { reference: string; ... 6 more ...; styleId: number; }[]; rows: never[]; columns: never[]; merges: never[]; }; }' to type 'WorkbookPreview' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'styles' are incompatible.
+    Type '{ font: {}; borders: {}; }[]' is not comparable to type 'XlsxStyle[]'.
+      Property 'numFmt' is missing in type '{ font: {}; borders: {}; }' but required in type 'XlsxStyle'.
+src/components/VisualFilePreview.tsx(174,36): error TS2367: This comparison appears to be unintentional because the types '"ready"' and '"loading"' have no overlap.
+src/components/VisualFilePreview.tsx(186,28): error TS2367: This comparison appears to be unintentional because the types '"ready"' and '"loading"' have no overlap.
+src/components/WorkbookFilePreview.tsx(243,53): error TS2339: Property 'file' does not exist on type 'WorkbookPreview'.
+src/components/WorkbookFilePreview.tsx(247,9): error TS2322: Type 'boolean | null' is not assignable to type 'boolean'.
+  Type 'null' is not assignable to type 'boolean'.
+src/components/WorkbookFilePreview.tsx(266,47): error TS2345: Argument of type 'boolean | null' is not assignable to parameter of type 'boolean'.
+  Type 'null' is not assignable to type 'boolean'.
+src/components/WorkbookFilePreview.tsx(342,15): error TS2322: Type 'boolean | null' is not assignable to type 'boolean | undefined'.
+  Type 'null' is not assignable to type 'boolean | undefined'.
+src/runtime/preview_reading_position.ts(62,44): error TS2339: Property 'file' does not exist on type 'WorkbookPreview'.
+src/runtime/preview_reading_position.ts(75,44): error TS2339: Property 'file' does not exist on type 'WorkbookPreview'.
+ ELIFECYCLE  Command failed with exit code 1.

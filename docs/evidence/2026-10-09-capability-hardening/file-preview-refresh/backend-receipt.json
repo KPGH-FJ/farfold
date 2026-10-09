@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T20:08:32.149734+00:00",
+  "scope": "P20 后端版本变化观察与完整重核；不包含自动调度、阅读位置恢复或安装版验收。",
+  "status": "targeted_backend_checks_passed_independent_review_pending",
+  "api": {
+    "command": "file_delivery_check_revision",
+    "arguments": {
+      "file": "既有 VerifiedFile；仅原来选择的一个明确本地文件",
+      "mode": ["hint", "content"]
+    },
+    "success": [
+      {
+        "kind": "hintUnchanged",
+        "meaning": "只比较受保护路径、root/file 身份、大小、mtime/ctime；没有读取正文，不是新的内容回执。"
+      },
+      {
+        "kind": "verified",
+        "file": "VerifiedFile",
+        "meaning": "完成受保护完整 capture、摘要及读后身份检查；内容模式即使 hint 相等也执行。"
+      }
+    ],
+    "failure": {
+      "shape": {
+        "code": "固定枚举"
+      },
+      "codes": [
+        "missing",
+        "redirected",
+        "changing",
+        "notFile",
+        "tooLarge",
+        "unreadable",
+        "pending",
+        "busy",
+        "unavailable"
+      ],
+      "detail": "命令执行错误按固定 code 对象序列化；参数解码或 IPC 传输错误仍由既有框架处理，不声称所有框架拒绝均此形状。"
+    }
+  },
+  "implementation": [
+    "复用 version(opened, oldReceipt.sha256) 比较既有不透明版本，不新增 locator、持久记录或正文缓存。",
+    "hint 比较之前保持相同 root/path/resolvedPath；canonical root 或解析叶目标改变在正文读取前拒绝。路径删除或改名不搜索替代文件。",
+    "同一个明确路径的原子替换会导致身份差异并取得完整新回执；不把旧回执升级为新文件访问证明。",
+    "完整 capture 消费同一已核实的句柄，保留原 read 后路径和对象重核。打开辅助函数只额外保留 OS ErrorKind，原显式接口仍转换为原 DeliveryError。",
+    "missing 仅来自真实开源路径阶段的 NotFound；PermissionDenied 不映射成 missing。",
+    "沿用 file_read_check 的主线程调用者门禁、全局两槽与 15 秒回复界限；命令不循环、不自动重试；pending 底层 OS 读取可能仍占槽。",
+    "没有新依赖、配置开关、Agent 调用、进程控制、正式应用操作或用户文件写入。"
+  ],
+  "tests": [
+    {
+      "log": "backend-red.txt",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery::revision::tests -- --nocapture",
+      "passed": 2,
+      "failed": 3,
+      "exitCode": null,
+      "detail": "有效红：委托原 inspect 的基线把未变化 hint 返回为 fresh receipt、删除归 unreadable、重定向 alias 自动采纳新目标。保留原始合并输出；首个执行句柄未保留退出码，不补造该值。"
+    },
+    {
+      "log": "backend-green.txt",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery::revision::tests -- --nocapture",
+      "passed": 14,
+      "failed": 0,
+      "exitCode": 0,
+      "detail": "实现后首绿；后续增加两项覆盖，最终源以下一日志为准。"
+    },
+    {
+      "log": "backend-file-delivery-regression.txt",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery -- --nocapture",
+      "passed": 56,
+      "failed": 0,
+      "exitCode": 0,
+      "detail": "含最终 16 项 revision 与既有文字、图片、PDF、DOCX、XLSX、复制/导出及目录读回归。"
+    },
+    {
+      "log": "backend-read-check-regression.txt",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_read_check::tests -- --nocapture",
+      "passed": 5,
+      "failed": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "backend-clippy.txt",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0
+    },
+    {
+      "log": "backend-format.txt",
+      "command": "rustfmt --edition 2024 --config skip_children=true --check <five owned files>",
+      "exitCode": 0
+    }
+  ],
+  "counterexamples": [
+    "真实临时文件不变的 hint 路径通过注入的正文捕获边界证明零正文读取；变化只执行一次捕获。",
+    "相同长度改写及相同字节原子替换仍取得不同版本；旧 read/copy/open 回执继续拒绝。",
+    "root 身份替换但相同 leaf 身份和全部 Stamp 字段仍相同，不能命中旧 hint。",
+    "明确 alias 或 root 改指其他位置不读取新目标正文；读取中替换路径返回 changing。",
+    "删除/改名、目录/FIFO（Unix）及超过 32MiB 的稀疏文件不冒充当前正文。",
+    "元信息碰撞模型保留旧摘要并构造当前元信息等价的旧版本；hint 仅返回观察结果，content 查出实际不同字节。它不是本机能伪造 ctime 的实测证明。",
+    "新 API code 对象序列化检查与原 read_check 的真实阻塞/超时/槽位测试分层记录；未声称真实 Tauri IPC 超时已实测。"
+  ],
+  "frontendRequirementsNotImplementedHere": [
+    "只对当前 active/visible 的明确普通文件启动单在途检查，检查完成后再安排下一次；隐藏、切任务和离开作废旧结果。",
+    "快速轮询仅使用 hint；重新激活/回到应用和低频有界兜底使用 content。未变化的 hint 不卸载渲染器、不更换回执。",
+    "pending 停止自动检查并保留未知；busy 不堆积请求。删除、改变目标、失败不把旧正文标为最新。",
+    "新版本 payload 通过既有 read/worker 的精确回执验证后才替换显示；阅读位置单独保存、限制并重核，不迁移旧意见锚点。",
+    "已保存意见继续由 thread/path/contentId 分开保存，不自动发送；HTML 保持 PRODUCT 明确的主动重载边界。"
+  ],
+  "limitations": [
+    "仅本机 macOS 受控临时文件测试；Windows、其他文件系统、网络卷和安装版行为未实测。",
+    "Stamp 是变化提示，不能证明每个平台或卷上内容绝对不变；现有 Windows 代码采用 FileIdInfo、LastWriteTime/ChangeTime，官方说明写入时间可能在写入句柄关闭后才完整反映，部分文件系统精度粗。",
+    "权限拒绝的 ErrorKind 分类有单元覆盖；本片未通过修改用户文件或 TCC 权限进行真实拒绝验证。",
+    "完整读取只证明本次取得的文件回执，不表示外部编辑器或 Agent 已完成后续写入。",
+    "P20 前端自动刷新、阅读位置和旧版意见联动尚由主代理实施；后端通过不能关闭整项 P20。"
+  ],
+  "primarySources": [
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/stat.2.html",
+      "supports": "fstat 的 mtime/ctime、大小与文件身份字段语义。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_basic_info",
+      "supports": "LastWriteTime 与 ChangeTime 的不同语义。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/file-times",
+      "supports": "写入句柄关闭前的时间戳更新限制与文件系统精度差异。"
+    }
+  ],
+  "ownedSources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "350ee62688e1ffd07cd7c2c56ccdda93ca843cf8cd94288b992ca60c46a04214"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/revision.rs",
+      "sha256": "1ad628841a419a954e328766cff1195124a268183664d69a294a2b7229cc6d1c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/revision_tests.rs",
+      "sha256": "d9894c4eba3eba4137bbe3f8ff920b98c3231e3efe22dbc79ac87d2a1e86b326"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "8b5bc32ddd410fb41bc20f27ef181794f775900651f9a2c31a143969d082665d"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "e48b65cd6e9cbcdf06f4b756ad8985a29447d5f859f534538999c7e396f682b4"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-red.txt",
+      "sha256": "3155e6a5521af9a166dd53bef658aa3fd2167ffed7b95fa20e80f78431ed9be9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-red-baseline.rs.txt",
+      "sha256": "21de6ee58584757f2650db052fcb6107f2c7c66391662be5c69576e50915614a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-green.txt",
+      "sha256": "01f4973f8d53c1fa673d9a3a90b1febbd5215cf735a82a200dc93d4e96d80b18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-file-delivery-regression.txt",
+      "sha256": "766c5b9d38b933ffbd48177923905256415ad13c863c2ec6983fcfb111cf4353"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-read-check-regression.txt",
+      "sha256": "d27d714984b7d8a403b4817c5700e96909a560ac2b50e56e0039f03bcd5ed1cf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-clippy.txt",
+      "sha256": "d78db09bb2d7e63244314fe645356983e9e8c08574099f985cd29672bebd02f7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceBoundary": "最终 source hash 对应 56 项/file_read_check5/clippy/fmt；早期红与14项绿是其真实时点，不伪装成最终源码。红基线接口源保留，红时完整测试文件快照未另存。",
+  "independentReview": "待 verification 只读结论；本字段更新时只变证据，不变源码。"
+}

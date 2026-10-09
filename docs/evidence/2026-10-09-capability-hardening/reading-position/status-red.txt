@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/PreviewReadingPosition.test.tsx (10 tests | 1 failed) 165ms
+   × uses a prepared matching document without a new capture, and reports owned readiness 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/PreviewReadingPosition.test.tsx > uses a prepared matching document without a new capture, and reports owned readiness
+AssertionError: expected last "vi.fn()" call to have been called with [ { …(2) } ]
+
+- Expected:
+[
+  {
+    "file": {
+      "name": "a.xlsx",
+      "path": "/work/a.xlsx",
+      "resolvedPath": "/work/a.xlsx",
+      "root": "/work",
+      "sha256": "h1",
+      "size": 32,
+      "version": "v1",
+    },
+    "state": "ready",
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/components/PreviewReadingPosition.test.tsx:486:17
+    484|  render(node);await drain();render(node);
+    485|  expect(h.captureDocument).not.toHaveBeenCalled();expect(h.readDocumen…
+    486|  expect(status).toHaveBeenLastCalledWith({file:source,state:"ready"});
+       |                 ^
+    487| });
+    488| it("adopts a prepared workbook but reselects the latest position from …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  04:23:39
+   Duration  338ms (transform 81ms, setup 0ms, import 113ms, tests 165ms, environment 0ms)
+

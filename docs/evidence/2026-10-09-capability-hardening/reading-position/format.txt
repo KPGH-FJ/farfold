@@ -1,0 +1,19 @@
+src/runtime/preview_reading_position.ts 37ms (unchanged)
+src/runtime/preview_reading_position.test.ts 10ms
+src/runtime/preview_capture.ts 6ms
+src/runtime/preview_capture.test.ts 7ms
+src/runtime/pdf_preview.ts 7ms (unchanged)
+src/runtime/pdf_preview.test.ts 14ms
+src/runtime/pdf_render_core.ts 9ms (unchanged)
+src/runtime/pdf_render_core.test.ts 9ms (unchanged)
+src/workers/pdf_render.worker.ts 3ms (unchanged)
+src/components/VisualFilePreview.tsx 13ms (unchanged)
+src/components/VisualFilePreview.test.tsx 22ms (unchanged)
+src/components/WorkbookFilePreview.tsx 39ms
+src/components/DocxFilePreview.tsx 9ms
+src/components/DocxDocumentView.tsx 16ms (unchanged)
+src/components/PreviewReadingPosition.test.tsx 20ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/index.html 13ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/fixture.tsx 15ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/serve.mjs 9ms
+docs/evidence/2026-10-09-capability-hardening/reading-position/browser/run.mjs 7ms

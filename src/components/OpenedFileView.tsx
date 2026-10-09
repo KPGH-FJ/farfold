@@ -21,6 +21,13 @@ import {
 import { VisualFilePreview } from "./VisualFilePreview";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import { DocxFilePreview } from "./DocxFilePreview";
+import { useFileRevisionMonitor } from "./useFileRevisionMonitor";
+import type { PreviewReadingPosition } from "../runtime/preview_reading_position";
+import type { PreviewContentStatus } from "../runtime/preview_capture";
+import {
+  prepareOfficePreview,
+  type PreparedOfficePreview,
+} from "../runtime/office_preview_prepare";
 import {
   fileFeedbackDrafts,
   fileFeedbackKey,
@@ -57,10 +64,16 @@ type View = {
   file?: VerifiedFile;
   text?: string;
   visual?: VisualPreview;
+  office?: PreparedOfficePreview;
   note?: string;
   pending?: boolean;
 };
-type Operation = { identity: string };
+type Operation = {
+  identity: string;
+  kind?: "refresh";
+  valid?: () => boolean;
+  parser?: AbortController;
+};
 const MAX_TEXT_BYTES = 1024 * 1024;
 const TEXT_EXTENSIONS = new Set([
   "md",
@@ -192,8 +205,28 @@ export function OpenedFileView({
   const [view, setView] = useState<View>({ identity, phase: "loading" });
   const latestView = useRef(view);
   latestView.current = view;
+  const readingPosition = useRef<PreviewReadingPosition | null>(null);
+  const readingOwner = useRef(identity);
+  const textContent = useRef<HTMLDivElement>(null);
+  const textScroll = useRef(0);
+  if (readingOwner.current !== identity) {
+    readingOwner.current = identity;
+    readingPosition.current = null;
+    textScroll.current = 0;
+  }
   const [visualReadiness, setVisualReadiness] =
     useState<VisualPreviewReadiness | null>(null);
+  const [officeStatus, setOfficeStatus] = useState<PreviewContentStatus | null>(
+    null,
+  );
+  const reportOfficeStatus = (status: PreviewContentStatus) => {
+    if (
+      mounted.current &&
+      currentProps.current.identity === identity &&
+      latestView.current.file === status.file
+    )
+      setOfficeStatus(status);
+  };
   const latestReadiness = useRef(visualReadiness);
   // Event handlers withdraw eligibility synchronously; a queued render must not
   // let an old page button select the page that has just been left.
@@ -208,7 +241,7 @@ export function OpenedFileView({
       shown.visual !== value.source ||
       !shown.file ||
       !sameFile(shown.file, value.source.file) ||
-      operation.current
+      (operation.current && operation.current.kind !== "refresh")
     )
       return;
     const next =
@@ -223,46 +256,71 @@ export function OpenedFileView({
     mounted.current &&
     currentProps.current.active &&
     currentProps.current.identity === owner.identity &&
-    operation.current === owner;
+    operation.current === owner &&
+    (owner.valid?.() ?? true);
 
   useLayoutEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
     };
   }, []);
   useLayoutEffect(() => {
     if (!active) {
+      const refreshing = operation.current?.kind === "refresh";
+      operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
       setVisualReadiness(null);
       setView((previous) =>
         previous.identity === identity &&
         (previous.phase === "loading" || previous.pending)
-          ? { identity, phase: "paused" }
+          ? refreshing && previous.phase === "ready"
+            ? { ...previous, pending: false }
+            : { identity, phase: "paused" }
           : previous,
       );
     }
   }, [active, identity]);
 
-  async function load() {
+  async function load(
+    verified?: VerifiedFile,
+    preserve = false,
+    valid?: () => boolean,
+  ): Promise<boolean> {
     if (
       !mounted.current ||
       !currentProps.current.active ||
       currentProps.current.identity !== identity ||
       operation.current
     )
-      return;
-    const owner = { identity };
+      return false;
+    const owner: Operation = {
+      identity,
+      kind: preserve ? "refresh" : undefined,
+      valid,
+      parser: preserve ? new AbortController() : undefined,
+    };
     operation.current = owner;
-    latestReadiness.current = null;
-    setVisualReadiness(null);
-    setView({ identity, phase: "loading" });
+    let applied = false;
+    if (!preserve) {
+      latestReadiness.current = null;
+      setVisualReadiness(null);
+    }
+    const previous = latestView.current;
+    textScroll.current = textContent.current?.scrollTop ?? textScroll.current;
+    setView(
+      preserve
+        ? { ...previous, pending: true }
+        : { identity, phase: "loading" },
+    );
     try {
-      const file = await fileDelivery.inspectLink(workingDirectory, path);
-      if (!current(owner)) return;
+      const file =
+        verified ?? (await fileDelivery.inspectLink(workingDirectory, path));
+      if (!current(owner)) return false;
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
         currentProps.current.onOpenHtml(file);
@@ -275,19 +333,29 @@ export function OpenedFileView({
         } else {
           try {
             const visual = await fileDelivery.readVisual(file);
-            if (!current(owner)) return;
+            if (!current(owner)) return false;
             if (!sameFile(visual.file, file)) throw new Error("File changed");
             setView({ identity, phase: "ready", file, visual });
-          } catch {
+          } catch (error) {
+            if (preserve) throw error;
             if (current(owner))
               setView({ identity, phase: "ready", file, note: V.failed });
           }
         }
       } else if (isWorkbook(file) || isDocument(file)) {
-        setView({ identity, phase: "ready", file });
+        if (preserve) {
+          const office = await prepareOfficePreview(
+            file,
+            readingPosition,
+            owner.parser!.signal,
+            () => current(owner),
+          );
+          if (!current(owner)) return false;
+          setView({ identity, phase: "ready", file, office });
+        } else setView({ identity, phase: "ready", file });
       } else if (isText(file) && file.size <= MAX_TEXT_BYTES) {
         const preview = await fileDelivery.readText(file);
-        if (!current(owner)) return;
+        if (!current(owner)) return false;
         if (!sameFile(preview.file, file)) throw new Error("File changed");
         setView({
           identity,
@@ -303,11 +371,44 @@ export function OpenedFileView({
           note: isText(file) ? S.large : S.other,
         });
       }
+      applied = true;
+      return true;
     } catch (error) {
       if (current(owner))
-        setView({ identity, phase: "failed", note: openFailureNotice(error) });
+        setView(
+          preserve
+            ? { ...previous, pending: false }
+            : { identity, phase: "failed", note: openFailureNotice(error) },
+        );
+      if (preserve) {
+        const message = error instanceof Error ? error.message : error;
+        if (message === D.checkWaitExpired) throw { code: "pending" };
+        if (message === D.checkBusy) throw { code: "busy" };
+        const code =
+          error && typeof error === "object" && "code" in error
+            ? error.code
+            : undefined;
+        if (code === "readPending") throw { code: "pending" };
+        if (code === "readBusy") throw { code: "busy" };
+      }
+      return false;
     } finally {
-      if (operation.current === owner) operation.current = null;
+      if (operation.current === owner) {
+        operation.current = null;
+        // Window visibility can invalidate publication without active=false.
+        // Restore the old snapshot and release pending controls in that case.
+        if (
+          preserve &&
+          !applied &&
+          mounted.current &&
+          currentProps.current.identity === identity
+        )
+          setView((latest) =>
+            latest.identity === identity && latest.pending
+              ? { ...previous, pending: false }
+              : latest,
+          );
+      }
     }
   }
 
@@ -315,7 +416,10 @@ export function OpenedFileView({
     if (currentProps.current.active) void load();
     else setView({ identity, phase: "paused" });
     return () => {
-      if (operation.current?.identity === identity) operation.current = null;
+      if (operation.current?.identity === identity) {
+        operation.current.parser?.abort();
+        operation.current = null;
+      }
     };
     // Activity resumption must not repeat a previously selected HTML handoff.
   }, [identity]);
@@ -402,6 +506,27 @@ export function OpenedFileView({
   useEffect(() => {
     if (active && feedbackOpen) feedbackInput.current?.focus();
   }, [active, feedbackOpen]);
+  const revisionNotice = useFileRevisionMonitor({
+    identity,
+    file: file && !isHtml(file) ? file : undefined,
+    active:
+      active &&
+      shown.phase === "ready" &&
+      (!file ||
+        (!isWorkbook(file) && !isDocument(file)) ||
+        (officeStatus?.file === file && officeStatus.state === "ready")),
+    blocked: Boolean(shown.pending),
+    apply: async (next, valid) => {
+      if (!valid() || operation.current) return "deferred";
+      // Do not replace the text beneath an opinion the user is editing.
+      if (feedbackOpen) return "deferred";
+      if (await load(next, true, valid)) return "applied";
+      return valid() ? "failed" : "cancelled";
+    },
+  });
+  useLayoutEffect(() => {
+    if (textContent.current) textContent.current.scrollTop = textScroll.current;
+  }, [shown.text]);
   return (
     <section className="file-artifact-view" aria-label={S.title}>
       <div className="a-head">
@@ -534,12 +659,18 @@ export function OpenedFileView({
           </p>
         )}
       </div>
+      {revisionNotice && (
+        <p className="artifact-provenance" role="status">
+          {S.revisionNotices[revisionNotice]}
+        </p>
+      )}
       {shown.visual && (
         <VisualFilePreview
           key={`${identity}:${shown.file?.version}`}
           preview={shown.visual}
           active={active}
           onReadiness={reportVisualReadiness}
+          readingPosition={readingPosition}
         />
       )}
       {file && shown.phase === "ready" && isWorkbook(file) && (
@@ -547,6 +678,11 @@ export function OpenedFileView({
           key={`${identity}:${file.version}:${file.sha256}`}
           file={file}
           active={active}
+          readingPosition={readingPosition}
+          prepared={
+            shown.office?.kind === "workbook" ? shown.office : undefined
+          }
+          onStatus={reportOfficeStatus}
         />
       )}
       {file && shown.phase === "ready" && isDocument(file) && (
@@ -554,10 +690,19 @@ export function OpenedFileView({
           key={`${identity}:${file.version}:${file.sha256}`}
           file={file}
           active={active}
+          readingPosition={readingPosition}
+          prepared={shown.office?.kind === "docx" ? shown.office : undefined}
+          onStatus={reportOfficeStatus}
         />
       )}
       {shown.text !== undefined && (
-        <div className="artifact-file-content">
+        <div
+          className="artifact-file-content"
+          ref={textContent}
+          onScroll={(event) => {
+            textScroll.current = event.currentTarget.scrollTop;
+          }}
+        >
           {markdown ? (
             <div className="artifact-document markdown-body">
               <ReactMarkdown
