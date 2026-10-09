@@ -11,6 +11,7 @@ const h = vi.hoisted(() => ({
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   cursor: 0,
   effects: [] as (() => void)[],
+  invoke: vi.fn(),
   inspectLink: vi.fn(),
   checkRevision: vi.fn(),
   prepareOffice: vi.fn(),
@@ -31,6 +32,7 @@ vi.mock("./FileCopyJobsStatus", () => ({
   FileCopyJobsStatus: () => <div data-copy-jobs />,
 }));
 vi.mock("@tauri-apps/plugin-dialog", () => ({ save: h.save }));
+vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
 vi.mock("../runtime/office_preview_prepare", () => ({
   prepareOfficePreview: h.prepareOffice,
 }));
@@ -194,6 +196,7 @@ beforeEach(() => {
   h.effects.length = 0;
   h.cursor = 0;
   for (const mock of [
+    h.invoke,
     h.inspectLink,
     h.checkRevision,
     h.prepareOffice,
@@ -1244,6 +1247,35 @@ it("provides only explicit location actions when inspection is too large, withou
     props.path,
   );
 });
+it.each(["oversize-257.txt", "/chosen/oversize-257.txt"])(
+  "renders the actual inspection wrapper string failure for %s with the limit and explicit fallback",
+  async (path) => {
+    const actual = await vi.importActual<
+      typeof import("../runtime/file_delivery")
+    >("../runtime/file_delivery");
+    h.invoke.mockRejectedValueOnce("文件超过当前操作的大小限制");
+    h.inspectLink.mockImplementation(actual.fileDelivery.inspectLink);
+    render({ ...props, path });
+    await drain();
+    expect(render().html).toContain(T.failures.tooLarge);
+    expect(render().html).not.toContain(S.failed);
+    expect(render().html).toContain(T.locationScope);
+    expect(button(T.openLocation)).toBeDefined();
+    expect(button(T.revealLocation)).toBeDefined();
+    expect(button(S.retry)).toBeDefined();
+    expect(button(T.save)).toBeUndefined();
+    expect(h.invoke).toHaveBeenCalledExactlyOnceWith(
+      path.startsWith("/")
+        ? "file_delivery_inspect_selected"
+        : "file_delivery_inspect",
+      path.startsWith("/") ? { path } : { root: "/work", path },
+    );
+    expect(h.readBlock).not.toHaveBeenCalled();
+    expect(h.readText).not.toHaveBeenCalled();
+    expect(h.openLocation).not.toHaveBeenCalled();
+    expect(h.revealLocation).not.toHaveBeenCalled();
+  },
+);
 it("a stale location fallback callback cannot open another selected file", async () => {
   h.inspectLink.mockRejectedValue({ code: "tooLarge" });
   render();

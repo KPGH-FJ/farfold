@@ -1,0 +1,132 @@
+{
+  "recordedAtUtc": "2026-10-09T21:44:27.274863+00:00",
+  "scope": "P17 initial ordinary-file inspection too-large error classification; no size, file read, export, source identity or UI production behavior broadened.",
+  "nativeObservation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-candidate/installed-large-file-initial.json",
+    "observer": "root",
+    "installedCommit": "f71a3434f00e14fed5d7fd473217b4e074462961",
+    "inputBytes": 269484032,
+    "observed": "Oversize257MiB rejected; displayed generic open failure rather than256MiB reason. Explicit selected-location open/reveal and unverified-content explanation remained visible.",
+    "hashBoundary": "Root is finalizing the native evidence JSON; no hash asserted here and no independent native reproduction claimed."
+  },
+  "rootCause": {
+    "backend": "Both file_delivery_inspect and file_delivery_inspect_selected return Result<VerifiedFile,String>; display_error returns DeliveryError::TooLarge.message().",
+    "wireValue": "文件超过当前操作的大小限制",
+    "frontend": "OpenedFileView openFailureNotice recognizes structured code errors or exact pending/busy messages; the initial TooLarge string fell through to generic failure.",
+    "coverageGap": "Previous fallback fixture directly rejected {code:tooLarge}, unlike the real command string."
+  },
+  "change": {
+    "productionFiles": 1,
+    "description": "Both inspection invokes catch the exact fixed TooLarge string and attach code=tooLarge to an Error retaining its original message and String(error). Every other rejection is rethrown unchanged.",
+    "notChanged": [
+      "Rust/IPC/source and format-specific limits",
+      "OpenedFileView production",
+      "readText and readVisual error routes",
+      "Explicit fallback and no-verified-file semantics",
+      "No automatic opener, retry, copy or Agent work"
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "fa1a3f9b66d64c806fd45baec1a0f25cb14e9f8f881f1275e57f1f6a49900c7f"
+    },
+    {
+      "path": "src/runtime/file_delivery.inspect-errors.test.ts",
+      "sha256": "98fde353e26c04dea3b5426d33d5658f67b681d3c219188374db621e40313b6b"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "78a0d8b28b55a1751421ca87a2f49b7b388335929df776ffd6f2cb0589fa4e7f"
+    }
+  ],
+  "unchangedBoundaryFiles": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "afe7adc809e7f5f60b385404eac127b05a1d2a3d3fe852f878ad0edbf4e7b840"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "ff82f983ccf0d68abb2720b3431f752abef694071ce28c844d63c2e0ca1e890f"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f027e7e0b62ea36322923a35328e719bb423b3fd7662fee82b86599a96fad4ad"
+    },
+    {
+      "path": "src/runtime/text_block_strings.ts",
+      "sha256": "0a2012f691dbf8b97cd12a1d95cb3b070505494dbadd5e43524e522e54cd85fc"
+    }
+  ],
+  "tests": [
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/file_delivery.inspect-errors.test.ts",
+        "src/components/OpenedFileView.test.tsx",
+        "-t",
+        "real string-shaped|actual inspection wrapper string"
+      ],
+      "result": "4 effective failures before production change;2 runtime classification +2 actual wrapper to parent rendered-output assertions.72 excluded by explicit filter, not failures.",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/red.txt",
+        "sha256": "91bd0fdd208210749da7d56cbf7c621db17742e0ac9617b4441f3fc626de7a61"
+      }
+    },
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/file_delivery.inspect-errors.test.ts",
+        "src/components/OpenedFileView.test.tsx",
+        "src/runtime/file_delivery.test.ts",
+        "src/components/FileDeliveryActions.test.tsx",
+        "src/runtime/text_block_preview.test.ts"
+      ],
+      "result": "5 files132 passed. Includes both inspect commands, exact string conversion, other rejection identity/pending/busy, format-specific readers, explicit fallback and no automatic action.",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/targeted-green.txt",
+        "sha256": "dc28c8782190fd41aa960cc8837e6847ecb97d93b537f5e17d86b17e83bbc114"
+      }
+    },
+    {
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "result": "exit0",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/runtime/file_delivery.ts",
+        "src/runtime/file_delivery.inspect-errors.test.ts",
+        "src/components/OpenedFileView.test.tsx"
+      ],
+      "result": "exit0",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/format.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    }
+  ],
+  "formatBoundary": "Targeted tests ran before Prettier; production and parent test unchanged by formatter, only new test formatting changed. Typecheck and targeted format check ran afterward. Root owns final same-input integration.",
+  "evidenceBoundary": [
+    "Tests use actual frontend inspection wrapper and parent component with controlled invoke strings, not live Tauri/native retest.",
+    "No Cargo or full repository suite repeated; Rust production and tests untouched by this repair.",
+    "Root will rebuild/install the minimal commit and verify the installed oversize path."
+  ],
+  "status": "targeted_fix_verified_source_frozen_independent_review_pending"
+}

@@ -1,0 +1,73 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_delivery.inspect-errors.test.ts (5 tests | 2 failed | 3 skipped) 5ms
+   × classifies the real string-shaped relative inspection size failure without losing its safe message 3ms
+   × classifies the real string-shaped selected inspection size failure without losing its safe message 1ms
+ ❯ src/components/OpenedFileView.test.tsx (71 tests | 2 failed | 69 skipped) 18ms
+   × renders the actual inspection wrapper string failure for oversize-257.txt with the limit and explicit fallback 13ms
+   × renders the actual inspection wrapper string failure for /chosen/oversize-257.txt with the limit and explicit fallback 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > renders the actual inspection wrapper string failure for oversize-257.txt with the limit and explicit fallback
+AssertionError: expected '<section class="file-artifact-view" a…' to contain '文件超过 256 MiB 的分段查看限制。'
+
+Expected: "文件超过 256 MiB 的分段查看限制。"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="oversize-257.txt">oversize-257.txt</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">oversize-257.txt</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-text">打开所选位置</button><button type="button" class="btn btn-text">显示所选位置</button><button type="button" class="btn btn-ghost">重新打开</button></div><p role="status">未能打开文件，请检查位置后重试。</p></div><p class="artifact-provenance">尚未核实文件内容；以下操作只打开或显示当前所选位置。</p></section>"
+
+ ❯ src/components/OpenedFileView.test.tsx:1260:27
+    1258|     render({ ...props, path });
+    1259|     await drain();
+    1260|     expect(render().html).toContain(T.failures.tooLarge);
+       |                           ^
+    1261|     expect(render().html).not.toContain(S.failed);
+    1262|     expect(render().html).toContain(T.locationScope);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > renders the actual inspection wrapper string failure for /chosen/oversize-257.txt with the limit and explicit fallback
+AssertionError: expected '<section class="file-artifact-view" a…' to contain '文件超过 256 MiB 的分段查看限制。'
+
+Expected: "文件超过 256 MiB 的分段查看限制。"
+Received: "<section class="file-artifact-view" aria-label="文件"><div class="a-head"><span class="a-title artifact-file-name" title="/chosen/oversize-257.txt">oversize-257.txt</span><div class="ac-actions"></div></div><div class="artifact-provenance"><details><summary>文件位置</summary><p style="overflow-wrap:anywhere">/chosen/oversize-257.txt</p></details><div class="ac-actions" style="flex-wrap:wrap"><button type="button" class="btn btn-text">打开所选位置</button><button type="button" class="btn btn-text">显示所选位置</button><button type="button" class="btn btn-ghost">重新打开</button></div><p role="status">未能打开文件，请检查位置后重试。</p></div><p class="artifact-provenance">尚未核实文件内容；以下操作只打开或显示当前所选位置。</p></section>"
+
+ ❯ src/components/OpenedFileView.test.tsx:1260:27
+    1258|     render({ ...props, path });
+    1259|     await drain();
+    1260|     expect(render().html).toContain(T.failures.tooLarge);
+       |                           ^
+    1261|     expect(render().html).not.toContain(S.failed);
+    1262|     expect(render().html).toContain(T.locationScope);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/file_delivery.inspect-errors.test.ts > classifies the real string-shaped relative inspection size failure without losing its safe message
+ FAIL  src/runtime/file_delivery.inspect-errors.test.ts > classifies the real string-shaped selected inspection size failure without losing its safe message
+AssertionError: expected '文件超过当前操作的大小限制' to match object { code: 'tooLarge', …(1) }
+
+- Expected:
+{
+  "code": "tooLarge",
+  "message": "文件超过当前操作的大小限制",
+}
+
++ Received:
+"文件超过当前操作的大小限制"
+
+ ❯ src/runtime/file_delivery.inspect-errors.test.ts:23:21
+     21|     vi.mocked(invoke).mockRejectedValueOnce(tooLargeWire);
+     22|     const failure: unknown = await inspect[kind]().catch((error) => er…
+     23|     expect(failure).toMatchObject({ code: "tooLarge", message: tooLarg…
+       |                     ^
+     24|     expect(String(failure)).toBe(tooLargeWire);
+     25|     expect(invoke).toHaveBeenCalledOnce();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 72 skipped (76)
+   Start at  05:42:54
+   Duration  379ms (transform 208ms, setup 0ms, import 371ms, tests 22ms, environment 0ms)
+

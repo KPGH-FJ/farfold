@@ -1,0 +1,38 @@
+[
+  {
+    "path": "src/runtime/file_delivery.ts",
+    "sha256": "fa1a3f9b66d64c806fd45baec1a0f25cb14e9f8f881f1275e57f1f6a49900c7f"
+  },
+  {
+    "path": "src/runtime/file_delivery.inspect-errors.test.ts",
+    "sha256": "98fde353e26c04dea3b5426d33d5658f67b681d3c219188374db621e40313b6b"
+  },
+  {
+    "path": "src/components/OpenedFileView.tsx",
+    "sha256": "f027e7e0b62ea36322923a35328e719bb423b3fd7662fee82b86599a96fad4ad"
+  },
+  {
+    "path": "src/components/OpenedFileView.test.tsx",
+    "sha256": "78a0d8b28b55a1751421ca87a2f49b7b388335929df776ffd6f2cb0589fa4e7f"
+  },
+  {
+    "path": "src/runtime/file_open_strings.ts",
+    "sha256": "2753f8c53b33a9328722ea808dc454be76654e261deead144d1298b6c896befa"
+  },
+  {
+    "path": "src/runtime/file_delivery_strings.ts",
+    "sha256": "ea4f53e2bd3da1f42a84dab277b01a39acea073867c7426610e784766f17d11f"
+  },
+  {
+    "path": "src/runtime/text_block_strings.ts",
+    "sha256": "0a2012f691dbf8b97cd12a1d95cb3b070505494dbadd5e43524e522e54cd85fc"
+  },
+  {
+    "path": "src-tauri/src/file_delivery_commands.rs",
+    "sha256": "ff82f983ccf0d68abb2720b3431f752abef694071ce28c844d63c2e0ca1e890f"
+  },
+  {
+    "path": "src-tauri/src/file_delivery.rs",
+    "sha256": "afe7adc809e7f5f60b385404eac127b05a1d2a3d3fe852f878ad0edbf4e7b840"
+  }
+]

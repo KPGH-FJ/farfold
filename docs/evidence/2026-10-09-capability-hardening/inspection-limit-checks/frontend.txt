@@ -1,0 +1,33 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_paths.test.ts (7 tests | 1 failed) 17ms
+   × routes a Windows absolute delivery candidate through explicit file inspection 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_paths.test.ts > routes a Windows absolute delivery candidate through explicit file inspection
+TypeError: Cannot read properties of undefined (reading 'catch')
+ ❯ Object.inspectSelected src/runtime/file_delivery.ts:119:69
+    117|   /** One exact file explicitly chosen through the picker or a clicked…
+    118|   inspectSelected: (path: string) =>
+    119|     invoke<VerifiedFile>("file_delivery_inspect_selected", { path }).c…
+       |                                                                     ^
+    120|       inspectionFailure,
+    121|     ),
+ ❯ Object.inspectLink src/runtime/file_delivery.ts:125:22
+ ❯ src/runtime/file_paths.test.ts:59:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 295 passed (296)
+      Tests  1 failed | 3257 passed (3258)
+   Start at  05:46:11
+   Duration  45.91s (transform 14.23s, setup 0ms, import 311.50s, tests 54.18s, environment 21ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

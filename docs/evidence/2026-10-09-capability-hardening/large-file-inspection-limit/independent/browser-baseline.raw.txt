@@ -1,0 +1,425 @@
+{
+  "mode": "baseline",
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "initial-readable",
+      "name": "actual parent displays initial controlled text",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "exact expected notice",
+      "ok": false,
+      "detail": {
+        "expected": "文件超过 256 MiB 的分段查看限制。",
+        "actual": "未能打开文件，请检查位置后重试。"
+      }
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "no successful copy action offered",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "explicit reveal uses exact selected location",
+      "ok": true
+    },
+    {
+      "scenario": "relative-limit",
+      "name": "explicit open is separately dispatched",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "exact expected notice",
+      "ok": false,
+      "detail": {
+        "expected": "文件超过 256 MiB 的分段查看限制。",
+        "actual": "未能打开文件，请检查位置后重试。"
+      }
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "no successful copy action offered",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "explicit reveal uses exact selected location",
+      "ok": true
+    },
+    {
+      "scenario": "absolute-limit",
+      "name": "explicit open is separately dispatched",
+      "ok": true
+    },
+    {
+      "scenario": "pending",
+      "name": "exact expected notice",
+      "ok": true,
+      "detail": {
+        "expected": "文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。",
+        "actual": "文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。"
+      }
+    },
+    {
+      "scenario": "pending",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "pending",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "pending",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "pending",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "busy",
+      "name": "exact expected notice",
+      "ok": true,
+      "detail": {
+        "expected": "已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。",
+        "actual": "已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。"
+      }
+    },
+    {
+      "scenario": "busy",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "busy",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "busy",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "busy",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "private-suffix",
+      "name": "exact expected notice",
+      "ok": true,
+      "detail": {
+        "expected": "未能打开文件，请检查位置后重试。",
+        "actual": "未能打开文件，请检查位置后重试。"
+      }
+    },
+    {
+      "scenario": "private-suffix",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "private-suffix",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "private-suffix",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "private-suffix",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "unknown-string",
+      "name": "exact expected notice",
+      "ok": true,
+      "detail": {
+        "expected": "未能打开文件，请检查位置后重试。",
+        "actual": "未能打开文件，请检查位置后重试。"
+      }
+    },
+    {
+      "scenario": "unknown-string",
+      "name": "old content and private details absent",
+      "ok": true
+    },
+    {
+      "scenario": "unknown-string",
+      "name": "fallback and retry remain explicit",
+      "ok": true
+    },
+    {
+      "scenario": "unknown-string",
+      "name": "failed inspection performs no content read/copy or external action",
+      "ok": true
+    },
+    {
+      "scenario": "unknown-string",
+      "name": "no automatic retry after failure",
+      "ok": true
+    },
+    {
+      "scenario": "small-reader-limit",
+      "name": "small text limit not relabelled as 256 MiB",
+      "ok": true
+    },
+    {
+      "scenario": "small-reader-limit",
+      "name": "reader uses real wrapper command",
+      "ok": true
+    },
+    {
+      "scenario": "small-reader-limit",
+      "name": "no unexpected IPC or unhandled rejection",
+      "ok": true,
+      "detail": {
+        "unexpected": [],
+        "unhandled": []
+      }
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "initial-readable",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "okay.txt"
+      }
+    },
+    {
+      "scenario": "initial-readable",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "okay.txt"
+      }
+    },
+    {
+      "scenario": "initial-readable",
+      "cmd": "file_delivery_read_text",
+      "args": {
+        "file": {
+          "root": "/controlled",
+          "path": "okay.txt",
+          "resolvedPath": "/controlled/okay.txt",
+          "name": "okay.txt",
+          "size": 17,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "version": "controlled-v1"
+        }
+      }
+    },
+    {
+      "scenario": "relative-limit",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "relative-limit",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "relative-limit",
+      "cmd": "file_delivery_reveal_selected_location",
+      "args": {
+        "path": "oversize-257.txt",
+        "root": "/controlled"
+      }
+    },
+    {
+      "scenario": "relative-limit",
+      "cmd": "file_delivery_open_selected_location",
+      "args": {
+        "path": "oversize-257.txt",
+        "root": "/controlled"
+      }
+    },
+    {
+      "scenario": "absolute-limit",
+      "cmd": "file_delivery_inspect_selected",
+      "args": {
+        "path": "/chosen/oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "absolute-limit",
+      "cmd": "file_delivery_inspect_selected",
+      "args": {
+        "path": "/chosen/oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "absolute-limit",
+      "cmd": "file_delivery_reveal_selected_location",
+      "args": {
+        "path": "/chosen/oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "absolute-limit",
+      "cmd": "file_delivery_open_selected_location",
+      "args": {
+        "path": "/chosen/oversize-257.txt"
+      }
+    },
+    {
+      "scenario": "pending",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "pending.txt"
+      }
+    },
+    {
+      "scenario": "pending",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "pending.txt"
+      }
+    },
+    {
+      "scenario": "busy",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "busy.txt"
+      }
+    },
+    {
+      "scenario": "busy",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "busy.txt"
+      }
+    },
+    {
+      "scenario": "private-suffix",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "private.txt"
+      }
+    },
+    {
+      "scenario": "private-suffix",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "private.txt"
+      }
+    },
+    {
+      "scenario": "unknown-string",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "unknown.txt"
+      }
+    },
+    {
+      "scenario": "unknown-string",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "unknown.txt"
+      }
+    },
+    {
+      "scenario": "small-reader-limit",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "small.txt"
+      }
+    },
+    {
+      "scenario": "small-reader-limit",
+      "cmd": "file_delivery_inspect",
+      "args": {
+        "root": "/controlled",
+        "path": "small.txt"
+      }
+    },
+    {
+      "scenario": "small-reader-limit",
+      "cmd": "file_delivery_read_text",
+      "args": {
+        "file": {
+          "root": "/controlled",
+          "path": "small.txt",
+          "resolvedPath": "/controlled/okay.txt",
+          "name": "okay.txt",
+          "size": 17,
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "version": "controlled-v1"
+        }
+      }
+    }
+  ],
+  "unhandled": [],
+  "unexpected": [],
+  "boundary": "Actual React StrictMode, OpenedFileView and fileDelivery. Only Tauri invoke is controlled; OS file IO/dialog/opener/native app are not executed. Baseline uses exact installed-commit wrapper through Vite load plugin; production files never reverted."
+}

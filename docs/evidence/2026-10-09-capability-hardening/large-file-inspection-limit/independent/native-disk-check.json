@@ -1,0 +1,86 @@
+{
+  "checkedAtUtc": "2026-10-09T21:44:39.132553+00:00",
+  "nativeReceiptSha256": "ce9058865d321816d1cdc7f7eb11b2974551a23f16b1852a303abea90f8dd36f",
+  "publicReferencesAllMatch": {
+    "candidate.json": true,
+    "candidate-inputs.json": true,
+    "candidate-independent.json": true,
+    "installed-data-retention.json": true,
+    "install-independent.json": true,
+    "duplicate-bundle-cleanup.json": true
+  },
+  "privateReferencesAllMatch": {
+    "native-fixtures.json": true,
+    "post-ui-draft-retention.json": true,
+    "check_post_ui_drafts.py": true
+  },
+  "sourceFixtures": [
+    {
+      "name": "large-16.md",
+      "bytes": 16777216,
+      "sizeMatches": true,
+      "sha256": "e4cb04e88bb91f60118efcd70556d94bfb9c705920e8e736608070e1e3ef19c4"
+    },
+    {
+      "name": "large-256.txt",
+      "bytes": 268435456,
+      "sizeMatches": true,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059"
+    },
+    {
+      "name": "invalid-tail.txt",
+      "bytes": 2097153,
+      "sizeMatches": true,
+      "sha256": "106808e523fff35d17d66c23be52a9bc5b67bdd60e5cbad3a35c9394757be7ff"
+    },
+    {
+      "name": "oversize-257.txt",
+      "bytes": 269484032,
+      "sizeMatches": true,
+      "hashBoundary": "Sparse oversize only: size/existence independently verified; no content hash claim."
+    }
+  ],
+  "wholeCopies": [
+    {
+      "name": "saved-16-complete.md",
+      "bytes": 16777216,
+      "sha256": "e4cb04e88bb91f60118efcd70556d94bfb9c705920e8e736608070e1e3ef19c4"
+    },
+    {
+      "name": "saved-256-complete.txt",
+      "bytes": 268435456,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059"
+    },
+    {
+      "name": "cancel-256-attempt.txt",
+      "bytes": 268435456,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059"
+    }
+  ],
+  "originalDraftGroups": {
+    "composers": {
+      "beforeEntries": 3,
+      "afterEntries": 3,
+      "existingEntriesUnchanged": 3
+    },
+    "feedback": {
+      "beforeEntries": 1,
+      "afterEntries": 1,
+      "existingEntriesUnchanged": 1
+    },
+    "queues": {
+      "beforeEntries": 3,
+      "afterEntries": 3,
+      "existingEntriesUnchanged": 3
+    }
+  },
+  "privateCaptureHashesMatch": true,
+  "copiesOnlyIntegrityChecks": "ok",
+  "backupAndCapturedMaterialsUnchanged": true,
+  "nativeScope": "Root observed installed UI. This reviewer checked retained receipt, referenced bytes, authored fixtures/copies and draft values via an isolated copied DB; did not witness native pixels, launch app, send Agent request or open original live DB.",
+  "retainedFailure": "Installed oversize257 initial notice failed; source fix not yet installed.",
+  "cancellationBoundary": "Complete output hashes support completed copy; they do not prove native cancellation or blocked-I/O/unknown/exit behavior.",
+  "sparseBoundary": "No sparse257 content hash existed before or now; exact size is verified, no full-byte unchanged proof claimed.",
+  "initialNativeReceiptSha256": "a15f696ee3c57b0c5a5f2c4bd979012deebc1bd157380448599d2941ce220318",
+  "nativeReceiptScopeCorrection": "Root clarified sparse257 sourceSizeUnchanged and no content hash proof after independent feedback. Source fixtures/copies/private draft references unchanged."
+}

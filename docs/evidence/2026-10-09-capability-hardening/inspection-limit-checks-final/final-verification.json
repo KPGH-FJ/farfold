@@ -1,0 +1,100 @@
+{
+  "checkedAtUtc": "2026-10-09T21:50:44.696019+00:00",
+  "status": "seven_check_requirements_satisfied_with_explicit_input_reuse",
+  "inputCount": 1105,
+  "sourceStable": true,
+  "inputsSha256": "66d0d130cbeb70f2bcf444423b968fea0775a24e99cc7d6cd05876a33ee16581",
+  "checks": [
+    {
+      "name": "format",
+      "exitCode": 0,
+      "executedInFinalPass": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "frontend",
+      "exitCode": 0,
+      "executedInFinalPass": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/frontend.txt",
+      "sha256": "620ed437ec9e879408630aebddbd943cb71aed29ef0d87b19ec19c595ecc9405"
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "executedInFinalPass": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks/build.txt",
+      "sha256": "4641e459f89a20eac6932eb16b7c3f95f693b03a9e059df7764f6f7fa6f88f48",
+      "executedNow": true,
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only one test Promise fixture changed after build; all production/build inputs identical. Rust source/config/tests/fixtures unchanged from prior P17 pass."
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only one test Promise fixture changed after build; all production/build inputs identical. Rust source/config/tests/fixtures unchanged from prior P17 pass."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only one test Promise fixture changed after build; all production/build inputs identical. Rust source/config/tests/fixtures unchanged from prior P17 pass."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only one test Promise fixture changed after build; all production/build inputs identical. Rust source/config/tests/fixtures unchanged from prior P17 pass."
+    }
+  ],
+  "tests": {
+    "frontend": {
+      "files": 296,
+      "passed": 3258
+    },
+    "rustReused": {
+      "passed": 1230,
+      "ignored": 6
+    }
+  },
+  "initialNonPass": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks/receipt.json",
+    "sha256": "5aa0692173cd68b3952a429777c4e92a381ce339e360f70c5fb07e7684288fa2",
+    "reason": "One old Windows path fixture returned undefined instead of official invoke Promise; original path/assertions retained, corrected then complete suite passed. Initial formatting encountered one in-progress browser harness and status table; both normalized then full format passed."
+  },
+  "independentReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/independent/review.json",
+    "sha256": "4b2c2787974679c61e4601295aa2254f087253d174d37dda534a7e940c79ef3e",
+    "actualBrowser": {
+      "baseline": {
+        "passed": 38,
+        "failed": 2
+      },
+      "fixed": {
+        "passed": 40,
+        "failed": 0
+      }
+    }
+  },
+  "scope": "One production inspection error normalization and three tests; no Rust, limit, Agent runtime or permissions change. Corrected native notice pending installation."
+}

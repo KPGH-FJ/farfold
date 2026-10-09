@@ -102,17 +102,32 @@ export function reportedFiles(call: ToolCallView): ReportedFile[] {
   return [...found.values()];
 }
 
+function inspectionFailure(error: unknown): never {
+  // These two legacy inspection commands return fixed strings. Only their
+  // ordinary-file limit means 256 MiB; media/text readers have smaller limits.
+  if (error === "文件超过当前操作的大小限制") {
+    const failure = new Error(error);
+    failure.name = ""; // Preserve String(error) for existing delivery callers.
+    throw Object.assign(failure, { code: "tooLarge" });
+  }
+  throw error;
+}
+
 export const fileDelivery = {
   /** One exact file explicitly chosen through the picker or a clicked file link. */
   inspectSelected: (path: string) =>
-    invoke<VerifiedFile>("file_delivery_inspect_selected", { path }),
+    invoke<VerifiedFile>("file_delivery_inspect_selected", { path }).catch(
+      inspectionFailure,
+    ),
   /** Called only after a user clicks this exact local file target. */
   inspectLink: (root: string, path: string) =>
     isAbsoluteFilePath(path)
       ? fileDelivery.inspectSelected(path)
       : fileDelivery.inspect(root, path),
   inspect: (root: string, path: string) =>
-    invoke<VerifiedFile>("file_delivery_inspect", { root, path }),
+    invoke<VerifiedFile>("file_delivery_inspect", { root, path }).catch(
+      inspectionFailure,
+    ),
   checkRevision: (file: VerifiedFile, mode: "hint" | "content") =>
     invoke<FileRevisionCheck>("file_delivery_check_revision", { file, mode }),
   readText: (file: VerifiedFile) =>

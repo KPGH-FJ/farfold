@@ -1,0 +1,71 @@
+{
+  "checkedAtUtc": "2026-10-09T21:47:09.356227+00:00",
+  "baseCommit": "f71a3434f00e14fed5d7fd473217b4e074462961",
+  "inputCount": 1105,
+  "sourceStable": true,
+  "changedInputs": [
+    "src/components/OpenedFileView.test.tsx",
+    "src/runtime/file_delivery.inspect-errors.test.ts",
+    "src/runtime/file_delivery.ts"
+  ],
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks/format.txt",
+      "sha256": "d9432a8b61e31531fa22fec35163bf5bce5101c6fbc67dae250f74740d22a370",
+      "executedNow": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 1,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks/frontend.txt",
+      "sha256": "9103dec3e100c25e09fddb57b86806f8bcd3e55b4ba6046662e99b44d646ef46",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks/build.txt",
+      "sha256": "4641e459f89a20eac6932eb16b7c3f95f693b03a9e059df7764f6f7fa6f88f48",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All Rust source/config/tests and shared fixtures exactly unchanged from prior successful checks."
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0,
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-inspection-limit/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": false,
+      "reason": "Owner ran after formatting on exact current three changed inputs."
+    }
+  ],
+  "allPassed": false,
+  "boundary": "Exact-input reuse is explicit; not claiming all seven checks rerun. Native notice retest remains pending."
+}

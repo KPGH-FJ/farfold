@@ -56,6 +56,8 @@ it("rejects schemes, drive-relative paths, device namespaces and project travers
 });
 it("routes a Windows absolute delivery candidate through explicit file inspection", async () => {
   vi.mocked(invoke).mockClear();
+  // The official invoke API always returns a Promise, even for an unused reply.
+  vi.mocked(invoke).mockResolvedValueOnce(undefined);
   await fileDelivery.inspectLink("C:\\work", "D:\\reports\\out.md");
   expect(invoke).toHaveBeenCalledExactlyOnceWith(
     "file_delivery_inspect_selected",

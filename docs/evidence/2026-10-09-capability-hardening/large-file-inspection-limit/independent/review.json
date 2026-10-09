@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-10-09T21:49:40.975946+00:00",
+  "reviewer": "verification; not patch author and not native UI observer",
+  "status": "completed_no_blocker_for_minimal_inspection_fix; installed repaired behavior remains pending",
+  "scope": "Exact ordinary-file inspection TooLarge string classification into existing parent UI, plus read-only review of initial installed receipts and authored fixtures/copies/unsent-data evidence.",
+  "sourceReview": {
+    "ownerReceiptSha256": "d73c65d4cdd2e0b728bd7ab1e26b90f50f881c2f60abe9902de740859986ae98",
+    "ownerSourceAndLogHashesMatch": true,
+    "sourceCheckpoint": [
+      {
+        "path": "src/runtime/file_delivery.ts",
+        "sha256": "fa1a3f9b66d64c806fd45baec1a0f25cb14e9f8f881f1275e57f1f6a49900c7f"
+      },
+      {
+        "path": "src/runtime/file_delivery.inspect-errors.test.ts",
+        "sha256": "98fde353e26c04dea3b5426d33d5658f67b681d3c219188374db621e40313b6b"
+      },
+      {
+        "path": "src/components/OpenedFileView.tsx",
+        "sha256": "f027e7e0b62ea36322923a35328e719bb423b3fd7662fee82b86599a96fad4ad"
+      },
+      {
+        "path": "src/components/OpenedFileView.test.tsx",
+        "sha256": "78a0d8b28b55a1751421ca87a2f49b7b388335929df776ffd6f2cb0589fa4e7f"
+      },
+      {
+        "path": "src/runtime/file_open_strings.ts",
+        "sha256": "2753f8c53b33a9328722ea808dc454be76654e261deead144d1298b6c896befa"
+      },
+      {
+        "path": "src/runtime/file_delivery_strings.ts",
+        "sha256": "ea4f53e2bd3da1f42a84dab277b01a39acea073867c7426610e784766f17d11f"
+      },
+      {
+        "path": "src/runtime/text_block_strings.ts",
+        "sha256": "0a2012f691dbf8b97cd12a1d95cb3b070505494dbadd5e43524e522e54cd85fc"
+      },
+      {
+        "path": "src-tauri/src/file_delivery_commands.rs",
+        "sha256": "ff82f983ccf0d68abb2720b3431f752abef694071ce28c844d63c2e0ca1e890f"
+      },
+      {
+        "path": "src-tauri/src/file_delivery.rs",
+        "sha256": "afe7adc809e7f5f60b385404eac127b05a1d2a3d3fe852f878ad0edbf4e7b840"
+      }
+    ],
+    "relevantSourceUnchangedDuringBrowser": true,
+    "baselineCommit": "f71a3434f00e14fed5d7fd473217b4e074462961",
+    "baselineWrapperBytesMatchCommit": true,
+    "mechanism": "Vite read-only load substitution at the original module path supplies baseline wrapper; same current unchanged OpenedFileView. Fixed run uses production wrapper. No production file rollback or mutation.",
+    "findings": [
+      "Result<VerifiedFile,String> inspection commands return the exact fixed TooLarge message; original wrapper preserved bare string while parent expected structured code or exact pending/busy text.",
+      "Only two initial inspection methods use the new exact equality conversion. Name-empty Error preserves String(error); unrelated strings/objects and independently limited text/visual reads retain original rejection. No size, authority, retry or external-action policy changes.",
+      "Root file_paths.test mock now supplies the official Promise-returning invoke shape. Original Windows path routing and exact command assertion remain; this is a test-fixture compatibility change, not a production relaxation."
+    ]
+  },
+  "independentBrowser": {
+    "engine": "Headless Chromium, React StrictMode, actual OpenedFileView, fileDelivery and production styles",
+    "controlledBoundary": "Only window.__TAURI_INTERNALS__.invoke replaced. No OS reads, native dialog/opener, app launch or Agent call. No virtual time.",
+    "validRed": {
+      "log": "browser-baseline.txt",
+      "json": "browser-baseline.json",
+      "exitCode": 1,
+      "passed": 38,
+      "failed": 2,
+      "failures": [
+        "relative-limit exact expected notice",
+        "absolute-limit exact expected notice"
+      ]
+    },
+    "green": {
+      "log": "browser-fixed.txt",
+      "json": "browser-fixed.json",
+      "exitCode": 0,
+      "passed": 40,
+      "failed": 0
+    },
+    "coverage": [
+      "Relative and selected absolute 257 MiB failure shows256 MiB reason after fix.",
+      "Previous successful text removed; failed inspect does not read content, start copy or open external app.",
+      "Explicit selected-location reveal/open keep exact path/root; retry and unverified-content wording remain.",
+      "Pending/busy fixed notices unchanged; other/extended private strings generic without raw detail.",
+      "Small text reader limit remains generic and is not incorrectly relabeled256 MiB.",
+      "No automatic retry within observed150ms after final failure; no unexpected IPC or unhandled rejection."
+    ],
+    "screenshotsActuallyViewed": [
+      "inspection-baseline.png",
+      "inspection-fixed.png"
+    ],
+    "harnessCorrection": {
+      "record": "browser-initial-timing.txt",
+      "classification": "Invalid premature terminal observation. First harness waited for any role=status and sampled loading UI. Preserved separately, not a product counterexample. Final identical red/green harness waits for actual fallback action after rejection."
+    },
+    "formatBoundary": "fixture-as-executed.raw.txt preserves exact executed harness; final fixture only Prettier-normalized after runs. Original JSON bytes preserved and parsed semantics compared."
+  },
+  "nativeEvidenceReview": {
+    "receiptSha256": "ce9058865d321816d1cdc7f7eb11b2974551a23f16b1852a303abea90f8dd36f",
+    "details": "native-disk-check.json",
+    "formalFiveFilesMatchInstalledReceipt": {
+      "Contents/Info.plist": true,
+      "Contents/MacOS/farfold": true,
+      "Contents/Resources/icon.icns": true,
+      "Contents/Resources/release-manifest.json": true,
+      "Contents/_CodeSignature/CodeResources": true
+    },
+    "archiveMatchesInstalledReceipt": true,
+    "observedByThisReviewer": "File hashes/sizes, preserved source and backup materials, copied-DB integrity and original7 unsent-value comparison only. Native UI claims remain root observations.",
+    "retainedBoundaries": [
+      "Native oversize initial notice genuinely failed on installed f71a; source/browser success is not installed repair proof.",
+      "Completed destination hashes support full copies, not confirmed cancellation.",
+      "Sparse257 fixture has size equality only, not before/after content digest.",
+      "No standalone native screenshot files claimed; browser screenshots are separately labeled."
+    ]
+  },
+  "cleanup": {
+    "ownedChromiumCount": 0,
+    "ownedServerPidsEnded": [74334, 75314],
+    "serverExitToolCodes": [143, 143],
+    "browserRunnerExitCodes": [1, 0],
+    "originalLiveDbOpened": false,
+    "formalAppOperated": false
+  },
+  "rawJsonPreservation": [
+    {
+      "formatted": "browser-fixed.diagnostics.json",
+      "original": "browser-fixed.diagnostics.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "c32ae813a68a8eb2abf07b2f2b82604b9d06a6b5d77e17af285d09173a717e0a",
+      "formattedSha256": "84928d8ccc137d440352a9a5af928edbf87f68f041edfbdb3245135a680f6ada"
+    },
+    {
+      "formatted": "browser-initial-timing.json",
+      "original": "browser-initial-timing.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "2d15bea796c1fa10c397459a95a17c755cd9ae8b18abcfa2989a9d972a8dbbfc",
+      "formattedSha256": "2d15bea796c1fa10c397459a95a17c755cd9ae8b18abcfa2989a9d972a8dbbfc"
+    },
+    {
+      "formatted": "browser-baseline.diagnostics.json",
+      "original": "browser-baseline.diagnostics.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "343c149fa28725d60ab893b84ada8f91397a53ff1835f045978c7407239237c6",
+      "formattedSha256": "d841e710afaa5c21039bd671f5c4e3559170bec5d159984eda4dcb8c6d2c73c3"
+    },
+    {
+      "formatted": "browser-baseline.json",
+      "original": "browser-baseline.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "7803fdd51f2db4dd4eb2357a9ba9fcd4b2366f767be4d5fd34a7d5e7fe9919e5",
+      "formattedSha256": "7803fdd51f2db4dd4eb2357a9ba9fcd4b2366f767be4d5fd34a7d5e7fe9919e5"
+    },
+    {
+      "formatted": "browser-fixed.json",
+      "original": "browser-fixed.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "3bcbba0a8720ef8ce34a74d886343f9113a15934c446255c4612e8b762014f29",
+      "formattedSha256": "3bcbba0a8720ef8ce34a74d886343f9113a15934c446255c4612e8b762014f29"
+    },
+    {
+      "formatted": "browser-initial-timing.diagnostics.json",
+      "original": "browser-initial-timing.diagnostics.raw.txt",
+      "semanticEqual": true,
+      "originalSha256": "0e7993418c07784a290361ef677aab3d0ce1233eeb32a1b1dab212276ab4e350",
+      "formattedSha256": "97c01d2612c11e1325b3decd7c9874865f03e0bcba8e18ab820c2954143927dd"
+    }
+  ],
+  "evidenceHashes": {
+    "baseline-file_delivery.ts": "f83fdfe9dfb75202b3f8c62130c647b04dcc9c8680b89fc157897f794576664e",
+    "browser-fixed.diagnostics.json": "84928d8ccc137d440352a9a5af928edbf87f68f041edfbdb3245135a680f6ada",
+    "browser-fixed.stderr.txt": "8b04c5b0c170e111c5553cdee7008e48949ea1d371650921b1380fcb4b7f4654",
+    "browser-initial-timing.json": "2d15bea796c1fa10c397459a95a17c755cd9ae8b18abcfa2989a9d972a8dbbfc",
+    "run.mjs": "a77059daa9ee031bec29f0c4034426dba64563471bec338a6f076c0c1e2bb0b2",
+    "browser-baseline.diagnostics.json": "d841e710afaa5c21039bd671f5c4e3559170bec5d159984eda4dcb8c6d2c73c3",
+    "index.html": "a48eb5e691f5eb210bcde35ee093484161ae41b51f9ac2ff65f35b2f2c13cc28",
+    "inspection-baseline.png": "a5ceadb64524c368a56a4683277771777e514b2d1c9c5b104e5f87b372a54f97",
+    "native-disk-check.json": "d2fb6ed0aefac977d8e8f05548ed887f48dffb5371099fab05f9b9392c86b115",
+    "browser-baseline.json": "7803fdd51f2db4dd4eb2357a9ba9fcd4b2366f767be4d5fd34a7d5e7fe9919e5",
+    "browser-initial-timing.raw.txt": "2d15bea796c1fa10c397459a95a17c755cd9ae8b18abcfa2989a9d972a8dbbfc",
+    "browser-fixed.json": "3bcbba0a8720ef8ce34a74d886343f9113a15934c446255c4612e8b762014f29",
+    "browser-initial-timing.diagnostics.raw.txt": "0e7993418c07784a290361ef677aab3d0ce1233eeb32a1b1dab212276ab4e350",
+    "fixture.tsx": "2b1affbc1210aef03a2a42a98e82db4c3e8036db0128a655d89a464424158a6a",
+    "browser-baseline.raw.txt": "7803fdd51f2db4dd4eb2357a9ba9fcd4b2366f767be4d5fd34a7d5e7fe9919e5",
+    "browser-fixed.raw.txt": "3bcbba0a8720ef8ce34a74d886343f9113a15934c446255c4612e8b762014f29",
+    "browser-initial-timing.txt": "e139c8d87a730a7e59954381c1de61f6db2d77a1f17c596458b89f8f96419d88",
+    "source-checkpoint.json": "5b86a543d3562294025800c8bb5cd728e42c109e8e77d0d1a6a084e53d5e0613",
+    "browser-initial-timing.diagnostics.json": "97c01d2612c11e1325b3decd7c9874865f03e0bcba8e18ab820c2954143927dd",
+    "browser-initial-timing.stderr.txt": "8384d069b6ea14bfc397e416daac8c015af66875f6be2ac3c67ecd9508148996",
+    "fixture-as-executed.raw.txt": "55c8a3d10b73cb6b95ca2b8b602495f8b0f2a0b766dde39bc1b7e6125f8f260c",
+    "browser-baseline.txt": "82eb345c5a8c1c46a7ffc336ecae3568383a2ea7b20cdd8789929338383195cb",
+    "serve.mjs": "55ddea5dfddfc922dfef990f9c512807b60d361907bbc921e7d8cc6af5a58d0d",
+    "browser-fixed.txt": "a06cc1e331938d2b1cede9d6a6cdddf0c8872006ed4a84db97702ef5b0a4fca6",
+    "browser-fixed.diagnostics.raw.txt": "c32ae813a68a8eb2abf07b2f2b82604b9d06a6b5d77e17af285d09173a717e0a",
+    "browser-baseline.stderr.txt": "a4a7683450045468cd9259c93fbddb5881b3eddd7ba5e433887b6ae0ca18c6d9",
+    "inspection-fixed.png": "e71af0029ae42968e587c1fed149abf616a8f5416f94473c8144a5fee93a7dfd",
+    "inspection-initial-timing.png": "a5ceadb64524c368a56a4683277771777e514b2d1c9c5b104e5f87b372a54f97",
+    "browser-baseline.diagnostics.raw.txt": "343c149fa28725d60ab893b84ada8f91397a53ff1835f045978c7407239237c6"
+  },
+  "remaining": [
+    "Root integration checks and installed repaired oversize recheck.",
+    "Native confirmed cancellation/blocked IO/unknown-result/exit interactions remain controlled evidence only.",
+    "All original122 capability conditions remain; no P17/P21 full completion asserted."
+  ]
+}

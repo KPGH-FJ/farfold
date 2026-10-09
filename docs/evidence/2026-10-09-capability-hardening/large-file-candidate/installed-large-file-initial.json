@@ -1,0 +1,195 @@
+{
+  "checkedAtUtc": "2026-10-09T21:42:56.239204+00:00",
+  "sourceCommit": "f71a3434f00e14fed5d7fd473217b4e074462961",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "observer": "root via CUA native AX and screenshots",
+  "standaloneNativeScreenshotFiles": false,
+  "phase": "installedPartialVerificationWithConfirmedOversizeNoticeDefect",
+  "sourceFixtures": [
+    {
+      "name": "large-16.md",
+      "bytes": 16777216,
+      "sha256": "e4cb04e88bb91f60118efcd70556d94bfb9c705920e8e736608070e1e3ef19c4",
+      "sourceUnchanged": true
+    },
+    {
+      "name": "large-256.txt",
+      "bytes": 268435456,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059",
+      "sourceUnchanged": true
+    },
+    {
+      "name": "invalid-tail.txt",
+      "bytes": 2097153,
+      "sha256": "106808e523fff35d17d66c23be52a9bc5b67bdd60e5cbad3a35c9394757be7ff",
+      "sourceUnchanged": true
+    },
+    {
+      "name": "oversize-257.txt",
+      "bytes": 269484032,
+      "sha256": null,
+      "sourceSizeUnchanged": true,
+      "contentUnchanged": "not independently hashed; no writes performed by this test"
+    }
+  ],
+  "checks": [
+    {
+      "id": "echo-only-entry",
+      "result": "passed",
+      "observed": "One new FARFOLD_LARGE_F71A3434_20261010 conversation; existing Codex / 6 Astra / Ultra / Approve for me settings retained. Agent returned exactly four Markdown links and completed; no tool call visible, no files requested from Agent. Conversation count 114 -> 115.",
+      "boundary": "Link echo creates preview entry only; does not prove Agent file reading, editing, P22 or other Agents. No new permission grant or model/service change."
+    },
+    {
+      "id": "16m-blocks",
+      "result": "passed",
+      "observed": {
+        "first": {
+          "ordinal": 1,
+          "total": 129,
+          "bytes": [0, 131071],
+          "lines": [1, 1660]
+        },
+        "next": {
+          "ordinal": 2,
+          "total": 129,
+          "bytes": [131071, 262141],
+          "lines": [1660, 3319]
+        },
+        "last": {
+          "ordinal": 129,
+          "total": 129,
+          "bytes": [16777153, 16777216],
+          "lines": [212370, 212370],
+          "text": "63 ASCII Z characters"
+        }
+      },
+      "boundary": "Observed these three blocks only; full-range correctness additionally covered by source tests, not claimed as all native blocks visited."
+    },
+    {
+      "id": "256m-blocks",
+      "result": "passed",
+      "observed": {
+        "first": {
+          "ordinal": 1,
+          "total": 2049,
+          "bytes": [0, 131071],
+          "lines": [1, 1660]
+        },
+        "last": {
+          "ordinal": 2049,
+          "total": 2049,
+          "bytes": [268434497, 268435456],
+          "lines": [3397906, 3397918]
+        }
+      },
+      "boundary": "Actual local macOS file; not network disk, all environments or Windows proof."
+    },
+    {
+      "id": "limits-and-continuation",
+      "result": "passed",
+      "observed": "Visible 256 MiB full-file limit, 128 KiB / 2000-line blocks, Markdown source mode, whole-file vs block copy distinction, continuation text, previous/next endpoint disabled states."
+    },
+    {
+      "id": "save-picker-cancel",
+      "result": "passed",
+      "observed": "Cancelled initial native save picker; remained on last block, no job or success created. Separate native same-name replacement prompt was cancelled before choosing a distinct new filename; source retained."
+    },
+    {
+      "id": "whole-copy-16-and-256",
+      "result": "passed",
+      "observed": "Native save flows to new owned destinations; global file-save entry retained same tasks after preview hidden; both UI statuses completed at exact full byte counts. Independent disk SHA/size match full sources."
+    },
+    {
+      "id": "cancel-race",
+      "result": "completed-before-cancellation-confirmation",
+      "observed": "Started independent 256 MiB copy then clicked observed Request cancel button in same CUA call after fresh AX. Subsequent UI reported complete, 268435456 bytes, not cancelled; destination SHA matches complete source.",
+      "boundary": "Not a confirmed native cancellation, unknown-result recovery or in-flight exit block proof; these remain controlled test evidence only."
+    },
+    {
+      "id": "invalid-utf8-tail",
+      "result": "passed",
+      "observed": "2 MiB valid UTF-8 prefix plus invalid trailing byte rejected as whole file; no prefix or stale prior file displayed; visible complete-file unsupported UTF-8 explanation and delivery alternatives."
+    },
+    {
+      "id": "oversize-initial-notice",
+      "result": "failed",
+      "observed": "257 MiB file rejected and previous content removed, but showed generic 未能打开文件，请检查位置后重试。 instead of 256 MiB limit.",
+      "followup": "Repair exact inspect error classification; retain this installed failure and reverify corrected candidate. No upper-limit change."
+    },
+    {
+      "id": "oversize-location-fallback",
+      "result": "passed",
+      "observed": "Failure view offered selected-location open/reveal with explicit no-content-verification statement. Clicked reveal; Finder actual selected oversize-257.txt at exact owned directory, size 269.5 MB; closed only this newly opened Finder window.",
+      "boundary": "Reveal observed, external default app open not invoked; no content SHA claimed for sparse oversize fixture."
+    },
+    {
+      "id": "normal-exit-and-unsent",
+      "result": "passed",
+      "observed": "Cmd-Q normal exit; CUA app quit, private deterministic check confirms formal process absent, 3 composer + 1 feedback + 3 queue original values unchanged; no force quit or data reset."
+    }
+  ],
+  "copies": [
+    {
+      "source": "large-16.md",
+      "destination": "saved-16-complete.md",
+      "bytes": 16777216,
+      "sha256": "e4cb04e88bb91f60118efcd70556d94bfb9c705920e8e736608070e1e3ef19c4",
+      "matchesWholeSource": true
+    },
+    {
+      "source": "large-256.txt",
+      "destination": "saved-256-complete.txt",
+      "bytes": 268435456,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059",
+      "matchesWholeSource": true
+    },
+    {
+      "source": "large-256.txt",
+      "destination": "cancel-256-attempt.txt",
+      "bytes": 268435456,
+      "sha256": "f88169389ab4e537295145b06ef2941360d87211d32177013be9852aede6f059",
+      "matchesWholeSource": true
+    }
+  ],
+  "postUiRetention": {
+    "composers": {
+      "beforeEntries": 3,
+      "afterEntries": 3,
+      "existingEntriesUnchanged": 3
+    },
+    "feedback": {
+      "beforeEntries": 1,
+      "afterEntries": 1,
+      "existingEntriesUnchanged": 1
+    },
+    "queues": {
+      "beforeEntries": 3,
+      "afterEntries": 3,
+      "existingEntriesUnchanged": 3
+    }
+  },
+  "evidenceReferences": {
+    "candidate.json": "868ecc344ae01219bc9f2646a2ba8d98ddfc51732077922aafc3748f22efd465",
+    "candidate-inputs.json": "368fa9d3c9ccb14c6aba6bb26533e4d9cd946a775ddbb825e1351e03a5074fae",
+    "candidate-independent.json": "abb21bc39eaf8904ab024d456791ebd8f407a231de06eea4e12c2645bedfd1b1",
+    "installed-data-retention.json": "e272ed1eef27685b8535dec586358e67b442745e2843d3ddc0e4d97140542a91",
+    "install-independent.json": "fa551c895399e57280663496f4be06afc24440934b9749eb59d037a717cf70f3",
+    "duplicate-bundle-cleanup.json": "e55cb75059f1ccc1443053d852fba7680eacd4b76d022cf2fc2d078e8aa528d7"
+  },
+  "privateEvidence": {
+    "native-fixtures.json": "a7ace46e0e76b8739fa83727a817ed58d11f3560cac2c64471b83bf547a60633",
+    "post-ui-draft-retention.json": "d8126dae71a75814fbda76c5595ca86657999f4bcce76b65b09e400664d6f134",
+    "check_post_ui_drafts.py": "6c8e40cfc02ed357a235f6a6ff3c6a0378e3d76ac02fa01f81ec02e04ca9b6b9"
+  },
+  "unchangedOriginalDrafts": 7,
+  "remaining": [
+    "Confirmed oversize initial notice defect pending minimal fix and installed recheck",
+    "Native confirmed cancellation, blocked I/O/unknown results/exit gate are not proven by this local fast copy",
+    "Large-text block reopen returned block 1; navigation position persistence remains a separate follow-up, not claimed here",
+    "External default application open, other disk/platform conditions and all remaining plan items",
+    "P21 exact text locations; P16 complete Office; P22 Agent rework; 29 x 8 standards; Windows; NEW-01",
+    "Public signing/notarization/distribution remains deferred"
+  ]
+}
