@@ -1,0 +1,140 @@
+{
+  "checkedAtUtc": "2026-10-09T21:04:07.309153+00:00",
+  "status": "passed_with_stated_evidence_limits",
+  "sourceCommit": "fa235998a70a4aa010ed1a4cb34bebd4b1c0c0dd",
+  "nativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/installed-file-refresh.json",
+    "sha256": "c962d943de4ab6ce8ce51622499c08df5d8c98d16068dd2e01b02afe2b458a60",
+    "bytes": 5025
+  },
+  "reviewMethod": "Read-only receipt, exact file hashes and current documentation review. Reviewer did not control or observe the native pixel journey; no second native acceptance is claimed.",
+  "nativeClaimsReviewed": {
+    "witness": "Root CUA accessibility trees and returned screenshots; no standalone native screenshots were saved.",
+    "scope": "DOCX paragraph segment retention/shrink/error/missing recovery, XLSX row retention/clamp, PDF page/version and old opinion preservation.",
+    "requestsSent": 0,
+    "permissionsChanged": false,
+    "limits": "Other formats, Agent-driven edits, Windows and full P16/P17/29-Agent standards remain unverified."
+  },
+  "artifactChain": {
+    "candidate": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/candidate.json",
+      "sha256": "af226fdb22df778c0d2c910b2cb8cca38608e60002c6ffafca9d4978cf7a13ba",
+      "bytes": 4828
+    },
+    "candidateIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/candidate-independent.json",
+      "sha256": "0596b9a5957d3aee9a64717a60e6e428455c4e7c82d3545a1440ffea390bf636",
+      "bytes": 3624
+    },
+    "installIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/install-independent.json",
+      "sha256": "27d137930b9e7f8d680b4c8c5161289f7a06cd05abc2d08804fe5e77c7cf998f",
+      "bytes": 9145
+    },
+    "duplicateCleanup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "ad49533b173b361436d2f36ffe6edec769af0af34a2b86f0f3f227ab990e36f4",
+      "bytes": 1589
+    },
+    "formalFiveFilesStillMatch": true,
+    "formalBinarySha256": "234343ce67e4d6b99c2611e503dd6e437bbf89a986d2786dbed7870b304a8e94",
+    "strictFormalCodesign": "passed",
+    "archiveSha256": "51276084bab4abb66a065bb1eb8d1a9f0b620810027ec8f23c42185db6f6b574",
+    "duplicateAbsent": true,
+    "formalProcessesNow": 0
+  },
+  "fixtureRestoration": {
+    "receipt": {
+      "path": "output/2026-10-10-file-refresh-install/fixture-manifest.json",
+      "sha256": "d47ea3bd209358318feefcd350947ffbc31c459805a5bbe6aeb05f4aac03b74a",
+      "bytes": 2369
+    },
+    "threeTaskOwnedCopiesMatchOriginals": true,
+    "entries": [
+      {
+        "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+        "temporaryAndSavedOriginalMatch": true,
+        "publicSourceChecked": true
+      },
+      {
+        "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a",
+        "temporaryAndSavedOriginalMatch": true,
+        "publicSourceChecked": true
+      },
+      {
+        "sha256": "e2aae9d415af8cb5eea3f1367ee4d01d8fbe1a86144038f0e8d2f5486cdcae92",
+        "temporaryAndSavedOriginalMatch": true,
+        "publicSourceChecked": false
+      }
+    ],
+    "generatedFixtureHashesAllMatch": true,
+    "opinionVersionHashMatchesAuthoredPdf": true
+  },
+  "unsentPreservation": {
+    "receipt": {
+      "path": "output/2026-10-10-file-refresh-install/post-ui-draft-retention.json",
+      "sha256": "ff639b5aa58ad0d79004e83e2da43dcbf23a036b0039c54e9190a27c30d0e0b5",
+      "bytes": 917
+    },
+    "checker": {
+      "path": "output/2026-10-10-file-refresh-install/check_post_ui_drafts.py",
+      "sha256": "7db85dc9c82bac560df3e77cb02497c3c3346a089fe691249865ddc6dbdc1d3f",
+      "bytes": 2832
+    },
+    "privateCapturedMainWalShmHashesMatchReceipt": true,
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "claimBasis": "Root private-copy comparison receipt and unchanged first-capture hashes; this closeout did not rerun SQLite queries or read original DB.",
+    "noPrivateContentEmitted": true
+  },
+  "documentation": {
+    "files": [
+      {
+        "path": "docs/status.md",
+        "sha256": "e15ea6df255699feac0796dcbc401cf2d504e921eccd5aa0e59f3a809fe9fe1b",
+        "bytes": 17645
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "954cb35bc073a5f5fb0d554682006dcb5e5aeff3faf86eadac80377c750e6d46",
+        "bytes": 72704
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "sha256": "1aa888908def8094c77ae45af4ec27c1c270bab81c6dd419383bddbf46cdfda7",
+        "bytes": 26981
+      }
+    ],
+    "currentInstalledCandidateAccurate": true,
+    "p20MarkedMacOSPartial": true,
+    "p17ExplicitlyInDevelopmentNotInstalled": true,
+    "originalIdsCount": 122,
+    "originalIdsCompleteAndUnique": true,
+    "protectedHistoricalReadmes": {
+      "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    },
+    "changesByReviewer": []
+  },
+  "boundaries": [
+    "Native receipt was evaluated for supported scope and hash provenance, not independently witnessed pixels.",
+    "The 217400 identical manifests describe installation only; later native UI metadata changes are not represented as a wholly unchanged database.",
+    "The currently installed PDF manual-reread hint remains an observed copy issue; its next-source correction is not claimed installed.",
+    "P17 source is concurrent work in progress and is excluded from fa235998 installed evidence."
+  ]
+}

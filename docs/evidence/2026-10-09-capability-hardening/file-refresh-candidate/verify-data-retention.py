@@ -63,7 +63,7 @@ record = {
     'privateEvidence': {name: sha(PRIVATE / name) for name in private_names},
     'candidateIndependentSha256': sha(OUT / 'candidate-independent.json'),
     'installedInteractionVerified': False, 'realAgentAcceptance': False,
-    'remaining': ['Installed DOCX/external-inquiry checks', 'Desktop access wait NEW-01',
+    'remaining': ['Installed automatic refresh, reading position and stale-file checks', 'Desktop access wait NEW-01',
                   'All remaining capability and Agent standards', 'Public distribution remains deferred'],
 }
 with (OUT / 'installed-data-retention.json').open('x') as handle:

@@ -1,0 +1,225 @@
+{
+  "task": "Independent P20 installed candidate and data-retention verification",
+  "checkedAtUtc": "2026-10-09T20:47:43.434779+00:00",
+  "status": "passed",
+  "sourceCommit": "fa235998a70a4aa010ed1a4cb34bebd4b1c0c0dd",
+  "phase": "installedVerifiedNotLaunched",
+  "method": {
+    "newBuildOrTests": false,
+    "appLaunchedOrAgentInvoked": false,
+    "originalDatabaseOpenedWithSQLite": false,
+    "databaseReads": "Immutable readonly private backup copies only; integrity and original unsent entries compared without emitting content or keys."
+  },
+  "publicReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/installed-data-retention.json",
+    "sha256": "5112df67b5c552510f2a7841595aa3697f9bbdb8eba7071e829650d71a8ffd61",
+    "bytes": 3173
+  },
+  "candidateIndependent": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/candidate-independent.json",
+    "sha256": "0596b9a5957d3aee9a64717a60e6e428455c4e7c82d3545a1440ffea390bf636",
+    "bytes": 3624
+  },
+  "candidateMetadata": {
+    "candidateJson": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/candidate.json",
+      "sha256": "af226fdb22df778c0d2c910b2cb8cca38608e60002c6ffafca9d4978cf7a13ba",
+      "bytes": 4828
+    },
+    "candidateInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/candidate-inputs.json",
+      "sha256": "36d057403cdd1c33fd60777327b2afe18426de629f62e47ced0ba22a9279f3a4",
+      "bytes": 121307
+    },
+    "exactCommittedInputsVerified": 1073,
+    "currentWorkspaceBoundary": "Root released source for next P17 increment during review; saved candidate input hashes were compared to exact fa235998 commit, not later working edits."
+  },
+  "installation": {
+    "privateOperation": {
+      "path": "output/2026-10-10-file-refresh-install/install-operation.json",
+      "sha256": "a267f1c936dc48b32f44d4404242d17a2e6f50b13b2137f81d1401d238c0c7ae",
+      "bytes": 2871
+    },
+    "installer": {
+      "path": "output/2026-10-10-file-refresh-install/install_verified_candidate.py",
+      "sha256": "1ccde4e27ac8afbc33f7a7d566cb4325c82b1cc05526f136284e38304f734b97",
+      "bytes": 14232
+    },
+    "installerDiffFromPreviouslyReviewed": "Only private output and public candidate directory constants changed from DOCX image-fix installer.",
+    "onlyFormalAppReplaced": true,
+    "formalAppProcessesNow": 0,
+    "candidateAppProcessesNow": 0,
+    "formalAndCandidateExactlyMatch": true,
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "234343ce67e4d6b99c2611e503dd6e437bbf89a986d2786dbed7870b304a8e94",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "passed for formal and duplicate candidate",
+    "signature": "ad-hoc; not notarized",
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-10-fa235998/Farfold-0.1.7-fa235998.zip",
+      "sha256": "51276084bab4abb66a065bb1eb8d1a9f0b620810027ec8f23c42185db6f6b574",
+      "bytes": 12824667
+    },
+    "archiveContentsAndCrcMatch": true,
+    "archiveMetadataBoundary": "All archive members passed CRC; exact five application members match formal/candidate. Standard __MACOSX AppleDouble metadata is separate from application files."
+  },
+  "normalExit": {
+    "record": {
+      "path": "output/2026-10-10-file-refresh-install/normal-exit-observation.json",
+      "sha256": "9cf6a2fe93631cadb1bec3813ed4e35e5f1bed7e7fa2d3dd75a8fad883ac2948",
+      "bytes": 330
+    },
+    "normalQuitObservedByRoot": true,
+    "forcedQuit": false,
+    "reviewerBoundary": "Current zero formal/candidate processes checked; prior Cmd-Q observation belongs to root."
+  },
+  "dataRetention": {
+    "allThreeCompleteManifestsEqual": true,
+    "snapshots": [
+      {
+        "phase": "before",
+        "sha256": "6c20c67a142e8021871136e55efaca9365c91e803f413e35c3017d358822c3c5",
+        "entries": 217400,
+        "bytes": 59360435,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      },
+      {
+        "phase": "preinstall",
+        "sha256": "6c20c67a142e8021871136e55efaca9365c91e803f413e35c3017d358822c3c5",
+        "entries": 217400,
+        "bytes": 59360435,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      },
+      {
+        "phase": "after",
+        "sha256": "6c20c67a142e8021871136e55efaca9365c91e803f413e35c3017d358822c3c5",
+        "entries": 217400,
+        "bytes": 59360435,
+        "mode": "0600",
+        "counts": {
+          "appData": {
+            "directory": 21360,
+            "file": 195450,
+            "symlink": 328,
+            "special": 0
+          },
+          "webkit": {
+            "directory": 152,
+            "file": 100,
+            "symlink": 0,
+            "special": 0
+          },
+          "cache": {
+            "directory": 8,
+            "file": 2,
+            "symlink": 0,
+            "special": 0
+          }
+        },
+        "metadataMainWalShmMatchCapture": true
+      }
+    ],
+    "publicPrivateEvidenceHashesAllMatch": true,
+    "sourceMainWalShmMatchCaptureInEachManifest": true,
+    "scope": "Saved appData/WebKit/cache manifests; private paths and user bodies omitted."
+  },
+  "recoveryBackup": {
+    "receipt": {
+      "path": "output/2026-10-10-file-refresh-install/metadata-backup-receipt.json",
+      "sha256": "088a43d7e3dee06e8dea4b803407b5a06a5205d448de24afb276fcfa00f3c410",
+      "bytes": 636
+    },
+    "script": {
+      "path": "output/2026-10-10-file-refresh-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    "methodReviewed": "Original main/WAL/SHM copied with signature/hash checks; SQLite backup operates only on a second private working copy. Original and first capture never passed to SQLite.",
+    "firstCaptureHashesMatchReceipt": true,
+    "backupSha256": "d12f7ed4d6f614eb99d50b48302afc6b60a7a5818fc4e8f9843b442113fe03f5",
+    "independentCopyIntegrity": "ok",
+    "copiesAndExistingSideFilesUnchangedByReview": true
+  },
+  "originalUnsentBaseline": {
+    "referenceBackupSha256": "865b16eb0cc4d94809e773507ffb9d0e0ab2730726073a46c4c051d8fd37c1c4",
+    "currentBackupSha256": "d12f7ed4d6f614eb99d50b48302afc6b60a7a5818fc4e8f9843b442113fe03f5",
+    "groups": {
+      "composers": {
+        "originalEntries": 3,
+        "currentEntries": 3,
+        "originalEntriesUnchanged": 3
+      },
+      "feedback": {
+        "originalEntries": 1,
+        "currentEntries": 1,
+        "originalEntriesUnchanged": 1
+      },
+      "queues": {
+        "originalEntries": 3,
+        "currentEntries": 3,
+        "originalEntriesUnchanged": 3
+      }
+    },
+    "allOriginalEntryValuesEqual": true,
+    "basis": "Private backup comparison; all three installation manifests preserve captured database main/WAL/SHM."
+  },
+  "reviewCorrection": {
+    "initialComparison": "Reviewer initially assumed bare/absolute manifest paths and that ZIP had only application members; assertions stopped on these representation differences.",
+    "resolution": "Verified dot-relative appData paths exactly and separated standard AppleDouble ZIP metadata; main/WAL/SHM and exact application members match. No product failure."
+  },
+  "boundaries": [
+    "Historical install-operation pending comparison field describes installation completion before the three manifests were compared; later completed evidence now confirms comparison.",
+    "No installed automatic refresh, reading-position or native interaction checked here; root owns native verification.",
+    "No real Agent, TCC resolution or public distribution acceptance.",
+    "Duplicate candidate still exists at this checkpoint; exact authorized cleanup is a separate receipt."
+  ]
+}

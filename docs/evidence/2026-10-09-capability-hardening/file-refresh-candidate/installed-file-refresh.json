@@ -1,0 +1,82 @@
+{
+  "checkedAtUtc": "2026-10-09T21:01:03.271979+00:00",
+  "sourceCommit": "fa235998a70a4aa010ed1a4cb34bebd4b1c0c0dd",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "method": "Root controlled the actual installed macOS WebKit window through CUA, read accessibility trees and inspected returned screenshots. Only three task-authored temporary fixture copies were changed with hash-checked atomic replacements. No standalone screenshots saved for this native run.",
+  "bundleStillMatchesCandidate": true,
+  "conversationsVisible": 114,
+  "agentPromptsSent": 0,
+  "permissionsChanged": false,
+  "coldPermissionReconfirmation": "Existing Codex permission prompts remained unconfirmed; no changes to selected service, model or reasoning.",
+  "docx": {
+    "result": "passed_in_observed_scope",
+    "checks": [
+      "A 65-paragraph version refreshed automatically; after navigating to segment 2/4, another version automatically retained paragraphs 21-40 with the V2 marker.",
+      "While the content pane was hidden, replacing with five paragraphs and reopening restored a valid short view.",
+      "Malformed replacement retained the prior short snapshot and explicitly reported failed refresh. Restoring the file and hiding/reopening retained this halted state until explicit reread.",
+      "Explicit reread restored the valid original. Moving the temporary file retained the old view with a missing-file notice; returning it and explicit reread cleared the notice."
+    ]
+  },
+  "xlsx": {
+    "result": "passed_in_observed_scope",
+    "checks": [
+      "Data A101-F105 remained selected across automatic refresh; A105 visibly changed from the original marker to P20 V2.",
+      "Replacing with the small workbook automatically clamped to the last valid row A2-F2; next was disabled and previous available."
+    ],
+    "notClaimed": "Native hidden-sheet policy coverage is not added by this run; controlled browser tests cover that path."
+  },
+  "pdf": {
+    "result": "passed_in_observed_scope",
+    "checks": [
+      "On page 2/2, a new file version was automatically adopted while retaining the page. The later feedback receipt carried the new SHA, proving adoption despite unchanged pixels.",
+      "While a page-2 opinion was being edited, replacing with a one-page PDF retained the old page and opinion and explicitly reported a newer file version.",
+      "Explicit reread showed 1/1 and preserved the previous-version opinion with its old page, hash and warning. Adding it to the initially empty composer retained those attributes; only this authored unsent text was then cleared, never sent.",
+      "After restoring the original and selecting 2/2 again with no edited opinion, replacing with a one-page PDF automatically clamped to 1/1 and visibly rendered the embedded Chinese glyph.",
+      "The original PDF was restored; the installed view automatically returned to page 1/2 before normal quit."
+    ],
+    "verifiedOpinionVersionSha256": "3f718f85ce78885cded888336f1c2ab4772b51e93225b074fae9c1a7907c92bb"
+  },
+  "cleanup": {
+    "ownedFixturesRestored": 3,
+    "publicOriginalFixturesUnchanged": true,
+    "normalQuit": true,
+    "forcedQuit": false,
+    "formalAppProcessesAfter": 0,
+    "existingUnsentValuesUnchanged": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "newAuthoredOpinionSent": false,
+    "newAuthoredOpinionAndComposerCleared": true
+  },
+  "remaining": [
+    "These macOS controlled file operations do not verify an Agent editing files, all formats, Windows or all 29 Agents.",
+    "P16 full Office, P17 large files, P22 real Agent edit/export and other original audit items remain open.",
+    "The installed PDF hint still described manual rereading; a neutral copy correction is in the next source increment, not this installed candidate."
+  ],
+  "privateEvidence": {
+    "fixture-manifest.json": "d47ea3bd209358318feefcd350947ffbc31c459805a5bbe6aeb05f4aac03b74a",
+    "fixture-mutations.jsonl": "0fa9622367beb9ffdf63886b5b7a20950dc220a2f9ce1e8431858a619dcb32ca",
+    "change_fixture.py": "e5c6dd53eaa4f42ac23889494b55ca17252c6aeb6e8bc58b3da5a79fd227f8f0",
+    "owned-docx-move.json": "f4ea7c86dacf736201db618513934695680cd3347c3037d4409b4f9bb3614299",
+    "owned-docx-restored.json": "4db44def7f3e6da8967f13c6aab1df20bc84f60681443024dec719530086f6da",
+    "check_post_ui_drafts.py": "7db85dc9c82bac560df3e77cb02497c3c3346a089fe691249865ddc6dbdc1d3f",
+    "post-ui-draft-retention.json": "ff639b5aa58ad0d79004e83e2da43dcbf23a036b0039c54e9190a27c30d0e0b5"
+  },
+  "privateDataBoundary": "Public receipt contains only aggregate preservation results; metadata copies and original user draft values remain private."
+}

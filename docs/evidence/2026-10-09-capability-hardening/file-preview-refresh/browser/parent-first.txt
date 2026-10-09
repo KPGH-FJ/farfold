@@ -1,0 +1,110 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "text-auto",
+      "name": "real 5s timer uses metadata hint without reread or DOM replacement",
+      "ok": true,
+      "elapsedMs": 5086
+    },
+    {
+      "scenario": "text-auto",
+      "name": "changed text keeps old snapshot while next read is pending",
+      "ok": true,
+      "elapsedMs": 10094
+    },
+    {
+      "scenario": "text-auto",
+      "name": "new checked text publishes after read success",
+      "ok": true,
+      "elapsedMs": 10120
+    },
+    {
+      "scenario": "text-auto",
+      "name": "hidden selection schedules no check for a full real poll interval",
+      "ok": true,
+      "elapsedMs": 15373
+    },
+    {
+      "scenario": "text-auto",
+      "name": "reactivation forces content check and fresh text",
+      "ok": true,
+      "elapsedMs": 15400
+    },
+    {
+      "scenario": "text-auto",
+      "name": "active opinion editing defers refresh without reading new body",
+      "ok": true,
+      "elapsedMs": 15431
+    },
+    {
+      "scenario": "text-auto",
+      "name": "unhandled harness failure",
+      "ok": false,
+      "error": "Error: timeout: text-auto text-auto.txt文件位置/controlled/text-auto.txt重新读取修改意见用默认应用打开在文件夹中显示另存为…文件已变化。当前内容和意见保持不变，重新读取可查看新内容。P20-txt-v3\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled reading line\nControlled r"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 51
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 51
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v1",
+      "atMs": 51
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "hint",
+      "atMs": 5060
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "hint",
+      "atMs": 10068
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v2",
+      "atMs": 10068
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 15379
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v3",
+      "atMs": 15379
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v3",
+      "mode": "content",
+      "atMs": 15410
+    }
+  ],
+  "unexpected": [],
+  "realElapsedMs": 20439,
+  "clock": "Unmodified Date/timers; focus/active events are controlled inputs, not native lifecycle proof.",
+  "scope": "Real Chromium/StrictMode/OpenedFileView and production Office workers; IPC is synthetic and no Tauri OS read or user data is accessed."
+}
+{"diagnosticEvents":142}

@@ -1,0 +1,231 @@
+{
+  "task": "Independent P20 parent browser validation",
+  "checkedAtUtc": "2026-10-09T20:49:22.350410+00:00",
+  "status": "passed_in_controlled_browser_scope",
+  "sourceCommit": "fa235998a70a4aa010ed1a4cb34bebd4b1c0c0dd",
+  "backendReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/backend-independent-review.json",
+    "sha256": "ed8dc7bc821e6dd9f7e633cd9ddbd49487e48efc25e6522f0ba865a10d2370e9",
+    "bytes": 3233
+  },
+  "sourceInputs": {
+    "record": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/source-inputs.json",
+      "sha256": "2cb613b03f60a113317fd76f2894ffea5818b9ebd905e0f74b2d997e950f5036",
+      "bytes": 70108
+    },
+    "count": 640,
+    "matchedCurrentAtPostRunCheckpoint": true,
+    "allMatchInstalledCandidateCommittedInputs": true,
+    "boundary": "Root later released production source for P17; do not treat subsequent working edits as browser-tested or as changes to installed fa235998."
+  },
+  "method": {
+    "browser": "Installed Chromium via task-owned headless process and temporary profile",
+    "actualComponents": [
+      "React StrictMode",
+      "OpenedFileView",
+      "Production file revision controller",
+      "Production DOCX and XLSX parser workers and views"
+    ],
+    "controlledBoundary": "Only Tauri invoke is replaced with synthetic revision/capture/text responses. No OS file reads, original user data or Agent calls.",
+    "clock": "Unmodified Date/timers; actual five-second monitor and 5.25-second no-retry windows. Controlled focus/active inputs are not native lifecycle evidence.",
+    "content": "Public controlled repository fixtures, version marker mutations and malformed XML; not private documents.",
+    "harnessBounds": "Runner watchdog 180 seconds, sequence deadline 150 seconds; screenshot acknowledgement retains original five-second limit."
+  },
+  "initialRun": {
+    "result": "harness_failure",
+    "exitCode": 1,
+    "passedChecksBeforeFailure": 6,
+    "reason": "Five-second screenshot acknowledgement timed out. Raw result retained; not counted as a product failure.",
+    "observations": "A late Vite document reload was recorded. Screenshot label/ack state can desynchronize across reload; the historical cause is not uniquely proven.",
+    "correction": "An announced attempted five-to-twenty-second screenshot-wait edit did not match the source; effective second-run harness retained five seconds. No product change occurred between runs.",
+    "diagnostics": {
+      "events": 142,
+      "runtimeExceptions": 0,
+      "networkLoadingFailures": 0,
+      "documentResponseTimes": [424739.710544, 424772.356316]
+    },
+    "resultFile": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.json",
+      "sha256": "f4971166f5dd2495f81ce40b03de106d44a0396ee61bd3d45ec0551b9187e9d5",
+      "bytes": 4688
+    },
+    "stdout": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.txt",
+      "sha256": "4d010c30198b6766f664d0ac6ccd541d0eb319301463387499951062369e4831",
+      "bytes": 4713
+    },
+    "stderr": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.stderr.txt",
+      "sha256": "4079cc601b21b83f1e7261ff83cc354519551bad47a3a8dbb657edd07dc659c6",
+      "bytes": 12990
+    }
+  },
+  "finalRun": {
+    "result": "passed",
+    "exitCode": 0,
+    "checksPassed": 28,
+    "checksFailed": 0,
+    "realElapsedMs": 53897,
+    "unexpectedIpc": [],
+    "diagnostics": {
+      "events": 140,
+      "runtimeExceptions": 0,
+      "networkLoadingFailures": 0,
+      "documentResponseTimes": [424850.658171, 424850.787459]
+    },
+    "resultFile": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.json",
+      "sha256": "6a83d42361f98cd7b93c8bfefe539acf386d7585383a50d98b5d4a06eed4a439",
+      "bytes": 11856
+    },
+    "stdout": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.txt",
+      "sha256": "7ec8be4e3131175014c0f0acbdc69c4ce5d6f868d2f866766feeb40db8e67be4",
+      "bytes": 11881
+    },
+    "stderr": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.stderr.txt",
+      "sha256": "6a1c53d6959c7e524fe2b7c454b5751788f34dd7b076412e47efacb46654a4b4",
+      "bytes": 12708
+    }
+  },
+  "coverage": [
+    "Real periodic metadata hint leaves unchanged text and DOM intact; pending changed text keeps prior snapshot until checked read succeeds.",
+    "Hidden selection pauses checking; reactivation obtains a full content result.",
+    "Active opinion editing defers automatic content replacement; explicit reread retains the old opinion and original content identity.",
+    "Missing, changing and pending results retain old content, give explicit stale status and stop automatic retry across focus/hide/reopen and a full poll window.",
+    "DOCX and XLSX initial previews use actual production workers. New capture stays staged while prior rendered content remains; successful parser result publishes without duplicate child capture.",
+    "Malformed DOCX/XLSX XML is rejected by actual workers; prior successful snapshot remains and monitor stops.",
+    "Hidden readPending capture does not start another capture or automatic check on reopen; old successful Office content stays available.",
+    "No send/open/save/Agent IPC invoked."
+  ],
+  "screenshots": [
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/feedback-version-protected.png",
+        "sha256": "f8c1261c34654c00ebe244d89f065626a419a84593c1bf0e1f335e1d5e6cdf1c",
+        "bytes": 90580
+      },
+      "viewedByReviewer": true,
+      "observation": "Text version 3 and changed-file notice remain with the retained opinion textarea."
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/office-staged-workbook.png",
+        "sha256": "5b175831dd477104dc2303e6466c773e0f4f479b3ea969ac1d69c9c6af488d41",
+        "bytes": 53842
+      },
+      "viewedByReviewer": true,
+      "observation": "Actual worksheet shows the successful version-2 cell marker with ordinary typed values."
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/office-pending-old-document.png",
+        "sha256": "500112cb710e556c1a7c5078ac1aed4bc2bce0831cf8effa8a9bb928ed5454cd",
+        "bytes": 54181
+      },
+      "viewedByReviewer": true,
+      "observation": "Prior successful DOCX version 2 remains visible with the waiting/paused notice."
+    }
+  ],
+  "screenshotsBoundary": "Current final screenshots inspected; reused filenames may replace images from the initial harness-failure run. Not full installed-app window screenshots.",
+  "harnessInputs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/serve.mjs",
+      "sha256": "b216d5acb76a98dc9ea0fd5ae0e4a93ac353b0c15522cabaf8c2540aad054790",
+      "bytes": 449
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/run.mjs",
+      "sha256": "4a8bee58fef4755f61b7f7e73495c7281cbda05610fe6ac082a6c6bd59880048",
+      "bytes": 4965
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/fixture.tsx",
+      "sha256": "51164d712cdb6644f6ca78dddd28573697399d16ae414d654c408d8813c310d3",
+      "bytes": 12857
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/index.html",
+      "sha256": "09050af5a290dea2e1a5e9b877eb42e5cc770cd01581ebce4931b21cb79c9172",
+      "bytes": 653
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/captures.json",
+      "sha256": "562da40ca8ac2e8e2eb0f986e4f29b135394a7a617fbb93a5df01794ee33a262",
+      "bytes": 7309
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/capture-provenance.json",
+      "sha256": "7eb85b48d071a1e8246bf1fc200d838e149906d083f8fc97b7bb63635c426b9f",
+      "bytes": 563
+    }
+  ],
+  "rawPreservation": [
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.json",
+        "sha256": "f4971166f5dd2495f81ce40b03de106d44a0396ee61bd3d45ec0551b9187e9d5",
+        "bytes": 4688
+      },
+      "originalBytes": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.raw.txt",
+        "sha256": "f4971166f5dd2495f81ce40b03de106d44a0396ee61bd3d45ec0551b9187e9d5",
+        "bytes": 4688
+      },
+      "sameParsedJson": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.json",
+        "sha256": "6a83d42361f98cd7b93c8bfefe539acf386d7585383a50d98b5d4a06eed4a439",
+        "bytes": 11856
+      },
+      "originalBytes": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.raw.txt",
+        "sha256": "6a83d42361f98cd7b93c8bfefe539acf386d7585383a50d98b5d4a06eed4a439",
+        "bytes": 11856
+      },
+      "sameParsedJson": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.diagnostics.json",
+        "sha256": "f8efd9a14eb10a9c13ff679df7b9869e5c8216feadd4e3208a29bfb1bf5e2ce8",
+        "bytes": 282004
+      },
+      "originalBytes": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-first.diagnostics.raw.txt",
+        "sha256": "997fe36e436e0aff1189d6b4ec65662ae9a3f5400fb5f653d82de63d56ff09c2",
+        "bytes": 282003
+      },
+      "sameParsedJson": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.diagnostics.json",
+        "sha256": "96e2778c7bb4b24eeede104b3c0aa14bde39ff4b6d6e46622137b8adf0ab0708",
+        "bytes": 267307
+      },
+      "originalBytes": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/parent-second.diagnostics.raw.txt",
+        "sha256": "b70078783e4ceec1f822576ee29bc2c04aff7f66977833ae25bee27e281a0802",
+        "bytes": 267306
+      },
+      "sameParsedJson": true
+    }
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/cleanup.json",
+    "sha256": "d985072a0cfff0d4846b29fafcec66cc5666dfb597170852014e50e8fbc8e42d",
+    "bytes": 887
+  },
+  "limitations": [
+    "Dev Chromium and controlled IPC are not packaged Tauri/WebKit/CSP/native file-access verification.",
+    "No OS/TCC read slot timing, actual missing files or platform permission behavior proved by this browser fixture.",
+    "No sustained memory or resource-performance measurement; recorded elapsed time is only this finite sequence.",
+    "Product reading-position 23 checks are separate evidence and not re-counted here.",
+    "Installed native P20 acceptance remains root-owned; no real Agent or user-data interaction."
+  ]
+}

@@ -1,0 +1,491 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "text-auto",
+      "name": "real 5s timer uses metadata hint without reread or DOM replacement",
+      "ok": true,
+      "elapsedMs": 5084
+    },
+    {
+      "scenario": "text-auto",
+      "name": "changed text keeps old snapshot while next read is pending",
+      "ok": true,
+      "elapsedMs": 10068
+    },
+    {
+      "scenario": "text-auto",
+      "name": "new checked text publishes after read success",
+      "ok": true,
+      "elapsedMs": 10096
+    },
+    {
+      "scenario": "text-auto",
+      "name": "hidden selection schedules no check for a full real poll interval",
+      "ok": true,
+      "elapsedMs": 15349
+    },
+    {
+      "scenario": "text-auto",
+      "name": "reactivation forces content check and fresh text",
+      "ok": true,
+      "elapsedMs": 15379
+    },
+    {
+      "scenario": "text-auto",
+      "name": "active opinion editing defers refresh without reading new body",
+      "ok": true,
+      "elapsedMs": 15416
+    },
+    {
+      "scenario": "text-auto",
+      "name": "explicit reread retains old opinion with original content identity",
+      "ok": true,
+      "elapsedMs": 15582
+    },
+    {
+      "scenario": "text-missing",
+      "name": "missing keeps old content with accurate stale notice",
+      "ok": true,
+      "elapsedMs": 15665
+    },
+    {
+      "scenario": "text-missing",
+      "name": "missing does not retry after focus/hide/reopen or next poll",
+      "ok": true,
+      "elapsedMs": 20919
+    },
+    {
+      "scenario": "text-changing",
+      "name": "changing keeps old content with accurate stale notice",
+      "ok": true,
+      "elapsedMs": 21003
+    },
+    {
+      "scenario": "text-changing",
+      "name": "changing does not retry after focus/hide/reopen or next poll",
+      "ok": true,
+      "elapsedMs": 26259
+    },
+    {
+      "scenario": "text-pending",
+      "name": "pending keeps old content with accurate stale notice",
+      "ok": true,
+      "elapsedMs": 26344
+    },
+    {
+      "scenario": "text-pending",
+      "name": "pending does not retry after focus/hide/reopen or next poll",
+      "ok": true,
+      "elapsedMs": 31600
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx initial real worker preview ready",
+      "ok": true,
+      "elapsedMs": 31680
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx parent stages capture while retaining old rendered document",
+      "ok": true,
+      "elapsedMs": 31708
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx publishes actual parser success with no duplicate child capture",
+      "ok": true,
+      "elapsedMs": 31734
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx actual worker rejection retains prior content and explicit stale notice",
+      "ok": true,
+      "elapsedMs": 31761
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx parser rejection halts automatic checks",
+      "ok": true,
+      "elapsedMs": 37014
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx hidden readPending stops checks and new OS-capture attempts",
+      "ok": true,
+      "elapsedMs": 42402
+    },
+    {
+      "scenario": "office-docx",
+      "name": "docx readPending preserves old successful snapshot",
+      "ok": true,
+      "elapsedMs": 42402
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx initial real worker preview ready",
+      "ok": true,
+      "elapsedMs": 43045
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx parent stages capture while retaining old rendered document",
+      "ok": true,
+      "elapsedMs": 43072
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx publishes actual parser success with no duplicate child capture",
+      "ok": true,
+      "elapsedMs": 43097
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx actual worker rejection retains prior content and explicit stale notice",
+      "ok": true,
+      "elapsedMs": 43258
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx parser rejection halts automatic checks",
+      "ok": true,
+      "elapsedMs": 48509
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx hidden readPending stops checks and new OS-capture attempts",
+      "ok": true,
+      "elapsedMs": 53896
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "xlsx readPending preserves old successful snapshot",
+      "ok": true,
+      "elapsedMs": 53897
+    },
+    {
+      "scenario": "office-xlsx",
+      "name": "no send/open/save/Agent IPC",
+      "ok": true,
+      "elapsedMs": 53897,
+      "detail": []
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 40
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 41
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v1",
+      "atMs": 41
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "hint",
+      "atMs": 5057
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "hint",
+      "atMs": 10060
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v2",
+      "atMs": 10060
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 15358
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v3",
+      "atMs": 15358
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_check_revision",
+      "version": "v3",
+      "mode": "content",
+      "atMs": 15395
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 15553
+    },
+    {
+      "scenario": "text-auto",
+      "cmd": "file_delivery_read_text",
+      "version": "v4",
+      "atMs": 15556
+    },
+    {
+      "scenario": "text-missing",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 15610
+    },
+    {
+      "scenario": "text-missing",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 15610
+    },
+    {
+      "scenario": "text-missing",
+      "cmd": "file_delivery_read_text",
+      "version": "v1",
+      "atMs": 15611
+    },
+    {
+      "scenario": "text-missing",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 15643
+    },
+    {
+      "scenario": "text-changing",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 20949
+    },
+    {
+      "scenario": "text-changing",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 20949
+    },
+    {
+      "scenario": "text-changing",
+      "cmd": "file_delivery_read_text",
+      "version": "v1",
+      "atMs": 20949
+    },
+    {
+      "scenario": "text-changing",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 20981
+    },
+    {
+      "scenario": "text-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 26290
+    },
+    {
+      "scenario": "text-pending",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 26290
+    },
+    {
+      "scenario": "text-pending",
+      "cmd": "file_delivery_read_text",
+      "version": "v1",
+      "atMs": 26290
+    },
+    {
+      "scenario": "text-pending",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 26321
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 31628
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 31628
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_read_docx",
+      "version": "v1",
+      "atMs": 31630
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 31659
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 31685
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_read_docx",
+      "version": "v2",
+      "atMs": 31685
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 31721
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 31739
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_read_docx",
+      "version": "v3",
+      "atMs": 31740
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 37015
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_read_docx",
+      "version": "v2",
+      "atMs": 37018
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 37034
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 37047
+    },
+    {
+      "scenario": "office-docx",
+      "cmd": "file_delivery_read_docx",
+      "version": "v4",
+      "atMs": 37047
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 42509
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 42509
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_read_workbook",
+      "version": "v1",
+      "atMs": 42510
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 43045
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v1",
+      "mode": "content",
+      "atMs": 43050
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_read_workbook",
+      "version": "v2",
+      "atMs": 43050
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 43087
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 43237
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_read_workbook",
+      "version": "v3",
+      "atMs": 43237
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_inspect_selected",
+      "atMs": 48509
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_read_workbook",
+      "version": "v2",
+      "atMs": 48512
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 48527
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_check_revision",
+      "version": "v2",
+      "mode": "content",
+      "atMs": 48542
+    },
+    {
+      "scenario": "office-xlsx",
+      "cmd": "file_delivery_read_workbook",
+      "version": "v4",
+      "atMs": 48542
+    }
+  ],
+  "unexpected": [],
+  "realElapsedMs": 53897,
+  "clock": "Unmodified Date/timers; focus/active events are controlled inputs, not native lifecycle proof.",
+  "scope": "Real Chromium/StrictMode/OpenedFileView and production Office workers; IPC is synthetic and no Tauri OS read or user data is accessed."
+}
+{"diagnosticEvents":140}

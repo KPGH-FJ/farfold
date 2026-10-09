@@ -1,0 +1,26 @@
+{
+  "checkedAtUtc": "2026-10-09T20:48:05.020472+00:00",
+  "status": "passed",
+  "sourceCommit": "fa235998a70a4aa010ed1a4cb34bebd4b1c0c0dd",
+  "authorization": "Root explicitly authorized removal of only this verified duplicate candidate bundle after independent installation/data checks.",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "removedOnlyExactDuplicateBundle": true,
+  "candidateMatchedFormalAndArchiveBeforeRemoval": true,
+  "candidateAbsentAfter": true,
+  "formalAppRetained": "/Applications/Farfold.app",
+  "formalFilesUnchanged": true,
+  "formalFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "234343ce67e4d6b99c2611e503dd6e437bbf89a986d2786dbed7870b304a8e94",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "strictFormalSignatureAfter": "passed",
+  "archiveRetained": "src-tauri/target/internal-candidate/2026-10-10-fa235998/Farfold-0.1.7-fa235998.zip",
+  "archiveSha256": "51276084bab4abb66a065bb1eb8d1a9f0b620810027ec8f23c42185db6f6b574",
+  "archiveBytes": 12824667,
+  "installIndependentSha256": "27d137930b9e7f8d680b4c8c5161289f7a06cd05abc2d08804fe5e77c7cf998f",
+  "formalOrAgentLaunchedOrQuit": false,
+  "nativeUiStillUnverified": true
+}

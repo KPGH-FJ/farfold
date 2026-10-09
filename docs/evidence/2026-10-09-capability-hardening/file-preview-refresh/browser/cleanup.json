@@ -1,0 +1,22 @@
+{
+  "checkedAtUtc": "2026-10-09T20:49:22.349938+00:00",
+  "status": "completed",
+  "server": {
+    "ownedPid": 52975,
+    "command": "node docs/evidence/2026-10-09-capability-hardening/file-preview-refresh/browser/serve.mjs",
+    "action": "SIGTERM sent only after exact command ownership check",
+    "toolSession": 3393,
+    "observedExitCode": 143,
+    "claim": "Signal-terminated task-owned Vite server, not exit 0."
+  },
+  "browser": {
+    "runnerSessions": [67287, 70155],
+    "exitCodes": [1, 0],
+    "ownedProfilePrefix": "farfold-p20-parent-chrome-",
+    "remainingOwnedChromeProcesses": 0,
+    "profileCleanup": "Runner finally removes its exact mkdtemp profile after own process cleanup."
+  },
+  "remainingOwnedServerProcesses": 0,
+  "formalAppOrAgentStartedStoppedOrInspected": false,
+  "cache": "Task-owned regenerable output/2026-10-10-p20-parent-browser/.vite retained."
+}

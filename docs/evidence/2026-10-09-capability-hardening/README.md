@@ -2,11 +2,13 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：正式图片修复已复验，继续文件自动刷新
+## 当前衔接：自动刷新已安装分项复验，继续大文件能力
 
-最新衔接：图片修复 `6c36cae0` 已提交并安装，[候选独立核验](docx-image-fix-candidate/candidate-independent.json)9/9、[安装独立核验](docx-image-fix-candidate/install-independent.json)通过，三份217,400条数据一致。[正式图片复验](docx-image-fix-candidate/installed-docx-images.json)确认PNG/JPEG、EXIF6方向、重读及收起重开成功，合并单元格详情可打开返回。复用已有受控对话，没有新请求或权限变更；正常退出后原7项未发内容保持。唯一正式应用为 `/Applications/Farfold.app`，重复包已精确移除。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)原文保留。全部122项及29家八项标准保持；继续P20自动检查/刷新，PPTX方案验证仍有真实显示与生命周期缺口。
+最新正式应用为 `fa235998` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`。[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
 
-P20 自动检查、刷新与阅读位置保留已完成源码整合及独立复核，隐藏、迟到读取、旧状态覆盖新预览的有效反例已修正。[七项工程检查](file-refresh-checks/final-verification.json)通过：1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。子预览受控浏览器23项通过；父层实际浏览器与正式安装复验接续，未关闭P20。
+P20 [七项工程检查](file-refresh-checks/final-verification.json)通过：1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。子预览受控浏览器23项、[父层实际浏览器](file-preview-refresh/parent-browser-independent.json)28项通过；后者为实际组件/Office解析器与模拟Tauri接口，不代替上述正式WebKit证据。隐藏、迟到读取和旧状态覆盖新预览的有效反例已修正。其他格式、真实Agent改写、Windows和全量122项/29家八项标准保持各自证据边界。
+
+下一片P17大文件流式核验、分块查看、可取消另存及退出保护正在开发；源码变化不代表已进入当前正式安装。PPTX与工作树设计研究仍有未关闭条件。此前[af66实机图片失败](eighth-candidate/installed-docx-first.json)和[6c36图片修复成功](docx-image-fix-candidate/installed-docx-images.json)保留，均为当时范围。
 
 2026-10-10 图片修复衔接：[同源WebKit反例与修复](docx-image-csp/receipt.json)及[独立复核](docx-image-csp/independent-review.json)已完成，生产配置仅在图片源增加本地blob，其他来源和指令保持。该轮修复前正式应用为af66f006，图片失败保留；其后6c36安装及分项成功见首段。修复首轮[全仓检查](docx-image-fix-checks/receipt.json)1,059输入未变，前端280文件/3,123项及类型/打包/Rust静态检查通过；Rust1,177通过、1项协议分类测试失败、5项忽略，当时另有并行PPTX研究文件排版问题。其后[真实配置锁反例与夹具修正](protocol-error-timing/receipt.json)保留原错误分类断言，并使派发前等待与响应超时分别有界；原失败具体调度未捕获。[最终整合](docx-image-fix-checks-final/final-verification.json)已七项通过，前端3,123项、Rust1,179项/5项忽略，1,059输入匹配。只有Rust测试文件在首轮后变化，因此前端/类型/打包复用字节相同输入的成功记录，最终重跑全仓格式及Rust检查。修复安装的私有退出记录、元数据恢复副本和217,400条新基线已完成；之后候选、安装及实机结果见首段。
 

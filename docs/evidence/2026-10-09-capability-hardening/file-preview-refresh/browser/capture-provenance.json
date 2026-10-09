@@ -1,0 +1,13 @@
+{
+  "scope": "Controlled IPC payload seeds; version text mutations are synthetic and not new disk capture proof. Real production workers parse each payload.",
+  "seeds": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/01-text-values.docx",
+      "sha256": "0f6d5eae8a7d5d26e807eff7a9823a21bd93997a3f19e03295f753e3465399fd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/browser/backend-capture.json",
+      "sha256": "ccff6c0c106332eee85e796908a431cf11285bb5e2077e2e358862a41bcc8bf6"
+    }
+  ]
+}
