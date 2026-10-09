@@ -1140,7 +1140,7 @@ export function ThreadView({
             </ErrorNotice>
           )}
           {draftComposerRef ? (
-            <div ref={draftComposerRef} />
+            <div className="prepared-composer-host" ref={draftComposerRef} />
           ) : (
             <Composer
               contextChips={

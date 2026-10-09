@@ -12,10 +12,6 @@
 corepack pnpm exec vitest run --config docs/evidence/2026-10-09-prototype07-landing/controlled-render/vitest.config.ts
 ```
 
-工作台样例由 `src/components/Workbench.landing-render.test.tsx` 生成。每次生成页面都会刷新画册目录和 `production.css`。全部生成完成后执行格式化，生成源码和呈现结果一起保留，便于复核来源。
-
-```sh
-corepack pnpm exec prettier --write 'docs/evidence/2026-10-09-prototype07-landing/controlled-render/*.{html,css,mjs,ts,tsx,md}'
-```
+工作台样例由 `src/components/Workbench.landing-render.test.tsx` 生成；准备完成后的首发输入区由 `prepared-portal-render.test.tsx` 使用正式 EmptyState 编辑区与 ThreadView 挂载位置生成。每次生成刷新画册目录和 `production.css`。HTML 与生成 CSS 保留原始字节，已在 `.prettierignore` 中精确排除；只格式化生成器源码及 Markdown。`prepared-portal-before.css` 冻结安装版修正前的级联，不随生成器刷新。
 
 浏览器核对、截图和最终测试结果由同级证据记录单独说明。

@@ -209,9 +209,13 @@ src-tauri/src/browser_workspace/fixtures/native-directory-observation.json
 # Production-component visual receipts retain the exact rendered markup and CSS.
 docs/evidence/2026-10-09-prototype07-landing/controlled-render/*.html
 docs/evidence/2026-10-09-prototype07-landing/controlled-render/production.css
+docs/evidence/2026-10-09-prototype07-landing/controlled-render/prepared-portal-before.css
 # Completed full UI audit is historical evidence, not maintained product source.
 docs/evidence/2026-10-08-ui-coverage-audit/
 
 # Raw candidate receipts preserve their recorded bytes.
 docs/evidence/2026-10-09-prototype07-landing/candidate.json
 docs/evidence/2026-10-09-prototype07-landing/candidate-inputs.json
+
+docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/candidate.json
+docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/candidate-inputs.json

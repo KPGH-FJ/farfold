@@ -1,0 +1,72 @@
+{
+  "startedAtUtc": "2026-10-09T04:36:45.549705+00:00",
+  "candidateCommit": "a085267220a3013e13257760d02a1ae785e85d39",
+  "phase": "installedVerifiedNotLaunched",
+  "userConfirmedSavedAndReadyToInstall": true,
+  "normalQuitObservedByRootAgent": true,
+  "forcedQuit": false,
+  "copyStarted": true,
+  "installed": true,
+  "launched": false,
+  "realAgentInvoked": false,
+  "dataRetentionComparisonPending": true,
+  "candidateVerification": {
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+    "signature": "ad-hoc; not notarized"
+  },
+  "beforeSnapshot": {
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "symlink": 328,
+        "special": 0
+      },
+      "webkit": {
+        "directory": 131,
+        "file": 86,
+        "symlink": 0,
+        "special": 0
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "symlink": 0,
+        "special": 0
+      }
+    },
+    "sha256": "32faf29408584084c46195db863ac7ba8f480500e3617e3146006183ac0de389",
+    "rawMode": "0600",
+    "rawBytes": 59353186,
+    "summarySha256": "270ccc7ed7d87ba575711d0898e154eafe51d24115157ab2f36e5be0cc794b93"
+  },
+  "formalAppProcessesBefore": 0,
+  "installedVerification": {
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+    "signature": "ad-hoc; not notarized"
+  },
+  "formalAppProcessesAfter": 0,
+  "onlyFormalAppReplaced": true,
+  "installedExactFiveFiles": true,
+  "installedFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "8768d20b59bf3be9e6b2e7a722dfde1715a011006f51208250892ea40b1baaca",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archiveSha256": "a4277bc90e6ec1c8020c7568069940dd4646276b529bffa8739a6ae695431652",
+  "sourceInputsVerified": 806,
+  "receiptHashes": {
+    "candidate": "786e5a27097006c1056498420e5c5b37671e18b20b7f256337c9c2bb72a6be88",
+    "inputs": "9f83da578f204f507d26cc5ea973c4961be9fe562b40c266c087c16b62838f18",
+    "independent": "9660e36d3056b382c658d715db35ac7ef2364a6557040d3fe369bf17e3f044bf"
+  },
+  "completedAtUtc": "2026-10-09T04:36:46.504499+00:00"
+}

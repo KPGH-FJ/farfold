@@ -1,4 +1,18 @@
 /* Conversation 07: current production data, with quiet hierarchical controls. */
+.conversation-workspace .prepared-composer-host {
+  width: 100%;
+  max-width: 784px;
+  min-width: 0;
+}
+.prepared-composer-host > .empty-col {
+  width: 100%;
+  max-width: 100%;
+  text-align: left;
+}
+.prepared-composer-host .workspace-folder-bar {
+  margin: 0 24px 12px;
+  flex-wrap: wrap;
+}
 .conversation-attachments {
   padding: 10px 12px 0;
   min-width: 0;

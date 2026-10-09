@@ -1,0 +1,35 @@
+{
+  "comparedAt": "2026-10-09T04:37:41.160255+00:00",
+  "equal": true,
+  "window": "after normal exit, before replacement through replacement verification; before relaunch",
+  "counts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "special": 0,
+      "symlink": 328
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2,
+      "special": 0,
+      "symlink": 0
+    },
+    "webkit": {
+      "directory": 131,
+      "file": 86,
+      "special": 0,
+      "symlink": 0
+    }
+  },
+  "entryCount": 217365,
+  "sha256": "32faf29408584084c46195db863ac7ba8f480500e3617e3146006183ac0de389",
+  "contentAndUnixModesUnchanged": true,
+  "rawManifestsKeptPrivateInOutput": true,
+  "scope": [
+    "FarFold application data (ai.farfold.desktop)",
+    "WebKit/ai.farfold.desktop",
+    "Caches/ai.farfold.desktop"
+  ],
+  "keychainAccessed": false
+}

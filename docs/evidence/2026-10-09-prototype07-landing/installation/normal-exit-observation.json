@@ -1,0 +1,9 @@
+{
+  "observedAt": "2026-10-09T04:34:15.040409+00:00",
+  "userConfirmedSavedNormalExit": true,
+  "userAuthorizedInstall": true,
+  "normalQuitObserved": true,
+  "normalQuitAction": "CUA Command-Q on /Applications/Farfold.app; API reported App quit",
+  "forcedQuit": false,
+  "exactFormalExecutableProcessesAfter": 0
+}
