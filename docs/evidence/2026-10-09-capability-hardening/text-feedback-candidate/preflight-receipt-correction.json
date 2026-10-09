@@ -1,0 +1,32 @@
+{
+  "recordedAtUtc": "2026-10-09T22:30:09.526488+00:00",
+  "kind": "Installer receipt schema correction, no product or guard change",
+  "firstAttempt": {
+    "startedAtUtc": "2026-10-09T22:29:35.058072+00:00",
+    "candidateCommit": "cd66aae74480a2f30a982775adafbfbb6562ec32",
+    "phase": "failed",
+    "userAuthorizedContinuousDevelopment": true,
+    "normalQuitObservedByRootAgent": true,
+    "forcedQuit": false,
+    "copyStarted": false,
+    "installed": false,
+    "launched": false,
+    "realAgentInvoked": false,
+    "dataRetentionComparisonPending": true,
+    "failedDuring": "preflight",
+    "error": "RuntimeError: Development authorization and observed normal exit are incomplete",
+    "completedAtUtc": "2026-10-09T22:29:35.058469+00:00"
+  },
+  "originalReceiptHashes": {
+    "normal-exit-observation.json": "637b5ba54fa11ca51d131f5f3582ea4dac9b848db56fdd78872d02e31d8a797a",
+    "install-operation.json": "a2aceb6643b6228cc7691c99aab7b90b97dadc3588fb2b4538437710773d7f81"
+  },
+  "formalAppUnchangedBeforeRetry": true,
+  "formalAppProcessCount": 0,
+  "actualNormalQuitEvidence": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-candidate/installed-inspection-limit.json",
+    "sha256": "aef3eaca0971ff589e35b1a9fc467f59a90afe3d68e7dc2c96e19fa402ba4c11"
+  },
+  "correction": "Supplied required aliases from the actual prior normal-exit observation and existing user development authorization. Original mismatched-schema receipt and failed preflight remain private. Installer guard is unchanged.",
+  "next": "Rerun exact candidate verifier before any copying."
+}

@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "cd66aae74480a2f30a982775adafbfbb6562ec32",
+  "startedAt": "2026-10-09T22:28:57.194415+00:00",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "candidateReceipts": {
+      "passed": true
+    },
+    "exactSource": {
+      "passed": true,
+      "inputCount": 1116,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed"
+    },
+    "bundleFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "9a35f748b517e1704dd6af665dd35dd56421169b28e24f3230747a808007376d",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "plistAndEmbeddedManifest": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7"
+    },
+    "architecture": {
+      "passed": true,
+      "architecture": "arm64"
+    },
+    "signature": {
+      "passed": true,
+      "strictVerification": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+      "details": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=233075 flags=0x10002(adhoc,runtime) hashes=7277+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=1991d239291e08185bddfb8d37e519e1f858a594\nCandidateCDHashFull sha256=1991d239291e08185bddfb8d37e519e1f858a594524d088eed93e0f1fec2b66e\nHash choices=sha256\nCMSDigest=1991d239291e08185bddfb8d37e519e1f858a594524d088eed93e0f1fec2b66e\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=23445504\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=1991d239291e08185bddfb8d37e519e1f858a594\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+      "distribution": "ad-hoc; not notarized or publicly signed"
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "1657e1af0e6cf9367f963414d604af1ea6ccc9c4713cad43c4a0fa65006373af",
+      "bytes": 12852152,
+      "fileModes": {
+        "Contents/_CodeSignature/CodeResources": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/Info.plist": "0o644"
+      }
+    },
+    "formalAppUnchanged": {
+      "passed": true,
+      "formalAppReplaced": false
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "installed": false,
+  "launched": false,
+  "realAgentInvoked": false,
+  "claim": "Independent filesystem/source/signature/archive inspection only; no installed-app or real-Agent acceptance",
+  "inputReceipts": {
+    "candidateJsonSha256": "bbbac854cb0c2605db4f2417eac5e5739ec73df0bbd8c6aa744a2b08f26f3c6f",
+    "candidateInputsJsonSha256": "4f1876fcc9acbe5294f2c36065cd1c12f68e249a663ea006e88b3d620f19cb5f"
+  },
+  "completedAt": "2026-10-09T22:28:57.558013+00:00"
+}

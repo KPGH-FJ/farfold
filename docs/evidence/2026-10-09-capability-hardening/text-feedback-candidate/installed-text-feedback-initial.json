@@ -1,0 +1,143 @@
+{
+  "checkedAtUtc": "2026-10-09T22:47:11.069010+00:00",
+  "sourceCommit": "cd66aae74480a2f30a982775adafbfbb6562ec32",
+  "formalApp": "/Applications/Farfold.app",
+  "result": "partial_pass_keyboard_submit_failed_pending_fix",
+  "observer": "root via native cua_repl accessibility, screenshots, mouse and keyboard",
+  "evidenceBoundary": "Actual installed macOS WebKit UI with owned files. Screenshots were viewed in tool responses, not exported as standalone images. User-visible coordinates and SHA values were re-observed; separate private post-quit copies verify persistence. Not Windows or all Agent acceptance.",
+  "installChain": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/install-independent.json",
+    "sha256": "754d75dc4cbc688b9e7afe95554aa1e449e9ceb0c122a4e6c61cb615dbb1f8b0"
+  },
+  "duplicateCleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/duplicate-bundle-cleanup.json",
+    "sha256": "fca113fa731600a82e2333202c2055da0b3c8df2742d97eeb5186ee8f2f24f3e"
+  },
+  "agentRequest": {
+    "newConversations": 1,
+    "titleMarker": "FARFOLD_TEXT_CD66AAE7_20261010",
+    "beforeConversationCount": 115,
+    "afterConversationCount": 116,
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "service": "Agent existing configuration",
+    "purpose": "One exact two-link echo, explicitly no tools/files/web/path verification",
+    "completedObserved": true,
+    "toolCallsObserved": 0,
+    "configurationChanged": false,
+    "permissionsGranted": false,
+    "realFeedbackPromptSent": false,
+    "coldPermissionReconfirmationLeftPending": true
+  },
+  "fixtures": {
+    "path": "output/2026-10-10-text-feedback-install/native-fixtures.json",
+    "sha256": "f3ceac3c5b2a223ac8b80ea8d7d7af5b3c6ddf15d2c129821a4d30de3afcf04c"
+  },
+  "passed": [
+    {
+      "case": "Markdown rendered/source separation",
+      "observed": "Rendered view had no source selection control; explicit 原文 showed exact repeated text, Chinese, emoji, combining character and CRLF."
+    },
+    {
+      "case": "Real mouse repeated text",
+      "selected": "second repeat",
+      "anchor": {
+        "byteStart": 58,
+        "byteEnd": 64,
+        "startLine": 3,
+        "endLine": 3
+      },
+      "sha256": "acdec91d59048a662f1273865950202c850712d881c748b7a0a4621dbbf994d7",
+      "observed": "After explicit confirmation and joining conversation, composer showed exact half-open byte range and original digest, without sending."
+    },
+    {
+      "case": "Small file line selection",
+      "anchor": {
+        "byteStart": 37,
+        "byteEnd": 66,
+        "startLine": 3,
+        "endLine": 3
+      },
+      "observed": "Entered 3/3 using keyboard, activated select-lines by button click, then Return confirmed selected line. Draft includes CRLF; cold restored with historical-position wording."
+    },
+    {
+      "case": "Actual current large block selection",
+      "blockIndex": 1,
+      "globalBlockBytes": [131072, 262144],
+      "selected": "🙂END",
+      "anchor": {
+        "byteStart": 131075,
+        "byteEnd": 131082,
+        "startLine": 1,
+        "endLine": 1
+      },
+      "observed": "Native drag in block 2 selected exact emoji+END. A subsequent temporary line selection without confirmation did not retarget existing feedback; joining used original emoji range."
+    },
+    {
+      "case": "Partial long line",
+      "anchor": {
+        "byteStart": 131072,
+        "byteEnd": 131084,
+        "startLine": 1,
+        "endLine": 1
+      },
+      "observed": "Select-lines click then keyboard Return produced only displayed part; scope warning shown. Flipping to block 1 left original feedback intact, restored after normal quit."
+    },
+    {
+      "case": "Unsent composer preservation",
+      "observed": "Two explicitly joined opinions appended once in controlled composer. Neither sent; both SHA/ranges/text retained after normal restart."
+    },
+    {
+      "case": "Same path version change",
+      "oldSha256": "acdec91d59048a662f1273865950202c850712d881c748b7a0a4621dbbf994d7",
+      "newSha256": "8dcb16d7bf2cb81ef283ccb743e05c6ae480c0d0f4e73120b69de54b494a97f9",
+      "observed": "Changed only owned 80-byte fixture to 41-byte content. Actual new preview showed changed heading, previous line3/37-66 opinion remained in other-version group with old digest, never mapped into new two-line content."
+    },
+    {
+      "case": "Explicit whole-file target",
+      "observed": "On new version, confirmed line1 target then typed new opinion. Clicking whole-file removed range while preserving opinion/new digest. Old-version and large-file line opinions remained separate."
+    },
+    {
+      "case": "Cold restoration",
+      "observed": "Normal Cmd-Q then process absent. After relaunch, existing composer plus two file opinions were restored with original byte ranges/digests and explicitly historical positions. Permission confirmation left unconfirmed."
+    }
+  ],
+  "failed": [
+    {
+      "case": "Enter from numeric line field",
+      "observed": "Small file start/end 3/3: Enter from end-line input did not leave a usable selection. Large block2 end-line1: screenshot confirmed focused input and caret before Return; after Return focus ring cleared, source unselected and confirm button disabled. Clicking select-lines immediately afterward succeeded. Enter on the resulting focused confirmation button also succeeded.",
+      "classification": "Installed interaction failure; root cause not yet established. Not reported as generic keyboard failure or fixed.",
+      "investigation": "Delegated actual WebKit event-order reproduction; old browser suite tested button Enter, not numeric-input implicit submit."
+    }
+  ],
+  "inputObservations": [
+    {
+      "case": "Pointer endpoint crossed CR only",
+      "observed": "First drag endpoint selected repeat plus CR and confirmation stayed disabled. Moving endpoint slightly selected exact repeat and enabled confirmation. This is not counted as successful split-CRLF selection or product failure."
+    },
+    {
+      "case": "Tab/Enter attempt",
+      "observed": "Initial multi-key route changed numeric values but did not produce retained selection; later focused-input screenshot separately confirmed Enter issue."
+    }
+  ],
+  "normalExit": {
+    "method": "Cmd-Q",
+    "finalProcessCount": 0,
+    "activePromptBeforeQuit": false,
+    "coldPermissionPromptUnconfirmed": true
+  },
+  "dataRetention": {
+    "path": "output/2026-10-10-text-feedback-install/post-ui-draft-retention.json",
+    "sha256": "896490218c80c67b2a950de498802a5a16f65cdd214e8bf818b098ea4657ebe6"
+  },
+  "fixtureVersionChange": {
+    "path": "output/2026-10-10-text-feedback-install/native-fixture-version-change.json",
+    "sha256": "d91af160719c86e99d783f2ca7b84fa684ba2173d663b56169a1e2f1b7491cbc"
+  },
+  "remaining": [
+    "Fix and independently verify numeric-field Enter selection, then build/install and repeat relevant native paths.",
+    "Office/PDF region/image position feedback and P22 real Agent rework remain open.",
+    "P17 confirmed cancellation/unknown exit, Windows, 29-by-8 and other global gaps remain separate."
+  ]
+}

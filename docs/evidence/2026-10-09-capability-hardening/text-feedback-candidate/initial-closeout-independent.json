@@ -1,0 +1,195 @@
+{
+  "kind": "P21 initial installed text feedback independent evidence closeout",
+  "checkedAtUtc": "2026-10-09T22:49:55.820756+00:00",
+  "status": "evidence_and_data_consistent; native_keyboard_input_failure_retained_pending_fix",
+  "sourceCommit": "cd66aae74480a2f30a982775adafbfbb6562ec32",
+  "boundary": "Independent filesystem/hash/retained-copy review only. Root alone observed native UI, screenshots, mouse/keyboard and real Agent echo. This reviewer did not open or operate Farfold, send Agent input or observe those pixels.",
+  "checks": {
+    "candidateNineChecksAndInstallTenChecksReceiptsMatch": true,
+    "formalFiveFilesAndZipMatchInstalledCommit": true,
+    "exactDuplicateBundleAbsent": true,
+    "privateReferencedReceiptHashesMatch": true,
+    "postUiCopyIntegrityAndCaptureHashUnchanged": true,
+    "originalSevenUnsentEntriesExactValuesRetained": true,
+    "onlyOneComposerAndOneFeedbackGroupAddedWithinUnsentGroups": true,
+    "threeControlledOpinionsDistinguishOriginalAndNewVersions": true,
+    "twoJoinedRangeSectionsExactlyOnce": true,
+    "ownedFixtureCurrentHashesAndStoredOldBytesMatch": true,
+    "initialNativeFailureNotOverwritten": true
+  },
+  "receipts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/installed-text-feedback-initial.json",
+      "sha256": "914092e234cd979248e5fdcb30c388dfedbbe967b97bc58e28bcfc16125b93b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/install-independent.json",
+      "sha256": "754d75dc4cbc688b9e7afe95554aa1e449e9ceb0c122a4e6c61cb615dbb1f8b0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/candidate.json",
+      "sha256": "bbbac854cb0c2605db4f2417eac5e5739ec73df0bbd8c6aa744a2b08f26f3c6f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/candidate-inputs.json",
+      "sha256": "4f1876fcc9acbe5294f2c36065cd1c12f68e249a663ea006e88b3d620f19cb5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/candidate-independent.json",
+      "sha256": "9549a8fc43840c99442ac7fd4c85d7a7e148cd9fd62b9a355f792773c676b436"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/installed-data-retention.json",
+      "sha256": "43dbfb84480f574c5777ce1e64159fe494020acc721b9350843044e604030741"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "fca113fa731600a82e2333202c2055da0b3c8df2742d97eeb5186ee8f2f24f3e"
+    }
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-10-text-feedback-install/post-ui-draft-retention.json",
+      "sha256": "896490218c80c67b2a950de498802a5a16f65cdd214e8bf818b098ea4657ebe6"
+    },
+    {
+      "path": "output/2026-10-10-text-feedback-install/metadata-backup-receipt.json",
+      "sha256": "43614c2af0bb96097484abb3e474a6cdd91980d8ef1ee8595ba3b74386d65801"
+    },
+    {
+      "path": "output/2026-10-10-text-feedback-install/native-fixtures.json",
+      "sha256": "f3ceac3c5b2a223ac8b80ea8d7d7af5b3c6ddf15d2c129821a4d30de3afcf04c"
+    },
+    {
+      "path": "output/2026-10-10-text-feedback-install/native-fixture-version-change.json",
+      "sha256": "d91af160719c86e99d783f2ca7b84fa684ba2173d663b56169a1e2f1b7491cbc"
+    },
+    {
+      "path": "output/2026-10-10-text-feedback-install/check_post_ui_drafts.py",
+      "sha256": "3d92f538985cce44c10b70ae0fea296b679ae98f53f2b07a81cee6e6491fdd3c"
+    }
+  ],
+  "formalFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "9a35f748b517e1704dd6af665dd35dd56421169b28e24f3230747a808007376d",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archive": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-cd66aae7/Farfold-0.1.7-cd66aae7.zip",
+    "sha256": "1657e1af0e6cf9367f963414d604af1ea6ccc9c4713cad43c4a0fa65006373af",
+    "bytes": 12852152
+  },
+  "duplicatePath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "duplicateAbsent": true,
+  "formalProcessCountAtCheck": 0,
+  "data": {
+    "method": "Open the existing before backup immutable/read-only. Copy preserved post-ui main/WAL/SHM into a new private temporary directory; open only that disposable copy read-only with WAL replay, integrity_check and exact unsentWork comparison. Never open the original live database. Temporary copies removed at scope exit.",
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 4,
+        "existingEntriesUnchanged": 3,
+        "addedEntries": 1
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 2,
+        "existingEntriesUnchanged": 1,
+        "addedEntries": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3,
+        "addedEntries": 0
+      }
+    },
+    "originalEntriesComparedByValue": 7,
+    "captureFiles": {
+      "farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "farfold.sqlite3-wal": "a2f0fc4791d2cd8997d551e1ed27cc25ac5cb783acbf63bf8669cc2b895047cb",
+      "farfold.sqlite3-shm": "eec509e7dfa972376f91b338eda415d91a0d24149774c4c37b3121247cc5c535"
+    },
+    "beforeBackupSha256": "8aaeae3fd3834257bf410fa0ac0223da6d99e55a4f212b7303aedac69f40d302",
+    "copyIntegrity": "ok",
+    "protectedCopyHashesUnchangedAfterCheck": true,
+    "newFeedbackOpinionCount": 3,
+    "newFeedbackVersions": [
+      {
+        "kind": "retained_old_small_version",
+        "anchor": {
+          "kind": "text-range",
+          "byteStart": 37,
+          "byteEnd": 66,
+          "startLine": 3,
+          "endLine": 3
+        },
+        "sourceSha256": "acdec91d59048a662f1273865950202c850712d881c748b7a0a4621dbbf994d7",
+        "opinionNonempty": true
+      },
+      {
+        "kind": "retained_large_partial_line",
+        "anchor": {
+          "kind": "text-range",
+          "byteStart": 131072,
+          "byteEnd": 131084,
+          "startLine": 1,
+          "endLine": 1
+        },
+        "sourceSha256": "3dc9a696da8ad319a8a25aafc4d7d61d16b51eda3ae7ab98ae506f45bc9bb41a",
+        "opinionNonempty": true
+      },
+      {
+        "kind": "new_small_whole_file",
+        "anchor": null,
+        "sourceSha256": "8dcb16d7bf2cb81ef283ccb743e05c6ae480c0d0f4e73120b69de54b494a97f9",
+        "opinionNonempty": true
+      }
+    ],
+    "joinedSections": [
+      {
+        "byteRange": "58–64",
+        "occurrences": 1,
+        "sourceSha256": "acdec91d59048a662f1273865950202c850712d881c748b7a0a4621dbbf994d7",
+        "digestPresent": true
+      },
+      {
+        "byteRange": "131075–131082",
+        "occurrences": 1,
+        "sourceSha256": "3dc9a696da8ad319a8a25aafc4d7d61d16b51eda3ae7ab98ae506f45bc9bb41a",
+        "digestPresent": true
+      }
+    ],
+    "historicalPositionWordingOccurrences": 2,
+    "privacy": "No original composer/feedback/queue keys or text emitted. Comparison covers these unsent groups; it does not claim the whole database or conversation count remained unchanged during the authorized controlled Agent echo."
+  },
+  "fixtureOracle": {
+    "oldSmallOriginalBytes": 80,
+    "newSmallCurrentBytes": 41,
+    "largeCurrentBytes": 2097152,
+    "secondRepeatBytes": [58, 64],
+    "oldLine3Bytes": [37, 66],
+    "largeEmojiEndBytes": [131075, 131082],
+    "largeDisplayedLinePartBytes": [131072, 131084],
+    "oldSmallContentPreservedInPrivateReceipt": true
+  },
+  "nativeObservationRetained": {
+    "observer": "root, not this reviewer",
+    "partialPassedCases": 9,
+    "failedCases": 1,
+    "failure": "Enter from numeric line field leaves no usable selection; clicking select-lines then confirmation Return succeeded. Root cause and repair not established by this receipt.",
+    "agentBoundary": "Root records one controlled two-link echo under existing model/reasoning/configuration, no observed tools; this is not a real feedback/rework prompt or broader Agent acceptance.",
+    "remaining": [
+      "Numeric-input Enter fix needs independent event-order reproduction and later installed retest.",
+      "P21 region/image/Office feedback and P22 rework remain open.",
+      "Windows, P17 cancellation/unknown-exit and 29 by8 acceptance stay separate."
+    ]
+  },
+  "reviewExecutionNote": "First review script assumed release-manifest.json contained sourceCommit and stopped with KeyError before any database copy/read or receipt write. That manifest only carries release version/date. Source commit linkage is established by the existing candidate/input/install chain and matching signed bundle hashes, not an invented embedded commit field.",
+  "notRepeated": [
+    "Full source input comparison against WIP, build, broad tests and original installation manifest traversal were not repeated; preserved independently verified install-chain hashes checked instead.",
+    "No live user DB capture, source mutation, app launch/exit, permissions or cleanup operation."
+  ]
+}
