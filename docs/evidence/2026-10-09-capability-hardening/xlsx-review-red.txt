@@ -1,0 +1,96 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_preview.test.ts (7 tests | 1 failed) 26ms
+     × releases cancellation synchronously before an immediate replacement read 3ms
+ ❯ src/runtime/xlsx_parse.test.ts (22 tests | 5 failed) 99ms
+     × decodes ST_Xstring once per text run and preserves escaped marker text 4ms
+     × rejects unrecognized rich text instead of returning a false empty string <is><foreign:text xmlns:foreign="urn:controlled-future">lost</foreign:text></is> 1ms
+     × rejects unrecognized rich text instead of returning a false empty string <is><r><future>lost</future></r></is> 1ms
+     × rejects unrecognized rich text instead of returning a false empty string <is><t><future>lost</future></t></is> 1ms
+     × retains defaults for empty cells in styled rows and columns 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > decodes ST_Xstring once per text run and preserves escaped marker text
+AssertionError: expected [ 'Line1_x000D_Line2', …(2) ] to deeply equal [ 'Line1\rLine2', '_x0041_', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "Line1Line2",
+-   "_x0041_",
+-   "_x0041__x0041_",
++   "Line1_x000D_Line2",
++   "_x005F_x0041_",
++   "_x005F_x0041__x0041_",
+  ]
+
+ ❯ src/runtime/xlsx_parse.test.ts:94:51
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > rejects unrecognized rich text instead of returning a false empty string <is><foreign:text xmlns:foreign="urn:controlled-future">lost</foreign:text></is>
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > rejects unrecognized rich text instead of returning a false empty string <is><r><future>lost</future></r></is>
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > rejects unrecognized rich text instead of returning a false empty string <is><t><future>lost</future></t></is>
+AssertionError: expected Error: unexpected success to be an instance of XlsxError
+ ❯ rejected src/runtime/xlsx_parse.test.ts:11:15
+      9|     throw new Error("unexpected success");
+     10|   } catch (e) {
+     11|     expect(e).toBeInstanceOf(XlsxError);
+       |               ^
+     12|     if (code) expect((e as XlsxError).code).toBe(code);
+     13|   }
+ ❯ src/runtime/xlsx_parse.test.ts:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > retains defaults for empty cells in styled rows and columns
+AssertionError: expected { index: 2, hidden: false } to match object { index: 2, styleId: 2 }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "index": 2,
+-   "styleId": 2,
+  }
+
+ ❯ src/runtime/xlsx_parse.test.ts:107:35
+    105|   it("retains defaults for empty cells in styled rows and columns", ()…
+    106|     const result = parseWorkbook(workbookFixture('<row r="2" customFor…
+    107|     expect(result.sheet!.rows[0]).toMatchObject({index:2, styleId:2});
+       |                                   ^
+    108|     expect(result.sheet!.columns[0]).toMatchObject({min:1,max:2,styleI…
+    109|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > releases cancellation synchronously before an immediate replacement read
+AssertionError: expected { error: Error: busy { code: 'busy' } } to have property "value.sheet.id" with value 'sheet1'
+
+- Expected:
+"sheet1"
+
++ Received:
+undefined
+
+ ❯ src/runtime/xlsx_preview.test.ts:119:26
+    117|     ControlledWorker.instances.at(-1)!.ready();
+    118|     await cancelled;
+    119|     expect(await result).toHaveProperty("value.sheet.id", "sheet1");
+       |                          ^
+    120|     expect(ControlledWorker.instances).toHaveLength(2);
+    121|     expect(ControlledWorker.instances[0].terminate).toHaveBeenCalledTi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  6 failed | 23 passed (29)
+   Start at  22:09:56
+   Duration  238ms (transform 94ms, setup 0ms, import 141ms, tests 125ms, environment 0ms)
+

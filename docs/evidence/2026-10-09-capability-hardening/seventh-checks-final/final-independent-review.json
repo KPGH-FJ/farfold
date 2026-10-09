@@ -1,0 +1,468 @@
+{
+  "checkedAtUtc": "2026-10-09T14:54:21.432542+00:00",
+  "status": "completed_no_blocker_in_reviewed_scope",
+  "reviewer": "verification subagent",
+  "sourceBase": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "scope": [
+    "Independent read-only integration review of seventh increment frozen inputs, original logs, capability review chain, 122 IDs, protected documents, proposed 52-file source ownership and public evidence privacy.",
+    "The reviewer implemented directory-search changes; their independent code review is architecture's directory-search-independent.json. This checkpoint does not relabel self-review as independent code review."
+  ],
+  "inputs": {
+    "count": 962,
+    "path": "docs/evidence/2026-10-09-capability-hardening/seventh-test-fix-checks/inputs.json",
+    "sha256": "7a23f979101e3786e674a1bf425edb12a3bd591be1deeb9ebf1bc0595d89d495",
+    "allCurrentHashesMatch": true,
+    "changed": [],
+    "symlinks": [],
+    "differenceFromFullSevenChecks": [
+      "src-tauri/src/acp_client/process_stdio_tests.rs"
+    ]
+  },
+  "checks": {
+    "allSevenHaveSuccessfulResults": true,
+    "execution": "Root execution; reviewer read retained stdout and checked receipt/log hashes without rerunning tests/build.",
+    "reuseBoundary": "The only input change after seventh-checks-final is process_stdio_tests.rs, included by cfg(test) in process_stdio.rs:84. Frontend/type/build inputs remain identical. Final cargo fmt/clippy/all Rust tests and full formatting reran in seventh-test-fix-checks.",
+    "frontend": {
+      "files": 267,
+      "passed": 2983,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 1153,
+      "failed": 0,
+      "ignored": 5
+    },
+    "logHashes": {
+      "seventh-test-fix-checks/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "seventh-checks-final/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "seventh-checks-final/frontend.txt": "22e3c7924338026fa1db91493348ca29d91a4f3a415d2ccfea96fff34956a3a5",
+      "seventh-checks-final/build.txt": "5af258ab0c9e34a792414b6e1bfe9b47e935a0fc0a99905b3b1fed14e18b2a0b",
+      "seventh-test-fix-checks/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "seventh-test-fix-checks/clippy.txt": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "seventh-test-fix-checks/rust.txt": "f859fddc94fb32d0094d16d70670963884d9f7f0e7d0ea31ecae251f38bc1bd4"
+    },
+    "buildWarning": "Vite reports chunks larger than 500 kB; successful build is not warning-free.",
+    "preservedFailures": "Initial Rust immediate-pipe-close failure, import ordering, raw JSON formatting and output-drain red logs remain. Actual original inheriting child was not captured. The accepted output-drain finding is resolved in a later checkpoint without overwriting its original changes_required history."
+  },
+  "ownedSources": {
+    "count": 52,
+    "exactlyMatchesCurrentSourceConfigGitChanges": true,
+    "files": [
+      {
+        "path": ".prettierignore",
+        "sha256": "5af4172a184d18a200ed93093fa73788d1a58f67ece828ee936b74880f89b7c8",
+        "ownedByEvidence": ["raw browser evidence exclusions"]
+      },
+      {
+        "path": "package.json",
+        "sha256": "00b8830ab4a5523895f61cea9c271114ead8cb45955274e62752b7bd061b936b",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "pnpm-lock.yaml",
+        "sha256": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "public/xlsx-preview-notices.txt",
+        "sha256": "9bdc604b3cd99d89900068c2fa56803d93c5b1c71837850e7f3499f5d122a2b2",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+        "sha256": "8bbc1ba56203f2acaf008c5c429fe1e3f3dec8a5a816ddae3c4cde33566b19a4",
+        "ownedByEvidence": ["stdio-output-capture.json"]
+      },
+      {
+        "path": "src-tauri/src/browser_workspace/local_preview/directory_tests.rs",
+        "sha256": "5977929f4e2db098087d4e849842f07959956ebafb07b1d8c30cb6d5bb592502",
+        "ownedByEvidence": ["directory-search-fix.json"]
+      },
+      {
+        "path": "src-tauri/src/file_access/directory_search_tests.rs",
+        "sha256": "655daee159c172bc9c685c6d520a56af3fc0e795006c64f33e8f73e56fcb1626",
+        "ownedByEvidence": ["directory-search-fix.json"]
+      },
+      {
+        "path": "src-tauri/src/file_access/unix.rs",
+        "sha256": "33559696bbc273b5b5a24cb08d77469bb4faacc6b4feaae5fc435a3a4133d40c",
+        "ownedByEvidence": ["directory-search-fix.json"]
+      },
+      {
+        "path": "src-tauri/src/file_delivery.rs",
+        "sha256": "7c2af4f16ca7de3d06dc7386810a16bd6cffc69b6cdee2c6cc495044f6619768",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/file_delivery/workbook.rs",
+        "sha256": "d98bc6abd2d4df9fc6652fae7346348d1cb0749531a23812f1d11d1cd6b47a5f",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+        "sha256": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/file_delivery_commands.rs",
+        "sha256": "bc3b23c07071352d8755a9a51502364b58ef3a22508ca92fd617611054db9a53",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/file_read_check.rs",
+        "sha256": "e33af48eb0dd66ae42db93d245058a9bc888a060e7da0d6f4091378802c08c67",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/file_read_check_tests.rs",
+        "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "sha256": "bcb55eee2f68c05092b0e0275796dc70c38f7dcdd71aeb1114d73524ec3c311f",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/components/OpenedFileView.test.tsx",
+        "sha256": "2e2e69ef2bf33ae2add9f2c67504d01885d7d49c4c4295c6369882b1025475ea",
+        "ownedByEvidence": [
+          "visual-feedback/receipt.json",
+          "xlsx/root-ui-implementation.json"
+        ]
+      },
+      {
+        "path": "src/components/OpenedFileView.tsx",
+        "sha256": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac",
+        "ownedByEvidence": [
+          "visual-feedback/receipt.json",
+          "xlsx/root-ui-implementation.json"
+        ]
+      },
+      {
+        "path": "src/components/ThreadPage.tsx",
+        "sha256": "ccdc0618c3355575a859c0ce8d2fdcae56a9ffbe4d7ddfcd2f913f1d18d20a5d",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/components/VisualFilePreview.test.tsx",
+        "sha256": "9b70b497c03636784d0ddeb81c9ae374e86c103ca3bbf6b0b98536f30646c9c1",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/components/VisualFilePreview.tsx",
+        "sha256": "a6018ab16373247c1f7c68bc11cdda0f02305da8e4973e74d3d2a51dace06646",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/components/WorkbookFilePreview.css",
+        "sha256": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/components/WorkbookFilePreview.tsx",
+        "sha256": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/product-shell.css",
+        "sha256": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/drafts.ts",
+        "sha256": "ac7fb66157086f7ba203327916e7ea596215c60a9f4e6c42d6f16998ce6a4243",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/export_strings.ts",
+        "sha256": "bc693440a82959e5466ba73b05b12fb8760ef744a83f1b6ad53aec59320bda8b",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/feedback_strings.ts",
+        "sha256": "4e25d7c516ab146328a33cde17a0c106b65662db330cb5916addf9c9c5375129",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/file_feedback_anchor.persistence.test.ts",
+        "sha256": "529baa9f454a100f14a1b8f7ebb51109b9d0e7ecca2736b38df0b0f5f438808b",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/file_feedback_anchor.test.ts",
+        "sha256": "9d42d3b155513a79370965ab3d702dc57c20b15a2917f20589f3807ea9093e2f",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/file_feedback_anchor.ts",
+        "sha256": "b958930d836ea26dbdf8a3cfbf823c1fd5c5fd49a4505ab54283e547107f4c71",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/fixtures/xlsx-basic.xlsx",
+        "sha256": "7d531400913c9cbc21af93a3dd81b646941693ea8875debe778d11f63492b586",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/strings.test.ts",
+        "sha256": "2b04d6771fc0917ec48124649f9e1e1df759e044d404334b3f0da2aa9e9d0bdb",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/visual_feedback.ts",
+        "sha256": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/visual_feedback_strings.ts",
+        "sha256": "08a893676b7e0bae275f89dac1efd76cb45b75c2651ecd66e9560a131525ca40",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/runtime/workbook_strings.ts",
+        "sha256": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/workbook_view.test.ts",
+        "sha256": "85fe7854d369172ae46ebdc3480dc822337f469eb93fe904efe6f97acddbfe9f",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/workbook_view.ts",
+        "sha256": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129",
+        "ownedByEvidence": ["xlsx/root-ui-implementation.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_fixture.ts",
+        "sha256": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_format.test.ts",
+        "sha256": "636fc217b540e94681be03fdd14c604b1313b87660927a0f49d0a6f403f4d20d",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_format.ts",
+        "sha256": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_parse.test.ts",
+        "sha256": "99501e09b91ecbe3106607c166f7225361f58bf08d61a968defa7b360a907826",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_parse.ts",
+        "sha256": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_preview.test.ts",
+        "sha256": "d4c66e6749e94c3367dff6408bb1f8cb4e5d59079bc7b2ff57c018d5ca37a614",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_preview.ts",
+        "sha256": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_sheet.ts",
+        "sha256": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_styles.ts",
+        "sha256": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_types.ts",
+        "sha256": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_xml.ts",
+        "sha256": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/runtime/xlsx_xstring.ts",
+        "sha256": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d",
+        "ownedByEvidence": ["xlsx-core.json"]
+      },
+      {
+        "path": "src/workers/pdf_parser_diagnostics.test.ts",
+        "sha256": "eb86d2c11ce0cdb200be714560344a92c6a9bcb908ed275b6e2bf48f3bde1234",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/workers/pdf_parser_diagnostics.ts",
+        "sha256": "45421396cf1efb5a8cd2e2a667343b98ca15a93c289d4af05859e4bcd47013f3",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/workers/pdf_preview.worker.ts",
+        "sha256": "c19100788781ffc68fd0f1563da97308dfc8d2fc8ed4544a72f88751989f3da9",
+        "ownedByEvidence": ["visual-feedback/receipt.json"]
+      },
+      {
+        "path": "src/workers/xlsx_preview.worker.ts",
+        "sha256": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+        "ownedByEvidence": ["xlsx-core.json"]
+      }
+    ],
+    "historicalHashDifferences": [
+      {
+        "path": "src-tauri/src/file_delivery.rs",
+        "historicalReceipt": "docs/evidence/2026-10-09-capability-hardening/xlsx-core.json",
+        "historicalSha256": "2270995129776940348d340f1d8d793fd447d59a49f455ecec1b581353a01d7d",
+        "currentSha256": "7c2af4f16ca7de3d06dc7386810a16bd6cffc69b6cdee2c6cc495044f6619768"
+      },
+      {
+        "path": "src-tauri/src/file_delivery/workbook.rs",
+        "historicalReceipt": "docs/evidence/2026-10-09-capability-hardening/xlsx-core.json",
+        "historicalSha256": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8",
+        "currentSha256": "d98bc6abd2d4df9fc6652fae7346348d1cb0749531a23812f1d11d1cd6b47a5f"
+      },
+      {
+        "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+        "historicalReceipt": "docs/evidence/2026-10-09-capability-hardening/xlsx-core.json",
+        "historicalSha256": "824a66476c5d1b235acd546b6f6acf637ab4c669fd00594b4977d21fc40427c3",
+        "currentSha256": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608"
+      },
+      {
+        "path": "src/components/OpenedFileView.tsx",
+        "historicalReceipt": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/receipt.json",
+        "historicalSha256": "cf4adb67e5485812ebd347627297afc9677feb57596cc14e87531353860be1e8",
+        "currentSha256": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac"
+      },
+      {
+        "path": "src/components/OpenedFileView.test.tsx",
+        "historicalReceipt": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/receipt.json",
+        "historicalSha256": "e86ff136a2c5671613e1bce1802921da2c22408f822790910268e13bb6082337",
+        "currentSha256": "2e2e69ef2bf33ae2add9f2c67504d01885d7d49c4c4295c6369882b1025475ea"
+      }
+    ],
+    "historicalDifferencesExplained": "Three Rust files differ from xlsx-core only by import ordering, independently byte-reconstructed to prior hashes in xlsx/source-independent-review.json formatOnlyAddendum. OpenedFileView and its test differ from P21 handover by subsequent root XLSX integration, reviewed against xlsx/root-ui-implementation.json; no historical hash was overwritten."
+  },
+  "originalScopeIds": {
+    "originalCount": 122,
+    "planCount": 122,
+    "unique": true,
+    "sameSet": true,
+    "missing": [],
+    "extra": [],
+    "new01": "NEW-01 remains separately listed; macOS directory mode fix does not establish resolution of Desktop TCC wait."
+  },
+  "protectedDocuments": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "unchangedFromPriorIndependentCheckpoint": true
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "unchangedFromPriorIndependentCheckpoint": true
+    }
+  ],
+  "fileSizePolicy": {
+    "scope": "Frozen src, src-tauri/src and src-tauri/native .ts/.tsx/.rs/.css/.m/.h, excluding test/fixture/spec paths.",
+    "productionFilesChecked": 497,
+    "limitLines": 1500,
+    "overLimit": [],
+    "largest": {
+      "path": "src/components/Composer.tsx",
+      "lines": 1489
+    },
+    "allOwnedSourceCodeAtOrBelowLimit": true
+  },
+  "capabilityBoundaries": {
+    "directorySearch": "Current macOS controlled 0100/0300 fixtures prove explicit source capture/recheck, local preview and non-overwriting export paths. macOS 13+ selection is checked; 11/12 retain known old directory-read restriction. No Desktop TCC resolution, installed-app or cross-platform result claimed.",
+    "visualFeedback": "P21 pure/React tests and development/built Chromium paths establish file/page anchors and preserved version-specific drafts within controlled fixtures. PDF static import race has valid production-wrapper red/green, errors/cancel coverage and prior independent review. No installed WebKit, region/Office anchoring or Agent interpretation claim.",
+    "xlsx": "Bounded read-only XLSX content preview with controlled 48 parser/IPC, 63 UI-related, Rust archive/read-check and real Chromium 38 assertions. Excludes formula recalculation, full chart/layout fidelity, DOCX/PPTX and installed WebKit.",
+    "installedSearchExportCorrections": "ThreadPage focus, scoped sr-only style and metadata-specific privacy text are source corrections from sixth installed evidence, still awaiting seventh installed validation.",
+    "documentation": "Read the updated status/plan/evidence README diff. Engineering success, installed sixth version, upcoming seventh candidate and remaining P16/P21/P35/29-Agent work are distinguished."
+  },
+  "privacyReview": {
+    "proposedSourceFiles": 52,
+    "newEvidenceFilesObservedBeforeThisReceipt": 283,
+    "method": [
+      "Credential-pattern scan over proposed source and new public evidence found no private-key block, provider-token, credential URL or long literal Bearer value. This is a bounded heuristic, not a proof that arbitrary secrets are impossible.",
+      "Public candidate/install receipts contain summaries, counts and hashes; private output manifests, database copies, formal export and user content paths remain outside the proposed source/evidence addition. Existing protected README changes are not part of the proposed commit.",
+      "Twelve screenshot files have eight unique hashes and originate from controlled visual-feedback/XLSX browser harnesses; prior screenshot review plus the two remaining image inspections show synthetic materials.",
+      "The authored xlsx-basic fixture has six OOXML parts with synthetic values/formulas and no user metadata document. Two large PDF diagnostic event logs contain local 127.0.0.1:1458 responses/console events and no credential header fields.",
+      "Absolute path references observed describe this repository, dependency registry, normal app-data locations or private evidence locations; none exposes user document content or a credential in reviewed material."
+    ],
+    "findings": [],
+    "stagingBoundary": "This reviews the parent-proposed explicit set before staging. It does not authorize staging all dirty files or any output directory; final staged set is root responsibility."
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/seventh-checks-final/final-verification.json",
+      "sha256": "5afdd3eb08fbe00dce2098f374cae2557714c48838ec9ade792e53af1866937b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/seventh-checks-final/receipt.json",
+      "sha256": "32bebe1b0dd370a01156d1d87fa6f708a43025c31d09ac673d21fcf3a4142c70"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/seventh-test-fix-checks/receipt.json",
+      "sha256": "e27fb0ef8d9100b42d9835b217357a0942184ce6992dd04e67d99a0da0271a4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/seventh-test-fix-checks/inputs.json",
+      "sha256": "7a23f979101e3786e674a1bf425edb12a3bd591be1deeb9ebf1bc0595d89d495"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-independent.json",
+      "sha256": "d2f2bb004313f7997b5c2ff7e3203db9e2f1ed0234e9186a6e8f310a8d065d5e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture.json",
+      "sha256": "3f38491700449a69614d85191bbd5be0cf7a7f2371762e3d33394a3fc3a505e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/source-independent-review.json",
+      "sha256": "4afacca4919574631990fcdde8d997748642ae303b459f1da3dc07aa80e89c36"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-review.json",
+      "sha256": "5e6f2a6554850a60ede555d72bf8ea352b5b70faaaae9b953efc5b52a897fe29"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/independent-review.json",
+      "sha256": "0e3fb991cc75e7db96cd93785f1798641901fbcb45936345aacdce97c16c78c8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-independent.json",
+      "sha256": "6499a44f42f737c171dd88f7dbc6d53bbbbc1ce667003249f1368dc138dc3914"
+    }
+  ],
+  "reviewedDocumentHashes": [
+    {
+      "path": "docs/status.md",
+      "sha256": "33f31f4e4571b36eb9bc86859827a0b9ce5d95196439447b5ece857e62236bf4"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "4b22a0956c26cf8a90347dca038df9eb8a8d45f37329e78d92fb0d548a069b40"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "b249c7bf499eecaf819c638b31eaeaec56f6f2fbf2255d314dbcf8b605ac3e60"
+    }
+  ],
+  "blockingFindings": [],
+  "notPerformed": [
+    "No test/build rerun.",
+    "No Agent, account, permission, system setting or formal app operation.",
+    "No user database body, draft body or credential read.",
+    "No source or existing hashed receipt change.",
+    "No seventh candidate build/verification/installation; wait for root candidate-ready notice."
+  ]
+}

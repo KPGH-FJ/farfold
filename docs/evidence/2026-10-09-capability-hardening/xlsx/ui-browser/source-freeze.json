@@ -1,0 +1,40 @@
+{
+  "commandExit": 0,
+  "sourceUnchanged": true,
+  "sourceBefore": {
+    "src/components/WorkbookFilePreview.tsx": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713",
+    "src/components/WorkbookFilePreview.css": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445",
+    "src/components/OpenedFileView.tsx": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac",
+    "src/runtime/workbook_view.ts": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129",
+    "src/runtime/workbook_strings.ts": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683",
+    "src/runtime/xlsx_fixture.ts": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+    "src/runtime/xlsx_format.ts": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+    "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+    "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+    "src/runtime/xlsx_sheet.ts": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+    "src/runtime/xlsx_styles.ts": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+    "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+    "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+    "src/runtime/xlsx_xstring.ts": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d",
+    "src/workers/xlsx_preview.worker.ts": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+    "src-tauri/src/file_delivery/workbook.rs": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8"
+  },
+  "sourceAfter": {
+    "src/components/WorkbookFilePreview.tsx": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713",
+    "src/components/WorkbookFilePreview.css": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445",
+    "src/components/OpenedFileView.tsx": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac",
+    "src/runtime/workbook_view.ts": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129",
+    "src/runtime/workbook_strings.ts": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683",
+    "src/runtime/xlsx_fixture.ts": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+    "src/runtime/xlsx_format.ts": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+    "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+    "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+    "src/runtime/xlsx_sheet.ts": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+    "src/runtime/xlsx_styles.ts": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+    "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+    "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+    "src/runtime/xlsx_xstring.ts": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d",
+    "src/workers/xlsx_preview.worker.ts": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+    "src-tauri/src/file_delivery/workbook.rs": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8"
+  }
+}

@@ -1,0 +1,17 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: the loop variable `index` is used to index `names`
+   --> src/file_delivery/workbook.rs:219:18
+    |
+219 |     for index in 0..archive.len() {
+    |                  ^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#needless_range_loop
+    = note: `-D clippy::needless-range-loop` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`
+help: consider using an iterator and enumerate()
+    |
+219 -     for index in 0..archive.len() {
+219 +     for (index, <item>) in names.iter().enumerate().take(archive.len()) {
+    |
+
+error: could not compile `farfold` (lib) due to 1 previous error

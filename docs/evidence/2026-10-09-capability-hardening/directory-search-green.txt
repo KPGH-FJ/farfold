@@ -1,0 +1,15 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 7 tests
+test file_access::unix::directory_search_tests::directory_search_macos_version_policy_keeps_legacy_and_unknown_access ... ok
+test file_access::unix::directory_search_tests::directory_search_handles_keep_nofollow_cloexec_and_leaf_nonblocking ... ok
+test file_access::unix::directory_search_tests::directory_search_missing_search_read_or_write_still_refuses_access ... ok
+test file_access::unix::directory_search_tests::directory_search_capture_and_recheck_read_known_file_without_listing_parent ... ok
+test file_access::unix::directory_search_tests::directory_search_replacement_and_permission_revocation_invalidate_receipt ... ok
+test browser_workspace::local_preview::directory::tests::directory_search_local_resources_work_without_listing_and_still_recheck ... ok
+test file_access::unix::directory_search_tests::directory_search_export_to_write_search_parent_never_overwrites_or_leaks_temp ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1139 filtered out; finished in 0.06s
+

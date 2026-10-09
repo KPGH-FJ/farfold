@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.71s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+owned-output-complete
+
+
+thread 'acp_client::process::stdio::tests::mac_stdio_isolated_capture_does_not_wait_for_inherited_output_writers' (19909998) panicked at src/acp_client/process_stdio_tests.rs:468:9:
+reaped child output must be readable while another child still owns a writer
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::process::stdio::tests::mac_stdio_isolated_capture_does_not_wait_for_inherited_output_writers ... FAILED
+
+failures:
+
+failures:
+    acp_client::process::stdio::tests::mac_stdio_isolated_capture_does_not_wait_for_inherited_output_writers
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1157 filtered out; finished in 1.03s
+
+error: test failed, to rerun pass `--lib`

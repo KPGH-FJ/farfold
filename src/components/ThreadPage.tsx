@@ -116,6 +116,7 @@ export function ThreadPage({
       thread.pendingElicitations.length > 0);
   const [contentMode, setContentMode] = useState<"files" | "browser">("files");
   const [finding, setFinding] = useState(false);
+  const findTrigger = useRef<HTMLButtonElement>(null);
   const [exported, setExported] = useState<{
     text: string;
     name: string;
@@ -185,6 +186,7 @@ export function ThreadPage({
         <button
           type="button"
           className="icon-button"
+          ref={findTrigger}
           aria-label={LIBRARY.find}
           onClick={() => setFinding(!finding)}
         >
@@ -246,7 +248,10 @@ export function ThreadPage({
           key={viewKey}
           host={host}
           revision={snapshot.version}
-          onClose={() => setFinding(false)}
+          onClose={() => {
+            setFinding(false);
+            findTrigger.current?.focus();
+          }}
         />
       )}
     </>

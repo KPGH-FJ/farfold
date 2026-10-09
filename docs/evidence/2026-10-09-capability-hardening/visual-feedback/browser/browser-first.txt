@@ -1,0 +1,2 @@
+Error: debug endpoint not ready
+    at file:///Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run.mjs:52:20

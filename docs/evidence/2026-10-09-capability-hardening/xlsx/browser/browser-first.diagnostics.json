@@ -1,0 +1,1470 @@
+[
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "50856660D2C4D6A870F069D6329C34E7",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.760192,
+      "type": "Document",
+      "response": {
+        "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+          "Content-Length": "927",
+          "Content-Type": "text/html",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Etag": "W/\"39f-e6fDSgKf4xU3XTrXnnjWmHq8xcc\"",
+          "Keep-Alive": "timeout=5",
+          "Vary": "Origin\nSec-Fetch-Dest"
+        },
+        "mimeType": "text/html",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 253,
+        "timing": {
+          "requestTime": 400822.740946,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.128,
+          "sendEnd": 0.154,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 18.229,
+          "receiveHeadersEnd": 18.308
+        },
+        "responseTime": 1791554300244.959,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.2",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.780571,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/@vite/client",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"96c1-jaPnvUomMp2rShjqmwMQccYD1xw\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "204816",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 293,
+        "timing": {
+          "requestTime": 400822.767788,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.407,
+          "sendEnd": 0.458,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 11.141,
+          "receiveHeadersEnd": 11.209
+        },
+        "responseTime": 1791554300264.713,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.6",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.785119,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/@react-refresh",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"5367-h8iO905IyT3hT92qDTgpgcseDiA\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "111894",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": false,
+        "connectionId": 81,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 293,
+        "timing": {
+          "requestTime": 400822.768374,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": 0.064,
+          "dnsEnd": 0.071,
+          "connectStart": 0.071,
+          "connectEnd": 0.246,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.278,
+          "sendEnd": 0.302,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 15.847,
+          "receiveHeadersEnd": 15.891
+        },
+        "responseTime": 1791554300270.007,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.7",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.785348,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/client/env.mjs",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"25b-NXvTQjekUxXmNQLgbD2IPIxHeBM\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "3478",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 290,
+        "timing": {
+          "requestTime": 400822.78091,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.09,
+          "sendEnd": 0.12,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 4.041,
+          "receiveHeadersEnd": 4.081
+        },
+        "responseTime": 1791554300270.736,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791554300272.641,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.3",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.788523,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html?html-proxy&index=0.js",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"1463-2WfWIwDP0j51DYsD/Y58NsGlQAE\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "16646",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 67,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 292,
+        "timing": {
+          "requestTime": 400822.768058,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.213,
+          "sendEnd": 0.232,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 18.097,
+          "receiveHeadersEnd": 18.125
+        },
+        "responseTime": 1791554300271.94,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.9",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.790638,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_preview.ts",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"10ff-TZ8QuTIXumKxVSQ8KD4jbz4lM8k\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "14678",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 67,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 292,
+        "timing": {
+          "requestTime": 400822.788814,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.693,
+          "sendEnd": 0.711,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 1.036,
+          "receiveHeadersEnd": 1.06
+        },
+        "responseTime": 1791554300275.635,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.10",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.790721,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_fixture.ts",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"cc2-u2GUXSyZ1UWibe+BPYq0jgJiaeM\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "9853",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 290,
+        "timing": {
+          "requestTime": 400822.788913,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.621,
+          "sendEnd": 0.63,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 1.128,
+          "receiveHeadersEnd": 1.15
+        },
+        "responseTime": 1791554300275.827,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791554300277.701,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.11",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.792082,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_core.js?v=fef6302e",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "max-age=31536000,immutable",
+          "Etag": "W/\"1d3-Nvihy68ZXMIigg8hcuYTYLjw1H8\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "2266",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 308,
+        "timing": {
+          "requestTime": 400822.791217,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.072,
+          "sendEnd": 0.094,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.611,
+          "receiveHeadersEnd": 0.632
+        },
+        "responseTime": 1791554300277.613,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.12",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.792817,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_types.ts",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Etag": "W/\"4ba-FV8SbTTWMOyPcT8/mZJEMhnkEAw\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "6729",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 67,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 290,
+        "timing": {
+          "requestTime": 400822.791338,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.038,
+          "sendEnd": 0.047,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.94,
+          "receiveHeadersEnd": 0.951
+        },
+        "responseTime": 1791554300278.063,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.13",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.794002,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.vite/deps/core-DEJe340b.js?v=fef6302e",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "max-age=31536000,immutable",
+          "Etag": "W/\"2ae6-HIs00jYo1Cq6lS5L7QfkogJuoDQ\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "33725",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 310,
+        "timing": {
+          "requestTime": 400822.792235,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.108,
+          "sendEnd": 0.121,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.874,
+          "receiveHeadersEnd": 0.892
+        },
+        "responseTime": 1791554300278.895,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.14",
+      "loaderId": "50856660D2C4D6A870F069D6329C34E7",
+      "timestamp": 400822.798295,
+      "type": "Other",
+      "response": {
+        "url": "http://127.0.0.1:1458/favicon.ico",
+        "status": 404,
+        "statusText": "Not Found",
+        "headers": {
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "0",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/plain",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 67,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 143,
+        "timing": {
+          "requestTime": 400822.797415,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.155,
+          "sendEnd": 0.19,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.566,
+          "receiveHeadersEnd": 0.619
+        },
+        "responseTime": 1791554300283.766,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "282ADFD5666D654FD3F55956C1130A7A",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.8166,
+      "type": "Document",
+      "response": {
+        "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "no-cache",
+          "Content-Length": "927",
+          "Content-Type": "text/html",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Etag": "W/\"39f-e6fDSgKf4xU3XTrXnnjWmHq8xcc\"",
+          "Vary": "Origin\nSec-Fetch-Dest"
+        },
+        "mimeType": "text/html",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 149,
+        "timing": {
+          "requestTime": 400822.81506,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.168,
+          "sendEnd": 0.184,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 1.23,
+          "receiveHeadersEnd": 1.255
+        },
+        "responseTime": 1791554300302.075,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.30",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.820102,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/@react-refresh",
+        "status": 304,
+        "statusText": "Not Modified",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.819287,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.433,
+          "sendEnd": 0.466,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.701,
+          "receiveHeadersEnd": 0.716
+        },
+        "responseTime": 1791554300305.774,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.26",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.82069,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/@vite/client",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Cache-Control": "no-cache",
+          "Content-Length": "204816",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Etag": "W/\"96c1-jaPnvUomMp2rShjqmwMQccYD1xw\"",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.818342,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.144,
+          "sendEnd": 0.16,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 1.112,
+          "receiveHeadersEnd": 1.328
+        },
+        "responseTime": 1791554300305.24,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.31",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.821871,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.5/node_modules/vite/dist/client/env.mjs",
+        "status": 304,
+        "statusText": "Not Modified",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.82086,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.089,
+          "sendEnd": 0.106,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.879,
+          "receiveHeadersEnd": 0.895
+        },
+        "responseTime": 1791554300307.525,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1791554300307.85,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.27",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.824399,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html?html-proxy&index=0.js",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Cache-Control": "no-cache",
+          "Content-Length": "16646",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Etag": "W/\"1463-2WfWIwDP0j51DYsD/Y58NsGlQAE\"",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": false,
+        "connectionId": 178,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.818385,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": 0.131,
+          "dnsEnd": 0.135,
+          "connectStart": 0.135,
+          "connectEnd": 0.251,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.266,
+          "sendEnd": 0.278,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 5.568,
+          "receiveHeadersEnd": 5.609
+        },
+        "responseTime": 1791554300309.739,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.33",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.82509,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_preview.ts",
+        "status": 304,
+        "statusText": "Not Modified",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 178,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.824612,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.121,
+          "sendEnd": 0.141,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.369,
+          "receiveHeadersEnd": 0.383
+        },
+        "responseTime": 1791554300310.767,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.34",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.82515,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_fixture.ts",
+        "status": 304,
+        "statusText": "Not Modified",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.824666,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.105,
+          "sendEnd": 0.113,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.403,
+          "receiveHeadersEnd": 0.411
+        },
+        "responseTime": 1791554300310.855,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.35",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.825207,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.vite/deps/@tauri-apps_api_core.js?v=fef6302e",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "max-age=31536000,immutable",
+          "Etag": "W/\"1d3-Nvihy68ZXMIigg8hcuYTYLjw1H8\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "2266",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 2574,
+        "timing": {
+          "requestTime": 400822.791217,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.072,
+          "sendEnd": 0.094,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.611,
+          "receiveHeadersEnd": 0.632
+        },
+        "responseTime": 1791554300277.613,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.37",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.825281,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/node_modules/.vite/deps/core-DEJe340b.js?v=fef6302e",
+        "status": 200,
+        "statusText": "OK",
+        "headers": {
+          "Cache-Control": "max-age=31536000,immutable",
+          "Etag": "W/\"2ae6-HIs00jYo1Cq6lS5L7QfkogJuoDQ\"",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Content-Length": "33725",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Content-Type": "text/javascript",
+          "Vary": "Origin"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 34035,
+        "timing": {
+          "requestTime": 400822.792235,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.108,
+          "sendEnd": 0.121,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.874,
+          "receiveHeadersEnd": 0.892
+        },
+        "responseTime": 1791554300278.895,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Network.responseReceived",
+    "params": {
+      "requestId": "97727.36",
+      "loaderId": "282ADFD5666D654FD3F55956C1130A7A",
+      "timestamp": 400822.825577,
+      "type": "Script",
+      "response": {
+        "url": "http://127.0.0.1:1458/src/runtime/xlsx_types.ts",
+        "status": 304,
+        "statusText": "Not Modified",
+        "headers": {
+          "Access-Control-Allow-Origin": "http://127.0.0.1:1458",
+          "Keep-Alive": "timeout=5",
+          "Date": "Fri, 09 Oct 2026 13:58:20 GMT",
+          "Vary": "Origin",
+          "Connection": "keep-alive"
+        },
+        "mimeType": "text/javascript",
+        "charset": "",
+        "connectionReused": true,
+        "connectionId": 56,
+        "remoteIPAddress": "127.0.0.1",
+        "remotePort": 1458,
+        "fromDiskCache": false,
+        "fromServiceWorker": false,
+        "fromPrefetchCache": false,
+        "encodedDataLength": 179,
+        "timing": {
+          "requestTime": 400822.825303,
+          "proxyStart": -1,
+          "proxyEnd": -1,
+          "dnsStart": -1,
+          "dnsEnd": -1,
+          "connectStart": -1,
+          "connectEnd": -1,
+          "sslStart": -1,
+          "sslEnd": -1,
+          "workerStart": -1,
+          "workerReady": -1,
+          "workerFetchStart": -1,
+          "workerRespondWithSettled": -1,
+          "sendStart": 0.091,
+          "sendEnd": 0.101,
+          "pushStart": 0,
+          "pushEnd": 0,
+          "receiveHeadersStart": 0.202,
+          "receiveHeadersEnd": 0.21
+        },
+        "responseTime": 1791554300311.291,
+        "protocol": "http/1.1",
+        "alternateProtocolUsage": "unspecifiedReason",
+        "securityState": "secure"
+      },
+      "hasExtraInfo": true,
+      "frameId": "B5376E770109449D38D368D931549B72"
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 3,
+      "timestamp": 1791554300312.346,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1458/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  }
+]

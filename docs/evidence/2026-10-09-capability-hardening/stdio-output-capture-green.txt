@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.49s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 7 tests
+test acp_client::process::stdio::tests::mac_stdio_parent_endpoints_are_nonblocking_and_child_endpoints_stay_blocking_cloexec ... ok
+test acp_client::process::stdio::tests::mac_stdio_spawn_has_no_post_spawn_standard_pipe_wrappers ... ok
+test acp_client::process::stdio::tests::mac_stdio_round_trip_stderr_and_eof_do_not_keep_command_endpoint_copies ... ok
+owned-output-complete
+
+farfold-stdio-isolation-complete:acp_client::process::stdio::tests::mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints
+
+test acp_client::process::stdio::tests::mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints ... ok
+test acp_client::process::stdio::tests::mac_stdio_isolated_capture_does_not_wait_for_inherited_output_writers ... ok
+controlled fork witness before_exec=false, after_exec=true
+farfold-stdio-isolation-complete:acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint
+
+test acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint ... ok
+controlled ENOENT attempts=16, endpoint witnesses deferred=15
+test acp_client::process::stdio::tests::mac_stdio_spawn_error_closes_all_prepared_endpoints ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1151 filtered out; finished in 0.11s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

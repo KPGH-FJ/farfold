@@ -1,0 +1,140 @@
+{
+  "checkedAtUtc": "2026-10-09T14:33:35.315375+00:00",
+  "reviewer": "verification",
+  "status": "changes_required_test_output_drain_not_bounded",
+  "scope": "Read-only independent review of process_stdio_tests.rs isolation only; production stdio unchanged.",
+  "findings": [
+    {
+      "id": "stdio-output-eof",
+      "status": "accepted_pending_fix",
+      "priority": "P2",
+      "location": "src-tauri/src/acp_client/process_stdio_tests.rs:152",
+      "problem": "The 10-second deadline covers child.try_wait, then wait_with_output drains newly piped stdout/stderr without a deadline. Another concurrent fork may inherit those pipe writers until exec, even after the exact test child exits, so the output drain can escape the advertised bound. This is the same descriptor-inheritance mechanism demonstrated by the new controlled witness.",
+      "evidenceLevel": "Source-level failure path; no separate output-drain execution counterexample run by this reviewer. Existing 6/6 targeted output does not exercise retained output-writer ownership.",
+      "requestedCorrection": "Use owned temporary regular files for child output; after exact child reap, read bounded file contents and verify completion token. Keep immediate endpoint assertions and exact Child cleanup. Root accepted; architecture will change after current full run stops."
+    }
+  ],
+  "verifiedWithoutRerun": [
+    "Original six-position preparation fault body, EMFILE/marker and immediate EOF/EPIPE assertions match HEAD statements after whitespace normalization; only outer isolation was added.",
+    "Current test executable with exact full test name and single harness thread prevents unrelated tests within that child. Completion token follows body success and is checked in addition to exit status, so zero matching tests cannot pass. No environment switch or new ignore.",
+    "Timeout branch uses the held exact Child kill/wait; new pre_exec callback only invokes libc close/write/poll/read/_exit and raw-fd access, with 3-second child gate and 2-second parent readiness gate.",
+    "Normal controlled probe releases gate then joins/reaps its exact fixture child before final closure assertions. Unchanged ENOENT test already had a bounded deferred-closure check; this change does not weaken preparation immediate assertions.",
+    "git diff for process_stdio.rs is empty; production file hash matches retained implementation receipt."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-isolation.json",
+      "sha256": "ecaf801128ad6fbb9d77f41d5af07701841999d7818e8c62fac0ff469939c06f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-fork-red.txt",
+      "sha256": "7125ad157063c39b916607721f25865357111216711729ea865a7b9801f3f4c8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-isolation-green.txt",
+      "sha256": "047c5ed9f312284a2ff03984d86c44ec2ecfa887895ded0f1d6e2adaca51c7d5"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+      "sha256": "1536ba5c48f831b34dcb480589ae5a882923829baf8d0d47c58a7007796f6bfd"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_stdio.rs",
+      "sha256": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162"
+    }
+  ],
+  "boundaries": [
+    "Controlled before_exec=false and after_exec=true is measured after join/wait, thus confirms closure after child reap; it does not separately sample between exec and exit. Independent fd-flag tests check CLOEXEC.",
+    "Original full-suite failed pipe owner was not captured. Controlled reproduction establishes a possible concurrent-fork mechanism, not attribution to a named original child.",
+    "Reviewer did not run tests, change source, launch an Agent or operate formal app. Targeted 6/6 result is architecture execution.",
+    "Current full integration is in progress; no final pass or no-blocker declaration until output-drain fix is reviewed."
+  ],
+  "resolvedCheckpoint": {
+    "checkedAtUtc": "2026-10-09T14:47:12.124922+00:00",
+    "status": "completed_no_blocker_for_final_test_fix",
+    "previousReviewSha256": "d40ef860e1075ee4c801b8ccb941714b0fca5efaa47b7c827d80cf7b3ff82887",
+    "history": "The original changes_required checkpoint and finding above are retained unchanged. This later checkpoint resolves stdio-output-eof for the source hash listed here.",
+    "resolvedFindingIds": ["stdio-output-eof"],
+    "source": {
+      "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+      "sha256": "8bbc1ba56203f2acaf008c5c429fe1e3f3dec8a5a816ddae3c4cde33566b19a4"
+    },
+    "unchangedProduction": {
+      "path": "src-tauri/src/acp_client/process_stdio.rs",
+      "sha256": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162"
+    },
+    "verifiedWithoutRerun": [
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:141",
+        "result": "The actual isolation helper captures stdout/stderr in two owned anonymous regular files; after successful try_wait it does not call wait_with_output or drain a pipe."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:180",
+        "result": "read_capture checks the file length against 64 KiB before allocation and reads that exact bounded length with read_exact_at. It neither waits for writer closure nor changes the shared write offset."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:149",
+        "result": "The 10-second child-exit deadline remains. The failure branch targets the held Child with kill/wait; successful exit and exact completion token are both required."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:197",
+        "result": "All statements of the original six-position preparation failure matrix match HEAD after whitespace normalization, including EMFILE, no-launch marker, and immediate witness EOF/EPIPE assertions."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:445",
+        "result": "The regression invokes the real run_isolated_command helper, observes the primary child reaped and holder gate opened, and requires capture completion while holder-completed is still absent. It then releases the FIFO gate, joins the capture thread, and observes the holder final marker before final assertions."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:463",
+        "result": "The background holder has an 8-second read fallback. Readiness and completion observations are bounded; the fixture does not use a process-name kill or claim waitpid ownership of the shell grandchild."
+      },
+      {
+        "location": "src-tauri/src/acp_client/process_stdio_tests.rs:371",
+        "result": "The retained pre_exec witness uses only libc close/write/poll/read/_exit and raw-fd access on the child side. Parent and child gates remain bounded. Production process_stdio.rs has no git diff."
+      }
+    ],
+    "evidence": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture.json",
+        "sha256": "3f38491700449a69614d85191bbd5be0cf7a7f2371762e3d33394a3fc3a505e3"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-red.txt",
+        "sha256": "6873e34a62f5f42e54fec325b97afb58ae9c38b2617573ab42a52e68c394ca4c"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-green.txt",
+        "sha256": "aa6b38c7f214599947dcfa8afecf2518d19d6480c5e39c1c06ac2e3eaa472238"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-final.txt",
+        "sha256": "03b4fa60558561f76dca0283bd51aed3617e683e0e16385a5f732fd0bb892bf5"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-owned-final.txt",
+        "sha256": "5b06ecda94004d231098cc0240d68a5622bbc1cb904fd54d3de06d36fe3a35da"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "observedResults": {
+      "validCounterexample": "Read the original output-capture red log: 1 failed at the retained-writer assertion. This is architecture execution, not a test run by this reviewer.",
+      "finalTargeted": "Read the final owned-holder log: 7 passed, 0 failed. Both exact isolation completion tokens and the retained controlled-fork witness appear.",
+      "format": "The edition 2024 format output is empty and its hash matches the implementation receipt; exit 0 is reported by that receipt.",
+      "hashValidation": "All 7 linked final receipt hashes were independently recomputed and matched, including test source and unchanged production source.",
+      "processCleanup": "Implementation receipt reports no exact live holder commands in a later read-only process snapshot. Reviewer did not independently resample processes."
+    },
+    "boundaries": [
+      "No test, build, Agent or formal application was run by this reviewer; no source was edited.",
+      "Original full-suite failure did not capture the exact child retaining the endpoint. The controlled witness establishes a possible mechanism, not attribution to an original named child.",
+      "The controlled after_exec value is measured after join/wait, not between exec and exit. CLOEXEC flags have a separate existing assertion.",
+      "Direct primary child reap and capture-thread join are distinct from the background holder final marker; the test does not reap the shell grandchild.",
+      "The 64 KiB bound is a logical output read/allocation bound, not an operating-system I/O latency guarantee.",
+      "Root seventh-test-fix-checks integration is separate and was still in progress at this checkpoint. This review does not declare the complete seventh increment, installed app or real-Agent acceptance passed."
+    ]
+  }
+}

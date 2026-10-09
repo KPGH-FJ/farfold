@@ -1,0 +1,20 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 26.68s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+test file_delivery::workbook::tests::rejects_duplicate_names_and_path_aliases_before_zip_indexing ... ok
+test file_delivery::workbook::tests::rejects_symlink_and_overlapping_local_records ... ok
+test file_delivery::workbook::tests::rejects_encryption_truncation_header_mismatch_and_excess_entry_count ... ok
+test file_delivery::workbook::tests::validates_crc_even_for_ignored_binary_entries ... ok
+test file_delivery::workbook::tests::captures_one_verified_version_without_extracting_files ... ok
+test file_delivery::workbook::tests::declared_sizes_do_not_authorize_unbounded_decompression ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1147 filtered out; finished in 0.29s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,10 @@
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/index.html 12ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx 65ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture-first.tsx 23ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/run.mjs 14ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-expanded.diagnostics.json 4ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-expanded.json 4ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.diagnostics.json 2ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-styles.diagnostics.json 3ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-styles.json 2ms (unchanged)

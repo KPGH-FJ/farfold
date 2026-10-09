@@ -37,6 +37,15 @@ vi.mock("./VisualFilePreview", () => ({
     preview: { file: { version: string } };
   }) => <div data-visual-version={preview.file.version} />,
 }));
+vi.mock("./WorkbookFilePreview", () => ({
+  WorkbookFilePreview: ({
+    file,
+    active,
+  }: {
+    file: { version: string };
+    active: boolean;
+  }) => <div data-workbook-version={file.version} data-active={active} />,
+}));
 vi.mock("react", async (original) => {
   const effect = (callback: () => void | (() => void), deps: unknown[]) => {
     const index = h.cursor++;
@@ -210,6 +219,41 @@ it("renders code and CSV as literal text instead of executing their contents", a
   await ready();
   expect(render().html).toContain("&lt;script&gt;");
   expect(render().html).not.toContain("<script>");
+});
+it("routes a verified workbook to its snapshot preview and refreshes to the new exact version", async () => {
+  const file = {
+    ...receipt,
+    name: "result.XLSX",
+    path: "/work/result.XLSX",
+    resolvedPath: "/work/result.XLSX",
+  };
+  props.path = "result.XLSX";
+  h.inspectLink.mockResolvedValueOnce(file);
+  await ready();
+  expect(render().html).toContain('data-workbook-version="v1"');
+  expect(h.readText).not.toHaveBeenCalled();
+  expect(h.readVisual).not.toHaveBeenCalled();
+  expect(h.open).not.toHaveBeenCalled();
+  expect(button(S.feedback)).toBeUndefined();
+  h.inspectLink.mockResolvedValueOnce({
+    ...file,
+    version: "v2",
+    sha256: "sha-b",
+  });
+  click(S.refresh);
+  expect(render().html).not.toContain("data-workbook-version");
+  await drain();
+  expect(render().html).toContain('data-workbook-version="v2"');
+  expect(render({ ...props, active: false }).html).toContain(
+    'data-active="false"',
+  );
+});
+it("does not send unsupported spreadsheet formats into the XLSX parser", async () => {
+  h.inspectLink.mockResolvedValueOnce({ ...receipt, name: "legacy.xls" });
+  await ready();
+  expect(render().html).not.toContain("data-workbook-version");
+  expect(render().html).toContain(S.other);
+  expect(h.open).not.toHaveBeenCalled();
 });
 
 it("does not load links, images or raw HTML from a Markdown file", async () => {
@@ -665,4 +709,187 @@ it("never hands a changed visual receipt to the renderer", async () => {
   await ready();
   expect(render().html).not.toContain("data-visual-version");
   expect(render().html).toContain("未能预览这份文件");
+});
+
+const visualReceipt = {
+  ...receipt,
+  path: "/work/result.pdf",
+  resolvedPath: "/work/result.pdf",
+  name: "result.pdf",
+  size: 6,
+  sha256: "a".repeat(64),
+};
+async function visualReady() {
+  h.inspectLink.mockResolvedValue(visualReceipt);
+  h.readVisual.mockResolvedValue({
+    file: visualReceipt,
+    mimeType: "application/pdf",
+    data: btoa("%PDF-1"),
+  });
+  await ready();
+  return render().nodes.find((node) => node.props.preview)!;
+}
+function reportPage(
+  node: Element,
+  location: unknown,
+  source = node.props.preview,
+) {
+  expect(typeof node.props.onReadiness).toBe("function");
+  (node.props.onReadiness as (value: unknown) => void)({ source, location });
+  render();
+}
+it("offers PDF feedback only from a rendered current page and preserves its chosen page across navigation", async () => {
+  const visual = await visualReady();
+  expect(button(S.feedback)?.props.disabled).toBe(true);
+  reportPage(visual, { kind: "pdf", page: 1, pageCount: 3 });
+  editFeedback("Keep this opinion");
+  click("针对当前第 1 页");
+  let draft = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  expect(draft).toMatchObject({
+    anchor: { kind: "pdf-page", page: 1, pageCount: 3 },
+  });
+  reportPage(visual, null);
+  reportPage(visual, { kind: "pdf", page: 2, pageCount: 3 });
+  expect(Object.values(fileFeedbackDrafts.entries(props.threadKey))[0]).toBe(
+    draft,
+  );
+  expect(render().html).toContain("意见针对第 1 / 3 页");
+  submitFeedback();
+  const composed = composerDrafts.read(`session:${props.threadKey}`).text;
+  expect(composed).toContain("第 1 / 3 页");
+  expect(composed).toContain(visualReceipt.sha256);
+  expect(composed).toContain("Keep this opinion");
+  expect(h.open).not.toHaveBeenCalled();
+});
+it("keeps a current visual opinion reachable when the page fails, but removes the current-page option", async () => {
+  const visual = await visualReady();
+  reportPage(visual, { kind: "pdf", page: 1, pageCount: 3 });
+  editFeedback("Retain on failure");
+  click("针对当前第 1 页");
+  reportPage(visual, null);
+  expect(button("针对当前第 1 页")).toBeUndefined();
+  expect(
+    render().nodes.find((node) => node.type === "textarea")?.props.value,
+  ).toBe("Retain on failure");
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].text,
+  ).toBe("Retain on failure");
+});
+it("does not accept a visible-page report from another source or after hiding", async () => {
+  const visual = await visualReady();
+  reportPage(
+    visual,
+    { kind: "pdf", page: 2, pageCount: 3 },
+    { ...(visual.props.preview as object) },
+  );
+  expect(button(S.feedback)?.props.disabled).toBe(true);
+  render({ ...props, active: false });
+  reportPage(visual, { kind: "pdf", page: 2, pageCount: 3 });
+  expect(button(S.feedback)?.props.disabled).toBe(true);
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey)),
+  ).toHaveLength(0);
+});
+
+it("rejects a stale page-target button after navigation and preserves its existing text", async () => {
+  const visual = await visualReady();
+  reportPage(visual, { kind: "pdf", page: 1, pageCount: 3 });
+  editFeedback("keep opinion");
+  const oldButton = render().nodes.find(
+    (n) => n.type === "button" && n.props.children === "针对当前第 1 页",
+  )!;
+  reportPage(visual, null);
+  reportPage(visual, { kind: "pdf", page: 2, pageCount: 3 });
+  (oldButton.props.onClick as () => void)();
+  const saved = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  expect(saved.text).toBe("keep opinion");
+  expect(saved.anchor).toBeUndefined();
+  click("针对当前第 2 页");
+  expect(
+    Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].anchor?.page,
+  ).toBe(2);
+});
+it.each([
+  { kind: "pdf", page: 0, pageCount: 3 },
+  { kind: "pdf", page: 4, pageCount: 3 },
+  { kind: "pdf", page: 1, pageCount: 1001 },
+  { kind: "image" },
+])(
+  "does not allow a malformed or mismatched ready location %j",
+  async (location) => {
+    const visual = await visualReady();
+    reportPage(visual, location);
+    expect(button(S.feedback)!.props.disabled).toBe(true);
+    expect(
+      Object.values(fileFeedbackDrafts.entries(props.threadKey)),
+    ).toHaveLength(0);
+  },
+);
+it("keeps old-version page opinions after refresh and rejects old-source readiness", async () => {
+  const visual = await visualReady();
+  reportPage(visual, { kind: "pdf", page: 2, pageCount: 3 });
+  editFeedback("old version");
+  click("针对当前第 2 页");
+  const old = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  const next = { ...visualReceipt, version: "v2", sha256: "b".repeat(64) };
+  h.inspectLink.mockResolvedValue(next);
+  h.readVisual.mockResolvedValue({
+    file: next,
+    mimeType: "application/pdf",
+    data: btoa("%PDF-1"),
+  });
+  click(S.refresh);
+  await drain();
+  render();
+  reportPage(visual, { kind: "pdf", page: 3, pageCount: 3 });
+  expect(button(S.feedback)!.props.disabled).toBe(true);
+  const retained = render().nodes.find((n) => n.type === FileFeedbackDrafts)!;
+  expect(retained.props.excludeContentId).not.toBe(old.contentId);
+  expect(
+    fileFeedbackDrafts.entries(props.threadKey)[
+      JSON.stringify([old.path, old.contentId])
+    ],
+  ).toBe(old);
+});
+it("provides image file feedback with exact version but no PDF page control", async () => {
+  const image = {
+    ...visualReceipt,
+    path: "/work/result.png",
+    resolvedPath: "/work/result.png",
+    name: "result.png",
+  };
+  props.path = image.path;
+  h.inspectLink.mockResolvedValue(image);
+  h.readVisual.mockResolvedValue({
+    file: image,
+    mimeType: "image/png",
+    data: "fixture",
+  });
+  await ready();
+  const visual = render().nodes.find((n) => n.props.preview)!;
+  reportPage(visual, { kind: "image" });
+  editFeedback("change contrast");
+  expect(render().html).toContain("意见针对整个文件");
+  expect(render().html).not.toContain("针对当前第");
+  submitFeedback();
+  const text = composerDrafts.read(`session:${props.threadKey}`).text;
+  expect(text).toContain("change contrast");
+  expect(text).toContain(image.sha256);
+  expect(text).not.toContain(" 页");
+});
+it("withdraws stale current-page actions while hidden and retains a blank selected-page draft", async () => {
+  const visual = await visualReady();
+  reportPage(visual, { kind: "pdf", page: 1, pageCount: 3 });
+  click(S.feedback);
+  render();
+  click("针对当前第 1 页");
+  const draft = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
+  expect(draft.anchor?.page).toBe(1);
+  expect(draft.text).toBe("");
+  props.active = false;
+  render();
+  expect(render().html).not.toContain("针对当前第 1 页");
+  expect(Object.values(fileFeedbackDrafts.entries(props.threadKey))[0]).toBe(
+    draft,
+  );
 });

@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 15 tests
+test file_delivery::tests::refuses_absolute_and_parent_escape ... ok
+test file_delivery::tests::missing_parent_failure_keeps_source_and_creates_nothing ... ok
+test file_delivery::tests::directory_and_fifo_are_not_files_and_do_not_block ... ok
+test file_delivery::tests::file_size_and_text_preview_have_separate_bounds ... ok
+test file_delivery::tests::existing_destination_is_never_overwritten_and_source_remains ... ok
+test file_delivery::tests::replaced_root_during_read_is_rejected ... ok
+test file_delivery::tests::destination_parent_replacement_and_alias_redirect_have_distinct_post_commit_error ... ok
+test file_delivery::tests::destination_symlink_is_not_followed_or_replaced ... ok
+test file_delivery::tests::redirected_symlink_invalidates_receipt ... ok
+test file_delivery::tests::binary_is_copyable_without_claiming_text_preview ... ok
+test file_delivery::tests::replacing_file_with_identical_bytes_invalidates_receipt ... ok
+test file_delivery::tests::verifies_disk_bytes_and_previews_same_version ... ok
+test file_delivery::tests::same_length_edit_rejects_old_read_and_copy ... ok
+test file_delivery::tests::symlink_must_resolve_inside_authorized_root ... ok
+test file_delivery::tests::text_snapshot_is_distinct_from_disk_copy_and_never_overwrites ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1132 filtered out; finished in 0.03s
+

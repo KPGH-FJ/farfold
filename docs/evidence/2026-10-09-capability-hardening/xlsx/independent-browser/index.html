@@ -1,0 +1,82 @@
+<!doctype html><meta charset="UTF-8" /><title>
+  XLSX independent parser counterexamples
+</title>
+<pre id="result">running</pre>
+<script type="module">
+  import { readWorkbookPreview } from "/src/runtime/xlsx_preview.ts";
+  import { workbookFixture, replacePart } from "/src/runtime/xlsx_fixture.ts";
+  const file = {
+    root: "/controlled",
+    path: "/controlled/example.xlsx",
+    resolvedPath: "/controlled/example.xlsx",
+    name: "example.xlsx",
+    size: 123,
+    sha256: "fixed-fixture",
+    version: "fixed-v1",
+  };
+  const results = [];
+  const run = async (input) =>
+    readWorkbookPreview(
+      { ...input, file, inflatedBytes: 50000 },
+      undefined,
+      new AbortController().signal,
+    );
+  window.__TAURI_INTERNALS__ = {
+    invoke() {
+      throw new Error("unexpected IPC");
+    },
+  };
+  try {
+    const input = workbookFixture(
+      '<row><c r="A1" t="inlineStr"><is><t>Line1_x000D_Line2</t></is></c><c r="B1" t="str"><v>_x005F_x0041_</v></c><c r="C1" t="s"><v>0</v></c></row>',
+      {
+        strings: "<si><r><t>_x005F_x0042_</t></r><r><t>_x000D_end</t></r></si>",
+      },
+    );
+    const workbook = await run(input);
+    const actual = workbook.sheet.cells.map((c) => c.display),
+      expected = ["Line1\rLine2", "_x0041_", "_x0042_\rend"];
+    results.push({
+      name: "valid OOXML escaped strings decode once in inline/cache/shared rich text",
+      ok: JSON.stringify(actual) === JSON.stringify(expected),
+      actual,
+      expected,
+      warnings: workbook.warnings,
+    });
+    const future = workbookFixture(
+      '<row><c r="A1" t="inlineStr"><is><foreign:text xmlns:foreign="urn:controlled-future">lost visible data</foreign:text></is></c></row>',
+    );
+    try {
+      const result = await run(future);
+      results.push({
+        name: "unknown rich text child is not silently empty",
+        ok: result.warnings.length > 0,
+        cell: result.sheet.cells[0],
+        warnings: result.warnings,
+      });
+    } catch (error) {
+      results.push({
+        name: "unknown rich text child is not silently empty",
+        ok: true,
+        code: error.code,
+      });
+    }
+  } catch (error) {
+    results.push({
+      name: "fixture completed",
+      ok: false,
+      error: String(error),
+    });
+  }
+  document.querySelector("#result").textContent = JSON.stringify(
+    {
+      passed: results.every((r) => r.ok),
+      results,
+      scope:
+        "actual production XLSX Worker with authored XML parts; no user file/native app/Agent",
+    },
+    null,
+    2,
+  );
+  document.documentElement.dataset.done = "true";
+</script>

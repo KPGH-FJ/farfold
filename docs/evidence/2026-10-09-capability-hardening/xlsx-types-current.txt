@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/workers/pdf_parser_diagnostics.test.ts(8,18): error TS2306: File '/Users/tw/Desktop/farfold/src/workers/pdf_parser_diagnostics.ts' is not a module.
+ ELIFECYCLE  Command failed with exit code 1.

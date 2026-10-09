@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "architecture",
+  "status": "no-blocking-finding-in-reviewed-scope",
+  "scope": "只读核 file_access/unix.rs 完整生产差异、directory_search_tests.rs 与 local_preview/directory_tests.rs 新增测试及 verification 主回执。未修改或重跑其测试。",
+  "findings": [],
+  "observations": [
+    "固定48字节只读sysctl；返回长度、NUL、纯数字版本段和u32解析均受检查。失败/未知/旧系统保留原目录读策略；macOS13+才采用O_SEARCH。",
+    "文件系统根与每个中间目录统一保留NOFOLLOW+CLOEXEC；叶读取保持O_RDONLY+NOFOLLOW+CLOEXEC+NONBLOCK，后续stamp/recheck与独占导出未被绕过。",
+    "新增测试是真实临时目录及公开读取/导出/预览路径，并明确非root执行、权限守卫恢复、自有文件范围；旧系统分支不冒称现代成功。",
+    "已读日志/主回执报告8专项及15/16回归，不将其作为本审查者亲自运行结果。"
+  ],
+  "limitations": [
+    "未在macOS11/12/13或Windows执行；macOS15.6受控结果来自verification。",
+    "本轮独立审查未重取Apple官方页面；版本起始归属依主回执保留的官方版本材料，不扩展为旧系统实测。",
+    "POSIX目录搜索能力修正不证明Desktop TCC等待已解决；未授权或执行正式应用/真实Agent/系统权限变更。"
+  ],
+  "implementationReceipt": "docs/evidence/2026-10-09-capability-hardening/directory-search-fix.json",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/file_access/unix.rs",
+      "sha256": "33559696bbc273b5b5a24cb08d77469bb4faacc6b4feaae5fc435a3a4133d40c"
+    },
+    {
+      "path": "src-tauri/src/file_access/directory_search_tests.rs",
+      "sha256": "655daee159c172bc9c685c6d520a56af3fc0e795006c64f33e8f73e56fcb1626"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/local_preview/directory_tests.rs",
+      "sha256": "5977929f4e2db098087d4e849842f07959956ebafb07b1d8c30cb6d5bb592502"
+    }
+  ]
+}

@@ -1,0 +1,373 @@
+{
+  "schemaVersion": 1,
+  "package": "M-BASE",
+  "kind": "readonly-design-research",
+  "date": "2026-10-09",
+  "planIds": ["ARCH-47", "H12", "H13", "H14", "H15", "H17"],
+  "status": "方案建议；未作范围决定、未实现、未运行工作树实验；不关闭原条目",
+  "authorization": {
+    "thisTask": "只读当前源码和官方资料；只新增本 JSON。不改生产、测试、契约或计划，不在本仓创建、移动、删除工作树，不启动 Agent 或应用。",
+    "withinExistingProductBoundary": "用户主动选择已有工作目录/工作树、原对话保持 cwd、同目录共享影响提示和已有发送/恢复保护可沿现有连续开发授权补强。",
+    "requiresRecordedScopeDecision": "活动计划 M 明确先决定范围再实现。建议采纳下述基础 Git 工作树能力；研究本身不代替该决定。根代理下一片需明确采用的创建、保留式归档、删除及元数据范围。",
+    "additionalResponsibilities": [
+      "自动提交/暂存/合并/冲突解决/PR 平台属于 H16，基础工作树不自动纳入。",
+      "完整磁盘快照、恢复分支、备份留存及自动清理策略会增加独立数据保管职责，不能借安全回收默认引入。",
+      "自动依赖安装、仓库脚本、端口调度、容器/沙箱、私有 HOME、代写 Agent 配置、远程仓库认证均不随工作树入口自动获授权。"
+    ]
+  },
+  "recommendation": {
+    "decision": "采用官方 Git CLI 的基础工作位置管理，不改变 Agent 运行方式；先做创建/选择/重查/保留式归档的依赖闭合切片，并在同一 M 包中继续闭合受保护删除。",
+    "why": "Git 已拥有工作树与分支事实；Farfold 只保存必要用户选择和自身操作归属。创建完成后仍走现有 cwd→官方 Agent 对话链，不移植对话、不复制正文。",
+    "firstSlice": "新草稿工作文件夹菜单增加选择已有工作树和创建工作树；显式起点及目录，成功核验后仅更新未发送草稿。管理页能重查、显示关联对话、保留式归档/恢复显示。取消、失败、未知、重启和共享影响同时完成。",
+    "notDoneByFirstSlice": "保留式归档不释放磁盘空间；不是 Git 快照或安全删除。H15 仍未完成，以下删除设计及决定必须继续处理，不能把隐藏按钮或外部手工操作当完成。"
+  },
+  "currentSource": [
+    {
+      "fact": "目录选择仅更新新稿，阻止发送准备/运行中的切换，并防迟到结果覆盖新选择。",
+      "evidence": [
+        "src/components/EmptyState.tsx:581",
+        "src/runtime/dialogs.ts:4"
+      ]
+    },
+    {
+      "fact": "cwd 当前验证为存在目录并 canonicalize；可选已有工作树不依赖 Git 类型，但这不是所有权、持久身份或文件隔离证明。",
+      "evidence": ["src-tauri/src/acp_client/manager.rs:899"]
+    },
+    {
+      "fact": "Agent 子进程按原命令/参数/环境和 cwd 启动；连接及会话身份已包含 cwd。工作树可只改变新对话传入目录。",
+      "evidence": [
+        "src-tauri/src/acp_client/process.rs:202",
+        "src-tauri/src/acp_client/connection_identity.rs:95",
+        "src/runtime/session_types.ts:197"
+      ]
+    },
+    {
+      "fact": "按目录工作开关串行化新建及发送，但恢复绕过该开关。因此不能直接把关闭工作开关当作删除维护锁。",
+      "evidence": [
+        "src-tauri/src/work_policy.rs:96",
+        "src-tauri/src/acp_client/session_commands.rs:89",
+        "src-tauri/src/acp_client/session_commands.rs:180"
+      ]
+    },
+    {
+      "fact": "现有归档保护检查运行/尾程/未知/审批/队列/草稿，并复核原索引路径和规范路径；后端注释明确没有本地路由不证明外部进程空闲。可复用判断，不能把单对话归档扩称整个目录安全。",
+      "evidence": [
+        "src/runtime/archive_admission.ts:9",
+        "src/runtime/archive_admission.ts:57",
+        "src-tauri/src/acp_client/session.rs:73",
+        "src-tauri/src/acp_client/session.rs:122",
+        "src-tauri/src/meta_store/archive.rs:74"
+      ]
+    },
+    {
+      "fact": "现有生命周期保留打开、操作、会话和关闭结果；全局退出/清除与工作准入已有协调器。新 Git 命令需接入这些实际进程归属，不能仅用界面 busy。",
+      "evidence": [
+        "src-tauri/src/acp_client/lifecycle.rs:136",
+        "src-tauri/src/managed_update.rs:27",
+        "src-tauri/src/process_platform.rs:20"
+      ]
+    },
+    {
+      "fact": "当前 SessionRow 保留 cwd；settings 可容纳版本化少量工作位置元数据。未发现上述负责链路存在 Git 工作树创建/回收执行器；此结论来自负责模块核查，不是仅凭搜索无命中。",
+      "evidence": [
+        "src-tauri/src/meta_store.rs:53",
+        "src-tauri/src/meta_store.rs:635",
+        "plans/agent-access.md:240"
+      ]
+    },
+    {
+      "fact": "文件交付有 OS 对象身份与拒重定向打开底座；Windows 当前限本机盘并拒部分路径。它不能自动使基于路径的 Git CLI 操作原子防替换。",
+      "evidence": [
+        "src-tauri/src/file_access.rs:1",
+        "src-tauri/src/file_access/windows.rs:86"
+      ]
+    }
+  ],
+  "officialSources": [
+    {
+      "id": "git-worktree-239",
+      "url": "https://git-scm.com/docs/git-worktree/2.39.0",
+      "checked": "list --porcelain -z、add -b/--lock、remove/move/repair 已有；工作树共享仓库内容，配置默认共享；主工作树及子模块有专门限制。"
+    },
+    {
+      "id": "git-worktree-current",
+      "url": "https://git-scm.com/docs/git-worktree",
+      "checked": "分支重复检出及锁保护、工作树配置和子模块限制仍须遵循；不采用 force、隐式猜分支或全仓 prune。"
+    },
+    {
+      "id": "git-worktree-source-2395",
+      "url": "https://raw.githubusercontent.com/git/git/v2.39.5/builtin/worktree.c",
+      "checked": "check_clean_worktree 使用 status；删除目录失败后仍继续删除管理项；add 的中断清理及 checkout hook 是有副作用操作，错误不是回滚证明。"
+    },
+    {
+      "id": "git-worktree-source-2501",
+      "url": "https://raw.githubusercontent.com/git/git/v2.50.1/builtin/worktree.c",
+      "checked": "交叉核查上述非事务删除及 checkout hook 边界仍存在；本研究未执行这些上游版本。"
+    },
+    {
+      "id": "git-status",
+      "url": "https://git-scm.com/docs/git-status",
+      "checked": "porcelain/NUL 输出；忽略项必须显式请求，matching 可标出忽略目录本身；ahead/behind 依据本地跟踪信息。"
+    },
+    {
+      "id": "git-config",
+      "url": "https://git-scm.com/docs/git-config",
+      "checked": "hooksPath 支持单命令覆盖；fsmonitor 可执行外部命令，旧版本对布尔值语义不同；safe.directory 不能自动设为通配信任。"
+    },
+    {
+      "id": "git-attributes",
+      "url": "https://git-scm.com/docs/gitattributes",
+      "checked": "checkout 的 smudge/process 过滤器可执行程序、下载或解密内容；简单禁 hook 不足以保证无外部执行。"
+    },
+    {
+      "id": "git-hooks",
+      "url": "https://git-scm.com/docs/githooks",
+      "checked": "post-checkout 是更新工作文件后的 hook，不能把其退出码当更新尚未发生。"
+    },
+    {
+      "id": "git-partial",
+      "url": "https://git-scm.com/docs/partial-clone",
+      "checked": "缺失对象可触发 Git fetch，checkout 可批量取回缺失 blob；本地命令不天然离线。"
+    },
+    {
+      "id": "git-rev-parse",
+      "url": "https://git-scm.com/docs/git-rev-parse",
+      "checked": "用官方解析获取根、git-dir、common-dir 和提交；不要自行拼接 .git 管理路径。"
+    },
+    {
+      "id": "git-ref",
+      "url": "https://git-scm.com/docs/git-check-ref-format",
+      "checked": "--branch 会解释 @{-n}；本产品显式新分支输入应先拒绝这种历史选择语法，再核精确 refs/heads 名称。"
+    },
+    {
+      "id": "git-refs",
+      "url": "https://git-scm.com/docs/git-for-each-ref",
+      "checked": "可列出本地及已有远程跟踪引用和提交；它不是远端最新事实或推送成功证明。"
+    },
+    {
+      "id": "git-windows",
+      "url": "https://gitforwindows.org/",
+      "checked": "Windows 可使用官方 Git for Windows CLI；平台已有发行版不等于 Farfold 集成和路径测试通过。"
+    }
+  ],
+  "gitExecutor": {
+    "dependency": "优先用户已安装的官方 Git CLI，不加 libgit2、不打包新 Git、不自动安装/升级。研究环境仅读 git --version：2.39.5 (Apple Git-154)。",
+    "baseline": "建议首片以 Git 2.39 或更新且所需参数实际可用为受支持基线；这是待实现验证的兼容要求，不是已测全版本承诺。旧 Git 仍可把已有目录当普通工作位置，管理入口明确缺少条件。",
+    "launch": "解析可信系统/用户明确选择的绝对 git 路径，不从项目目录找可执行文件；用 Command 参数数组，不拼 shell。继承常规用户环境但清除只针对该 Git 子进程的仓库重定向/配置注入变量；不 env_clear、不改 HOME、不改 Agent 环境。具体移除集合须受控反例验证，不新增产品环境开关。",
+    "bounded": "只允许固定子命令/固定参数结构；stdout/stderr 大小、工作树/分支条目数和等待均有上限，超限不以截断清单准入。只持有并取消本命令及其实际子进程，进程未确认结束则保护未释放。",
+    "nonExecutingInspection": "每次在安全版本下用单命令配置禁 fsmonitor 与 hooks、禁自动 gc/maintenance、禁子模块递归；只读检查可加 --no-optional-locks。覆盖不写用户配置。原始 stderr 不直接进 UI/诊断，避免路径、URL 内秘密或任意文本暴露。",
+    "checkoutPolicy": "BASE 不运行仓库安装脚本。为每个命令使用应用自有空 hooks 目录；先检查有效 filter 配置及 partial/promisor/sparse 状态，存在未承接外部过滤器、隐式取回或稀疏语义时停止创建并给出具体缺项，不静默忽略过滤器制造不完整文件。用户可选择自己准备好的已有目录。后续支持 LFS/过滤器执行需单独明确授权和结果判定。",
+    "network": "本片不 fetch/push/clone，不询问远端凭据。远程跟踪分支只代表本地已有记录；启动点必须可解析为本地完整提交。缺对象不能暗中联网补齐。",
+    "never": [
+      "--force",
+      "-B",
+      "reset --hard",
+      "clean",
+      "branch -D",
+      "自动 worktree prune",
+      "自动 worktree repair",
+      "修改 safe.directory 或 worktreeConfig",
+      "自动依赖安装或 .env 复制"
+    ]
+  },
+  "discoveryAndCreation": {
+    "discovery": "用户选目录后，官方 rev-parse 核顶层目录、common-dir、git-dir、HEAD；list --porcelain -z 核主/linked、分支、锁和缺失。Git 输出按 NUL/固定字段解析，未知字段保留诊断但未知对象形态不获得修改资格。普通非 Git 目录仍正常可用。",
+    "existing": "选择已有工作树只更新新稿 cwd；不登记为 Farfold 创建，不取得删除所有权。允许多个新对话显式选择同一目录，展示其共享文件影响，绝不说成自动隔离。旧对话不会切换分支或位置。",
+    "destination": "用户确认项目外独立目录；首片要求本机磁盘、父目录已存在且可核身份、目标尚不存在。拒根目录、.git、现有工作树内部、Farfold/Agent 数据目录及重解析/符号链接目标。已有空目录也不默认当作可删除的自有目录。",
+    "startPoint": "默认展示所选仓库当前提交和分支供用户确认；允许选择明确本地分支、已有远程跟踪提交或提交 OID。解析并固定 OID，确认页写明主目录未提交/未跟踪/忽略文件不复制。不是把工作区快照当分支起点。",
+    "newBranch": "用户输入新分支名，经精确引用校验后执行 add -b，禁止重置已有分支；起点用已核 OID，不让 Git 猜默认 remote。新分支名可建议 farfold/任务名，但用户必须能编辑。",
+    "existingBranch": "列出已经在哪个工作树使用；在用时提供前往该目录/新建另一个分支，不 force 重复检出。选已有分支后执行前重核 tip，执行后核实际 HEAD/branch/目录及 Git 登记。变化则返回冲突或未知，不偷偷 reset。",
+    "ready": "只有 Git 完成、目标/common-dir/branch/HEAD 符合预期、有限归属元数据保存成功，才返回可供草稿采用的 cwd。关闭创建面板不自动开 Agent 或发送；结果迟到不能覆盖已切换草稿。",
+    "scopeLimits": "首片不创建 detached/unborn/bare/sparse/submodule 工作树，不复制 working-tree 未提交快照；这些是明确待承接场景，不算支持。用户已有普通目录选择不因新管理限制被撤销。"
+  },
+  "lifecycleAndData": {
+    "ownership": "默认一个工作树可被多段对话使用，不强造一树一会话关系。关联由现有 sessions.cwd/草稿位置推导；只记录 Farfold 实际创建且核验成功的工作位置，不给旧用户目录补 createdBy 标记。",
+    "minimalPersistence": "建议现有 MetaStore settings 内版本化 worktreeLocations.v1：仓库/common-dir、工作树绝对路径、明确来源(created/existing)、用户显示名、是否在管理清单归档、创建起点及必要恢复状态。只保留有限最近操作意图(kind、目标、预期 Git/目录身份、阶段/结果)，完成后收敛为现态。不是每条 Git 输出/Agent 事件账本，不新增会话定位/代次或正文表。字段须通过范围决定并采用严格解析与事务 CAS。",
+    "identity": "Git 登记与路径每次重查；正在修改/恢复的预期目录对象身份仅服务该文件操作。路径同名、common-dir 相同、分支同名都不足以采纳替换目标；不得按目录字符串自动继续删除。跨重启无法确证即未知，保留记录和材料。",
+    "startup": "启动只读重查 pending 和已登记位置，不自动重跑 add/remove/repair/prune。Git 成功但回执或 SQLite 写入失败时显示结果待核，可从实际登记确认原对象；不能重新创建第二份或自动扫删残留。",
+    "missing": "目录缺失/移动/权限拒绝保留原历史和未发送内容。提供显示原位置、重新检查、另选目录新开；不更改旧 session.cwd，也不借新空目录冒称原上下文可恢复。旧位置修复与原 Agent 历史恢复分别核验。",
+    "forgetVsArchive": "从工作位置清单解除接入只删除 Farfold 管理显示关系，不动 Git、文件或对话。保留式归档隐藏该工作位置但原目录和对话仍存在，可重查后恢复；不能标注已释放空间。",
+    "sharedResources": "工作树只分开被检出的文件及各自 index/HEAD。Git 对象、refs、默认配置、Agent HOME/登录、系统缓存、依赖仓库及端口可能共享；不得称完全环境隔离或扩大文件许可。"
+  },
+  "protectedRemovalDesign": {
+    "status": "设计必须继续闭合；不建议仅包一层 git worktree remove 就开放删除。首片保留式归档可先交付，H15 不能因此结项。",
+    "admission": "仅 Farfold 创建且所有权仍准确的 linked worktree；主工作树、用户已有对象、locked、detached、嵌套仓库、子模块、未知身份都拒绝。不自动删 branch 或 Git 对象。",
+    "applicationGate": "按真实根目录范围取得维护准入，并覆盖根内子目录/已记录别名的所有新建、恢复、发送和 Git 修改，防检查后新工作进入。已有运行、审批、尾程、未知请求、打开/关闭在途、未发/待发/文件意见及页面/服务器持有均保留并阻止。前端 flush 后后端事务重核；当前 work_policy 的普通关闭不能替代这个 gate。",
+    "contentChecks": "显式状态检查 tracked/index/untracked/ignored，不能依赖普通 status 的 clean；不执行 clean 或 force。忽略目录中可能有唯一秘密/数据，不因 node_modules 名称自动豁免。任何检查失败/超限/非普通对象保留。",
+    "commits": "显示本地分支及提交位置，检查 detached/未命名提交和未被本地远程跟踪引用覆盖的提交；没有可信基线、shallow 或本地远程信息过旧只能说无法确认。默认阻止该类删除，不把 ahead=0 当已经推送。不自动联网或删分支来完成回收。",
+    "history": "历史中的 cwd 必须保留。建议有需继续使用该位置的对话时只提供保留式归档；若后续决定允许在保留历史同时删除目录，确认须写明续用依赖原位置重建，且先完成精确原路径恢复测试，不能偷偷把它们迁到另一工作树。",
+    "executionAndReceipt": "保存 bounded 删除意图成功后方执行固定非 force remove；用户取消/超时后等待实际子进程结束再重查目标和 Git 登记。非零退出、目录缺失或登记缺失均不是单独成功依据；部分删除保留错误和剩余材料，不 rm-rf 补偿、不自动 prune。",
+    "externalRace": "Farfold gate 只约束自身；Git lock 文件不锁外部编辑器/Agent，OS 进程清单亦不是完整无写入证明。目录句柄复核无法原子约束路径式 Git remove。在有效外部替换/并发写入反例未闭合前，不能承诺删除无损；保持保留式归档。",
+    "decisionOptions": [
+      {
+        "option": "保守 BASE",
+        "meaning": "先提供可恢复显示的归档，保留实际工作树；受保护删除继续未完成，不借此降低 H15。可立刻独立实现其他闭环。"
+      },
+      {
+        "option": "后续开放磁盘删除",
+        "meaning": "明确仅安静自有干净工作树的边界，并完成外部并发/路径替换保护与可恢复材料方案。若必须新增完整快照或本机回收区，应单独记录保管范围、空间上限和恢复行为，不默认把它藏进基础 worktree。"
+      }
+    ]
+  },
+  "cancelFailureRecovery": [
+    {
+      "when": "检查或确认阶段取消",
+      "behavior": "没有 Git 修改；保留原草稿/选择，废弃仅本次检查结果。"
+    },
+    {
+      "when": "已派发创建后取消/超时",
+      "behavior": "结束自己的 Git 命令并等待真实退出；目录/分支/登记可能已改变，先重查，不能把取消当无副作用。Git 自身中断清理也不保证可恢复旧检查时态。"
+    },
+    {
+      "when": "Git 成功、元数据保存失败或 UI 回执丢失",
+      "behavior": "结果未确认，保留确切 pending 意图；重查只采纳匹配对象，不二次 add、不删除可能已被用户使用的结果。"
+    },
+    {
+      "when": "重启或进程退出未知",
+      "behavior": "只读恢复状态，维护目标继续禁止新的破坏性命令；用户可查看目录/结果并重查，不能自动重发。"
+    },
+    {
+      "when": "路径被移动、替换、prune 后重新 add",
+      "behavior": "不按相同路径重试原删除，不自动接受新对象所有权；明确身份变化，保留历史和文件。"
+    },
+    {
+      "when": "Git 锁/仓库权限/磁盘满/缺 Git",
+      "behavior": "固定错误类别和可执行下一步；不删除锁、不改权限、不运行 sudo、不把 stderr 当产品说明。"
+    }
+  ],
+  "uiProposal": {
+    "newDraft": "现有工作文件夹入口打开同一层菜单：选择文件夹 / 选择已有工作树 / 创建工作树。未选 Agent 也可准备位置；创建不自动打开对话。",
+    "createDialog": "项目、起点、分支、目标文件夹；主文一句“不包含原文件夹未提交的改动”，共享设置等进入详情。创建中可取消，未知提供重新检查；失败保留输入。",
+    "workingLocation": "输入区显示文件夹和分支简短摘要；详情列相关对话及共享影响。已有对话只有查看原位置/另开新稿，不提供就地切分支。",
+    "management": "按仓库列工作位置，来源区分已有与此应用创建；主工作树、锁、缺失、进行中和未知都可辨。保留式归档与删除分开命名，删除确认明确对象和保留的分支/历史。",
+    "copyRules": "统一集中字符串、层级详情和键盘焦点。内部 common-dir/operation/token 不作为主界面文案；工作树只在用户明确进入 Git 功能时使用，日常仍称工作文件夹。"
+  },
+  "implementationSeams": [
+    {
+      "proposal": "新建独立 Rust worktree 模块",
+      "purpose": "只负责固定 Git CLI、结构化检查、生命周期和 bounded 操作；不进入 Agent loop，不修改第三方。"
+    },
+    {
+      "proposal": "现有目录准入加维护排他层",
+      "purpose": "覆盖根下 cwd、新建/恢复/续发及创建/删除在途；保留正常停止/审批出口，不把工作关闭偷偷改语义。"
+    },
+    {
+      "proposal": "MetaStore 新 settings 格式及 CAS",
+      "purpose": "保存必要工作位置选择/归属和有限操作恢复；读取失败不得空数组覆盖，命令和 DB 非原子必须显式未知。"
+    },
+    {
+      "proposal": "新工作位置组件 + EmptyState 小接线",
+      "purpose": "共用现有草稿保护、chooseDirectory 与准备成功应用；不增 Agent 专属面板，不改 ThreadState 身份。"
+    },
+    {
+      "proposal": "借用 file_access / process_platform 能力",
+      "purpose": "精确路径对象及自有进程资源管理；补能力缺口而非复制一套，不能借借用名义宣称外部文件系统已锁住。"
+    }
+  ],
+  "counterexamplesRequiredBeforeEnabling": [
+    "已有 linked worktree/new draft 实际 cwd；原对话、服务、配置和历史不变。",
+    "源目录有 tracked/untracked/ignored 改动；新工作树仅来自所选提交，源字节和 index 保留。",
+    "起点切换、远程同名、本地 tip 在确认后移动、重复分支/在用分支；不猜测、不 reset。",
+    "中文/空格/换行路径，NUL 分隔输出；非 UTF-8 或畸形/超限输出不 lossy 采纳错误目标。",
+    "repo hooks、fsmonitor、smudge/process、partial clone 缺 blob；检查及基础创建不运行未获准代码或网络。",
+    "来源/目标 symlink、Windows reparse、父目录替换、共同仓库移动；真实身份不符不能继续。",
+    "创建中 disk full、checkout 失败、子进程已完成但回执丢失；保留实际残余且不重复创建。",
+    "取消在 spawn 前、branch 已建、目录已建、checkout 中和回执前；只清确切自有对象，不称原子回滚。",
+    "DB 写入/回读失败、损坏设置、重启；不空值覆盖、不自动 add/remove。",
+    "同树两个 Agent/两个服务/子目录对话；运行、尾程、审批、未知、恢复在途均阻止维护。",
+    "检查删除同时新 prompt/open/restore 或新草稿关联进入；相同后端 gate 确认互斥，停止与已有审批仍可处理。",
+    "忽略目录含秘密、未跟踪目录、特殊文件、嵌套仓库、子模块、锁；不因 Git clean 或目录名称放行。",
+    "无 upstream、离线旧 refs、shallow、detached 独有提交；不把本地 ahead=0 当真实推送。",
+    "Git 删除只删了一部分、先删目录后清登记失败及反向异常；不显示成功、不继续自动扫删。",
+    "原删除意图后路径同名替换、外部 prune/re-add；重启不向新对象重发旧删除。",
+    "外部写入在检查后发生；证明可恢复材料/执行边界前不能对该场景开放或宣称无损删除。",
+    "保留式归档/恢复显示不变文件，不宣称磁盘空间回收；解除清单不删对话/草稿。",
+    "新树缺依赖、端口冲突、共享登录/配置和 .env；不自动复制秘密/装依赖，不假称任务可执行。",
+    "macOS 实际目录权限和 Windows 实机路径/锁/进程组/取消分别验证；静态/交叉编译不能替代。"
+  ],
+  "evidenceBoundaries": {
+    "observed": "当前源码只读核查；Git 官方文档及指定上游源码核查；本机 git --version 输出。",
+    "notRun": "没有创建/删除/移动工作树、Git hook/过滤器实验、Windows 实机、Agent 对话或真实应用交互；反例列表均待执行，不是已通过测试。",
+    "independentChallenge": "verification 提醒操作意图后路径被替换或 prune/re-add，不得按同路径重试删除；已纳入身份/恢复设计。",
+    "memory": "仅用既有记忆定位工程边界，再以本次 PRODUCT/plan/source 复核；未继承旧 J1-J6 或旧测试门槛。",
+    "conclusion": "基础创建/已有接入与保留式归档可通过官方 CLI 和现有数据/进程底座落地；安全磁盘删除是本包最高风险且仍待方案选择与实证。工作树不改变 Agent runtime，也不提供完全文件/环境隔离。"
+  },
+  "sourceSnapshot": {
+    "head": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+    "note": "研究写入时实际源文件 hash；含根代理正在整合的已有变更，不声称此集合为独立 build 输入。",
+    "files": [
+      {
+        "path": "PRODUCT.md",
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "4b22a0956c26cf8a90347dca038df9eb8a8d45f37329e78d92fb0d548a069b40"
+      },
+      {
+        "path": "src/components/EmptyState.tsx",
+        "sha256": "a0fa3bbf30563cab6545b5114eaa94f931078042cfcd702179313e0c6d2975dc"
+      },
+      {
+        "path": "src/runtime/archive_admission.ts",
+        "sha256": "cd3985dfcaed5c825d4454392ea473af730e84ad562e1734489c1904241497ef"
+      },
+      {
+        "path": "src/runtime/session_types.ts",
+        "sha256": "09c0a69ee302bc3414961b6323c2798318149f1b655c501a0d3f74b6cac5c762"
+      },
+      {
+        "path": "src-tauri/src/acp_client/manager.rs",
+        "sha256": "4e944aed7f2c5bc7c7ab6ed3445a9488fe5ba57018939f02398475eb030a8cd4"
+      },
+      {
+        "path": "src-tauri/src/acp_client/session_commands.rs",
+        "sha256": "25f3fa5fb6fe59d7f463495803d55deb5f22573afafe12c48347a03bcfe958b0"
+      },
+      {
+        "path": "src-tauri/src/acp_client/session.rs",
+        "sha256": "a3ef9611cd870bccf5fe0e0aed0baba393b34468bccc33fc2c14518e703e6d46"
+      },
+      {
+        "path": "src-tauri/src/acp_client/connection_identity.rs",
+        "sha256": "8359462d0417e86632346eea13e008518d1d3c4095db430f25427bf3bd307a97"
+      },
+      {
+        "path": "src-tauri/src/acp_client/lifecycle.rs",
+        "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+      },
+      {
+        "path": "src-tauri/src/acp_client/process.rs",
+        "sha256": "f160e72374889c0a03b4d208f6dec099a2f012bec34172005ba14cd1ba1c60f8"
+      },
+      {
+        "path": "src-tauri/src/meta_store.rs",
+        "sha256": "7b18f9ff6918a8d2611132eacd6cf769efbd596f93c757ec11e168bde7872e8e"
+      },
+      {
+        "path": "src-tauri/src/meta_store/archive.rs",
+        "sha256": "fa24ef83a92ac52bab24f1188133e4140ac47692db084e97c1412f452f0bf3c2"
+      },
+      {
+        "path": "src-tauri/src/work_policy.rs",
+        "sha256": "b5b49105adb4308bc14d2cecdc9b1cc16ed535b72c469f5153113086b2d1303b"
+      },
+      {
+        "path": "src-tauri/src/file_access.rs",
+        "sha256": "9ceea312f6062dc59dd574392dd5744883ed3f0fff0259968b0f3ef63190f9a4"
+      },
+      {
+        "path": "src-tauri/src/file_access/windows.rs",
+        "sha256": "90c53b8bd642b96e038af22b24ff6681a9e1507848e8c85177c46dad4a9d6ab6"
+      },
+      {
+        "path": "src-tauri/src/process_platform.rs",
+        "sha256": "ce007fb5a66c1998c736543343e37b8b9b44b0030f3f9365e9e822ed753468fb"
+      },
+      {
+        "path": "src-tauri/src/managed_update.rs",
+        "sha256": "78abda06b88fc2e6e9f29f037ed45302d19e73ee35e03be6e4e77571e3d7bb75"
+      }
+    ]
+  }
+}

@@ -290,7 +290,9 @@
 
 ## 7. 本轮开发记录
 
-第六片已补强P12当前已加载文字查找与P35 Markdown导出：折叠内容、工具文字、长差异和已接收附件文字均纳入当前范围，命中临时展开与用户选择分别保留；导出保持正文空白和实际工具状态，附件仅列来源并剔除URL认证参数，明确排除未加载内容和附件实体。检索29文件203项、受控Chrome31项通过；导出最终关联72项通过，独立实际渲染12项通过。首字符Markdown结构反例已修正，原始失败保留。见[检索](../docs/evidence/2026-10-09-capability-hardening/transcript-search/receipt.json)与[导出](../docs/evidence/2026-10-09-capability-hardening/conversation-export-review.json)。第六片七项工程检查已通过（前端2,887项、Rust1,134项/5项忽略），尚待正式安装验证，不关闭P35完整可迁移归档要求。
+第六片 `413226dc` 已安装并分项实测：[正式查找与导出](../docs/evidence/2026-10-09-capability-hardening/sixth-candidate/installed-search-export.json)覆盖正文/折叠详情定位、临时展开回收、实际文件保真与取消回执；原7项未发内容保持，实机后正常退出。查找栏说明样式、关闭焦点与导出隐私文案已补源码修正，待下一版实测。第七片已整合目录搜索权限修复、PDF/图片文件级及已显示页级意见、受限XLSX预览；分项独立复核与XLSX真实Chromium38项通过；[最终工程检查](../docs/evidence/2026-10-09-capability-hardening/seventh-checks-final/final-verification.json)前端2,983项、Rust1,153项/5项忽略及其余五项通过。原始管道测试失败保留，隔离与有界输出辅助修复已独立复核；第七片准备提交并安装；后者不包括DOCX/PPTX、公式执行或图表保真，不能据此关闭完整P16/P21/P35。
+
+第六片已补强P12当前已加载文字查找与P35 Markdown导出：折叠内容、工具文字、长差异和已接收附件文字均纳入当前范围，命中临时展开与用户选择分别保留；导出保持正文空白和实际工具状态，附件仅列来源并剔除URL认证参数，明确排除未加载内容和附件实体。检索29文件203项、受控Chrome31项通过；导出最终关联72项通过，独立实际渲染12项通过。首字符Markdown结构反例已修正，原始失败保留。见[检索](../docs/evidence/2026-10-09-capability-hardening/transcript-search/receipt.json)与[导出](../docs/evidence/2026-10-09-capability-hardening/conversation-export-review.json)。第六片七项工程检查已通过（前端2,887项、Rust1,134项/5项忽略），正式安装分项结果见前段，不关闭P35完整可迁移归档要求。
 
 2026-10-09 已开始按计划开发。首片提交 `be1364ca`，补强本地发送准备中的停止、取消后迟到审批/表单、损坏草稿与已保存配置的完整读取。前端2,542项、Rust 1,045项通过（4项原忽略），独立复核通过；初次Rust发现的7项环境顺序回归已修正，失败与复验记录均保留。详见[增量证据](../docs/evidence/2026-10-09-capability-hardening/README.md)。
 

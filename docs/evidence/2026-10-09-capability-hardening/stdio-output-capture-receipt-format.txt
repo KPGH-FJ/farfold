@@ -1,0 +1,1 @@
+docs/evidence/2026-10-09-capability-hardening/stdio-output-capture.json 11ms (unchanged)

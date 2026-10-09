@@ -1,0 +1,38 @@
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/file_delivery/workbook.rs:1:
+ //! Passive OOXML capture. Never extracts to disk or grants a file URL.
+-use super::{capture_expected, DeliveryError, VerifiedFile};
+-use base64::{engine::general_purpose::STANDARD, Engine};
++use super::{DeliveryError, VerifiedFile, capture_expected};
++use base64::{Engine, engine::general_purpose::STANDARD};
+ use serde::Serialize;
+ use std::{
+     collections::HashSet,
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/file_delivery/workbook.rs:39:
+ }
+ impl WorkbookReadFailure {
+     pub fn check(message: &str) -> Self {
+-        use crate::file_read_check::{classify_error, FailureKind};
++        use crate::file_read_check::{FailureKind, classify_error};
+         Self {
+             code: match classify_error(message) {
+                 FailureKind::Pending => "readPending",
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/file_delivery/workbook_tests.rs:1:
+ use super::*;
+ use std::io::Write;
+-use zip::{write::SimpleFileOptions, CompressionMethod, ZipWriter};
++use zip::{CompressionMethod, ZipWriter, write::SimpleFileOptions};
+ 
+ fn package(entries: &[(&str, &[u8])], method: CompressionMethod) -> Vec<u8> {
+     let mut writer = ZipWriter::new(Cursor::new(Vec::new()));
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/file_delivery.rs:18:
+ use sha2::{Digest, Sha256};
+ 
+ mod visual;
+-pub use visual::{read_visual, VisualPreview};
++pub use visual::{VisualPreview, read_visual};
+ mod workbook;
+-pub use workbook::{read_workbook, WorkbookCapture, WorkbookReadFailure};
++pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
+ 
+ pub const MAX_FILE_BYTES: u64 = 32 * 1024 * 1024;
+ pub const MAX_TEXT_BYTES: u64 = 1024 * 1024;

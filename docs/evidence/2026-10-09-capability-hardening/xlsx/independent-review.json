@@ -1,0 +1,172 @@
+{
+  "checkedAtUtc": "2026-10-09T14:21:34.853371+00:00",
+  "status": "independent-source-and-controlled-browser-review-no-open-blocker",
+  "reviewer": "product_coverage; implementation owners root/architecture",
+  "productionEditsByReviewer": false,
+  "actualRuns": {
+    "parserCounterexamples": {
+      "red": "independent-browser/independent-first.json + raw .txt: 2 failed",
+      "green": "independent-browser/independent-fixed.json + raw .txt: same 2 assertions passed"
+    },
+    "uiFirst": "ui-browser/ui-first.json + raw .txt: 23 passed / 1 failed (missing shared-formula body displayed blank)",
+    "uiExpanded": "ui-browser/ui-expanded.json: 33 passed; ui-styles.json: 36 passed; ui-final.json: 37 passed",
+    "uiFrozen": {
+      "evidence": "ui-browser/ui-frozen.json + raw .txt",
+      "passed": 38,
+      "exit": 0,
+      "sourceUnchanged": true,
+      "ipcCalls": 7,
+      "initialStrictModeCaptureCalls": 1,
+      "workersCreated": 11,
+      "workersTerminated": 11,
+      "workersCompleted": 9
+    },
+    "fixture": "Authored inert OOXML capture returned by strict file_delivery_read_workbook fixture; real production React StrictMode component, parser and browser Worker. Worker subclass only records creation/termination/message kind without replacing transport. IPC fixture does not claim actual native archive read.",
+    "execution": "Fresh owned headless Chromium temporary profile at localhost:1458; profiles/processes cleaned by runner finally."
+  },
+  "closedFindings": [
+    {
+      "finding": "ST_Xstring escaped text displayed encoded",
+      "verification": "same real Worker inline/cache/shared-run cases now decode once including escaped underscore"
+    },
+    {
+      "finding": "unknown rich-text structure silently became authoritative empty string",
+      "verification": "same real Worker counterexample now rejects unsupported"
+    },
+    {
+      "finding": "row/column style metadata missing for blank cells",
+      "verification": "computed backgrounds match column green and overriding row pink"
+    },
+    {
+      "finding": "shared formula with absent full body displayed empty formula section",
+      "verification": "original UI red now shows explicit noFormulaText; cached numeric 7 remains; no formula reconstruction"
+    }
+  ],
+  "covered": [
+    "zero, false, cached empty text, missing formula cache, 1900 serial60, cached formula error, absent shared formula body",
+    "rich runs do not bypass display prefix/hidden format; saved source accessible only after explicit detail selection",
+    "explicit false bold/italic/underline/strike overrides inherited style; td/button decoration absent",
+    "actual numeric Green computedColor rgb(0,255,0)",
+    "hidden row/column and hidden merge anchor do not leak; explicit reveal restores; rehiding clears selected detail",
+    "merge rowSpan/colSpan, cross-window continuation, 100x24 bounded coordinate view and XFD1048576 single sparse cell",
+    "32000-character value preserved in detail; measured viewport/document 1000/1000, grid client/scroll 866/2141, cell width88; no outer horizontal overflow in fixture",
+    "detail focus and return-to-cell; paging resets grid scroll; invalid address preserves current view",
+    "switch sheet reuses captured version; actual Worker cancellation then immediate switch; hide during parse and exact selected-sheet restart",
+    "cancelled/hidden delayed capture cannot publish; old version response cannot overwrite latest version; first StrictMode obsolete effect does not start read"
+  ],
+  "sourceReview": {
+    "scope": "Capture size/version checks; archive preallocation and decompression budgets; XML/namespace/DTD handling; typed cached values/style warnings; expanded text/run budgets; external relationships inert; worker timeout/cancellation disposal; exact component file/controller ownership; bounded grid and source selection.",
+    "sourceHashes": {
+      "src/components/WorkbookFilePreview.tsx": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713",
+      "src/components/WorkbookFilePreview.css": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445",
+      "src/components/OpenedFileView.tsx": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac",
+      "src/runtime/workbook_view.ts": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129",
+      "src/runtime/workbook_strings.ts": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683",
+      "src/runtime/xlsx_fixture.ts": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+      "src/runtime/xlsx_format.ts": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+      "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+      "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+      "src/runtime/xlsx_sheet.ts": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+      "src/runtime/xlsx_styles.ts": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+      "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+      "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+      "src/runtime/xlsx_xstring.ts": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d",
+      "src/workers/xlsx_preview.worker.ts": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+      "src-tauri/src/file_delivery/workbook.rs": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8"
+    },
+    "sourceHashWindow": "UI frozen command before/after all 16 production inputs identical; separate source-freeze.json preserves both.",
+    "peerLogsReadNotRerun": [
+      "xlsx-final-targeted.txt: 48/3 passed",
+      "xlsx-archive-final.txt: 8 passed",
+      "xlsx-final-typecheck.txt: clean output"
+    ],
+    "rootReceiptRead": "xlsx/root-ui-implementation.json; 63 entry tests are root evidence, not executed by this reviewer"
+  },
+  "screenshotsPersonallyInspected": [
+    "ui-browser/ui-values-merged.png",
+    "ui-browser/ui-hidden-sheet.png",
+    "ui-browser/ui-new-version.png"
+  ],
+  "limits": [
+    "Controlled Chromium development component/Worker evidence, not installed WebKit or real Agent acceptance.",
+    "Own UI fixture mocks only bounded native capture; backend-to-browser capture evidence belongs to architecture.",
+    "Read-only cached XLSX data; no formula recalculation, spreadsheet editing, chart drawing, full Excel fidelity, PDF/Office region opinions, DOCX/PPTX claim.",
+    "Single authored workload/layout measurements do not establish general performance bound beyond implemented budgets.",
+    "No package build, formal-app operation, user file read, Agent invocation or source edits performed in this review."
+  ],
+  "evidenceHashes": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/index.html",
+      "sha256": "d2cdc9aca4b82f6a829ddeacc6df44e7b30e2f7d39b4762521b8c5391b201ba5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx",
+      "sha256": "21349c7826790e6a791e6ab24e618d5683895595e501a61e9f2a436c31537177"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture-first.tsx",
+      "sha256": "fb376be429a21bda6eaa72ed081c583e8a1e9187f9b28106ea46741016640bcd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/run.mjs",
+      "sha256": "b6ab223c682d729c291348457ffebb836cb54ac81a0b2c3002c5debf7dc1a1bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/source-freeze.json",
+      "sha256": "84981765fa82865587d9bc35723c1e9b13592d97b6f77bf1a39e074741675a3c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.json",
+      "sha256": "c9ffaa23f945aca8b94e2ae6bc5200cc3246fb41e11645b947a74dad73eccdbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.txt",
+      "sha256": "43b2f03e9f3bcfdc4f9c03364bf38bff4393280eb4b852e71cab1aaa6f7bcb62"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.json",
+      "sha256": "8975c2d94702b38b2c43b0a5dd8399fe2b424f4c6f30461f84ab935b99856b27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.txt",
+      "sha256": "4b40c2f66c791298d05486f44a9c2ce09f44d5b3741a3c10ceef4b95b8a06b26"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.diagnostics.json",
+      "sha256": "3e927e2f1b3dfe99694b99af0559c5f42f9bea970435ea5941f62e73a044ea36"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.stderr.txt",
+      "sha256": "ccac1447e31ea094933fd107b375c469c634a65d404b67ae7f6f589d57dad455"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-values-merged.png",
+      "sha256": "ebbd7b9793e36b0c76ddd8b87d13c43eb6763e87804ae98d97c9782dcff52606"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-hidden-sheet.png",
+      "sha256": "b67342374a03b44bdb63006acbcfba3232b95a977d36d03957c546dc5813ff71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-new-version.png",
+      "sha256": "19a5b3760b91be1126a3eb8a814ca2916556553f1a200fd2b51dae050ac336c4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-first.json",
+      "sha256": "92f6e1ba549b86411635b3d9b3a492ac7d8b66e04fac50a65e80ac2470bacc58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-first.txt",
+      "sha256": "01f19d426682e3da8a96374c195e818e526653c997355cc28806e0a83d1777ee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-fixed.json",
+      "sha256": "d6cba7cac3a39304e9a11a9a7e8bca8224b227674e8db1066dec84758c6eb342"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-fixed.txt",
+      "sha256": "26d9075efd1ced41c139b3f2d815a7a09e381d391c9bd0a8fab0a18d92435f05"
+    }
+  ],
+  "cleanup": "Chromium runners cleaned owned process groups and temporary profiles; shared owned Vite 1458 retained until root release."
+}

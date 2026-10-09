@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  3 passed (3)
+      Tests  28 passed (28)
+   Start at  21:56:31
+   Duration  240ms (transform 142ms, setup 0ms, import 205ms, tests 115ms, environment 0ms)
+

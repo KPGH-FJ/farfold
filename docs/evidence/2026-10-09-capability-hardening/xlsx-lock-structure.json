@@ -1,0 +1,18 @@
+{
+  "packages": {
+    "added": ["frac@1.1.2", "saxes@6.0.0", "ssf@0.11.2", "xmlchars@2.2.0"],
+    "removed": [],
+    "changed": []
+  },
+  "snapshots": {
+    "added": ["frac@1.1.2", "saxes@6.0.0", "ssf@0.11.2", "xmlchars@2.2.0"],
+    "removed": [],
+    "changed": []
+  },
+  "importer": {
+    "added": ["saxes", "ssf"],
+    "existingChanged": [],
+    "devUnchanged": true
+  },
+  "otherTopLevelUnchanged": true
+}

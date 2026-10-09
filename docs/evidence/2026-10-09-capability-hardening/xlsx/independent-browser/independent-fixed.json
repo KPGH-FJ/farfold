@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "valid OOXML escaped strings decode once in inline/cache/shared rich text",
+      "ok": true,
+      "actual": ["Line1\rLine2", "_x0041_", "_x0042_\rend"],
+      "expected": ["Line1\rLine2", "_x0041_", "_x0042_\rend"],
+      "warnings": []
+    },
+    {
+      "name": "unknown rich text child is not silently empty",
+      "ok": true,
+      "code": "unsupported"
+    }
+  ],
+  "scope": "actual production XLSX Worker with authored XML parts; no user file/native app/Agent"
+}

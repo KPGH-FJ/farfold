@@ -1,0 +1,239 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualFilePreview.test.tsx (7 tests | 2 failed) 31ms
+   × reports a PDF page only after that operation drew successfully, then withdraws it before page navigation 4ms
+   × withdraws cancelled or failed page eligibility and ignores their late success 3ms
+ ❯ src/runtime/file_feedback_anchor.test.ts (16 tests | 15 failed) 19ms
+   × restores the exact PDF page anchor on its disk version without adding a content copy 8ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"future","page":2,"pageCount":4} 2ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":0,"pageCount":4} 0ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":5,"pageCount":4} 1ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":1.2,"pageCount":4} 0ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":2,"pageCount":1001} 0ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":2,"pageCount":4,"rectangle":[0,0,1,1]} 1ms
+   × rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: null 1ms
+   × rejects contradictory or unknown location metadata: {"selection":{"side":"after","line":2}} 1ms
+   × rejects contradictory or unknown location metadata: {"lineInput":{"side":"after","text":"2"}} 1ms
+   × rejects contradictory or unknown location metadata: {"scope":"fragment"} 0ms
+   × rejects contradictory or unknown location metadata: {"contentId":"unknown-version"} 0ms
+   × rejects contradictory or unknown location metadata: {"path":"/other.pdf"} 0ms
+   × rejects contradictory or unknown location metadata: {"futureLocation":{"page":9}} 0ms
+   × formats the old page and exact saved digest, without promising that the current file still matches 2ms
+ ❯ src/components/OpenedFileView.test.tsx (42 tests | 3 failed) 2917ms
+   × offers PDF feedback only from a rendered current page and preserves its chosen page across navigation 55ms
+   × keeps a current visual opinion reachable when the page fails, but removes the current-page option 54ms
+   × does not accept a visible-page report from another source or after hiding 53ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 20 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > offers PDF feedback only from a rendered current page and preserves its chosen page across navigation
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/OpenedFileView.test.tsx:684:46
+    682| it("offers PDF feedback only from a rendered current page and preserve…
+    683|   const visual=await visualReady();
+    684|   expect(button(S.feedback)?.props.disabled).toBe(true);
+       |                                              ^
+    685|   reportPage(visual,{kind:"pdf",page:1,pageCount:3});
+    686|   editFeedback("Keep this opinion");click("针对当前第 1 页");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps a current visual opinion reachable when the page fails, but removes the current-page option
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ reportPage src/components/OpenedFileView.test.tsx:678:41
+    676| }
+    677| function reportPage(node: Element, location: unknown, source = node.pr…
+    678|   expect(typeof node.props.onReadiness).toBe("function");
+       |                                         ^
+    679|   (node.props.onReadiness as (value: unknown)=>void)({source,location}…
+    680|   render();
+ ❯ src/components/OpenedFileView.test.tsx:698:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not accept a visible-page report from another source or after hiding
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ reportPage src/components/OpenedFileView.test.tsx:678:41
+    676| }
+    677| function reportPage(node: Element, location: unknown, source = node.pr…
+    678|   expect(typeof node.props.onReadiness).toBe("function");
+       |                                         ^
+    679|   (node.props.onReadiness as (value: unknown)=>void)({source,location}…
+    680|   render();
+ ❯ src/components/OpenedFileView.test.tsx:705:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/20]⎯
+
+ FAIL  src/components/VisualFilePreview.test.tsx > reports a PDF page only after that operation drew successfully, then withdraws it before page navigation
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected:
+[
+  {
+    "location": null,
+    "source": {
+      "data": "JVBERi0x",
+      "file": {
+        "name": "a.pdf",
+        "path": "/work/a.pdf",
+        "resolvedPath": "/work/a.pdf",
+        "root": "/work",
+        "sha256": "hash1",
+        "size": 6,
+        "version": "v1",
+      },
+      "mimeType": "application/pdf",
+    },
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/components/VisualFilePreview.test.tsx:184:18
+    182|   h.render.mockReturnValueOnce(first.promise).mockReturnValueOnce(next…
+    183|   render();
+    184|   expect(report).toHaveBeenLastCalledWith({source: props.preview, loca…
+       |                  ^
+    185|   h.render.mock.calls[0][5](4);
+    186|   expect(report.mock.calls.some(([value]) => value.location?.kind === …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/20]⎯
+
+ FAIL  src/components/VisualFilePreview.test.tsx > withdraws cancelled or failed page eligibility and ignores their late success
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected:
+[
+  {
+    "location": null,
+    "source": {
+      "data": "JVBERi0x",
+      "file": {
+        "name": "a.pdf",
+        "path": "/work/a.pdf",
+        "resolvedPath": "/work/a.pdf",
+        "root": "/work",
+        "sha256": "hash1",
+        "size": 6,
+        "version": "v1",
+      },
+      "mimeType": "application/pdf",
+    },
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/components/VisualFilePreview.test.tsx:202:18
+    200|   const pending=deferred<void>();h.render.mockReturnValue(pending.prom…
+    201|   click(S.cancel);h.render.mock.calls[0][5](3);pending.resolve();await…
+    202|   expect(report).toHaveBeenLastCalledWith({source:props.preview,locati…
+       |                  ^
+    203|   expect(report.mock.calls.every(([value])=>value.location===null)).to…
+    204| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/20]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.test.ts > restores the exact PDF page anchor on its disk version without adding a content copy
+AssertionError: expected { path: '/work/result.pdf', …(4) } to match object { path: '/work/result.pdf', …(5) }
+
+- Expected
++ Received
+
+@@ -1,11 +1,6 @@
+  {
+-   "anchor": {
+-     "kind": "pdf-page",
+-     "page": 2,
+-     "pageCount": 4,
+-   },
+    "contentId": "disk:[\"/work/result.pdf\",\"v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+    "path": "/work/result.pdf",
+    "scope": "file",
+    "selection": null,
+    "text": "Change this heading",
+
+ ❯ src/runtime/file_feedback_anchor.test.ts:11:51
+      9| it("restores the exact PDF page anchor on its disk version without add…
+     10|   const parsed = parseDraftSnapshot(snapshot(entry))!;
+     11|   expect(Object.values(parsed.feedback[0][1])[0]).toMatchObject(entry);
+       |                                                   ^
+     12| });
+     13| it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/20]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"future","page":2,"pageCount":4}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":0,"pageCount":4}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":5,"pageCount":4}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":1.2,"pageCount":4}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":2,"pageCount":1001}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: {"kind":"pdf-page","page":2,"pageCount":4,"rectangle":[0,0,1,1]}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects an unsupported or invalid anchor instead of silently restoring a file-wide opinion: null
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/file_feedback_anchor.test.ts:16:66
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/20]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"selection":{"side":"after","line":2}}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"lineInput":{"side":"after","text":"2"}}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"scope":"fragment"}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"contentId":"unknown-version"}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"path":"/other.pdf"}
+ FAIL  src/runtime/file_feedback_anchor.test.ts > rejects contradictory or unknown location metadata: {"futureLocation":{"page":9}}
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/file_feedback_anchor.test.ts:21:73
+     19|   { selection: {side: "after", line: 2} }, {lineInput: {side:"after",t…
+     20| ])("rejects contradictory or unknown location metadata: %j", differenc…
+     21|   expect(() => parseDraftSnapshot(snapshot({...entry, ...difference}))…
+       |                                                                         ^
+     22| });
+     23| it("formats the old page and exact saved digest, without promising tha…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/20]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.test.ts > formats the old page and exact saved digest, without promising that the current file still matches
+AssertionError: expected '关于 /work/result.pdf（当时查看的内容）：\nChange…' to contain '第 2 / 4 页'
+
+- Expected
++ Received
+
+- 第 2 / 4 页
++ 关于 /work/result.pdf（当时查看的内容）：
++ Change this heading
+
+ ❯ src/runtime/file_feedback_anchor.test.ts:25:16
+     23| it("formats the old page and exact saved digest, without promising tha…
+     24|   const text = fileFeedbackText(entry as SavedFileFeedback);
+     25|   expect(text).toContain("第 2 / 4 页");
+       |                ^
+     26|   expect(text).toContain(sha256);
+     27|   expect(text).toContain("若文件已变化");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/20]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  20 failed | 45 passed (65)
+   Start at  21:32:13
+   Duration  3.29s (transform 334ms, setup 0ms, import 601ms, tests 2.97s, environment 0ms)
+

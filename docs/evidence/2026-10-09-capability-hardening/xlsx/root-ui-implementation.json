@@ -1,0 +1,89 @@
+{
+  "checkedAtUtc": "2026-10-09T14:20:03.712298+00:00",
+  "status": "source-integrated-pending-full-checks-and-installed-validation",
+  "scope": [
+    "XLSX read-only viewport and OpenedFileView entry",
+    "sixth-installed search toolbar/focus and export scope copy corrections"
+  ],
+  "sourceFiles": [
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "ccdc0618c3355575a859c0ce8d2fdcae56a9ffbe4d7ddfcd2f913f1d18d20a5d"
+    },
+    {
+      "path": "src/product-shell.css",
+      "sha256": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8"
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "bc693440a82959e5466ba73b05b12fb8760ef744a83f1b6ad53aec59320bda8b"
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713"
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.css",
+      "sha256": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445"
+    },
+    {
+      "path": "src/runtime/workbook_view.ts",
+      "sha256": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129"
+    },
+    {
+      "path": "src/runtime/workbook_view.test.ts",
+      "sha256": "85fe7854d369172ae46ebdc3480dc822337f469eb93fe904efe6f97acddbfe9f"
+    },
+    {
+      "path": "src/runtime/workbook_strings.ts",
+      "sha256": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "2b04d6771fc0917ec48124649f9e1e1df759e044d404334b3f0da2aa9e9d0bdb"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "2e2e69ef2bf33ae2add9f2c67504d01885d7d49c4c4295c6369882b1025475ea"
+    }
+  ],
+  "checks": {
+    "initial": "xlsx/ui-tests-first.txt: 3 files, 60 passed",
+    "refined": "xlsx/ui-tests-refined.txt: 3 files, 61 passed",
+    "entry": "xlsx/ui-entry-tests.txt: 3 files, 63 passed",
+    "typecheck": "xlsx/ui-types-refined.txt: passed before final entry test additions; full check pending"
+  },
+  "implemented": [
+    "100 rows x 24 columns bounded coordinate window and exact A1 jump",
+    "original cell coordinates, hidden rows/columns and explicitly selected hidden sheets",
+    "clipped merges retain original source; hidden anchors cannot reveal content",
+    "separate zero, false, empty text, blank display, missing formula cache and original saved value",
+    "format warnings and per-cell details; no formula evaluation, macro execution or external data load",
+    "one surviving StrictMode effect crosses IPC; file/sheet/cancel/visibility owner checks suppress late results",
+    "cell-detail keyboard focus return and page-scroll reset",
+    "row/column default styles and explicit rich-run style off values; formatted display wins over rich source text"
+  ],
+  "independentCorrections": [
+    "shared formula absent text identified by root and actual Worker UI, parser owner fixes to null",
+    "rich source text must not bypass formatted or hidden display",
+    "explicit false font switches must override inherited font; decoration must not propagate from td",
+    "merged default style follows original anchor even when clipped",
+    "empty rich-run expansion bounded in parser by architecture"
+  ],
+  "evidenceBoundaries": [
+    "backend capture/parser tests and browser evidence have separate receipts",
+    "OpenedFileView and its test include additional XLSX changes after P21 source freeze",
+    "no seventh candidate built or installed at this checkpoint",
+    "no new Agent request or permission expansion",
+    "full Office preview, charts and formula recalculation are not claimed complete"
+  ],
+  "remaining": [
+    "final independent browser and source review",
+    "seven full project checks",
+    "candidate/package/install/data verification and installed UI checks"
+  ]
+}

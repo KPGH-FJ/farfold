@@ -1,0 +1,190 @@
+{
+  "passed": false,
+  "sample": {
+    "path": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+    "status": 200,
+    "size": 0,
+    "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a"
+  },
+  "results": [
+    {
+      "entry": "production renderPdfPage",
+      "status": "error",
+      "error": "Error: 预览尚未返回，已停止等待。可重新读取或使用其他应用打开。",
+      "ms": 15002.900000035763
+    },
+    {
+      "entry": "same core after actual official parser ready",
+      "status": "success",
+      "pages": 2,
+      "width": 600,
+      "height": 800
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "url": "http://127.0.0.1:1458/src/workers/pdf_render.worker.ts?worker_file&type=module",
+      "at": 69
+    },
+    {
+      "kind": "sent",
+      "keys": ["data", "pageNumber", "displayWidth"],
+      "at": 69.10000002384186
+    },
+    {
+      "kind": "terminated",
+      "at": 15071.800000011921
+    },
+    {
+      "kind": "parser-message",
+      "action": "ready",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "DataLoaded",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "GetDoc",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "StartRenderPage",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "FetchBinaryData",
+      "keys": ["sourceName", "targetName", "action", "callbackId", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "commonobj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "chunk"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "obj",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "parser-message",
+      "action": "StartRenderPage",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "parser-message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "chunk"]
+    }
+  ]
+}

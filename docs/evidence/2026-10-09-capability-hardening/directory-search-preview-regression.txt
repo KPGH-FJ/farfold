@@ -1,0 +1,23 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 16 tests
+test browser_workspace::local_preview::directory::tests::path_aliases_and_encoded_traversal_cannot_escape_or_bypass_name_policy ... ok
+test browser_workspace::local_preview::directory::tests::cancel_during_read_and_cloned_readers_cannot_return_or_deliver_late_content ... ok
+test browser_workspace::local_preview::directory::tests::root_or_file_retargeted_to_symlink_after_selection_is_rejected ... ok
+test browser_workspace::local_preview::tests::developer_server_requires_explicit_literal_loopback_origin_and_port ... ok
+test browser_workspace::local_preview::directory::tests::root_replacement_and_mutation_during_read_discard_the_bytes ... ok
+test browser_workspace::local_preview::directory::tests::selected_entry_and_relative_assets_are_read_with_mime_and_mandatory_policy ... ok
+test browser_workspace::local_preview::tests::revocation_rejects_final_delivery_without_revoking_other_preview ... ok
+test browser_workspace::local_preview::directory::tests::special_files_invalid_text_and_oversize_assets_return_errors ... ok
+test browser_workspace::local_preview::directory::tests::unicode_entry_path_round_trips_through_url_encoding ... ok
+test browser_workspace::local_preview::directory::tests::entry_must_be_explicit_html_inside_root_and_selected_alias_root_is_canonicalized ... ok
+test browser_workspace::local_preview::tests::server_navigation_cannot_change_selected_host_port_or_scheme ... ok
+test browser_workspace::local_preview::directory::tests::directory_search_local_resources_work_without_listing_and_still_recheck ... ok
+test browser_workspace::local_preview::tests::developer_server_still_requires_an_existing_selected_project ... ok
+test browser_workspace::local_preview::directory::tests::symlink_files_directories_and_hard_links_are_never_followed ... ok
+test browser_workspace::local_preview::tests::directory_storage_is_stable_and_separate_by_project_entry_and_mode ... ok
+test browser_workspace::local_preview::directory::tests::directory_selection_does_not_auto_expose_hidden_config_credentials_or_source_maps ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 1131 filtered out; finished in 0.01s
+

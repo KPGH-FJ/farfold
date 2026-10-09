@@ -1,0 +1,25 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_parse.test.ts (26 tests | 1 failed) 99ms
+     × decodes font names and suppresses unsupported custom indexed palette colors 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > decodes font names and suppresses unsupported custom indexed palette colors
+AssertionError: expected 'Font_x005F_x0041_' to be 'Font_x0041_' // Object.is equality
+
+Expected: "Font_x0041_"
+Received: "Font_x005F_x0041_"
+
+ ❯ src/runtime/xlsx_parse.test.ts:165:40
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 passed (26)
+   Start at  22:15:53
+   Duration  217ms (transform 43ms, setup 0ms, import 62ms, tests 99ms, environment 0ms)
+

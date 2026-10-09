@@ -1,0 +1,74 @@
+9:40:53 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
+
+  VITE v8.2.2  ready in 563 ms
+
+  ➜  Local:   http://127.0.0.1:1458/
+9:40:54 PM [vite] (client) [optimizer] scanning dependencies...
+9:41:48 PM [vite] (client) dependencies optimized: pdfjs-dist/legacy/build/pdf.mjs, pdfjs-dist/legacy/build/pdf.worker.mjs
+9:41:48 PM [vite] (client) optimized dependencies changed. reloading
+9:42:26 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx
+9:44:13 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.html
+9:44:35 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.ts
+9:45:32 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.html
+9:47:16 PM [vite] (client) page reload src/workers/pdf_preview.worker.ts
+9:47:16 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.ts
+9:47:44 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.html
+9:47:44 PM [vite] (client) [console.warn] Warning: Indexing all PDF objects
+9:55:33 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx
+9:55:46 PM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+9:55:46 PM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.ts
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.ts
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.ts
+9:55:46 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.html
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.html
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/index.html
+9:55:46 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.html
+9:57:28 PM [vite] (client) page reload src/workers/pdf_parser_diagnostics.ts
+9:58:19 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html
+9:58:21 PM [vite] (client) dependencies optimized: saxes, ssf
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_fixture.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_parse.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_preview.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_sheet.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_styles.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_types.ts
+10:00:34 PM [vite] (client) page reload src/runtime/xlsx_xml.ts
+10:00:34 PM [vite] (client) page reload src/workers/xlsx_preview.worker.ts
+10:00:34 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html
+10:05:14 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/index.html
+10:08:15 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/index.html
+10:08:16 PM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+10:09:24 PM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+10:10:55 PM [vite] (client) page reload src/runtime/xlsx_preview.ts
+10:10:55 PM [vite] (client) page reload src/runtime/xlsx_sheet.ts
+10:10:55 PM [vite] (client) page reload src/runtime/xlsx_parse.ts
+10:10:55 PM [vite] (client) page reload src/runtime/xlsx_types.ts
+10:13:09 PM [vite] (client) page reload src/runtime/xlsx_types.ts
+10:13:09 PM [vite] (client) page reload src/runtime/xlsx_sheet.ts
+10:13:09 PM [vite] (client) page reload src/runtime/xlsx_preview.ts
+10:13:33 PM [vite] (client) page reload src/runtime/xlsx_preview.ts
+10:13:33 PM [vite] (client) page reload src/runtime/xlsx_sheet.ts
+10:13:33 PM [vite] (client) page reload src/runtime/xlsx_types.ts
+10:14:22 PM [vite] (client) page reload src/runtime/xlsx_styles.ts
+10:14:22 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html
+10:14:23 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html
+10:14:29 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/index.html
+10:15:53 PM [vite] (client) page reload src/runtime/xlsx_sheet.ts
+10:16:13 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx
+10:16:18 PM [vite] (client) page reload src/runtime/xlsx_styles.ts
+10:16:18 PM [vite] (client) page reload src/runtime/xlsx_styles.ts
+10:17:00 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx
+10:17:04 PM [vite] (client) hmr update /src/components/WorkbookFilePreview.tsx
+10:17:51 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx
+10:17:51 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/index.html
+10:17:51 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx
+10:17:57 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:18:55 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:18:55 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:19:12 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:19:19 PM [vite] (client) page reload src/runtime/xlsx_format.ts
+10:19:29 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx
+10:19:29 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/fixture.tsx

@@ -1,0 +1,16 @@
+official release index: https://opensource.apple.com/scripts/main.built.6a507df9.js sha256: e70fa629127593fc7766f3ddeae3a7e23def5efb6eee1b6f1cdab1265bc7f3c5
+release mapping: macOS 13.0 xnu 8792.41.9
+release mapping: macOS 12.3 xnu 8020.101.4
+release mapping: macOS 11.2 xnu 7195.81.3
+official header: https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-7195.81.3/bsd/sys/fcntl.h sha256: 02d4a9cedd50f1914d4c661f56c7b718bc92420ca7a78ce5daaf9265d166356c O_SEARCH present: False
+official header: https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-8020.101.4/bsd/sys/fcntl.h sha256: f0e2def17b4585bd9e624d834fb770cf33b44887c2073476e1eb2ac2ec841330 O_SEARCH present: False
+official header: https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-8792.41.9/bsd/sys/fcntl.h sha256: 084757ba7bf696ae64e0ed31d431ee9d8bea7fd2fb35e97b0826c668fab00cf7 O_SEARCH present: True
+184 #define O_SEARCH        (O_EXEC | O_DIRECTORY)   /* open directory for search only */
+189 #define FSEARCH         FEXEC
+official system-version query: https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-7195.81.3/bsd/kern/kern_sysctl.c sha256: 55ba83cfef62225a8f42132358bb5056bda1c0140b98825ccb944599e0f03783 contains osproductversion: True
+actual uname: Darwin 24.6.0 arm64
+actual product version: 15.6
+actual effective uid: 501
+local SDK: /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+deployment minimum from prior candidate codesign record:
+VersionMin=720896

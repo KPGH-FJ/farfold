@@ -1,0 +1,67 @@
+{
+  "checkedAtUtc": "2026-10-09T14:08:15.381244+00:00",
+  "mode": "independent read-only source review plus actual production Worker with authored parts",
+  "status": "two confirmed content findings sent to architecture; UI awaits root ready notice",
+  "findings": [
+    {
+      "id": "xlsx-xstring",
+      "evidence": "independent-first.json",
+      "source": [
+        "src/runtime/xlsx_sheet.ts:39",
+        "src/runtime/xlsx_sheet.ts:132"
+      ],
+      "detail": "Inline, cached-string and shared rich-text values leave valid ST_Xstring CR and escaped underscore sequences undecoded with no warning. Expected Line1 CR Line2 and literal _x0041_; actual encoded source is shown.",
+      "officialSource": "https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/d34ae755-c53f-4a44-a363-c6dd3ee018a4",
+      "state": "reported awaiting owner repair"
+    },
+    {
+      "id": "xlsx-rich-unknown",
+      "evidence": "independent-first.json",
+      "source": ["src/runtime/xlsx_sheet.ts:39"],
+      "detail": "Unknown namespaced text nested in inline rich text becomes type=text,value empty,display empty,warnings empty. Reject or disclose unsupported content instead of returning authoritative blank.",
+      "state": "reported awaiting owner repair"
+    },
+    {
+      "id": "xlsx-blank-style",
+      "source": [
+        "src/runtime/xlsx_sheet.ts:175",
+        "src/runtime/xlsx_sheet.ts:213"
+      ],
+      "detail": "Row/column default style IDs only affect explicit cells and are omitted from output rows/columns, so blank visible grid cells cannot inherit source styling. Reported for owner/root scope choice: preserve IDs/apply bounded window or accurately warn.",
+      "state": "static design limitation; not an independently executed display failure"
+    }
+  ],
+  "notFindings": [
+    "An attempted Vite SSR diagnostic hit CJS SSF namespace interop before parsing; it was not counted as a product failure. Actual browser Worker is the executed evidence.",
+    "No claim that sparse logical dimensions allocate a dense grid; parser retains sparse cells and merge-area budget. UI window behavior awaits its actual source."
+  ],
+  "reviewedSource": [
+    "src/runtime/xlsx_types.ts",
+    "src/runtime/xlsx_parse.ts",
+    "src/runtime/xlsx_sheet.ts",
+    "src/runtime/xlsx_styles.ts",
+    "src/runtime/xlsx_xml.ts",
+    "src/runtime/xlsx_preview.ts",
+    "src/runtime/xlsx_format.ts",
+    "src/workers/xlsx_preview.worker.ts",
+    "src-tauri/src/file_delivery/workbook.rs"
+  ],
+  "sourceHashesAtReview": [
+    {
+      "path": "src/runtime/xlsx_sheet.ts",
+      "sha256": "d1efeedb732988edf085dbd1e69670292e970974b4308e060106de2045fc95ad"
+    },
+    {
+      "path": "src/runtime/xlsx_parse.ts",
+      "sha256": "d503c4af8ae51e485f7e55dd829adc49e3d84ab514bfa41332623fba1f2239e6"
+    },
+    {
+      "path": "src/runtime/xlsx_styles.ts",
+      "sha256": "f02c7dafcbe6a843af7e84b7e228767b936fc84cde0c5e099488b2ccf51f65de"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "sha256": "390d14aea140ecf425c15be4a6998bdb84479f1572c7a17f3ce7cfdf698dae86"
+    }
+  ]
+}

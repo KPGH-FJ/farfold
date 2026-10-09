@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_format.test.ts (6 tests | 1 failed) 7ms
+     × uses spreadsheet bright green rather than the CSS green keyword 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > uses spreadsheet bright green rather than the CSS green keyword
+AssertionError: expected { display: '2', color: '#008000' } to deeply equal { display: '2', color: '#00FF00' }
+
+- Expected
++ Received
+
+  {
+-   "color": "#00FF00",
++   "color": "#008000",
+    "display": "2",
+  }
+
+ ❯ src/runtime/xlsx_format.test.ts:48:40
+     46|   });
+     47|   it("uses spreadsheet bright green rather than the CSS green keyword"…
+     48|     expect(show(2, "[Green]0", false)).toEqual({
+       |                                        ^
+     49|       display: "2",
+     50|       color: "#00FF00",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  22:19:12
+   Duration  87ms (transform 16ms, setup 0ms, import 23ms, tests 7ms, environment 0ms)
+

@@ -1,0 +1,9 @@
+{
+  "checkedAtUtc": "2026-10-09T14:01:06.343660+00:00",
+  "builtServerOwnedPid": 97620,
+  "terminatedBuiltServer": true,
+  "removedTemporaryBuild": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-visual-feedback-build-vulehV",
+  "verifiedManifestFilesBeforeRemoval": 93,
+  "chromium": "Each harness owns and terminates its temporary-profile process group; profiles removed by runner.",
+  "developmentServer": "1458 remains shared with architecture XLSX check until coordinated cleanup."
+}

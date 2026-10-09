@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_parse.test.ts (24 tests | 1 failed) 103ms
+     × decodes number-format ST_Xstring without a second pass 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > decodes number-format ST_Xstring without a second pass
+AssertionError: expected '"_x005F_x0041_"0' to be '"_x0041_"0' // Object.is equality
+
+Expected: ""_x0041_"0"
+Received: ""_x005F_x0041_"0"
+
+ ❯ src/runtime/xlsx_parse.test.ts:145:37
+    143|     input = replacePart(input, "xl/styles.xml", x => x.replace('format…
+    144|     const result = parseWorkbook(input);
+    145|     expect(result.styles[3].numFmt).toBe('"_x0041_"0');
+       |                                     ^
+    146|     expect(result.sheet!.cells[0].display).toBe("_x0041_2");
+    147|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 passed (24)
+   Start at  22:13:59
+   Duration  244ms (transform 51ms, setup 0ms, import 71ms, tests 103ms, environment 0ms)
+

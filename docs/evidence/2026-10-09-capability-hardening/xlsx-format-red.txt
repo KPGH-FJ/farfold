@@ -1,0 +1,119 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_format.test.ts (5 tests | 5 failed) 6ms
+     × applies numeric precision, percent, grouping, fractions and scientific formats 3ms
+     × preserves Excel's calendar and elapsed duration without local Date conversion 1ms
+     × does not conflate zero, false, empty cache and number-looking text 0ms
+     × reports unsupported locale codes and unknown bracket directives instead of General 1ms
+     × carries supported color sections and flags width-dependent spacing 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > applies numeric precision, percent, grouping, fractions and scientific formats
+AssertionError: expected '0.12' to be '12.00%' // Object.is equality
+
+Expected: "12.00%"
+Received: "0.12"
+
+ ❯ src/runtime/xlsx_format.test.ts:6:48
+      4| describe("typed spreadsheet display", () => {
+      5|   it("applies numeric precision, percent, grouping, fractions and scie…
+      6|     expect(show(0.12, "0.00%", false).display).toBe("12.00%");
+       |                                                ^
+      7|     expect(show(1234.5, "#,##0.00", false).display).toBe("1,234.50");
+      8|     expect(show(1.5, "# ?/?", false).display).toBe("1 1/2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > preserves Excel's calendar and elapsed duration without local Date conversion
+AssertionError: expected [ '59', '60', '61' ] to deeply equal [ '1900-02-28', '1900-02-29', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "1900-02-28",
+-   "1900-02-29",
+-   "1900-03-01",
++   "59",
++   "60",
++   "61",
+  ]
+
+ ❯ src/runtime/xlsx_format.test.ts:12:73
+     10|   });
+     11|   it("preserves Excel's calendar and elapsed duration without local Da…
+     12|     expect([59, 60, 61].map(n => show(n, "yyyy-mm-dd", false).display)…
+       |                                                                         ^
+     13|     expect(show(0, "yyyy-mm-dd", true).display).toBe("1904-01-01");
+     14|     expect(show(1.5, "[h]:mm", false).display).toBe("36:00");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > does not conflate zero, false, empty cache and number-looking text
+AssertionError: expected '0' to be '0.00' // Object.is equality
+
+Expected: "0.00"
+Received: "0"
+
+ ❯ src/runtime/xlsx_format.test.ts:17:44
+     15|   });
+     16|   it("does not conflate zero, false, empty cache and number-looking te…
+     17|     expect(show(0, "0.00", false).display).toBe("0.00");
+       |                                            ^
+     18|     expect(show(false, "yyyy-mm-dd", false).display).toBe("FALSE");
+     19|     expect(show("", "0.00", false).display).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > reports unsupported locale codes and unknown bracket directives instead of General
+AssertionError: expected { display: '60' } to deeply equal { display: null, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "display": null,
+-   "issue": "unsupportedFormat",
++   "display": "60",
+  }
+
+ ❯ src/runtime/xlsx_format.test.ts:23:49
+     21|   });
+     22|   it("reports unsupported locale codes and unknown bracket directives …
+     23|     expect(show(60, "[$-804]yyyy年m月d日", false)).toEqual({ display: nul…
+       |                                                 ^
+     24|     expect(show(2, "[unrecognized]0.00", false)).toEqual({ display: nu…
+     25|     expect(show(-1, "yyyy-mm-dd", false)).toEqual({ display: null, iss…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > carries supported color sections and flags width-dependent spacing
+AssertionError: expected { display: '-10' } to deeply equal { Object (display, color) }
+
+- Expected
++ Received
+
+  {
+-   "color": "#FF0000",
+-   "display": "(10.00)",
++   "display": "-10",
+  }
+
+ ❯ src/runtime/xlsx_format.test.ts:28:50
+     26|   });
+     27|   it("carries supported color sections and flags width-dependent spaci…
+     28|     expect(show(-10, "0.00;[Red](0.00)", false)).toEqual({ display: "(…
+       |                                                  ^
+     29|     expect(show(10, "_($* #,##0.00_)", false).issue).toBe("widthDepend…
+     30|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  21:34:04
+   Duration  116ms (transform 13ms, setup 0ms, import 19ms, tests 6ms, environment 0ms)
+

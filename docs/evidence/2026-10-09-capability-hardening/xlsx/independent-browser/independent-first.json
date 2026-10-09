@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "results": [
+    {
+      "name": "valid OOXML escaped strings decode once in inline/cache/shared rich text",
+      "ok": false,
+      "actual": [
+        "Line1_x000D_Line2",
+        "_x005F_x0041_",
+        "_x005F_x0042__x000D_end"
+      ],
+      "expected": ["Line1\rLine2", "_x0041_", "_x0042_\rend"],
+      "warnings": []
+    },
+    {
+      "name": "unknown rich text child is not silently empty",
+      "ok": false,
+      "cell": {
+        "reference": "A1",
+        "row": 1,
+        "column": 1,
+        "styleId": 0,
+        "type": "text",
+        "raw": "",
+        "value": "",
+        "formulaPresent": false,
+        "formula": null,
+        "cacheState": "notFormula",
+        "display": ""
+      },
+      "warnings": []
+    }
+  ],
+  "scope": "actual production XLSX Worker with authored XML parts; no user file/native app/Agent"
+}

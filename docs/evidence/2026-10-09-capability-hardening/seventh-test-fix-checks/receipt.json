@@ -1,0 +1,59 @@
+{
+  "checkedAtUtc": "2026-10-09T14:44:59.567556+00:00",
+  "inputCount": 962,
+  "sourceUnchanged": true,
+  "changedSinceFullChecks": ["src-tauri/src/acp_client/process_stdio_tests.rs"],
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.709,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.606,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 38.769,
+      "log": "rust.txt"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 16.122,
+      "log": "format.txt"
+    }
+  ],
+  "passed": true,
+  "coverage": "Frontend type/test/build results from seventh-checks-final remain applicable: only the reviewed cfg(test) Rust file changed; all Rust checks and full formatting rerun here."
+}

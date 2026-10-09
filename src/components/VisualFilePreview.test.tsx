@@ -125,6 +125,7 @@ it("shows one requested page and clears the previous canvas before starting the 
   expect(h.render.mock.calls[0][4].aborted).toBe(true);
   expect(h.render.mock.calls[1][2]).toBe(2);
   expect(render().html).toContain("hidden");
+  h.render.mock.calls[1][5](3);
   next.resolve();
   await drain();
   expect(render().html).toContain("第 2 / 3 页");
@@ -173,4 +174,146 @@ it("shows only a fixed password outcome, never library details", async () => {
   render();
   await drain();
   expect(render().html).toContain(S.password);
+});
+
+it("reports a PDF page only after that operation drew successfully, then withdraws it before page navigation", async () => {
+  const report = vi.fn();
+  Object.assign(props, { onReadiness: report });
+  const first = deferred<void>(),
+    next = deferred<void>();
+  h.render.mockReturnValueOnce(first.promise).mockReturnValueOnce(next.promise);
+  render();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  h.render.mock.calls[0][5](4);
+  expect(
+    report.mock.calls.some(([value]) => value.location?.kind === "pdf"),
+  ).toBe(false);
+  first.resolve();
+  await drain();
+  render();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: { kind: "pdf", page: 1, pageCount: 4 },
+  });
+  click(S.next);
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  h.render.mock.calls[0][5](99); // Late callback from the completed prior operation.
+  h.render.mock.calls[1][5](4);
+  next.resolve();
+  await drain();
+  render();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: { kind: "pdf", page: 2, pageCount: 4 },
+  });
+  props.active = false;
+  render();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+});
+it("withdraws cancelled or failed page eligibility and ignores their late success", async () => {
+  const report = vi.fn();
+  Object.assign(props, { onReadiness: report });
+  const pending = deferred<void>();
+  h.render.mockReturnValue(pending.promise);
+  render();
+  click(S.cancel);
+  h.render.mock.calls[0][5](3);
+  pending.resolve();
+  await drain();
+  render();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  expect(report.mock.calls.every(([value]) => value.location === null)).toBe(
+    true,
+  );
+});
+
+it("withdraws failed and unmounted PDF operations and rejects a success without valid page count", async () => {
+  const report = vi.fn();
+  Object.assign(props, { onReadiness: report });
+  h.render.mockResolvedValue(undefined);
+  render();
+  await drain();
+  expect(render().html).toContain(S.failed);
+  expect(report.mock.calls.every(([value]) => value.location === null)).toBe(
+    true,
+  );
+  const waiting = deferred<void>();
+  h.render.mockReturnValue(waiting.promise);
+  props.preview = { ...props.preview };
+  render();
+  for (const slot of h.slots) slot.cleanup?.();
+  h.render.mock.calls[1][5](2);
+  waiting.resolve();
+  await drain();
+  expect(report.mock.calls.every(([value]) => value.location === null)).toBe(
+    true,
+  );
+});
+it("reports image feedback only on actual image load and revokes it on image error", async () => {
+  const report = vi.fn();
+  Object.assign(props, { onReadiness: report });
+  const data =
+    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+  props.preview = {
+    file: { ...source, name: "a.png", size: atob(data).length },
+    mimeType: "image/png",
+    data,
+  };
+  h.decode.mockResolvedValue({ data, mimeType: "image/png" });
+  render();
+  await drain();
+  const image = render().all.find((node) => node.type === "img")!;
+  expect(image).toBeDefined();
+  expect(report.mock.calls.every(([value]) => value.location === null)).toBe(
+    true,
+  );
+  (image.props.onLoad as () => void)();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: { kind: "image" },
+  });
+  (image.props.onError as () => void)();
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  (image.props.onLoad as () => void)(); // A later browser event cannot revive this image.
+  expect(report).toHaveBeenLastCalledWith({
+    source: props.preview,
+    location: null,
+  });
+  expect(render().html).toContain(S.failed);
+});
+it("ignores an old image load when the same file is refreshed to a new read-result object", async () => {
+  const report = vi.fn();
+  Object.assign(props, { onReadiness: report });
+  const data =
+    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+  props.preview = {
+    file: { ...source, name: "a.png", size: atob(data).length },
+    mimeType: "image/png",
+    data,
+  };
+  h.decode.mockResolvedValue({ data, mimeType: "image/png" });
+  render();
+  await drain();
+  const oldImage = render().all.find((node) => node.type === "img")!;
+  props.preview = { ...props.preview };
+  render();
+  (oldImage.props.onLoad as () => void)();
+  expect(report.mock.calls.every(([value]) => value.location === null)).toBe(
+    true,
+  );
 });

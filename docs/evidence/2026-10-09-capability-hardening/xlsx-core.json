@@ -1,0 +1,324 @@
+{
+  "date": "2026-10-09",
+  "status": "implementation-and-targeted-tests-complete-awaiting-root-integration-and-installed-validation",
+  "scope": "P16只读XLSX数据底座；本receipt不声明DOCX/PPTX或完整Office视觉保真完成。UI由root，真实Worker+React独立验收由product_coverage另记。",
+  "implementation": [
+    "现有zip4.6.1预检central/local头、UTF8路径/别名/重复/加密/支持压缩方式/重叠范围/符号链接，每个entry真实有界解压并读到EOF核CRC，不落盘解包。",
+    "VerifiedFile原版本capture_expected；仅XML/rels内容与entry名称传给独立Worker，不给外部网页权限。",
+    "固定saxes/SSF保留typed值和原始cache存在性；0、false、empty、absent独立；不执行公式、不推导shared公式。",
+    "1900/1904日期、serial60、数值/百分比/科学/分数/elapsed格式白名单；不支持格式返回null display+formatIssue并保留原值/format。",
+    "ST_Xstring在shared/inline各run、cache text、sheet name、formatCode、字体名各原始字段单次解码；不跨run二次解码。未知rich child拒绝unsupported。",
+    "稀疏cells；row/column styleId用于空白格默认样式；merge范围/重叠/累计面积受限；无按最大坐标整表分配。",
+    "一份active parse；同步abort销毁Worker与释放槽，Promise finally幂等；10秒期限销毁；late消息不更新旧结果。取消capture只弃等待，OS读取继续占许可直到真实结束。",
+    "新增IPC返回固定{code}；wrapper将未知后台结果归一化unreadable；readPending/readBusy区分等待未返回/未准入，与worker timeout不同。"
+  ],
+  "limits": {
+    "compressedBytes": 16777216,
+    "entryBytes": 16777216,
+    "actualInflatedTotalBytes": 67108864,
+    "entries": 2048,
+    "sheets": 64,
+    "xmlDepth": 64,
+    "xmlNodesPerPart": 500000,
+    "attrsPerNode": 64,
+    "sourceTextPerPart": 8388608,
+    "cellsSelectedSheet": 100000,
+    "styles": 4096,
+    "merges": 4096,
+    "mergeArea": 100000,
+    "logicalOutputText": 8388608,
+    "logicalOutputRunsIncludingEmptyAndRepeatedSst": 100000,
+    "workerMs": 10000,
+    "qualification": "应用逻辑预算和worker终止，不是操作系统级硬堆上限；XML包和克隆有有界多份内存。"
+  },
+  "failuresRetained": [
+    "xlsx-types-current.txt曾因另一代理的pdf_parser_diagnostics.ts过渡无export而失败，未记成功；最终typecheck真实通过。",
+    "xlsx-clippy-first.txt为range-loop；xlsx-clippy-final.txt为新结构化错误替代旧message后dead code；均已最小修正，clean日志是最终。",
+    "xlsx-color-red.txt / xlsx-color-valid-red.txt仅夹具未导入名称，不算有效红；xlsx-complete-green.txt / xlsx-frozen-green.txt文件名含green但实际47过1夹具失败，不能当成功。唯一颜色有效红为xlsx-color-actual-red.txt；xlsx-final-targeted.txt最终48通过。",
+    "xlsx-current-green.txt中原期望SSF支持quoted下划线失败；直接固定SSF受控探针确认库拒绝该合法格式，未改第三方/未伪造显示。测试改为保留decoded格式并准确unsupported，同时验证解码A可格式化。"
+  ],
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-format-red.txt",
+      "sha256": "4154bf8bd9652acb3d659d996fc74bd2dedaf690606bf8749317979079444305",
+      "result": "5 failed",
+      "scope": "实际 String(value) 初始formatter不能处理类型/格式"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-review-red.txt",
+      "sha256": "c92191d1255511812b8d850af5b1adb395aeb8c34670a11f2e993bbc6d4d4e83",
+      "result": "6 failed / 23 passed",
+      "scope": "取消后立即替换、ST_Xstring、未知rich children、row/col默认样式"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-runs-red.txt",
+      "sha256": "c7d9bde182ae5110239a1390ac6727e9ebed4214f54c97743e2d11bbef5d4c47",
+      "result": "1 failed / 22 passed",
+      "scope": "1001空run被100次引用可绕过文本预算"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-ipc-red.txt",
+      "sha256": "5c047dde6c5631739eff2fd3100cd230b3ab4a3afa931ad35e231660a929a2f4",
+      "result": "9 failed / 7 passed",
+      "scope": "结构化code与未知错误归一化前"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-format-escape-red.txt",
+      "sha256": "eb512b7d1a423f9ab4a97cbb2a03d8de1cd0556cc84b88447e4129a4681003f5",
+      "result": "1 failed / 23 passed",
+      "scope": "numFmt ST_Xstring未解码"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-formula-red.txt",
+      "sha256": "7242b7313f5f73b272eec49adc698e1fdf4f4f263ea0e55d5da413144104b13a",
+      "result": "1 failed / 24 passed",
+      "scope": "shared/空f的缺文本被表示为empty string"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-font-palette-red.txt",
+      "sha256": "d9450f3ff72a830253dd6552f0785c33d2955ee7e4c0693f1614b37de9f19d1a",
+      "result": "1 failed / 25 passed",
+      "scope": "字体名未解码；自定义palette不能冒用默认色"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-color-actual-red.txt",
+      "sha256": "3195e87f1fbdc95a09f649073a5d722cff9c303b61802abc93fc688f4c52e752",
+      "result": "1 failed / 5 passed",
+      "scope": "修正夹具import后有效旧CSS green颜色反例"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-targeted.txt",
+      "sha256": "59a309d523ff1eda1ea09d32afc5dcdc8de7be385cd40e56084c1c60261d0b7b",
+      "result": "48 passed",
+      "scope": "3个最终parser/formatter/wrapper测试文件"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "result": "exit 0",
+      "scope": "全项目TypeScript，最终owned代码"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-archive-final.txt",
+      "sha256": "4e07e89afc1bd33dfb3a3f4118c2ae3ca5326f29e8ffdb01cce44d3a0b328c71",
+      "result": "8 passed",
+      "scope": "真实临时文件/ZIP/VerifiedFile/结构化固定错误；移除不再使用message方法前，之后clippy覆盖"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-read-check-regression.txt",
+      "sha256": "303574d191d3b843e2e44295903df78c93baeefdce22d737fe49271aedcc6e05",
+      "result": "5 passed",
+      "scope": "既有OS读取许可生命周期及新纯分类"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-clippy-clean.txt",
+      "sha256": "41ad8012d54eef911ad39cb791d9c64b1fbe8c2336b88a749e522023f6fea3aa",
+      "result": "exit 0",
+      "scope": "最终Rust源码，无生产逻辑变化后"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "result": "exit 0",
+      "scope": "owned TS/worker/package/lock与维护JSON"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "exit 0",
+      "scope": "owned Rust模块"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-backend-capture.txt",
+      "sha256": "afc11bcc6a7ca1e68a73d94675458c058830d7c412c72a6f3a1fe411c80a992b",
+      "result": "1 passed",
+      "scope": "真实Rust读取自制xlsx并实际序列化capture给独立浏览器"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-realtime.json",
+      "sha256": "1135280e5e302576df07099215dcc8c672e61db8a57ff9cbe7f8629f5abd4372",
+      "result": "15 checks passed",
+      "scope": "Chromium/Vite真Worker，含实际后端capture/hash、立即abort替换、超时销毁/槽恢复、IPC=0；此轮后补字体/共享formula/Green由unit与peerUI覆盖"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-first.json",
+      "sha256": "92f6e1ba549b86411635b3d9b3a492ac7d8b66e04fac50a65e80ac2470bacc58",
+      "result": "2 failed",
+      "scope": "product独立真Worker发现ST_Xstring与未知rich child"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-fixed.json",
+      "sha256": "d6cba7cac3a39304e9a11a9a7e8bca8224b227674e8db1066dec84758c6eb342",
+      "result": "2 passed",
+      "scope": "同独立fixture/期望修复后，由product执行"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.json",
+      "sha256": "c9ffaa23f945aca8b94e2ae6bc5200cc3246fb41e11645b947a74dad73eccdbd",
+      "result": "23/24 passed",
+      "scope": "product真实UI同因发现shared formula空字符串，最终UI结果另见其receipt"
+    }
+  ],
+  "dependencyEvidence": [
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-preview-dependency-research.json",
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-dependency-integrity.json",
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-lock-structure.json",
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-license-sources.json"
+  ],
+  "officialSources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oi29500/d34ae755-c53f-4a44-a363-c6dd3ee018a4",
+      "supports": "ST_Xstring CR/转义下划线语义"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.numberingformat",
+      "supports": "formatCode为ST_Xstring"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.fontname?view=openxml-3.0.1",
+      "supports": "font name val为ST_Xstring；不可用字体允许替代"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/LibreOffice/core/master/svl/source/numbers/zforscan.cxx",
+      "supports": "独立成熟formatter的GREEN→COL_LIGHTGREEN映射，不声称这是Excel实机比对"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/LibreOffice/core/master/include/tools/color.hxx",
+      "supports": "COL_LIGHTGREEN = 00FF00"
+    }
+  ],
+  "knownLimits": [
+    "仅Transitional XLSX支持的选定sheet受限网格；Strict OOXML、xls/xlsb/xlsm/DOCX/PPTX、ZIP64/multivolume、非Stored/Deflate拒绝。",
+    "不执行宏、公式、外链、图表、嵌入对象或Office脚本；图/图表/透视/外部关系/条件格式/数据验证/打印/视图等固定warning，不声称完整视觉保真。",
+    "固定SSF缺少部分locale/数值格式与quoted underscore literal；准确unsupportedFormat保留原值。ISO t=d保留原值并明确isoDateValue，本片不伪造日期格式。",
+    "自定义indexed palette及默认索引16+未支持，返回明确warnings并不冒用颜色；旋转/缩小/特殊边框/填充等按现白名单及warnings。",
+    "不是完整工作簿逐页验证；只解析选定sheet及必需结构，但后端所有ZIP entry解压/CRC受检。",
+    "Worker不能作为安全沙箱或硬堆限制承诺；源码无动态XML执行，DTD拒绝，URL关系不读取；本模块不扩大Agent或远程网页访问。",
+    "真实浏览器只Chromium；WK/WebKit、Windows、正式安装版、真实用户Office文件、Tauri真实IPC未由本代理验收。root将接最终全仓/构建/安装验证。",
+    "未比较实际Excel/LibreOffice应用渲染；自制OOXML与固定期望是覆盖样本，不是所有文档保真证明。"
+  ],
+  "sourceFiles": [
+    {
+      "path": "package.json",
+      "absolutePath": "/Users/tw/Desktop/farfold/package.json",
+      "sha256": "00b8830ab4a5523895f61cea9c271114ead8cb45955274e62752b7bd061b936b"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "absolutePath": "/Users/tw/Desktop/farfold/pnpm-lock.yaml",
+      "sha256": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_delivery.rs",
+      "sha256": "2270995129776940348d340f1d8d793fd447d59a49f455ecec1b581353a01d7d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_delivery_commands.rs",
+      "sha256": "bc3b23c07071352d8755a9a51502364b58ef3a22508ca92fd617611054db9a53"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/lib.rs",
+      "sha256": "bcb55eee2f68c05092b0e0275796dc70c38f7dcdd71aeb1114d73524ec3c311f"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_delivery/workbook.rs",
+      "sha256": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_delivery/workbook_tests.rs",
+      "sha256": "824a66476c5d1b235acd546b6f6acf637ab4c669fd00594b4977d21fc40427c3"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_read_check.rs",
+      "sha256": "e33af48eb0dd66ae42db93d245058a9bc888a060e7da0d6f4091378802c08c67"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "absolutePath": "/Users/tw/Desktop/farfold/src-tauri/src/file_read_check_tests.rs",
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src/workers/xlsx_preview.worker.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/workers/xlsx_preview.worker.ts",
+      "sha256": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-basic.xlsx",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/fixtures/xlsx-basic.xlsx",
+      "sha256": "7d531400913c9cbc21af93a3dd81b646941693ea8875debe778d11f63492b586"
+    },
+    {
+      "path": "public/xlsx-preview-notices.txt",
+      "absolutePath": "/Users/tw/Desktop/farfold/public/xlsx-preview-notices.txt",
+      "sha256": "9bdc604b3cd99d89900068c2fa56803d93c5b1c71837850e7f3499f5d122a2b2"
+    },
+    {
+      "path": "src/runtime/xlsx_fixture.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_fixture.ts",
+      "sha256": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05"
+    },
+    {
+      "path": "src/runtime/xlsx_format.test.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_format.test.ts",
+      "sha256": "636fc217b540e94681be03fdd14c604b1313b87660927a0f49d0a6f403f4d20d"
+    },
+    {
+      "path": "src/runtime/xlsx_format.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_format.ts",
+      "sha256": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2"
+    },
+    {
+      "path": "src/runtime/xlsx_parse.test.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_parse.test.ts",
+      "sha256": "99501e09b91ecbe3106607c166f7225361f58bf08d61a968defa7b360a907826"
+    },
+    {
+      "path": "src/runtime/xlsx_parse.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_parse.ts",
+      "sha256": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417"
+    },
+    {
+      "path": "src/runtime/xlsx_preview.test.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_preview.test.ts",
+      "sha256": "d4c66e6749e94c3367dff6408bb1f8cb4e5d59079bc7b2ff57c018d5ca37a614"
+    },
+    {
+      "path": "src/runtime/xlsx_preview.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_preview.ts",
+      "sha256": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f"
+    },
+    {
+      "path": "src/runtime/xlsx_sheet.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_sheet.ts",
+      "sha256": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec"
+    },
+    {
+      "path": "src/runtime/xlsx_styles.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_styles.ts",
+      "sha256": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf"
+    },
+    {
+      "path": "src/runtime/xlsx_types.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_types.ts",
+      "sha256": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6"
+    },
+    {
+      "path": "src/runtime/xlsx_xml.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_xml.ts",
+      "sha256": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee"
+    },
+    {
+      "path": "src/runtime/xlsx_xstring.ts",
+      "absolutePath": "/Users/tw/Desktop/farfold/src/runtime/xlsx_xstring.ts",
+      "sha256": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d"
+    }
+  ],
+  "ownedSourceCount": 24,
+  "next": "root七项整合、打包产物与真实安装验证；本代理源码/测试冻结，无真实Agent/正式app操作。"
+}

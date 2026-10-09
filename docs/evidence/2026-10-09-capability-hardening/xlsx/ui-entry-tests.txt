@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/workbook_view.test.ts" "src/runtime/strings.test.ts" "src/components/OpenedFileView.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  3 passed (3)
+      Tests  63 passed (63)
+   Start at  22:19:11
+   Duration  3.67s (transform 373ms, setup 0ms, import 573ms, tests 3.41s, environment 0ms)
+

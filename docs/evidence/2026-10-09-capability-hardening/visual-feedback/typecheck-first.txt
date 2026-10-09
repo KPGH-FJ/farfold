@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/OpenedFileView.test.tsx(754,30): error TS2339: Property 'all' does not exist on type '{ nodes: Element[]; html: string; }'.
+src/components/OpenedFileView.test.tsx(755,6): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/components/OpenedFileView.test.tsx(778,12): error TS2532: Object is possibly 'undefined'.
+src/components/OpenedFileView.test.tsx(801,10): error TS2532: Object is possibly 'undefined'.
+src/components/OpenedFileView.test.tsx(802,29): error TS2339: Property 'all' does not exist on type '{ nodes: Element[]; html: string; }'.
+src/components/OpenedFileView.test.tsx(802,39): error TS7006: Parameter 'n' implicitly has an 'any' type.
+src/components/OpenedFileView.test.tsx(825,27): error TS2339: Property 'all' does not exist on type '{ nodes: Element[]; html: string; }'.
+src/components/OpenedFileView.test.tsx(825,37): error TS7006: Parameter 'n' implicitly has an 'any' type.
+ ELIFECYCLE  Command failed with exit code 1.

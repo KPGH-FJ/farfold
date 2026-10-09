@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_format.test.ts (6 tests | 1 failed) 5ms
+     × uses spreadsheet bright green rather than the CSS green keyword 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_format.test.ts > typed spreadsheet display > uses spreadsheet bright green rather than the CSS green keyword
+ReferenceError: formatXlsxValue is not defined
+ ❯ src/runtime/xlsx_format.test.ts:48:5
+     46|   });
+     47|   it("uses spreadsheet bright green rather than the CSS green keyword"…
+     48|     expect(formatXlsxValue(2, "[Green]0", false)).toEqual({display:"2"…
+       |     ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  22:17:22
+   Duration  89ms (transform 16ms, setup 0ms, import 24ms, tests 5ms, environment 0ms)
+

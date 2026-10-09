@@ -1,0 +1,11 @@
+{
+  "checkedAtUtc": "2026-10-09T14:22:54.391979+00:00",
+  "authorization": "root requested normal stop after architecture released shared service; no next task depends on it",
+  "vitePid": 96204,
+  "signal": "SIGTERM",
+  "processExited": true,
+  "port1458HasListener": false,
+  "ownedXlsxChromeProcessesRemaining": 0,
+  "scope": "Only exact owned Vite PID stopped. No formal app/Agent/browser user profile affected. Authored scripts, logs, captures and review receipts retained.",
+  "processProbe": "Chrome executable path must start command, plus authored temporary user-data-dir prefix; initial broader substring probe matched its own harness shell and was corrected."
+}

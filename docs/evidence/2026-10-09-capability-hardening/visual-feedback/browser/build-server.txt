@@ -1,0 +1,8 @@
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /assets/index-BgLh2hrl.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /assets/index-BqoFVRkg.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /assets/pdf_render.worker-CHVXB_WX.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] code 404, message File not found
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /assets/pdf-DfnaJ1g7.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 21:58:14] "GET /assets/pdf_preview.worker-ADhZTxws.js HTTP/1.1" 200 -

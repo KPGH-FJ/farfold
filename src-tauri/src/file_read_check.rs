@@ -16,6 +16,22 @@ const MAX_IN_FLIGHT: usize = 2;
 const CHECK_WAIT: Duration = Duration::from_secs(15);
 static ADMISSION: OnceLock<Arc<Semaphore>> = OnceLock::new();
 
+/// Classifies only this module's fixed outer failures, without changing admission
+/// or the lifetime of an already started OS check.
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum FailureKind {
+    Pending,
+    Busy,
+    Unavailable,
+}
+pub(crate) fn classify_error(message: &str) -> FailureKind {
+    match message {
+        WAIT_EXPIRED => FailureKind::Pending,
+        CHECK_BUSY => FailureKind::Busy,
+        _ => FailureKind::Unavailable,
+    }
+}
+
 pub(crate) async fn run<T, F>(operation: F) -> Result<T, String>
 where
     T: Send + 'static,

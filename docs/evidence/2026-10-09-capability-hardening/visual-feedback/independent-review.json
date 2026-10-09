@@ -1,0 +1,456 @@
+{
+  "checkedAtUtc": "2026-10-09T13:45:28.911896+00:00",
+  "reviewer": "verification subagent",
+  "mode": "independent_read_only_source_and_existing_test_output_review",
+  "status": "completed_no_blocker_in_reviewed_source_scope",
+  "capability": "P21 PDF page and image whole-file feedback; not region selection",
+  "findings": [],
+  "readOnlyChecks": [
+    {
+      "area": "strict persistence",
+      "locations": [
+        "src/runtime/file_feedback_anchor.ts:32",
+        "src/runtime/file_feedback_anchor.ts:42",
+        "src/runtime/drafts.ts:589"
+      ],
+      "result": "Anchor only accepts exact pdf-page/page/pageCount fields; safe integer 1..pageCount<=1000; requires file scope, no line selection/input and a matching existing disk contentId tuple with 64-hex content digest. Unknown/contradictory feedback fields reject parsing instead of dropping a page target. parseDraftSnapshot validates before publishing; persistence failure guard retains original unread settings."
+    },
+    {
+      "area": "legacy compatibility",
+      "locations": [
+        "src/runtime/drafts.ts:613",
+        "src/runtime/feedback_strings.ts:16"
+      ],
+      "result": "Missing anchor remains valid; old path-keyed drafts, old optional scope and before/after line ranges retain their prior meaning. Unsupported null/unknown typed fields are not treated as absent. New anchor does not copy PDF contents or introduce a separate feedback ledger."
+    },
+    {
+      "area": "shown page eligibility",
+      "locations": [
+        "src/components/VisualFilePreview.tsx:48",
+        "src/runtime/pdf_preview.ts:69",
+        "src/components/OpenedFileView.tsx:193"
+      ],
+      "result": "PDF readiness follows successful awaited render, which validates and draws the bitmap before reporting document count/resolving. Image readiness waits for actual img onLoad, not decode alone. Exact source object, current AbortController, current props/view/file identity and active state gate reports; failures/cancel/hide/cleanup revoke readiness and stale reports cannot revive it."
+    },
+    {
+      "area": "draft target and stale controls",
+      "locations": [
+        "src/components/OpenedFileView.tsx:364",
+        "src/components/OpenedFileView.tsx:605"
+      ],
+      "result": "Current displayed page is an explicit action. Page navigation alone leaves saved anchor/text unchanged; latestReadiness reference prevents an old page-target button from reusing a withdrawn/new report. Refresh/file/thread identity changes separate saved contentId entries, and failed/unavailable visuals leave earlier opinions accessible."
+    },
+    {
+      "area": "take and ownership",
+      "locations": [
+        "src/components/OpenedFileView.tsx:560",
+        "src/runtime/drafts.ts:326",
+        "src/components/FileFeedbackDrafts.tsx:41"
+      ],
+      "result": "Submission reads the exact current key and moves it once into session:<original threadKey>; the stored key is removed in the same in-memory snapshot. Existing composer text, attachments, queue/send markers remain. Second take is false. No prompt/Agent request path is added; settings-save failure preserves moved composer memory and original disk recovery material."
+    },
+    {
+      "area": "image and text behavior",
+      "locations": [
+        "src/runtime/visual_feedback.ts:13",
+        "src/runtime/feedback_strings.ts:24"
+      ],
+      "result": "Image readiness enables whole-file feedback with digest and no PDF page control. Text feedback keeps before/after and fragment/file line wording; version advice does not promise the current disk still matches the old view."
+    }
+  ],
+  "consideredCounterexamples": [
+    {
+      "case": "Page button only setPage; withdrawal occurs in layout cleanup",
+      "assessment": "No confirmed defect from static review: before the new commit, the canvas still shows the previously successful page; cleanup clears/revokes before starting the next render. After readiness changes, old-target callbacks are reference-guarded. Asked peer to include pending-page/current-button disappearance in real React browser fixture; did not turn an unproved scheduling concern into a blocker."
+    },
+    {
+      "case": "Blank page-only anchor versus authored feedback",
+      "assessment": "Anchor-only selection is persisted and retained. Existing unsent-work/list visibility still keys on nonblank opinion text, as with prior line-only selection; no new claim that selecting a page constitutes a sent/submittable opinion."
+    }
+  ],
+  "evidenceRead": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/initial-red.txt",
+      "sha256": "efb8fd942c902d164c388950bff958f24ef552e845c1f8deae7f024cf08c03e5",
+      "result": "20 failed, 45 passed in 3 test files; valid pre-implementation failures, no compilation failure"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/expanded-green.txt",
+      "sha256": "dbac1aa666edcb1f0a403a479b2453babed9a9060768adc88ea0c0dd432db15e",
+      "result": "9 test files, 123 passed; peer executed, reviewer did not rerun"
+    }
+  ],
+  "sourceRead": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "a2d1c0eeb51988e5fce10c2fe787c1a25fcf586dfc09c042c79717db6e293515",
+      "lines": 684
+    },
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "a6018ab16373247c1f7c68bc11cdda0f02305da8e4973e74d3d2a51dace06646",
+      "lines": 200
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ac7fb66157086f7ba203327916e7ea596215c60a9f4e6c42d6f16998ce6a4243",
+      "lines": 756
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "b958930d836ea26dbdf8a3cfbf823c1fd5c5fd49a4505ab54283e547107f4c71",
+      "lines": 71
+    },
+    {
+      "path": "src/runtime/visual_feedback.ts",
+      "sha256": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef",
+      "lines": 20
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "4e25d7c516ab146328a33cde17a0c106b65662db330cb5916addf9c9c5375129",
+      "lines": 36
+    },
+    {
+      "path": "src/runtime/visual_feedback_strings.ts",
+      "sha256": "08a893676b7e0bae275f89dac1efd76cb45b75c2651ecd66e9560a131525ca40",
+      "lines": 10
+    },
+    {
+      "path": "src/components/FileFeedbackDrafts.tsx",
+      "sha256": "a66891bc8746f4b73305edeff17b9e7a8d72a79d7d6ee5ed46050efef336734b",
+      "lines": 76
+    },
+    {
+      "path": "src/runtime/pdf_preview.ts",
+      "sha256": "42fb53816b749f1f452f1b61b587c28dc53def412e19ef85d3fd83cc024df1f0",
+      "lines": 123
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "e86ff136a2c5671613e1bce1802921da2c22408f822790910268e13bb6082337",
+      "lines": 851
+    },
+    {
+      "path": "src/components/VisualFilePreview.test.tsx",
+      "sha256": "9b70b497c03636784d0ddeb81c9ae374e86c103ca3bbf6b0b98536f30646c9c1",
+      "lines": 319
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.test.ts",
+      "sha256": "9d42d3b155513a79370965ab3d702dc57c20b15a2917f20589f3807ea9093e2f",
+      "lines": 74
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.persistence.test.ts",
+      "sha256": "529baa9f454a100f14a1b8f7ebb51109b9d0e7ecca2736b38df0b0f5f438808b",
+      "lines": 141
+    }
+  ],
+  "executionAttribution": {
+    "verification": "Only read source/tests and retained outputs; no tests, browser, app, Agent or file delivery actions executed. Wrote this independent receipt.",
+    "product_coverage": "Authored P21 implementation and ran targeted red/green tests. Actual React StrictMode/PDF worker/image-load browser work still in progress at this receipt checkpoint."
+  },
+  "browserEvidence": {
+    "status": "pending_peer_completion",
+    "reviewed": false,
+    "note": "No browser screenshots, real worker or installed UI outcome is claimed by this source review. Final peer browser evidence can be reviewed as an addendum without relabelling mocked hook fixtures as browser execution."
+  },
+  "limits": [
+    "Component unit tests use a controlled hook/SSR harness and mocked PDF/image functions; they do not by themselves prove actual React scheduling, PDF worker rendering or installed WKWebView.",
+    "Persistence fixtures mock settings_get/settings_set; they cover cold module reload and refusal/save-error behavior, not a real installed data recovery.",
+    "No real file change during subsequent Agent processing is revalidated by the generated feedback text; exact saved digest and check-version advice disclose that boundary.",
+    "PDF page/whole-image feedback only; area selection and other P21 scope remain separate. No Windows, real Agent/model, real disk full/power loss or formal installation acceptance."
+  ],
+  "finalAddendum": {
+    "checkedAtUtc": "2026-10-09T14:09:47.022680+00:00",
+    "status": "completed_no_blocker_in_final_P21_and_P16_startup_repair_scope",
+    "previousCheckpoint": {
+      "sha256": "1e610ee8dd3b3602f565d1718ee7c503a022cc97736411a870f76723095b9e4d",
+      "checkedAtUtc": "2026-10-09T13:45:28.911896+00:00",
+      "preservation": "Original top-level fields including sourceRead and pending browserEvidence remain the earlier checkpoint. This addendum records final evidence and supersedes its pending conclusion only for the scope below."
+    },
+    "findings": [],
+    "sourceHashCheck": {
+      "atInitialFinalRead": "14/14 matched the P21 handover receipt; recorded tool output retained in conversation.",
+      "atWriting": "13/14 still match. Root has begun authorized XLSX integration in OpenedFileView (WorkbookFilePreview/isWorkbook paths visible); that subsequent integration is outside this P21 handover review. An initial write-time all-match assertion stopped before any write; this is coordinated source evolution, not a product failure.",
+      "reviewedSources": [
+        {
+          "path": "src/components/OpenedFileView.tsx",
+          "sha256": "cf4adb67e5485812ebd347627297afc9677feb57596cc14e87531353860be1e8",
+          "lines": 691,
+          "matchesAtWriting": false
+        },
+        {
+          "path": "src/components/OpenedFileView.test.tsx",
+          "sha256": "e86ff136a2c5671613e1bce1802921da2c22408f822790910268e13bb6082337",
+          "lines": 851,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/components/VisualFilePreview.tsx",
+          "sha256": "a6018ab16373247c1f7c68bc11cdda0f02305da8e4973e74d3d2a51dace06646",
+          "lines": 200,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/components/VisualFilePreview.test.tsx",
+          "sha256": "9b70b497c03636784d0ddeb81c9ae374e86c103ca3bbf6b0b98536f30646c9c1",
+          "lines": 319,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/drafts.ts",
+          "sha256": "ac7fb66157086f7ba203327916e7ea596215c60a9f4e6c42d6f16998ce6a4243",
+          "lines": 756,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/feedback_strings.ts",
+          "sha256": "4e25d7c516ab146328a33cde17a0c106b65662db330cb5916addf9c9c5375129",
+          "lines": 36,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/file_feedback_anchor.ts",
+          "sha256": "b958930d836ea26dbdf8a3cfbf823c1fd5c5fd49a4505ab54283e547107f4c71",
+          "lines": 71,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/file_feedback_anchor.test.ts",
+          "sha256": "9d42d3b155513a79370965ab3d702dc57c20b15a2917f20589f3807ea9093e2f",
+          "lines": 74,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/file_feedback_anchor.persistence.test.ts",
+          "sha256": "529baa9f454a100f14a1b8f7ebb51109b9d0e7ecca2736b38df0b0f5f438808b",
+          "lines": 141,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/visual_feedback.ts",
+          "sha256": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef",
+          "lines": 20,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/runtime/visual_feedback_strings.ts",
+          "sha256": "08a893676b7e0bae275f89dac1efd76cb45b75c2651ecd66e9560a131525ca40",
+          "lines": 10,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/workers/pdf_preview.worker.ts",
+          "sha256": "c19100788781ffc68fd0f1563da97308dfc8d2fc8ed4544a72f88751989f3da9",
+          "lines": 7,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/workers/pdf_parser_diagnostics.ts",
+          "sha256": "45421396cf1efb5a8cd2e2a667343b98ca15a93c289d4af05859e4bcd47013f3",
+          "lines": 6,
+          "matchesAtWriting": true
+        },
+        {
+          "path": "src/workers/pdf_parser_diagnostics.test.ts",
+          "sha256": "eb86d2c11ce0cdb200be714560344a92c6a9bcb908ed275b6e2bf48f3bde1234",
+          "lines": 20,
+          "matchesAtWriting": true
+        }
+      ]
+    },
+    "readOnlyChecks": [
+      {
+        "area": "Static initialization and diagnostics",
+        "locations": [
+          "src/workers/pdf_preview.worker.ts:6",
+          "src/workers/pdf_parser_diagnostics.ts:3",
+          "node_modules/pdfjs-dist/legacy/build/pdf.mjs:22826",
+          "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs:70744"
+        ],
+        "result": "Static dependency order evaluates diagnostics before the official parser. Diagnostics have no dependency/await and send only a fixed incomplete flag; the official parser static initialization synchronously installs its message listener. Its PDFWorker port constructor immediately resolves/configures instead of waiting for ready, corroborating the original detached dynamic-import race. No library patch or timeout relaxation."
+      },
+      {
+        "area": "Cancellation and owned resources",
+        "locations": [
+          "src/runtime/pdf_preview.ts:23",
+          "src/runtime/pdf_preview.ts:36",
+          "src/runtime/pdf_preview.ts:49",
+          "src/runtime/pdf_preview.ts:110",
+          "src/workers/pdf_render.worker.ts:16",
+          "src/runtime/pdf_render_core.ts:217"
+        ],
+        "result": "Unchanged wrapper keeps two-slot concurrency and original 15-second timer, rejects on abort/error, clears failed canvas, and always removes listener/timer and calls worker.terminate before decrementing activeRenders in nested finally. Settled late ImageBitmap replies close without drawing/readiness. Drawing-worker failure suppresses ready and closes returned bitmap; parser terminate remains in finally. Core aborts asset requests/cancels render/destroys library objects without awaiting library cancellation acknowledgement."
+      },
+      {
+        "area": "P21 final UI and immediate page transition",
+        "locations": [
+          "src/components/OpenedFileView.tsx:577",
+          "src/components/OpenedFileView.tsx:592",
+          "src/components/OpenedFileView.tsx:622",
+          "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx:197"
+        ],
+        "result": "P21 handover adds role=status and aria-pressed on explicit PDF targets; image has no redundant page/file toggle. The actual React fixture flushSync-commits navigation then immediately asserts absence of any current-page target while the previous page-one anchor and text remain. Earlier exact source/controller/owner guards remain intact."
+      },
+      {
+        "area": "Raw evidence consistency and screenshots",
+        "result": "Five retained JSON results equal their corresponding first JSON object in raw stdout: dev browser, bundled browser, errors/cancel, mixed-PDF red and green. Viewed three bundled-browser screenshots showing current page two distinct from retained page-one target, reachable old-version actions, and whole-file image feedback. Synthetic inputs and Chromium only."
+      }
+    ],
+    "validationReviewed": {
+      "targeted": "17 files / 179 passed; follow-up string/diagnostics 2 files / 3 passed has an overlapping parser test, not added into an inflated unique total. Typecheck and selected formatting outputs successful.",
+      "browser": "Dev Chromium 20/20 and production-bundle Chromium 20/20 with actual PDF worker/image load and fixture IPC. Bad/password/missing-font PDF, immediate cancellation with no readiness, and subsequent page-two render 5/5.",
+      "startupRedGreen": "Same 22643-byte mixed PDF and digest: production renderPdfPage timed out at 15002.9 ms, after static imports rendered 2 pages at 195.4 ms; official-ready control succeeds. Original red sample.size=0 is a documented sampler mistake after buffer transfer, with original raw evidence preserved. Individual timings are not a performance guarantee.",
+      "resourceEvidence": "Existing fake-worker tests cover late bitmap close, timeout/cancel termination and two-slot capacity reuse. Browser cancellation/next-render checks corroborate observable cancellation/reuse but do not enumerate descendant threads or profile memory."
+    },
+    "emittedAssetReview": {
+      "status": "retained_evidence_reviewed_not_independently_rehashed",
+      "reportedWarningOffset": 36,
+      "reportedInitializeOffset": 1227791,
+      "note": "Build log and built-assets.json retain emitted parser hash and warning-before-initialize ordering. Temporary build directory was absent at review, so the emitted parser could not be reopened/re-hashed. No rebuild/substitute output created."
+    },
+    "evidenceRead": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/receipt.json",
+        "sha256": "7d30e179dd0fe749cefae122406f42f030f5d4d381fb9aac89328cdd8bddf092"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/targeted-final.txt",
+        "sha256": "6e9e94d23d37011f78dd932a454db37eb30fe0287243aa3ee06126633a4ad40c"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/strings-and-parser-final.txt",
+        "sha256": "1649e5c512924d9ea6de2e6cd00ec22169eeea16766004c7070765ad6f1b1115"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/typecheck-final-fixed.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-final.json",
+        "sha256": "0eafd134fe03f12e2d075719823701ee881c1d035e8f3db83b4e2cf2bfdc5c93"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-final.txt",
+        "sha256": "c0abf58b478298566a94eb00d67cbfdaf340cdda0a7c78bfadcda59cb217d80b"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final.json",
+        "sha256": "ac24745ca956516249980a53353b321a031605e4c4713f4a5bd380587f772a91"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final.txt",
+        "sha256": "737b23e85f80ca50fc1539de2f111bb1e25d1b832fa8830b3db3d7e9effbc14d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/worker-errors-green.json",
+        "sha256": "aac5e4e522d10d99e6fa7ba3cec652ca431058dc6d278fb279db466162ff6e27"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/worker-errors-green.txt",
+        "sha256": "21331e0f3d410dbffe8d9dc7f571f0ac8844423373fb4317c9a586af85dce746"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.json",
+        "sha256": "acb2192c4998c0f448d02243093c005316210883fa5b0773a87ffbf9e4a73357"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.txt",
+        "sha256": "056a71ade534493d3139ecc12c1b284893edee880ec40968bc707aa58a6b84c4"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.json",
+        "sha256": "efc7c32d2eb620d45779ee524ab068900588994b8654c3649c791f5babe21fc3"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.txt",
+        "sha256": "e8fbcb319e9fb7326e6cfed98dd2733d1ff4e16e938314da0634d52c4a98b042"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/built-assets.json",
+        "sha256": "e47bbaee56531f31283c9ee3f8b9a1f08c1aec49020927edca15dca3e4635566"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/build-final.txt",
+        "sha256": "1de34313d25ba8bbb7bd444df4f4c5af9f8d6437f8d72dc8d362033a375499e4"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx",
+        "sha256": "bbb4fd9df702bea22d1ae2a918664323eb040caca0a81f9ac55370df05eb6b5e"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.ts",
+        "sha256": "08a267b07134dfa053bec871fa12d25cdc3ff83b2cabedf5b03c73e9c8709a09"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run.mjs",
+        "sha256": "d8378df8c3ce0fe75fb2d14f85061be0cd0a451ac0494a0328306bceae8418f4"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-built.mjs",
+        "sha256": "10cfd39bc74f9c89c332bf6b7a2a3415f0a607b61dfb86984a3c6b9dad0f1d58"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-errors.mjs",
+        "sha256": "a4c509f56b974fe6eae1f1737c103a5b80cf0f1e872528611735ea6d8dc08dcc"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final-pdf-page2-retained.png",
+        "sha256": "ce0cf35f3f1eb578844075c303d488a4ef658b69e0e9c0dfd74db70bd70ae153"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final-version-changed-actions.png",
+        "sha256": "b679dd8058204aaf88f6e610a3562101d370da155178432cd08b907f38dd4b07"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final-image-opinion.png",
+        "sha256": "770c86fed7b3a898942009313e7e6951ebd1573b793e752b55f69f3025c51e91"
+      }
+    ],
+    "additionalSourceRead": [
+      {
+        "path": "src/runtime/pdf_preview.ts",
+        "sha256": "42fb53816b749f1f452f1b61b587c28dc53def412e19ef85d3fd83cc024df1f0"
+      },
+      {
+        "path": "src/runtime/pdf_preview.test.ts",
+        "sha256": "10c52afd94a18ff29ad01639a5e12fc6e594d8c73897e3513a96663134874070"
+      },
+      {
+        "path": "src/runtime/pdf_render_core.ts",
+        "sha256": "2790d11ab61f142c254912fe7f8934e7c3ad3bcc8ce2c52a1eac31c18b553a8e"
+      },
+      {
+        "path": "src/runtime/pdf_render_core.test.ts",
+        "sha256": "6311d1a5d79d0a60a070621870f2d3403249534afac9291fe24ae1e5250603f1"
+      },
+      {
+        "path": "src/workers/pdf_render.worker.ts",
+        "sha256": "204596df049e94b1c251d6a5cdc33ece652a407d38931f064790d1eabcb5f4e9"
+      },
+      {
+        "path": "node_modules/pdfjs-dist/legacy/build/pdf.mjs",
+        "sha256": "91e29f812c593904e8d48d022db5ddf93e3443575d4765ac9bfbb42494cfbd8d"
+      },
+      {
+        "path": "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs",
+        "sha256": "df3bf6bf6b8b8dac8a4042d8c4ecf1cf21e1d197e0fe231c192122409eba656b"
+      }
+    ],
+    "executionAttribution": "verification read source/local official package, retained logs/screenshots, rechecked source hashes and JSON/raw consistency. No tests/build/browser/installed app/Agent executed; product_coverage executed the retained checks.",
+    "limits": [
+      "No installed Farfold/WKWebView, Windows or real Agent/account/model acceptance.",
+      "Browser IPC uses explicit fixture data; no real file/history/draft database round trip.",
+      "PDF page and whole-image feedback only; regions and Office anchors remain outside this slice.",
+      "No memory/durability/total PDF heap guarantee. Real browser cancellation observation is bounded, supplemented by source and fake-worker tests.",
+      "Emitted temporary bundle no longer present; offset check is retained peer evidence.",
+      "Root subsequent OpenedFileView XLSX integration requires its own validation; reviewed P21 handover hash is preserved."
+    ]
+  }
+}

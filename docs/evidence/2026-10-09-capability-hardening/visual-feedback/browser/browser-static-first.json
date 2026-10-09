@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "real PDF worker completed with visible pixels",
+      "ok": true,
+      "detail": {
+        "width": 600,
+        "height": 375
+      }
+    },
+    {
+      "name": "button available: 修改意见",
+      "ok": true
+    },
+    {
+      "name": "button available: 针对当前第 1 页",
+      "ok": true
+    },
+    {
+      "name": "page one anchor uses exact disk digest",
+      "ok": true
+    },
+    {
+      "name": "button available: 下一页",
+      "ok": true
+    },
+    {
+      "name": "page navigation preserves existing target and text",
+      "ok": true
+    },
+    {
+      "name": "hide withdraws page target while retaining opinion",
+      "ok": true
+    },
+    {
+      "name": "button available: 加入对话",
+      "ok": true
+    },
+    {
+      "name": "take appends original page and version without sending",
+      "ok": true
+    },
+    {
+      "name": "button available: 修改意见",
+      "ok": true
+    },
+    {
+      "name": "button available: 针对当前第 2 页",
+      "ok": true
+    },
+    {
+      "name": "button available: 重新读取",
+      "ok": true
+    },
+    {
+      "name": "changed version does not retarget retained draft",
+      "ok": true
+    },
+    {
+      "name": "button available: 修改意见",
+      "ok": true
+    },
+    {
+      "name": "image offers file-level target with loaded pixels",
+      "ok": true
+    },
+    {
+      "name": "button available: 加入对话",
+      "ok": true
+    },
+    {
+      "name": "only file-read and draft settings calls occurred",
+      "ok": true,
+      "detail": [
+        "settings_get",
+        "file_delivery_inspect_selected",
+        "file_delivery_inspect_selected",
+        "file_delivery_read_visual",
+        "settings_set",
+        "settings_set",
+        "settings_set",
+        "file_delivery_inspect_selected",
+        "file_delivery_read_visual",
+        "file_delivery_inspect_selected",
+        "file_delivery_read_visual",
+        "settings_set",
+        "settings_set"
+      ]
+    },
+    {
+      "name": "moving image opinion retains previous PDF draft",
+      "ok": true
+    }
+  ],
+  "counts": {
+    "checks": 18,
+    "ipc": 13
+  },
+  "scope": "real React StrictMode/PDF worker/image browser; fixed local bytes and IPC fixture; no installed WebKit or Agent"
+}

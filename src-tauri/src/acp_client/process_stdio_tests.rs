@@ -113,66 +113,147 @@ impl Witness {
     }
 }
 
+// A pipe witness proves EOF for the pipe object, not merely for this parent's
+// descriptor. Concurrent tests may fork while preparation is in progress and
+// retain CLOEXEC copies until exec. Run immediate-close assertions in one test
+// process, retaining the original assertion instead of waiting out other tests.
+fn in_isolated_test(name: &str, body: impl FnOnce()) {
+    let args: Vec<_> = std::env::args().collect();
+    let child_mode = args.iter().any(|arg| arg == name)
+        && args.iter().any(|arg| arg == "--exact")
+        && args.iter().any(|arg| arg == "--test-threads=1");
+    let completion = format!("farfold-stdio-isolation-complete:{name}");
+    if child_mode {
+        body();
+        eprintln!("{completion}");
+        return;
+    }
+    let mut command = std::process::Command::new(std::env::current_exe().unwrap());
+    command.args([name, "--exact", "--test-threads=1", "--nocapture"]);
+    run_isolated_command(command, &completion, || {});
+}
+
+fn run_isolated_command(
+    mut command: std::process::Command,
+    completion: &str,
+    after_reap: impl FnOnce(),
+) {
+    let stdout = tempfile::tempfile().unwrap();
+    let stderr = tempfile::tempfile().unwrap();
+    let mut child = command
+        .stdin(std::process::Stdio::null())
+        .stdout(stdout.try_clone().unwrap())
+        .stderr(stderr.try_clone().unwrap())
+        .spawn()
+        .unwrap();
+    let deadline = std::time::Instant::now() + Duration::from_secs(10);
+    let status = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break status,
+            Ok(None) if std::time::Instant::now() < deadline => {
+                std::thread::sleep(Duration::from_millis(5));
+            }
+            result => {
+                let _ = child.kill();
+                let _ = child.wait();
+                panic!("isolated stdio test did not finish: {result:?}");
+            }
+        }
+    };
+    after_reap();
+    let stdout = read_capture(&stdout);
+    let stderr = read_capture(&stderr);
+    assert!(
+        status.success(),
+        "isolated stdio test failed:\n{stdout}\n{stderr}"
+    );
+    assert!(
+        stderr.lines().any(|line| line == completion),
+        "isolated test body did not complete: {stdout}\n{stderr}"
+    );
+    eprintln!("{stderr}");
+}
+
+// A reaped child does not imply EOF on a pipe inherited by another process.
+// Anonymous regular files have no writer-close wait. Positional reading also
+// avoids moving the shared file offset of an inherited writer.
+fn read_capture(file: &std::fs::File) -> String {
+    use std::os::unix::fs::FileExt;
+    let length = file.metadata().unwrap().len();
+    assert!(
+        length <= 64 * 1024,
+        "isolated test output exceeds capture limit"
+    );
+    let mut bytes = vec![0; length as usize];
+    file.read_exact_at(&mut bytes, 0).unwrap();
+    String::from_utf8_lossy(&bytes).into_owned()
+}
+
 #[test]
 fn mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints() {
-    // Fail each pipe creation or parent registration in turn, without changing
-    // process-wide limits. Witnesses retain only a parent endpoint: EOF/EPIPE
-    // proves every partially prepared opposite endpoint was actually closed.
-    for failure in 0..6 {
-        let dir = tempfile::tempdir().unwrap();
-        let marker = dir.path().join("should-not-start");
-        let mut command = async_process::Command::new("/bin/sh");
-        command.args(["-c", "printf started > \"$1\"", "fixture"]);
-        command.arg(&marker);
-        let mut step = 0;
-        let mut witnesses = Vec::new();
-        let fault = std::cell::Cell::new(0);
-        let fail = || {
-            let current = fault.get();
-            fault.set(current + 1);
-            if current == failure {
-                Err(io::Error::from_raw_os_error(libc::EMFILE))
-            } else {
-                Ok(())
-            }
-        };
-        let result = spawn_prepared(command, || {
-            Prepared::with_factories(
-                || {
-                    fail()?;
-                    let pair = io::pipe()?;
-                    witnesses.push(if step == 0 {
-                        Witness::Input(nonblocking(pair.1.try_clone()?))
+    in_isolated_test(
+        "acp_client::process::stdio::tests::mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints",
+        || {
+            // Fail each pipe creation or parent registration in turn, without changing
+            // process-wide limits. Witnesses retain only a parent endpoint: EOF/EPIPE
+            // proves every partially prepared opposite endpoint was actually closed.
+            for failure in 0..6 {
+                let dir = tempfile::tempdir().unwrap();
+                let marker = dir.path().join("should-not-start");
+                let mut command = async_process::Command::new("/bin/sh");
+                command.args(["-c", "printf started > \"$1\"", "fixture"]);
+                command.arg(&marker);
+                let mut step = 0;
+                let mut witnesses = Vec::new();
+                let fault = std::cell::Cell::new(0);
+                let fail = || {
+                    let current = fault.get();
+                    fault.set(current + 1);
+                    if current == failure {
+                        Err(io::Error::from_raw_os_error(libc::EMFILE))
                     } else {
-                        Witness::Output(nonblocking(pair.0.try_clone()?))
-                    });
-                    step += 1;
-                    Ok(pair)
-                },
-                |writer| {
-                    fail()?;
-                    Async::new(writer)
-                },
-                |reader| {
-                    fail()?;
-                    Async::new(reader)
-                },
-            )
-        });
-        let error = match result {
-            Err(error) => error,
-            Ok((_streams, mut child)) => {
-                let _ = child.kill();
-                futures_lite::future::block_on(child.status()).unwrap();
-                panic!("injected preparation failure must prevent spawn");
+                        Ok(())
+                    }
+                };
+                let result = spawn_prepared(command, || {
+                    Prepared::with_factories(
+                        || {
+                            fail()?;
+                            let pair = io::pipe()?;
+                            witnesses.push(if step == 0 {
+                                Witness::Input(nonblocking(pair.1.try_clone()?))
+                            } else {
+                                Witness::Output(nonblocking(pair.0.try_clone()?))
+                            });
+                            step += 1;
+                            Ok(pair)
+                        },
+                        |writer| {
+                            fail()?;
+                            Async::new(writer)
+                        },
+                        |reader| {
+                            fail()?;
+                            Async::new(reader)
+                        },
+                    )
+                });
+                let error = match result {
+                    Err(error) => error,
+                    Ok((_streams, mut child)) => {
+                        let _ = child.kill();
+                        futures_lite::future::block_on(child.status()).unwrap();
+                        panic!("injected preparation failure must prevent spawn");
+                    }
+                };
+                assert_eq!(error.raw_os_error(), Some(libc::EMFILE));
+                assert!(!marker.exists());
+                for witness in witnesses {
+                    witness.assert_opposite_end_closed();
+                }
             }
-        };
-        assert_eq!(error.raw_os_error(), Some(libc::EMFILE));
-        assert!(!marker.exists());
-        for witness in witnesses {
-            witness.assert_opposite_end_closed();
-        }
-    }
+        },
+    );
 }
 
 #[tokio::test]
@@ -257,4 +338,172 @@ fn mac_stdio_spawn_error_closes_all_prepared_endpoints() {
         }
     }
     eprintln!("controlled ENOENT attempts=16, endpoint witnesses deferred={deferred}");
+}
+
+#[test]
+fn mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint() {
+    in_isolated_test(
+        "acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint",
+        || {
+            use std::os::unix::process::CommandExt;
+            let (mut ready_read, ready_write) = io::pipe().unwrap();
+            let (release_read, mut release_write) = io::pipe().unwrap();
+            let ready_read_fd = ready_read.as_raw_fd();
+            let release_write_fd = release_write.as_raw_fd();
+            std::thread::scope(|scope| {
+                let mut child = None;
+                let mut witness = None;
+                let command = async_process::Command::new("/bin/sh");
+                let result = spawn_prepared(command, || {
+                    Prepared::with_factories(
+                        || {
+                            let pair = io::pipe()?;
+                            witness = Some(Witness::Input(nonblocking(pair.1.try_clone()?)));
+                            let ready_write = ready_write.try_clone()?;
+                            let release_read = release_read.try_clone()?;
+                            child = Some(scope.spawn(move || {
+                                let mut command = std::process::Command::new("/bin/sh");
+                                command.args(["-c", "exit 0"]);
+                                // The only child-side work is async-signal-safe libc I/O.
+                                // The parent releases the gate before any assertion; a
+                                // deadline exits only this exact fixture child on failure.
+                                unsafe {
+                                    command.pre_exec(move || {
+                                        libc::close(ready_read_fd);
+                                        libc::close(release_write_fd);
+                                        let byte = [1u8];
+                                        if libc::write(
+                                            ready_write.as_raw_fd(),
+                                            byte.as_ptr().cast(),
+                                            1,
+                                        ) != 1
+                                        {
+                                            libc::_exit(90);
+                                        }
+                                        let mut poll = libc::pollfd {
+                                            fd: release_read.as_raw_fd(),
+                                            events: libc::POLLIN,
+                                            revents: 0,
+                                        };
+                                        if libc::poll(&mut poll, 1, 3000) != 1 {
+                                            libc::_exit(91);
+                                        }
+                                        let mut byte = [0u8];
+                                        if libc::read(
+                                            release_read.as_raw_fd(),
+                                            byte.as_mut_ptr().cast(),
+                                            1,
+                                        ) != 1
+                                        {
+                                            libc::_exit(92);
+                                        }
+                                        Ok(())
+                                    });
+                                }
+                                let mut child = command.spawn().unwrap();
+                                child.wait().unwrap()
+                            }));
+                            let mut poll = libc::pollfd {
+                                fd: ready_read.as_raw_fd(),
+                                events: libc::POLLIN,
+                                revents: 0,
+                            };
+                            if unsafe { libc::poll(&mut poll, 1, 2000) } != 1 {
+                                return Err(io::Error::from_raw_os_error(libc::ETIMEDOUT));
+                            }
+                            ready_read.read_exact(&mut [0u8])?;
+                            Ok(pair)
+                        },
+                        |_writer| Err(io::Error::from_raw_os_error(libc::EMFILE)),
+                        Async::new,
+                    )
+                });
+                let error = result.err().unwrap();
+                let mut witness = witness.unwrap();
+                let closed_before_exec = witness.opposite_end_closed();
+                release_write.write_all(&[1]).unwrap();
+                assert!(child.unwrap().join().unwrap().success());
+                let closed_after_exec = witness.opposite_end_closed();
+                eprintln!(
+                    "controlled fork witness before_exec={closed_before_exec}, after_exec={closed_after_exec}"
+                );
+                assert_eq!(error.raw_os_error(), Some(libc::EMFILE));
+                assert!(
+                    !closed_before_exec,
+                    "pre-exec child still owns its forked endpoint"
+                );
+                assert!(
+                    closed_after_exec,
+                    "exec must close the inherited CLOEXEC endpoint"
+                );
+            });
+        },
+    );
+}
+
+#[test]
+fn mac_stdio_isolated_capture_does_not_wait_for_inherited_output_writers() {
+    use std::os::unix::{ffi::OsStrExt, fs::OpenOptionsExt};
+    let dir = tempfile::tempdir().unwrap();
+    let gate_path = dir.path().join("owned-gate");
+    let gate_name = std::ffi::CString::new(gate_path.as_os_str().as_bytes()).unwrap();
+    assert_eq!(unsafe { libc::mkfifo(gate_name.as_ptr(), 0o600) }, 0);
+    let mut gate = std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .custom_flags(libc::O_NONBLOCK)
+        .open(&gate_path)
+        .unwrap();
+    let opened = dir.path().join("gate-opened");
+    let completed = dir.path().join("holder-completed");
+    let mut command = std::process::Command::new("/bin/sh");
+    command
+        .args([
+            "-c",
+            "(exec 3<> \"$1\"; printf ready > \"$3\"; IFS= read -t 8 -r ignored <&3; printf done > \"$4\") & printf '%s\\n' \"$2\" >&2; exit 0",
+            "fixture",
+        ])
+        .arg(&gate_path)
+        .arg("owned-output-complete")
+        .arg(&opened)
+        .arg(&completed);
+    let (reaped_send, reaped_recv) = std::sync::mpsc::channel();
+    let (done_send, done_recv) = std::sync::mpsc::channel();
+    std::thread::scope(|scope| {
+        let capture = scope.spawn(move || {
+            run_isolated_command(command, "owned-output-complete", || {
+                reaped_send.send(()).unwrap();
+            });
+            done_send.send(()).unwrap();
+        });
+        let reaped = reaped_recv.recv_timeout(Duration::from_secs(5));
+        let opened_by = std::time::Instant::now() + Duration::from_secs(5);
+        while !opened.exists() && std::time::Instant::now() < opened_by {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        let holder_opened = opened.exists();
+        let captured_while_writer_alive = reaped.is_ok()
+            && holder_opened
+            && done_recv.recv_timeout(Duration::from_secs(1)).is_ok()
+            && !completed.exists();
+        // Release and join before asserting even on the old blocking behavior.
+        // Opening the gate read/write plus read's deadline avoids a background
+        // child waiting forever if the parent exits before FIFO open finishes.
+        gate.write_all(b"release\n").unwrap();
+        drop(gate);
+        capture.join().unwrap();
+        let completed_by = std::time::Instant::now() + Duration::from_secs(5);
+        while !completed.exists() && std::time::Instant::now() < completed_by {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert!(
+            holder_opened && completed.exists(),
+            "owned writer holder must open and finish its gate"
+        );
+        assert!(reaped.is_ok(), "controlled primary child must have exited");
+        assert!(
+            captured_while_writer_alive,
+            "reaped child output must be readable while another child still owns a writer"
+        );
+    });
 }

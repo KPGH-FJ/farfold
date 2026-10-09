@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/xlsx_format.test.ts(48,12): error TS2304: Cannot find name 'formatXlsxValue'.
+ ELIFECYCLE  Command failed with exit code 1.

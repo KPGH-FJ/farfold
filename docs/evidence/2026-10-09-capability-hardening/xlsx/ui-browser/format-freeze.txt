@@ -1,0 +1,13 @@
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/source-freeze.json 9ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-expanded.diagnostics.json 7ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-expanded.json 6ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-final.diagnostics.json 4ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-final.json 3ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.diagnostics.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.diagnostics.json 3ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-styles.diagnostics.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-styles.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-fixed.json 0ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-fixed.diagnostics.json 2ms

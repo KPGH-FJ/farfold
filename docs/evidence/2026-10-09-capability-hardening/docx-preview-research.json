@@ -1,0 +1,345 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-10-09",
+  "kind": "read-only-dependency-and-implementation-design",
+  "planItem": "P16",
+  "status": "research-complete-not-implemented-or-tested",
+  "scope": {
+    "performed": [
+      "读取当前文件交付、受控读取、XLSX OOXML、图片校验和 Worker 源码",
+      "读取候选包发布元数据、维护者官方源码和许可证",
+      "核 Apple 公开 Quick Look 文档、本机 SDK 头文件及 Microsoft Open XML 文档"
+    ],
+    "written": ["本 JSON"],
+    "notPerformed": [
+      "没有修改源码、依赖、契约或活动计划",
+      "没有安装或运行候选库",
+      "没有读取用户 DOCX 文件",
+      "没有启动正式应用、Agent、Word、Quick Look 或系统转换器",
+      "没有进行浏览器、像素或端到端验收"
+    ]
+  },
+  "recommendation": {
+    "path": "优先复用现有 VerifiedFile、受控读取、ZIP 容器检查及 saxes，在独立 Worker 中形成受限 WordprocessingML 结构，再由共用内容栏的 React 白名单组件显示。",
+    "productSlice": "明确支持清单的 DOCX 连续只读预览：真实正文、基础字符/段落样式、常用列表、普通表格及包内 PNG/JPEG；页眉页脚和注释性正文按独立区域呈现，准确列出被限制的内容。",
+    "why": "当前两家成熟浏览器库不能直接同时满足独立 Worker、准确基础格式和惰性资源边界。复用已存在的有界 OOXML 管道可避免第二次无界解压、任意 HTML/CSS 和第三方预览进程；实施代价是必须明确解析 profile、遗漏检测和格式反例，不能把自写小解析器称作 Word 排版引擎。",
+    "noNewDependencyNeededForCandidate": true,
+    "notClaimed": [
+      "Word 实时分页或逐页像素保真",
+      "完整 DOCX 格式支持",
+      "DOC/PPTX/DOCM 支持",
+      "宏、字段、外链更新或编辑能力",
+      "Agent 已能读取该格式",
+      "完整 P16 或 P21 已完成"
+    ],
+    "decisionGate": "若普通真实样本中常见结构无法准确显示且持续只能拒绝，应停止扩大手写 profile，重新评估隔离渲染方案；不能以成功拒绝全部文档作为交付。"
+  },
+  "currentFoundation": [
+    {
+      "evidence": ["plans/agent-access.md:172", "plans/agent-access.md:177"],
+      "fact": "P16 要求内容栏实际视觉预览及准确失败；P21 的版本意见是独立要求，本片不能借预览开通虚构 Word 页码锚点。"
+    },
+    {
+      "evidence": [
+        "src-tauri/src/file_delivery.rs:298",
+        "src-tauri/src/file_delivery_commands.rs:72",
+        "src-tauri/src/file_read_check.rs:15"
+      ],
+      "fact": "capture_expected 重新按受控路径捕获并比较完整 VerifiedFile；主 WebView 门禁和有界 OS 读取槽已经存在。新 DOCX 命令应共用这一链路，不把 path 或文件 URL 交给解析器。"
+    },
+    {
+      "evidence": [
+        "src-tauri/src/file_delivery/workbook.rs:10",
+        "src-tauri/src/file_delivery/workbook.rs:81",
+        "src-tauri/src/file_delivery/workbook.rs:233"
+      ],
+      "fact": "现 XLSX 入口在 ZipArchive 分配前检查中央目录，核实际受限解压、CRC、名称、重复、重叠、加密/方法/ZIP64；16 MiB 压缩、单项 16 MiB、总量 64 MiB、2048 项。所有二进制项也读完校验，但只返回 XML/.rels，尚不提供 DOCX 图片。"
+    },
+    {
+      "evidence": [
+        "src/runtime/xlsx_xml.ts:84",
+        "src/runtime/xlsx_parse.ts:111",
+        "src/runtime/xlsx_types.ts:34"
+      ],
+      "fact": "已有 namespace-aware saxes、DTD 拒绝、文本/节点/深度限制、关系解析和固定错误代码。可抽通用部分，不能直接套用 SpreadsheetML namespace、XlsxError、布尔值、格式或正文规则。"
+    },
+    {
+      "evidence": [
+        "src/runtime/xlsx_preview.ts:40",
+        "src/runtime/xlsx_preview.ts:130",
+        "src/workers/xlsx_preview.worker.ts:1"
+      ],
+      "fact": "现有精确版本核对、取消等待、单 Worker、超时终止和迟到回执防护可复用。取消前端等待不等于终止实际 OS 读取，底层槽仍等真实退出。"
+    },
+    {
+      "evidence": [
+        "src/runtime/image_bytes.ts:1",
+        "src/runtime/image_bytes.ts:94",
+        "src/runtime/visual_preview.ts:32",
+        "src-tauri/tauri.conf.json:26"
+      ],
+      "fact": "现有图片真实容器/像素/动画检查和受限 CSP 可复用；图片签名/CRC 通过仍不能代替真实解码成功。不能为 DOCX 放开远程 img/font/connect 或任意源。"
+    }
+  ],
+  "candidates": [
+    {
+      "name": "docx-preview",
+      "fixedVersion": "0.4.1",
+      "publishedAt": "2026-09-21T16:47:25.799Z",
+      "olderThanSevenDaysOnResearchDate": true,
+      "license": "Apache-2.0；本次读取了维护者对应源码 LICENSE",
+      "sources": [
+        "https://registry.npmjs.org/docx-preview",
+        "https://registry.npmjs.org/docx-preview/0.4.1",
+        "https://github.com/VolodymyrBaydalka/docxjs/tree/c533f383069008d4a1e05c6171ef8777fd078385",
+        "https://raw.githubusercontent.com/VolodymyrBaydalka/docxjs/c533f383069008d4a1e05c6171ef8777fd078385/LICENSE"
+      ],
+      "strength": "成熟的浏览器 DOCX 视觉转换，已覆盖页眉页脚、注释正文、表格和图片等许多结构。",
+      "verifiedConstraints": [
+        "src/parser/xml-parser.ts:9/27 使用 DOMParser/XMLSerializer；parseAsync 不是可直接移入当前裸 Worker 的无 DOM 解析器。",
+        "README.md:71 将 parseAsync/renderDocument 标为 experimental/internal API；返回对象不是现成稳定可序列化的跨 Worker 契约。",
+        "src/common/open-xml-package.ts:28 使用 JSZip.loadAsync；src/word-document.ts:155 递归 Promise.all 加载关系。已有 Rust 预解压并不能直接作为它的公开输入，重新喂 ZIP 会重复解压与保留。",
+        "src/docx-preview.ts:48 默认 renderAltChunks=true；src/html-renderer.ts:999-1006 创建 iframe 并赋 srcdoc。设置 false 只会不渲染该正文，仍必须在产品中说明缺失或拒绝。",
+        "src/html-renderer.ts:929-935 把 External hyperlink target 交给 href；src/word-document.ts:161-196 加载包内图片/字体并产生 URL。不能把默认 DOM 输出放进带 IPC 权限的主应用。未据这些代码宣称包内图片一定发生远程 fetch。",
+        "README.md:92/101 明确字段/TOC 与实时分页限制；手动或 lastRenderedPageBreak 不是重新计算过的真实 Word 页码。"
+      ],
+      "dependencyBoundary": "上游声明 jszip >=3.0.0，若采用必须用精确锁定/覆盖已审版本而非 floating 范围，审完整解析、DOM shim、样式、图片、字体及许可证链。本次未完成该依赖图的可运行审计。",
+      "assessment": "保留为后续隔离 HTML 渲染候选；不推荐本片直接采用。独立无权限 iframe/WebView 仍不是独立解析 Worker，且需新的 CSP、消息身份与资源生命周期，关闭几个选项不足以交付。"
+    },
+    {
+      "name": "mammoth",
+      "fixedVersion": "1.13.0",
+      "publishedAt": "2026-09-26T22:11:25.198Z",
+      "olderThanSevenDaysOnResearchDate": true,
+      "license": "BSD-2-Clause；本次核维护者 1.13.0 LICENSE 两条再分发条件",
+      "sources": [
+        "https://registry.npmjs.org/mammoth",
+        "https://registry.npmjs.org/mammoth/1.13.0",
+        "https://github.com/mwilliamson/mammoth.js/tree/1.13.0",
+        "https://github.com/mwilliamson/mammoth.js/blob/1.13.0/README.md",
+        "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/NEWS",
+        "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.13.0/LICENSE"
+      ],
+      "strength": "公开 browser 转换入口、语义标题/列表/表格/脚注/图像支持，适合正文提取与语义阅读。",
+      "verifiedConstraints": [
+        "维护者明确以语义 HTML 为目标，会忽略部分视觉细节，例如表格边框等格式，不是 Word 视觉排版。",
+        "维护者明确不净化 HTML；链接可能是 javascript:。externalFileAccess 默认 false 不能替代隔离输出与字段/关系检查。",
+        "NEWS 1.12.2 修过可改变 externalFileAccess 的样式原型污染，1.12.3 修过字段字符串病态回溯；1.13.0 改 native Promise、补修订移动内容和 Markdown 转义。只能选本次已核新版本，不能沿旧版本安全印象。",
+        "官方建议不可信转换在独立线程和超时保护下执行。浏览器打包/Worker 兼容还需实际验证，HTML 输出不直接进入主应用。"
+      ],
+      "dependencyBoundary": "公开依赖包括 jszip、@xmldom/xmldom、underscore、xmlbuilder、lop 等。只有顶层候选元数据/发布说明已核，不宣称完整传递图已审或 Worker 已运行。",
+      "assessment": "可作为后续语义提取候选；单独不能满足本片基础视觉格式目标。追加自建样式系统会同时承担两套解析语义，当前最小片不采用。"
+    },
+    {
+      "name": "Microsoft Open XML SDK",
+      "sources": [
+        "https://github.com/dotnet/Open-XML-SDK/blob/main/README.md",
+        "https://learn.microsoft.com/en-us/office/open-xml/open-xml-sdk"
+      ],
+      "license": "MIT，维护者 README 直接声明",
+      "strength": "Microsoft/.NET Foundation 维护的低层 OPC 与 Open XML 强类型读写 API，可作为格式资料与对照工具。",
+      "constraint": "官方定位为低层文件/标记操作，不提供此处需要的现成浏览器视觉预览；新增 .NET 运行时和进程边界仍不能省去布局实现。README 还提示 .NET Core/5+ ZIP 非流式造成 working-set 风险。",
+      "fixedVersion": null,
+      "versionStatus": "不拟作为本片依赖，因此没有选定/验证具体发行版本；不声称通过依赖年龄门槛。",
+      "assessment": "不为只读 DOCX 预览新增 CLR 或把类型 SDK 当渲染器。"
+    },
+    {
+      "name": "Apple QLPreviewView / Quick Look",
+      "sources": [
+        "https://developer.apple.com/documentation/quicklook",
+        "https://developer.apple.com/documentation/quicklookui/qlpreviewview",
+        "https://developer.apple.com/documentation/quicklookui/qlpreviewview/previewitem",
+        "https://developer.apple.com/documentation/quicklookui/qlpreviewitem/previewitemurl",
+        "https://developer.apple.com/tutorials/data/documentation/quicklookui/qlpreviewview.json",
+        "https://developer.apple.com/tutorials/data/documentation/quicklookui/qlpreviewitem/previewitemurl.json"
+      ],
+      "minimum": "QLPreviewView 与 QLPreviewItem macOS 10.6；initWithFrame:style: macOS 10.7，本机官方 SDK 头文件与 DocC 元数据均已核。",
+      "strength": "公开可嵌入的系统预览，官方列出 Microsoft Office 常见文档；不用外部编辑器窗口也可以展示。",
+      "verifiedConstraints": [
+        "previewItemURL 要求 file-type URL，设置 previewItem 后异步加载，不能立即当作 ready。",
+        "displayState 是不透明对象，不能直接提取稳定 Word 页码供版本意见使用。",
+        "官方说明支持类型可能随系统变化。已读公开接口未提供此任务所需的任意 provider 网络禁用、解压/像素预算或完整内容缺失报告契约；这表示尚未证明，不是断言系统一定会执行宏或联网。"
+      ],
+      "assessment": "保留为独立原生预览路线，不选作本片最小跨平台路径。原 path 会破坏精确版本读取；复制已捕获字节到私有临时文件又新增落盘、清理和 provider 行为证明。不能直接把原路径交 Quick Look 并宣称已显示该 VerifiedFile。"
+    },
+    {
+      "name": "AppKit NSAttributedString OfficeOpenXML 导入",
+      "localEvidence": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSAttributedString.h:268",
+      "minimum": "NSOfficeOpenXMLTextDocumentType macOS 10.5",
+      "assessment": "只确认公开导入类型存在；未建立对字段、图片、表格、页眉页脚和资源限制的完整保证，不以常量存在推断视觉保真。不是本片推荐方案。"
+    }
+  ],
+  "existingDependencyReuse": [
+    {
+      "name": "saxes",
+      "fixedVersion": "6.0.0",
+      "publishedAt": "2021-11-07T19:06:31.264Z",
+      "license": "ISC",
+      "olderThanSevenDays": true,
+      "sources": [
+        "https://registry.npmjs.org/saxes",
+        "https://github.com/lddubeau/saxes/tree/v6.0.0"
+      ],
+      "usage": "仓内已精确依赖，用于 namespace-aware XML；继续拒绝 DTD，不引入外部实体解析。"
+    },
+    {
+      "name": "xmlchars",
+      "fixedVersion": "2.2.0",
+      "publishedAt": "2019-09-06T16:38:51.976Z",
+      "license": "MIT",
+      "olderThanSevenDays": true,
+      "sources": ["https://registry.npmjs.org/xmlchars"],
+      "usage": "saxes 既有传递依赖；本次核版本元数据，不另行安装。"
+    },
+    {
+      "name": "zip",
+      "fixedVersion": "4.6.1",
+      "publishedAt": "2025-09-03T08:17:46.519861Z",
+      "license": "MIT",
+      "olderThanSevenDays": true,
+      "sources": ["https://crates.io/api/v1/crates/zip/4.6.1"],
+      "usage": "Cargo.toml 已 =4.6.1 且仅 deflate-flate2；本次核发布元数据、非 yanked。复用容器能力，不调用外部 unzip。"
+    },
+    {
+      "name": "jszip",
+      "fixedVersion": "3.10.2",
+      "publishedAt": "2026-09-08T22:31:16.671Z",
+      "license": "MIT OR GPL-3.0-or-later",
+      "olderThanSevenDays": true,
+      "sources": [
+        "https://registry.npmjs.org/jszip",
+        "https://stuk.github.io/jszip/documentation/limitations.html"
+      ],
+      "usage": "仅候选库所需的对比资料，本片不新增；使用时需选择并保留适用许可，完整内存解压仍需独立预算。"
+    }
+  ],
+  "minimalUsefulProfile": {
+    "identity": "只接显式 .docx 路由，但实际内容必须有唯一内部 officeDocument 关系和正确 WordprocessingML main content type；首片接受 Transitional namespace，Strict、旧 .doc、.docm、加密 OLE 容器准确标不支持/加密，不以扩展名决定格式。",
+    "paragraphs": "按源顺序保留中文/英文、XML 空白语义、tab/换行、显式分页或节边界标记；使用标题与段落语义、对齐、缩进及基本间距。不把缓存 lastRenderedPageBreak 或渲染分组当 Word 页码。",
+    "styles": "docDefaults → 正确类型的 basedOn 链 → 段落/字符样式 → 直接格式；实现已支持 toggle/显式 false 语义、字号、基础字重/斜体/下划线/删除线/上下标/前景背景。循环和资源超限拒绝。Word on/off 布尔与 XLSX 规则不同。字体仅采用本地可用/应用已打包字体，替代要提示，不读取包内字体或联网补字。",
+    "lists": "支持普通 bullet/decimal、多级层次和显式起点/重启；保留可核验编号。未支持的 numbering 变体给原位提示，不伪造所有列表从 1 开始。",
+    "tables": "支持普通表格、行/单元格顺序、宽度、边框和基本填充，以及经验证的 gridSpan/vMerge。重叠、无锚点续并或无法还原结构不得静默拉平。复杂嵌套/浮动表格可准确拒绝或局部占位，但状态必须标有限预览。",
+    "images": "只显示由当前 story 的内部关系指向的包内 PNG/JPEG，核 MIME 与真实字节、绘制尺寸/比例及图像解码成功；使用当前版本的独立 resource id。初始仅 inline DrawingML；不把浮动/裁切/旋转等未知变换当正常原图。外链图片、SVG/VML/EMF/WMF 等显示明确原位限制或拒绝，绝不 fetch。",
+    "otherStories": "已引用的页眉/页脚、脚注/尾注按明确命名的独立内容区保留基本正文和图片，不重复绘制在每个伪页面；说明真实分页/定位尚未支持。存在但未能处理的相关 story 不能静默省略。",
+    "linksAndFields": "超链接保留显示文本并采用不可导航的只读呈现；不把关系 URL 用作 href。字段不执行、不更新，只按 fldChar/fldSimple 结构显示文件已存结果并说明未更新；缺结果显示缺失，不能把 DDE/INCLUDETEXT/INCLUDEPICTURE/TOC/PAGE 指令当执行任务或已算新结果。",
+    "revisionAndHiddenContent": "首片有修订/移动删除、复杂内容控件、批注结构或隐藏格式但不能准确处理时明确拒绝或标局部缺失；禁止默认展开已删除/隐藏文本，或不提示地选择接受/拒绝修订。不能在默认预览中悄悄补入源文件的隐藏内容。",
+    "notSupported": [
+      "真实 Word 分页和页码锚点",
+      "复杂环绕/定位/多栏、文本框、WordArt、数学公式、图表与 SmartArt",
+      "altChunk HTML/RTF/MHTML",
+      "VBA/宏、ActiveX、OLE 或嵌入可执行包",
+      "自动更新链接、模板、数据绑定或远程字体",
+      "任意用户 CSS、HTML、脚本或文件 URL"
+    ],
+    "completeness": "每个正文结构必须被处理、明确列为非正文元数据、或产生有位置的限制/拒绝。未知正文不能直接递归找 w:t 后声称完整；未知命名空间与 mc:MustUnderstand/AlternateContent 必须遵守选择规则或拒绝，不能双分支显示。只有完整处理了支持 profile 的文档才可称该 profile 读取完成。"
+  },
+  "implementationChain": [
+    {
+      "step": 1,
+      "module": "file_delivery 的共用 OOXML archive helper + 独立 document.rs",
+      "design": "从 workbook.rs 抽容器校验而非扩成万能文件解析器，保留 XLSX 回归。精确 capture_expected 后受限解压所有项并核 CRC；返回有界 XML/.rels 及候选惰性栅格图片字节、entry manifest 和同一 VerifiedFile。不得提取到磁盘或再次从 path 读取图片。"
+    },
+    {
+      "step": 2,
+      "module": "独立 docx_types/docx_package/docx_parse/docx_styles/docx_numbering 与 Worker",
+      "design": "XML/OPC 层按 namespace 和 source-relative 关系解析，worker 只读取本次已捕获字节，无 Tauri API、DOM 或网络。输出有限类型的 blocks/runs/styles/image resources 和固定 warning codes；不输出任意 HTML/CSS/URL。类型和错误码再次在主线程校验。"
+    },
+    {
+      "step": 3,
+      "module": "docx_preview controller",
+      "design": "严格核 capture 的 VerifiedFile、request id 与版本；沿现有 busy/cancel/timeout 机制独占 Worker。先释放自己的槽再 resolve/reject；hide/unmount/换版本终止并丢弃迟到结果。所有图片解码/缓存也归同一 controller，旧图片成功不能混入新文档。"
+    },
+    {
+      "step": 4,
+      "module": "DocumentFilePreview 共用内容栏组件 + 集中文案",
+      "design": "白名单 React 文本与结构呈现，必要的长文分组必须称内容分组而非原文件页码。真实解码后才显示图片；局部缺失有原位提示和总览，状态区不把有遗漏的文档说成完整。具有取消、重新读取、版本提示与现有外部打开退路，不自动发送。"
+    },
+    {
+      "step": 5,
+      "module": "OpenedFileView 路由与可选文件级意见接线",
+      "design": "完成预览本身后按拥有者协调接 .docx。若接既有 P21 文件级意见，仅绑定当前 exact VerifiedFile，不增加未经验证的页级/区域锚点；take 仍只移入草稿。完整 Office 位置意见保留未完成。"
+    }
+  ],
+  "packageAndActiveContentRules": [
+    "容器身份先核 Content_Types 与唯一内部 main relationship；拒绝重复 entry/relationship id、大小写/规范化歧义、绝对或越界路径、非规范 URI、循环/超深关系。合法相对父路径必须在包内正规化，不能把所有 ../ 一概当远程，也不能放行跨包访问。",
+    "[Content_Types]、所有关系与被引用 part 的命名空间/MIME 一致；external Target 永不转成 fetch、img/src、font-face、iframe/srcdoc 或 file URL。被拒绝的外部 URL 不写诊断日志。",
+    "宏 content type、vbaProject、ActiveX、OLE、嵌入 package 与 altChunk 属于首片拒绝条件，改名 .docx 不改变判定。未执行不等于已安全或完整预览。",
+    "字段只读缓存；updateFields、外部模板、linked image、mail merge、DDE、包含文件和数据刷新没有执行路径。不能为补内容调用 shell/Word/LibreOffice 或 Agent。",
+    "支持的 mc:AlternateContent 只选一个已验证分支；未知 required feature 或无可用分支直接限制/拒绝。结构中缺图、缺脚注、缺关系和断裂字段必须留下准确结果，不能生成空白成功页。",
+    "图片名与 ContentType 不足以信任，必须核真实图片容器、字节/像素预算和最终解码；动态图片、SVG 或未知格式不进入浏览器资源节点。文档样式仅允许固定 CSS 属性和值域，不接受 url()/expression()/任意 style 字符串。",
+    "前端不使用 dangerouslySetInnerHTML，不创建不可信 iframe，不扩 CSP，不执行包内脚本/字体。worker fetch 拦截属于防意外措施，不是单独安全边界；关键是只处理惰性数据且没有任何调用者提供的代码。"
+  ],
+  "proposedBudgets": {
+    "status": "设计建议，尚未用 DOCX 样本测定；不是现实现或 OS 硬堆限额",
+    "archive": "不高于既有 16 MiB/单 part 16 MiB/实际总解压 64 MiB/2048 项；可先用更小 DOCX profile，经现实样本再决定。",
+    "xml": "复用有界深度、节点、属性、文本限制，但须按文档累计而非每 part 重置；各 story 与重复关系扩张一并计数。",
+    "output": "建议正文总 4 MiB、10000 blocks、100000 runs、20000 cells、样式 4096；上限前拒绝，不能静默截断。长文 UI 分组限制实际 DOM 数量。",
+    "images": "每项沿既有 8 MiB/8192 边/16777216 像素上限；另加图片数量 256、全篇唯一图片总像素 33554432、同时解码预算 16777216 的候选限额。重复嵌入不重复解码，但每个实际展示引用都纳入布局预算。",
+    "runtime": "单 Worker，初始沿 XLSX 10 秒有界等待；取消/超时 terminate，renderer 和图片资源必须同样有终态，不只限制 XML 阶段。不得靠延长 timeout 修复病态输入。",
+    "memoryCaveat": "解压数据、base64、structured clone、XML 树、输出和像素存在同时保留峰值；总量限额不等于实际堆上限。须实测峰值和高重复图片/字符串，及时释放中间态，不能声称防止所有 OOM。"
+  },
+  "counterexamplesAndAcceptance": [
+    "先建真实普通 DOCX 受控样本：中英文和特殊空格、至少两种标题、不同基础字重/字号/颜色、列表重启、普通合并表、两张不同图片。与有已知预期的参考图及 XML 字段对照，不用同一解析器生成预期。",
+    "格式反例：basedOn 循环、继承 bold 再显式 false、style toggle、on/off 布尔、混合 script/font 与字体缺失、tab/空格、vMerge 续并无锚点、跨层列表重启；错格式不能归入绿色完整状态。",
+    "内容完整度：页眉/页脚/脚注/尾注、字段缓存 0/空串/缺失、嵌套字段、修订/隐藏文字、文本框、数学公式、未知 namespace 和 Choice/Fallback。验证提示准确且不重复或静默消失。",
+    "主动内容 canary：altChunk script/style/iframe、javascript/file/data 超链接、外部图片/字体/模板、宏/OLE 改后缀、关系到包外、DTD/实体；确认网络、IPC、文件读取、导航、下载和进程启动均为 0，固定测试文本例外不得被当用户数据。",
+    "容器反例：中央目录骗大小、实际超解压、CRC 错误、重复/规范化冲突路径、重叠 local records、ZIP64/多卷/加密、假 ContentType、深 XML/多属性/循环引用；与既有 XLSX 边界同时回归。",
+    "图片反例：外链、缺 part、伪 MIME、畸形 PNG/JPEG、解码失败、超像素、重复大图、浮动/裁切变换不支持；图片丢失不得仍显示完整预览。",
+    "生命周期：取消前/读取中/解析中/图片解码中、StrictMode 重挂、隐藏恢复、文件 A→B、同路径新版本、旧 Worker 与旧图片迟到、挂起超时、槽释放后新请求。旧结果不得标 ready 或保留在新版本画面。",
+    "现实量级：不少于数百段、数十表格行和多图片的正文样本；测初次读取/Worker/DOM/图片峰值与取消响应，不只跑极小 XML fixture。超限明确拒绝而不是卡住或偷偷截断。",
+    "构建与真实 Worker：dev 与打包产物均验证独立 Worker 首消息、零远程资源、字体/图片完整、CSP 无放宽、所有资源释放；jsdom/Node 解析绿不能替代 WKWebView 或正式安装版。",
+    "交付门槛：至少一份普通多结构文档完整显示、至少一份局部未支持文档准确标缺失、损坏/主动内容失败准确、同版本和取消反例通过。全部拒绝或仅提取文字不构成本片完成。",
+    "父任务按授权进行安装版自查；本片不触发 Agent，视觉预览不作为 P08 Agent 内容交付能力或 29 家实际接入证明。"
+  ],
+  "formatReferences": [
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.basedon?view=openxml-3.0.1",
+      "usedFor": "样式继承是按类型与链条处理，不能只看直接 rPr。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.bold?view=openxml-3.0.1",
+      "usedFor": "bold 为 toggle property，直接 false 与样式链不能用单一 truthy 合并。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.fieldchar?view=openxml-3.0.1",
+      "usedFor": "复杂字段开始/分隔/结束与字段结果必须区别，不能执行 instrText。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.altchunk?view=openxml-2.8.1",
+      "usedFor": "altChunk 可把外部内容部件导入正文；禁用渲染也意味着内容缺失，必须说明。"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/office/open-xml/general/introduction-to-markup-compatibility",
+      "usedFor": "未知扩展和可替代内容需要显式兼容性处理，不能泛化为忽略未知标签。"
+    }
+  ],
+  "remainingUnknowns": [
+    "尚未编写或运行 DOCX profile，基础样式和故事区支持成本仍需先做现实样本可行性验证。",
+    "候选库完整传递依赖、安全审计、浏览器打包和 WKWebView 行为未验；版本年龄与许可已核不等于可安全采用。",
+    "Quick Look 的具体 DOCX 渲染、联网和资源行为未测；未因公开接口缺少保证而断言系统实际危险。",
+    "真正 Word 分页/复杂布局与 PPTX 仍未完成；研究及基础 profile 不能降低完整 P16 要求。"
+  ],
+  "sourceCheckpoint": {
+    "recordedAtUTC": "2026-10-09T14:51:31.961565+00:00",
+    "meaning": "研究读取的当前源码散列；不是安装版或实现冻结证明。",
+    "sha256": {
+      "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "plans/agent-access.md": "a35f3717d59c133ae0855328f3fd34f09a85325b337600148fa187474d0084c6",
+      "package.json": "00b8830ab4a5523895f61cea9c271114ead8cb45955274e62752b7bd061b936b",
+      "pnpm-lock.yaml": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de",
+      "src-tauri/Cargo.toml": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b",
+      "src-tauri/src/file_delivery.rs": "7c2af4f16ca7de3d06dc7386810a16bd6cffc69b6cdee2c6cc495044f6619768",
+      "src-tauri/src/file_delivery_commands.rs": "bc3b23c07071352d8755a9a51502364b58ef3a22508ca92fd617611054db9a53",
+      "src-tauri/src/file_read_check.rs": "e33af48eb0dd66ae42db93d245058a9bc888a060e7da0d6f4091378802c08c67",
+      "src-tauri/src/file_delivery/workbook.rs": "d98bc6abd2d4df9fc6652fae7346348d1cb0749531a23812f1d11d1cd6b47a5f",
+      "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+      "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+      "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+      "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+      "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+      "src/runtime/visual_preview.ts": "1b9aca9fba3d3a6ddd82f3d63c3c04121ce9a1b9c2c9f12ba3aaf11ff783de91",
+      "src/workers/xlsx_preview.worker.ts": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+      "src-tauri/tauri.conf.json": "a1aa2c6178f26f57bfe5110e54e4c7e76f8ee0a2a36e60529047e2ae0aa2efd3"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+src/components/WorkbookFilePreview.tsx 65ms
+docs/status.md 37ms (unchanged)
+plans/agent-access.md 67ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/README.md 17ms

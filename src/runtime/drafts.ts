@@ -9,6 +9,10 @@ import {
   restoreTemplateEdit,
 } from "./template_edit_drafts";
 import { parseTemplateEdit } from "./prompt_template_data";
+import {
+  parseFeedbackAnchor,
+  type PdfPageAnchor,
+} from "./file_feedback_anchor";
 export {
   templateEditDrafts,
   useTemplateEditDraft,
@@ -270,6 +274,7 @@ export interface FileFeedback {
   lineInput?: { side: "before" | "after"; text: string };
   contentId?: string;
   scope?: "file" | "fragment";
+  anchor?: PdfPageAnchor;
 }
 export interface SavedFileFeedback extends FileFeedback {
   path: string;
@@ -298,7 +303,7 @@ export const fileFeedbackDrafts = {
   update(threadKey: string, path: string, value: FileFeedback) {
     const current = { ...feedbackValues.get(threadKey) };
     const key = feedbackKey(path, value.contentId);
-    if (value.text || value.selection || value.lineInput?.text)
+    if (value.text || value.selection || value.lineInput?.text || value.anchor)
       current[key] = { ...value, path };
     else delete current[key];
     if (Object.keys(current).length) feedbackValues.set(threadKey, current);
@@ -584,6 +589,27 @@ export function parseDraftSnapshot(value: unknown) {
   const feedback = Object.entries(record(raw.feedback)).map(([key, items]) => {
     const entries = Object.entries(record(items)).map(([storedKey, item]) => {
       const itemValue = record(item);
+      if (
+        Object.keys(itemValue).some(
+          (field) =>
+            ![
+              "path",
+              "contentId",
+              "text",
+              "selection",
+              "lineInput",
+              "scope",
+              "anchor",
+            ].includes(field),
+        ) ||
+        (itemValue.path !== undefined && typeof itemValue.path !== "string") ||
+        (itemValue.contentId !== undefined &&
+          typeof itemValue.contentId !== "string") ||
+        (itemValue.scope !== undefined &&
+          itemValue.scope !== "file" &&
+          itemValue.scope !== "fragment")
+      )
+        throw new Error("invalid feedback");
       // v1 path-keyed drafts migrate without rewriting any history. New
       // entries retain a flat text field for the existing archive guard.
       const path =
@@ -598,7 +624,10 @@ export function parseDraftSnapshot(value: unknown) {
         itemValue.selection === null ? null : record(itemValue.selection);
       if (
         selection &&
-        (!["before", "after"].includes(String(selection.side)) ||
+        (Object.keys(selection).some(
+          (field) => !["side", "line", "endLine"].includes(field),
+        ) ||
+          !["before", "after"].includes(String(selection.side)) ||
           !Number.isSafeInteger(selection.line) ||
           Number(selection.line) < 1 ||
           (selection.endLine !== undefined &&
@@ -606,15 +635,26 @@ export function parseDraftSnapshot(value: unknown) {
               Number(selection.endLine) < Number(selection.line))))
       )
         throw new Error("invalid line");
-      const lineInput = itemValue.lineInput
-        ? record(itemValue.lineInput)
-        : undefined;
+      const lineInput =
+        itemValue.lineInput !== undefined
+          ? record(itemValue.lineInput)
+          : undefined;
       if (
         lineInput &&
-        (!["before", "after"].includes(String(lineInput.side)) ||
+        (Object.keys(lineInput).some(
+          (field) => !["side", "text"].includes(field),
+        ) ||
+          !["before", "after"].includes(String(lineInput.side)) ||
           typeof lineInput.text !== "string")
       )
         throw new Error("invalid line input");
+      const anchor = parseFeedbackAnchor(itemValue.anchor, {
+        path,
+        contentId,
+        scope: itemValue.scope,
+        selection,
+        lineInput,
+      });
       return [
         feedbackKey(path, contentId),
         {
@@ -622,6 +662,7 @@ export function parseDraftSnapshot(value: unknown) {
           text: itemValue.text,
           selection,
           ...(lineInput ? { lineInput } : {}),
+          ...(anchor ? { anchor } : {}),
           contentId,
           scope:
             itemValue.scope === "file" || itemValue.scope === "fragment"

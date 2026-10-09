@@ -69,6 +69,19 @@ pub async fn file_delivery_read_visual(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_workbook(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::WorkbookCapture, file_delivery::WorkbookReadFailure> {
+    require_main(&webview)
+        .map_err(|_| file_delivery::WorkbookReadFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || Ok(file_delivery::read_workbook(&file)))
+        .await
+        .map_err(|message| file_delivery::WorkbookReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[tauri::command]
 pub async fn file_delivery_copy(
     webview: Webview,
     file: VerifiedFile,

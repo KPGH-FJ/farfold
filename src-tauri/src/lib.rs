@@ -284,6 +284,7 @@ pub fn run() {
                 file_delivery_commands::file_delivery_inspect_selected,
                 file_delivery_commands::file_delivery_read_text,
                 file_delivery_commands::file_delivery_read_visual,
+                file_delivery_commands::file_delivery_read_workbook,
                 file_delivery_commands::file_delivery_copy,
                 file_delivery_commands::file_delivery_export_text,
                 file_delivery_commands::file_delivery_open,

@@ -1,0 +1,4 @@
+src/runtime/xlsx_styles.ts 58ms (unchanged)
+src/runtime/xlsx_parse.test.ts 28ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/browser/index.html 51ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/browser/backend-capture.json 2ms (unchanged)

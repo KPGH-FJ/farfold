@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-09",
+  "sourceCommit": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "observer": "root; native Farfold accessibility and rendered screenshot observations through CUA",
+  "formalApp": "/Applications/Farfold.app",
+  "platform": "macOS 15.6 arm64, installed Tauri WebKit",
+  "scope": "Existing owned FARFOLD_PREVIEW_CE9659D1_20261009 conversation, current loaded history only",
+  "startup": {
+    "conversationCount": 112,
+    "existingAgent": "Codex",
+    "displayedModel": "6 Astra",
+    "displayedReasoning": "Ultra",
+    "permission": "继续发送前，请重新确认这条对话的权限。",
+    "permissionConfirmed": false,
+    "newAgentPromptsSent": 0,
+    "note": "Official Agent history was loaded; this is not a claim that no Agent process was invoked. No model/service choice changed."
+  },
+  "search": {
+    "passed": [
+      "Open control focuses the query and exposes loaded-only scope to accessibility.",
+      "临时两页 has two matches: user Markdown text and assistant file-link button. Next moves 1/2 to 2/2 with rendered highlight/outline and scrolling; it does not open the file.",
+      "After inspecting and manually closing a received detail, final_answer finds both folded occurrences. The current detail opens; next closes the prior temporary detail and opens the other.",
+      "Close removes the query and restores both temporary disclosures to off.",
+      "A detail explicitly opened by the user remains open after searching and closing; root subsequently restored its original closed choice.",
+      "A unique absent query shows 没有匹配内容 with both navigation controls disabled; Escape closes the find bar.",
+      "No content pane, attachment decoder or browser was opened by these search actions."
+    ],
+    "findings": [
+      {
+        "id": "P12-installed-01",
+        "actual": "The sr-only scope span had no matching CSS rule and visibly occupied the find toolbar.",
+        "repair": "Root added a scoped visually-hidden rule in product-shell.css while retaining aria-describedby and the input title.",
+        "status": "source repair, not yet tested in the installed app"
+      },
+      {
+        "id": "P12-installed-02",
+        "actual": "After close/Escape the accessibility focus was the page root rather than the find trigger.",
+        "repair": "Root added a find-trigger ref and explicit close focus restoration in ThreadPage.tsx.",
+        "status": "source repair, not yet tested in the installed app"
+      }
+    ]
+  },
+  "export": {
+    "passed": [
+      "Default dialog has one concise scope sentence; detailed scope and privacy disclosure starts collapsed and expands on request.",
+      "Native Save dialog wrote an owned file in a private temporary directory, then reported 文件已保存 and the actual destination.",
+      "Actual UTF-8 file contains exactly two user and two assistant headings; both assistant sets of six Markdown links match the controlled source lines exactly. All twelve original links also remain in user messages.",
+      "The folded /update/_meta and final_answer details are omitted, consistent with the export scope. The file is mode 0600.",
+      "After a successful save, selecting Save again and cancelling the native dialog shows 已取消本次保存, resets the displayed filename and does not retain the old success message.",
+      "Closing the export dialog returns focus to the conversation action trigger."
+    ],
+    "fileBytes": 3774,
+    "fileSha256": "3c5cbb080b328255856e89c6579dc2b8f7f914dbc35a7cc3f12aabcc27c53751",
+    "privateValidation": "output/2026-10-09-sixth-install/export-content-validation.json",
+    "copyCorrection": {
+      "actual": "The privacy sentence did not explicitly limit URL parameter removal to attachment/tool metadata, although message bodies intentionally remain unchanged.",
+      "repair": "Root clarified the metadata-only scope and preservation of message text in export_strings.ts.",
+      "status": "source copy correction, not installed yet"
+    }
+  },
+  "exit": {
+    "normalQuitObserved": true,
+    "forcedQuit": false,
+    "exactFormalProcessesAfter": 0,
+    "existingUnsentWork": {
+      "composers": 3,
+      "feedbackGroups": 1,
+      "queueGroups": 3,
+      "allSevenEntriesEqualToPreinstallCopy": true,
+      "method": "Capture original SQLite main/WAL/SHM after quit; compare unsentWork.v1 on a second private copy with the immutable preinstall backup. Original and first capture hashes remain unchanged."
+    }
+  },
+  "limits": [
+    "Screenshots and accessibility output were observed in tool results; no screenshot files or independent replay are claimed.",
+    "No new Agent prompt, permission confirmation, model change, user attachment read or user draft edit occurred.",
+    "Native tests did not cover streaming search, high-density search, four attachments, long diffs, thread switching, save-failure injection or a complete archive; separate synthetic evidence retains its narrower attribution.",
+    "The three source corrections require subsequent integration and installed verification.",
+    "Global history search, attachment packaging, remaining P35 requirements, Desktop authorization and 29-Agent standards remain open."
+  ]
+}

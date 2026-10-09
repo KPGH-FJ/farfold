@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "ready": true,
+  "events": [
+    {
+      "kind": "message",
+      "action": "ready",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "message",
+      "action": "DataLoaded",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "message",
+      "action": "GetDoc",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "callback", "callbackId", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "message",
+      "action": "StartRenderPage",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "chunk"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "success"]
+    },
+    {
+      "kind": "message",
+      "action": "StartRenderPage",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    },
+    {
+      "kind": "message",
+      "keys": ["sourceName", "targetName", "stream", "streamId", "chunk"]
+    }
+  ],
+  "result": {
+    "status": "success",
+    "pages": 2,
+    "width": 600,
+    "height": 375
+  }
+}

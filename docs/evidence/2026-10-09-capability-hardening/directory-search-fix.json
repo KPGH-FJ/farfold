@@ -1,0 +1,172 @@
+{
+  "recordType": "implemented_real_filesystem_red_green_evidence",
+  "date": "2026-10-09",
+  "status": "implemented_targeted_verified_independent_review_completed",
+  "issue": "NEW-01-associated independent POSIX directory-read defect; Desktop TCC cause remains unresolved",
+  "sourceBase": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "observedDefect": "On this macOS, known readable files beneath synthetic 0100 directories were directly readable by the OS, but Farfold file_delivery inspect/read and local directory HTML selection failed because every directory handle requested O_RDONLY. A synthetic 0300 destination likewise rejected an otherwise permitted new export.",
+  "changes": [
+    "Only file_access/unix.rs production behavior changed. On verified macOS 13+ directory descriptors use O_SEARCH; initial filesystem root and every intermediate component use the same O_NOFOLLOW|O_CLOEXEC policy.",
+    "Leaf file open remains O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_NONBLOCK. Root containment, canonical-path checks, source identity/size/content checks, final file validation and exclusive export publication are unchanged.",
+    "An existing libc sysctlbyname read of kern.osproductversion uses a fixed 48-byte buffer and null newp. Cached decision accepts a complete numeric two/three-part NUL-terminated version; query failure, oversize, malformed or unknown data preserves O_RDONLY|O_DIRECTORY. No new dependency, environment switch, user config or OS permission change.",
+    "macOS 11/12 and other Unix targets retain directory-read access mode. No O_PATH/O_EVTONLY substitute, no error-based retry that drops no-follow or file identity protections."
+  ],
+  "platform": {
+    "tested": {
+      "macOS": "15.6",
+      "darwin": "24.6.0",
+      "architecture": "arm64",
+      "effectiveUid": 501,
+      "sdk": "MacOSX15.5.sdk"
+    },
+    "deploymentMinimum": {
+      "source": "sixth-candidate/candidate-independent.json checks.signature.details VersionMin=720896",
+      "decoded": "macOS 11.0.0",
+      "unchanged": true
+    },
+    "officialVersionEvidence": "Apple release-index data maps macOS 13.0 to XNU 8792.41.9, whose fcntl.h defines O_SEARCH/FSEARCH; retained 11.2/12.3 source headers do not. The macOS 13 guard avoids assuming SDK constants work on older runtime kernels.",
+    "sources": [
+      {
+        "url": "https://opensource.apple.com/releases/",
+        "role": "Apple source release index"
+      },
+      {
+        "url": "https://opensource.apple.com/scripts/main.built.6a507df9.js",
+        "role": "Official release data maps macOS 11.2/12.3/13.0 to reviewed XNU versions; fetched hash and extracted mappings in platform stdout"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-8792.41.9/bsd/sys/fcntl.h",
+        "role": "macOS 13.0 source defines O_SEARCH and FSEARCH"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-8020.101.4/bsd/sys/fcntl.h",
+        "role": "macOS 12.3 source lacks O_SEARCH"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-7195.81.3/bsd/sys/fcntl.h",
+        "role": "macOS 11.2 source lacks O_SEARCH"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-7195.81.3/bsd/kern/kern_sysctl.c",
+        "role": "Official kern.osproductversion system query exists in supported older kernel; system compatibility may report an older value, which conservatively keeps old policy"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-8792.41.9/bsd/vfs/vfs_subr.c",
+        "role": "Search permission distinct from directory read/listing; OS MAC authorization still applies"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11417.140.69/bsd/man/man2/open.2",
+        "role": "Current official open/openat search-only semantics; prior research receipt retains detailed investigation"
+      }
+    ],
+    "oldSystemBoundary": "No real macOS 11/12/13 execution. Version-policy fixtures cover older/newer/malformed values; actual filesystem success was measured only on macOS 15.6. Old-system directory-read limitation remains intentionally unresolved."
+  },
+  "redGreen": {
+    "red": "Six real-entrypoint tests compiled; 4 failed and 2 passed before production edit. Three failures expose readable-source/local-preview/export functionality; the fourth checks new search-required descriptor semantics on a 0400 directory and is not a separate prior file-access bypass.",
+    "green": "After minimal production edit, 7/7 passed. Added explicit runtime version and acquired-fd flags test; final 8/8 passed, confirming O_EXEC search bit on both / and temporary root while leaf stays read-only/nonblocking.",
+    "compatibilityTests": "Success tests explicitly retain old refusal when running with the legacy policy; final runtime flags test independently compares the actual sysctl version to chosen flags, preventing an accidentally disabled modern policy from appearing as successful modern coverage.",
+    "regression": "Existing file_delivery::tests 15/15 and browser_workspace::local_preview 16/16 passed; one new preview test overlaps the eight targeted tests. 38 unique tests total in final targeted plus regressions.",
+    "rawLogs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-red.txt",
+        "sha256": "393df1ef6802be073a5277a08c18757cd09acbc2f31fb7d00a79f2a9d039cc66",
+        "exitCode": 101,
+        "tests": 6,
+        "passed": 2,
+        "failed": 4,
+        "kind": "actual cargo stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-green.txt",
+        "sha256": "cc0a1795a50d9a26e7d702fcd5a5f1cb8f3270f4d2a6dd8fec584780d5fe2bfc",
+        "exitCode": 0,
+        "tests": 7,
+        "passed": 7,
+        "failed": 0,
+        "kind": "actual cargo stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-final-green.txt",
+        "sha256": "49e824944e0f03b18c78d00596c8ea4ec1e23f20d3dce7136aa0a1300ba5518c",
+        "exitCode": 0,
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "kind": "actual cargo stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-delivery-regression.txt",
+        "sha256": "5263e2e14de2cc608a2a3c431e44852676e29888bf88d96978c9f3316e8b9fdd",
+        "exitCode": 0,
+        "tests": 15,
+        "passed": 15,
+        "failed": 0,
+        "kind": "actual cargo stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-preview-regression.txt",
+        "sha256": "de708e48c93f34c1422cabb5a893e83913b2fe0a289b3a9dddd74fc3282e2760",
+        "exitCode": 0,
+        "tests": 16,
+        "passed": 16,
+        "failed": 0,
+        "kind": "actual cargo stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-platform.txt",
+        "sha256": "8554ae1f51298b9be18f7bdec73606f628c20bd35729f1bea5ab7acc55e69512",
+        "exitCode": 0,
+        "kind": "actual stdout/stderr retained unmodified"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/directory-search-rustfmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exitCode": 0,
+        "kind": "actual stdout/stderr retained unmodified"
+      }
+    ]
+  },
+  "covered": [
+    "0100 selected parent and 0100 relative intermediate: inspect, capture+recheck, read_text, revalidate_for_open, text/link attachments, prefix/media-byte capture and attachment size refusal.",
+    "0300 export target: text write and verified-file copy succeed; existing file and destination symlink are not overwritten; source/retained destination bytes stay correct and unpublished temporary files are removed.",
+    "Missing directory search, leaf read and target write permissions still deny access. Permission revocation invalidates further reads. No synthetic fixture ran as root.",
+    "Direct safe walker refuses intermediate/final symlinks and parent traversal; existing file_delivery explicit canonicalized aliases retain their prior contained behavior. Local preview rejects linked resources, traversal/hidden names and unsupported resources.",
+    "FIFO is rejected as not-file without blocking; non-directory intermediate rejected; NOFOLLOW/CLOEXEC verified at handles and leaf NONBLOCK preserved.",
+    "Identical-byte file replacement, root replacement, changed source, redirected alias and post-publication destination-parent checks retain their distinct failures through existing and new regressions.",
+    "Local HTML/relative CSS from search-only directories retain CSP, resource bounds and revocation. No browser or WebView was started."
+  ],
+  "ownedFiles": [
+    {
+      "path": "src-tauri/src/file_access/unix.rs",
+      "sha256": "33559696bbc273b5b5a24cb08d77469bb4faacc6b4feaae5fc435a3a4133d40c",
+      "lines": 225
+    },
+    {
+      "path": "src-tauri/src/file_access/directory_search_tests.rs",
+      "sha256": "655daee159c172bc9c685c6d520a56af3fc0e795006c64f33e8f73e56fcb1626",
+      "lines": 299
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/local_preview/directory_tests.rs",
+      "sha256": "5977929f4e2db098087d4e849842f07959956ebafb07b1d8c30cb6d5bb592502",
+      "lines": 304
+    }
+  ],
+  "independentReview": {
+    "status": "completed_no_blocker_in_reviewed_scope",
+    "reviewer": "architecture",
+    "sourceFrozen": true,
+    "scope": "Production flags/version guard, actual source/export/preview tests and preserved security/compatibility boundaries",
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/directory-search-independent.json",
+    "sha256": "6499a44f42f737c171dd88f7dbc6d53bbbbc1ce667003249f1368dc138dc3914",
+    "attribution": "Architecture read source/test changes and retained outputs; did not rerun tests or claim old-system/TCC/installed acceptance."
+  },
+  "limits": [
+    "No formal application, Agent, credential, live user data, real folder permission or TCC setting was operated on for this implementation. chmod only affected newly created disposable test material and guards restored its permissions.",
+    "Desktop/Documents TCC wait is not attributed to this POSIX-mode defect and is not claimed fixed. Leaf access still requires OS authorization.",
+    "No installed-app acceptance, Windows/other Unix runtime acceptance, alternate/network filesystem coverage, ACL matrix, power-loss or durability guarantee.",
+    "File delivery canonicalization and rechecks narrow races but do not promise an external process cannot mutate a path after final validation.",
+    "Directory listing is not added; search handles serve only existing explicit file/resource selection. This does not grant broader Agent tools or file roots.",
+    "No full-build/full-test claim for this slice yet; root coordinates final integration. No Cargo dependencies, lib.rs, product plan/status or shared UI files changed."
+  ]
+}

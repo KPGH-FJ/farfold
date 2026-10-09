@@ -1,0 +1,1105 @@
+{
+  "date": "2026-10-09",
+  "mode": "read-only-network-and-existing-local-runtime-no-install",
+  "status": "research-complete-exceljs-alone-not-recommended-raw-ooxml-route-feasible-pending-product-implementation",
+  "baselineFiles": [
+    {
+      "path": "package.json",
+      "sha256": "73b2b45b0168dc35bff58e16b3ae45fb3ec35aef9ea841b923bcdf2bebaac164"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "9e0d61f27813627eedb25c758d03e9b7ab2d97ac65d00e1f21e627e016138806"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+    }
+  ],
+  "candidateGraph": {
+    "root": "exceljs@4.4.0",
+    "cutoffInclusive": "2026-10-02T00:00:00.000Z",
+    "method": "官方npm registry完整元信息，使用已有全局npm附带semver求每条依赖范围内最高非预发行且发布日期不晚于截止日的版本；不是实际pnpm安装/lock结果。包含required peers/optional dependencies，排除devDependencies。",
+    "packageVersionCount": 85,
+    "edgeCountIncludingRoot": 126,
+    "allPublishedByCutoff": true,
+    "registryUrlRule": "https://registry.npmjs.org/{URL-encoded-package-name}/{version}",
+    "entries": [
+      {
+        "id": "@fast-csv/format@4.3.5",
+        "publishedAt": "2020-11-03T04:20:01.461Z",
+        "license": "MIT",
+        "integrity": "sha512-8iRn6QF3I8Ak78lNAa+Gdl5MJJBM5vRHivFtMRUWINdevNo00K7OXxS2PshawLKTejVwieIlPmK5YlLu6w4u8A=="
+      },
+      {
+        "id": "@fast-csv/parse@4.3.6",
+        "publishedAt": "2020-12-04T05:57:45.821Z",
+        "license": "MIT",
+        "integrity": "sha512-uRsLYksqpbDmWaSmzvJcuApSEe38+6NQZBUsuAyMZKqHxH0g1wcJgsKUvN3WC8tewaqFjBMMGrkHmC+T7k8LvA=="
+      },
+      {
+        "id": "@types/node@14.18.63",
+        "publishedAt": "2023-09-23T20:50:07.437Z",
+        "license": "MIT",
+        "integrity": "sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ=="
+      },
+      {
+        "id": "archiver-utils@2.1.0",
+        "publishedAt": "2019-07-19T22:51:28.302Z",
+        "license": "MIT",
+        "integrity": "sha512-bEL/yUb/fNNiNTuUz979Z0Yg5L+LzLxGJz8x79lYmR54fmTIb6ob/hNQgkQnIUDWIFjZVQwl9Xs356I6BAMHfw=="
+      },
+      {
+        "id": "archiver-utils@3.0.4",
+        "publishedAt": "2023-09-02T04:07:56.684Z",
+        "license": "MIT",
+        "integrity": "sha512-KVgf4XQVrTjhyWmx6cte4RxonPLR9onExufI1jhvw/MQ4BB6IsZD5gT8Lq+u/+pRkWna/6JoHpiQioaqFP5Rzw=="
+      },
+      {
+        "id": "archiver@5.3.2",
+        "publishedAt": "2023-08-17T03:30:33.559Z",
+        "license": "MIT",
+        "integrity": "sha512-+25nxyyznAXF7Nef3y0EbBeqmGZgeN/BxHX29Rs39djAfaFalmQ89SE6CWyDCHzGL0yt/ycBtNOmGTW0FyGWNw=="
+      },
+      {
+        "id": "async@3.2.6",
+        "publishedAt": "2024-08-19T23:24:23.363Z",
+        "license": "MIT",
+        "integrity": "sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA=="
+      },
+      {
+        "id": "balanced-match@1.0.2",
+        "publishedAt": "2021-04-06T12:51:09.276Z",
+        "license": "MIT",
+        "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
+      },
+      {
+        "id": "base64-js@1.5.1",
+        "publishedAt": "2020-11-11T19:33:48.234Z",
+        "license": "MIT",
+        "integrity": "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
+      },
+      {
+        "id": "big-integer@1.6.52",
+        "publishedAt": "2023-11-21T16:18:10.850Z",
+        "license": "Unlicense",
+        "integrity": "sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg=="
+      },
+      {
+        "id": "binary@0.3.0",
+        "publishedAt": "2012-05-11T12:39:11.639Z",
+        "license": "MIT",
+        "integrity": "sha512-D4H1y5KYwpJgK8wk1Cue5LLPgmwHKYSChkbspQg5JtVuR5ulGckxfR62H3AE9UDkdMC8yyXlqYihuz3Aqg2XZg=="
+      },
+      {
+        "id": "bl@4.1.0",
+        "publishedAt": "2021-02-09T10:37:35.452Z",
+        "license": "MIT",
+        "integrity": "sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w=="
+      },
+      {
+        "id": "bluebird@3.4.7",
+        "publishedAt": "2016-12-22T17:27:51.668Z",
+        "license": "MIT",
+        "integrity": "sha512-iD3898SR7sWVRHbiQv+sHUtHnMvC1o3nW5rAcqnq3uOn07DSAppZYUkIGslDz6gXC7HfunPe7YVBgoEJASPcHA=="
+      },
+      {
+        "id": "brace-expansion@1.1.21",
+        "publishedAt": "2026-09-14T21:59:28.332Z",
+        "license": "MIT",
+        "integrity": "sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw=="
+      },
+      {
+        "id": "brace-expansion@2.1.7",
+        "publishedAt": "2026-09-14T22:02:58.810Z",
+        "license": "MIT",
+        "integrity": "sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g=="
+      },
+      {
+        "id": "buffer-crc32@0.2.13",
+        "publishedAt": "2016-11-22T01:28:28.865Z",
+        "license": "MIT",
+        "integrity": "sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ=="
+      },
+      {
+        "id": "buffer-indexof-polyfill@1.0.2",
+        "publishedAt": "2020-09-09T02:24:05.892Z",
+        "license": "MIT",
+        "integrity": "sha512-I7wzHwA3t1/lwXQh+A5PbNvJxgfo5r3xulgpYDB5zckTu/Z9oUK9biouBKQUjEqzaz3HnAT6TYoovmE+GqSf7A=="
+      },
+      {
+        "id": "buffer@5.7.1",
+        "publishedAt": "2020-11-04T21:51:35.578Z",
+        "license": "MIT",
+        "integrity": "sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ=="
+      },
+      {
+        "id": "buffers@0.1.1",
+        "publishedAt": "2011-10-12T23:33:33.118Z",
+        "license": null,
+        "integrity": "sha512-9q/rDEGSb/Qsvv2qvzIzdluL5k7AaJOTrw23z9reQthrbF7is4CtlT0DXyO1oei2DCp4uojjzQ7igaSHp1kAEQ=="
+      },
+      {
+        "id": "chainsaw@0.1.0",
+        "publishedAt": "2011-07-17T08:42:45.022Z",
+        "license": "MIT/X11",
+        "integrity": "sha512-75kWfWt6MEKNC8xYXIdRpDehRYY/tNSgwKaJq+dbbDcxORuVrrQ+SEHoWsniVn9XPYfP4gmdWIeDk/4YNp1rNQ=="
+      },
+      {
+        "id": "compress-commons@4.1.2",
+        "publishedAt": "2023-09-02T22:34:30.969Z",
+        "license": "MIT",
+        "integrity": "sha512-D3uMHtGc/fcO1Gt1/L7i1e33VOvD4A9hfQLP+6ewd+BvG/gQ84Yh4oftEhAdjSMgBgwGL+jsppT7JYNpo6MHHg=="
+      },
+      {
+        "id": "concat-map@0.0.1",
+        "publishedAt": "2014-01-30T03:06:35.982Z",
+        "license": "MIT",
+        "integrity": "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="
+      },
+      {
+        "id": "core-util-is@1.0.3",
+        "publishedAt": "2021-08-31T14:35:36.995Z",
+        "license": "MIT",
+        "integrity": "sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ=="
+      },
+      {
+        "id": "crc-32@1.2.2",
+        "publishedAt": "2022-04-04T23:05:52.784Z",
+        "license": "Apache-2.0",
+        "integrity": "sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ=="
+      },
+      {
+        "id": "crc32-stream@4.0.3",
+        "publishedAt": "2023-09-02T22:14:46.250Z",
+        "license": "MIT",
+        "integrity": "sha512-NT7w2JVU7DFroFdYkeq8cywxrgjPHWkdX1wjpRQXPX5Asews3tA+Ght6lddQO5Mkumffp3X7GEqku3epj2toIw=="
+      },
+      {
+        "id": "dayjs@1.11.23",
+        "publishedAt": "2026-08-17T11:52:35.217Z",
+        "license": "MIT",
+        "integrity": "sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ=="
+      },
+      {
+        "id": "duplexer2@0.1.4",
+        "publishedAt": "2015-11-08T08:07:39.098Z",
+        "license": "BSD-3-Clause",
+        "integrity": "sha512-asLFVfWWtJ90ZyOUHMqk7/S2w2guQKxUI2itj3d92ADHhxUSbCMGi1f1cBcJ7xM1To+pE/Khbwo1yuNbMEPKeA=="
+      },
+      {
+        "id": "end-of-stream@1.4.5",
+        "publishedAt": "2025-06-16T13:29:00.574Z",
+        "license": "MIT",
+        "integrity": "sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg=="
+      },
+      {
+        "id": "exceljs@4.4.0",
+        "publishedAt": "2023-10-19T19:49:55.669Z",
+        "license": "MIT",
+        "integrity": "sha512-XctvKaEMaj1Ii9oDOqbW/6e1gXknSY4g/aLCDicOXqBE4M0nRWkUu0PTp++UPNzoFY12BNHMfs/VadKIS6llvg=="
+      },
+      {
+        "id": "fast-csv@4.3.6",
+        "publishedAt": "2020-12-04T05:57:48.969Z",
+        "license": "MIT",
+        "integrity": "sha512-2RNSpuwwsJGP0frGsOmTb9oUF+VkFSM4SyLTDgwf2ciHWTarN0lQTC+F2f/t5J9QjW+c65VFIAAu85GsvMIusw=="
+      },
+      {
+        "id": "fs-constants@1.0.0",
+        "publishedAt": "2018-04-26T14:42:32.817Z",
+        "license": "MIT",
+        "integrity": "sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow=="
+      },
+      {
+        "id": "fs.realpath@1.0.0",
+        "publishedAt": "2016-06-15T18:39:05.978Z",
+        "license": "ISC",
+        "integrity": "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw=="
+      },
+      {
+        "id": "fstream@1.0.12",
+        "publishedAt": "2019-05-15T00:38:18.821Z",
+        "license": "ISC",
+        "integrity": "sha512-WvJ193OHa0GHPEL+AycEJgxvBEwyfRkN1vhjca23OaPVMCaLCXTd5qAu82AjTcgP1UJmytkOKb63Ypde7raDIg=="
+      },
+      {
+        "id": "glob@7.2.3",
+        "publishedAt": "2022-05-15T14:44:04.854Z",
+        "license": "ISC",
+        "integrity": "sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q=="
+      },
+      {
+        "id": "graceful-fs@4.2.11",
+        "publishedAt": "2023-03-16T19:30:19.323Z",
+        "license": "ISC",
+        "integrity": "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ=="
+      },
+      {
+        "id": "ieee754@1.2.1",
+        "publishedAt": "2020-10-27T23:06:07.424Z",
+        "license": "BSD-3-Clause",
+        "integrity": "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
+      },
+      {
+        "id": "immediate@3.0.6",
+        "publishedAt": "2016-07-28T12:25:21.086Z",
+        "license": "MIT",
+        "integrity": "sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ=="
+      },
+      {
+        "id": "inflight@1.0.6",
+        "publishedAt": "2016-10-13T03:53:29.524Z",
+        "license": "ISC",
+        "integrity": "sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA=="
+      },
+      {
+        "id": "inherits@2.0.4",
+        "publishedAt": "2019-06-19T20:18:52.465Z",
+        "license": "ISC",
+        "integrity": "sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ=="
+      },
+      {
+        "id": "isarray@1.0.0",
+        "publishedAt": "2015-12-10T10:05:07.067Z",
+        "license": "MIT",
+        "integrity": "sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ=="
+      },
+      {
+        "id": "jszip@3.10.2",
+        "publishedAt": "2026-09-08T22:31:16.671Z",
+        "license": "(MIT OR GPL-3.0-or-later)",
+        "integrity": "sha512-3l+rb15IOWtUhU0H5MFqES/T6Kh7abYwjosBey/vD6hDt8zoEffkSC5Ws5SGtgVw3gBx2NEbhTeSW1+kWkpyTQ=="
+      },
+      {
+        "id": "lazystream@1.0.1",
+        "publishedAt": "2021-10-23T09:04:15.234Z",
+        "license": "MIT",
+        "integrity": "sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw=="
+      },
+      {
+        "id": "lie@3.3.0",
+        "publishedAt": "2018-03-06T14:54:08.384Z",
+        "license": "MIT",
+        "integrity": "sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ=="
+      },
+      {
+        "id": "listenercount@1.0.1",
+        "publishedAt": "2016-02-17T17:57:15.718Z",
+        "license": "ISC",
+        "integrity": "sha512-3mk/Zag0+IJxeDrxSgaDPy4zZ3w05PRZeJNnlWhzFz5OkX49J4krc+A8X2d2M69vGMBEX0uyl8M+W+8gH+kBqQ=="
+      },
+      {
+        "id": "lodash.defaults@4.2.0",
+        "publishedAt": "2016-08-13T17:37:52.434Z",
+        "license": "MIT",
+        "integrity": "sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ=="
+      },
+      {
+        "id": "lodash.difference@4.5.0",
+        "publishedAt": "2016-08-13T17:38:01.190Z",
+        "license": "MIT",
+        "integrity": "sha512-dS2j+W26TQ7taQBGN8Lbbq04ssV3emRw4NY58WErlTO29pIqS0HmoT5aJ9+TUQ1N3G+JOZSji4eugsWwGp9yPA=="
+      },
+      {
+        "id": "lodash.escaperegexp@4.1.2",
+        "publishedAt": "2016-07-25T14:43:16.424Z",
+        "license": "MIT",
+        "integrity": "sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw=="
+      },
+      {
+        "id": "lodash.flatten@4.4.0",
+        "publishedAt": "2016-08-13T17:38:44.610Z",
+        "license": "MIT",
+        "integrity": "sha512-C5N2Z3DgnnKr0LOpv/hKCgKdb7ZZwafIrsesve6lmzvZIRZRGaZ/l6Q8+2W7NaT+ZwO3fFlSCzCzrDCFdJfZ4g=="
+      },
+      {
+        "id": "lodash.groupby@4.6.0",
+        "publishedAt": "2016-08-13T17:39:30.602Z",
+        "license": "MIT",
+        "integrity": "sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw=="
+      },
+      {
+        "id": "lodash.isboolean@3.0.3",
+        "publishedAt": "2016-02-03T07:28:20.290Z",
+        "license": "MIT",
+        "integrity": "sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg=="
+      },
+      {
+        "id": "lodash.isequal@4.5.0",
+        "publishedAt": "2017-01-10T05:30:04.223Z",
+        "license": "MIT",
+        "integrity": "sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ=="
+      },
+      {
+        "id": "lodash.isfunction@3.0.9",
+        "publishedAt": "2018-02-04T04:08:49.079Z",
+        "license": "MIT",
+        "integrity": "sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw=="
+      },
+      {
+        "id": "lodash.isnil@4.0.0",
+        "publishedAt": "2016-01-13T11:05:47.913Z",
+        "license": "MIT",
+        "integrity": "sha512-up2Mzq3545mwVnMhTDMdfoG1OurpA/s5t88JmQX809eH3C8491iu2sfKhTfhQtKY78oPNhiaHJUpT/dUDAAtng=="
+      },
+      {
+        "id": "lodash.isplainobject@4.0.6",
+        "publishedAt": "2016-08-13T17:41:07.730Z",
+        "license": "MIT",
+        "integrity": "sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA=="
+      },
+      {
+        "id": "lodash.isundefined@3.0.1",
+        "publishedAt": "2015-04-16T16:32:09.780Z",
+        "license": "MIT",
+        "integrity": "sha512-MXB1is3s899/cD8jheYYE2V9qTHwKvt+npCwpD+1Sxm3Q3cECXCiYHjeHWXNwr6Q0SOBPrYUDxendrO6goVTEA=="
+      },
+      {
+        "id": "lodash.union@4.6.0",
+        "publishedAt": "2016-08-13T17:46:33.082Z",
+        "license": "MIT",
+        "integrity": "sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw=="
+      },
+      {
+        "id": "lodash.uniq@4.5.0",
+        "publishedAt": "2016-08-13T17:46:41.962Z",
+        "license": "MIT",
+        "integrity": "sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ=="
+      },
+      {
+        "id": "minimatch@3.1.5",
+        "publishedAt": "2026-02-25T17:17:15.626Z",
+        "license": "ISC",
+        "integrity": "sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w=="
+      },
+      {
+        "id": "minimatch@5.1.9",
+        "publishedAt": "2026-02-25T17:16:47.801Z",
+        "license": "ISC",
+        "integrity": "sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw=="
+      },
+      {
+        "id": "minimist@1.2.8",
+        "publishedAt": "2023-02-09T20:59:49.233Z",
+        "license": "MIT",
+        "integrity": "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA=="
+      },
+      {
+        "id": "mkdirp@0.5.6",
+        "publishedAt": "2022-03-22T23:48:15.108Z",
+        "license": "MIT",
+        "integrity": "sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw=="
+      },
+      {
+        "id": "normalize-path@3.0.0",
+        "publishedAt": "2018-04-19T14:54:47.609Z",
+        "license": "MIT",
+        "integrity": "sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA=="
+      },
+      {
+        "id": "once@1.4.0",
+        "publishedAt": "2016-09-06T21:11:09.367Z",
+        "license": "ISC",
+        "integrity": "sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w=="
+      },
+      {
+        "id": "pako@1.0.11",
+        "publishedAt": "2020-01-29T07:46:09.668Z",
+        "license": "(MIT AND Zlib)",
+        "integrity": "sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw=="
+      },
+      {
+        "id": "path-is-absolute@1.0.1",
+        "publishedAt": "2016-09-30T04:42:03.803Z",
+        "license": "MIT",
+        "integrity": "sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg=="
+      },
+      {
+        "id": "process-nextick-args@2.0.1",
+        "publishedAt": "2019-06-19T20:34:39.252Z",
+        "license": "MIT",
+        "integrity": "sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag=="
+      },
+      {
+        "id": "readable-stream@2.3.8",
+        "publishedAt": "2023-02-23T10:04:06.163Z",
+        "license": "MIT",
+        "integrity": "sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA=="
+      },
+      {
+        "id": "readable-stream@3.6.2",
+        "publishedAt": "2023-03-10T09:02:34.449Z",
+        "license": "MIT",
+        "integrity": "sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA=="
+      },
+      {
+        "id": "readdir-glob@1.1.3",
+        "publishedAt": "2023-04-05T19:13:06.840Z",
+        "license": "Apache-2.0",
+        "integrity": "sha512-v05I2k7xN8zXvPD9N+z/uhXPaj0sUFCe2rcWZIpBsqxfP7xXFQ0tipAd/wjj1YxWyWtUS5IDJpOG82JKt2EAVA=="
+      },
+      {
+        "id": "rimraf@2.7.1",
+        "publishedAt": "2019-08-14T16:53:32.844Z",
+        "license": "ISC",
+        "integrity": "sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w=="
+      },
+      {
+        "id": "safe-buffer@5.1.2",
+        "publishedAt": "2018-04-25T20:10:24.706Z",
+        "license": "MIT",
+        "integrity": "sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g=="
+      },
+      {
+        "id": "safe-buffer@5.2.1",
+        "publishedAt": "2020-05-10T16:37:30.776Z",
+        "license": "MIT",
+        "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
+      },
+      {
+        "id": "saxes@5.0.1",
+        "publishedAt": "2020-04-10T22:04:04.301Z",
+        "license": "ISC",
+        "integrity": "sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw=="
+      },
+      {
+        "id": "setimmediate@1.0.5",
+        "publishedAt": "2016-09-12T00:59:56.656Z",
+        "license": "MIT",
+        "integrity": "sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA=="
+      },
+      {
+        "id": "string_decoder@1.1.1",
+        "publishedAt": "2018-03-30T08:14:15.043Z",
+        "license": "MIT",
+        "integrity": "sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg=="
+      },
+      {
+        "id": "string_decoder@1.3.0",
+        "publishedAt": "2019-08-07T09:20:36.634Z",
+        "license": "MIT",
+        "integrity": "sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA=="
+      },
+      {
+        "id": "tar-stream@2.2.0",
+        "publishedAt": "2020-12-29T10:22:57.508Z",
+        "license": "MIT",
+        "integrity": "sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ=="
+      },
+      {
+        "id": "tmp@0.2.7",
+        "publishedAt": "2026-05-27T15:47:18.009Z",
+        "license": "MIT",
+        "integrity": "sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw=="
+      },
+      {
+        "id": "traverse@0.3.9",
+        "publishedAt": "2011-06-15T05:24:38.007Z",
+        "license": "MIT/X11",
+        "integrity": "sha512-iawgk0hLP3SxGKDfnDJf8wTz4p2qImnyihM5Hh/sGvQ3K37dPi/w8sRhdNIxYA1TwFwc5mDhIJq+O0RsvXBKdQ=="
+      },
+      {
+        "id": "unzipper@0.10.14",
+        "publishedAt": "2023-05-10T02:09:27.193Z",
+        "license": "MIT",
+        "integrity": "sha512-ti4wZj+0bQTiX2KmKWuwj7lhV+2n//uXEotUmGuQqrbVZSEGFMbI68+c6JCQ8aAmUWYvtHEz2A8K6wXvueR/6g=="
+      },
+      {
+        "id": "util-deprecate@1.0.2",
+        "publishedAt": "2015-10-07T18:37:40.665Z",
+        "license": "MIT",
+        "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="
+      },
+      {
+        "id": "uuid@8.3.2",
+        "publishedAt": "2020-12-08T20:38:36.233Z",
+        "license": "MIT",
+        "integrity": "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
+      },
+      {
+        "id": "wrappy@1.0.2",
+        "publishedAt": "2016-05-17T23:30:52.415Z",
+        "license": "ISC",
+        "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
+      },
+      {
+        "id": "xmlchars@2.2.0",
+        "publishedAt": "2019-09-06T16:38:51.976Z",
+        "license": "MIT",
+        "integrity": "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw=="
+      },
+      {
+        "id": "zip-stream@4.1.1",
+        "publishedAt": "2023-09-02T23:01:49.964Z",
+        "license": "MIT",
+        "integrity": "sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ=="
+      }
+    ],
+    "edges": [
+      "(root) --root:4.4.0--> exceljs@4.4.0",
+      "exceljs@4.4.0 --dependency:^0.2.0--> tmp@0.2.7",
+      "exceljs@4.4.0 --dependency:^3.10.1--> jszip@3.10.2",
+      "exceljs@4.4.0 --dependency:^8.3.0--> uuid@8.3.2",
+      "exceljs@4.4.0 --dependency:^0.10.11--> unzipper@0.10.14",
+      "exceljs@4.4.0 --dependency:^1.8.34--> dayjs@1.11.23",
+      "exceljs@4.4.0 --dependency:^4.3.1--> fast-csv@4.3.6",
+      "exceljs@4.4.0 --dependency:^5.0.0--> archiver@5.3.2",
+      "exceljs@4.4.0 --dependency:^5.0.1--> saxes@5.0.1",
+      "jszip@3.10.2 --dependency:^1.0.5--> setimmediate@1.0.5",
+      "unzipper@0.10.14 --dependency:~0.3.0--> binary@0.3.0",
+      "jszip@3.10.2 --dependency:~3.3.0--> lie@3.3.0",
+      "jszip@3.10.2 --dependency:~1.0.2--> pako@1.0.11",
+      "unzipper@0.10.14 --dependency:^1.0.12--> fstream@1.0.12",
+      "exceljs@4.4.0 --dependency:^3.6.0--> readable-stream@3.6.2",
+      "jszip@3.10.2 --dependency:~2.3.6--> readable-stream@2.3.8",
+      "unzipper@0.10.14 --dependency:~3.4.1--> bluebird@3.4.7",
+      "unzipper@0.10.14 --dependency:~1.0.4--> setimmediate@1.0.5",
+      "unzipper@0.10.14 --dependency:~2.3.6--> readable-stream@2.3.8",
+      "unzipper@0.10.14 --dependency:~1.0.1--> listenercount@1.0.1",
+      "fast-csv@4.3.6 --dependency:4.3.6--> @fast-csv/parse@4.3.6",
+      "unzipper@0.10.14 --dependency:~0.1.4--> duplexer2@0.1.4",
+      "unzipper@0.10.14 --dependency:^1.6.17--> big-integer@1.6.52",
+      "unzipper@0.10.14 --dependency:~1.0.0--> buffer-indexof-polyfill@1.0.2",
+      "unzipper@0.10.14 --dependency:^4.2.2--> graceful-fs@4.2.11",
+      "archiver@5.3.2 --dependency:^3.6.0--> readable-stream@3.6.2",
+      "archiver@5.3.2 --dependency:^4.1.0--> zip-stream@4.1.1",
+      "archiver@5.3.2 --dependency:^0.2.1--> buffer-crc32@0.2.13",
+      "archiver@5.3.2 --dependency:^2.1.0--> archiver-utils@2.1.0",
+      "archiver@5.3.2 --dependency:^1.1.2--> readdir-glob@1.1.3",
+      "fast-csv@4.3.6 --dependency:4.3.5--> @fast-csv/format@4.3.5",
+      "archiver@5.3.2 --dependency:^2.2.0--> tar-stream@2.2.0",
+      "archiver@5.3.2 --dependency:^3.2.4--> async@3.2.6",
+      "fstream@1.0.12 --dependency:^4.1.2--> graceful-fs@4.2.11",
+      "saxes@5.0.1 --dependency:^2.2.0--> xmlchars@2.2.0",
+      "binary@0.3.0 --dependency:~0.1.0--> chainsaw@0.1.0",
+      "binary@0.3.0 --dependency:~0.1.1--> buffers@0.1.1",
+      "fstream@1.0.12 --dependency:>=0.5 0--> mkdirp@0.5.6",
+      "fstream@1.0.12 --dependency:2--> rimraf@2.7.1",
+      "lie@3.3.0 --dependency:~3.0.5--> immediate@3.0.6",
+      "fstream@1.0.12 --dependency:~2.0.0--> inherits@2.0.4",
+      "readable-stream@3.6.2 --dependency:^2.0.3--> inherits@2.0.4",
+      "readable-stream@2.3.8 --dependency:~2.0.3--> inherits@2.0.4",
+      "readable-stream@3.6.2 --dependency:^1.0.1--> util-deprecate@1.0.2",
+      "readable-stream@2.3.8 --dependency:~5.1.1--> safe-buffer@5.1.2",
+      "readable-stream@3.6.2 --dependency:^1.1.1--> string_decoder@1.3.0",
+      "readable-stream@2.3.8 --dependency:~1.1.1--> string_decoder@1.1.1",
+      "readable-stream@2.3.8 --dependency:~1.0.0--> isarray@1.0.0",
+      "readable-stream@2.3.8 --dependency:~1.0.0--> core-util-is@1.0.3",
+      "readable-stream@2.3.8 --dependency:~1.0.1--> util-deprecate@1.0.2",
+      "readable-stream@2.3.8 --dependency:~2.0.0--> process-nextick-args@2.0.1",
+      "@fast-csv/parse@4.3.6 --dependency:^4.5.0--> lodash.uniq@4.5.0",
+      "@fast-csv/parse@4.3.6 --dependency:^3.0.1--> lodash.isundefined@3.0.1",
+      "@fast-csv/parse@4.3.6 --dependency:^3.0.9--> lodash.isfunction@3.0.9",
+      "@fast-csv/parse@4.3.6 --dependency:^4.0.0--> lodash.isnil@4.0.0",
+      "@fast-csv/parse@4.3.6 --dependency:^4.6.0--> lodash.groupby@4.6.0",
+      "@fast-csv/parse@4.3.6 --dependency:^14.0.1--> @types/node@14.18.63",
+      "duplexer2@0.1.4 --dependency:^2.0.2--> readable-stream@2.3.8",
+      "zip-stream@4.1.1 --dependency:^3.0.4--> archiver-utils@3.0.4",
+      "zip-stream@4.1.1 --dependency:^3.6.0--> readable-stream@3.6.2",
+      "archiver-utils@2.1.0 --dependency:^4.2.0--> graceful-fs@4.2.11",
+      "@fast-csv/parse@4.3.6 --dependency:^4.1.2--> lodash.escaperegexp@4.1.2",
+      "archiver-utils@2.1.0 --dependency:^1.0.0--> lazystream@1.0.1",
+      "archiver-utils@2.1.0 --dependency:^7.1.4--> glob@7.2.3",
+      "zip-stream@4.1.1 --dependency:^4.1.2--> compress-commons@4.1.2",
+      "archiver-utils@2.1.0 --dependency:^2.0.0--> readable-stream@2.3.8",
+      "archiver-utils@2.1.0 --dependency:^4.6.0--> lodash.union@4.6.0",
+      "archiver-utils@2.1.0 --dependency:^4.4.0--> lodash.flatten@4.4.0",
+      "archiver-utils@2.1.0 --dependency:^4.5.0--> lodash.difference@4.5.0",
+      "archiver-utils@2.1.0 --dependency:^4.0.6--> lodash.isplainobject@4.0.6",
+      "archiver-utils@2.1.0 --dependency:^3.0.0--> normalize-path@3.0.0",
+      "archiver-utils@2.1.0 --dependency:^4.2.0--> lodash.defaults@4.2.0",
+      "readdir-glob@1.1.3 --dependency:^5.1.0--> minimatch@5.1.9",
+      "@fast-csv/format@4.3.5 --dependency:^14.0.1--> @types/node@14.18.63",
+      "@fast-csv/format@4.3.5 --dependency:^4.0.0--> lodash.isnil@4.0.0",
+      "@fast-csv/format@4.3.5 --dependency:^3.0.9--> lodash.isfunction@3.0.9",
+      "@fast-csv/format@4.3.5 --dependency:^4.1.2--> lodash.escaperegexp@4.1.2",
+      "tar-stream@2.2.0 --dependency:^2.0.3--> inherits@2.0.4",
+      "@fast-csv/format@4.3.5 --dependency:^3.0.3--> lodash.isboolean@3.0.3",
+      "@fast-csv/format@4.3.5 --dependency:^4.5.0--> lodash.isequal@4.5.0",
+      "tar-stream@2.2.0 --dependency:^4.0.3--> bl@4.1.0",
+      "tar-stream@2.2.0 --dependency:^3.1.1--> readable-stream@3.6.2",
+      "rimraf@2.7.1 --dependency:^7.1.3--> glob@7.2.3",
+      "string_decoder@1.3.0 --dependency:~5.2.0--> safe-buffer@5.2.1",
+      "string_decoder@1.1.1 --dependency:~5.1.0--> safe-buffer@5.1.2",
+      "tar-stream@2.2.0 --dependency:^1.4.1--> end-of-stream@1.4.5",
+      "mkdirp@0.5.6 --dependency:^1.2.6--> minimist@1.2.8",
+      "chainsaw@0.1.0 --dependency:>=0.3.0 <0.4--> traverse@0.3.9",
+      "tar-stream@2.2.0 --dependency:^1.0.0--> fs-constants@1.0.0",
+      "archiver-utils@3.0.4 --dependency:^7.2.3--> glob@7.2.3",
+      "archiver-utils@3.0.4 --dependency:^4.2.0--> graceful-fs@4.2.11",
+      "archiver-utils@3.0.4 --dependency:^1.0.0--> lazystream@1.0.1",
+      "archiver-utils@3.0.4 --dependency:^4.2.0--> lodash.defaults@4.2.0",
+      "archiver-utils@3.0.4 --dependency:^4.5.0--> lodash.difference@4.5.0",
+      "archiver-utils@3.0.4 --dependency:^4.4.0--> lodash.flatten@4.4.0",
+      "archiver-utils@3.0.4 --dependency:^4.0.6--> lodash.isplainobject@4.0.6",
+      "archiver-utils@3.0.4 --dependency:^4.6.0--> lodash.union@4.6.0",
+      "archiver-utils@3.0.4 --dependency:^3.0.0--> normalize-path@3.0.0",
+      "archiver-utils@3.0.4 --dependency:^3.6.0--> readable-stream@3.6.2",
+      "lazystream@1.0.1 --dependency:^2.0.5--> readable-stream@2.3.8",
+      "glob@7.2.3 --dependency:2--> inherits@2.0.4",
+      "glob@7.2.3 --dependency:^3.1.1--> minimatch@3.1.5",
+      "glob@7.2.3 --dependency:^1.3.0--> once@1.4.0",
+      "glob@7.2.3 --dependency:^1.0.0--> fs.realpath@1.0.0",
+      "glob@7.2.3 --dependency:^1.0.4--> inflight@1.0.6",
+      "compress-commons@4.1.2 --dependency:^0.2.13--> buffer-crc32@0.2.13",
+      "compress-commons@4.1.2 --dependency:^3.0.0--> normalize-path@3.0.0",
+      "compress-commons@4.1.2 --dependency:^3.6.0--> readable-stream@3.6.2",
+      "bl@4.1.0 --dependency:^2.0.4--> inherits@2.0.4",
+      "glob@7.2.3 --dependency:^1.0.0--> path-is-absolute@1.0.1",
+      "compress-commons@4.1.2 --dependency:^4.0.2--> crc32-stream@4.0.3",
+      "minimatch@5.1.9 --dependency:^2.0.1--> brace-expansion@2.1.7",
+      "bl@4.1.0 --dependency:^5.5.0--> buffer@5.7.1",
+      "bl@4.1.0 --dependency:^3.4.0--> readable-stream@3.6.2",
+      "end-of-stream@1.4.5 --dependency:^1.4.0--> once@1.4.0",
+      "minimatch@3.1.5 --dependency:^1.1.7--> brace-expansion@1.1.21",
+      "inflight@1.0.6 --dependency:^1.3.0--> once@1.4.0",
+      "crc32-stream@4.0.3 --dependency:^3.4.0--> readable-stream@3.6.2",
+      "once@1.4.0 --dependency:1--> wrappy@1.0.2",
+      "inflight@1.0.6 --dependency:1--> wrappy@1.0.2",
+      "crc32-stream@4.0.3 --dependency:^1.2.0--> crc-32@1.2.2",
+      "brace-expansion@1.1.21 --dependency:0.0.1--> concat-map@0.0.1",
+      "brace-expansion@2.1.7 --dependency:^1.0.0--> balanced-match@1.0.2",
+      "brace-expansion@1.1.21 --dependency:^1.0.0--> balanced-match@1.0.2",
+      "buffer@5.7.1 --dependency:^1.3.1--> base64-js@1.5.1",
+      "buffer@5.7.1 --dependency:^1.1.13--> ieee754@1.2.1"
+    ],
+    "errors": [],
+    "licenseCounts": {
+      "MIT": 62,
+      "Unlicense": 1,
+      "UNKNOWN": 1,
+      "MIT/X11": 2,
+      "Apache-2.0": 2,
+      "BSD-3-Clause": 2,
+      "ISC": 13,
+      "(MIT OR GPL-3.0-or-later)": 1,
+      "(MIT AND Zlib)": 1
+    },
+    "deprecated": [
+      {
+        "id": "fstream@1.0.12",
+        "message": "This package is no longer supported."
+      },
+      {
+        "id": "glob@7.2.3",
+        "message": "Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me"
+      },
+      {
+        "id": "inflight@1.0.6",
+        "message": "This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful."
+      },
+      {
+        "id": "lodash.isequal@4.5.0",
+        "message": "This package is deprecated. Use require('node:util').isDeepStrictEqual instead."
+      },
+      {
+        "id": "rimraf@2.7.1",
+        "message": "Rimraf versions prior to v4 are no longer supported"
+      },
+      {
+        "id": "uuid@8.3.2",
+        "message": "uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028)."
+      }
+    ],
+    "declaredInstallHookPackages": [],
+    "limits": [
+      "Candidate range resolution is not pnpm installation/lock verification.",
+      "Age compliance is not a vulnerability audit.",
+      "Node dependency graph does not replace bundled browser code or its license inventory."
+    ]
+  },
+  "browserBundleInspection": {
+    "packageUrl": "https://registry.npmjs.org/exceljs/-/exceljs-4.4.0.tgz",
+    "integrityMatched": true,
+    "integrity": "sha512-XctvKaEMaj1Ii9oDOqbW/6e1gXknSY4g/aLCDicOXqBE4M0nRWkUu0PTp++UPNzoFY12BNHMfs/VadKIS6llvg==",
+    "bundleBytes": 947702,
+    "bundleSha256": "7e49da68588e250dbb8bba190d2caa8ab3787cc0284bda1d8b2f805c4df742c9",
+    "sourceMapSourceCount": 534,
+    "embeddedPackageNames": "@fast-csv; asn1.js; base64-js; bn.js; brorand; browser-pack; browserify; browserify-aes; browserify-cipher; browserify-des; browserify-rsa; browserify-sign; buffer; buffer-xor; cipher-base; core-js; core-util-is; create-ecdh; create-hash; create-hmac; crypto-browserify; dayjs; des.js; diffie-hellman; elliptic; events; evp_bytestokey; fast-csv; hash-base; hash.js; hmac-drbg; ieee754; inherits; jszip; lodash.escaperegexp; lodash.groupby; lodash.isboolean; lodash.isequal; lodash.isfunction; lodash.isnil; lodash.isundefined; lodash.uniq; md5.js; miller-rabin; minimalistic-assert; minimalistic-crypto-utils; parse-asn1; pbkdf2; process; process-nextick-args; public-encrypt; randombytes; randomfill; readable-stream; regenerator-runtime; ripemd160; safe-buffer; safer-buffer; saxes; sha.js; stream-browserify; timers-browserify; util; util-deprecate; uuid; xmlchars",
+    "workerRuntimeTest": "controlledNodeWorkerProbe:13-cell-synthetic-workbook-successfully-parsed",
+    "limits": "Official browser field selects the prebundled dist file; a new lock cannot replace embedded code. Source map package names and two exact embedded versions are not a complete SBOM/license inventory. dist/LICENSE equals the root LICENSE; v4.4.0 package-lock.json URL returned 404.",
+    "confirmedEmbeddedVersions": [
+      {
+        "package": "elliptic",
+        "version": "6.5.4",
+        "sourceMapPath": "node_modules/elliptic/package.json"
+      },
+      {
+        "package": "core-js",
+        "version": "3.33.0",
+        "sourceMapPath": "node_modules/core-js/internals/shared.js"
+      }
+    ]
+  },
+  "controlledNodeWorkerProbe": {
+    "method": "官方npm tarball仅在内存解包，dist bundle在Node Worker内无DOM/网络API的vm上下文加载；禁止动态代码生成。合成OOXML ZIP，不读用户文档、不安装。不是浏览器或WK验证。",
+    "bundleSha256": "7e49da68588e250dbb8bba190d2caa8ab3787cc0284bda1d8b2f805c4df742c9",
+    "fixtureSha256": "cd33797620159cc9e27b1036c8393eb848caddda1239ff29759dc00c9c6a2714",
+    "stderr": "",
+    "exitCode": 0,
+    "transportNote": "首次Python urllib读取4.7MB官方归档在末尾IncompleteRead，未执行探针；改为Node fetch arrayBuffer完整读取后才执行。",
+    "stdoutJson": "{\"ok\":true,\"result\":{\"environment\":{\"window\":\"undefined\",\"document\":\"undefined\",\"fetch\":\"undefined\",\"XMLHttpRequest\":\"undefined\",\"require\":\"undefined\",\"process\":\"undefined\"},\"date1904\":false,\"cells\":[{\"address\":\"A1\",\"type\":2,\"text\":\"0.12\",\"numFmt\":\"0.00%\",\"value\":0.12,\"hasResult\":false},{\"address\":\"A2\",\"type\":2,\"text\":\"1234.5\",\"numFmt\":\"#,##0.00\",\"value\":1234.5,\"hasResult\":false},{\"address\":\"A3\",\"type\":6,\"text\":\"\",\"value\":{\"formula\":\"1-1\"},\"result\":0,\"hasResult\":true},{\"address\":\"A4\",\"type\":6,\"text\":\"\",\"value\":{\"formula\":\"FALSE()\"},\"result\":false,\"hasResult\":true},{\"address\":\"A5\",\"type\":6,\"text\":\"\",\"value\":{\"formula\":\"IF(1,\\\"\\\",\\\"x\\\")\"},\"hasResult\":false},{\"address\":\"A6\",\"type\":6,\"text\":\"\",\"value\":{\"formula\":\"1+1\"},\"hasResult\":false},{\"address\":\"A7\",\"type\":6,\"text\":\"[object Object]\",\"value\":{\"formula\":\"1/0\",\"result\":{\"error\":\"#DIV/0!\"}},\"result\":{\"error\":\"#DIV/0!\"},\"hasResult\":true},{\"address\":\"A8\",\"type\":4,\"text\":\"Tue Feb 27 1900 08:05:43 GMT+0805 (China Standard Time)\",\"numFmt\":\"mm-dd-yy\",\"value\":{\"kind\":\"Date\",\"milliseconds\":-2204064000000,\"iso\":\"1900-02-27T00:00:00.000Z\"},\"hasResult\":false},{\"address\":\"A9\",\"type\":4,\"text\":\"Wed Feb 28 1900 08:05:43 GMT+0805 (China Standard Time)\",\"numFmt\":\"mm-dd-yy\",\"value\":{\"kind\":\"Date\",\"milliseconds\":-2203977600000,\"iso\":\"1900-02-28T00:00:00.000Z\"},\"hasResult\":false},{\"address\":\"A10\",\"type\":4,\"text\":\"Thu Mar 01 1900 08:05:43 GMT+0805 (China Standard Time)\",\"numFmt\":\"mm-dd-yy\",\"value\":{\"kind\":\"Date\",\"milliseconds\":-2203891200000,\"iso\":\"1900-03-01T00:00:00.000Z\"},\"hasResult\":false},{\"address\":\"A11\",\"type\":4,\"text\":\"Sun Dec 31 1899 20:05:43 GMT+0805 (China Standard Time)\",\"numFmt\":\"[h]:mm\",\"value\":{\"kind\":\"Date\",\"milliseconds\":-2209032000000,\"iso\":\"1899-12-31T12:00:00.000Z\"},\"hasResult\":false},{\"address\":\"A12\",\"type\":6,\"text\":\"Sat Dec 30 1899 08:05:43 GMT+0805 (China Standard Time)\",\"numFmt\":\"mm-dd-yy\",\"value\":{\"formula\":\"FALSE()\",\"result\":\"1899-12-30T00:00:00.000Z\"},\"result\":{\"kind\":\"Date\",\"milliseconds\":-2209161600000,\"iso\":\"1899-12-30T00:00:00.000Z\"},\"hasResult\":true},{\"address\":\"A13\",\"type\":6,\"text\":\"Invalid Date\",\"numFmt\":\"mm-dd-yy\",\"value\":{\"formula\":\"1/0\",\"result\":null},\"result\":{\"kind\":\"Date\",\"milliseconds\":\"NaN\",\"iso\":\"Invalid Date\"},\"hasResult\":true}]}}",
+    "fixtureCellDefinitionsJson": "[[\"A1\",\" s=\\\"1\\\"\",\"\",\"0.12\"],[\"A2\",\" s=\\\"2\\\"\",\"\",\"1234.5\"],[\"A3\",\"\",\"1-1\",\"0\"],[\"A4\",\" t=\\\"b\\\"\",\"FALSE()\",\"0\"],[\"A5\",\" t=\\\"str\\\"\",\"IF(1,\\\"\\\",\\\"x\\\")\",\"\"],[\"A6\",\"\",\"1+1\",null],[\"A7\",\" t=\\\"e\\\"\",\"1/0\",\"#DIV/0!\"],[\"A8\",\" s=\\\"3\\\"\",\"\",\"59\"],[\"A9\",\" s=\\\"3\\\"\",\"\",\"60\"],[\"A10\",\" s=\\\"3\\\"\",\"\",\"61\"],[\"A11\",\" s=\\\"4\\\"\",\"\",\"1.5\"],[\"A12\",\" t=\\\"b\\\" s=\\\"3\\\"\",\"FALSE()\",\"0\"],[\"A13\",\" t=\\\"e\\\" s=\\\"3\\\"\",\"1/0\",\"#DIV/0!\"]]"
+  },
+  "formatterCandidate": {
+    "packages": [
+      {
+        "name": "ssf",
+        "version": "0.11.2",
+        "publishedAt": "2020-06-27T22:56:33.923Z",
+        "license": "Apache-2.0",
+        "dependencies": {
+          "frac": "~1.1.2"
+        },
+        "registry": "https://registry.npmjs.org/ssf/0.11.2",
+        "tarball": "https://registry.npmjs.org/ssf/-/ssf-0.11.2.tgz",
+        "integrity": "sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g=="
+      },
+      {
+        "name": "frac",
+        "version": "1.1.2",
+        "publishedAt": "2018-02-20T21:06:16.836Z",
+        "license": "Apache-2.0",
+        "dependencies": {},
+        "registry": "https://registry.npmjs.org/frac/1.1.2",
+        "tarball": "https://registry.npmjs.org/frac/-/frac-1.1.2.tgz",
+        "integrity": "sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA=="
+      }
+    ],
+    "sourceSha256": "27b543bb7440feb42c821ab58fc401a60d4affbc611d96bcd6bad31b09e5cb87",
+    "probeMethod": "官方registry归档内ssf.js在无DOM、无网络API、禁止动态代码的Node vm仅内存执行；不安装，不代表浏览器/WK或全部格式正确。",
+    "probe": [
+      {
+        "format": "0.00%",
+        "value": 0.12,
+        "options": {},
+        "display": "12.00%"
+      },
+      {
+        "format": "#,##0.00",
+        "value": 1234.5,
+        "options": {},
+        "display": "1,234.50"
+      },
+      {
+        "format": "yyyy-mm-dd",
+        "value": 59,
+        "options": {},
+        "display": "1900-02-28"
+      },
+      {
+        "format": "yyyy-mm-dd",
+        "value": 60,
+        "options": {},
+        "display": "1900-02-29"
+      },
+      {
+        "format": "yyyy-mm-dd",
+        "value": 61,
+        "options": {},
+        "display": "1900-03-01"
+      },
+      {
+        "format": "yyyy-mm-dd",
+        "value": 0,
+        "options": {
+          "date1904": true
+        },
+        "display": "1904-01-01"
+      },
+      {
+        "format": "[h]:mm",
+        "value": 1.5,
+        "options": {},
+        "display": "36:00"
+      },
+      {
+        "format": "0",
+        "value": 0,
+        "options": {},
+        "display": "0"
+      },
+      {
+        "format": "0",
+        "value": false,
+        "options": {},
+        "display": "FALSE"
+      },
+      {
+        "format": "0",
+        "value": "",
+        "options": {},
+        "display": ""
+      },
+      {
+        "format": "0.00E+00",
+        "value": 1234.5,
+        "options": {},
+        "display": "1.23E+03"
+      },
+      {
+        "format": "# ?/?",
+        "value": 1.5,
+        "options": {},
+        "display": "1 1/2"
+      }
+    ],
+    "limits": [
+      "SSF是数字格式器，不计算公式、不修复ExcelJS丢失缓存状态或类型、不解析Office布局。",
+      "需原始数值/日期系统/缓存类型输入；不能先走cell.text或Date本地化。",
+      "本次12例格式探针不覆盖所有locale/会计宽度/颜色条件/特殊自定义格式，不可声明Excel等价。"
+    ]
+  },
+  "rawXmlRoute": {
+    "dependencies": [
+      {
+        "name": "saxes",
+        "version": "6.0.0",
+        "publishedAt": "2021-11-07T19:06:31.264Z",
+        "license": "ISC",
+        "dependencies": {
+          "xmlchars": "^2.2.0"
+        },
+        "engines": {
+          "node": ">=v12.22.7"
+        },
+        "registry": "https://registry.npmjs.org/saxes/6.0.0",
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/lddubeau/saxes.git"
+        },
+        "integrity": "sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA=="
+      },
+      {
+        "name": "xmlchars",
+        "version": "2.2.0",
+        "publishedAt": "2019-09-06T16:38:51.976Z",
+        "license": "MIT",
+        "dependencies": {},
+        "engines": null,
+        "registry": "https://registry.npmjs.org/xmlchars/2.2.0",
+        "repository": {
+          "type": "git",
+          "url": "git+https://github.com/lddubeau/xmlchars.git"
+        },
+        "integrity": "sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw=="
+      },
+      {
+        "name": "ssf",
+        "version": "0.11.2",
+        "publishedAt": "2020-06-27T22:56:33.923Z",
+        "license": "Apache-2.0",
+        "dependencies": {
+          "frac": "~1.1.2"
+        },
+        "engines": {
+          "node": ">=0.8"
+        },
+        "registry": "https://registry.npmjs.org/ssf/0.11.2",
+        "repository": {
+          "type": "git",
+          "url": "git://github.com/SheetJS/ssf.git"
+        },
+        "integrity": "sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g=="
+      }
+    ],
+    "moduleSha256": {
+      "saxes": "d00e2ba27ed7d6ac961d03ff14d6b8c0eb5bf063ed2c996c22c6df06ac121423",
+      "xmlchars/xml/1.1/ed2": "461d5c71cc6076dc16aebbfd2d3c506481df5a74f43631d82372a6ffdc239d69",
+      "xmlchars/xmlns/1.0/ed3": "ff14ffa3a2cdfdd1b6077c4a8443dc949f53d5bb56de5ed89d4dbc5d9fdf08f7",
+      "xmlchars/xml/1.0/ed5": "ea350479ab6f6553c0c3395c30ec440fb39821f6902081939831ddf1b5e8fd0f",
+      "ssf": "27b543bb7440feb42c821ab58fc401a60d4affbc611d96bcd6bad31b09e5cb87"
+    },
+    "probeMethod": "官方registry归档仅内存解包。专用Node Worker+vm无DOM/网络API，禁止字符串/wasm动态代码，模块加载器只准已读xmlchars/saxes/ssf源。合成XML保留原始t/f/v存在性，包装明确拒绝DOCTYPE及解析错误。不是产品实现或浏览器/WK验收。",
+    "exitCode": 0,
+    "stderr": "",
+    "stdoutJson": "{\"ok\":true,\"result\":{\"environment\":{\"window\":\"undefined\",\"document\":\"undefined\",\"fetch\":\"undefined\",\"XMLHttpRequest\":\"undefined\",\"require\":\"undefined\",\"process\":\"undefined\"},\"cells\":[{\"address\":\"A1\",\"type\":\"n\",\"formulaPresent\":true,\"valuePresent\":true,\"formula\":\"1-1\",\"value\":\"0\"},{\"address\":\"B1\",\"type\":\"b\",\"formulaPresent\":true,\"valuePresent\":true,\"formula\":\"FALSE()\",\"value\":\"0\"},{\"address\":\"C1\",\"type\":\"str\",\"formulaPresent\":true,\"valuePresent\":true,\"formula\":\"IF(1,\\\"\\\",\\\"x\\\")\",\"value\":\"\"},{\"address\":\"D1\",\"type\":\"n\",\"formulaPresent\":true,\"valuePresent\":false,\"formula\":\"1+1\",\"value\":\"\"},{\"address\":\"E1\",\"type\":\"e\",\"formulaPresent\":true,\"valuePresent\":true,\"formula\":\"1/0\",\"value\":\"#DIV/0!\"}],\"rejects\":[{\"rejected\":true,\"error\":\"Error: DOCTYPE rejected by host policy\"},{\"rejected\":true,\"error\":\"Error: 1:28: unexpected close tag.\"}],\"formatted\":[\"12.00%\",\"1900-02-29\",\"36:00\",\"FALSE\"]}}"
+  },
+  "baselineVerified": [
+    {
+      "path": "package.json",
+      "sha256": "73b2b45b0168dc35bff58e16b3ae45fb3ec35aef9ea841b923bcdf2bebaac164",
+      "matchesBaseline": true
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "9e0d61f27813627eedb25c758d03e9b7ab2d97ac65d00e1f21e627e016138806",
+      "matchesBaseline": true
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b",
+      "matchesBaseline": true
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08",
+      "matchesBaseline": true
+    }
+  ],
+  "scope": {
+    "authorization": "仅只读网络/既有本地运行时；只写本JSON。未安装、未改lock、未启动正式应用/Agent、未读用户文档。",
+    "priorResearch": "docs/evidence/2026-10-09-capability-hardening/office-preview-research.json",
+    "evidenceLevel": "官方元信息/源码阅读；合成材料的Node Worker/vm实际探针。没有浏览器/WK、Vite构建、安装版、真实Office对照验收。",
+    "logs": "探针真实stdout保留于本JSON的stdoutJson字段（JSON编码字符串），非独立原始日志。未保存网络归档或合成XLSX文件。"
+  },
+  "conclusion": [
+    "ExcelJS 4.4.0可在本次无DOM/无网络API的Node Worker探针中加载合成XLSX，但不能独自作为显示值的权威来源；不建议下一片直接引入它完成视觉预览。",
+    "13单元格探针实证：cell.text不应用numFmt，公式缓存0/false显示为空；缓存空字符串与无缓存合并；日期格式把公式布尔值变Date、错误值变Invalid Date。仅追加格式器不能恢复已经丢失的存在性/类型。",
+    "推荐下一片：现有Rust zip=4.6.1做VerifiedFile绑定/有界解压；固定saxes=6.0.0+xmlchars=2.2.0解析受限OOXML，保留原始typed/cached值及格式；固定SSF=0.11.2+frac=1.1.2格式化；白名单结构进入窗口化只读网格。该路线避免ExcelJS的有损转换和完整旧浏览器bundle。",
+    "推荐4个包均已核官方registry精确版本、日期和许可证，均超过7天；未安装，未生成实际pnpm锁，实际构建/锁及WK须在实施后核对。",
+    "这不是完整Excel排版引擎。常见单元格内容、合并、行列尺寸和基础样式要做到真实可读；未支持的复杂功能须检测并披露，不能默默丢内容后显示完整成功，也不能把原始文本当视觉保真。"
+  ],
+  "licenseResolution": {
+    "package": "buffers@0.1.1",
+    "registry": "https://registry.npmjs.org/buffers/0.1.1",
+    "tarball": "https://registry.npmjs.org/buffers/-/buffers-0.1.1.tgz",
+    "observed": "registry无license/legacy licenses；官方归档package.json和README.markdown未声明许可证，也未找到LICENSE文件。",
+    "status": "unresolved-do-not-label-as-MIT-by-inference",
+    "impact": "属于ExcelJS Node安装候选图。浏览器source map包名未见buffers；不能据此承诺所有分发场景均无许可问题。推荐saxes+SSF路线不依赖它。"
+  },
+  "sourceFindings": [
+    {
+      "id": "XLSX-RESEARCH-01",
+      "status": "source-and-controlled-probe-confirmed",
+      "detail": "cell.text调用值toString，不读取numFmt；FormulaValue.toString用结果truthiness，0/false变空，错误对象显示[object Object]。",
+      "sources": [
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/doc/cell.js#L232",
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/doc/cell.js#L877"
+      ],
+      "probeCells": ["A1", "A2", "A3", "A4", "A7"]
+    },
+    {
+      "id": "XLSX-RESEARCH-02",
+      "status": "controlled-probe-confirmed",
+      "detail": "公式缓存空字符串<v/>和没有<v>均得到result undefined；cell.value对象未保留result 0/false，但cell.result单独getter仍有0/false。不能用truthiness或补默认值掩盖存在性。",
+      "sources": [
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/doc/cell.js",
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/xlsx/xform/sheet/cell-xform.js#L349"
+      ],
+      "probeCells": ["A3", "A4", "A5", "A6"]
+    },
+    {
+      "id": "XLSX-RESEARCH-03",
+      "status": "source-and-controlled-probe-confirmed",
+      "detail": "日期格式把数字/公式结果转JS Date。1900 serial 59/60变2月27/28日；[h]:mm的1.5变Date；false和错误公式缓存变Date/Invalid Date。本地Date.toString还带时区。应保留Excel日期serial、date1904及原类型。",
+      "sources": [
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/utils/utils.js#L58",
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/xlsx/xform/sheet/cell-xform.js#L450",
+        "https://docs.sheetjs.com/docs/csf/features/dates/"
+      ],
+      "probeCells": ["A8", "A9", "A10", "A11", "A12", "A13"]
+    },
+    {
+      "id": "XLSX-RESEARCH-04",
+      "status": "source-confirmed",
+      "detail": "xlsx.load对ZIP各entry使用entry.async整项解压，再分16KiB字符串交XML解析；这不是资源预检或流式上限，须在进入库前限制实际解压量。",
+      "sources": [
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/lib/xlsx/xlsx.js#L279"
+      ]
+    },
+    {
+      "id": "XLSX-RESEARCH-05",
+      "status": "controlled-probe-confirmed-with-platform-limit",
+      "detail": "官方browser bundle和推荐saxes+SSF均能在本次无window/document/fetch/XHR的Node Worker上下文读取受控数据；未测试真实DedicatedWorker、生产CSP、Vite或WK。Worker不等于安全沙箱或硬堆上限。",
+      "sources": [
+        "https://github.com/exceljs/exceljs/blob/v4.4.0/package.json",
+        "https://github.com/lddubeau/saxes",
+        "https://github.com/SheetJS/ssf"
+      ]
+    }
+  ],
+  "recommendedImplementation": {
+    "dependencies": {
+      "direct": ["saxes@6.0.0", "ssf@0.11.2"],
+      "exactTransitiveCandidates": ["xmlchars@2.2.0", "frac@1.1.2"],
+      "existingBackend": "src-tauri/Cargo.toml:41 zip =4.6.1 (deflate-flate2 only)",
+      "reason": "固定小型XML解析器+数字格式器；不安装ExcelJS、DOCX/PPTX库或公式计算引擎。版本日期/许可见rawXmlRoute.dependencies及formatterCandidate.packages。"
+    },
+    "stages": [
+      "后端以VerifiedFile的path/resolvedPath/version/size/sha256捕获同一份字节；ZIP校验与选中part读取均基于该捕获，不再次按路径读取新版本。沿用OpenedFileView取消/切换归属。",
+      "有界ZIP读取后，只把选中OOXML XML字节交专用Worker。解析Content Types、根/workbook关系、workbook、styles、sharedStrings、worksheet和必要theme；按命名空间、关系type和目标part处理，不能依赖文件名猜语义。",
+      "保留单元格原始t、s、f存在性/共享公式标记、v存在性/原字符串；空缓存、无缓存、0、false、错误、inline/shared/rich text分别处理。公式仅显示文件缓存并标明来源，不执行、不补算、不联网。",
+      "SSF接收经验证的原始数值+numFmt+date1904；文本/布尔/错误按类型显示，保留raw值供详情。不经cell.text或本地Date。未知locale/custom format明确反馈未完整显示。",
+      "Worker仅返回白名单数字/布尔/纯文本/颜色/样式枚举/合并与坐标；主界面React生成只读网格，不接收HTML、DOM或任意CSS。行列窗口化、按sheet加载；取消/切页/切文件终止旧Worker并丢弃旧结果。",
+      "基础视觉范围含行列尺寸、隐藏状态、合并、边框/填充/字体/对齐/换行、富文字与theme颜色解析。未覆盖的图片/图表/条件格式/透视表/嵌入对象/打印版式等须检测并明确列出，不把缺失称完整成功。"
+    ],
+    "preservedBoundaries": [
+      "不执行宏、公式、DDE、外部关系或超链接；超链接可作为惰性普通文字显示，不自动打开。",
+      "不扩Agent文件权限，不复用browser_workspace许可，不加载远程字体/图片。",
+      "Worker是取消与避免阻塞UI的边界，不等于进程/堆硬隔离；仍需输入/输出/模型/渲染多层上限。",
+      "Office其他格式DOCX/PPTX仍未实现；此路线不承诺Excel像素级或打印保真。"
+    ]
+  },
+  "zipAndXmlPreflight": [
+    "限制压缩尺寸、entry数、每entry/总实际解压字节；有界流读取并在超限前终止，不能信任central directory宣称大小，不能先全部解压再计数。校验CRC、截断、local/central header一致性与不支持的压缩/加密方法。",
+    "校验entry名及规范化后唯一性；拒绝绝对路径、NUL、ZIP穿越、反斜线歧义、重复part、symlink语义；不向用户目录解压。ZIP64若支持也经过同一上限，不能因64位长度绕过预算。",
+    "关系Target按OPC URI规则解析/解码并约束包内；合法../相对目标可在包内规范化，不能一刀切拒绝。External仅记录而不请求；关系ID重复、目标缺失或非法类型不得静默取第一条。",
+    "核xlsx内容类型/真实容器；加密Office通常非普通OOXML ZIP，准确显示不支持/需解密，不能当空表。宏型内容、嵌入对象、外链、不支持部件须检测，无论扩展名是否xlsx。",
+    "固定XML解析器，包装明确拒绝DOCTYPE/外部实体；预算深度、属性数/长度、累计文本、共享字符串数/总长、style/format数量、sheet/cell数。错误XML或越界索引明确失败。",
+    "不信任dimension、row/col或稀疏最大坐标，禁止按巨大dimension预分配二维数组。限制实际cell数/坐标、merge数/面积并核重叠与边界，避免合并展开/格式规则二次方开销。",
+    "数字严格校验且有限；date1904、numFmt、缓存类型保留。SSF格式输入需长度/时间预算；未知格式不能退为General再声称正确。",
+    "边界值/资源限额在实施期实测确定，区分过大/部分未显示/取消/失效反馈；输入大小限制不等于Worker硬内存限制。"
+  ],
+  "requiredCounterexamples": [
+    "数字：百分比、千分位、小数、负数/零多段、科学计数、分数、货币/会计、前导零；数字字符串保持文本。未知locale/custom format不能默默General。",
+    "日期：1900 serial 0/59/60/61，1904 serial 0，跨时区，纯时间、小数秒、超过24小时[h]:mm、负值；不把Excel无时区日期当绝对时刻。",
+    "公式：缓存0/false/空串/错误/缺失、共享/数组/动态公式、外部引用缓存、calcMode/fullCalcOnLoad；全部不执行，缺缓存不能显示0或完整成功。",
+    "XML/ZIP：zip bomb、伪造大小、坏CRC、截断、重复entry/关系、路径歧义/穿越、DOCTYPE、超深XML、过量sharedStrings/稀疏极大坐标/巨大merge、坏样式引用。",
+    "视觉：多sheet/隐藏sheet/隐藏行列、合并/冻结、行高列宽、中文长文/换行/富文字/主题色、复杂功能检测。正常有样式文件必须成功，不能全部拒绝当安全完成。",
+    "隔离：文本包含HTML/CSS/URL、外链/图片/宏部件，主UI零网络/零自动文件读取；取消/超时/切页/版本变化后的旧结果不得覆盖新视图。",
+    "平台资源：真实WK DedicatedWorker+CSP/Vite产物、worker终止/迟到结果、并发限额、重复打开关闭、普通/大/稀疏样本内存与交互；Node探针不替代。"
+  ],
+  "remainingUnverified": [
+    "推荐4依赖实际pnpm锁、归档完整性/许可材料归集、Vite构建、浏览器产物大小未验证。",
+    "registry完整性字段已留，ExcelJS归档实核sha512匹配；其他包留source hash，但本轮未逐项比较归档integrity。",
+    "OOXML完整结构、样式、relationship/content-type处理、ZIP限额/取消尚未实现；XML探针仅5种缓存语义和两个拒绝例。",
+    "SSF验证12例及Worker四例，不代表全部国际化/自定义格式或Excel像素级一致。",
+    "未运行浏览器/WK、真实用户文件、Excel/LibreOffice对照或正式安装验收。",
+    "不将P16全项关闭，不改活动计划或新增用户验收门槛。"
+  ],
+  "implementationInputs": {
+    "status": "proposed-next-slice-not-implemented-or-benchmarked",
+    "capture": "复用VerifiedFile expected值捕获有界字节；返回捕获的sha256/size/version供现有打开文件归属核对。未经过该捕获的路径/URL不可作为解析输入。",
+    "workerRequest": {
+      "parts": "只读OOXML白名单part名与Uint8Array内容；总字节预算内转移ArrayBuffer，不传路径/IPC句柄/URL加载回调。",
+      "selection": "工作簿目录元信息或一个明确sheet关系ID；sheet解析只发生于当前操作仍有效时。",
+      "limits": "固定宿主常量，不由文档内值覆盖；超限为明确结果，不能裁掉剩余内容后报完整成功。"
+    },
+    "workerResponse": {
+      "workbook": "sheet名称/可见性/关系ID、date1904、已检测复杂功能及缺失/不支持说明。",
+      "sheet": "稀疏cells、行列属性、merges、基础style和纯文本显示；cell保留typed raw值、formulaPresent/valuePresent、cached状态、numFmt与格式化结果/明确未格式化原因。",
+      "semantics": "单元格合法错误值仍是可展示的错误值；公式缺缓存/未知格式按单元格明确说明，不伪造0，也不自动把整份文件判损坏。",
+      "ownership": "复用当前文件打开操作的身份/生命周期；旧Worker迟到结果不得覆盖新文件/新sheet。不增加持久化事件或正文索引。"
+    },
+    "initialLimitsProposal": {
+      "qualification": "下列仅可实施起点，须用真实样本和实际内存/耗时反例调整；不是已证明安全阈值或新增验收门槛。",
+      "maxCompressedBytes": 16777216,
+      "maxTotalInflatedBytes": 67108864,
+      "maxXmlPartBytes": 16777216,
+      "maxZipEntries": 2048,
+      "maxSheets": 64,
+      "maxActualCellsPerSelectedSheet": 100000,
+      "maxSharedStringUtf8Bytes": 8388608,
+      "maxSharedStrings": 100000,
+      "maxStyles": 4096,
+      "maxMergeRanges": 4096,
+      "maxXmlDepth": 64,
+      "maxAttributesPerElement": 64,
+      "maxFormatCodeLength": 1024,
+      "workerDeadlineMs": 10000,
+      "maxConcurrentPreviewWorkers": 1,
+      "additional": "坐标只准xlsx合法范围但不能据最大坐标预分配。单元格文本、行列/merge累计数据、结果结构总量及merge面积亦须设常量预算；实际实现不能仅依以上文件字节预算。"
+    },
+    "packagingChecks": [
+      "正式包前固定2个直接包及2个传递包的实际lock版本；重新核各归档integrity、许可证/NOTICE与构建产物中实际代码。",
+      "测试生产Vite Worker产物在WebKit中无DOM依赖、无额外Node polyfill/eval需求；不得为运行成功放宽主应用权限或开启unsafe-eval。",
+      "原始ZIP字节首先做有限EOCD/ZIP64与目录数量预检；再用zip crate严格读取。ZipArchive构造本身的元信息分配也要在恶意entry计数样本中测量，不能只限制解压后的字节。"
+    ]
+  }
+}

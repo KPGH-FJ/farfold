@@ -1,0 +1,17 @@
+src/components/OpenedFileView.tsx 67ms
+src/workers/pdf_parser_diagnostics.ts 1ms (unchanged)
+src/workers/pdf_parser_diagnostics.test.ts 2ms (unchanged)
+src/workers/pdf_preview.worker.ts 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.ts 7ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.ts 4ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.ts 9ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/fixture.tsx 15ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-diagnostic-immediate.mjs 13ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-diagnostic.mjs 5ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-errors.mjs 4ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run-mixed.mjs 4ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/run.mjs 4ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/diagnostic.html 10ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/errors.html 1ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/index.html 1ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-diagnostic.html 1ms

@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "damaged.pdf reports exact fixed failure without page eligibility",
+      "ok": true,
+      "detail": {
+        "message": "未能预览这份文件。内容可能损坏、格式不受支持，或超过当前预览限制。",
+        "reported": 0,
+        "ms": 233.10000002384186
+      }
+    },
+    {
+      "name": "password.pdf reports exact fixed failure without page eligibility",
+      "ok": true,
+      "detail": {
+        "message": "这份 PDF 需要密码，暂不能在这里预览。可使用其他应用打开。",
+        "reported": 0,
+        "ms": 100
+      }
+    },
+    {
+      "name": "unembedded-chinese.pdf reports exact fixed failure without page eligibility",
+      "ok": true,
+      "detail": {
+        "message": "未能预览这份文件。内容可能损坏、格式不受支持，或超过当前预览限制。",
+        "reported": 0,
+        "ms": 132.19999998807907
+      }
+    },
+    {
+      "name": "cancelled real worker cannot publish a late page",
+      "ok": true,
+      "detail": {
+        "message": "预览已取消。",
+        "reported": 0
+      }
+    },
+    {
+      "name": "next owned worker still renders page two after failures and cancellation",
+      "ok": true,
+      "detail": {
+        "width": 600,
+        "height": 800
+      }
+    }
+  ]
+}

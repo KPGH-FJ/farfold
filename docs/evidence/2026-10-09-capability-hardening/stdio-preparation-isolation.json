@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-09",
+  "status": "isolated-test-correction-targeted-green-awaiting-root-full-regression",
+  "scope": "第七批全仓唯一Rust失败的定向调查；仅process_stdio_tests.rs变更，生产stdio未变，不操作正式应用/Agent。",
+  "originalFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/seventh-checks/rust.txt",
+    "sha256": "2cea45e22cd89e394d2a79b0eb7814341ae6d8666a7a9c8e2c554851ad633f6b"
+  },
+  "originalResult": "1150 passed / 1 failed / 5 ignored；preparation fault matrix立即EOF/EPIPE断言失败。",
+  "investigation": [
+    "单项原实现定向通过；不将一次通过作为根因或修复证明。",
+    "Witness持有io::PipeReader/PipeWriter克隆，检查真实pipe对象EOF/EPIPE；不是失效RawFd的F_GETFD检查，FD号码复用不是这里的解释。",
+    "Prepared::with_factories以拥有型RAII端点逐项构造，?错误返回同步释放此前本方端点；没有发现生产代码遗留所有权。",
+    "有效确定性反例在真实with_factories造pipe后，启动一个专用/bin/sh子进程并停在pre_exec；本方writer准备被注入EMFILE失败。before_exec=false、release并等待确切child后after_exec=true，原即时关闭假设明确失败。",
+    "该反例证实并行fork可继承CLOEXEC对象直到exec，使原共享测试进程的立即EOF断言不成立。原1150/1全仓现场未捕获持有该对象的具体child，因此不能宣称已精确归属原现场进程。"
+  ],
+  "fix": [
+    "只把6故障位矩阵与新的fork反例放到当前测试二进制自身的--exact指定测试 --test-threads=1隔离进程；没有新环境开关、ignored测试或生产分支。",
+    "原故障矩阵保留逐项EMFILE、未启动marker以及立即EOF/EPIPE断言，不加宽关闭期限、不以重试掩盖泄漏。",
+    "隔离child只识别标准harness参数；完成token必须在整个body成功后出现，防止过滤到0项或错误名称被当成功。父进程有界等待，并只通过持有的Child句柄kill/wait自身超时fixture。",
+    "诊断pre_exec仅执行libc close/write/poll/read/_exit；child gate最长3s且parent断言之前释放并join/reap。不在fork child里分配、取环境、加mutex或操作用户文件。"
+  ],
+  "proofs": [
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-targeted-baseline.txt",
+        "sha256": "0e2a85b2ac0d85b6b487681269d5aeb94de117ddb586e9a18b158d2f042bdc4d"
+      },
+      "result": "1 passed",
+      "meaning": "旧代码单项定向，未重现并行现场"
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-fork-red.txt",
+        "sha256": "7125ad157063c39b916607721f25865357111216711729ea865a7b9801f3f4c8"
+      },
+      "result": "1 failed",
+      "meaning": "确定性before_exec=false/after_exec=true；旧立即关闭假设失败"
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-isolation-green.txt",
+        "sha256": "047c5ed9f312284a2ff03984d86c44ec2ecfa887895ded0f1d6e2adaca51c7d5"
+      },
+      "result": "6 passed",
+      "meaning": "完整stdio关联测试，含原6故障位隔离矩阵和真实fork生命周期反例"
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": "exit 0",
+      "meaning": "仓库edition2024定向rustfmt检查"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://doc.rust-lang.org/std/os/unix/process/trait.CommandExt.html#tymethod.pre_exec",
+      "supports": "pre_exec在fork后exec前；descriptor已复制；child回调async-signal-safety约束"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/os/unix/process/trait.CommandExt.html#tymethod.exec",
+      "supports": "exec关闭CLOEXEC descriptor"
+    }
+  ],
+  "changedSource": {
+    "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+    "sha256": "1536ba5c48f831b34dcb480589ae5a882923829baf8d0d47c58a7007796f6bfd"
+  },
+  "unchangedProduction": {
+    "path": "src-tauri/src/acp_client/process_stdio.rs",
+    "sha256": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162"
+  },
+  "boundaries": [
+    "本机macOS受控fixture，不等于已定位每个全仓并行子进程。",
+    "不改变生产启动、权限、reaper、异步io、恢复或取消语义。",
+    "父harness的5ms轮询仅等待进程完成，不用于延迟pipe关闭断言；原立即断言保持。",
+    "全仓回归由root统一执行，本代理未重复全仓。"
+  ]
+}

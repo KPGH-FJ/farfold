@@ -1,0 +1,19 @@
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-final.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-first.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-second.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-static-first.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-third.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/build.mjs
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-immediate-diagnostic.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-immediate-diagnostic.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-ready-diagnostic.diagnostics.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-ready-diagnostic.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/temporary-build-path.json
+[warn] docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/worker-errors-green.diagnostics.json
+[warn] Code style issues found in 17 files. Run Prettier with --write to fix.

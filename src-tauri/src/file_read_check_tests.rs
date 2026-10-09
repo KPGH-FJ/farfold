@@ -156,3 +156,10 @@ async fn successful_and_failed_checks_preserve_results_and_release_slots() {
     );
     assert_eq!(admission.available_permits(), 1);
 }
+
+#[test]
+fn fixed_read_check_classification_distinguishes_pending_busy_and_other_errors() {
+    assert_eq!(classify_error(WAIT_EXPIRED), FailureKind::Pending);
+    assert_eq!(classify_error(CHECK_BUSY), FailureKind::Busy);
+    assert_eq!(classify_error("untrusted"), FailureKind::Unavailable);
+}

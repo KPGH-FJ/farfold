@@ -1,0 +1,538 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (42 tests | 42 failed) 20ms
+   × opens the exact clicked path through the common inspector and renders verified Markdown 4ms
+   × keeps the fixed recovery guidance when inspect reports 文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。 1ms
+   × keeps the fixed recovery guidance when inspect reports 已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。 0ms
+   × keeps the fixed recovery guidance when read reports 文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。 0ms
+   × keeps the fixed recovery guidance when read reports 已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。 0ms
+   × does not display arbitrary inspection errors as recovery guidance 0ms
+   × renders code and CSV as literal text instead of executing their contents 0ms
+   × does not load links, images or raw HTML from a Markdown file 0ms
+   × hands verified HTML to the browser once and does not repeat after hide and return 1ms
+   × does not automatically launch another application for binary or executable files 0ms
+   × offers manual delivery for a text file above the reader limit 0ms
+   × keeps the original path and retries after inspection failure 0ms
+   × invalidates the receipt on read failure 0ms
+   × invalidates the receipt on changed version 0ms
+   × discards HTML inspection completed after hiding, with explicit retry on return 0ms
+   × never revives the old inspection after A to B to A selection changes 0ms
+   × does not inspect or open an initially inactive selection 4ms
+   × discards a delayed text result on unmount 0ms
+   × copies only after explicit destination selection and passes the exact receipt 0ms
+   × never copies after the destination picker returns to a hidden view 0ms
+   × invalidates displayed text and file actions after a delivery failure 0ms
+   × retains a completed text view across hiding without automatically reading it again 0ms
+   × explicitly rereads the disk file and replaces the displayed version without launching anything 0ms
+   × appends whole-file feedback once to the original composer and preserves its send protections 0ms
+   × keeps the earlier version's opinion separate after a refresh and exposes the existing saved-draft control 0ms
+   × restores the same unsent opinion after rereading the unchanged version 0ms
+   × rejects a stale feedback form or editor when hidden without losing the original opinion 0ms
+   × rejects a stale feedback form or editor when task changed without losing the original opinion 0ms
+   × rejects a stale feedback form or editor when unmounted without losing the original opinion 0ms
+   × rejects a stale feedback form or editor when refreshing without losing the original opinion 0ms
+   × rejects a stale feedback form or editor when refresh failed without losing the original opinion 1ms
+   × rejects a stale feedback form or editor when new version without losing the original opinion 0ms
+   × keeps text-feedback and reread controls out of project.html delivery 0ms
+   × keeps text-feedback and reread controls out of archive.zip delivery 0ms
+   × does not move a blank opinion into the composer even if the form is submitted directly 0ms
+   × loads visual bytes from the exact verified receipt and offers a fresh read 0ms
+   × does not display mismatched or late visual bytes from a prior selection 0ms
+   × keeps verified external-file actions when a large image cannot be previewed 0ms
+   × never hands a changed visual receipt to the renderer 0ms
+   × offers PDF feedback only from a rendered current page and preserves its chosen page across navigation 0ms
+   × keeps a current visual opinion reachable when the page fails, but removes the current-page option 0ms
+   × does not accept a visible-page report from another source or after hiding 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 42 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > opens the exact clicked path through the common inspector and renders verified Markdown
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:168:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the fixed recovery guidance when inspect reports 文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the fixed recovery guidance when inspect reports 已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the fixed recovery guidance when read reports 文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the fixed recovery guidance when read reports 已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:186:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not display arbitrary inspection errors as recovery guidance
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:197:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > renders code and CSV as literal text instead of executing their contents
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:210:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not load links, images or raw HTML from a Markdown file
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:220:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > hands verified HTML to the browser once and does not repeat after hide and return
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:230:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not automatically launch another application for binary or executable files
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:247:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > offers manual delivery for a text file above the reader limit
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:258:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the original path and retries after inspection failure
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:266:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > invalidates the receipt on read failure
+ FAIL  src/components/OpenedFileView.test.tsx > invalidates the receipt on changed version
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:286:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > discards HTML inspection completed after hiding, with explicit retry on return
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:297:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > never revives the old inspection after A to B to A selection changes
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:314:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not inspect or open an initially inactive selection
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:334:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > discards a delayed text result on unmount
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:343:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > copies only after explicit destination selection and passes the exact receipt
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:353:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > never copies after the destination picker returns to a hidden view
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:367:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > invalidates displayed text and file actions after a delivery failure
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:381:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > retains a completed text view across hiding without automatically reading it again
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:390:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > explicitly rereads the disk file and replaces the displayed version without launching anything
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:419:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > appends whole-file feedback once to the original composer and preserves its send protections
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:433:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps the earlier version's opinion separate after a refresh and exposes the existing saved-draft control
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:478:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > restores the same unsent opinion after rereading the unchanged version
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:516:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when hidden without losing the original opinion
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when task changed without losing the original opinion
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when unmounted without losing the original opinion
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when refreshing without losing the original opinion
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when refresh failed without losing the original opinion
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale feedback form or editor when new version without losing the original opinion
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:541:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps text-feedback and reread controls out of project.html delivery
+ FAIL  src/components/OpenedFileView.test.tsx > keeps text-feedback and reread controls out of archive.zip delivery
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:585:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not move a blank opinion into the composer even if the form is submitted directly
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:593:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > loads visual bytes from the exact verified receipt and offers a fresh read
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:610:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not display mismatched or late visual bytes from a prior selection
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ src/components/OpenedFileView.test.tsx:630:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps verified external-file actions when a large image cannot be previewed
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:650:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > never hands a changed visual receipt to the renderer
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ src/components/OpenedFileView.test.tsx:665:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > offers PDF feedback only from a rendered current page and preserves its chosen page across navigation
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ visualReady src/components/OpenedFileView.test.tsx:685:9
+ ❯ src/components/OpenedFileView.test.tsx:698:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps a current visual opinion reachable when the page fails, but removes the current-page option
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ visualReady src/components/OpenedFileView.test.tsx:685:9
+ ❯ src/components/OpenedFileView.test.tsx:721:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/42]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > does not accept a visible-page report from another source or after hiding
+TypeError: Cannot read properties of null (reading 'location')
+ ❯ Module.OpenedFileView src/components/OpenedFileView.tsx:366:25
+    364|   const visualLocation =
+    365|     active && shown.visual === visualReadiness?.source
+    366|       ? visualReadiness.location
+       |                         ^
+    367|       : null;
+    368|   const supportsFeedback =
+ ❯ render src/components/OpenedFileView.test.tsx:107:16
+ ❯ ready src/components/OpenedFileView.test.tsx:131:3
+ ❯ visualReady src/components/OpenedFileView.test.tsx:685:9
+ ❯ src/components/OpenedFileView.test.tsx:735:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/42]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  42 failed | 23 passed (65)
+   Start at  21:36:51
+   Duration  309ms (transform 226ms, setup 0ms, import 402ms, tests 47ms, environment 0ms)
+

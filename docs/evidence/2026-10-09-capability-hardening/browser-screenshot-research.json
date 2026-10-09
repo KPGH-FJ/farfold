@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-10-09",
+  "kind": "read-only-official-surface-and-source-research",
+  "planItems": ["P26", "P27", "H07"],
+  "status": "research-complete-implementation-not-started",
+  "scope": {
+    "authorized": "现有获准公开网页的生产截图能力调查；只新增本研究 JSON。",
+    "performed": [
+      "读取当前产品契约、活动计划和相关源码",
+      "核查 Apple、Microsoft、Chrome DevTools 官方资料及本机 SDK 头文件",
+      "与 architecture 讨论反例"
+    ],
+    "notPerformed": [
+      "未修改生产源码、契约、计划或依赖",
+      "未启动正式应用、真实 Agent 或账号操作",
+      "未申请或改变系统权限",
+      "未运行 macOS 或 Windows 截图探针",
+      "未把已有内部截图测试重算为本次通过"
+    ]
+  },
+  "conclusion": {
+    "numberCorrection": "P26 是观察、点击和普通输入；生产截图缺口是 P27。",
+    "currentMac": "本机 macOS 15.6 / SDK 15.5 已有官方 WKWebView 截图接口，但没有本次核到的公开封闭 Shadow DOM 检查能力。源码的生产禁用有明确保护依据，不能仅接通已有内部截图函数或增加确认弹窗便开放。",
+    "officialNewMacSurface": "官方 WKContentWorld.Configuration.allowAccessingClosedShadowRoots 和 worldWithConfiguration: 的最低系统为 macOS 27.0。该能力只是可能补足结构检查的必要条件；并不保证检查与像素捕获原子一致。",
+    "windows": "当前依赖已提供官方 ICoreWebView2.CapturePreview；同一自有 WebView2 的官方 CDP DOM 接口可作为封闭结构检查候选。尚无 Windows 实际浏览器、运行时与敏感输入反例证明，不宣称可安全启用。",
+    "deliverableCandidate": "共用请求与许可层分离是否需要复核、是否会修改页面；配合实际平台保护能力、公开来源类型、单次取消租约和同一观察身份，再复用现有 MCP image 交付。保护或画面归属不能可靠建立时仍返回明确 unavailable。",
+    "notACompletionDecision": "本研究不自行将 P27 标成完成或后置；父任务根据实际平台条件和验证结果安排下一包。"
+  },
+  "contract": [
+    {
+      "evidence": "PRODUCT.md:181",
+      "constraint": "当前公开页打开、读取、关闭与切页撤回分别成立；手动浏览、工具准备、许可和实际调用不能互相代替。"
+    },
+    {
+      "evidence": "PRODUCT.md:185",
+      "constraint": "取消或错误不能虚构确定回执；未知结果保留未知。"
+    },
+    {
+      "evidence": "PRODUCT.md:191",
+      "constraint": "独立空环境、单任务可见授权、单控制者；敏感输入期间停止读取、写入、观察和历史回流。旧监听、缓存、截图及迟到结果不得继续提供。"
+    },
+    {
+      "evidence": "PRODUCT.md:192",
+      "constraint": "不复制登录资料，不绕过网站保护，不把浏览器建设扩大为账号、付款或持久访问授权。"
+    },
+    {
+      "evidence": "PRODUCT.md:193",
+      "constraint": "公开页临时存储，不建立页面、模型或工具正文账本。"
+    },
+    {
+      "evidence": "plans/agent-access.md:189",
+      "constraint": "生产截图必须实际交给 Agent，可靠处理或拒绝受保护输入与封闭内容；内部截图或参数声明不算完成。"
+    }
+  ],
+  "currentImplementation": [
+    {
+      "id": "three-production-blocks",
+      "detail": "Observe{screenshot:true} 参数存在，但 browser_tools 调 native 时固定 false 并返回 unavailable；native 再次固定 false；complete_observation 还会剥除意外 captured 图片。不是遗漏一个按钮。",
+      "evidence": [
+        "src-tauri/src/browser_workspace/browser_tools.rs:202",
+        "src-tauri/src/browser_workspace/browser_tools.rs:307",
+        "src-tauri/src/browser_workspace/native.rs:687"
+      ]
+    },
+    {
+      "id": "internal-mac-snapshot",
+      "detail": "内部函数采用 WKSnapshotConfiguration 当前 view.bounds、afterScreenUpdates 和 takeSnapshot；检查相同请求、导航、URL，随后再检查 documentVersion 和保护状态。最大边 1024、PNG 300000 字节；仍不构成生产开放或完整保护证明。",
+      "evidence": [
+        "src-tauri/native/BrowserWorkspace.m:600",
+        "src-tauri/native/BrowserWorkspace.m:616"
+      ]
+    },
+    {
+      "id": "closed-root-gap",
+      "detail": "当前 isolated world 只可通过 element.shadowRoot 发现开放根；扫描上限 4000，已有输入和框架拒绝。不可见封闭根可能承载受保护内容，当前 worldWithName 无公开检查手段。",
+      "evidence": [
+        "src-tauri/native/BrowserWorkspace.m:586",
+        "src-tauri/native/browser_observation.js:67",
+        "src-tauri/native/browser_observation.js:155",
+        "src-tauri/native/browser_observation.js:164"
+      ]
+    },
+    {
+      "id": "review-is-not-mutation",
+      "detail": "control() 仅 Click/Input。截图 review 元信息和共用 UI 字符串已存在，但 permission dispatcher 只给 control 请求生成单次操作 review；transport 对非 control 直接复用有效文字 grant。因此当前像素解除禁用之前必须补独立 requiresReview 分类。不能把 Observe 直接变成 control，因为控制请求的 unknown/applied 语义用于写入动作。",
+      "evidence": [
+        "src-tauri/src/browser_workspace/browser_tools.rs:90",
+        "src-tauri/src/browser_workspace/browser_tools.rs:159",
+        "src-tauri/src/browser_sharing.rs:451",
+        "src-tauri/src/browser_sharing/transport.rs:537",
+        "src-tauri/src/browser_sharing/transport.rs:326",
+        "src/runtime/browser_sharing_strings.ts:4",
+        "src/components/BrowserReadRequest.tsx:41"
+      ]
+    },
+    {
+      "id": "scope-is-broader-than-public",
+      "detail": "shareable 已覆盖目录和开发服务预览。P27 本片若限公开页，须检查实际来源类型与现有公开 URL 策略，不能仅判断 shareable 或 URL 字符串。现有公开 URL 检查也不等于 DNS 沙箱或完整登录检测。",
+      "evidence": [
+        "src-tauri/src/browser_workspace/preview_commands.rs:27",
+        "src-tauri/src/browser_workspace/policy.rs:12",
+        "src-tauri/src/browser_workspace.rs:363"
+      ]
+    },
+    {
+      "id": "request-and-delivery-reuse",
+      "detail": "现有 PageReadLease、one_shot 与精确请求取消可复用；最终非阻塞输出逐次受租约检查。MCP 已能将 screenshot.data 从文字/structured 表示移出，单独生成 image content。运输最大响应 600000 字节，需计算完整编码体，不能只看 PNG 大小。",
+      "evidence": [
+        "src-tauri/src/browser_workspace/page_read.rs:122",
+        "src-tauri/src/browser_workspace/page_read.rs:166",
+        "src-tauri/src/browser_sharing/protocol.rs:200",
+        "src-tauri/src/browser_sharing/transport.rs:26",
+        "src-tauri/src/browser_sharing/transport.rs:280"
+      ]
+    },
+    {
+      "id": "visibility-and-retirement",
+      "detail": "当前 hide 保留普通读取许可；mac operationLive 不检查 view 可见性。截图需额外限定可见且尺寸有效，不自动展示隐藏页面，也不因此撤销普通文字许可。取消或超时必须清退自己的 native pending slot，迟到回调不能清掉新操作。仅丢弃 Rust Future 不等于 native 槽已释放。",
+      "evidence": [
+        "src-tauri/native/BrowserWorkspace.m:540",
+        "src-tauri/native/BrowserWorkspace.m:600",
+        "src-tauri/src/browser_workspace/windows/mod.rs:511",
+        "src-tauri/src/browser_workspace/windows/observation.rs:118",
+        "src-tauri/src/browser_sharing/transport.rs:280"
+      ]
+    },
+    {
+      "id": "windows-not-implemented",
+      "detail": "Windows 现 observe 同样忽略 screenshot 参数；已有独立 app-owned WebView2、固定 CDP 调用、isolated realm、精确 pending operation id 与导航校验，尚未调用 CapturePreview。",
+      "evidence": [
+        "src-tauri/src/browser_workspace/windows/mod.rs:576",
+        "src-tauri/src/browser_workspace/windows/observation.rs:7",
+        "src-tauri/src/browser_workspace/windows/observation.rs:82",
+        "src-tauri/src/browser_workspace/windows/observation.rs:137"
+      ]
+    }
+  ],
+  "officialSources": [
+    {
+      "id": "apple-snapshot",
+      "urls": [
+        "https://developer.apple.com/documentation/webkit/wkwebview/takesnapshot(with:completionhandler:)",
+        "https://developer.apple.com/documentation/webkit/wksnapshotconfiguration"
+      ],
+      "verified": "WKWebView.takeSnapshot 与 WKSnapshotConfiguration 可截取自有网页视图；本机 Apple SDK 头文件标记 macOS 10.13 起，afterScreenUpdates 为 macOS 10.15 起。",
+      "localEvidence": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKWebView.h:421",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/WebKit.framework/Headers/WKSnapshotConfiguration.h:34"
+      ],
+      "limit": "接口可截图不意味着可以识别封闭根中的受保护内容，也不证明 DOM 检查和截图属于原子画面。"
+    },
+    {
+      "id": "apple-public-closed-shadow-access",
+      "urls": [
+        "https://developer.apple.com/documentation/webkit/wkcontentworld/configuration",
+        "https://developer.apple.com/documentation/webkit/wkcontentworld/configuration/allowaccessingclosedshadowroots",
+        "https://developer.apple.com/tutorials/data/documentation/webkit/wkcontentworld/configuration.json",
+        "https://developer.apple.com/tutorials/data/documentation/webkit/wkcontentworld/configuration/allowaccessingclosedshadowroots.json",
+        "https://raw.githubusercontent.com/WebKit/WebKit/main/Source/WebKit/UIProcess/API/Cocoa/WKContentWorldConfiguration.h",
+        "https://raw.githubusercontent.com/WebKit/WebKit/main/Source/WebKit/UIProcess/API/Cocoa/WKContentWorld.h"
+      ],
+      "verified": "官方 DocC 元数据 introducedAt=27.0；公开 Objective-C WKContentWorldConfiguration 为 macOS 27.0，allowAccessingClosedShadowRoots 可让该 world 的脚本把封闭根视为开放根；worldWithConfiguration: 也要求 macOS 27.0。该 world 必须保留对象，不能用 name 找回。",
+      "limit": "本机 OS 15.6 / SDK 15.5 不具备；不是批准升级系统或依赖。当前属性名是 allowAccessingClosedShadowRoots，不使用旧搜索结果中的名称或私有 _WK 配置。"
+    },
+    {
+      "id": "microsoft-capture-preview",
+      "urls": [
+        "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2?view=webview2-1.0.3537.50#capturepreview",
+        "https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2capturepreviewcompletedhandler?view=webview2-1.0.4129.50",
+        "https://learn.microsoft.com/en-us/microsoft-edge/webview2/release-notes/sdk/0-9-430"
+      ],
+      "verified": "ICoreWebView2.CapturePreview 使用格式、IStream 和异步完成回调。官方说明首次 ContentLoading 前失败；后续导航的 ContentLoading 前可能截到离开的页面。接口文档起点 SDK 0.9.430，该历史 SDK 要求 Edge Runtime 82.0.430.0。",
+      "localEvidence": [
+        "src-tauri/Cargo.toml:45",
+        "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-sys-0.38.2/src/bindings.rs:1376",
+        "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/webview2-com-0.38.2/src/callback.rs:304"
+      ],
+      "limit": "这是历史 API 最低信息，不是 Farfold Windows 最低版本声明，也不是已在 Windows 运行验证。当前精确依赖已提供绑定，无需为取得该入口升级。"
+    },
+    {
+      "id": "microsoft-native-versus-screen-capture",
+      "urls": [
+        "https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/overview-features-apis"
+      ],
+      "verified": "官方列表分别列出自有 WebView 的 CapturePreview 与网页屏幕捕获事件。候选路径只调用 app-owned WebView 的原生截图，不调用 getDisplayMedia、不启动桌面录屏。",
+      "limit": "不对未实测 Windows 的系统交互作超出 API 范围的保证。"
+    },
+    {
+      "id": "cdp-dom-structure",
+      "urls": [
+        "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/json/browser_protocol.json"
+      ],
+      "verified": "官方 schema 的 DOM.getDocument 支持 depth=-1 与 pierce=true，遍历 iframe 与 shadow root；Node 包含 shadowRoots、contentDocument，shadowRootType 区分 user-agent/open/closed。getDocument 会启用 DOM 事件。shadowRootPushed/Popped 为 experimental，不能作为唯一保证。",
+      "candidate": "在现有同一 WebView2 的固定 CallDevToolsProtocolMethod 接口内读取有界结构，仅派生允许/拒绝信号；不把原始 DOM 结果写日志、持久化或交给 Agent。首片保守拒绝任何 shadow root、嵌入 frame、编辑控件和无法检查区域。",
+      "limit": "master schema 不是任一已装运行时能力保证；须处理实际不支持/错误/截断，并用封闭根与声明式封闭根反例验证。不能拿含输入值的 DOMSnapshot 或另一浏览器来代替。"
+    }
+  ],
+  "environment": {
+    "hostOS": "macOS 15.6",
+    "installedSDK": "macOS 15.5 CommandLineTools SDK",
+    "existingBuildMinimum": "src-tauri/build.rs:48 当前设置 macOS 11.0；与已有 WKContentWorld 使用一致。新截图接口本身不要求提高该最低版本。",
+    "windowsRuntime": "未测试；本机无 Windows 运行时验证",
+    "upgradesPerformed": false
+  },
+  "smallestCoherentCandidate": [
+    {
+      "step": 1,
+      "title": "先证明平台保护能力，再开放可见入口",
+      "implementation": "macOS 使用公开 typed SDK 27+ 与实际 @available 检查创建单独 guard world，仅启用 closed-root 可见能力，不启用其他额外能力；旧系统保持 unavailable。Windows 使用同一自有 core 的官方固定 DOM 结构调用和 CapturePreview。实际保护探测不可用、数据不完整或不确定均不提供图片。",
+      "boundary": "不是提高整个应用最低版本的决定；平台能力有了仍需后续敏感像素与异步一致性验证。"
+    },
+    {
+      "step": 2,
+      "title": "复用共用确认组件，拆分授权和页面修改语义",
+      "implementation": "ToolRequest 增加独立 requires_review / may_mutate 判断；Observe 截图需要已成立的当前页文字许可及一次明确截图复核，使用已有 screenshot review UI 与一次性 lease。复用文字许可不绕过截图复核；截图取消没有 applied/网页操作未知语义。",
+      "boundary": "确认只表达用户意图，绝不替代保护检查；没有已有文字 grant 时提示先允许当前页读取，不悄悄升级已有许可。"
+    },
+    {
+      "step": 3,
+      "title": "限定来源、可见区域与精确请求身份",
+      "implementation": "只允许实际 Public 来源，校验同 task/browser/native navigation/URL/有效 read ticket、可见且尺寸非零的当前 viewport。新观察先清旧 refs；整条请求由唯一 request id 与一次性 lease 管理。不会自动打开、显示、切页或滚动。",
+      "boundary": "目录与开发服务可读取不自动成为本片截图范围；hide 只取消本次截图资格，不撤销已有普通读取许可。"
+    },
+    {
+      "step": 4,
+      "title": "保护扫描与有界内存截图",
+      "implementation": "固定 app-owned guard 只产生结构判定；发现受保护输入沿用阻断/撤回。任何无法排除的封闭内容、frame、可编辑区域或动态画面返回 unavailable。通过后调用官方 owned-view 截图，使用有界内存缓冲，不落临时图片文件。Windows IStream 写入须有上限，不能先无限分配再检查。",
+      "boundary": "不向 Agent 暴露新增闭根文本，不提供任意 JS/CDP 执行，不创建第二个浏览器或 Agent 循环。"
+    },
+    {
+      "step": 5,
+      "title": "捕获后再次验证并精确退场",
+      "implementation": "回调核请求身份、lease、来源、导航、URL、可见性、尺寸与保护状态；超时或取消只退场自己的 native slot，迟到回调丢弃。读取失败不重试，任何确认不足都不提供像素。",
+      "boundary": "首末 DOM 和 geometry 相同不能证明截图帧安全。必须先关闭下述动态画面反例，不能把此步骤描述为原子截图保证。"
+    },
+    {
+      "step": 6,
+      "title": "沿既有 image 回执交付，验证完整体积与终态",
+      "implementation": "确认 PNG 格式、实际像素尺寸和完整编码响应预算；按现有 protocol::snapshot 仅在 MCP image content 中提供一次图片，文字含同一次 observationId、页面身份、时间、viewport 范围和截图状态。末端写入继续逐次检查 lease。",
+      "boundary": "当前 1024 像素边、300000 字节 PNG、600000 字节完整响应仅是现有内部/传输上限，应以较严约束交集验证。字节已经交给 Agent 后不能收回，停止共享只阻止未来读取和未交付结果。"
+    }
+  ],
+  "unresolvedFeasibilityGate": {
+    "reviewer": "architecture 的独立只读反例，已纳入本结论；未要求其运行实验。",
+    "counterexample": "CSS 动画、canvas 绘制、视频帧、纯 property 赋值或 CSSOM 修改不一定触发当前 MutationObserver；封闭根也可能在检查之间创建又消失。首末 DOM/version/geometry 相等不保证捕获瞬间不存在敏感像素。",
+    "requiredResolution": "必须明确可证明的支持范围，并用实际生产平台受控反例确认无法核实的画面会被拒绝。仅增加 canvas/video/animation 名称黑名单也不构成完备证明；如果官方接口不能提供可靠关联和保护证据，继续 unavailable，准确记录阻断。",
+    "currentStatus": "本轮仅调查，没有证明该条件已满足。"
+  },
+  "failureAndRevocation": [
+    {
+      "trigger": "取消等待确认",
+      "required": "精确结束该请求，不截图、不消耗其他请求授权，不自动重试。"
+    },
+    {
+      "trigger": "捕获中取消或超时",
+      "required": "取消自己的 lease 与 native pending slot；迟到成功不输出、不恢复资格；随后合法请求不会被旧 slot 永久阻塞。"
+    },
+    {
+      "trigger": "导航、同 URL 文档替换、重定向、关闭、连接结束或停止共享",
+      "required": "原 scope 失效；尚未交付图片与文字均不得返回；部分运输帧不能伪装成新成功。"
+    },
+    {
+      "trigger": "隐藏或切任务",
+      "required": "不自动展示页面；当前截图不能继续以可见 viewport 成功回执，普通读取许可按既有产品语义保留。"
+    },
+    {
+      "trigger": "保护输入、登录态改变或 guard 不完整",
+      "required": "已知受保护状态沿现有路径撤回；未知检查仅返回 unavailable，不输出图像。不能新弹窗覆盖保护。"
+    },
+    {
+      "trigger": "滚动、尺寸或像素比例变化",
+      "required": "当前 observation/viewport 关联失效或明确重新观察；不沿旧 refs 点击，不隐式补拍。"
+    },
+    {
+      "trigger": "截图接口失败、畸形 PNG、超预算或无法确认完成",
+      "required": "保留准确 unavailable/未确认状态，图片不返回。只有仍有效的原文字范围才能提供文字；取消或撤回时不能借降级返回页面正文。"
+    }
+  ],
+  "requiredValidation": [
+    "先保留当前生产 hard-block 反例，再验证获准静态公开页经正式工具返回实际 image content，像素标记、尺寸与 observationId 同属一次观察。",
+    "已有文字许可不能免去截图单次复核；取消或拒绝后不能由第二个相同请求复用旧确认。",
+    "普通、已填写、password/autocomplete 敏感字段，开放/封闭/声明式封闭 Shadow DOM，以及 iframe/object/embed 都有受控禁止样本。",
+    "在 guard 前后及 snapshot 执行间创建/删除控件或闭根；CSSOM、CSS 动画、canvas、video、property-only 改变使用敏感 canary，失败时图像、文字、日志和缓存均不可出现 canary。",
+    "导航中 CapturePreview 旧页行为、同 URL reload、redirect、切页、关闭、连接结束和停止共享分别断言旧结果不能返回。",
+    "隐藏后和尺寸为零不得截图；隐藏/返回仍保留普通读取范围，不能暗自打开隐藏页。",
+    "滚动、resize、DPI/backing scale 变化与手动用户活动使像素/节点关联明确失效；不把 dispatch 当网页完成。",
+    "取消覆盖确认前、native 执行中、回调后队列中、部分输出；只有本请求 slot 被清退，迟到回调不影响下一请求。",
+    "hung capture 有界超时后立即新请求可执行；原回调随后到达不能重新发送或覆盖新的 observation。",
+    "PNG 头与实际解码尺寸、base64 长度、颜色转换失败、最大 viewport 和完整 MCP 600000 字节边界均拒绝或明确 unavailable；无无界分配和临时图片落盘。",
+    "Public 与目录/开发服务/单 HTML 来源矩阵，拒绝本片未授权来源，文字许可现有行为不回退。",
+    "macOS 15.6 继续明确 unavailable；macOS 27+ 正式 SDK/runtime 路径及实际 Windows WebView2 路径分别实测，不能互相替代。",
+    "真实安装版和 Agent image 接收由父任务按授权执行；模块或内部 FFI 测试不冒称生产和全部 29 家完成。"
+  ],
+  "prospectiveSourceOwnership": {
+    "common": [
+      "src-tauri/src/browser_workspace/browser_tools.rs",
+      "src-tauri/src/browser_workspace/page_read.rs",
+      "src-tauri/src/browser_sharing.rs",
+      "src-tauri/src/browser_sharing/transport.rs",
+      "src-tauri/src/browser_sharing/protocol.rs",
+      "src-tauri/src/browser_sharing/permission.rs"
+    ],
+    "macOS": [
+      "src-tauri/native/BrowserWorkspace.m",
+      "src-tauri/native/browser_observation.js",
+      "src-tauri/src/browser_workspace/native.rs"
+    ],
+    "windows": [
+      "src-tauri/src/browser_workspace/windows/mod.rs",
+      "src-tauri/src/browser_workspace/windows/observation.rs"
+    ],
+    "ui": "优先复用 BrowserReadRequest 与集中 screenshot 字符串；只有确需表达准确状态时修改共用组件，不加 Agent 品牌分支。",
+    "note": "这些只是候选接线位置，本轮一个也未修改。"
+  },
+  "nextDecision": "当前 Mac 不具备公开闭根检查 API，且任一平台还缺画面一致性证明。可先在拥有 SDK/runtime 的受控环境验证官方保护路径；条件不满足就准确保留生产禁用。不能以 Web Inspector/私有 SPI、外部浏览器截图、系统录屏、新确认弹窗或第二控制器绕过。",
+  "sourceCheckpoint": {
+    "recordedAtUTC": "2026-10-09T14:41:30.548606+00:00",
+    "meaning": "本次研究读取位置的当前散列；不是安装版、测试或未来实现冻结证明。",
+    "files": {
+      "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "plans/agent-access.md": "a35f3717d59c133ae0855328f3fd34f09a85325b337600148fa187474d0084c6",
+      "src-tauri/Cargo.toml": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b",
+      "src-tauri/build.rs": "3cfd26a3c287abeaf2818c622cdf6fb9409039d8576954dc1f4b961e0d710967",
+      "src-tauri/native/BrowserWorkspace.m": "7dd61e561dd80c38e27be138abdbdb4686535b0c3b7bd5e7bd82e4e7428f67a5",
+      "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+      "src-tauri/src/browser_sharing.rs": "53862ae2b22a59873f17468a19d3f14537271ec943f2d84aca9303d997f60b03",
+      "src-tauri/src/browser_sharing/permission.rs": "cf6ac4de82bf2cc99ad3195d66ae442029fa573e793544cc857c69c422df0a24",
+      "src-tauri/src/browser_sharing/protocol.rs": "b43f435f45bbe4e32665c1413adf7b3ae65f6ec144294fc960e69670eb95f3c5",
+      "src-tauri/src/browser_sharing/transport.rs": "42b18294440a4800466745df0f9e95084822b988d63857cdc0593aa8a1416ec8",
+      "src-tauri/src/browser_workspace.rs": "6be7d5c954af55bcacd6945f90b29efc388683f064b345436773e13d79308070",
+      "src-tauri/src/browser_workspace/browser_tools.rs": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+      "src-tauri/src/browser_workspace/native.rs": "d2f0aa1e4363a64e7a0b7d169f4344aa6cedccec0a84963f4ba6c60934843779",
+      "src-tauri/src/browser_workspace/page_read.rs": "0e0b5b25cef09508b0ddbfe37a47ae0cf37122191f6de70cbbdea88b983a6ffa",
+      "src-tauri/src/browser_workspace/policy.rs": "b6f5e572d1329fccdfeac8228eaf7bfeb86033ec77ea4171ae45af7af70ff088",
+      "src-tauri/src/browser_workspace/preview_commands.rs": "c1484d7f144e47adee24938c4c90d7ba18c85e8d3acee1b4d7bbadd011bfff8c",
+      "src-tauri/src/browser_workspace/windows/mod.rs": "c026fe732c333d23c936d7881d5cd858ef3a2779a729debaa2071a0281b16769",
+      "src-tauri/src/browser_workspace/windows/observation.rs": "77a0a052650102034723f46b16197a56ef914ba044518be248ad378e4f8cb1d3",
+      "src/components/BrowserReadRequest.tsx": "f8cba0b5bb660d4f0e7273bd9cdb679a7e94d6d7c021089fb96d7d78797b0312",
+      "src/runtime/browser_sharing_strings.ts": "80dd72d5b08a25c353412dbfaf55dbce7c0444279a5eb9186e278940fa56517e"
+    }
+  }
+}

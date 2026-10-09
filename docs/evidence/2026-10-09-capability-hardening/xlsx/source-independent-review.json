@@ -1,0 +1,284 @@
+{
+  "checkedAtUtc": "2026-10-09T14:25:04.954266+00:00",
+  "status": "independent_read_only_review_completed_no_blocker_in_frozen_scope",
+  "reviewer": "verification subagent; implementation by root and architecture, real browser execution by product_coverage",
+  "scope": "Final root 11 source inputs, XLSX core ownership/resource/data boundaries and retained browser evidence. P21 original checkpoint remains unchanged; XLSX increments in OpenedFileView/test are reviewed here.",
+  "sourceBase": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "findings": [],
+  "sourceChecks": {
+    "rootInputs": {
+      "matched": 11,
+      "total": 11,
+      "files": [
+        {
+          "path": "src/components/ThreadPage.tsx",
+          "sha256": "ccdc0618c3355575a859c0ce8d2fdcae56a9ffbe4d7ddfcd2f913f1d18d20a5d"
+        },
+        {
+          "path": "src/product-shell.css",
+          "sha256": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8"
+        },
+        {
+          "path": "src/runtime/export_strings.ts",
+          "sha256": "bc693440a82959e5466ba73b05b12fb8760ef744a83f1b6ad53aec59320bda8b"
+        },
+        {
+          "path": "src/components/WorkbookFilePreview.tsx",
+          "sha256": "82593277c9bcf3edd4f5b8476d95323aecd5d957c6cc7a3f7cb9b86c47ded713"
+        },
+        {
+          "path": "src/components/WorkbookFilePreview.css",
+          "sha256": "5f923a70e58f0a2e4e34857d5965963b9ca234adefff66a1097faf8c4a8ea445"
+        },
+        {
+          "path": "src/runtime/workbook_view.ts",
+          "sha256": "bbd6906a1b5780931c91fa6a7372b07e6483c344f84798d4e6554eb116d43129"
+        },
+        {
+          "path": "src/runtime/workbook_view.test.ts",
+          "sha256": "85fe7854d369172ae46ebdc3480dc822337f469eb93fe904efe6f97acddbfe9f"
+        },
+        {
+          "path": "src/runtime/workbook_strings.ts",
+          "sha256": "22d61ee92f090a760d4d24af7b7a92f60826ec34850f0c50ea0f8a4a328f2683"
+        },
+        {
+          "path": "src/runtime/strings.test.ts",
+          "sha256": "2b04d6771fc0917ec48124649f9e1e1df759e044d404334b3f0da2aa9e9d0bdb"
+        },
+        {
+          "path": "src/components/OpenedFileView.tsx",
+          "sha256": "26160eb75d5f46c7399ed6c6cd253e9fe83f37dd7d8cd0679f0fa6c121e157ac"
+        },
+        {
+          "path": "src/components/OpenedFileView.test.tsx",
+          "sha256": "2e2e69ef2bf33ae2add9f2c67504d01885d7d49c4c4295c6369882b1025475ea"
+        }
+      ]
+    },
+    "coreInputs": {
+      "matched": 24,
+      "total": 24,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-core.json",
+        "sha256": "bae08b8ef0b6ff0ab160d20478ccb9f5a58e2c6cd98e2989ccce17b4e46b400d"
+      },
+      "note": "All 24 paths/hashes match current source/package/lock/fixture/notices; not all were independently audited line by line. Core review focused on file capture, IPC, XML/selected-sheet parser and worker lifecycle."
+    },
+    "browserInputs": {
+      "matched": 16,
+      "total": 16,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-review.json",
+        "sha256": "5e6f2a6554850a60ede555d72bf8ea352b5b70faaaae9b953efc5b52a897fe29"
+      }
+    },
+    "coreProofHashes": {
+      "matched": 20,
+      "total": 20
+    },
+    "browserEvidenceHashes": {
+      "matched": 18,
+      "total": 18
+    },
+    "priorP21TestRetention": {
+      "result": "passed",
+      "method": "In-memory removal of only the new WorkbookFilePreview mock and two XLSX routing tests reconstructs the exact prior P21 file hash. No source rewrite performed.",
+      "sha256": "e86ff136a2c5671613e1bce1802921da2c22408f822790910268e13bb6082337"
+    }
+  },
+  "reviewedAreas": [
+    {
+      "area": "Async ownership and cancellation",
+      "locations": [
+        "src/components/WorkbookFilePreview.tsx:87",
+        "src/runtime/xlsx_preview.ts:137"
+      ],
+      "result": "Only surviving layout-effect owner proceeds after microtask; exact file object/current controller/active checks run before capture use and result publish. Cancel/hide/replacement aborts old owner. Worker dispose is synchronous and idempotent, so immediate replacement can acquire slot; late messages stop at settled. Native capture cancellation discards the wait only; actual bounded OS work keeps its backend admission until it returns."
+    },
+    {
+      "area": "Navigation, merge and hidden metadata",
+      "locations": [
+        "src/runtime/workbook_view.ts:62",
+        "src/components/WorkbookFilePreview.tsx:450"
+      ],
+      "result": "Viewport allocates at most 100x24 coordinate positions; sparse far cell never allocates preceding dimensions. Clipped merges carry original anchor and full extent; default style fallback uses merge.fromRow/fromColumn. Hidden anchor removes value/runs and detail until explicit show-hidden, and rehiding clears selection. Sheet change uses existing captured version and selected-sheet match; refresh remounts with exact identity/version/hash."
+    },
+    {
+      "area": "Values and formatting",
+      "locations": [
+        "src/components/WorkbookFilePreview.tsx:32",
+        "src/components/WorkbookFilePreview.tsx:470",
+        "src/runtime/xlsx_sheet.ts:104"
+      ],
+      "result": "Nullish display selection retains 0/false/empty text independently; detail distinguishes blank display/saved empty text/missing formula cache. Empty/shared formula body maps to null and explicit unavailable-text wording, not reconstructed formula. Rich runs render only when formatted display equals typed text and joined run text; hidden/custom formatted values therefore remain authoritative."
+    },
+    {
+      "area": "Styles and layout",
+      "locations": [
+        "src/runtime/workbook_view.ts:163",
+        "src/components/WorkbookFilePreview.tsx:481",
+        "src/components/WorkbookFilePreview.css:42"
+      ],
+      "result": "Explicit false font switches emit normal/400/none. Decoration is not placed on ancestor td; each rich run merges base font and run font, allowing explicit off. Table has computed bounded numeric width; grid scroll contains it, cells clip and full detail scrolls. Color allowlist and quoted cleaned font names prevent CSS text injection. Browser workload confirms 32k text does not expand the document horizontally."
+    },
+    {
+      "area": "Parser structural budgets",
+      "locations": [
+        "src/runtime/xlsx_sheet.ts:39",
+        "src/runtime/xlsx_sheet.ts:274",
+        "src/runtime/xlsx_xstring.ts:1",
+        "src/runtime/xlsx_xml.ts:113"
+      ],
+      "result": "ST_Xstring decoded once per original field/run; unknown rich child rejects rather than inventing empty text. Both logical text and repeated rich-run counts are bounded, including empty runs. XML rejects DTD and enforces size/nodes/depth/attributes. Sparse selected-sheet cells/merges/styles are bounded; no formula/URL execution. These are logical limits, not a hard OS heap guarantee."
+    },
+    {
+      "area": "Rust and Tauri boundary",
+      "locations": [
+        "src-tauri/src/file_delivery/workbook.rs:66",
+        "src-tauri/src/file_delivery_commands.rs:72",
+        "src-tauri/src/file_read_check.rs:60"
+      ],
+      "result": "read_workbook uses capture_expected of the selected VerifiedFile, no extraction. Archive directory preflight precedes ZIP indexing, validates bounded headers/names/overlaps; all entries read with actual decompression caps and CRC, including ignored binary entries. Command requires main webview and existing bounded read-check; fixed structured error codes distinguish unknown read, changed, limit, encrypted, pending and busy. No new file write or Agent permission path."
+    },
+    {
+      "area": "Other root changes",
+      "locations": [
+        "src/components/ThreadPage.tsx:251",
+        "src/product-shell.css:437",
+        "src/runtime/export_strings.ts:10"
+      ],
+      "result": "Search close restores trigger focus; scoped sr-only hides accessible search label visually. Export copy now explicitly limits address redaction to attachment/tool source metadata while body remains original. Static changes do not themselves prove installed search/export acceptance."
+    }
+  ],
+  "closedCounterexamples": [
+    "Rich-text runs bypassing formatted prefix/hidden display: guarded equality and real browser checks pass.",
+    "Explicit false font/ancestor decoration: per-run styling and computed browser styles pass.",
+    "Repeated empty rich runs escaping text-only budget: outputRuns cap and retained valid red/final green.",
+    "Shared formula missing body displayed blank: parser null plus original UI 23/24 red becomes 38/38 final.",
+    "Immediately cancelled worker blocking next selection: synchronous dispose plus unit/actual Worker replacement checks pass.",
+    "Blank-cell default styles and clipped merge anchor fallback: metadata retained, UI original-anchor lookup; browser blank-style checks pass."
+  ],
+  "retainedValidation": {
+    "rootEntry": "3 test files / 63 passed. Original P21 assertions preserved byte-for-byte outside added workbook mock/two cases.",
+    "core": "3 frontend files / 48 passed; final TypeScript output successful. Rust archive 8 and read-check 5 passed before deletion of unused WorkbookError::message method; final clippy clean covers final Rust source. Not a freshly rerun final 13-test claim.",
+    "browser": "Product_coverage actual Chromium StrictMode final 38/38; 7 fixture capture IPC calls; 11 workers created/terminated, 9 ready. First UI retained 23 pass/1 fail for empty shared formula. JSONs match corresponding original stdout result objects.",
+    "screenshots": "Personally inspected three retained final screenshots showing typed/merged grid, explicitly selected hidden sheet and latest-version detail. No installed application viewed.",
+    "failureAttribution": "Architecture receipt preserves misleading green-named failure logs and invalid import/setup reds; this review uses explicit final outputs and does not reclassify those failures."
+  },
+  "executionAttribution": "This reviewer only read sources, retained logs/receipts/screenshots, checked hashes and reconstructed prior test bytes in memory. No test, browser, build, app, Agent or user-data operation; only this new evidence JSON written.",
+  "limits": [
+    "Source and controlled Chromium evidence, not installed WebKit/Windows/Tauri IPC or real user-file acceptance.",
+    "Browser mocks native capture only; native ZIP fixture-to-browser evidence is separately attributed to architecture, not a full installed journey.",
+    "No full Excel/Office fidelity: selected supported Transitional XLSX only; formula recalculation, charts, DOCX/PPTX, regions and editing remain outside scope.",
+    "Budgeted cells/runs/text do not promise OS hard memory limits or general performance across workbooks; one authored browser workload measured.",
+    "Core official-source/dependency claims are retained architecture evidence; this reviewer did not repeat external web research or reinstall dependencies.",
+    "Full seven repository checks, packaging, installation/data retention and installed UI remain root responsibilities."
+  ],
+  "evidenceRead": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/root-ui-implementation.json",
+      "sha256": "07ef9e5641800ba7595e35df23e95fdadc08140990e9ea4d9d309eb04f225dc6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-core.json",
+      "sha256": "bae08b8ef0b6ff0ab160d20478ccb9f5a58e2c6cd98e2989ccce17b4e46b400d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/independent-review.json",
+      "sha256": "5e6f2a6554850a60ede555d72bf8ea352b5b70faaaae9b953efc5b52a897fe29"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-entry-tests.txt",
+      "sha256": "4100201c152b3528c15a765cf176670bc5f664e24d71a861ea9fa1f8ff19b228"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-targeted.txt",
+      "sha256": "59a309d523ff1eda1ea09d32afc5dcdc8de7be385cd40e56084c1c60261d0b7b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-final-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-archive-final.txt",
+      "sha256": "4e07e89afc1bd33dfb3a3f4118c2ae3ca5326f29e8ffdb01cce44d3a0b328c71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-read-check-regression.txt",
+      "sha256": "303574d191d3b843e2e44295903df78c93baeefdce22d737fe49271aedcc6e05"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-clippy-clean.txt",
+      "sha256": "41ad8012d54eef911ad39cb791d9c64b1fbe8c2336b88a749e522023f6fea3aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.json",
+      "sha256": "c9ffaa23f945aca8b94e2ae6bc5200cc3246fb41e11645b947a74dad73eccdbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-first.txt",
+      "sha256": "43b2f03e9f3bcfdc4f9c03364bf38bff4393280eb4b852e71cab1aaa6f7bcb62"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.json",
+      "sha256": "8975c2d94702b38b2c43b0a5dd8399fe2b424f4c6f30461f84ab935b99856b27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-frozen.txt",
+      "sha256": "4b40c2f66c791298d05486f44a9c2ce09f44d5b3741a3c10ceef4b95b8a06b26"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/source-freeze.json",
+      "sha256": "84981765fa82865587d9bc35723c1e9b13592d97b6f77bf1a39e074741675a3c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-values-merged.png",
+      "sha256": "ebbd7b9793e36b0c76ddd8b87d13c43eb6763e87804ae98d97c9782dcff52606"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-hidden-sheet.png",
+      "sha256": "b67342374a03b44bdb63006acbcfba3232b95a977d36d03957c546dc5813ff71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx/ui-browser/ui-new-version.png",
+      "sha256": "19a5b3760b91be1126a3eb8a814ca2916556553f1a200fd2b51dae050ac336c4"
+    }
+  ],
+  "formatOnlyAddendum": {
+    "checkedAtUtc": "2026-10-09T14:26:51.847063+00:00",
+    "previousReceiptSHA256": "167ffaf53595b0bb2b31c3ed276087430b3984cb864d4a5a2f830213cfdefc9e",
+    "result": "Three Rust files differ only in six import/re-export ordering statements. In-memory reversal reconstructs each previously reviewed core-source byte hash exactly; no source written by reviewer.",
+    "files": [
+      {
+        "path": "src-tauri/src/file_delivery/workbook.rs",
+        "reviewedBeforeSHA256": "b2cd962444af831bfcac40975ba64898eced3d9d292acf40bb2aca680b95efd8",
+        "formattedSHA256": "d98bc6abd2d4df9fc6652fae7346348d1cb0749531a23812f1d11d1cd6b47a5f",
+        "reverseOnlyImportOrderMatchesPriorBytes": true
+      },
+      {
+        "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+        "reviewedBeforeSHA256": "824a66476c5d1b235acd546b6f6acf637ab4c669fd00594b4977d21fc40427c3",
+        "formattedSHA256": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608",
+        "reverseOnlyImportOrderMatchesPriorBytes": true
+      },
+      {
+        "path": "src-tauri/src/file_delivery.rs",
+        "reviewedBeforeSHA256": "2270995129776940348d340f1d8d793fd447d59a49f455ecec1b581353a01d7d",
+        "formattedSHA256": "7c2af4f16ca7de3d06dc7386810a16bd6cffc69b6cdee2c6cc495044f6619768",
+        "reverseOnlyImportOrderMatchesPriorBytes": true
+      }
+    ],
+    "evidence": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/seventh-checks/cargo-fmt.txt",
+        "sha256": "7cc31190c57f15fded23a505118b98988bafe17babd1483e40a3ec5bcb8e1b47"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/seventh-checks/rustfmt-repair.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "integrationBoundary": "Root reports initial full Rust run 1150 passed / 1 failed / 5 ignored; stdio endpoint failure remains under architecture investigation. This source-format addendum is not a full-check pass or a diagnosis of that failure. Historical xlsx-core receipt and prior review fields remain unchanged."
+  }
+}

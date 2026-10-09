@@ -1,0 +1,172 @@
+{
+  "checkedAtUtc": "2026-10-09T14:00:40.510471+00:00",
+  "capability": "P21 PDF file/page feedback and image file feedback; P16 parser initialization repair",
+  "status": "source_and_controlled_browser_verified_not_installed",
+  "implementation": [
+    "Optional pdf-page anchor persists only page/pageCount beside existing checked disk contentId, never file body; strict whole-snapshot parsing rejects unknown/contradictory metadata and leaves legacy line opinions valid.",
+    "Only successful matching PDF draw / loaded image enables new visual feedback; exact source object/current controller/current props/view gate readiness. Navigation/cancel/hide/failure withdraw current-page choice; explicit selected target and draft remain unchanged.",
+    "Existing draft take moves formatted path/digest/original page/version advice into original conversation composer in one unsent-work snapshot, preserving existing composer fields and queue; never sends to an Agent.",
+    "Image opinions are whole-file; PDF page target is explicit. Regions and workbook/document/slide anchors remain deferred.",
+    "PDF parser wrapper now statically imports diagnostic boundary first, then official parser. Queued first requests cannot run before listener registration. No wait-limit or cancellation relaxation."
+  ],
+  "validation": [
+    {
+      "evidence": "initial-red.txt",
+      "result": "20 failed / 45 passed in 3 files before implementation; effective missing-behavior red"
+    },
+    {
+      "evidence": "second-green.txt",
+      "result": "65 passed in 3 files"
+    },
+    {
+      "evidence": "expanded-green.txt",
+      "result": "123 passed in 9 files, including persistence/failure/legacy feedback"
+    },
+    {
+      "evidence": "targeted-final.txt",
+      "result": "179 passed in 17 files"
+    },
+    {
+      "evidence": "strings-and-parser-final.txt",
+      "result": "3 passed in 2 files after type-only module export; one parser test overlaps prior 179"
+    },
+    {
+      "evidence": "typecheck-final-fixed.txt",
+      "result": "passed; earlier TS2306 only new diagnostics helper needed export {}"
+    },
+    {
+      "evidence": "browser/browser-final.json",
+      "result": "20/20 assertions, real dev React StrictMode + actual PDF Worker/image load; fixed local inputs and 13 explicit fixture IPC calls only"
+    },
+    {
+      "evidence": "browser/browser-built-final.json",
+      "result": "20/20 assertions after Vite production bundling; 12 fixture IPC calls; production React does not double-run development StrictMode effects"
+    },
+    {
+      "evidence": "browser/worker-errors-green.json",
+      "result": "5/5 actual browser: corrupt/password/unembedded-font fixed failure with no readiness; cancelled worker cannot later publish; subsequent page two succeeds"
+    },
+    {
+      "evidence": "browser/build-final.txt",
+      "result": "controlled production fixture built in isolated temporary directory; not a packaged/installed Farfold app"
+    },
+    {
+      "evidence": "browser/built-assets.json",
+      "result": "93 assets, 4900688 bytes; emitted parser warning boundary offset 36 precedes official initialize offset 1227791"
+    }
+  ],
+  "pdfStartupRootCause": {
+    "evidence": [
+      "browser/browser-third.json",
+      "browser/parser-immediate-diagnostic.json",
+      "browser/parser-ready-diagnostic.json",
+      "browser/mixed-production-diagnostic.json",
+      "browser/mixed-production-static-green.json"
+    ],
+    "conclusion": "Existing void dynamic import returned before official parser listener initialized. PDFWorker.create({port}) immediately resolves/configures and does not wait for ready; early messages were lost. Explicit-ready control passed; static dependency repair makes the same production renderPdfPage route pass.",
+    "officialLocalSource": [
+      "node_modules/pdfjs-dist/legacy/build/pdf.mjs:22826",
+      "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs:71455"
+    ],
+    "sample": {
+      "path": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+      "bytes": 22643,
+      "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a"
+    },
+    "observation": "Same checked sample: original production route timed out at 15002.9 ms, after fix rendered 2 pages at 195.4 ms. These are individual controlled measurements, not a performance guarantee.",
+    "environment": "Vite had completed dependency optimization before the mixed production diagnostic; final production-bundle browser removes the dev optimizer from the route. No claim about prior installed WebKit outcome.",
+    "originalReceiptCorrection": "mixed-production-diagnostic.json sample.size=0 was captured after the follow-up core transferred its input buffer. Response was HTTP 200, sample digest matches 22643-byte fixture, and follow-up rendered 2 pages. Original red .txt/.json kept; subsequent sampler stores original size before transfer.",
+    "rawEvidence": "Original .txt captures retain tool stdout; JSON copies were normalized with repository formatter without changing values. Initial browser-first failed to start its owned debug endpoint; no product assertion ran."
+  },
+  "visualSelfReview": {
+    "viewed": [
+      "browser/pdf-page2-retained.png",
+      "browser/version-changed-retained.png",
+      "browser/image-opinion.png",
+      "browser/browser-built-final-pdf-page2-retained.png",
+      "browser/browser-built-final-version-changed-actions.png",
+      "browser/browser-built-final-image-opinion.png"
+    ],
+    "result": "Current page 2 clearly differs from retained page 1 target; old-version feedback remains inside scrollable area with reachable add/copy actions; image shows whole-file target without redundant page controls. Inputs are fixed synthetic text/images, not user conversation content."
+  },
+  "boundaries": [
+    "No installed Farfold/WebKit or real Agent/account/model operations executed.",
+    "Region anchors, edits directly on canvas, Office anchors and automatic file-version migration are not implemented.",
+    "Digest is a request-side version description, not automatic Agent-side file validation or guaranteed Agent interpretation.",
+    "A selected blank page anchor persists but remains outside authored-text unsent counts, as existing blank line selections do.",
+    "Full seven repository checks, integration routing, packaging and installed validation remain root responsibilities."
+  ],
+  "independentReview": "independent-review.json; verification peer updates final browser/PDF addendum separately",
+  "ownedSources": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "cf4adb67e5485812ebd347627297afc9677feb57596cc14e87531353860be1e8",
+      "lines": 691
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "e86ff136a2c5671613e1bce1802921da2c22408f822790910268e13bb6082337",
+      "lines": 851
+    },
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "a6018ab16373247c1f7c68bc11cdda0f02305da8e4973e74d3d2a51dace06646",
+      "lines": 200
+    },
+    {
+      "path": "src/components/VisualFilePreview.test.tsx",
+      "sha256": "9b70b497c03636784d0ddeb81c9ae374e86c103ca3bbf6b0b98536f30646c9c1",
+      "lines": 319
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ac7fb66157086f7ba203327916e7ea596215c60a9f4e6c42d6f16998ce6a4243",
+      "lines": 756
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "4e25d7c516ab146328a33cde17a0c106b65662db330cb5916addf9c9c5375129",
+      "lines": 36
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "b958930d836ea26dbdf8a3cfbf823c1fd5c5fd49a4505ab54283e547107f4c71",
+      "lines": 71
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.test.ts",
+      "sha256": "9d42d3b155513a79370965ab3d702dc57c20b15a2917f20589f3807ea9093e2f",
+      "lines": 74
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.persistence.test.ts",
+      "sha256": "529baa9f454a100f14a1b8f7ebb51109b9d0e7ecca2736b38df0b0f5f438808b",
+      "lines": 141
+    },
+    {
+      "path": "src/runtime/visual_feedback.ts",
+      "sha256": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef",
+      "lines": 20
+    },
+    {
+      "path": "src/runtime/visual_feedback_strings.ts",
+      "sha256": "08a893676b7e0bae275f89dac1efd76cb45b75c2651ecd66e9560a131525ca40",
+      "lines": 10
+    },
+    {
+      "path": "src/workers/pdf_preview.worker.ts",
+      "sha256": "c19100788781ffc68fd0f1563da97308dfc8d2fc8ed4544a72f88751989f3da9",
+      "lines": 7
+    },
+    {
+      "path": "src/workers/pdf_parser_diagnostics.ts",
+      "sha256": "45421396cf1efb5a8cd2e2a667343b98ca15a93c289d4af05859e4bcd47013f3",
+      "lines": 6
+    },
+    {
+      "path": "src/workers/pdf_parser_diagnostics.test.ts",
+      "sha256": "eb86d2c11ce0cdb200be714560344a92c6a9bcb908ed275b6e2bf48f3bde1234",
+      "lines": 20
+    }
+  ]
+}

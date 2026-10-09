@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "ready": false,
+  "events": [
+    {
+      "kind": "message",
+      "action": "ready",
+      "keys": ["sourceName", "targetName", "action", "data"]
+    }
+  ],
+  "result": {
+    "status": "error",
+    "error": "Error: bounded timeout"
+  }
+}

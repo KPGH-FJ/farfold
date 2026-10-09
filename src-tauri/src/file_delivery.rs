@@ -19,6 +19,8 @@ use sha2::{Digest, Sha256};
 
 mod visual;
 pub use visual::{VisualPreview, read_visual};
+mod workbook;
+pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
 
 pub const MAX_FILE_BYTES: u64 = 32 * 1024 * 1024;
 pub const MAX_TEXT_BYTES: u64 = 1024 * 1024;

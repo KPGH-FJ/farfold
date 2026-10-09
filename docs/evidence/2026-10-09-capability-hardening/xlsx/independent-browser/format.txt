@@ -1,0 +1,5 @@
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-first.diagnostics.json 15ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/independent-first.json 1ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/index.html 20ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/review-initial.json 1ms
+docs/evidence/2026-10-09-capability-hardening/xlsx/independent-browser/run.mjs 13ms

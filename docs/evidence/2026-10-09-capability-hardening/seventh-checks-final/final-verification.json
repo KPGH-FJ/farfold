@@ -1,0 +1,148 @@
+{
+  "status": "engineering-checks-passed-installed-validation-pending",
+  "sourceBase": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "inputCount": 962,
+  "finalInputs": "seventh-test-fix-checks/inputs.json",
+  "finalInputsCurrentlyMatch": true,
+  "onlyChangeAfterFullChecks": [
+    "src-tauri/src/acp_client/process_stdio_tests.rs"
+  ],
+  "reuseBoundary": "Only cfg(test) Rust helper changed after the complete seven-check run; frontend/type/build inputs remain byte-identical. All Rust checks and whole-repository formatting reran on the final test version.",
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 16.122,
+      "log": "seventh-test-fix-checks/format.txt",
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.3,
+      "log": "seventh-checks-final/typecheck.txt",
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 31.094,
+      "log": "seventh-checks-final/frontend.txt",
+      "logSha256": "22e3c7924338026fa1db91493348ca29d91a4f3a415d2ccfea96fff34956a3a5"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 6.874,
+      "log": "seventh-checks-final/build.txt",
+      "logSha256": "5af258ab0c9e34a792414b6e1bfe9b47e935a0fc0a99905b3b1fed14e18b2a0b"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.709,
+      "log": "seventh-test-fix-checks/cargo-fmt.txt",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.606,
+      "log": "seventh-test-fix-checks/clippy.txt",
+      "logSha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 38.769,
+      "log": "seventh-test-fix-checks/rust.txt",
+      "logSha256": "f859fddc94fb32d0094d16d70670963884d9f7f0e7d0ea31ecae251f38bc1bd4"
+    }
+  ],
+  "frontend": {
+    "files": 267,
+    "passed": 2983
+  },
+  "rust": {
+    "passed": 1153,
+    "failed": 0,
+    "ignored": 5
+  },
+  "protectedFiles": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "planUniqueItems": 122,
+  "references": [
+    {
+      "path": "seventh-checks-final/receipt.json",
+      "sha256": "32bebe1b0dd370a01156d1d87fa6f708a43025c31d09ac673d21fcf3a4142c70"
+    },
+    {
+      "path": "seventh-test-fix-checks/receipt.json",
+      "sha256": "e27fb0ef8d9100b42d9835b217357a0942184ce6992dd04e67d99a0da0271a4c"
+    },
+    {
+      "path": "seventh-test-fix-checks/inputs.json",
+      "sha256": "7a23f979101e3786e674a1bf425edb12a3bd591be1deeb9ebf1bc0595d89d495"
+    },
+    {
+      "path": "stdio-preparation-independent.json",
+      "sha256": "d2f2bb004313f7997b5c2ff7e3203db9e2f1ed0234e9186a6e8f310a8d065d5e"
+    },
+    {
+      "path": "stdio-output-capture.json",
+      "sha256": "3f38491700449a69614d85191bbd5be0cf7a7f2371762e3d33394a3fc3a505e3"
+    },
+    {
+      "path": "xlsx/source-independent-review.json",
+      "sha256": "4afacca4919574631990fcdde8d997748642ae303b459f1da3dc07aa80e89c36"
+    },
+    {
+      "path": "xlsx/independent-review.json",
+      "sha256": "5e6f2a6554850a60ede555d72bf8ea352b5b70faaaae9b953efc5b52a897fe29"
+    },
+    {
+      "path": "visual-feedback/independent-review.json",
+      "sha256": "0e3fb991cc75e7db96cd93785f1798641901fbcb45936345aacdce97c16c78c8"
+    },
+    {
+      "path": "directory-search-independent.json",
+      "sha256": "6499a44f42f737c171dd88f7dbc6d53bbbbc1ce667003249f1368dc138dc3914"
+    }
+  ],
+  "limits": [
+    "First whole-suite pipe-close failure process not captured; deterministic fork counterexample proves the test isolation requirement only.",
+    "XLSX is bounded read-only content preview; no formula recalculation, chart rendering, DOCX or PPTX claim.",
+    "Native installed WebKit validation pending; Desktop TCC wait remains NEW-01.",
+    "No 29-Agent or entire-plan completion claim."
+  ]
+}

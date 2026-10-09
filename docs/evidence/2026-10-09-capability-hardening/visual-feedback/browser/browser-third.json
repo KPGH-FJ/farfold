@@ -1,0 +1,11 @@
+{
+  "passed": false,
+  "results": [],
+  "error": "Error: wait expired: result.pdf文件位置/controlled/result.pdf重新读取修改意见用默认应用打开在文件夹中显示另存为…预览尚未返回，已停止等待。可重新读取或使用其他应用打开。running",
+  "calls": [
+    "settings_get",
+    "file_delivery_inspect_selected",
+    "file_delivery_inspect_selected",
+    "file_delivery_read_visual"
+  ]
+}

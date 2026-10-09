@@ -237,3 +237,68 @@ fn unicode_entry_path_round_trips_through_url_encoding() {
     assert_eq!(preview.entry_path(), "/%E4%BD%A0%E5%A5%BD%20world.html");
     assert!(preview.read_resource(&preview.entry_path()).is_ok());
 }
+
+#[cfg(target_os = "macos")]
+#[test]
+fn directory_search_local_resources_work_without_listing_and_still_recheck() {
+    use std::os::unix::fs::PermissionsExt;
+    assert_ne!(unsafe { libc::geteuid() }, 0);
+    let (dir, _) = fixture();
+    let root = dir.path().canonicalize().unwrap();
+    let assets = root.join("assets");
+    fs::create_dir(&assets).unwrap();
+    fs::write(assets.join("style.css"), "body { color: blue }").unwrap();
+    struct Restore(std::path::PathBuf);
+    impl Drop for Restore {
+        fn drop(&mut self) {
+            fs::set_permissions(&self.0, fs::Permissions::from_mode(0o700)).unwrap();
+        }
+    }
+    let _root_restore = Restore(root.clone());
+    let _asset_restore = Restore(assets.clone());
+    fs::set_permissions(&assets, fs::Permissions::from_mode(0o100)).unwrap();
+    fs::set_permissions(&root, fs::Permissions::from_mode(0o100)).unwrap();
+    assert!(fs::read_dir(&root).is_err());
+    let root_open = crate::file_access::open_directory(&root);
+    if root_open.is_err() {
+        // Legacy macOS may retain the directory-read requirement. Check the
+        // official version policy in file_access tests; this path is explicit.
+        let version = std::process::Command::new("/usr/sbin/sysctl")
+            .args(["-n", "kern.osproductversion"])
+            .output()
+            .unwrap();
+        let major = std::str::from_utf8(&version.stdout)
+            .unwrap()
+            .split('.')
+            .next()
+            .unwrap()
+            .parse::<u32>()
+            .unwrap();
+        assert!(
+            major < 13,
+            "search-only root unexpectedly refused on macOS 13+"
+        );
+        assert!(DirectoryPreview::select(&root, &root.join("index.html")).is_err());
+        return;
+    }
+    let preview = DirectoryPreview::select(&root, &root.join("index.html")).unwrap();
+    assert!(
+        String::from_utf8(preview.read_resource("/index.html").unwrap().bytes)
+            .unwrap()
+            .contains(DIRECTORY_CSP)
+    );
+    assert_eq!(
+        preview.read_resource("/assets/style.css").unwrap().bytes,
+        b"body { color: blue }"
+    );
+    assert!(preview.read_resource("/assets/").is_err());
+    assert!(preview.read_resource("/../index.html").is_err());
+    fs::set_permissions(&root, fs::Permissions::from_mode(0o700)).unwrap();
+    fs::remove_file(root.join("app.js")).unwrap();
+    symlink(root.join("index.html"), root.join("app.js")).unwrap();
+    assert!(preview.read_resource("/app.js").is_err());
+    fs::set_permissions(&assets, fs::Permissions::from_mode(0o000)).unwrap();
+    assert!(preview.read_resource("/assets/style.css").is_err());
+    preview.revoke();
+    assert!(preview.read_resource("/index.html").is_err());
+}

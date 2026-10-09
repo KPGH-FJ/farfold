@@ -1,0 +1,24 @@
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final.diagnostics.json 6ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-built-final.json 7ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-final.diagnostics.json 3ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-final.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-first.diagnostics.json 0ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-second.diagnostics.json 5ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-second.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-static-first.diagnostics.json 2ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-static-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-third.diagnostics.json 2ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/browser-third.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/built-assets.json 6ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.diagnostics.json 115ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-diagnostic.json 2ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.diagnostics.json 102ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/mixed-production-static-green.json 2ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-immediate-diagnostic.diagnostics.json 1ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-immediate-diagnostic.json 0ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-ready-diagnostic.diagnostics.json 1ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/parser-ready-diagnostic.json 1ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/temporary-build-path.json 0ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/worker-errors-green.diagnostics.json 4ms
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/worker-errors-green.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/build.mjs 5ms

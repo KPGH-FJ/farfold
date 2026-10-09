@@ -1,0 +1,89 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_feedback_anchor.persistence.test.ts (4 tests | 2 failed) 103ms
+   × restores the exact page/version, moves it into one composer snapshot and preserves queue/attachments without sending 92ms
+   × a failed move save keeps composer content in memory and the old page opinion on disk for recovery 2ms
+ ❯ src/components/OpenedFileView.test.tsx (50 tests | 3 failed) 3134ms
+   × rejects a stale page-target button after navigation and preserves its existing text 55ms
+   × keeps old-version page opinions after refresh and rejects old-source readiness 55ms
+   × provides image file feedback with exact version but no PDF page control 51ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > rejects a stale page-target button after navigation and preserves its existing text
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ src/components/OpenedFileView.test.tsx:754:30
+    752|   reportPage(visual, { kind: "pdf", page: 1, pageCount: 3 });
+    753|   editFeedback("keep opinion");
+    754|   const oldButton = render().all.find(
+       |                              ^
+    755|     (n) => n.type === "button" && n.props.children === "针对当前第 1 页",
+    756|   )!;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > keeps old-version page opinions after refresh and rejects old-source readiness
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ src/components/OpenedFileView.test.tsx:802:29
+    800|   reportPage(visual, { kind: "pdf", page: 3, pageCount: 3 });
+    801|   expect(button(S.feedback).props.disabled).toBe(true);
+    802|   const retained = render().all.find((n) => n.type === FileFeedbackDra…
+       |                             ^
+    803|   expect(retained.props.excludeContentId).not.toBe(old.contentId);
+    804|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > provides image file feedback with exact version but no PDF page control
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ src/components/OpenedFileView.test.tsx:825:27
+    823|   });
+    824|   await ready();
+    825|   const visual = render().all.find((n) => n.props.preview)!;
+       |                           ^
+    826|   reportPage(visual, { kind: "image" });
+    827|   editFeedback("change contrast");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.persistence.test.ts > restores the exact page/version, moves it into one composer snapshot and preserves queue/attachments without sending
+AssertionError: expected { blocks: [ [ { …(2) } ] ], …(1) } to be { blocks: [ [ { …(2) } ] ], …(1) } // Object.is equality
+
+If it should pass with deep equality, replace "toBe" with "toStrictEqual"
+
+Expected: { blocks: [ [ { …(2) } ] ], …(1) }
+Received: serializes to the same string
+
+
+Compared values have no visual difference.
+
+ ❯ src/runtime/file_feedback_anchor.persistence.test.ts:62:35
+     60|   });
+     61|   expect(d.composerDrafts.read("session:a").attachments[0]).toBe(attac…
+     62|   expect(d.draftQueues.read("a")).toBe(queue);
+       |                                   ^
+     63|   expect(d.fileFeedbackDrafts.entries("a")).toEqual({});
+     64|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.persistence.test.ts > a failed move save keeps composer content in memory and the old page opinion on disk for recovery
+Error: 未能读取未发送内容，请重试。原内容没有被覆盖。
+ ❯ src/runtime/draft_storage.ts:83:15
+     81|         const message = storageFailureMessage(error, DRAFT_STRINGS.loa…
+     82|         publish({ error: message });
+     83|         throw new Error(message);
+       |               ^
+     84|       })
+     85|       .finally(() => {
+ ❯ src/runtime/file_feedback_anchor.persistence.test.ts:132:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed | 7 passed (9)
+      Tests  5 failed | 118 passed (123)
+   Start at  21:38:49
+   Duration  3.47s (transform 949ms, setup 0ms, import 2.14s, tests 3.70s, environment 0ms)
+

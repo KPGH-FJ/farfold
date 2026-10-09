@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-10-09T13:27:10.827028+00:00",
+  "reviewer": "verification",
+  "mode": "independent_read_only_artifact_private_manifest_and_backup_script_review",
+  "result": "passed_with_recorded_execution_boundaries",
+  "installedCommit": "413226dc6e3f9db5ff08fd1dc1130a0b1bf3898a",
+  "formalMatchesExactCandidateFiles": true,
+  "formalChecks": {
+    "signature": {
+      "exitCode": 0,
+      "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+    },
+    "architecture": {
+      "exitCode": 0,
+      "output": "arm64"
+    }
+  },
+  "archiveMatchesFormal": true,
+  "archiveSha256": "1bedcbcddfc77705f9ca114265e1aad8bc0248ca28b16e491825658b99f3814f",
+  "archiveFileModes": {
+    "Contents/_CodeSignature/CodeResources": "0o644",
+    "Contents/MacOS/farfold": "0o755",
+    "Contents/Resources/icon.icns": "0o644",
+    "Contents/Resources/release-manifest.json": "0o644",
+    "Contents/Info.plist": "0o644"
+  },
+  "frozenCandidateReceiptsUnchanged": true,
+  "sourceInputs": {
+    "count": 932,
+    "currentDiskAndCommitAndCandidateAllMatch": true
+  },
+  "formalProcessCountNow": 0,
+  "privateDirectoryMode": "0700",
+  "manifestChecks": [
+    {
+      "phase": "before",
+      "entries": 217400,
+      "sha256": "c7bb3262f9f153893cedb9b08a63fc5bf64858cc97c496ab62d2419aa381b787",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    },
+    {
+      "phase": "preinstall",
+      "entries": 217400,
+      "sha256": "c7bb3262f9f153893cedb9b08a63fc5bf64858cc97c496ab62d2419aa381b787",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    },
+    {
+      "phase": "after",
+      "entries": 217400,
+      "sha256": "c7bb3262f9f153893cedb9b08a63fc5bf64858cc97c496ab62d2419aa381b787",
+      "mode": "0600",
+      "bytes": 59360435,
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "mainAndAllRecordedSidecarsMatchCapture": true
+    }
+  ],
+  "capturedFiles": {
+    "farfold.sqlite3": {
+      "bytes": 323584,
+      "sha256": "c5e1610d7f333007db282aef96e1f922667c4bc18c3c24827fc7ed7dd4bca7df",
+      "mode": "0600"
+    },
+    "farfold.sqlite3-wal": {
+      "bytes": 4140632,
+      "sha256": "d305d3eabe3dde073b273a2385de518178e2e688c4387cb1da31b33c5b812544",
+      "mode": "0600"
+    },
+    "farfold.sqlite3-shm": {
+      "bytes": 32768,
+      "sha256": "90eb92b7e98ef23c1f3818488141b7774d3153b38fc7045f921c33d0faf8cca8",
+      "mode": "0600"
+    }
+  },
+  "backup": {
+    "sha256": "d0f0d629aa7598eaadbeb4e4cd0fb09b5bbbb221fb9f80692a00b2a02467e818",
+    "mode": "0600",
+    "integrity": "ok",
+    "readMode": "Private standalone backup opened mode=ro&immutable=1; PRAGMA integrity_check only, no table rows/settings queried.",
+    "unchangedAfterIntegrity": true
+  },
+  "backupMethodEvidence": {
+    "retainedScript": "output/2026-10-09-sixth-install/backup_metadata.py",
+    "scriptReview": "Requires no exact formal process; lstat regular files plus source identity/hash before and after; copies main and existing WAL/SHM separately to first capture and second private working directories, verifies both against original hashes; only second working copy is opened by SQLite; creates standalone backup exclusively and integrity-checks it; first capture remains hash-identical.",
+    "independentlyEstablished": "Retained script and receipt agree; first capture hashes match the exact database entries and complete present main/WAL/SHM set in all three independently parsed full manifests; standalone backup hash and immutable integrity check match. No journal exists in these retained source inventories.",
+    "executionBoundary": "Root executed backup and snapshot processes; this review inspected retained script/receipt/materials and did not rerun backup or installation. Artifact integrity alone does not prove semantic recovery of every historical conversation; script evidence concerns this closed-app controlled operation, not an adversarial filesystem-race guarantee."
+  },
+  "preflightFailure": {
+    "retained": true,
+    "failedDuring": "preflight",
+    "errorClass": "JSONDecodeError",
+    "copyStarted": false,
+    "attribution": "Root scheduled installation before asynchronous preinstall summary completed; orchestration error, not product runtime failure.",
+    "review": "Installer validates candidate and old formal bundle then parses snapshot before setting copyStarted or invoking ditto. Retained failed receipt agrees. Successful retry receipt follows failure and contains complete matching snapshot evidence.",
+    "retryBoundary": "Root reported snapshot exit 0 before retry; this review confirms complete summaries/raw inventories and hashes without re-executing the process."
+  },
+  "privateEvidenceSha256": {
+    "normal-exit-observation.json": "8fce45a01618817da5ba4520d65be05e79061ed3d101ef13f7b246ec3cf7f6cc",
+    "metadata-backup-receipt.json": "a5f28e0763c346af630c9416f0c870e589e86cf1b5964695bd9b30c7d90a4f5b",
+    "backup_metadata.py": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+    "install_data_snapshot.py": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+    "install_verified_candidate.py": "56e796988baacb0229b3c27d76ae4a325fadf1f95f9ab7d5e531fd9d2c0018c2",
+    "install-operation-preflight-incomplete-snapshot.json": "ffbd71bcc0cc2ac5d288ba7768701c5cace93b734982025d17d022778b2dc3a5",
+    "install-operation.json": "ffdecb0ecac68689ccf88c6993d7d73a130a5153b6f9778e10053b12339febaa",
+    "install-data-before-summary.json": "16a3ca04cc87e748f7be679b410cd3c0f168990b92c1a0358e569feaad99bf36",
+    "install-data-preinstall-summary.json": "16a3ca04cc87e748f7be679b410cd3c0f168990b92c1a0358e569feaad99bf36",
+    "install-data-after-summary.json": "16a3ca04cc87e748f7be679b410cd3c0f168990b92c1a0358e569feaad99bf36"
+  },
+  "publicEvidenceSha256": {
+    "candidate.json": "be219f5f7f8c30ec8f0f1d90d5ad300a61c258d0ef061101ada24437a3610c04",
+    "candidate-inputs.json": "b804c14b6dbfc8e7bfaf95552c3f0d9a8565d4ca80e89151882d31617d36225f",
+    "candidate-independent.json": "176dcd2529f8dda9d3bc83ab2eeb4e4ccebe774c0fb95910673b467661844111",
+    "installed-data-retention.json": "07bad45b60077e2ec99348008c44819afc8c87a99a4acaf3572f16665bda2cfd"
+  },
+  "sourceProtectionReview": [
+    "Snapshot script uses O_NOFOLLOW directory descriptors, records symlink targets without following them, checks opened file/directory identity and stability, and creates exclusive 0600 manifests.",
+    "Installer checks frozen source/candidate/archive identities and no formal process before ditto; only formal app bundle is copied, then exact files and signature are checked while stopped.",
+    "All three 217400-entry whole-data inventories independently parsed, counted and rehashed without printing user paths, keys or content. Retention applies to the recorded normal-exit through prelaunch replacement window."
+  ],
+  "claimReview": {
+    "installedBundle": "Current formal app equals verified 413226dc arm64 candidate ZIP with strict ad-hoc signature.",
+    "dataRetention": "All three full recorded manifests and captured raw database files agree across installation; no claim about future launch writes.",
+    "capabilities": "P12/P35 installed interaction still untested at this checkpoint; no Agent call, physical corrupt-database recovery, power-loss/full-disk, Office or Windows acceptance.",
+    "signing": "Ad-hoc, not public signing or notarization."
+  },
+  "reviewerCheckCorrection": "An initial local assertion incorrectly assumed embedded release-manifest contains a commit. Actual retained schema only contains version/generatedAt; corrected verification uses exact manifest bytes plus frozen source/candidate commit linkage. This was a reviewer assumption failure, not a product or installation failure.",
+  "actions": "Read scripts/receipts/manifests; hash artifacts; inspect source, formal bundle, signature and ZIP; immutable integrity_check private backup; write this receipt. No UI, Agent, install, launch, quit, deletion, source/status/plan edits or candidate receipt formatting."
+}

@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_parse.test.ts (25 tests | 1 failed) 100ms
+     × keeps shared formula presence when its dependent cell omits full formula text 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML typed cells and formatting > keeps shared formula presence when its dependent cell omits full formula text
+AssertionError: expected [ Array(3) ] to deeply equal [ Array(3) ]
+
+- Expected
++ Received
+
+@@ -5,16 +5,16 @@
+      "present",
+      2,
+    ],
+    [
+      true,
+-     null,
++     "",
+      "present",
+      3,
+    ],
+    [
+      true,
+-     null,
++     "",
+      "present",
+      0,
+    ],
+  ]
+
+ ❯ src/runtime/xlsx_parse.test.ts:159:91
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 passed (25)
+   Start at  22:15:26
+   Duration  217ms (transform 42ms, setup 0ms, import 60ms, tests 100ms, environment 0ms)
+

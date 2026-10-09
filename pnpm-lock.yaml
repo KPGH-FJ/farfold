@@ -40,6 +40,12 @@ importers:
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
+      saxes:
+        specifier: 6.0.0
+        version: 6.0.0
+      ssf:
+        specifier: 0.11.2
+        version: 0.11.2
     devDependencies:
       "@tauri-apps/cli":
         specifier: 2.11.4
@@ -790,6 +796,13 @@ packages:
       picomatch:
         optional: true
 
+  frac@1.1.2:
+    resolution:
+      {
+        integrity: sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==,
+      }
+    engines: { node: ">=0.8" }
+
   fsevents@2.3.3:
     resolution:
       {
@@ -1365,6 +1378,13 @@ packages:
     engines: { node: ^20.19.0 || >=22.12.0 }
     hasBin: true
 
+  saxes@6.0.0:
+    resolution:
+      {
+        integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==,
+      }
+    engines: { node: ">=v12.22.7" }
+
   scheduler@0.27.0:
     resolution:
       {
@@ -1389,6 +1409,13 @@ packages:
       {
         integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==,
       }
+
+  ssf@0.11.2:
+    resolution:
+      {
+        integrity: sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g==,
+      }
+    engines: { node: ">=0.8" }
 
   stackback@0.0.2:
     resolution:
@@ -1618,6 +1645,12 @@ packages:
       }
     engines: { node: ">=8" }
     hasBin: true
+
+  xmlchars@2.2.0:
+    resolution:
+      {
+        integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==,
+      }
 
   zwitch@2.0.4:
     resolution:
@@ -1939,6 +1972,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  frac@1.1.2: {}
 
   fsevents@2.3.3:
     optional: true
@@ -2501,6 +2536,10 @@ snapshots:
       "@rolldown/binding-win32-arm64-msvc": 1.2.6
       "@rolldown/binding-win32-x64-msvc": 1.2.6
 
+  saxes@6.0.0:
+    dependencies:
+      xmlchars: 2.2.0
+
   scheduler@0.27.0: {}
 
   siginfo@2.0.0: {}
@@ -2508,6 +2547,10 @@ snapshots:
   source-map-js@1.2.1: {}
 
   space-separated-tokens@2.0.2: {}
+
+  ssf@0.11.2:
+    dependencies:
+      frac: 1.1.2
 
   stackback@0.0.2: {}
 
@@ -2630,5 +2673,7 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+
+  xmlchars@2.2.0: {}
 
   zwitch@2.0.4: {}

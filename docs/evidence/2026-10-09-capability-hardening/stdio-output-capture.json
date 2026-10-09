@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-09",
+  "status": "test-harness-output-wait-fixed-targeted-green",
+  "parentReceipt": "docs/evidence/2026-10-09-capability-hardening/stdio-preparation-isolation.json",
+  "finding": "Independent review identified that try_wait bounds child exit but wait_with_output can still wait indefinitely for pipe EOF retained by another process.",
+  "effectiveCounterexample": {
+    "proof": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-red.txt",
+      "sha256": "6873e34a62f5f42e54fec325b97afb58ae9c38b2617573ab42a52e68c394ca4c"
+    },
+    "result": "1 failed",
+    "method": "The actual run_isolated_command helper reaped a controlled shell while its background child held stdout/stderr open at an owned FIFO gate. Capture remained blocked until gate release."
+  },
+  "fix": [
+    "Use two anonymous tempfile files for stdout/stderr, cloning handles only for the controlled child.",
+    "After child exit, read at most 64 KiB using FileExt::read_exact_at. This neither waits for writer closure nor moves the shared file offset.",
+    "Retain successful exit and exact completion-token checks.",
+    "Regression requires holder-opened and absence of holder-completed before accepting capture success. Afterwards it releases the owned gate and observes completion; read has an 8-second fallback."
+  ],
+  "proofs": [
+    {
+      "proof": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-green.txt",
+        "sha256": "aa6b38c7f214599947dcfa8afecf2518d19d6480c5e39c1c06ac2e3eaa472238"
+      },
+      "result": "7 passed",
+      "scope": "initial tempfile change"
+    },
+    {
+      "proof": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-final.txt",
+        "sha256": "03b4fa60558561f76dca0283bd51aed3617e683e0e16385a5f732fd0bb892bf5"
+      },
+      "result": "7 passed",
+      "scope": "gate readiness and cleanup markers"
+    },
+    {
+      "proof": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-owned-final.txt",
+        "sha256": "5b06ecda94004d231098cc0240d68a5622bbc1cb904fd54d3de06d36fe3a35da"
+      },
+      "result": "7 passed",
+      "scope": "final holder-still-running assertion"
+    },
+    {
+      "proof": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/stdio-output-capture-format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result": "exit 0",
+      "scope": "edition 2024 format"
+    }
+  ],
+  "source": {
+    "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+    "sha256": "8bbc1ba56203f2acaf008c5c429fe1e3f3dec8a5a816ddae3c4cde33566b19a4"
+  },
+  "unchangedProduction": {
+    "path": "src-tauri/src/acp_client/process_stdio.rs",
+    "sha256": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162"
+  },
+  "ownedProcessObservation": {
+    "matchedLiveHolderCommands": [],
+    "method": "Read-only ps match anchored to the actual /bin/sh executable and exact controlled script/argument; excludes parent shell command text. No name-based kill."
+  },
+  "limits": [
+    "Only test harness changed. Production stdio and XLSX source were not changed.",
+    "The background holder is a shell grandchild. Its completion marker proves the final statement before shell exit, not waitpid/reap by this test. The direct primary child is reaped through its Child handle.",
+    "8-second read fallback plus explicit gate release bounds this controlled holder. A read-only process snapshot found no matching holder command after the final run.",
+    "64 KiB is a logical capture limit, not an OS-level I/O timing guarantee.",
+    "Prior full-check receipts retain their actual source hashes. Root will run the final Rust/format checks for this test-only increment."
+  ]
+}

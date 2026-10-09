@@ -49,6 +49,7 @@ import { SENDING_STRINGS } from "./sending_strings";
 import { UPDATE_IMPACT } from "./update_impact";
 import { CONNECTION_ACCOUNT_STRINGS } from "./connection_account_strings";
 import { SIDEBAR_STRINGS } from "./sidebar_strings";
+import { WORKBOOK_STRINGS, WORKBOOK_WARNINGS } from "./workbook_strings";
 
 // PRODUCT.md §5 禁用词：不得出现在任何用户可见字符串中。
 const FORBIDDEN =
@@ -77,6 +78,8 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      WORKBOOK_STRINGS,
+      WORKBOOK_WARNINGS,
       REDESIGN,
       AGENT_REDESIGN,
       SETTINGS_REDESIGN,

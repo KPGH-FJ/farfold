@@ -1,0 +1,349 @@
+{
+  "passed": true,
+  "results": [
+    {
+      "name": "actual Worker and StrictMode UI ready",
+      "ok": true,
+      "detail": {
+        "calls": 2
+      }
+    },
+    {
+      "name": "numeric zero preserved",
+      "ok": true,
+      "detail": "单元格 A1收起单元格内容显示值0保存的值0"
+    },
+    {
+      "name": "false remains false",
+      "ok": true,
+      "detail": "FALSE"
+    },
+    {
+      "name": "cached empty string distinguished from missing cache",
+      "ok": true,
+      "detail": "单元格 C1收起单元格内容显示值空白显示值保存的值空文本公式IF(1,\"\",\"\")"
+    },
+    {
+      "name": "missing formula cache is explicit",
+      "ok": true,
+      "detail": "单元格 D1收起单元格内容显示值未保存计算结果保存的值未保存计算结果公式1+1未保存计算结果"
+    },
+    {
+      "name": "1900 date serial 60 formatted and raw retained",
+      "ok": true,
+      "detail": "单元格 E1收起单元格内容显示值1900-02-29保存的值60"
+    },
+    {
+      "name": "cached formula error is retained",
+      "ok": true,
+      "detail": "单元格 F1收起单元格内容显示值#DIV/0!保存的值#DIV/0!公式1/0"
+    },
+    {
+      "name": "absent shared-formula body is explicit",
+      "ok": true,
+      "detail": "单元格 G1收起单元格内容显示值7保存的值7公式文件未保存此单元格的完整公式文本。"
+    },
+    {
+      "name": "merge retains actual spans",
+      "ok": true
+    },
+    {
+      "name": "hidden row/column and hidden merge source never leak",
+      "ok": true
+    },
+    {
+      "name": "blank cells inherit column and row styles",
+      "ok": true,
+      "detail": {
+        "column": "rgb(34, 170, 68)",
+        "row": "rgb(221, 68, 102)"
+      }
+    },
+    {
+      "name": "long text stays inside bounded grid horizontal scrolling",
+      "ok": true,
+      "detail": {
+        "viewport": 1000,
+        "document": 1000,
+        "gridClient": 866,
+        "gridScroll": 2141,
+        "cell": 88
+      }
+    },
+    {
+      "name": "long text remains complete in detail with keyboard focus",
+      "ok": true,
+      "detail": {
+        "textLength": 32000
+      }
+    },
+    {
+      "name": "closing detail returns focus to original cell",
+      "ok": true
+    },
+    {
+      "name": "explicit reveal restores hidden anchor and column",
+      "ok": true
+    },
+    {
+      "name": "hiding clears selected hidden detail",
+      "ok": true
+    },
+    {
+      "name": "row paging starts at 101 and merge continuation explicit",
+      "ok": true,
+      "detail": "合并范围 A90–B110 · 合并范围跨越当前显示范围"
+    },
+    {
+      "name": "paging clears grid scroll offset",
+      "ok": true,
+      "detail": {
+        "top": 0,
+        "left": 0
+      }
+    },
+    {
+      "name": "each rendered window stays bounded",
+      "ok": true,
+      "detail": {
+        "cells": 2281
+      }
+    },
+    {
+      "name": "far legal sparse cell does not allocate preceding cells",
+      "ok": true,
+      "detail": {
+        "cells": 1
+      }
+    },
+    {
+      "name": "invalid address keeps current grid with error",
+      "ok": true
+    },
+    {
+      "name": "sheet selection uses same captured file and labels hidden sheet",
+      "ok": true,
+      "detail": {
+        "callsBefore": 2,
+        "callsAfter": 2
+      }
+    },
+    {
+      "name": "returning sheet resets grid/selection safely",
+      "ok": true
+    },
+    {
+      "name": "sheet change launched real Worker before cancellation",
+      "ok": true
+    },
+    {
+      "name": "cancel real sheet Worker then immediately select another sheet",
+      "ok": true
+    },
+    {
+      "name": "sheet change launched real Worker before cancellation",
+      "ok": true
+    },
+    {
+      "name": "hiding during real Worker parse removes grid",
+      "ok": true
+    },
+    {
+      "name": "reveal restarts exact selected sheet with bounded output",
+      "ok": true,
+      "detail": {
+        "cells": 100
+      }
+    },
+    {
+      "name": "cancelled capture cannot become ready late",
+      "ok": true
+    },
+    {
+      "name": "retry after cancellation reads and renders safely",
+      "ok": true
+    },
+    {
+      "name": "hidden owner cannot publish late capture",
+      "ok": true
+    },
+    {
+      "name": "old version response never overwrites new version",
+      "ok": true
+    },
+    {
+      "name": "only bounded file capture IPC invoked",
+      "ok": true,
+      "detail": {
+        "calls": 12
+      }
+    }
+  ],
+  "calls": [
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "v1"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "v1"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "slow"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "slow"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "slow"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "old"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "old"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "old"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "stale"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "stale"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "latest"
+    },
+    {
+      "command": "file_delivery_read_workbook",
+      "version": "latest"
+    }
+  ],
+  "workerEvents": [
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    },
+    {
+      "event": "created",
+      "url": "http://127.0.0.1:1458/src/workers/xlsx_preview.worker.ts?worker_file&type=module"
+    },
+    {
+      "event": "message",
+      "kind": "ready"
+    },
+    {
+      "event": "terminated"
+    }
+  ],
+  "scope": "Real Chromium, React StrictMode WorkbookFilePreview, production XLSX Worker. Worker subclass records creation/termination/kind without replacing transport. Authored XML capture via strict IPC fixture; no native app/real file/Agent; not WebKit acceptance."
+}
+[{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connecting..."}],"executionContextId":2,"timestamp":1791555373333.701,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":858,"columnNumber":8}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connected."}],"executionContextId":2,"timestamp":1791555373356.293,"stackTrace":{"callFrames":[{"functionName":"handleMessage","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":967,"columnNumber":11},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":459,"columnNumber":41},{"functionName":"dequeue","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":481,"columnNumber":7},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":473,"columnNumber":8},{"functionName":"enqueue","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":467,"columnNumber":9},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":459,"columnNumber":27},{"functionName":"onMessage","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":297,"columnNumber":5},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":415,"columnNumber":4}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"info","args":[{"type":"string","value":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"},{"type":"string","value":"font-weight:bold"}],"executionContextId":2,"timestamp":1791555373381.491,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14335,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14372,"columnNumber":3},{"functionName":"","scriptId":"17","url":"http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=fef6302e","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14377,"columnNumber":18},{"functionName":"","scriptId":"17","url":"http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=fef6302e","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14380,"columnNumber":15}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connecting..."}],"executionContextId":3,"timestamp":1791555373466.348,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":858,"columnNumber":8}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connected."}],"executionContextId":3,"timestamp":1791555373469.099,"stackTrace":{"callFrames":[{"functionName":"handleMessage","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":967,"columnNumber":11},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":459,"columnNumber":41},{"functionName":"dequeue","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":481,"columnNumber":7},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":473,"columnNumber":8},{"functionName":"enqueue","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":467,"columnNumber":9},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":459,"columnNumber":27},{"functionName":"onMessage","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":297,"columnNumber":5},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1458/@vite/client","lineNumber":415,"columnNumber":4}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"info","args":[{"type":"string","value":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"},{"type":"string","value":"font-weight:bold"}],"executionContextId":3,"timestamp":1791555373469.785,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14335,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14372,"columnNumber":3},{"functionName":"","scriptId":"17","url":"http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=fef6302e","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14377,"columnNumber":18},{"functionName":"","scriptId":"17","url":"http://127.0.0.1:1458/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=fef6302e","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"11","url":"http://127.0.0.1:1458/node_modules/.vite/deps/react-dom_client.js?v=fef6302e","lineNumber":14380,"columnNumber":15}]}}}]

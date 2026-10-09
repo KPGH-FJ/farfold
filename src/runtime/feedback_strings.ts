@@ -1,4 +1,6 @@
 import type { SavedFileFeedback } from "./drafts";
+import { feedbackDiskVersion } from "./file_feedback_anchor";
+import { VISUAL_FEEDBACK_STRINGS as V } from "./visual_feedback_strings";
 
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
@@ -18,14 +20,17 @@ export function fileFeedbackText(entry: SavedFileFeedback): string {
   const lines = entry.selection
     ? `${entry.selection.line}${entry.selection.endLine && entry.selection.endLine !== entry.selection.line ? `–${entry.selection.endLine}` : ""}`
     : "";
-  const location = entry.selection
-    ? entry.scope === "fragment"
-      ? `${side}片段第 ${lines} 行`
-      : entry.scope === "file"
-        ? `${side}第 ${lines} 行`
-        : `当时标记的第 ${lines} 行，位置未重新核对`
-    : entry.lineInput?.text.trim()
-      ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
-      : "";
-  return `关于 ${entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${entry.text.trim()}`;
+  const location = entry.anchor
+    ? `第 ${entry.anchor.page} / ${entry.anchor.pageCount} 页`
+    : entry.selection
+      ? entry.scope === "fragment"
+        ? `${side}片段第 ${lines} 行`
+        : entry.scope === "file"
+          ? `${side}第 ${lines} 行`
+          : `当时标记的第 ${lines} 行，位置未重新核对`
+      : entry.lineInput?.text.trim()
+        ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
+        : "";
+  const disk = feedbackDiskVersion(entry.path, entry.contentId);
+  return `关于 ${entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
 }

@@ -1,0 +1,220 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_preview.test.ts (16 tests | 9 failed) 27ms
+     × normalizes the structured backend changed code without exposing raw errors 3ms
+     × normalizes the structured backend unreadable code without exposing raw errors 1ms
+     × normalizes the structured backend encrypted code without exposing raw errors 1ms
+     × normalizes the structured backend invalid code without exposing raw errors 0ms
+     × normalizes the structured backend limit code without exposing raw errors 0ms
+     × normalizes the structured backend unsupported code without exposing raw errors 0ms
+     × normalizes the structured backend readPending code without exposing raw errors 0ms
+     × normalizes the structured backend readBusy code without exposing raw errors 1ms
+     × normalizes an unexpected capture error to unreadable 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend changed code without exposing raw errors
+AssertionError: expected { code: 'changed', …(1) } to match object { code: 'changed', message: 'changed' }
+
+- Expected
++ Received
+
+  {
+    "code": "changed",
+-   "message": "changed",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend unreadable code without exposing raw errors
+AssertionError: expected { code: 'unreadable', …(1) } to match object { code: 'unreadable', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "unreadable",
+-   "message": "unreadable",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend encrypted code without exposing raw errors
+AssertionError: expected { code: 'encrypted', …(1) } to match object { code: 'encrypted', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "encrypted",
+-   "message": "encrypted",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend invalid code without exposing raw errors
+AssertionError: expected { code: 'invalid', …(1) } to match object { code: 'invalid', message: 'invalid' }
+
+- Expected
++ Received
+
+  {
+    "code": "invalid",
+-   "message": "invalid",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend limit code without exposing raw errors
+AssertionError: expected { code: 'limit', …(1) } to match object { code: 'limit', message: 'limit' }
+
+- Expected
++ Received
+
+  {
+    "code": "limit",
+-   "message": "limit",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend unsupported code without exposing raw errors
+AssertionError: expected { code: 'unsupported', …(1) } to match object { code: 'unsupported', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "unsupported",
+-   "message": "unsupported",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend readPending code without exposing raw errors
+AssertionError: expected { code: 'readPending', …(1) } to match object { code: 'readPending', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "readPending",
+-   "message": "readPending",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes the structured backend readBusy code without exposing raw errors
+AssertionError: expected { code: 'readBusy', …(1) } to match object { code: 'readBusy', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "readBusy",
+-   "message": "readBusy",
++   "message": "private-untrusted-error",
+  }
+
+ ❯ src/runtime/xlsx_preview.test.ts:57:74
+     55|   it.each(["changed", "unreadable", "encrypted", "invalid", "limit", "…
+     56|     invoke.mockRejectedValue({code, message: "private-untrusted-error"…
+     57|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     58|   });
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/runtime/xlsx_preview.test.ts > XLSX captured version and worker ownership > normalizes an unexpected capture error to unreadable
+AssertionError: expected 'untrusted private path' to match object { code: 'unreadable', …(1) }
+
+- Expected:
+{
+  "code": "unreadable",
+  "message": "unreadable",
+}
+
++ Received:
+"untrusted private path"
+
+ ❯ src/runtime/xlsx_preview.test.ts:61:74
+     59|   it("normalizes an unexpected capture error to unreadable", async () …
+     60|     invoke.mockRejectedValue("untrusted private path");
+     61|     await expect(readWorkbookCapture(file, new AbortController().signa…
+       |                                                                          ^
+     62|   });
+     63|   it("abandons capture wait on abort without claiming to abort the OS …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 7 passed (16)
+   Start at  22:13:09
+   Duration  164ms (transform 47ms, setup 0ms, import 68ms, tests 27ms, environment 0ms)
+

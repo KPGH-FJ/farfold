@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/receipt.json 12ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-feedback/browser/cleanup.json 1ms (unchanged)

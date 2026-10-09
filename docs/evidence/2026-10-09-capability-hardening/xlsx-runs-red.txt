@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_parse.test.ts (23 tests | 1 failed) 96ms
+     × bounds logically repeated runs including empty text 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_parse.test.ts > OOXML bounded invalid inputs > bounds logically repeated runs including empty text
+AssertionError: expected Error: unexpected success to be an instance of XlsxError
+ ❯ rejected src/runtime/xlsx_parse.test.ts:11:15
+      9|     throw new Error("unexpected success");
+     10|   } catch (e) {
+     11|     expect(e).toBeInstanceOf(XlsxError);
+       |               ^
+     12|     if (code) expect((e as XlsxError).code).toBe(code);
+     13|   }
+ ❯ src/runtime/xlsx_parse.test.ts:228:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 passed (23)
+   Start at  22:12:24
+   Duration  215ms (transform 41ms, setup 0ms, import 59ms, tests 96ms, environment 0ms)
+

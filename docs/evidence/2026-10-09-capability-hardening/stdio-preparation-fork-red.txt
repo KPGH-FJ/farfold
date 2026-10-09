@@ -1,0 +1,20 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.52s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+controlled fork witness before_exec=false, after_exec=true
+
+thread 'acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint' (19891746) panicked at src/acp_client/process_stdio_tests.rs:341:9:
+original immediate-close assumption
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint ... FAILED
+
+failures:
+
+failures:
+    acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1156 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

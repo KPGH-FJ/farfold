@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>XLSX controlled worker fixture</title>
+    <style>
+      body {
+        font: 14px system-ui;
+        margin: 32px;
+        color: #222;
+        background: #fafafa;
+      }
+      table {
+        border-collapse: collapse;
+        background: white;
+      }
+      td,
+      th {
+        border: 1px solid #aaa;
+        padding: 10px 18px;
+        max-width: 240px;
+      }
+      th {
+        background: #eee;
+        text-align: left;
+      }
+      pre {
+        white-space: pre-wrap;
+      }
+      small {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>XLSX — controlled fixture</h1>
+    <p>
+      Authored OOXML, real browser Worker, no user document or native
+      application.
+    </p>
+    <main></main>
+    <pre id="result"></pre>
+    <script type="module">
+      import { readWorkbookPreview } from "/src/runtime/xlsx_preview.ts";
+      import {
+        workbookFixture,
+        replacePart,
+      } from "/src/runtime/xlsx_fixture.ts";
+      const checks = [],
+        start = performance.now();
+      let ipcCalls = 0;
+      window.__TAURI_INTERNALS__ = {
+        invoke() {
+          ipcCalls++;
+          throw Error("unexpected IPC");
+        },
+      };
+      const check = (name, condition) => {
+        checks.push({ name, passed: !!condition });
+        if (!condition) throw Error(name);
+      };
+      const capture = (input) => ({
+        ...input,
+        file: {
+          root: "/authored",
+          path: "/authored/example.xlsx",
+          resolvedPath: "/authored/example.xlsx",
+          name: "example.xlsx",
+          size: 123,
+          sha256: "authored-fixture",
+          version: "authored-v1",
+        },
+        inflatedBytes: 500000,
+      });
+      const render = (data, id) =>
+        readWorkbookPreview(capture(data), id, new AbortController().signal);
+      try {
+        const backendCapture = await (
+          await fetch("./backend-capture.json")
+        ).json();
+        const authoredBytes = await (
+          await fetch("/src/runtime/fixtures/xlsx-basic.xlsx")
+        ).arrayBuffer();
+        const digest = [
+          ...new Uint8Array(
+            await crypto.subtle.digest("SHA-256", authoredBytes),
+          ),
+        ]
+          .map((x) => x.toString(16).padStart(2, "0"))
+          .join("");
+        check(
+          "backend capture same authored file hash",
+          digest === backendCapture.file.sha256,
+        );
+        const backendResult = await readWorkbookPreview(
+          backendCapture,
+          undefined,
+          new AbortController().signal,
+        );
+        check(
+          "actual backend capture true Worker typed formats",
+          backendResult.sheet.cells.some((c) => c.display === "1900-02-29") &&
+            backendResult.sheet.cells.some((c) => c.value === false) &&
+            backendResult.sheet.cells.some((c) => c.value === 0),
+        );
+        const input = workbookFixture(
+          '<row r="1"><c r="A1" s="1"><v>0.12</v></c><c r="B1" s="2"><v>1234.5</v></c><c r="C1" s="3"><v>60</v></c><c r="D1" s="4"><v>1.5</v></c></row><row r="2"><c r="A2"><f>1-1</f><v>0</v></c><c r="B2" t="b"><f>FALSE()</f><v>0</v></c><c r="C2" t="str"><f>EMPTY()</f><v/></c><c r="D2"><f>NOT_CALCULATED()</f></c></row><row r="3"><c r="A3" t="inlineStr"><is><t>中文 &lt;script&gt; inert</t></is></c></row>',
+        );
+        const first = await render(input);
+        check(
+          "real worker returned typed worksheet",
+          first.sheet.cells.length === 9,
+        );
+        check(
+          "number/date/duration formats",
+          JSON.stringify(
+            first.sheet.cells.slice(0, 4).map((c) => c.display),
+          ) === JSON.stringify(["12.00%", "1,234.50", "1900-02-29", "36:00"]),
+        );
+        check(
+          "zero and false caches",
+          first.sheet.cells[4].value === 0 &&
+            first.sheet.cells[5].value === false,
+        );
+        check(
+          "empty differs from absent cache",
+          first.sheet.cells[6].cacheState === "present" &&
+            first.sheet.cells[6].display === "" &&
+            first.sheet.cells[7].cacheState === "missing" &&
+            first.sheet.cells[7].display === null,
+        );
+        check(
+          "passive Chinese/text",
+          first.sheet.cells[8].display === "中文 <script> inert",
+        );
+        const table = document.createElement("table"),
+          head = document.createElement("tr");
+        for (const title of ["Cell", "Display", "Type/cache", "Original"]) {
+          const el = document.createElement("th");
+          el.textContent = title;
+          head.append(el);
+        }
+        table.append(head);
+        for (const cell of first.sheet.cells) {
+          const row = document.createElement("tr");
+          for (const value of [
+            cell.reference,
+            cell.display ?? "(no cached result)",
+            `${cell.type} / ${cell.cacheState}`,
+            cell.raw ?? "absent",
+          ]) {
+            const el = document.createElement("td");
+            el.textContent = value;
+            row.append(el);
+          }
+          table.append(row);
+        }
+        document.querySelector("main").append(table);
+        document.documentElement.dataset.capture = "xlsx-worker-sample";
+        for (
+          let n = 0;
+          n < 100 &&
+          document.documentElement.dataset.captured !== "xlsx-worker-sample";
+          n++
+        )
+          await new Promise((r) => setTimeout(r, 50));
+        const dtd = replacePart(
+          input,
+          "xl/worksheets/sheet1.xml",
+          (x) =>
+            '<!DOCTYPE worksheet SYSTEM "https://example.invalid/not-requested">' +
+            x,
+        );
+        try {
+          await render(dtd);
+          check("DTD rejected", false);
+        } catch (e) {
+          check("DTD rejected", e.code === "unsupported");
+        }
+        const external = replacePart(input, "xl/_rels/workbook.xml.rels", (x) =>
+          x.replace(
+            "</Relationships>",
+            '<Relationship Id="external" Type="link" TargetMode="External" Target="https://example.invalid/not-requested"/></Relationships>',
+          ),
+        );
+        check(
+          "external relation inert warning",
+          (await render(external)).warnings.includes("externalRelationships"),
+        );
+        const ctrl = new AbortController(),
+          pending = readWorkbookPreview(capture(input), undefined, ctrl.signal);
+        ctrl.abort();
+        const immediateNext = render(input);
+        try {
+          await pending;
+          check("abort rejects wait", false);
+        } catch (e) {
+          check("abort rejects wait", e.code === "cancelled");
+        }
+        check(
+          "fresh worker after abort",
+          (await immediateNext).sheet.cells[0].display === "12.00%",
+        );
+        const busy = render(input);
+        try {
+          await render(input);
+          check("concurrency limited", false);
+        } catch (e) {
+          check("concurrency limited", e.code === "busy");
+        }
+        await busy;
+        const WorkerReal = window.Worker;
+        window.Worker = class extends WorkerReal {
+          constructor(_url, options) {
+            super(new URL("./idle.worker.js", import.meta.url), options);
+          }
+        };
+        const deadlineStart = performance.now();
+        try {
+          await render(input);
+          check("real idle worker deadline", false);
+        } catch (e) {
+          check(
+            "real idle worker deadline",
+            e.code === "timeout" && performance.now() - deadlineStart >= 9900,
+          );
+        } finally {
+          window.Worker = WorkerReal;
+        }
+        check(
+          "slot recovered after deadline",
+          (await render(input)).sheet.cells.length === 9,
+        );
+        check("no native file/IPC calls", ipcCalls === 0);
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: true,
+          checks,
+          elapsedMs: performance.now() - start,
+          ipcCalls,
+          scope:
+            "Chromium/Vite real Worker plus explicitly substituted idle Worker for deadline; not WebKit or installed app",
+        });
+      } catch (error) {
+        document.querySelector("#result").textContent = JSON.stringify({
+          passed: false,
+          checks,
+          error: String(error),
+          stack: error.stack,
+          ipcCalls,
+        });
+      } finally {
+        document.documentElement.dataset.done = "true";
+      }
+    </script>
+  </body>
+</html>
