@@ -1,3 +1,7 @@
+import ConversationConfiguration from "./ConversationConfiguration.jsx";
+import { additionalOptionsFor } from "./agent-catalog.js";
+import { applyConversationPatch } from "./conversation-policy.js";
+import { historySourceIssue } from "./history-start-state.js";
 import React, { useState } from "react";
 import {
   Plus,
@@ -16,6 +20,9 @@ import {
   Globe,
 } from "@phosphor-icons/react";
 import { Button, AgentIcon, Modal, Badge } from "./ui";
+import AttachmentList from "./AttachmentList.jsx";
+import CommandPicker from "./CommandPicker.jsx";
+import { ATTACHMENT_EXAMPLES, insertCommand } from "./composer-examples.js";
 import DraftWebPreview from "./DraftWebPreview.jsx";
 import PermissionControl from "./PermissionControl.jsx";
 import { permissionSelectionFor } from "./agent-catalog.js";
@@ -38,6 +45,7 @@ import {
   usesApi,
 } from "./service-access.js";
 export default function NewConversationV2({
+  active = true,
   draft,
   recoveryNotice = null,
   setDraft,
@@ -70,6 +78,7 @@ export default function NewConversationV2({
     pendingOnboardingForEntry(current, choice, { view: "new", folder });
   const ready = agentCanStartConversation(current) && !pendingPreparation;
   const permission = permissionSelectionFor(current, choice);
+  const editingLocked = pending || Boolean(choice.configurationChange);
   const hasContent = hasDraftContent(draft, files);
   const existingModels = current
     ? currentModelOptions(current, {
@@ -85,9 +94,13 @@ export default function NewConversationV2({
   );
   const compatible = compatibleServices(current, services);
   const modelIssue = modelDraft
-    ? serviceChoiceIssue(modelDraft, current, services)
+    ? serviceChoiceIssue(modelDraft, current, services) ||
+      (choice.requiresSourceSelection
+        ? historySourceIssue(modelDraft, agents, services, folder)
+        : null)
     : null;
   const chooseAgent = (a, confirmed = false) => {
+    if (editingLocked) return;
     if (!confirmed && hasContent && current && current.id !== a.id) {
       setPendingAgent(a);
       setModal("change-agent");
@@ -96,6 +109,10 @@ export default function NewConversationV2({
     if (agentNeedsInitialPreparation(a) || hasPendingOnboarding(a)) {
       setModal(null);
       onExplore(a.id, { intent: "use" });
+      return;
+    }
+    if (selectionMatchesAgent(a, choice)) {
+      setModal(null);
       return;
     }
     onChoiceChange?.();
@@ -115,27 +132,47 @@ export default function NewConversationV2({
           : null,
       accessMode: a.accessMode || "existing",
       effort: a.effort || a.efforts?.[0] || "",
+      configValues: structuredClone(a.configValues || {}),
     });
     setModal(null);
   };
   const modelDialog = () => {
+    if (editingLocked) return;
     setModelDraft({ ...choice });
     setModal("model");
   };
-  const commitModel = (model, service) =>
-    setModelDraft((c) => ({
-      ...c,
-      model,
-      source: service ? service.name : "沿用已有设置",
-      serviceId: service?.id,
-      serviceSnapshot: service ? structuredClone(service) : null,
-      accessMode: service ? "api" : "existing",
-    }));
+  const commitModel = (model, service) => {
+    if (editingLocked) return;
+    setModelDraft((c) => {
+      const sourceChanged =
+        c.serviceId !== service?.id ||
+        c.accessMode !== (service ? "api" : "existing") ||
+        c.serviceSnapshot?.endpoint !== service?.endpoint ||
+        c.serviceSnapshot?.format !== service?.format;
+      return {
+        ...c,
+        model,
+        originalModelKnown: true,
+        source: service ? service.name : "沿用已有设置",
+        serviceId: service?.id,
+        serviceSnapshot: service ? structuredClone(service) : null,
+        accessMode: service ? "api" : "existing",
+        configValues: sourceChanged ? {} : c.configValues,
+        reviewConfigurationOptions: sourceChanged
+          ? false
+          : c.reviewConfigurationOptions,
+        configurationNotice: sourceChanged
+          ? "来源已更改，更多设置按新来源重新提供。"
+          : c.configurationNotice,
+      };
+    });
+  };
   const addFile = (f) => {
     setFiles((fs) => [...new Set([...fs, f])]);
     setModal(null);
   };
   const requestSend = () => {
+    if (editingLocked || choice.requiresSourceSelection) return;
     if (!ready) return onExplore(current?.id || null);
     if (!folder) return setModal("send-folder");
     onSend();
@@ -149,22 +186,14 @@ export default function NewConversationV2({
       </div>
       {recoveryNotice}
       <div className="v2-compose-card">
-        {files.length > 0 && (
-          <div className="v2-attached">
-            {files.map((f) => (
-              <span key={f}>
-                <FileText size={14} />
-                {f}
-                <button
-                  aria-label={"移除 " + f}
-                  onClick={() => setFiles((fs) => fs.filter((x) => x !== f))}
-                >
-                  <X size={12} />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
+        <AttachmentList
+          files={files}
+          label="新对话附件"
+          disabled={editingLocked}
+          onRemove={(file) =>
+            setFiles((items) => items.filter((item) => item !== file))
+          }
+        />
         <textarea
           aria-label="新对话内容"
           placeholder="描述想完成的事，或添加一份资料…"
@@ -177,7 +206,13 @@ export default function NewConversationV2({
               !e.nativeEvent.isComposing
             ) {
               e.preventDefault();
-              if (!hasContent || pending || !workEnabled) return;
+              if (
+                !hasContent ||
+                editingLocked ||
+                choice.requiresSourceSelection ||
+                !workEnabled
+              )
+                return;
               requestSend();
             }
           }}
@@ -194,7 +229,7 @@ export default function NewConversationV2({
             <button
               className="v2-agent-choice"
               aria-label="选择 Agent"
-              disabled={pending}
+              disabled={editingLocked}
               onClick={() => {
                 setSearch("");
                 setModal("agent");
@@ -208,7 +243,7 @@ export default function NewConversationV2({
             <button
               className="v2-model-choice"
               aria-label="选择模型与来源"
-              disabled={!ready || pending}
+              disabled={!ready || editingLocked}
               title={!ready ? "先完成 Agent 接入，再选择模型" : undefined}
               onClick={modelDialog}
             >
@@ -225,7 +260,7 @@ export default function NewConversationV2({
                 <select
                   aria-label="思考深度"
                   value={choice.effort}
-                  disabled={!ready || pending}
+                  disabled={!ready || editingLocked}
                   onChange={(e) =>
                     setChoice((c) => ({ ...c, effort: e.target.value }))
                   }
@@ -241,7 +276,7 @@ export default function NewConversationV2({
               key={current?.id}
               capability={permission?.permissionCapability}
               value={permission?.permissionValue}
-              disabled={!ready || pending}
+              disabled={!ready || editingLocked}
               disabledReason={
                 pending ? "消息发送中，暂不能更改权限。" : "先完成 Agent 接入。"
               }
@@ -249,10 +284,49 @@ export default function NewConversationV2({
                 setChoice((c) => ({ ...c, permissionValue }))
               }
             />
+            {(ready || choice.configurationChange) && (
+              <ConversationConfiguration
+                additionalOnly
+                active={active}
+                task={{
+                  ...choice,
+                  id: "new-draft",
+                  status: pending ? "submitting" : "draft",
+                  folder,
+                }}
+                capability={{
+                  models: choice.model ? [choice.model] : [],
+                  configOptions: additionalOptionsFor(current, choice),
+                }}
+                onTaskChange={(patch) =>
+                  setChoice((value) => {
+                    const next = applyConversationPatch(
+                      { ...value, id: "new-draft", status: "draft", folder },
+                      patch,
+                    );
+                    const fields = [
+                      "model",
+                      "effort",
+                      "configValues",
+                      "configurationChange",
+                      "configurationNotice",
+                      "reviewConfigurationOptions",
+                      "configurationPreviewResult",
+                    ];
+                    return {
+                      ...value,
+                      ...Object.fromEntries(
+                        fields.map((key) => [key, next[key]]),
+                      ),
+                    };
+                  })
+                }
+              />
+            )}
             <button
               className="v2-tune"
               aria-label="对话选项"
-              disabled={!ready || pending}
+              disabled={!ready || editingLocked}
               onClick={() => setModal("options")}
             >
               <SlidersHorizontal size={17} />
@@ -263,7 +337,11 @@ export default function NewConversationV2({
             aria-label={
               ready ? "发送新对话" : current ? "继续设置 Agent" : "挑选 Agent"
             }
-            disabled={pending || (ready && (!hasContent || !workEnabled))}
+            disabled={
+              editingLocked ||
+              choice.requiresSourceSelection ||
+              (ready && (!hasContent || !workEnabled))
+            }
             onClick={requestSend}
           >
             {pending ? (
@@ -276,6 +354,19 @@ export default function NewConversationV2({
           </button>
         </div>
       </div>
+      {choice.requiresSourceSelection && (
+        <div role="alert" className="workbench-send-message">
+          原来源需要重新确认，草稿仍保留。
+          <Button disabled={editingLocked} onClick={modelDialog}>
+            重新选择来源与模型
+          </Button>
+        </div>
+      )}
+      {choice.configurationChange && (
+        <p role="status" className="workbench-send-message">
+          更多设置尚未确认，发送暂停。请打开“更多设置”核对结果。
+        </p>
+      )}
       {(sendError || !workEnabled) && (
         <div className="workbench-send-message" role="status">
           <span>
@@ -316,19 +407,22 @@ export default function NewConversationV2({
                   choice.source) + " · 仅本次选择的来源"}
         </span>
         <small>
-          {!workEnabled
-            ? "发送已暂停 · 草稿保留"
-            : "Enter 发送 · Shift Enter 换行"}
+          {editingLocked
+            ? "设置或发送待确认 · 草稿保留"
+            : !workEnabled
+              ? "发送已暂停 · 草稿保留"
+              : "Enter 发送 · Shift Enter 换行"}
         </small>
       </div>
       <div className="draft-context-row">
-        <button onClick={() => setModal("folder")}>
+        <button disabled={editingLocked} onClick={() => setModal("folder")}>
           <FolderSimple size={16} />
           <span>{folder || "选择工作文件夹"}</span>
         </button>
         {folder && (
           <button
             aria-label="移除工作文件夹"
+            disabled={editingLocked}
             onClick={() => {
               setFolder("");
               setDraftWeb(false);
@@ -477,11 +571,11 @@ export default function NewConversationV2({
               </Button>
               <Button
                 primary
-                disabled={Boolean(modelIssue)}
+                disabled={Boolean(modelIssue) || editingLocked}
                 onClick={() => {
-                  if (modelIssue) return;
+                  if (modelIssue || editingLocked) return;
                   onChoiceChange?.();
-                  setChoice(modelDraft);
+                  setChoice({ ...modelDraft, requiresSourceSelection: false });
                   setModal(null);
                 }}
               >
@@ -614,6 +708,16 @@ export default function NewConversationV2({
       {modal === "files" && (
         <Modal title="选择演示文件" onClose={() => setModal(null)}>
           <p className="v2-help">这里只添加示例文件名，不读取你的电脑。</p>
+          <Button
+            onClick={() => {
+              setFiles((items) => [
+                ...new Set([...items, ...ATTACHMENT_EXAMPLES]),
+              ]);
+              setModal(null);
+            }}
+          >
+            添加多附件示例（8 个）
+          </Button>
           <div className="v2-action-list">
             {["旅行偏好.md", "读书笔记.md", "项目说明.md"].map((f) => (
               <button key={f} onClick={() => addFile(f)}>
@@ -642,6 +746,7 @@ export default function NewConversationV2({
               <button
                 key={f}
                 onClick={() => {
+                  if (editingLocked) return;
                   setFolder(f);
                   setModal(null);
                 }}
@@ -654,30 +759,13 @@ export default function NewConversationV2({
         </Modal>
       )}
       {modal === "commands" && (
-        <Modal title="Agent 命令示例" onClose={() => setModal(null)}>
-          <p className="v2-help">
-            正式使用时，只显示这个 Agent 实际提供的命令。
-          </p>
-          <div className="v2-action-list">
-            {[
-              ["/help", "查看可用帮助"],
-              ["/compact", "整理当前对话上下文"],
-            ].map(([c, d]) => (
-              <button
-                key={c}
-                onClick={() => {
-                  setDraft((text) => `${c} ${text}`);
-                  setModal(null);
-                }}
-              >
-                <span>
-                  <strong>{c}</strong>
-                  <small>{d}</small>
-                </span>
-              </button>
-            ))}
-          </div>
-        </Modal>
+        <CommandPicker
+          onClose={() => setModal(null)}
+          onSelect={(command) => {
+            setDraft((text) => insertCommand(text, command));
+            setModal(null);
+          }}
+        />
       )}
       {modal === "change-agent" && pendingAgent && (
         <Modal

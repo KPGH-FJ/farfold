@@ -1,3 +1,4 @@
+import { OBSERVED_CONFIGURATION_SAMPLE } from "./additional-configuration.js";
 import { AGENT_DIRECTORY } from "./agent-directory.js";
 import { authenticationFolder } from "./authentication-state.js";
 import { ACCOUNT_CAPABILITIES } from "./account-capabilities.js";
@@ -18,6 +19,7 @@ const entries = [
     id: "codex",
     name: "Codex",
     permissionCapability: APPROVAL_PRESET_SAMPLE,
+    configurationSamples: OBSERVED_CONFIGURATION_SAMPLE,
     publisher: "OpenAI",
     icon: "/assets/codex.svg",
     description: "处理代码、文件和项目任务，保留自己的账号与模型设置。",
@@ -221,10 +223,33 @@ export const AGENT_CATALOG = directoryEntries.map((entry) => ({
     status: entry.serviceConfigurationReady ? "implemented" : "unknown",
     formats: entry.apiFormats || [],
   },
-  configOptions: (entry.efforts || []).length
-    ? [{ id: "effort", label: "推理等级", options: entry.efforts }]
-    : [],
+  configOptions: [
+    ...((entry.efforts || []).length
+      ? [{ id: "effort", label: "推理等级", options: entry.efforts }]
+      : []),
+    ...(entry.configurationSamples || []),
+  ],
 }));
+// Old review snapshots may lack newly documented read-only observations. Never
+// carry these existing-source observations into an API source.
+export function additionalOptionsFor(agent, selection = {}) {
+  if (
+    !agent ||
+    [selection.access, selection.accessMode].includes("api") ||
+    selection.serviceId ||
+    selection.sourceId
+  )
+    return [];
+  const current = agent.configOptions || [];
+  const sample =
+    AGENT_CATALOG.find((item) => item.id === agent.id)?.configurationSamples ||
+    [];
+  return [...current, ...sample].filter(
+    (option, index, all) =>
+      option.id !== "effort" &&
+      all.findIndex((item) => item.id === option.id) === index,
+  );
+}
 export const AGENT_CATEGORIES = ["全部", "编程", "自动化", "研究", "轻量"];
 export function permissionCapabilityFor(agent) {
   if (!agent) return null;
@@ -290,5 +315,8 @@ export function setupTestFingerprint(agent, draft, services = []) {
     service?.secretRevision || 0,
     draft.model || "",
     draft.effort || "",
+    Object.entries(draft.configValues || {}).sort(([left], [right]) =>
+      left.localeCompare(right),
+    ),
   ]);
 }

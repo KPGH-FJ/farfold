@@ -1,0 +1,135 @@
+.configuration-options {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+}
+.configuration-options-heading,
+.configuration-option-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.configuration-options-heading h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.configuration-options-heading > span,
+.configuration-option-title > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.configuration-option {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-width: 0;
+}
+.configuration-option-title label {
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.configuration-option p {
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.configuration-option dl {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+  font-size: 12px;
+}
+.configuration-option dl > div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px;
+}
+.configuration-option dt {
+  color: var(--muted);
+}
+.configuration-option dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.configuration-option select {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: inherit;
+  background: var(--card);
+}
+.configuration-option select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.configuration-option select:disabled {
+  opacity: 0.65;
+}
+.configuration-option details {
+  margin-top: 8px;
+  font-size: 11px;
+}
+.configuration-option summary {
+  cursor: pointer;
+  width: fit-content;
+  color: var(--muted);
+}
+.configuration-option .configuration-option-readonly {
+  color: var(--muted);
+}
+.configuration-preview-tools {
+  margin: 16px 0;
+  font-size: 12px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+}
+.configuration-preview-tools summary {
+  cursor: pointer;
+}
+.configuration-preview-tools label {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+}
+.configuration-preview-tools select {
+  min-height: 34px;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.new-more-settings {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.new-more-settings:hover {
+  background: var(--card-dim);
+}
+.new-more-settings:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.configuration-option-title h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}

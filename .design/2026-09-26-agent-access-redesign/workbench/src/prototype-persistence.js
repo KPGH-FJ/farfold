@@ -4,6 +4,7 @@ import {
   removeRetiredAuthenticationSamples,
 } from "./prototype-migrations.js";
 import { draftTitle } from "./workbench-state.js";
+import { suspendedDraft } from "./history-start-state.js";
 export const PROTOTYPE_STORAGE_KEY = "farfold-workbench-review-v6";
 const forbidden =
   /^(apiKey|key|token|password|secret|credential|authorization|env)$/i;
@@ -53,6 +54,14 @@ export function restorePrototypeSnapshot(snapshot) {
         task.queue?.some((item) => item.attachments?.length),
       ),
       simulatePending: false,
+      ...(task.configurationChange?.phase === "pending"
+        ? {
+            configurationChange: {
+              ...task.configurationChange,
+              phase: "unknown",
+            },
+          }
+        : {}),
       ...(task.permissionChange?.phase === "pending"
         ? { permissionChange: { ...task.permissionChange, phase: "unknown" } }
         : {}),
@@ -118,6 +127,12 @@ export function restorePrototypeSnapshot(snapshot) {
         }
       : {}),
   }));
+  state.draft = suspendedDraft(state.draft);
+  if (Array.isArray(state.savedDrafts))
+    state.savedDrafts = state.savedDrafts.map((item) => ({
+      ...item,
+      draft: suspendedDraft(item.draft),
+    }));
   state.pendingSend = null;
   state.restored = true;
   state.attachmentsNeedReview = Boolean(state.draft.files?.length);

@@ -77,6 +77,10 @@ export default function Conversation({
   task,
   onTaskChange: publishTaskChange,
   onNew,
+  onNewFromMessage,
+  onDeleteConversation,
+  onMoveToGroup,
+  groups = [],
   onSettings,
   onResumeSending,
   onBack,
@@ -696,6 +700,11 @@ export default function Conversation({
               )}
               <ConversationActions
                 task={task}
+                groups={groups}
+                onMoveToGroup={onMoveToGroup}
+                onDeleteConversation={onDeleteConversation}
+                onNew={onNew}
+                copy={copy}
                 transcript={transcript}
                 active={active}
                 renameOpen={rename !== null}
@@ -1020,6 +1029,7 @@ export default function Conversation({
                 showWork && (
                   <ConversationTranscript
                     task={task}
+                    onNewFromMessage={onNewFromMessage}
                     stopping={
                       stopping ||
                       (pending && !canAnswerPreview(task, task.status, false))

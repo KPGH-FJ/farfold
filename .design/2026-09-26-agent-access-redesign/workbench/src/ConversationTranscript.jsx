@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Copy, PencilSimple, Square } from "@phosphor-icons/react";
-import { AgentIcon, Badge, Button, Modal } from "./ui";
+import React, { useRef } from "react";
+import { Square } from "@phosphor-icons/react";
+import { AgentIcon, Badge, Button } from "./ui";
 import {
   EngineeringSteps,
   EngineeringResult,
@@ -25,7 +25,8 @@ import {
   SimulationResult,
   Approval,
 } from "./ConversationParts.jsx";
-import { replyAt } from "./conversation-state.js";
+import { replyAt, readableTranscript } from "./conversation-state.js";
+import ConversationMessageActions from "./ConversationMessageActions.jsx";
 
 function Requests({
   task,
@@ -175,8 +176,10 @@ function Reply({
   onFeedback,
   openPane,
   copy,
+  onNewFromMessage,
   children,
 }) {
+  const replyElement = useRef(null);
   const scenario = scenarioFor(task);
   const interactive =
     task.id.startsWith("new-") || task.resultMode === "simulated";
@@ -202,11 +205,21 @@ function Reply({
     !["simulated", "plan", "decision"].includes(task.resultMode);
   const open = (tab, file) => openPane(tab, file, task);
   return (
-    <>
+    <div ref={replyElement} style={{ display: "contents" }}>
       <div className="conv-agent-message" data-reply-round={task.round}>
         <div className="conv-message-meta">
           <AgentIcon name={task.agent} size={21} />
           <strong>{task.agent}</strong>
+          <ConversationMessageActions
+            task={task}
+            message={{ role: "assistant" }}
+            resolveMessage={() => ({
+              role: "assistant",
+              text: readableTranscript(replyElement.current),
+            })}
+            copy={copy}
+            onNewFromMessage={onNewFromMessage}
+          />
         </div>
         <p>
           {decisionResult
@@ -323,7 +336,7 @@ function Reply({
           <span>你可以切换到其他对话</span>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -341,23 +354,8 @@ export default function ConversationTranscript({
   onSubmitAnswer,
   onCancelQuestion,
   onCheckQuestion,
+  onNewFromMessage,
 }) {
-  const [editCandidate, setEditCandidate] = useState(null);
-  const startResend = (message) => {
-    onTaskChange({
-      draft: message.text || "",
-      attachments: [...(message.attachments || [])],
-      resendDraft: {
-        previousDraft: task.resendDraft?.previousDraft ?? task.draft ?? "",
-        previousAttachments:
-          task.resendDraft?.previousAttachments || task.attachments || [],
-      },
-    });
-    setEditCandidate(null);
-    requestAnimationFrame(() =>
-      document.querySelector('textarea[aria-label="消息内容"]')?.focus(),
-    );
-  };
   const messages = [
     {
       text: task.prompt ?? scenarioFor(task)?.prompt ?? task.title,
@@ -382,13 +380,13 @@ export default function ConversationTranscript({
               <AgentIcon name={task.agent} size={21} />
             )}
             <strong>{message.role === "user" ? "你" : task.agent}</strong>
-            <Button
-              kind="icon"
-              aria-label="复制历史消息"
-              onClick={() => copy(message.text)}
-            >
-              <Copy size={14} />
-            </Button>
+            <ConversationMessageActions
+              task={task}
+              message={message}
+              copy={copy}
+              onTaskChange={onTaskChange}
+              onNewFromMessage={onNewFromMessage}
+            />
           </div>
           <p style={{ whiteSpace: "pre-wrap" }}>{message.text}</p>
         </div>
@@ -407,27 +405,13 @@ export default function ConversationTranscript({
             <div className="conv-user-message">
               <div className="conv-message-meta">
                 <strong>你</strong>
-                <Button
-                  kind="icon"
-                  aria-label="编辑后追加为新消息"
-                  title="编辑后追加为新消息"
-                  onClick={() =>
-                    task.draft?.trim() || task.attachments?.length
-                      ? setEditCandidate(message)
-                      : startResend(message)
-                  }
-                >
-                  <PencilSimple size={14} />
-                </Button>
-                {message.text && (
-                  <Button
-                    kind="icon"
-                    aria-label="复制消息"
-                    onClick={() => copy(message.text)}
-                  >
-                    <Copy size={14} />
-                  </Button>
-                )}
+                <ConversationMessageActions
+                  task={task}
+                  message={message}
+                  copy={copy}
+                  onTaskChange={onTaskChange}
+                  onNewFromMessage={onNewFromMessage}
+                />
               </div>
               {message.text && <p>{message.text}</p>}
               <SentAttachments attachments={message.attachments} />
@@ -443,6 +427,7 @@ export default function ConversationTranscript({
                 onFeedback={onFeedback}
                 openPane={openPane}
                 copy={copy}
+                onNewFromMessage={onNewFromMessage}
               >
                 {current && (
                   <Requests
@@ -460,29 +445,6 @@ export default function ConversationTranscript({
           </React.Fragment>
         );
       })}
-      {editCandidate && (
-        <Modal
-          title="编辑后追加为新消息"
-          onClose={() => setEditCandidate(null)}
-          footer={
-            <>
-              <Button onClick={() => setEditCandidate(null)}>
-                保留当前草稿
-              </Button>
-              <Button primary onClick={() => startResend(editCandidate)}>
-                暂存草稿并编辑
-              </Button>
-            </>
-          }
-        >
-          <p>
-            {task.resendDraft
-              ? "正在编辑另一条重发消息。更换后会替换这次编辑内容；先前暂存的原草稿仍会保留。"
-              : "输入框已有未发送内容。开始编辑后，会暂存当前草稿；取消重发可恢复。"}
-          </p>
-          <p>原消息和已有回答会保留，确认发送后追加一条新消息。</p>
-        </Modal>
-      )}
     </>
   );
 }

@@ -25,11 +25,13 @@ after(async () => server?.close());
 const render = (Component, props = {}) =>
   renderToStaticMarkup(React.createElement(Component, props));
 
-test("unavailable notification and shortcut customization proposals cannot report saved functionality", () => {
+test("notification preview is interactive but explicit about system limits; shortcut customization remains unavailable", () => {
   const html = render(General, { theme: "light", setTheme() {} });
   assert.ok(html.includes("需要你时提醒"));
-  assert.ok(html.includes("尚未提供"));
-  assert.ok(!html.includes('role="switch"'));
+  assert.ok(html.includes("不请求系统权限、不播放声音、不发送桌面通知"));
+  assert.equal((html.match(/role="switch"/g) || []).length, 2);
+  assert.ok(html.includes("尚未请求"));
+  assert.ok(html.includes("预览测试提醒"));
   assert.ok(html.includes("查看快捷键"));
   assert.ok(!html.includes("查看与自定义"));
   assert.ok(html.includes("⌘ K"));

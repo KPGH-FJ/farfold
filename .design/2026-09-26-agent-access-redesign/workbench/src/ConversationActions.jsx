@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Archive,
+  ArrowUpRight,
+  FolderOpen,
+  Folders,
+  Trash,
   Copy,
   DotsThree,
   FileArrowDown,
@@ -10,6 +14,7 @@ import { Button } from "./ui";
 import { conversationState } from "./conversation-policy.js";
 import { snapshotConversationExport } from "./conversation-export.js";
 import ConversationExportDialog from "./ConversationExportDialog.jsx";
+import ConversationManagementDialogs from "./ConversationManagementDialogs.jsx";
 
 export default function ConversationActions({
   task,
@@ -20,12 +25,18 @@ export default function ConversationActions({
   toast,
   active,
   renameOpen = false,
+  groups = [],
+  onMoveToGroup,
+  onDeleteConversation,
+  onNew,
+  copy,
 }) {
   const [menu, setMenu] = useState(false);
   const [exportState, setExportState] = useState(null);
+  const [management, setManagement] = useState(null);
   const trigger = useRef(null);
   const dialogWasOpen = useRef({ open: false, taskId: task.id });
-  const dialogOpen = Boolean(exportState) || renameOpen;
+  const dialogOpen = Boolean(exportState) || Boolean(management) || renameOpen;
   const activity = conversationState(task);
   useEffect(() => {
     const previous = dialogWasOpen.current;
@@ -43,14 +54,25 @@ export default function ConversationActions({
     if (!active) {
       setMenu(false);
       setExportState(null);
+      setManagement(null);
     }
   }, [active]);
   useEffect(() => {
     setMenu(false);
     setExportState(null);
+    setManagement(null);
   }, [task.id]);
   return (
-    <div className="conv-popover-wrap">
+    <div
+      className="conv-popover-wrap"
+      onKeyDown={(event) => {
+        if (event.key === "Escape" && menu) {
+          event.stopPropagation();
+          setMenu(false);
+          trigger.current?.focus();
+        }
+      }}
+    >
       <Button
         ref={trigger}
         kind="icon"
@@ -68,6 +90,34 @@ export default function ConversationActions({
             onClick={() => setMenu(false)}
           />
           <div className="conv-menu">
+            <button
+              onClick={() => {
+                onNew?.();
+                setMenu(false);
+              }}
+              disabled={!onNew}
+            >
+              <ArrowUpRight size={16} />
+              相同设置再开一段
+            </button>
+            <button
+              onClick={() => {
+                setManagement("move");
+                setMenu(false);
+              }}
+            >
+              <Folders size={16} />
+              移到分组
+            </button>
+            <button
+              onClick={() => {
+                setManagement("finder");
+                setMenu(false);
+              }}
+            >
+              <FolderOpen size={16} />
+              在访达中显示工作位置
+            </button>
             <button
               onClick={() => {
                 onRename();
@@ -119,11 +169,35 @@ export default function ConversationActions({
               <Archive size={16} />
               {task.archived ? "移回最近对话" : "归档对话"}
             </button>
+            <button
+              disabled={!onDeleteConversation}
+              onClick={() => {
+                setManagement("delete");
+                setMenu(false);
+              }}
+            >
+              <Trash size={16} />
+              删除对话
+            </button>
             {!task.archived && activity.archiveReason && (
               <small className="cr-menu-reason">{activity.archiveReason}</small>
             )}
           </div>
         </>
+      )}
+      {management && (
+        <ConversationManagementDialogs
+          key={`${task.id}-${management}`}
+          kind={management}
+          task={task}
+          groups={groups}
+          onClose={() => setManagement(null)}
+          onTaskChange={onTaskChange}
+          onMoveToGroup={onMoveToGroup}
+          onDeleteConversation={onDeleteConversation}
+          copy={copy}
+          toast={toast}
+        />
       )}
       {exportState && (
         <ConversationExportDialog

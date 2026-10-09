@@ -122,8 +122,18 @@ export default function ConversationReviewPanel({
               网页连接结束
             </Button>
           </div>
+          <Button
+            disabled={Boolean(task.configurationChange)}
+            onClick={() => onTaskChange({ reviewConfigurationOptions: true })}
+          >
+            显示附加配置交互样例
+          </Button>
+          <p className="cr-context">
+            样例提供一个可更改选项与一个未知类型，用于评审通用配置；不代表此
+            Agent 的真实功能。之后从输入区的对话设置打开。
+          </p>
           <label className="cr-demo-select">
-            模型设置返回结果
+            模型与附加设置返回结果
             <select
               aria-label="模型设置演示结果"
               value={task.configurationPreviewResult || "success"}
@@ -134,6 +144,7 @@ export default function ConversationReviewPanel({
               <option value="success">确认并保存成功</option>
               <option value="failed">明确失败 · 保留旧值</option>
               <option value="unknown">未确认 · 暂停发送</option>
+              <option value="waiting">持续等待 · 手动核对</option>
             </select>
           </label>
           <label className="cr-demo-select">

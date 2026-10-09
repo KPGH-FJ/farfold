@@ -12,7 +12,8 @@ export const REDESIGN_ISSUES = [
     title: "命令菜单长描述覆盖相邻条目，无法可靠浏览选择",
     status: "observed",
     recommendation:
-      "为长命令和长描述提供独立条目边界、足够行高及滚动；保留 Agent 内容，必要时摘要并提供完整查看。",
+      "已补长名称、长描述与多条目样例；名称和描述均可搜索，条目换行并独立滚动。填入命令保留草稿且不执行；真实命令仍按 Agent 提供的内容验证。",
+    coverage: "本轮原型交互已补齐",
     target: "new",
   },
   {
@@ -178,7 +179,8 @@ export const REDESIGN_ISSUES = [
     title: "“编辑后重发”没有说明会追加为新消息",
     status: "observed",
     recommendation:
-      "回填时明确“修改后作为新消息发送”，保留原消息关系，并提供退出本次编辑的清晰动作；不擅自改变追加语义。",
+      "消息菜单已提供编辑后追加、再发准备和从单条消息新开。先保护原草稿与附件，再由用户确认发送；不改写旧消息、不把新草稿当作恢复旧上下文。",
+    coverage: "本轮原型交互已补齐",
     target: "approval",
   },
   {
@@ -258,7 +260,8 @@ export const REDESIGN_ISSUES = [
     title: "附件折叠项的 AX 快照未呈现展开状态",
     status: "risk",
     recommendation:
-      "验证折叠项可聚焦、可键盘操作，且辅助技术能够获取名称、角色与展开状态；有缺口时补足相应语义。",
+      "已补共用附件收纳与展开，显示数量和完整位置，提供 aria-expanded 与 aria-controls。浏览器已观察展开状态；正式应用中的实际读屏仍待验证。",
+    coverage: "本轮原型交互已补齐",
     target: "new",
   },
   {
@@ -266,7 +269,8 @@ export const REDESIGN_ISSUES = [
     title: "移动分组弹窗没有显示当前归属与具体对象",
     status: "risk",
     recommendation:
-      "标题明确使用“移到分组”，显示所选对话摘要/当前归属，并说明选择目标的生效方式；多个对象时显示数量及可查看清单。",
+      "对话页与库中的移动入口均列出具体对象和当前分组，确认后移动。对话页同时补齐删除范围、访达结果演示和相同设置新开；原内容与来源受保护。",
+    coverage: "本轮原型交互已补齐",
     target: "conversations",
   },
   {
@@ -314,7 +318,8 @@ export const REDESIGN_ISSUES = [
     title: "附加配置只有名称与值，缺少效果和生效范围说明",
     status: "risk",
     recommendation:
-      "在官方语义可验证的前提下提供简短解释与生效范围，保留原始名称；未知能力明确未知，不猜测性能或费用影响。",
+      "已补通用配置卡片，分列当前值、说明、作用对象、生效时点和依据。未提供的内容保持未知；审查单值只读，可变选项仅来自明确声明，独立样例用于验证保存流程。",
+    coverage: "本轮原型交互已补齐",
     target: "new",
   },
   {
@@ -322,7 +327,8 @@ export const REDESIGN_ISSUES = [
     title: "首发后的对话不再呈现此前的附加配置入口",
     status: "risk",
     recommendation:
-      "核对会话准备前后真实可用配置；若仍可用，保留一致入口，若不可调整则说明当前值与限制，避免无解释地消失。",
+      "首发前“更多设置”和首发后对话设置持续可达。已补比较、待保存、成功、失败、未知与核对；忙碌或未确认时只查看不更改，重启保留未确认状态。",
+    coverage: "本轮原型交互已补齐",
     target: "approval",
   },
   {
@@ -393,7 +399,8 @@ export const REDESIGN_ISSUES = [
     title: "提醒开关看起来像静态的已关闭标签",
     status: "risk",
     recommendation:
-      "采用容易识别的开关形态，或以清晰动作文字配合当前状态；确保关闭状态仍能看出可操作。",
+      "已补提醒与声音开关、权限允许／拒绝／不可用演示、返回重查和本页测试卡片；点击定位具体对话。未申请真实系统权限、播放声音或发送桌面通知。",
+    coverage: "本轮原型交互已补齐",
     target: "general",
   },
 ];
@@ -426,7 +433,7 @@ export const REDESIGN_FAMILIES = [
     id: "V05",
     title: "通用设置",
     target: "general",
-    path: "设置 → 通用 → 外观、提醒与数据",
+    path: "设置 → 通用 → 提醒开关、权限演示和测试卡片",
   },
   {
     id: "V06",
@@ -474,13 +481,13 @@ export const REDESIGN_FAMILIES = [
     id: "V13",
     title: "配置/权限浮层",
     target: "approval",
-    path: "示例对话 → 输入区权限 / 配置确认",
+    path: "草稿更多设置；对话 → 原型场景 → 完成 → 输入区设置与权限",
   },
   {
     id: "V14",
     title: "输入/附件/待发",
-    target: "approval",
-    path: "示例对话 → 附件、草稿和待发编辑",
+    target: "new",
+    path: "新草稿或对话 → 长命令搜索、多附件展开、待发编辑",
   },
   {
     id: "V15",
@@ -497,8 +504,8 @@ export const REDESIGN_FAMILIES = [
   {
     id: "V17",
     title: "管理菜单/确认",
-    target: "conversations",
-    path: "对话库行菜单 → 重命名、移动、归档或删除",
+    target: "approval",
+    path: "对话操作 → 移组、删除、访达演示或相同设置新开；消息操作",
   },
   {
     id: "V18",
@@ -540,6 +547,6 @@ export const REDESIGN_FAMILIES = [
     id: "V24",
     title: "系统/外部",
     target: "external",
-    path: "外部登录、系统选择器与真实窗口的交接边界",
+    path: "访达与通知已有模拟入口；系统选择器、外部登录和真实窗口仍待实机验证",
   },
 ];

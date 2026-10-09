@@ -49,6 +49,7 @@ import { conversationState } from "./conversation-policy.js";
 import "./history-settings.css";
 import "./settings-redesign.css";
 import { DataPrivacy, DiagnosticExport } from "./settings-maintenance.jsx";
+import NotificationSettings from "./NotificationSettings.jsx";
 
 export function updatePreviewIssue({
   tasks = [],
@@ -81,6 +82,9 @@ export default function General({
   onRunArchive,
   onOpenArchived,
   onManageSending,
+  notificationPreferences,
+  onNotificationPreferencesChange,
+  onOpenTask,
 }) {
   const [localArchive, setLocalArchive] = useState(String(archiveDays));
   const archive = onArchiveDaysChange ? String(archiveDays) : localArchive;
@@ -136,6 +140,7 @@ export default function General({
       <nav className="sl-settings-index" aria-label="通用设置分组">
         <a href="#settings-appearance">外观</a>
         <a href="#settings-organisation">对话整理</a>
+        <a href="#settings-notifications">提醒</a>
         <a href="#settings-maintenance">更新与诊断</a>
         <a href="#settings-data">数据与隐私</a>
       </nav>
@@ -237,26 +242,14 @@ export default function General({
             此处演示保存到本浏览器的整理结果，不会改变正式应用中的对话。
           </p>
         </div>
-        <div className="set-setting-row">
-          <div>
-            <strong>
-              <Bell size={16} />
-              需要你时提醒 <Badge>设计提案</Badge>
-            </strong>
-            <p>Agent 请求批准、提问或工作出现异常时，给出桌面提醒。</p>
-          </div>
-          <span className="set-caption">尚未提供</span>
-        </div>
-        <div className="set-setting-row">
-          <div>
-            <strong>
-              提醒声音 <Badge>设计提案</Badge>
-            </strong>
-            <p>只对需要处理的事项播放声音，普通输出保持安静。</p>
-          </div>
-          <span className="set-caption">尚未提供</span>
-        </div>
       </section>
+      <NotificationSettings
+        preferences={notificationPreferences}
+        onChange={onNotificationPreferencesChange}
+        tasks={tasks}
+        onOpenTask={onOpenTask}
+        saveFailed={generalFail || storageIssue}
+      />
       <section className="set-general-section">
         <div className="set-section-title">
           <h3>

@@ -31,6 +31,9 @@ export default function WorkbenchSettings({
   commitArchive,
   runArchive,
   setFilters,
+  notificationPreferences,
+  onNotificationPreferencesChange,
+  onOpenTask,
 }) {
   const EMPTY_FILTER = { agent: "", group: "", state: "all", query: "" };
   return (
@@ -87,6 +90,11 @@ export default function WorkbenchSettings({
         </div>
         <div hidden={settingsTab !== "general"}>
           <General
+            {...{
+              notificationPreferences,
+              onNotificationPreferencesChange,
+              onOpenTask,
+            }}
             toast={toast}
             storageIssue={storageIssue}
             onManageSending={() => setModal("work-policy")}

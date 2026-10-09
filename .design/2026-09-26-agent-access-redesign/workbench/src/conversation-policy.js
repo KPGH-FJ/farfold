@@ -8,6 +8,7 @@ const IDENTITY = [
   "source",
   "model",
   "effort",
+  "configValues",
   "folder",
   "serviceSnapshot",
 ];
@@ -72,7 +73,11 @@ export function applyConversationPatch(task, patch) {
       : null);
   if (fixed) {
     for (const key of IDENTITY) {
-      if (configurationConfirmed && ["model", "effort"].includes(key)) continue;
+      if (
+        configurationConfirmed &&
+        ["model", "effort", "configValues"].includes(key)
+      )
+        continue;
       const value = fixed[key];
       if (value !== undefined && value !== null && value !== "")
         next[key] = value;
@@ -87,6 +92,9 @@ export function applyConversationPatch(task, patch) {
     if (configurationConfirmed) {
       next.fixedIdentity.model = next.model;
       next.fixedIdentity.effort = next.effort;
+      next.fixedIdentity.configValues = structuredClone(
+        next.configValues || {},
+      );
     }
     if (patch.confirmMissingIdentity)
       for (const key of IDENTITY) {

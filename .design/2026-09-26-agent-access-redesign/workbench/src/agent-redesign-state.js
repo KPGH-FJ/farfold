@@ -141,7 +141,12 @@ export function setupSelectionSummary(selection = {}, services = []) {
 }
 
 export function setupSelectionChanged(before = {}, after = {}) {
-  return ["access", "serviceId", "model", "effort", "serviceSnapshot"].some(
-    (key) => JSON.stringify(before[key]) !== JSON.stringify(after[key]),
-  );
+  return [
+    "access",
+    "serviceId",
+    "model",
+    "effort",
+    "serviceSnapshot",
+    "configValues",
+  ].some((key) => JSON.stringify(before[key]) !== JSON.stringify(after[key]));
 }

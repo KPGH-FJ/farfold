@@ -6,6 +6,8 @@ const hasItems = (value) => Array.isArray(value) && value.length > 0;
 export function hasUnsentContent(task) {
   return Boolean(
     hasText(task.draft) ||
+    hasText(task.resendDraft?.previousDraft) ||
+    hasItems(task.resendDraft?.previousAttachments) ||
     hasText(task.answerDraft) ||
     (!task.answerSubmitted && hasText(task.answerDraft?.note)) ||
     hasItems(task.draftAttachments) ||

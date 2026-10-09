@@ -201,6 +201,9 @@ export default function RedesignGuide({ onClose, onNavigate }) {
                 <h3>{x.title}</h3>
               </header>
               <p>{x.recommendation}</p>
+              {x.coverage && (
+                <p className="cr-demo-caption">{x.coverage} · 实机验证另列</p>
+              )}
               <button onClick={() => visit(x.target)}>
                 查看对应流程 <ArrowUpRight size={14} />
               </button>
@@ -271,17 +274,21 @@ export default function RedesignGuide({ onClose, onNavigate }) {
           ) : (
             <>
               <p>
-                系统文件选择、菜单栏、通知、剪贴板、外部登录和安装窗口沿用操作系统交互。原型中的文件夹、附件和登录都使用示例数据。
+                系统文件选择、菜单栏、剪贴板、外部登录和安装窗口沿用操作系统交互。原型中的文件夹、附件和登录使用示例数据；访达结果和通知权限已有可操作演示，但不调用系统。
               </p>
               <ul className="boundary-list">
                 <li>取消文件选择 → 返回原草稿，不清空内容。</li>
                 <li>外部登录返回 → 自动检查真实登录结果，检查前不显示成功。</li>
-                <li>通知点击 → 定位具体对话与待处理事项。</li>
+                <li>
+                  提醒测试卡片 →
+                  已可定位具体示例对话；系统通知点击仍待实机验证。
+                </li>
                 <li>窗口缩小 → 保留主动作和独立滚动，不能隐藏退出按钮。</li>
               </ul>
               <p>
                 这些行为必须在目标系统重新验收，不能用网页中的演示回执替代。
               </p>
+              <Button onClick={() => visit("general")}>打开提醒演示</Button>
             </>
           )}
         </Modal>

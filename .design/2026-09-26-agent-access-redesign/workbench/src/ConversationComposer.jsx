@@ -1,3 +1,6 @@
+import AttachmentList from "./AttachmentList.jsx";
+import CommandPicker from "./CommandPicker.jsx";
+import { ATTACHMENT_EXAMPLES, insertCommand } from "./composer-examples.js";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowUp,
@@ -47,13 +50,17 @@ export default function ConversationComposer({
   onCheckStop,
 }) {
   const [menu, setMenu] = useState(null);
+  const [commandPicker, setCommandPicker] = useState(false);
   const input = useRef(null);
   const queued = isRunning || pending || paused;
   const stopWaiting =
     task.stopPhase === "waiting" || (!task.stopPhase && stopping);
   const retryStop = ["unknown", "failed"].includes(task.stopPhase);
   useEffect(() => {
-    if (!active) setMenu(null);
+    if (!active) {
+      setMenu(null);
+      setCommandPicker(false);
+    }
   }, [active]);
   useEffect(() => {
     if (!input.current) return;
@@ -70,6 +77,16 @@ export default function ConversationComposer({
   const toggle = (next) => setMenu(menu === next ? null : next);
   return (
     <>
+      {active && commandPicker && (
+        <CommandPicker
+          onClose={() => setCommandPicker(false)}
+          onSelect={(command) => {
+            onTaskChange({ draft: insertCommand(text, command) });
+            setCommandPicker(false);
+            input.current?.focus();
+          }}
+        />
+      )}
       {task.stopPhase && (
         <div
           className="conv-stop-notice"
@@ -135,28 +152,21 @@ export default function ConversationComposer({
           }
         }}
       >
-        {(attachments.length > 0 || task.folder) && (
+        {task.folder && (
           <div className="conv-chips">
             <ComposerFolder folder={task.folder} />
-            {attachments.map((file) => (
-              <span key={file}>
-                <FileText size={14} />
-                {file.split("/").pop()}
-                <button
-                  type="button"
-                  aria-label={`移除附件 ${file}`}
-                  onClick={() =>
-                    onTaskChange({
-                      attachments: attachments.filter((item) => item !== file),
-                    })
-                  }
-                >
-                  <X size={12} />
-                </button>
-              </span>
-            ))}
           </div>
         )}
+        <AttachmentList
+          files={attachments}
+          label="当前消息附件"
+          disabled={blocked || stopWaiting}
+          onRemove={(_, index) =>
+            onTaskChange({
+              attachments: attachments.filter((item, i) => i !== index),
+            })
+          }
+        />
         <textarea
           ref={input}
           aria-label="消息内容"
@@ -290,6 +300,29 @@ export default function ConversationComposer({
                     <span className="conv-menu-label">
                       快捷指令 · 填入后可编辑
                     </span>
+                    <button
+                      onClick={() => {
+                        setMenu(null);
+                        setCommandPicker(true);
+                      }}
+                    >
+                      Agent 命令示例 · 支持搜索
+                    </button>
+                    <button
+                      onClick={() => {
+                        onTaskChange({
+                          attachments: [
+                            ...new Set([
+                              ...attachments,
+                              ...ATTACHMENT_EXAMPLES,
+                            ]),
+                          ],
+                        });
+                        setMenu(null);
+                      }}
+                    >
+                      添加多附件示例（8 个）
+                    </button>
                     {SHORTCUTS.map((shortcut) => (
                       <button
                         key={shortcut.label}

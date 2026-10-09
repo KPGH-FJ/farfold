@@ -1,3 +1,9 @@
+import ConfigurationOptions from "./ConfigurationOptions.jsx";
+import {
+  configurationValuesEqual,
+  optionLabel,
+} from "./additional-configuration.js";
+import { additionalOptionsFor } from "./agent-catalog.js";
 import React, { useEffect, useRef, useState } from "react";
 import { Plus, Robot } from "@phosphor-icons/react";
 import { Button, Modal, Notice } from "./ui.jsx";
@@ -246,7 +252,19 @@ export default function AgentSetup({
     )
       return;
     if (Object.hasOwn(change, "serviceId")) setSavedNotice("");
-    patch({ ...change, test: "idle", testFingerprint: null });
+    const sourceChanged =
+      (Object.hasOwn(change, "access") && change.access !== draft.access) ||
+      (Object.hasOwn(change, "serviceId") &&
+        change.serviceId !== draft.serviceId) ||
+      (Object.hasOwn(change, "serviceSnapshot") &&
+        (change.serviceSnapshot?.endpoint !== draft.serviceSnapshot?.endpoint ||
+          change.serviceSnapshot?.format !== draft.serviceSnapshot?.format));
+    patch({
+      ...change,
+      ...(sourceChanged ? { configValues: {} } : {}),
+      test: "idle",
+      testFingerprint: null,
+    });
   };
   const advance = (action, selection = draft, patch = {}) => {
     const next = nextOnboarding(journey, action, {
@@ -280,6 +298,7 @@ export default function AgentSetup({
                 : agent.model || agent.models?.[0] || "",
           };
     if (selection.access !== draft.access) {
+      selection.configValues = {};
       selection.test = "idle";
       selection.testFingerprint = null;
     }
@@ -342,6 +361,11 @@ export default function AgentSetup({
     if (
       busy ||
       completionIssue ||
+      (!configurationValuesEqual(
+        entryDraft.current.configValues,
+        draft.configValues,
+      ) &&
+        (busyCount || agent.connectionState === "unknown")) ||
       (guided && onboardingStepIssue(journey, agent, draft, services))
     )
       return;
@@ -675,6 +699,18 @@ export default function AgentSetup({
             </label>
           ))}
       </div>
+      <ConfigurationOptions
+        options={additionalOptionsFor(agent, draft)}
+        values={draft.configValues || {}}
+        savedValues={entryDraft.current.configValues || {}}
+        disabled={
+          busy ||
+          fixedConversation ||
+          Boolean(busyCount) ||
+          agent.connectionState === "unknown"
+        }
+        onChange={(configValues) => choose({ configValues })}
+      />
       {draft.access === "existing" && (
         <AgentModelRead
           agent={agent}
@@ -706,6 +742,15 @@ export default function AgentSetup({
                     {setupSelectionSummary(entryDraft.current, services)[key]}
                   </td>
                   <td>{setupSelectionSummary(draft, services)[key]}</td>
+                </tr>
+              ))}
+              {additionalOptionsFor(agent, draft).map((option) => (
+                <tr key={option.id}>
+                  <th scope="row">{option.label}</th>
+                  <td>
+                    {optionLabel(option, entryDraft.current.configValues)}
+                  </td>
+                  <td>{optionLabel(option, draft.configValues)}</td>
                 </tr>
               ))}
             </tbody>

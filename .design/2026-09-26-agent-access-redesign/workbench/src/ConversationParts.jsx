@@ -1,3 +1,4 @@
+import AttachmentList from "./AttachmentList.jsx";
 import React, { useEffect, useRef, useState } from "react";
 import FileFeedback from "./FileFeedback.jsx";
 import FilePreviewState, { FilePreviewReview } from "./FilePreviewState.jsx";
@@ -146,21 +147,7 @@ const hasPresetResults = (task) =>
   (!task.resultMode && ["done", "archived"].includes(task.id)) ||
   (task.resultMode === "preset" && task.status === "done");
 function SentAttachments({ attachments = [] }) {
-  if (!attachments.length) return null;
-  return (
-    <div className="conv-chips" aria-label="随消息发送的附件">
-      {attachments.map((file, index) => {
-        const path =
-          typeof file === "string" ? file : file.path || file.name || "附件";
-        return (
-          <span key={`${path}-${index}`} title={path}>
-            <Paperclip size={14} />
-            {path.split("/").pop()}
-          </span>
-        );
-      })}
-    </div>
-  );
+  return <AttachmentList files={attachments} label="随消息发送的附件" />;
 }
 function SimulationResult({ plan = false, note = "" }) {
   return (

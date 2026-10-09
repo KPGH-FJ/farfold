@@ -174,6 +174,7 @@ export function draftForEntry(agent, services, selection, context = {}) {
           : null,
       model: selection.model ?? saved.model,
       effort: selection.effort ?? saved.effort,
+      configValues: structuredClone(selection.configValues || {}),
     };
   }
   return setupFingerprint(agent, next, services) === saved.testFingerprint

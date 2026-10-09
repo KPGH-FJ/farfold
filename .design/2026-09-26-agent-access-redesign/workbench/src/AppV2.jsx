@@ -1,3 +1,8 @@
+import HistoryLocationDialog from "./HistoryLocationDialog.jsx";
+import HistoryStartDialog, { SavedDrafts } from "./HistoryStartDialog.jsx";
+import { preserveDraft, historySourceIssue } from "./history-start-state.js";
+import { libraryProtection } from "./settings-library-state.js";
+import { additionalOptionsFor } from "./agent-catalog.js";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -161,6 +166,13 @@ export default function AppV2() {
   const [importRequest, setImportRequest] = useState(0);
   const [locationTask, setLocationTask] = useState(null);
   const [historyStart, setHistoryStart] = useState(null);
+  const [historyStartError, setHistoryStartError] = useState("");
+  const [savedDrafts, setSavedDrafts] = useState(
+    restoredState?.savedDrafts || [],
+  );
+  const [notificationPreferences, setNotificationPreferences] = useState(
+    restoredState?.notificationPreferences || { enabled: false, sound: false },
+  );
   const [newLocation, setNewLocation] = useState("");
   const openImport = (name) => {
     setImportTarget(typeof name === "string" ? name : null);
@@ -209,6 +221,8 @@ export default function AppV2() {
     services,
     filters,
     archiveDays,
+    savedDrafts,
+    notificationPreferences,
     theme,
     draft: { text: draft, files, folder, choice },
     pendingSend,
@@ -230,6 +244,8 @@ export default function AppV2() {
     services,
     filters,
     archiveDays,
+    savedDrafts,
+    notificationPreferences,
     theme,
     draft,
     files,
@@ -499,6 +515,10 @@ export default function AppV2() {
       return;
     }
     if (!hasDraftContent(draft, files) || pendingSend) return;
+    if (choice.requiresSourceSelection || choice.configurationChange) {
+      setSendError("请先确认来源与设置，再发送。草稿仍保留。");
+      return;
+    }
     if (attachmentsNeedReview && files.length) {
       setModal("restore-attachments");
       return;
@@ -711,38 +731,75 @@ export default function AppV2() {
     setHubRequest((value) => value + 1);
     setView("agents");
   };
-  const applyHistoryStart = (next) => {
-    setDraft("");
-    setFiles([]);
-    setChoice(next.choice);
+  const applyHistoryStart = (next, restoredId = null) => {
+    const result = preserveDraft(
+      draftNow.current,
+      next,
+      savedDrafts,
+      crypto.randomUUID(),
+      restoredId,
+    );
+    const nextState = {
+      ...snapshotNow.current,
+      ...result,
+      view: "new",
+      active: null,
+    };
+    if (!writePrototypeState(localStorage, nextState)) {
+      setHistoryStartError("新草稿未能保存，原内容保持不变。请重试或取消。");
+      toast("未能保存草稿，原内容保持不变。");
+      return false;
+    }
+    snapshotNow.current = nextState;
+    setSavedDrafts(result.savedDrafts);
+    setDraft(next.text);
+    setFiles(next.files);
+    setAttachmentsNeedReview(Boolean(next.files.length));
+    setChoice(result.draft.choice);
     setFolder(next.folder);
     setHistoryStart(null);
+    setHistoryStartError("");
     setModal(null);
     newChat();
+    return true;
   };
-  const startFromHistory = (task, nextFolder = task.folder || "") => {
-    const next = {
-      folder: nextFolder,
-      choice: task.readOnly
-        ? agentChoice(task.agent)
-        : {
-            agent: task.agent,
-            model: task.model,
-            source: task.source,
-            effort: task.effort,
-            serviceId: task.serviceId,
-            serviceSnapshot: task.serviceSnapshot
-              ? structuredClone(task.serviceSnapshot)
-              : null,
-            accessMode: task.accessMode,
-          },
-    };
-    if (draft.trim() || files.length) {
-      setHistoryStart(next);
-      setModal("history-draft");
-      return;
+  const startFromHistory = (
+    task,
+    nextFolder = task.folder || "",
+    message = null,
+  ) => {
+    setHistoryStart({ task, folder: nextFolder, message });
+    setHistoryStartError("");
+    setModal(null);
+  };
+  const saveNotificationPreferences = (next) => {
+    const nextState = { ...snapshotNow.current, notificationPreferences: next };
+    if (!writePrototypeState(localStorage, nextState)) return false;
+    snapshotNow.current = nextState;
+    setNotificationPreferences(next);
+    return true;
+  };
+  const deleteConversation = (id) => {
+    const state = snapshotNow.current;
+    const target = state.tasks.find((task) => task.id === id);
+    if (!target || libraryProtection(target)) {
+      toast(target ? libraryProtection(target) : "未找到这段对话。");
+      return false;
     }
-    applyHistoryStart(next);
+    const nextState = {
+      ...state,
+      tasks: state.tasks.filter((task) => task.id !== id),
+    };
+    if (!writePrototypeState(localStorage, nextState)) {
+      toast("删除结果未能保存，原对话保留。");
+      return false;
+    }
+    snapshotNow.current = nextState;
+    setTasks(nextState.tasks);
+    setActive(null);
+    go("conversations");
+    toast("示例对话已删除；没有操作真实历史。");
+    return true;
   };
   const needs = tasks.filter(
     (t) => visibleInActive(t) && conversationState(t).attention,
@@ -751,6 +808,7 @@ export default function AppV2() {
     (t) => visibleInActive(t) && conversationState(t).running,
   );
   const startProps = {
+    active: view === "new",
     draft,
     setDraft,
     choice,
@@ -839,6 +897,8 @@ export default function AppV2() {
     setRestoredDraft(false);
     setAttachmentsNeedReview(false);
     setArchiveDays("30");
+    setSavedDrafts([]);
+    setNotificationPreferences({ enabled: false, sound: false });
     sendTicket.current++;
     setPendingSend(null);
     setSendError("");
@@ -1012,6 +1072,28 @@ export default function AppV2() {
               style={{ display: view === "new" ? "block" : "none" }}
             >
               <div className="v2-new-content">
+                <SavedDrafts
+                  items={savedDrafts}
+                  onRestore={(item) =>
+                    applyHistoryStart(
+                      {
+                        ...item.draft,
+                        choice: {
+                          ...item.draft.choice,
+                          requiresSourceSelection: Boolean(
+                            historySourceIssue(
+                              item.draft.choice,
+                              agents,
+                              services,
+                              item.draft.folder,
+                            ),
+                          ),
+                        },
+                      },
+                      item.id,
+                    )
+                  }
+                />
                 <NewConversationV2
                   {...startProps}
                   recoveryNotice={
@@ -1105,6 +1187,12 @@ export default function AppV2() {
             >
               <Conversation
                 task={t}
+                groups={groups}
+                onMoveToGroup={(id, group) => patch(id, { group })}
+                onDeleteConversation={deleteConversation}
+                onNewFromMessage={(message) =>
+                  startFromHistory(t, t.folder || "", message)
+                }
                 onBack={() =>
                   authWorkReturn?.taskId === t.id
                     ? returnToAccount()
@@ -1135,6 +1223,7 @@ export default function AppV2() {
                       label: id,
                       efforts: a.efforts || [],
                     })),
+                    configOptions: additionalOptionsFor(a, t),
                     supportsModelChange: models.length > 1,
                     supportsEffortChange: Boolean(a.efforts?.length > 1),
                   };
@@ -1187,6 +1276,14 @@ export default function AppV2() {
             </div>
           ))}
           <WorkbenchSettings
+            notificationPreferences={notificationPreferences}
+            onNotificationPreferencesChange={saveNotificationPreferences}
+            onOpenTask={(id) => {
+              const task = snapshotNow.current.tasks.find(
+                (item) => item.id === id,
+              );
+              if (task) open(task);
+            }}
             {...{
               view,
               revision,
@@ -1234,42 +1331,12 @@ export default function AppV2() {
         </div>
       )}
       {modal === "import-location" && locationTask && (
-        <Modal title="选择新对话的工作位置" onClose={() => setModal(null)}>
-          <div className="flow-folder-picker">
-            <p>
-              原对话“{locationTask.title}
-              ”仍保留原来的设置。这里为新对话选择一个示例位置，不移动或重新连接旧历史。
-            </p>
-            <label htmlFor="new-location">新对话的文件夹</label>
-            <select
-              id="new-location"
-              value={newLocation}
-              onChange={(e) => setNewLocation(e.target.value)}
-            >
-              <option value="">不选文件夹 · 普通对话</option>
-              <option value="~/Projects/farfold">
-                ~/Projects/farfold · 示例
-              </option>
-              <option value="~/Documents/Notes">
-                ~/Documents/Notes · 示例
-              </option>
-            </select>
-            <small>
-              选择的是工作位置，不代表文件访问权限边界。本原型不会打开真实文件。
-            </small>
-            <footer>
-              <Button onClick={() => setModal(null)}>取消</Button>
-              <Button
-                primary
-                onClick={() => {
-                  startFromHistory(locationTask, newLocation);
-                }}
-              >
-                进入新对话
-              </Button>
-            </footer>
-          </div>
-        </Modal>
+        <HistoryLocationDialog
+          task={locationTask}
+          {...{ newLocation, setNewLocation }}
+          onClose={() => setModal(null)}
+          onStart={startFromHistory}
+        />
       )}
       {modal === "agent-draft" && pendingChoice && (
         <Modal
@@ -1317,38 +1384,16 @@ export default function AppV2() {
       <WorkPolicyDialog
         {...{ modal, setModal, folder, tasks, workPolicies, setWorkPolicies }}
       />
-      {modal === "history-draft" && historyStart && (
-        <Modal title="还有一份未发送的草稿" onClose={() => setModal(null)}>
-          <div className="flow-folder-picker">
-            <p>
-              当前草稿使用 {choice.agent}，工作位置为
-              {folder || "未指定文件夹"}。 另开对话将使用{" "}
-              {historyStart.choice.agent}，工作位置为
-              {historyStart.folder || "未指定文件夹"}。
-            </p>
-            {draft.trim() && (
-              <blockquote className="history-draft-preview">{draft}</blockquote>
-            )}
-            {!!files.length && <p>草稿还包含 {files.length} 个附件。</p>}
-            <small>
-              关闭此窗口会保留草稿。只有选择清空，才会移除这份草稿的文字与附件；不会发送任何内容。
-            </small>
-            <footer>
-              <Button
-                onClick={() => {
-                  setHistoryStart(null);
-                  setModal(null);
-                  newChat();
-                }}
-              >
-                返回原草稿
-              </Button>
-              <Button primary onClick={() => applyHistoryStart(historyStart)}>
-                清空草稿并新开
-              </Button>
-            </footer>
-          </div>
-        </Modal>
+      {historyStart && (
+        <HistoryStartDialog
+          request={historyStart}
+          current={draftNow.current}
+          agents={agents}
+          services={services}
+          onClose={() => setHistoryStart(null)}
+          onApply={applyHistoryStart}
+          error={historyStartError}
+        />
       )}
       <LibraryDialogs
         {...{
