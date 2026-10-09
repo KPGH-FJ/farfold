@@ -1,0 +1,30 @@
+{
+  "comparedAt": "2026-10-09T04:52:00.149207+00:00",
+  "equal": true,
+  "window": "normal exit through replacement verification; before relaunch",
+  "counts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "special": 0,
+      "symlink": 328
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2,
+      "special": 0,
+      "symlink": 0
+    },
+    "webkit": {
+      "directory": 131,
+      "file": 86,
+      "special": 0,
+      "symlink": 0
+    }
+  },
+  "entryCount": 217365,
+  "sha256": "ab551b1dc9e822fa5e616eded0f0796c54846867c41c122678bcbb2256c9d8b8",
+  "contentAndUnixModesUnchanged": true,
+  "rawManifestsKeptPrivateInOutput": true,
+  "keychainAccessed": false
+}

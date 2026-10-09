@@ -1,0 +1,31 @@
+{
+  "verifiedAt": "2026-10-09T04:53:24.668346+00:00",
+  "installedSourceCommit": "e9081b124d5965222691b7584f41070af3a6490b",
+  "method": "CUA native application launch and AX/screenshot observation",
+  "application": "/Applications/Farfold.app",
+  "screenshot": "installed-prepared.png",
+  "logicalWindow": {
+    "width": 1280,
+    "height": 820
+  },
+  "observed": {
+    "preparedDraftMovedIntoConversation": true,
+    "wideComposerVisible": true,
+    "toolbarAndSendControlFullyVisible": true,
+    "folderBarFullyVisible": true,
+    "conversationIndexCount": 108,
+    "selectedAgent": "Codex",
+    "selectedModel": "6 Astra",
+    "selectedReasoning": "Ultra",
+    "existingChoicesUnchangedByTest": true,
+    "emptySendDisabled": true
+  },
+  "actions": {
+    "messagesSent": 0,
+    "modelChanges": 0,
+    "loginActions": 0,
+    "credentialChanges": 0,
+    "destructiveActions": 0
+  },
+  "boundary": "App may normally prepare the selected Agent connection on launch. This verifies installed UI, not real message/stop/resume/system-notification/29-Agent acceptance."
+}

@@ -1,0 +1,10 @@
+{
+  "observedAtUtc": "2026-10-09T04:50:04.948293+00:00",
+  "userConfirmedSavedNormalExit": true,
+  "userAuthorizedInstall": true,
+  "normalQuitObserved": true,
+  "method": "CUA Command-Q; then process inventory without reopening UI",
+  "forcedQuit": false,
+  "exactFormalExecutableProcessesAfter": 0,
+  "context": "Scoped corrective update after the first approved installation; only read-only empty/UI checks performed."
+}
