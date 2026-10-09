@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/storage_restore.preview.test.ts(10,20): error TS2339: Property 'parseDraftSnapshot' does not exist on type 'typeof import("/Users/tw/Desktop/farfold/src/runtime/drafts")'.
+src/runtime/storage_restore.preview.test.ts(20,20): error TS2339: Property 'parseSetupSnapshot' does not exist on type 'typeof import("/Users/tw/Desktop/farfold/src/runtime/setup_storage")'.
+ ELIFECYCLE  Command failed with exit code 1.

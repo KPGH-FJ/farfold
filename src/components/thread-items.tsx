@@ -13,6 +13,7 @@ import {
 } from "./MessageContent";
 import { STRINGS } from "../runtime/strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
+import { ReportedDetails } from "./ReportedDetails";
 import type {
   PermissionOption,
   PlanEntry,
@@ -117,7 +118,8 @@ function hasDetail(call: ToolCallView): boolean {
     call.content.length > 0 ||
     call.locations.length > 0 ||
     call.rawInput != null ||
-    call.rawOutput !== undefined
+    call.rawOutput !== undefined ||
+    Boolean(call.reportedDetails && Object.keys(call.reportedDetails).length)
   );
 }
 
@@ -298,6 +300,7 @@ function ToolDetail({
       {call.rawOutput !== undefined && (
         <pre className="step-text">{rawOutputText(call.rawOutput)}</pre>
       )}
+      <ReportedDetails details={call.reportedDetails} />
     </div>
   );
 }

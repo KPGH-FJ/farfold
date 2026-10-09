@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-09",
+  "scope": ["ARCH-38", "ARCH-39"],
+  "method": "只读核当前官方文档、已安装官方 Claude 0.81.2 包与 Farfold 源码；未启动 Agent、发送模型消息或协商新能力。",
+  "sources": [
+    "https://agentclientprotocol.com/protocol/v1/tool-calls",
+    "https://github.com/agentclientprotocol/agent-client-protocol/pull/1992",
+    "https://raw.githubusercontent.com/agentclientprotocol/agent-client-protocol/main/docs/rfds/subagents.mdx",
+    "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/main/docs/subagent-sessions.md",
+    "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/main/src/acp-subagents.ts",
+    "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/main/docs/air-extensions.md"
+  ],
+  "sourceLimit": "官方 main 文档按本次读取内容核对；GitHub API 提交定位请求被远端断开，未声称固定到某个远端 commit。",
+  "verifiedFacts": [
+    "Farfold 当前 initialize 使用 ACP v1，锁定 Rust agent-client-protocol 2.2.0/schema 1.9.1；该 schema 未提供 subagent 类型或功能开关。工具名称只用于信息展示，不能作为子 Agent 身份或操作授权。",
+    "PR #1992 已于 9月30日合并，其当前文档仍属实验草案；最新形状为 subagent_update、session_message、session_message_chunk，子会话可复用，工作空闲不等于整个子会话结束。",
+    "最新草案仅由 clientCapabilities.subagents 对 v1 做入口声明；父事件外层 sessionId 是父身份，update.sessionId 是子身份；子事件自动在同一连接送达，不以直接 load/resume 子会话来接收。取消当前工作须有该子会话明确的 cancel 能力；其他写入控制不能推断支持。",
+    "已安装官方 Claude 0.81.2 的 dist/acp-subagents.js、native-subagents.js 仍实现早期 subagent_spawned/subagent_state_update；其 README 和当前 Codex 官方说明使用双向能力及 AIR nativeSubagentSessions 桥接。两者当前文档所示子能力为空，不提供目标子会话 cancel/close。该差异不是 Farfold 可以悄悄统一成同一种终态的字段别名。",
+    "未启用原生子会话协商时，官方接入继续用普通工具回退。Claude 的 _meta.claudeCode.parentToolUseId 是已记录的扩展关联信息；不可从 Agent/Task 等工具名称或标题自造身份。"
+  ],
+  "hostGaps": [
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:333",
+      "detail": "当前 SessionRoute 只接一个精确 sessionId。子流需要显式公告后的连接内归属和请求路由，不能直接开启声明后把未注册子流留给重试队列。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/manager.rs:570",
+      "detail": "无当前路由的 sessionId 事件保留等待动态 handler；必须测试父公告和子首事件的竞争，不靠晚到事件猜父子关系。"
+    },
+    {
+      "evidence": "src/runtime/session_projection.ts:296",
+      "detail": "已知工具和消息的额外字段被归一化忽略。ARCH39 正补实体内最近扩展字段详情，未由此宣称支持子任务控制。"
+    }
+  ],
+  "nextContractTests": [
+    "用隔离 stdio 对端分别固定最新草案与已发布早期扩展形状；未协商时不请求子会话、不错误接受控制资格。",
+    "先公告后子事件、立即连续送达、多层嵌套、兄弟同名与各自相同 tool/message ID；精确按连接和 sessionId 分流，不串正文、工具、审批或文件来源。",
+    "重复公告与元数据省略/null、冲突父身份/自环、未知状态及未经公告的请求；保持原始信息和未知状态，不执行猜测性控制。",
+    "父提示结束不推定子工作停止；子空闲后再次运行、断线、恢复公告缺失、缺少子历史均如实区分；不重建持久子任务账本或补假历史。",
+    "审批/提问按原请求与实际子归属返回；根取消和目标取消竞态、能力撤回、取消发送后无确认均不伪造成功。已发布包空能力不显示目标控制。",
+    "session_message 的两个方向和各自消息ID独立；不由发件记录伪造收件记录，不把子间通信计为用户回答，不自动转发或另起 Agent 循环。",
+    "费用按官方归属显示，不把父累计与子报告相加；文件只沿实际工具/子会话来源呈现，不能假定子目录等同父目录。"
+  ],
+  "status": "ARCH38 仍未完成；先实现依赖闭合的路由/呈现与协议测试，再按实际官方接入差异协商。此记录不证明真实 Agent 子任务可用。"
+}

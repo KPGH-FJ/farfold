@@ -1,6 +1,11 @@
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
 import {
+  applyCompaction,
+  loseCompactionObservation,
+  maintenanceResult,
+} from "./compaction";
+import {
   completion,
   canContinueAfterCompletion,
   type CompletionEvent,
@@ -13,6 +18,7 @@ import { STRINGS } from "./strings";
 import { reportedTokens, reportedUsage } from "./session_usage";
 import { normalizeMessageAttachment } from "./message_attachments";
 import { streamTailItem } from "./session_streams";
+import { retainReportedDetails } from "./reported_details";
 import type {
   ConfigChoice,
   ConfigOptionView,
@@ -328,14 +334,18 @@ function upsertToolCall(s: ThreadState, update: Record<string, unknown>): void {
   if (update.status !== undefined && update.status !== null) {
     call.status = String(update.status);
   }
-  if (update.locations !== undefined) {
+  // ACP v1 nullable optional fields treat null like omission. Explicit []
+  // still replaces a collection; v2's null-clearing rule does not apply here.
+  if (update.locations !== undefined && update.locations !== null) {
     call.locations = normalizeLocations(update.locations);
   }
-  if (update.content !== undefined) {
+  if (update.content !== undefined && update.content !== null) {
     call.content = normalizeToolContents(update.content);
   }
-  if (update.rawInput !== undefined) call.rawInput = update.rawInput;
-  if (update.rawOutput !== undefined) call.rawOutput = update.rawOutput;
+  if (update.rawInput !== undefined && update.rawInput !== null)
+    call.rawInput = update.rawInput;
+  if (update.rawOutput !== undefined && update.rawOutput !== null)
+    call.rawOutput = update.rawOutput;
   if (
     (call.status === "completed" || call.status === "failed") &&
     call.startedAt > 0 &&
@@ -595,10 +605,23 @@ function diffCountInItems(items: ThreadItem[]): number {
 }
 
 /** Apply one raw `update` object onto the thread state (in place). */
-export function applyUpdate(s: ThreadState, update: unknown): void {
+export function applyUpdate(
+  s: ThreadState,
+  update: unknown,
+  envelope?: unknown,
+): void {
+  applyUpdateContent(s, update);
+  retainReportedDetails(s, update, envelope);
+}
+
+function applyUpdateContent(s: ThreadState, update: unknown): void {
   const u = update as Record<string, unknown> | null;
   const kind = u?.sessionUpdate;
   switch (kind) {
+    case "compaction_update":
+    case "compaction_summary_chunk":
+      if (!applyCompaction(s.items, u!, nextItemId)) pushRaw(s, update);
+      return;
     case "user_message_chunk":
       appendStreamText(s, "user", u?.content, u?.messageId);
       return;
@@ -711,21 +734,31 @@ export function applyTurnEnd(
   const { status, error } = completion(event);
   const round = s.items.slice(s.roundItemBase);
   const replyReceived = hasAgentReply(round);
+  const compactions = round.flatMap((item) =>
+    item.kind === "compaction" ? [item] : [],
+  );
+  const maintenance = maintenanceResult(compactions);
   const result = roundResult(
     replyReceived,
     round.flatMap((item) => (item.kind === "tool" ? [item.call] : [])),
     s.activeToolCallIds,
     !s.connectionLost,
+    compactions,
   );
-  if (!canContinueAfterCompletion(status, result))
+  if (
+    !canContinueAfterCompletion(status, result) ||
+    (maintenance && maintenance !== "maintenance")
+  )
     pauseQueue(
       s,
-      status === "unknown"
+      status === "unknown" || maintenance === "maintenance_unknown"
         ? "uncertain"
         : status === "done"
-          ? result === "pending"
-            ? "stopped"
-            : "no_result"
+          ? maintenance === "maintenance_failed"
+            ? "failed"
+            : result === "pending" || maintenance
+              ? "stopped"
+              : "no_result"
           : status,
     );
   s.items.push({
@@ -737,6 +770,9 @@ export function applyTurnEnd(
     diffCount: diffCountInItems(s.items.slice(s.roundItemBase)),
     artifactCount: roundArtifactCount(s),
     artifactToolItemIds: roundToolItemIds(s),
+    compactionItemIds: round.flatMap((item) =>
+      item.kind === "compaction" ? [item.id] : [],
+    ),
     replyReceived,
     time: Date.now(),
   });
@@ -745,6 +781,7 @@ export function applyTurnEnd(
 
 /** `{kind:"connectionLost"}` — honest unknown outcome, never "done". */
 export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
+  loseCompactionObservation(s.items);
   forgetConfigurationPause(s);
   s.connectionOutcomeUnknown = Boolean(
     s.connectionOutcomeUnknown ||

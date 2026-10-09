@@ -29,6 +29,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [exitReadError, setExitReadError] = useState<string | null>(null);
   const [exitReview, setExitReview] = useState<number | null>(null);
   const [cancelError, setCancelError] = useState(false);
+  const [readsSettled, setReadsSettled] = useState(false);
   const cancelExit = async (token: number) => {
     if (currentExit.current !== token) return;
     const attempt = ++saveAttempt.current;
@@ -105,8 +106,16 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     let active = true;
     const unlisteners: (() => void)[] = [];
     setStartupError(false);
+    setReadsSettled(false);
     void (async () => {
-      await Promise.all([draftPersistence.load(), setupStorage.load()]);
+      const loaded = await Promise.allSettled([
+        draftPersistence.load(),
+        setupStorage.load(),
+      ]);
+      if (!active) return;
+      setReadsSettled(true);
+      if (loaded.some((result) => result.status === "rejected"))
+        throw new Error("startup content unavailable");
       const off = await listen<number>("app:save-before-exit", (event) => {
         void saveAndExit(event.payload);
       });
@@ -230,12 +239,20 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setup.error ??
     status.error ??
     (startupError ? DRAFT_STRINGS.loadFailed : null);
-  if (failure)
+  if (failure && readsSettled)
     return (
       <StorageRecovery
+        restoreKeys={[
+          ...(!status.ready ? ["unsentWork.v1" as const] : []),
+          ...(!setup.ready ? ["agentSetup.v1" as const] : []),
+        ]}
         message={failure}
         onRetry={async () => {
-          await Promise.all([draftPersistence.load(), setupStorage.load()]);
+          setReadsSettled(false);
+          await Promise.allSettled([
+            draftPersistence.load(),
+            setupStorage.load(),
+          ]);
           setRetry((value) => value + 1);
         }}
       />

@@ -42,20 +42,31 @@ function present(key: string, generation: number, id: string) {
 
 /** Keep the exact chosen attachments before reading them. Every late result
  * remains with its original draft and is discarded if that input was cleared. */
-export function addPickedAttachments(
+export async function addPickedAttachments(
   key: string,
   paths: readonly string[],
   imageEnabled: boolean,
   report: Report,
 ): Promise<void> {
   const generation = composerDrafts.generation(key);
-  const additions: DraftAttachment[] = paths.map((path) => ({
-    id: crypto.randomUUID(),
-    kind: "file",
-    name: fileBasename(path),
-    uri: filePathUri(path),
-    loading: true,
-  }));
+  const existing = new Set(
+    composerDrafts.read(key).attachments.map((item) => item.uri),
+  );
+  const additions: DraftAttachment[] = paths.flatMap((path) => {
+    const uri = filePathUri(path);
+    if (existing.has(uri)) return [];
+    existing.add(uri);
+    return [
+      {
+        id: crypto.randomUUID(),
+        kind: "file",
+        name: fileBasename(path),
+        uri,
+        loading: true,
+      },
+    ];
+  });
+  if (!additions.length) return Promise.resolve();
   composerDrafts.update(key, (draft) => ({
     ...draft,
     attachments: [...draft.attachments, ...additions],

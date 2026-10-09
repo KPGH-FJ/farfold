@@ -2,6 +2,7 @@ import type { AgentSetupSelection } from "./AgentSetup";
 import type { Credential } from "../runtime/credentials";
 import type { ConfigOptionView } from "../runtime/session_types";
 import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
+import { STRINGS } from "../runtime/strings";
 
 /** Compare recorded choices without substituting a different service revision. */
 export function selectionReviewRows(
@@ -23,7 +24,9 @@ export function selectionReviewRows(
   };
   const value = (id: string, raw: unknown) => {
     if (raw === undefined) return U.configurationUnknown;
-    if (typeof raw === "boolean" || typeof raw === "number") return String(raw);
+    if (typeof raw === "boolean")
+      return raw ? STRINGS.options.enabled : STRINGS.options.disabled;
+    if (typeof raw === "number") return String(raw);
     if (typeof raw !== "string") return U.notProvided;
     const option = options.find((item) => item.id === id);
     return option?.options.find((item) => item.value === raw)?.name ?? raw;

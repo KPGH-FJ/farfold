@@ -1,0 +1,193 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/reported_details.test.ts (7 tests | 6 failed) 10ms
+     × keeps message and content fields without copying rendered text 4ms
+     × retains omitted fields and replaces opaque objects, arrays and explicit null 1ms
+     × does not mix distinct message IDs, roles or fresh recovery views 1ms
+     × keeps late tool details with its ID and avoids duplicating output or diff bodies 1ms
+     × preserves media metadata without another image or resource body 1ms
+     × keeps non-message extensions outside reply and tool result accounting 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > keeps message and content fields without copying rendered text
+AssertionError: expected undefined to deeply equal { '/update/_meta': { …(1) }, …(2) }
+
+- Expected:
+{
+  "/update/_meta": {
+    "vendor": {
+      "parent": "declared-only",
+    },
+  },
+  "/update/content/_meta": {
+    "citation": 2,
+  },
+  "/update/future": [
+    1,
+    null,
+  ],
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/reported_details.test.ts:19:37
+     17|       future: [1, null],
+     18|     });
+     19|     expect(details(state.items[0])).toEqual({
+       |                                     ^
+     20|       "/update/_meta": { vendor: { parent: "declared-only" } },
+     21|       "/update/future": [1, null],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > retains omitted fields and replaces opaque objects, arrays and explicit null
+AssertionError: expected undefined to deeply equal { '/update/_meta': null, …(2) }
+
+- Expected:
+{
+  "/update/_meta": null,
+  "/update/future": [
+    3,
+  ],
+  "/update/retained": true,
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/reported_details.test.ts:39:37
+     37|     applyUpdate(state, chunk({ _meta: null }));
+     38|     expect(state.items).toHaveLength(1);
+     39|     expect(details(state.items[0])).toEqual({
+       |                                     ^
+     40|       "/update/_meta": null,
+     41|       "/update/future": [3],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > does not mix distinct message IDs, roles or fresh recovery views
+AssertionError: expected [ undefined, undefined, undefined ] to deeply equal [ { '/update/_meta': { …(1) } }, …(2) ]
+
+- Expected
++ Received
+
+  [
+-   {
+-     "/update/_meta": {
+-       "owner": "agent-a",
+-     },
+-   },
+-   {
+-     "/update/_meta": {
+-       "owner": "agent-b",
+-     },
+-   },
+-   {
+-     "/update/_meta": {
+-       "owner": "thought-b",
+-     },
+-   },
++   undefined,
++   undefined,
++   undefined,
+  ]
+
+ ❯ src/runtime/reported_details.test.ts:59:38
+     57|         _meta: { owner },
+     58|       });
+     59|     expect(state.items.map(details)).toEqual([
+       |                                      ^
+     60|       { "/update/_meta": { owner: "agent-a" } },
+     61|       { "/update/_meta": { owner: "agent-b" } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > keeps late tool details with its ID and avoids duplicating output or diff bodies
+AssertionError: expected undefined to deeply equal { …(4) }
+
+- Expected:
+{
+  "/update/_meta": {
+    "owner": "old",
+  },
+  "/update/content/0/extra": null,
+  "/update/later": "old-only",
+  "/update/locations/0/futureLine": [
+    1,
+    4,
+  ],
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/reported_details.test.ts:86:31
+     84|     });
+     85|     const calls = state.items.flatMap((item) => item.kind === "tool" ?…
+     86|     expect(details(calls[0])).toEqual({
+       |                               ^
+     87|       "/update/_meta": { owner: "old" },
+     88|       "/update/later": "old-only",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > preserves media metadata without another image or resource body
+AssertionError: expected undefined to deeply equal { …(2) }
+
+- Expected:
+{
+  "/update/content/annotations": {
+    "audience": [
+      "user",
+    ],
+  },
+  "/update/content/resource/_meta": {
+    "owner": 2,
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/reported_details.test.ts:106:37
+    104|       content: { type: "resource", resource: { uri: "file:///work/a", …
+    105|     });
+    106|     expect(details(state.items[0])).toEqual({
+       |                                     ^
+    107|       "/update/content/annotations": { audience: ["user"] },
+    108|       "/update/content/resource/_meta": { owner: 2 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/reported_details.test.ts > reported extension fields stay with their existing entity > keeps non-message extensions outside reply and tool result accounting
+AssertionError: expected undefined to deeply equal { …(1) }
+
+- Expected:
+{
+  "/usage_update/update/_meta": {
+    "answer": "not a reply",
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/reported_details.test.ts:117:28
+    115|     applyUpdate(state, { sessionUpdate: "usage_update", used: 3, size:…
+    116|     applyUpdate(state, { sessionUpdate: "usage_update", used: 4, size:…
+    117|     expect(details(state)).toEqual({ "/usage_update/update/_meta": { a…
+       |                            ^
+    118|     expect(state.items).toHaveLength(0);
+    119|     expect(hasAgentReply(state.items)).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  18:37:14
+   Duration  156ms (transform 61ms, setup 0ms, import 75ms, tests 10ms, environment 0ms)
+

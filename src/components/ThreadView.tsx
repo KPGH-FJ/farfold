@@ -47,6 +47,7 @@ import {
 } from "../runtime/sessions";
 import { configCheckMessage } from "../runtime/config_check";
 import { streamTailItem } from "../runtime/session_streams";
+import { ReportedDetails } from "./ReportedDetails";
 import { ConfigCheckReview } from "./ConfigCheckReview";
 import { configRecheckBusy } from "../runtime/session_config_recheck";
 import { canExplainFailedToolQueue } from "../runtime/queue";
@@ -56,6 +57,8 @@ import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
 import { artifactRoundCounts } from "../runtime/artifact_view";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
+import { maintenanceLabel } from "../runtime/compaction_strings";
+import { CompactionCard } from "./CompactionCard";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { UserMessageContent } from "./UserMessageContent";
 import { permissionShortcut } from "../runtime/permission_shortcuts";
@@ -117,15 +120,17 @@ function SettledLine({
   result?: RoundResult;
   onOpenArtifacts: MouseEventHandler<HTMLButtonElement>;
 }) {
+  const maintenance = maintenanceLabel(result);
   const label =
     item.status === "done"
-      ? result === "none"
-        ? STRINGS.thread.noResult
-        : result === "pending"
-          ? STRINGS.thread.resultPending
-          : result === "tool"
-            ? STRINGS.thread.ended
-            : STRINGS.thread.done
+      ? (maintenance ??
+        (result === "none"
+          ? STRINGS.thread.noResult
+          : result === "pending"
+            ? STRINGS.thread.resultPending
+            : result === "tool"
+              ? STRINGS.thread.ended
+              : STRINGS.thread.done))
       : item.status === "stopped"
         ? STRINGS.thread.stopped
         : item.status === "unknown"
@@ -135,7 +140,7 @@ function SettledLine({
     item.status === "done"
       ? result === "none"
         ? "warn"
-        : result === "tool" || result === "pending"
+        : result === "tool" || result === "pending" || maintenance
           ? undefined
           : "ok"
       : item.status === "unknown"
@@ -154,7 +159,7 @@ function SettledLine({
               ? "! "
               : result === "pending"
                 ? "… "
-                : result === "tool"
+                : result === "tool" || maintenance
                   ? "· "
                   : "✓ "
             : item.status === "stopped"
@@ -882,6 +887,7 @@ export function ThreadView({
                         attachments={first.attachments}
                         onOpenFile={openFile}
                       />
+                      <ReportedDetails details={first.reportedDetails} />
                     </div>
                   );
                 case "agent":
@@ -918,6 +924,7 @@ export function ThreadView({
                           <span className="caret" />
                         )}
                       </div>
+                      <ReportedDetails details={first.reportedDetails} />
                     </div>
                   );
                 case "thought":
@@ -928,10 +935,23 @@ export function ThreadView({
                     >
                       <summary>{STRINGS.thread.thinking}</summary>
                       <p>{first.text}</p>
+                      <ReportedDetails details={first.reportedDetails} />
                     </details>
                   );
                 case "plan":
-                  return <PlanBlock key={first.id} entries={first.entries} />;
+                  return (
+                    <div key={first.id}>
+                      <PlanBlock entries={first.entries} />
+                      <ReportedDetails details={first.reportedDetails} />
+                    </div>
+                  );
+                case "compaction":
+                  return (
+                    <div key={first.id}>
+                      <CompactionCard item={first} onOpenFile={openFile} />
+                      <ReportedDetails details={first.reportedDetails} />
+                    </div>
+                  );
                 case "decision":
                   return (
                     <DecisionLine
@@ -956,15 +976,17 @@ export function ThreadView({
                   );
                 case "raw":
                   return (
-                    <RawBlock
-                      key={first.id}
-                      update={first.update}
-                      label={
-                        first.label === "notification"
-                          ? STRINGS.thread.rawNotification
-                          : undefined
-                      }
-                    />
+                    <div key={first.id}>
+                      <RawBlock
+                        update={first.update}
+                        label={
+                          first.label === "notification"
+                            ? STRINGS.thread.rawNotification
+                            : undefined
+                        }
+                      />
+                      <ReportedDetails details={first.reportedDetails} />
+                    </div>
                   );
                 case "notice":
                   return (
@@ -976,6 +998,7 @@ export function ThreadView({
                   return null;
               }
             })}
+            <ReportedDetails details={thread.reportedDetails} />
             <div
               ref={requestsRef}
               className="workspace-requests"

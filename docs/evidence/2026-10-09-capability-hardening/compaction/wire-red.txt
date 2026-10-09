@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.84s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-eb7350b2bfafe2df)
+
+running 2 tests
+
+thread 'acp_client::compaction_wire_tests::compaction_capability_is_the_official_object_on_the_live_handshake' (18792385) panicked at src/acp_client/compaction_wire_tests.rs:117:5:
+assertion `left == right` failed
+  left: Null
+ right: Object {}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::compaction_wire_tests::compaction_patches_chunks_nulls_and_unknown_status_reach_the_session_unchanged' (18792386) panicked at src/acp_client/compaction_wire_tests.rs:125:5:
+assertion `left == right` failed
+  left: []
+ right: [Object {"sessionUpdate": String("compaction_update"), "compactionId": String("c"), "status": String("in_progress"), "_meta": Object {"future": Number(1)}}, Object {"sessionUpdate": String("compaction_summary_chunk"), "compactionId": String("c"), "content": Object {"type": String("text"), "text": String("retained")}, "_meta": Object {"chunk": Bool(true)}}, Object {"sessionUpdate": String("compaction_update"), "compactionId": String("c"), "status": String("completed"), "summary": Null, "_meta": Null}, Object {"sessionUpdate": String("compaction_update"), "compactionId": String("future"), "status": String("_future"), "future": Object {"intact": Bool(true)}}]
+test acp_client::compaction_wire_tests::compaction_capability_is_the_official_object_on_the_live_handshake ... FAILED
+test acp_client::compaction_wire_tests::compaction_patches_chunks_nulls_and_unknown_status_reach_the_session_unchanged ... FAILED
+
+failures:
+
+failures:
+    acp_client::compaction_wire_tests::compaction_capability_is_the_official_object_on_the_live_handshake
+    acp_client::compaction_wire_tests::compaction_patches_chunks_nulls_and_unknown_status_reach_the_session_unchanged
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1090 filtered out; finished in 0.39s
+
+error: test failed, to rerun pass `--lib`

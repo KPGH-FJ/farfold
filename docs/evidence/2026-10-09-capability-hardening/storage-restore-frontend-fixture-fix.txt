@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/StorageRestore.test.tsx" "src/components/DraftStartup.restore.test.tsx" "src/components/DraftStartup.test.tsx" "src/runtime/storage_restore.preview.test.ts" "src/runtime/drafts.test.ts" "src/runtime/setup_storage.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  6 passed (6)
+      Tests  70 passed (70)
+   Start at  18:58:29
+   Duration  1.35s (transform 440ms, setup 0ms, import 582ms, tests 1.68s, environment 0ms)
+

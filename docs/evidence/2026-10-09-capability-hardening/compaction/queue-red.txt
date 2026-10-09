@@ -1,0 +1,32 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/compaction.test.ts (32 tests | 4 failed) 9ms
+   × does not auto-drain a reply's queue when its compaction remains in_progress 2ms
+   × does not auto-drain a reply's queue when its compaction remains failed 0ms
+   × does not auto-drain a reply's queue when its compaction remains cancelled 0ms
+   × does not auto-drain a reply's queue when its compaction remains _future 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/compaction.test.ts > does not auto-drain a reply's queue when its compaction remains in_progress
+ FAIL  src/runtime/compaction.test.ts > does not auto-drain a reply's queue when its compaction remains failed
+ FAIL  src/runtime/compaction.test.ts > does not auto-drain a reply's queue when its compaction remains cancelled
+ FAIL  src/runtime/compaction.test.ts > does not auto-drain a reply's queue when its compaction remains _future
+AssertionError: expected null not to be null
+ ❯ src/runtime/compaction.test.ts:156:29
+    154|   applyUpdate(s, update("c", status));
+    155|   expect(applyTurnEnd(s, { stopReason: "end_turn" })).toBe("reply");
+    156|   expect(s.queuePaused).not.toBeNull();
+       |                             ^
+    157| });
+    158|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 28 passed (32)
+   Start at  18:34:46
+   Duration  141ms (transform 53ms, setup 0ms, import 67ms, tests 9ms, environment 0ms)
+

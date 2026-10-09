@@ -1228,7 +1228,16 @@ export function AgentSetup({
                       selection: { service: selection.service, config },
                     });
                 }}
-              />
+              >
+                {selectionMismatch && testThread && (
+                  <AgentSelectionReview
+                    before={selection}
+                    after={{ service: selection.service, config: test.config }}
+                    services={services}
+                    options={testThread.configOptions}
+                  />
+                )}
+              </AgentModelReadNotice>
               {modelReadFailed && test.error && (
                 <p role="alert" className="ac-error">
                   {test.error}

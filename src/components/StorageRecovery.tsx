@@ -10,6 +10,8 @@ import {
   type StorageRecoveryStatus,
 } from "../runtime/storage_recovery";
 import "./StorageRecovery.css";
+import { StorageRestore } from "./StorageRestore";
+import type { RestoreKey } from "../runtime/storage_restore";
 
 const S = STRINGS.storageRecovery;
 
@@ -17,17 +19,20 @@ const S = STRINGS.storageRecovery;
 export function StorageRecovery({
   message,
   onRetry,
+  restoreKeys = [],
 }: {
   message: string;
   onRetry: () => Promise<void>;
+  restoreKeys?: readonly RestoreKey[];
 }) {
   const [busy, setBusy] = useState<"retry" | "export" | "reveal" | null>(null);
   const actionPending = useRef(false);
+  const [restoring, setRestoring] = useState(false);
   const [partialPath, setPartialPath] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<StorageExportReceipt | null>(null);
   const run = async (action: "retry" | "export" | "reveal") => {
-    if (actionPending.current) return;
+    if (actionPending.current || restoring) return;
     actionPending.current = true;
     setBusy(action);
     setError(null);
@@ -80,7 +85,7 @@ export function StorageRecovery({
           <button
             type="button"
             className="btn btn-primary"
-            disabled={busy !== null}
+            disabled={busy !== null || restoring}
             onClick={() => void run("retry")}
           >
             {busy === "retry" ? S.checking : S.retry}
@@ -88,7 +93,7 @@ export function StorageRecovery({
           <button
             type="button"
             className="btn"
-            disabled={busy !== null}
+            disabled={busy !== null || restoring}
             onClick={() => void run("export")}
           >
             {busy === "export" ? S.exporting : S.export}
@@ -96,13 +101,20 @@ export function StorageRecovery({
           <button
             type="button"
             className="btn"
-            disabled={busy !== null}
+            disabled={busy !== null || restoring}
             onClick={() => void run("reveal")}
           >
             {S.reveal}
           </button>
         </div>
         <p className="storage-recovery-note">{S.privacy}</p>
+        {restoreKeys.length > 0 && (
+          <StorageRestore
+            keys={restoreKeys}
+            disabled={busy !== null}
+            onBlockChange={setRestoring}
+          />
+        )}
         {receipt && (
           <div className="storage-recovery-receipt" role="status">
             <p>

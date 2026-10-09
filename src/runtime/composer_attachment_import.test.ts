@@ -153,3 +153,20 @@ it("keeps refused clipboard contents as unsent data and never starts the browser
   expect(report).toHaveBeenCalledExactlyOnceWith(IMAGE_BYTES_STRINGS.invalid);
   expect(h.invoke).not.toHaveBeenCalled();
 });
+
+it("deduplicates repeated chosen paths against both the current draft and this drop", async () => {
+  h.invoke.mockResolvedValue(null);
+  await addPickedAttachments(key, ["/same.txt"], false, vi.fn());
+  await addPickedAttachments(
+    key,
+    ["/same.txt", "/next.txt", "/next.txt"],
+    false,
+    vi.fn(),
+  );
+  expect(composerDrafts.read(key).attachments.map((item) => item.uri)).toEqual([
+    "file:///same.txt",
+    "file:///next.txt",
+  ]);
+  expect(h.invoke).toHaveBeenCalledTimes(2);
+  expect(composerDrafts.read(key).text).toBe("keep my text");
+});

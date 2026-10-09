@@ -128,7 +128,7 @@ export async function previewHistory(
             ?.sessionUpdate === "config_option_update"
         )
           pushRaw(state, event.update, "config_option_update");
-        else applyUpdate(state, event.update);
+        else applyUpdate(state, event.update, event);
       }
     }
     finishHistoryPrefix(state);

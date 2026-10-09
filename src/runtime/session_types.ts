@@ -3,6 +3,7 @@
  * it under the file-size cap; `sessions.ts` re-exports this module).
  */
 import type { CommandEntry } from "./commands";
+import type { ReportedDetailsOwner } from "./reported_details";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -43,7 +44,7 @@ export type ToolContent =
   | { type: "link"; name: string; uri: string }
   | { type: "raw"; value: unknown };
 
-export interface ToolCallView {
+export interface ToolCallView extends ReportedDetailsOwner {
   toolCallId: string;
   title: string;
   name?: string;
@@ -62,7 +63,8 @@ export interface ToolCallView {
   terminalOutput?: string;
 }
 
-export type ThreadItem =
+export type ThreadItem = (
+  | import("./compaction").CompactionView
   | {
       kind: "user";
       id: string;
@@ -123,10 +125,14 @@ export type ThreadItem =
       artifactCount: number;
       /** References into this in-memory projection, never a persisted history. */
       artifactToolItemIds?: string[];
+      /** In-memory compaction entities first observed in this round only. */
+      compactionItemIds?: string[];
       /** Whether this live round received readable Agent content, never thoughts. */
       replyReceived?: boolean;
       time: number;
-    };
+    }
+) &
+  ReportedDetailsOwner;
 
 export interface ConfigChoice {
   description?: string;
@@ -188,7 +194,7 @@ export interface PendingPermission extends PendingRequest {
 
 export type AvailableCommand = CommandEntry;
 
-export interface ThreadState {
+export interface ThreadState extends ReportedDetailsOwner {
   /** `<agentId>:<cwd>:<nativeSessionId>` — also the index row id. */
   key: string;
   agentId: string;

@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/storage_restore.preview.test.ts (2 tests | 2 failed) 50ms
+   × validates a candidate without hydrating drafts, activity or causing IO 43ms
+   × validates preparation content without publishing completed setup or selected service 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/storage_restore.preview.test.ts > validates a candidate without hydrating drafts, activity or causing IO
+TypeError: d.parseDraftSnapshot is not a function
+ ❯ src/runtime/storage_restore.preview.test.ts:10:20
+      8|   const { archiveActivity } = await import("./archive_activity");
+      9|   const before = d.composerDrafts.read("new");
+     10|   const parsed = d.parseDraftSnapshot(candidate());
+       |                    ^
+     11|   expect(parsed?.composers[0][1].sendPending).toBe(true);
+     12|   expect(parsed?.queues[0][1].uncertainIndex).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/storage_restore.preview.test.ts > validates preparation content without publishing completed setup or selected service
+TypeError: s.parseSetupSnapshot is not a function
+ ❯ src/runtime/storage_restore.preview.test.ts:20:20
+     18|   const s = await import("./setup_storage");
+     19|   const before = s.setupStorage.snapshot();
+     20|   const parsed = s.parseSetupSnapshot({ version:1, completed:["agent"]…
+       |                    ^
+     21|   expect(parsed.completed).toEqual(["agent"]);
+     22|   expect(s.setupStorage.snapshot()).toBe(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  18:40:14
+   Duration  121ms (transform 49ms, setup 0ms, import 16ms, tests 50ms, environment 0ms)
+

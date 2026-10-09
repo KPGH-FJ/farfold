@@ -100,3 +100,9 @@ mod tool_activity_tests;
 
 #[cfg(test)]
 mod transient_mcp_route_tests;
+
+#[cfg(test)]
+mod compaction_wire_tests;
+
+#[cfg(all(test, target_os = "macos"))]
+mod installed_initialize_probe;

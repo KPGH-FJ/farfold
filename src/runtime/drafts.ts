@@ -3,7 +3,7 @@ import type { ServiceSelection } from "./credentials";
 import type { PromptBlock } from "./session_types";
 import { draftPersistence } from "./draft_storage";
 import { REDESIGN } from "./redesign_strings";
-import { archiveActivity } from "./archive_activity";
+import { archiveActivity, parseArchiveActivity } from "./archive_activity";
 export { draftPersistence } from "./draft_storage";
 
 export interface DraftAttachment {
@@ -548,6 +548,108 @@ function serializeComposer(value: ComposerDraft): ComposerDraft {
   };
 }
 
+export function parseDraftSnapshot(value: unknown) {
+  if (value === null || value === undefined) return;
+  const raw = record(value);
+  if (
+    raw.version !== 1 ||
+    Object.keys(raw).some(
+      (key) =>
+        ![
+          "version",
+          "composers",
+          "choice",
+          "feedback",
+          "queues",
+          "activity",
+        ].includes(key),
+    )
+  )
+    throw new Error("unsupported draft format");
+  // Validate the entire value before publishing any restored content.
+  const composers = Object.entries(record(raw.composers)).map(
+    ([key, item]) => [key, parseComposer(item)] as const,
+  );
+  const selected = parseChoice(raw.choice);
+  const feedback = Object.entries(record(raw.feedback)).map(([key, items]) => {
+    const entries = Object.entries(record(items)).map(([storedKey, item]) => {
+      const itemValue = record(item);
+      // v1 path-keyed drafts migrate without rewriting any history. New
+      // entries retain a flat text field for the existing archive guard.
+      const path =
+        typeof itemValue.path === "string" ? itemValue.path : storedKey;
+      const contentId =
+        typeof itemValue.contentId === "string"
+          ? itemValue.contentId
+          : undefined;
+      if (typeof itemValue.text !== "string")
+        throw new Error("invalid feedback");
+      const selection =
+        itemValue.selection === null ? null : record(itemValue.selection);
+      if (
+        selection &&
+        (!["before", "after"].includes(String(selection.side)) ||
+          !Number.isSafeInteger(selection.line) ||
+          Number(selection.line) < 1 ||
+          (selection.endLine !== undefined &&
+            (!Number.isSafeInteger(selection.endLine) ||
+              Number(selection.endLine) < Number(selection.line))))
+      )
+        throw new Error("invalid line");
+      const lineInput = itemValue.lineInput
+        ? record(itemValue.lineInput)
+        : undefined;
+      if (
+        lineInput &&
+        (!["before", "after"].includes(String(lineInput.side)) ||
+          typeof lineInput.text !== "string")
+      )
+        throw new Error("invalid line input");
+      return [
+        feedbackKey(path, contentId),
+        {
+          path,
+          text: itemValue.text,
+          selection,
+          ...(lineInput ? { lineInput } : {}),
+          contentId,
+          scope:
+            itemValue.scope === "file" || itemValue.scope === "fragment"
+              ? itemValue.scope
+              : undefined,
+        },
+      ] as const;
+    });
+    return [
+      key,
+      Object.fromEntries(entries) as Record<string, SavedFileFeedback>,
+    ] as const;
+  });
+  const queues = Object.entries(record(raw.queues)).map(([key, item]) => {
+    const q = record(item);
+    if (
+      !Array.isArray(q.blocks) ||
+      q.blocks.some((blocks) => !isPromptBlocks(blocks))
+    )
+      throw new Error("invalid queue");
+    if (
+      q.uncertainIndex !== null &&
+      (!Number.isInteger(q.uncertainIndex) ||
+        Number(q.uncertainIndex) < 0 ||
+        Number(q.uncertainIndex) >= q.blocks.length)
+    )
+      throw new Error("invalid pending message");
+    return [key, q as unknown as QueuedDraft] as const;
+  });
+  return {
+    composers,
+    selected,
+    feedback,
+    queues,
+    activity: parseArchiveActivity(raw.activity),
+  };
+}
+
 draftPersistence.configure(
   () => ({
     version: 1,
@@ -569,109 +671,15 @@ draftPersistence.configure(
     activity: archiveActivity.snapshot(),
   }),
   (value) => {
-    if (value === null || value === undefined) return;
-    const raw = record(value);
-    if (
-      raw.version !== 1 ||
-      Object.keys(raw).some(
-        (key) =>
-          ![
-            "version",
-            "composers",
-            "choice",
-            "feedback",
-            "queues",
-            "activity",
-          ].includes(key),
-      )
-    )
-      throw new Error("unsupported draft format");
-    // Validate the entire value before publishing any restored content.
-    const composers = Object.entries(record(raw.composers)).map(
-      ([key, item]) => [key, parseComposer(item)] as const,
-    );
-    const selected = parseChoice(raw.choice);
-    const feedback = Object.entries(record(raw.feedback)).map(
-      ([key, items]) => {
-        const entries = Object.entries(record(items)).map(
-          ([storedKey, item]) => {
-            const itemValue = record(item);
-            // v1 path-keyed drafts migrate without rewriting any history. New
-            // entries retain a flat text field for the existing archive guard.
-            const path =
-              typeof itemValue.path === "string" ? itemValue.path : storedKey;
-            const contentId =
-              typeof itemValue.contentId === "string"
-                ? itemValue.contentId
-                : undefined;
-            if (typeof itemValue.text !== "string")
-              throw new Error("invalid feedback");
-            const selection =
-              itemValue.selection === null ? null : record(itemValue.selection);
-            if (
-              selection &&
-              (!["before", "after"].includes(String(selection.side)) ||
-                !Number.isSafeInteger(selection.line) ||
-                Number(selection.line) < 1 ||
-                (selection.endLine !== undefined &&
-                  (!Number.isSafeInteger(selection.endLine) ||
-                    Number(selection.endLine) < Number(selection.line))))
-            )
-              throw new Error("invalid line");
-            const lineInput = itemValue.lineInput
-              ? record(itemValue.lineInput)
-              : undefined;
-            if (
-              lineInput &&
-              (!["before", "after"].includes(String(lineInput.side)) ||
-                typeof lineInput.text !== "string")
-            )
-              throw new Error("invalid line input");
-            return [
-              feedbackKey(path, contentId),
-              {
-                path,
-                text: itemValue.text,
-                selection,
-                ...(lineInput ? { lineInput } : {}),
-                contentId,
-                scope:
-                  itemValue.scope === "file" || itemValue.scope === "fragment"
-                    ? itemValue.scope
-                    : undefined,
-              },
-            ] as const;
-          },
-        );
-        return [
-          key,
-          Object.fromEntries(entries) as Record<string, SavedFileFeedback>,
-        ] as const;
-      },
-    );
-    const queues = Object.entries(record(raw.queues)).map(([key, item]) => {
-      const q = record(item);
-      if (
-        !Array.isArray(q.blocks) ||
-        q.blocks.some((blocks) => !isPromptBlocks(blocks))
-      )
-        throw new Error("invalid queue");
-      if (
-        q.uncertainIndex !== null &&
-        (!Number.isInteger(q.uncertainIndex) ||
-          Number(q.uncertainIndex) < 0 ||
-          Number(q.uncertainIndex) >= q.blocks.length)
-      )
-        throw new Error("invalid pending message");
-      return [key, q as unknown as QueuedDraft] as const;
-    });
-    archiveActivity.restore(raw.activity);
-    for (const [key, draft] of composers)
+    const parsed = parseDraftSnapshot(value);
+    if (!parsed) return;
+    archiveActivity.restore(parsed.activity);
+    for (const [key, draft] of parsed.composers)
       if (!values.has(key)) values.set(key, draft);
-    Object.assign(choice, selected);
-    for (const [key, data] of feedback)
+    Object.assign(choice, parsed.selected);
+    for (const [key, data] of parsed.feedback)
       if (!feedbackValues.has(key)) feedbackValues.set(key, data);
-    for (const [key, data] of queues)
+    for (const [key, data] of parsed.queues)
       if (!queueValues.has(key)) queueValues.set(key, data);
     draftRevision++;
     listeners.forEach((fn) => fn());

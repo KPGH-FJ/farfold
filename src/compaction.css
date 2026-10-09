@@ -1,0 +1,33 @@
+.compaction-card {
+  margin: 14px 0;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.compaction-status {
+  margin: 0;
+  font-weight: 600;
+}
+.compaction-error,
+.compaction-note {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+}
+.compaction-summary {
+  margin-top: 8px;
+}
+.compaction-summary > summary {
+  cursor: pointer;
+  padding: 4px 0;
+}
+.compaction-summary > summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.compaction-card .raw-block {
+  margin-top: 8px;
+}

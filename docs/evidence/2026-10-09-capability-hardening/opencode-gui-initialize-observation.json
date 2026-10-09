@@ -1,0 +1,328 @@
+{
+  "observedAt": "2026-10-09T11:01:23.102733+00:00",
+  "parentPid": 54178,
+  "windowSeconds": 90,
+  "readOnly": true,
+  "streamContentRead": false,
+  "processSignalsSent": false,
+  "existingMatchingChildCount": 0,
+  "snapshots": [
+    {
+      "elapsedSeconds": 0.63,
+      "pipes": {
+        "parentFdListAvailable": true,
+        "stdio": [
+          {
+            "fd": 0,
+            "pipeInfoAvailable": true,
+            "reportedSize": 448,
+            "openFlags": 1,
+            "status": 0,
+            "parentPeer": [
+              {
+                "fd": 34,
+                "reportedSize": 448,
+                "openFlags": 65542,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 1,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 36,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 2,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 38,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          }
+        ]
+      },
+      "stateAndSignalMasks": ["S", "0", "0"]
+    },
+    {
+      "elapsedSeconds": 5.547,
+      "pipes": {
+        "parentFdListAvailable": true,
+        "stdio": [
+          {
+            "fd": 0,
+            "pipeInfoAvailable": true,
+            "reportedSize": 448,
+            "openFlags": 1,
+            "status": 0,
+            "parentPeer": [
+              {
+                "fd": 34,
+                "reportedSize": 448,
+                "openFlags": 65542,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 1,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 36,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 2,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 38,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          }
+        ]
+      },
+      "stateAndSignalMasks": ["S", "0", "0"]
+    },
+    {
+      "elapsedSeconds": 15.394,
+      "pipes": {
+        "parentFdListAvailable": true,
+        "stdio": [
+          {
+            "fd": 0,
+            "pipeInfoAvailable": true,
+            "reportedSize": 448,
+            "openFlags": 1,
+            "status": 0,
+            "parentPeer": [
+              {
+                "fd": 34,
+                "reportedSize": 448,
+                "openFlags": 65542,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 1,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 36,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 2,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 38,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          }
+        ]
+      },
+      "stateAndSignalMasks": ["S", "0", "0"]
+    },
+    {
+      "elapsedSeconds": 35.493,
+      "pipes": {
+        "parentFdListAvailable": true,
+        "stdio": [
+          {
+            "fd": 0,
+            "pipeInfoAvailable": true,
+            "reportedSize": 448,
+            "openFlags": 1,
+            "status": 0,
+            "parentPeer": [
+              {
+                "fd": 34,
+                "reportedSize": 448,
+                "openFlags": 65542,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 1,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 36,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 2,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 38,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          }
+        ]
+      },
+      "stateAndSignalMasks": ["S", "0", "0"]
+    },
+    {
+      "elapsedSeconds": 55.144,
+      "pipes": {
+        "parentFdListAvailable": true,
+        "stdio": [
+          {
+            "fd": 0,
+            "pipeInfoAvailable": true,
+            "reportedSize": 448,
+            "openFlags": 1,
+            "status": 0,
+            "parentPeer": [
+              {
+                "fd": 34,
+                "reportedSize": 448,
+                "openFlags": 65542,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 1,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 36,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          },
+          {
+            "fd": 2,
+            "pipeInfoAvailable": true,
+            "reportedSize": 0,
+            "openFlags": 6,
+            "status": 1,
+            "parentPeer": [
+              {
+                "fd": 38,
+                "reportedSize": 0,
+                "openFlags": 5,
+                "status": 2
+              }
+            ]
+          }
+        ]
+      },
+      "stateAndSignalMasks": ["S", "0", "0"]
+    }
+  ],
+  "childPid": 58660,
+  "sampleReturnCode": 0,
+  "safeSampleSymbolPresence": {
+    "kevent": false,
+    "__read_nocancel": false,
+    "read": false,
+    "__write_nocancel": false,
+    "write": false,
+    "poll": false,
+    "__poll": false,
+    "select": false,
+    "__select": false,
+    "mach_msg2_trap": false,
+    "mach_msg": false,
+    "__ulock_wait": false,
+    "__ulock_wait2": true,
+    "pthread_cond_wait": false,
+    "__psynch_cvwait": true,
+    "__psynch_mutexwait": false,
+    "__semwait_signal": false,
+    "nanosleep": false,
+    "__fork": false,
+    "posix_spawn": false,
+    "sqlite3_step": false,
+    "sqlite3_prepare_v2": false,
+    "openat": true,
+    "__openat": true
+  },
+  "childNoLongerPresent": true,
+  "observationSeconds": 60.071,
+  "result": "observed",
+  "safeSampleFrameCounts": {
+    "openat": [181],
+    "__openat": [181]
+  },
+  "pipeSizeSemantics": {
+    "source": "https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/sys_pipe.c",
+    "function": "fill_pipeinfo",
+    "meaning": "pipe_stat.vst_size is current pipe_buffer.cnt, including read-side peer count when inspecting the write endpoint"
+  },
+  "uiObservationByRoot": {
+    "afterOwnTimeout": "Farfold initialization error page only",
+    "nativePermissionDialogObserved": false,
+    "evidenceMethods": ["accessibility", "screenshot"],
+    "systemPermissionChanged": false,
+    "furtherRetry": false
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "observedAt": "2026-10-09T10:33:11.946082+00:00",
+  "installedAppCommit": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "method": "initialize",
+  "appObservation": "AGENT_INITIALIZE_TIMEOUT",
+  "cwd": "/Users/tw/Desktop/TR",
+  "timeoutSeconds": 65,
+  "privateHome": false,
+  "agentConfigWritten": false,
+  "promptSent": false,
+  "environment": "Inherited shell plus registered env; not claimed identical to GUI launch environment.",
+  "result": "initialized",
+  "protocolVersion": 1,
+  "agentInfo": {
+    "name": "OpenCode",
+    "version": "1.18.31"
+  },
+  "errorCode": null,
+  "responseSeconds": 0.735,
+  "ownProcessExited": true,
+  "ownProcessGroupGone": true
+}

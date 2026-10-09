@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-09",
+  "scope": "H02 valid-copy selected startup-record recovery; source and controlled fixtures only",
+  "baseCommit": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "status": "implemented_targeted_tests_passed_independent_review_completed",
+  "flows": [
+    "Only offered after both startup reads settle and at least one record failed; editor is still gated. Physical DB initialization failure has no whole-DB restore entry.",
+    "Explicit selected SQLite file is read through no-follow file handles; exact main/WAL/SHM/journal files are copied into private temp storage and hashes/file sets are compared. SQLite operates only on private copies, no source migrations or side-file writes.",
+    "512 MiB candidate material limit, 32 MiB per selected value, integrity_check, known current tables/column order/user_version, duplicate selected rows refused; future/unknown frontend record shapes remain disabled.",
+    "Pure preview uses the same draft/setup parsers without hydration or external actions; only failed allowed records are selectable. Captured preview content remains immutable if the chosen file later changes.",
+    "Explicit confirmation asks for current-material backup location; successful full SQLite backup receipt precedes an IMMEDIATE transaction. Both raw key baselines are compared, then selected keys are atomically replaced.",
+    "The shared recovery mutex serializes command gate, preview, export, apply, receipt cache, and app_drafts_ready. Normal writing commands stay closed before editor admission.",
+    "Only unsentWork.v1 and agentSetup.v1 may be written. Other settings/credentials/account/history/permissions are not imported. A ticket caches one successful receipt by normalized key set; no second export or write on same-ticket retry.",
+    "Unknown IPC/worker result freezes recovery confirmation and offers receipt lookup; a successful receipt must match ticket and key set. No reload, queue continuation, or send is automatic."
+  ],
+  "tests": [
+    {
+      "file": "storage-restore-preview-red.txt",
+      "status": "failed",
+      "meaning": "2 new pure-parser API tests failed before extraction; capability absence, not proof of existing data loss"
+    },
+    {
+      "file": "storage-restore-backend-initial.txt",
+      "status": "invalid_runtime_red",
+      "meaning": "compile errors in first implementation; not a SQLite counterexample"
+    },
+    {
+      "file": "storage-restore-backend-green.txt",
+      "status": "failed",
+      "meaning": "filename is historical; actual 17 passed and 4 failed because candidate nofollow rejected macOS /var ancestor link"
+    },
+    {
+      "file": "storage-restore-candidate-diagnostic.txt",
+      "status": "failed",
+      "meaning": "one controlled candidate-open error localized NOFOLLOW rejection; diagnostic logging removed"
+    },
+    {
+      "file": "storage-restore-backend-path-fix.txt",
+      "status": "failed",
+      "meaning": "17 passed and 4 failed; private temporary-copy path also required canonicalization"
+    },
+    {
+      "file": "storage-restore-backend-captured-green.txt",
+      "status": "passed",
+      "tests": 21
+    },
+    {
+      "file": "storage-restore-startup-red.txt",
+      "status": "failed",
+      "tests": 2,
+      "meaning": "both controlled early-failure/other-read-delayed cases exposed recovery UI before both reads settled"
+    },
+    {
+      "file": "storage-restore-frontend-targeted.txt",
+      "status": "test_harness_failure",
+      "meaning": "5 new component tests recursed on undefined children in test tree traversal; no production defect inferred; harness fixed"
+    },
+    {
+      "file": "storage-restore-review-red.txt",
+      "status": "failed",
+      "passed": 7,
+      "failed": 1,
+      "meaning": "duplicate settings rows were silently accepted (effective red). Same-name snapshot candidate already passed, so it was not an observed defect; independent temp output directory added defensively."
+    },
+    {
+      "file": "storage-restore-backend-final.txt",
+      "status": "passed",
+      "tests": 29,
+      "scope": "storage_recovery including 15 prior tests and 14 new restore/candidate tests"
+    },
+    {
+      "file": "storage-restore-meta-final.txt",
+      "status": "passed",
+      "tests": 2,
+      "scope": "new true query_only/SQLITE_FULL tests and raw absent/empty/null/SQL NULL baseline semantics"
+    },
+    {
+      "file": "storage-restore-frontend-final.txt",
+      "status": "passed",
+      "tests": 97,
+      "files": 9,
+      "scope": "includes 2 SSR markup checks; no screenshot or installed GUI evidence"
+    },
+    {
+      "file": "storage-restore-queue-regression.txt",
+      "status": "passed",
+      "tests": 1,
+      "scope": "existing cold-open uncertain queue remains paused and never dispatches through mocked transport"
+    },
+    {
+      "file": "storage-restore-typecheck.txt",
+      "status": "passed"
+    },
+    {
+      "file": "storage-restore-format.txt",
+      "status": "passed"
+    },
+    {
+      "file": "storage-restore-rust-format.txt",
+      "status": "passed"
+    }
+  ],
+  "dataProtectionEvidence": [
+    "All DB and filesystem mutations used tempfile fixture directories; no ordinary app-data files or credentials were read or changed by this increment.",
+    "Shared valid-v1 fixture used in Rust two-key restore/cold-read + protected-original/other-setting preservation, and TypeScript pure preview/cold load. Only settings_get occurs during TS cold load; pending-send flags, attachments and uncertain queue index remain retained. This joins a shared data fixture across unit boundaries, not a Tauri end-to-end run.",
+    "Source fixture retained active nonempty WAL; main and exact side-file byte arrays and path sets stayed unchanged during preview.",
+    "File-change/file-set drift tests deterministically exercise the comparison boundary; source replacement after preview exercises captured-ticket application. No adversarial continuous filesystem race test is claimed.",
+    "Successful receipt retry with reversed key ordering creates no second backup; different selected set is refused.",
+    "Second-key trigger failure rolls back both originals and returns a complete protection path. Separate MetaStore tests exercise actual SQLite query_only and max_page_count-induced SQLITE_FULL, then cold-read unchanged values. Not real OS disk exhaustion.",
+    "Concurrent ready test blocks on the same recovery mutex across apply and cached receipt; pre-editor writes and pending-preview reads are refused. This is State/SQLite-level concurrency, not full IPC scheduling."
+  ],
+  "limits": [
+    "Physical corrupt/unopenable current database replacement is not implemented by this increment.",
+    "No installed recovery GUI/real-user restore, screenshot validation, or real Agent call was performed. Prior SSR-browser path remains stopped by root policy.",
+    "Windows path/copy behavior is not tested; canonical path prefix differences remain an explicit platform follow-up.",
+    "No power-loss/fsync interruption or real full filesystem test. Backup helper retains earlier final-directory-fsync receipt boundary; manifest alone never certifies successful durability.",
+    "Backend enforces SQLite structure/size, JSON version, two-key scope, protection/CAS/atomicity; detailed draft/setup semantics are checked in the shared frontend pure parsers before confirmation and again before apply. Raw IPC with a syntactically v1 but semantically invalid record is outside the UI semantic proof.",
+    "No permanent restore ledger was introduced; ticket and successful receipt live only in the current process. After process restart, startup reads durable data normally."
+  ],
+  "files": [
+    {
+      "path": "src-tauri/src/draft_exit.rs",
+      "lines": 432,
+      "sha256": "2138d02c8c4e97cc416cfad4933b20ee4a62cd25607e8e7418cb93d3a90d6fa0"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "lines": 375,
+      "sha256": "0bc0a4a25461522497ba05ecbfdb041d6e7ea6521f66a5d87f12dd38c76d731b"
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "lines": 1337,
+      "sha256": "86666bde42b616c38835e122c1b3ebc4c9004698c731658051df88fd4ffbedf8"
+    },
+    {
+      "path": "src-tauri/src/meta_store/startup_restore.rs",
+      "lines": 47,
+      "sha256": "09c2304887e4be058586b90824a14c8acd47c7a72465d8613fb69761b8e36ffe"
+    },
+    {
+      "path": "src-tauri/src/meta_store/startup_restore_tests.rs",
+      "lines": 100,
+      "sha256": "002b14d6a1cb0790e76bfc68c97cb9e4061c0ebe7acf9951c0fdafda9b9fee97"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery.rs",
+      "lines": 227,
+      "sha256": "0a5e70ad650f8e0fb04b790a54ecb7652e38753cba74490dcc76476d30fcf023"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/tests.rs",
+      "lines": 389,
+      "sha256": "2166610b97352e965655b9ded81ffd07018411ea9d54d91e8da87f5a2a48a259"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore.rs",
+      "lines": 171,
+      "sha256": "65fb6022ce55c0c4b2b5806c70aa36074fb0f04afafa2a6a2d76ea68d007530a"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore_commands.rs",
+      "lines": 80,
+      "sha256": "be1b238788f956c1e3201ea992ef18e693a1645f1e4dc22a43e33801661bb47b"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore_tests.rs",
+      "lines": 365,
+      "sha256": "b93eb8f6f5f42ef3e65d0bf2e1bd6f53c996cc91e7f323fec5ec658d619ccf70"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore/candidate.rs",
+      "lines": 223,
+      "sha256": "85fd8c58f7e62a5f7b1807edf1684295193538b7ee782635a192e5af77559630"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore/candidate_tests.rs",
+      "lines": 54,
+      "sha256": "5fa17738bec62beea166c560694bef68005879884b78c2844abb107e8a8241e1"
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "lines": 267,
+      "sha256": "0e3f3e28dbe9c95f9228699a790b1262dcbeef0d36d7aa2ecf233d223405d2a4"
+    },
+    {
+      "path": "src/components/DraftStartup.restore.test.tsx",
+      "lines": 95,
+      "sha256": "57a60c650aa86d40588313976a207128474a87befed70403d122a64a14bd6c0c"
+    },
+    {
+      "path": "src/components/StorageRecovery.tsx",
+      "lines": 174,
+      "sha256": "7707f7286c2b38181009443ec7f852733768e9830a7c9aaf809de8918c8b9ca1"
+    },
+    {
+      "path": "src/components/StorageRecovery.css",
+      "lines": 94,
+      "sha256": "8588d684a03224061e09f701f23e8e85c82cc023a64961e575f2800aa319b59c"
+    },
+    {
+      "path": "src/components/StorageRestore.tsx",
+      "lines": 237,
+      "sha256": "ba215b5e90243ca479a84fd061599996efec8491e65899f3459b902205c7e001"
+    },
+    {
+      "path": "src/components/StorageRestore.test.tsx",
+      "lines": 171,
+      "sha256": "2808042753c1edced61ce4645849e831e53c14976329833c0545b0520e4845f3"
+    },
+    {
+      "path": "src/runtime/archive_activity.ts",
+      "lines": 90,
+      "sha256": "9d91bcc5e138f61508c8bd6a24d3552da065086fc5e2ac4798e78c002b156940"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "lines": 700,
+      "sha256": "34c26edbca2f464186eb4a2cb8c62742c8540602d6ba7d7708cfa7c0e720a8f3"
+    },
+    {
+      "path": "src/runtime/setup_storage.ts",
+      "lines": 372,
+      "sha256": "ea5074cf0ee47a197acab09ff6b5c02850037274dde6afcb69fe67d42ccf53fa"
+    },
+    {
+      "path": "src/runtime/storage_restore.ts",
+      "lines": 277,
+      "sha256": "51d2b6d97e653096970c3fb0041aa77145b5f9deb895dd601a51b80e253b8010"
+    },
+    {
+      "path": "src/runtime/storage_restore_strings.ts",
+      "lines": 41,
+      "sha256": "c102ac1533d7cdd6a96aa3119074c8fea6fae81b0754665107265de925f79318"
+    },
+    {
+      "path": "src/runtime/storage_restore.preview.test.ts",
+      "lines": 159,
+      "sha256": "8eafb3721bb70957b4b89e2d5ab60d355b9219858af2c26a5734a66901c9d5f8"
+    },
+    {
+      "path": "src/runtime/fixtures/storage-restore-v1.json",
+      "lines": 41,
+      "sha256": "403db7f09eae65c040d543c14fbe0749474a0dc186dbb8c4b2dc9c2ef64c3a4c"
+    }
+  ],
+  "independentReview": {
+    "agent": "architecture",
+    "status": "completed_no_blocker",
+    "method": "Read-only final source, tests and receipt review; no duplicate test execution or installed restore experiment.",
+    "notes": [
+      "Verified source no-follow read-only copying to private SQLite snapshot, duplicate selected-row refusal, raw both-key CAS, confirmed protective copy before transaction, same-key-set ticket result reuse, and unknown apply receipt lookup.",
+      "Verified DraftStartup both-read settlement and mutex-shared app_drafts_ready gate; restored queues remain stopped/uncertain and no automatic send path was found.",
+      "Same-name snapshot candidate initially passed its concrete fixture, so that static suspicion was not counted as a fixed defect.",
+      "Detailed schema semantics remain frontend pure-parser proof; shared fixture is layered Rust cold read plus TS settings_get evidence, not installed Tauri E2E. Windows/power-loss/real filesystem-full remain unverified."
+    ]
+  }
+}

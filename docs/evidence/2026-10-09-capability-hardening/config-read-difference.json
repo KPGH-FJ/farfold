@@ -1,0 +1,27 @@
+{
+  "sourceBase": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "trigger": "Installed Codex 1.13.1 now reports fast-mode as boolean false after official boolean negotiation; saved choice was string off. Other selected model, reasoning and permission remained unchanged.",
+  "changes": [
+    "Show the just-read option differences before confirming them; preserve saved selections until explicit confirmation.",
+    "Display Boolean values as enabled/disabled while preserving old strings for honest comparison.",
+    "Ordinary workbench SSR regression no longer rewrites historical layout evidence."
+  ],
+  "validation": {
+    "red": "config-read-difference-red.txt: 2 failed, 40 passed",
+    "green": "config-read-difference-green.txt: 4 files, 80 passed",
+    "independentReview": "product_coverage read-only source and existing adverse-case review: no blocker; reviewer did not rerun tests.",
+    "installedNewPreview": false
+  },
+  "sourceFiles": {
+    "src/components/AgentSetup.tsx": "f7c0e53480a58dbf1090fac439af70edcd7975093dba6682d51af633579cd539",
+    "src/components/AgentModelReadNotice.tsx": "ac5ed78797b8a381baede70f19770dcad8ceb35243cf2e17b971ed5e4ad498b2",
+    "src/components/AgentSelectionReview.tsx": "81b8a86ce40e833156ca7e2e553bc2730442a8ec87c0264cd23b33ea000d2fff",
+    "src/components/AgentSetup.selection.test.tsx": "bf222412e58894864244682c9ed8a8e8bedaa3d299eaf8c2d6f5435716004f25",
+    "src/components/AgentSelectionReview.test.tsx": "fd1b7778fe63c77fcc299c5275f6ebc22c02184a86a191a077bea03f24071406",
+    "src/components/Workbench.landing-render.test.tsx": "435d461923af6f68851e8b917eb8756b1f304c7b4166b86cc960f9d3f0e39a1d"
+  },
+  "remaining": [
+    "Final combined checks and new installation required.",
+    "No automatic compatibility migration or model/permission change introduced."
+  ]
+}

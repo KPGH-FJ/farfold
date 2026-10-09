@@ -1,0 +1,50 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.11s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 36 tests
+test acp_client::permission_guard::tests::restored_default_and_unsolicited_updates_never_confirm ... ok
+test acp_client::mutation::restore_tests::configuration_restore_continuation_expired_before_dispatch_never_polls_next_request ... ok
+test acp_client::mutation::restore_tests::configuration_restore_continuation_closed_caller_never_polls_next_request ... ok
+test acp_client::lifecycle::tests::closing_restore_keeps_cross_source_reservation_until_process_completion ... ok
+test acp_client::model_guard::change_tests::configuration_change_explicit_change_commits_only_after_save_and_restores_the_new_baseline ... ok
+test acp_client::pump::preparation_mode_tests::preparation_restores_legacy_only_top_level_mode ... ok
+test acp_client::archive_tests::alias_tests::unverified_directory_blocks_archive_but_does_not_block_restore ... ok
+test acp_client::archive_tests::alias_tests::reviewed_directory_can_only_veto_archive_and_does_not_route_or_block_restore ... ok
+test acp_client::service_connection::tests::restored_source_is_never_replaced_or_guessed ... ok
+test acp_client::lifecycle_tests::abandoned_restore_blocks_other_service_until_actual_load_finishes ... ok
+test credentials::tests::historical_grants_isolate_same_named_variables_and_revoke_restores_original ... ok
+test meta_store::startup_restore_tests::startup_restore_compares_missing_empty_and_null_raw_values_without_normalizing ... ok
+test acp_client::process::cwd_tests::cold_restore_keeps_original_actual_cwd_native_session_and_recorded_choices ... ok
+test meta_store::startup_restore_tests::startup_restore_read_only_and_full_errors_keep_both_original_values ... ok
+test storage_recovery::restore::candidate::tests::changed_bytes_or_side_file_set_after_capture_are_rejected ... ok
+test storage_recovery::restore::candidate::tests::oversized_sparse_source_is_refused ... ok
+test storage_recovery::restore::candidate::tests::symbolic_link_side_file_and_ancestor_are_rejected ... ok
+test acp_client::process::cwd_tests::cold_restore_model_and_reasoning_drift_still_blocks_sending ... ok
+test acp_client::category_guard_tests::category_guard_persists_all_values_and_blocks_second_choice_drift_on_cold_restore ... ok
+test storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore ... ok
+test storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy ... ok
+test storage_recovery::restore_tests::direct_restore_rejects_keys_outside_the_two_allowed_records ... ok
+test storage_recovery::restore_tests::a_symbolic_link_candidate_is_rejected_without_following_it ... ok
+test storage_recovery::restore_tests::a_valid_candidate_named_snapshot_sqlite3_does_not_collide_with_private_snapshot ... ok
+test storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected ... ok
+test acp_client::session_config::transport_tests::legacy_transport_empty_ack_updates_original_session_and_cold_restores_before_next_prompt ... ok
+test storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write ... ok
+test acp_client::pump::restore_tests::configuration_restore_confirmed_replay_save_failure_keeps_baseline_and_never_ready ... ok
+test storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file ... ok
+test storage_recovery::restore_tests::unknown_database_version_and_added_schema_are_refused_without_migration ... ok
+test acp_client::pump::restore_tests::configuration_restore_last_reply_followed_by_drift_never_publishes_stale_ready ... ok
+test storage_recovery::restore_tests::valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_original_copy ... ok
+test storage_recovery::restore_tests::startup_ready_and_restore_are_serialized_until_the_receipt_is_recorded ... ok
+test acp_client::lifecycle_tests::connection_isolation_tests::precise_view_hold_and_restore_keep_connection_purposes_separate ... ok
+test acp_client::pump::restore_tests::configuration_restore_load_defaults_replays_model_then_saved_thought_on_same_session ... ok
+test acp_client::pump::restore_tests::configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_blocks_prompt ... ok
+
+test result: ok. 36 passed; 0 failed; 0 ignored; 0 measured; 1073 filtered out; finished in 1.09s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

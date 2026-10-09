@@ -1,8 +1,14 @@
 import { hasReadableMessages } from "./message_attachments";
+import {
+  maintenanceResult,
+  type CompactionView,
+  type MaintenanceResult,
+} from "./compaction";
 import type { ThreadItem, ThreadState, ToolCallView } from "./session_types";
 
 /** A received result is separate from the Agent's reason for ending a request. */
-export type RoundResult = "reply" | "tool" | "pending" | "none";
+export type RoundResult =
+  "reply" | "tool" | "pending" | "none" | MaintenanceResult;
 type Settled = Extract<ThreadItem, { kind: "settled" }>;
 
 export function hasAgentReply(items: readonly ThreadItem[]): boolean {
@@ -51,12 +57,13 @@ export function roundResult(
   tools: readonly ToolCallView[],
   activeIds: readonly string[],
   connected = true,
+  compactions: readonly CompactionView[] = [],
 ): RoundResult {
   if (replyReceived) return "reply";
   if (tools.some(hasToolResult)) return "tool";
   if (connected && tools.some((tool) => activeIds.includes(tool.toolCallId)))
     return "pending";
-  return "none";
+  return maintenanceResult(compactions) ?? "none";
 }
 
 /** Existing in-memory tool IDs keep a late tool result with its original
@@ -80,7 +87,7 @@ export function settledRoundResults(
 function settledResult(
   item: Settled,
   tools: ReadonlyMap<string, ToolCallView>,
-  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
+  state: Pick<ThreadState, "items" | "activeToolCallIds" | "connectionLost">,
 ): RoundResult {
   return roundResult(
     item.replyReceived === true,
@@ -90,5 +97,10 @@ function settledResult(
     }),
     state.activeToolCallIds,
     !state.connectionLost,
+    state.items.filter(
+      (entry): entry is CompactionView =>
+        entry.kind === "compaction" &&
+        (item.compactionItemIds ?? []).includes(entry.id),
+    ),
   );
 }

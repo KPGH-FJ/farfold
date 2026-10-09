@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-10-09T11:01:31.923736+00:00",
+  "scope": ["P07", "P05 shared chosen-file deduplication"],
+  "changes": [
+    "Native file drag is routed only to the visible active composer hit region; physical coordinates are converted using current devicePixelRatio.",
+    "Gesture owner and draft clear generation must remain unchanged; inactive, pending send, inert, covered and exit-locked inputs refuse attachment imports.",
+    "Import reuses selected attachment image/path verification, preserves draft text, never sends, and ignores repeated identical file URIs within a batch or the current draft.",
+    "Late native subscriptions are detached after unmount."
+  ],
+  "verification": {
+    "red": "1 existing deduplication regression failed, 5 passed; new drag suite could not load its not-yet-created module.",
+    "initialGreen": "2 files / 14 passed",
+    "firstRegression": "1 failed / 67 passed. Pending-input fixture was empty, so draft storage intentionally discarded it; fixture corrected to contain pending text.",
+    "finalRegression": "8 files / 71 passed, including real Composer send-preparation entry and partial registration rejection.",
+    "typecheck": "Earlier intermediate typecheck passed; final combined typecheck remains required.",
+    "preparationRegression": "Independent review found a real before-sendPending window. The first flush-hanging test failed; an incomplete initial patch remained failing; the actual busy ref wiring then passed. Raw output retained."
+  },
+  "limits": [
+    "No installed native file drag evidence yet.",
+    "Windows path parsing fixtures are not Windows desktop validation.",
+    "Identical URI deduplication does not equate different aliases or hardlinks.",
+    "File removal/read failure follows existing attachment verification and requires correction before sending; the user draft is retained.",
+    "If the Tauri convenience API rejects after partial listener registration, returned handles are unavailable; residual callbacks are now disabled locally, but full underlying listener removal is not proven."
+  ],
+  "sourceHashes": {
+    "src/runtime/composer_file_drop.ts": "0deea8bf66788a9ab92957baa9445775e1642d0466e901160fe3fdaf58f9e87d",
+    "src/components/useComposerFileDrop.ts": "b81ef42edc9224bcbb57d307346a1878292e32a8638f2dc78a186a3add37b53f",
+    "src/components/Composer.tsx": "b549a7f8d7d3a524eecd7a5171566e5269f6e97d24ad0ccc837290317ae68c1d",
+    "src/runtime/composer_attachment_import.ts": "9781f6f1a9b3e410271ccae939371fbc3c7c071bcfc2342c0a8a644ea44bc496",
+    "src/desktop-workbench.css": "4ea973fb9582c3abe5eee7d966e1e22a788207102997985306d14881cb137609",
+    "src/runtime/composer_file_drop.test.ts": "af0b109511010fbc3019f8aad85537e9129c4fae2ea4bb7b300a20ce2f9c1ea1",
+    "src/components/useComposerFileDrop.test.tsx": "f881435e47e986bf34859c706e94c3474284e2fc09fb639874cdfe2b320d1cec",
+    "src/runtime/composer_attachment_import.test.ts": "cff8dea707a451dfb4ab31493966244eb75de35d133a71d513c4bad3f0c3ecc1",
+    "src/components/Composer.file-drop.test.tsx": "8cc82231f51b4a4e9c8daa9199edc4d7c0f78ef858b37086993e59ca581b2c9c"
+  },
+  "logHashes": {
+    "file-drop-red.txt": "1bf32ea5d70e49a310286393feba62a0afc77c28a1fc93bf8a77de580b5f4858",
+    "file-drop-initial-green.txt": "55c6a4f00d59739b33fe63f718e65f0261334c9a772208718f14791a690b1524",
+    "file-drop-regression.txt": "312b3bd8840d41c5ea0823ded41ff4b5ff039f650b0f1d14a49d7fe4a6d1e15a",
+    "file-drop-regression-final.txt": "256215b78140bafe5e5550923501ca5e8d852f4f25004b2b1e1f54db8b8616ce",
+    "file-drop-typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "file-drop-preparation-red.txt": "579c3045306f828de107b3be8ebdea6eb9f8285b53775996b2c1234c997e9fc0",
+    "file-drop-preparation-green.txt": "a11f99c33f63f9866d273b9410c0e2a979838871dfdb54e33f4921c44739d5e3",
+    "file-drop-preparation-final.txt": "c3aae5b2ac0d8c00c13726d5709fbe6e9e06fd19fe1743a28777b1bc26ce943b",
+    "file-drop-partial-registration.txt": "b519c45a964aed1d419824cf1f0a470fb2845766fb0656f88d8e92c2f4bd60b4"
+  },
+  "independentReview": "Architecture reviewer found the preparation gap; fixed and reviewed without remaining blocker. Final callback rejection guard separately submitted for review."
+}

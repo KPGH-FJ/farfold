@@ -1,0 +1,149 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/tool_v1_null.test.ts (8 tests | 6 failed) 8ms
+   × ACP v1 null content does not erase the previously reported value 4ms
+   × ACP v1 null locations does not erase the previously reported value 1ms
+   × ACP v1 null rawInput does not erase the previously reported value 0ms
+   × ACP v1 null rawOutput does not erase the previously reported value 0ms
+   × initial null raw values have the same absent meaning as omitted values 0ms
+   × keeps explicit null in opaque extension details without assigning v2 clear semantics to known v1 fields 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > ACP v1 null content does not erase the previously reported value
+AssertionError: expected [] to deeply equal [ { type: 'text', …(1) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "text": "reported output",
+-     "type": "text",
+-   },
+- ]
++ []
+
+ ❯ src/runtime/tool_v1_null.test.ts:26:25
+     24|     const details = structuredClone(call.reportedDetails);
+     25|     applyUpdate(state, { sessionUpdate: "tool_call_update", toolCallId…
+     26|     expect(call[field]).toEqual(previous);
+       |                         ^
+     27|     expect(call.reportedDetails).toEqual(details);
+     28|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > ACP v1 null locations does not erase the previously reported value
+AssertionError: expected [] to deeply equal [ { path: '/work/a', line: 2 } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "line": 2,
+-     "path": "/work/a",
+-   },
+- ]
++ []
+
+ ❯ src/runtime/tool_v1_null.test.ts:26:25
+     24|     const details = structuredClone(call.reportedDetails);
+     25|     applyUpdate(state, { sessionUpdate: "tool_call_update", toolCallId…
+     26|     expect(call[field]).toEqual(previous);
+       |                         ^
+     27|     expect(call.reportedDetails).toEqual(details);
+     28|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > ACP v1 null rawInput does not erase the previously reported value
+AssertionError: expected null to deeply equal { query: 'input' }
+
+- Expected:
+{
+  "query": "input",
+}
+
++ Received:
+null
+
+ ❯ src/runtime/tool_v1_null.test.ts:26:25
+     24|     const details = structuredClone(call.reportedDetails);
+     25|     applyUpdate(state, { sessionUpdate: "tool_call_update", toolCallId…
+     26|     expect(call[field]).toEqual(previous);
+       |                         ^
+     27|     expect(call.reportedDetails).toEqual(details);
+     28|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > ACP v1 null rawOutput does not erase the previously reported value
+AssertionError: expected null to deeply equal { result: 'output' }
+
+- Expected:
+{
+  "result": "output",
+}
+
++ Received:
+null
+
+ ❯ src/runtime/tool_v1_null.test.ts:26:25
+     24|     const details = structuredClone(call.reportedDetails);
+     25|     applyUpdate(state, { sessionUpdate: "tool_call_update", toolCallId…
+     26|     expect(call[field]).toEqual(previous);
+       |                         ^
+     27|     expect(call.reportedDetails).toEqual(details);
+     28|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > initial null raw values have the same absent meaning as omitted values
+AssertionError: expected null to be undefined
+
+- Expected:
+undefined
+
++ Received:
+null
+
+ ❯ src/runtime/tool_v1_null.test.ts:54:30
+     52|   const item = state.items[0];
+     53|   if (item?.kind !== "tool") throw new Error("missing fixture tool");
+     54|   expect(item.call.rawInput).toBeUndefined();
+       |                              ^
+     55|   expect(item.call.rawOutput).toBeUndefined();
+     56|   expect(item.call.content).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/tool_v1_null.test.ts > keeps explicit null in opaque extension details without assigning v2 clear semantics to known v1 fields
+AssertionError: expected null to deeply equal { result: 'output' }
+
+- Expected:
+{
+  "result": "output",
+}
+
++ Received:
+null
+
+ ❯ src/runtime/tool_v1_null.test.ts:64:26
+     62|   const { state, call } = fixture();
+     63|   applyUpdate(state, { sessionUpdate: "tool_call_update", toolCallId: …
+     64|   expect(call.rawOutput).toEqual({ result: "output" });
+       |                          ^
+     65|   expect(call.reportedDetails).toHaveProperty("/update/_meta", null);
+     66|   expect(call.reportedDetails).toHaveProperty("/update/future", null);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  18:45:52
+   Duration  144ms (transform 55ms, setup 0ms, import 69ms, tests 8ms, environment 0ms)
+

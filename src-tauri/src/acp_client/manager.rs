@@ -14,8 +14,9 @@ use std::time::Duration;
 use agent_client_protocol::schema::ProtocolVersion;
 use agent_client_protocol::schema::v1::{
     AuthCapabilities, BooleanConfigOptionCapabilities, ClientCapabilities,
-    ClientSessionCapabilities, ElicitationCapabilities, ElicitationFormCapabilities,
-    Implementation, InitializeRequest, Meta, SessionConfigOptionsCapabilities,
+    ClientSessionCapabilities, CompactionCapabilities, ElicitationCapabilities,
+    ElicitationFormCapabilities, Implementation, InitializeRequest, Meta,
+    SessionConfigOptionsCapabilities,
 };
 use agent_client_protocol::{
     AcpAgent, AcpAgentConfig, Agent, Client, ConnectionTo, Dispatch, Handled, UntypedMessage,
@@ -585,7 +586,7 @@ impl AcpManager {
                         .client_capabilities(
                             ClientCapabilities::new()
                                 .session(
-                                    ClientSessionCapabilities::new().config_options(
+                                    ClientSessionCapabilities::new().compaction(CompactionCapabilities::new()).config_options(
                                         SessionConfigOptionsCapabilities::new()
                                             .boolean(BooleanConfigOptionCapabilities::new()),
                                     ),

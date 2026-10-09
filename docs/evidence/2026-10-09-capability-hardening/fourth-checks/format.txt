@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] src/components/ThreadView.tsx
+[warn] src/runtime/session_projection.ts
+[warn] src/runtime/session_types.ts
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

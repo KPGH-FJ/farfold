@@ -1,3 +1,5 @@
+import { useComposerFileDrop } from "./useComposerFileDrop";
+import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { ComposerAttachments } from "./ComposerAttachments";
 import { ThreadUsage } from "./ThreadUsage";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
@@ -292,6 +294,25 @@ export function Composer({
         !work.enabled(thread.agentId)
       : false);
   const inputDisabled = disabled && !editableWhenDisabled;
+  const dropBox = useRef<HTMLDivElement | null>(null);
+  const fileDrop = useComposerFileDrop({
+    box: dropBox,
+    key: storageKey,
+    blocked: () => busy.current,
+    enabled:
+      active &&
+      !inputDisabled &&
+      !input.sendPending &&
+      !draftSave.interactionLocked,
+    add: (owner, paths) => {
+      void addPickedAttachments(owner, paths, imageEnabled, (message) => {
+        if (liveKey.current === owner) setSendError({ message });
+      }).catch(() => {
+        if (liveKey.current === owner)
+          setSendError({ message: STRINGS.repair.requestFailed });
+      });
+    },
+  });
 
   const autogrow = () => {
     const el = areaRef.current;
@@ -1214,7 +1235,20 @@ export function Composer({
           </p>
         </div>
       )}
-      <div className={`composer-box${focus ? " focus" : ""}`}>
+      <div
+        ref={dropBox}
+        className={`composer-box${focus ? " focus" : ""}${fileDrop.over ? " file-drop-over" : ""}`}
+      >
+        {fileDrop.over && (
+          <p className="composer-file-drop" role="status">
+            {FILE_DROP_STRINGS.release}
+          </p>
+        )}
+        {active && fileDrop.error && (
+          <p className="composer-command-hint" role="status">
+            {fileDrop.error}
+          </p>
+        )}
         {contextChips}
         <ComposerAttachments
           key={storageKey}

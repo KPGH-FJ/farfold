@@ -16,6 +16,7 @@ import {
 } from "./session_config_recheck";
 import { SessionConfiguration } from "./session_configuration";
 import { configChangeBusy } from "./protected_config";
+import { retainReportedDetails } from "./reported_details";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
@@ -503,10 +504,11 @@ class ThreadsStore {
       ) {
         if (!isKnownConfigUpdate(e.update))
           pushRaw(s, e.update, "config_option_update");
+        retainReportedDetails(s, e.update, e);
         this.emit(key);
         return;
       }
-      applyUpdate(s, e.update);
+      applyUpdate(s, e.update, e);
       if (live) conversationReadState.receiveUpdate(key, e.update);
       if (
         (e.update as { sessionUpdate?: unknown } | undefined)?.sessionUpdate ===

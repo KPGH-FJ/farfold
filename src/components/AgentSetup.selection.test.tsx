@@ -116,6 +116,7 @@ import {
 import { AgentPrerequisites } from "./AgentPrerequisites";
 import { ModelPicker } from "./ModelPicker";
 import { AgentModelReadNotice } from "./AgentModelReadNotice";
+import { AgentSelectionReview } from "./AgentSelectionReview";
 import { AgentAuthSection } from "./AgentAuthSection";
 import { AgentServiceSection } from "./AgentServiceSection";
 import { ServiceModelPicker } from "./ServiceModelPicker";
@@ -254,6 +255,48 @@ beforeEach(() => {
 afterEach(() => {
   for (const effect of h.effects) effect?.cleanup?.();
   vi.unstubAllGlobals();
+});
+
+it("shows the actual boolean read difference before accepting it without replacing saved choices", () => {
+  progress.selection = { service: null, config: { model: "A", toggle: "off" } };
+  h.snapshot = {
+    ...(h.snapshot as PreparationSnapshot),
+    input: {
+      ...(h.snapshot as PreparationSnapshot).input!,
+      readOptionsOnly: true,
+      config: { model: "A", toggle: "off" },
+    },
+    config: { model: "A", toggle: false },
+  };
+  h.thread = {
+    ...(h.thread as object),
+    configOptions: [
+      ...(h.thread as { configOptions: unknown[] }).configOptions,
+      {
+        id: "toggle",
+        name: "Toggle",
+        type: "boolean",
+        currentValue: false,
+        options: [],
+      },
+    ],
+  };
+  const nodes = render();
+  const readDifference = nodes.find(
+    (node) =>
+      node.type === AgentSelectionReview &&
+      (node.props.after as { config: Record<string, unknown> }).config
+        .toggle === false,
+  );
+  expect(readDifference).toBeDefined();
+  expect(readDifference?.props.before).toEqual(progress.selection);
+  expect(readDifference?.props.after).toEqual({
+    service: null,
+    config: { model: "A", toggle: false },
+  });
+  expect(progress.selection.config.toggle).toBe("off");
+  expect(h.setConfig).not.toHaveBeenCalled();
+  expect(h.confirmRead).not.toHaveBeenCalled();
 });
 
 it.each(["confirmed", "failed"])(

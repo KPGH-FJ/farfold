@@ -1,0 +1,365 @@
+use super::{restore::*, *};
+use serde_json::json;
+use std::{collections::BTreeMap, fs};
+fn saved(dir: &Path, text: &str) -> (PathBuf, MetaStore) {
+    let path = dir.canonicalize().unwrap().join("farfold.sqlite3");
+    let store = MetaStore::open(&path).unwrap();
+    store
+        .set_setting(KEYS[0], &json!({"version":1,"text":text}))
+        .unwrap();
+    store
+        .set_setting(KEYS[1], &json!({"version":1,"completed":[]}))
+        .unwrap();
+    (path, store)
+}
+#[test]
+fn preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, source_store) = saved(source.path(), "candidate");
+    let (path, store) = saved(target.path(), "original");
+    drop(source_store);
+    let before = fs::read(&source_path).unwrap();
+    let mut state = RestoreState::default();
+    let preview = state.preview(&store, &source_path).unwrap();
+    assert_eq!(fs::read(&source_path).unwrap(), before);
+    assert_eq!(
+        store.get_setting(KEYS[0]).unwrap().unwrap()["text"],
+        "original"
+    );
+    fs::write(&source_path, b"source changed after preview").unwrap();
+    let receipt = state
+        .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+        .unwrap();
+    assert_eq!(
+        store.get_setting(KEYS[0]).unwrap().unwrap()["text"],
+        "candidate"
+    );
+    let protected =
+        MetaStore::open(&Path::new(&receipt.protected_path).join("farfold.sqlite3")).unwrap();
+    assert_eq!(
+        protected.get_setting(KEYS[0]).unwrap().unwrap()["text"],
+        "original"
+    );
+    let again = state
+        .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+        .unwrap();
+    assert_eq!(again.protected_path, receipt.protected_path);
+    assert_eq!(fs::read_dir(copies.path()).unwrap().count(), 1);
+    assert_eq!(state.receipt(&preview.id).unwrap().keys, vec![KEYS[0]]);
+}
+#[test]
+fn a_change_to_either_startup_key_after_preview_refuses_the_whole_restore() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, _) = saved(source.path(), "candidate");
+    let (path, store) = saved(target.path(), "original");
+    let mut state = RestoreState::default();
+    let preview = state.preview(&store, &source_path).unwrap();
+    store
+        .set_setting(KEYS[1], &json!({"version":1,"changed":true}))
+        .unwrap();
+    let error = state
+        .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+        .unwrap_err();
+    assert_eq!(error.code, "changed");
+    assert!(error.materials_complete);
+    assert_eq!(
+        store.get_setting(KEYS[0]).unwrap().unwrap()["text"],
+        "original"
+    );
+    assert!(state.receipt(&preview.id).is_none());
+}
+#[test]
+fn missing_backup_location_unknown_key_and_future_candidate_do_not_write() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, candidate) = saved(source.path(), "candidate");
+    let (path, store) = saved(target.path(), "original");
+    let mut state = RestoreState::default();
+    let preview = state.preview(&store, &source_path).unwrap();
+    assert_eq!(
+        state
+            .apply(
+                &store,
+                &path,
+                &preview.id,
+                &["credentials".into()],
+                copies.path()
+            )
+            .unwrap_err()
+            .code,
+        "selection"
+    );
+    assert_eq!(
+        state
+            .apply(
+                &store,
+                &path,
+                &preview.id,
+                &[KEYS[0].into()],
+                &copies.path().join("missing")
+            )
+            .unwrap_err()
+            .code,
+        "backup"
+    );
+    candidate
+        .set_setting(KEYS[0], &json!({"version":999}))
+        .unwrap();
+    let preview = state.preview(&store, &source_path).unwrap();
+    assert_eq!(
+        state
+            .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+            .unwrap_err()
+            .code,
+        "unsupported"
+    );
+    assert_eq!(
+        store.get_setting(KEYS[0]).unwrap().unwrap()["text"],
+        "original"
+    );
+    assert_eq!(fs::read_dir(copies.path()).unwrap().count(), 0);
+}
+#[test]
+fn a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, _) = saved(source.path(), "candidate");
+    let (path, store) = saved(target.path(), "original");
+    let mut state = RestoreState::default();
+    let preview = state.preview(&store, &source_path).unwrap();
+    let connection = rusqlite::Connection::open(&path).unwrap();
+    connection.execute_batch("CREATE TRIGGER refuse_restore BEFORE UPDATE ON settings WHEN NEW.key='agentSetup.v1' BEGIN SELECT RAISE(ABORT, 'fixture save failure'); END;").unwrap();
+    let before = store.restore_values().unwrap();
+    let error = state
+        .apply(
+            &store,
+            &path,
+            &preview.id,
+            &KEYS.map(String::from),
+            copies.path(),
+        )
+        .unwrap_err();
+    assert!(error.materials_complete);
+    assert_eq!(store.restore_values().unwrap(), before);
+}
+#[cfg(unix)]
+#[test]
+fn a_symbolic_link_candidate_is_rejected_without_following_it() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let (source_path, _) = saved(source.path(), "candidate");
+    let (_, store) = saved(target.path(), "original");
+    let link = source.path().join("linked.sqlite3");
+    std::os::unix::fs::symlink(source_path, &link).unwrap();
+    assert_eq!(
+        RestoreState::default()
+            .preview(&store, &link)
+            .unwrap_err()
+            .code,
+        "unsupported"
+    );
+}
+#[test]
+fn direct_restore_rejects_keys_outside_the_two_allowed_records() {
+    let dir = tempfile::tempdir().unwrap();
+    let (_, store) = saved(dir.path(), "original");
+    let baseline = store.restore_values().unwrap();
+    assert!(
+        store
+            .restore_startup_values(
+                &baseline,
+                &BTreeMap::from([("credential".into(), "null".into())])
+            )
+            .is_err()
+    );
+    assert_eq!(store.restore_values().unwrap(), baseline);
+}
+#[test]
+fn a_valid_candidate_named_snapshot_sqlite3_does_not_collide_with_private_snapshot() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let (source_path, candidate) = saved(source.path(), "candidate");
+    drop(candidate);
+    let renamed = source_path.with_file_name("snapshot.sqlite3");
+    fs::rename(source_path, &renamed).unwrap();
+    let (_, store) = saved(target.path(), "original");
+    assert!(RestoreState::default().preview(&store, &renamed).is_ok());
+}
+#[test]
+fn duplicate_candidate_key_rows_are_not_silently_selected() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let (source_path, candidate) = saved(source.path(), "candidate");
+    drop(candidate);
+    let connection = rusqlite::Connection::open(&source_path).unwrap();
+    connection.execute_batch("ALTER TABLE settings RENAME TO old_settings; CREATE TABLE settings(key TEXT,value TEXT); INSERT INTO settings SELECT key,value FROM old_settings; INSERT INTO settings SELECT key,value FROM old_settings; DROP TABLE old_settings;").unwrap();
+    drop(connection);
+    let (_, store) = saved(target.path(), "original");
+    assert!(
+        RestoreState::default()
+            .preview(&store, &source_path)
+            .is_err()
+    );
+}
+#[test]
+fn valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_original_copy() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, candidate) = saved(source.path(), "old-fixture");
+    let (path, store) = saved(target.path(), "original");
+    let fixture: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../src/runtime/fixtures/storage-restore-v1.json"
+    ))
+    .unwrap();
+    for key in KEYS {
+        candidate.set_setting(key, &fixture[key]).unwrap();
+    }
+    candidate
+        .set_setting("credential", &json!("never-import-fixture"))
+        .unwrap();
+    store
+        .set_setting("credential", &json!("keep-target-fixture"))
+        .unwrap();
+    assert!(
+        fs::metadata(format!("{}-wal", source_path.display()))
+            .unwrap()
+            .len()
+            > 0
+    );
+    let originals = store.restore_values().unwrap();
+    let materials = existing_material(&source_path).unwrap();
+    let bytes = materials
+        .iter()
+        .map(|p| fs::read(p).unwrap())
+        .collect::<Vec<_>>();
+    let mut restore = RestoreState::default();
+    let preview = restore.preview(&store, &source_path).unwrap();
+    assert_eq!(existing_material(&source_path).unwrap(), materials);
+    assert_eq!(
+        materials
+            .iter()
+            .map(|p| fs::read(p).unwrap())
+            .collect::<Vec<_>>(),
+        bytes
+    );
+    let receipt = restore
+        .apply(
+            &store,
+            &path,
+            &preview.id,
+            &KEYS.map(String::from),
+            copies.path(),
+        )
+        .unwrap();
+    let mut reversed = KEYS.map(String::from);
+    reversed.reverse();
+    assert_eq!(
+        restore
+            .apply(&store, &path, &preview.id, &reversed, copies.path())
+            .unwrap()
+            .protected_path,
+        receipt.protected_path
+    );
+    assert_eq!(fs::read_dir(copies.path()).unwrap().count(), 1);
+    assert_eq!(
+        restore
+            .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+            .unwrap_err()
+            .code,
+        "selection"
+    );
+    drop(store);
+    let cold = MetaStore::open(&path).unwrap();
+    for key in KEYS {
+        assert_eq!(cold.get_setting(key).unwrap().unwrap(), fixture[key]);
+    }
+    assert_eq!(
+        cold.get_setting("credential").unwrap(),
+        Some(json!("keep-target-fixture"))
+    );
+    let original =
+        MetaStore::open(&Path::new(&receipt.protected_path).join("farfold.sqlite3")).unwrap();
+    assert_eq!(original.restore_values().unwrap(), originals);
+}
+#[test]
+fn unknown_database_version_and_added_schema_are_refused_without_migration() {
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let (source_path, candidate) = saved(source.path(), "candidate");
+    drop(candidate);
+    let (_, store) = saved(target.path(), "original");
+    let connection = rusqlite::Connection::open(&source_path).unwrap();
+    connection.pragma_update(None, "user_version", 9).unwrap();
+    drop(connection);
+    let before = fs::read(&source_path).unwrap();
+    assert!(
+        RestoreState::default()
+            .preview(&store, &source_path)
+            .is_err()
+    );
+    assert_eq!(fs::read(&source_path).unwrap(), before);
+    let connection = rusqlite::Connection::open(&source_path).unwrap();
+    connection.pragma_update(None, "user_version", 0).unwrap();
+    connection
+        .execute_batch("ALTER TABLE settings ADD COLUMN future_send TEXT;")
+        .unwrap();
+    drop(connection);
+    assert!(
+        RestoreState::default()
+            .preview(&store, &source_path)
+            .is_err()
+    );
+}
+#[test]
+fn startup_ready_and_restore_are_serialized_until_the_receipt_is_recorded() {
+    use std::sync::{Arc, mpsc};
+    use std::time::Duration;
+    let source = tempfile::tempdir().unwrap();
+    let target = tempfile::tempdir().unwrap();
+    let copies = tempfile::tempdir().unwrap();
+    let (source_path, _) = saved(source.path(), "candidate");
+    let (path, store) = saved(target.path(), "original");
+    let state = Arc::new(StorageRecoveryState::new(path.clone()));
+    {
+        state.0.lock().unwrap().status.ready = true;
+    }
+    assert!(!state.allows("settings_set"));
+    assert!(state.allows("settings_get"));
+    let mut guard = state.0.lock().unwrap();
+    let preview = guard.restore.preview(&store, &source_path).unwrap();
+    drop(guard);
+    assert!(!state.allows("settings_get"));
+    assert!(state.mark_editable().is_err());
+    let mut guard = state.0.lock().unwrap();
+    let (started, wait_started) = mpsc::channel();
+    let (done, wait_done) = mpsc::channel();
+    let copy = state.clone();
+    let worker = std::thread::spawn(move || {
+        started.send(()).unwrap();
+        done.send(copy.mark_editable()).unwrap();
+    });
+    wait_started.recv().unwrap();
+    assert!(wait_done.recv_timeout(Duration::from_millis(20)).is_err());
+    guard
+        .restore
+        .apply(&store, &path, &preview.id, &[KEYS[0].into()], copies.path())
+        .unwrap();
+    assert!(guard.restore.receipt(&preview.id).is_some());
+    assert!(wait_done.try_recv().is_err());
+    drop(guard);
+    assert!(
+        wait_done
+            .recv_timeout(Duration::from_secs(1))
+            .unwrap()
+            .is_ok()
+    );
+    worker.join().unwrap();
+    assert!(state.allows("settings_set"));
+}

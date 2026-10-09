@@ -57,3 +57,38 @@
     padding: 24px 20px;
   }
 }
+.storage-restore {
+  margin-top: 20px;
+}
+.storage-restore h2 {
+  font-size: 17px;
+  margin: 12px 0;
+}
+.storage-restore code {
+  display: block;
+  overflow-wrap: anywhere;
+  user-select: text;
+  font-size: 12px;
+}
+.storage-restore fieldset {
+  border: 0;
+  margin: 16px 0;
+  padding: 0;
+}
+.storage-restore-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 0;
+}
+.storage-restore-choice input {
+  margin-top: 5px;
+  accent-color: var(--accent);
+}
+.storage-restore-choice > span {
+  display: grid;
+  gap: 6px;
+}
+.storage-restore-choice strong {
+  font-weight: 600;
+}

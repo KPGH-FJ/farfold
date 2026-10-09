@@ -1,0 +1,33 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/DraftStartup.restore.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DraftStartup.restore.test.tsx (2 tests | 2 failed) 6ms
+   × waits for the other read when draft fails first 4ms
+   × waits for the other read when setup fails first 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DraftStartup.restore.test.tsx > waits for the other read when draft fails first
+ FAIL  src/components/DraftStartup.restore.test.tsx > waits for the other read when setup fails first
+AssertionError: expected [Function StorageRecovery] not to be [Function StorageRecovery] // Object.is equality
+ ❯ src/components/DraftStartup.restore.test.tsx:31:28
+     29|  h[`${late}Load`].mockImplementation(async()=>{await waiting;h[late].r…
+     30|  render();h.effects[0]();await new Promise(resolve=>setTimeout(resolve…
+     31|  expect(render().type).not.toBe(StorageRecovery);
+       |                            ^
+     32|  expect(h.invoke).not.toHaveBeenCalled();
+     33|  finish();await new Promise(resolve=>setTimeout(resolve,0));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  18:56:02
+   Duration  128ms (transform 41ms, setup 0ms, import 63ms, tests 6ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

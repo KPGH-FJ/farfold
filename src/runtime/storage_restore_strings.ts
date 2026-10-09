@@ -1,0 +1,41 @@
+export const STORAGE_RESTORE_STRINGS = {
+  fileType: "资料副本",
+  choose: "从副本恢复…",
+  chooseTitle: "选择以前保存的资料副本",
+  loading: "正在检查副本…",
+  title: "恢复未发送内容和准备记录",
+  note: "选择要恢复的内容。恢复前会保存当前资料副本，对话历史和账号不会被替换。",
+  captured: "下列内容已单独读取。之后修改所选文件，不会改变这次待确认的内容。",
+  draft: "未发送内容",
+  setup: "Agent 准备记录",
+  unavailable: "副本中没有这项内容",
+  unsupported: "这项内容无法确认格式或版本，不能恢复。",
+  empty: "副本中这项内容为空；恢复会将当前这项内容替换为空。",
+  confirm: "保存当前副本并恢复…",
+  chooseBackup: "选择当前资料保护副本的保存位置",
+  applying: "正在保存当前副本并恢复…",
+  cancel: "取消恢复",
+  reloading: "重新载入",
+  restored:
+    "所选内容已恢复。当前资料的保护副本保存在下列位置。重新载入后，排队内容仍会暂停，不会自动发送。",
+  unknown: "恢复结果尚未确认。请核对结果；不要重复确认恢复。",
+  check: "核对恢复结果",
+  noReceipt: "尚未找到已完成的恢复结果，请稍后再核对，或重新打开应用检查。",
+  materials: "当前资料的保护副本已保留：",
+  partialMaterials: "未完成的副本保留在下列位置，尚不能作为完整副本使用：",
+  errors: {
+    unsupported:
+      "无法确认副本的结构或版本，请选择 Farfold 保存的有效资料副本。",
+    tooLarge: "副本中的内容过大，本次无法安全读取，请保留原文件。",
+    unavailable: "当前不能恢复。此操作只可在未进入工作台时使用。",
+    selection: "请选择副本中可以恢复的内容。",
+    expired: "这次预览已失效，请重新选择副本。",
+    changed: "当前资料已发生变化，本次没有恢复。请重新检查副本。",
+    backup: "当前资料的保护副本尚未确认，本次没有恢复。请检查保存位置后重试。",
+    storage: "恢复未完成，请保留当前窗口和副本，检查资料位置后重试。",
+  },
+  draftCount: (drafts: number, queues: number) =>
+    `${drafts} 份草稿，${queues} 项排队内容`,
+  setupCount: (completed: number, pending: number) =>
+    `${completed} 项已保存准备记录，${pending} 项准备进度`,
+} as const;

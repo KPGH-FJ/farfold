@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentSelectionReview.test.tsx (3 tests | 1 failed) 9ms
+   × labels boolean values and retains an older string value for explicit comparison 4ms
+ ❯ src/components/AgentSetup.selection.test.tsx (39 tests | 1 failed) 39ms
+   × shows the actual boolean read difference before accepting it without replacing saved choices 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentSelectionReview.test.tsx > labels boolean values and retains an older string value for explicit comparison
+AssertionError: expected { name: 'Toggle', before: 'off', …(1) } to deeply equal { name: 'Toggle', before: 'off', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "after": "关闭",
++   "after": "false",
+    "before": "off",
+    "name": "Toggle",
+  }
+
+ ❯ src/components/AgentSelectionReview.test.tsx:18:19
+     16|     [{ id: "toggle", name: "Toggle", type: "boolean", currentValue: fa…
+     17|   );
+     18|   expect(rows[1]).toEqual({ name: "Toggle", before: "off", after: STRI…
+       |                   ^
+     19| });
+     20|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentSetup.selection.test.tsx > shows the actual boolean read difference before accepting it without replacing saved choices
+AssertionError: expected undefined to be defined
+ ❯ src/components/AgentSetup.selection.test.tsx:283:26
+    281|       (node.props.after as { config: Record<string, unknown> }).config…
+    282|   );
+    283|   expect(readDifference).toBeDefined();
+       |                          ^
+    284|   expect(readDifference?.props.before).toEqual(progress.selection);
+    285|   expect(readDifference?.props.after).toEqual({ service: null, config:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 40 passed (42)
+   Start at  18:37:52
+   Duration  985ms (transform 278ms, setup 0ms, import 967ms, tests 48ms, environment 0ms)
+

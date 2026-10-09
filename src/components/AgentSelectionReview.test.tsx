@@ -6,6 +6,29 @@ import {
 } from "./AgentSelectionReview";
 import type { Credential } from "../runtime/credentials";
 import { AGENT_REDESIGN as U } from "../runtime/agent_redesign_strings";
+import { STRINGS } from "../runtime/strings";
+
+it("labels boolean values and retains an older string value for explicit comparison", () => {
+  const rows = selectionReviewRows(
+    { service: null, config: { toggle: "off" } },
+    { service: null, config: { toggle: false } },
+    [],
+    [
+      {
+        id: "toggle",
+        name: "Toggle",
+        type: "boolean",
+        currentValue: false,
+        options: [],
+      },
+    ],
+  );
+  expect(rows[1]).toEqual({
+    name: "Toggle",
+    before: "off",
+    after: STRINGS.options.disabled,
+  });
+});
 
 it("keeps a removed or changed service unknown rather than describing the new revision as the previous source", () => {
   const previous = {

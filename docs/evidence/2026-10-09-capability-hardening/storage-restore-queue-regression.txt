@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/sessions.regression.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  64 passed (64)
+   Start at  19:04:03
+   Duration  551ms (transform 162ms, setup 0ms, import 196ms, tests 289ms, environment 0ms)
+

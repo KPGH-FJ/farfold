@@ -9,7 +9,11 @@ import { LIBRARY } from "../runtime/library_strings";
 import { STRINGS } from "../runtime/strings";
 import { ConversationLibrary } from "./ConversationLibrary";
 import { Sidebar } from "./Sidebar";
-import { freshThreadState } from "../runtime/session_projection";
+import {
+  applyTurnEnd,
+  applyUpdate,
+  freshThreadState,
+} from "../runtime/session_projection";
 import type { ThreadState } from "../runtime/session_types";
 
 const data = {
@@ -143,6 +147,47 @@ beforeEach(() => {
     row("busy", "run"),
   ];
 });
+
+it.each([
+  ["completed", "整理已结束"],
+  ["in_progress", "整理尚未结束"],
+  ["failed", "整理未完成"],
+  ["cancelled", "整理未完成"],
+  ["_future", "整理结果待确认"],
+])(
+  "preserves compaction-only %s as its actual maintenance result in the library",
+  (status, label) => {
+    const state = freshThreadState("idle", agent.id, "/ordinary", "idle");
+    applyUpdate(state, {
+      sessionUpdate: "compaction_update",
+      compactionId: "c",
+      status,
+    });
+    applyTurnEnd(state, { stopReason: "end_turn" });
+    liveThreads.set("idle", state);
+    expect(renderLibrary()).toContain(label);
+  },
+);
+
+it.each(["refusal", "cancelled"])(
+  "does not override the library's %s round with successful maintenance",
+  (stopReason) => {
+    const state = freshThreadState("idle", agent.id, "/ordinary", "idle");
+    applyUpdate(state, {
+      sessionUpdate: "compaction_update",
+      compactionId: "c",
+      status: "completed",
+    });
+    applyTurnEnd(state, { stopReason });
+    liveThreads.set("idle", state);
+    expect(renderLibrary()).not.toContain("整理已结束");
+    expect(renderLibrary()).toContain(
+      stopReason === "cancelled"
+        ? STRINGS.thread.stopped
+        : STRINGS.thread.failed,
+    );
+  },
+);
 
 it.each(["stopped", "failed"] as const)(
   "labels an unfinished tool after a %s reply as unknown in the row and global count",

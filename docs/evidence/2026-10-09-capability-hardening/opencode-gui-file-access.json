@@ -1,0 +1,178 @@
+{
+  "observedAt": "2026-10-09T11:04:06.847188+00:00",
+  "timeWindowLocal": ["2026-10-09 19:01:40", "2026-10-09 19:03:00"],
+  "source": "macOS unified log, tccd",
+  "parentPid": 54178,
+  "childPid": 58660,
+  "matchedRecordCount": 15,
+  "requestCorrelationIdCount": 2,
+  "rawMessagesPersisted": false,
+  "safeRecords": [
+    {
+      "timestamp": "2026-10-09 19:01:43.286788+0800",
+      "events": [],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.287544+0800",
+      "events": ["AUTHREQ_CTX"],
+      "services": ["kTCCServiceSystemPolicyAllFiles"],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.287561+0800",
+      "events": ["AUTHREQ_ATTRIBUTION"],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": true,
+      "mentionsObservedChild": true,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": true,
+      "keywords": ["responsible", "accessing", "identifier"]
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.290735+0800",
+      "events": ["AUTHREQ_SUBJECT"],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.291487+0800",
+      "events": [],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": ["identifier"]
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.291993+0800",
+      "events": [],
+      "services": ["kTCCServiceSystemPolicyAllFiles"],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.292501+0800",
+      "events": ["AUTHREQ_RESULT"],
+      "services": [],
+      "knownCodes": ["authValue=0", "authReason=5"],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.292599+0800",
+      "events": [],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": ["reply"]
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.293167+0800",
+      "events": [],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.293806+0800",
+      "events": ["AUTHREQ_CTX"],
+      "services": ["kTCCServiceSystemPolicyDesktopFolder"],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": false,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.293824+0800",
+      "events": ["AUTHREQ_ATTRIBUTION"],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": true,
+      "mentionsObservedChild": true,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": true,
+      "keywords": ["responsible", "accessing", "identifier"]
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.296054+0800",
+      "events": ["AUTHREQ_SUBJECT"],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.296893+0800",
+      "events": [],
+      "services": [],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": ["identifier"]
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.297309+0800",
+      "events": [],
+      "services": ["kTCCServiceSystemPolicyDesktopFolder"],
+      "knownCodes": [],
+      "mentionsMain": false,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": []
+    },
+    {
+      "timestamp": "2026-10-09 19:01:43.297941+0800",
+      "events": ["AUTHREQ_PROMPTING"],
+      "services": ["kTCCServiceSystemPolicyDesktopFolder"],
+      "knownCodes": [],
+      "mentionsMain": true,
+      "mentionsObservedChild": false,
+      "mentionsFarfold": true,
+      "mentionsOpenCode": false,
+      "keywords": ["prompt", "responsible", "identifier"]
+    }
+  ],
+  "interpretation": "The same initialization has Desktop Folder AUTHREQ_PROMPTING attributed to Farfold. Correlation and stack/pipe observations support an OS file-access prompt wait; no permission action or successful recovery has been observed."
+}

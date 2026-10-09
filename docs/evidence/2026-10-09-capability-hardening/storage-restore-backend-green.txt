@@ -1,0 +1,51 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.60s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 21 tests
+test storage_recovery::tests::extended_readonly_recovery_errors_do_not_claim_filesystem_permissions ... ok
+test storage_recovery::tests::a_truncated_existing_file_is_not_initialized_as_an_empty_store ... ok
+test storage_recovery::tests::a_failed_manifest_promotion_keeps_incomplete_material_without_a_completion_file ... ok
+test storage_recovery::tests::failed_copy_never_acknowledges_a_complete_export_or_touches_the_source ... ok
+test storage_recovery::tests::corrupt_database_and_side_files_are_retained_and_exported_as_unverified ... ok
+test storage_recovery::tests::missing_previously_observed_database_is_never_recreated ... ok
+test storage_recovery::restore_tests::direct_restore_rejects_keys_outside_the_two_allowed_records ... ok
+
+thread 'storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write' (18835600) panicked at src/storage_recovery/restore_tests.rs:83:55:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: None, materials_complete: false }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test storage_recovery::tests::orphaned_wal_prevents_empty_initialization_and_can_be_preserved_on_its_own ... ok
+test storage_recovery::tests::recovery_gate_rejects_every_existing_non_recovery_command ... ok
+test storage_recovery::tests::file_created_during_a_failed_attempt_is_remembered_before_retry ... ok
+test storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store ... ok
+
+thread 'storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore' (18835596) panicked at src/storage_recovery/restore_tests.rs:60:55:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: None, materials_complete: false }
+
+thread 'storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file' (18835601) panicked at src/storage_recovery/restore_tests.rs:25:55:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: None, materials_complete: false }
+
+thread 'storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy' (18835597) panicked at src/storage_recovery/restore_tests.rs:135:55:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: None, materials_complete: false }
+test storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write ... FAILED
+test storage_recovery::restore_tests::a_symbolic_link_candidate_is_rejected_without_following_it ... ok
+test storage_recovery::tests::orphaned_shm_and_journal_also_block_creation_but_similarly_named_files_do_not ... ok
+test storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file ... FAILED
+test storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore ... FAILED
+test storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy ... FAILED
+test storage_recovery::tests::structural_damage_after_a_valid_sqlite_header_is_rejected_without_repairing_bytes ... ok
+test storage_recovery::tests::read_only_database_is_reported_before_initialization_changes_it ... ok
+test storage_recovery::tests::retry_failure_keeps_the_gate_closed_and_parallel_retry_installs_only_once ... ok
+test storage_recovery::tests::online_export_includes_committed_wal_and_preserves_invalid_draft_text ... ok
+
+failures:
+
+failures:
+    storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore
+    storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy
+    storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write
+    storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file
+
+test result: FAILED. 17 passed; 4 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.19s
+
+error: test failed, to rerun pass `--lib`

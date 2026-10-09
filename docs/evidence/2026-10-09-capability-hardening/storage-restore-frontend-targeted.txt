@@ -1,0 +1,71 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/StorageRestore.test.tsx" "src/components/DraftStartup.restore.test.tsx" "src/components/DraftStartup.test.tsx" "src/runtime/storage_restore.preview.test.ts" "src/runtime/drafts.test.ts" "src/runtime/setup_storage.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/StorageRestore.test.tsx (6 tests | 5 failed) 94ms
+   × requires explicit selection and confirmation, then only reloads on a separate action 42ms
+   × an unknown apply result freezes editing and checks the ticket without applying twice 21ms
+   × a mismatched successful receipt remains unknown rather than claiming recovery 10ms
+   × a confirmed failed transaction identifies its protective copy and leaves selection editable 9ms
+   × cancels only with acknowledged backend release 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/StorageRestore.test.tsx > requires explicit selection and confirmation, then only reloads on a separate action
+RangeError: Maximum call stack size exceeded
+ ❯ Module.StorageRestore src/components/StorageRestore.tsx:25:33
+     23|   onBlockChange: (value: boolean) => void;
+     24| }) {
+     25|   const [preview, setPreview] = useState<RestorePreview | null>(null);
+       |                                 ^
+     26|   const [selected, setSelected] = useState<RestoreKey[]>([]);
+     27|   const [receipt, setReceipt] = useState<RestoreReceipt | null>(null);
+ ❯ render src/components/StorageRestore.test.tsx:12:45
+ ❯ nodes src/components/StorageRestore.test.tsx:13:31
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+ ❯ src/components/StorageRestore.test.tsx:13:133
+ ❯ nodes src/components/StorageRestore.test.tsx:13:122
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+ ❯ src/components/StorageRestore.test.tsx:13:133
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components/StorageRestore.test.tsx > an unknown apply result freezes editing and checks the ticket without applying twice
+ FAIL  src/components/StorageRestore.test.tsx > a mismatched successful receipt remains unknown rather than claiming recovery
+ FAIL  src/components/StorageRestore.test.tsx > a confirmed failed transaction identifies its protective copy and leaves selection editable
+RangeError: Maximum call stack size exceeded
+ ❯ nodes src/components/StorageRestore.test.tsx:13:147
+
+ ❯ src/components/StorageRestore.test.tsx:13:133
+ ❯ nodes src/components/StorageRestore.test.tsx:13:122
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+ ❯ src/components/StorageRestore.test.tsx:13:133
+ ❯ nodes src/components/StorageRestore.test.tsx:13:122
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/components/StorageRestore.test.tsx > cancels only with acknowledged backend release
+RangeError: Maximum call stack size exceeded
+ ❯ nodes src/components/StorageRestore.test.tsx:13:147
+
+ ❯ src/components/StorageRestore.test.tsx:13:133
+ ❯ nodes src/components/StorageRestore.test.tsx:13:122
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+ ❯ src/components/StorageRestore.test.tsx:13:133
+ ❯ nodes src/components/StorageRestore.test.tsx:13:122
+ ❯ nodes src/components/StorageRestore.test.tsx:13:247
+ ❯ src/components/StorageRestore.test.tsx:13:133
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  5 failed | 58 passed (63)
+   Start at  18:57:59
+   Duration  1.34s (transform 388ms, setup 0ms, import 553ms, tests 1.72s, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

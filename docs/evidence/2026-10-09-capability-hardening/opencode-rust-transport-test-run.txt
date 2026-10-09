@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.86s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport' (18873591) panicked at src/acp_client/installed_initialize_probe.rs:33:44:
+registered environment required: Error("invalid type: map, expected a sequence", line: 1, column: 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport ... FAILED
+
+failures:
+
+failures:
+    acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1098 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

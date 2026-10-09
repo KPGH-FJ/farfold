@@ -1,0 +1,12 @@
+   Compiling agent-client-protocol-schema v1.9.1
+   Compiling agent-client-protocol v2.2.0
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.49s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+test acp_client::compaction_wire_tests::compaction_patches_chunks_nulls_and_unknown_status_reach_the_session_unchanged ... ok
+test acp_client::compaction_wire_tests::compaction_capability_is_the_official_object_on_the_live_handshake ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1090 filtered out; finished in 0.40s
+

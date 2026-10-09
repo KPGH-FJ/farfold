@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+test meta_store::startup_restore_tests::startup_restore_compares_missing_empty_and_null_raw_values_without_normalizing ... ok
+test meta_store::startup_restore_tests::startup_restore_read_only_and_full_errors_keep_both_original_values ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1107 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

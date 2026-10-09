@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.84s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 8 tests
+test storage_recovery::restore_tests::direct_restore_rejects_keys_outside_the_two_allowed_records ... ok
+test storage_recovery::restore_tests::a_symbolic_link_candidate_is_rejected_without_following_it ... ok
+test storage_recovery::restore_tests::a_valid_candidate_named_snapshot_sqlite3_does_not_collide_with_private_snapshot ... ok
+test storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected ... FAILED
+test storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore ... ok
+test storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy ... ok
+test storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file ... ok
+test storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write ... ok
+
+failures:
+
+---- storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected stdout ----
+
+thread 'storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected' (18879891) panicked at src/storage_recovery/restore_tests.rs:204:5:
+assertion failed: RestoreState::default().preview(&store, &source_path).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 measured; 1093 filtered out; finished in 0.10s
+
+error: test failed, to rerun pass `--lib`

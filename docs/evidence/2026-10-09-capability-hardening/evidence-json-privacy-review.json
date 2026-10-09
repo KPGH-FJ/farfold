@@ -1,0 +1,136 @@
+{
+  "recordedAt": "2026-10-09T11:08:45.700769+00:00",
+  "reviewer": "product_coverage",
+  "scope": "Current modified/untracked JSON under docs/evidence/2026-10-09-capability-hardening, excluding this receipt. Read-only review; input hashes bound the result.",
+  "result": "No accidental environment values, credentials, or historical conversation bodies found in the reviewed JSON.",
+  "fileCount": 21,
+  "stringLeavesExamined": 1529,
+  "checks": {
+    "allJsonParsed": true,
+    "credentialPatternHits": [],
+    "nonemptyEnvironmentMaps": [],
+    "environmentFields": "Source/method descriptions only; GUI comparison stores presence/equality booleans.",
+    "messageCandidates": "Source paths, file hashes and the explicit controlled usage-test marker/reply; no historical conversation body found.",
+    "openCodeDiagnostics": "Pipe byte counts/flags, fixed protocol status fields and tccd category summaries only. No stream content, raw stderr, environment values or raw sample in public JSON.",
+    "knownHighEntropyValues": "Source/bundle/archive SHA-256 and commit IDs; no unexplained opaque credential-like value found."
+  },
+  "explicitException": {
+    "file": "candidate/installed-usage-progress.json",
+    "fields": ["promptMarker", "exactReply"],
+    "confirmedBy": "root, the author of the controlled test",
+    "reason": "Both were predetermined fixed acceptance text. exactReply is the fixed six-character usage-check reply, not old user conversation content.",
+    "retained": true
+  },
+  "limitations": [
+    "This is a scoped evidence review, not a proof against every possible secret format.",
+    "Private output samples and stderr were excluded from public JSON review; raw sample protection was separately observed as 0600 in a 0700 directory.",
+    "Files changed after these hashes require proportionate re-review."
+  ],
+  "files": [
+    {
+      "path": "candidate/candidate-independent.json",
+      "sha256": "8bfdca8a77f44dbd96d15dde51699e8c61664c5f956f76ac6089fc78d170fe27",
+      "bytes": 3623
+    },
+    {
+      "path": "candidate/candidate-inputs.json",
+      "sha256": "9afdcdb350b642282bc0cd0b54e1a1e260815c7796cadf3dfc5e6a73d6d7ddf9",
+      "bytes": 92885
+    },
+    {
+      "path": "candidate/candidate.json",
+      "sha256": "1b86db086f3928ec16805c87e79120fce979e6f4d0c0fcd5656beb5bf1359936",
+      "bytes": 4147
+    },
+    {
+      "path": "candidate/duplicate-bundle-cleanup.json",
+      "sha256": "dc6f007290d9aba59aa2ded14bfde38e3c7127eaaf3bac812e6abeebe63d20c2",
+      "bytes": 276
+    },
+    {
+      "path": "candidate/installed-data-retention.json",
+      "sha256": "2aaeae06c904b183fda8c8d86a97c1c596236994b05015a06d2e9d98a16e3fcf",
+      "bytes": 1052
+    },
+    {
+      "path": "candidate/installed-usage-progress.json",
+      "sha256": "78c1c538edfb04d6399c0baf6715a4dfe904cd5a8396e12f240f6358ef011b52",
+      "bytes": 1722
+    },
+    {
+      "path": "codex-config-probe.json",
+      "sha256": "321449359520e3279cdde073b2901db2cd59a15c25722bbed6d4044eff1398f6",
+      "bytes": 1969
+    },
+    {
+      "path": "compaction/independent-review.json",
+      "sha256": "2d0b7a811c63586875a5c93b70caef2a5dbbc4a7bf908a49c83548cb0152855a",
+      "bytes": 1713
+    },
+    {
+      "path": "compaction/receipt.json",
+      "sha256": "a3027d3d210aa22e1d57ca9ac91609245e78028f37c65a5b5d0624f2b8f07e6f",
+      "bytes": 5906
+    },
+    {
+      "path": "config-read-difference.json",
+      "sha256": "17f9f571318b52d2ee84b7faf416b81b5919e31aa1a450ab879d2027e22b5c23",
+      "bytes": 1821
+    },
+    {
+      "path": "file-drop.json",
+      "sha256": "a10b35d5dc740977960880193d16b66b3d17aa8cebc553bf0c777353438cd31a",
+      "bytes": 3034
+    },
+    {
+      "path": "official-subagent-surfaces.json",
+      "sha256": "ad992e11ddffa034e4874cc8e712206f1f238a9e7333804f467a1066d59fa79e",
+      "bytes": 4641
+    },
+    {
+      "path": "opencode-gui-environment.json",
+      "sha256": "f00091115a212561ec0b7db0a31df3cee80f2e0c077e9e85df0113160f06fb6d",
+      "bytes": 1479
+    },
+    {
+      "path": "opencode-gui-file-access.json",
+      "sha256": "c1a39d5b7eb26c6f9f5529c15aaddd88ac286c9805702af05dd749ad3dd4543a",
+      "bytes": 5729
+    },
+    {
+      "path": "opencode-gui-initialize-observation.json",
+      "sha256": "3f86b4cefe1e6270480969294675db3d4ec55dd89e798b14b898b8364f4c4ed3",
+      "bytes": 8256
+    },
+    {
+      "path": "opencode-initialize-diagnosis.json",
+      "sha256": "8a9ffc93aac2346a72a6c98dbbc1cf87fdc8120697bf331d4a2354ab7d6d8f67",
+      "bytes": 3105
+    },
+    {
+      "path": "opencode-initialize.json",
+      "sha256": "26600f97c1f245a53503268441d438891cbbc2c1641459008af101771150c266",
+      "bytes": 668
+    },
+    {
+      "path": "opencode-rust-transport.json",
+      "sha256": "d81fcff4423431fb22e58f67720e44524593e50dbf1973604a008df80ba844e7",
+      "bytes": 3904
+    },
+    {
+      "path": "reported-details-and-v1-null.json",
+      "sha256": "9a33619eb154f4c446412b67607efc26c042e03ebd42d170f1b7f22db4a0e40e",
+      "bytes": 6933
+    },
+    {
+      "path": "reported-details-independent-review.json",
+      "sha256": "f3e5c466309dfe0353214ace8d05c6b47afb487a8317ded0e29e1ce91d95ed30",
+      "bytes": 1726
+    },
+    {
+      "path": "storage-restore.json",
+      "sha256": "aee2b23d172809728ebd233f51d04b3769ae9140f91ae4b78f499619304363b0",
+      "bytes": 13038
+    }
+  ]
+}

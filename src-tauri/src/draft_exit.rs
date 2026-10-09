@@ -203,8 +203,11 @@ pub fn request_restart_after_save(app: &AppHandle) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn app_drafts_ready(app: AppHandle) {
+pub fn app_drafts_ready(app: AppHandle) -> Result<(), String> {
+    app.state::<crate::storage_recovery::StorageRecoveryState>()
+        .mark_editable()?;
     app.state::<DraftExit>().ready.store(true, Ordering::SeqCst);
+    Ok(())
 }
 #[tauri::command]
 pub fn app_exit_after_save(

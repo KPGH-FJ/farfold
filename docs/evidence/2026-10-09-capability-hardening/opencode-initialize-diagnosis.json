@@ -1,0 +1,62 @@
+{
+  "observedAt": "2026-10-09T11:06:01.104755+00:00",
+  "scope": "OpenCode initialize-only difference diagnosis for installed af487016; no model/session/auth/config operation",
+  "confirmed": [
+    "Inherited-shell probe initialized in 0.735s.",
+    "Main GUI launch environment plus reconstructed login shell and process_group(0) initialized in 0.619s.",
+    "Production Rust ProcessTransport/macOS process_stdio/official ACP 2.2.0 initialized in 0.645s.",
+    "During targeted GUI retry, five samples over 55s found the full 448-byte initialization line still in child stdin; stdout/stderr had zero queued bytes.",
+    "OpenCode sample retained openat/__openat on its first thread.",
+    "tccd attributed the exact child to Farfold and issued DesktopFolder AUTHREQ_PROMPTING without an observed matching authorization result in the captured window.",
+    "The app timed out and the owned child disappeared after 60.071s."
+  ],
+  "diagnosis": "This attempt is localized to waiting for macOS Desktop Folder access authorization during Agent startup, before it reads initialize. Authorization result and recovery remain unknown.",
+  "unresolved": [
+    "Root checked AX and screenshot after timeout: only the Farfold error page, no visible system permission dialog.",
+    "Why the system permission dialog was not visible is not established.",
+    "No permission decision or successful installed-app recovery has been tested."
+  ],
+  "changes": "Only an explicitly ignored diagnostic test and its registration were added; production behavior unchanged.",
+  "notRequested": [
+    "Full Disk Access",
+    "timeout increase",
+    "Agent upgrade",
+    "account/model/config change",
+    "new retry"
+  ],
+  "evidence": [
+    {
+      "file": "opencode-initialize.json",
+      "sha256": "26600f97c1f245a53503268441d438891cbbc2c1641459008af101771150c266"
+    },
+    {
+      "file": "opencode-gui-environment.json",
+      "sha256": "f00091115a212561ec0b7db0a31df3cee80f2e0c077e9e85df0113160f06fb6d"
+    },
+    {
+      "file": "opencode-rust-transport.json",
+      "sha256": "d81fcff4423431fb22e58f67720e44524593e50dbf1973604a008df80ba844e7"
+    },
+    {
+      "file": "opencode-gui-initialize-observation.json",
+      "sha256": "3f86b4cefe1e6270480969294675db3d4ec55dd89e798b14b898b8364f4c4ed3"
+    },
+    {
+      "file": "opencode-gui-file-access.json",
+      "sha256": "c1a39d5b7eb26c6f9f5529c15aaddd88ac286c9805702af05dd749ad3dd4543a"
+    }
+  ],
+  "privateSample": {
+    "retained": true,
+    "fileMode": "0600",
+    "parentDirectoryMode": "0700",
+    "rawSampleInPublicEvidence": false
+  },
+  "pipeReader": {
+    "source": "opencode-pipe-info.c",
+    "api": "proc_pidfdinfo(PROC_PIDFDPIPEINFO), metadata only",
+    "build": "clang opencode-pipe-info.c -o /tmp/farfold-opencode-pipe-info-20261009",
+    "reference": "https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/sys_pipe.c#L1570",
+    "observations": "Child stdin is blocking; this running OpenCode child reports nonblocking stdout/stderr at observation time. That later observed mode is not a claim about flags before Agent startup."
+  }
+}

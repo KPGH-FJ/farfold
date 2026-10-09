@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-09",
+  "reviewer": "architecture",
+  "scope": [
+    "H02 selected startup-record restore",
+    "P07 native file drop including preparation and failed-registration callback guards"
+  ],
+  "status": "completed_no_remaining_blocker_in_reviewed_scope",
+  "method": "Independent read-only source, controlled-test design, raw output and receipt review. Reviewer did not rerun tests, modify product code, operate installed application, call an Agent, or read/change ordinary user data.",
+  "receipts": [
+    "docs/evidence/2026-10-09-capability-hardening/storage-restore.json",
+    "docs/evidence/2026-10-09-capability-hardening/file-drop.json"
+  ],
+  "findings": [
+    {
+      "id": "H02-duplicate-selected-key",
+      "status": "fixed_and_reviewed",
+      "detail": "An otherwise accepted candidate could contain duplicate selected settings keys; query_row silently selected one. Verification captured 7 passed / 1 failed before rejecting count > 1. Final rejection is present. Reviewer did not execute that test.",
+      "evidence": [
+        "src-tauri/src/storage_recovery/restore/candidate.rs:198",
+        "docs/evidence/2026-10-09-capability-hardening/storage-restore-review-red.txt"
+      ]
+    },
+    {
+      "id": "H02-snapshot-basename",
+      "status": "initial_static_concern_not_reproduced",
+      "detail": "Reviewer initially suspected a snapshot.sqlite3 basename conflict. Verification tested the previous implementation and it passed. This is not an observed defect or a claimed red-to-green fix. The independent output directory is a defensive change."
+    },
+    {
+      "id": "P07-send-preparation",
+      "status": "fixed_and_reviewed",
+      "detail": "During the first draft flush or attachment preparation, busy was true but sendPending was not yet true. A drop could alter the draft and cause doSend to return without sending. Composer now supplies blocked: () => busy.current; the hook reads it on every native event. The actual Composer click/doSend entrypoint is exercised with its first flush pending, separately from the hook event test.",
+      "evidence": [
+        "src/components/Composer.tsx:301",
+        "src/components/useComposerFileDrop.ts:40",
+        "src/components/Composer.file-drop.test.tsx:29",
+        "src/components/useComposerFileDrop.test.tsx:92"
+      ]
+    },
+    {
+      "id": "P07-partial-registration-callback",
+      "status": "local_callback_guard_reviewed",
+      "detail": "Registration catch now sets accepting=false and clears highlight. The retained callback checks mounted && accepting, so both an earlier enter followed by a drop and a new enter/drop after rejection cannot import. The added controlled rejection test covers both sequences. It does not prove Tauri internally unregisters partial listeners.",
+      "evidence": [
+        "src/components/useComposerFileDrop.ts:85",
+        "src/components/useComposerFileDrop.ts:92",
+        "src/components/useComposerFileDrop.test.tsx:149"
+      ]
+    }
+  ],
+  "reviewedInvariants": {
+    "H02": [
+      "Original candidate files are opened as read-only no-follow inputs and copied to private temporary storage; SQLite opens private copies only. Exact main/WAL/SHM/journal file sets and hashes are compared.",
+      "Only unsentWork.v1 and agentSetup.v1 are offered and written. Pure preview does not hydrate state; detailed semantics are checked through frontend pure parsers before confirmation and again before apply.",
+      "A successful current-data protective export precedes the IMMEDIATE transaction; both original raw key values are compared before atomic selected writes. Other records are retained.",
+      "Same ticket and normalized selection return the cached successful receipt without another export/write. Unknown apply transport or worker result does not offer another confirmation; receipt identity and key set are checked.",
+      "Both startup reads settle before recovery UI is offered. Recovery mutex spans apply and receipt capture and is shared with app_drafts_ready. Editable admission prevents subsequent import.",
+      "Reload requires a separate user action. Restored queues retain stopped/uncertain state and attachments/pending flags are preserved. No automatic send path was found."
+    ],
+    "P07": [
+      "Physical position is converted with devicePixelRatio for CSS rectangle and DOM hit-testing; hidden, covered and inert composers are rejected.",
+      "Gesture retains draft key and generation; each event rechecks current owner, preparation, sendPending and exit lock. Completion adds attachments only, never sends.",
+      "Imports deduplicate exact file URIs; asynchronous attachment results require the original generation and still-present attachment identity.",
+      "Resolved subscriptions detach on unmount; subscriptions resolving after unmount immediately detach. Callback guards prevent effects after unmount or registration rejection."
+    ]
+  },
+  "testEvidence": [
+    {
+      "owner": "verification",
+      "receipt": "storage-restore.json",
+      "resultReportedInReceipt": "29 storage tests, 2 MetaStore tests, 97 frontend tests and 1 cold-open queue test passed",
+      "reviewerReran": false,
+      "level": "Controlled SQLite/State/TS fixtures; not installed Tauri recovery"
+    },
+    {
+      "owner": "root",
+      "file": "file-drop-preparation-red.txt",
+      "result": "1 failed",
+      "meaning": "Controlled Composer preparation guard counterexample"
+    },
+    {
+      "owner": "root",
+      "file": "file-drop-preparation-green.txt",
+      "result": "69 passed, 1 failed",
+      "meaning": "Historical filename is not a pass: Composer blocked argument was still missing"
+    },
+    {
+      "owner": "root",
+      "file": "file-drop-preparation-final.txt",
+      "result": "70 passed in 8 files"
+    },
+    {
+      "owner": "root",
+      "file": "file-drop-partial-registration.txt",
+      "result": "71 passed in 8 files",
+      "meaning": "Latest targeted output includes rejected-registration callback guard"
+    }
+  ],
+  "limits": [
+    "No installed restore UI or actual native file-drop journey was performed by this review; controlled tests are not real desktop evidence.",
+    "Tauri onDragDropEvent registers four listeners sequentially. A middle registration failure does not expose earlier unlisten handles through this API; the new guard disables effects but does not claim those internal listeners were removed.",
+    "Windows path/copy behavior, actual display scaling/window drag behavior, physical disk exhaustion and power-loss/fsync interruption remain unverified.",
+    "Restore does not replace a physically corrupt/unopenable current database. Detailed startup-record semantics are enforced by frontend parser entrypoints; backend separately enforces database structure/size, JSON version, key scope, protection and atomicity.",
+    "Shared valid-v1 Rust/TS fixture and State-level mutex test are layered evidence, not full IPC scheduling or installed end-to-end recovery.",
+    "A manifest file alone is not a successful durability receipt; restore relies on the export command success result before mutation."
+  ],
+  "reviewedSourceSnapshots": [
+    {
+      "path": "src-tauri/src/storage_recovery/restore.rs",
+      "sha256": "65fb6022ce55c0c4b2b5806c70aa36074fb0f04afafa2a6a2d76ea68d007530a",
+      "lines": 171
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore/candidate.rs",
+      "sha256": "85fd8c58f7e62a5f7b1807edf1684295193538b7ee782635a192e5af77559630",
+      "lines": 223
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore_commands.rs",
+      "sha256": "be1b238788f956c1e3201ea992ef18e693a1645f1e4dc22a43e33801661bb47b",
+      "lines": 80
+    },
+    {
+      "path": "src-tauri/src/meta_store/startup_restore.rs",
+      "sha256": "09c2304887e4be058586b90824a14c8acd47c7a72465d8613fb69761b8e36ffe",
+      "lines": 47
+    },
+    {
+      "path": "src-tauri/src/storage_recovery.rs",
+      "sha256": "0a5e70ad650f8e0fb04b790a54ecb7652e38753cba74490dcc76476d30fcf023",
+      "lines": 227
+    },
+    {
+      "path": "src/components/StorageRestore.tsx",
+      "sha256": "ba215b5e90243ca479a84fd061599996efec8491e65899f3459b902205c7e001",
+      "lines": 237
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "0e3f3e28dbe9c95f9228699a790b1262dcbeef0d36d7aa2ecf233d223405d2a4",
+      "lines": 267
+    },
+    {
+      "path": "src/runtime/storage_restore.ts",
+      "sha256": "51d2b6d97e653096970c3fb0041aa77145b5f9deb895dd601a51b80e253b8010",
+      "lines": 277
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "b549a7f8d7d3a524eecd7a5171566e5269f6e97d24ad0ccc837290317ae68c1d",
+      "lines": 1451
+    },
+    {
+      "path": "src/components/useComposerFileDrop.ts",
+      "sha256": "b81ef42edc9224bcbb57d307346a1878292e32a8638f2dc78a186a3add37b53f",
+      "lines": 109
+    },
+    {
+      "path": "src/components/useComposerFileDrop.test.tsx",
+      "sha256": "f881435e47e986bf34859c706e94c3474284e2fc09fb639874cdfe2b320d1cec",
+      "lines": 159
+    },
+    {
+      "path": "src/components/Composer.file-drop.test.tsx",
+      "sha256": "8cc82231f51b4a4e9c8daa9199edc4d7c0f78ef858b37086993e59ca581b2c9c",
+      "lines": 78
+    },
+    {
+      "path": "src/runtime/composer_file_drop.ts",
+      "sha256": "0deea8bf66788a9ab92957baa9445775e1642d0466e901160fe3fdaf58f9e87d",
+      "lines": 69
+    },
+    {
+      "path": "src/runtime/composer_attachment_import.ts",
+      "sha256": "9781f6f1a9b3e410271ccae939371fbc3c7c071bcfc2342c0a8a644ea44bc496",
+      "lines": 178
+    }
+  ],
+  "reviewedRawOutputSnapshots": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-restore-review-red.txt",
+      "sha256": "b1711058b91365b7865dc283e14e2f6f7fe2fef0e381213a11ce437e36096636",
+      "lines": 29
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-drop-preparation-red.txt",
+      "sha256": "579c3045306f828de107b3be8ebdea6eb9f8285b53775996b2c1234c997e9fc0",
+      "lines": 33
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-drop-preparation-green.txt",
+      "sha256": "a11f99c33f63f9866d273b9410c0e2a979838871dfdb54e33f4921c44739d5e3",
+      "lines": 33
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-drop-preparation-final.txt",
+      "sha256": "c3aae5b2ac0d8c00c13726d5709fbe6e9e06fd19fe1743a28777b1bc26ce943b",
+      "lines": 9
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-drop-partial-registration.txt",
+      "sha256": "b519c45a964aed1d419824cf1f0a470fb2845766fb0656f88d8e92c2f4bd60b4",
+      "lines": 9
+    }
+  ]
+}

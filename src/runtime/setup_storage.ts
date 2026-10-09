@@ -131,7 +131,7 @@ function parseProgress(value: unknown): AgentSetupProgress {
     result.installationInputInvalid = true;
   return result;
 }
-function parse(value: unknown): Data {
+export function parseSetupSnapshot(value: unknown): Data {
   if (value == null) return empty();
   if (
     !object(value) ||
@@ -234,7 +234,7 @@ export const setupStorage = {
       key: SETUP_STORAGE_KEY,
     })
       .then((value) => {
-        const data = parse(value);
+        const data = parseSetupSnapshot(value);
         confirmed = new Set(data.completed);
         savedSelections = structuredClone(data.selections);
         publish({ ...data, ready: true, error: null });

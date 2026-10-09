@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-09T10:29:56.360505+00:00",
+  "sourceCommit": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "installed": true,
+  "launched": false,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "appPath": "/Applications/Farfold.app",
+  "exactBundleFilesVerified": true,
+  "strictAdHocSignatureVerified": true,
+  "sourceInputsVerified": 838,
+  "dataBeforeAfterIdentical": true,
+  "dataEntryCounts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "special": 0,
+      "symlink": 328
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2,
+      "special": 0,
+      "symlink": 0
+    },
+    "webkit": {
+      "directory": 152,
+      "file": 100,
+      "special": 0,
+      "symlink": 0
+    }
+  },
+  "dataEntriesTotal": 217400,
+  "dataManifestSha256": "d4c202b4a92b53cb982b32a44feae32c35584505a150afa720abd7800534e672",
+  "privateManifestMode": "0600",
+  "metadataRecoveryCopyIntegrity": "ok",
+  "scope": "Bundle replacement and byte-identical data retention before first launch; no installed UI claim yet."
+}

@@ -45,6 +45,7 @@ import {
 } from "../runtime/sessions";
 import { STRINGS } from "../runtime/strings";
 import { settledRoundResults } from "../runtime/round_result";
+import { maintenanceLabel } from "../runtime/compaction_strings";
 import { hasReadableMessages } from "../runtime/message_attachments";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
@@ -95,15 +96,19 @@ function loadedResult(state: ThreadState | undefined) {
     const result = settledRoundResults(state).get(item.id);
     return {
       label:
-        result === "reply"
+        maintenanceLabel(result) ??
+        (result === "reply"
           ? STRINGS.thread.done
           : result === "none"
             ? LIBRARY.noResult
             : result === "pending"
               ? LIBRARY.running
-              : STRINGS.thread.ended,
+              : STRINGS.thread.ended),
       title: result === "none" ? STRINGS.thread.noResult : undefined,
-      attention: result === "none",
+      attention:
+        result === "none" ||
+        result === "maintenance_failed" ||
+        result === "maintenance_unknown",
     };
   }
   return null;

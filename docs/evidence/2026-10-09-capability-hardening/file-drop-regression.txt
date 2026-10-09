@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/useComposerFileDrop.test.tsx (9 tests | 1 failed) 10ms
+   × does not add files through pending input 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/useComposerFileDrop.test.tsx > does not add files through pending input
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "native-file-drop",
+      Array [
+        "/file.txt",
+      ],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/useComposerFileDrop.test.tsx:107:23
+    105|     if (reason === "exit") draftPersistence.lockInteraction(true);
+    106|     s.send("drop");
+    107|     expect(s.add).not.toHaveBeenCalled();
+       |                       ^
+    108|     s.cleanup();
+    109|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 67 passed (68)
+   Start at  18:59:22
+   Duration  2.19s (transform 1.30s, setup 0ms, import 7.01s, tests 647ms, environment 0ms)
+

@@ -270,6 +270,8 @@ fn retry_failure_keeps_the_gate_closed_and_parallel_retry_installs_only_once() {
         worker.join().unwrap();
     }
     assert_eq!(installed.load(Ordering::SeqCst), 1);
+    assert!(!state.allows("settings_set"));
+    state.mark_editable().unwrap();
     assert!(state.allows("settings_set"));
     assert_eq!(
         fs::read(dir.path().join("preserved-original")).unwrap(),

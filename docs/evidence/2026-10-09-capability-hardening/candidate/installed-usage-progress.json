@@ -1,0 +1,53 @@
+{
+  "observedAt": "2026-10-09T10:40:32.483976+00:00",
+  "installedCommit": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "interfaceObserved": true,
+  "launchSucceeded": true,
+  "initialCounts": {
+    "conversations": 109,
+    "unsent": 7,
+    "running": 0
+  },
+  "codexAgentVersion": "1.13.1",
+  "model": "gpt-6-astra",
+  "reasoning": "ultra",
+  "permissionMode": "agent",
+  "settingsDifference": {
+    "id": "fast-mode",
+    "previous": "off",
+    "current": false,
+    "modelAndReasoningUnchanged": true,
+    "confirmedThroughProduct": true
+  },
+  "realPromptCount": 1,
+  "promptMarker": "FARFOLD_USAGE_AF487016_20261009",
+  "exactReply": "用量核对完成",
+  "toolsObserved": 0,
+  "completedVisible": true,
+  "usageVisible": {
+    "contextUsed": 24315,
+    "contextSize": 258400,
+    "totalTokens": 24315,
+    "inputTokens": 11250,
+    "outputTokens": 9,
+    "thoughtTokens": 0,
+    "cachedReadTokens": 13056,
+    "cost": "not supplied"
+  },
+  "escapeClosesPopupAndRestoresTriggerFocus": true,
+  "normalQuitObserved": true,
+  "formalProcessCountAfter": 0,
+  "coldRestore": {
+    "samePromptAndReplyVisible": true,
+    "usageNotReplayed": "UI correctly says not supplied",
+    "permissionReconfirmationRequired": true,
+    "permissionNotChangedOrApproved": true,
+    "secondPromptSent": false
+  },
+  "limitations": [
+    "This single reply does not prove all models, Agents or standards.",
+    "The newly coded configuration-difference preview is not yet installed.",
+    "OpenCode first GUI initialize timed out; direct initialize succeeded; cause not yet established."
+  ],
+  "modelEvidence": "Selected UI model and reasoning matched official returned config; no independent service-side model identity receipt."
+}

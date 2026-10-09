@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.file-drop.test.tsx (1 test | 1 failed) 10ms
+   × blocks native file import immediately while the first send save is still pending 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.file-drop.test.tsx > blocks native file import immediately while the first send save is still pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/Composer.file-drop.test.tsx:73:40
+     71|   expect(flush).toHaveBeenCalledOnce();
+     72|   expect(composerDrafts.read(key).sendPending).not.toBe(true);
+     73|   expect(h.drop?.blocked?.() ?? false).toBe(true);
+       |                                        ^
+     74|   expect(onSend).not.toHaveBeenCalled();
+     75|   resolve();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 69 passed (70)
+   Start at  19:06:03
+   Duration  2.28s (transform 1.37s, setup 0ms, import 9.10s, tests 644ms, environment 1ms)
+

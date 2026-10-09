@@ -1,0 +1,10 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.09s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+{"result":"initialized","responseSeconds":0.644979792,"ownProcessGroupGone":true}
+test acp_client::installed_initialize_probe::registered_opencode_initialize_through_real_transport ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1098 filtered out; finished in 0.99s
+

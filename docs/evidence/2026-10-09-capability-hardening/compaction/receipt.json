@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T10:39:12.550608+00:00",
+  "sourceBase": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "status": "implemented-controlled-verified-not-installed",
+  "scope": "ARCH-36 official ACP v1 compaction lifecycle only; no compact or steer request",
+  "changes": [
+    "Official crate unstable_session_compaction with clientCapabilities.session.compaction object declaration",
+    "Session-local memory ID upsert and fixed placement; omitted/null/replacement patch semantics; ordered content chunks and preserved details",
+    "Shared lifecycle card, optional safe Markdown/media summary, partial summary labels, unknown status and connection-loss observation",
+    "Separate maintenance result and original-round entity references; no reply/artifact inflation; no automatic queue drain from maintenance or an answered round with non-successful compaction"
+  ],
+  "sources": [
+    {
+      "url": "https://agentclientprotocol.com/rfds/session-compaction",
+      "scope": "Official Preview wire contract, not stable API"
+    },
+    {
+      "url": "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/docs/session-compaction.md",
+      "scope": "Implementation supports no-summary lifecycle; usage separate"
+    },
+    {
+      "url": "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.88.0/src/context-compaction.ts",
+      "scope": "Declared client compaction contract and lifecycle implementation"
+    }
+  ],
+  "validation": [
+    {
+      "log": "frontend-red.txt",
+      "result": "25 failed, 7 passed; valid initial missing-feature red"
+    },
+    {
+      "log": "frontend-green-initial.txt",
+      "result": "32 passed"
+    },
+    {
+      "log": "queue-red.txt",
+      "result": "4 failed, 28 passed; reply plus non-successful compaction could auto-drain"
+    },
+    {
+      "log": "summary-red-library.txt",
+      "result": "1 failed, 38 passed; adjacent text chunks broke Markdown; library maintenance regressions passed"
+    },
+    {
+      "log": "wire-red.txt",
+      "result": "2 failed; live initialize omitted compaction and peer withheld events"
+    },
+    {
+      "log": "wire-green.txt",
+      "result": "2 passed; real AcpManager and controlled local Python peer, no real Agent/model"
+    },
+    {
+      "log": "frontend-regression.txt",
+      "result": "44 files, 548 passed; projection/queue/history/usage/thread/library/keyboard/strings"
+    },
+    {
+      "log": "typecheck-initial.txt",
+      "result": "failed on test text literal widening; corrected to literal type"
+    },
+    {
+      "log": "typecheck-final.txt",
+      "result": "passed"
+    }
+  ],
+  "testBoundary": [
+    "No actual external Agent/model request",
+    "No installed Farfold UI validation or screenshot",
+    "No user configuration or credentials touched",
+    "No standard manual compaction request exists in the selected v1 surface; no request invented",
+    "No claim of saved tokens, altered Agent history, or complete ARCH-36/29-Agent acceptance",
+    "Shared source files may receive independently authorized ARCH-39 changes after this receipt; final integration must validate combined source"
+  ],
+  "independentReview": "Requested from architecture; not yet accepted in this receipt",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/Cargo.toml",
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "4e944aed7f2c5bc7c7ab6ed3445a9488fe5ba57018939f02398475eb030a8cd4"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "25c679324b4396b3c5347b55256f8e1b28c6067f9b6434c7b026f1fed98792d0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/compaction_wire_tests.rs",
+      "sha256": "24d5055f983a0b8e4bdb65f168beb865a827769d2d20e5a0faed7e0ff3fc0809"
+    },
+    {
+      "path": "src/runtime/compaction.ts",
+      "sha256": "9b5a2b489bb49198a9e3b3734ff0a76c9cb70091b9136bc24648a0f27b927b4a"
+    },
+    {
+      "path": "src/runtime/compaction_strings.ts",
+      "sha256": "b5d33971507e7abf2d1423c730140c4018ca567d26a7dd7fde6916c431651c5f"
+    },
+    {
+      "path": "src/runtime/compaction.test.ts",
+      "sha256": "730b889f23e435adc1adfb85cd7e71773c01fce746bb2baf7506a468945c5f67"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "104ab725f8d61c2b05a955ec21b0a03e5327e2beb64f0321a7ee7078821515ac"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "04a60839f00946af7037b1148f9174187f7c5202c212aaba953d50164a65f2df"
+    },
+    {
+      "path": "src/runtime/session_streams.ts",
+      "sha256": "10f943b7593375fae760df822da9218b71158f0c1fa851b29110448958181d4d"
+    },
+    {
+      "path": "src/runtime/round_result.ts",
+      "sha256": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602"
+    },
+    {
+      "path": "src/components/CompactionCard.tsx",
+      "sha256": "64cb55584359abb2afe67e06085f5530d1ddb3195b0a3bbc195a1452051e4713"
+    },
+    {
+      "path": "src/components/CompactionCard.test.tsx",
+      "sha256": "3c293ad346be1ec571b992b614566d904ec746b98a894af685428f53d9a63c88"
+    },
+    {
+      "path": "src/components/ThreadView.compaction.test.tsx",
+      "sha256": "e3520fb321be61ef73b2a148ac7acc5f6ea1f4042e1a7954c90b3cae18b9f188"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "1d6f68d57f12adf4643fdf31f16d7e4e1a2b392a1ba3a56d33da0f7d1c996fdc"
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "54b4f7163727e0aa00cdd7de5d6589ddcbb8c64290638d87daa6d71aa696054a"
+    },
+    {
+      "path": "src/components/ConversationLibrary.test.tsx",
+      "sha256": "bca0674410bbf008a38812fa7409b78b93f305d30f56a50c80c7db193c2767f0"
+    },
+    {
+      "path": "src/compaction.css",
+      "sha256": "b79528e45d6ef7e179db6b989f6cafc262fe619f555624a208743fd2dbc911e2"
+    }
+  ]
+}

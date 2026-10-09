@@ -2,6 +2,11 @@
 //! opens the application command gate; original files stay at the same path.
 mod error;
 mod export;
+pub(crate) mod restore;
+mod restore_commands;
+pub use restore_commands::*;
+#[cfg(test)]
+mod restore_tests;
 #[cfg(test)]
 mod tests;
 
@@ -27,6 +32,8 @@ struct Recovery {
     // Once any database was observed, disappearance must never create an empty replacement.
     observed_database: bool,
     status: RecoveryStatus,
+    editable: bool,
+    restore: restore::RestoreState,
 }
 pub struct StorageRecoveryState(Mutex<Recovery>);
 
@@ -43,6 +50,8 @@ impl StorageRecoveryState {
         Self(Mutex::new(Recovery {
             path,
             observed_database,
+            editable: false,
+            restore: restore::RestoreState::default(),
             status: RecoveryStatus {
                 ready: false,
                 issue: None,
@@ -50,10 +59,31 @@ impl StorageRecoveryState {
             },
         }))
     }
+    pub(crate) fn mark_editable(&self) -> Result<(), String> {
+        let mut state = self.0.lock().map_err(|_| "资料尚未就绪，请重试")?;
+        if !state.status.ready || state.restore.active() {
+            return Err("资料恢复尚未完成，请先完成或取消恢复".into());
+        }
+        state.editable = true;
+        Ok(())
+    }
     pub fn allows(&self, command: &str) -> bool {
         self.0
             .lock()
-            .map(|state| command_allowed(state.status.ready, command))
+            .map(|state| {
+                if !state.status.ready || state.restore.active() {
+                    return command_allowed(false, command);
+                }
+                state.editable
+                    || command_allowed(false, command)
+                    || matches!(
+                        command,
+                        "settings_get"
+                            | "app_drafts_ready"
+                            | "host_performance_origin"
+                            | "host_performance_sample"
+                    )
+            })
             .unwrap_or(false)
     }
 }
@@ -83,6 +113,10 @@ fn command_allowed(ready: bool, command: &str) -> bool {
                 | "storage_recovery_retry"
                 | "storage_recovery_export"
                 | "storage_recovery_reveal"
+                | "storage_recovery_restore_preview"
+                | "storage_recovery_restore_apply"
+                | "storage_recovery_restore_receipt"
+                | "storage_recovery_restore_cancel"
         )
 }
 

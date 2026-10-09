@@ -1,9 +1,5 @@
 import { expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-// @ts-expect-error Evidence-only JavaScript renderer has no runtime application import.
-import { writeEvidencePage } from "../../docs/evidence/2026-10-09-prototype07-landing/controlled-render/render-shell.mjs";
-import { readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
 import type { ReactNode } from "react";
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -71,18 +67,9 @@ const state = {
   remove: noop,
   addCustom: noop,
 } as unknown as AgentsState;
-const output = resolve(
-  "docs/evidence/2026-10-09-prototype07-landing/controlled-render",
-);
 function page(id: string, body: ReactNode) {
   const content = renderToStaticMarkup(body);
-  expect(content).toContain("Agent");
-  writeEvidencePage(`${id}-light.html`, id, content);
-  const light = readFileSync(resolve(output, `${id}-light.html`), "utf8");
-  writeFileSync(
-    resolve(output, `${id}-dark.html`),
-    light.replace('data-theme="light"', 'data-theme="dark"'),
-  );
+  expect(content, id).toContain("Agent");
 }
 function shell(content: ReactNode, active: "start" | "agents" = "start") {
   return (
@@ -107,7 +94,7 @@ function shell(content: ReactNode, active: "start" | "agents" = "start") {
     </div>
   );
 }
-it("renders production workbench, discovery and unknown capabilities for visual inspection", () => {
+it("server-renders the workbench, discovery and unknown capabilities without rewriting historical evidence", () => {
   newConversationChoice.agentId = card.id;
   newConversationChoice.cwd = "/示例项目";
   newConversationChoice.service = null;

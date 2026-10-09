@@ -11,7 +11,7 @@ let revision = 0;
 const pending = new Map<string, number>();
 const listeners = new Set<() => void>();
 
-function parse(value: unknown): Records {
+export function parseArchiveActivity(value: unknown): Records {
   if (value === undefined) return {};
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new Error("invalid archive metadata");
@@ -66,7 +66,7 @@ export const archiveActivity = {
   snapshot: () => records,
   /** Called by draft hydration only after every other field has validated. */
   restore(value: unknown) {
-    const parsed = parse(value);
+    const parsed = parseArchiveActivity(value);
     // Input edited before loading is never replaced by an older stored value.
     for (const key of pending.keys()) parsed[key] = records[key];
     records = parsed;

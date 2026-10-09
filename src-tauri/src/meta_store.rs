@@ -13,11 +13,14 @@ use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+mod startup_restore;
 mod storage_recovery;
 use crate::storage_recovery::{io_receipt, sqlite_receipt};
 
 #[cfg(test)]
 mod recovery_tests;
+#[cfg(test)]
+mod startup_restore_tests;
 
 fn now_millis() -> i64 {
     SystemTime::now()

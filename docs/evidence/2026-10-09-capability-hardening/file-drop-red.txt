@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/composer_file_drop.test.ts (0 test)
+ ❯ src/runtime/composer_attachment_import.test.ts (6 tests | 1 failed) 8ms
+   × deduplicates repeated chosen paths against both the current draft and this drop 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/composer_file_drop.test.ts [ src/runtime/composer_file_drop.test.ts ]
+Error: Cannot find module './composer_file_drop' imported from /Users/tw/Desktop/farfold/src/runtime/composer_file_drop.test.ts
+ ❯ src/runtime/composer_file_drop.test.ts:2:1
+      1| import { expect, it, vi } from "vitest";
+      2| import { createFileDropHandler } from "./composer_file_drop";
+       | ^
+      3|
+      4| function setup() {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/composer_attachment_import.test.ts > deduplicates repeated chosen paths against both the current draft and this drop
+AssertionError: expected [ 'file:///same.txt', …(3) ] to deeply equal [ 'file:///same.txt', …(1) ]
+
+- Expected
++ Received
+
+  [
+    "file:///same.txt",
++   "file:///same.txt",
++   "file:///next.txt",
+    "file:///next.txt",
+  ]
+
+ ❯ src/runtime/composer_attachment_import.test.ts:161:72
+    159|   await addPickedAttachments(key, ["/same.txt"], false, vi.fn());
+    160|   await addPickedAttachments(key, ["/same.txt", "/next.txt", "/next.tx…
+    161|   expect(composerDrafts.read(key).attachments.map((item) => item.uri))…
+       |                                                                        ^
+    162|     "file:///same.txt", "file:///next.txt",
+    163|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 5 passed (6)
+   Start at  18:57:09
+   Duration  158ms (transform 81ms, setup 0ms, import 83ms, tests 8ms, environment 0ms)
+

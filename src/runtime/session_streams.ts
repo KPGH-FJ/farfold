@@ -8,6 +8,9 @@ export function streamTailItem(
   for (let index = items.length - 1; index >= 0; index--) {
     const item = items[index]!;
     if (item.kind === "raw" && item.streamNeutral === true) continue;
+    // A compaction entity has its own identity/position and does not end an
+    // Agent message. Its patches never move it or split that message.
+    if (item.kind === "compaction") continue;
     return item;
   }
   return undefined;

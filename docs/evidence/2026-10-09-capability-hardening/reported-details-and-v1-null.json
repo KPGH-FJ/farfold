@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-09",
+  "scope": ["ARCH-39", "ACP v1 nullable tool update correction"],
+  "baseCommit": "af4870168ce29ded9d2a55cdb646771e57991012",
+  "implementation": [
+    "已知更新的未消费字段及session/update信封额外字段仅在当前内存中保存。各字段最后收到的值替换原值，省略保留、显式null可见、未知对象和数组不深合并；不保存完整事件账本或另一份已呈现正文。",
+    "消息/工具/计划沿实际投影实体附着，工具迟到更新仍归原ID；对话级配置/用量的额外字段单独呈现，不增造消息，不更改权限、回复、工具结果、队列或历史可读性判定。已知整列表替换同时清除旧位置的附加详情。",
+    "共用详情默认折叠，明确最近收到的字段不等于完整消息或能力生效。每次渲染仍执行JSON.stringify，不声称按需序列化或大扩展性能已解决。",
+    "实际使用ACP v1：content/locations/rawInput/rawOutput为null时保留先前值；[]仍清空集合，false/0仍替换原始载荷。扩展字段中的null继续原样展示，不赋予v2业务清空语义。"
+  ],
+  "actualRuns": [
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/reported_details.test.ts",
+      "phase": "before implementation",
+      "result": "6 failed, 1 passed",
+      "log": "reported-details-red.txt"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/reported_details.test.ts",
+      "phase": "initial implementation",
+      "result": "7 passed",
+      "log": "reported-details-initial-green.txt"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/reported_details.test.ts src/runtime/reported_details.channel.test.ts src/components/ReportedDetails.test.tsx",
+      "phase": "corrected channel/render fixtures",
+      "result": "13 passed in 3 files",
+      "log": "reported-details-targeted-final.txt"
+    },
+    {
+      "phase": "related history/stream/round/compaction/render regressions before null fix",
+      "result": "127 passed in 12 files",
+      "log": "reported-details-regression.txt"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/tool_v1_null.test.ts",
+      "phase": "v1 null before correction",
+      "result": "6 failed, 2 passed",
+      "log": "tool-v1-null-red.txt"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/tool_v1_null.test.ts src/runtime/reported_details.test.ts src/runtime/reported_details.channel.test.ts src/components/ReportedDetails.test.tsx",
+      "phase": "v1 null + details corrected",
+      "result": "21 passed in 4 files",
+      "log": "tool-v1-null-green.txt"
+    },
+    {
+      "phase": "final related regressions including artifact view",
+      "result": "145 passed in 14 files",
+      "log": "reported-details-null-regression.txt",
+      "note": "The command also contained a nonexistent artifacts.test.ts selector; it was not counted or claimed. Actual tool_content and sessions.tool_activity coverage follows separately."
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/tool_content.test.ts src/runtime/sessions.tool_activity.test.ts",
+      "phase": "final tool activity/content regression",
+      "result": "27 passed in 2 files",
+      "log": "tool-v1-null-activity-regression.txt"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "phase": "during parallel storage implementation",
+      "result": "failed on parallel storage_restore.preview.test.ts missing parseDraftSnapshot/parseSetupSnapshot exports; not a pass",
+      "log": "reported-details-typecheck.txt"
+    }
+  ],
+  "intermediateFailures": [
+    "One unsaved implementation trial had invalid TypeScript interface extends syntax; corrected to a type import. Tool output only, no fabricated raw log.",
+    "One unsaved green trial reached a mistaken test assertion details(calls) on an array; corrected to calls.map(details). Initial six red assertions had already failed on missing details before this assertion.",
+    "reported-details-targeted.txt had one configuration fixture expectation failure plus document-is-not-defined from a broad mock. The broad mock was corrected to null. reported-details-targeted-green.txt still failed because an update with _meta is intentionally treated as an opaque configuration update by the existing strict guard. The final fixture supplies extra envelope metadata while preserving that guard. Neither intermediate run is treated as a pass."
+  ],
+  "officialSemantics": [
+    "https://agentclientprotocol.com/protocol/v1/tool-calls",
+    "Local locked agent-client-protocol-schema 1.9.1 src/v1/tool_call.rs:168-192",
+    "official-subagent-surfaces.json"
+  ],
+  "boundaries": [
+    "No Agent process, account, model or real provider invoked.",
+    "No build, installation, native UI interaction or installed-product acceptance in this subtask. Static React rendering is not interactive UI verification.",
+    "No subagent capability advertised; ARCH38 remains incomplete and official implementation differences remain open.",
+    "No large-extension memory/serialization performance claim; no full durable transcript or full event replay guarantee.",
+    "Global formatting/typecheck/full-suite integration belongs to root after parallel source freeze."
+  ],
+  "logs": [
+    {
+      "path": "reported-details-red.txt",
+      "sha256": "28140dd325a955b5a1c4ee8042ce32a58a2087dfd020eff9228e9b15b8ab3916"
+    },
+    {
+      "path": "reported-details-initial-green.txt",
+      "sha256": "ceacb3cc9e7ac7efda92b845d0acebe0f8760b707e9eebfcc82ff0be3d987ccc"
+    },
+    {
+      "path": "reported-details-targeted.txt",
+      "sha256": "be8c4045d83845aec157e7b5fd55721441244321d7709a33b19974dc29813c8a"
+    },
+    {
+      "path": "reported-details-targeted-green.txt",
+      "sha256": "47eaca46d55d020c3cb4c05f1d7bab02c4209cd970661772c3a6c2cfed0fe01f"
+    },
+    {
+      "path": "reported-details-targeted-final.txt",
+      "sha256": "cf9dfe5ef4a1b8e4353f6c570392301ab89d836b52feae6316d223084e7cd422"
+    },
+    {
+      "path": "reported-details-regression.txt",
+      "sha256": "2b4a417565a62708c8749ebb04c69df2fda30e6f844fc2033c0b1df2720b5d9d"
+    },
+    {
+      "path": "reported-details-typecheck.txt",
+      "sha256": "66ca932c03ee64dbd0882d95d33516d823ebfaa52aee607420beeb69f5bcd4e2"
+    },
+    {
+      "path": "tool-v1-null-red.txt",
+      "sha256": "16a58abc655da5d2a7648eb155f9e706d2c3474a5d046c42230f4d7aa1de599f"
+    },
+    {
+      "path": "tool-v1-null-green.txt",
+      "sha256": "34ffd1f903230146e8e88899833973d680045b1befc3dcb4791326e4cc3d8fc0"
+    },
+    {
+      "path": "reported-details-null-regression.txt",
+      "sha256": "93d51c2a87da7f28a03356abd8a40226f3d08ed5484a8ae5ee6b34b67b6c9c7d"
+    },
+    {
+      "path": "tool-v1-null-activity-regression.txt",
+      "sha256": "f4eb9264ceed2849b5b86cb6303289a1a50c21956b919fd16bd81898aed471f6"
+    }
+  ]
+}

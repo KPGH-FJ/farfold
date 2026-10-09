@@ -1,0 +1,27 @@
+{
+  "reviewer": "root",
+  "reviewKind": "Independent read-only review of now-frozen ARCH39 and v1-null scope",
+  "result": "No blocker found in reviewed paths",
+  "reviewed": [
+    "Entity ownership and fresh/role separated IDs",
+    "Envelope and content extras preserved as last reported fields, not a replay ledger",
+    "Explicit null vs missing extension fields; replacement of known lists removes obsolete indexed details",
+    "Text escaping and no extra reply/tool/result/permission/queue authority",
+    "v1 tool null omitted semantics distinct from empty arrays and false/zero",
+    "Default collapsed UI still serializes JSON on render; no lazy-render performance claim"
+  ],
+  "authorValidation": "reported-details-and-v1-null.json and original test output; final integrated test still pending",
+  "hashes": {
+    "src/runtime/reported_details.ts": "114d38053acfc0f1b3e4a5e7b863785b87e2272002d55d3a96017b4a4861d826",
+    "src/components/ReportedDetails.tsx": "b145c30f30189365494f7cfa4b35fbb13e920684524242117b5f374c697d0674",
+    "src/runtime/session_projection.ts": "a6bed96b82fb02a0bc731e9565da8a157277442f0eb3da72f8e473668498b27a",
+    "src/runtime/sessions.ts": "24d9bcba59106dd2b5757139157b4f12492144535c105ce7e4f0561fdcb74413",
+    "src/runtime/history_import.ts": "2778bc2ae9690d7a6b295367ea0ea5e57b61a6de001783187939487c241197f8",
+    "src/components/ThreadView.tsx": "0adfdea089e5ad1d497e8971c8b7249b064245216f1b793c85c0211ef5b07a4c",
+    "src/components/thread-items.tsx": "b569b1f7937e4a8ad4b9fe744cead8bc970e5fddbd82c042356f5cc21b21b2bc"
+  },
+  "limits": [
+    "No full per-event retained envelope history is claimed.",
+    "No real Agent extension or large-payload performance validation yet."
+  ]
+}

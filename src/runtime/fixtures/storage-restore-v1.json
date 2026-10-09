@@ -1,0 +1,41 @@
+{
+  "unsentWork.v1": {
+    "version": 1,
+    "composers": {
+      "new": {
+        "text": "Fixture recovered input",
+        "attachments": [
+          {
+            "id": "image",
+            "name": "fixture.png",
+            "kind": "image",
+            "data": "dGVzdA==",
+            "mimeType": "image/png"
+          }
+        ],
+        "sendPending": true
+      }
+    },
+    "choice": { "agentId": null, "cwd": null, "service": null, "config": {} },
+    "feedback": {},
+    "queues": {
+      "fixture-thread": {
+        "blocks": [[{ "type": "text", "text": "Fixture queued input" }]],
+        "uncertainIndex": 0
+      }
+    },
+    "activity": {}
+  },
+  "agentSetup.v1": {
+    "version": 1,
+    "completed": ["fixture-agent"],
+    "pending": {},
+    "progress": {},
+    "selections": {
+      "fixture-agent": {
+        "config": { "model": "fixture-model" },
+        "service": null
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/compaction.test.ts(117,16): error TS2322: Type '{ type: string; text: string; }' is not assignable to type 'PromptBlock'.
+  Type '{ type: string; text: string; }' is not assignable to type '{ type: "text"; text: string; }'.
+    Types of property 'type' are incompatible.
+      Type 'string' is not assignable to type '"text"'.
+ ELIFECYCLE  Command failed with exit code 1.
