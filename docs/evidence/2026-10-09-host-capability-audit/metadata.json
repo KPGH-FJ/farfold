@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-09",
+  "head": "a41430eea8a10e0b8a5c6392a3596dde2e55a5ae",
+  "scope": "多 Agent host 全域源码能力盘点与一手资料同行比较；不执行真实Agent、账号、模型或破坏性测试",
+  "notAReleaseGate": "不新增或恢复旧整组六条旅程门槛；29家八项标准保持，分发签名更新由用户后置。",
+  "evidenceLevels": [
+    "当前源码核查",
+    "既有受限实测记录",
+    "同行官方公开资料及定向源码",
+    "工程判断与范围建议"
+  ],
+  "statusDefinitions": {
+    "implemented": "源码具备，不表示每家真实使用已验收",
+    "partial": "部分机制、类型、来源或场景具备",
+    "missing": "当前已核执行与呈现路径缺少此能力",
+    "unverified": "尚缺所需真实证据，不等同失败",
+    "decision": "范围需决定，不自动纳入开发",
+    "deferred": "用户已后置或契约明确不做"
+  },
+  "runtimeBoundary": "不改第三方Agent或适配器代码、不新增Agent循环、不自建压缩、steer或历史。官方请求和用户选择会改变会话状态或工具范围，不能承诺行为完全不变。",
+  "verificationAxes": [
+    "正常完成",
+    "失败与拒绝",
+    "取消与未知结果",
+    "断连与重启",
+    "并发与共享资源",
+    "大文件与长对话",
+    "权限、凭据、来源变化",
+    "macOS与Windows差异"
+  ],
+  "protectedDirtyFiles": [
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md"
+  ],
+  "referenceSnapshots": {
+    "PRODUCT.md": "docs/archive/2026-10-09-before-capability-hardening/PRODUCT.md",
+    "AGENTS.md": "docs/archive/2026-10-09-before-capability-hardening/AGENTS.md",
+    "README.md": "docs/archive/2026-10-09-before-capability-hardening/README.md",
+    "INTERNAL-USE.md": "docs/archive/2026-10-09-before-capability-hardening/INTERNAL-USE.md",
+    "docs/status.md": "docs/archive/2026-10-09-before-capability-hardening/docs/status.md",
+    "docs/architecture.md": "docs/archive/2026-10-09-before-capability-hardening/docs/architecture.md",
+    "docs/README.md": "docs/archive/2026-10-09-before-capability-hardening/docs/README.md",
+    "docs/archive/README.md": "docs/archive/2026-10-09-before-capability-hardening/docs/archive/README.md",
+    "plans/agent-access.md": "docs/archive/2026-10-09-before-capability-hardening/plans/agent-access.md",
+    ".design/README.md": "docs/archive/2026-10-09-before-capability-hardening/.design/README.md",
+    ".design/2026-09-26-agent-access-redesign/workbench/README.md": "docs/archive/2026-10-09-before-capability-hardening/.design/2026-09-26-agent-access-redesign/workbench/README.md"
+  }
+}

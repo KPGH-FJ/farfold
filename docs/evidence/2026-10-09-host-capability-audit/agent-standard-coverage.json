@@ -1,0 +1,411 @@
+{
+  "scope": "追踪表，不是实测结果；232项没有依据本次源码盘点自动打勾。旧版本的有限成功和失败须查原证据。",
+  "items": [
+    {
+      "id": "amp-acp",
+      "name": "Amp",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "antigravity-acp",
+      "name": "Antigravity",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "autohand",
+      "name": "Autohand",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "claude-acp",
+      "name": "Claude",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "codebuddy-code",
+      "name": "CodeBuddy",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "codex-acp",
+      "name": "Codex",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "dimcode",
+      "name": "DimCode",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "dirac",
+      "name": "Dirac",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "fast-agent",
+      "name": "fast-agent",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "github-copilot-cli",
+      "name": "GitHub Copilot",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "grok-build",
+      "name": "Grok Build",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "kimchi",
+      "name": "Kimchi",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "minimax-code",
+      "name": "MiniMax",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "nova",
+      "name": "Nova",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "pi-acp",
+      "name": "Pi",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    },
+    {
+      "id": "sigit",
+      "name": "siGit",
+      "standards": {
+        "准备": "not_revalidated_current_version",
+        "账号服务": "not_revalidated_current_version",
+        "历史续用": "not_revalidated_current_version",
+        "模型生效": "not_revalidated_current_version",
+        "工作能力": "not_revalidated_current_version",
+        "多任务": "not_revalidated_current_version",
+        "停止恢复": "not_revalidated_current_version",
+        "统一反馈": "not_revalidated_current_version"
+      }
+    }
+  ]
+}

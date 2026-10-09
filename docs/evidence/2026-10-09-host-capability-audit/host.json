@@ -1,0 +1,278 @@
+[
+  {
+    "id": "H01",
+    "domain": "数据与边界",
+    "capability": "Agent 正文与元数据分工",
+    "status": "implemented",
+    "detail": "SQLite保存登记、会话索引及设置；正文归Agent。不能任意新增全量正文账本。",
+    "evidence": ["src-tauri/src/meta_store.rs:1", "PRODUCT.md:19"],
+    "runtimeImpact": "host-only",
+    "followup": "全文搜索优先走官方接口；若需持久正文索引，先解决契约冲突。"
+  },
+  {
+    "id": "H02",
+    "domain": "数据与边界",
+    "capability": "元数据原子写入与损坏恢复",
+    "status": "partial",
+    "detail": "已有WAL、互斥和事务；没有产品级数据库损坏恢复入口。WAL不等于任意断电或磁盘损坏都能恢复。",
+    "evidence": [
+      "src-tauri/src/meta_store.rs:63",
+      "src-tauri/src/meta_store.rs:87"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "核磁盘满、只读目录、损坏、中断写入后的反馈和原文件保留。"
+  },
+  {
+    "id": "H03",
+    "domain": "数据与边界",
+    "capability": "草稿保存失败与容量保护",
+    "status": "implemented",
+    "detail": "读取成功才写入；串行合并保存保留最新修改；32MiB上限会报告未保存。",
+    "evidence": [
+      "src/runtime/draft_storage.ts:4",
+      "src/runtime/draft_storage.ts:44",
+      "src/runtime/draft_storage.ts:100"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "实测大附件、空间不足和关闭竞争；源码不等于所有故障通过。"
+  },
+  {
+    "id": "H04",
+    "domain": "数据与边界",
+    "capability": "清除自身数据的归属与中断保护",
+    "status": "partial",
+    "detail": "先等连接关闭，清凭据和自有目录再清表，禁止旧快照回写；当前真实清除仍未验。",
+    "evidence": [
+      "src-tauri/src/data_reset.rs:99",
+      "src-tauri/src/meta_store.rs:139",
+      "docs/status.md:31"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "破坏性实测需明确专用对象；不清Agent配置和用户项目。"
+  },
+  {
+    "id": "H05",
+    "domain": "数据与边界",
+    "capability": "诊断隐私与预览后导出",
+    "status": "implemented",
+    "detail": "按白名单提取，导出同一已预览快照，排除原始日志、正文、启动配置和环境。",
+    "evidence": [
+      "src-tauri/src/diagnostics.rs:1",
+      "src-tauri/src/diagnostics.rs:449"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "检查预览过期、导出失败、秘密不泄露；不自动上传。"
+  },
+  {
+    "id": "H06",
+    "domain": "数据与边界",
+    "capability": "文件身份与替换竞态保护",
+    "status": "implemented",
+    "detail": "自身文件操作有句柄和身份核验，Unix不跟随链接，Windows拒重解析穿越；不代表限制Agent所有文件访问。",
+    "evidence": [
+      "src-tauri/src/file_access/unix.rs:42",
+      "src-tauri/src/file_access/windows.rs:177",
+      "src-tauri/src/file_delivery.rs:300"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "核替换、重命名、链接、失效路径及权限变化。"
+  },
+  {
+    "id": "H07",
+    "domain": "数据与边界",
+    "capability": "页面与主应用调用权限分隔",
+    "status": "implemented",
+    "detail": "业务命令统一检查调用页面来源；浏览器页面不自动取得主应用权限。",
+    "evidence": [
+      "src-tauri/src/lib.rs:157",
+      "src-tauri/src/browser_workspace.rs:1"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保持导航、重开和迟到调用的来源检查；本轮未重跑网页安全实测。"
+  },
+  {
+    "id": "H08",
+    "domain": "规模与性能",
+    "capability": "多路流式更新正确性",
+    "status": "implemented",
+    "detail": "有2000块、两路交错的状态层夹具；证明内容和订阅合并，不是安装版帧率、内存或输入延迟证据。",
+    "evidence": [
+      "src/runtime/sessions.performance.test.ts:1",
+      "src/runtime/sessions.performance.test.ts:35"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "最终安装版观测多路流式时的输入与切换。"
+  },
+  {
+    "id": "H09",
+    "domain": "规模与性能",
+    "capability": "长对话与大量历史响应",
+    "status": "unverified",
+    "detail": "列表和对话按当前条目渲染，尚无覆盖大量历史、长对话与富媒体的本轮实机性能基线；不能判慢或已达标。",
+    "evidence": [
+      "src/components/ThreadView.tsx:779",
+      "src/components/ConversationLibrary.tsx:746",
+      "src/runtime/sessions.performance.test.ts:1"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "记录输入延迟、首屏、切换与内存，按测量决定分页或虚拟化。"
+  },
+  {
+    "id": "H10",
+    "domain": "规模与性能",
+    "capability": "长期运行、休眠与网络变化",
+    "status": "unverified",
+    "detail": "进程和空闲回收已有；长期并发、休眠唤醒、网络切换后的整体资源及恢复表现未有本轮同版本证据。",
+    "evidence": ["src-tauri/src/acp_client/mod.rs:1", "docs/status.md:11"],
+    "runtimeImpact": "host-only",
+    "followup": "观测残留进程、句柄、内存和恢复；不自动重发未知请求。"
+  },
+  {
+    "id": "H11",
+    "domain": "规模与性能",
+    "capability": "大项目文件选择完整性",
+    "status": "partial",
+    "detail": "文件选择是有界扫描：2000项、10层并跳过固定目录；不是完整项目索引或全文搜索。",
+    "evidence": [
+      "src-tauri/src/project_index.rs:1",
+      "src-tauri/src/project_index.rs:12"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "检查截断提示、未列出文件的替代入口及大仓库体验。"
+  },
+  {
+    "id": "H12",
+    "domain": "工作空间",
+    "capability": "已有工作树作为工作目录",
+    "status": "implemented",
+    "detail": "可选择已有目录；同目录对话仍共享文件。工作开关只控制Farfold派发，不是文件系统沙箱。",
+    "evidence": [
+      "src-tauri/src/acp_client/process.rs:211",
+      "src-tauri/src/work_policy.rs:96",
+      "PRODUCT.md:83"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "清楚说明共享影响，不将进程独立称为文件隔离。"
+  },
+  {
+    "id": "H13",
+    "domain": "工作空间",
+    "capability": "创建工作树与选择起点",
+    "status": "decision",
+    "detail": "当前没有工作树创建及分支起点管理；可通过Git官方命令扩展，属于范围决定。",
+    "evidence": [
+      "src-tauri/src/lib.rs:165",
+      "src-tauri/src/meta_store.rs:44",
+      "src-tauri/src/acp_client/process.rs:211"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "最小版只在新对话选已有目录或新工作树；明确起点和创建结果，不迁移活跃会话。"
+  },
+  {
+    "id": "H14",
+    "domain": "工作空间",
+    "capability": "工作树与对话生命周期对应",
+    "status": "decision",
+    "detail": "工作树归属及会话关联还没有产品管理；所需元数据不能扩成Agent事件账本。",
+    "evidence": ["src-tauri/src/meta_store.rs:44", "PRODUCT.md:19"],
+    "runtimeImpact": "host-only",
+    "followup": "定义多会话共用、移动/删除、重启重查、活动保护与解除关联。"
+  },
+  {
+    "id": "H15",
+    "domain": "工作空间",
+    "capability": "工作树安全归档和删除",
+    "status": "decision",
+    "detail": "没有回收器；Git拒删脏树和锁定树仅是基础，还需保护忽略文件、未推送提交和活动进程。",
+    "evidence": ["src-tauri/src/lib.rs:165"],
+    "runtimeImpact": "host-only",
+    "followup": "明确路径及归属；不默认force，不自动删用户工作树，未知结果保留。"
+  },
+  {
+    "id": "H16",
+    "domain": "工作空间",
+    "capability": "Git合并、冲突和PR管理",
+    "status": "decision",
+    "detail": "现有差异与意见反馈不是完整Git客户端；合并、冲突、提交和PR管理是额外方向。",
+    "evidence": [
+      "src/runtime/artifacts.ts:1",
+      "src-tauri/src/lib.rs:165",
+      "PRODUCT.md:19"
+    ],
+    "runtimeImpact": "decision",
+    "followup": "与最小工作树分开决策，不自动纳入创建隔离目录。"
+  },
+  {
+    "id": "H17",
+    "domain": "工作空间",
+    "capability": "工作树依赖、端口和秘密",
+    "status": "decision",
+    "detail": "工作树分开检出文件，仍可能共享Git、账号和环境；依赖、端口、忽略文件的准备流程未具备。",
+    "evidence": [
+      "src-tauri/src/acp_client/process.rs:211",
+      "src-tauri/src/meta_store.rs:36"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "不自动复制秘密或创建私有HOME；准备与失败有结果反馈。"
+  },
+  {
+    "id": "H18",
+    "domain": "平台与范围",
+    "capability": "Windows真实运行与路径兼容",
+    "status": "unverified",
+    "detail": "已有源码和交叉静态检查；进程、凭据、终端、WebView2、通知及文件行为仍需Windows实机。",
+    "evidence": [
+      "docs/status.md:165",
+      "src-tauri/src/file_access/windows.rs:86"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "分项记录，不以macOS结果代替Windows。"
+  },
+  {
+    "id": "H19",
+    "domain": "平台与范围",
+    "capability": "网络盘和重解析路径",
+    "status": "partial",
+    "detail": "Windows当前接受盘符绝对路径并拒绝部分重解析路径；UNC不属当前可用范围。",
+    "evidence": [
+      "src-tauri/src/file_access/windows.rs:86",
+      "docs/status.md:169"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "决定是否扩范围；限制要清楚说明并允许选择本地位置。"
+  },
+  {
+    "id": "H20",
+    "domain": "平台与范围",
+    "capability": "对外分发、签名、公证、更新渠道",
+    "status": "deferred",
+    "detail": "用户明确后置到其认可能力达标之后，不作为本阶段阻断；现有数据保护保留。",
+    "evidence": ["src-tauri/tauri.conf.json:31", "plans/agent-access.md:15"],
+    "runtimeImpact": "host-only",
+    "followup": "用户决定启动后推进；本次不改配置、不换应用。"
+  },
+  {
+    "id": "H21",
+    "domain": "平台与范围",
+    "capability": "编辑器、LifeModel采集、多窗口及其他平台",
+    "status": "deferred",
+    "detail": "编辑器、真实LifeModel采集注入、多窗口、Linux和移动端是现契约明确不做；不能直接列本轮缺陷。",
+    "evidence": ["PRODUCT.md:31"],
+    "runtimeImpact": "out-of-scope",
+    "followup": "若改变范围先明确决定；静态LifeModel页不是已实现采集。"
+  },
+  {
+    "id": "H22",
+    "domain": "平台与范围",
+    "capability": "云执行、远程主机、定时任务与团队协作",
+    "status": "decision",
+    "detail": "当前本地外部Agent模式没有通用远程、定时或团队调度底座；是同行扩展方向，不自动属本阶段。",
+    "evidence": [
+      "PRODUCT.md:13",
+      "src-tauri/src/acp_client/mod.rs:1",
+      "src-tauri/src/lib.rs:1"
+    ],
+    "runtimeImpact": "decision",
+    "followup": "需求成立再明确身份、运行边界与工作保护，不添加第二个Agent循环。"
+  }
+]

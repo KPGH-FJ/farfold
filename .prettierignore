@@ -219,3 +219,6 @@ docs/evidence/2026-10-09-prototype07-landing/candidate-inputs.json
 
 docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/candidate.json
 docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/candidate-inputs.json
+
+# Original document bytes retained for historical line references and audit hashes.
+docs/archive/2026-10-09-before-capability-hardening/

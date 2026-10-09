@@ -2,19 +2,19 @@
 
 文档描述事实的层级与产品要求分开：产品契约规定应有行为，源码及对应验证说明实际行为；计划负责安排差距，历史只用于追溯。
 
-| 入口                                          | 用途                                         |
-| --------------------------------------------- | -------------------------------------------- |
-| [PRODUCT.md](../PRODUCT.md)                   | 唯一产品契约；不随缺陷下调承诺               |
-| [AGENTS.md](../AGENTS.md)                     | 仓库工作规则                                 |
-| [architecture.md](architecture.md)            | 当前源码结构、数据和调用路径                 |
-| [status.md](status.md)                        | 能力、验证范围、已知问题的当前基线           |
-| [活动计划](../plans/agent-access.md)          | 唯一待执行序列                               |
-| [首批 Agent 名单](agent-first-release.md)     | 探索目录范围、用户调整与历史边界             |
-| [INTERNAL-USE.md](../INTERNAL-USE.md)         | 当前内部使用说明                             |
-| [设计说明](../.design/README.md)              | 唯一当前原型、运行方式与模拟边界             |
-| [evidence/](evidence/README.md)               | 带边界说明的原始验证材料                     |
-| [archive/](archive/README.md)                 | 冻结的旧计划、研究、交付说明、截图和设计探索 |
-| [整理记录](maintenance/2026-09-20-cleanup.md) | 本轮迁移、删除、保留与检查结果               |
+| 入口                                                     | 用途                                         |
+| -------------------------------------------------------- | -------------------------------------------- |
+| [PRODUCT.md](../PRODUCT.md)                              | 唯一产品契约；不随缺陷下调承诺               |
+| [AGENTS.md](../AGENTS.md)                                | 仓库工作规则                                 |
+| [architecture.md](architecture.md)                       | 当前源码结构、数据和调用路径                 |
+| [status.md](status.md)                                   | 能力、验证范围、已知问题的当前基线           |
+| [活动计划](../plans/agent-access.md)                     | 唯一待执行序列                               |
+| [首批 Agent 名单](agent-first-release.md)                | 探索目录范围、用户调整与历史边界             |
+| [INTERNAL-USE.md](../INTERNAL-USE.md)                    | 当前内部使用说明                             |
+| [设计说明](../.design/README.md)                         | 唯一当前原型、运行方式与模拟边界             |
+| [evidence/](evidence/README.md)                          | 带边界说明的原始验证材料                     |
+| [archive/](archive/README.md)                            | 冻结的旧计划、研究、交付说明、截图和设计探索 |
+| [整理记录](maintenance/2026-10-09-plan-consistency.json) | 当前入口校正、原文归档与保护校验             |
 
 ## 代码与资产
 
@@ -27,3 +27,5 @@
 - `src-tauri/target/`：编译输出与历史本地备份混存，具体保护项见整理记录，禁止整体清空。
 
 新状态与问题更新到现有状态页和活动计划，避免另建一份“当前执行入口”。新验收材料应放到 `docs/evidence/日期-主题/` 并说明提交、应用身份、真实操作及未覆盖项；不要长期依赖 `/tmp`。
+
+2026-10-09 起，状态页只保留当前基线与未完成项，活动计划只保留当前顺序和全量条目；两者的累计旧正文保存在 `docs/archive/2026-10-09-before-capability-hardening/`。证据目录内的旧计划式文件和 `output/` 下的研究副本只用于追溯，不具有执行权威，也不因文件名含 plan 或 handoff 自动删除。

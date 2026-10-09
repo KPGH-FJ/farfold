@@ -1,0 +1,589 @@
+{
+  "date": "2026-10-09",
+  "timezone": "Asia/Shanghai",
+  "purpose": "用真正承载多家外部 Agent 的产品比较 host 能力；不把单一厂商 Agent 自家桌面作为直接同行。",
+  "scope": {
+    "method": "访问官方站点、官方仓库、发布和提交记录；对四个开源仓库固定提交做定向源码阅读。",
+    "notPerformed": [
+      "安装或启动同行",
+      "启动真实 Agent",
+      "账号或模型测试",
+      "可靠性基准",
+      "所有源码的排他性审计"
+    ],
+    "evidenceBoundary": "官网功能声明、默认分支实现、发布记录、安装版行为是不同层级。本材料没有证明同行所有功能可靠，也没有证明默认分支全部已随所列版本发布。",
+    "scopeBoundary": "同行功能的并集不是 Farfold 契约。编辑器、Git 工作树、云执行、跨 Agent 接力和浏览器控制只提供范围参照，不自动成为 Farfold 缺陷或新增验收门槛。"
+  },
+  "evidenceLevels": {
+    "official_documentation": "官方页面或 README 声明，未运行验证",
+    "official_release_record": "官方发布或提交日期记录，不能推出产品可靠性",
+    "pinned_source_inspected": "已阅读固定提交的相关实现，结论限所列路径",
+    "not_verified": "本轮未找到或未核到足够证据；不等于不存在"
+  },
+  "classificationAxes": [
+    "externalAgentLoop",
+    "multipleAgents",
+    "interactionSurface",
+    "officialInterfaceAndResume",
+    "maintenance"
+  ],
+  "runtimeTerms": {
+    "externalAgentLoop": "推理、工具调度及请求执行主要交给外部 Agent 官方 CLI、SDK 或协议进程。",
+    "hostIntervention": "启动参数、环境、配置、工具注入、文件和终端请求处理、事件归一化、进程生命周期及持久化；这些会影响可观察行为，不能被表述为完全不影响 Agent。",
+    "upstreamCodePatch": "直接修改外部 Agent 或适配器发布代码；与仅调用官方接口区分。Codeg 的 Cursor 包补丁属于这一类。",
+    "absenceLimit": "抽查未见自建循环或字节补丁，只能说明所查路径；不能证明整个产品永远没有此类行为。"
+  },
+  "comparisonMatrix": [
+    {
+      "name": "Harnss",
+      "category": "直接同行：统一图形多 Agent host",
+      "externalAgentLoop": "官方 SDK / app-server / ACP 路径已核",
+      "multipleAgents": "Claude、Codex、可添加 ACP Agent",
+      "interactionSurface": "统一结构化对话及工具卡片",
+      "officialInterfaceAndResume": "原有会话恢复依能力；ACP 无 load 时新建会话",
+      "maintenance": "公开 beta；2026-06-19 提交、2026-04-14 发布；README 提醒等待重写"
+    },
+    {
+      "name": "Codeg",
+      "category": "直接同行：多 Agent 图形工作台，但运行时边界不同",
+      "externalAgentLoop": "外部 ACP 进程；确认会修改受管理 Cursor 包",
+      "multipleAgents": "官方声明 15 个内置及 registry/custom",
+      "interactionSurface": "统一结构化对话、工具和成果工作台",
+      "officialInterfaceAndResume": "ACP new/load/resume；聚合外部历史声明",
+      "maintenance": "2026-10-07 发布 v0.34.0"
+    },
+    {
+      "name": "Conductor",
+      "category": "直接/邻近同行：多 Agent 编程工作区及云任务",
+      "externalAgentLoop": "官方称使用原厂 harness；核心源码未核",
+      "multipleAgents": "Claude Code、Codex、Cursor、OpenCode",
+      "interactionSurface": "任务、图形对话、文件和审查工作区",
+      "officialInterfaceAndResume": "官方原厂接口声明；恢复细节源码未知",
+      "maintenance": "2026-10-02 的 0.90.0 及后续 0.90.1 记录"
+    },
+    {
+      "name": "Superset",
+      "category": "邻近且趋向直接：终端编排与结构化 chat 并存",
+      "externalAgentLoop": "外部 CLI；新 chat 使用官方 SDK / app-server / ACP",
+      "multipleAgents": "多种 CLI 模板、自定义 Agent 和多 harness chat",
+      "interactionSurface": "终端、工作树、任务；当前源码另有 chat-runtime",
+      "officialInterfaceAndResume": "CLI resume/fork；跨 Agent handoff 是新会话加摘要上下文",
+      "maintenance": "2026-10-08 desktop-v1.37.0；2026-10-09 canary"
+    },
+    {
+      "name": "Vibe Kanban",
+      "category": "邻近/社区参照：多 Agent 任务看板与工作树",
+      "externalAgentLoop": "定向核实 Codex app-server、Claude stream-json",
+      "multipleAgents": "多个专属 executor",
+      "interactionSurface": "任务看板、Agent 输出、diff、终端和预览",
+      "officialInterfaceAndResume": "executor 专属 resume；非通用 ACP-only 架构",
+      "maintenance": "公司 2026-04-10 宣布关闭；社区分支 2026-09-19 仍有提交"
+    }
+  ],
+  "products": [
+    {
+      "name": "Harnss",
+      "category": "direct_structured_multi_agent_host",
+      "boundary": {
+        "summary": "在同一桌面承载 Claude Agent SDK、Codex app-server 和 ACP Agent；所查路径保留外部执行循环。",
+        "hostResponsibilities": "项目/空间、会话 UI、工具事件、MCP、文件/Git、浏览器和历史展示。",
+        "runtimeModification": "所查集成路径未发现修改外部 Agent 发布代码；未做全仓排他性证明。",
+        "importantQualification": "ACP revive 在 Agent 不支持 loadSession 时创建全新会话，但继续展示磁盘恢复的旧 UI 消息；这不能证明原上下文恢复。"
+      },
+      "capabilities": {
+        "configuration": {
+          "summary": "内置 Claude/Codex 路径、Agent Store 和自定义 binary/args/env；能力依引擎。",
+          "sources": ["readme", "acpSource", "codexSource"],
+          "level": "pinned_source_inspected"
+        },
+        "sessions": {
+          "summary": "结构化图形对话；SDK query、Codex thread/resume、ACP new/load。",
+          "sources": ["claudeSource", "codexSource", "acpSource"],
+          "level": "pinned_source_inspected"
+        },
+        "tools": {
+          "summary": "官方展示工具卡片、权限与 diff；未实测每家事件覆盖。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "skills": {
+          "summary": "统一 skills 管理和跨引擎一致性未核；不据此断言缺失。",
+          "sources": [],
+          "level": "not_verified"
+        },
+        "mcp": {
+          "summary": "官方声明项目级 stdio/SSE/HTTP 及 OAuth；ACP 会话源码传入 mcpServers。",
+          "sources": ["readme", "acpSource"],
+          "level": "pinned_source_inspected"
+        },
+        "history": {
+          "summary": "官方声明全文搜索、Claude CLI 导入/续接；其他 Agent 历史完整性未实测。",
+          "sources": ["readme", "acpSource"],
+          "level": "official_documentation"
+        },
+        "files": {
+          "summary": "文件/diff、图片附件与标注；未验证大型或非文本成果范围。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "browser": {
+          "summary": "官方展示内嵌浏览器；权限、恢复和各引擎操作覆盖未测。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "worktrees": {
+          "summary": "官方声明 Git worktree 及 stage/commit/push。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "parallel": {
+          "summary": "项目空间、多会话和后台任务；并发稳定性未测。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        }
+      },
+      "sourceFindings": [
+        {
+          "finding": "Claude 的执行入口调用官方 SDK query，Codex 启动 app-server 并请求 thread/resume。",
+          "sources": ["claudeSource", "codexSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "acp-sessions.ts 的 revive 分支按 load 能力选择 loadSession 或 newSession；后者注释明确 fresh context，旧 UI 消息已从磁盘恢复。",
+          "sources": ["acpResumeSource"],
+          "level": "pinned_source_inspected"
+        }
+      ],
+      "sourceUrls": {
+        "readme": "https://github.com/OpenSource03/harnss",
+        "claudeSource": "https://github.com/OpenSource03/harnss/blob/dc1dfd8a33caa46a1eefcfe9e14697b27ac4c33d/electron/src/ipc/claude-sessions.ts",
+        "codexSource": "https://github.com/OpenSource03/harnss/blob/dc1dfd8a33caa46a1eefcfe9e14697b27ac4c33d/electron/src/ipc/codex-sessions.ts",
+        "acpSource": "https://github.com/OpenSource03/harnss/blob/dc1dfd8a33caa46a1eefcfe9e14697b27ac4c33d/electron/src/ipc/acp-sessions.ts",
+        "acpResumeSource": "https://github.com/OpenSource03/harnss/blob/dc1dfd8a33caa46a1eefcfe9e14697b27ac4c33d/electron/src/ipc/acp-sessions.ts#L646-L685",
+        "releases": "https://github.com/OpenSource03/harnss/releases.atom",
+        "commits": "https://github.com/OpenSource03/harnss/commits/master.atom"
+      },
+      "evidenceLevel": [
+        "official_documentation",
+        "official_release_record",
+        "pinned_source_inspected"
+      ],
+      "maintenance": {
+        "defaultBranch": "master",
+        "inspectedCommit": "dc1dfd8a33caa46a1eefcfe9e14697b27ac4c33d",
+        "latestObservedCommitAt": "2026-06-19T11:44:24Z",
+        "latestObservedRelease": "v0.22.0-beta.2",
+        "releaseRecordUpdatedAt": "2026-04-14T13:42:38Z",
+        "assessment": "公开 beta，README 提醒早期开发及待进行的大规模重写；不据几个月未发布断言停更。"
+      },
+      "notes": "最接近统一多 Agent 对话 host 的比较对象之一；需特别区别 UI 历史可见与外部上下文恢复。"
+    },
+    {
+      "name": "Codeg",
+      "category": "direct_structured_multi_agent_workbench_with_runtime_patch",
+      "boundary": {
+        "summary": "Rust/Tauri 工作台通过 ACP 启动外部 Agent；官方声明不 fork/replace Agent，但当前源码确认会补丁修改受管理 Cursor 包。",
+        "hostResponsibilities": "结构化会话、ACP 文件/终端请求、配置、历史聚合、编辑器、浏览器、任务/工作树以及 host MCP。",
+        "runtimeModification": "已确认：Cursor 特定版本 JS bundle 注入 enableAgentRetries，并由缓存选取/安装生产路径调用；并非只有测试或文档。",
+        "importantQualification": "这一补丁改变 Cursor ACP 重试行为，并不等于重写整个 Agent 循环；但明显不符合 Farfold 不修改上游 Agent/adapter 的边界。管理版本固定、配置写入和社区桥接也与 Farfold 契约不同。"
+      },
+      "capabilities": {
+        "configuration": {
+          "summary": "官方列出 15 个内置、registry/custom；托管安装固定版本，并提供原有配置与服务设置。",
+          "sources": ["agents", "cacheSource"],
+          "level": "pinned_source_inspected"
+        },
+        "sessions": {
+          "summary": "统一图形对话；ACP new/load/resume 分派，外部子进程执行。",
+          "sources": ["processSource", "sessionSource"],
+          "level": "pinned_source_inspected"
+        },
+        "tools": {
+          "summary": "工具卡片、权限、计划、diff；host 实现 ACP 文件读写及终端请求。",
+          "sources": ["architecture", "filesSource", "terminalSource"],
+          "level": "pinned_source_inspected"
+        },
+        "skills": {
+          "summary": "官方提供共享 skills 目录、技能包，并链接/复制到 Agent 发现目录。",
+          "sources": ["skills"],
+          "level": "official_documentation"
+        },
+        "mcp": {
+          "summary": "扫描/登记/按 Agent 启用，写入对应配置；另有 codeg-mcp。",
+          "sources": ["mcp", "architecture"],
+          "level": "official_documentation"
+        },
+        "history": {
+          "summary": "官方声明聚合各 Agent 磁盘历史、搜索和续接；支持目录不证明每条历史均能恢复。",
+          "sources": ["readme", "agents"],
+          "level": "official_documentation"
+        },
+        "files": {
+          "summary": "官方提供编辑器、Git、diff、Office 预览与画布；范围明显宽于纯会话 host。",
+          "sources": ["workspace", "readme"],
+          "level": "official_documentation"
+        },
+        "browser": {
+          "summary": "页面/元素/截图/console 分享及 computer-use 预览；未实测许可与控制失败路径。",
+          "sources": ["browser"],
+          "level": "official_documentation"
+        },
+        "worktrees": {
+          "summary": "任务可使用独立分支/工作树和审查流程。",
+          "sources": ["readme", "workspace"],
+          "level": "official_documentation"
+        },
+        "parallel": {
+          "summary": "多 Agent、任务调度及经 MCP 的跨 Agent 委派；不同 Agent 仍是独立会话。",
+          "sources": ["readme", "architecture"],
+          "level": "official_documentation"
+        }
+      },
+      "sourceFindings": [
+        {
+          "finding": "agent_process.rs 创建外部命令和环境、启动 ACP 进程；agent_session.rs 分派新建/加载/恢复。",
+          "sources": ["processSource", "sessionSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "cursor_acp_retry_compat.rs 根据已核版本定位 Cursor ACP bundle，加入重试选项并原子写回。文件顶层说明因缺少公开 CLI/config/env 接口而采用 bundle patch。",
+          "sources": ["cursorPatchSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "binary_cache.rs 第 729、783、924、1007 行及 1015-1028 行在命中缓存和安装成功路径调用补丁；所以不能依据架构文档将产品归为完全不改运行时。",
+          "sources": ["cacheSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "源码客户端处理 ACP read/write 文件及 terminal 创建；这类 host 工具服务与直接修改 Agent bundle 必须分别描述。",
+          "sources": ["filesSource", "terminalSource"],
+          "level": "pinned_source_inspected"
+        }
+      ],
+      "sourceUrls": {
+        "readme": "https://github.com/spacering-net/codeg",
+        "architecture": "https://docs.codeg.app/reference/architecture",
+        "agents": "https://docs.codeg.app/guide/supported-agents",
+        "skills": "https://docs.codeg.app/guide/skills",
+        "mcp": "https://docs.codeg.app/guide/mcp",
+        "workspace": "https://docs.codeg.app/guide/workspace",
+        "browser": "https://docs.codeg.app/guide/browser",
+        "processSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/agent_process.rs",
+        "sessionSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/agent_session.rs",
+        "filesSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/file_system_runtime.rs",
+        "terminalSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/terminal_runtime.rs",
+        "cursorPatchSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/cursor_acp_retry_compat.rs",
+        "cacheSource": "https://github.com/spacering-net/codeg/blob/1b68ee1855beb67133f4b96b8f255e8386eb1f19/src-tauri/src/acp/binary_cache.rs#L1007-L1028",
+        "releases": "https://github.com/spacering-net/codeg/releases.atom",
+        "release": "https://github.com/spacering-net/codeg/releases/tag/v0.34.0"
+      },
+      "evidenceLevel": [
+        "official_documentation",
+        "official_release_record",
+        "pinned_source_inspected"
+      ],
+      "maintenance": {
+        "defaultBranch": "main",
+        "inspectedCommit": "1b68ee1855beb67133f4b96b8f255e8386eb1f19",
+        "latestObservedRelease": "v0.34.0",
+        "releaseRecordUpdatedAt": "2026-10-07T16:37:15Z",
+        "assessment": "近期仍有官方发布；未安装该发行包。"
+      },
+      "notes": "可比较结构化能力和界面组织，但不能把其补丁、版本固定或代写 Agent 配置作为 Farfold 的实现先例。"
+    },
+    {
+      "name": "Conductor",
+      "category": "multi_agent_coding_workspace_and_cloud_host",
+      "boundary": {
+        "summary": "当前官网覆盖 Claude Code、Codex、Cursor、OpenCode 的桌面与云工作区；比早期仅双 Agent 桌面描述更宽。",
+        "hostResponsibilities": "任务、图形会话、工作树/云隔离、文件审查、脚本和预览。",
+        "runtimeModification": "官方声称使用原厂 harness，可选择托管或本机安装；未检查到公开核心源码，无法证实是否存在上游补丁或完整的运行时边界。",
+        "importantQualification": "官方接口和功能声明不等于协议实现审计；Agent 间控件、MCP 状态和模式支持有差异。"
+      },
+      "capabilities": {
+        "configuration": {
+          "summary": "Agent/服务和模型设置，Claude 可用托管或自行安装 executable；支持范围依 harness。",
+          "sources": ["providers", "claude"],
+          "level": "official_documentation"
+        },
+        "sessions": {
+          "summary": "任务工作区中的图形对话及不同 Agent harness。",
+          "sources": ["home", "docs"],
+          "level": "official_documentation"
+        },
+        "tools": {
+          "summary": "工具执行、文件/diff 审查；模式和思考选项按 Agent 有差异。",
+          "sources": ["modes", "docs"],
+          "level": "official_documentation"
+        },
+        "skills": {
+          "summary": "模式文档列 Claude/Codex/OpenCode 的技能能力；不代表统一发现及所有技能均可用。",
+          "sources": ["modes"],
+          "level": "official_documentation"
+        },
+        "mcp": {
+          "summary": "读取 Agent 自有项目/用户配置，提供部分 Agent 状态和刷新；各家范围不同。",
+          "sources": ["mcp"],
+          "level": "official_documentation"
+        },
+        "history": {
+          "summary": "官方更新记录有会话恢复和 fork context；任意外部 CLI 历史导入的完整性未核。",
+          "sources": ["previewRelease", "changelog"],
+          "level": "official_documentation"
+        },
+        "files": {
+          "summary": "编辑/审查、PDF 与非文本文件预览或下载。",
+          "sources": ["docs", "olderChangelog"],
+          "level": "official_documentation"
+        },
+        "browser": {
+          "summary": "localhost 预览和 Agentation 标注；云远程桌面属于更宽的执行产品。",
+          "sources": ["previewRelease", "olderChangelog"],
+          "level": "official_documentation"
+        },
+        "worktrees": {
+          "summary": "本机独立工作区/分支及 setup/run 脚本；云任务声明独立 microVM。",
+          "sources": ["firstWorkspace", "home"],
+          "level": "official_documentation"
+        },
+        "parallel": {
+          "summary": "并行任务、多工作区以及桌面/云入口；数量和稳定性未测。",
+          "sources": ["home", "docs"],
+          "level": "official_documentation"
+        }
+      },
+      "sourceFindings": [],
+      "sourceUrls": {
+        "home": "https://www.conductor.build/",
+        "docs": "https://www.conductor.build/docs",
+        "claude": "https://www.conductor.build/docs/reference/harnesses/claude-code",
+        "providers": "https://www.conductor.build/docs/guides/providers",
+        "modes": "https://www.conductor.build/docs/concepts/agent-modes",
+        "mcp": "https://www.conductor.build/docs/reference/mcp",
+        "firstWorkspace": "https://www.conductor.build/docs/first-workspace",
+        "previewRelease": "https://www.conductor.build/changelog/0.62.0-repo-settings-browser-preview",
+        "changelog": "https://www.conductor.build/changelog",
+        "olderChangelog": "https://www.conductor.build/changelog/page/2"
+      },
+      "evidenceLevel": ["official_documentation", "official_release_record"],
+      "maintenance": {
+        "observedReleaseRecord": "0.90.0 (2026-10-02)，页面另列 0.90.1",
+        "assessment": "近期持续更新；部分指南可能落后于 changelog，不据网页推定用户当前安装版本。"
+      },
+      "notes": "可直接参照多 Agent 工作区体验，但 runtime 是否改动只能保留未知；云执行和完整编程工作区超出 Farfold 当前纯 host 范围。"
+    },
+    {
+      "name": "Superset",
+      "category": "terminal_orchestration_plus_structured_multi_harness_chat",
+      "boundary": {
+        "summary": "多 CLI 终端/工作树编排仍是核心；当前源码另有基于 Claude SDK、Codex app-server、ACP 的结构化 chat-runtime。",
+        "hostResponsibilities": "终端与进程、工作区/工作树、Agent hooks/config/skills、浏览器、远程 host；新 chat 拥有独立持久化事件账本。",
+        "runtimeModification": "定向源码显示包装命令最终执行真实外部二进制，或经官方 SDK/app-server 运行；会写 hooks/config 并管理 CODEX_HOME。未确认上游字节补丁，也没有证据把当前 chat 简单定性为自建 LLM 循环。",
+        "importantQualification": "chat-runtime 的 durable journal、epoch 和宿主会话记录与 Farfold 禁止重建事件账本的契约不同；当前源码的 chat rollout 不等于所有用户发布版都已启用。"
+      },
+      "capabilities": {
+        "configuration": {
+          "summary": "内置与自定义 Agent 启动模板、prompt/resume/fork 参数；引擎设置能力不完全同构。",
+          "sources": ["agentIntegration", "wrappersSource"],
+          "level": "pinned_source_inspected"
+        },
+        "sessions": {
+          "summary": "终端 CLI 与新图形 chat 两条路径；官方 SDK/app-server 适配器在源码中。",
+          "sources": ["chatSource", "claudeSource", "codexSource"],
+          "level": "pinned_source_inspected"
+        },
+        "tools": {
+          "summary": "终端/状态 hooks、审批和结构化 chat 事件；不能把 chat 覆盖推广到全部终端 Agent。",
+          "sources": ["chatSource", "wrappersSource"],
+          "level": "pinned_source_inspected"
+        },
+        "skills": {
+          "summary": "自动配置/更新宿主技能到外部 Agent 发现目录，含浏览器、电脑和编排能力。",
+          "sources": ["skills"],
+          "level": "official_documentation"
+        },
+        "mcp": {
+          "summary": "提供宿主工作区/编排 MCP 和相关工具接入；任意 Agent MCP 配置一致性未实测。",
+          "sources": ["readme", "skills"],
+          "level": "official_documentation"
+        },
+        "history": {
+          "summary": "Agent 自有 resume/fork；跨 Agent handoff 新开会话并注入最多 36000 字符已有内容，不是迁移原始上下文。",
+          "sources": ["sessions"],
+          "level": "official_documentation"
+        },
+        "files": {
+          "summary": "文件编辑、diff、Git、端口和工作区管理。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "browser": {
+          "summary": "浏览器 pane、预览/DevTools/设计拾取；CLI 读页、截图、eval/CDP，使用实际浏览器会话。",
+          "sources": ["browser"],
+          "level": "official_documentation"
+        },
+        "worktrees": {
+          "summary": "并行工作树/分支；README 明确文件隔离不等于进程沙箱。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "parallel": {
+          "summary": "本机与远端工作区、多 CLI 并行和自动化；不采信营销并发量为可靠性证据。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        }
+      },
+      "sourceFindings": [
+        {
+          "finding": "chat-runtime README 为 HarnessAdapter → LiveSession → SQLite chat.db journal → subscriptions；事件和投影由宿主持久化。",
+          "sources": ["chatSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "Claude adapter 导入官方 Agent SDK query；Codex adapter 使用 app-server 并有 thread/resume。不能继续称该产品只有终端看板，也不能未经证据称它必然自建 Agent 循环。",
+          "sources": ["claudeSource", "codexSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "Agent wrappers 执行真实 CLI，同时写 Codex hooks、处理账户 CODEX_HOME、设置 OpenCode 配置目录；这属于可影响行为的 host 干预。",
+          "sources": ["wrappersSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "新 chat 在 host 按需初始化，客户端决定 rollout；本次未核已发布安装版的实际开关。",
+          "sources": ["chatSource"],
+          "level": "pinned_source_inspected"
+        }
+      ],
+      "sourceUrls": {
+        "readme": "https://github.com/superset-sh/superset",
+        "agentIntegration": "https://docs.superset.sh/agent-integration",
+        "sessions": "https://docs.superset.sh/agent-sessions",
+        "skills": "https://docs.superset.sh/skills",
+        "browser": "https://docs.superset.sh/browser",
+        "chatSource": "https://github.com/superset-sh/superset/blob/502135366a804fa6f7af816aaaeb95021fe020c3/packages/chat-runtime/README.md",
+        "claudeSource": "https://github.com/superset-sh/superset/blob/502135366a804fa6f7af816aaaeb95021fe020c3/packages/chat-runtime/src/harness/claude/createClaudeAdapter/createClaudeAdapter.ts",
+        "codexSource": "https://github.com/superset-sh/superset/blob/502135366a804fa6f7af816aaaeb95021fe020c3/packages/chat-runtime/src/harness/codex/codexAdapter/codexAdapter.ts",
+        "wrappersSource": "https://github.com/superset-sh/superset/blob/502135366a804fa6f7af816aaaeb95021fe020c3/packages/agent-setup/src/agent-wrappers-claude-codex-opencode.ts",
+        "releases": "https://github.com/superset-sh/superset/releases.atom"
+      },
+      "evidenceLevel": [
+        "official_documentation",
+        "official_release_record",
+        "pinned_source_inspected"
+      ],
+      "maintenance": {
+        "defaultBranch": "main",
+        "inspectedCommit": "502135366a804fa6f7af816aaaeb95021fe020c3",
+        "latestObservedStableRelease": "desktop-v1.37.0",
+        "releaseRecordUpdatedAt": "2026-10-08T05:21:56Z",
+        "latestObservedCanaryDate": "2026-10-09",
+        "assessment": "近期持续发布；README 主平台 macOS、Linux 实验性、Windows 不可用。"
+      },
+      "notes": "适合比较并行、恢复提示、工作区和浏览器；不可将终端支持目录当作结构化 chat 已同等覆盖。"
+    },
+    {
+      "name": "Vibe Kanban",
+      "category": "adjacent_community_multi_agent_task_and_worktree_host",
+      "boundary": {
+        "summary": "任务看板管理多个外部 Agent executor、工作树、输出和审查；不是统一 ACP-only host。",
+        "hostResponsibilities": "任务/尝试、分支、专属命令构造、事件归一化、MCP 配置、预览及合并。",
+        "runtimeModification": "所查 Codex 和 Claude executor 启动外部官方包，通过 app-server 或 stream-json 请求/恢复；会固定包版本、附加参数和处理 Agent 专属配置。未做全仓补丁排查。",
+        "importantQualification": "运营公司已关闭；本机开源项目仍有后续社区提交。不能将过去托管服务的文档视为今天仍可用的证据。"
+      },
+      "capabilities": {
+        "configuration": {
+          "summary": "多 Agent executor 和配置；需先满足对应 Agent 认证，命令/参数按 Agent 实现。",
+          "sources": ["readme", "executorsSource"],
+          "level": "pinned_source_inspected"
+        },
+        "sessions": {
+          "summary": "任务内 Agent 执行和后续请求；Codex thread start/resume，Claude --resume。",
+          "sources": ["codexSource", "claudeSource"],
+          "level": "pinned_source_inspected"
+        },
+        "tools": {
+          "summary": "专属事件/输出归一化和 diff 审查；每家工具事件完整性未测。",
+          "sources": ["executorsSource", "readme"],
+          "level": "pinned_source_inspected"
+        },
+        "skills": {
+          "summary": "统一 skills 市场/发现/管理未核；不据此断言不存在。",
+          "sources": [],
+          "level": "not_verified"
+        },
+        "mcp": {
+          "summary": "executor 层有各 Agent MCP 配置路径与格式处理。",
+          "sources": ["executorsSource"],
+          "level": "pinned_source_inspected"
+        },
+        "history": {
+          "summary": "任务后续请求可引用外部会话标识；任意 CLI 历史导入与完整恢复未核。",
+          "sources": ["codexSource", "claudeSource"],
+          "level": "pinned_source_inspected"
+        },
+        "files": {
+          "summary": "Git diff、行内反馈、文件与 PR/merge 流程。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "browser": {
+          "summary": "本机开发服务预览、DevTools 和设备模拟声明；服务存续与权限未运行检查。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "worktrees": {
+          "summary": "任务隔离工作树、分支和合并是核心流程。",
+          "sources": ["readme"],
+          "level": "official_documentation"
+        },
+        "parallel": {
+          "summary": "多任务/多 Agent 编排；社区维护环境下并发可靠性未测。",
+          "sources": ["readme", "shutdown"],
+          "level": "official_documentation"
+        }
+      },
+      "sourceFindings": [
+        {
+          "finding": "executor 枚举与 spawn/spawn_follow_up 结构为多个外部 Agent 做专属接入，并非自身统一推理循环的证据。",
+          "sources": ["executorsSource"],
+          "level": "pinned_source_inspected"
+        },
+        {
+          "finding": "Codex executor 默认 npx @openai/codex@0.124.0 并运行 app-server；Claude 默认 @anthropic-ai/claude-code@2.1.119、stream-json、--resume；另有可选 CCR 路径。",
+          "sources": ["codexSource", "claudeSource"],
+          "level": "pinned_source_inspected"
+        }
+      ],
+      "sourceUrls": {
+        "readme": "https://github.com/BloopAI/vibe-kanban",
+        "shutdown": "https://www.vibekanban.com/blog/shutdown",
+        "commits": "https://github.com/BloopAI/vibe-kanban/commits/main.atom",
+        "executorsSource": "https://github.com/BloopAI/vibe-kanban/blob/d5cbb5380fa0b32e98ef9b8d987f63decce4be3a/crates/executors/src/executors/mod.rs",
+        "codexSource": "https://github.com/BloopAI/vibe-kanban/blob/d5cbb5380fa0b32e98ef9b8d987f63decce4be3a/crates/executors/src/executors/codex.rs",
+        "claudeSource": "https://github.com/BloopAI/vibe-kanban/blob/d5cbb5380fa0b32e98ef9b8d987f63decce4be3a/crates/executors/src/executors/claude.rs"
+      },
+      "evidenceLevel": [
+        "official_documentation",
+        "official_release_record",
+        "pinned_source_inspected"
+      ],
+      "maintenance": {
+        "defaultBranch": "main",
+        "inspectedCommit": "d5cbb5380fa0b32e98ef9b8d987f63decce4be3a",
+        "companyShutdownAnnouncementDate": "2026-04-10",
+        "latestObservedCommitDate": "2026-09-19",
+        "recentObservedVersionBump": "0.1.45",
+        "assessment": "公司退出但有社区后续提交；可作为交互/架构参照，不能当作仍在运营的同等商业服务。"
+      },
+      "notes": "维护状态需同时说明公司退出与社区提交，既不能称持续商业运营，也不能笼统称整个仓库无人维护。"
+    }
+  ],
+  "conclusions": [
+    "最直接的统一图形多 Agent 参照是 Harnss 和 Codeg；Conductor 是功能更宽的编程工作区，Superset 是终端与结构化 chat 混合，Vibe Kanban 属任务看板/社区参照。",
+    "接入外部 Agent 不等于零 runtime 干预。Codeg 有已核实的 Cursor bundle 补丁；其他产品也有配置、hooks、工具和生命周期干预。只有所查路径保留外部执行循环的有限结论。",
+    "恢复必须拆分 UI 记录、原 Agent 会话、跨 Agent 新建会话三件事。Harnss 的无 load fallback 和 Superset 的 handoff 都不能作为原上下文恢复的证明。",
+    "同行声明和源码丰富度不是可靠性实测。本轮没有运行产品，也不据此给 Farfold 添加全功能并集或额外验收门槛。"
+  ]
+}

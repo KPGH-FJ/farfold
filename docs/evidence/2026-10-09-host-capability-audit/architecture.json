@@ -1,0 +1,734 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-10-09",
+  "auditedGitHead": "a41430eea8a10e0b8a5c6392a3596dde2e55a5ae",
+  "auditScope": "多Agent Host能力源码盘点：发现安装、账号服务、模型配置、会话执行恢复、高级事件、权限、并发资源与官方接口边界",
+  "evidenceLevel": "当前源码与产品契约只读核查；本轮没有运行真实Agent、登录、模型请求、安装或破坏性操作。",
+  "statusDefinitions": {
+    "implemented": "当前源码已有对应机制；不是当前安装版或29家真实端到端通过。",
+    "partial": "已接一部分接口、类型或对象，仍有具体未覆盖范围。",
+    "missing": "已核执行/状态/呈现入口后确认当前没有所述专用能力；不表示Agent自身没有该能力。",
+    "unverified": "机制或局部历史证据存在，但所述覆盖范围缺可靠当前证据，不能判支持或成功。",
+    "decision": "需要产品或工程范围决定，尚未自动成为新增验收门槛。",
+    "deferred": "当前产品边界有意不实现或暂缓；不得当已完成能力，也不自动纳入本阶段门槛。"
+  },
+  "boundaries": [
+    "不把接口声明、initialize成功、代码测试、原型、安装UI与真实业务能力混为同一证据。",
+    "能力无官方证明则保留未知；ACP未暴露不等同Agent不支持，需再核官方SDK/CLI。",
+    "Host补充只调用可核实的官方入口并保真呈现；不得修改Agent本体、fork适配器、私有HOME、代写Agent配置或创建第二个Agent循环。",
+    "运行中引导、压缩、子任务控制必须由Agent自己的能力执行；Host负责调用、状态、权限、身份和错误语义。",
+    "按用户要求，本清单不把对外签名、公证、更新及分发作为当前能力阶段门槛。",
+    "本清单是本领域的系统盘点，仍需与其他领域合并；条目数不是完成率，followup是建议调查/实现方向，不是新授权。",
+    "真实用户历史、凭据、未发送内容、在跑任务和原安装未更改。"
+  ],
+  "items": [
+    {
+      "id": "ARCH-01",
+      "domain": "发现与安装",
+      "capability": "官方目录、缓存与离线退路",
+      "status": "implemented",
+      "detail": "源码已合并目录、登记与本机发现；刷新失败保留已成功解析的缓存，没有缓存时如实返回失败。首批目录仅表示纳入范围，不表示认证、模型或历史可用。",
+      "evidence": [
+        "src-tauri/src/agent_catalog.rs:384",
+        "src-tauri/src/agent_catalog.rs:416",
+        "src-tauri/src/agent_catalog.rs:658"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保留目录来源与更新时间，按当前29项逐家记录实际能力；不把目录出现当通过。"
+    },
+    {
+      "id": "ARCH-02",
+      "domain": "发现与安装",
+      "capability": "本机程序发现与用户选择",
+      "status": "partial",
+      "detail": "发现逻辑按已知定义与候选目录查找可执行文件，版本探测有总时间预算和去重；未知程序可通过自定义入口选择。不是对本机任意Agent、IDE内置Agent或所有安装位置的完整发现器。",
+      "evidence": [
+        "src-tauri/src/agent_discovery.rs:244",
+        "src-tauri/src/agent_discovery.rs:287",
+        "src-tauri/src/agent_install.rs:423"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "逐项核首批真实安装形态；未知或多份程序由用户明确选择，避免猜测IDE登录或程序归属。"
+    },
+    {
+      "id": "ARCH-03",
+      "domain": "发现与安装",
+      "capability": "自定义命令、参数和环境变量接入",
+      "status": "implemented",
+      "detail": "自定义登记保存用户指定的可执行路径、参数和环境；后续仍须initialize。env是登记元数据，不是通用秘密保险箱，不能把用户直接填入的秘密环境值误称全部经Keychain保护。",
+      "evidence": [
+        "src-tauri/src/agent_install.rs:423",
+        "src-tauri/src/meta_store.rs:25",
+        "src-tauri/src/agent_install.rs:474"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保持明确命令来源及秘密提示；如要支持通用自定义秘密字段，需设计安全引用方式，不能静默把普通env当密钥库。"
+    },
+    {
+      "id": "ARCH-04",
+      "domain": "发现与安装",
+      "capability": "安装成功前的兼容探测与原子选择",
+      "status": "implemented",
+      "detail": "注册安装先准备候选、完成initialize探测，再提交选定程序和安装记录；失败不提前把新程序标作可用。探测仅证明协议初始化，不能证明业务请求成功。",
+      "evidence": [
+        "src-tauri/src/agent_install.rs:302",
+        "src-tauri/src/agent_install.rs:493"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "保留程序、协议、认证与实际请求四层结论，真实安装发行形态分别验证。"
+    },
+    {
+      "id": "ARCH-05",
+      "domain": "发现与安装",
+      "capability": "安装取消、失败清理与未知进程保护",
+      "status": "implemented",
+      "detail": "安装任务有取消状态和不可取消的提交阶段；探测失败但进程归属未确认结束时保留候选文件和收据，只清理本次持有的明确暂存路径。源码已有取消与失败出口，未在本轮制造真实下载/进程失败。",
+      "evidence": [
+        "src-tauri/src/install_job.rs:331",
+        "src-tauri/src/agent_install.rs:318"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "按受影响机制补真实取消及失败恢复证据，不把取消请求当已停止或删掉仍被进程使用的文件。"
+    },
+    {
+      "id": "ARCH-06",
+      "domain": "发现与安装",
+      "capability": "程序切换、回退、移除和忙态门禁",
+      "status": "implemented",
+      "detail": "程序变更先释放安全空闲连接，工作、待回应、账号操作或未知结果阻止变更；回退恢复原登记并重新探测。移除和卸载有独立影响范围，不能把取消登记等同删除Agent历史。",
+      "evidence": [
+        "src-tauri/src/agent_install.rs:548",
+        "src-tauri/src/agent_install.rs:562",
+        "src-tauri/src/agent_install.rs:662"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "继续区分程序管理与账号/历史管理；逐家真实卸载和换号不由本审查自动执行。"
+    },
+    {
+      "id": "ARCH-07",
+      "domain": "发现与安装",
+      "capability": "Node/伴随程序等依赖的全目录覆盖",
+      "status": "unverified",
+      "detail": "源码有依赖状态、官方要求、解析、检查和缺依赖拒绝；这证明准备设施存在，不证明29项各平台、各种本机安装方式均已覆盖。缺失官方发行或伴随程序条件仍可能阻断使用。",
+      "evidence": [
+        "src-tauri/src/acp_client/preparation.rs:30",
+        "src-tauri/src/acp_client/preparation.rs:248",
+        "src-tauri/src/acp_client/preparation.rs:302",
+        "src-tauri/src/agent_install.rs:514"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "以实际官方启动形态核每项依赖与失败下一步，不新增自造版本兼容限制。"
+    },
+    {
+      "id": "ARCH-08",
+      "domain": "账号与服务",
+      "capability": "协议认证、终端认证与方法级密钥",
+      "status": "implemented",
+      "detail": "auth_run按当前声明和核实入口分流到authenticate或受控PTY；密钥与方法/provider/revision匹配，不能给非密钥方法注入密钥。机制已有，不等于每家完整登录成功。",
+      "evidence": [
+        "src-tauri/src/auth.rs:649",
+        "src-tauri/src/auth.rs:682",
+        "src-tauri/src/auth.rs:694",
+        "src-tauri/src/auth.rs:785"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐家保持声明、可执行入口和实际登录结果分列；不通过品牌名称猜登录命令。"
+    },
+    {
+      "id": "ARCH-09",
+      "domain": "账号与服务",
+      "capability": "已有登录复用与重新检查",
+      "status": "partial",
+      "detail": "可以刷新接受认证的原进程，避免丢失连接内登录态；重新检查仅重建所选准备连接，保护其他目录与API连接。能否确认账号仍取决于Agent公开推送/查询，已有CLI凭据不等同复用IDE账号。",
+      "evidence": [
+        "src-tauri/src/acp_client/auth_connection.rs:11",
+        "src-tauri/src/acp_client/auth_connection.rs:61"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "把凭据存在、已认证、身份和服务资格分别呈现；缺官方查询时保留未知。"
+    },
+    {
+      "id": "ARCH-10",
+      "domain": "账号与服务",
+      "capability": "认证取消、迟到结果和未知状态",
+      "status": "implemented",
+      "detail": "认证操作有attempt归属、取消到达顺序处理及unknown回调；取消请求本身不宣称Agent已结束。终端与协议操作持有原作用范围直到实际结束，防止旧请求影响新选择。",
+      "evidence": [
+        "src-tauri/src/auth/attempts.rs:74",
+        "src-tauri/src/auth/attempts.rs:107",
+        "src-tauri/src/auth.rs:798"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "补证各真实登录方式的取消/返回/失败恢复；不复用过期attempt或自动重复认证。"
+    },
+    {
+      "id": "ARCH-11",
+      "domain": "账号与服务",
+      "capability": "身份、订阅/付费来源与账号状态",
+      "status": "partial",
+      "detail": "已有受限账号身份类型、官方推送和Kimchi/Vibe/CodeBuddy等查询补充；部分接口只能证明凭据存在，不能证明订阅权益或真实付费来源。API来源另行保存，不由Agent账号推送替换。",
+      "evidence": [
+        "src-tauri/src/acp_client/account_query.rs:10",
+        "src-tauri/src/acp_client/account_query.rs:41",
+        "src-tauri/src/acp_client/account_query.rs:85",
+        "src-tauri/src/acp_client/service_connection.rs:29"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "为每种字段保留来源与证据等级；不要把邮箱/本机凭据推成权益已验证。"
+    },
+    {
+      "id": "ARCH-12",
+      "domain": "账号与服务",
+      "capability": "退出登录与换号闭环",
+      "status": "partial",
+      "detail": "已有按当前连接能力或核实官方动作退出的入口和结果处理；不支持时拒绝。真实退出范围、远端撤销、换号及后续旧连接行为仍依赖具体Agent，未由最新UI安装核对验收。",
+      "evidence": [
+        "src-tauri/src/auth.rs:834",
+        "src-tauri/src/acp_client/account_logout.rs:87",
+        "docs/status.md:9"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "按明确账号对象另核官方退出/重登语义；无官方支持不删除Agent私有凭据来冒充退出。"
+    },
+    {
+      "id": "ARCH-13",
+      "domain": "账号与服务",
+      "capability": "共享账号与配置变更的跨连接保护",
+      "status": "partial",
+      "detail": "账号操作按Agent和已证实启动入口别名收集范围并阻止并行变更；会退役持有旧账号副本的安全空闲进程。未知包装程序、外部编辑器或用户在Farfold之外的修改不能由此机制全部覆盖。",
+      "evidence": [
+        "src-tauri/src/acp_client/account_scope.rs:6",
+        "src-tauri/src/acp_client/account_scope.rs:46",
+        "src-tauri/src/acp_client/account_scope.rs:95",
+        "src-tauri/src/acp_client/account_scope.rs:149"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "把已知共享范围与不可观测外部影响明确分开；未知包装不作已隔离承诺。"
+    },
+    {
+      "id": "ARCH-14",
+      "domain": "账号与服务",
+      "capability": "API密钥安全保存与显式使用",
+      "status": "implemented",
+      "detail": "凭据池使用Keychain接口保存/读取/删除秘密，SQLite只保存非秘密记录和引用；选择具体服务后才准备启动环境。保存API配置不等于已授权向所有Agent分发。",
+      "evidence": [
+        "src-tauri/src/credentials.rs:93",
+        "src-tauri/src/credentials.rs:123",
+        "src-tauri/src/acp_client/service_connection.rs:106"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保留服务选择与保存分离，验证日志/错误路径不泄漏，不能扩写为全部自定义env安全存储。"
+    },
+    {
+      "id": "ARCH-15",
+      "domain": "账号与服务",
+      "capability": "新的API服务交付覆盖面",
+      "status": "partial",
+      "detail": "当前service_config明确支持OpenCode的chat-completions/responses/messages和Codex的responses；Pi与其他条目在此路径无新API服务配置方式，可沿用已有设置。不能据此断言这些Agent自身不支持API。",
+      "evidence": [
+        "src-tauri/src/acp_client/service_config.rs:35",
+        "src-tauri/src/acp_client/service_config.rs:93",
+        "src-tauri/src/acp_client/service_config.rs:131"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐项查官方配置接口和公开启动参数；有依据再扩展共用接入能力，不代写Agent配置或更换HOME。"
+    },
+    {
+      "id": "ARCH-16",
+      "domain": "账号与服务",
+      "capability": "服务地址、接口、模型与修订变化保护",
+      "status": "implemented",
+      "detail": "读取密钥前验证服务身份、地址/接口指纹、模型及选择修订；恢复沿原记录，不能让调用方将旧对话替换到另一个服务。来源缺失和漂移会阻止误发。",
+      "evidence": [
+        "src-tauri/src/credentials.rs:271",
+        "src-tauri/src/acp_client/service_connection.rs:47",
+        "src/runtime/conversation_actions.ts:18"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保持后端执行前验证；真实服务变更和恢复结果另证，不用同名模型替代同来源。"
+    },
+    {
+      "id": "ARCH-17",
+      "domain": "账号与服务",
+      "capability": "密钥轮换、删除与外部撤销边界",
+      "status": "partial",
+      "detail": "引用修订随密钥轮换变化，旧副本可能因在途工作保留；删除Farfold密钥不等于服务商撤销，也不能抹掉已启动进程内的秘密。源码有池引用与退役引用管理，完整跨Agent真实使用/撤销尚需具体证据。",
+      "evidence": [
+        "src-tauri/src/credentials.rs:130",
+        "src-tauri/src/credentials.rs:295",
+        "PRODUCT.md:175"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "清楚呈现作用范围；外部撤销必须使用官方服务能力，不能假称本地删除已撤销远端Key。"
+    },
+    {
+      "id": "ARCH-18",
+      "domain": "模型与配置",
+      "capability": "现代configOptions和旧模型声明统一承接",
+      "status": "implemented",
+      "detail": "SessionConfig将现代配置与旧models声明转为统一视图，现代优先；旧setter空对象和现代缺少完整回执分别处理，不把失败现代调用自动换旧接口重试。",
+      "evidence": [
+        "src-tauri/src/acp_client/session_config.rs:1",
+        "src-tauri/src/acp_client/session_config.rs:42",
+        "src-tauri/src/acp_client/session_config.rs:135"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "继续按真实声明和调用契约处理，避免旧研究文档中未接旧setter的结论覆盖当前源码。"
+    },
+    {
+      "id": "ARCH-19",
+      "domain": "模型与配置",
+      "capability": "同对话安全空闲切换模型与推理",
+      "status": "implemented",
+      "detail": "配置操作在前端受忙态/漂移/权限等状态约束，后端经会话pump确认并保存完整回执；正常通知不能替代显式确认。历史仍留在原对话。",
+      "evidence": [
+        "src/runtime/session_configuration.ts:90",
+        "src-tauri/src/acp_client/session.rs:544",
+        "src-tauri/src/acp_client/pump.rs:975"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐家证实际后续请求使用所选模型，界面选中和设置回执不单独证明服务端执行。"
+    },
+    {
+      "id": "ARCH-20",
+      "domain": "模型与配置",
+      "capability": "配置失败、超时、迟到与保存失败",
+      "status": "implemented",
+      "detail": "配置请求失败保留错误并阻止误发；权限变为unknown。后端对送出但未确认的变更保留状态和操作隔离，不将迟到普通通知当已确认新基线。",
+      "evidence": [
+        "src/runtime/session_configuration.ts:196",
+        "src-tauri/src/acp_client/pump.rs:991",
+        "src-tauri/src/acp_client/session_config.rs:142"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "继续将确定失败与结果未知分开，针对实际版本补证，不能自动重试有副作用的配置动作。"
+    },
+    {
+      "id": "ARCH-21",
+      "domain": "模型与配置",
+      "capability": "冷恢复已保存模型/推理及漂移阻断",
+      "status": "implemented",
+      "detail": "恢复沿原配置记录，通过官方设置路径恢复并核对；前端等待本次历史回放，保留原队列和未知状态。无法证明原配置一致时阻止发送，不改用户选定模型来凑成功。",
+      "evidence": [
+        "src-tauri/src/acp_client/session.rs:344",
+        "src-tauri/src/acp_client/pump/restore_config.rs:1",
+        "src/runtime/sessions.ts:665",
+        "src/runtime/sessions.ts:720"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "每家列表、正文、模型保持和继续请求分别核验；Agent恢复缺陷不能由Farfold伪造历史或基线修补。"
+    },
+    {
+      "id": "ARCH-22",
+      "domain": "模型与配置",
+      "capability": "附加配置类型与完整语义承接",
+      "status": "partial",
+      "detail": "通用设置控件支持select和boolean，未知类型保留只读；配置名称/说明以声明为依据。非这两类输入、作用范围不明、费用/性能语义未知的配置没有被自动推断。",
+      "evidence": [
+        "src/components/SessionOptionsMenu.tsx:55",
+        "src/components/SessionOptionsMenu.tsx:96",
+        "src/runtime/session_configuration.ts:95"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "核真实Agent是否提供其他类型和生效范围；需要新增类型时扩展共用控件，不按品牌做页面。"
+    },
+    {
+      "id": "ARCH-23",
+      "domain": "模型与配置",
+      "capability": "权限模式与普通工作模式区分",
+      "status": "partial",
+      "detail": "权限主控件仅在核实身份与模式形态下启用，当前verified_permission_option只认Codex目录身份；恢复要求重新确认。其他Agent普通mode可以呈现，但不能自动当权限边界。",
+      "evidence": [
+        "src-tauri/src/acp_client/service_config.rs:31",
+        "src-tauri/src/acp_client/permission_guard.rs:11",
+        "src-tauri/src/acp_client/permission_guard.rs:33"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐项核官方权限/沙箱配置与回执，缺依据保持未知，不把模式名称推成安全保证。"
+    },
+    {
+      "id": "ARCH-24",
+      "domain": "会话执行与恢复",
+      "capability": "新建、加载与唯一对话身份",
+      "status": "implemented",
+      "detail": "新建使用session/new，恢复使用session/load；加载前注册路由接回放，打开预留及原生编号校验防止新建覆盖已有对话。不存在以新空会话冒充加载成功的设计。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump/open.rs:81",
+        "src-tauri/src/acp_client/pump/open.rs:114",
+        "src-tauri/src/acp_client/connection_identity.rs:13"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "继续核Agent实际返回标识与正文，不以load能力声明证明每条历史可恢复。"
+    },
+    {
+      "id": "ARCH-25",
+      "domain": "会话执行与恢复",
+      "capability": "发送准入、已接纳与结果未知",
+      "status": "implemented",
+      "detail": "消息先入待发队列，后端实际接纳后才消费；发送IPC异常可能发生于已派发之后，因此保留uncertain而不自动重发。前端保存失败不能把已接纳消息误报为未发送。",
+      "evidence": [
+        "src/runtime/sessions.ts:901",
+        "src/runtime/sessions.ts:1050",
+        "src-tauri/src/acp_client/session_commands.rs:148"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "按真实失败与断线复核内容保全，保持接纳、完成、有输出三层状态。"
+    },
+    {
+      "id": "ARCH-26",
+      "domain": "会话执行与恢复",
+      "capability": "待发队列、暂停、编辑与显式继续",
+      "status": "implemented",
+      "detail": "队列只在空闲且各保护状态满足时发送；停止、失败、未知、断线暂停。继续发送有明确入口，附件未核实、待编辑、权限未确认等条件仍阻止续发。",
+      "evidence": [
+        "src/runtime/queue.ts:33",
+        "src/runtime/sessions.ts:1065",
+        "src/runtime/sessions.ts:1109"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保留跨导航和重启暂停语义；与运行中steer分别描述，不把排队当实时追加。"
+    },
+    {
+      "id": "ARCH-27",
+      "domain": "会话执行与恢复",
+      "capability": "重启后的未发送内容、附件与未知请求",
+      "status": "implemented",
+      "detail": "未发送内容使用同一settings快照并有32MiB上限、合并保存及失败提示；恢复的非文字队列先标记需核对，未知发送保留由用户判断，不自动重试。",
+      "evidence": [
+        "src/runtime/draft_storage.ts:4",
+        "src/runtime/draft_storage.ts:44",
+        "src/runtime/recovered_attachments.ts:3",
+        "src/runtime/sessions.ts:323"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "继续覆盖附件丢失/权限变化和保存失败；上限存在不代表高负载体验已测。"
+    },
+    {
+      "id": "ARCH-28",
+      "domain": "会话执行与恢复",
+      "capability": "停止请求与30秒未确认出口",
+      "status": "implemented",
+      "detail": "session_cancel只派发官方取消；前端等待turnEnd，不在IPC返回时改成已停止。30秒未确认进入结果未知并暂停队列，原请求仍可能继续执行。",
+      "evidence": [
+        "src-tauri/src/acp_client/session.rs:521",
+        "src/runtime/sessions.ts:1192",
+        "src/runtime/stop_confirmation.ts:20"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "先定位Agent、适配器和Host各自终态，不能靠强行改UI或自动重发修饰停止成功。"
+    },
+    {
+      "id": "ARCH-29",
+      "domain": "会话执行与恢复",
+      "capability": "29项停止、恢复与版本一致性的真实覆盖",
+      "status": "unverified",
+      "detail": "源码停止/恢复设施齐全不表示29项八标准均通过。最新UI安装核对未发消息；已有历史实测只证明相应Agent、版本、服务和路径，不能推广当前全目录。",
+      "evidence": [
+        "docs/status.md:3",
+        "docs/status.md:9",
+        "PRODUCT.md:40",
+        "plans/agent-access.md:15"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "按既定范围收集具体已测成功、失败与未测；不恢复用户已撤销的旧整组旅程门槛。"
+    },
+    {
+      "id": "ARCH-30",
+      "domain": "会话执行与恢复",
+      "capability": "断线后重读、正文完整性与原内容保留",
+      "status": "implemented",
+      "detail": "恢复先以临时缓冲收回放，再要求本次完成标记和可读内容，失败保留原内容与队列；旧通道的迟到内容不能解除保护。普通重连不会把未知请求变成可重发。",
+      "evidence": [
+        "src/runtime/sessions.ts:647",
+        "src/runtime/sessions.ts:665",
+        "src/runtime/session_recovery.ts:1"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "核官方load真实回放时序与空历史语义；不读取私有日志或重建正文账本补齐缺失。"
+    },
+    {
+      "id": "ARCH-31",
+      "domain": "会话执行与恢复",
+      "capability": "官方历史列表、分页、预览与带入",
+      "status": "implemented",
+      "detail": "session/list支持查询目录与cursor，不支持、空列表和格式失败分开；预览仅临时加载，preview token核对后登记索引，加入不复制Agent正文，也不保证可以继续请求。",
+      "evidence": [
+        "src-tauri/src/acp_client/session_discovery.rs:266",
+        "src-tauri/src/acp_client/session_discovery.rs:338",
+        "src-tauri/src/acp_client/session_discovery.rs:48"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐家区分列表成功、正文可读、配置可核和继续成功；不把本地索引伪装成官方完整历史。"
+    },
+    {
+      "id": "ARCH-32",
+      "domain": "会话执行与恢复",
+      "capability": "删除对话的Agent侧结果与本地残留说明",
+      "status": "partial",
+      "detail": "已有官方session/delete和本地索引/隐藏标记处理，返回deleted/unsupported/unconfirmed；远端不支持或失败仍不能声称Agent记录已删。真实Agent删除三态未由本轮执行验证。",
+      "evidence": [
+        "src-tauri/src/acp_client/session_commands.rs:520",
+        "src-tauri/src/acp_client/session.rs:860",
+        "docs/status.md:45"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "按真实官方能力处理删除，保留范围说明；禁止删除Agent私有历史文件来代替官方删除。"
+    },
+    {
+      "id": "ARCH-33",
+      "domain": "会话执行与恢复",
+      "capability": "真正的对话分支、回退和检查点恢复",
+      "status": "missing",
+      "detail": "现有从某条消息新开仅还原该条用户文字/附件并选同类设置；SessionControl没有官方fork/rewind/checkpoint操作。因此没有保留原历史上下文的真正分支或回退能力，不能把新草稿命名成分支恢复。",
+      "evidence": [
+        "src/runtime/message_actions.ts:4",
+        "src-tauri/src/acp_client/pump.rs:178",
+        "src/runtime/conversation_actions.ts:63"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "先核各Agent官方分支/回退接口与文件副作用语义，选择性承接；无接口不伪造原生对话或回滚文件。"
+    },
+    {
+      "id": "ARCH-34",
+      "domain": "高级事件与能力呈现",
+      "capability": "回复、思考、工具和计划进度",
+      "status": "implemented",
+      "detail": "会话投影分别处理用户/Agent文字、思考、工具和plan；计划有进行中/完成等专用呈现，思想块独立折叠。实测仍取决于Agent是否真实报告对应事件。",
+      "evidence": [
+        "src/runtime/session_projection.ts:570",
+        "src/components/thread-items.tsx:376",
+        "src/components/ThreadView.tsx:923"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "按真实事件补齐布局和终态表现，不从普通正文推断隐藏计划或思考。"
+    },
+    {
+      "id": "ARCH-35",
+      "domain": "高级事件与能力呈现",
+      "capability": "上下文用量、token和费用反馈",
+      "status": "partial",
+      "detail": "usage_update只保存used/size，当前组件没有消费usage；没有用户可见的完整上下文占用/输入输出token/缓存token/费用视图。不能根据字符数或模型名称估算并冒充Agent用量。",
+      "evidence": [
+        "src/runtime/session_projection.ts:623",
+        "src/runtime/session_types.ts:230",
+        "src/components/ThreadView.tsx:933"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "先接官方报告字段和缺失状态，提供有限且诚实的用量反馈；费用需要真实价格/账单语义，不自行改变Agent预算。"
+    },
+    {
+      "id": "ARCH-36",
+      "domain": "高级事件与能力呈现",
+      "capability": "压缩开始、完成、失败与压缩控制",
+      "status": "missing",
+      "detail": "没有专用压缩动作或生命周期状态；Agent若声明压缩斜杠命令，可从通用命令入口发送，但并不具备统一压缩进度、结果与上下文变化呈现。Agent自己的自动压缩仍由其执行。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump.rs:178",
+        "src/runtime/session_projection.ts:570",
+        "src/components/Composer.tsx:500"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "只承接官方压缩接口/事件；无接口标明未知，绝不在Farfold实现第二套摘要或改写Agent历史。"
+    },
+    {
+      "id": "ARCH-37",
+      "domain": "高级事件与能力呈现",
+      "capability": "运行中追加与steer",
+      "status": "missing",
+      "detail": "当前输入一律入队，running时不准入；pump也拒绝旧prompt未结束时提交新prompt。实际支持的是排下一条和停止后再发，不是对当前运行轮次实时引导。",
+      "evidence": [
+        "src/runtime/queue.ts:33",
+        "src/runtime/sessions.ts:901",
+        "src-tauri/src/acp_client/pump.rs:1073"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "核官方steer接口、能力声明、接纳回执及失败/未知语义后接入；无接口不插入自建循环或自动取消重发冒充steer。"
+    },
+    {
+      "id": "ARCH-38",
+      "domain": "高级事件与能力呈现",
+      "capability": "子Agent/子任务层级、状态与独立控制",
+      "status": "partial",
+      "detail": "子任务若表现为普通工具可保留展示；当前ToolCallView和ThreadItem无父子任务身份/层级，其他扩展更新落raw。没有按子任务定位、独立审批/停止和产物来源的专用承接；这不代表Agent本身没有子Agent能力。",
+      "evidence": [
+        "src/runtime/session_types.ts:46",
+        "src/runtime/session_types.ts:65",
+        "src/runtime/session_projection.ts:649"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "先保真呈现官方子任务事件，再决定可用控制；不由Host派生第二套Agent调度和任务账本。"
+    },
+    {
+      "id": "ARCH-39",
+      "domain": "高级事件与能力呈现",
+      "capability": "未知事件与扩展信封保留",
+      "status": "implemented",
+      "detail": "未识别sessionUpdate保留在raw块，而非静默丢弃；当前只提供技术详情，不自动赋予可执行能力或成功含义。保留原文不等于完整理解或可操作承接。",
+      "evidence": [
+        "src/runtime/session_projection.ts:649",
+        "src/components/thread-items.tsx:404",
+        "src/components/ThreadView.tsx:957"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "把常见且有官方语义的扩展逐步提升为共用展示；未知事件继续保留但不猜支持。"
+    },
+    {
+      "id": "ARCH-40",
+      "domain": "高级事件与能力呈现",
+      "capability": "技能/MCP已有配置承接与统一管理",
+      "status": "partial",
+      "detail": "进程沿用现有HOME/配置和环境；可显示Agent声明的命令，Farfold网页工具经临时MCP追加。当前new/load参数只包含该受控MCP集合，没有通用技能/MCP安装、启停、权限和连接诊断管理层；已有私有配置是否完整生效需逐家证明。",
+      "evidence": [
+        "src-tauri/src/acp_client/transient_mcp.rs:199",
+        "src/runtime/session_projection.ts:605",
+        "src/components/Composer.tsx:302",
+        "AGENTS.md:32"
+      ],
+      "runtimeImpact": "decision",
+      "followup": "决定Host统一管理的范围；仅通过官方配置/API，不直接代写Agent私有配置，不把自动继承当全功能已验。"
+    },
+    {
+      "id": "ARCH-41",
+      "domain": "权限与交互",
+      "capability": "并发审批的身份、选项、失效与未知回复",
+      "status": "implemented",
+      "detail": "每请求有独立responder和会话归属，后端检查optionId与sessionId；取消或已过期不再批准，回复失败转unknown不重复发送。前端还提供延时可撤回的记住操作。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump.rs:565",
+        "src-tauri/src/acp_client/session.rs:978",
+        "src/runtime/interaction_actions.ts:41",
+        "src/runtime/interaction_actions.ts:83"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "真实并发样本按Agent补证；不能把多张模拟卡片当所有Agent并发审批已通过。"
+    },
+    {
+      "id": "ARCH-42",
+      "domain": "权限与交互",
+      "capability": "表单提问的填写、拒绝、取消与重试",
+      "status": "implemented",
+      "detail": "form elicitation进入独立请求集合；accept/decline/cancel有后端校验，归属和取消状态与审批类似，错误可返回retryable或uncertain。复杂schema的实际呈现与无障碍不由后端实现证明。",
+      "evidence": [
+        "src-tauri/src/acp_client/pump.rs:609",
+        "src-tauri/src/acp_client/session.rs:927"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "按实际官方schema覆盖支持字段与失败出口；无法表示的内容不能自动接受。"
+    },
+    {
+      "id": "ARCH-43",
+      "domain": "权限与交互",
+      "capability": "非form询问、URL交接与未知反向请求",
+      "status": "missing",
+      "detail": "初始化只声明form elicitation；非form模式明确返回cancel并发出unavailable事件；未知反向方法返回未实现。浏览器能打开页面不等于已承接协议URL询问、授权结果回传或任意双向扩展请求。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:583",
+        "src-tauri/src/acp_client/pump.rs:609",
+        "src-tauri/src/acp_client/pump.rs:657"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "核官方URL/其他模式的需求与作用范围；需要时扩展共用交接和结果核验，不把普通网页打开当授权完成。"
+    },
+    {
+      "id": "ARCH-44",
+      "domain": "权限与交互",
+      "capability": "官方客户端文件/终端接口承接与独立沙箱边界",
+      "status": "decision",
+      "detail": "当前初始化不声明客户端fs/terminal能力，现有文件和命令工作由Agent自身执行。实现ACP官方客户端文件/终端回调本身不等于新增Agent循环；是否需要应按具体Agent官方运行要求评估，并明确权限、执行和进程归属。工作文件夹不是安全沙箱，另建Host独立沙箱仍是范围决定，当前没有该隔离承诺。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:581",
+        "PRODUCT.md:83",
+        "AGENTS.md:32"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐家核官方是否依赖客户端fs/terminal及缺失后果；有需求再决定受控承接方式，不擅自接管Agent执行。独立沙箱与官方回调分别决策，不把未声明接口直接视为永久禁止。"
+    },
+    {
+      "id": "ARCH-45",
+      "domain": "并发与资源",
+      "capability": "每对话独立进程与精确控制路由",
+      "status": "implemented",
+      "detail": "准备连接和工作对话分离；conversation_id使每段工作对话拥有独立进程，stop/config/close按原会话owner定向，减少同进程模型串扰。独立进程不隔离共享磁盘与账号。",
+      "evidence": [
+        "src-tauri/src/acp_client/service_connection.rs:145",
+        "src-tauri/src/acp_client/service_connection.rs:171",
+        "src-tauri/src/acp_client/connection_identity.rs:95"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "实际并发隔离按Agent验证；保持身份与服务范围，不广播停止或配置。"
+    },
+    {
+      "id": "ARCH-46",
+      "domain": "并发与资源",
+      "capability": "空闲保留、回收与未知操作准入",
+      "status": "implemented",
+      "detail": "有30分钟空闲回收；work、操作、可见视图、仍被保留会话及非ready状态阻止回收。打开/变更结果未知时保留owner与预留，避免重复启动。回收并不证明全部Agent可无损恢复。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:43",
+        "src-tauri/src/acp_client/manager.rs:207",
+        "src-tauri/src/acp_client/lifecycle.rs:311"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "结合实际恢复能力衡量资源回收；不要为了减少进程强行回收不可确认恢复的工作。"
+    },
+    {
+      "id": "ARCH-47",
+      "domain": "并发与资源",
+      "capability": "同目录并行文件冲突与可选worktree",
+      "status": "decision",
+      "detail": "当前将用户目录直接设为cwd，无Host创建/合并/回收worktree流程；选择同一目录的多对话共享文件。可手选已有worktree，但不是自动文件隔离。契约明确未作文件访问隔离承诺。",
+      "evidence": [
+        "src-tauri/src/acp_client/process.rs:211",
+        "PRODUCT.md:83",
+        "src-tauri/src/lib.rs:182"
+      ],
+      "runtimeImpact": "decision",
+      "followup": "先决定是否提供可选隔离工作目录；最小版本可由Host创建/选择/保留worktree并明确用户合并，仍让Agent在所选cwd运行，不改其循环。清理脏树、依赖/未跟踪文件、分支和恢复必须说明。"
+    },
+    {
+      "id": "ARCH-48",
+      "domain": "并发与资源",
+      "capability": "正常退出、草稿保存和确切进程归属回收",
+      "status": "implemented",
+      "detail": "退出协调草稿保存，最终退出关闭已拥有连接，并等待最长5秒；未确认结束保留归属记录。不能根据进程名扫杀，也不能将退出请求等同所有子进程已经退出。",
+      "evidence": [
+        "src-tauri/src/draft_exit.rs:141",
+        "src-tauri/src/draft_exit.rs:210",
+        "src-tauri/src/acp_client/manager.rs:817",
+        "src-tauri/src/supervisor.rs:1"
+      ],
+      "runtimeImpact": "host-only",
+      "followup": "保持正常退出与强制退出风险区分，按当前安装和真实进程树补证，不干扰在跑工作。"
+    },
+    {
+      "id": "ARCH-49",
+      "domain": "并发与资源",
+      "capability": "全局并发预算、背压和长会话资源治理",
+      "status": "decision",
+      "detail": "当前有局部保护与草稿32MiB限制，但连接表及每会话command/inbox采用无界通道；未见全局并发配额、跨任务内存预算或用户可控资源调度策略。不能据此断言已发生泄漏或性能故障，当前缺实际高负载结论。",
+      "evidence": [
+        "src-tauri/src/acp_client/manager.rs:151",
+        "src-tauri/src/acp_client/manager.rs:463",
+        "src-tauri/src/acp_client/pump/open.rs:78",
+        "src/runtime/draft_storage.ts:5"
+      ],
+      "runtimeImpact": "decision",
+      "followup": "先量测多Agent/长输出/长历史的内存和响应，再决定背压、可见历史窗口或并发预算；不限制或终止用户工作来假造性能改善。"
+    },
+    {
+      "id": "ARCH-50",
+      "domain": "官方接口与责任边界",
+      "capability": "ACP之外的完整官方SDK/CLI会话能力扩展",
+      "status": "partial",
+      "detail": "已有官方终端配置、账号扩展和服务启动参数补充；对话执行注册与SessionControl仍以ACP路径为核心，没有完整通用的非ACP高级会话执行层。此结论基于命令注册、完整控制枚举及已读补充模块，不以关键词无结果判不存在。",
+      "evidence": [
+        "src-tauri/src/lib.rs:200",
+        "src-tauri/src/acp_client/pump.rs:178",
+        "src-tauri/src/acp_client/preparation_actions.rs:237",
+        "src-tauri/src/acp_client/account_query.rs:10"
+      ],
+      "runtimeImpact": "official-agent-api",
+      "followup": "逐能力核官方API而非只看ACP声明；可在acp_client内部增加有证据的官方补充并归一化到同一UI。没有官方能力则标不支持/未知，不fork Agent、不改runtime、不重建循环、压缩或steer。"
+    }
+  ]
+}

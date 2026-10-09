@@ -1,0 +1,699 @@
+[
+  {
+    "id": "P01",
+    "domain": "输入与草稿",
+    "capability": "未发送文字和附件的持久保存与恢复",
+    "status": "implemented",
+    "detail": "源码有独立未发送内容存储、保存失败提示和恢复时附件重检；总序列化上限为32 MiB。只保存用户未发送内容，不是Agent正文历史库。此分类证明实现存在，不新增冷恢复实测结论。",
+    "evidence": [
+      "src/runtime/draft_storage.ts:4",
+      "src/runtime/draft_storage.ts:44"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保留现有保存失败与版本未知保护；大附件组合和系统异常的真实性能按专门证据验证。"
+  },
+  {
+    "id": "P02",
+    "domain": "输入与草稿",
+    "capability": "切换入口时保留和找回多份草稿",
+    "status": "implemented",
+    "detail": "已有保存新稿、原设置归属、恢复选择和发送中保护；准备中的附件或待确认发送不能直接覆盖。不是只有一个会被新入口覆盖的文本框。",
+    "evidence": ["src/runtime/drafts.ts:85", "src/runtime/drafts.ts:92"],
+    "runtimeImpact": "host-only",
+    "followup": "继续维护所有导航入口共用草稿归属；新增入口须覆盖保存失败和已有新稿冲突。"
+  },
+  {
+    "id": "P03",
+    "domain": "输入与草稿",
+    "capability": "待发消息队列及暂停后恢复",
+    "status": "implemented",
+    "detail": "队列有准入条件；运行中、重连、配置未知、停止未确认或附件未复核时不会自动发送。失败、未知、停止等状态保留并暂停队列。",
+    "evidence": [
+      "src/runtime/queue.ts:9",
+      "src/runtime/queue.ts:33",
+      "src/runtime/queue.ts:60"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "逐家实际发送和停止仍需官方结果验证；不把队列源码通过当作29家成功。"
+  },
+  {
+    "id": "P04",
+    "domain": "输入与草稿",
+    "capability": "发送过程的草稿保护及未知结果处理",
+    "status": "implemented",
+    "detail": "发送前准备附件并落盘，记录发送待确认，成功后只清理未被用户继续修改的原草稿。恢复遇到上次结果未知时要求先检查，不自动重发。",
+    "evidence": [
+      "src/components/Composer.tsx:473",
+      "src/runtime/draft_storage.ts:15"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "维持保存、关闭、发送回执竞态保护；真实结果归属与恢复能力由对应接入证据判断。"
+  },
+  {
+    "id": "P05",
+    "domain": "输入与草稿",
+    "capability": "文件选择和输入框@文件入口",
+    "status": "implemented",
+    "detail": "支持多文件选择和@项目文件选择；选定文件变成附件，发送前重新核对可读性。不是将Agent文件工具替换为Host目录扫描权限。",
+    "evidence": [
+      "src/components/Composer.tsx:599",
+      "src/components/Composer.tsx:640",
+      "src-tauri/src/draft_attachment.rs:9"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保留明确文件选择、取消及附件失效路径；目录整体附件属于另行设计能力。"
+  },
+  {
+    "id": "P06",
+    "domain": "输入与草稿",
+    "capability": "剪贴板图片输入",
+    "status": "partial",
+    "detail": "实现会筛选剪贴板image/*，按Agent声明决定是否接受并形成图片附件；普通剪贴板文件不是该路径支持对象。既有计划仍将实际剪贴板图片验证列为待条件。",
+    "evidence": [
+      "src/components/Composer.tsx:621",
+      "src-tauri/src/draft_attachment.rs:64",
+      "plans/agent-access.md:98"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "在授权后验证真实剪贴板格式、Agent实际图片接收和错误提示；不由能力声明推断模型已经看见图片。"
+  },
+  {
+    "id": "P07",
+    "domain": "输入与草稿",
+    "capability": "把文件拖放到输入框",
+    "status": "missing",
+    "detail": "生产前端未找到onDrop、onDragOver或onDragDropEvent处理；当前可核实入口为选择文件、@文件和剪贴板图片。没有通用桌面文件拖入流程。",
+    "evidence": [
+      "src/components/Composer.tsx:599",
+      "src/components/Composer.tsx:621",
+      "src/components/Composer.tsx:640"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "如列入日常输入体验，可复用现有附件检查链增加拖放，明确多文件、文件夹及无效对象处理。"
+  },
+  {
+    "id": "P08",
+    "domain": "输入与草稿",
+    "capability": "PDF、Office、音频等附件的统一内容输入",
+    "status": "partial",
+    "detail": "通用附件会成为资源链接；可嵌入内容时只生成text/plain资源，图片另走image块。未见Host统一PDF/Office提取、OCR或音频转写；附件路径存在不等于不能由具备相应工具的Agent读取。",
+    "evidence": [
+      "src/runtime/draft_attachments.ts:82",
+      "src/runtime/draft_attachments.ts:97",
+      "src-tauri/src/draft_attachment.rs:9"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "先呈现当前Agent支持的交付形式与失败原因；若增加Host转换器，需要单独格式支持和内容准确性验收。"
+  },
+  {
+    "id": "P09",
+    "domain": "输入与草稿",
+    "capability": "Agent斜杠命令与可编辑快捷模板",
+    "status": "partial",
+    "detail": "能接收available_commands_update的名称、说明、输入提示，并与固定模板共同搜索和选择；模板填入后可编辑。没有可核实的用户模板创建、收藏、导入导出管理界面；命令列表也不等同于完整技能目录。",
+    "evidence": [
+      "src/runtime/session_projection.ts:605",
+      "src/components/Composer.tsx:302",
+      "src/runtime/composer_strings.ts:15"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "保持按Agent实际返回显示；若需要个人常用提示库，可独立建设Host模板管理，不伪装为Agent技能。"
+  },
+  {
+    "id": "P10",
+    "domain": "消息与对话",
+    "capability": "复制、编辑后追加、准备再次发送",
+    "status": "implemented",
+    "detail": "用户消息菜单提供复制、独立编辑重发、准备再次发送；菜单本身不立即发送。独立重发草稿保留主输入，关闭可保留或放弃，不原地篡改历史消息。",
+    "evidence": [
+      "src/components/UserMessageActions.tsx:7",
+      "src/components/UserMessageActions.tsx:20",
+      "src/components/MessageResendDialog.tsx:27",
+      "src/components/MessageResendDialog.tsx:52"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "维持明确二次发送和主草稿保护；不将追加一条消息描述成修改Agent旧历史。"
+  },
+  {
+    "id": "P11",
+    "domain": "消息与对话",
+    "capability": "从历史节点创建完整上下文分支",
+    "status": "missing",
+    "detail": "已有从某条消息开新对话，但只将选中消息的文字和附件种入新草稿，并复用Agent、工作位置和可核实设置。未找到session/fork调用，不是把该节点之前的完整Agent历史复制为新分支。",
+    "evidence": [
+      "src/components/UserMessageActions.tsx:24",
+      "src/App.tsx:627",
+      "src/App.tsx:637"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "若提供真正分支，应按官方会话分支能力启用，并区分单消息新稿与完整上下文复制。"
+  },
+  {
+    "id": "P12",
+    "domain": "消息与对话",
+    "capability": "当前对话正文查找",
+    "status": "partial",
+    "detail": "已实现当前载入并可见DOM文本查找，包括用户、助手、思考和步骤；折叠不可见内容被跳过，展开后重新计算。不是当前会话所有远端历史、附件内容或未载入正文的完整搜索。",
+    "evidence": [
+      "src/components/ConversationFind.tsx:26",
+      "src/components/ConversationFind.tsx:34",
+      "src/components/ConversationFind.tsx:60"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "明确查找范围；可优先补展开内容查找和跳转，再按官方能力扩展尚未载入历史。"
+  },
+  {
+    "id": "P13",
+    "domain": "消息与对话",
+    "capability": "Agent返回图片和音频等媒体的呈现",
+    "status": "partial",
+    "detail": "已有规范化媒体附件、图片和音频播放器路径；这证明可渲染支持的返回块，不证明29家都会发送对应块或模型能理解输入音频，也没有通用视频/任意文件内容查看器。",
+    "evidence": [
+      "src/runtime/message_attachments.ts:88",
+      "src/components/MessageContent.tsx:145"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "分别验证官方返回格式、播放失败和大媒体；避免把协议字段支持扩张成每家多模态成功。"
+  },
+  {
+    "id": "P14",
+    "domain": "文件与成果",
+    "capability": "真实磁盘文件核验、另存、打开和定位",
+    "status": "implemented",
+    "detail": "文件交付有路径、大小、SHA和版本回执；用户点击精确文件后才核验，读取、复制、导出、系统打开和定位各有独立接口。报告一个文件路径不被当成写入成功。",
+    "evidence": [
+      "src/runtime/file_delivery.ts:5",
+      "src/runtime/file_delivery.ts:12",
+      "src/runtime/file_delivery.ts:84"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "维持执行前后版本核对和失败反馈；实际系统选择器及导出另有验证项。"
+  },
+  {
+    "id": "P15",
+    "domain": "文件与成果",
+    "capability": "文字、Markdown与HTML的应用内查看",
+    "status": "implemented",
+    "detail": "常见文字/代码扩展在1 MiB内读取，Markdown有专门呈现；HTML交给内嵌网页查看。读取后会核对返回文件版本，失败清除旧回执。",
+    "evidence": [
+      "src/components/OpenedFileView.tsx:47",
+      "src/components/OpenedFileView.tsx:195",
+      "src/components/OpenedFileView.tsx:247",
+      "src/components/OpenedFileView.tsx:285"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保持文字与HTML的不同执行边界；补格式时用真实文件验证编码、大小和呈现。"
+  },
+  {
+    "id": "P16",
+    "domain": "文件与成果",
+    "capability": "PDF、Office及普通图片文件的内容栏视觉预览",
+    "status": "missing",
+    "detail": "OpenedFileView内部读取分支只有HTML和小型文字文件，其他文件显示交由系统应用的说明。尚无PDF翻页、Office页面/表格/幻灯片预览，普通位图文件也没有此文件页内的图像分支；消息块中的图片展示是另一项能力。",
+    "evidence": [
+      "src/components/OpenedFileView.tsx:195",
+      "src/components/OpenedFileView.tsx:222",
+      "src-tauri/src/file_delivery_commands.rs:91"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "优先选用户常交付的PDF和图片预览，再评估Office转换；不能据此声称Agent不能读这些文件。"
+  },
+  {
+    "id": "P17",
+    "domain": "文件与成果",
+    "capability": "大文件的分段查看与交付",
+    "status": "partial",
+    "detail": "文字预览上限1 MiB，文件交付有32 MiB边界；超过文本预览上限可给其他应用打开提示。未见分段读取、虚拟化大文档或大型二进制分块交付流程。",
+    "evidence": [
+      "src/components/OpenedFileView.tsx:47",
+      "src/components/OpenedFileView.tsx:222",
+      "src-tauri/src/file_delivery.rs:20"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "先明确限制及外部打开后路；按真实文件规模决定是否增加分段预览，避免笼统去掉上限。"
+  },
+  {
+    "id": "P18",
+    "domain": "文件与成果",
+    "capability": "工具变更与差异查看",
+    "status": "partial",
+    "detail": "成果栏支持diff、命令和日志卡；差异明确区分整文件与片段，部分差异可以从工具写入参数推导。这是Agent报告/输入的展示，并不自动证明磁盘最终内容，也不是编辑器或完整版本控制界面。",
+    "evidence": [
+      "src/runtime/artifacts.ts:18",
+      "src/runtime/artifacts.ts:92",
+      "src/runtime/artifacts.ts:129"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "增强报告变更与真实文件打开的衔接；仍按官方工具返回事实展示，不将写入意图当作文件写成。"
+  },
+  {
+    "id": "P19",
+    "domain": "文件与成果",
+    "capability": "统一可交付成果清单",
+    "status": "partial",
+    "detail": "当前成果卡由工具事件推导且仅在内存，主要为差异/命令/日志。reportedFiles已经能识别完成工具里的本地链接、变更路径和edit/move位置，但生产代码没有发现其调用，因此尚未闭合为所有文件产物的统一列表。",
+    "evidence": [
+      "src/runtime/artifacts.ts:1",
+      "src/runtime/artifacts.ts:18",
+      "src/runtime/file_delivery.ts:64"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "接通可核验候选文件列表、打开/另存和重复归并；仍由磁盘核验确认存在，不建第二份会话事件库。"
+  },
+  {
+    "id": "P20",
+    "domain": "文件与成果",
+    "capability": "文件变更后的自动预览刷新",
+    "status": "partial",
+    "detail": "现有文件页首次按identity加载，文字页提供手动刷新；读取回执会校验版本。未见该页面订阅文件系统变化，Agent或外部编辑器改写后不能据当前源码承诺预览自动更新。",
+    "evidence": [
+      "src/components/OpenedFileView.tsx:195",
+      "src/components/OpenedFileView.tsx:238",
+      "src/components/OpenedFileView.tsx:351"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "可增加明确过期提示或受控刷新，保留用户阅读位置及按旧版本撰写的意见，避免静默换版本。"
+  },
+  {
+    "id": "P21",
+    "domain": "文件与成果",
+    "capability": "对文件特定版本提出修改意见",
+    "status": "partial",
+    "detail": "已有按对话、文件路径和版本标识保存的反馈草稿；只有成功读取了文字的文件页允许编辑反馈。PDF、Office、普通图片及大文件不具备同等页内意见能力，尚非统一文档批注系统。",
+    "evidence": [
+      "src/components/OpenedFileView.tsx:285",
+      "src/components/OpenedFileView.tsx:298"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "扩展预览后按文件类型决定页码、区域和选中文字定位；保持意见绑定可验证版本并由用户显式发送。"
+  },
+  {
+    "id": "P22",
+    "domain": "文件与成果",
+    "capability": "完整真实Agent返工及实际文件导出旅程",
+    "status": "unverified",
+    "detail": "文件反馈、交付与导出机制存在，但活动计划将真实Agent完整返工单列待用户，最新安装说明也未认定实际系统导出已验收。本轮仅只读源码核查，没有发送返工消息或创建真实导出文件。",
+    "evidence": [
+      "plans/agent-access.md:89",
+      "docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md:21"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "授权后用真实文档走选择文件、查看、提出意见、Agent修改、版本核对、另存的闭环；与纯组件测试分别记证。"
+  },
+  {
+    "id": "P23",
+    "domain": "浏览器",
+    "capability": "内嵌公开网页打开、阅读与关闭",
+    "status": "implemented",
+    "detail": "已有内容栏内真实网页、地址、状态、文字快照、关闭和可见性接口；是独立网页表面而非嵌入其他Agent产品页面。源码实现存在不代表任意网站都能读取。",
+    "evidence": [
+      "src/components/BrowserWorkspace.tsx:112",
+      "src/runtime/browser_workspace.ts:37",
+      "src/runtime/browser_workspace.ts:61"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "继续逐站区分网站加载、文字快照、保护限制和Agent调用；不把手动打开当成Agent已读取。"
+  },
+  {
+    "id": "P24",
+    "domain": "浏览器",
+    "capability": "本地HTML、多文件项目和开发服务器预览",
+    "status": "implemented",
+    "detail": "正式接口同时有openHtml、openDirectory和openDevelopment，开发服务器入口采用本地回环地址与端口；不能把多文件/开发服务器预览列成完全缺失。",
+    "evidence": [
+      "src/runtime/browser_workspace.ts:43",
+      "src/runtime/browser_workspace.ts:94",
+      "src/runtime/browser_workspace_strings.ts:3"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "在真实项目中覆盖依赖资源、刷新、存储隔离和错误入口；当前实现不等于远程SSH项目。"
+  },
+  {
+    "id": "P25",
+    "domain": "浏览器",
+    "capability": "网页共享读取许可及撤回",
+    "status": "implemented",
+    "detail": "网页工具可先等待用户确认，允许读取绑定当前页面及版本；导航会立即使旧许可不可用，停止共享按确认状态处理。收起、换页和关闭语义不能混为同一操作。",
+    "evidence": [
+      "src-tauri/src/browser_sharing/protocol.rs:102",
+      "src/runtime/browser_sharing.ts:235",
+      "src/runtime/browser_sharing.ts:415",
+      "src/runtime/browser_sharing.ts:434"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保持旧页面和旧工具请求无法越界复用；失败或未知撤回状态继续明确展示。"
+  },
+  {
+    "id": "P26",
+    "domain": "浏览器",
+    "capability": "受控网页观察、点击和普通字段输入",
+    "status": "partial",
+    "detail": "工具实现观察节点、30秒有效位置、单次明确确认后的点击/输入；协议明示dispatched仅是事件已交付，字段matched仅是该字段检查，不能当作网站任务完成。敏感输入和自动提交不在此普通输入路径内。",
+    "evidence": [
+      "src-tauri/src/browser_sharing/protocol.rs:98",
+      "src-tauri/src/browser_sharing/protocol.rs:103",
+      "src/runtime/browser_sharing.ts:447"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "按网站重新观察证明目标状态；错误或未知结果不自动重试，不扩大成全网页自动化完成承诺。"
+  },
+  {
+    "id": "P27",
+    "domain": "浏览器",
+    "capability": "向Agent提供当前网页截图",
+    "status": "missing",
+    "detail": "生产observe路径明确传入false禁止截图；即使请求screenshot=true也返回unavailable，原因是无法可靠核实封闭shadow root内受保护输入。存在内部受控截图或参数声明不等于生产功能可用。",
+    "evidence": [
+      "src-tauri/src/browser_workspace/browser_tools.rs:202",
+      "src-tauri/src/browser_workspace/browser_tools.rs:214",
+      "src-tauri/src/browser_sharing/protocol.rs:103"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "若恢复该能力，应先解决产品规定的受保护内容边界与实际截图验证；保持当前不可用说明准确。"
+  },
+  {
+    "id": "P28",
+    "domain": "浏览器",
+    "capability": "Farfold网页工具覆盖全部接入Agent",
+    "status": "partial",
+    "detail": "内置临时网页MCP的reviewed_launch目前只接受registry中的Codex/codex-acp及已核启动形态，且需另外满足实际连接条件。其他Agent可能有自己的浏览器工具，不能据此说它们不能浏览，也不能说Farfold网页工具已29家通用。",
+    "evidence": [
+      "src-tauri/src/acp_client/browser_capability.rs:11",
+      "src-tauri/src/acp_client/browser_capability.rs:21",
+      "src-tauri/src/acp_client/browser_capability.rs:46"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "按官方临时MCP/工具注入能力逐步扩展，不代写Agent配置，不把私有扩展变成29家通用门槛。"
+  },
+  {
+    "id": "P29",
+    "domain": "浏览器",
+    "capability": "登录页面、账号密码及敏感表单自动化",
+    "status": "decision",
+    "detail": "当前开发范围为公开页和普通受控操作；协议明确保护密码、账号和验证码输入，活动计划不假定登录及敏感动作自动可用。这是当前范围与保护决定，不应作为意外实现回归。",
+    "evidence": [
+      "src-tauri/src/browser_sharing/protocol.rs:105",
+      "plans/agent-access.md:90"
+    ],
+    "runtimeImpact": "decision",
+    "followup": "只有用户另定范围并具备相应安全机制后再建设；本轮不通过登录测试扩大权限。"
+  },
+  {
+    "id": "P30",
+    "domain": "浏览器",
+    "capability": "多页面/标签工作区及浏览状态恢复",
+    "status": "partial",
+    "detail": "当前应用协调器明确只有一个真实网页表面；单个BrowserWorkspace持有一份地址、页面状态和快照，没有多标签页模型。多标签与多窗口不同，产品仅明确排除了后者，前者需单独权衡。",
+    "evidence": [
+      "src/App.tsx:151",
+      "src/components/BrowserWorkspace.tsx:145",
+      "src/runtime/browser_workspace.ts:112",
+      "PRODUCT.md:31"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "若多资料并行成为高频需求，先决定多标签归属、跨对话许可和恢复语义；不直接扩为多窗口项目。"
+  },
+  {
+    "id": "P31",
+    "domain": "历史与整理",
+    "capability": "对话元数据搜索、分组、置顶和归档",
+    "status": "implemented",
+    "detail": "列表和快捷搜索按标题、文件夹、Agent和分组检索；整理操作已有统一菜单和元数据实现。搜索可用，但检索对象不是正文、附件内容或全部Agent原始历史。",
+    "evidence": [
+      "src/components/ConversationLibrary.tsx:234",
+      "src/components/CommandPalette.tsx:65",
+      "src/components/ConversationLibrary.tsx:929"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "完善当前元数据组合筛选体验；全文能力单独评估而不重命名现有标题检索。"
+  },
+  {
+    "id": "P32",
+    "domain": "历史与整理",
+    "capability": "跨对话全文及附件内容搜索",
+    "status": "missing",
+    "detail": "全局列表和快捷搜索都只拼接title、cwd、agentName与group；目前没有全文正文索引或官方跨历史内容检索入口。产品不允许Host重建正文事件库，因此不能简单复制所有聊天文本来补齐。",
+    "evidence": [
+      "src/components/ConversationLibrary.tsx:234",
+      "src/components/CommandPalette.tsx:77",
+      "src/runtime/settings_redesign_strings.ts:35",
+      "PRODUCT.md:151"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "优先评估官方搜索接口或显式范围的临时检索；明确已收录索引、Agent远端历史和附件的不同范围。"
+  },
+  {
+    "id": "P33",
+    "domain": "历史与整理",
+    "capability": "发现、预览和带入Agent已有对话",
+    "status": "partial",
+    "detail": "有分页发现、supported/unsupported、可加载/位置状态及回放完成标记。可安全预览再纳入，但是否可发现、读取和继续取决于Agent官方历史接口；不等于29家历史全部可恢复。",
+    "evidence": [
+      "src/runtime/history_import.ts:15",
+      "src/runtime/history_import.ts:39",
+      "src/runtime/history_import.ts:50",
+      "src/runtime/history_import.ts:138"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "按家记录发现、完整回放、继续使用各自结果；拒绝空回放或未完成预览被显示成成功恢复。"
+  },
+  {
+    "id": "P34",
+    "domain": "历史与整理",
+    "capability": "删除对话及确认Agent端残留",
+    "status": "partial",
+    "detail": "删除流程保护活动任务与未发送内容，并区分Agent确认删除、官方不支持、请求未确认三种结果。存在本地移除与防重现逻辑，但不是所有Agent都会删除自己的原始历史。",
+    "evidence": [
+      "src/runtime/sessions.ts:1446",
+      "src/runtime/sessions.ts:1462",
+      "src/runtime/sessions.ts:1478"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "用户界面持续解释删掉了什么、原始记录是否残留；不能把移除本地列表当作彻底清除全部历史。"
+  },
+  {
+    "id": "P35",
+    "domain": "历史与整理",
+    "capability": "对话导出与可迁移归档",
+    "status": "partial",
+    "detail": "已有Markdown保存对话，范围为当前已载入消息，不包含草稿/队列；工具仅一行摘要，附件输出名称和URI而非打包。未提供完整Agent历史归档、跨Agent导入、PDF/Office导出或自含附件包。",
+    "evidence": [
+      "src/components/ConversationExportDialog.tsx:26",
+      "src/runtime/conversation_redesign_strings.ts:32",
+      "src/runtime/conversation_actions.ts:125",
+      "src/runtime/conversation_actions.ts:137"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保持导出范围说明；如需可移交资料包，应先定义附件打包、秘密去除和格式，不冒充Agent会话恢复文件。"
+  },
+  {
+    "id": "P36",
+    "domain": "历史与整理",
+    "capability": "使用原对话设置再开新稿",
+    "status": "implemented",
+    "detail": "已有历史服务和配置解析；缺失、过期或不完整身份不能静默使用当前默认设置，需用户复核。新稿复用设置与复制完整Agent历史是不同能力。",
+    "evidence": [
+      "src/runtime/conversation_actions.ts:18",
+      "src/runtime/conversation_actions.ts:96",
+      "src/App.tsx:645"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "持续校验已保存选择与当前官方能力；不静默更换模型或服务。"
+  },
+  {
+    "id": "P37",
+    "domain": "历史与整理",
+    "capability": "自动归档及活动内容保护",
+    "status": "implemented",
+    "detail": "有自动归档资格判断；置顶、活动/需处理、未发送内容等不自动归档，只处理确认结束并满足时间条件的对话。",
+    "evidence": [
+      "src/runtime/auto_archive.ts:12",
+      "src/runtime/auto_archive.ts:39"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "保留未确认结果和草稿保护；无需为本审计重新操作用户归档数据。"
+  },
+  {
+    "id": "P38",
+    "domain": "历史与整理",
+    "capability": "未读状态与离开对话后的新消息提示",
+    "status": "implemented",
+    "detail": "可持久保存未读集合，当前可读对话打开后清除；只对可读助手消息或规范化媒体更新未读。不是把所有技术事件都制造成新消息提示。",
+    "evidence": [
+      "src/runtime/conversation_read_state.ts:92",
+      "src/runtime/conversation_read_state.ts:118",
+      "src/components/Sidebar.tsx:434"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "继续核对多个并行任务的可见性归属；不要把历史回放误作新消息。"
+  },
+  {
+    "id": "P39",
+    "domain": "技能与MCP",
+    "capability": "技能、工具和MCP的统一可见清单",
+    "status": "missing",
+    "detail": "命令更新能呈现Agent愿意公开的命令；当前设置导航没有技能或MCP页，未形成当前Agent已加载技能、连接服务器、可用工具及其来源/状态的统一清单。不能据此推断Agent本身没有技能或MCP。",
+    "evidence": [
+      "src/runtime/session_projection.ts:605",
+      "src/components/Composer.tsx:302",
+      "src/components/SettingsPage.tsx:21"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "先建设按官方可见数据的只读清单与不可获知说明，再区分命令、技能、工具和服务器。"
+  },
+  {
+    "id": "P40",
+    "domain": "技能与MCP",
+    "capability": "统一技能发现、安装、启停与作用域管理",
+    "status": "missing",
+    "detail": "现有输入框仅使用已公开命令和固定模板，没有可核实的跨Agent技能安装/启停/作用域管理流程。Agent拥有自己的技能和配置，缺统一Host入口不构成允许直接修改其私有配置的理由。",
+    "evidence": [
+      "src/components/Composer.tsx:302",
+      "src/components/SettingsPage.tsx:21",
+      "PRODUCT.md:149"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "按官方CLI/API支持矩阵决定哪些操作能统一、哪些只能跳转说明；不假设29家共享同一技能格式。"
+  },
+  {
+    "id": "P41",
+    "domain": "技能与MCP",
+    "capability": "任意MCP服务器的统一添加、连接和诊断管理",
+    "status": "missing",
+    "detail": "当前Host内MCP注入为单会话的临时网页offer，不存配置；session_params仅带该临时server或空列表，没有通用服务器设置管理器。Agent自己配置的MCP可能照常工作，不等于Host能显示或编辑它。",
+    "evidence": [
+      "src-tauri/src/acp_client/transient_mcp.rs:1",
+      "src-tauri/src/acp_client/transient_mcp.rs:199",
+      "src/components/SettingsPage.tsx:21"
+    ],
+    "runtimeImpact": "official-agent-api",
+    "followup": "优先补只读连接状态、错误归属和官方配置入口；密钥、启停和作用域必须由授权及官方能力驱动。"
+  },
+  {
+    "id": "P42",
+    "domain": "导航与可访问性",
+    "capability": "全局对话跳转和任务注意力入口",
+    "status": "implemented",
+    "detail": "侧栏有需要处理、运行中和未读入口；快捷搜索有键盘选择、输入法保护和列表语义。但该快捷面板目前是对话检索器，不是包含所有应用操作的通用命令中心。",
+    "evidence": [
+      "src/components/Sidebar.tsx:413",
+      "src/components/CommandPalette.tsx:100",
+      "src/components/CommandPalette.tsx:149"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "维持统一返回和原草稿保护；若用户需要全局动作检索，再扩充命令模型而非只改标题。"
+  },
+  {
+    "id": "P43",
+    "domain": "导航与可访问性",
+    "capability": "新对话准备前后布局连续性",
+    "status": "partial",
+    "detail": "准备完成即产生workspaceKey并通知App显示预开对话，hero和建议项按composerTarget隐藏；尚未发送也会从居中欢迎入口进入底部输入和空对话。主审本轮安装版重现了该切换，源码可解释为既有预开草稿呈现，不是自动发消息或数据丢失。",
+    "evidence": [
+      "src/components/EmptyState.tsx:846",
+      "src/components/EmptyState.tsx:1150",
+      "src/components/EmptyState.tsx:1295",
+      "src/App.tsx:145"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "决定首条消息接受前是否保持居中新稿结构；调整布局承接无需改动Agent预准备或草稿归属。"
+  },
+  {
+    "id": "P44",
+    "domain": "导航与可访问性",
+    "capability": "焦点、对话框、键盘与遮罩基本机制",
+    "status": "implemented",
+    "detail": "有原生dialog生命周期、关闭后焦点恢复、忙时禁止退出、审批快捷键的IME/表单保护；窄屏成果栏将被遮挡主区设为inert并转移焦点。可核实有基础，不应写成完全缺乏可访问性。",
+    "evidence": [
+      "src/components/useModalDialog.ts:2",
+      "src/components/useModalDialog.ts:95",
+      "src/runtime/permission_shortcuts.ts:4",
+      "src/components/ArtifactPane.tsx:154"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "新增弹层复用已有机制，避免多重遮罩和错误返回焦点；真实辅助技术验证另列。"
+  },
+  {
+    "id": "P45",
+    "domain": "导航与可访问性",
+    "capability": "完整键盘、读屏、缩放及全尺寸体验验收",
+    "status": "unverified",
+    "detail": "最新安装和视觉记录明确没有完成全量键盘/读屏及全部窗口尺寸验收。静态SSR截图不执行React交互，不能用截图覆盖推断屏幕阅读器或整段键盘旅程成功。",
+    "evidence": [
+      "docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md:21",
+      "docs/evidence/2026-10-09-prototype07-landing/visual-verification.md:25"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "按关键旅程完成VoiceOver/键盘、大字号或系统缩放、窄窗口和动态状态检查，记录实际失败再修。"
+  },
+  {
+    "id": "P46",
+    "domain": "导航与可访问性",
+    "capability": "主题与窄窗口布局",
+    "status": "partial",
+    "detail": "实现system/light/dark偏好、可缩放侧内容区和窄屏覆盖模式；900×620及1280×820准备后输入区有有限实际/受控证据。没有足够证据承诺全部主题、尺寸、长内容组合都已验收。",
+    "evidence": [
+      "src/runtime/theme.ts:6",
+      "src/components/ArtifactPane.tsx:150",
+      "src/components/ArtifactPane.tsx:162",
+      "docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md:7"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "优先覆盖实际常用尺寸与长内容；主题保存失败及恢复继续可见，不把基础实现当完整视觉无缺陷。"
+  },
+  {
+    "id": "P47",
+    "domain": "通知",
+    "capability": "审批、提问和中断的系统通知闭环",
+    "status": "unverified",
+    "detail": "有开关、声音、权限检查、去重和点击定位实现，通知正文使用通用提示；但最新证据未验收实际送达与声音，既有实机曾受勿扰状态限制。本轮不更改系统设置。",
+    "evidence": [
+      "src/runtime/desktop_notifications.ts:176",
+      "src/runtime/desktop_notifications.ts:299",
+      "src/runtime/notification_navigation.ts:13",
+      "docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md:21"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "在允许的系统条件下验证真实送达、声音与点击定位，分别记录系统权限和Host事件问题。"
+  },
+  {
+    "id": "P48",
+    "domain": "通知",
+    "capability": "任务成功完成的桌面通知",
+    "status": "missing",
+    "detail": "当前noticeFor只处理审批、提问、异常中断；turnEnd只有failed或unknown生成中断通知，正常成功返回null。内页完成状态及未读不等同于任务完成系统提醒。",
+    "evidence": [
+      "src/runtime/desktop_notifications.ts:176",
+      "src/runtime/desktop_notifications.ts:208",
+      "src-tauri/src/desktop_notifications.rs:176"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "如并行任务需要完成提醒，可增加独立偏好和去重，避免历史回放或用户正在查看时重复打扰。"
+  },
+  {
+    "id": "P49",
+    "domain": "平台",
+    "capability": "Windows文件、网页、通知及桌面交互覆盖",
+    "status": "partial",
+    "detail": "已有共用UI和Windows系统适配，但实机运行仍单列未验收。文件服务当前仅本机磁盘，拒UNC、链接/重解析目录；通知点击仅定位正在运行应用，未实现冷启动激活。签名、分发和更新已由用户推迟，不在本阶段补验门槛内。",
+    "evidence": [
+      "docs/architecture.md:5",
+      "docs/architecture.md:7",
+      "docs/architecture.md:9",
+      "src-tauri/src/file_access/windows.rs:86",
+      "docs/evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md:21"
+    ],
+    "runtimeImpact": "host-only",
+    "followup": "有Windows环境后分开验证文件、WebView2、系统权限和通知；UNC和冷启动点击若需要则明确扩展范围。"
+  },
+  {
+    "id": "P50",
+    "domain": "产品边界",
+    "capability": "编辑器、多窗口、语音、远程项目及其他明确延期范围",
+    "status": "deferred",
+    "detail": "PRODUCT明确本轮不做编辑器、Linux、LifeModel真实采集/注入、多窗口和移动端；远程SSH在后续演进，活动计划也不因必备能力讨论自动纳入语音。这些不能列为本轮实现失败，也不应为了同行功能表自行恢复验收门槛。",
+    "evidence": ["PRODUCT.md:31", "PRODUCT.md:158", "plans/agent-access.md:94"],
+    "runtimeImpact": "out-of-scope",
+    "followup": "只有用户明确调整范围后再立项；本次能力盘点标出边界，不改契约和活动计划。"
+  }
+]

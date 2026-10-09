@@ -1,0 +1,31 @@
+{
+  "browserPreview": "not performed; browser URL policy rejected local file navigation; no workaround attempted",
+  "independentReview": "two wording/classification corrections applied; no product source changed",
+  "auditItems": 122,
+  "domains": 22,
+  "statusCounts": {
+    "implemented": 51,
+    "partial": 37,
+    "unverified": 8,
+    "missing": 13,
+    "decision": 10,
+    "deferred": 3
+  },
+  "uniqueIds": true,
+  "sourceFilesAndLineBoundsChecked": true,
+  "agentCount": 29,
+  "standardCells": 232,
+  "sourceFingerprint": {
+    "files": 731,
+    "sha256": "ac4b54a8b9c0060fad01ab8c74ebe743fc25fce96856cb01eb335d8ddb179bfd"
+  },
+  "newProductTestsRun": false,
+  "realAgentTestsRun": false,
+  "peerAppsInstalled": false,
+  "scope": "Artifact schema, source links and exact allowlist only; no claim of end-to-end acceptance.",
+  "htmlItemCount": 122,
+  "htmlLocalLinksChecked": true,
+  "javascriptSyntaxCheck": "passed",
+  "documentSnapshotLinks": 34,
+  "documentSnapshotMappingsVerified": 11
+}
