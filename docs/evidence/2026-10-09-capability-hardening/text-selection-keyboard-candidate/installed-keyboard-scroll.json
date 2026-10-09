@@ -1,0 +1,93 @@
+{
+  "checkedAtUtc": "2026-10-09T23:27:49.346103+00:00",
+  "sourceCommit": "e98e2a46a46d6ef874ec63e5c6863fe046d8ef8d",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "result": "passed_scoped_native_retest",
+  "observation": {
+    "method": "Root CUA native AX and screenshots in this conversation; no injected UI state or separate browser fixture",
+    "standaloneScreenshotFiles": false,
+    "observedScreenshotPixels": [2560, 1640],
+    "conversation": "Existing controlled FARFOLD_TEXT_CD66AAE7_20261010, 116 conversations before and after",
+    "newAgentRequest": false,
+    "modelAndReasoning": "Existing Codex 6 Astra / Ultra unchanged",
+    "coldPermissionConfirmation": "Left unconfirmed; no send"
+  },
+  "checks": [
+    {
+      "case": "Small current Markdown source, ending-line numeric Enter",
+      "result": "passed",
+      "steps": [
+        "Open current 41-byte owned file; existing new-version whole-file opinion visible",
+        "Switch to source; expand line controls; focus end input; enter 2; press Return",
+        "Selected text and lines 1–2 visibly retained; separate confirmation enabled; existing opinion still whole-file",
+        "Second Return changed target to lines 1–2 and focused opinion; text unchanged",
+        "Explicit whole-file button restored original target"
+      ]
+    },
+    {
+      "case": "Large file block two, starting-line numeric Enter",
+      "result": "passed",
+      "steps": [
+        "Open existing 2 MiB owned file; prior line opinion retained on block one",
+        "Next block shows bytes 131072–262144 and original lines 1–3 with continuation notice",
+        "Focus start-line input; enter 1; Return retained selected 中🙂END plus original CRLF and enabled confirmation",
+        "Second Return focused same retained line opinion; content unchanged"
+      ]
+    },
+    {
+      "case": "NEW-02 focus and local scrolling",
+      "result": "passed",
+      "steps": [
+        "With long unsent composer and block-two line controls open, confirm selection to focus opinion",
+        "Click ending-line input: numeric focus ring visible and app navigation/top toolbar remain at original top position",
+        "Mouse wheel scrolls body locally; app navigation/top toolbar and feedback stay visible",
+        "Tab to selection button then Page Down scrolls local preview; next Tab reaches original-text focus ring; Home returns text start",
+        "Scroll local preview upward: block controls return; previous block works; retained opinion unchanged"
+      ],
+      "boundary": "Native screenshot observation only; no DOM scrollY measurement or claim about other window sizes. Minimum-size 900x620 remains separate controlled-browser evidence."
+    }
+  ],
+  "postUiRetention": {
+    "groups": {
+      "composers": {
+        "beforeEntries": 4,
+        "afterEntries": 4,
+        "existingEntriesUnchanged": 4
+      },
+      "feedback": {
+        "beforeEntries": 2,
+        "afterEntries": 2,
+        "existingEntriesUnchanged": 2
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "differences": [],
+    "privateReceiptSha256": "de30452ed35c50cb823e188136a9e3dd1376c6dbfc3b1af017677f9c886f09bb",
+    "sourceAndFirstCaptureUnchanged": true
+  },
+  "normalExit": {
+    "method": "Native Cmd-Q; CUA reported App quit; pgrep confirmed zero formal processes",
+    "forcedQuit": false,
+    "formalProcessCountAfter": 0
+  },
+  "installedBundleStillMatchesCandidate": true,
+  "evidence": {
+    "candidate.json": "ae5c92e4198d9f7360965522c09e034aee98496507fa940622a0e97d60322cd8",
+    "candidate-independent.json": "a0bf922b19b1cfcf45eeefac6dba5371c689b2437856c51322ab0a76c8e03abe",
+    "installed-data-retention.json": "05b3c1dddaa0d85e5ea18fe031220a07f05927204b92facd040a9537960541aa",
+    "install-independent.json": "dcffe46810864870a16c5dfda9729d17c941241f9d2357a136e1e3d96fb24e60",
+    "duplicate-bundle-cleanup.json": "55a10c85a595e4dc9d588cf5160aed2a859407ff7148154a48d3a75ee52de1d0"
+  },
+  "notProven": [
+    "All P21 formats: Office precise positions, PDF/image regions remain open",
+    "P22 actual Agent rework",
+    "All market-readiness and 29 Agent standards"
+  ],
+  "next": "Continue XLSX source positions and ordinary-writer compatibility; current working-tree Office changes are not in this installed build."
+}

@@ -4,13 +4,13 @@
 
 ## 当前基线与证据边界
 
-| 层级         | 已有证据                                                                                                                                                           | 不能据此推出                                             |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| 产品源码     | P21文字选段 `cd66aae7` 已提交并安装；拖选、键盘选择和版本意见已有源码及受控浏览器证据，实机局部通过，Enter/滚动修复已测，待安装复验                                | 所有已列能力已补齐                                       |
-| 工程检查     | P21初轮前端302文件/3,345项通过，1,116输入匹配；真实拖选样式问题已修，独立浏览器61项通过；Rust复用依据及原失败保留                                                  | 所有 Agent、系统权限及安装环境通过                       |
-| 正式安装     | 当前安装 `cd66aae7` / 0.1.7 arm64；唯一正式应用 `/Applications/Farfold.app`。三份217,400条快照一致，已实机核验拖选、片段和旧版意见；Enter/滚动修复已测，待安装复验 | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
-| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                                                                                               | 跨版本累计成功等于当前 29 家全部通过                     |
-| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                                                                                          | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
+| 层级         | 已有证据                                                                                                                                           | 不能据此推出                                             |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 产品源码     | P21文字选段与Enter/滚动修复 `e98e2a46` 已提交安装；正式窗口分项复验通过，Office位置反馈正在开发                                                    | 所有已列能力已补齐                                       |
+| 工程检查     | 修复前端302文件/3,349项、类型/打包/格式通过，1,116输入匹配；双浏览器与Rust复用依据、原失败均保留                                                   | 所有 Agent、系统权限及安装环境通过                       |
+| 正式安装     | 当前安装 `e98e2a46` / 0.1.7 arm64；唯一正式应用 `/Applications/Farfold.app`。三份217,400条快照一致，Enter与局部滚动实机通过，原9组未发内容逐值保留 | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
+| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                                                                               | 跨版本累计成功等于当前 29 家全部通过                     |
+| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                                                                          | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
 
 安装细节见[正式落地](evidence/2026-10-09-prototype07-landing/README.md)和[最终布局安装](evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md)。本轮源码与受控检查见[能力补强证据](evidence/2026-10-09-capability-hardening/README.md)。接续已调用已安装的官方 Claude 0.81.2 对接受控 HTTP 服务，确认实际路径、模型与测试认证头，并核本次进程组退出，见[路由实证](evidence/2026-10-09-capability-hardening/claude-service-delivery/installed-route.json)；不是实际模型回答、付费服务或新安装版 UI 证明。第三片[安装与数据保留](evidence/2026-10-09-capability-hardening/candidate/installed-data-retention.json)及[实际用量/冷恢复](evidence/2026-10-09-capability-hardening/candidate/installed-usage-progress.json)已有回执：Codex 1.13.1、gpt-6-astra / ultra 单次回复及累计用量显示，重启后正文恢复、未重报用量明确未知；继续发送仍需权限确认，本轮没有确认该权限或再次发送。第四片[安装与数据保留](evidence/2026-10-09-capability-hardening/fourth-candidate/installed-data-retention.json)核验完成，独立候选检查9/9通过，启动后110段对话可见；新能力仍逐项验证。OpenCode 1.18.31 在前三次 GUI 初始化超时后，本片重启恢复新草稿时再次自动准备并超时，没有手动点重试或发送。独立环境和真实传输探针均成功；第三次观测确认请求已写入、子进程卡在文件打开，macOS 同期出现桌面文件夹授权等待，结果仍未知且无可见弹窗。见[诊断回执](evidence/2026-10-09-capability-hardening/opencode-initialize-diagnosis.json)，不算恢复成功，不要求扩大到完全磁盘访问。
 
@@ -59,7 +59,7 @@ P21 已补普通文字、Markdown原文及大文件当前片段的准确选段�
 - 首批已推进停止竞态、数据保护、布尔协商和配置确认；接续官方来源映射、历史回放可见性、数据恢复与真实负载剩余条件。29 家公开资料见[官方能力基线](evidence/2026-10-09-capability-hardening/official-capabilities.json)，其中旧源码缺口与本轮修正按增量证据对照，不把资料核查算作真实通过。
 - 第五片整库恢复、PDF/图片预览与用户模板已完成源码整合及独立复核；[七项检查](evidence/2026-10-09-capability-hardening/fifth-checks-final/final-verification.json)通过，前端2,820项、Rust1,134项/5项忽略。首轮失败及修复证据保留；第五片已安装并启动，[数据留存](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-data-retention.json)及[独立核验](evidence/2026-10-09-capability-hardening/fifth-candidate/install-independent.json)通过。[模板实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-templates.json)覆盖创建/编辑/保存、关闭与重启恢复、保留草稿与附件且不自动发送；[预览实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-visual-preview.json)覆盖临时受控副本两页PDF、Type3中文单字、PNG及损坏/密码反馈。桌面路径读取等候系统许可，未解决；该次尚无Office预览，后续XLSX/DOCX进展见前文；整库恢复未破坏日常数据进行验收。第六片已补强P12已加载内容检索和P35导出保真，分项实机结果见上文。运行中引导的[官方接口核查](evidence/2026-10-09-capability-hardening/official-steering-surfaces.json)发现旧接口能力声明不足以保证只作用于当前工作，ARCH-37继续未完成。
 
-- 当前接续 P21：支持的文字、Markdown原文及大文件当前片段的准确选段意见；旧意见保留原版本与位置，不自动发送。PDF区域、Office位置、图片区域和P22真实返工仍未完成。
+- 当前接续 P21 的 XLSX 单元格/合并范围位置意见，同时修复普通写出器空文本单元格与公式空缓存的兼容缺陷；随后继续 DOCX 位置、PDF/图片区域与 P22 真实返工。文字选段的原生键盘与滚动修复已分项复验，不代表完整 P21 完成。
 
 ## 历史与维护记录
 
@@ -67,4 +67,4 @@ P21 已补普通文字、Markdown原文及大文件当前片段的准确选段�
 
 本轮归档摘要、条目完整性与保护检查见[一致性整理回执](maintenance/2026-10-09-plan-consistency.json)；Markdown 分布与旧计划式证据去向见[清点回执](maintenance/2026-10-09-markdown-inventory.json)。资料整理不代表功能缺口已修复。
 
-P21实机后两项修复已完成工程检查：按行输入Enter的WebKit焦点交接修复通过[独立键盘复核](evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/independent-review.json)；NEW-02大文件预览改为局部滚动，完整App双浏览器156项通过，见[原反例和修复](evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json)。[最终整合](evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/final-verification.json)七项具备成功证据，前端3,349项，1,116输入稳定；最终仅CSS变化，打包/全仓格式重跑，未变输入的检查明确复用。正式仍为cd66，修复尚待重新安装实测。
+P21实机后两项修复已完成工程检查：按行输入Enter的WebKit焦点交接修复通过[独立键盘复核](evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/independent-review.json)；NEW-02大文件预览改为局部滚动，完整App双浏览器156项通过，见[原反例和修复](evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json)。[最终整合](evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/final-verification.json)七项具备成功证据，前端3,349项，1,116输入稳定；最终仅CSS变化，打包/全仓格式重跑，未变输入的检查明确复用。已提交安装 `e98e2a46`，[正式复验](evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/installed-keyboard-scroll.json)确认两种行号输入Enter、明确二次确认与长文件局部滚动；4条输入、2组意见、3组待发逐值不变，已正常退出。没有新Agent请求、权限变更或全产品达标结论。

@@ -137,3 +137,5 @@ P09 用户模板已补创建、编辑、保存、删除和加入当前草稿，�
 第五片验证后已正常退出，精确正式进程与浏览器助手均为0。通过安装前备份与退出后私有捕获副本只读比较，原3条输入、1组文件反馈、3组待发共7项逐值不变；未将真实请求产生的新对话或用量变化误报为“全数据未变”。当前正式版仍为ce9659d1，P12/P35开发与定向验证进行中。
 
 文字选段实机后的修复：行号Enter焦点交接与大文件预览局部滚动已完成，分别有[独立键盘复核](text-feedback/webkit-enter/independent-review.json)和[完整App原反例及156项检查](text-feedback/native-scroll-review/receipt.json)。[最终整合](text-selection-keyboard-checks-final/final-verification.json)七项要求具备成功证据，前端3,349项、1,116输入保持；最终仅CSS增量，打包和全仓格式重跑，其余相同输入结果复用。正式应用仍为cd66，不把工程结果记作已安装；下一步替换并重测真实WKWebView。
+
+2026-10-10 P21键盘/滚动修复闭合：`e98e2a46`已安装唯一正式应用，候选独立9项、安装独立10项通过；[三份217,400条数据](text-selection-keyboard-candidate/installed-data-retention.json)完全一致。[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)确认小文件结束行、大文件起始行的Enter保留选区、二次明确确认及NEW-02局部滚动，4条输入/2组意见/3组待发逐值不变，正常退出。原失败保留；没有新Agent请求或权限变更。下一片正在实现XLSX位置意见与真实写出器兼容，其他P21/P22范围仍开放。

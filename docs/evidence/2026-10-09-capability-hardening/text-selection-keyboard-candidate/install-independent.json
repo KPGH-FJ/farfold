@@ -1,0 +1,186 @@
+{
+  "checkedAtUtc": "2026-10-09T23:22:48.243457+00:00",
+  "sourceCommit": "e98e2a46a46d6ef874ec63e5c6863fe046d8ef8d",
+  "result": "passed",
+  "reviewer": "verification",
+  "phase": "installed_verified_not_launched",
+  "checks": {
+    "candidateNineChecksAndHashChain": true,
+    "formalExactFiveFilesEqualCandidateAndArchive": true,
+    "plistArm64StrictAdhocSignature": true,
+    "zipCrcExactFilesAndModes": true,
+    "guardedInstallerScopeReviewed": true,
+    "allThreePrivateManifestCountsHashesAndMetadataRecordsEqual": true,
+    "privateEvidenceHashChain": true,
+    "captureAndBackupIntegrityAndUnchanged": true,
+    "current1116InputsMatchCandidateAndCommit": true,
+    "formalProcessesZeroAndVerificationInputsStable": true
+  },
+  "evidence": {
+    "candidate-independent.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/candidate-independent.json",
+      "sha256": "a0bf922b19b1cfcf45eeefac6dba5371c689b2437856c51322ab0a76c8e03abe"
+    },
+    "candidate.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/candidate.json",
+      "sha256": "ae5c92e4198d9f7360965522c09e034aee98496507fa940622a0e97d60322cd8"
+    },
+    "candidate-inputs.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/candidate-inputs.json",
+      "sha256": "ef4340d482c31467461928f676fd90cf7767d766ee5fd5e303a81f245a730572"
+    },
+    "installed-data-retention.json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/installed-data-retention.json",
+      "sha256": "05b3c1dddaa0d85e5ea18fe031220a07f05927204b92facd040a9537960541aa"
+    }
+  },
+  "privateEvidence": {
+    "normal-exit-observation.json": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/normal-exit-observation.json",
+      "sha256": "44fee569a1296bbf5e80835f9ce00a0adb3e2822234b6d97955fef1c8a6df06c"
+    },
+    "metadata-backup-receipt.json": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/metadata-backup-receipt.json",
+      "sha256": "5357d6e4178675b67aabac8ba0bf6cfcffa11e56e87b1ca5ecee2ce0b3b2941e"
+    },
+    "backup_metadata.py": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    "install_verified_candidate.py": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/install_verified_candidate.py",
+      "sha256": "0904684db9eabbea906fdf031a77dd519b6913203ac15a9bb78ff330af7cd904"
+    },
+    "install-operation.json": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/install-operation.json",
+      "sha256": "a52e17e566a6e7681af3503b0556dff141e9336db051135f186c53eba41673cd"
+    },
+    "install_data_snapshot.py": {
+      "path": "output/2026-10-10-text-selection-keyboard-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    }
+  },
+  "installedBundle": {
+    "path": "/Applications/Farfold.app",
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "b76f05b319d865003ce35bcc1ef13d02c7362ade5cbe51e896b5f8d1389a53eb",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictSignature": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+    "signatureDetails": "Executable=/Applications/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=233075 flags=0x10002(adhoc,runtime) hashes=7277+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=bab138007744f55beaff3b993df2a8fca1addcb8\nCandidateCDHashFull sha256=bab138007744f55beaff3b993df2a8fca1addcb883e7692c8cfb6c156f7cc1fd\nHash choices=sha256\nCMSDigest=bab138007744f55beaff3b993df2a8fca1addcb883e7692c8cfb6c156f7cc1fd\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=23445504\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=bab138007744f55beaff3b993df2a8fca1addcb8\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+    "signatureBoundary": "Internal ad-hoc package, not public signing/notarization."
+  },
+  "archive": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-e98e2a46/Farfold-0.1.7-e98e2a46.zip",
+    "sha256": "839eb7bcd71f081a79ed5243177826d93788514a915c055d74dc3b07f27347a2",
+    "bytes": 12852326,
+    "crcAndExactContents": true,
+    "fileModes": {
+      "Contents/_CodeSignature/CodeResources": "0o644",
+      "Contents/MacOS/farfold": "0o755",
+      "Contents/Resources/icon.icns": "0o644",
+      "Contents/Resources/release-manifest.json": "0o644",
+      "Contents/Info.plist": "0o644"
+    }
+  },
+  "dataRetention": {
+    "entriesPerSnapshot": 217400,
+    "allThreeEqual": true,
+    "manifests": [
+      {
+        "phase": "before",
+        "entries": 217400,
+        "sha256": "84ed5de864e19ca2769e505917976369d88b43045bb327538c194066d9df0c3c",
+        "bytes": 59360435,
+        "mode": "0600",
+        "stableWhileReading": true,
+        "summary": {
+          "path": "output/2026-10-10-text-selection-keyboard-install/install-data-before-summary.json",
+          "sha256": "93743b293719a9c41320baac40782afde9e5dff338b51e05f26347e547b17ad4"
+        }
+      },
+      {
+        "phase": "preinstall",
+        "entries": 217400,
+        "sha256": "84ed5de864e19ca2769e505917976369d88b43045bb327538c194066d9df0c3c",
+        "bytes": 59360435,
+        "mode": "0600",
+        "stableWhileReading": true,
+        "summary": {
+          "path": "output/2026-10-10-text-selection-keyboard-install/install-data-preinstall-summary.json",
+          "sha256": "93743b293719a9c41320baac40782afde9e5dff338b51e05f26347e547b17ad4"
+        }
+      },
+      {
+        "phase": "after",
+        "entries": 217400,
+        "sha256": "84ed5de864e19ca2769e505917976369d88b43045bb327538c194066d9df0c3c",
+        "bytes": 59360435,
+        "mode": "0600",
+        "stableWhileReading": true,
+        "summary": {
+          "path": "output/2026-10-10-text-selection-keyboard-install/install-data-after-summary.json",
+          "sha256": "93743b293719a9c41320baac40782afde9e5dff338b51e05f26347e547b17ad4"
+        }
+      }
+    ],
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "boundary": "Every retained raw record counted/hashed; no user text/private entry paths printed. No live data recapture. Three-file SQLite source hashes were obtained from retained manifests, not by opening the original database."
+  },
+  "metadataRecovery": {
+    "methodReviewed": "Capture original main/WAL/SHM; SQLite backup exclusively from second private working copy",
+    "capturedThreeFilesMatchAllThreeManifests": true,
+    "backupSha256": "9c2644f3c05a64f6b823be913a1f0fa75473d99e72bc6c9bb9758d40d19ae7c1",
+    "backupWalBytes": 0,
+    "privateReadOnlyImmutableIntegrity": "ok",
+    "backupAndSideFilesUnchanged": true,
+    "capturedFilesUnchanged": true,
+    "sourceProtectionEvidence": "Backup helper verifies original main/WAL/SHM identity/content before and after copying and after backup; SQLite opens only its second private working copy. This reviewer only opened standalone retained backup mode=ro&immutable=1."
+  },
+  "normalExit": {
+    "rootObservation": "docs/evidence/2026-10-09-capability-hardening/text-feedback-candidate/installed-text-feedback-initial.json",
+    "sha256": "914092e234cd979248e5fdcb30c388dfedbbe967b97bc58e28bcfc16125b93b9",
+    "forced": false,
+    "observedByThisReviewer": false,
+    "boundary": "Root observed normal final quit after partial native P21 tests; no new user saved-work confirmation is claimed."
+  },
+  "operationBoundary": "Private installer dataRetentionComparisonPending remains its historical state; later public aggregation and this independent full manifest calculation establish completion. No receipt rewritten.",
+  "formalProcessCount": 0,
+  "sourceInputCount": 1116,
+  "installed": true,
+  "launchedByReviewer": false,
+  "realAgentInvoked": false,
+  "sourceModified": false,
+  "duplicateBundleDeleted": false,
+  "remaining": [
+    "Root may delete only the verified duplicate build bundle; formal and ZIP remain.",
+    "Installed keyboard selection and NEW-02 focus/scroll retest remain root responsibility.",
+    "Other capability, real-Agent and platform acceptance remains separate."
+  ],
+  "claim": "Independent physical installation and retained data verification only; no native interaction/pixel or real-Agent acceptance."
+}
