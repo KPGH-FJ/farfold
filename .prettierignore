@@ -211,3 +211,7 @@ docs/evidence/2026-10-09-prototype07-landing/controlled-render/*.html
 docs/evidence/2026-10-09-prototype07-landing/controlled-render/production.css
 # Completed full UI audit is historical evidence, not maintained product source.
 docs/evidence/2026-10-08-ui-coverage-audit/
+
+# Raw candidate receipts preserve their recorded bytes.
+docs/evidence/2026-10-09-prototype07-landing/candidate.json
+docs/evidence/2026-10-09-prototype07-landing/candidate-inputs.json

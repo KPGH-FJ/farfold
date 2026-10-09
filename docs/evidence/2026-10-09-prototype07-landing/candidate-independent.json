@@ -1,0 +1,148 @@
+{
+  "reviewedAt": "2026-10-09T04:30:39.333640+00:00",
+  "sourceCommit": "a085267220a3013e13257760d02a1ae785e85d39",
+  "scope": "Independent read-only source and candidate artifact verification; no build, install, app launch, quit or user-data access",
+  "checks": {
+    "headMatchesRequestedCommit": {
+      "passed": true
+    },
+    "receiptIdentity": {
+      "passed": true
+    },
+    "commitTreeRead": {
+      "passed": true,
+      "details": {
+        "gitLsTreeCalls": 1
+      }
+    },
+    "sourceInventory": {
+      "passed": true,
+      "details": {
+        "receiptCount": 806,
+        "commitCount": 806,
+        "diskCount": 806,
+        "receiptVsCommit": [],
+        "diskVsCommit": []
+      }
+    },
+    "allSourceBytesMatchInputReceipt": {
+      "passed": true,
+      "details": {
+        "mismatches": [],
+        "invalidTypes": []
+      }
+    },
+    "allSourceBytesMatchCommitBlobs": {
+      "passed": true,
+      "details": {
+        "mismatches": [],
+        "method": "Git blob SHA-1 computed from current file bytes and compared with one ls-tree result"
+      }
+    },
+    "infoPlistIncluded": {
+      "passed": true
+    },
+    "candidateLocations": {
+      "passed": true
+    },
+    "candidateFilesMatchReceipt": {
+      "passed": true,
+      "details": {
+        "count": 5,
+        "files": {
+          "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+          "Contents/MacOS/farfold": "8768d20b59bf3be9e6b2e7a722dfde1715a011006f51208250892ea40b1baaca",
+          "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+          "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+          "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+        },
+        "invalidSymlinks": []
+      }
+    },
+    "candidateInfoPlist": {
+      "passed": true,
+      "details": {
+        "CFBundleIdentifier": "ai.farfold.desktop",
+        "CFBundleShortVersionString": "0.1.7",
+        "CFBundleExecutable": "farfold",
+        "CFBundleDevelopmentRegion": "zh_CN",
+        "CFBundleLocalizations": ["zh-Hans"]
+      }
+    },
+    "candidateArchitecture": {
+      "passed": true,
+      "details": {
+        "exitCode": 0,
+        "output": "arm64"
+      }
+    },
+    "candidateStrictSignatureVerification": {
+      "passed": true,
+      "details": {
+        "exitCode": 0,
+        "output": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement"
+      }
+    },
+    "candidateAdhocSignature": {
+      "passed": true,
+      "details": {
+        "exitCode": 0,
+        "output": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=207603 flags=0x10002(adhoc,runtime) hashes=6481+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=4b051baf911fec43d43056f16852485001f20d33\nCandidateCDHashFull sha256=4b051baf911fec43d43056f16852485001f20d337f5761d15aa75aa40eb60470\nHash choices=sha256\nCMSDigest=4b051baf911fec43d43056f16852485001f20d337f5761d15aa75aa40eb60470\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=20447232\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=4b051baf911fec43d43056f16852485001f20d33\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+        "publicDistributionSigned": false
+      }
+    },
+    "archiveIdentity": {
+      "passed": true,
+      "details": {
+        "sha256": "a4277bc90e6ec1c8020c7568069940dd4646276b529bffa8739a6ae695431652",
+        "bytes": 10298914
+      }
+    },
+    "archiveCrc": {
+      "passed": true,
+      "details": {
+        "firstCorruptMember": null
+      }
+    },
+    "archiveFilesMatchCandidate": {
+      "passed": true,
+      "details": {
+        "fileCount": 5,
+        "unexpectedMembers": [],
+        "duplicateMembers": 0
+      }
+    },
+    "formalAppBytesMatchPreBuildReceipt": {
+      "passed": true,
+      "details": {
+        "fileCount": 5,
+        "files": {
+          "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+          "Contents/MacOS/farfold": "f921489355dc8af3d420978268c02b6a5521d89a681b5bb1327a6bdbf30142ca",
+          "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+          "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+          "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+        },
+        "invalidSymlinks": []
+      }
+    },
+    "headRemainedUnchanged": {
+      "passed": true
+    }
+  },
+  "failures": [],
+  "inputReceipts": {
+    "candidateJsonSha256": "786e5a27097006c1056498420e5c5b37671e18b20b7f256337c9c2bb72a6be88",
+    "candidateInputsJsonSha256": "9f83da578f204f507d26cc5ea973c4961be9fe562b40c266c087c16b62838f18"
+  },
+  "result": "passed",
+  "notPerformed": [
+    "Candidate build",
+    "Formal app installation or replacement",
+    "App launch or termination",
+    "Real Agent invocation",
+    "User data access",
+    "Notarization or public distribution acceptance"
+  ],
+  "completedAt": "2026-10-09T04:30:39.678418+00:00"
+}
