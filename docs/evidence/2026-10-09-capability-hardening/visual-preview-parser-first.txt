@@ -1,0 +1,120 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stderr | src/runtime/pdf_preview_parser.test.ts
+Warning: Please use the `legacy` build in Node.js environments.
+
+ ❯ src/runtime/pdf_preview_parser.test.ts (4 tests | 4 failed) 20020ms
+   × parses a genuine vector page without reading a document URL 5009ms
+   × rejects a too-large image instead of silently reporting a page with that image missing 5004ms
+   × identifies a bad font warning even when the strict parser completes its operator list 5003ms
+   × does not execute JavaScript OpenAction or fetch a link while preparing page pixels 5003ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_preview_parser.test.ts > parses a genuine vector page without reading a document URL
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/runtime/pdf_preview_parser.test.ts:33:1
+     31| afterEach(() => vi.restoreAllMocks());
+     32|
+     33| it("parses a genuine vector page without reading a document URL", asyn…
+       | ^
+     34|   const fetch = vi.spyOn(globalThis, "fetch");
+     35|   const result = await operators(fixture("0 0 1 rg 10 10 100 100 re f"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/pdf_preview_parser.test.ts > rejects a too-large image instead of silently reporting a page with that image missing
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/runtime/pdf_preview_parser.test.ts:40:1
+     38| });
+     39|
+     40| it("rejects a too-large image instead of silently reporting a page wit…
+       | ^
+     41|   const create = () => fixture("q 200 0 0 200 0 0 cm /Im1 Do Q", "/XOb…
+     42|     "<< /Type /XObject /Subtype /Image /Width 8193 /Height 8193 /Color…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/pdf_preview_parser.test.ts > identifies a bad font warning even when the strict parser completes its operator list
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/runtime/pdf_preview_parser.test.ts:51:1
+     49| });
+     50|
+     51| it("identifies a bad font warning even when the strict parser complete…
+       | ^
+     52|   const warning = vi.spyOn(console, "warn").mockImplementation(() => {…
+     53|   await operators(fixture("BT /F1 12 Tf 10 10 Td (hello) Tj ET", "/Fon…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/pdf_preview_parser.test.ts > does not execute JavaScript OpenAction or fetch a link while preparing page pixels
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/runtime/pdf_preview_parser.test.ts:57:1
+     55| });
+     56|
+     57| it("does not execute JavaScript OpenAction or fetch a link while prepa…
+       | ^
+     58|   const fetch = vi.spyOn(globalThis, "fetch");
+     59|   const marker = vi.fn(); vi.stubGlobal("farfoldPdfFixtureExecuted", m…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 4 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Promise.try is not a function
+ ❯ MessageHandler.#onMessage node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8844:18
+ ❯ node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8723:18
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+This error originated in "src/runtime/pdf_preview_parser.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "parses a genuine vector page without reading a document URL". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Promise.try is not a function
+ ❯ MessageHandler.#onMessage node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8844:18
+ ❯ node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8723:18
+
+This error originated in "src/runtime/pdf_preview_parser.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "rejects a too-large image instead of silently reporting a page with that image missing". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Promise.try is not a function
+ ❯ MessageHandler.#onMessage node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8844:18
+ ❯ node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8723:18
+
+This error originated in "src/runtime/pdf_preview_parser.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "identifies a bad font warning even when the strict parser completes its operator list". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Promise.try is not a function
+ ❯ MessageHandler.#onMessage node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8844:18
+ ❯ node_modules/.pnpm/pdfjs-dist@6.3.289/node_modules/pdfjs-dist/build/pdf.mjs:8723:18
+
+This error originated in "src/runtime/pdf_preview_parser.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not execute JavaScript OpenAction or fetch a link while preparing page pixels". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+     Errors  4 errors
+   Start at  19:42:40
+   Duration  20.12s (transform 25ms, setup 0ms, import 40ms, tests 20.02s, environment 0ms)
+

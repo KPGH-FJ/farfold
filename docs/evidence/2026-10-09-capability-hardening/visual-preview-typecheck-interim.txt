@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/pdf_preview.test.ts(9,10): error TS2305: Module '"./pdf_preview"' has no exported member 'pdfCanvasSize'.
+ ELIFECYCLE  Command failed with exit code 1.

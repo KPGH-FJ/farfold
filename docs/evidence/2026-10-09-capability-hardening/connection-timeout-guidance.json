@@ -1,0 +1,15 @@
+{
+  "scope": "NEW-01 shared timeout guidance only",
+  "change": "Timeout states that the cause is unknown and suggests checking pending login or folder-access prompts and launch settings before retrying",
+  "tested": {
+    "command": "corepack pnpm test src/runtime/ui_error.test.ts src/runtime/agents.startup-errors.test.ts",
+    "files": 2,
+    "passed": 31
+  },
+  "limitations": [
+    "Does not determine or change OS permissions",
+    "No Full Disk Access recommendation",
+    "Does not fix OpenCode initialization",
+    "Not yet installed"
+  ]
+}

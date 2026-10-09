@@ -1,0 +1,156 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ✓ src/runtime/prompt_templates.test.ts > reads the complete strict document and preserves literal template text 2ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 0 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 1 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 2 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 3 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 4 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 5 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 6 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 7 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 8 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 9 0ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 10 3ms
+ ✓ src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 11 0ms
+ ✓ src/runtime/prompt_templates.test.ts > allows an unfinished empty editor but validates the optional original 0ms
+ ✓ src/runtime/prompt_templates.test.ts > loads without writing and saves through a confirmed readback 70ms
+ ✓ src/runtime/prompt_templates.test.ts > never overwrites an unread future document 2ms
+ ✓ src/runtime/prompt_templates.test.ts > serializes concurrent saves and rejects duplicate or stale expectations 2ms
+ ✓ src/runtime/prompt_templates.test.ts > reconciles a failed write when its exact intended document can be read 1ms
+ ✓ src/runtime/prompt_templates.test.ts > keeps unknown writes blocked even when reload sees the previous value 1ms
+ ✓ src/runtime/prompt_templates.test.ts > does not trust a success acknowledgement without matching readback 1ms
+ ✓ src/runtime/prompt_templates.test.ts > retains an edit changed during a save and leaves clearing to the exact editor owner 2ms
+ ✓ src/runtime/prompt_templates.test.ts > passes the complete baseline to CAS and rejects a competing update without retrying 1ms
+ ✓ src/runtime/prompt_templates.test.ts > normalizes expected fields regardless of object key ordering 1ms
+ ✓ src/runtime/prompt_templates.test.ts > unlocks a confirmed rolled-back rejection after readback so a repaired store can retry 3ms
+ ✓ src/runtime/prompt_templates.test.ts > explicit read-only recovery preserves edits and a late old CAS before the next CAS cannot overwrite a later confirmed save 3ms
+ ✓ src/runtime/prompt_templates.test.ts > explicit read-only recovery preserves edits and a late old CAS after the next CAS cannot overwrite a later confirmed save 2ms
+ ✓ src/runtime/prompt_templates.test.ts > retains unknown input when readback fails and preserves immutable stable snapshots 2ms
+ ✓ src/runtime/prompt_templates.test.ts > does not confirm deletion when the entire setting disappears instead of matching the intended document 2ms
+ ✓ src/runtime/prompt_templates.test.ts > cannot release unknown protection by reading an unsupported document 1ms
+ ✓ src/runtime/prompt_templates.test.ts > keeps classified read failures accurate and never dispatches a write 1ms
+ ✓ src/runtime/template_edit_drafts.test.ts > restores a template editor without dispatching or populating conversation input 33ms
+ ✓ src/runtime/template_edit_drafts.test.ts > keeps legacy documents compatible and serializes new unsent edits through draft persistence 2ms
+ ✓ src/runtime/template_edit_drafts.test.ts > rejects the entire snapshot if the optional template editor is malformed 3ms
+ ✓ src/runtime/template_edit_drafts.test.ts > retains edits after a failed draft write and never mutates them via caller references 2ms
+ ✓ src/runtime/template_edit_drafts.test.ts > cannot replace unread edits or edit during a recovery interaction lock 1ms
+ ✓ src/components/Composer.attachments.test.tsx > requires explicit attachment review in a restored new draft and does not send after confirming 15ms
+ ✓ src/components/Composer.attachments.test.tsx > blocks the restored queue's Continue action and scopes queue-edit recovery to its independent draft 5ms
+ ✓ src/components/Composer.file-drop.test.tsx > blocks native file import immediately while the first send save is still pending 63ms
+ ✓ src/components/Composer.ime.test.tsx > leaves IME confirmation {"isComposing":true,"keyCode":13} to the input method 16ms
+ ✓ src/components/Composer.ime.test.tsx > leaves IME confirmation {"isComposing":false,"keyCode":229} to the input method 1ms
+ ✓ src/components/Composer.ime.test.tsx > does not submit a modified IME Enter {"metaKey":true} 1ms
+ ✓ src/components/Composer.ime.test.tsx > does not submit a modified IME Enter {"ctrlKey":true} 1ms
+ ✓ src/components/Composer.ime.test.tsx > does not submit a modified IME Enter {"altKey":true} 1ms
+ ✓ src/components/Composer.ime.test.tsx > sends committed text on the next ordinary Enter without a timing gate 52ms
+ ✓ src/components/Composer.ime.test.tsx > keeps Shift Enter as a newline without preparing or sending 1ms
+ ✓ src/components/Composer.ime.test.tsx > does not route an IME confirmation to Agent preparation 2ms
+ ✓ src/components/Composer.ime.test.tsx > does not save a queue edit on IME confirmation 2ms
+ ✓ src/components/Composer.ime.test.tsx > leaves the command picker unchanged for IME confirmation, then selects on ordinary Enter without sending 3ms
+ ✓ src/components/Composer.shortcuts.test.tsx > exposes project-file lookup through the add menu and keeps existing input 11ms
+ ✓ src/components/Composer.shortcuts.test.tsx > inserts only declared Agent commands in a draft conversation and preserves input on cancellation 5ms
+ ✓ src/components/Composer.shortcuts.test.tsx > inserts only declared Agent commands in a established conversation and preserves input on cancellation 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > appends a saved template without replacing the current draft, attachments or queue 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > does not insert a saved template after it becomes deleted 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > does not insert a saved template after it becomes unknown 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > opens template management separately while preserving current input 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > finds a saved template in slash suggestions and refuses stale replacement of edited input 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > appends 先给出计划 to the current editable draft without sending or altering attachments and queue 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > appends 整理为要点 to the current editable draft without sending or altering attachments and queue 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > appends 换一种表达 to the current editable draft without sending or altering attachments and queue 3ms
+ ✓ src/components/Composer.shortcuts.test.tsx > keeps native Agent slash commands available after canceling the local menu 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > dismisses slash suggestions with Escape without changing the draft and reopens them after editing 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > keeps Tab navigation and normal Enter dispatch when a slash token has no visible match 54ms
+ ✓ src/components/Composer.shortcuts.test.tsx > shows the declared command input hint only while its argument is empty, without inserting or sending it 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > closes on navigation and rejects an old menu action after changing conversations 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > contains shortcut keyboard events so they cannot reach conversation approval shortcuts 2ms
+ ✓ src/components/Composer.shortcuts.test.tsx > keeps the unified entry on opened drafts but off the pre-open and queue-edit composer 1ms
+ ✓ src/components/Composer.shortcuts.test.tsx > searches declared command descriptions and keeps the complete long command plus existing draft 2ms
+ ✓ src/components/Composer.work.test.tsx > restores an explicitly paused location without changing a single Agent or sending its queue 11ms
+ ✓ src/components/Composer.work.test.tsx > offers an explicit enable action for the selected agent and folder before a conversation can be opened 2ms
+ ✓ src/components/Composer.work.test.tsx > provides a retry when the work policy could not be read 1ms
+ ✓ src/components/Composer.work.test.tsx > offers recovery for an unknown first-message target without ordinary edit continuation 1ms
+ ✓ src/components/Composer.visual-render.test.tsx > exports the real sidebar and Composer without any execution ('01-start-light') 14ms
+ ✓ src/components/Composer.visual-render.test.tsx > exports the real sidebar and Composer without any execution ('02-start-dark') 4ms
+ ✓ src/components/Composer.visual-render.test.tsx > exports the real sidebar and Composer without any execution ('03-thread-light') 4ms
+ ✓ src/components/Composer.visual-render.test.tsx > exports the real sidebar and Composer without any execution ('04-thread-dark') 2ms
+ ✓ src/components/Composer.visual-render.test.tsx > exports the real sidebar and Composer without any execution ('05-running-light') 2ms
+ ✓ src/components/Composer.errors.test.tsx > omits only the failed-open reason already presented by the conversation 7ms
+ ✓ src/components/Composer.errors.test.tsx > does not attach a hidden open error's settings action to the permission notice (parent presents it: false) 1ms
+ ✓ src/components/Composer.errors.test.tsx > does not attach a hidden open error's settings action to the permission notice (parent presents it: true) 1ms
+ ✓ src/components/Composer.errors.test.tsx > retains the independent composer's failed-open action and the Start page's explicit setup action 2ms
+ ✓ src/components/Composer.errors.test.tsx > keeps first-send failure 此消息发送失败，请重试 without routing to unrelated setup, until an explicit context switch 52ms
+ ✓ src/components/Composer.project-files.test.tsx > uses the existing add-file menu to import an image without changing text or contacting an Agent 60ms
+ ✓ src/components/Composer.work.test.tsx > does not save an old queue edit into the target chosen after it was cancelled during persistence 110ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > edits a retained draft and saves only its name and text, then clears that exact edit 4ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > keeps a rejected edit and does not silently close or repeat the save 1ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > late save success does not clear a newer edit and duplicate submission is suppressed 0ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > closing preserves editor content and starting another item requires clearing the edit 1ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > deletion needs a second explicit action and passes the exact selected saved value 1ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > unknown storage disables editing and exposes a read-only recovery action 0ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > explicit unknown recovery only reads storage and keeps the edit 0ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > preserves an edit on conflict until the user explicitly accepts the displayed current baseline 1ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > offers a new identity for a deleted target without losing text 1ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > finishes an already saved edit without submitting it again 0ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > a stale finish action cannot clear an edit after the stored value changes 0ms
+ ✓ src/components/PromptTemplatesDialog.test.tsx > keeps controls locked while unsent work is still loading 0ms
+ ✓ src/components/Composer.errors.test.tsx > keeps first-send failure 附件已无法读取，请重新选择或移除后再发送。 without routing to unrelated setup, until an explicit context switch 52ms
+ ✓ src/components/Composer.errors.test.tsx > rechecks a chosen file before sending and keeps its draft after a failed check (embed: false) 1ms
+ ✓ src/components/Composer.errors.test.tsx > rechecks a chosen file before sending and keeps its draft after a failed check (embed: true) 0ms
+ ✓ src/components/Composer.errors.test.tsx > does not submit an attachment read after its exact draft has changed 53ms
+ ✓ src/components/Composer.errors.test.tsx > allows stop retry after confirmation expires even while the first cancel call is unresolved 2ms
+ ✓ src/components/Composer.errors.test.tsx > keeps the draft in the input and does not enqueue it while stopping 0ms
+ ✓ src/components/Composer.errors.test.tsx > keeps the draft in the input and does not enqueue it while stopUnconfirmed 0ms
+ ✓ src/components/Composer.errors.test.tsx > keeps the draft in the input and does not enqueue it while connectionOutcomeUnknown 0ms
+ ✓ src/components/Composer.errors.test.tsx > keeps stop ownership with each conversation when switching before a cancel reply 1ms
+ ✓ src/components/useComposerFileDrop.test.tsx > converts Retina physical coordinates and imports only the hit input 3ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through hidden input 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through covered input 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through inert input 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through pending input 1ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through exit input 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > does not add files through preparing input 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > refuses an inactive composer without registering an import 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > unlistens a subscription that resolves after unmount and ignores late events 1ms
+ ✓ src/components/useComposerFileDrop.test.tsx > detaches a resolved subscription on unmount 0ms
+ ✓ src/components/useComposerFileDrop.test.tsx > disables partial native callbacks after registration rejects 0ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 0 54ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 1 54ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 2 51ms
+ ✓ src/components/Composer.project-files.test.tsx > keeps cancellation and a late chooser response from replacing later draft input 1ms
+ ✓ src/components/Composer.project-files.test.tsx > looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending 2ms
+ ✓ src/components/Composer.project-files.test.tsx > dismisses file suggestions with Escape without deleting typed text or accepting a stale selection 1ms
+ ✓ src/components/Composer.project-files.test.tsx > prefers the established conversation folder to a different selected work context 1ms
+ ✓ src/components/Composer.project-files.test.tsx > does not query or attach a project file when no folder is available 2ms
+ ✓ src/components/Composer.project-files.test.tsx > hides an old folder's list immediately and rejects its captured selection while the replacement query is pending 2ms
+ ✓ src/components/Composer.project-files.test.tsx > ignores a late old-folder response after the new folder's files are ready 3ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to other draft 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to inactive 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to unmounted 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects an old selection when the draft becomes read-only or its file query changes 1ms
+ ✓ src/components/Composer.project-files.test.tsx > completes an explicitly picked file read only in its original draft after another draft is shown 1ms
+ ✓ src/components/Composer.project-files.test.tsx > does not place a late file body into an attachment whose path has been replaced 1ms
+ ✓ src/components/Composer.project-files.test.tsx > encodes a picked project attachment in /selected and retains existing unsent work 1ms
+ ✓ src/components/Composer.project-files.test.tsx > encodes a picked project attachment in C:\work folder and retains existing unsent work 1ms
+ ✓ src/components/Composer.project-files.test.tsx > asks for a working folder before an @ search and resumes when one arrives 1ms
+ ✓ src/components/Composer.project-files.test.tsx > runs a requested send once and clears the draft only after it is sent 53ms
+ ✓ src/components/Composer.project-files.test.tsx > drops a send request that arrives while sending is unavailable 1ms
+ ✓ src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty stopped pause can be released 62ms
+ ✓ src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty work_disabled pause can be released 54ms
+ ✓ src/components/Composer.stop.test.tsx > labels explicit new input as send after an empty no_result pause can be released 55ms
+ ✓ src/components/Composer.stop.test.tsx > preserves the pause and queue label while queued still blocks new input 3ms
+ ✓ src/components/Composer.stop.test.tsx > preserves the pause and queue label while running still blocks new input 2ms
+ ✓ src/components/Composer.stop.test.tsx > preserves the pause and queue label while permission still blocks new input 2ms
+ ✓ src/components/Composer.stop.test.tsx > offers mouse queue submission alongside stop without starting another request 57ms
+ ✓ src/components/Composer.stop.test.tsx > keeps the waiting confirmation beside the input with a disabled stop control 5ms
+ ✓ src/components/Composer.stop.test.tsx > moves unknown stop recovery out of the scrollable transcript and into the composer only once 14ms
+ ✓ src/components/Composer.stop.test.tsx > keeps stop available while work or permission settings pause sending and preserves the queue on confirmation 6ms
+ ✓ src/components/Composer.stop.test.tsx > shows a failed cancel as unknown and offers an explicit retry without claiming nondelivery 2ms
+
+ Test Files  13 passed (13)
+      Tests  147 passed (147)
+   Start at  20:09:46
+   Duration  3.92s (transform 2.85s, setup 0ms, import 28.99s, tests 1.31s, environment 1ms)
+

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/pdf_render_core.test.ts (7 tests | 1 failed) 168ms
+   × refuses a malformed embedded font and an image beyond the parser's pixel limit 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_render_core.test.ts > refuses a malformed embedded font and an image beyond the parser's pixel limit
+AssertionError: expected 'rendered' to be 'failed' // Object.is equality
+
+Expected: "failed"
+Received: "rendered"
+
+ ❯ src/runtime/pdf_render_core.test.ts:79:117
+     77|     "<< /Type /XObject /Subtype /Image /Width 8193 /Height 8193 /Color…
+     78|   ]);
+     79|   expect(await renderPdfPixels(largeImage, 1, 200, undefined, () => wa…
+       |                                                                                                                     ^
+     80| });
+     81|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 10 passed (11)
+   Start at  19:53:49
+   Duration  473ms (transform 141ms, setup 0ms, import 428ms, tests 218ms, environment 0ms)
+

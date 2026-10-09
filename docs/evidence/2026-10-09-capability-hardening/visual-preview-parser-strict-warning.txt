@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/pdf_preview_parser.test.ts (4 tests | 1 failed) 48ms
+   × rejects a too-large image instead of silently reporting a page with that image missing 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_preview_parser.test.ts > rejects a too-large image instead of silently reporting a page with that image missing
+AssertionError: expected "warn" to be called at least once
+ ❯ src/runtime/pdf_preview_parser.test.ts:50:19
+     48|   warning.mockClear();
+     49|   await operators(create());
+     50|   expect(warning).toHaveBeenCalled();
+       |                   ^
+     51| });
+     52|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  19:47:12
+   Duration  537ms (transform 30ms, setup 0ms, import 424ms, tests 48ms, environment 0ms)
+

@@ -1,0 +1,403 @@
+{
+  "id": "P16-passive-image-pdf-preview",
+  "createdAt": "2026-10-09T12:07:18.976693+00:00",
+  "status": "implemented-and-targeted-tested; installed-WebKit acceptance remains open",
+  "scope": {
+    "implemented": [
+      "VerifiedFile-bound in-memory bytes for static PNG/JPEG/GIF/WebP and PDF",
+      "Two-layer dedicated Worker PDF parsing/drawing with a pixel-only main UI boundary",
+      "One page at a time, explicit cancellation, timeout, stale-reply rejection and reload",
+      "Fixed local CMaps/fonts/three Wasm decoders; no PDF action, annotation DOM, embedded attachment, external URL or scripting-manager execution"
+    ],
+    "notCompleted": [
+      "Office spreadsheet/slides/document visual fidelity",
+      "P17 arbitrary large-file handling, P20 auto-refresh, P21 complete version-feedback flow",
+      "Animated image previews and additional codecs",
+      "Ordinary embedded CJK font-family coverage beyond one synthetic Type3 glyph",
+      "Unsupported PDF SVG filters and unembedded fonts whose glyph resources are unavailable"
+    ]
+  },
+  "proofLevels": {
+    "source": true,
+    "deterministicFrontendAndRustTests": true,
+    "actualPdfParserAndNativeCanvasPixels": true,
+    "frontendProductionBuild": true,
+    "browserWorkerRuntime": false,
+    "installedWebKit": false,
+    "windows": false,
+    "realAgentOrAccount": false
+  },
+  "implementation": {
+    "versionBinding": "read_visual calls the existing capture_expected with the full VerifiedFile; UI compares the full receipt and ties operations to file selection and active pane. No file URL grant or Agent access expansion.",
+    "image": "Existing structural byte checks and browser image decode are reused. Decode cancellation retires UI ownership; a pending browser decoder may finish later and is ignored.",
+    "pdf": "The official 6.3.289 legacy display library draws in the dedicated rendering Worker with OffscreenCanvas and a nested official parser Worker. No page DOM is created. Only fixed error codes, page count and a transferred ImageBitmap cross to the app.",
+    "warningPolicy": "Both Worker contexts replace console.warn/error before library initialization and report only a fixed failure, without document text. stopAtErrors=false deliberately exposes recoverable parser errors as fatal warnings to Farfold. In 6.3.289 the stopAtErrors=true operator-stream path can settle rendering before reporting the rejection; the actual oversized-image fixture demonstrates this. Farfold never displays the recovered page.",
+    "fontCompleteness": "After drawing, the exact locked PDF.js operator list/commonObjs font objects are checked for missingFile/isInvalidPDFjsFont, including Type3 nested lists. This closes the unembedded Chinese fixture that otherwise returned pixels with no warning. It is a version-specific library contract, not a proof of every possible PDF glyph.",
+    "noEvalClaim": "The selected API has no isEvalSupported option. Farfold does not load a scripting manager or QuickJS asset. The official legacy build includes core-js compatibility code, including fixed global-object detection fallbacks; it is not correct to claim the entire bundle contains no Function expression. No document JavaScript is executed by the selected render calls. Packaged CSP omits unsafe-eval; actual WebKit CSP execution remains untested."
+  },
+  "limits": {
+    "pdfInputBytes": 33554432,
+    "imageInputBytes": 8388608,
+    "documentPages": 1000,
+    "pageOrImagePixels": 16777216,
+    "canvasEdge": 8192,
+    "trackedCanvasPixelsPerRenderingWorker": 33554432,
+    "admittedConcurrentPdfRenders": 2,
+    "renderWaitMs": 15000,
+    "meaning": "Input/canvas/request budgets are not a hard cap on decoder/parser heap or OS memory. Worker termination retires the owned tree without awaiting a library reply; no instantaneous OS memory reclamation claim. File-read waiting uses the existing two-slot/15-second guard; it does not interrupt a blocking OS read."
+  },
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/VisualFilePreview.test.tsx src/components/OpenedFileView.test.tsx src/runtime/pdf_render_core.test.ts src/runtime/pdf_preview.test.ts src/runtime/pdf_preview_assets.test.ts src/runtime/pdf_preview_parser.test.ts src/runtime/visual_preview.test.ts src/runtime/image_bytes.test.ts src/runtime/draft_images.test.ts",
+      "result": "99 passed across 9 files",
+      "log": "visual-preview-final-targeted.txt"
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery",
+      "result": "21 passed, 0 failed; 1109 filtered out at execution time",
+      "log": "visual-preview-file-delivery-rust.txt"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "result": "passed",
+      "log": "visual-preview-typecheck-final.txt"
+    },
+    {
+      "command": "corepack pnpm exec vite build",
+      "result": "passed; existing large-chunk warning retained",
+      "log": "visual-preview-vite-final.txt"
+    }
+  ],
+  "counterexamples": [
+    {
+      "topic": "first contract red",
+      "evidence": "visual-preview-contract-red.txt",
+      "meaning": "New feature module missing, not an existing runtime defect."
+    },
+    {
+      "topic": "modern package in Node 22",
+      "evidence": "visual-preview-parser-first.txt",
+      "meaning": "Promise.try missing caused four timeouts/unhandled errors in this test environment; switched to the official legacy build. Not a WebKit failure claim."
+    },
+    {
+      "topic": "late pixels after timeout",
+      "evidence": "visual-preview-pixel-timeout-red.txt",
+      "meaning": "Deterministic new-controller defect reproduced, then settled-state gate closes/ignores late bitmaps."
+    },
+    {
+      "topic": "silent missing CJK font",
+      "evidence": "visual-preview-missing-font-red.txt",
+      "meaning": "Real parser/native canvas initially accepted missing font. Exact font-object validation rejects it."
+    },
+    {
+      "topic": "oversized PDF image",
+      "evidence": "visual-preview-pixels-errors.txt",
+      "meaning": "Real strict parser/native canvas initially returned success with image absent. Fatal-warning policy closes that fixture."
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "src/runtime/fixtures/pdf-preview/damaged.pdf",
+      "sha256": "27791e883da34365bf2b5f07a8b48636861a75f5d6a1fd41f52775a1df1f49e3",
+      "bytes": 24
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-preview/embedded-chinese.pdf",
+      "sha256": "d3e7db77631b7ee358ad16d6f4554b42a9c69448dc268b788c4208f632c08cf8",
+      "bytes": 1321
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+      "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a",
+      "bytes": 22643
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-preview/password.pdf",
+      "sha256": "4185a72bd0969f39ced917e2fb20a28329824a9d4e385df6c49c4a1aa370efbc",
+      "bytes": 22890
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-preview/unembedded-chinese.pdf",
+      "sha256": "2e6a9e617cc96e57ba4577babd20e020d5cec3cfab5543c2ff1a45b9797e1bc7",
+      "bytes": 2341
+    }
+  ],
+  "visualInspection": {
+    "tool": "bundled Poppler pdftoppm, scale-to 600",
+    "observed": [
+      "mixed page 1: embedded Latin text, blue rectangle, orange bitmap",
+      "mixed page 2: local standard Latin font and green circle",
+      "synthetic embedded Type3 U+4E2D: expected original vector strokes"
+    ],
+    "limitations": "Synthetic test document visual inspection, not app screenshots or ordinary CJK font coverage. Poppler emitted a fontconfig setup warning but generated the inspected images. The native Canvas test verifies nonblank pixels, not full pixel equivalence to Poppler.",
+    "images": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-renders/chinese-1.png",
+        "sha256": "0aa339c86678bc5692d50b085d9bdf9fad165f0406a634acc71f0baf06ec0524",
+        "bytes": 1919
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-renders/mixed-1.png",
+        "sha256": "266425f22f934eb472be8ab5df73272ea64be68dd4621a94e1b427be242430ab",
+        "bytes": 6665
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-renders/mixed-2.png",
+        "sha256": "f5a5abf51802a3528ed6616644638f14f8c12311e3410ea3fded4e6ad14699d5",
+        "bytes": 7779
+      }
+    ]
+  },
+  "dependencies": {
+    "direct": "pdfjs-dist 6.3.289 exact",
+    "optionalNodeCanvas": "1.0.10 plus eleven platform packages, used by Node-only pixel tests; no native binary in frontend output",
+    "releaseAge": "13 added lock nodes all at least seven days before 2026-10-09T00:00:00Z; registry dates preserved",
+    "lockChanges": "13 added package/snapshot nodes; zero existing nodes removed or changed; no other lock sections changed; only pdfjs-dist added to dependencies. Formatting initially rewrote lines, then was normalized.",
+    "evidence": [
+      "visual-preview-lock-structure.json",
+      "visual-preview-dependency-age.json",
+      "visual-preview-build.json"
+    ]
+  },
+  "officialSources": [
+    "https://github.com/mozilla/pdf.js/releases/tag/v6.3.289",
+    "https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib.html",
+    "https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-PDFDocumentLoadingTask.html",
+    "https://mozilla.github.io/pdf.js/api/draft/module-pdfjsLib-RenderTask.html",
+    "https://github.com/mozilla/pdf.js/blob/v6.3.289/src/display/api.js",
+    "https://github.com/mozilla/pdf.js/blob/v6.3.289/src/core/evaluator.js",
+    "https://raw.githubusercontent.com/zloirock/core-js/v3.50.0/LICENSE"
+  ],
+  "independentReview": {
+    "reviewer": "product_coverage",
+    "result": "read-only source/component review reported no blocking finding; actual test logs and three fixture images inspected; reviewer did not rerun tests or operate the app",
+    "receipt": "pending separate independent review receipt"
+  },
+  "sharedIntegration": "lib.rs adds file_delivery_read_visual beside file_delivery_read_text. lib.rs remains root/verification-owned for parallel storage work, so its final integrated hash is intentionally not represented as frozen here.",
+  "rawEvidence": "Listed .txt files are actual redirected tool output. visual-preview-pixels-first.txt.gz is a byte-preserving gzip of an oversized assertion output containing generated fixture pixel arrays; later compact red records avoid that verbosity. The earlier main-thread drawing/controller greens concern the superseded design and are not the final worker-tree proof.",
+  "sourceFiles": [
+    {
+      "path": "package.json",
+      "sha256": "73b2b45b0168dc35bff58e16b3ae45fb3ec35aef9ea841b923bcdf2bebaac164",
+      "bytes": 1134
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "9e0d61f27813627eedb25c758d03e9b7ab2d97ac65d00e1f21e627e016138806",
+      "bytes": 71583
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "c6bed1bdbf62374502f49b20ebcacdcc3a747f0fc8e20627388d59d4baf6e07f",
+      "bytes": 281
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "a1aa2c6178f26f57bfe5110e54e4c7e76f8ee0a2a36e60529047e2ae0aa2efd3",
+      "bytes": 1294
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "c9a48b924ff07084314b3c843f68ca328f0f3c4e16ca9a9bfc059f45cb58b21a",
+      "bytes": 14561
+    },
+    {
+      "path": "src-tauri/src/file_delivery/visual.rs",
+      "sha256": "6232def73405a6423d92a425a2de44aa10202f8c5706587b13679941e31df805",
+      "bytes": 2865
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "698be8b84aa0b055e5181745f2cfb039c6f6ff670f9c436b645e4b565c7e9021",
+      "bytes": 10537
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "8fd069387e83eeb06fa0c9534578531fbd80da999272af0becda74c4858301f6",
+      "bytes": 16372
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "913e65eefb9d5cd6a3f34c571d96d7aac1583685190326ba9e9e166a257135fa",
+      "bytes": 23461
+    },
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "84d6cbb38da4d45b452a14cdb4d9a0c030936d371b492924565c4d704673591a",
+      "bytes": 4231
+    },
+    {
+      "path": "src/components/VisualFilePreview.test.tsx",
+      "sha256": "07a5ea995dd0f05886e81f3eb32cc1c4139a9f74dbc987c2c2ab451f10d02ccd",
+      "bytes": 5787
+    },
+    {
+      "path": "src/components/VisualFilePreview.css",
+      "sha256": "f94dc2a3334875e20b8ebc8e248ec3d5a0410e46a97e95877658a9f25ef2cad4",
+      "bytes": 429
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "74e6ac76eeec74fbaad2d70737749d684df657d860e3d6924d14e1a2bc7c9281",
+      "bytes": 5277
+    },
+    {
+      "path": "src/runtime/visual_preview.ts",
+      "sha256": "1b9aca9fba3d3a6ddd82f3d63c3c04121ce9a1b9c2c9f12ba3aaf11ff783de91",
+      "bytes": 2984
+    },
+    {
+      "path": "src/runtime/visual_preview.test.ts",
+      "sha256": "2a7632a7b438cf1cf5d506957df23b2fbedb80cab21cf94b176a9c097a19de92",
+      "bytes": 1966
+    },
+    {
+      "path": "src/runtime/pdf_preview.ts",
+      "sha256": "42fb53816b749f1f452f1b61b587c28dc53def412e19ef85d3fd83cc024df1f0",
+      "bytes": 3904
+    },
+    {
+      "path": "src/runtime/pdf_preview.test.ts",
+      "sha256": "10c52afd94a18ff29ad01639a5e12fc6e594d8c73897e3513a96663134874070",
+      "bytes": 5278
+    },
+    {
+      "path": "src/runtime/pdf_preview_assets.ts",
+      "sha256": "539937d5a7905b82f0a62051df6ddde6f8a95e9c4f20d6eb70697a45d1f625e0",
+      "bytes": 1579
+    },
+    {
+      "path": "src/runtime/pdf_preview_assets.test.ts",
+      "sha256": "e1c7e0a4438c1ca04660d75a731e715d5bd9c82f60b1f07794d133e9415b08ec",
+      "bytes": 1465
+    },
+    {
+      "path": "src/runtime/pdf_preview_parser.test.ts",
+      "sha256": "4f6858e8635ba82f4c5c0a4d1ed4a93edee77b2efd36c8ffcee74240170714e0",
+      "bytes": 3003
+    },
+    {
+      "path": "src/runtime/pdf_render_core.ts",
+      "sha256": "2790d11ab61f142c254912fe7f8934e7c3ad3bcc8ce2c52a1eac31c18b553a8e",
+      "bytes": 7009
+    },
+    {
+      "path": "src/runtime/pdf_render_core.test.ts",
+      "sha256": "6311d1a5d79d0a60a070621870f2d3403249534afac9291fe24ae1e5250603f1",
+      "bytes": 5325
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-preview/fixture.ts",
+      "sha256": "a561d536947e6aa7d482ce5bb95b36142cb73ae3ef7309db729dab7f9a3a0edd",
+      "bytes": 1117
+    },
+    {
+      "path": "src/workers/pdf_preview.worker.ts",
+      "sha256": "56d55184992f3ebfebf6d4ff86d884392cb277be9834633181502bfd6f578ba5",
+      "bytes": 423
+    },
+    {
+      "path": "src/workers/pdf_render.worker.ts",
+      "sha256": "204596df049e94b1c251d6a5cdc33ece652a407d38931f064790d1eabcb5f4e9",
+      "bytes": 1683
+    },
+    {
+      "path": "src/workers/pdf-worker-module.d.ts",
+      "sha256": "d117edbc01f1ff9872c15c1142f8d45501617c84022210c6d7d8e56a2d2cfdf8",
+      "bytes": 190
+    },
+    {
+      "path": "public/pdf-preview-notices.txt",
+      "sha256": "bee444c3efa038b5570533d6484b1ec760e3c1e91de56e69f09a74701b441e69",
+      "bytes": 58146
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-final-targeted.txt",
+      "sha256": "cc8ccc3b2547f99fbb7a9ef8f57fbebfad4031208c116f1a06ce53a740766976",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-file-delivery-rust.txt",
+      "sha256": "184313b1fb37a82330e36241195f493cdfa9115028fa3b4dab4df2616e100be4",
+      "bytes": 2434
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-vite-final.txt",
+      "sha256": "a52c6f7021afbca8cf5db94331d62d523fc02b4beda49dd2261ed9914fbacfe8",
+      "bytes": 4527
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-lock-structure.json",
+      "sha256": "7b1591a024815cf54f70d0e5d55ba200d9e2710fac649ac5c22cf0f638cd0df5",
+      "bytes": 5957
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-dependency-age.json",
+      "sha256": "bc156d92f08b8340fd7c8f0b386d6dffe61e1728875ff0881c126b8a002959f4",
+      "bytes": 3713
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-build.json",
+      "sha256": "423f597c6ec16bc18232fe8fe8ef6c1b47e985f72897dae5af8f76d35ee4fb9e",
+      "bytes": 10278
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-contract-red.txt",
+      "sha256": "98ab08d3372d9f9ac8446892cad054095c985a6ce5d5be95cc3795f31d417eb3",
+      "bytes": 847
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-parser-first.txt",
+      "sha256": "5362f82302594f55337f2069d6136935c3eba9e8dc1b3b893c88e37f923782c4",
+      "bytes": 7191
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-parser-legacy.txt",
+      "sha256": "061d0dd7dc3bf6f29544a11548d0d563e081ea1730729a63e34b8402a38849a0",
+      "bytes": 1940
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-parser-strict-warning.txt",
+      "sha256": "bb419f803db93e74a66796ce71b2004513be9be11c80e7b01bd377bfc9db7aa0",
+      "bytes": 942
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-pixel-timeout-red.txt",
+      "sha256": "964f224b5034fe2ff3eb4345e11bc81dfb21f0f2e8ad1c111da7c06038f05e48",
+      "bytes": 1193
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-pixel-controller-green.txt",
+      "sha256": "04f5dae5382e49f1b1e313d876e1a7cd6d5bdbc81acae974df94740b3bf8b0ee",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-missing-font-red.txt",
+      "sha256": "790074e4d661e844c7a6b8560fb285caaa556be73e4144da7417833c8a890b6e",
+      "bytes": 1204
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-pixels-errors.txt",
+      "sha256": "7a004c5f2446bc0fbbfbe0301b470bfb232ca8f719bee5a2e6aee58963d1bd60",
+      "bytes": 1152
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-pixels-errors-green.txt",
+      "sha256": "05acda5d34768be7c3edc6489a543ada9f73fce417532c82a6f3e34136df1127",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-preview-pixels-first.txt.gz",
+      "sha256": "acddd4955f1db0598fdec1cfa64383044e35fbde07cc125a5d0b269c4c76c9ac",
+      "bytes": 20636
+    }
+  ],
+  "formatBoundary": "Root subsequently ran cargo fmt and formatted OpenedFileView.test.tsx only. These hashes describe the current formatted files; targeted results precede that final formatting pass. Root owns subsequent full-suite integration verification."
+}

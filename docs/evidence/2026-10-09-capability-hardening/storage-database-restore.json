@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T12:07:30.655066+00:00",
+  "requirement": "H02",
+  "status": "implemented_targeted_checks_passed_independent_review_completed_no_blocker",
+  "baseCommit": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "scope": "Startup-only macOS physical metadata database replacement from an explicitly chosen valid current-schema snapshot. No live formal app or daily database operation; no Agent prompt/SDK calls, account/model/config changes, Keychain or Agent-private history access.",
+  "implementation": [
+    "Candidate source main/WAL/SHM/journal are no-follow read-only captured with exact set/content checks. Private SQLite backup yields reviewed snapshot; later source-path changes do not alter the ticket.",
+    "Exact trusted current sqlite_schema objects (including constraints/index SQL) are compared, user_version/application_id must match, integrity_check must be ok, required LifeModel JSON values must parse. Unknown/future schemas rejected; no migration on source.",
+    "Recovery commands require not ready, not editable, no MetaStore. Same recovery mutex spans material work; atomic admission excludes normal close/exit and no old renderer is asked to save.",
+    "Durable Preparing intent is persisted before first exact Farfold-Restore sentinel directory. Original main/WAL/SHM/journal identities are represented by exact filenames, lengths and hashes, without arbitrary paths. Record max64KiB; current material total max512MiB.",
+    "Preparing never moves original files. Failure/restart permits explicit new preview only if originals remain exact and retained-original directory is empty; previous record and partial materials remain. Unknown/missing/malformed/symlink intent with material sentinel closes gate.",
+    "Complete protected raw copies and a separately verified candidate precede durable Prepared. Native macOS no-replace rename moves originals individually to a separate retained directory, then promotes new main; directory sync and actual identities govern continuation.",
+    "Installed state requires original retention, protected copies, new-main digest and no old sidefiles. Same process stays noneditable and requires explicit restart.",
+    "Cold startup checks intent before opening MetaStore. Installed digest/file set and private integrity/schema must revalidate, then durable Released must succeed before opening. Failed release returns error even when its record may have been written. Released never compares old digest or replays replacement; later legitimate writes remain.",
+    "GUI separates preview, explicit confirmation, prepare retry, continue, status query and restart. Unknown apply only checks status; exact prior Preparing can regain reselection, different active ticket cannot. Restart acknowledgement holds duplicate guard.",
+    "Restored semantic drafts/preparations still pass existing DraftStartup parsers. Queue restore stays stopped/uncertain; no send occurs from recovery. Template editing draft included in two-key preview count without expanding key allowlist."
+  ],
+  "controlledCoverage": {
+    "newPhysicalDatabaseTests": 20,
+    "allStorageRecoveryRustTests": 51,
+    "frontendRecoveryTests": 62,
+    "frontendFiles": 6,
+    "interruptionMatrix": "Before and after 16 injected move/sync/record operations during advance (32 temporary DB executions) and 8 preparation operations (16 temporary DB executions); final release save failure before/after (2). These are FileOps fixture failures, not actual power cuts or physical full disks.",
+    "counterexamples": [
+      "unresolved intent before DB open",
+      "canonical macOS temporary path",
+      "receipt aggregate size",
+      "intent lost with known material directory",
+      "first preparation failure across new State then reselect",
+      "old Preparing ticket never moves files",
+      "changed original rejects retry/cancel",
+      "promotion sidefile or digest drift",
+      "release failure with marker already promoted",
+      "released new writes not overwritten",
+      "released symlink rejected",
+      "previous released record retained during next recovery",
+      "source replaced after preview uses reviewed snapshot",
+      "lost reply idempotency",
+      "wrong ticket never success",
+      "prior Preparing A after B preparation failure",
+      "template-only unsent edit visible in preview"
+    ]
+  },
+  "verification": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-intent-filtered-no-tests.txt",
+      "classification": "invalid_test_filter",
+      "tests": null,
+      "note": "Unqualified --exact test name selected zero tests; not red evidence.",
+      "sha256": "d864d1ea23ee8fd0de9c001987a16b96bc867aea4cfc8fb998649d20ba52909a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-intent-red.txt",
+      "classification": "valid_red",
+      "tests": 1,
+      "note": "Existing readable temporary DB opened despite unresolved intent before startup guard.",
+      "sha256": "785f99f3be7878feb818936f70a1e6c4bd37cc92df74a54d623135fd668b79bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-core-first.txt",
+      "classification": "compile_failure",
+      "tests": null,
+      "note": "u64 FromSql unsupported; no runtime result.",
+      "sha256": "75d70869b25da84d81aa26250eff62ce2c9611693b93c84c40105446735d09d4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-core-initial-failures.txt",
+      "classification": "failed",
+      "tests": 9,
+      "note": "3 pass / 6 fail; post-promote private snapshot path rejected by NOFOLLOW.",
+      "sha256": "888458c1ea0d8a8bca5b0299cf616f3fcee8f6ca5e1cfb66c5d16e94f8eee6bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-path-and-record-red.txt",
+      "classification": "valid_red",
+      "tests": 12,
+      "note": "3 pass / 9 fail; additional canonical-temp, missing-intent and aggregate-size counterexamples.",
+      "sha256": "0593206ddf026f353106c4c29b2859d7cae5b3c4a70649f5985d0f74e6dd1be2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-core-green.txt",
+      "classification": "passed",
+      "tests": 12,
+      "note": "Canonical path, known sentinel directory and aggregate receipt bound.",
+      "sha256": "c82d09ef318cccc336752a1d5e1809041db115ccf60bc7cc82629c5a88ea8c00"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-preparation-retry-red.txt",
+      "classification": "valid_red",
+      "tests": 1,
+      "note": "First failed preparation was stranded by missing-intent sentinel.",
+      "sha256": "1df5eaeff722a7d71aa6b9e669860d82df9ded7877d7b2e27401455ae5bf7e18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-preparation-green.txt",
+      "classification": "passed",
+      "tests": 13,
+      "note": "Durable Preparing supports new-State explicit retry.",
+      "sha256": "32ae9879c3085afc7d4700f26a4d844c2aa8489019cf305da31dd4192bb8b4e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-recovery-regression.txt",
+      "classification": "passed",
+      "tests": 50,
+      "note": "Storage recovery, prior two-key import and candidate capture regressions.",
+      "sha256": "dd56e9e48d7eb9fada1a994570ccfdf04ecfd5f9f565d90222e45584aaa93435"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-release-symlink-red.txt",
+      "classification": "valid_red",
+      "tests": 1,
+      "note": "Released record admitted a later symlink to external source.",
+      "sha256": "60528b97d396a48e46347373c21729b1b7f15780d1744823f03285ae6e569f29"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-recovery-final.txt",
+      "classification": "passed",
+      "tests": 51,
+      "note": "Final storage_recovery:: scope, including released symlink rejection.",
+      "sha256": "ccc7a2fb23a86ca562052b3c07af7dc7db164feb4286c75fb36b00cb5a0ba94d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-ui-first-harness-failure.txt",
+      "classification": "mixed_invalid_harness",
+      "tests": 19,
+      "note": "12 pass / 7 fail, includes undefined React child recursion harness defect; not sole behavior-red evidence.",
+      "sha256": "0eca041bf036ea521e4f5b3293ed0c2ae71cc3522b6d563203ccca88eafe1363"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-ui-red.txt",
+      "classification": "valid_red",
+      "tests": 19,
+      "note": "16 pass / 3 fail: old released receipt, restart stale callback, template-only preview count.",
+      "sha256": "e3b9c33efe5246559365f1a1af0db265ffd047424e0f3028785a275e8b8c7659"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-ui-green.txt",
+      "classification": "passed",
+      "tests": 19,
+      "note": "Those three red cases green.",
+      "sha256": "42c9056aa2e40de9b732e6e19362445f2795aa042976ec5660b0935e14f9c506"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-ui-preparation-green.txt",
+      "classification": "passed",
+      "tests": 20,
+      "note": "Preparing reselection and cancel gate.",
+      "sha256": "20f41d03e38e68df40ea148580e7d1ae749a5b25cf16d82dcedb1a2a03375a20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-frontend-regression.txt",
+      "classification": "passed",
+      "tests": 59,
+      "note": "Six files before final prior Preparing counterexample.",
+      "sha256": "12d3f84fb114186b52b77fb532425524eac8db5a31c93f5b971d9bb9ceb310bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-prior-preparing-red.txt",
+      "classification": "valid_red",
+      "tests": 11,
+      "note": "Old Preparing A after failed preview B could not regain reselection.",
+      "sha256": "fc786db1ac3dea45bbb841cbcc99de265e576ac69d686184fcf59c92ebba37a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-frontend-before-prior-fix.txt",
+      "classification": "failed",
+      "tests": 62,
+      "note": "Repeat failure; attempted text patch did not match and no production change occurred.",
+      "sha256": "957792a383254b2a6d704766daed56e7f09f28bf052f9d976a127725b3b28090"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-frontend-final.txt",
+      "classification": "passed",
+      "tests": 62,
+      "note": "Final six-file recovery/DraftStartup/draft storage/preview suite.",
+      "sha256": "0924adc129d1795d6bcce8caa1e7a68406e3e54d4a378d12a631b8a7f989e726"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/storage-database-typecheck-final-3.txt",
+      "classification": "passed",
+      "tests": null,
+      "note": "Final TypeScript check, exit 0.",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "independentReview": {
+    "status": "completed_no_blocker",
+    "reviewer": "product_coverage",
+    "kind": "read_only_source_test_and_original_log_review_no_rerun",
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/storage-database-independent-review.json",
+    "knownFinding": "Old Preparing receipt after failed reselection was independently found, fixed with exact priorStatus acceptance, valid red then final 62 frontend tests passed; no other blocker found."
+  },
+  "boundaries": [
+    "MacOS temporary files and controlled UI mocks only. No formal app replacement or installed recovery journey by this agent.",
+    "Windows whole-database move support is deliberately unavailable; no Windows filesystem/reparse-point test claimed.",
+    "No real disk-full, hardware failure, power cut, hostile concurrent filesystem writer or crash-kill test. Fsync/rename fault injection proves only represented code paths.",
+    "No SQLite salvage, arbitrary old/future schema migration, partial table import, Agent history or Keychain restore.",
+    "Exact schema/integrity validity does not establish every setting value is semantically usable; existing startup parsers retain gate and original values on semantic failure.",
+    "Intent loss/tampering, material mismatch or ambiguous file layout remains blocked with materials retained, not guessed or reset.",
+    "No screenshot, visual installed-app validation or Tauri real IPC import claimed; prior SSR browser path remains prohibited, no workaround used.",
+    "Source file hashes below record this checkpoint; lib.rs/meta_store.rs also contain coordinated P09/P16 registrations by other agents. Full seven-check integration and commit belong to parent."
+  ],
+  "files": [
+    {
+      "path": "src-tauri/src/meta_store/schema.rs",
+      "sha256": "faf499300e89d568fb9270fdb62bede247f18fe7912f040fd6c3b340fff29a26",
+      "lines": 35
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "sha256": "7b18f9ff6918a8d2611132eacd6cf769efbd596f93c757ec11e168bde7872e8e",
+      "lines": 1304
+    },
+    {
+      "path": "src-tauri/src/storage_recovery.rs",
+      "sha256": "8eff0bb45f4e04bd68863a9c7b0e1f71822a5dd5d2e43e1800ebc32976dc2f5b",
+      "lines": 322
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore.rs",
+      "sha256": "345c11046528041f694af274386d38d97a1a6f1074c155dc5384af4c9278968d",
+      "lines": 283
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore/files.rs",
+      "sha256": "f6a553a825ff52aca48117abd311a91a0aa28e30dbd9219fa4f1bf8bca9f4ba9",
+      "lines": 160
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore/operation.rs",
+      "sha256": "2e27ad3b615bb0a4cb22938c37f000c804e82771625138742b9d2c4ae15213f2",
+      "lines": 316
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore/validate.rs",
+      "sha256": "2e8046333f4ab9186fa5fa3c95cb3cc7a188a45cb8d6eb869c6a99ec26287554",
+      "lines": 116
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore/tests.rs",
+      "sha256": "f275e6c80e0f59f8633d0e0c0b32dc8566ba84814d86ec7913202a611ebf97b1",
+      "lines": 455
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_commands.rs",
+      "sha256": "b8037260d0356619359d244c29dd5dce08b5ce1aa1ed4564a32b333e4b20e6cb",
+      "lines": 124
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore.rs",
+      "sha256": "b05b0e1f3d69b8755352c76793913825f8cbe5eca6b9d1dfb08d4648894dcbcd",
+      "lines": 171
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore/candidate.rs",
+      "sha256": "d2021c6a015a10c4216ece57b066a95ec3da20339e61df93b6b4c2921c0e690d",
+      "lines": 231
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/tests.rs",
+      "sha256": "6fbaab969e4b21e04b2c61217358510c60a5e6a3c72890cc14156cc76f61ef20",
+      "lines": 419
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "f322a62be99649ceb5f1dcd979887f605c6cde05d4c5842d8c9c073ff056f2b3",
+      "lines": 385
+    },
+    {
+      "path": "src/components/StorageDatabaseRestore.tsx",
+      "sha256": "ecf75986c4b9872c8f409955a71ef8f5989cf526b08ad43ea87feac88ae79bf6",
+      "lines": 281
+    },
+    {
+      "path": "src/components/StorageDatabaseRestore.test.tsx",
+      "sha256": "a7550bf789924f9a7ed2abcc3df911d7c8dd165f72b6a99a6bfe55497bf97368",
+      "lines": 252
+    },
+    {
+      "path": "src/components/StorageRecovery.tsx",
+      "sha256": "d071a1a77160c85558495d5c1276124dd9d193a52b1c1e96d2475903ea0900a4",
+      "lines": 196
+    },
+    {
+      "path": "src/components/StorageRecovery.test.tsx",
+      "sha256": "741fc6d8b388d840e7f43ab2d377fdac6882c720b801b0e470af084a37b7b4bf",
+      "lines": 225
+    },
+    {
+      "path": "src/runtime/storage_database_restore.ts",
+      "sha256": "0379dba9fe77396e0d595fef655958e4918936497af2800033c5d1e8aaef0363",
+      "lines": 151
+    },
+    {
+      "path": "src/runtime/storage_recovery.ts",
+      "sha256": "d5b867d99c32ea9c1008f59629127d8285a3c93e891163029f531203a27d1f10",
+      "lines": 69
+    },
+    {
+      "path": "src/runtime/storage_restore.ts",
+      "sha256": "783aa55ebe0a8712daa44799ec2aa5e5fae9c4056ff672c38faf205d648f0ec8",
+      "lines": 277
+    },
+    {
+      "path": "src/runtime/storage_restore_strings.ts",
+      "sha256": "11b18febf00cf52303d1282b84dbc23db477ea41b0f2ea6980404bdd78be01ae",
+      "lines": 41
+    },
+    {
+      "path": "src/runtime/storage_restore.preview.test.ts",
+      "sha256": "b34a9536f2190461c7c4e40a3d383ad738596543f25d0e249f35592abf40c2a9",
+      "lines": 184
+    }
+  ],
+  "checkpointNote": "Source hashes refreshed after parent targeted rustfmt/Prettier and comment correction; parent now runs seven integration checks. These hashes do not claim final package inputs."
+}

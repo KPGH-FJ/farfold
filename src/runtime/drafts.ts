@@ -4,6 +4,15 @@ import type { PromptBlock } from "./session_types";
 import { draftPersistence } from "./draft_storage";
 import { REDESIGN } from "./redesign_strings";
 import { archiveActivity, parseArchiveActivity } from "./archive_activity";
+import {
+  templateEditDrafts,
+  restoreTemplateEdit,
+} from "./template_edit_drafts";
+import { parseTemplateEdit } from "./prompt_template_data";
+export {
+  templateEditDrafts,
+  useTemplateEditDraft,
+} from "./template_edit_drafts";
 export { draftPersistence } from "./draft_storage";
 
 export interface DraftAttachment {
@@ -562,6 +571,7 @@ export function parseDraftSnapshot(value: unknown) {
           "feedback",
           "queues",
           "activity",
+          "templateEdits",
         ].includes(key),
     )
   )
@@ -647,6 +657,7 @@ export function parseDraftSnapshot(value: unknown) {
     feedback,
     queues,
     activity: parseArchiveActivity(raw.activity),
+    templateEdits: parseTemplateEdit(raw.templateEdits),
   };
 }
 
@@ -669,11 +680,15 @@ draftPersistence.configure(
     feedback: Object.fromEntries(feedbackValues),
     queues: Object.fromEntries(queueValues),
     activity: archiveActivity.snapshot(),
+    ...(templateEditDrafts.read()
+      ? { templateEdits: templateEditDrafts.read() }
+      : {}),
   }),
   (value) => {
     const parsed = parseDraftSnapshot(value);
     if (!parsed) return;
     archiveActivity.restore(parsed.activity);
+    restoreTemplateEdit(parsed.templateEdits);
     for (const [key, draft] of parsed.composers)
       if (!values.has(key)) values.set(key, draft);
     Object.assign(choice, parsed.selected);

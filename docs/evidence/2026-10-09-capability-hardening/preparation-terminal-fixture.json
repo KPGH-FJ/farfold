@@ -1,0 +1,61 @@
+{
+  "subject": "preparation action terminal fixture readiness",
+  "scope": "test-only deterministic readiness; no production behavior changed",
+  "originalFailure": {
+    "test": "acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap",
+    "result": "1133 passed, 1 failed, 5 ignored; started.exists() false",
+    "raw": "preparation-terminal-original-full-rust.txt",
+    "source": "fifth-checks/rust.txt",
+    "cause": "The exact condition of the original full-suite failure was not reproduced. No claim that PATH failure caused that run."
+  },
+  "investigation": [
+    "Read the action/PTY spawning, cancellation ownership and cleanup paths, environment resolution and neighboring PTY tests.",
+    "Original fixture discards PTY output and uses a separately spawned external touch command as evidence of shell readiness.",
+    "One isolated diagnostic run passed. It is evidence of intermittence, not a fix.",
+    "A controlled script-local PATH with no external tools deterministically reproduces false-not-started: PTY proves fixture-entered, then reports touch: command not found, and started.exists() remains false."
+  ],
+  "fix": [
+    "Only preparation_actions_tests.rs changes. The fixture retains the no-external-tools PATH and uses shell builtin printf after installing signal traps.",
+    "The existing PTY Channel aggregates output fragments and signals a oneshot when its fixed ready marker arrives. The existing three-second bound is unchanged; no extra sleeps or retry loop.",
+    "Bounded captured fixture output is retained for failure diagnostics.",
+    "Existing exact PtyManager/ReapFixture ownership closes and reaps this fixture on success or panic. No process-by-name termination or external data cleanup was performed."
+  ],
+  "validation": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::preparation_actions::tests -- --nocapture",
+    "result": "11 passed, 0 failed",
+    "raw": "preparation-terminal-green.txt",
+    "fullSuiteAfterFix": "pending root integration run"
+  },
+  "notClaimed": [
+    "Production cancellation or service configuration had a demonstrated defect.",
+    "The original full-suite failure trigger is conclusively identified.",
+    "One successful isolated rerun repairs a flaky test."
+  ],
+  "source": {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+    "bytes": 24547
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/preparation-terminal-original-full-rust.txt",
+      "sha256": "344be43834acbc95eee87f03d7fe35a748e3c0884ae38314ac5a40bd0572a89d",
+      "bytes": 124341
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/preparation-terminal-diagnostic.txt",
+      "sha256": "50675f6490a50f41d666e2ad0fa008f99688c99763b22fbe7f9bd4effdccb470",
+      "bytes": 675
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/preparation-terminal-no-tools-red.txt",
+      "sha256": "4c85fa043566c50767887af16ff69ed2e2cc46a80ddf7301fea28107bd47426b",
+      "bytes": 1146
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/preparation-terminal-green.txt",
+      "sha256": "6cb5f83f5d484fde205e72636ef0754342dbb9ed72a5bd658aaeb457619ba96b",
+      "bytes": 1946
+    }
+  ]
+}

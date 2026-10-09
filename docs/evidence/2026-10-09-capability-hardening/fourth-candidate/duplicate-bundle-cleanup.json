@@ -1,0 +1,9 @@
+{
+  "recordedAt": "2026-10-09T11:21:08.123998+00:00",
+  "sourceCommit": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "removedOnly": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "verifiedIdenticalToInstalledAndArchived": true,
+  "formalAppRetained": true,
+  "archiveRetained": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-09-63ed89ff/Farfold-0.1.7-63ed89ff.zip",
+  "userDataTouched": false
+}

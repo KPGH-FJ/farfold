@@ -1,0 +1,122 @@
+{
+  "recordedAt": "2026-10-09T12:19:12.410351+00:00",
+  "sourceBase": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "sourceInputCount": 918,
+  "sourceStillMatchesFinalFrozenInputs": true,
+  "allSevenChecksPassed": true,
+  "frontend": {
+    "files": 252,
+    "passed": 2820
+  },
+  "rust": {
+    "passed": 1134,
+    "failed": 0,
+    "ignored": 5
+  },
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "log": "format-after-receipts.txt",
+      "note": "Duration of the successful formatting recheck was not recorded; original failed timing is retained in receipt.json."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.672,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 32.072,
+      "log": "frontend.txt"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 6.847,
+      "log": "build.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.858,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 7.953,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 39.847,
+      "log": "rust.txt"
+    }
+  ],
+  "sourceChangesAfterFirstRun": [
+    "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "src-tauri/src/storage_recovery/database_restore/validate.rs",
+    "src/components/Composer.project-files.test.tsx"
+  ],
+  "retainedFailures": [
+    "../fifth-checks/receipt.json",
+    "../fifth-checks/frontend.txt",
+    "../fifth-checks/rust.txt",
+    "../fifth-checks/clippy.txt",
+    "format.txt"
+  ],
+  "failureResolution": [
+    "Project-file tests now isolate the independent template store without weakening existing attachment or no-Agent assertions.",
+    "Terminal fixture readiness now uses its actual PTY and a shell builtin, with bounded diagnostics and the same 3 second deadline. Original full-suite trigger remains undetermined; controlled missing-tool counterexample is separate evidence.",
+    "Database schema type uses a named alias for clippy; no semantic change.",
+    "Only newly generated receipt JSON formatting was repaired after the final frozen code checks."
+  ],
+  "logSha256": {
+    "format.txt": "c9936496feba966a9faf53c61e20342466e0e5915b5a04111bc534a6b32b6467",
+    "typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "frontend.txt": "61d3ca3ef25f60dba0b6b198e890fd927132152bf7e04c84fa8860361e117318",
+    "build.txt": "0c15e86703c6a3d8786993212e6bed001e36e77dc9b027769a6c5acf79bd5744",
+    "cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "clippy.txt": "46f414fcc3faf9d7cdf82eafc56d835403dbc21dc4ae307ee02b162c26147673",
+    "rust.txt": "2a6df5f7868947502ce9376edbf98dd597fc1d821df10dfaf4a8a3569a179cf3",
+    "format-after-receipts.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+  },
+  "proofBoundary": "Source, controlled tests and frontend build. Not yet fifth candidate, installed UI, real power loss/full disk, Office preview, Windows runtime or 29-Agent acceptance.",
+  "independentReview": {
+    "file": "final-independent-review.json",
+    "sha256": "05cdd48562554374796341bc92c1118288396dcd6dde19a8921868ee0eee6ffc",
+    "result": "passed"
+  }
+}

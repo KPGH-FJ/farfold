@@ -7,7 +7,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
-fn read_file(path: &Path, mut output: Option<&mut File>) -> Result<(u64, Vec<u8>), RestoreFailure> {
+pub(crate) fn read_file(
+    path: &Path,
+    mut output: Option<&mut File>,
+) -> Result<(u64, Vec<u8>), RestoreFailure> {
     let fail = || RestoreFailure::new("unsupported");
     let metadata = path.symlink_metadata().map_err(|_| fail())?;
     if !metadata.is_file() || metadata.file_type().is_symlink() {
@@ -56,7 +59,7 @@ fn read_file(path: &Path, mut output: Option<&mut File>) -> Result<(u64, Vec<u8>
     }
     Ok((bytes, hash.finalize().to_vec()))
 }
-fn capture(source: &Path, directory: &Path) -> Result<PathBuf, RestoreFailure> {
+pub(crate) fn capture(source: &Path, directory: &Path) -> Result<PathBuf, RestoreFailure> {
     let fail = || RestoreFailure::new("unsupported");
     if !source.is_absolute() {
         return Err(fail());
@@ -106,7 +109,7 @@ fn verify_capture(
     Ok(())
 }
 
-pub(super) fn read_candidate(source: &Path) -> Result<SavedValues, RestoreFailure> {
+pub(crate) fn snapshot_file(source: &Path, snapshot: &Path) -> Result<(), RestoreFailure> {
     let invalid = || RestoreFailure::new("unsupported");
     let temporary = tempfile::tempdir().map_err(|_| RestoreFailure::new("unavailable"))?;
     let directory = temporary
@@ -139,13 +142,18 @@ pub(super) fn read_candidate(source: &Path) -> Result<SavedValues, RestoreFailur
     }
     // SQLite operates only on private copies. Include committed WAL in a
     // consistent snapshot; no schema migration or source-file mutation.
-    let output =
-        tempfile::tempdir_in(&directory).map_err(|_| RestoreFailure::new("unavailable"))?;
-    let snapshot = output.path().join("snapshot.sqlite3");
     candidate
-        .backup(rusqlite::MAIN_DB, &snapshot, None)
+        .backup(rusqlite::MAIN_DB, snapshot, None)
         .map_err(|_| invalid())?;
     drop(candidate);
+    Ok(())
+}
+
+pub(super) fn read_candidate(source: &Path) -> Result<SavedValues, RestoreFailure> {
+    let invalid = || RestoreFailure::new("unsupported");
+    let output = tempfile::tempdir().map_err(|_| RestoreFailure::new("unavailable"))?;
+    let snapshot = output.path().join("snapshot.sqlite3");
+    snapshot_file(source, &snapshot)?;
     let snapshot = Connection::open_with_flags(snapshot, OpenFlags::SQLITE_OPEN_READ_ONLY)
         .map_err(|_| invalid())?;
     let integrity: String = snapshot

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T11:56:45.803927+00:00",
+  "sourceHead": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "status": "implemented_source_and_controlled_tests_no_installed_app_claim",
+  "scope": "P09 saved user prompt templates and one persistent unsaved template editor; root owns shared Composer/dialog UI.",
+  "behavior": [
+    "promptTemplates.v1 严格 version/items/id/label/text 解析；100项、名称80 UTF-16单位、正文32000 UTF-16单位、JSON UTF-8总1MiB。未知字段/版本/重复id/非法项整份拒绝，不抢救式覆盖。",
+    "unsentWork.v1 可选 templateEdits 保留单个编辑稿及原模板；旧记录缺字段兼容、非法扩展拒绝整份恢复、通过既有 draftPersistence.changed/flush 保存，不发送或替换对话正文。",
+    "UI只能在原编辑对象仍一致时清除；store不自动清理编辑稿。未读取/恢复交互锁期间拒绝模板编辑。",
+    "保存/删除异步串行；读当前完整文档并验证 expected，再执行仅该key的 BEGIN IMMEDIATE compare-and-set；缺失用null，旧值变化返回conflict。",
+    "写入结果与实际回读分开；精确目标回读才确认保存。IPC丢失/commit或rollback异常保留unknown，不自动再写。",
+    "已知未写或确认rollback的 rejected 回执先只读回读，保留编辑稿并允许修复原因后显式重试；raw错误内容不直接展示。",
+    "recoverUnknown 是用户明确选择后的只读操作，保留修改并显示旧结果仍未知；后续保存仍CAS。旧请求先到则新请求冲突，旧请求后到则旧CAS冲突。",
+    "全部模板操作均为Farfold settings/未发送内容，不修改Agent配置、服务、模型、权限或历史。"
+  ],
+  "ownedSource": [
+    "src/runtime/prompt_template_data.ts",
+    "src/runtime/prompt_templates.ts",
+    "src/runtime/prompt_templates.test.ts",
+    "src/runtime/template_edit_drafts.ts",
+    "src/runtime/template_edit_drafts.test.ts",
+    "src/runtime/drafts.ts (optional field parsing/serialization/restoration and exports only)",
+    "src-tauri/src/meta_store/prompt_templates.rs",
+    "src-tauri/src/prompt_templates_commands.rs",
+    "src-tauri/src/meta_store.rs (prompt_templates module declaration only)",
+    "src-tauri/src/lib.rs (prompt_templates_commands module/command registration only)"
+  ],
+  "verification": [
+    {
+      "file": "runtime-red.txt",
+      "result": "25 tests failed against importable API skeleton; behavioral assertion failures, no missing-module failure"
+    },
+    {
+      "file": "runtime-green-attempt.txt",
+      "result": "25 passed after initial implementation"
+    },
+    {
+      "file": "editor-guard-red.txt",
+      "result": "1 failed / 28 passed: unread or interaction-locked edit was incorrectly allowed"
+    },
+    {
+      "file": "runtime-regression-attempt1.txt",
+      "result": "1 failed / 72 passed: previous malformed-load test needed to expect the newly required editor guard; raw output retained"
+    },
+    {
+      "file": "runtime-green.txt",
+      "result": "73 passed"
+    },
+    {
+      "file": "recovery-red.txt",
+      "result": "5 failed / 23 passed: typed CAS conflict, reordered expected fields, confirmed rollback retry and explicit unknown recovery"
+    },
+    {
+      "file": "recovery-green.txt",
+      "result": "77 passed with associated draft regressions"
+    },
+    {
+      "file": "integration-final.txt",
+      "result": "120 passed across 10 files: template runtime/edit drafts, prior draft/storage, shared Composer/dialog and recovery preview"
+    },
+    {
+      "file": "cas-red.txt",
+      "result": "4 failed / 2 passed: baseline unconditional setter lost CAS/schema protections"
+    },
+    {
+      "file": "cas-green.txt",
+      "result": "6 passed: complete schema/limits, missing/future/corrupt protection, separate-connection concurrent CAS, late stale write, read-only preservation"
+    },
+    {
+      "file": "typecheck-final.txt",
+      "result": "passed; earlier typecheck-attempt/typecheck logs preserved and included concurrent source intermediate errors"
+    },
+    {
+      "file": "format-check.txt",
+      "result": "passed for owned frontend source at check; subsequent small edits formatted via same Prettier"
+    },
+    {
+      "file": "rust-format-check.txt",
+      "result": "passed for owned Rust modules"
+    }
+  ],
+  "independentReview": {
+    "rootReview": "Root identified key-order false conflict and lack of a usable unknown/known-rejection recovery path; both implemented with controlled counterexamples.",
+    "uiReviewByThisAgent": "Reported stale finishSaved handler could clear a changed editor; root added fresh current-value/ready/uncertain checks and fresh draft locks with red-green UI evidence. Re-read current checks after change; no remaining blocker found in reviewed UI/data path.",
+    "additionalReviewer": "Architecture peer notified of stable store/CAS; independent review pending at this receipt time.",
+    "rootFinalReview": {
+      "at": "2026-10-09T11:59:09.858494+00:00",
+      "result": "No further blocker found in final parse/store/editor/UI/CAS paths reviewed; rejected writes, read-only unknown recovery and stale callback protections re-read. Installed UI remains unverified."
+    }
+  },
+  "limits": [
+    "No new installed-app UI run, real Agent/model/account action, or native config change in this slice.",
+    "Full repository checks and packaging remain root integration responsibility; no commit made by this agent.",
+    "promptTemplates.v1 is covered by full database backup; separate H02 selective recovery remains its existing two-key scope. templateEdits is inside unsentWork.v1 and its preview count is coordinated with verification.",
+    "A readback proves stored content at observation time, not cancellation of an earlier unknown request. Explicit recovery keeps that distinction; every later mutation remains CAS."
+  ]
+}

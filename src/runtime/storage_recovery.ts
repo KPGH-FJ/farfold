@@ -1,4 +1,5 @@
 import { STRINGS } from "./strings";
+import type { DatabaseStatus } from "./storage_database_restore";
 
 export type StorageIssueKind =
   | "readOnly"
@@ -12,6 +13,8 @@ export type StorageRecoveryStatus = {
   ready: boolean;
   issue: { kind: StorageIssueKind } | null;
   dataDirectory: string;
+  databaseReplacementAvailable?: boolean;
+  databaseReplacement?: DatabaseStatus | null;
 };
 export type StorageExportReceipt = {
   path: string;

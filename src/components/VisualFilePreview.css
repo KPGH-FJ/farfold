@@ -1,0 +1,25 @@
+.visual-file-preview {
+  min-width: 0;
+  padding: 16px;
+}
+.visual-file-preview canvas,
+.visual-file-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.visual-file-preview canvas[hidden] {
+  display: none;
+}
+.visual-file-preview p {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.visual-file-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}

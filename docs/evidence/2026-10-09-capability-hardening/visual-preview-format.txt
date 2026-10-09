@@ -1,0 +1,24 @@
+package.json 10ms (unchanged)
+pnpm-lock.yaml 85ms (unchanged)
+vite.config.ts 20ms (unchanged)
+src-tauri/tauri.conf.json 2ms (unchanged)
+src/components/OpenedFileView.tsx 46ms
+src/components/OpenedFileView.test.tsx 50ms
+src/components/VisualFilePreview.tsx 5ms
+src/components/VisualFilePreview.css 12ms
+src/components/VisualFilePreview.test.tsx 8ms
+src/runtime/file_delivery.ts 7ms (unchanged)
+src/runtime/visual_preview.ts 3ms
+src/runtime/visual_preview.test.ts 2ms
+src/runtime/pdf_preview.ts 9ms
+src/runtime/pdf_preview.test.ts 12ms
+src/runtime/pdf_preview_assets.ts 2ms
+src/runtime/pdf_preview_assets.test.ts 2ms
+src/runtime/pdf_preview_parser.test.ts 5ms
+src/runtime/pdf_render_core.ts 7ms
+src/runtime/pdf_render_core.test.ts 5ms
+src/runtime/fixtures/pdf-preview/fixture.ts 2ms
+src/runtime/fixtures/pdf-preview/README.md 14ms (unchanged)
+src/workers/pdf_preview.worker.ts 1ms (unchanged)
+src/workers/pdf_render.worker.ts 2ms
+src/workers/pdf-worker-module.d.ts 1ms (unchanged)

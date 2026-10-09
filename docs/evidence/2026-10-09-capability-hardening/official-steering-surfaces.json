@@ -1,0 +1,665 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-09T11:18:08.598367+00:00",
+  "requirement": "ARCH-37",
+  "status": "read_only_research_complete_no_runtime_claim",
+  "scope": "运行中补充/steer：重点本机 Codex ACP 与 Claude ACP，区分官方 app-server/SDK 与 ACP 扩展；对照现有 29 家表，不扩大产品契约。",
+  "sourceHead": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "sourceState": "存在并行未提交增量；本文是调研快照，不是冻结源码、候选安装或真实使用验收。",
+  "skill": {
+    "name": "OpenAI Docs",
+    "path": "/Users/tw/.codex/skills/.system/openai-docs/SKILL.md",
+    "applied": "先官方域定向搜索并实际打开文档，再核已安装接入源码；不需要账号或 API key。"
+  },
+  "boundaries": [
+    "未启动、安装、升级或修改 Agent/adapter；未发 prompt、steer、initialize、认证或模型请求。",
+    "仅读取安装包源码/元数据、项目源码与官方公开资料；未读取用户会话正文或凭据，未改账号/模型/配置。",
+    "本轮唯一新增文件为此 JSON；没有新增活动计划、生产源码、测试或持久事件账本。",
+    "安装包代码存在不等于当前连接已广告或运行时接受；没有本轮线上握手/调用回执。",
+    "tag 和版本仅用于证据定位，不用版本 pin 或二进制 SHA 判断 Agent 兼容性；兼容性仍由 initialize。",
+    "维护者 ACP 扩展与厂商官方 SDK/app-server 分开；两家扩展同名不代表语义一致。"
+  ],
+  "summary": [
+    "已装 Codex ACP 1.13.1 和 Claude ACP 0.81.2 都在 initialize 顶层 _meta.steering.supported 声明 _session/steering；仅判断此布尔值不足以安全统一发送。",
+    "Codex app-server 有 expectedTurnId 与 turnId 接纳回执；Codex ACP 隐藏目标 ID 并在空闲/结束竞争时自动开始新一轮，不能直接承诺只补充原工作。",
+    "已核 Claude ACP 0.81.2 的 promptRequired opt-in 可让空闲分支不消费；但官方 0.63.0 同样声明 supported=true 却丢弃 _meta 并在结束竞争时另开请求，不能据官方接入映射加共享布尔值启用生产入口。",
+    "已核 0.63.0 无 opt-in、0.64.0 有 opt-in；这是所查 release tag 的语义边界，不作为版本门禁，也不证明最早引入提交或所有中间 patch。当前缺可安全协商的子能力及外部目标 ID，ARCH37 生产发送保持关闭。",
+    "Pi 底层 RPC 支持 steer，但已装 Pi ACP 普通 prompt 忙时是 turnQueue；不可把排队当运行中补充。",
+    "29 项名单完整对照；本轮深查 3 个相关接入，其余 26 个 steering 保持 unknown，原表无该字段不能推出不支持。"
+  ],
+  "sources": [
+    {
+      "id": "openai-app-server",
+      "url": "https://learn.chatgpt.com/docs/app-server",
+      "kind": "official_live_documentation",
+      "checked": "opened actual page after official-domain search",
+      "supports": "turn/steer 的 expectedTurnId、当前轮次限制、turnId 接纳回执，以及 interrupt 与最终 interrupted 分开。",
+      "versionBound": false
+    },
+    {
+      "id": "openai-sdk",
+      "url": "https://learn.chatgpt.com/docs/codex-sdk",
+      "kind": "official_live_documentation",
+      "checked": "opened actual page",
+      "supports": "TypeScript SDK 的 thread.run/resume 与完整交互客户端 app-server 路径区分；此页没有确立 TS SDK 中途 steer API。",
+      "versionBound": false
+    },
+    {
+      "id": "acp-v1-turn",
+      "url": "https://agentclientprotocol.com/protocol/v1/prompt-turn",
+      "kind": "official_live_specification",
+      "checked": "opened actual page",
+      "supports": "session/prompt 终态与 session/cancel 通知分开；仍需接收更新并等待 cancelled。未在该 v1 页面取得标准 steer 方法。",
+      "versionBound": false
+    },
+    {
+      "id": "codex-1.13.1-extension",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v1.13.1/src/AcpExtensions.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source",
+      "supports": "扩展名称、仅 sessionId/prompt 参数、injected/startedNewTurn/failed 回执。",
+      "versionBound": "1.13.1"
+    },
+    {
+      "id": "codex-2.1.1-extension",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/AcpExtensions.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source",
+      "supports": "当前既有 registry 表所记 2.1.1 仍为同样请求/回执形状；不是本机安装版本。",
+      "versionBound": "2.1.1"
+    },
+    {
+      "id": "codex-2.1.1-server",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/CodexAcpServer.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source",
+      "supports": "performSteeringRequest、injectIntoCurrentTurn、startNewTurnFromSteering 和 parseSessionSteerParams；无活跃工作或竞争结束仍回落新轮。",
+      "versionBound": "2.1.1"
+    },
+    {
+      "id": "claude-0.81.2-example",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.81.2/examples/steering.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source",
+      "supports": "顶层 _meta 能力、扩展方法、promptRequired 空闲处理选项和回执类型，与已安装版本对应。",
+      "versionBound": "0.81.2"
+    },
+    {
+      "id": "claude-0.88.0-server",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.88.0/src/acp-agent.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source; relevant steer path inspected",
+      "supports": "3769–3840 的 steer 仍保留 promptRequired、活动输入 push 和 injected；仅此路径核读，不把所有新版本行为当已验证。",
+      "versionBound": "0.88.0"
+    },
+    {
+      "id": "claude-sdk-stream",
+      "url": "https://code.claude.com/docs/en/agent-sdk/streaming-vs-single-mode",
+      "kind": "official_live_documentation",
+      "checked": "opened actual page; platform.claude.com redirected here",
+      "supports": "持久 streaming input 能承接消息、工具、权限与中断；精确 priority/终态规则以下列已安装源码为证。",
+      "versionBound": false
+    },
+    {
+      "id": "pi-acp-0.0.34",
+      "url": "https://raw.githubusercontent.com/svkozak/pi-acp/v0.0.34/src/acp/agent.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched actual source",
+      "supports": "ACP 外层入口与 /steering 模式设置；模式设置不等于输入 steer。",
+      "versionBound": "0.0.34"
+    },
+    {
+      "id": "pi-rpc-0.87.1",
+      "url": "https://raw.githubusercontent.com/earendil-works/pi/v0.87.1/packages/coding-agent/docs/rpc-commands.md",
+      "kind": "maintainer_tagged_documentation",
+      "checked": "fetched actual source and compared installed documentation",
+      "supports": "底层 steer 排队至工具完成后的下次模型调用前；success 回执；clear_queue 与 abort 分开且残余队列可能继续。",
+      "versionBound": "0.87.1"
+    },
+    {
+      "id": "claude-0.63.0-counterexample",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.63.0/src/acp-agent.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched and inspected actual source",
+      "supports": "227–241 parseSteerRequest 丢弃 _meta；1416–1419 声明 steering.supported=true；1720–1756 steer 在没有活动工作时调用 detached prompt 并返回 startedNewTurn。",
+      "versionBound": "0.63.0"
+    },
+    {
+      "id": "claude-0.64.0-opt-in",
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.64.0/src/acp-agent.ts",
+      "kind": "maintainer_tagged_source",
+      "checked": "fetched and inspected actual source",
+      "supports": "211–218 请求 opt-in；238–267 解析 _meta.steering.idleBehavior；1495–1498 仍仅声明 supported=true；1839–1842 空闲时返回 promptRequired。与 0.63.0 相比，没有新增可辨别该子能力的握手声明。",
+      "versionBound": "0.64.0"
+    }
+  ],
+  "surfaces": {
+    "codexAppServer": {
+      "provider": "OpenAI",
+      "route": "turn/steer",
+      "evidenceLevel": "official_documentation_and_installed_adapter_call_site",
+      "request": {
+        "threadId": "existing native thread",
+        "expectedTurnId": "must equal currently active native turn",
+        "input": "official content items"
+      },
+      "acceptance": "返回 turnId 仅表示接纳到该活动工作；不表示模型已经执行、工具已经停止或本轮完成。",
+      "idleOrWrongTarget": "官方文档说明无活动工作或 expectedTurnId 不匹配会失败；不会为 steer 新开工作。",
+      "constraints": "不通过 steer 改 cwd/model/sandbox/outputSchema；interrupt 独立且仍需最终终态。",
+      "installedAvailability": "已装 @openai/codex 0.156.1 的调用面被 Codex ACP steerTurn 使用；本轮未启动 app-server，未独立验证版本运行时 wire。",
+      "notEquivalent": "已装 @openai/codex 是 CLI 依赖；不等于已装 @openai/codex-sdk。官方 TS SDK 页的 thread.run 不能直接当中途 steer。",
+      "farfoldFit": "精确目标语义满足设计方向，但当前活动连接由 ACP adapter 持有；不能另开进程将同名会话冒充同一活动工作。直接 app-server 需独立接入设计，不是此次最小改动。",
+      "sourceRefs": ["openai-app-server", "openai-sdk"],
+      "localEvidence": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:34260",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:34850"
+      ]
+    },
+    "codexAcp": {
+      "installedPackages": [
+        {
+          "name": "@agentclientprotocol/codex-acp",
+          "version": "1.13.1",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/package.json"
+        },
+        {
+          "name": "@openai/codex",
+          "version": "0.156.1",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@openai/codex/package.json"
+        }
+      ],
+      "method": "_session/steering",
+      "advertisement": "initialize response /_meta/steering/supported = true",
+      "requestFields": ["sessionId", "prompt"],
+      "target": "adapter 查找本 session 当前可补充的 turnId，并在内部调用 app-server expectedTurnId；调用方不能提供预期 ID。",
+      "extraParameterBehavior": "1.13.1 parseSessionSteerParams 仅返回 sessionId/prompt；调用方 _meta 和 expectedTurnId 被丢弃。",
+      "outcomes": {
+        "injected": "内部活动 turn/steer 成功；仅表示接纳。",
+        "startedNewTurn": "没有活动 turn 或注入时原 turn 已结束，自动启动新 prompt；不是拒绝，也不能安全重发原内容。",
+        "failed": "队列捕获非 RequestError 后给此值；可能覆盖传输/派发后失败，不能一概当未消费。",
+        "rpcError": "只有能证明发生在派发前的校验失败才归拒绝；其余保守归未知。"
+      },
+      "concurrency": "adapter 每 session SteeringQueue 串行处理；待旧 activePrompt 完成后可启动回落的新 prompt。串行本身不能保证调用方所指原轮次。",
+      "toolPermissionCancellation": "steer 与独立 interrupt/cancel 不同；未取得运行中工具必然中止或审批自动取消的保证。Farfold 必须继续承接原权限和终态，不自行代答。",
+      "currentTagComparison": "官方 2.1.1 的扩展类型和服务实现仍有新轮回落，升级版本不是已证明的解决办法；本轮未升级。",
+      "eligibility": "not_eligible_for_strict_active_only_without_official_guard",
+      "remainingGap": "缺调用方目标 ID、禁止空闲新开的协商参数、可追溯接纳 ID/查询；应保留缺口，不能修改上游实现来补。",
+      "sourceRefs": [
+        "codex-1.13.1-extension",
+        "codex-2.1.1-extension",
+        "codex-2.1.1-server"
+      ],
+      "localEvidence": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:37755",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:38739",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:38778",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:38816",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:38845",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:38923"
+      ]
+    },
+    "claudeAcp": {
+      "installedPackages": [
+        {
+          "name": "@agentclientprotocol/claude-agent-acp",
+          "version": "0.81.2",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/package.json"
+        },
+        {
+          "name": "@anthropic-ai/claude-agent-sdk",
+          "version": "0.3.280",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/package.json"
+        }
+      ],
+      "method": "_session/steering",
+      "advertisement": "initialize response /_meta/steering/supported = true",
+      "activeOnlyRequest": {
+        "sessionId": "existing ACP session",
+        "prompt": [
+          {
+            "type": "text",
+            "text": "user supplied addition"
+          }
+        ],
+        "_meta": {
+          "steering": {
+            "idleBehavior": "promptRequired"
+          }
+        }
+      },
+      "target": "没有外部 expectedTurnId；查找该 session 的未 settle 工作，活动分支从检查到 input.push 同步执行。Farfold 必须保证同 session 不在旧请求与补充未决时派发新 prompt。",
+      "outcomes": {
+        "injected": "把带内部 UUID 的 SDKUserMessage 推入原 stream 后返回；UUID 没有随回执返回。",
+        "promptRequired": "reason=noRunningTurn；指定 idleBehavior 后，空闲分支不写 SDK 输入、不新开工作，可明确保留内容。",
+        "startedNewTurn": "省略 opt-in 的默认空闲行为会启动 detached prompt；严格补充路径必须禁用这一默认行为。",
+        "rpcError": "push 后仍 await publishGoalFromPrompt；因此所有错误不能统一归未接纳。缺回复、断连、超时、意外形状都按未知处理。"
+      },
+      "pendingToolOrUserInput": "pendingUserInputCount > 0 时 priority=later；否则 priority=now 可打断当前生成周期。既有工具步骤之间继续输入；这不是所有工具立即终止的保证。",
+      "completion": "steered UUID/echo/result 留在原活动工作；原 ACP prompt 不因被打断的单个 SDK cycle 结果提前 settle，等待 steered 结果与 idle。",
+      "cancel": "cancel 标记 session、打断 query/compaction 并清理交互；待处理 steer echo 作为 orphan 跟踪，避免迟到结果归入下一次 prompt。本轮仅源码核对，未跑该竞态。",
+      "currentTagComparison": "官方 0.88.0 对应 steer 路径仍包含 opt-in 空闲拒绝和 injected；本机依旧 0.81.2。",
+      "eligibility": "not_eligible_for_production_active_only_without_safe_subcapability_negotiation",
+      "remainingGap": "即使确认是官方 Claude 接入并取得实时 supported=true，仍不能区别已核 0.63.0 与支持 opt-in 的实现。不能用版本 pin、品牌、二进制 hash、错误文本或非空占位探针替代协商；没有已证无副作用的协商方式。还缺外部目标 ID、接纳消息 ID、幂等查询。",
+      "sourceRefs": [
+        "claude-0.81.2-example",
+        "claude-0.88.0-server",
+        "claude-sdk-stream",
+        "claude-0.63.0-counterexample",
+        "claude-0.64.0-opt-in"
+      ],
+      "localEvidence": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:181",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:191",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:1135",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:1839",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:1868",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:1895",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:1961",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:4767",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/dist/acp-agent.js:5466",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:3058",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:5981"
+      ],
+      "legacyCounterexample": {
+        "status": "source_verified_no_runtime_call",
+        "sameAdvertisement": "0.63.0 与 0.64.0 都是 initialize._meta.steering.supported=true；握手无法判断 idleBehavior 子能力。",
+        "unsafeBehavior": "0.63.0 parseSteerRequest 仅返回 sessionId/prompt，忽略 _meta；活动工作恰好结束时按空闲默认调用 prompt，故请求声称 promptRequired 仍可启动新工作。",
+        "checkedReleaseBoundary": "已核 v0.63.0 不含 promptRequired，v0.64.0 包含 opt-in；不主张最早实现提交，也不据版本决定运行能力。",
+        "probeBoundary": "已装 0.81.2 先拒绝空 prompt 再解析 idleBehavior；空数组 invalidParams 不能验证子能力，非空占位有被消费风险。未运行探针。",
+        "decision": "当前生产入口保持关闭；不开发隐藏失效按钮或以受控 fixture 冒充对已登记 Agent 的安全支持。"
+      }
+    },
+    "piAcp": {
+      "installedPackages": [
+        {
+          "name": "pi-acp",
+          "version": "0.0.34",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/package.json"
+        },
+        {
+          "name": "@earendil-works/pi-coding-agent",
+          "version": "0.87.1",
+          "packageJson": "/Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-pi/dependency-pi-cli-GAsip5/node_modules/@earendil-works/pi-coding-agent/package.json"
+        }
+      ],
+      "nativeRpc": "底层 Pi RPC 有 steer 和 prompt.streamingBehavior=steer；工具调用完成后、下次模型调用前交付，success 只表示排入 Agent 队列。",
+      "nativeCancellationCaveat": "官方 0.87.1 文档把 clear_queue 与 abort 分开；abort 后剩余队列可能继续。不可沿用别家取消假设。",
+      "actualInstalledAcp": "ACP prompt→controller.prompt；已有 pendingTurn 时进入 turnQueue，普通底层 prompt 只传 message/images，未带 streamingBehavior。",
+      "notEquivalent": "/steering 仅修改递送模式；源码中有该词或底层 RPC 能力，不等于 ACP 已暴露运行中输入。",
+      "eligibility": "not_exposed_by_checked_installed_acp_route",
+      "sourceRefs": ["pi-acp-0.0.34", "pi-rpc-0.87.1"],
+      "localEvidence": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/dist/index.js:205",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/dist/index.js:870",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/pi/install-t261dt/node_modules/pi-acp/dist/index.js:2128",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-pi/dependency-pi-cli-GAsip5/node_modules/@earendil-works/pi-coding-agent/docs/rpc-commands.md:44",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-pi/dependency-pi-cli-GAsip5/node_modules/@earendil-works/pi-coding-agent/docs/rpc-commands.md:122"
+      ]
+    }
+  },
+  "farfoldCurrent": {
+    "sourceEvidence": [
+      "plans/agent-access.md:132",
+      "src-tauri/src/acp_client/pump.rs:179",
+      "src-tauri/src/acp_client/pump.rs:1135",
+      "src-tauri/src/acp_client/session.rs:480",
+      "src-tauri/src/acp_client/manager.rs:580",
+      "src-tauri/src/acp_client/handshake.rs:202",
+      "src-tauri/src/acp_client/handshake.rs:263",
+      "src-tauri/src/acp_client/account_query.rs:1"
+    ],
+    "observation": "当前生产 runtime/components/acp_client 搜索未找到 steer/_session/steering/session/inject 处理；SessionControl 只有已有 prompt/cancel/config 等入口。ARCH-37 保持缺少。",
+    "availableFoundation": "已有逐 session prompt 活跃门禁、取消通知与最终回执、UntypedMessage 扩展调用及 initialize _meta 的 schema 传递。可复用这些边界，不引入第二 Agent loop。",
+    "missing": "共用能力声明、活动请求归属检查、补充请求路由与独立回执、未知结果后的输入保护、权限/取消/终态交错测试和共用 UI。",
+    "standardBoundary": "核过的 ACP v1 prompt-turn 规范没有建立通用 typed steer 方法；本轮所证两家是维护者扩展，不把讨论中的 session/inject 提案当已发布标准。"
+  },
+  "minimalDesign": {
+    "status": "conditional_design_only_blocked_by_missing_safe_capability_negotiation_no_production_entry",
+    "runtimeOwnership": "继续外部 Agent 自己执行循环、工具、权限与历史；不使用直接 Responses API 代替 Agent，不改 adapter，不停后重发伪装 steer。",
+    "capability": [
+      "共享 initialize._meta.steering.supported 只证明扩展存在，不证明 active-only 或 exact-target；旧官方 Claude 反例也排除已核品牌映射加该布尔值。当前不开放生产入口。",
+      "不靠版本 pin、二进制 hash、品牌猜测、错误文字、空输入或占位消息探测子能力；没有可证无副作用的协商前，fixture 只能证明本方状态规则，不能成为交付功能。",
+      "下列设计仅在官方面明确保证目标工作约束且该连接可确认语义后适用；或另行完整迁移到具有 expectedTurnId 的官方连接，不能并联第二控制器。"
+    ],
+    "admissionAndTarget": [
+      "请求归属于当前连接对象、现有 session 和当前未完成 prompt 生命周期；开始取消、连接替换、prompt 完结、忙于互斥配置或另一个补充未决时不派发。",
+      "本地短生命周期关联仅用于防止请求串到下一轮；不建立 locator/generation/事件账本。官方有 expectedTurnId 的路由必须传原值并核返回 turnId。",
+      "当前 Claude ACP 无法安全协商 active-only opt-in，此前以本方单 prompt 加已核映射即可开放的设想由旧官方版本反例否定；本节不得被解释为当前可实施生产路径。"
+    ],
+    "scheduling": "在既有控制 FIFO 中登记补充，网络回执异步接回；不能在 pump 上阻塞等待导致审批、取消、更新或原 prompt 终态饥饿。不得破坏已验证的队首 Cancel 快路和控制顺序。",
+    "receiptStates": [
+      {
+        "state": "rejected_before_delivery",
+        "condition": "本地派发前拒绝，或官方能证明未消费的 promptRequired/noRunningTurn",
+        "input": "保留内容，说明未补充；后续普通发送/排队必须由用户另行选择。"
+      },
+      {
+        "state": "accepted",
+        "condition": "可识别 injected 或匹配 expectedTurnId 的 turnId",
+        "input": "仅标接纳，继续原活动工作；保留其来源，不宣称执行成功或轮次完成。"
+      },
+      {
+        "state": "unexpected_new_work",
+        "condition": "收到 startedNewTurn",
+        "input": "已可能被消费，不能自动重发；诚实提示另一项工作已经开始并停用此严格路由，作为能力违约调查。"
+      },
+      {
+        "state": "unknown",
+        "condition": "派发后超时/断连/丢回复/failed/异常形状/无法证明未消费的 RPC error",
+        "input": "保留原输入与未确认状态，禁止自动重试或冷恢复自动发送；没有官方查询/幂等键就不得猜回执。"
+      }
+    ],
+    "cancelAndPermission": "补充接纳与停止确认独立。开始停止后关闭新补充入口；已发补充不因 cancel 成功即宣称未消费。权限/提问仍答原请求，工具是否已中断由 Agent 更新与最终 cancelled 证明。",
+    "ui": "沿用同一 Composer 和状态体系，清楚区分补充、排队、停止与结果未知；可先限制为官方确认支持的文本输入。附件/特殊命令需单独覆盖既有许可与参数转换，不硬编码模型。",
+    "persistence": "复用现有未发送内容/不确定请求保护，冷载入一律暂停；不新增发送事件持久 ledger。",
+    "firstExecutableSlice": "本轮不实施生产控制或隐藏入口。先评估完整官方 app-server 接入的身份、历史、配置、权限与生命周期依赖；若不具备依赖闭合方案，记录准确阻断并转做其他独立能力。"
+  },
+  "requiredControlledTests": [
+    "实时握手 absent/false/畸形/meta 位点错误/未知语义拒绝；不把 Codex supported 当 Claude active-only。",
+    "活动输入 injected 保持原工作；空闲/结束竞争 promptRequired 不消费，不自动普通发送。",
+    "过期连接/session/prompt 的请求在派发前拒绝；补充回执未决时下一 prompt 不得穿过。",
+    "派发后 RPC error、failed、超时、丢回复及错误目标均保留未知；不自动重试，不让迟到回执覆盖下一工作。",
+    "Codex startedNewTurn 反例证明当前 strict 路由不能启用；额外 _meta 不被误认为有效护栏。",
+    "工具执行、多个权限/提问待答、停止先到/补充先到、队首控制项顺序和 inbox→turnEnd 共存，所有等待可取消且无饥饿。",
+    "Claude 被打断 SDK cycle 的结果不能提前结束原 prompt；steered echo/result 后再终态；取消后的迟到结果不能归入下一 prompt。",
+    "队列/输入冷恢复固定暂停；接纳不等于完成；无官方查询时保留结果未知，不根据文本重复猜去重。"
+  ],
+  "catalogOverlay": {
+    "baseTable": "docs/evidence/2026-10-09-capability-hardening/official-capabilities.json",
+    "membershipSource": "src-tauri/src/acp_client/first_release.rs:4",
+    "exactIdsMatched": true,
+    "rows": [
+      {
+        "id": "amp-acp",
+        "name": "Amp",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "antigravity-acp",
+        "name": "Google Antigravity",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "autohand",
+        "name": "Autohand Code",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "claude-acp",
+        "name": "Claude Agent ACP",
+        "steeringEvidence": "installed_and_tagged_source_checked",
+        "surfaceRef": "claudeAcp",
+        "note": "0.81.2 源码有 opt-in，但 0.63.0 同 supported 声明会忽略它并另开工作；不能安全协商，生产严格补充入口保持关闭。"
+      },
+      {
+        "id": "cline",
+        "name": "Cline CLI",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "codebuddy-code",
+        "name": "Codebuddy Code",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "codex-acp",
+        "name": "Codex ACP",
+        "steeringEvidence": "installed_and_tagged_source_checked",
+        "surfaceRef": "codexAcp",
+        "note": "当前扩展可能自动新开一轮；严格补充当前工作不可直接启用。"
+      },
+      {
+        "id": "cursor",
+        "name": "Cursor",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "devin",
+        "name": "Devin",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "dimcode",
+        "name": "DimCode",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "dirac",
+        "name": "Dirac",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "factory-droid",
+        "name": "Factory Droid",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "fast-agent",
+        "name": "fast-agent",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "gemini",
+        "name": "Gemini CLI",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "github-copilot-cli",
+        "name": "GitHub Copilot CLI",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "goose",
+        "name": "Goose",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "grok-build",
+        "name": "Grok Build",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "kilo",
+        "name": "Kilo",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "kimchi",
+        "name": "Kimchi",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "kimi",
+        "name": "Kimi CLI",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "minimax-code",
+        "name": "MiniMax Code",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "mistral-vibe",
+        "name": "Mistral Vibe",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "nova",
+        "name": "Nova",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "opencode",
+        "name": "OpenCode",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "pi-acp",
+        "name": "Pi ACP",
+        "steeringEvidence": "installed_and_tagged_source_checked",
+        "surfaceRef": "piAcp",
+        "note": "底层 Pi RPC 有 steer；已装 ACP prompt 忙时排队，不能当 steer。"
+      },
+      {
+        "id": "poolside",
+        "name": "Poolside",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "qoder",
+        "name": "Qoder CLI",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "qwen-code",
+        "name": "Qwen Code",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      },
+      {
+        "id": "sigit",
+        "name": "siGit Code",
+        "steeringEvidence": "unknown_not_reaudited",
+        "surfaceRef": null,
+        "note": "既有 29 家接口表没有 steering 字段；本轮未逐项重新核此能力，不代表不支持。"
+      }
+    ],
+    "counts": {
+      "catalog": 29,
+      "installedAndTaggedSteeringSourceChecked": 3,
+      "unknownNotReaudited": 26,
+      "runtimePromptOrSteerCalls": 0,
+      "completeRealAgentAcceptance": 0
+    },
+    "note": "原表其他字段可能已被后续工程推进，此 overlay 仅复用名单与入口，未重判原表历史状态。"
+  },
+  "verification": {
+    "passed": [
+      "29 行 ID 集合与当前 first_release INCLUDED 完全一致。",
+      "已安装包 package.json 版本与代码读取成功。",
+      "所列官方页面/tag 内容实际读取，不只依赖搜索摘要。",
+      "本 JSON 解析与引用路径检查完成。"
+    ],
+    "failedRuntimeTests": [],
+    "notTested": [
+      "真实 initialize/steer/prompt/审批/取消",
+      "当前正式 app 的运行中补充 UI 与 IPC",
+      "账号/模型/工具实际行为",
+      "真实竞态、丢回复、跨进程恢复",
+      "所有 29 家逐项 steering API 与真实出口"
+    ],
+    "interpretation": "自动开始新轮等结论为已安装/官方源码所示行为；没有本轮运行反例，不记红测或产品实测失败。最小设计仍需独立复核和受控测试。"
+  },
+  "followupReviewedAt": "2026-10-09T11:33:32.075697+00:00",
+  "alternativeConnectionAssessment": {
+    "status": "read_only_architecture_assessment_no_production_change_no_agent_calls",
+    "decision": "现有 ACP 路由没有可立即交付且满足精确目标约束的小片。完整 Codex app-server 路由在官方接口语义上可行，但应作为独立连接迁移项目；不为 ARCH37 单点仓促替换。直接 Claude SDK 目前仍未取得更强目标约束。",
+    "codexAppServer": {
+      "feasibility": "官方 turn/steer 明确要求 expectedTurnId 并返回接纳 turnId，无活动工作时失败。因此完整单连接迁移具备目标约束的接口基础；这不是本机运行实测或所有安装版本符合性证明。",
+      "ownership": "一个现有 AcpManager 生命周期所有者运行一个官方 app-server 子进程，普通输入、steer、interrupt、审批、事件、配置和恢复全部通过这条连接。不得从正在运行 ACP 子进程旁再开 app-server；不得改 Codex loop、HOME 或配置文件。",
+      "historyEvidence": "已装 Codex ACP 1.13.1 在 newSession 直接把 response.thread.id 返回为 sessionId；resume/load 直接把 request.sessionId 传 threadResume.threadId。现有 native_session_id 在此已核路径可原值保留，不需要复制历史。跨路径实际恢复尚未执行；不能把 ID 形状当所有历史可恢复的证明。",
+      "serviceEvidence": "当前 Farfold CODEX_CONFIG/MODEL_PROVIDER 由官方 ACP 包读取并转为 threadStart/threadResume 的 config/modelProvider；直接启动 app-server 不能假设这些 adapter 环境字段仍有效。必须在官方会话级 config override 中恢复选定 provider/model，继续专用环境项交付 secret，并核服务身份及有效配置回执；不得调用 config/value/write 或批量写用户配置。",
+      "minimumVerticalDependencies": [
+        "入口与协议：只执行已登记或用户明确配置的官方命令，不自动替换为包内发现的 Codex。现有 manager 的官方 ACP Client/InitializeRequest 强耦合，需在 acp_client 中加入单一连接协议实现分派，统一生命周期及清理；ACP 仍是其余接入路径。当前命令和握手契约如何显式登记官方 app-server 需先形成一致接入约定。",
+        "身份与恢复：保留 agent_id/cwd/native_session_id/service identity 及既有打开保留；协议切换只发生在连接确认关闭之后。thread/resume/read/list 映射历史，不遍历或改写原始 Agent 文件，不把其他 provider 历史错误并入当前来源。",
+        "配置与认证：model/list、thread start/resume 回执、config/read、account API 映射到同一配置/认证视图；旧保存 model/effort/mode/fast 选择逐项对照，不能用缺字段或默认值掩盖变化。API 来源指纹及秘密隔离、MCP 临时配置/撤回必须同等保留。",
+        "事件与交互：完整映射 turn/item、approval、user input/elicitation、resolved、usage/compaction/子任务及未知 envelope 到现有共享 UI。不得只映射文本成功路而回退或丢弃权限请求、历史工具与终态。",
+        "运行保护：每次 turn/start 返回的官方 turn.id 只存于该活动连接内；steer 传同 thread/expectedTurnId 并核回执。审批/取消/终态持续处理，未知补充独立留存，原请求 completed 不会消除此输入或放开下一项队列；不支持的方法明确失败而非 fallback 新轮。"
+      ],
+      "cost": "高于单个扩展请求的小片；至少协议与生命周期、身份/配置/服务恢复、交互与事件完整映射、目标/未知状态四个依赖闭合增量，并分别受控验证。不能据阅读给可靠工时或声称无回归。完成这些以后才有用户可用的单一路径；不建议先发布内部半成品。",
+      "verificationRequired": [
+        "空闲/错误 expectedTurnId/原请求刚完成均不得新建请求；同一 active turn 匹配回执才认接纳；unknown method 不回落。",
+        "补充入队但未派发时取消；已派发后取消、审批等待、原请求完成、超时断连；迟到回执仍关联原工作且不使下一普通输入越过未知门禁。",
+        "旧 native_session_id 无内容复制地恢复；同服务来源/model/effort/mode/fast 对照，缺失或变化触发现有确认保护。",
+        "API override 与已有账号环境竞争、模型不符、MCP 必需服务失败、权限/提问取消、未知事件；凭据不进诊断/事件/元数据。",
+        "真实官方 app-server 对受控本地服务完整单连接旅程，再按 root 统一安排安装版验证；本轮均未执行。"
+      ],
+      "sourceRefs": ["openai-app-server"],
+      "localEvidence": [
+        "src-tauri/src/acp_client/manager.rs:526",
+        "src-tauri/src/acp_client/manager.rs:583",
+        "src-tauri/src/acp_client/service_config.rs:168",
+        "src-tauri/src/acp_client/service_connection.rs:48",
+        "src-tauri/src/acp_client/connection_identity.rs:22",
+        "src-tauri/src/acp_client/session_config.rs:33",
+        "src/runtime/sessions.ts:439",
+        "src/runtime/sessions.ts:1000",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:27269",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:33808",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:33874",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:33969",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:34260",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js:40562"
+      ],
+      "researchLimit": "官方在线 app-server 文档已搜索并打开；尝试读取 openai/codex rust-v0.156.1 与 main 的两条原源码路径均 HTTPError，未作为来源。当前精确安装路径关系仅据已装 ACP 分发源码；不声称已复核内嵌 app-server Rust 实现。"
+    },
+    "claudeSdk": {
+      "independentReviewer": "verification subagent; installed declaration read only",
+      "feasibility": "当前已核 Query.streamInput 返回 Promise<void>，SDKUserMessage 含 priority 与可选 uuid/session_id，但没有取得 expectedTurnId/activeOnly 或带目标接纳回执。可控制写入哪个 Query，不足以承诺该 Query 内精确运行轮次。",
+      "ownership": "只有统一 Query 创建/恢复、普通输入、streamInput、interrupt、审批、状态与历史后才是一条官方连接；不能与现有 ACP 并联 Query。",
+      "cost": "需迁移协议进程、身份/来源/模型恢复、权限与取消、事件与历史、终态及未知回执五组职责；未证更强目标约束前，不建议为 ARCH37 更换全路径。",
+      "localEvidence": [
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:3052",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:5970",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:2019",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:2713",
+        "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts:2749"
+      ],
+      "sourceRefs": ["claude-sdk-stream"]
+    },
+    "blockingConditions": [
+      "当前 Claude ACP 握手无法区分是否遵守 promptRequired，旧官方实现已提供确定反例；当前 Codex ACP 会隐藏目标约束并 fallback 新轮。",
+      "Claude SDK 未取得更强 expected-target 约束；直接改连接仍不能消除该语义缺口。",
+      "Codex app-server 有官方目标约束，但 Farfold 尚无完整单连接协议实现及原身份/配置/服务/权限/历史的迁移验证；不能只为 steer 并联控制器。"
+    ]
+  }
+}

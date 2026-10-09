@@ -4,7 +4,10 @@ import { uiError } from "./ui_error";
 
 const failures = [
   ["AGENT_INITIALIZE_FAILED", "连接检查未完成，请检查程序或启动设置后重试"],
-  ["AGENT_INITIALIZE_TIMEOUT", "等待连接检查超时，请稍后重试"],
+  [
+    "AGENT_INITIALIZE_TIMEOUT",
+    "连接检查超时，原因尚未确定。请先查看是否有待处理的登录或文件夹访问提示，再检查程序启动设置",
+  ],
   ["AGENT_CONNECTION_ENDED", "连接在检查完成前结束，请检查程序后重试"],
   ["AGENT_START_FAILED", "程序未能启动，请检查程序文件和资料文件夹后重试"],
 ] as const;

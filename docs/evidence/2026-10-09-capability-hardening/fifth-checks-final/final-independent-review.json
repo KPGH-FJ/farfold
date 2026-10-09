@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-09T12:21:00.330372+00:00",
+  "reviewer": "verification",
+  "mode": "independent_read_only_source_inventory_and_existing_evidence_no_test_rerun",
+  "result": "completed_no_blocker_in_requested_precommit_scope",
+  "inputs": {
+    "manifest": "inputs.json",
+    "sha256": "c0391813a744b1f7a8e6f963b53ee74c52fdfc0f1aad843619c5a0ef745492a7",
+    "expectedCount": 918,
+    "currentCount": 918,
+    "exactSamePathsAndHashes": true,
+    "changedInputs": [],
+    "enumeration": "Recomputed exact scopes/top-level input list from reviewed run-fifth-checks.py; no dependency/target/user-data traversal."
+  },
+  "originalScope": {
+    "auditFiles": [
+      "docs/evidence/2026-10-09-host-capability-audit/architecture.json",
+      "docs/evidence/2026-10-09-host-capability-audit/product.json",
+      "docs/evidence/2026-10-09-host-capability-audit/host.json"
+    ],
+    "count": 122,
+    "unique": 122,
+    "planOccurrences": 122,
+    "missing": [],
+    "duplicates": [],
+    "range": "ARCH-01–50, P01–50, H01–22; checked audit items against plan table rows."
+  },
+  "fileSize": {
+    "productionFilesChecked": 475,
+    "maximum": {
+      "path": "src/components/Composer.tsx",
+      "lines": 1489
+    },
+    "over1500": [],
+    "scope": "ts/tsx/rs/css/m/h under src, src-tauri/src, src-tauri/native; standalone tests/test-support and fixture directories excluded; inline tests remain counted in production file size."
+  },
+  "protectedExistingDirtyFiles": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "unchanged": true
+    }
+  ],
+  "finalValidation": {
+    "receipt": "final-verification.json",
+    "allSevenPassedAccordingToReceiptAndLogs": true,
+    "logHashesAllMatch": true,
+    "frontend": {
+      "files": 252,
+      "passed": 2820,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 1134,
+      "failed": 0,
+      "ignored": 5
+    },
+    "format": "Original final-run format failure was only fifth-checks/receipt.json; format-after-receipts.txt confirms successful separate recheck. No unchanged behavioral tests rerun by this reviewer."
+  },
+  "firstToFinalInputDifferences": [
+    "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "src-tauri/src/storage_recovery/database_restore/validate.rs",
+    "src/components/Composer.project-files.test.tsx"
+  ],
+  "changesReviewed": [
+    "validate.rs uses SchemaObject tuple alias; no schema validation semantic change.",
+    "Composer.project-files.test.tsx isolates template store while retaining attachment/no-Agent assertions.",
+    "preparation_actions_tests.rs observes bounded real PTY builtin readiness rather than external touch; does not change runtime control code, and original full-suite trigger remains undetermined."
+  ],
+  "claimBoundaries": {
+    "P09": "Templates implemented and fixture-tested; installed interaction and full Agent slash-command item remain open.",
+    "P16": "Image/PDF source, parser/canvas fixtures and build; browser worker/installed WebKit and Office remain unverified/unimplemented.",
+    "H02": "Startup physical replacement plus temporary-database and mocked UI tests; no formal damaged-data recovery, real power loss/full disk or Windows replacement claim.",
+    "docs": "Current status/README state seven checks passed, fifth candidate not yet installed; earlier staged records remain historical. All 122 IDs and their conditions retained."
+  },
+  "notPerformed": [
+    "No source or test edits, no test rerun, no application launch/quit/install, no user database or credential inspection.",
+    "Normal exit/private snapshot and 111 conversations/7 unsent/0 active are parent-owned observations, not independently repeated in this review.",
+    "Candidate binary/archive/codesign and installed behavior are outside this precommit review; candidate verification will be separate."
+  ]
+}

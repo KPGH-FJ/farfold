@@ -17,6 +17,9 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+mod visual;
+pub use visual::{VisualPreview, read_visual};
+
 pub const MAX_FILE_BYTES: u64 = 32 * 1024 * 1024;
 pub const MAX_TEXT_BYTES: u64 = 1024 * 1024;
 
@@ -30,6 +33,7 @@ pub enum DeliveryError {
     Changed,
     Unreadable,
     UnsupportedText,
+    UnsupportedVisual,
     AlreadyExists,
     InvalidDestination,
     DestinationChanged,
@@ -47,6 +51,7 @@ impl DeliveryError {
             Self::Changed => "文件或位置已变化，请重新检查",
             Self::Unreadable => "文件已无法读取，请检查位置和访问权限",
             Self::UnsupportedText => "此文件无法作为文字预览，请另存或使用其他应用打开",
+            Self::UnsupportedVisual => "此文件无法在这里预览，请另存或使用其他应用打开",
             Self::AlreadyExists => "目标位置已有同名文件，请使用其他名称",
             Self::InvalidDestination => "保存位置无效，请重新选择",
             Self::DestinationChanged => "保存位置已变化，请先检查目标文件，勿重复保存",

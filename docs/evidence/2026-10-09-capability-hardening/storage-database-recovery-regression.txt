@@ -1,0 +1,64 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.35s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 50 tests
+test storage_recovery::database_restore::tests::future_schema_and_same_columns_without_constraints_are_rejected ... ok
+test storage_recovery::database_restore::tests::missing_intent_after_preparation_never_becomes_a_fresh_database ... ok
+test storage_recovery::database_restore::tests::intent_tampering_and_unexpected_side_files_keep_admission_closed ... ok
+test storage_recovery::database_restore::tests::lost_apply_reply_is_idempotent_and_another_ticket_cannot_apply ... ok
+test storage_recovery::database_restore::tests::oversized_and_future_receipts_cannot_open_or_trigger_new_recovery ... ok
+test storage_recovery::database_restore::tests::interrupted_or_changed_promoted_files_never_release_to_database_open ... ok
+test storage_recovery::database_restore::tests::missing_main_keeps_every_side_file_and_never_mixes_it_with_new_database ... ok
+test storage_recovery::database_restore::tests::preparing_record_cannot_replay_moves_or_accept_changed_originals ... ok
+test storage_recovery::database_restore::tests::private_verification_accepts_a_valid_database_through_resolved_temp_path ... ok
+test storage_recovery::database_restore::tests::symbolic_link_intent_is_not_followed_or_replaced ... ok
+test storage_recovery::restore::candidate::tests::changed_bytes_or_side_file_set_after_capture_are_rejected ... ok
+test storage_recovery::restore::candidate::tests::oversized_sparse_source_is_refused ... ok
+test storage_recovery::restore::candidate::tests::symbolic_link_side_file_and_ancestor_are_rejected ... ok
+test storage_recovery::database_restore::tests::failed_first_preparation_can_be_explicitly_retried_without_discarding_materials ... ok
+test storage_recovery::database_restore::tests::receipt_cannot_expand_total_material_size_past_the_preparation_limit ... ok
+test storage_recovery::database_restore::tests::next_recovery_after_release_keeps_the_previous_receipt_and_all_originals ... ok
+test storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore ... ok
+test storage_recovery::database_restore::tests::preview_source_replacement_does_not_change_reviewed_material ... ok
+test storage_recovery::restore_tests::a_symbolic_link_candidate_is_rejected_without_following_it ... ok
+test storage_recovery::restore_tests::direct_restore_rejects_keys_outside_the_two_allowed_records ... ok
+test storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy ... ok
+test storage_recovery::restore_tests::a_valid_candidate_named_snapshot_sqlite3_does_not_collide_with_private_snapshot ... ok
+test storage_recovery::database_restore::tests::released_receipt_never_overwrites_later_database_writes ... ok
+test storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected ... ok
+test storage_recovery::tests::a_failed_manifest_promotion_keeps_incomplete_material_without_a_completion_file ... ok
+test storage_recovery::tests::a_truncated_existing_file_is_not_initialized_as_an_empty_store ... ok
+test storage_recovery::database_restore::tests::valid_copy_replaces_only_after_protection_and_requires_fresh_startup ... ok
+test storage_recovery::tests::extended_readonly_recovery_errors_do_not_claim_filesystem_permissions ... ok
+test storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write ... ok
+test storage_recovery::tests::failed_copy_never_acknowledges_a_complete_export_or_touches_the_source ... ok
+test storage_recovery::tests::corrupt_database_and_side_files_are_retained_and_exported_as_unverified ... ok
+test storage_recovery::restore_tests::startup_ready_and_restore_are_serialized_until_the_receipt_is_recorded ... ok
+test storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file ... ok
+test storage_recovery::tests::missing_previously_observed_database_is_never_recreated ... ok
+test storage_recovery::tests::orphaned_wal_prevents_empty_initialization_and_can_be_preserved_on_its_own ... ok
+test storage_recovery::tests::recovery_gate_rejects_every_existing_non_recovery_command ... ok
+test storage_recovery::tests::replacement_change_and_exit_admission_are_mutually_exclusive ... ok
+test storage_recovery::tests::file_created_during_a_failed_attempt_is_remembered_before_retry ... ok
+test storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store ... ok
+test storage_recovery::tests::orphaned_shm_and_journal_also_block_creation_but_similarly_named_files_do_not ... ok
+test storage_recovery::tests::read_only_database_is_reported_before_initialization_changes_it ... ok
+test storage_recovery::tests::structural_damage_after_a_valid_sqlite_header_is_rejected_without_repairing_bytes ... ok
+test storage_recovery::tests::unresolved_database_replacement_intent_prevents_opening_a_readable_database ... ok
+test storage_recovery::restore_tests::unknown_database_version_and_added_schema_are_refused_without_migration ... ok
+test storage_recovery::tests::retry_failure_keeps_the_gate_closed_and_parallel_retry_installs_only_once ... ok
+test storage_recovery::tests::online_export_includes_committed_wal_and_preserves_invalid_draft_text ... ok
+test storage_recovery::restore_tests::valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_original_copy ... ok
+test storage_recovery::database_restore::tests::release_failure_never_admits_even_when_the_marker_was_promoted ... ok
+test storage_recovery::database_restore::tests::first_preparation_interruptions_preserve_originals_and_have_a_deterministic_exit ... ok
+test storage_recovery::database_restore::tests::interruption_before_and_after_each_mutation_can_resume_without_losing_originals ... ok
+
+test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 1088 filtered out; finished in 7.87s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

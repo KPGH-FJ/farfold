@@ -1,0 +1,1 @@
+docs/evidence/2026-10-09-capability-hardening/visual-preview.json 31ms (unchanged)

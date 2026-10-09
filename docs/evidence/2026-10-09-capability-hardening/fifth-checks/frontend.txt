@@ -1,0 +1,346 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.project-files.test.tsx (22 tests | 17 failed) 321ms
+   × uses the existing add-file menu to import an image without changing text or contacting an Agent 65ms
+   × keeps cancellation and a late chooser response from replacing later draft input 4ms
+   × looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending 5ms
+   × dismisses file suggestions with Escape without deleting typed text or accepting a stale selection 2ms
+   × prefers the established conversation folder to a different selected work context 3ms
+   × does not query or attach a project file when no folder is available 2ms
+   × hides an old folder's list immediately and rejects its captured selection while the replacement query is pending 5ms
+   × ignores a late old-folder response after the new folder's files are ready 4ms
+   × rejects a captured file selection after moving to other draft 1ms
+   × rejects a captured file selection after moving to inactive 2ms
+   × rejects a captured file selection after moving to unmounted 2ms
+   × rejects an old selection when the draft becomes read-only or its file query changes 3ms
+   × completes an explicitly picked file read only in its original draft after another draft is shown 3ms
+   × does not place a late file body into an attachment whose path has been replaced 2ms
+   × encodes a picked project attachment in /selected and retains existing unsent work 2ms
+   × encodes a picked project attachment in C:\work folder and retains existing unsent work 1ms
+   × asks for a working folder before an @ search and resumes when one arrives 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 17 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > uses the existing add-file menu to import an image without changing text or contacting an Agent
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'draft_attachment_image', { …(2) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "draft_attachment_image",
++   "settings_get",
+    {
+-     "read": true,
+-     "uri": "file:///chosen/%E5%9B%BE%E7%89%87%20space%25.txt",
++     "key": "promptTemplates.v1",
+    },
+  ]
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 2
+
+ ❯ src/components/Composer.project-files.test.tsx:207:18
+    205|   );
+    206|   expect(hooks.openDialog).toHaveBeenCalledExactlyOnceWith({ multiple:…
+    207|   expect(invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_ima…
+       |                  ^
+    208|     uri: "file:///chosen/%E5%9B%BE%E7%89%87%20space%25.txt",
+    209|     read: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > keeps cancellation and a late chooser response from replacing later draft input
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "settings_get",
+      Object {
+        "key": "promptTemplates.v1",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/Composer.project-files.test.tsx:280:22
+    278|   await settle();
+    279|   expect(composerDrafts.read("project-new-a")).toBe(later);
+    280|   expect(invoke).not.toHaveBeenCalled();
+       |                      ^
+    281|   expect(threads.open).not.toHaveBeenCalled();
+    282|   expect(threads.send).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:309:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > dismisses file suggestions with Escape without deleting typed text or accepting a stale selection
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:335:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > prefers the established conversation folder to a different selected work context
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:368:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > does not query or attach a project file when no folder is available
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "settings_get",
+      Object {
+        "key": "promptTemplates.v1",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/Composer.project-files.test.tsx:376:22
+    374|   await settle();
+    375|   expect(options()).toHaveLength(0);
+    376|   expect(invoke).not.toHaveBeenCalled();
+       |                      ^
+    377|   expect(composerDrafts.read("project-new-a").text).toBe("Keep @");
+    378|   expect(composerDrafts.read("project-new-a").attachments).toHaveLengt…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > hides an old folder's list immediately and rejects its captured selection while the replacement query is pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:402:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > ignores a late old-folder response after the new folder's files are ready
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:423:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to other draft
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to inactive
+ FAIL  src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to unmounted
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:454:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > rejects an old selection when the draft becomes read-only or its file query changes
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:471:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > completes an explicitly picked file read only in its original draft after another draft is shown
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:503:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > does not place a late file body into an attachment whose path has been replaced
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:533:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > encodes a picked project attachment in /selected and retains existing unsent work
+ FAIL  src/components/Composer.project-files.test.tsx > encodes a picked project attachment in C:\work folder and retains existing unsent work
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:553:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/17]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > asks for a working folder before an @ search and resumes when one arrives
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ noAgentRequests src/components/Composer.project-files.test.tsx:151:5
+    149|           command === "project_files" || command === "project_file_rea…
+    150|       ),
+    151|   ).toBe(true);
+       |     ^
+    152| }
+    153|
+ ❯ src/components/Composer.project-files.test.tsx:573:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/17]⎯
+
+
+ Test Files  1 failed | 251 passed (252)
+      Tests  17 failed | 2803 passed (2820)
+   Start at  20:07:38
+   Duration  38.45s (transform 11.63s, setup 0ms, import 257.02s, tests 39.70s, environment 32ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

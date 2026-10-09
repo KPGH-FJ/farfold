@@ -1,0 +1,39 @@
+{
+  "asOf": "2026-10-09",
+  "owner": "product_coverage",
+  "result": "fixed-test-dependency-isolation",
+  "rootCause": "Composer 新增 usePromptTemplates 后会在挂载时读取 promptTemplates.v1。项目文件测试用同一个 invoke mock 返回文件列表或附件字节，且将 IPC 严格限定为项目文件操作；未隔离的模板读取既收到不匹配数据，也被原调用次数/白名单断言识别为额外调用。全部 17 个原失败均对应 settings_get({key:promptTemplates.v1})，未发现 Agent 调用或附件保存行为回归。",
+  "change": {
+    "file": "src/components/Composer.project-files.test.tsx",
+    "description": "在模板模块边界提供稳定的已就绪空快照，与既有模板快捷操作测试的隔离方式一致。",
+    "productionChanged": false,
+    "existingAssertionsChanged": false,
+    "preservedAssertions": [
+      "threads.open/send、onSend、onGoSettings 不被意外调用",
+      "project_files/project_file_read IPC 白名单与附件读取精确调用次数",
+      "既有文字/附件保持、取消和跨草稿迟到响应保护",
+      "不扩大 IPC 允许列表，不忽略 settings_get 调用计数"
+    ]
+  },
+  "verification": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/Composer.project-files.test.tsx --reporter=verbose",
+      "before": "17 failed, 5 passed; exit 1",
+      "after": "22 passed; exit 0",
+      "logs": [
+        "composer-project-files-template-red.txt",
+        "composer-project-files-template-green.txt"
+      ]
+    },
+    {
+      "scope": "全部 9 个 Composer.* 测试文件、useComposerFileDrop、PromptTemplatesDialog、prompt_templates 和 template_edit_drafts",
+      "result": "13 files, 147 tests passed; exit 0",
+      "log": "composer-template-related-green.txt"
+    },
+    {
+      "command": "corepack pnpm exec prettier --check src/components/Composer.project-files.test.tsx",
+      "result": "passed; exit 0"
+    }
+  ],
+  "limits": "上述测试由本 reviewer 实际运行；未据此宣称全仓通过、安装版通过或真实 Agent 验证。全仓重验由 root 接续。"
+}

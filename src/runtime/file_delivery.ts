@@ -24,6 +24,12 @@ export interface TextPreview {
   text: string;
 }
 
+export interface VisualPreview {
+  file: VerifiedFile;
+  mimeType: string;
+  data: string;
+}
+
 export interface DeliveryReceipt {
   kind: "fileCopy" | "textSnapshot";
   destination: string;
@@ -94,6 +100,8 @@ export const fileDelivery = {
     invoke<VerifiedFile>("file_delivery_inspect", { root, path }),
   readText: (file: VerifiedFile) =>
     invoke<TextPreview>("file_delivery_read_text", { file }),
+  readVisual: (file: VerifiedFile) =>
+    invoke<VisualPreview>("file_delivery_read_visual", { file }),
   copy: (file: VerifiedFile, destination: string) =>
     invoke<DeliveryReceipt>("file_delivery_copy", { file, destination }),
   exportText: (text: string, destination: string) =>

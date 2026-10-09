@@ -2,6 +2,12 @@ import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { ComposerAttachments } from "./ComposerAttachments";
 import { ThreadUsage } from "./ThreadUsage";
+import {
+  ComposerTemplateActions,
+  isCurrentTemplateText,
+} from "./ComposerTemplateActions";
+import { PromptTemplatesDialog } from "./PromptTemplatesDialog";
+import { usePromptTemplates } from "../runtime/prompt_templates";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
@@ -17,11 +23,6 @@ import {
   keepQueueEditAsDraft,
 } from "../runtime/queue_edit";
 import { configCheckMessage } from "../runtime/config_check";
-/**
- * 消息栏（F 稿 .composer）：自动增高、Enter/Shift+Enter、IME 安全、
- * 粘贴图片（需 promptCapabilities.image）、@ 或 + 添加文件、
- * 运行中排队显示、停止按钮。
- */
 import { toUiNotice, uiError, type UiNotice } from "../runtime/ui_error";
 import { ErrorNotice } from "./ErrorNotice";
 import { traceAfterPaint } from "../runtime/performance-trace";
@@ -186,6 +187,8 @@ export function Composer({
   plusOwner.current = active && plusOpen ? storageKey : null;
   const [commandQuery, setCommandQuery] = useState("");
   const [shortcutScope, setShortcutScope] = useState<string | null>(null);
+  const [templateManager, setTemplateManager] = useState(false);
+  const templates = usePromptTemplates();
   const shortcutAnchor = useRef<HTMLButtonElement>(null);
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
@@ -333,6 +336,13 @@ export function Composer({
   const searchedTemplates = C.shortcuts.filter((item) =>
     `${item.label} ${item.text}`.toLocaleLowerCase().includes(commandNeedle),
   );
+  const savedTemplates =
+    templates.ready && !templates.uncertain ? templates.items : [];
+  const searchedSavedTemplates = savedTemplates.filter((item) =>
+    `${item.label} ${item.text}`.toLocaleLowerCase().includes(commandNeedle),
+  );
+  const liveTemplates = useRef<readonly { label: string; text: string }[]>([]);
+  liveTemplates.current = [...C.shortcuts, ...savedTemplates];
   const inputHint = commandInputHint(commands, text);
   const liveCommands = useRef(commands);
   liveCommands.current = commands;
@@ -342,7 +352,9 @@ export function Composer({
   const slashQ = slashQuery(text);
   // W3-7：斜杠菜单与快捷指令面板共用同一分组列表（Agent 命令 + 模板）。
   const slashActions =
-    slashQ === null ? [] : filterComposerActions(commands, C.shortcuts, slashQ);
+    slashQ === null
+      ? []
+      : filterComposerActions(commands, liveTemplates.current, slashQ);
   const slashOpen =
     !shortcutOpen && !suggestionsDismissed && slashActions.length > 0;
   const slashList = slashActions;
@@ -419,7 +431,22 @@ export function Composer({
 
   const pickSlash = (index: number) => {
     const action = slashActions[index];
-    if (!action) return;
+    if (
+      !action ||
+      !active ||
+      inputDisabled ||
+      liveKey.current !== storageKey ||
+      composerDrafts.read(storageKey).text !== text ||
+      draftPersistence.snapshot().interactionLocked
+    )
+      return;
+    if (action.kind === "template" && !isCurrentTemplateText(action.insert))
+      return;
+    if (
+      action.kind === "command" &&
+      !liveCommands.current.some((item) => item.name === action.insert)
+    )
+      return;
     // The whole input is a single `/token`; a pick replaces it entirely —
     // commands keep their `/name ` form, templates insert their body.
     setText(action.kind === "command" ? `/${action.insert} ` : action.insert);
@@ -509,6 +536,12 @@ export function Composer({
   }, [inputDisabled]);
   const insertShortcut = (value: string) => {
     if (inputDisabled || shortcutOwner.current !== storageKey) return;
+    if (
+      draftPersistence.snapshot().interactionLocked ||
+      busy.current ||
+      !isCurrentTemplateText(value)
+    )
+      return;
     setText(
       (previous) =>
         `${previous}${previous && !previous.endsWith("\n") ? "\n" : ""}${value}`,
@@ -1165,7 +1198,7 @@ export function Composer({
       {browserSuggestionsReady && slashOpen && (
         <div className="pick-menu" role="listbox">
           {slashActions.map((action, i) => (
-            <Fragment key={`${action.kind}:${action.label}`}>
+            <Fragment key={`${action.kind}:${action.label}:${i}`}>
               {(i === 0 || slashActions[i - 1].kind !== action.kind) && (
                 <div className="pm pm-group" aria-hidden="true">
                   {action.kind === "command"
@@ -1383,7 +1416,8 @@ export function Composer({
             <p className="composer-shortcuts-note">{R.commandNote}</p>
             {commandNeedle &&
               !searchedCommands.length &&
-              !searchedTemplates.length && (
+              !searchedTemplates.length &&
+              !searchedSavedTemplates.length && (
                 <p role="status">{R.commandEmpty}</p>
               )}
             <span className="composer-shortcuts-title">{C.agentCommands}</span>
@@ -1404,20 +1438,24 @@ export function Composer({
                 {C.agentCommandsEmpty}
               </p>
             )}
-            <span className="composer-shortcuts-title">{C.shortcutsHint}</span>
-            {searchedTemplates.map((shortcut) => (
-              <button
-                key={shortcut.label}
-                type="button"
-                className="btn btn-ghost"
-                onClick={() => insertShortcut(shortcut.text)}
-              >
-                <CommandIcon size={15} />
-                <span>{shortcut.label}</span>
-              </button>
-            ))}
+            <ComposerTemplateActions
+              items={searchedSavedTemplates}
+              builtins={searchedTemplates}
+              error={!!templates.error}
+              onInsert={insertShortcut}
+              onManage={() => {
+                setShortcutScope(null);
+                setTemplateManager(true);
+              }}
+            />
           </div>
         </WorkspaceActionMenu>
+      )}
+      {active && templateManager && (
+        <PromptTemplatesDialog
+          returnFocusRef={shortcutAnchor}
+          onClose={() => setTemplateManager(false)}
+        />
       )}
       <div className="composer-footer">
         {thread?.identity === "established" && (

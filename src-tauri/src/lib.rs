@@ -43,6 +43,7 @@ mod program_launch;
 #[cfg(test)]
 mod program_launch_tests;
 mod project_index;
+mod prompt_templates_commands;
 mod pty;
 pub mod shell_env;
 mod storage_recovery;
@@ -180,6 +181,12 @@ pub fn run() {
                 storage_recovery::storage_recovery_restore_apply,
                 storage_recovery::storage_recovery_restore_receipt,
                 storage_recovery::storage_recovery_restore_cancel,
+                storage_recovery::storage_recovery_database_preview,
+                storage_recovery::storage_recovery_database_apply,
+                storage_recovery::storage_recovery_database_status,
+                storage_recovery::storage_recovery_database_continue,
+                storage_recovery::storage_recovery_database_cancel,
+                storage_recovery::storage_recovery_database_restart,
                 browser_sharing::browser_share_status,
                 browser_sharing::browser_share_allow,
                 browser_sharing::browser_share_respond,
@@ -261,6 +268,7 @@ pub fn run() {
                 work_policy::agent_work_set,
                 auth::settings_get,
                 auth::settings_set,
+                prompt_templates_commands::prompt_templates_save,
                 desktop_notifications::desktop_notifications_get,
                 desktop_notifications::desktop_notifications_set,
                 desktop_notifications::desktop_notification_submit,
@@ -275,6 +283,7 @@ pub fn run() {
                 file_delivery_commands::file_delivery_inspect,
                 file_delivery_commands::file_delivery_inspect_selected,
                 file_delivery_commands::file_delivery_read_text,
+                file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_copy,
                 file_delivery_commands::file_delivery_export_text,
                 file_delivery_commands::file_delivery_open,
@@ -304,6 +313,7 @@ pub fn run() {
             browser_workspace::handle_run_event(app, &event);
             desktop_notifications::handle_run_event(&event);
             draft_exit::handle(app, &event);
+            storage_recovery::handle_run_event(app, &event);
             if let tauri::RunEvent::WindowEvent {
                 label,
                 event: tauri::WindowEvent::Destroyed,

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/pdf_preview.test.ts (11 tests | 1 failed) 21ms
+   × terminates a nonresponsive rendering worker on timeout without waiting for any library acknowledgement 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_preview.test.ts > terminates a nonresponsive rendering worker on timeout without waiting for any library acknowledgement
+AssertionError: expected 600 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 600
+
+ ❯ src/runtime/pdf_preview.test.ts:35:24
+     33|   expect(target.width).toBe(0); expect(FakeWorker.instances[0].termina…
+     34|   const late = new Bitmap(); FakeWorker.instances[0].receive({ kind: "…
+     35|   expect(target.width).toBe(0); expect(late.close).toHaveBeenCalledOnc…
+       |                        ^
+     36| });
+     37| it("cancels and does not draw a late pixel reply", async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  19:48:23
+   Duration  138ms (transform 33ms, setup 0ms, import 43ms, tests 21ms, environment 0ms)
+

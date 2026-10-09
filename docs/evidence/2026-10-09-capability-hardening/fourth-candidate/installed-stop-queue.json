@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-10-09T11:32:50.857872+00:00",
+  "sourceCommit": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "application": "/Applications/Farfold.app",
+  "environment": "macOS arm64, existing configured Codex, model displayed 6 Astra, reasoning Ultra",
+  "configurationChanged": false,
+  "method": "Native CUA input/actions followed by accessibility observations; official Agent and configured real service",
+  "conversation": "Single newly created visible test conversation, FARFOLD_STOP_63ED89FF_20261009",
+  "stopThenContinue": {
+    "prompt": "FARFOLD_STOP_63ED89FF_20261009: no tools/files/web, request 200 numbered short cloud sentences",
+    "streamObservedBeforeStop": true,
+    "stopClicked": true,
+    "observedTerminal": "已停止",
+    "observedStatus": "未在运行",
+    "followupPrompt": "FARFOLD_RESUME_63ED89FF_20261009: no tools/files/web; reply only 停止后继续成功",
+    "actualReply": "停止后继续成功",
+    "followupTerminal": "已完成"
+  },
+  "stopWithQueuedMessage": {
+    "prompt": "FARFOLD_QUEUE_STOP_63ED89FF_20261009: no tools/files/web, request 200 numbered short wave sentences",
+    "queuedWhileRunning": "FARFOLD_QUEUE_63ED89FF_20261009: no tools/files/web; reply only 手动继续队列成功",
+    "queueObservedBeforeStop": 1,
+    "afterStop": {
+      "terminal": "已停止",
+      "status": "未在运行",
+      "queue": "待发消息已暂停",
+      "manualContinueControl": "继续发送"
+    },
+    "laterObservationBeforeManualContinue": {
+      "queueRetained": true,
+      "stillNotRunning": true,
+      "queuedTextStillPresent": true
+    },
+    "manualContinueClicked": true,
+    "actualReply": "手动继续队列成功",
+    "terminal": "已完成"
+  },
+  "toolCallsObservedInUi": 0,
+  "newPermissionsApproved": false,
+  "finalState": "Not running, empty composer, Send disabled; no pending test attachment",
+  "limits": [
+    "One Agent/service/model configuration and same visible test conversation only",
+    "No external tool or child process was started; cannot establish external-process cancellation",
+    "No raw protocol cancellation receipt captured; installed UI terminal plus source mapping is the stated evidence",
+    "No independent service-side model identity attestation",
+    "No cold resume or permission replay verified by these two live-continuation flows",
+    "No saved screenshot claimed"
+  ]
+}

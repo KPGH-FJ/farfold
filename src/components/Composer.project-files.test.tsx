@@ -57,6 +57,20 @@ vi.mock("@tauri-apps/api/core", () => ({
 vi.mock("../runtime/work_policy", () => ({
   useWorkPolicy: () => ({ ready: true, enabled: () => true }),
 }));
+// Template loading has its own store/shortcut tests. Keep this fixture's IPC
+// boundary specific to file discovery and attachment reads.
+vi.mock("../runtime/prompt_templates", () => {
+  const empty = {
+    items: [],
+    ready: true,
+    saving: false,
+    uncertain: false,
+    error: null,
+    notice: null,
+  };
+  const snapshot = () => empty;
+  return { usePromptTemplates: snapshot, promptTemplates: { snapshot } };
+});
 
 import { invoke } from "@tauri-apps/api/core";
 import { Composer } from "./Composer";

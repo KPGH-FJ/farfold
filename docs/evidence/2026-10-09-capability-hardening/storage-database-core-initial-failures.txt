@@ -1,0 +1,47 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.24s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 9 tests
+test storage_recovery::database_restore::tests::symbolic_link_intent_is_not_followed_or_replaced ... ok
+test storage_recovery::database_restore::tests::future_schema_and_same_columns_without_constraints_are_rejected ... ok
+test storage_recovery::database_restore::tests::intent_tampering_and_unexpected_side_files_keep_admission_closed ... ok
+
+thread 'storage_recovery::database_restore::tests::missing_main_keeps_every_side_file_and_never_mixes_it_with_new_database' (19075649) panicked at src/storage_recovery/database_restore/tests.rs:148:39:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpdoshlR/Farfold-Restore-53211a3523dff4f1a907e08904bf6ad13651fa993972ce4e"), materials_complete: true }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'storage_recovery::database_restore::tests::lost_apply_reply_is_idempotent_and_another_ticket_cannot_apply' (19075648) panicked at src/storage_recovery/database_restore/tests.rs:135:39:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpNGMimp/Farfold-Restore-12665494da2adfb5738d984b3cb0b0025f492a654b1a3902"), materials_complete: true }
+test storage_recovery::database_restore::tests::lost_apply_reply_is_idempotent_and_another_ticket_cannot_apply ... FAILED
+test storage_recovery::database_restore::tests::missing_main_keeps_every_side_file_and_never_mixes_it_with_new_database ... FAILED
+
+thread 'storage_recovery::database_restore::tests::released_receipt_never_overwrites_later_database_writes' (19075651) panicked at src/storage_recovery/database_restore/tests.rs:96:39:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp6mHken/Farfold-Restore-331bbe62c1c6231196972f412a716801cb9157756a829fe9"), materials_complete: true }
+
+thread 'storage_recovery::database_restore::tests::interruption_before_and_after_each_mutation_can_resume_without_losing_originals' (19075647) panicked at src/storage_recovery/database_restore/tests.rs:236:76:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpoE1NDN/Farfold-Restore-2eb12091401e4355f8a8eb31b6a7259c95b9b52fd6f52cab"), materials_complete: true }
+
+thread 'storage_recovery::database_restore::tests::valid_copy_replaces_only_after_protection_and_requires_fresh_startup' (19075653) panicked at src/storage_recovery/database_restore/tests.rs:60:53:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpi3NjkU/Farfold-Restore-cb74828c0546fa5da82afb0adf24851a81474958e293a4c8"), materials_complete: true }
+
+thread 'storage_recovery::database_restore::tests::preview_source_replacement_does_not_change_reviewed_material' (19075650) panicked at src/storage_recovery/database_restore/tests.rs:120:39:
+called `Result::unwrap()` on an `Err` value: RestoreFailure { code: "unsupported", issue: None, materials_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpkWopTH/Farfold-Restore-cfd919e964c723e65da5274d513f74a5c7bb0e546978cbd1"), materials_complete: true }
+test storage_recovery::database_restore::tests::released_receipt_never_overwrites_later_database_writes ... FAILED
+test storage_recovery::database_restore::tests::interruption_before_and_after_each_mutation_can_resume_without_losing_originals ... FAILED
+test storage_recovery::database_restore::tests::valid_copy_replaces_only_after_protection_and_requires_fresh_startup ... FAILED
+test storage_recovery::database_restore::tests::preview_source_replacement_does_not_change_reviewed_material ... FAILED
+
+failures:
+
+failures:
+    storage_recovery::database_restore::tests::interruption_before_and_after_each_mutation_can_resume_without_losing_originals
+    storage_recovery::database_restore::tests::lost_apply_reply_is_idempotent_and_another_ticket_cannot_apply
+    storage_recovery::database_restore::tests::missing_main_keeps_every_side_file_and_never_mixes_it_with_new_database
+    storage_recovery::database_restore::tests::preview_source_replacement_does_not_change_reviewed_material
+    storage_recovery::database_restore::tests::released_receipt_never_overwrites_later_database_writes
+    storage_recovery::database_restore::tests::valid_copy_replaces_only_after_protection_and_requires_fresh_startup
+
+test result: FAILED. 3 passed; 6 failed; 0 ignored; 0 measured; 1117 filtered out; finished in 0.48s
+
+error: test failed, to rerun pass `--lib`

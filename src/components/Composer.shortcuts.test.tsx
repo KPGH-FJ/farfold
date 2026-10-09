@@ -15,7 +15,19 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
   effects: [] as (() => void)[],
+  templates: [] as { id: string; label: string; text: string }[],
+  templatesUnknown: false,
 }));
+vi.mock("../runtime/prompt_templates", () => {
+  const snapshot = () => ({
+    items: h.templates,
+    ready: true,
+    saving: false,
+    uncertain: h.templatesUnknown,
+    error: null,
+  });
+  return { usePromptTemplates: snapshot, promptTemplates: { snapshot } };
+});
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useState: (initial: unknown) => {
@@ -54,8 +66,10 @@ vi.mock("@tauri-apps/api/core", () => ({
   Channel: class {},
 }));
 import { Composer } from "./Composer";
+import { ComposerTemplateActions } from "./ComposerTemplateActions";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { PromptTemplatesDialog } from "./PromptTemplatesDialog";
 import { composerDrafts } from "../runtime/drafts";
 import { draftPersistence } from "../runtime/draft_storage";
 import { applyUpdate, freshThreadState } from "../runtime/session_projection";
@@ -68,7 +82,16 @@ const plusFocus = vi.fn();
 function nodes(tree: ReactNode): Element[] {
   return Children.toArray(tree).flatMap((child) =>
     isValidElement<Record<string, unknown>>(child)
-      ? [child, ...nodes(child.props.children as ReactNode)]
+      ? [
+          child,
+          ...nodes(
+            child.type === ComposerTemplateActions
+              ? ComposerTemplateActions(
+                  child.props as ComponentProps<typeof ComposerTemplateActions>,
+                )
+              : (child.props.children as ReactNode),
+          ),
+        ]
       : [],
   );
 }
@@ -110,6 +133,8 @@ beforeEach(() => {
   h.cursor = 0;
   h.slots = [];
   h.effects = [];
+  h.templates = [];
+  h.templatesUnknown = false;
   focus.mockClear();
   plusFocus.mockClear();
   const thread = freshThreadState("shortcut-a", "test", "/p", "one");
@@ -240,6 +265,73 @@ afterEach(() => {
   composerDrafts.clear("session:shortcut-a");
   composerDrafts.clear("session:shortcut-b");
   vi.restoreAllMocks();
+});
+
+it("appends a saved template without replacing the current draft, attachments or queue", () => {
+  h.templates = [
+    {
+      id: "custom",
+      label: "Check changes",
+      text: "Explain the changes first.",
+    },
+  ];
+  const before = composerDrafts.read("session:shortcut-a");
+  const queue = props.thread!.queued;
+  open();
+  (shortcut("Check changes").props.onClick as () => void)();
+  expect(composerDrafts.read("session:shortcut-a").text).toBe(
+    `${before.text}\nExplain the changes first.`,
+  );
+  expect(composerDrafts.read("session:shortcut-a").attachments).toBe(
+    before.attachments,
+  );
+  expect(props.thread!.queued).toBe(queue);
+  expect(threads.send).not.toHaveBeenCalled();
+});
+
+it.each(["deleted", "unknown"])(
+  "does not insert a saved template after it becomes %s",
+  (reason) => {
+    h.templates = [{ id: "custom", label: "Custom", text: "Retired content" }];
+    open();
+    const stale = shortcut("Custom").props.onClick as () => void;
+    const before = composerDrafts.read("session:shortcut-a");
+    if (reason === "deleted") h.templates = [];
+    else h.templatesUnknown = true;
+    stale();
+    expect(composerDrafts.read("session:shortcut-a")).toBe(before);
+    expect(threads.send).not.toHaveBeenCalled();
+  },
+);
+
+it("opens template management separately while preserving current input", () => {
+  const before = composerDrafts.read("session:shortcut-a");
+  open();
+  (buttonNamed("管理模板")!.props.onClick as () => void)();
+  const dialog = render().find((n) => n.type === PromptTemplatesDialog);
+  expect(dialog).toBeDefined();
+  expect(render().some((n) => n.type === WorkspaceActionMenu)).toBe(false);
+  (dialog!.props.onClose as () => void)();
+  expect(composerDrafts.read("session:shortcut-a")).toBe(before);
+  expect(threads.send).not.toHaveBeenCalled();
+});
+
+it("finds a saved template in slash suggestions and refuses stale replacement of edited input", () => {
+  h.templates = [{ id: "custom", label: "review", text: "Review carefully" }];
+  composerDrafts.update("session:shortcut-a", (draft) => ({
+    ...draft,
+    text: "/review",
+  }));
+  const selected = render().find((n) => n.props.role === "option")!;
+  expect(selected).toBeDefined();
+  const event = { preventDefault: () => {} };
+  composerDrafts.update("session:shortcut-a", (draft) => ({
+    ...draft,
+    text: "New input",
+  }));
+  (selected.props.onMouseDown as (e: typeof event) => void)(event);
+  expect(composerDrafts.read("session:shortcut-a").text).toBe("New input");
+  expect(threads.send).not.toHaveBeenCalled();
 });
 
 it.each([

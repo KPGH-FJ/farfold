@@ -157,3 +157,28 @@ it("reads the shared backend recovery fixture after reload without dispatch or a
     "settings_get",
   ]);
 });
+
+it("includes an unsaved template edit in recovery preview without loading it", async () => {
+  const { previewEntries } = await import("./storage_restore");
+  const value = {
+    ...candidate(),
+    composers: {},
+    queues: {},
+    templateEdits: {
+      id: "unfinished",
+      label: "draft title",
+      text: "unsaved template",
+    },
+  };
+  const result = previewEntries(
+    {
+      id: "a".repeat(48),
+      sourcePath: "/copy",
+      values: { "unsentWork.v1": JSON.stringify(value), "agentSetup.v1": null },
+    },
+    ["unsentWork.v1"],
+  );
+  expect(result[0].valid).toBe(true);
+  expect(result[0].summary).toContain("1 份模板编辑稿");
+  expect(h.invoke).not.toHaveBeenCalled();
+});

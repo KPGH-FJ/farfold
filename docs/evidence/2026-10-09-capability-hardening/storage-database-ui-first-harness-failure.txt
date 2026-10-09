@@ -1,0 +1,102 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/storage_restore.preview.test.ts (11 tests | 1 failed) 74ms
+   × includes an unsaved template edit in recovery preview without loading it 3ms
+ ❯ src/components/StorageDatabaseRestore.test.tsx (8 tests | 6 failed) 91ms
+   × requires explicit confirmation and a separate restart without sending requests 27ms
+   × a cancelled file chooser does not admit restoration 27ms
+   × unknown apply only checks the ticket and never repeats replacement 19ms
+   × a different ticket cannot become a success receipt 8ms
+   × old released receipt after failed preparation permits only acknowledged cancellation 5ms
+   × restart acknowledgement keeps the in-flight guard against stale callbacks 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > requires explicit confirmation and a separate restart without sending requests
+RangeError: Maximum call stack size exceeded
+ ❯ jsxDEVImpl node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react-jsx-dev-runtime.development.js:196:24
+ ❯ process.env.NODE_ENV.exports.jsxDEV node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react-jsx-dev-runtime.development.js:327:14
+ ❯ Module.StorageDatabaseRestore src/components/StorageDatabaseRestore.tsx:69:43
+
+ ❯ render src/components/StorageDatabaseRestore.test.tsx:35:10
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:37:34
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:38:40
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:40:54
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > a cancelled file chooser does not admit restoration
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > a different ticket cannot become a success receipt
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > old released receipt after failed preparation permits only acknowledged cancellation
+RangeError: Maximum call stack size exceeded
+ ❯ Module.StorageDatabaseRestore src/components/StorageDatabaseRestore.tsx:11:33
+      9|   onBlockChange: (value: boolean) => void;
+     10| }) {
+     11|   const [preview, setPreview] = useState<DatabasePreview | null>(null);
+       |                                 ^
+     12|   const [status, setStatus] = useState<DatabaseStatus | null>(initialD…
+     13|   const [confirmed, setConfirmed] = useState(false);
+ ❯ render src/components/StorageDatabaseRestore.test.tsx:35:10
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:37:34
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:38:40
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:40:54
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > unknown apply only checks the ticket and never repeats replacement
+RangeError: Maximum call stack size exceeded
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:39:8
+     37| function nodes(node: ReactNode = render()): { type: unknown; props: Re…
+     38|   if (Array.isArray(node)) return node.flatMap(n => nodes(n));
+     39|   if (!isValidElement<Record<string, unknown>>(node)) return [];
+       |        ^
+     40|   return [{ type: node.type, props: node.props }, ...nodes((node.props…
+     41| }
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:38:40
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:40:54
+ ❯ src/components/StorageDatabaseRestore.test.tsx:38:53
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:38:40
+ ❯ nodes src/components/StorageDatabaseRestore.test.tsx:40:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > restart acknowledgement keeps the in-flight guard against stale callbacks
+AssertionError: expected "vi.fn()" to be called 1 times, but got 2 times
+ ❯ src/components/StorageDatabaseRestore.test.tsx:91:74
+     89|  initialStatus=receipt; const button=nodes().find(n => n.props.childre…
+     90|  h.invoke.mockResolvedValue(undefined); (button.props.onClick as () =>…
+     91|  (button.props.onClick as () => void)(); await flush(); expect(h.invok…
+       |                                                                          ^
+     92| });
+     93|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/runtime/storage_restore.preview.test.ts > includes an unsaved template edit in recovery preview without loading it
+AssertionError: expected '0 份草稿，0 项排队内容' to contain '1 份模板编辑稿'
+
+Expected: "1 份模板编辑稿"
+Received: "0 份草稿，0 项排队内容"
+
+ ❯ src/runtime/storage_restore.preview.test.ts:166:29
+    164|   const result = previewEntries({ id: "a".repeat(48), sourcePath: "/co…
+    165|   expect(result[0].valid).toBe(true);
+    166|   expect(result[0].summary).toContain("1 份模板编辑稿");
+       |                             ^
+    167|   expect(h.invoke).not.toHaveBeenCalled();
+    168| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  7 failed | 12 passed (19)
+   Start at  19:57:59
+   Duration  228ms (transform 110ms, setup 0ms, import 102ms, tests 166ms, environment 0ms)
+

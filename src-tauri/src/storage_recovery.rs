@@ -1,7 +1,10 @@
 //! Recovery never substitutes an empty store. Only successful initialization
-//! opens the application command gate; original files stay at the same path.
+//! opens the application command gate; original materials are preserved.
+mod database_commands;
+mod database_restore;
 mod error;
 mod export;
+pub use database_commands::*;
 pub(crate) mod restore;
 mod restore_commands;
 pub use restore_commands::*;
@@ -16,7 +19,10 @@ pub(crate) use error::{io_receipt, sqlite_receipt};
 use serde::Serialize;
 use std::{
     path::{Path, PathBuf},
-    sync::Mutex,
+    sync::{
+        Mutex,
+        atomic::{AtomicU8, Ordering},
+    },
 };
 use tauri::{AppHandle, Manager};
 
@@ -26,6 +32,8 @@ pub struct RecoveryStatus {
     pub ready: bool,
     pub issue: Option<StorageIssue>,
     pub data_directory: String,
+    pub database_replacement_available: bool,
+    pub database_replacement: Option<database_restore::Status>,
 }
 struct Recovery {
     path: PathBuf,
@@ -34,8 +42,28 @@ struct Recovery {
     status: RecoveryStatus,
     editable: bool,
     restore: restore::RestoreState,
+    replacement: database_restore::State,
 }
-pub struct StorageRecoveryState(Mutex<Recovery>);
+pub struct StorageRecoveryState(Mutex<Recovery>, AtomicU8);
+const AVAILABLE: u8 = 0;
+const CHANGING: u8 = 1;
+const EXITING: u8 = 2;
+struct ChangeGuard<'a>(&'a AtomicU8);
+impl Drop for ChangeGuard<'_> {
+    fn drop(&mut self) {
+        let _ = self
+            .0
+            .compare_exchange(CHANGING, AVAILABLE, Ordering::SeqCst, Ordering::SeqCst);
+    }
+}
+impl ChangeGuard<'_> {
+    fn reserve_exit(&self) -> Result<(), restore::RestoreFailure> {
+        self.0
+            .compare_exchange(CHANGING, EXITING, Ordering::SeqCst, Ordering::SeqCst)
+            .map_err(|_| restore::RestoreFailure::new("unavailable"))?;
+        Ok(())
+    }
+}
 
 impl StorageRecoveryState {
     pub fn new(path: PathBuf) -> Self {
@@ -47,21 +75,33 @@ impl StorageRecoveryState {
             .unwrap_or(Path::new(""))
             .to_string_lossy()
             .into_owned();
-        Self(Mutex::new(Recovery {
-            path,
-            observed_database,
-            editable: false,
-            restore: restore::RestoreState::default(),
-            status: RecoveryStatus {
-                ready: false,
-                issue: None,
-                data_directory,
-            },
-        }))
+        Self(
+            Mutex::new(Recovery {
+                path,
+                observed_database,
+                editable: false,
+                restore: restore::RestoreState::default(),
+                replacement: database_restore::State::default(),
+                status: RecoveryStatus {
+                    ready: false,
+                    issue: None,
+                    data_directory,
+                    database_replacement_available: database_restore::supported(),
+                    database_replacement: None,
+                },
+            }),
+            AtomicU8::new(AVAILABLE),
+        )
+    }
+    fn begin_change(&self) -> Result<ChangeGuard<'_>, restore::RestoreFailure> {
+        self.1
+            .compare_exchange(AVAILABLE, CHANGING, Ordering::SeqCst, Ordering::SeqCst)
+            .map_err(|_| restore::RestoreFailure::new("unavailable"))?;
+        Ok(ChangeGuard(&self.1))
     }
     pub(crate) fn mark_editable(&self) -> Result<(), String> {
         let mut state = self.0.lock().map_err(|_| "资料尚未就绪，请重试")?;
-        if !state.status.ready || state.restore.active() {
+        if !state.status.ready || state.restore.active() || state.replacement.active() {
             return Err("资料恢复尚未完成，请先完成或取消恢复".into());
         }
         state.editable = true;
@@ -71,7 +111,7 @@ impl StorageRecoveryState {
         self.0
             .lock()
             .map(|state| {
-                if !state.status.ready || state.restore.active() {
+                if !state.status.ready || state.restore.active() || state.replacement.active() {
                     return command_allowed(false, command);
                 }
                 state.editable
@@ -117,12 +157,18 @@ fn command_allowed(ready: bool, command: &str) -> bool {
                 | "storage_recovery_restore_apply"
                 | "storage_recovery_restore_receipt"
                 | "storage_recovery_restore_cancel"
+                | "storage_recovery_database_preview"
+                | "storage_recovery_database_apply"
+                | "storage_recovery_database_status"
+                | "storage_recovery_database_continue"
+                | "storage_recovery_database_cancel"
+                | "storage_recovery_database_restart"
         )
 }
 
 impl Recovery {
     fn initialize(&mut self, install: impl FnOnce(MetaStore) -> Result<(), String>) {
-        if self.status.ready {
+        if self.status.ready || self.replacement.active() {
             return;
         }
         match self.open().and_then(install) {
@@ -132,8 +178,15 @@ impl Recovery {
             }
             Err(error) => self.status.issue = Some(StorageIssue::from_receipt(&error)),
         }
+        self.refresh_replacement();
+    }
+    fn refresh_replacement(&mut self) {
+        self.status.database_replacement = database_restore::inspect(&self.path)
+            .unwrap_or_else(|_| Some(database_restore::Status::blocked()));
     }
     fn open(&mut self) -> Result<MetaStore, String> {
+        self.observed_database |= database_restore::startup(&self.path)
+            .map_err(|_| "FARFOLD_STORAGE:unknown:资料恢复尚未完成".to_string())?;
         self.observed_database |= !existing_material(&self.path)?.is_empty();
         match self.path.symlink_metadata() {
             Ok(_) => self.observed_database = true,
@@ -196,9 +249,51 @@ pub fn storage_recovery_status(app: AppHandle) -> Result<RecoveryStatus, String>
 }
 #[tauri::command]
 pub async fn storage_recovery_retry(app: AppHandle) -> Result<RecoveryStatus, String> {
-    tauri::async_runtime::spawn_blocking(move || initialize(&app))
-        .await
-        .map_err(|_| "暂时无法检查资料，请重试")?
+    tauri::async_runtime::spawn_blocking(move || {
+        let state = app.state::<StorageRecoveryState>();
+        let _change = state
+            .begin_change()
+            .map_err(|_| "暂时无法检查资料，请稍后重试")?;
+        initialize(&app)
+    })
+    .await
+    .map_err(|_| "暂时无法检查资料，请重试")?
+}
+
+/// The non-editable shell has no renderer save owner. Reserve exit against
+/// whole-database mutations with the same atomic admission as those commands.
+pub fn handle_run_event(app: &AppHandle, event: &tauri::RunEvent) {
+    if app.try_state::<MetaStore>().is_some() {
+        return;
+    }
+    let Some(state) = app.try_state::<StorageRecoveryState>() else {
+        return;
+    };
+    match event {
+        tauri::RunEvent::ExitRequested { api, .. } => {
+            if state
+                .1
+                .compare_exchange(AVAILABLE, EXITING, Ordering::SeqCst, Ordering::SeqCst)
+                == Err(CHANGING)
+            {
+                api.prevent_exit();
+            }
+        }
+        tauri::RunEvent::WindowEvent {
+            event: tauri::WindowEvent::CloseRequested { api, .. },
+            ..
+        } => {
+            api.prevent_close();
+            if state
+                .1
+                .compare_exchange(AVAILABLE, EXITING, Ordering::SeqCst, Ordering::SeqCst)
+                != Err(CHANGING)
+            {
+                app.exit(0);
+            }
+        }
+        _ => {}
+    }
 }
 #[tauri::command]
 pub async fn storage_recovery_export(

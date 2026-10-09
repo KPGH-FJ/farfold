@@ -1,0 +1,32 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts" "src/runtime/template_edit_drafts.test.ts" "src/runtime/draft_storage.test.ts" "src/runtime/draft_storage.failure.test.ts" "src/runtime/draft_storage.recovery.test.ts" "src/runtime/drafts.test.ts" "src/runtime/draft_preservation.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/template_edit_drafts.test.ts (5 tests | 1 failed) 81ms
+   × rejects the entire snapshot if the optional template editor is malformed 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > rejects the entire snapshot if the optional template editor is malformed
+Error: 未能读取未发送内容，请重试。原内容没有被覆盖。
+ ❯ Object.update src/runtime/template_edit_drafts.ts:16:60
+     14|   update(next: TemplateEditDraft | null) {
+     15|     const storage = draftPersistence.snapshot();
+     16|     if (!storage.ready || storage.interactionLocked) throw new Error(s…
+       |                                                            ^
+     17|     const parsed = parseTemplateEdit(next);
+     18|     if (JSON.stringify(value) === JSON.stringify(parsed)) return;
+ ❯ src/runtime/template_edit_drafts.test.ts:35:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 72 passed (73)
+   Start at  19:45:33
+   Duration  281ms (transform 428ms, setup 0ms, import 398ms, tests 522ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

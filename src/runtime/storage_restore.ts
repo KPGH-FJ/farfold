@@ -217,7 +217,7 @@ export function previewEntries(
           key,
           label,
           valid: true,
-          summary: S.draftCount(drafts, queues),
+          summary: S.draftCount(drafts, queues, parsed?.templateEdits ? 1 : 0),
           empty: value == null,
         };
       }

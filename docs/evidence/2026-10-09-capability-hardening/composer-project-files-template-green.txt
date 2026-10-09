@@ -1,0 +1,31 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ✓ src/components/Composer.project-files.test.tsx > uses the existing add-file menu to import an image without changing text or contacting an Agent 56ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 0 53ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 1 55ms
+ ✓ src/components/Composer.project-files.test.tsx > retains a refused image without sending it into the thumbnail decoder 2 53ms
+ ✓ src/components/Composer.project-files.test.tsx > keeps cancellation and a late chooser response from replacing later draft input 3ms
+ ✓ src/components/Composer.project-files.test.tsx > looks up and adds a file in an editable unconnected draft's selected folder without connecting or sending 4ms
+ ✓ src/components/Composer.project-files.test.tsx > dismisses file suggestions with Escape without deleting typed text or accepting a stale selection 4ms
+ ✓ src/components/Composer.project-files.test.tsx > prefers the established conversation folder to a different selected work context 2ms
+ ✓ src/components/Composer.project-files.test.tsx > does not query or attach a project file when no folder is available 2ms
+ ✓ src/components/Composer.project-files.test.tsx > hides an old folder's list immediately and rejects its captured selection while the replacement query is pending 3ms
+ ✓ src/components/Composer.project-files.test.tsx > ignores a late old-folder response after the new folder's files are ready 2ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to other draft 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to inactive 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects a captured file selection after moving to unmounted 1ms
+ ✓ src/components/Composer.project-files.test.tsx > rejects an old selection when the draft becomes read-only or its file query changes 3ms
+ ✓ src/components/Composer.project-files.test.tsx > completes an explicitly picked file read only in its original draft after another draft is shown 4ms
+ ✓ src/components/Composer.project-files.test.tsx > does not place a late file body into an attachment whose path has been replaced 1ms
+ ✓ src/components/Composer.project-files.test.tsx > encodes a picked project attachment in /selected and retains existing unsent work 1ms
+ ✓ src/components/Composer.project-files.test.tsx > encodes a picked project attachment in C:\work folder and retains existing unsent work 1ms
+ ✓ src/components/Composer.project-files.test.tsx > asks for a working folder before an @ search and resumes when one arrives 1ms
+ ✓ src/components/Composer.project-files.test.tsx > runs a requested send once and clears the draft only after it is sent 54ms
+ ✓ src/components/Composer.project-files.test.tsx > drops a send request that arrives while sending is unavailable 1ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  20:09:33
+   Duration  1.56s (transform 251ms, setup 0ms, import 1.19s, tests 307ms, environment 0ms)
+

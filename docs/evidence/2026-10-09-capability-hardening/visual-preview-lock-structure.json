@@ -1,0 +1,213 @@
+{
+  "packages": {
+    "added": [
+      "@napi-rs/canvas-android-arm64@1.0.10",
+      "@napi-rs/canvas-darwin-arm64@1.0.10",
+      "@napi-rs/canvas-darwin-x64@1.0.10",
+      "@napi-rs/canvas-linux-arm-gnueabihf@1.0.10",
+      "@napi-rs/canvas-linux-arm64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-arm64-musl@1.0.10",
+      "@napi-rs/canvas-linux-riscv64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-x64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-x64-musl@1.0.10",
+      "@napi-rs/canvas-win32-arm64-msvc@1.0.10",
+      "@napi-rs/canvas-win32-x64-msvc@1.0.10",
+      "@napi-rs/canvas@1.0.10",
+      "pdfjs-dist@6.3.289"
+    ],
+    "removed": [],
+    "changed": []
+  },
+  "snapshots": {
+    "added": [
+      "@napi-rs/canvas-android-arm64@1.0.10",
+      "@napi-rs/canvas-darwin-arm64@1.0.10",
+      "@napi-rs/canvas-darwin-x64@1.0.10",
+      "@napi-rs/canvas-linux-arm-gnueabihf@1.0.10",
+      "@napi-rs/canvas-linux-arm64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-arm64-musl@1.0.10",
+      "@napi-rs/canvas-linux-riscv64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-x64-gnu@1.0.10",
+      "@napi-rs/canvas-linux-x64-musl@1.0.10",
+      "@napi-rs/canvas-win32-arm64-msvc@1.0.10",
+      "@napi-rs/canvas-win32-x64-msvc@1.0.10",
+      "@napi-rs/canvas@1.0.10",
+      "pdfjs-dist@6.3.289"
+    ],
+    "removed": [],
+    "changed": []
+  },
+  "other_sections_changed": [],
+  "importers_before": {
+    ".": {
+      "dependencies": {
+        "@phosphor-icons/react": {
+          "specifier": "^2.1.10",
+          "version": "2.1.10(react-dom@19.2.8(react@19.2.8))(react@19.2.8)"
+        },
+        "@tauri-apps/api": {
+          "specifier": "2.11.1",
+          "version": "2.11.1"
+        },
+        "@tauri-apps/plugin-dialog": {
+          "specifier": "2.7.2",
+          "version": "2.7.2"
+        },
+        "@tauri-apps/plugin-opener": {
+          "specifier": "2.5.4",
+          "version": "2.5.4"
+        },
+        "@xterm/addon-fit": {
+          "specifier": "0.11.0",
+          "version": "0.11.0"
+        },
+        "@xterm/xterm": {
+          "specifier": "6.0.0",
+          "version": "6.0.0"
+        },
+        "react": {
+          "specifier": "19.2.8",
+          "version": "19.2.8"
+        },
+        "react-dom": {
+          "specifier": "19.2.8",
+          "version": "19.2.8(react@19.2.8)"
+        },
+        "react-markdown": {
+          "specifier": "^10.1.0",
+          "version": "10.1.0(@types/react@19.2.18)(react@19.2.8)"
+        },
+        "remark-gfm": {
+          "specifier": "^4.0.1",
+          "version": "4.0.1"
+        }
+      },
+      "devDependencies": {
+        "@tauri-apps/cli": {
+          "specifier": "2.11.4",
+          "version": "2.11.4"
+        },
+        "@types/node": {
+          "specifier": "24",
+          "version": "24.13.5"
+        },
+        "@types/react": {
+          "specifier": "19.2.18",
+          "version": "19.2.18"
+        },
+        "@types/react-dom": {
+          "specifier": "19.2.4",
+          "version": "19.2.4(@types/react@19.2.18)"
+        },
+        "@vitejs/plugin-react": {
+          "specifier": "6.0.5",
+          "version": "6.0.5(vite@8.2.2(@types/node@24.13.5))"
+        },
+        "prettier": {
+          "specifier": "3.9.6",
+          "version": "3.9.6"
+        },
+        "typescript": {
+          "specifier": "5.9.3",
+          "version": "5.9.3"
+        },
+        "vite": {
+          "specifier": "8.2.2",
+          "version": "8.2.2(@types/node@24.13.5)"
+        },
+        "vitest": {
+          "specifier": "4.1.11",
+          "version": "4.1.11(@types/node@24.13.5)(vite@8.2.2(@types/node@24.13.5))"
+        }
+      }
+    }
+  },
+  "importers_after": {
+    ".": {
+      "dependencies": {
+        "@phosphor-icons/react": {
+          "specifier": "^2.1.10",
+          "version": "2.1.10(react-dom@19.2.8(react@19.2.8))(react@19.2.8)"
+        },
+        "@tauri-apps/api": {
+          "specifier": "2.11.1",
+          "version": "2.11.1"
+        },
+        "@tauri-apps/plugin-dialog": {
+          "specifier": "2.7.2",
+          "version": "2.7.2"
+        },
+        "@tauri-apps/plugin-opener": {
+          "specifier": "2.5.4",
+          "version": "2.5.4"
+        },
+        "@xterm/addon-fit": {
+          "specifier": "0.11.0",
+          "version": "0.11.0"
+        },
+        "@xterm/xterm": {
+          "specifier": "6.0.0",
+          "version": "6.0.0"
+        },
+        "pdfjs-dist": {
+          "specifier": "6.3.289",
+          "version": "6.3.289"
+        },
+        "react": {
+          "specifier": "19.2.8",
+          "version": "19.2.8"
+        },
+        "react-dom": {
+          "specifier": "19.2.8",
+          "version": "19.2.8(react@19.2.8)"
+        },
+        "react-markdown": {
+          "specifier": "^10.1.0",
+          "version": "10.1.0(@types/react@19.2.18)(react@19.2.8)"
+        },
+        "remark-gfm": {
+          "specifier": "^4.0.1",
+          "version": "4.0.1"
+        }
+      },
+      "devDependencies": {
+        "@tauri-apps/cli": {
+          "specifier": "2.11.4",
+          "version": "2.11.4"
+        },
+        "@types/node": {
+          "specifier": "24",
+          "version": "24.13.5"
+        },
+        "@types/react": {
+          "specifier": "19.2.18",
+          "version": "19.2.18"
+        },
+        "@types/react-dom": {
+          "specifier": "19.2.4",
+          "version": "19.2.4(@types/react@19.2.18)"
+        },
+        "@vitejs/plugin-react": {
+          "specifier": "6.0.5",
+          "version": "6.0.5(vite@8.2.2(@types/node@24.13.5))"
+        },
+        "prettier": {
+          "specifier": "3.9.6",
+          "version": "3.9.6"
+        },
+        "typescript": {
+          "specifier": "5.9.3",
+          "version": "5.9.3"
+        },
+        "vite": {
+          "specifier": "8.2.2",
+          "version": "8.2.2(@types/node@24.13.5)"
+        },
+        "vitest": {
+          "specifier": "4.1.11",
+          "version": "4.1.11(@types/node@24.13.5)(vite@8.2.2(@types/node@24.13.5))"
+        }
+      }
+    }
+  }
+}

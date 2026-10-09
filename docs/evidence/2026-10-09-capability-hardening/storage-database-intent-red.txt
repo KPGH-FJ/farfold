@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.44s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'storage_recovery::tests::unresolved_database_replacement_intent_prevents_opening_a_readable_database' (19019550) panicked at src/storage_recovery/tests.rs:14:5:
+assertion failed: state.0.lock().unwrap().open().is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test storage_recovery::tests::unresolved_database_replacement_intent_prevents_opening_a_readable_database ... FAILED
+
+failures:
+
+failures:
+    storage_recovery::tests::unresolved_database_replacement_intent_prevents_opening_a_readable_database
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1111 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

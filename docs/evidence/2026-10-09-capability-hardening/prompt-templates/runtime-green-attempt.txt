@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts" "src/runtime/template_edit_drafts.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
+   Start at  19:42:21
+   Duration  149ms (transform 104ms, setup 0ms, import 77ms, tests 89ms, environment 0ms)
+

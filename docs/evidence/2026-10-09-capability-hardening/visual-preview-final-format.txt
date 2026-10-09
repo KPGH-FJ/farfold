@@ -1,0 +1,4 @@
+src/runtime/pdf_preview.ts 41ms
+src/runtime/pdf_preview.test.ts 20ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/visual-preview-lock-structure.json 9ms
+docs/evidence/2026-10-09-capability-hardening/visual-preview-dependency-age.json 2ms (unchanged)

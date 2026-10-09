@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts" "src/runtime/template_edit_drafts.test.ts" "src/runtime/draft_storage.test.ts" "src/runtime/draft_storage.failure.test.ts" "src/runtime/draft_storage.recovery.test.ts" "src/runtime/drafts.test.ts" "src/runtime/draft_preservation.test.ts" "src/components/PromptTemplatesDialog.test.tsx" "src/components/Composer.shortcuts.test.tsx" "src/runtime/storage_restore.preview.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  10 passed (10)
+      Tests  120 passed (120)
+   Start at  19:55:23
+   Duration  1.51s (transform 1.15s, setup 0ms, import 2.08s, tests 906ms, environment 1ms)
+

@@ -6,7 +6,8 @@ export const ERROR_STRINGS = {
   /** Collapsed disclosure label for raw error text / codes. */
   technicalDetails: "技术详情",
   agentInitializeFailed: "连接检查未完成，请检查程序或启动设置后重试",
-  agentInitializeTimeout: "等待连接检查超时，请稍后重试",
+  agentInitializeTimeout:
+    "连接检查超时，原因尚未确定。请先查看是否有待处理的登录或文件夹访问提示，再检查程序启动设置",
   agentConnectionEnded: "连接在检查完成前结束，请检查程序后重试",
   agentStartFailed: "程序未能启动，请检查程序文件和资料文件夹后重试",
 } as const;

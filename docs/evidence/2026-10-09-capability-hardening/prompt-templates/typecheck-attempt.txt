@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/Composer.shortcuts.test.tsx(310,4): error TS2532: Object is possibly 'undefined'.
+src/runtime/prompt_templates.test.ts(37,16): error TS2353: Object literal may only specify known properties, and 'extra' does not exist in type '{ id: string; label: string; text: string; }'.
+src/runtime/prompt_templates.ts(92,114): error TS2345: Argument of type 'string' is not assignable to parameter of type '"未能读取模板，原内容没有被覆盖。请重新读取。" | "模板尚未确认保存，修改已保留。请重新读取后核对。" | "模板已变化，请重新读取后核对；你的修改仍保留。" | "请填写名称与内容；名称最多80字，内容最多32000字。" | "模板最多100个，总大小不能超过1MB。"'.
+ ELIFECYCLE  Command failed with exit code 1.

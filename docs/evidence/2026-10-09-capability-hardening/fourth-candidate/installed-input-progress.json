@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-10-09T11:29:57.601255+00:00",
+  "sourceCommit": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "application": "/Applications/Farfold.app",
+  "method": "Native macOS UI via CUA accessibility and screenshots",
+  "startup": {
+    "conversationsVisible": 110,
+    "newEmptyDraftCodexPrepared": true,
+    "modelDisplayed": "6 Astra",
+    "reasoningDisplayed": "Ultra",
+    "serviceOrModelChanged": false,
+    "promptSent": false
+  },
+  "opencode": {
+    "automaticPreparationAfterLaunch": "Timed out on the persisted selected new draft; fourth GUI timeout overall, first on this build",
+    "manualRetryThisBuild": false,
+    "newDiagnosticsForThisAttempt": false,
+    "cause": "Not attributed from this attempt alone; prior diagnosis remains separately recorded"
+  },
+  "filePicker": {
+    "fixture": "output/2026-10-09-fourth-install/file-drop-fixtures/drag-check.txt",
+    "add": "One attachment shown",
+    "duplicateSelection": "Same file selected again, still one attachment",
+    "remove": "Attachment removed and empty input shown",
+    "send": "Remained disabled; no prompt sent"
+  },
+  "nativeFileDrop": {
+    "attempts": 2,
+    "method": "Finder window arranged left; attempted cross-window drag with CUA app-relative coordinates",
+    "observed": "No attachment appeared and no source-file move observed",
+    "deliveryToComposerConfirmed": false,
+    "result": "inconclusive",
+    "limits": "The gesture target was not independently confirmed. Does not establish correct native drop behavior or a product defect. P07 remains open.",
+    "finderWindowSizeRestored": true
+  },
+  "finalState": {
+    "conversationCount": 110,
+    "status": "未在运行",
+    "attachments": 0,
+    "sendDisabled": true
+  },
+  "limits": [
+    "No real model response on this build",
+    "No compaction, restore or changed-configuration acceptance in this UI check",
+    "Screenshots observed inline only; no saved screenshot claimed",
+    "Does not validate Windows or alias-path deduplication"
+  ]
+}

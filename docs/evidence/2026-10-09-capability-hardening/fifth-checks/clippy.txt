@@ -1,0 +1,12 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: very complex type used. Consider factoring parts into `type` definitions
+  --> src/storage_recovery/database_restore/validate.rs:30:6
+   |
+30 | ) -> Result<Vec<(String, String, String, Option<String>)>, Failure> {
+   |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#type_complexity
+   = note: `-D clippy::type-complexity` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: could not compile `farfold` (lib) due to 1 previous error

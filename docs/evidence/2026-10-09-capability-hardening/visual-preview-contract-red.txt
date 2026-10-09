@@ -1,0 +1,24 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/visual_preview.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/visual_preview.test.ts [ src/runtime/visual_preview.test.ts ]
+Error: Cannot find module './visual_preview' imported from /Users/tw/Desktop/farfold/src/runtime/visual_preview.test.ts
+ ❯ src/runtime/visual_preview.test.ts:2:1
+      1| import { expect, it } from "vitest";
+      2| import { checkedVisualPreview, visualFileKind } from "./visual_preview…
+       | ^
+      3| import type { VerifiedFile } from "./file_delivery";
+      4|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  19:32:14
+   Duration  85ms (transform 11ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+

@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex, OnceLock, atomic::AtomicU32},
-    time::{Duration, Instant},
+    time::Duration,
 };
 
 #[cfg(unix)]
@@ -275,17 +275,24 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
     assert_eq!(error, "AUTH_CANCELLED");
     assert!(api.work().is_ok());
 
-    let started = data.path().join("started");
+    const READY: &str = "fixture-configuration-ready";
     std::fs::write(
         &row.command,
         format!(
-            "#!/bin/sh\ntrap '' HUP TERM\ntouch '{}'\nwhile :; do read token; done\n",
-            started.display()
+            "#!/bin/sh\ntrap '' HUP TERM\nPATH='{}'\nprintf '{READY}\\n'\nwhile :; do read token; done\n",
+            data.path().join("no-external-tools").display()
         ),
     )
     .unwrap();
     let attempt = attempts::reserve(&row.id, "service-running").unwrap();
     let configuration = crate::install_job::configuration_guard(&row.id).await;
+    // The child deliberately has no external tools. Its readiness must prove
+    // that the shell installed the signal traps, not that another process such
+    // as `touch` could start. Observe the same PTY path the action actually uses.
+    let output = Arc::new(Mutex::new(String::new()));
+    let observed = output.clone();
+    let (ready_tx, ready_rx) = tokio::sync::oneshot::channel();
+    let ready_tx = Mutex::new(Some(ready_tx));
     let id = run_terminal(
         &manager,
         &pty,
@@ -295,7 +302,26 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
         TerminalOwnership {
             configuration,
             attempt,
-            output: Channel::new(|_| Ok(())),
+            output: Channel::new(move |body| {
+                use base64::Engine;
+                let frame: serde_json::Value = body.deserialize()?;
+                let bytes = frame
+                    .get("data")
+                    .and_then(|data| data.as_str())
+                    .and_then(|data| base64::engine::general_purpose::STANDARD.decode(data).ok())
+                    .unwrap_or_else(|| frame.to_string().into_bytes());
+                let mut trace = observed.lock().unwrap();
+                let remaining = 8192usize.saturating_sub(trace.len());
+                trace.push_str(&String::from_utf8_lossy(
+                    &bytes[..bytes.len().min(remaining)],
+                ));
+                if trace.contains(READY)
+                    && let Some(tx) = ready_tx.lock().unwrap().take()
+                {
+                    let _ = tx.send(());
+                }
+                Ok(())
+            }),
         },
     )
     .unwrap();
@@ -303,11 +329,14 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
         pty: pty.clone(),
         id: id.clone(),
     };
-    let deadline = Instant::now() + Duration::from_secs(3);
-    while !started.exists() && Instant::now() < deadline {
-        tokio::time::sleep(Duration::from_millis(10)).await;
-    }
-    assert!(started.exists());
+    assert!(
+        matches!(
+            tokio::time::timeout(Duration::from_secs(3), ready_rx).await,
+            Ok(Ok(()))
+        ),
+        "fixture did not become ready; PTY output: {:?}",
+        output.lock().unwrap()
+    );
     assert!(api.work().is_err());
     assert!(attempts::reserve(&row.id, "duplicate").is_err());
     attempts::auth_cancel(row.id.clone(), "service-running".into()).unwrap();

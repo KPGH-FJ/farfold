@@ -4,6 +4,18 @@ use serde_json::json;
 use std::fs;
 
 #[test]
+fn unresolved_database_replacement_intent_prevents_opening_a_readable_database() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("farfold.sqlite3");
+    drop(MetaStore::open(&path).unwrap());
+    let before = fs::read(&path).unwrap();
+    fs::write(dir.path().join("farfold-restore.json"), b"{interrupted").unwrap();
+    let state = StorageRecoveryState::new(path.clone());
+    assert!(state.0.lock().unwrap().open().is_err());
+    assert_eq!(fs::read(&path).unwrap(), before);
+}
+
+#[test]
 fn recovery_gate_rejects_every_existing_non_recovery_command() {
     let source = include_str!("../lib.rs");
     let commands = source
@@ -386,4 +398,22 @@ fn orphaned_shm_and_journal_also_block_creation_but_similarly_named_files_do_not
         fs::read(dir.path().join("farfold.sqlite3-wal-other")).unwrap(),
         b"unrelated user file"
     );
+}
+
+#[test]
+fn replacement_change_and_exit_admission_are_mutually_exclusive() {
+    let directory = tempfile::tempdir().unwrap();
+    let state = StorageRecoveryState::new(directory.path().join("farfold.sqlite3"));
+    let change = state.begin_change().unwrap();
+    assert!(state.begin_change().is_err());
+    assert_eq!(
+        state
+            .1
+            .compare_exchange(AVAILABLE, EXITING, Ordering::SeqCst, Ordering::SeqCst),
+        Err(CHANGING)
+    );
+    change.reserve_exit().unwrap();
+    drop(change);
+    assert_eq!(state.1.load(Ordering::SeqCst), EXITING);
+    assert!(state.begin_change().is_err());
 }

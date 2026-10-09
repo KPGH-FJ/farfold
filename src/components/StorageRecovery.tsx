@@ -12,6 +12,8 @@ import {
 import "./StorageRecovery.css";
 import { StorageRestore } from "./StorageRestore";
 import type { RestoreKey } from "../runtime/storage_restore";
+import { StorageDatabaseRestore } from "./StorageDatabaseRestore";
+import type { DatabaseStatus } from "../runtime/storage_database_restore";
 
 const S = STRINGS.storageRecovery;
 
@@ -20,19 +22,30 @@ export function StorageRecovery({
   message,
   onRetry,
   restoreKeys = [],
+  databaseRecovery = false,
+  databaseStatus,
 }: {
   message: string;
   onRetry: () => Promise<void>;
   restoreKeys?: readonly RestoreKey[];
+  databaseRecovery?: boolean;
+  databaseStatus?: DatabaseStatus | null;
 }) {
   const [busy, setBusy] = useState<"retry" | "export" | "reveal" | null>(null);
   const actionPending = useRef(false);
   const [restoring, setRestoring] = useState(false);
+  const replacementPending =
+    databaseStatus != null && databaseStatus.phase !== "released";
   const [partialPath, setPartialPath] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<StorageExportReceipt | null>(null);
   const run = async (action: "retry" | "export" | "reveal") => {
-    if (actionPending.current || restoring) return;
+    if (
+      actionPending.current ||
+      restoring ||
+      (action === "retry" && replacementPending)
+    )
+      return;
     actionPending.current = true;
     setBusy(action);
     setError(null);
@@ -85,7 +98,7 @@ export function StorageRecovery({
           <button
             type="button"
             className="btn btn-primary"
-            disabled={busy !== null || restoring}
+            disabled={busy !== null || restoring || replacementPending}
             onClick={() => void run("retry")}
           >
             {busy === "retry" ? S.checking : S.retry}
@@ -111,6 +124,13 @@ export function StorageRecovery({
         {restoreKeys.length > 0 && (
           <StorageRestore
             keys={restoreKeys}
+            disabled={busy !== null}
+            onBlockChange={setRestoring}
+          />
+        )}
+        {databaseRecovery && (
+          <StorageDatabaseRestore
+            initialStatus={databaseStatus}
             disabled={busy !== null}
             onBlockChange={setRestoring}
           />
@@ -162,6 +182,8 @@ export function StorageStartup({ children }: { children: ReactNode }) {
   return (
     <StorageRecovery
       message={error ?? storageIssueMessage(status?.issue?.kind ?? "unknown")}
+      databaseRecovery={status?.databaseReplacementAvailable === true}
+      databaseStatus={status?.databaseReplacement}
       onRetry={async () => {
         const next = await invoke<StorageRecoveryStatus>(
           "storage_recovery_retry",

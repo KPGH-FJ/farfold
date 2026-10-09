@@ -1,0 +1,14 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.98s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+test meta_store::prompt_templates::tests::template_cas_rejects_late_or_missing_baseline_without_overwriting ... ok
+test meta_store::prompt_templates::tests::template_cas_creates_updates_and_preserves_unrelated_settings ... ok
+test meta_store::prompt_templates::tests::template_cas_read_only_failure_preserves_saved_content ... ok
+test meta_store::prompt_templates::tests::template_cas_protects_future_malformed_and_null_stored_values ... ok
+test meta_store::prompt_templates::tests::template_cas_only_one_concurrent_writer_can_use_the_same_baseline ... ok
+test meta_store::prompt_templates::tests::template_cas_validates_limits_and_complete_schema_before_writing ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1121 filtered out; finished in 0.07s
+

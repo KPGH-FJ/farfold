@@ -13,6 +13,7 @@ const h = vi.hoisted(() => ({
   effects: [] as (() => void)[],
   inspectLink: vi.fn(),
   readText: vi.fn(),
+  readVisual: vi.fn(),
   open: vi.fn(),
   reveal: vi.fn(),
   copy: vi.fn(),
@@ -23,10 +24,18 @@ vi.mock("../runtime/file_delivery", () => ({
   fileDelivery: {
     inspectLink: h.inspectLink,
     readText: h.readText,
+    readVisual: h.readVisual,
     open: h.open,
     reveal: h.reveal,
     copy: h.copy,
   },
+}));
+vi.mock("./VisualFilePreview", () => ({
+  VisualFilePreview: ({
+    preview,
+  }: {
+    preview: { file: { version: string } };
+  }) => <div data-visual-version={preview.file.version} />,
 }));
 vi.mock("react", async (original) => {
   const effect = (callback: () => void | (() => void), deps: unknown[]) => {
@@ -136,6 +145,7 @@ beforeEach(() => {
   for (const mock of [
     h.inspectLink,
     h.readText,
+    h.readVisual,
     h.open,
     h.reveal,
     h.copy,
@@ -587,4 +597,72 @@ it("does not move a blank opinion into the composer even if the form is submitte
   expect(
     Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].text,
   ).toBe("   ");
+});
+
+it("loads visual bytes from the exact verified receipt and offers a fresh read", async () => {
+  const file = { ...receipt, name: "result.pdf", size: 6 };
+  h.inspectLink.mockResolvedValue(file);
+  h.readVisual.mockResolvedValue({
+    file,
+    mimeType: "application/pdf",
+    data: btoa("%PDF-1"),
+  });
+  await ready();
+  expect(h.readVisual).toHaveBeenCalledWith(file);
+  expect(render().html).toContain('data-visual-version="v1"');
+  expect(button(S.refresh)).toBeDefined();
+});
+
+it("does not display mismatched or late visual bytes from a prior selection", async () => {
+  const first = { ...receipt, name: "first.pdf", size: 6 },
+    second = { ...first, name: "second.pdf", version: "v2", sha256: "sha2" };
+  const late = deferred<{
+    file: typeof first;
+    mimeType: string;
+    data: string;
+  }>();
+  h.inspectLink.mockResolvedValueOnce(first).mockResolvedValueOnce(second);
+  h.readVisual.mockReturnValueOnce(late.promise).mockResolvedValueOnce({
+    file: second,
+    mimeType: "application/pdf",
+    data: btoa("%PDF-2"),
+  });
+  render();
+  await vi.waitFor(() => expect(h.readVisual).toHaveBeenCalledOnce());
+  props = { ...props, selectionKey: "next-visual" };
+  await ready();
+  late.resolve({
+    file: first,
+    mimeType: "application/pdf",
+    data: btoa("%PDF-1"),
+  });
+  await drain();
+  expect(render().html).toContain('data-visual-version="v2"');
+  expect(render().html).not.toContain('data-visual-version="v1"');
+});
+
+it("keeps verified external-file actions when a large image cannot be previewed", async () => {
+  h.inspectLink.mockResolvedValue({
+    ...receipt,
+    name: "large.png",
+    size: 9 * 1024 * 1024,
+  });
+  await ready();
+  expect(h.readVisual).not.toHaveBeenCalled();
+  expect(render().html).toContain("文件超过当前预览限制");
+  expect(button(S.open)).toBeDefined();
+  expect(button(S.refresh)).toBeDefined();
+});
+
+it("never hands a changed visual receipt to the renderer", async () => {
+  const file = { ...receipt, name: "result.pdf", size: 6 };
+  h.inspectLink.mockResolvedValue(file);
+  h.readVisual.mockResolvedValue({
+    file: { ...file, sha256: "different" },
+    mimeType: "application/pdf",
+    data: btoa("%PDF-1"),
+  });
+  await ready();
+  expect(render().html).not.toContain("data-visual-version");
+  expect(render().html).toContain("未能预览这份文件");
 });

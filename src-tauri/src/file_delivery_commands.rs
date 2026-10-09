@@ -59,6 +59,16 @@ pub async fn file_delivery_read_text(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_visual(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::VisualPreview, String> {
+    require_main(&webview)?;
+    crate::file_read_check::run(move || file_delivery::read_visual(&file).map_err(display_error))
+        .await
+}
+
+#[tauri::command]
 pub async fn file_delivery_copy(
     webview: Webview,
     file: VerifiedFile,

@@ -9,7 +9,16 @@ import {
 import { save } from "@tauri-apps/plugin-dialog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { fileDelivery, type VerifiedFile } from "../runtime/file_delivery";
+import {
+  fileDelivery,
+  type VerifiedFile,
+  type VisualPreview,
+} from "../runtime/file_delivery";
+import {
+  visualFileKind,
+  VISUAL_PREVIEW_STRINGS as V,
+} from "../runtime/visual_preview";
+import { VisualFilePreview } from "./VisualFilePreview";
 import {
   fileFeedbackDrafts,
   fileFeedbackKey,
@@ -40,6 +49,7 @@ type View = {
   phase: "loading" | "ready" | "failed" | "paused";
   file?: VerifiedFile;
   text?: string;
+  visual?: VisualPreview;
   note?: string;
   pending?: boolean;
 };
@@ -209,6 +219,23 @@ export function OpenedFileView({
       if (isHtml(file)) {
         setView({ identity, phase: "ready", file, note: S.html });
         currentProps.current.onOpenHtml(file);
+      } else if (visualFileKind(file.name)) {
+        if (
+          visualFileKind(file.name) === "image" &&
+          file.size > 8 * 1024 * 1024
+        ) {
+          setView({ identity, phase: "ready", file, note: V.limit });
+        } else {
+          try {
+            const visual = await fileDelivery.readVisual(file);
+            if (!current(owner)) return;
+            if (!sameFile(visual.file, file)) throw new Error("File changed");
+            setView({ identity, phase: "ready", file, visual });
+          } catch {
+            if (current(owner))
+              setView({ identity, phase: "ready", file, note: V.failed });
+          }
+        }
       } else if (isText(file) && file.size <= MAX_TEXT_BYTES) {
         const preview = await fileDelivery.readText(file);
         if (!current(owner)) return;
@@ -348,16 +375,18 @@ export function OpenedFileView({
                   {S.openHtml}
                 </button>
               )}
+              {(shown.text !== undefined || visualFileKind(file.name)) && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={disabled}
+                  onClick={() => void load()}
+                >
+                  {S.refresh}
+                </button>
+              )}
               {shown.text !== undefined && (
                 <>
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    disabled={disabled}
-                    onClick={() => void load()}
-                  >
-                    {S.refresh}
-                  </button>
                   <button
                     type="button"
                     className="btn btn-text"
@@ -440,6 +469,13 @@ export function OpenedFileView({
           </p>
         )}
       </div>
+      {shown.visual && (
+        <VisualFilePreview
+          key={`${identity}:${shown.file?.version}`}
+          preview={shown.visual}
+          active={active}
+        />
+      )}
       {shown.text !== undefined && (
         <div className="artifact-file-content">
           {markdown ? (

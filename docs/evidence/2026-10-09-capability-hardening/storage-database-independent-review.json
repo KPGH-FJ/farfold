@@ -1,0 +1,65 @@
+{
+  "asOf": "2026-10-09",
+  "reviewer": "product_coverage",
+  "mode": "independent-read-only-source-and-existing-evidence-review",
+  "result": "one-reproducible-ui-blocker-found-and-fixed-by-implementation-owner; no-additional-blocker-found-after-reread",
+  "sourceReviewed": [
+    "src-tauri/src/storage_recovery/database_restore.rs",
+    "src-tauri/src/storage_recovery/database_restore/operation.rs",
+    "src-tauri/src/storage_recovery/database_restore/files.rs",
+    "src-tauri/src/storage_recovery/database_restore/validate.rs",
+    "src-tauri/src/storage_recovery/database_restore/tests.rs",
+    "src-tauri/src/storage_recovery/database_commands.rs",
+    "src-tauri/src/storage_recovery.rs",
+    "src-tauri/src/storage_recovery/tests.rs",
+    "src-tauri/src/storage_recovery/restore/candidate.rs",
+    "src-tauri/src/meta_store/schema.rs",
+    "src-tauri/src/lib.rs",
+    "src-tauri/src/draft_exit.rs",
+    "src/runtime/storage_database_restore.ts",
+    "src/components/StorageDatabaseRestore.tsx",
+    "src/components/StorageDatabaseRestore.test.tsx",
+    "src/components/StorageRecovery.tsx"
+  ],
+  "finding": {
+    "id": "H02-prior-preparing-reselection",
+    "severity": "P2",
+    "reproduction": "已有 Preparing A；重选副本取得预览 B；B 在发布新记录前准备失败，后端仍保留 A；只读核对返回 A，原 UI 将其与 B 对照并判为未知，因而无法取消或重新选择，需重启才有出口。",
+    "dataImpact": "未发现原件移动或数据丢失；问题是受控失败后的恢复入口被锁住。",
+    "fixOwner": "verification",
+    "fixReviewed": "StorageDatabaseRestore.tsx:87 仅接受与 priorStatus 相同 id 且同为 preparing 的旧状态，恢复重新选择；不接受另一条 pending/installed 记录，不自动 apply/continue，不解除工作台保护。",
+    "redEvidence": "storage-database-prior-preparing-red.txt",
+    "redObserved": "11 tests: 1 failed, 10 passed；预期重新显示 preparing，实际 false",
+    "greenEvidence": "storage-database-frontend-final.txt",
+    "resolution": "fix and regression tests reread; resolved within source/fixture scope"
+  },
+  "confirmedBoundaries": [
+    "首次 Preparing 记录先持久化再创建材料目录；Preparing 不移动原件，重选前核原件摘要一致且 original 目录为空。",
+    "Prepared 之前保留完整独立字节副本并同步目录；逐件移动使用 macOS RENAME_EXCL，不替换未知目标；中断后按 live/retained 的精确状态继续。",
+    "同 id 的重复 apply 仅检查已有记录，不再次执行准备；UI 的未知回执路径只读取状态，继续恢复必须另行明确操作。",
+    "Installed 后同进程仍由 replacement.active 与无 MetaStore 的恢复壳限制；新启动再次核资料及候选完整性才提升 Released。",
+    "Released 不再拿历史摘要覆盖或否定后续用户写入；新加主库/伴随文件非 symlink、规范路径检查已核，不删除或回滚资料。",
+    "AVAILABLE/CHANGING/EXITING 原子准入使恢复变更与退出互斥；restart 在当前恢复记录允许时将变更准入直接提升为退出，避免开放间隙。",
+    "原库、WAL、SHM、journal 只处理四个明确路径；保护副本、原件和旧 receipt 保留；原始 Agent 历史、配置及钥匙串不进入这条更换路径。",
+    "不支持的平台和未知 schema、损坏/未来记录、材料变化均保持关闭；当前整库更换限定 macOS。"
+  ],
+  "existingRawEvidenceReviewed": [
+    {
+      "path": "storage-database-recovery-final.txt",
+      "observed": "51 Rust tests passed, 0 failed; 包含 Preparing 8 个注入边界前后、移动/同步 16 个边界前后、release 失败、保留旧记录、符号链接及退出准入测试",
+      "executionOwner": "verification",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "storage-database-frontend-final.txt",
+      "observed": "6 files, 62 tests passed; 包含本次发现的旧 Preparing 反例和不同 pending 记录拒绝",
+      "executionOwner": "verification",
+      "rerunByReviewer": false
+    }
+  ],
+  "notEstablished": [
+    "本次是独立源码及原始日志复核，没有重新运行测试、操作正式应用或日常用户资料。",
+    "注入的文件操作前后中断不等于真实断电、物理磁盘耗尽或所有文件系统故障都无损。",
+    "未验证安装版损坏资料恢复旅程或 Windows 整库更换；不据受控通过将 H02 整项宣布完成。"
+  ]
+}

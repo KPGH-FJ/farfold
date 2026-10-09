@@ -1,7 +1,7 @@
 //! Restore only the two Farfold-owned startup records from a reviewed snapshot.
 //! No candidate migrations, credential/history imports or live workspace replacement.
 use super::{StorageIssue, export};
-mod candidate;
+pub(crate) mod candidate;
 use crate::meta_store::MetaStore;
 use serde::Serialize;
 use std::{collections::BTreeMap, path::Path};
@@ -46,7 +46,7 @@ impl RestoreFailure {
             materials_complete: false,
         }
     }
-    fn storage(reason: String) -> Self {
+    pub(super) fn storage(reason: String) -> Self {
         Self {
             issue: Some(StorageIssue::from_receipt(&reason)),
             ..Self::new("storage")

@@ -1,0 +1,37 @@
+{
+  "recordedAt": "2026-10-09T11:19:54.276599+00:00",
+  "sourceCommit": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "installed": true,
+  "launchedBeforeRetentionCheck": false,
+  "normalQuitObserved": true,
+  "formalProcessCountBefore": 0,
+  "beforePreinstallAndAfterIdentical": true,
+  "entryCount": 217400,
+  "counts": {
+    "appData": {
+      "directory": 21360,
+      "file": 195450,
+      "special": 0,
+      "symlink": 328
+    },
+    "cache": {
+      "directory": 8,
+      "file": 2,
+      "special": 0,
+      "symlink": 0
+    },
+    "webkit": {
+      "directory": 152,
+      "file": 100,
+      "special": 0,
+      "symlink": 0
+    }
+  },
+  "sha256": "e54b432dc92fed77264b82729a94101c7822e078be71baa9ae037f8ee980a448",
+  "privateEvidenceDirectory": "output/2026-10-09-fourth-install",
+  "rawManifests": "Owner-only 0600, not committed; compares path/type/mode/content digest or symlink target",
+  "metadataBackupIntegrity": "ok",
+  "candidateIndependentChecks": 9,
+  "signature": "ad-hoc, not public distribution signed or notarized",
+  "evidenceScope": "Installed bundle and data preservation before launch; no UI or Agent validation of this candidate yet."
+}

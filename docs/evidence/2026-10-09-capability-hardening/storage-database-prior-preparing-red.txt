@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/StorageDatabaseRestore.test.tsx (11 tests | 1 failed) 41ms
+   × failed reselection can return to the same prior preparing ticket without accepting another active replacement 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/StorageDatabaseRestore.test.tsx > failed reselection can return to the same prior preparing ticket without accepting another active replacement
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/StorageDatabaseRestore.test.tsx:224:32
+    222|   h.invoke.mockRejectedValueOnce({ code: "storage" }); await click(S.c…
+    223|   h.invoke.mockResolvedValueOnce(initialStatus); await click(S.check);
+    224|   expect(visible(S.preparing)).toBe(true); expect(visible(S.choose)).t…
+       |                                ^
+    225|   expect(visible(S.installed)).toBe(false);
+    226| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  20:05:00
+   Duration  166ms (transform 40ms, setup 0ms, import 56ms, tests 41ms, environment 0ms)
+

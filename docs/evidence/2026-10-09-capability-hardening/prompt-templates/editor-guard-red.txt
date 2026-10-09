@@ -1,0 +1,31 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts" "src/runtime/template_edit_drafts.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/template_edit_drafts.test.ts (5 tests | 1 failed) 45ms
+   × cannot replace unread edits or edit during a recovery interaction lock 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > cannot replace unread edits or edit during a recovery interaction lock
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/template_edit_drafts.test.ts:53:77
+     51|   mock.invoke.mockResolvedValue({ ...saved(), templateEdits: edit });
+     52|   const d = await import("./drafts");
+     53|   expect(() => d.templateEditDrafts.update({ ...edit, text: "premature…
+       |                                                                             ^
+     54|   await d.draftPersistence.load();
+     55|   d.draftPersistence.lockInteraction(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 28 passed (29)
+   Start at  19:45:13
+   Duration  148ms (transform 92ms, setup 0ms, import 77ms, tests 83ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

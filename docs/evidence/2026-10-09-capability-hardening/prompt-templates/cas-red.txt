@@ -1,0 +1,40 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.23s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+
+thread 'meta_store::prompt_templates::tests::template_cas_rejects_late_or_missing_baseline_without_overwriting' (19086538) panicked at src/meta_store/prompt_templates.rs:35:9:
+assertion `left == right` failed
+  left: "saved"
+ right: "conflict"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'meta_store::prompt_templates::tests::template_cas_protects_future_malformed_and_null_stored_values' (19086536) panicked at src/meta_store/prompt_templates.rs:43:13:
+assertion failed: store.save_prompt_templates(&existing, &document("replacement")).is_err()
+
+thread 'meta_store::prompt_templates::tests::template_cas_validates_limits_and_complete_schema_before_writing' (19086539) panicked at src/meta_store/prompt_templates.rs:63:13:
+assertion failed: store.save_prompt_templates(&Value::Null, &next).is_err()
+test meta_store::prompt_templates::tests::template_cas_validates_limits_and_complete_schema_before_writing ... FAILED
+test meta_store::prompt_templates::tests::template_cas_rejects_late_or_missing_baseline_without_overwriting ... FAILED
+test meta_store::prompt_templates::tests::template_cas_creates_updates_and_preserves_unrelated_settings ... ok
+test meta_store::prompt_templates::tests::template_cas_protects_future_malformed_and_null_stored_values ... FAILED
+test meta_store::prompt_templates::tests::template_cas_read_only_failure_preserves_saved_content ... ok
+
+thread 'meta_store::prompt_templates::tests::template_cas_only_one_concurrent_writer_can_use_the_same_baseline' (19086535) panicked at src/meta_store/prompt_templates.rs:79:9:
+assertion `left == right` failed
+  left: ["saved", "saved"]
+ right: ["conflict", "saved"]
+test meta_store::prompt_templates::tests::template_cas_only_one_concurrent_writer_can_use_the_same_baseline ... FAILED
+
+failures:
+
+failures:
+    meta_store::prompt_templates::tests::template_cas_only_one_concurrent_writer_can_use_the_same_baseline
+    meta_store::prompt_templates::tests::template_cas_protects_future_malformed_and_null_stored_values
+    meta_store::prompt_templates::tests::template_cas_rejects_late_or_missing_baseline_without_overwriting
+    meta_store::prompt_templates::tests::template_cas_validates_limits_and_complete_schema_before_writing
+
+test result: FAILED. 2 passed; 4 failed; 0 ignored; 0 measured; 1121 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

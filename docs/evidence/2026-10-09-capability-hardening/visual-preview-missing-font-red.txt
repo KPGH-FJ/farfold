@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/pdf_render_core.test.ts (6 tests | 1 failed) 142ms
+   × gives an explicit failure for encrypted, damaged and missing Chinese glyph resources 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_render_core.test.ts > gives an explicit failure for encrypted, damaged and missing Chinese glyph resources
+AssertionError: expected 'rendered' to be 'incomplete' // Object.is equality
+
+Expected: "incomplete"
+Received: "rendered"
+
+ ❯ src/runtime/pdf_render_core.test.ts:49:95
+     47|   await expect(draw("damaged.pdf")).rejects.toThrow();
+     48|   warned = false;
+     49|   expect(await draw("unembedded-chinese.pdf").then(() => "rendered", e…
+       |                                                                                               ^
+     50| });
+     51| it("bounds page canvases and aggregate temporary canvas allocation", (…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  19:52:16
+   Duration  431ms (transform 120ms, setup 0ms, import 228ms, tests 142ms, environment 0ms)
+

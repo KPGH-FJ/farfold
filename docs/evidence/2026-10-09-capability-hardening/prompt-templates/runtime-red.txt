@@ -1,0 +1,373 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts" "src/runtime/template_edit_drafts.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/prompt_templates.test.ts (21 tests | 21 failed) 42ms
+   × reads the complete strict document and preserves literal template text 5ms
+   × rejects malformed, future and oversized documents without salvage: 0 1ms
+   × rejects malformed, future and oversized documents without salvage: 1 0ms
+   × rejects malformed, future and oversized documents without salvage: 2 0ms
+   × rejects malformed, future and oversized documents without salvage: 3 0ms
+   × rejects malformed, future and oversized documents without salvage: 4 0ms
+   × rejects malformed, future and oversized documents without salvage: 5 0ms
+   × rejects malformed, future and oversized documents without salvage: 6 0ms
+   × rejects malformed, future and oversized documents without salvage: 7 0ms
+   × rejects malformed, future and oversized documents without salvage: 8 0ms
+   × rejects malformed, future and oversized documents without salvage: 9 0ms
+   × rejects malformed, future and oversized documents without salvage: 10 0ms
+   × rejects malformed, future and oversized documents without salvage: 11 0ms
+   × allows an unfinished empty editor but validates the optional original 1ms
+   × loads without writing and saves through a confirmed readback 8ms
+   × never overwrites an unread future document 1ms
+   × serializes concurrent saves and rejects duplicate or stale expectations 1ms
+   × reconciles a failed write when its exact intended document can be read 0ms
+   × keeps unknown writes blocked even when reload sees the previous value 0ms
+   × does not trust a success acknowledgement without matching readback 1ms
+   × retains an edit changed during a save and leaves clearing to the exact editor owner 20ms
+ ❯ src/runtime/template_edit_drafts.test.ts (4 tests | 4 failed) 57ms
+   × restores a template editor without dispatching or populating conversation input 51ms
+   × keeps legacy documents compatible and serializes new unsent edits through draft persistence 2ms
+   × rejects the entire snapshot if the optional template editor is malformed 1ms
+   × retains edits after a failed draft write and never mutates them via caller references 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > reads the complete strict document and preserves literal template text
+AssertionError: expected { version: 1, items: [] } to deeply equal { version: 1, items: [ { …(3) } ] }
+
+- Expected
++ Received
+
+  {
+-   "items": [
+-     {
+-       "id": "a",
+-       "label": "检查",
+-       "text": "检查当前改动",
+-     },
+-   ],
++   "items": [],
+    "version": 1,
+  }
+
+ ❯ src/runtime/prompt_templates.test.ts:30:39
+     28|
+     29| it("reads the complete strict document and preserves literal template …
+     30|   expect(parsePromptTemplates(doc())).toEqual(doc());
+       |                                       ^
+     31|   expect(parsePromptTemplates(null)).toEqual(doc([]));
+     32|   const literal = { ...a, text: "  $skill\n{{path}}\n  " };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 0
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 1
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 2
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 3
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 4
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 5
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 6
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 7
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 8
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 9
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 10
+ FAIL  src/runtime/prompt_templates.test.ts > rejects malformed, future and oversized documents without salvage: 11
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/prompt_templates.test.ts:44:45
+     42|   undefined,
+     43| ])("rejects malformed, future and oversized documents without salvage:…
+     44|   expect(() => parsePromptTemplates(value)).toThrow();
+       |                                             ^
+     45| });
+     46| it("allows an unfinished empty editor but validates the optional origi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > allows an unfinished empty editor but validates the optional original
+AssertionError: expected null to deeply equal { id: 'new', label: '', text: '' }
+
+- Expected:
+{
+  "id": "new",
+  "label": "",
+  "text": "",
+}
+
++ Received:
+null
+
+ ❯ src/runtime/prompt_templates.test.ts:48:35
+     46| it("allows an unfinished empty editor but validates the optional origi…
+     47|   const edit = { id: "new", label: "", text: "" };
+     48|   expect(parseTemplateEdit(edit)).toEqual(edit);
+       |                                   ^
+     49|   expect(parseTemplateEdit(undefined)).toBeNull();
+     50|   expect(() => parseTemplateEdit({ ...edit, original: a })).toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > loads without writing and saves through a confirmed readback
+AssertionError: expected { items: [], ready: false, …(3) } to match object { ready: true, items: [ { …(3) } ] }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "items": [
+-     {
+-       "id": "a",
+-       "label": "检查",
+-       "text": "检查当前改动",
+-     },
+-   ],
+-   "ready": true,
++   "items": [],
++   "ready": false,
+  }
+
+ ❯ src/runtime/prompt_templates.test.ts:56:38
+     54|   const { promptTemplates } = await import("./prompt_templates");
+     55|   await promptTemplates.load();
+     56|   expect(promptTemplates.snapshot()).toMatchObject({ ready: true, item…
+       |                                      ^
+     57|   expect(writes()).toHaveLength(0);
+     58|   await promptTemplates.save(b);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > never overwrites an unread future document
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/prompt_templates.test.ts:66:39
+     64|   persisted = { version: 2, items: [] };
+     65|   const { promptTemplates } = await import("./prompt_templates");
+     66|   await expect(promptTemplates.load()).rejects.toThrow();
+       |                                       ^
+     67|   await expect(promptTemplates.save(b)).rejects.toThrow();
+     68|   expect(writes()).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > serializes concurrent saves and rejects duplicate or stale expectations
+AssertionError: expected { version: 1, items: [ { …(3) } ] } to deeply equal { version: 1, …(1) }
+
+- Expected
++ Received
+
+  {
+    "items": [
+      {
+        "id": "a",
+        "label": "检查",
+-       "text": "new",
+-     },
+-     {
+-       "id": "b",
+-       "label": "说明",
+-       "text": "说明这段代码",
++       "text": "检查当前改动",
+      },
+    ],
+    "version": 1,
+  }
+
+ ❯ src/runtime/prompt_templates.test.ts:74:21
+     72|   const { promptTemplates } = await import("./prompt_templates");
+     73|   await Promise.all([promptTemplates.save(b), promptTemplates.save({ .…
+     74|   expect(persisted).toEqual(doc([{ ...a, text: "new" }, b]));
+       |                     ^
+     75|   await expect(promptTemplates.save(a)).rejects.toThrow();
+     76|   await expect(promptTemplates.remove(a)).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > reconciles a failed write when its exact intended document can be read
+AssertionError: expected { items: [], ready: false, …(3) } to match object { …(3) }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "error": null,
+-   "items": [
+-     {
+-       "id": "a",
+-       "label": "检查",
+-       "text": "检查当前改动",
+-     },
+-     {
+-       "id": "b",
+-       "label": "说明",
+-       "text": "说明这段代码",
+-     },
+-   ],
++   "items": [],
+    "uncertain": false,
+  }
+
+ ❯ src/runtime/prompt_templates.test.ts:88:38
+     86|   const { promptTemplates } = await import("./prompt_templates");
+     87|   await promptTemplates.save(b);
+     88|   expect(promptTemplates.snapshot()).toMatchObject({ items: [a, b], un…
+       |                                      ^
+     89| });
+     90| it("keeps unknown writes blocked even when reload sees the previous va…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > keeps unknown writes blocked even when reload sees the previous value
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/prompt_templates.test.ts:97:40
+     95|   });
+     96|   const { promptTemplates } = await import("./prompt_templates");
+     97|   await expect(promptTemplates.save(b)).rejects.toThrow();
+       |                                        ^
+     98|   await expect(promptTemplates.reload()).rejects.toThrow();
+     99|   await expect(promptTemplates.save({ ...b, text: "retry" })).rejects.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > does not trust a success acknowledgement without matching readback
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/prompt_templates.test.ts:112:42
+    110|       ? Promise.resolve() : defaultInvoke(command, args));
+    111|   const { promptTemplates } = await import("./prompt_templates");
+    112|   await expect(promptTemplates.remove(a)).rejects.toThrow();
+       |                                          ^
+    113|   expect(promptTemplates.snapshot().uncertain).toBe(true);
+    114| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > retains an edit changed during a save and leaves clearing to the exact editor owner
+TypeError: Cannot read properties of null (reading 'id')
+ ❯ src/runtime/prompt_templates.test.ts:129:54
+    127|   });
+    128|   const { promptTemplates } = await import("./prompt_templates");
+    129|   const saving = promptTemplates.save({ id: captured.id, label: captur…
+       |                                                      ^
+    130|   await entered.promise;
+    131|   templateEditDrafts.update({ ...captured, text: "second" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > restores a template editor without dispatching or populating conversation input
+AssertionError: expected null to deeply equal { id: 'one', label: '检查', …(2) }
+
+- Expected:
+{
+  "id": "one",
+  "label": "检查",
+  "original": {
+    "id": "one",
+    "label": "检查",
+    "text": "检查当前变更",
+  },
+  "text": "编辑未完成",
+}
+
++ Received:
+null
+
+ ❯ src/runtime/template_edit_drafts.test.ts:12:39
+     10|   const d = await import("./drafts");
+     11|   await d.draftPersistence.load();
+     12|   expect(d.templateEditDrafts.read()).toEqual(edit);
+       |                                       ^
+     13|   expect(d.templateEditDrafts.snapshot()).toBe(d.templateEditDrafts.re…
+     14|   expect(d.composerDrafts.read("new").text).toBe("");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > keeps legacy documents compatible and serializes new unsent edits through draft persistence
+AssertionError: expected "vi.fn()" to be called at least once
+ ❯ src/runtime/template_edit_drafts.test.ts:25:18
+     23|   d.templateEditDrafts.update(edit);
+     24|   await d.draftPersistence.flush();
+     25|   expect(notify).toHaveBeenCalled();
+       |                  ^
+     26|   const value = mock.invoke.mock.calls.filter(([name]) => name === "se…
+     27|   expect(value.templateEdits).toEqual(edit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > rejects the entire snapshot if the optional template editor is malformed
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/template_edit_drafts.test.ts:33:42
+     31|   mock.invoke.mockResolvedValue({ ...saved(), composers: { new: { text…
+     32|   const d = await import("./drafts");
+     33|   await expect(d.draftPersistence.load()).rejects.toThrow();
+       |                                          ^
+     34|   expect(d.composerDrafts.read("new").text).toBe("");
+     35|   d.templateEditDrafts.update(edit);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  src/runtime/template_edit_drafts.test.ts > retains edits after a failed draft write and never mutates them via caller references
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/template_edit_drafts.test.ts:47:43
+     45|   const input = structuredClone(edit);d.templateEditDrafts.update(inpu…
+     46|   input.text = "external mutation";
+     47|   await expect(d.draftPersistence.flush()).rejects.toThrow();
+       |                                           ^
+     48|   expect(d.templateEditDrafts.read()).toEqual(edit);
+     49| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  25 failed (25)
+   Start at  19:40:47
+   Duration  183ms (transform 104ms, setup 0ms, import 73ms, tests 98ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

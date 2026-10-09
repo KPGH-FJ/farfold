@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T11:30:22.670346+00:00",
+  "requirement": "H02",
+  "status": "design_accepted_implementation_receipt_available",
+  "sourceHead": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+  "scope": "物理坏库的完整恢复：只用临时 DB/fixture 开发，不损坏日常数据库、不操作正式 app；不触碰 Agent 私有历史/配置或 Keychain。此文件是设计与证据定位记录，不是活动计划。",
+  "observations": [
+    {
+      "fact": "现有恢复壳可以在 MetaStore 未注册时运行；所有普通 invoke 被白名单挡住。",
+      "sources": [
+        "src-tauri/src/storage_recovery.rs:79",
+        "src-tauri/src/storage_recovery.rs:165",
+        "src-tauri/src/lib.rs:152",
+        "src-tauri/src/lib.rs:160"
+      ]
+    },
+    {
+      "fact": "现有两 key 恢复要求 ready 且未 editable；不能直接用于物理坏库，因为该时 MetaStore 不存在。",
+      "sources": [
+        "src-tauri/src/storage_recovery/restore_commands.rs:20",
+        "src-tauri/src/storage_recovery/restore.rs:9"
+      ]
+    },
+    {
+      "fact": "当前存储是四个表，user_version 未设非零版本；MetaStore::open 用 CREATE IF NOT EXISTS，不能用打开成功判定候选是当前 schema。",
+      "sources": [
+        "src-tauri/src/meta_store.rs:86",
+        "src-tauri/src/storage_recovery/restore/candidate.rs:159"
+      ]
+    },
+    {
+      "fact": "已有候选读取只读捕获精确 main/WAL/SHM/journal，再在私有目录用 SQLite backup 生成一致副本；已有导出保存原始损坏材料并返回 partialPath。",
+      "sources": [
+        "src-tauri/src/storage_recovery/restore/candidate.rs:61",
+        "src-tauri/src/storage_recovery/export.rs:99",
+        "src-tauri/src/meta_store/storage_recovery.rs:5"
+      ]
+    },
+    {
+      "fact": "启动失败不注册通知委托；退出/菜单/窗口共用已有对象，整库恢复可持续禁止 MetaStore 注册直到新进程。DraftExit 未 ready 时不会执行旧前端草稿保存。",
+      "sources": [
+        "src-tauri/src/storage_recovery.rs:178",
+        "src-tauri/src/draft_exit.rs:156",
+        "src-tauri/src/lib.rs:301",
+        "src-tauri/src/app_menu.rs:135",
+        "src-tauri/native/AppQuit.m:45"
+      ]
+    }
+  ],
+  "proposedBoundary": [
+    "只在 status.ready=false、editable=false、app.try_state<MetaStore>() 不存在且没有另一恢复操作时允许开始；不做运行中健康库热替换。",
+    "只恢复用户明确选择、只读捕获后通过当前完整结构检查的副本；不推断未来/未知 schema，不运行迁移修补候选。",
+    "保留全部 Farfold 元数据（四表），不合并或导入 Agent 正文，不访问 Keychain；非秘密服务引用不代表账号/权限已有效。",
+    "内容设置/草稿语义与 SQLite 结构分开。恢复后仍经过既有 DraftStartup 严格读取与暂停规则，非法语义保留原值而不开放编辑/自动发送。",
+    "替换仅触及固定 farfold.sqlite3 及 -wal/-shm/-journal；不依赖目录前缀扫描，不移动应用目录、Agent 安装、附件或其他文件。"
+  ],
+  "candidateValidation": [
+    "复用并抽出已有 no-follow 捕获辅助函数：绝对且受核路径、普通文件、大小上限、精确侧文件集合、复制前后身份/长度/摘要和集合一致；原材料只读。",
+    "在私有副本上用 SQLite backup 消化已提交 WAL，生成同文件系统的独立新主库；完整 integrity_check，限定 page count/size，总量不超过已有 512 MiB 上限。",
+    "核当前四表全部 table_xinfo（列顺序/类型/not-null/default/主键/hidden）、table 属性、索引和约束；拒绝未知表/列/索引、视图、触发器、虚拟表及 future user_version。不能只匹配四表列名。",
+    "只读核应用启动所必需的设置可以解析；草稿/准备内容仍使用同一纯解析层，显示数量/范围，不把原始设置、启动环境或潜在秘密打进日志。",
+    "预览持有私有已核副本票据；应用时使用该副本并再核摘要，不重读用户后来换掉的候选路径。取消预览仅丢弃本方未采用的暂存，不触碰源材料。"
+  ],
+  "protocol": [
+    {
+      "step": 1,
+      "name": "preview",
+      "detail": "门禁下只读准备候选，展示将恢复的 Farfold 索引/设置范围、候选文件与待保留原材料位置；明确不恢复 Agent 私有正文/凭据、恢复后重启且不自动继续工作。"
+    },
+    {
+      "step": 2,
+      "name": "confirm_and_protect",
+      "detail": "用户明确确认后，持同一恢复互斥锁，复核无 MetaStore；先完整复制原 main/WAL/SHM/journal 到新的私有保护目录，sync 文件/目录并核字节，只有成功回执才能继续。物理损坏副本标 unverifiedFiles；若已知主库缺失，缺失也要写入精确基线，不能当空白初始库。"
+    },
+    {
+      "step": 3,
+      "name": "durable_intent",
+      "detail": "在数据目录内同一文件系统持有已核新库、保留原件目录；写受限、定长的恢复操作 manifest（版本、操作 ID、固定相对文件名、原集合摘要、新库摘要、保护回执、阶段），create_new 临时文件→sync→单文件原子提升→目录 sync。任何失败/未知都不开始移动。此记录只服务本次文件恢复，不是 Agent 事件账本。"
+    },
+    {
+      "step": 4,
+      "name": "isolate_originals",
+      "detail": "复核原集合仍匹配保护基线，逐个无覆盖 rename 精确旧文件到保留原件目录；每步同步目录并核实际位置/摘要。整个过程不打开原/新 SQLite，不允许 retry initialize、另一个恢复或编辑准入。旧原件和保护副本均保留。"
+    },
+    {
+      "step": 5,
+      "name": "promote_checked_database",
+      "detail": "只有所有旧材料已在保留位置、活动目录无旧侧文件时，才把已核新主库无覆盖提升到固定位置；同步后再核完整结构/摘要，写 filesInstalled 回执。不能把多次 rename 宣称为一次原子事务。"
+    },
+    {
+      "step": 6,
+      "name": "restart_and_admit",
+      "detail": "当前进程保持恢复壳，不注册 MetaStore、不挂编辑界面；显示已安装文件与原材料路径，由明确重新打开动作启动新进程。新进程在任何 MetaStore::open 前识别恢复记录并核完整状态；完成持久 release 标记后才能按普通流程开库，再由 DraftStartup 两类读取完成和 app_drafts_ready 放行。已 release 的记录绝不按旧候选哈希回滚后来合法写入。"
+    }
+  ],
+  "restartRecognition": [
+    {
+      "diskState": "prepared 或任意中途阶段",
+      "behavior": "无论主库是否存在，启动均先进入恢复壳；不能先执行 MetaStore::open/CREATE/ensure_defaults。"
+    },
+    {
+      "diskState": "每个旧文件恰在活动位置或本次原件目录之一，摘要匹配；新库仍是已核暂存",
+      "behavior": "可显示同一操作的可继续状态，用户继续只执行尚未完成的步骤，不重新保护/导入另一候选。"
+    },
+    {
+      "diskState": "新库已提升、旧材料完整，但完成回执丢失或目录 sync 报错",
+      "behavior": "标结果未知；通过同一操作回执查询和实际文件重新核验后决定 filesInstalled，不能重放覆盖或自动回滚。"
+    },
+    {
+      "diskState": "旧材料丢失/双位置冲突/摘要改变、未知 marker、候选变化或旧 WAL 又出现",
+      "behavior": "保持不可编辑，显示实际保留路径和不完整范围；允许导出/定位，禁止猜测继续、删除侧文件、补空库或覆盖新库。"
+    },
+    {
+      "diskState": "filesInstalled 且首次新进程验证完整",
+      "behavior": "持久标 release 后再开放正常初始化；任何验证/标记失败保持门禁。"
+    },
+    {
+      "diskState": "released 且数据库后来合法变化",
+      "behavior": "不再执行替换或比较候选旧哈希；正常结构/语义检查负责当前数据。完成回执作为保留材料定位，不能恢复为可重放事务。"
+    }
+  ],
+  "failureAndExit": [
+    "失败回执区分未开始、已保留未替换、部分更换、文件已装入待重启、结果未知；始终带可定位保护/原件/暂存路径，不能用旧成功回执冒充本次成功。",
+    "正常退出在正在写恢复步骤时通过轻量非阻塞门禁暂缓；不能让主线程等待被后台复制占用的 Mutex。关闭窗口、菜单与正常 quit 都需覆盖；强退/崩溃仍靠持久记录在下次启动安全识别。",
+    "请求重启只在已完成替换且无后台文件操作时发出；恢复壳从未加载旧编辑缓存，不调用旧缓存的 save-before-restart。未知时不得重启后直接放行。",
+    "原材料目录、候选暂存和保护副本不在失败处理里自动删除；清理另按具体归属及用户范围处理。",
+    "单实例与无 MetaStore 只保证 Farfold 自身无并发句柄；不宣称能防任意外部程序持续写 DB。检测变化即拒绝，外部写入、权限/文件系统异常保留未知。"
+  ],
+  "requiredFixtures": [
+    "真实格式四表候选成功，含 WAL 提交内容；原 main/WAL/SHM/journal 逐字节保留，新进程冷开数据相同，不调用 Agent/Keychain。",
+    "损坏/截断/空候选、future user_version、同列但主键/约束不符、重复键、触发器/视图/虚拟表/额外索引、过大、符号链接/重解析点都不触碰原库。",
+    "预览后候选原路径替换，仍用已核票据；本方暂存漂移拒绝。保护期间原文件内容/身份或侧文件集合变化拒绝。",
+    "只读、权限拒绝、空间不足发生于候选暂存、原保护、manifest 写/sync、每次 rename 前后和最终目录 sync；逐点保留并返回实际路径。",
+    "进程中断枚举每个旧文件移前/移后、新主库提升前/提升后、完成记录前/后；新实例必须先识别而不先开 SQLite。",
+    "主库缺失但旧 WAL/SHM/journal 尚在；缺失不得当空库，旧侧文件不能搭配新主库。完全缺失仅在已知资料丢失的门禁内按缺失基线处理。",
+    "相同操作 receipt 丢失后重复查询/继续不重放；其他操作/候选/不同 manifest 拒绝。manifest 已 release 后的新库合法写入永不被旧操作回滚。",
+    "恢复与 retry/export/app_drafts_ready、退出/关闭/重启并发：门禁不穿透，不发生缺失 MetaStore State panic，不保存旧前端缓存。",
+    "已装入后冷开失败仍恢复壳；设置/草稿语义失败不伪造全部恢复完成；有效草稿/附件/未确认请求/队列冷载入均暂停、不自动发送。"
+  ],
+  "anticipatedFiles": [
+    "src-tauri/src/storage_recovery.rs",
+    "src-tauri/src/storage_recovery/database_restore.rs",
+    "src-tauri/src/storage_recovery/database_restore/*",
+    "src-tauri/src/storage_recovery/restore/candidate.rs（只为复用捕获/验证辅助，不改变两 key 边界）",
+    "src-tauri/src/meta_store.rs（如需抽当前 schema 常量，保持建表行为）",
+    "src-tauri/src/lib.rs（小块注册/启动与退出 gate，保留其他 agent 新增注册）",
+    "src/components/StorageRecovery.tsx",
+    "src/components/StorageDatabaseRestore.tsx",
+    "src/runtime/storage_database_restore.ts",
+    "独立文案和专项测试"
+  ],
+  "independentDesignChallenge": {
+    "reviewer": "architecture",
+    "kind": "read_only_design_challenge_no_tests",
+    "points": [
+      "启动必须先识别 manifest，再决定是否打开 SQLite；主库存在不代表完整。",
+      "提升后、完成前及冷开失败继续锁门；正式释放后旧记录不可再覆盖新写入。",
+      "无 SQLite 句柄才移动；目录同步/rename 未知单列，原副本成功不是多文件切换原子证明。"
+    ],
+    "disposition": "已纳入 protocol/restartRecognition/failure fixtures；实现完成仍需独立源码复核。"
+  },
+  "officialReferences": [
+    {
+      "url": "https://www.sqlite.org/howtocorrupt.html",
+      "checked": "实际打开官方页面",
+      "applied": "热 journal/WAL 必须与对应主库保留，不可把旧 journal 配新库；打开句柄仍在时不能移动主库。"
+    },
+    {
+      "url": "https://sqlite.org/backup.html",
+      "checked": "实际打开官方页面",
+      "applied": "从私有 SQLite 副本通过 backup API 得一致新库，不只复制活跃主文件。"
+    },
+    {
+      "url": "https://www.sqlite.org/atomiccommit.html",
+      "checked": "实际打开官方页面",
+      "applied": "区分文件写入/目录持久化与事务原子性，不宣称本方逐文件替换可抵御所有硬件故障。"
+    }
+  ],
+  "verificationBoundary": {
+    "performed": [
+      "当前源码入口只读审查",
+      "官方 SQLite 文档查证",
+      "独立设计挑战"
+    ],
+    "notPerformed": [
+      "新增源码实现",
+      "fixture 红绿测试",
+      "真实磁盘满/断电",
+      "Windows 实机路径与重解析点",
+      "正式应用恢复/安装操作"
+    ],
+    "remainingScope": "未知损坏原件的修复/SQLite salvage、任意旧 schema 迁移、Agent 私有历史、Keychain 导入均不自动纳入。"
+  },
+  "implementationReceipt": "docs/evidence/2026-10-09-capability-hardening/storage-database-restore.json",
+  "implementationDifferences": [
+    "Preparing intent now precedes the first sentinel directory to distinguish repairable preparation failure from missing intent.",
+    "Current implementation validates normalized complete sqlite_schema against extracted trusted schema rather than only table_xinfo.",
+    "Native no-replace move is implemented for macOS; other platforms keep this action unavailable."
+  ],
+  "verificationBoundaryAppliesTo": "Original design stage only; implementation and subsequent checks are recorded in implementationReceipt."
+}

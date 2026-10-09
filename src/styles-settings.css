@@ -443,3 +443,45 @@
 :root[data-theme="dark"] .agent-logo[data-monochrome] {
   filter: invert(1);
 }
+.prompt-templates-body {
+  display: grid;
+  gap: 12px;
+  max-height: min(72vh, 720px);
+  overflow: auto;
+  padding: 16px;
+}
+.prompt-template-editor,
+.prompt-template-editor label {
+  display: grid;
+  gap: 8px;
+}
+.prompt-template-editor input,
+.prompt-template-editor textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+  padding: 10px;
+  font: inherit;
+}
+.prompt-template-editor textarea {
+  resize: vertical;
+}
+.prompt-template-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.prompt-template-list li {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.prompt-template-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 100px;
+  overflow: auto;
+  color: var(--ink-2);
+}

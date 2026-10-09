@@ -1,0 +1,109 @@
+{
+  "asOf": "2026-10-09",
+  "reviewer": "product_coverage",
+  "mode": "independent-read-only-source-and-existing-evidence-review",
+  "result": "no-additional-blocker-found-in-reviewed-scope",
+  "sourceReviewed": [
+    "src/runtime/visual_preview.ts",
+    "src/runtime/image_bytes.ts",
+    "src/runtime/draft_images.ts",
+    "src/runtime/pdf_preview.ts",
+    "src/runtime/pdf_render_core.ts",
+    "src/runtime/pdf_preview_assets.ts",
+    "src/workers/pdf_render.worker.ts",
+    "src/workers/pdf_preview.worker.ts",
+    "src/components/VisualFilePreview.tsx",
+    "src/components/OpenedFileView.tsx",
+    "src-tauri/src/file_delivery/visual.rs",
+    "src-tauri/src/file_delivery_commands.rs",
+    "src-tauri/tauri.conf.json",
+    "vite.config.ts",
+    "package.json"
+  ],
+  "confirmedBoundaries": [
+    "文件读取再次核对完整 VerifiedFile；选择归属和版本变化不接受迟到结果。",
+    "应用主页面仅接收 PDF 位图；解析和绘制在专用 worker 树内，没有 annotation DOM 或 PDF 脚本沙箱。",
+    "两层 worker 在加载实际解析库前接管 warning/error；已保留严格模式仍可能空页成功的反例，修正后另行检查实际使用字体的 missingFile/isInvalidPDFjsFont。",
+    "取消、15 秒超时、并发上限、位图尺寸和迟到位图释放有独立路径；像素/文件/页数限制没有被等同于解析器总堆内存限制。",
+    "静态图片沿用字节格式检查和真实 Image.decode；取消后不显示迟到结果，未结束的底层解码继续占有限槽位。",
+    "字体、CMAP、三个 Wasm 仅经锁定包内精确资源映射读取；路径遍历、任意网址和 QuickJS 不进入允许列表。CSP 未开放外网或普通 JavaScript eval。",
+    "最后新增的 ImageBitmap 能力检测已只读核对：缺失环境在创建渲染 worker 前返回明确不支持。"
+  ],
+  "existingRawEvidenceReviewed": [
+    {
+      "path": "visual-preview-targeted.txt",
+      "observed": "9 files, 99 tests passed",
+      "executionOwner": "architecture",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-file-delivery-rust.txt",
+      "observed": "21 tests passed",
+      "executionOwner": "architecture",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-pixels-errors.txt",
+      "observed": "保留缺图/字体处理的失败反例",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-pixels-errors-green.txt",
+      "observed": "5 files, 27 tests passed；不沿用口头误计的 29",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-pixel-timeout-red.txt",
+      "observed": "超时反例原始记录",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-pixel-controller-green.txt",
+      "observed": "超时/控制器修正记录",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-missing-font-red.txt",
+      "observed": "缺失字体反例原始记录",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-pixels-font-green.txt",
+      "observed": "2 files, 10 tests passed",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-vite-first.txt",
+      "observed": "Vite 构建通过；对应 dist 只读枚举 95 文件/6104085 bytes，无 .node/.dll/.dylib 或 QuickJS 命名资产",
+      "rerunByReviewer": false
+    },
+    {
+      "path": "visual-preview-dependency-age.json",
+      "observed": "精确版本发布日依据已记录；本次未另行网络复查"
+    },
+    {
+      "path": "visual-preview-lock-structure.json",
+      "observed": "新增依赖范围记录已核"
+    }
+  ],
+  "pixelsPersonallyViewed": [
+    {
+      "path": "visual-preview-renders/mixed-1.png",
+      "observed": "可见 Embedded font and image 文本、蓝色和橙色矩形"
+    },
+    {
+      "path": "visual-preview-renders/mixed-2.png",
+      "observed": "可见 Local standard font 文本和绿色圆形"
+    },
+    {
+      "path": "visual-preview-renders/chinese-1.png",
+      "observed": "可见嵌入的中文字形 中"
+    }
+  ],
+  "notEstablished": [
+    "上述像素来自实际 PDF.js 与可选 Node Canvas 受控样本，不是 WebKit worker/Wasm 实测。",
+    "本次没有重新运行前端/Rust 测试、浏览器或正式应用；没有启动 Agent、调用模型或改用户数据。",
+    "尚未证明安装版实际文件打开、翻页、取消和错误退路；不能由构建或 Node 样本推定。",
+    "未宣称任意 PDF 都可完整绘制、任意损坏都可识别或解析器总内存具有硬上限。"
+  ]
+}

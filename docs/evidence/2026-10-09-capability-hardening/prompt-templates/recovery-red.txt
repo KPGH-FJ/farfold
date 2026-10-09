@@ -1,0 +1,98 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/prompt_templates.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/prompt_templates.test.ts (28 tests | 5 failed) 66ms
+   × passes the complete baseline to CAS and rejects a competing update without retrying 5ms
+   × normalizes expected fields regardless of object key ordering 1ms
+   × unlocks a confirmed rolled-back rejection after readback so a repaired store can retry 1ms
+   × explicit read-only recovery preserves edits and a late old CAS before the next CAS cannot overwrite a later confirmed save 1ms
+   × explicit read-only recovery preserves edits and a late old CAS after the next CAS cannot overwrite a later confirmed save 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > passes the complete baseline to CAS and rejects a competing update without retrying
+AssertionError: expected { items: [ { id: 'a', …(2) } ], …(5) } to match object { items: [ { id: 'a', …(2) } ], …(1) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "items": [
+      {
+        "id": "a",
+        "label": "检查",
+-       "text": "other writer",
++       "text": "检查当前改动",
+      },
+    ],
+-   "uncertain": false,
++   "uncertain": true,
+  }
+
+ ❯ src/runtime/prompt_templates.test.ts:204:38
+    202|   await expect(promptTemplates.save(b)).rejects.toThrow();
+    203|   expect(writes()).toHaveLength(1);
+    204|   expect(promptTemplates.snapshot()).toMatchObject({
+       |                                      ^
+    205|     items: [{ ...a, text: "other writer" }],
+    206|     uncertain: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > normalizes expected fields regardless of object key ordering
+Error: 模板已变化，请重新读取后核对；你的修改仍保留。
+ ❯ mutate src/runtime/prompt_templates.ts:154:11
+    152|       : storageFailureMessage(error, S.saveFailed);
+    153|     publish({ error: message, uncertain: pending !== null });
+    154|     throw new Error(message);
+       |           ^
+    155|   } finally {
+    156|     publish({ saving: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > unlocks a confirmed rolled-back rejection after readback so a repaired store can retry
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/prompt_templates.test.ts:222:48
+    220|   const { promptTemplates } = await import("./prompt_templates");
+    221|   await expect(promptTemplates.save(b)).rejects.toThrow();
+    222|   expect(promptTemplates.snapshot().uncertain).toBe(false);
+       |                                                ^
+    223|   full = false;
+    224|   await promptTemplates.save(b);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/prompt_templates.test.ts > explicit read-only recovery preserves edits and a late old CAS before the next CAS cannot overwrite a later confirmed save
+ FAIL  src/runtime/prompt_templates.test.ts > explicit read-only recovery preserves edits and a late old CAS after the next CAS cannot overwrite a later confirmed save
+Error: 模板尚未确认保存，修改已保留。请重新读取后核对。
+ ❯ Object.recoverUnknown src/runtime/prompt_templates.ts:174:34
+    172|   },
+    173|   reload: () => serial(reload),
+    174|   async recoverUnknown() { throw new Error(S.saveFailed); },
+       |                                  ^
+    175|   save(item: PromptTemplate, expected?: PromptTemplate) {
+    176|     const submitted = structuredClone(item);
+ ❯ src/runtime/prompt_templates.test.ts:246:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 23 passed (28)
+   Start at  19:51:42
+   Duration  181ms (transform 66ms, setup 0ms, import 44ms, tests 66ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

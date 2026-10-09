@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/PromptTemplatesDialog.test.tsx" "src/components/Composer.shortcuts.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  2 passed (2)
+      Tests  31 passed (31)
+   Start at  19:52:44
+   Duration  1.31s (transform 340ms, setup 0ms, import 1.29s, tests 90ms, environment 0ms)
+

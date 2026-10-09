@@ -197,3 +197,29 @@ it("does not open two pickers when the same handler is activated before React re
   await tick();
   expect(h.open).toHaveBeenCalledTimes(1);
 });
+
+it("pending whole database recovery blocks retry but keeps reveal available", async () => {
+  const retry = vi.fn(async () => {});
+  h.cursor = 0;
+  h.refCursor = 0;
+  const tree = StorageRecovery({
+    message: "interrupted",
+    onRetry: retry,
+    databaseRecovery: true,
+    databaseStatus: {
+      id: "a".repeat(48),
+      phase: "preparing",
+      protectedPath: null,
+      retainedPath: "/partial",
+      canContinue: false,
+      canRestart: false,
+    },
+  });
+  expect(
+    elements(tree).find((n) => n.props.children === S.retry)?.props.disabled,
+  ).toBe(true);
+  click(tree, S.reveal);
+  await tick();
+  expect(h.invoke).toHaveBeenCalledExactlyOnceWith("storage_recovery_reveal");
+  expect(retry).not.toHaveBeenCalled();
+});

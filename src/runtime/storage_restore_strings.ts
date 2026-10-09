@@ -34,8 +34,8 @@ export const STORAGE_RESTORE_STRINGS = {
     backup: "当前资料的保护副本尚未确认，本次没有恢复。请检查保存位置后重试。",
     storage: "恢复未完成，请保留当前窗口和副本，检查资料位置后重试。",
   },
-  draftCount: (drafts: number, queues: number) =>
-    `${drafts} 份草稿，${queues} 项排队内容`,
+  draftCount: (drafts: number, queues: number, templateEdits = 0) =>
+    `${drafts} 份草稿，${queues} 项排队内容${templateEdits ? `，${templateEdits} 份模板编辑稿` : ""}`,
   setupCount: (completed: number, pending: number) =>
     `${completed} 项已保存准备记录，${pending} 项准备进度`,
 } as const;

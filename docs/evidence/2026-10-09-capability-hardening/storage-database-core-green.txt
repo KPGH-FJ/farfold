@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.01s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 12 tests
+test storage_recovery::database_restore::tests::private_verification_accepts_a_valid_database_through_resolved_temp_path ... ok
+test storage_recovery::database_restore::tests::future_schema_and_same_columns_without_constraints_are_rejected ... ok
+test storage_recovery::database_restore::tests::symbolic_link_intent_is_not_followed_or_replaced ... ok
+test storage_recovery::database_restore::tests::missing_intent_after_preparation_never_becomes_a_fresh_database ... ok
+test storage_recovery::database_restore::tests::intent_tampering_and_unexpected_side_files_keep_admission_closed ... ok
+test storage_recovery::database_restore::tests::receipt_cannot_expand_total_material_size_past_the_preparation_limit ... ok
+test storage_recovery::database_restore::tests::lost_apply_reply_is_idempotent_and_another_ticket_cannot_apply ... ok
+test storage_recovery::database_restore::tests::missing_main_keeps_every_side_file_and_never_mixes_it_with_new_database ... ok
+test storage_recovery::database_restore::tests::preview_source_replacement_does_not_change_reviewed_material ... ok
+test storage_recovery::database_restore::tests::released_receipt_never_overwrites_later_database_writes ... ok
+test storage_recovery::database_restore::tests::valid_copy_replaces_only_after_protection_and_requires_fresh_startup ... ok
+test storage_recovery::database_restore::tests::interruption_before_and_after_each_mutation_can_resume_without_losing_originals ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1118 filtered out; finished in 4.38s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
