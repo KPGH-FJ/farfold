@@ -1,0 +1,58 @@
+{
+  "mode": "parent",
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "unicode-parent",
+      "id": "TF06",
+      "name": "original CRLF/BOM text kept in DOM",
+      "ok": true
+    },
+    {
+      "scenario": "unicode-parent",
+      "id": "TF12",
+      "name": "selection alone does not save a target",
+      "ok": true
+    },
+    {
+      "scenario": "unicode-parent",
+      "id": "TF01/06",
+      "name": "confirmed exact Unicode range",
+      "ok": false
+    },
+    {
+      "scenario": "unicode-parent",
+      "name": "scenario interrupted",
+      "ok": false,
+      "error": "Error: confirmed exact Unicode range"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "",
+      "cmd": "settings_get"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_read_text",
+      "fileVersion": "controlled-1"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "controlled-1"
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}
+{"diagnosticEvents":94}

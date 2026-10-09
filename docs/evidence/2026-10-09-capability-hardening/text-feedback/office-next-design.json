@@ -1,0 +1,101 @@
+{
+  "recordedAt": "2026-10-09T22:18:08.253292+00:00",
+  "kind": "read-only implementation design; not an active plan",
+  "scope": "P21 Office location feedback on existing verified XLSX/DOCX previews; no Office editing, external application, new Agent capability, or automatic send.",
+  "recommendation": "Prioritize XLSX cell/merged-range feedback on the existing detail UI. Add bounded visible-window rectangle selection with explicit addresses if included in the same complete slice. DOCX paragraph/whole-table feedback requires a small parser source-position addition first; current generated view IDs are insufficient for historical source positions.",
+  "currentEvidence": [
+    {
+      "source": "src/runtime/xlsx_types.ts:127",
+      "fact": "Cells retain original row/column/reference and typed value/cache state. Sheet metadata retains relationship id/name/state, sheet result retains full merges."
+    },
+    {
+      "source": "src/runtime/xlsx_parse.ts:192",
+      "fact": "Exposed sheet id originates from workbook relationship r:id, not the current displayed tab index."
+    },
+    {
+      "source": "src/runtime/workbook_view.ts:49",
+      "fact": "WorkbookPosition distinguishes clipped display row/column, original merged range, partial merge and hidden original anchor. Never use the clipped display coordinate as the full merged target."
+    },
+    {
+      "source": "src/components/WorkbookFilePreview.tsx:465",
+      "fact": "Current detail panel already knows selection, current workbook/sheet and original merge. This provides an existing explicit-action surface."
+    },
+    {
+      "source": "src/runtime/docx_parse.ts:68",
+      "fact": "block-N is allocated from a parser-wide counter. It is not an OOXML source coordinate or a stable paragraph ordinal."
+    },
+    {
+      "source": "src/runtime/docx_parse.ts:525",
+      "fact": "story-N is allocated by discovery order; original part is available internally but not retained in DocxStory output."
+    },
+    {
+      "source": "src/runtime/document_view.ts:78",
+      "fact": "paragraphParts slices presentation into at most 1000 runs/40000 characters; these segments are not Word pages or source paragraphs."
+    },
+    {
+      "source": "src/components/DocxDocumentView.tsx:205",
+      "fact": "Table detail retains sourceRow/sourceColumn and true spans separately from visible clipped cells; BlockSequence mounts only a bounded content window."
+    },
+    {
+      "source": "src/runtime/office_preview_prepare.ts:28",
+      "fact": "Existing parent preparation validates complete capture/parse before replacement; children recheck exact file/attempt before ready. Position feedback must retain this ownership, not create a second file read or body ledger."
+    }
+  ],
+  "xlsxSlice": {
+    "source": "Ephemeral owner containing the exact successful WorkbookCapture/file + current WorkbookPreview/sheet object. A matching name or DTO shape alone is not a fresh source.",
+    "anchorProposal": {
+      "kind": "xlsx-range",
+      "sheetId": "actual relationship id from current workbook",
+      "sheetName": "bounded literal name for historical display",
+      "fromRow": "1-based integer",
+      "toRow": "1-based inclusive integer",
+      "fromColumn": "1-based integer",
+      "toColumn": "1-based inclusive integer"
+    },
+    "singleAndMerged": "Single cell uses one coordinate, including real empty visible positions. A merged-cell action uses the complete original merge bounds and clearly labels the full merged range even when the visible window is clipped. A hidden original anchor is not silently revealed or selectable until the user explicitly chooses to display hidden rows/columns.",
+    "rectangle": "Optional first-slice range form uses A1:B4 plus existing parseCellAddress. Require every ordinary requested coordinate inside the current visible 100x24 window; reject hidden gaps unless explicitly shown, and reject ranges crossing unseen groups. Do not auto-load additional sheets, silently expand partial merges or claim all offscreen cells were inspected.",
+    "operation": "Existing cell detail gets 对此单元格/合并范围提意见. Merely clicking a cell, navigating or changing sheet only changes the candidate; explicit action updates the common opinion target while preserving its text.",
+    "limits": "Honor worksheet bounds 1048576 rows/16384 columns and existing bounded window. Persist coordinates and bounded names only, not cell content/formula/clipboard snapshots. Formula/cache values retain existing incomplete-format notices."
+  },
+  "docxSlice": {
+    "dependency": "Retain source part name and the actual parsed XML element-child path on each supported p/tbl, before filtering/compatibility selection. Map the original DocxXml nodes, including chosen AlternateContent descendants, to paths while the bounded part tree exists; do not infer from output block-N or displayed segment order.",
+    "anchorProposal": {
+      "kind": "docx-block",
+      "part": "validated OPC part name from the current captured package",
+      "elementPath": "bounded zero-based XML element-child indices from that part root",
+      "blockKind": "paragraph or table"
+    },
+    "sourceOwnership": "Retain the exact DocxPreview object plus source-backed block. The current view/story/block must actually be mounted and active; a notice placeholder is not a selectable source block.",
+    "firstTargets": "Paragraph as a whole or table as a whole. A paragraph may be visually split, and a table window may be partial: target labels must say whole paragraph/table and keep existing partial-content notices. Do not claim Word page, screen line, individual run range or arbitrary nested-cell feedback.",
+    "stories": "Part/path supports body and explicitly selected header/footer/footnote/endnote without inventing page placement. Preserve original note id only as display context where available. Source IDs and missing content are not reconstructed from user-visible labels.",
+    "revalidation": "A new full version or a changed parser output cannot automatically retarget an old opinion. To call a saved location currently checked, read the exact original version and resolve that same part/path/kind against real captured source; absent/mismatched remains historical and usable as such."
+  },
+  "sharedApi": {
+    "availability": "onOfficeTargetAvailability({source,available}); false names the retiring source so a late cleanup cannot clear a newer candidate.",
+    "confirm": "onOfficeTargetConfirm({source,anchor}); child immediately checks current ready/active/attempt and exact sheet/block; parent independently checks current file/version/thread and no replace operation before changing the common draft.",
+    "persistence": "Extend the discriminated FeedbackAnchor union and every strict parser/formatter. Keep existing path/contentId disk version+SHA and unsentWork.v1 container; unknown fields/kinds reject the protected snapshot as today. No serialized fresh flag, parallel body index or access-grant token.",
+    "transfer": "Common take appends one original-version location description and user opinion to the composer in the existing atomic snapshot. Escape literal sheet/part labels as data. Do not send automatically, evaluate formulas, open Office, or add an Agent tool."
+  },
+  "failureProtection": [
+    "Before real child ready, while changing sheet/story/group, after hide/cancel/parse error, and during version replacement, new targets are unavailable; historical drafts remain intact.",
+    "A valid previous selection must not be relabelled with a new sheet, recycled relationship id, clipped merge coordinate, new paragraph counter, or restored reading-position ref.",
+    "Wrong type/path/range, missing original merge, stale child callback, unmounted block and hidden original data reject confirmation. Pending native capture keeps the existing single-flight and explicit retry rules.",
+    "Saved historical anchors are displayed as prior selections; shape-valid JSON alone is never current-disk validation. Source body is never persisted by this feature."
+  ],
+  "independentValidationFeasible": {
+    "fixtures": "Reuse existing independent python-docx ordinary writer documents and real Rust XLSX/DOCX capture receipts, plus small synthetic files for merged/hidden cells and source-node paths. Do not modify frozen fixtures or infer successful selection from parser success alone.",
+    "cases": [
+      "XLSX 0/false/empty cell/missing formula cache each retain exact selected coordinate and displayed distinction.",
+      "Merged cell spans two view windows; original full bounds survive clipping. Hidden anchor stays protected until explicit show-hidden.",
+      "Sheet switch/rename/reused id and same-path new SHA invalidate candidates, preserving old opinions.",
+      "DOCX repeated text, inserted preceding paragraph, ignored marker and AlternateContent do not confuse source element paths.",
+      "Body/header/footer/footnote with identical text resolve distinct parts/paths; no fabricated page number.",
+      "Long split paragraph and clipped table are labelled whole targets, not current segment pages; unsupported notice blocks cannot become targets.",
+      "Pointer and keyboard explicit action both preserve opinion text; late ready/callback, hide, failed parse and restore cannot confirm stale targets.",
+      "Cold draft restore/unknown fields/take once/settings-write failure preserve the existing atomic protections."
+    ],
+    "levels": "Pure strict parser/runtime tests -> real worker capture/path mapping -> controlled React/DOM interaction -> installed WKWebView separately. No test or implementation for this future slice has run."
+  },
+  "productionChanged": false,
+  "p21Complete": false
+}

@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/text_feedback_range.test.ts (39 tests | 1 failed) 20ms
+     × does not normalize combining marks or require a whole grapheme 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/text_feedback_range.test.ts > exact source coordinates (literal independent Python UTF-8 oracle) > does not normalize combining marks or require a whole grapheme
+AssertionError: expected { kind: 'text-range', …(4) } to deeply equal { kind: 'text-range', …(4) }
+
+- Expected
++ Received
+
+  {
+-   "byteEnd": 15,
+-   "byteStart": 13,
++   "byteEnd": 16,
++   "byteStart": 14,
+    "endLine": 2,
+    "kind": "text-range",
+    "startLine": 2,
+  }
+
+ ❯ src/runtime/text_feedback_range.test.ts:36:52
+     34|   });
+     35|   it("does not normalize combining marks or require a whole grapheme",…
+     36|     expect(textFeedbackRange(sourceFor(text),8,9)).toEqual({kind:"text…
+       |                                                    ^
+     37|   });
+     38|   it("maps CRLF, isolated CR and LF lines without adding an empty EOF …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 61 passed (62)
+   Start at  06:08:45
+   Duration  157ms (transform 107ms, setup 0ms, import 147ms, tests 24ms, environment 0ms)
+

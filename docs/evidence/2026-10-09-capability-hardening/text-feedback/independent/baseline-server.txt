@@ -1,0 +1,3 @@
+Text feedback independent server 1461 ready; PID 91250
+Read-only original CSS: 736406514e966f65465cb62f2fd1e7b0e1ff5d287c4b451407d07c573e2c9b2e
+6:22:34 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/fixture.tsx

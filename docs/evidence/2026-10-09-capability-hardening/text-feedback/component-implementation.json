@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-10-09T22:11:56.919374+00:00",
+  "scope": "P21 shared read-only source selection and current text-block integration",
+  "status": "source checkpoint; independent browser pending",
+  "ownedSourceHashes": {
+    "src/components/SourceTextSelection.tsx": "9afdcd68898a1424e0e2b84516e65f662f55dbcb87884491b4f1e93e7df93af3",
+    "src/components/SourceTextSelection.css": "736406514e966f65465cb62f2fd1e7b0e1ff5d287c4b451407d07c573e2c9b2e",
+    "src/components/SourceTextSelection.test.tsx": "c09e6551a438ea94fc3b280aa527aaf5c481041ba1c9fc96fb03852c73e9a565",
+    "src/components/source_text_dom.ts": "5c741d69197b7dd1fcdbd75ef6954eed7399d274f698c5ac1c711573dabce14d",
+    "src/components/source_text_dom.test.ts": "52b971051f6145434ccd955b148fca19831446559d216b3b9677da4026d7c812",
+    "src/components/TextBlockPreview.tsx": "2796f949a58f757cce453f8f0ee482b0af25727ae4d3079dba6895337ad52977",
+    "src/components/TextBlockPreview.test.tsx": "ad1b9ec520082d546b91445b565a492f9799fc1415352605c3a8e521712ce89a",
+    "src/runtime/source_text_selection_strings.ts": "e6b11b11b904ce1e4e2563b23ce51043be467e5ee712683a7e62d43b716521a0"
+  },
+  "behavior": [
+    "Pointer ranges use actual Text nodes and endpoint offsets, never selected-text lookup or innerText. The exact current pre.textContent must match the stable successful source receipt.",
+    "The keyboard line-range form selects actual DOM text only within the current loaded source; separate confirmation focuses and requires a further explicit click or Enter. No textarea or editable DOM is used.",
+    "Candidate state is transient. Only explicit confirmation forwards the recomputed anchor; source/active/readiness changes and external interaction retire candidates without writing old opinions.",
+    "TextBlockPreview confirmation rechecks current reader, exact block, source, active, ready and no outstanding read. Its callback refers to the displayed child block, not the parent initial block.",
+    "Line availability and partial-line scope are visible. Source controls precede text and remain sticky to preserve access with long small-file previews."
+  ],
+  "api": {
+    "availability": "{source,available}; true only for a valid candidate, false tagged with retiring source",
+    "confirmation": "{source,anchor}; runtime calculates strict UTF-8 byte and logical line coordinates",
+    "blockProps": ["onTextSelectionAvailability", "onTextSelectionConfirm"]
+  },
+  "tests": [
+    {
+      "log": "component-dom-red.txt",
+      "result": "2 failed / 2 passed; valid node positions unsupported by initial stub",
+      "countsAsEffectiveRed": true
+    },
+    {
+      "log": "component-dom-green.txt",
+      "result": "4 passed; structural node traversal fixture, not a browser"
+    },
+    {
+      "log": "component-first.txt",
+      "result": "3 files / 15 passed"
+    },
+    {
+      "log": "component-range-green.txt",
+      "result": "3 files / 16 passed after visible range/empty-source case"
+    },
+    {
+      "log": "component-targeted.txt",
+      "result": "5 files / 34 passed",
+      "command": "corepack pnpm exec vitest run src/components/SourceTextSelection.test.tsx src/components/TextBlockPreview.test.tsx src/components/source_text_dom.test.ts src/runtime/text_block_reader.test.ts src/runtime/text_block_preview.test.ts"
+    },
+    {
+      "log": "component-typecheck-final.txt",
+      "result": "corepack pnpm typecheck exit 0"
+    }
+  ],
+  "testBoundary": "Component tests use hook and structural DOM fixtures to challenge ownership, disabled state, explicit action and late callbacks. They do not prove real browser selection/focus or installed WKWebView. Independent controlled browser is being run by verification; no result is claimed yet.",
+  "excluded": [
+    "OpenedFileView parent integration",
+    "runtime coordinates and persistence implementation",
+    "formal application or real Agent execution",
+    "Office/image regions or unloaded-block selection"
+  ],
+  "productionFilesOutsideOwnershipModified": false,
+  "submitted": false
+}

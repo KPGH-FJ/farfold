@@ -1051,8 +1051,8 @@ it("rejects a stale page-target button after navigation and preserves its existi
   expect(saved.anchor).toBeUndefined();
   click("针对当前第 2 页");
   expect(
-    Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].anchor?.page,
-  ).toBe(2);
+    Object.values(fileFeedbackDrafts.entries(props.threadKey))[0].anchor,
+  ).toEqual({ kind: "pdf-page", page: 2, pageCount: 3 });
 });
 it.each([
   { kind: "pdf", page: 0, pageCount: 3 },
@@ -1129,7 +1129,7 @@ it("withdraws stale current-page actions while hidden and retains a blank select
   render();
   click("针对当前第 1 页");
   const draft = Object.values(fileFeedbackDrafts.entries(props.threadKey))[0];
-  expect(draft.anchor?.page).toBe(1);
+  expect(draft.anchor).toEqual({ kind: "pdf-page", page: 1, pageCount: 3 });
   expect(draft.text).toBe("");
   props.active = false;
   render();

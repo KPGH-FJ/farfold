@@ -7,18 +7,31 @@ import {
   type PreviewReadingPositionRef,
 } from "../runtime/preview_reading_position";
 import type { PreviewContentStatus } from "../runtime/preview_capture";
+import {
+  createTextFeedbackSource,
+  type TextFeedbackSource,
+} from "../runtime/text_feedback_range";
+import {
+  SourceTextSelection,
+  type TextSelectionAvailability,
+  type TextSelectionConfirmation,
+} from "./SourceTextSelection";
 import "./TextBlockPreview.css";
 export interface TextBlockPreviewProps {
   initial: Block;
   active: boolean;
   readingPosition?: PreviewReadingPositionRef;
   onStatus?: (status: PreviewContentStatus) => void;
+  onTextSelectionAvailability?: (value: TextSelectionAvailability) => void;
+  onTextSelectionConfirm?: (value: TextSelectionConfirmation) => void;
 }
 export function TextBlockPreview({
   initial,
   active,
   readingPosition,
   onStatus,
+  onTextSelectionAvailability,
+  onTextSelectionConfirm,
 }: TextBlockPreviewProps) {
   const readerRef = useRef<TextBlockReader | null>(null);
   const initialRef = useRef(initial);
@@ -32,8 +45,18 @@ export function TextBlockPreview({
     reader.snapshot,
     reader.snapshot,
   );
-  const props = useRef({ active, onStatus });
-  props.current = { active, onStatus };
+  const props = useRef({
+    active,
+    onStatus,
+    onTextSelectionAvailability,
+    onTextSelectionConfirm,
+  });
+  props.current = {
+    active,
+    onStatus,
+    onTextSelectionAvailability,
+    onTextSelectionConfirm,
+  };
   const [input, setInput] = useState(String(state.block.blockIndex + 1));
   const [copyNote, setCopyNote] = useState<string | null>(null);
   const copying = useRef(false);
@@ -72,6 +95,24 @@ export function TextBlockPreview({
     if (props.current.active) void reader.go(index);
   };
   const b = state.block;
+  const sourceRef = useRef<{
+    block: Block;
+    source: TextFeedbackSource | null;
+  } | null>(null);
+  if (sourceRef.current?.block !== b)
+    sourceRef.current = {
+      block: b,
+      source: createTextFeedbackSource(b, b.file),
+    };
+  const source = sourceRef.current.source;
+  const ownsSelection = () =>
+    mounted.current &&
+    props.current.active &&
+    readerRef.current === reader &&
+    reader.snapshot().block === b &&
+    reader.snapshot().phase === "ready" &&
+    !reader.isBusy() &&
+    sourceRef.current?.source === source;
   return (
     <section className="text-block-preview" aria-label={S.title}>
       <p>{S.scope}</p>
@@ -192,9 +233,29 @@ export function TextBlockPreview({
                 : copyNote}
         </p>
       )}
-      <pre ref={content} className="a-term text-block-content" tabIndex={0}>
-        {b.text}
-      </pre>
+      {source && onTextSelectionConfirm ? (
+        <SourceTextSelection
+          source={source}
+          enabled={active && state.phase === "ready" && !busy}
+          contentRef={content}
+          className="a-term text-block-content"
+          onAvailability={(value) => {
+            if (
+              !value.available ||
+              (value.source === source && ownsSelection())
+            )
+              props.current.onTextSelectionAvailability?.(value);
+          }}
+          onConfirm={(value) => {
+            if (value.source === source && ownsSelection())
+              props.current.onTextSelectionConfirm?.(value);
+          }}
+        />
+      ) : (
+        <pre ref={content} className="a-term text-block-content" tabIndex={0}>
+          {b.text}
+        </pre>
+      )}
     </section>
   );
 }

@@ -1,0 +1,53 @@
+.source-text-selection {
+  min-width: 0;
+}
+.source-text-selection > pre {
+  -webkit-user-select: text;
+  user-select: text;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.source-text-selection-controls {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface, #fff);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.source-text-selection-controls p {
+  margin: 0;
+}
+.source-text-selection-controls details {
+  flex-basis: 100%;
+}
+.source-text-selection-controls summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.source-text-selection-controls form,
+.source-text-selection-controls label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+.source-text-selection-controls input {
+  width: 96px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #ddd);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+.source-text-selection-controls :focus-visible {
+  outline: 2px solid var(--ink-2);
+  outline-offset: 3px;
+}

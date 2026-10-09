@@ -17,6 +17,7 @@ import { IMPORT_STRINGS } from "./import_strings";
 import { STRINGS } from "./strings";
 import { FILE_DELIVERY_STRINGS } from "./file_delivery_strings";
 import { FILE_OPEN_STRINGS } from "./file_open_strings";
+import { SOURCE_TEXT_SELECTION_STRINGS } from "./source_text_selection_strings";
 import { WORKSPACE_STRINGS } from "./workspace_strings";
 import { PREPARATION_STRINGS } from "./preparation_strings";
 import { PREPARATION_ACTION_STRINGS } from "./preparation_action_strings";
@@ -128,6 +129,7 @@ describe("strings", () => {
       EXIT_IMPACT,
       FEEDBACK_STRINGS,
       FILE_OPEN_STRINGS,
+      SOURCE_TEXT_SELECTION_STRINGS,
       IMAGE_INPUT_STRINGS,
       IMAGE_BYTES_STRINGS,
       MESSAGE_ATTACHMENTS,

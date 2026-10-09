@@ -1,0 +1,218 @@
+{
+  "mode": "coordinates",
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "wire-oracles",
+      "id": "TF03/04",
+      "name": "real Rust wire offsets 0:0",
+      "ok": true,
+      "detail": {
+        "actual": {
+          "kind": "text-range",
+          "byteStart": 0,
+          "byteEnd": 3,
+          "startLine": 1,
+          "endLine": 1
+        },
+        "want": {
+          "kind": "text-range",
+          "byteStart": 0,
+          "byteEnd": 3,
+          "startLine": 1,
+          "endLine": 1
+        }
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF03/04",
+      "name": "real Rust wire offsets 0:1",
+      "ok": true,
+      "detail": {
+        "actual": {
+          "kind": "text-range",
+          "byteStart": 3,
+          "byteEnd": 9,
+          "startLine": 1,
+          "endLine": 1
+        },
+        "want": {
+          "kind": "text-range",
+          "byteStart": 3,
+          "byteEnd": 9,
+          "startLine": 1,
+          "endLine": 1
+        }
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF03/04",
+      "name": "real Rust wire offsets 0:3",
+      "ok": true,
+      "detail": {
+        "actual": {
+          "kind": "text-range",
+          "byteStart": 9,
+          "byteEnd": 11,
+          "startLine": 1,
+          "endLine": 1
+        },
+        "want": {
+          "kind": "text-range",
+          "byteStart": 9,
+          "byteEnd": 11,
+          "startLine": 1,
+          "endLine": 1
+        }
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF03/04",
+      "name": "real Rust wire offsets 1:123",
+      "ok": true,
+      "detail": {
+        "actual": {
+          "kind": "text-range",
+          "byteStart": 131195,
+          "byteEnd": 131198,
+          "startLine": 2,
+          "endLine": 2
+        },
+        "want": {
+          "kind": "text-range",
+          "byteStart": 131195,
+          "byteEnd": 131198,
+          "startLine": 2,
+          "endLine": 2
+        }
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF03/04",
+      "name": "real Rust wire offsets 2:11",
+      "ok": true,
+      "detail": {
+        "actual": {
+          "kind": "text-range",
+          "byteStart": 262155,
+          "byteEnd": 262163,
+          "startLine": 2,
+          "endLine": 3
+        },
+        "want": {
+          "kind": "text-range",
+          "byteStart": 262155,
+          "byteEnd": 262163,
+          "startLine": 2,
+          "endLine": 3
+        }
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF01/03",
+      "name": "Unicode/BOM/CRLF exact bytes 4",
+      "ok": true,
+      "detail": {
+        "kind": "text-range",
+        "byteStart": 6,
+        "byteEnd": 16,
+        "startLine": 2,
+        "endLine": 2
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF01/03",
+      "name": "Unicode/BOM/CRLF exact bytes 1",
+      "ok": true,
+      "detail": {
+        "kind": "text-range",
+        "byteStart": 3,
+        "byteEnd": 9,
+        "startLine": 1,
+        "endLine": 2
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF01/03",
+      "name": "Unicode/BOM/CRLF exact bytes 10",
+      "ok": true,
+      "detail": {
+        "kind": "text-range",
+        "byteStart": 17,
+        "byteEnd": 19,
+        "startLine": 3,
+        "endLine": 3
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF01/03",
+      "name": "Unicode/BOM/CRLF exact bytes 2",
+      "ok": true,
+      "detail": {
+        "kind": "text-range",
+        "byteStart": 4,
+        "byteEnd": 6,
+        "startLine": 1,
+        "endLine": 1
+      }
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF02",
+      "name": "reject split endpoint 6",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF02",
+      "name": "reject split endpoint 3",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF02",
+      "name": "reverse offsets retain range",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF02/05",
+      "name": "empty, negative and beyond rejected",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF08",
+      "name": "manufactured source object is not live factory result",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "TF08",
+      "name": "forged line numbers cannot revalidate",
+      "ok": true
+    },
+    {
+      "scenario": "wire-oracles",
+      "id": "all",
+      "name": "no prompt/permission/unexpected IPC or unhandled rejection",
+      "ok": true,
+      "detail": {
+        "unexpected": [],
+        "unhandled": []
+      }
+    }
+  ],
+  "calls": [],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}

@@ -1,0 +1,46 @@
+{
+  "mode": "refresh",
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "refresh-parent",
+      "id": "TF10/12",
+      "name": "live candidate defers fresh version read",
+      "ok": true
+    },
+    {
+      "scenario": "refresh-parent",
+      "name": "scenario interrupted",
+      "ok": false,
+      "error": "Error: Timeout refresh-parent refresh-parent.txt文件位置/controlled/refresh-parent.txt重新读取修改意见用默认应用打开在文件夹中显示完整文件另存为…文件已变化。当前内容和意见保持不变，重新读取可查看新内容。选择原文后，可对此选段提意见。按行选择可选第 1–4 行起始行结束行选择这些行已选择第 2 行中的文字对此选段提意见﻿A\r\n中🙂é\rZ\nrepeat repeat\n"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "",
+      "cmd": "settings_get"
+    },
+    {
+      "scenario": "refresh-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "refresh-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "refresh-parent",
+      "cmd": "file_delivery_read_text",
+      "fileVersion": "controlled-1"
+    },
+    {
+      "scenario": "refresh-parent",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "controlled-1"
+    }
+  ],
+  "domEvents": [],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}

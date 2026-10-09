@@ -1,0 +1,69 @@
+{
+  "kind": "independent real-Rust-wire coordinate oracle",
+  "wire": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/text-block-wire.json",
+  "wireSha256": "cb059ca99ab226a866b2b362bafa0788a0ef00800b7cb221b1f716be96de5106",
+  "wholeContentSha256": "cbcc7ab09771aba3e4381531ac03e985f06486466e7372f7a2296c980a2ce913",
+  "wholeBytes": 262163,
+  "blocks": 3,
+  "cases": [
+    {
+      "block": 0,
+      "localUtf16Start": 0,
+      "localUtf16End": 1,
+      "byteStart": 0,
+      "byteEnd": 3,
+      "startLine": 1,
+      "endLine": 1,
+      "selected": "﻿"
+    },
+    {
+      "block": 0,
+      "localUtf16Start": 1,
+      "localUtf16End": 3,
+      "byteStart": 3,
+      "byteEnd": 9,
+      "startLine": 1,
+      "endLine": 1,
+      "selected": "开始"
+    },
+    {
+      "block": 0,
+      "localUtf16Start": 3,
+      "localUtf16End": 5,
+      "byteStart": 9,
+      "byteEnd": 11,
+      "startLine": 1,
+      "endLine": 1,
+      "selected": "\r\n"
+    },
+    {
+      "block": 1,
+      "localUtf16Start": 123,
+      "localUtf16End": 126,
+      "byteStart": 131195,
+      "byteEnd": 131198,
+      "startLine": 2,
+      "endLine": 2,
+      "selected": "xxx"
+    },
+    {
+      "block": 2,
+      "localUtf16Start": 11,
+      "localUtf16End": 15,
+      "byteStart": 262155,
+      "byteEnd": 262163,
+      "startLine": 2,
+      "endLine": 3,
+      "selected": "中\r\n尾"
+    }
+  ],
+  "invalidEndpoints": [
+    {
+      "block": 0,
+      "localUtf16": 4,
+      "reason": "inside CRLF"
+    }
+  ],
+  "result": "five literal byte-slice assertions passed; three real wire blocks reconstruct exact whole content hash",
+  "boundary": "Existing Rust fixture output is reused; no new Rust run or original temp-file current identity check. Frontend runtime and browser assertions await source freeze. Emoji/combining half-surrogate expectations remain separately in coordinate-oracles.json."
+}

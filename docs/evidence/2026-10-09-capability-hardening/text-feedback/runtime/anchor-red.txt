@@ -1,0 +1,79 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_feedback_anchor.text.test.ts (23 tests | 3 failed) 8ms
+   × restores text coordinates as historical metadata without a body or current verification flag 3ms
+   × formats text ranges with original byte units and historical context, never PDF or before/after labels 2ms
+   × keeps path controls inside one quoted metadata value while preserving the opinion 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_feedback_anchor.text.test.ts > restores text coordinates as historical metadata without a body or current verification flag
+Error: invalid feedback anchor
+ ❯ parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:65:11
+     63|     !feedbackDiskVersion(context.path, context.contentId)
+     64|   )
+     65|     throw new Error("invalid feedback anchor");
+       |           ^
+     66|   return {
+     67|     kind: "pdf-page",
+ ❯ src/runtime/drafts.ts:651:22
+ ❯ src/runtime/drafts.ts:590:51
+ ❯ Module.parseDraftSnapshot src/runtime/drafts.ts:589:57
+ ❯ src/runtime/file_feedback_anchor.text.test.ts:35:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.text.test.ts > formats text ranges with original byte units and historical context, never PDF or before/after labels
+AssertionError: expected '关于 /work/source.md（当时查看的内容，第 undefine…' to contain '第 2 行'
+
+- Expected
++ Received
+
+- 第 2 行
++ 关于 /work/source.md（当时查看的内容，第 undefined / undefined 页）：
++ 文件 SHA-256：aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
++ Keep my exact opinion
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.text.test.ts:44:16
+     42| it("formats text ranges with original byte units and historical contex…
+     43|   const text = fileFeedbackText(entry as unknown as SavedFileFeedback);
+     44|   expect(text).toContain("第 2 行");
+       |                ^
+     45|   expect(text).toContain("字节 6–16");
+     46|   expect(text).toContain("末位不含");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.text.test.ts > keeps path controls inside one quoted metadata value while preserving the opinion
+AssertionError: expected '关于 /work/part\n# pretend verified.md（…' to contain '"/work/part\n# pretend verified.md"'
+
+- Expected
++ Received
+
+- "/work/part\n# pretend verified.md"
++ 关于 /work/part
++ # pretend verified.md（当时查看的内容，第 undefined / undefined 页）：
++ 文件 SHA-256：aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
++ Keep my exact opinion
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.text.test.ts:60:16
+     58|     contentId: `disk:${JSON.stringify([injected, "v1", sha256])}`,
+     59|   } as unknown as SavedFileFeedback);
+     60|   expect(text).toContain(JSON.stringify(injected));
+       |                ^
+     61|   expect(text).not.toContain("\n# pretend verified");
+     62|   expect(text).toContain(entry.text);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 20 passed (23)
+   Start at  06:04:32
+   Duration  150ms (transform 56ms, setup 0ms, import 77ms, tests 8ms, environment 0ms)
+

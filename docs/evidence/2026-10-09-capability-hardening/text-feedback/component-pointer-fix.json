@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-09T22:23:19.524232+00:00",
+  "scope": "Follow-up to the frozen P21 source-selection component checkpoint",
+  "priorCheckpoint": {
+    "path": "component-implementation.json",
+    "sha256": "18b094f63b70ef00d873465b5fcc587a59d40bb4df934fda65dadd550d45fb80",
+    "modified": false
+  },
+  "confirmedFailure": "With production styles.css body user-select:none, actual Chromium mouse dragging the visible second repeat leaves Selection collapsed, text empty and confirmation disabled. Programmatic Range/Enter tests did not cover this behavior.",
+  "minimalFix": {
+    "path": "src/components/SourceTextSelection.css",
+    "oldSha256": "736406514e966f65465cb62f2fd1e7b0e1ff5d287c4b451407d07c573e2c9b2e",
+    "sha256": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8",
+    "change": "Add -webkit-user-select:text and user-select:text only to .source-text-selection > pre.",
+    "otherSevenOwnedInputsUnchanged": true
+  },
+  "verification": {
+    "executor": "verification agent; this reviewer read the actual outputs and screenshots, did not rerun browsers",
+    "evidence": [
+      {
+        "path": "independent/parent-original-css-valid-red.json",
+        "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6",
+        "passed": false,
+        "checks": 6,
+        "failed": 1
+      },
+      {
+        "path": "independent/parent-mouse-fixed.json",
+        "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416",
+        "passed": true,
+        "checks": 19,
+        "failed": 0
+      },
+      {
+        "path": "independent/block-first.json",
+        "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a",
+        "passed": true,
+        "checks": 7,
+        "failed": 0
+      },
+      {
+        "path": "independent/refresh-harness-fixed.json",
+        "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426",
+        "passed": true,
+        "checks": 5,
+        "failed": 0
+      },
+      {
+        "path": "independent/persistence-harness-fixed.json",
+        "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196",
+        "passed": true,
+        "checks": 14,
+        "failed": 0
+      },
+      {
+        "path": "independent/coordinates-first.json",
+        "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b",
+        "passed": true,
+        "checks": 16,
+        "failed": 0
+      }
+    ],
+    "effectiveRed": "parent-original-css-valid-red loads the exact original CSS hash using the corrected CDP runner; preceding Enter issue was a runner input omission, not a product failure.",
+    "mouseGreen": "Same visible glyph endpoints now produce DOM UTF16 [19,25), text repeat, computed userSelect=text, and confirmed UTF8 bytes [26,32), logical line4.",
+    "keyboardGreen": "Actual line-entry/Enter path creates a real DOM Range, requires separate explicit confirmation, and retains CR. Actual Enter activates the enabled button after the runner includes the required text field.",
+    "applicableFinalChecks": 61,
+    "scope": "Actual Chromium production React/components/styles with controlled IPC; historical Rust wire also checked. No unexpected IPC/unhandled rejection in the final scenario outputs. This does not prove installed WebKit or live OS file reads.",
+    "webkit": "The prefixed CSS declaration is present for WebKit; no WebKit engine/native installation was operated by this component task.",
+    "format": "Targeted prettier --check SourceTextSelection.css exit0"
+  },
+  "visualReview": [
+    "independent/parent-pointer-diagnostic-p21-pointer-diagnostic.png",
+    "independent/parent-mouse-fixed-p21-pointer-diagnostic.png",
+    "independent/parent-mouse-fixed-p21-precise-text-target.png"
+  ],
+  "visualConclusion": "Personally viewed original failure and two passing screenshots: repeated text is visibly selected; the explicit action and retained-opinion form remain reachable. No new visual blocker found in these controlled frames.",
+  "remaining": "Parent/root owns production build/format refresh for the CSS change and eventual installed WebKit validation. Office next slice is design-only in office-next-design.json; no region or Office feedback completion claimed.",
+  "sourceFrozen": true,
+  "submitted": false
+}

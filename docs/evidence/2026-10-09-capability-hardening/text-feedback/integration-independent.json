@@ -1,0 +1,150 @@
+{
+  "reviewedAtUtc": "2026-10-09T22:16:18.120083+00:00",
+  "status": "passed_for_recorded_source_integration",
+  "reviewer": "architecture",
+  "method": "Read-only independent artifact/source hashing and scope enumeration, plus original stdout and runner inspection. No test/build/app execution repeated. Reviewer also authored the coordinate runtime; this integration hash audit is separate from the other reviewer runtime/browser challenge.",
+  "sourceBase": "7365beac19963b528558c3a983231660ce94a37c",
+  "integrationReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/receipt.json",
+    "sha256": "9edc2f7dca1e5b10fcad7abac578c4708c812949c863bc10844f2a7e522c1ba7"
+  },
+  "fixedInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/inputs.json",
+    "sha256": "2d49ed24dca20dbc64eb1c207fc3e90668e15df458f0b733308f225bc6b1f1b8"
+  },
+  "runner": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/run-text-feedback-checks.py",
+    "sha256": "4ce98ea661e7cfa87104361b61aa477e4f14a17346932458845c37c4602652e3"
+  },
+  "conditions": {
+    "all1116CurrentScopePathsAndHashesEqualFixedInputs": true,
+    "noAdditionalOrMissingPathsInDeclaredScopes": true,
+    "noSymlinkInputs": true,
+    "rootBeforeAfterStabilityRecorded": true,
+    "allSevenCheckReceiptsExitZeroAndRawHashesMatch": true,
+    "freshFrontendCounts": {
+      "files": 302,
+      "passed": 3345
+    },
+    "freshChecks": ["format", "frontend", "typecheck", "build"],
+    "reusedChecks": ["cargo-fmt", "clippy", "rust"],
+    "originalRustCounts": {
+      "passed": 1230,
+      "failed": 0,
+      "ignored": 6
+    },
+    "reuseComparedDirectlyToOriginalRustInputs": true,
+    "rustConfigExternalAndRuntimeFixtureInputCount": 446,
+    "exact20FrontendChangesCoveredByOwnerSourceHashes": true,
+    "centralizedStringsIncludesNewSourceSelectionFeedbackAndOpenText": true,
+    "twoProtectedReadmesUnchanged": true
+  },
+  "changedInputs": [
+    "src/components/OpenedFileView.test.tsx",
+    "src/components/OpenedFileView.text-feedback.test.tsx",
+    "src/components/OpenedFileView.tsx",
+    "src/components/SourceTextSelection.css",
+    "src/components/SourceTextSelection.test.tsx",
+    "src/components/SourceTextSelection.tsx",
+    "src/components/TextBlockPreview.test.tsx",
+    "src/components/TextBlockPreview.tsx",
+    "src/components/source_text_dom.test.ts",
+    "src/components/source_text_dom.ts",
+    "src/runtime/drafts.ts",
+    "src/runtime/feedback_strings.ts",
+    "src/runtime/file_feedback_anchor.text.test.ts",
+    "src/runtime/file_feedback_anchor.ts",
+    "src/runtime/file_open_strings.ts",
+    "src/runtime/source_text_selection_strings.ts",
+    "src/runtime/strings.test.ts",
+    "src/runtime/text_feedback_persistence.test.ts",
+    "src/runtime/text_feedback_range.test.ts",
+    "src/runtime/text_feedback_range.ts"
+  ],
+  "owners": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/implementation.json",
+      "sha256": "18ad61258057b611c74be750bfc405c6ca54479fb2d70d0f7168f3faea92ffdf",
+      "sourceCount": 7,
+      "sourceHashesMatchCurrentAndFixedInputs": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/component-implementation.json",
+      "sha256": "18b094f63b70ef00d873465b5fcc587a59d40bb4df934fda65dadd550d45fb80",
+      "sourceCount": 8,
+      "sourceHashesMatchCurrentAndFixedInputs": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/parent-checks/implementation.json",
+      "sha256": "4e05e5f60eefa4d61377eba1e8fd219095ea489af20b44443294541704041724",
+      "sourceCount": 5,
+      "sourceHashesMatchCurrentAndFixedInputs": true
+    }
+  ],
+  "logs": [
+    {
+      "name": "format",
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedNow": true
+    },
+    {
+      "name": "frontend",
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/frontend.txt",
+      "sha256": "8d4c18112f122e30ac8264ca22022be3f02d471eb0d77dcaae1a1745a14037a7",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/build.txt",
+      "sha256": "21c27d0c40d105b3627c0cd62851fe3bc5472f7ff9aba5ee9d23a90c222b12e7",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false
+    },
+    {
+      "name": "clippy",
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false
+    },
+    {
+      "name": "rust",
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false
+    }
+  ],
+  "originalRustInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json",
+    "sha256": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12"
+  },
+  "originalRustFinalReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks-final/final-verification.json",
+    "sha256": "2c0d67ee95fb30685e1f6cff50bdc776cd871882389460b66ab76e131fa4a5b6"
+  },
+  "priorIntegrationInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/inputs.json",
+    "sha256": "66d0d130cbeb70f2bcf444423b968fea0775a24e99cc7d6cd05876a33ee16581"
+  },
+  "protectedReadmes": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "limitations": [
+    "Original Rust tests were not rerun. Direct matching Rust/config/shared input hashes support explicit reuse; this does not add platform, filesystem, real Agent or performance observations.",
+    "This record checks the frozen source and engineering receipts only. Controlled browser work is still independently tracked; no installed text-selection interaction, native WKWebView success or user-data retention is claimed here.",
+    "Build completed with its recorded bundle-size warning; exit0 is not a production performance measurement.",
+    "The original P17 six ignored Rust cases remain unclaimed by this review, including the separately executed benchmark."
+  ]
+}

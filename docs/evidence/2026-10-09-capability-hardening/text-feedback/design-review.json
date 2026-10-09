@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T21:40:45.897799+00:00",
+  "kind": "independent design review; not an active plan",
+  "status": "ready for scoped implementation; production untouched; proposed cases not yet executed",
+  "scope": {
+    "ids": ["P21"],
+    "firstSlice": "Exact selection feedback on already supported UTF-8 plain text and Markdown source, including current bounded large-file block. No file editing, no new Agent request or permission.",
+    "remaining": "PDF regions, Office locations, image regions, cross-unloaded-block selection and P22 real Agent rework remain separate; all122 original conditions remain."
+  },
+  "confirmedSourceGap": [
+    {
+      "path": "src/components/OpenedFileView.tsx:1017",
+      "fact": "Disk text opinions always reset selection=null and scope=file; disk version tuple already exists at591."
+    },
+    {
+      "path": "src/components/TextBlockPreview.tsx:195",
+      "fact": "Actual bounded text is a plain pre; no selection callback carries the displayed block owner."
+    },
+    {
+      "path": "src/runtime/file_feedback.ts:10",
+      "fact": "Existing before/after selection explicitly describes reported tool content, not disk coordinates; do not reuse it with misleading before/after labels."
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts:40",
+      "fact": "Strict saved anchor parser currently accepts only pdf-page; new kind must extend the union and exhaustive rendering."
+    }
+  ],
+  "coordinateContract": {
+    "persistedShapeProposal": {
+      "kind": "text-range",
+      "byteStart": "zero-based safe integer, inclusive",
+      "byteEnd": "zero-based safe integer, exclusive; >byteStart",
+      "startLine": "one-based logical line of first selected token",
+      "endLine": "one-based logical line containing last selected token"
+    },
+    "identity": "Parent saved feedback path/contentId already contains resolved path, opaque disk version and full SHA. A range never changes that tuple. No source body or global selection ledger stored.",
+    "units": "Convert exact displayed DOM text UTF-16 offsets using UTF-8 encoding of source prefixes, then add proven block.byteStart. Never use JS string.length as bytes or normalize input. Walk original DOM Text nodes and their offsets; never use selection.toString(), innerText or text.indexOf(selection), which cannot distinguish repeated text and may normalize layout.",
+    "lineRules": "CRLF counts once; isolated CR/LF count once; BOM consumes3 UTF-8 bytes but no line break. A trailing selected newline belongs to its preceding line; no extra empty end line.",
+    "boundaries": "Endpoints may not split a surrogate pair or CRLF. Empty/multiple/disjoint/outside-container ranges rejected. Reverse drag is normalized to the same ordered source range. Combining-character boundaries are preserved as selected; do not normalize graphemes.",
+    "largeFile": "Use actual returned block text, byteStart and startLine, never requested blockIndex or a parent initial block after child navigation. A mid-line block does not start at byte0 or a new logical line. Selection is limited to current loaded block; no full-file reread or fabricated missing bytes merely to expand selection. Existing receipts do not provide the absolute column prefix for a startsMidLine block; do not display column=1 or claim an absolute column.",
+    "smallText": "Use original UTF-8 text receipt unchanged. Rendered Markdown/HTML DOM is not source-coordinate evidence; explicit source mode uses exact text and retains existing rendered mode."
+  },
+  "evidenceAndTrust": {
+    "backendProof": "read_text uses capture_expected then UTF-8 decode (file_delivery.rs:370); read_text_block performs full stream::expected before returning calculated range/lines (text_blocks.rs:186). stream::expected reopens, checks final path/root/leaf and compares full SHA/version. Existing file_read_check admission/pending behavior remains.",
+    "liveFactory": "Construct a new anchor only from the current active successfully-read source object plus a DOM Range entirely inside its exact text surface. Require textContent===source.text, valid endpoints, source byte length consistency, recomputed range/line bounds and exact current owner at explicit confirmation. Snapshot/file fields alone are not a certificate.",
+    "structuralParserIsNotProof": "parseTextBlock and parseFeedbackAnchor validate shape/consistency, not provenance. JSON with matching path/hash can be manufactured. Do not export a path+numbers-to-verified-anchor shortcut or let IPC/tool metadata bypass actual read/display ownership.",
+    "coldRestore": "Strictly parse and preserve a historical anchor; initialize any live verification flag to false and do not serialize it. Display and transfer as a previously selected position, not current-disk or newly checked proof. Unknown fields/versions reject the whole unsent snapshot under existing protection, never drop fields and rewrite.",
+    "revalidate": "To claim position currently rechecked, explicitly read the same full version through existing backend, obtain the block containing the range (or whole small text), then recompute endpoints/lines against those actual bytes. SamePreviewFile or matching digest strings alone are insufficient; missing/changed/unavailable leaves history intact and unverified. Location mismatch must not silently clamp a feedback range.",
+    "take": "Historical opinions remain usable: clearly mark historical position and original digest; ask downstream reader to verify the original version. Adding to composer does not assert current validity or send a request.",
+    "securityLimit": "No tamper-evident signature or authentic proof of a past human selection is promised. A malicious local DB edit can alter historical draft metadata; current validity must come from a fresh read. Do not treat a forged saved anchor as an access grant, current read proof or native receipt."
+  },
+  "minimalChanges": [
+    {
+      "path": "new src/runtime/text_feedback_range.ts (+tests)",
+      "role": "Pure source-offset conversion and validation; separate historical parser and live-source factory/revalidation, fixed coordinate rules."
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts; src/runtime/drafts.ts; src/runtime/feedback_strings.ts (+persistence tests)",
+      "role": "Discriminated anchor union, exhaustive rendering and strict snapshot parse. Keep same unsentWork.v1 container, original PDF/tool feedback compatibility, existing one-snapshot take."
+    },
+    {
+      "path": "new shared plain-source selection component/hook; src/components/TextBlockPreview.tsx",
+      "role": "Current displayed block owns the callback; pointer and keyboard selections both work. Retire candidates when block/source/active/read state changes."
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx; src/components/FileFeedbackDrafts.tsx; dedicated text-feedback strings",
+      "role": "Explicit selected target/whole-file target and source mode. Existing opinion does not retarget on drag/flip/refresh; only deliberate target action updates it. Parent checks exact callback ownership again, preserves all old versions."
+    },
+    {
+      "path": "src/runtime/file_delivery.ts or new small-text receipt validator (only if shared factory requires it)",
+      "role": "Validate readText shape, exact file identity, scalar-valid text and UTF-8 byte count before using it for coordinates; this validation still does not replace actual backend provenance."
+    }
+  ],
+  "backendResponsibility": {
+    "expectedProductionChange": "None required for the minimum slice if current read receipts are reused and cold positions are explicitly historical until reread. Keep existing full-stream/OS read slot/path/version authority; do not introduce a persisted proof token or new ledger.",
+    "tests": "Real temp-file receipt for the oracle samples, equality with expected UTF-8 slices and global lines; forged VerifiedFile metadata/changed file must be rejected by existing expected-version read. Reuse/extend scoped tests only if current coverage is missing.",
+    "conditional": "If UI promises current verification for a saved range without loading its containing source, a dedicated backend full-version/range verifier is necessary. Do not silently make that stronger promise in this slice."
+  },
+  "takeAndFailureRules": [
+    "Append exactly once to original composer; preserve its existing text, attachments, queue-edit/pending fields, other opinions and queues. Remove only exact feedback key in the same persisted snapshot.",
+    "Settings failure leaves combined composer in memory and original disk opinion recoverable; show unsaved state, never claim disk save or auto-send.",
+    "Repeated click after take returns false/no duplicate. File content and backend file commands remain untouched."
+  ],
+  "sourceSnapshot": [
+    {
+      "path": "src/runtime/text_block_preview.ts",
+      "sha256": "7f322eb76119e053d52627de1756d30ca4a514488d210a12cc87fd29eb83dade"
+    },
+    {
+      "path": "src/runtime/text_block_reader.ts",
+      "sha256": "06230c5115eb85e8ef93f48e91ba2791622e9fdd1f15356b8ebb11445fd94110"
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "b958930d836ea26dbdf8a3cfbf823c1fd5c5fd49a4505ab54283e547107f4c71"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ac7fb66157086f7ba203327916e7ea596215c60a9f4e6c42d6f16998ce6a4243"
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "4e25d7c516ab146328a33cde17a0c106b65662db330cb5916addf9c9c5375129"
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "f83fdfe9dfb75202b3f8c62130c647b04dcc9c8680b89fc157897f794576664e"
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e"
+    },
+    {
+      "path": "src/components/TextBlockPreview.tsx",
+      "sha256": "f9ae66b090594199e665ab6a289e33dd45a694c57831d9c4608ce3c4036f4e50"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f027e7e0b62ea36322923a35328e719bb423b3fd7662fee82b86599a96fad4ad"
+    },
+    {
+      "path": "src/components/FileFeedbackDrafts.tsx",
+      "sha256": "a66891bc8746f4b73305edeff17b9e7a8d72a79d7d6ee5ed46050efef336734b"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "afe7adc809e7f5f60b385404eac127b05a1d2a3d3fe852f878ad0edbf4e7b840"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_blocks.rs",
+      "sha256": "b184039071f988a83bd8ae47220db5c4c6319e90c57e7f6897feaad72c903176"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/stream.rs",
+      "sha256": "bbf7ff3573aa4ad1ba42cdb017c4f7deb383b0f6f6451ad79f74c6f565e78db7"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "ff82f983ccf0d68abb2720b3431f752abef694071ce28c844d63c2e0ca1e890f"
+    }
+  ],
+  "oracle": "coordinate-oracles.json",
+  "validationBoundary": "Read-only source inspection plus independently asserted Python UTF-8 literal oracles. No new production tests, browser/native UI, Agent or user data operations executed in this design task.",
+  "independentBackendCheck": {
+    "reviewer": "architecture",
+    "result": "Existing complete UTF-8 receipts preserve BOM and newlines, and full-file verified blocks include global byte and line ranges without splitting scalars/CRLF. No Rust production change needed for this slice. Existing real Rust text-block wire fixtures may supply the cross-language test input.",
+    "boundary": "Read-only source review, not a new backend test execution or a live-selection implementation result."
+  }
+}

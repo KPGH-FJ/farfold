@@ -1,0 +1,9 @@
+{
+  "checkedAtUtc": "2026-10-09T22:20:54.361135+00:00",
+  "exitCode": 0,
+  "sourceStable": true,
+  "inputCount": 1116,
+  "changedSinceInitial": ["src/components/SourceTextSelection.css"],
+  "log": "text-feedback-checks-final/build.txt",
+  "sha256": "ee946c92fec50b09ea8f49d26b62cd372eb2591c90555ce35734265e17ceac4f"
+}

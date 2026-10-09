@@ -14,6 +14,13 @@ const h = vi.hoisted(() => ({
   copy: vi.fn(),
 }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
+// This suite owns the reader/selection boundary; the shared component has its own
+// hook and real-browser tests, so its hooks must not reuse this harness's slots.
+vi.mock("./SourceTextSelection", () => ({
+  SourceTextSelection: (props: { source: { text: string } }) => (
+    <pre>{props.source.text}</pre>
+  ),
+}));
 vi.mock("react", async (original) => {
   const effect = (fn: () => void | (() => void), deps: unknown[]) => {
     const index = h.cursor++,
@@ -52,6 +59,11 @@ import {
   type TextBlockPreviewProps,
 } from "./TextBlockPreview";
 import { TEXT_BLOCK_STRINGS as S } from "../runtime/text_block_strings";
+import {
+  SourceTextSelection,
+  type SourceTextSelectionProps,
+} from "./SourceTextSelection";
+import { textFeedbackRange } from "../runtime/text_feedback_range";
 const file = {
   root: "/w",
   path: "a",
@@ -59,7 +71,7 @@ const file = {
   name: "a",
   size: 6,
   version: "1",
-  sha256: "h",
+  sha256: "a".repeat(64),
 };
 const initial = {
   file,
@@ -136,4 +148,77 @@ it("never treats markup or unsupported scalar content as rendered HTML", () => {
   expect(html).toContain("&lt;img");
   expect(html).not.toContain("<img");
   expect(h.invoke).not.toHaveBeenCalled();
+});
+function selectionProps() {
+  return render().nodes.find((n) => n.type === SourceTextSelection)!
+    .props as unknown as SourceTextSelectionProps;
+}
+it("the displayed child block owns selection, rather than the parent's initial block", async () => {
+  props = {
+    ...props,
+    onTextSelectionConfirm: vi.fn(),
+    onTextSelectionAvailability: vi.fn(),
+  };
+  render();
+  const first = selectionProps();
+  h.invoke.mockResolvedValue({
+    ...initial,
+    blockIndex: 1,
+    byteStart: 3,
+    byteEnd: 6,
+    startsMidLine: true,
+    endsMidLine: false,
+    text: "def",
+  });
+  click(S.next);
+  first.onConfirm({
+    source: first.source,
+    anchor: textFeedbackRange(first.source, 0, 1)!,
+  });
+  expect(props.onTextSelectionConfirm).not.toHaveBeenCalled();
+  await drain();
+  const next = selectionProps();
+  expect(next.source.text).toBe("def");
+  first.onConfirm({
+    source: first.source,
+    anchor: textFeedbackRange(first.source, 0, 1)!,
+  });
+  expect(props.onTextSelectionConfirm).not.toHaveBeenCalled();
+  const anchor = textFeedbackRange(next.source, 0, 1)!;
+  next.onAvailability?.({ source: next.source, available: true });
+  next.onConfirm({ source: next.source, anchor });
+  expect(props.onTextSelectionAvailability).toHaveBeenLastCalledWith({
+    source: next.source,
+    available: true,
+  });
+  expect(props.onTextSelectionConfirm).toHaveBeenCalledWith({
+    source: next.source,
+    anchor: {
+      kind: "text-range",
+      byteStart: 3,
+      byteEnd: 4,
+      startLine: 1,
+      endLine: 1,
+    },
+  });
+});
+it("hidden, busy and failed retained fragments cannot confirm new selections", async () => {
+  props = { ...props, onTextSelectionConfirm: vi.fn() };
+  render();
+  const child = selectionProps();
+  const value = {
+    source: child.source,
+    anchor: textFeedbackRange(child.source, 0, 1)!,
+  };
+  render({ ...props, active: false });
+  child.onConfirm(value);
+  expect(props.onTextSelectionConfirm).not.toHaveBeenCalled();
+  render({ ...props, active: true });
+  h.invoke.mockRejectedValue({ code: "pending" });
+  click(S.next);
+  child.onConfirm(value);
+  await drain();
+  child.onConfirm(value);
+  expect(props.onTextSelectionConfirm).not.toHaveBeenCalled();
+  expect(selectionProps().enabled).toBe(false);
 });

@@ -1,0 +1,59 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/source_text_dom.test.ts (4 tests | 2 failed) 4ms
+     × distinguishes the second repeated text using nodes, retaining CRLF/BOM 2ms
+     × supports element endpoints without including toolbar siblings 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/source_text_dom.test.ts > exact source DOM offsets > distinguishes the second repeated text using nodes, retaining CRLF/BOM
+AssertionError: expected null to deeply equal { start: 5, end: 7 }
+
+- Expected:
+{
+  "end": 7,
+  "start": 5,
+}
+
++ Received:
+null
+
+ ❯ src/components/source_text_dom.test.ts:31:49
+     29|     const first = text("\uFEFF同名\r\n"), second = text("同名😀尾");
+     30|     const root = element(first, element(second));
+     31|     expect(offsets(root, second, 0, second, 2)).toEqual({ start: 5, en…
+       |                                                 ^
+     32|     expect(offsets(root, second, 2, second, 4)).toEqual({ start: 7, en…
+     33|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/source_text_dom.test.ts > exact source DOM offsets > supports element endpoints without including toolbar siblings
+AssertionError: expected null to deeply equal { start: 2, end: 3 }
+
+- Expected:
+{
+  "end": 3,
+  "start": 2,
+}
+
++ Received:
+null
+
+ ❯ src/components/source_text_dom.test.ts:36:42
+     34|   it("supports element endpoints without including toolbar siblings", …
+     35|     const a = text("ab"), b = text("cd"), root = element(a, element(b)…
+     36|     expect(offsets(root, root, 1, b, 1)).toEqual({ start: 2, end: 3 });
+       |                                          ^
+     37|   });
+     38|   it("rejects foreign nodes and changed DOM text", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  06:03:31
+   Duration  86ms (transform 12ms, setup 0ms, import 17ms, tests 4ms, environment 0ms)
+

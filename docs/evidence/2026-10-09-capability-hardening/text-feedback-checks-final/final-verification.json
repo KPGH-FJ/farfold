@@ -1,0 +1,105 @@
+{
+  "checkedAtUtc": "2026-10-09T22:24:44.087446+00:00",
+  "status": "seven_check_requirements_satisfied_with_explicit_input_reuse",
+  "inputCount": 1116,
+  "sourceStable": true,
+  "inputsSha256": "f3f7bc10f7b1fbd9db865ea702672b8aac5be56de881dd556382db11abc6a31c",
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 36.47,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/frontend.txt",
+      "sha256": "8d4c18112f122e30ac8264ca22022be3f02d471eb0d77dcaae1a1745a14037a7",
+      "executedNow": false,
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 23.365,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": false,
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/build.txt",
+      "sha256": "ee946c92fec50b09ea8f49d26b62cd372eb2591c90555ce35734265e17ceac4f",
+      "executedInFinalPass": true,
+      "executedNow": true
+    },
+    {
+      "name": "format",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInFinalPass": true,
+      "executedNow": true
+    }
+  ],
+  "tests": {
+    "frontendReused": {
+      "files": 302,
+      "passed": 3345
+    },
+    "rustReused": {
+      "passed": 1230,
+      "ignored": 6
+    },
+    "controlledBrowser": {
+      "passed": 61
+    }
+  },
+  "initialSourceCheck": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/receipt.json",
+    "sha256": "9edc2f7dca1e5b10fcad7abac578c4708c812949c863bc10844f2a7e522c1ba7"
+  },
+  "independentBrowser": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/receipt.json",
+    "sha256": "e38a4d78b27aef610a9f269e17aff736c6c3a4d65dd19e0964497ae2d7026e34"
+  },
+  "regression": {
+    "changedAfterInitial": ["src/components/SourceTextSelection.css"],
+    "reason": "Actual pointer selection was disabled by inherited body styling. Explicit text selection styles fixed the original CSS counterexample; keyboard and programmatic Range tests alone did not prove mouse behavior.",
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/text-feedback/component-pointer-fix.json",
+    "sha256": "833994075818dbfb9e8b070c8d43e77da4be65a11f7a12e934d0796f46d81f8e"
+  },
+  "boundary": "Production implementation and controlled Chromium verification. Native WebKit, real Agent rework, broader formats and Windows remain unverified for this slice."
+}

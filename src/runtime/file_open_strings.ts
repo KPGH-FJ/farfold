@@ -8,6 +8,12 @@ export const FILE_OPEN_STRINGS = {
   retry: "重新打开",
   refresh: "重新读取",
   feedback: "修改意见",
+  markdownRendered: "排版",
+  markdownSource: "原文",
+  textTarget: (start: number, end: number) =>
+    `意见针对当时选中的第 ${start === end ? start : `${start}–${end}`} 行片段`,
+  textTargetRetained:
+    "意见保留当时的选段和文件版本；翻片或重新选择文字不会改变目标。点击“对此选段提意见”才更换目标。",
   feedbackHint: "意见对应当前查看的内容，加入输入框后由你发送。",
   html: "可在网页中查看此 HTML。",
   openHtml: "打开网页",

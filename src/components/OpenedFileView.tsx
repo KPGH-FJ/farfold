@@ -19,6 +19,13 @@ import {
   VISUAL_PREVIEW_STRINGS as V,
 } from "../runtime/visual_preview";
 import { TextBlockPreview } from "./TextBlockPreview";
+import { SourceTextSelection } from "./SourceTextSelection";
+import {
+  createTextFeedbackSource,
+  textFeedbackRangeMatches,
+  type TextFeedbackSource,
+} from "../runtime/text_feedback_range";
+import type { TextRangeAnchor } from "../runtime/file_feedback_anchor";
 import {
   readTextBlock,
   textBlockFailure,
@@ -75,6 +82,7 @@ type View = {
   phase: "loading" | "ready" | "failed" | "paused";
   file?: VerifiedFile;
   text?: string;
+  textSource?: TextFeedbackSource | null;
   block?: TextBlock;
   visual?: VisualPreview;
   office?: PreparedOfficePreview;
@@ -225,10 +233,16 @@ export function OpenedFileView({
   const readingOwner = useRef(identity);
   const textContent = useRef<HTMLDivElement>(null);
   const textScroll = useRef(0);
+  const textSelection = useRef<{
+    identity: string;
+    source: TextFeedbackSource;
+  } | null>(null);
+  const [sourceMode, setSourceMode] = useState<string | null>(null);
   if (readingOwner.current !== identity) {
     readingOwner.current = identity;
     readingPosition.current = null;
     textScroll.current = 0;
+    textSelection.current = null;
   }
   const [visualReadiness, setVisualReadiness] =
     useState<VisualPreviewReadiness | null>(null);
@@ -297,10 +311,12 @@ export function OpenedFileView({
       operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
+      textSelection.current = null;
     };
   }, []);
   useLayoutEffect(() => {
     if (!active) {
+      textSelection.current = null;
       const refreshing = operation.current?.kind === "refresh";
       operation.current?.parser?.abort();
       operation.current = null;
@@ -338,6 +354,7 @@ export function OpenedFileView({
       parser: preserve ? new AbortController() : undefined,
     };
     operation.current = owner;
+    textSelection.current = null;
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
@@ -398,6 +415,7 @@ export function OpenedFileView({
           phase: "ready",
           file: preview.file,
           text: preview.text,
+          textSource: createTextFeedbackSource(preview, file),
         });
       } else if (isText(file)) {
         blockAttempt = true;
@@ -587,6 +605,9 @@ export function OpenedFileView({
     blockReadFlight.current?.identity === identity;
   const name = file?.name || fileBasename(path);
   const markdown = file && /^(md|markdown)$/i.test(extension(file.name));
+  const sourceVisible = !markdown || sourceMode === identity;
+  const sourceVisibleRef = useRef(sourceVisible);
+  sourceVisibleRef.current = sourceVisible;
   // Draft identity contains only disk revision metadata, never the displayed body.
   const contentId = file
     ? `disk:${JSON.stringify([file.resolvedPath, file.version, file.sha256])}`
@@ -617,6 +638,7 @@ export function OpenedFileView({
     currentProps.current.identity === identity &&
     currentFeedback.current === feedbackOwner &&
     !operation.current &&
+    !(shown.block && latestBlockStatus.current?.readInFlight) &&
     shown.phase === "ready" &&
     (shown.text !== undefined ||
       Boolean(shown.block) ||
@@ -625,14 +647,70 @@ export function OpenedFileView({
       (supportsFeedback && hasRetainedFeedback())) &&
     Boolean(file);
   useEffect(() => {
-    setFeedbackOpen(
-      Boolean(fileFeedbackDrafts.read(threadKey, feedbackPath, contentId).text),
-    );
+    setFeedbackOpen(hasRetainedFeedback());
     setFeedbackAdded(false);
   }, [threadKey, identity, feedbackPath, contentId]);
   useEffect(() => {
     if (active && feedbackOpen) feedbackInput.current?.focus();
   }, [active, feedbackOpen]);
+  const acceptsTextSource = (source: TextFeedbackSource) => {
+    const latest = latestView.current;
+    return (
+      mounted.current &&
+      currentProps.current.active &&
+      currentProps.current.identity === identity &&
+      latest.identity === identity &&
+      latest.phase === "ready" &&
+      !latest.pending &&
+      !operation.current &&
+      Boolean(latest.file && sameFile(latest.file, source.file)) &&
+      (latest.block
+        ? latestBlockStatus.current?.state === "ready" &&
+          !latestBlockStatus.current.readInFlight
+        : sourceVisibleRef.current && latest.textSource === source)
+    );
+  };
+  const reportTextSelection = ({
+    source,
+    available,
+  }: {
+    source: TextFeedbackSource;
+    available: boolean;
+  }) => {
+    if (!available) {
+      if (textSelection.current?.source === source)
+        textSelection.current = null;
+    } else if (acceptsTextSource(source))
+      textSelection.current = { identity, source };
+  };
+  const confirmTextSelection = ({
+    source,
+    anchor,
+  }: {
+    source: TextFeedbackSource;
+    anchor: TextRangeAnchor;
+  }) => {
+    if (
+      !canEditFeedback() ||
+      !acceptsTextSource(source) ||
+      textSelection.current?.identity !== identity ||
+      textSelection.current.source !== source ||
+      !textFeedbackRangeMatches(source, anchor)
+    )
+      return;
+    const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
+    const { lineInput: _lineInput, ...value } = saved;
+    fileFeedbackDrafts.update(threadKey, feedbackPath, {
+      ...value,
+      contentId,
+      scope: "file",
+      selection: null,
+      anchor,
+    });
+    setFeedbackAdded(false);
+    setFeedbackOpen(true);
+    feedbackInput.current?.focus();
+  };
   const revisionNotice = useFileRevisionMonitor({
     identity,
     file: file && !isHtml(file) ? file : undefined,
@@ -660,7 +738,8 @@ export function OpenedFileView({
       )
         return "deferred";
       // Do not replace the text beneath an opinion the user is editing.
-      if (feedbackOpen) return "deferred";
+      if (feedbackOpen || textSelection.current?.identity === identity)
+        return "deferred";
       if (await load(next, true, valid)) return "applied";
       return valid() ? "failed" : "cancelled";
     },
@@ -846,6 +925,8 @@ export function OpenedFileView({
           active={active && !shown.pending}
           readingPosition={readingPosition}
           onStatus={reportBlockStatus}
+          onTextSelectionAvailability={reportTextSelection}
+          onTextSelectionConfirm={confirmTextSelection}
         />
       )}
       {shown.visual && (
@@ -887,7 +968,33 @@ export function OpenedFileView({
             textScroll.current = event.currentTarget.scrollTop;
           }}
         >
-          {markdown ? (
+          {markdown && (
+            <div className="ac-actions">
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={disabled}
+                aria-pressed={!sourceVisible}
+                onClick={() => {
+                  textSelection.current = null;
+                  sourceVisibleRef.current = false;
+                  setSourceMode(null);
+                }}
+              >
+                {S.markdownRendered}
+              </button>
+              <button
+                type="button"
+                className="btn btn-text"
+                disabled={disabled}
+                aria-pressed={sourceVisible}
+                onClick={() => setSourceMode(identity)}
+              >
+                {S.markdownSource}
+              </button>
+            </div>
+          )}
+          {markdown && !sourceVisible ? (
             <div className="artifact-document markdown-body">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -901,6 +1008,14 @@ export function OpenedFileView({
                 {shown.text}
               </ReactMarkdown>
             </div>
+          ) : shown.textSource ? (
+            <SourceTextSelection
+              source={shown.textSource}
+              enabled={!disabled && shown.phase === "ready"}
+              className="a-term"
+              onAvailability={reportTextSelection}
+              onConfirm={confirmTextSelection}
+            />
           ) : (
             <pre
               className="a-term"
@@ -931,7 +1046,7 @@ export function OpenedFileView({
           {file && visualFileKind(file.name) && (
             <div>
               <p role="status">
-                {feedback.anchor
+                {feedback.anchor?.kind === "pdf-page"
                   ? F.pageTarget(
                       feedback.anchor.page,
                       feedback.anchor.pageCount,
@@ -969,7 +1084,8 @@ export function OpenedFileView({
                       className="btn btn-text"
                       disabled={!canEditFeedback()}
                       aria-pressed={
-                        feedback.anchor?.page === visualLocation.page &&
+                        feedback.anchor?.kind === "pdf-page" &&
+                        feedback.anchor.page === visualLocation.page &&
                         feedback.anchor.pageCount === visualLocation.pageCount
                       }
                       onClick={() => {
@@ -1004,7 +1120,50 @@ export function OpenedFileView({
               {feedback.anchor && <p>{F.retained}</p>}
             </div>
           )}
-          {shown.block && <p>{T.feedback}</p>}
+          {(shown.text !== undefined || shown.block) && (
+            <div>
+              <p role="status">
+                {feedback.anchor?.kind === "text-range"
+                  ? S.textTarget(
+                      feedback.anchor.startLine,
+                      feedback.anchor.endLine,
+                    )
+                  : F.fileTarget}
+              </p>
+              {feedback.anchor?.kind === "text-range" && (
+                <>
+                  <p>{S.textTargetRetained}</p>
+                  <button
+                    type="button"
+                    className="btn btn-text"
+                    disabled={disabled || !canEditFeedback()}
+                    onClick={() => {
+                      if (!canEditFeedback()) return;
+                      const saved = fileFeedbackDrafts.read(
+                        threadKey,
+                        feedbackPath,
+                        contentId,
+                      );
+                      const {
+                        anchor: _anchor,
+                        lineInput: _lineInput,
+                        ...value
+                      } = saved;
+                      fileFeedbackDrafts.update(threadKey, feedbackPath, {
+                        ...value,
+                        contentId,
+                        scope: "file",
+                        selection: null,
+                      });
+                    }}
+                  >
+                    {F.wholeFile}
+                  </button>
+                </>
+              )}
+              {shown.block && !feedback.anchor && <p>{T.feedback}</p>}
+            </div>
+          )}
           <textarea
             ref={feedbackInput}
             aria-label={W.feedbackLabel}

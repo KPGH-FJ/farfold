@@ -1,0 +1,607 @@
+{
+  "kind": "P21 text-range feedback independent browser and code review",
+  "recordedAt": "2026-10-09T22:24:01.017036+00:00",
+  "status": "passed_with_one_css_defect_reproduced_and_fixed; no_remaining_blocker_in_tested_scope",
+  "reviewer": "verification; did not author the production runtime/component changes",
+  "boundary": "Actual Chromium and production React components/CSS. Tauri invoke is controlled; no native Farfold, no Agent, no account/permission changes, no original user documents or database. This does not close full P21 including image regions, nor all 29 Agent acceptance.",
+  "checksPassed": 61,
+  "runs": [
+    {
+      "name": "coordinates-first",
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.json",
+        "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.raw.txt",
+        "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.txt",
+        "sha256": "897dee7aca89dd0746688bde3f714715bb91fb8838f965b63be22472613219c8"
+      },
+      "checksPassed": 16,
+      "level": "Actual browser pure coordinate functions with five independent literal ranges from preserved real Rust wire; no new filesystem read."
+    },
+    {
+      "name": "parent-mouse-fixed",
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json",
+        "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.raw.txt",
+        "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.txt",
+        "sha256": "b9e212700839748a9cf44aee472403d3019559a970bb084b853e2774cd480709"
+      },
+      "checksPassed": 19,
+      "level": "Actual parent OpenedFileView under React StrictMode; real CDP mouse and Enter, plus separately labeled DOM Range scenarios."
+    },
+    {
+      "name": "block-first",
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.json",
+        "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.raw.txt",
+        "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.txt",
+        "sha256": "05cec4e14c9fb717fb84bba7d99fff77225183e5453d1dc6ff56dcf28bd53a21"
+      },
+      "checksPassed": 7,
+      "level": "Actual TextBlockPreview under React StrictMode with historical real Rust block wire and controlled invoke; source lifecycle, not native OS read."
+    },
+    {
+      "name": "refresh-harness-fixed",
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.json",
+        "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.raw.txt",
+        "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.txt",
+        "sha256": "c8b88b1c907830fe1b7e62920470f70c10bf8b00246e5cc378078c0bd4037724"
+      },
+      "checksPassed": 5,
+      "level": "Actual parent and real timer/focus scheduling, controlled revision/read IPC; deferred change requires explicit reread."
+    },
+    {
+      "name": "persistence-harness-fixed",
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.json",
+        "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.raw.txt",
+        "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.txt",
+        "sha256": "7763b78c68fec58f70a3c65ee8cca9e0f91c374d68fde72a7736ca64f0e8b791"
+      },
+      "checksPassed": 14,
+      "level": "Actual parent plus unsent store and controlled settings_get/settings_set; parser and take failures, not a real database restart."
+    }
+  ],
+  "finding": {
+    "id": "source-text-pointer-selection-disabled",
+    "cause": "SourceTextSelection > pre inherited production body user-select:none. Programmatic Range and keyboard controls masked inability to drag-select source text.",
+    "fix": "Owner added -webkit-user-select:text and user-select:text only to the source pre. No JavaScript, reader or persistence behavior changed.",
+    "originalCssSha256": "736406514e966f65465cb62f2fd1e7b0e1ff5d287c4b451407d07c573e2c9b2e",
+    "fixedCss": {
+      "path": "src/components/SourceTextSelection.css",
+      "sha256": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8"
+    },
+    "effectiveRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.json",
+      "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+    },
+    "effectiveRedRaw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.raw.txt",
+      "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+    },
+    "baselineMethod": "Task-owned Vite transform returns exactly original CSS after asserting its SHA equals initial checkpoint. Production files are not changed. Uses the corrected identical mouse runner; all other production sources current and unchanged.",
+    "baselineServer": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/baseline-server.txt",
+      "sha256": "6a99b3c74b26b5f9cd742fac45565ed958a477536e2eb7ff17eedfaa8576389b"
+    },
+    "redObservation": {
+      "type": "afterDrag",
+      "selection": "",
+      "rangeCount": 1,
+      "collapsed": true,
+      "start": 2,
+      "end": 2,
+      "ar": {
+        "x": 74.5625,
+        "y": 331.1875,
+        "width": 7.234375,
+        "height": 14,
+        "top": 331.1875,
+        "right": 81.796875,
+        "bottom": 345.1875,
+        "left": 74.5625
+      },
+      "br": {
+        "x": 110.6875,
+        "y": 331.1875,
+        "width": 7.234375,
+        "height": 14,
+        "top": 331.1875,
+        "right": 117.921875,
+        "bottom": 345.1875,
+        "left": 110.6875
+      },
+      "userSelect": "none"
+    },
+    "greenObservation": {
+      "type": "afterDrag",
+      "selection": "repeat",
+      "rangeCount": 1,
+      "collapsed": false,
+      "start": 19,
+      "end": 25,
+      "ar": {
+        "x": 74.5625,
+        "y": 331.1875,
+        "width": 7.234375,
+        "height": 14,
+        "top": 331.1875,
+        "right": 81.796875,
+        "bottom": 345.1875,
+        "left": 74.5625
+      },
+      "br": {
+        "x": 110.6875,
+        "y": 331.1875,
+        "width": 7.234375,
+        "height": 14,
+        "top": 331.1875,
+        "right": 117.921875,
+        "bottom": 345.1875,
+        "left": 110.6875
+      },
+      "userSelect": "text"
+    },
+    "green": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json",
+      "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+    },
+    "resolved": true
+  },
+  "earlierAttempts": [
+    {
+      "results": ["parent-first", "parent-diagnostic"],
+      "classification": "harness_error",
+      "detail": "CDP Enter omitted carriage-return text. DOM diagnostics show keydown/keyup without click. Adding text and unmodifiedText carriage return gives actual activation; not a production failure."
+    },
+    {
+      "results": [
+        "parent-input-fixed",
+        "parent-pointer-diagnostic",
+        "parent-css-green"
+      ],
+      "classification": "mouse_harness_incomplete",
+      "detail": "Mouse moves omitted button:left. These failures alone are not valid defect proof. Preserved unchanged; later exact-original-CSS comparison with corrected runner establishes the genuine CSS failure."
+    },
+    {
+      "results": ["refresh-first"],
+      "classification": "incorrect_harness_expectation",
+      "detail": "Deferred new-version notice intentionally halts monitoring and tells user to reread. Test incorrectly expected focus to resume it. Corrected to explicit reread without changing production."
+    },
+    {
+      "results": ["persistence-first"],
+      "classification": "harness_API_error",
+      "detail": "Called nonexistent composerDrafts.write. Corrected to existing update API. Other-thread lookup corrected to existing JSON tuple key before successful run."
+    }
+  ],
+  "coverageByMatrix": [
+    {
+      "ids": ["TF01", "TF02", "TF03"],
+      "proof": "Independent literal UTF8 oracle and actual browser functions; BOM, CRLF, Unicode, combining marks, half-surrogate and split-CRLF rejection, reverse selection."
+    },
+    {
+      "ids": ["TF04"],
+      "proof": "Preserved real Rust 128KiB block wire reassembled and whole SHA verified by independent Python; browser block2 global bytes131195..131198 and no invented column."
+    },
+    {
+      "ids": ["TF05"],
+      "proof": "Independent browser rejects empty/out-of-bounds range and checks actual EOF block. Full empty-file/2000-break variants remain author unit coverage, not an additional independent browser claim."
+    },
+    {
+      "ids": ["TF06", "TF07"],
+      "proof": "Real CDP mouse drag and keyboard Enter, repeat text, explicit confirmation, outside focus; actual Markdown rendered/source toggle retains literal original bytes."
+    },
+    {
+      "ids": ["TF08", "TF09"],
+      "proof": "Manufactured source clone and mismatched lines rejected; strict saved-anchor malformed/unknown fields rejected; accepted saved record remains historical. Cold module reload/atomic unread snapshot protection independently read in author tests, not rerun as native DB recovery."
+    },
+    {
+      "ids": ["TF10", "TF11"],
+      "proof": "Parent hide/new page withdraw candidate; actual child navigates to block2 and uses its global coordinates; late hidden read cannot revive selection. Full parent-child block2 ownership also verified by reading root integration test, not claimed as an additional independent browser parent-block run."
+    },
+    {
+      "ids": ["TF12", "TF13"],
+      "proof": "Selection alone never changes target. Explicit new target preserves original opinion. Deferred automatic revision does not read new text; explicit reread retains reachable old-version historical opinion."
+    },
+    {
+      "ids": ["TF14", "TF15"],
+      "proof": "Take appends once and preserves composer attachments/sendPending/queueEdit, paused queue and other-thread opinion. Failed settings save leaves exact old disk-mock snapshot and combined in-memory composer. No send IPC."
+    },
+    {
+      "ids": ["TF16"],
+      "proof": "Source hide/in-flight next-block boundary tested; no automatic continuation. Broader OS pending/busy and same-byte/different-version backend guarantees rely on P17/P20 evidence and current author tests, not a new filesystem experiment."
+    },
+    {
+      "ids": ["TF17", "TF18"],
+      "proof": "Browser checks no full source body persisted and historical hash wording. Read-only runtime test review covers quoted path metadata and previous PDF/tool/no-anchor union; these were not independently repeated in actual native UI."
+    }
+  ],
+  "sourceStability": {
+    "first": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/first-source-checkpoint.json",
+      "sha256": "0377df62329a239e995337cd05f9d6865345f1ebce74a6dd8af2780a5dbd2c3c"
+    },
+    "final": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/final-source-checkpoint.json",
+      "sha256": "c6ad70511ddeead56f82d272c09cb7d53f2745cf7bf8d3e32090165f68efa003"
+    },
+    "count": 20,
+    "onlyChange": "Authorized two-declaration SourceTextSelection.css fix; other19 sources/test inputs unchanged. Coordinates/block runs precede CSS-only change, whose behavior is directly retested by parent mouse run."
+  },
+  "authorEvidenceReadNotRerun": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/implementation.json",
+      "sha256": "18ad61258057b611c74be750bfc405c6ca54479fb2d70d0f7168f3faea92ffdf"
+    }
+  ],
+  "screenshotsActuallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed-p21-precise-text-target.png",
+      "sha256": "776d129ce8f484750f4e0e3827f91c8b9a7d692f37ddaefc670301f3ea400b73"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed-p21-pointer-diagnostic.png",
+      "sha256": "fc6e393f179f7b25b90ff9aca26b63d272d2d731cb44bb0e525037a8f3e6b149"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first-p21-real-wire-block.png",
+      "sha256": "07cdb9d3bf5215987b736761fe192338491325107ce1059d5f4072e11c51b73b"
+    }
+  ],
+  "formatting": {
+    "records": [
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.diagnostics.json",
+          "sha256": "5cc0605c6d041d1b7ce85cfc323269fa5bd241fe7304a6fe0543e42c4ebc0578"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.diagnostics.raw.txt",
+          "sha256": "9231877af94e48e0ea1a7d79242a10c2d297ec9ce0391bf5adc54a61a5ac92d6"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.json",
+          "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.raw.txt",
+          "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.diagnostics.json",
+          "sha256": "8e67b64c3c06689ae6eab810e35216d3621e8e12e27e122e84ff6ba00861cf5f"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.diagnostics.raw.txt",
+          "sha256": "0aedecece9856c1d3cfe51126f9527ab37a0ffd1f65003b91321755bc2f0edf3"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.json",
+          "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.raw.txt",
+          "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/first-source-checkpoint.json",
+          "sha256": "0377df62329a239e995337cd05f9d6865345f1ebce74a6dd8af2780a5dbd2c3c"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/first-source-checkpoint.raw.txt",
+          "sha256": "0377df62329a239e995337cd05f9d6865345f1ebce74a6dd8af2780a5dbd2c3c"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.diagnostics.json",
+          "sha256": "38e7d1e237a74e510344b5f6dc6088684e4a237d177d969a1dd434bd8e8c614d"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.diagnostics.raw.txt",
+          "sha256": "5b10e2756ead30f6973ea35e9b3dae6f0da189112a701125f14058439718d46c"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.json",
+          "sha256": "e0f45b7861f9423b2c542ef056e819288c5d64bc54a367c4602ae2e14d9a4e5d"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.raw.txt",
+          "sha256": "e0f45b7861f9423b2c542ef056e819288c5d64bc54a367c4602ae2e14d9a4e5d"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.diagnostics.json",
+          "sha256": "618c1786002688ec8db1d2cfd4c397d5d61db244153bdeb0cb8012417da0c547"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.diagnostics.raw.txt",
+          "sha256": "22da829a53372699ff632223d60c941f8bec8275d79c4e2ddc0fa4fe5ff47853"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.json",
+          "sha256": "513b98e84ef8358a37fdeac7c3c20d682de105092318e814b7fc251825963404"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.raw.txt",
+          "sha256": "513b98e84ef8358a37fdeac7c3c20d682de105092318e814b7fc251825963404"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.diagnostics.json",
+          "sha256": "d0ea094e3a1bd4a9df629c0f12e79a08bca8df922e92f5c2d90ed66598066acd"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.diagnostics.raw.txt",
+          "sha256": "63f715c0f8a5c9d195d5b5bc964f6123fa6f566b72b373345059a5d100b6a991"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.json",
+          "sha256": "20c460008d4837695af715c28ee7086fe664761db8bbdf200c9200171616e2de"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.raw.txt",
+          "sha256": "20c460008d4837695af715c28ee7086fe664761db8bbdf200c9200171616e2de"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.diagnostics.json",
+          "sha256": "153b5f26235bbb40d791d8277113123aa4998c1b607a23b6411057646d63bfc0"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.diagnostics.raw.txt",
+          "sha256": "3988f81bce5384b1bf090a7bccf01d369bda7fdab457299c48bbfbed94d19083"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.json",
+          "sha256": "f2346943c41d3ffe774eef16bc285ac3002510b06bdcec70e49c03dff7f60c4e"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.raw.txt",
+          "sha256": "f2346943c41d3ffe774eef16bc285ac3002510b06bdcec70e49c03dff7f60c4e"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.diagnostics.json",
+          "sha256": "0cf9cec2fb9bcbdb2a671fa4310fd2420e538e4bfd42670e505c0e030cb0385f"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.diagnostics.raw.txt",
+          "sha256": "bf70e66188fb09ed3e08fe2981574c984b23b6b1fe0097e54db0af2effabb2dc"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json",
+          "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.raw.txt",
+          "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.diagnostics.json",
+          "sha256": "a03e0821a3428911ae0c641094f32953569f21c7a97d6c30666507c46581fd06"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.diagnostics.raw.txt",
+          "sha256": "625f78d3bb91027144e381496f97dfd0f8782c4f1833d1e29c389c46f087f88f"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.json",
+          "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.raw.txt",
+          "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.diagnostics.json",
+          "sha256": "1227b9b6c34731bef3065cebd85edee0589e8be3bd9d4636aa13a9404888f7ff"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.diagnostics.raw.txt",
+          "sha256": "4084840dcfe69afe5e157ceb5bd17453b9433710e0cdb403bab661c47291d965"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.json",
+          "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.raw.txt",
+          "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.diagnostics.json",
+          "sha256": "90019e325bdb75c988fcb39a7fdd1091f0923db0cd07cf9407e6706a091792bc"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.diagnostics.raw.txt",
+          "sha256": "2714e7c6391472f358d0d2919114295141c5a92728dc6563a8fcb708ad5c1d1a"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.json",
+          "sha256": "2f5e31bb9bd48fc2a931399d0125f4cd6c4aca54dc57a842e23799b76b306671"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.raw.txt",
+          "sha256": "2f5e31bb9bd48fc2a931399d0125f4cd6c4aca54dc57a842e23799b76b306671"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.diagnostics.json",
+          "sha256": "1d5c642dc43aebcaa49701ffb061a010f78803d768ffd7c76773f25d3fa7a705"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.diagnostics.raw.txt",
+          "sha256": "96d75f3a5ed54823e9f7a0ec0d68b844cc20eb2eadb36a8caf15273c3dbc2c05"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.json",
+          "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.raw.txt",
+          "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.diagnostics.json",
+          "sha256": "aeac34a406c4e6b7a05d302e025670f76961bf445e0d066b8e7250fc73ddb231"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.diagnostics.raw.txt",
+          "sha256": "ddb8a8f911038dbb2ac947313bb1759273fd1841439b987a962c5ec453e4633f"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.json",
+          "sha256": "b5f027ffa733e9486b66684e2a97026ca7ad474ee90d956025cc25984c069780"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.raw.txt",
+          "sha256": "b5f027ffa733e9486b66684e2a97026ca7ad474ee90d956025cc25984c069780"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.diagnostics.json",
+          "sha256": "140c4aecd0f35a574c8fb3251c99239cea4a847fd75ebd31e838336a64ef3c1a"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.diagnostics.raw.txt",
+          "sha256": "5c3d454f7939ed915e60fa233cf3eae4a118c8220d7ab9f428f15a9d821ab58b"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.json",
+          "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.raw.txt",
+          "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426"
+        },
+        "semanticsEqual": true
+      },
+      {
+        "json": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/wire-oracle.json",
+          "sha256": "170ad6aee5a8ed75e4e050fe5bda997e1a1ccc6d5d9f3b1571323cf7108cb4d3"
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/wire-oracle.raw.txt",
+          "sha256": "170ad6aee5a8ed75e4e050fe5bda997e1a1ccc6d5d9f3b1571323cf7108cb4d3"
+        },
+        "semanticsEqual": true
+      }
+    ],
+    "rule": "Every originally generated JSON retained byte-for-byte as matching .raw.txt before Prettier; semantic equality asserted. Original stdout/stderr not edited."
+  },
+  "cleanup": {
+    "serverPids": [87857, 91250],
+    "action": "SIGTERM sent only to owned Vite PIDs; sessions returned143. Subsequent exact PID check absent. Every runner owns and terminates its own detached Chrome group and removes its temporary profile.",
+    "remainingOwnedServerPids": [],
+    "remainingExactOwnedChromeMatches": 0,
+    "formalAppTouched": false
+  },
+  "limitations": [
+    "Chromium controlled IPC is not Tauri/WKWebView/native selection acceptance; installed verification remains root responsibility.",
+    "No new Rust execution; historical wire provenance and content hash verified, not current file identity.",
+    "No screen-reader or IME-specific interactive audit; keyboard line selection tested through actual browser Enter.",
+    "Full 18-item design matrix has layered coverage and explicitly stated remaining boundaries; 61 assertions are not 61 distinct product features."
+  ]
+}

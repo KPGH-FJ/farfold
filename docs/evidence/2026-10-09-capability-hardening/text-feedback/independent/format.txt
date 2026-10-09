@@ -1,0 +1,33 @@
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/fixture.tsx 81ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/run.mjs 19ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/serve.mjs 3ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/index.html 21ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.diagnostics.json 56ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.diagnostics.json 27ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/first-source-checkpoint.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.diagnostics.json 24ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-css-green.json 3ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.diagnostics.json 52ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-diagnostic.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.diagnostics.json 22ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-first.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.diagnostics.json 22ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-input-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.diagnostics.json 35ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.diagnostics.json 25ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.diagnostics.json 43ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-pointer-diagnostic.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-first.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.diagnostics.json 24ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-first.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.diagnostics.json 23ms
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/wire-oracle.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/final-source-checkpoint.json 12ms (unchanged)

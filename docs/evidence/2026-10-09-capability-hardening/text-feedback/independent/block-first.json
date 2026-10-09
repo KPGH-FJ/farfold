@@ -1,0 +1,170 @@
+{
+  "mode": "block",
+  "passed": true,
+  "checks": [
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF03/06",
+      "name": "real wire first block includes BOM byte prefix",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF04/11",
+      "name": "child current block global offset differs from initial block",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF04",
+      "name": "long-line continuation has no invented column",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF10/16",
+      "name": "in-flight next read retires old candidate",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF10",
+      "name": "hidden late read does not revive confirmation",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "TF10",
+      "name": "reactivated block remains unselected",
+      "ok": true
+    },
+    {
+      "scenario": "actual-wire-block",
+      "id": "all",
+      "name": "no prompt/permission/unexpected IPC or unhandled rejection",
+      "ok": true,
+      "detail": {
+        "unexpected": [],
+        "unhandled": []
+      }
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "actual-wire-block",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "cf2326c5bb2da4b162c16120c9080f14355190dfdb2621cb301bbb6b02701272",
+      "index": 1
+    },
+    {
+      "scenario": "actual-wire-block",
+      "cmd": "file_delivery_read_text_block",
+      "fileVersion": "cf2326c5bb2da4b162c16120c9080f14355190dfdb2621cb301bbb6b02701272",
+      "index": 2
+    }
+  ],
+  "domEvents": [
+    {
+      "type": "focusin",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keydown",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "click",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "focusout",
+      "target": "对此选段提意见",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "keyup",
+      "target": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ",
+      "key": "Enter",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "afterConfirm",
+      "saved": {
+        "text": "",
+        "selection": null
+      },
+      "entries": {},
+      "buttonDisabled": true,
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "type": "click",
+      "target": "下一片段",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "focusin",
+      "target": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "active": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "type": "focusout",
+      "target": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "focusin",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keydown",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "click",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keyup",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "focusout",
+      "target": "对此选段提意见",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "afterConfirm",
+      "saved": {
+        "text": "",
+        "selection": null
+      },
+      "entries": {},
+      "buttonDisabled": true,
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "type": "focusin",
+      "target": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "active": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "type": "click",
+      "target": "下一片段",
+      "active": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}

@@ -1,0 +1,127 @@
+{
+  "kind": "text-feedback-runtime-implementation",
+  "recordedAt": "2026-10-09T22:11:34.570839+00:00",
+  "status": "targeted_source_passed_not_installed",
+  "scope": "P21 pure UTF-16 to original UTF-8 range coordinates, strict historical anchor union, unsent-draft persistence and explicit opinion formatting. No component, backend, Agent, disk file read or installed application operation.",
+  "ownedSources": [
+    {
+      "path": "src/runtime/text_feedback_range.ts",
+      "sha256": "65f2507db7636f8d5cb5449e4aa8d20c24f91cf55a13664522e11d0adbc04c02"
+    },
+    {
+      "path": "src/runtime/text_feedback_range.test.ts",
+      "sha256": "44a5da153f691040b33a725e85a3502f7f2aec681bb3794a0a70754acaf935df"
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "48535fcbb992954196066d2194cdf81442eb4ba39ba2374181509312f38bb9b3"
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.text.test.ts",
+      "sha256": "fbaa8af1a6a8407705c6a0e761fabbc8bba9512b639ffc49740569c34eb152d3"
+    },
+    {
+      "path": "src/runtime/text_feedback_persistence.test.ts",
+      "sha256": "7743836c2acfdedd6ad0bbb240ba6f8c2e5db3460b401405ed2a52f50c412972"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4"
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "4936d918179dd4c55552534f2911881c13af88e3100023f3c5172570628c39e4"
+    }
+  ],
+  "api": [
+    "createTextFeedbackSource(actualTextPreviewOrBlock, expectedFile)",
+    "textFeedbackRange(source, anchorUtf16, focusUtf16)",
+    "textFeedbackLineOffsets(source, startLine, endLine)",
+    "textFeedbackRangeMatches(source, historicalAnchor)"
+  ],
+  "semantics": [
+    "Offsets are zero-based half-open UTF-8 bytes in the exact read version; line numbers are one-based. CRLF is one logical newline and cannot be split. UTF-16 surrogate pairs cannot be split. BOM bytes and combining code points are retained. No column or whole unloaded line is inferred.",
+    "The immutable source copies seven file identity fields, validates small full text or existing block receipt bounds, and is tracked by weak identity. This is not cryptographic authentication; only the read caller can establish actual successful receipt and live request/view ownership. Metadata, clone and stored coordinates do not prove current disk state.",
+    "No file content, selection quote, read receipt, verification flag or source object is persisted. The existing unsent version-1 snapshot preserves the five-field text-range anchor with disk version identity, and rejects unknown/contradictory fields atomically.",
+    "The new text-range formatting preserves opinion whitespace and quotes the path as one metadata value. It labels original line and byte positions as historical, includes saved content SHA and requests checking the version before applying changes. Existing PDF/tool formatting remains compatible.",
+    "Moving an opinion uses the existing single draft snapshot and preserves other versions/threads, attachments, queue edits and pending state. No send command runs; failure preserves the joined in-memory input and old on-disk opinion for cold recovery."
+  ],
+  "tests": [
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/anchor-red.txt",
+      "result": "effective red: 3 failed / 20 passed on pre-change production; valid text-anchor restore, historical formatter and path-control metadata"
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/coordinates-first.txt",
+      "result": "39 coordinate +23 anchor tests: 1 failed /61 passed; incorrect authored combining-mark byte expectation (13..15 instead of14..16), not a production defect; corrected against literal UTF-8 byte sequence"
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/targeted-first.txt",
+      "result": "3 failed /83 passed; new persistence fixture used queueEdit.blocks instead of existing queueEdit.original. Corrected fixture; not a product defect."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/targeted-green.txt",
+      "result": "5 files /86 passed"
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/related-final.txt",
+      "command": "corepack pnpm exec vitest run src/runtime/text_feedback_range.test.ts src/runtime/file_feedback_anchor.text.test.ts src/runtime/text_feedback_persistence.test.ts src/runtime/file_feedback_anchor.test.ts src/runtime/file_feedback_anchor.persistence.test.ts src/runtime/drafts.test.ts src/runtime/draft_storage.test.ts src/runtime/draft_storage.recovery.test.ts src/runtime/draft_storage.failure.test.ts src/runtime/text_block_preview.test.ts src/runtime/strings.test.ts",
+      "result": "11 files /134 passed; exit0"
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/typecheck-first.txt",
+      "command": "corepack pnpm typecheck",
+      "result": "exit0"
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/format-final.txt",
+      "command": "corepack pnpm exec prettier --check (seven owned sources)",
+      "result": "exit0"
+    }
+  ],
+  "rawEvidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/anchor-red.txt",
+      "sha256": "72134b2717cb5956b383a59b15c1d9da9bf358f9ebbd3b635bc6487354a33832"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/coordinates-first.txt",
+      "sha256": "da27cd0589ba2b2059e0a3acca782627c664958c19befe7ba29b7a032a7c076a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/related-final.txt",
+      "sha256": "02bff4e84b2fa3a46dc7820e59063ba6925abedb995f283424d30734ac263665"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/targeted-first.txt",
+      "sha256": "8203ef737c65937d58cf730beabd214c22270fda6fe124bd750eede20ce67581"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/targeted-green.txt",
+      "sha256": "0cf0ae2afc7429642219e1a7d59731f92650b045fb8a6b92bcaf0f2f7aac0080"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/runtime/typecheck-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "coordinateInputs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/coordinate-oracles.json",
+      "sha256": "1c925963b3c5d783caa5306e83c57041b44005619663eda9a6c7227e1a6c23d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-segments/text-block-wire.json",
+      "sha256": "cb059ca99ab226a866b2b362bafa0788a0ef00800b7cb221b1f716be96de5106"
+    }
+  ],
+  "limits": [
+    "Literal Python oracle and actual earlier Rust wire shape are distinct evidence. Reading the historic wire fixture is not a fresh disk verification and does not rerun Rust.",
+    "No actual DOM selection, pointer/keyboard/browser behavior, automatic refresh integration, installed application or real Agent was exercised by this runtime subtask. Parent/product/independent owners test these separately.",
+    "No source text search/index/ledger, backend offset algorithm, file cap, Agent runtime or user data changes."
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "reviewedAtUtc": "2026-10-09T22:26:39.531171+00:00",
+  "status": "passed_final_css_increment_and_recorded_integration",
+  "reviewer": "architecture",
+  "method": "Read-only current scope enumeration and SHA comparison; final logs, actual browser raw result data, source checkpoints and red/green classifications inspected. No production/test change, browser rerun or app operation. Reviewer authored the coordinate runtime; verification independently operated the browser.",
+  "sourceBase": "7365beac19963b528558c3a983231660ce94a37c",
+  "finalIntegrationReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/final-verification.json",
+    "sha256": "56d30a625af8bd7dca79082705aa2f70aab110eef9dc5085f9cbf518d67395ed"
+  },
+  "finalInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/inputs.json",
+    "sha256": "f3f7bc10f7b1fbd9db865ea702672b8aac5be56de881dd556382db11abc6a31c"
+  },
+  "initialIndependentReviewPreserved": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/integration-independent.json",
+    "sha256": "71501bebbab729a451c7511b182acc74d68c993c9190e3687b99e1e7eee37892"
+  },
+  "conditions": {
+    "currentInputsExact": 1116,
+    "sameInputSetAsInitial": true,
+    "onlySourceChangeAfterInitial": ["src/components/SourceTextSelection.css"],
+    "diffIsExactlyTwoTextSelectionCssDeclarations": true,
+    "allSevenRequiredChecksHavePassingAndHashMatchedEvidence": true,
+    "finalExecutedChecks": ["build", "format"],
+    "explicitlyReusedChecks": [
+      "frontend",
+      "typecheck",
+      "cargo-fmt",
+      "clippy",
+      "rust"
+    ],
+    "unchangedTsJsTestsAndConfig": true,
+    "directlyMatchedOriginalRustAndSharedFixtureInputs": 446,
+    "final20BrowserSourceCheckpointHashesMatch": true,
+    "referencedBrowserArtifactHashesChecked": 82,
+    "twoProtectedReadmesUnchanged": true
+  },
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 36.47,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/frontend.txt",
+      "sha256": "8d4c18112f122e30ac8264ca22022be3f02d471eb0d77dcaae1a1745a14037a7",
+      "executedNow": false,
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 23.365,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": false,
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All Rust/config/shared fixtures exactly match the previous successful check inputs.",
+      "executedInFinalPass": false,
+      "reuseBoundary": "Only SourceTextSelection.css changed after the initial complete pass; TS/JS/tests/config/shared fixtures and Rust are byte-identical."
+    },
+    {
+      "name": "build",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/build.txt",
+      "sha256": "ee946c92fec50b09ea8f49d26b62cd372eb2591c90555ce35734265e17ceac4f",
+      "executedInFinalPass": true,
+      "executedNow": true
+    },
+    {
+      "name": "format",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/text-feedback-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInFinalPass": true,
+      "executedNow": true
+    }
+  ],
+  "browser": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/receipt.json",
+      "sha256": "e38a4d78b27aef610a9f269e17aff736c6c3a4d65dd19e0964497ae2d7026e34"
+    },
+    "totalAssertions": 61,
+    "runs": [
+      {
+        "name": "coordinates-first",
+        "checks": 16,
+        "level": "Actual browser pure coordinate functions with five independent literal ranges from preserved real Rust wire; no new filesystem read.",
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/coordinates-first.json",
+          "sha256": "61c4c2517026e9d27b94e7731ed324638974c2f6cab9fd3e9848157d5ce3722b"
+        }
+      },
+      {
+        "name": "parent-mouse-fixed",
+        "checks": 19,
+        "level": "Actual parent OpenedFileView under React StrictMode; real CDP mouse and Enter, plus separately labeled DOM Range scenarios.",
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json",
+          "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+        }
+      },
+      {
+        "name": "block-first",
+        "checks": 7,
+        "level": "Actual TextBlockPreview under React StrictMode with historical real Rust block wire and controlled invoke; source lifecycle, not native OS read.",
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/block-first.json",
+          "sha256": "10a578e20855870df6d0bb18dc0c9206bf504c8662a81971b2c3d2768cc6776a"
+        }
+      },
+      {
+        "name": "refresh-harness-fixed",
+        "checks": 5,
+        "level": "Actual parent and real timer/focus scheduling, controlled revision/read IPC; deferred change requires explicit reread.",
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/refresh-harness-fixed.json",
+          "sha256": "86076b41d5e4f9a7f364ae7e19f1c6d0438175e2e588c9c0b5e2ca2ec4b77426"
+        }
+      },
+      {
+        "name": "persistence-harness-fixed",
+        "checks": 14,
+        "level": "Actual parent plus unsent store and controlled settings_get/settings_set; parser and take failures, not a real database restart.",
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/persistence-harness-fixed.json",
+          "sha256": "749d0f44bffa509def1c51e0ca99f1ae06a7aac8e555877de82aa2426fc3a196"
+        }
+      }
+    ],
+    "finding": "Actual mouse dragging failed under exact initial CSS and corrected CDP driver: computed userSelect none, collapsed selection. The two local declarations produce text selection and correct original byte target. Programmatic Range or keyboard tests alone were not sufficient proof.",
+    "effectiveRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-original-css-valid-red.json",
+      "sha256": "ff3ea01dabd4a840e0c806fd697e633da4af68036882fb324adb1d31fa00c3c6"
+    },
+    "effectiveGreen": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/parent-mouse-fixed.json",
+      "sha256": "495cb4234287efefaffea6a95e024b9e5d174b704afd0861867cefd9d62d5416"
+    },
+    "componentFixReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/component-pointer-fix.json",
+      "sha256": "833994075818dbfb9e8b070c8d43e77da4be65a11f7a12e934d0796f46d81f8e"
+    },
+    "earlierAttemptsRemainSeparate": [
+      {
+        "results": ["parent-first", "parent-diagnostic"],
+        "classification": "harness_error",
+        "detail": "CDP Enter omitted carriage-return text. DOM diagnostics show keydown/keyup without click. Adding text and unmodifiedText carriage return gives actual activation; not a production failure."
+      },
+      {
+        "results": [
+          "parent-input-fixed",
+          "parent-pointer-diagnostic",
+          "parent-css-green"
+        ],
+        "classification": "mouse_harness_incomplete",
+        "detail": "Mouse moves omitted button:left. These failures alone are not valid defect proof. Preserved unchanged; later exact-original-CSS comparison with corrected runner establishes the genuine CSS failure."
+      },
+      {
+        "results": ["refresh-first"],
+        "classification": "incorrect_harness_expectation",
+        "detail": "Deferred new-version notice intentionally halts monitoring and tells user to reread. Test incorrectly expected focus to resume it. Corrected to explicit reread without changing production."
+      },
+      {
+        "results": ["persistence-first"],
+        "classification": "harness_API_error",
+        "detail": "Called nonexistent composerDrafts.write. Corrected to existing update API. Other-thread lookup corrected to existing JSON tuple key before successful run."
+      }
+    ],
+    "sourceStability": {
+      "first": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/first-source-checkpoint.json",
+        "sha256": "0377df62329a239e995337cd05f9d6865345f1ebce74a6dd8af2780a5dbd2c3c"
+      },
+      "final": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/independent/final-source-checkpoint.json",
+        "sha256": "c6ad70511ddeead56f82d272c09cb7d53f2745cf7bf8d3e32090165f68efa003"
+      },
+      "count": 20,
+      "onlyChange": "Authorized two-declaration SourceTextSelection.css fix; other19 sources/test inputs unchanged. Coordinates/block runs precede CSS-only change, whose behavior is directly retested by parent mouse run."
+    }
+  },
+  "boundaries": [
+    "Initial integration-independent.json remains an accurate initial source/test checkpoint and is not rewritten as mouse acceptance. The later actual browser defect and fix are retained separately.",
+    "61 means assertions across five controlled Chromium modes; coordinates, programmatic Range, real CDP mouse/Enter, controlled IPC, historical Rust wire and mock persistence are individually described. It is not 61 distinct features or native filesystem/DB proof.",
+    "No native WKWebView/installed text selection, real Agent rework, broader Office/image-region feedback, Windows, screen reader or IME coverage is added by this review.",
+    "Rust1230 pass/6 ignored and frontend302 files/3345 pass are reused only under the recorded exact input boundary. Build and repository format were executed after CSS fix.",
+    "Build retains the bundle-size warning; passing compilation does not demonstrate performance."
+  ]
+}

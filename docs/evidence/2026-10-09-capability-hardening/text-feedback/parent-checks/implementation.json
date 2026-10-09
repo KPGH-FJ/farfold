@@ -1,0 +1,59 @@
+{
+  "recordedAtUtc": "2026-10-09T22:14:25.775084+00:00",
+  "scope": "P21 parent integration only; no production Rust, Agent runtime, service, model or permission changes",
+  "sourceBase": "7365beac",
+  "sourceFiles": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "9152f33eba0d8d458366bee976345e129c90f76fb2b4722ce1095e21f8e3417f"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "9803ce95ebd456004d8b1479cefb974264e312eb8c219a4e112a961a9858ef84"
+    },
+    {
+      "path": "src/components/OpenedFileView.text-feedback.test.tsx",
+      "sha256": "95b9d5a2d036efb86a5a839a315e93087f56ffb52652bcc12cff2c7dc6749492"
+    },
+    {
+      "path": "src/runtime/file_open_strings.ts",
+      "sha256": "8fa6801c1e21a6e9c97bf5156895bdac76251672ba38230680dbffae908ebae4"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "3b2107053394c312be958955eff6c5786597c59399bb5e93108431d9f363b07a"
+    }
+  ],
+  "changes": [
+    "Build stable text source only from successful readText; preserve exact current view identity and version.",
+    "Keep Markdown rendered mode and explicitly selectable source mode.",
+    "Confirm selection only after child DOM validation, current availability, exact source/view ownership and coordinate recheck.",
+    "Defer automatic replacement during temporary selection or editing; explicit reread preserves old version opinions.",
+    "Use existing single-snapshot take into original composer once, without sending.",
+    "Extend PDF regression assertions to the full discriminated page shape; original page and count requirements preserved."
+  ],
+  "tests": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/OpenedFileView.text-feedback.test.tsx src/components/OpenedFileView.test.tsx src/components/OpenedFileView.revision-review.test.tsx",
+      "result": "3 files, 86 passed",
+      "log": "text-feedback/parent-checks/initial.txt",
+      "sha256": "fb9c888e1dfc2d3f341a39c41c129f60b0c5e5b7540fbd743db408be31cd7276"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "result": "exit0",
+      "log": "text-feedback/parent-checks/typecheck-initial.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "independentReadOnlyReview": {
+    "reviewer": "architecture",
+    "result": "No substantive new blocker found in parent identity/selection/refresh and historical feedback lifecycle",
+    "boundary": "Source review, not a second native/browser observation"
+  },
+  "remaining": [
+    "Actual browser DOM and keyboard verification in progress.",
+    "Installed native text-selection interactions and retention not yet tested.",
+    "PDF regions, Office locations, image regions and P22 real Agent rework remain open."
+  ]
+}

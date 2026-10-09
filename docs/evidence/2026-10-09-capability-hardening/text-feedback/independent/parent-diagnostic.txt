@@ -1,0 +1,87 @@
+{
+  "mode": "parent",
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "unicode-parent",
+      "id": "TF06",
+      "name": "original CRLF/BOM text kept in DOM",
+      "ok": true
+    },
+    {
+      "scenario": "unicode-parent",
+      "id": "TF12",
+      "name": "selection alone does not save a target",
+      "ok": true
+    },
+    {
+      "scenario": "unicode-parent",
+      "id": "TF01/06",
+      "name": "confirmed exact Unicode range",
+      "ok": false
+    },
+    {
+      "scenario": "unicode-parent",
+      "name": "scenario interrupted",
+      "ok": false,
+      "error": "Error: confirmed exact Unicode range"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "",
+      "cmd": "settings_get"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_read_text",
+      "fileVersion": "controlled-1"
+    },
+    {
+      "scenario": "unicode-parent",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "controlled-1"
+    }
+  ],
+  "domEvents": [
+    {
+      "type": "focusin",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keydown",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keyup",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "afterConfirm",
+      "saved": {
+        "text": "",
+        "selection": null
+      },
+      "entries": {},
+      "buttonDisabled": false,
+      "body": "unicode-parent.txt文件位置/controlled/unicode-parent.txt重新读取修改意见用默认应用打开在文件夹中显示完整文件另存为…选择原文后，可对此选段提意见。按行选择可选第 1–4 行起始行结束行选择这些行已选择第 2 行中的文字对此选段提意见﻿A\r\n中🙂é\rZ\nrepeat repeat\n"
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}
+{"diagnosticEvents":180}

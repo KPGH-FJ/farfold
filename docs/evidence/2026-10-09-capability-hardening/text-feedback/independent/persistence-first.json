@@ -1,0 +1,116 @@
+{
+  "mode": "persistence",
+  "passed": false,
+  "checks": [
+    {
+      "scenario": "persistence-parent",
+      "name": "scenario interrupted",
+      "ok": false,
+      "error": "TypeError: composerDrafts.write is not a function"
+    }
+  ],
+  "calls": [
+    {
+      "scenario": "",
+      "cmd": "settings_get"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "file_delivery_inspect"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "file_delivery_read_text",
+      "fileVersion": "controlled-1"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "settings_set"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "file_delivery_check_revision",
+      "fileVersion": "controlled-1"
+    },
+    {
+      "scenario": "persistence-parent",
+      "cmd": "settings_set"
+    }
+  ],
+  "domEvents": [
+    {
+      "type": "focusin",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "keydown",
+      "target": "对此选段提意见",
+      "key": "Enter",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "click",
+      "target": "对此选段提意见",
+      "active": "对此选段提意见"
+    },
+    {
+      "type": "focusout",
+      "target": "对此选段提意见",
+      "active": "\n    \n      P21 · actual components / controlled IPC\n    \n    \n    Outside controlled targ"
+    },
+    {
+      "type": "focusin",
+      "target": "",
+      "active": ""
+    },
+    {
+      "type": "keyup",
+      "target": "",
+      "key": "Enter",
+      "active": ""
+    },
+    {
+      "type": "afterConfirm",
+      "saved": {
+        "text": "",
+        "selection": null,
+        "contentId": "disk:[\"/controlled/persistence-parent.txt\",\"controlled-1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+        "scope": "file",
+        "anchor": {
+          "kind": "text-range",
+          "byteStart": 6,
+          "byteEnd": 16,
+          "startLine": 2,
+          "endLine": 2
+        },
+        "path": "/controlled/persistence-parent.txt"
+      },
+      "entries": {
+        "[\"/controlled/persistence-parent.txt\",\"disk:[\\\"/controlled/persistence-parent.txt\\\",\\\"controlled-1\\\",\\\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\\"]\"]": {
+          "text": "",
+          "selection": null,
+          "contentId": "disk:[\"/controlled/persistence-parent.txt\",\"controlled-1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "scope": "file",
+          "anchor": {
+            "kind": "text-range",
+            "byteStart": 6,
+            "byteEnd": 16,
+            "startLine": 2,
+            "endLine": 2
+          },
+          "path": "/controlled/persistence-parent.txt"
+        }
+      },
+      "buttonDisabled": true,
+      "body": "persistence-parent.txt文件位置/controlled/persistence-parent.txt重新读取修改意见用默认应用打开在文件夹中显示完整文件另存为…选择原文后，可对此选段提意见。按行选择可选第 1–4 行起始行结束行选择这些行对此选段提意见﻿A\r\n中🙂é\rZ\nrepeat repeat\n意见针对当时选中的第 2 行片段意见保留当时的选段和文件版本；翻片或重新选择文字不会改变目标。点击“对此选段提意见”才更换目标。针对整个文件意见对应当前查看的内容，加入输入框后由你发送。加入对话"
+    }
+  ],
+  "unexpected": [],
+  "unhandled": [],
+  "boundary": "Actual production React components/styles and DOM plus controlled Tauri invoke. Real Rust wire is preserved historical fixture, not live filesystem proof. Browser Enter/mouse are real CDP input; explicit Range construction used only separately labeled DOM-coordinate cases. No native app/Agent/OS opener."
+}

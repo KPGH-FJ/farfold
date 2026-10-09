@@ -11,7 +11,7 @@ import {
 import { parseTemplateEdit } from "./prompt_template_data";
 import {
   parseFeedbackAnchor,
-  type PdfPageAnchor,
+  type FileFeedbackAnchor,
 } from "./file_feedback_anchor";
 export {
   templateEditDrafts,
@@ -274,7 +274,7 @@ export interface FileFeedback {
   lineInput?: { side: "before" | "after"; text: string };
   contentId?: string;
   scope?: "file" | "fragment";
-  anchor?: PdfPageAnchor;
+  anchor?: FileFeedbackAnchor;
 }
 export interface SavedFileFeedback extends FileFeedback {
   path: string;

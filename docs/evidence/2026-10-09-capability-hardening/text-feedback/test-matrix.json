@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "kind": "implementation test matrix, not active plan or executed results",
+  "status": "proposed; only coordinate-oracles Python assertions executed",
+  "ids": ["P21"],
+  "cases": [
+    {
+      "id": "TF01",
+      "layer": "pure",
+      "trigger": "BOM/中文/emoji/combining sample in coordinate-oracles.json",
+      "expected": "UTF16[4,9) -> UTF8[6,16), line2; exact original slice, no normalization",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF02",
+      "layer": "pure",
+      "trigger": "UTF16 endpoint6 cuts emoji or3 splitsCRLF; empty/out-of-bounds/reversed selection",
+      "expected": "Invalid endpoints rejected; reverse valid drag yields same normalized anchor; empty produces no target",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF03",
+      "layer": "pure",
+      "trigger": "CRLF-only; range endingCRLF/LF; loneCR and BOM",
+      "expected": "CRLF once; ending newline stays preceding line; BOM bytes counted, lines unchanged",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF04",
+      "layer": "backend+pure",
+      "trigger": "131072 x chars then 中🙂END\\r\\n尾\\n; select🙂END in second block",
+      "expected": "Global[131075,131082), line1; do not reset range/line at block boundary or claim whole long line; no invented absolute column for startsMidLine",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF05",
+      "layer": "backend+pure",
+      "trigger": "Block2000 logical breaks and final EOF/no-newline/empty-file variants",
+      "expected": "Anchors derived only from returned text; EOF exact; empty file cannot have a nonempty anchor",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF06",
+      "layer": "browser",
+      "trigger": "Actual plain pre selected with pointer/keyboard/reverse range; outside toolbar or two containers; select the second of two identical strings",
+      "expected": "Only exact current source range accepted; no window-global unrelated selection; repeated text maps to the selected node/offset, never first indexOf occurrence",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF07",
+      "layer": "browser",
+      "trigger": "Markdown rendered heading/link/entity differs from source; toggle explicit source view",
+      "expected": "Rendered DOM never yields guessed source coordinates; source mode maps original bytes and executes no markup",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF08",
+      "layer": "pure+persistence",
+      "trigger": "Manufactured saved path/hash/range with valid structure; then valid and mismatched actual fresh source",
+      "expected": "Cold record stays historical; only actual source revalidation may mark current; line/byte mismatch remains unverified, not clamped",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF09",
+      "layer": "persistence",
+      "trigger": "Unknown anchor kind/extra field/string number/NaN/fraction/negative/reversed/cap-exceeding bounds; conflicting PDF/tool fields",
+      "expected": "Whole snapshot load fails and no settings_set; source bytes preserved. Valid old PDF/tool/no-anchor shapes still restore",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF10",
+      "layer": "browser",
+      "trigger": "Select then navigate block; active request pending; cancel/hide/reopen; switch file before callback",
+      "expected": "Retire pending candidate; no late owner target can attach to replacement. Saved opinion remains with original version/range",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF11",
+      "layer": "browser",
+      "trigger": "Child shows block2 while parent initial block remains block1",
+      "expected": "Range derived from actual child snapshot; parent does not use stale initial source",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF12",
+      "layer": "browser",
+      "trigger": "Opinion exists; select elsewhere/flip block/auto refresh then explicit retarget",
+      "expected": "Existing text/target unchanged until explicit target action; old-version opinion never remapped to new bytes",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF13",
+      "layer": "persistence+browser",
+      "trigger": "Cold saved range outside current block; stale/missing/changed/pending fresh read",
+      "expected": "Retain accessible historical opinion; no automatic scan/retry/send; do not show position rechecked",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF14",
+      "layer": "persistence",
+      "trigger": "take with prefilled composer+attachments+queueEdit/sendPending and other version/thread opinions; repeat take",
+      "expected": "Append once to original thread; retain all composer fields/other entries/queues; delete only exact key; zero session_prompt",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF15",
+      "layer": "persistence",
+      "trigger": "settings_set fails during take; restart from unchanged old disk snapshot",
+      "expected": "In-memory combined draft retained, error visible; old disk opinion recoverable; no false saved/sent state",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF16",
+      "layer": "browser",
+      "trigger": "New selection after failed pending read and source refresh; same bytes different OS version",
+      "expected": "No overlapping read; explicit retry only. Equal text does not collapse different version owners",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF17",
+      "layer": "boundary",
+      "trigger": "Quote-like path/newlines and user text with Markdown controls; proposed no stored source body",
+      "expected": "Location fields cannot fake fresh proof or role; original user opinion preserved; no whole-file content persistence",
+      "execution": "not_run"
+    },
+    {
+      "id": "TF18",
+      "layer": "regression",
+      "trigger": "PDF page anchor, existing diff fragment line, old whole-file opinion, new text-range union",
+      "expected": "Render each discriminant accurately; no before/after labels on disk text; no .page access on text anchor",
+      "execution": "not_run"
+    }
+  ],
+  "redFirst": "Establish source-gap red for unsupported text-range/pointer binding first; current behavior is an unfinished capability, not pre-labeling every proposed case as an existing bug. Preserve actual failing output only.",
+  "independentBrowserOwner": "verification after production source freeze, actual components/production styles and controlled IPC, with real DOM selection/keyboard and source hashes before/after; no native acceptance claim.",
+  "backendBrowserSeparation": "Backend temp-file tests prove filesystem/version/UTF8 receipts. Browser bridge can be mocked but must use matching real Rust wire fixtures for at least oracle samples; a TypeScript object alone is not backend proof.",
+  "handoff": "Root/owners select exact UI/serialization shape using these invariants. Any stronger current-validity claim requires corresponding read evidence."
+}

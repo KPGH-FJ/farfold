@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Text feedback independent browser</title>
+  </head>
+  <body>
+    <h1 style="font: 18px sans-serif; padding: 12px">
+      P21 · actual components / controlled IPC
+    </h1>
+    <div id="stage" role="status"></div>
+    <button id="outside" type="button">Outside controlled target</button>
+    <div
+      id="app"
+      style="height: 760px; width: 960px; margin: 12px; display: flex"
+    ></div>
+    <pre id="result"></pre>
+    <script>
+      window.__TAURI_INTERNALS__ = {
+        invoke: (cmd, args) => window.fixture.invoke(cmd, args),
+      };
+    </script>
+    <script type="module" src="./fixture.tsx"></script>
+  </body>
+</html>
