@@ -1,0 +1,342 @@
+{
+  "date": "2026-10-09",
+  "timezone": "Asia/Shanghai",
+  "authorized_scope": "User approved cleanup of obsolete UI/UX previews and concepts, duplicate/reproducible outputs; preserve current prototype, necessary evidence, product source and user data.",
+  "status": "completed",
+  "entries": [
+    {
+      "path": "output/01-request-light.html",
+      "reason": "obsolete_static_preview; exact historical copy verified retained outside checkout",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/01-request-light.html",
+          "bytes": 142101,
+          "sha256": "d50cb04fd6955a038d85b2c6c20737d6efae09c67c2e38ef2d0986de66b1dddb"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "output/02-request-dark.html",
+      "reason": "obsolete_static_preview; no active dependency or matching evidence receipt",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/02-request-dark.html",
+          "bytes": 149107,
+          "sha256": "01635332ed79b66c52b67910bb2ddb7d0c53a43b1c8d5cedf031e69cb7aa7379"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "output/03-browser-light.html",
+      "reason": "obsolete_static_preview; no active dependency or matching evidence receipt",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/03-browser-light.html",
+          "bytes": 148347,
+          "sha256": "3b6f7242d6727f70d554927ba27e94e30ecdb6069b36c10abfbaeeedb12dba74"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "output/04-browser-dark.html",
+      "reason": "obsolete_static_preview; exact historical copy verified retained outside checkout",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/04-browser-dark.html",
+          "bytes": 140931,
+          "sha256": "f59f9a10a0ae6aa1d7312a354400851062996d64efb6a25584de7ba61a60e40a"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "output/05-conversation-light.html",
+      "reason": "obsolete_static_preview; no active dependency or matching evidence receipt",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/05-conversation-light.html",
+          "bytes": 148374,
+          "sha256": "b244ffd9ab12ebda2a55867c3b4bc25d2b10c15584f785c06c2f5590bdf2c28e"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "output/07-browser-pending-dark.html",
+      "reason": "obsolete_static_preview; no active dependency or matching evidence receipt",
+      "kind": "file",
+      "files": [
+        {
+          "path": "output/07-browser-pending-dark.html",
+          "bytes": 149093,
+          "sha256": "e53b20cf840646a207fd618f1dd7d96283204f16875b0454f11bae1c7113f855"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "generated_images/exec-3087caf2-dba0-4b14-b592-9a467c5ce7b9.png",
+      "reason": "unadopted_generated_icon_concept; current user-supplied brand source retained",
+      "kind": "file",
+      "files": [
+        {
+          "path": "generated_images/exec-3087caf2-dba0-4b14-b592-9a467c5ce7b9.png",
+          "bytes": 692491,
+          "sha256": "f885432cea620e3051379bbaf2398da91e96f1d97afae3c6a579b05c7df1e871"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": "generated_images/exec-7f456a80-9f51-4aaa-8434-c0fb04b4ccf6.png",
+      "reason": "superseded_purple_conversation_concept; current prototype07 retained",
+      "kind": "file",
+      "files": [
+        {
+          "path": "generated_images/exec-7f456a80-9f51-4aaa-8434-c0fb04b4ccf6.png",
+          "bytes": 968964,
+          "sha256": "c7da8d7e4f5294ef9c9717f01cdc5b53921d68945a5a26e50041a430ca528b82"
+        }
+      ],
+      "deleted": true
+    },
+    {
+      "path": ".design/2026-09-26-agent-access-redesign/workbench/dist",
+      "reason": "reproducible_prototype_build; active Vite serves source",
+      "kind": "directory",
+      "files": [
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/amp-acp.svg",
+          "bytes": 3391,
+          "sha256": "40c79d8c7baa04c2fee214cc1c66a9797eb6aa96bec6c5b20c7d12cd66490696"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/antigravity-acp.svg",
+          "bytes": 5301,
+          "sha256": "d775965ea1f8060538c15f758a3e22487317211fcb6051333b5e023f35aa726f"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/autohand.svg",
+          "bytes": 8967,
+          "sha256": "6324e552f6c85025642ca9aabf4adddb4bba318a6f9422c7053fd4c610914120"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/claude-acp.png",
+          "bytes": 1198,
+          "sha256": "4004381309500f25e49a1ae639912ce307ea81da74cc383954a1ac8b9d343fe6"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/cline.svg",
+          "bytes": 1876,
+          "sha256": "267e6a8fdc37e3ad3ebedf843584ad1b6b0fe62cde28cfa4c5702006184970bb"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/codebuddy-code.svg",
+          "bytes": 4186,
+          "sha256": "149baa45b9f9370c15f20d599afe381aa138e4fc13acf503f435c571ac93ecf5"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/codex-acp.svg",
+          "bytes": 1377,
+          "sha256": "3304f6c5797ebce8f5c3d0e0af28e1eb970e81697deaae986466970523e46b96"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/cursor.svg",
+          "bytes": 4388,
+          "sha256": "78f169abca311d70e18ada789ccf1a55b4ca0306822f21a9ab0c2658ed88dbe0"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/devin.svg",
+          "bytes": 1405,
+          "sha256": "fe0753d2e3823bc1eb8a37943234fac63733b8c9e8abff0ca0402a6c7ddcd682"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/dimcode.png",
+          "bytes": 5581,
+          "sha256": "cf76e6ebbf15b6fbbbac070d7f58ded2259c8cbe247e2a06bca8d04cc6a71e77"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/dirac.svg",
+          "bytes": 3358,
+          "sha256": "b4cb757a69e43b00f3dd49f16935e9bf1d77effd8128c46082e7fcba252c6752"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/factory-droid.svg",
+          "bytes": 3280,
+          "sha256": "931960821fbafd095221a922ca017676d41fbc67f61b708d325413ad6e0bbec7"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/fast-agent.svg",
+          "bytes": 346,
+          "sha256": "42e64a043c56e900dbe34585a7992d8ae83f7796d17601ee3189a9cbb67e111d"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/gemini.svg",
+          "bytes": 2843,
+          "sha256": "d2b511e4d9a97bb849526646cf1e7705ffa028a52eb53d847c6c3de1e9a40a73"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/github-copilot-cli.svg",
+          "bytes": 1559,
+          "sha256": "693d7abe6f899646cc2e96856723b45e95f71885a54910b2749f6decdf7e1ee1"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/goose.svg",
+          "bytes": 4864,
+          "sha256": "9dacb0a0324f958fa6fbc270026526b2ad66ea5d2e01bded474546811218a316"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/grok-build.png",
+          "bytes": 2779,
+          "sha256": "768cbbf7a7528d6e7b3af8112d7cde43eb6c9c8989ad9b06be8047dae1227463"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/kilo.svg",
+          "bytes": 674,
+          "sha256": "13be39ffd7f1a5a4a8162d810b3f0f66ac9a39130fa54b659dd682b207551f21"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/kimchi.svg",
+          "bytes": 1123,
+          "sha256": "ff28275e151ae37ec2b80d023c5dafd5985ef41a9f061d640e00f669adea2bcd"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/kimi.png",
+          "bytes": 11486,
+          "sha256": "dbd00e2ad61ea8832ef0b024662a4a8a5d1b66f0599d5d42e1c9688b9d4cfdf6"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/minimax-code.jpg",
+          "bytes": 6139,
+          "sha256": "05f6002860dd8a9f8b36d3118a672e4dedbdb7b66dca3bec22d39fba47186b21"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/mistral-vibe.svg",
+          "bytes": 514,
+          "sha256": "fcc1e2b4b630bf7eab2c12b5228d8e788f8394bba7db3cfcb2bb3d8d7cba9986"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/nova.svg",
+          "bytes": 1773,
+          "sha256": "8c05dee2525c0cd876845adbccfcb070ce9fe096c9a55d1640a16294bf9f973f"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/opencode.svg",
+          "bytes": 221,
+          "sha256": "b60bce4476ce81c772f78313e497b98f9489a67580fd89f39354b527241edbc6"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/pi-acp.svg",
+          "bytes": 334,
+          "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/poolside.svg",
+          "bytes": 2824,
+          "sha256": "4147f3b13b56114bcfec0d8a6d0d6d027fe117e38ff4ed55853376951c69fe40"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/qoder.svg",
+          "bytes": 54775,
+          "sha256": "0c131dc20a5c6f8979b20a95787f9a0ddd1fe3531cb3c9620c71b530c732044e"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/qwen-code.svg",
+          "bytes": 933,
+          "sha256": "f7e324607c3f657953977d2742fbb8a3a0a354a13736671d27bfb906e9d1f3f2"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/agents/sigit.svg",
+          "bytes": 282,
+          "sha256": "58729c87f565e55f665dbaa0385c804db2320e09bc0fe82393f8d7c4e7890c6b"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/brand/mark.svg",
+          "bytes": 1705,
+          "sha256": "78dedab2f9c3cca2cf21fb6ffe56143b882e0521ece0208c5ff8618342e5519a"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/brand/wordmark.svg",
+          "bytes": 3092,
+          "sha256": "1e4dffd2e21d10216a9161a7aeb06d42ce461cac62a3c847947efcd2186b818e"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/codex.svg",
+          "bytes": 1377,
+          "sha256": "3304f6c5797ebce8f5c3d0e0af28e1eb970e81697deaae986466970523e46b96"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/index-CIo5yO09.css",
+          "bytes": 178305,
+          "sha256": "c5e944aee3d8daffde215eba6771144ca63cf838cbba1c4b8d7b7e3c86a474c7"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/index-D7Lmsr_a.js",
+          "bytes": 892911,
+          "sha256": "98c00aeb2e19555c3f921c23d17fb4ae1251d8a74170e3670c579f7b8a34c04e"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/opencode.svg",
+          "bytes": 221,
+          "sha256": "b60bce4476ce81c772f78313e497b98f9489a67580fd89f39354b527241edbc6"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/assets/pi-color.svg",
+          "bytes": 334,
+          "sha256": "abd66e7868b2d24f0f0895f9237ee8a6dcb22337583b0dc54aeb595acecb4d6b"
+        },
+        {
+          "path": ".design/2026-09-26-agent-access-redesign/workbench/dist/index.html",
+          "bytes": 477,
+          "sha256": "466c62008ab12e12f36d1282c8c587409b6d0d360b8512d85038e0525241e965"
+        }
+      ],
+      "deleted": true
+    }
+  ],
+  "preflight": {
+    "exact_paths_no_symlinks": true,
+    "open_file_owners": 0,
+    "independent_review": "product_coverage confirmed these nine precise targets; no mutations by reviewer",
+    "active_preview": "PID 40282 Vite dev serves workbench source; not dist preview"
+  },
+  "protected": {
+    "files_checked": 9502,
+    "before_tree_sha256": "6048dabf20041e15ab363bb833a69c86ec1d4f49952e161081c43163913053c5",
+    "installed_files": {
+      "/Applications/Farfold.app/Contents/MacOS/farfold": "6de1c496b802818dd5a60879c9e3de68c903082416eb33a1d1aa288483062731",
+      "/Applications/Farfold.app/Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "/Applications/Farfold.app/Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "/Applications/Farfold.app/Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "/Applications/Farfold.app/Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "after_tree_sha256": "6048dabf20041e15ab363bb833a69c86ec1d4f49952e161081c43163913053c5",
+    "unchanged": true,
+    "changed_paths": [],
+    "installed_unchanged": true
+  },
+  "boundaries": [
+    "No user database, credentials, sessions, drafts or Agent configuration accessed or deleted.",
+    "No process stopped; installed app and target directories preserved.",
+    "No historical screenshot, report, test receipt or research source deleted."
+  ],
+  "removed_empty_directory": "generated_images",
+  "preview_check": {
+    "status": 200,
+    "current_entry_present": true,
+    "current_title_present": true,
+    "scope": "HTTP source-entry check only; not browser interaction or full runtime verification"
+  },
+  "deleted_files": 45,
+  "deleted_logical_bytes": 3755607,
+  "filesystem_free_space_claimed": false,
+  "all_targets_absent": true
+}
