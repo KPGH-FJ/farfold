@@ -226,6 +226,7 @@ async fn account_recheck_keeps_other_directories_and_api_work_connected() {
             &f.store,
             false,
             Some(PreparedService {
+                delivery: None,
                 environment: crate::shell_env::command_env(),
                 context: ServiceContext {
                     identity: crate::credentials::ServiceIdentity {
@@ -736,6 +737,7 @@ async fn two_service_connections_route_stop_and_interactions_to_their_own_sessio
                 &f.store,
                 false,
                 Some(PreparedService {
+                    delivery: None,
                     environment,
                     context,
                 }),
@@ -878,6 +880,7 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
                 &f.store,
                 false,
                 Some(PreparedService {
+                    delivery: None,
                     environment,
                     context,
                 }),

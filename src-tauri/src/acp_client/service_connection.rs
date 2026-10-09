@@ -1,5 +1,5 @@
 //! Service selection is launch metadata on the existing connection owner.
-//! Secrets live in the launch environment, never in keys, status or history.
+//! Secrets live in launch delivery, never in keys, status or history.
 use std::{collections::HashMap, path::Path, sync::atomic::Ordering};
 
 use serde::{Deserialize, Serialize};
@@ -24,6 +24,7 @@ pub(crate) struct ServiceContext {
 pub(crate) struct PreparedService {
     pub environment: HashMap<String, String>,
     pub context: ServiceContext,
+    pub delivery: Option<super::service_delivery::ServiceDelivery>,
 }
 
 /// Missing on old history means unknown, not proof of today's default service.
@@ -130,6 +131,7 @@ impl AcpManager {
                             .collect::<String>();
                         Ok(PreparedService {
                             environment,
+                            delivery: config.delivery,
                             context: ServiceContext {
                                 identity: snapshot.identity,
                                 revision,

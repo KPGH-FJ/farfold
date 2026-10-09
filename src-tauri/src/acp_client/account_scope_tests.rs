@@ -36,6 +36,7 @@ async fn aliases_share_account_admission_and_busy_api_work_blocks_changes() {
             &f.store,
             false,
             Some(PreparedService {
+                delivery: None,
                 environment: crate::shell_env::command_env(),
                 context,
             }),

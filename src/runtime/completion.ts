@@ -5,6 +5,7 @@ export interface CompletionEvent {
   stopReason?: string;
   error?: string;
   failure?: unknown;
+  usage?: unknown;
 }
 
 /** A normal end receipt alone does not prove an answer or tool result arrived. */

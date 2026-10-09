@@ -1,4 +1,5 @@
 import { ComposerAttachments } from "./ComposerAttachments";
+import { ThreadUsage } from "./ThreadUsage";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
@@ -1385,6 +1386,9 @@ export function Composer({
         </WorkspaceActionMenu>
       )}
       <div className="composer-footer">
+        {thread?.identity === "established" && (
+          <ThreadUsage key={thread.key} thread={thread} disabled={!active} />
+        )}
         {caption && <span className="composer-caption">{caption}</span>}
         <span className="c-hint">
           {queueEditing

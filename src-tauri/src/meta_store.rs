@@ -13,6 +13,8 @@ use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+mod storage_recovery;
+use crate::storage_recovery::{io_receipt, sqlite_receipt};
 
 #[cfg(test)]
 mod recovery_tests;
@@ -79,12 +81,19 @@ impl MetaStore {
     /// Open (or create) the store at `path`. Schema is created if missing;
     /// no migrations — this is a fresh store, not a successor of the old DB.
     pub fn open(path: &Path) -> Result<Self, String> {
+        // Check an existing file before any schema or journal-mode mutation.
+        // Zero-length/truncated databases are not treated as a fresh install.
+        let existing = storage_recovery::check_existing(path)?;
         if let Some(parent) = path.parent() {
-            std::fs::create_dir_all(parent)
-                .map_err(|error| format!("cannot create meta store directory: {error}"))?;
+            std::fs::create_dir_all(parent).map_err(io_receipt)?;
         }
-        let connection = Connection::open(path)
-            .map_err(|error| format!("cannot open meta store {}: {error}", path.display()))?;
+        let connection = storage_recovery::open_connection(path, existing)?;
+        if connection
+            .is_readonly(rusqlite::MAIN_DB)
+            .map_err(sqlite_receipt)?
+        {
+            return Err("FARFOLD_STORAGE:readOnly:资料位置处于只读状态".into());
+        }
         connection
             .execute_batch(
                 "PRAGMA journal_mode = WAL;
@@ -122,7 +131,7 @@ impl MetaStore {
                      created_at  INTEGER NOT NULL
                  );",
             )
-            .map_err(|error| format!("cannot initialize meta store schema: {error}"))?;
+            .map_err(sqlite_receipt)?;
         Ok(Self {
             connection: Arc::new(Mutex::new(connection)),
         })
@@ -640,13 +649,13 @@ impl MetaStore {
         let connection = self.lock()?;
         let mut statement = connection
             .prepare("SELECT value FROM settings WHERE key = ?1")
-            .map_err(|error| format!("cannot read settings: {error}"))?;
+            .map_err(sqlite_receipt)?;
         let mut rows = statement
             .query_map(params![key], |row| row.get::<_, String>(0))
-            .map_err(|error| format!("cannot read setting {key}: {error}"))?;
+            .map_err(sqlite_receipt)?;
         match rows.next() {
             None => Ok(None),
-            Some(Err(error)) => Err(format!("cannot read setting {key}: {error}")),
+            Some(Err(error)) => Err(sqlite_receipt(error)),
             Some(Ok(raw)) => serde_json::from_str(&raw)
                 .map(Some)
                 .map_err(|error| format!("setting {key} is not JSON: {error}")),
@@ -661,7 +670,7 @@ impl MetaStore {
                  ON CONFLICT(key) DO UPDATE SET value = excluded.value",
                 params![key, value.to_string()],
             )
-            .map_err(|error| format!("cannot write setting {key}: {error}"))?;
+            .map_err(sqlite_receipt)?;
         Ok(())
     }
 

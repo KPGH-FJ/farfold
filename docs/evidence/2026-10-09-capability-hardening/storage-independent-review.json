@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-09",
+  "result": "no-blocking-findings-for-current-increment",
+  "scope": "H02 本轮存储恢复增量的独立只读源码与已有原始回执审查；本审查者没有修改源码、运行应用、进行真实故障注入或重复全量测试。",
+  "reviewed": [
+    "src-tauri/src/storage_recovery.rs",
+    "src-tauri/src/storage_recovery/error.rs",
+    "src-tauri/src/storage_recovery/export.rs",
+    "src-tauri/src/storage_recovery/tests.rs",
+    "src-tauri/src/meta_store/storage_recovery.rs",
+    "src-tauri/src/meta_store.rs",
+    "src-tauri/src/lib.rs",
+    "src/components/StorageRecovery.tsx",
+    "src/components/DraftStartup.tsx",
+    "src/runtime/storage_recovery.ts",
+    "src/runtime/draft_storage.ts",
+    "src/main.tsx",
+    "菜单、退出、窗口和桌面通知的相关非 IPC 回调路径"
+  ],
+  "findings": [
+    {
+      "id": "storage-review-manifest-durability",
+      "status": "resolved-by-precise-contract-and-evidence",
+      "detail": "manifest rename 后的目录 sync 可能失败，此时 recovery.json 已存在但命令仍返回 Err 和 partialPath。未发现 UI 假成功或源材料丢失；原注释暗示文件存在等同成功，现已更正为仅成功命令回执确认本次持久化，未来导入必须重新校验。没有要求在失败存储上额外删除或写入补偿。",
+      "evidence": "src-tauri/src/storage_recovery/export.rs:142"
+    }
+  ],
+  "confirmedBySourceReview": [
+    "恢复态 gate 在 Tauri 命令 State 提取之前执行；非存储 State 先注册，通知初始化在 MetaStore 注册之后。未发现已审回调绕过 gate 后索取不存在 MetaStore 的路径。",
+    "已有主库先检查普通文件、SQLite header 和 quick_check，再以禁止 CREATE 的既有文件方式打开；恢复态记住已观察材料，不因消失创建替代空库。",
+    "侧文件修正同时保护 startup 与直接 MetaStore::open：仅剩 -wal、-shm 或 -journal 仍阻止新库创建；只复制四个精确路径，不扫描类似前缀文件。",
+    "已打开库导出使用锁内 SQLite backup 和快照 quick_check；未打开库按复制前、后与副本哈希一致性保存为 unverifiedFiles，不冒称可恢复。",
+    "目标为新建私有目录，已有文件不覆盖；源符号链接和非普通文件拒绝，不复制 Agent 配置/凭据目录或 Keychain。UI 提醒副本含私密材料。",
+    "partialPath 与成功回执分开；取消位置选择不发导出，新尝试清除旧成功回执，重复动作由同步 ref 和 busy guard 阻止。"
+  ],
+  "verificationEvidenceRead": [
+    {
+      "log": "storage-orphan-wal-red.txt",
+      "owner": "verification",
+      "result": "1 个有效反例失败，证明原实现把孤立侧文件当成首次安装。"
+    },
+    {
+      "log": "storage-orphan-material-green.txt",
+      "owner": "verification",
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "log": "storage-meta-orphan-regression.txt",
+      "owner": "verification",
+      "passed": 23,
+      "failed": 0
+    }
+  ],
+  "notProvenOrNotImplemented": [
+    "未进行真实 Tauri 故障启动、物理磁盘满、目录 fsync 失败、断电或 Windows 实机验证。",
+    "SQLite 正常打开/关闭可改变侧文件布局；原始字节不变仅覆盖明确拒绝的损坏样例，不覆盖所有部分初始化失败。",
+    "未实现完整副本导入或损坏草稿修复；H02 仍未整体完成。",
+    "本次未进行视觉浏览器验证，也未绕过已经拒绝的本地 HTML URL 安全策略。"
+  ]
+}

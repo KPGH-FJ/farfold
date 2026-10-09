@@ -1,0 +1,44 @@
+{
+  "startedAt": "2026-10-09T10:06:41.490997+00:00",
+  "kind": "installed-official-agent-with-controlled-http-peer",
+  "version": "0.81.2",
+  "source": "@agentclientprotocol/claude-agent-acp",
+  "calls": [
+    "initialize",
+    "providers/list",
+    "providers/set",
+    "providers/list",
+    "session/new",
+    "session/prompt"
+  ],
+  "requests": [
+    {
+      "path": "/v1/messages?beta=true",
+      "model": "farfold-controlled-route-model",
+      "keyMatches": true,
+      "authorizationPresent": true,
+      "authorizationIsProxyOrAbsent": true,
+      "stream": true
+    },
+    {
+      "path": "/v1/messages?beta=true",
+      "model": "farfold-controlled-route-model",
+      "keyMatches": true,
+      "authorizationPresent": true,
+      "authorizationIsProxyOrAbsent": true,
+      "stream": true
+    }
+  ],
+  "observed": {
+    "updates": 6,
+    "permissionsCancelled": 0,
+    "markerSeen": true
+  },
+  "realModelAnswer": false,
+  "outcome": "passed",
+  "modelConfirmed": true,
+  "stopReason": "end_turn",
+  "routeVerified": true,
+  "ownedLeaderExited": true,
+  "ownedProcessGroupGone": true
+}

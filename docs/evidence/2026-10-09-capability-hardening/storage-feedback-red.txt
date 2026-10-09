@@ -1,0 +1,64 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/draft_storage.failure.test.ts (3 tests | 3 failed) 16ms
+   × keeps the latest input and explains readOnly, then saves only on retry 13ms
+   × keeps the latest input and explains full, then saves only on retry 1ms
+   × keeps the latest input and explains corrupt, then saves only on retry 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/draft_storage.failure.test.ts > keeps the latest input and explains readOnly, then saves only on retry
+AssertionError: expected [Function] to throw error including '只读' but got '未发送内容尚未保存，请重试后再关闭。'
+
+Expected: "只读"
+Received: "未发送内容尚未保存，请重试后再关闭。"
+
+ ❯ src/runtime/draft_storage.failure.test.ts:22:26
+     20|   current = { text: "latest unsaved input" };
+     21|   d.changed();
+     22|   await expect(d.flush()).rejects.toThrow(text);
+       |                          ^
+     23|   expect(d.snapshot().error).toContain(text);
+     24|   expect(current.text).toBe("latest unsaved input");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/draft_storage.failure.test.ts > keeps the latest input and explains full, then saves only on retry
+AssertionError: expected [Function] to throw error including '空间不足' but got '未发送内容尚未保存，请重试后再关闭。'
+
+Expected: "空间不足"
+Received: "未发送内容尚未保存，请重试后再关闭。"
+
+ ❯ src/runtime/draft_storage.failure.test.ts:22:26
+     20|   current = { text: "latest unsaved input" };
+     21|   d.changed();
+     22|   await expect(d.flush()).rejects.toThrow(text);
+       |                          ^
+     23|   expect(d.snapshot().error).toContain(text);
+     24|   expect(current.text).toBe("latest unsaved input");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/draft_storage.failure.test.ts > keeps the latest input and explains corrupt, then saves only on retry
+AssertionError: expected [Function] to throw error including '无法读取' but got '未发送内容尚未保存，请重试后再关闭。'
+
+Expected: "无法读取"
+Received: "未发送内容尚未保存，请重试后再关闭。"
+
+ ❯ src/runtime/draft_storage.failure.test.ts:22:26
+     20|   current = { text: "latest unsaved input" };
+     21|   d.changed();
+     22|   await expect(d.flush()).rejects.toThrow(text);
+       |                          ^
+     23|   expect(d.snapshot().error).toContain(text);
+     24|   expect(current.text).toBe("latest unsaved input");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  17:55:10
+   Duration  92ms (transform 16ms, setup 0ms, import 16ms, tests 16ms, environment 0ms)
+

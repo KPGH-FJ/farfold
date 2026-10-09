@@ -1,0 +1,58 @@
+import { expect, it } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { freshThreadState } from "../runtime/session_projection";
+import { ThreadUsage, ThreadUsageDetails } from "./ThreadUsage";
+
+it("renders unavailable values distinctly from reported zero and small exact cost", () => {
+  const thread = freshThreadState("one", "fixture", "/fixture", "one");
+  const empty = renderToStaticMarkup(<ThreadUsageDetails thread={thread} />);
+  expect(empty).toContain("尚未提供");
+  expect(empty).not.toContain("0 tokens");
+  thread.usage = {
+    used: 0,
+    size: 1000,
+    cost: { amount: 0.000001, currency: "USD" },
+  };
+  const known = renderToStaticMarkup(<ThreadUsageDetails thread={thread} />);
+  expect(known).toContain("0 tokens");
+  expect(known).toContain("1,000 tokens");
+  expect(known).toContain("0.000001 USD");
+  expect(known).toContain("累计费用");
+  expect(known).toContain("实际计费以服务方账单为准");
+});
+
+it("shows reported cumulative fields and labels disconnected data", () => {
+  const thread = freshThreadState("one", "fixture", "/fixture", "one");
+  thread.usage = { used: 50, size: 100 };
+  thread.sessionTokens = {
+    totalTokens: 300,
+    inputTokens: 180,
+    outputTokens: 120,
+    thoughtTokens: 20,
+  };
+  thread.connectionLost = true;
+  const html = renderToStaticMarkup(<ThreadUsageDetails thread={thread} />);
+  expect(html).toContain("连接已断开");
+  expect(html).toContain("300 tokens");
+  expect(html).not.toContain("本轮用量");
+  const control = renderToStaticMarkup(<ThreadUsage thread={thread} />);
+  expect(control).toContain('aria-haspopup="dialog"');
+  expect(control).not.toContain("50%");
+});
+
+it("does not present prior values as current while reconnecting or after a failed history read", () => {
+  const thread = freshThreadState("one", "fixture", "/fixture", "one");
+  thread.usage = { used: 50, size: 100 };
+  thread.reconnecting = true;
+  expect(renderToStaticMarkup(<ThreadUsage thread={thread} />)).not.toContain(
+    "50%",
+  );
+  thread.reconnecting = false;
+  thread.historyUnavailable = { reason: "empty", sourceKnown: true };
+  expect(renderToStaticMarkup(<ThreadUsage thread={thread} />)).not.toContain(
+    "50%",
+  );
+  expect(
+    renderToStaticMarkup(<ThreadUsageDetails thread={thread} />),
+  ).toContain("此前收到的数据");
+});

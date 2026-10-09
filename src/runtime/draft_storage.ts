@@ -1,5 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
+import { storageFailureMessage } from "./storage_recovery";
+import { STRINGS } from "./strings";
 
 export const DRAFT_STORAGE_KEY = "unsentWork.v1";
 const MAX_BYTES = 32 * 1024 * 1024;
@@ -75,9 +77,10 @@ export const draftPersistence = {
         restore(value);
         publish({ ready: true, error: null });
       })
-      .catch(() => {
-        publish({ error: DRAFT_STRINGS.loadFailed });
-        throw new Error(DRAFT_STRINGS.loadFailed);
+      .catch((error) => {
+        const message = storageFailureMessage(error, DRAFT_STRINGS.loadFailed);
+        publish({ error: message });
+        throw new Error(message);
       })
       .finally(() => {
         loading = null;
@@ -116,9 +119,14 @@ export const draftPersistence = {
         const message =
           error instanceof Error && error.message === DRAFT_STRINGS.tooLarge
             ? error.message
-            : DRAFT_STRINGS.saveFailed;
-        publish({ error: message });
-        throw new Error(message);
+            : storageFailureMessage(error, DRAFT_STRINGS.saveFailed);
+        const explanation =
+          message === DRAFT_STRINGS.saveFailed ||
+          message === DRAFT_STRINGS.tooLarge
+            ? message
+            : `${message}${STRINGS.storageRecovery.unsaved}`;
+        publish({ error: explanation });
+        throw new Error(explanation);
       } finally {
         publish({ saving: false });
       }

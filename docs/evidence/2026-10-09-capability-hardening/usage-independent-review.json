@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-09",
+  "status": "targeted-passed",
+  "scope": "独立只读复核用量实现，并增加专用 stdio 协议回归；未修改用量生产实现。",
+  "evidenceKind": "源码独立复核与实际执行的隔离协议测试，不是真实 Agent、服务账单、正式安装或 29 项接入验收。",
+  "reviewedFiles": [
+    "src/runtime/session_usage.ts",
+    "src/components/ThreadUsage.tsx",
+    "src/components/Composer.tsx",
+    "src/runtime/session_projection.ts",
+    "src/runtime/session_types.ts",
+    "src/runtime/completion.ts",
+    "src/runtime/sessions.ts",
+    "src/runtime/session_recovery.ts",
+    "src-tauri/src/acp_client/pump.rs",
+    "src-tauri/Cargo.toml"
+  ],
+  "review": {
+    "blockingFindings": [],
+    "confirmed": [
+      "官方 schema 的 required token 字段描述为跨会话累计；当前实现替换 Agent 报告，不对重复累计值再次求和。",
+      "未知与零值分开；安全整数边界和非负值经过验证，畸形必填导致整份 token 报告不可用，畸形选填不污染有效必填。",
+      "微额费用按报告保留；不估算实际计费，未提供的费用不会伪造为零。",
+      "PromptResponse 缺失或畸形 usage 不复用前次累计报告；恢复成功由 freshState 重建，用本次收到的报告填充。",
+      "root 已将断连、恢复中、打开失败、历史不可用、服务来源失败的旧报告标为此前数据，且紧凑入口不显示当前百分比。",
+      "旧 Channel 所有权检查阻止被替换连接污染当前对话；非活动 Composer 禁用并关闭用量弹层。"
+    ],
+    "boundary": "用量报告仍是 Agent 最近一次提供的值；不能从该实现推断 Agent 实际支持率、真实账单准确性或完整历史重放。"
+  },
+  "testFile": "src-tauri/src/acp_client/usage_wire_tests.rs",
+  "registration": "src-tauri/src/acp_client/mod.rs",
+  "run": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib usage_wire_tests -- --nocapture",
+    "log": "usage-wire-tests.txt",
+    "exitCode": 0,
+    "passed": 4,
+    "failed": 0,
+    "filtered": 1077,
+    "testSeconds": 0.42,
+    "coverage": [
+      "PromptResponse 六个官方 token 字段与 usage._meta、response._meta 经官方 typed SDK 和 pump 完整传递。",
+      "usage_update 的 context used/size、0.000001 USD 和 cost/update _meta 完整进入会话事件。",
+      "六项 token 的零值与零费用保留，不因序列化或格式转换丢失。",
+      "连续请求中后续 usage 缺失、required 类型错误、JSON-RPC 错误均不复用之前的 usage。",
+      "官方 DefaultOnError 对畸形 optional thoughtTokens 局部降级，保留其他有效 required/optional 字段。"
+    ],
+    "warnings": "当时并行开发尚未接入的 service_delivery hook 触发 dead_code，storage_recovery/export.rs 和既有 archive.rs 另有 unused import；原始输出完整保留，此次未擅改相关模块。",
+    "sha256": "5aa24d092cabf6fe4dc88fb7bf7e10f4a1fd60d36cece5d7aca63ae3808c944a"
+  },
+  "sources": [
+    {
+      "source": "https://agentclientprotocol.com/protocol/v1/prompt-turn",
+      "purpose": "官方 usage_update 上下文与累计费用含义。"
+    },
+    {
+      "source": "agent-client-protocol-schema 1.9.1 src/v1/agent.rs:3203-3246",
+      "purpose": "本地实际编译的官方 Usage 类型；明确 unstable_end_turn_token_usage 与跨会话累计字段、DefaultOnError。"
+    }
+  ],
+  "remaining": [
+    "项目全量检查和正式应用/真实 Agent 验证由主任务单独执行；本回执不能替代。",
+    "官方 token Usage 扩展仍是 unstable 能力，未声明或未返回数据时继续保留未知，不补估算值。"
+  ],
+  "recordedHead": "bed3cbe290de26ebca3a6d74ab2581fe676bfc1a"
+}

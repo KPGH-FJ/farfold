@@ -1,0 +1,27 @@
+   Compiling agent-client-protocol-schema v1.9.1
+   Compiling agent-client-protocol v2.2.0
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: couldn't read `src/acp_client/service_delivery_tests.rs`: No such file or directory (os error 2)
+   --> src/acp_client/service_delivery.rs:107:1
+    |
+107 | mod tests;
+    | ^^^^^^^^^^
+
+error: could not compile `farfold` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error[E0597]: `provider_id` does not live long enough
+  --> src/acp_client/service_delivery.rs:48:49
+   |
+47 |         let provider_id = provider["providerId"].as_str().ok_or(())?.to_owned();
+   |             ----------- binding `provider_id` declared here
+48 |         let request = SetProviderRequest::new(&*provider_id, LlmProtocol::Anthropic, &self.base_url)
+   |                       --------------------------^^^^^^^^^^^-----------------------------------------
+   |                       |                         |
+   |                       |                         borrowed value does not live long enough
+   |                       argument requires that `provider_id` is borrowed for `'static`
+...
+66 |     }
+   |     - `provider_id` dropped here while still borrowed
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `farfold` (lib) due to 1 previous error

@@ -440,14 +440,15 @@ impl AcpManager {
                     .cloned()
             })
             .collect();
-        let mut environment = match prepared {
-            Some(prepared) => prepared.environment,
+        let (mut environment, service_delivery) = match prepared {
+            Some(prepared) => (prepared.environment, prepared.delivery),
             None => {
-                store
+                let environment = store
                     .run(move |store| {
                         crate::credentials::environment_for_launch(store, &environment_agent)
                     })
-                    .await?
+                    .await?;
+                (environment, None)
             }
         };
         for (name, value) in dependency_environment {
@@ -623,6 +624,16 @@ impl AcpManager {
                             return Err(error);
                         }
                     };
+                    // A configured service owns this fresh process. Do not
+                    // publish ready or admit session work until the official
+                    // route has been declared, applied and read back. Failure
+                    // cannot fall through to the Agent's saved account.
+                    if let Some(delivery) = service_delivery
+                        && delivery.apply(&cx, &init_response).await.is_err()
+                    {
+                        let _ = init_tx.send(Err(InitializeFailure::Failed));
+                        return Err(agent_client_protocol::Error::internal_error());
+                    }
                     let query = (!candidate).then(|| super::account_query::AccountQuery::declared(&init_response.public_json(), account_query)).flatten();
                     let _ = init_tx.send(Ok(init_response));
                     // Compatibility completes before this bounded read. Run it

@@ -4,7 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import { draftPersistence } from "../runtime/drafts";
 import { DRAFT_STRINGS, useDraftSaveStatus } from "../runtime/draft_storage";
 import { threads } from "../runtime/sessions";
-import { STRINGS } from "../runtime/strings";
+import { StorageRecovery } from "./StorageRecovery";
 import { conversationReadState } from "../runtime/conversation_read_state";
 import { exitNeedsReview, EXIT_IMPACT as E } from "../runtime/exit_impact";
 import { WorkspaceDialog } from "./WorkspaceDialog";
@@ -226,25 +226,25 @@ export function DraftStartup({ children }: { children: ReactNode }) {
         </div>
       </>
     );
+  const failure =
+    setup.error ??
+    status.error ??
+    (startupError ? DRAFT_STRINGS.loadFailed : null);
+  if (failure)
+    return (
+      <StorageRecovery
+        message={failure}
+        onRetry={async () => {
+          await Promise.all([draftPersistence.load(), setupStorage.load()]);
+          setRetry((value) => value + 1);
+        }}
+      />
+    );
   return (
     <main className="main" style={{ padding: 32 }}>
-      <p
-        role={setup.error || status.error || startupError ? "alert" : "status"}
-      >
-        {setup.error ??
-          status.error ??
-          (!setup.ready ? SETUP_STORAGE_STRINGS.loading : null) ??
-          (startupError ? DRAFT_STRINGS.loadFailed : DRAFT_STRINGS.loading)}
+      <p role="status">
+        {!setup.ready ? SETUP_STORAGE_STRINGS.loading : DRAFT_STRINGS.loading}
       </p>
-      {(setup.error || status.error || startupError) && (
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setRetry((v) => v + 1)}
-        >
-          {STRINGS.common.retry}
-        </button>
-      )}
     </main>
   );
 }

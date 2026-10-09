@@ -1,0 +1,68 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `self`
+ --> src/storage_recovery/export.rs:5:10
+  |
+5 |     fs::{self, File, OpenOptions},
+  |          ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+
+warning: field `secret` is never read
+  --> src/acp_client/service_delivery.rs:19:5
+   |
+17 | pub(crate) struct ServiceDelivery {
+   |                   --------------- field in this struct
+18 |     base_url: String,
+19 |     secret: String,
+   |     ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `apply` is never used
+  --> src/acp_client/service_delivery.rs:37:25
+   |
+22 | impl ServiceDelivery {
+   | -------------------- method in this implementation
+...
+37 |     pub(crate) async fn apply(
+   |                         ^^^^^
+
+warning: function `list` is never used
+  --> src/acp_client/service_delivery.rs:69:10
+   |
+69 | async fn list(cx: &ConnectionTo<Agent>) -> Result<Value, ()> {
+   |          ^^^^
+
+warning: function `unique_anthropic_provider` is never used
+  --> src/acp_client/service_delivery.rs:75:4
+   |
+75 | fn unique_anthropic_provider(response: &Value) -> Result<&Value, ()> {
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `delivery` is never read
+  --> src/acp_client/service_connection.rs:27:9
+   |
+24 | pub(crate) struct PreparedService {
+   |                   --------------- field in this struct
+...
+27 |     pub delivery: Option<super::service_delivery::ServiceDelivery>,
+   |         ^^^^^^^^
+
+warning: `farfold` (lib test) generated 7 warnings (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.58s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-eb7350b2bfafe2df)
+
+running 4 tests
+test acp_client::usage_wire_tests::official_prompt_usage_and_context_cost_keep_every_field_and_metadata ... ok
+test acp_client::usage_wire_tests::official_invalid_optional_count_does_not_discard_valid_required_usage ... ok
+test acp_client::usage_wire_tests::official_zero_reports_remain_zero_without_rounding_or_omission ... ok
+test acp_client::usage_wire_tests::missing_invalid_and_failed_reports_never_reuse_prior_prompt_usage ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1077 filtered out; finished in 0.42s
+

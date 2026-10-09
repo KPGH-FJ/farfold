@@ -50,6 +50,7 @@ import { archiveBlockReason, archiveIndexRow } from "./archive_admission";
 import { LIBRARY } from "./library_strings";
 import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
+import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
 import {
   requireReadableHistory,
   isHistoryReadFailure,
@@ -442,6 +443,7 @@ class ThreadsStore {
         stopReason: typeof e.stopReason === "string" ? e.stopReason : undefined,
         error: typeof e.error === "string" ? e.error : undefined,
         failure: e.failure,
+        usage: e.usage,
       });
       if (e.error === "AUTH_REQUIRED")
         observeAuthentication(
@@ -604,7 +606,7 @@ class ThreadsStore {
       routePrepared = true;
       if (retryState) this.channels.delete(retryState.key);
       const channel = new Channel<unknown>();
-      const buffered: unknown[] = [];
+      const buffered = new HistoryReplayBuffer();
       const openToken = crypto.randomUUID();
       let replayComplete = false;
       let replayLost = false;
@@ -625,6 +627,7 @@ class ThreadsStore {
         } | null;
         if (received?.kind === "session_history_complete") {
           if (received.openToken === openToken) {
+            buffered.mark(openToken);
             replayComplete = true;
             replayDelivered?.();
           }
@@ -679,12 +682,12 @@ class ThreadsStore {
           requireReadableHistory(
             input.agentId,
             result,
-            buffered,
+            buffered.prefix(openToken),
             replayComplete,
             replayLost,
           );
         } catch (error) {
-          buffered.length = 0;
+          buffered.clear();
           if (isHistoryReadFailure(error)) {
             // Retain only actual loss from this owner, never late replay content.
             historyFailed = true;
@@ -769,21 +772,16 @@ class ThreadsStore {
         this.drafts.set(draftGroup(input), key);
       }
       boundKey = key;
-      for (const event of buffered.splice(0)) {
+      const { prefix, following } = buffered.take(
+        result.resumed ? openToken : undefined,
+      );
+      for (const event of prefix) {
         this.applyChannelEvent(key, event, false);
       }
+      if (result.resumed) finishHistoryPrefix(state);
+      for (const event of following) this.applyChannelEvent(key, event);
       recheck?.finish(state, result);
       recheckObserver = undefined;
-      // Replay carries no original timestamps in the supported update shapes.
-      // Do not pass the load time off as the time the message was authored.
-      if (result.resumed)
-        for (const item of state.items) {
-          if ("time" in item) item.time = 0;
-          if (item.kind === "tool") {
-            item.call.startedAt = 0;
-            item.call.endedAt = undefined;
-          }
-        }
       this.emit();
       void this.refreshIndex();
       return state;

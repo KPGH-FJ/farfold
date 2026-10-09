@@ -1,0 +1,157 @@
+{
+  "id": "ARCH-15-claude-messages",
+  "checkedAt": "2026-10-09T10:00:44Z",
+  "status": "implemented-controlled-verified-not-installed-ui",
+  "scope": "Source and owned JSON-RPC peer verified. Root separately verified installed official Claude ACP against controlled local HTTP. No real paid model response or installed Farfold UI acceptance.",
+  "decision": {
+    "agentId": "registry:claude-acp",
+    "protocol": "已实现的官方 ACP providers/list、providers/set；启动握手声明和实时两次读取作为准入，不按版本猜能力。",
+    "rejectedEnvironmentOnly": "Claude Code 的 settings env 可覆盖子进程 env。只注入 ANTHROPIC_BASE_URL/API_KEY 可能把已选择来源误报为生效。",
+    "geminiDeferred": "Gemini 官方 GOOGLE_GEMINI_BASE_URL/GEMINI_API_KEY 属 Gemini 原生协议；当前 Farfold 服务记录只有 chat-completions/responses/messages，不能冒用其一。",
+    "authentication": "不调用 authenticate/logout。新连接初始化后配置自己的服务，用户已有登录及配置不改。",
+    "model": "使用官方 ANTHROPIC_MODEL + ANTHROPIC_CUSTOM_MODEL_OPTION；实际 new/load 仍需现有 ModelGuard 完整确认，受限制/被替换/未列出的模型不虚报已选。",
+    "secrets": "不把所选密钥/地址放进启动 env 或持久配置。一次性私有类型直接构成官方请求；provider 回应与错误绝不转入状态、事件或诊断。",
+    "endpoint": "Farfold Messages 基础地址接 /messages；Claude 接 /v1/messages。仅将末尾 /v1 转为 provider root（Anthropic 官方根地址先按既有规则补 /v1）；其他自定义路径明确拒绝，保留原服务身份。",
+    "validatedApiTypes": {
+      "value": ["messages"],
+      "basis": "installed-route.json: official installed Claude ACP 0.81.2, controlled HTTP, expected path/model/x-api-key and end_turn marker. Not a real model answer or all eight standards."
+    }
+  },
+  "sources": [
+    {
+      "url": "https://code.claude.com/docs/en/llm-gateway-connect",
+      "finding": "环境配置覆盖优先级、API key 对应 x-api-key、TypeScript SDK env 继承行为。"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/llm-gateway-protocol",
+      "finding": "Anthropic Messages 请求路径为 /v1/messages，必要协议头由 Agent 负责。"
+    },
+    {
+      "url": "https://code.claude.com/docs/en/model-config",
+      "finding": "ANTHROPIC_MODEL 和 ANTHROPIC_CUSTOM_MODEL_OPTION 是官方模型入口；模型限制仍由 Agent 执行。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.88.0/src/acp-agent.ts",
+      "sha256": "10efa1c7811a1a1a5f5ac7574d8240b5cd1f029d8efa777a89e81ee577b55a07",
+      "version": "0.88.0",
+      "lineEvidence": {
+        "declaration": 2743,
+        "list": 3169,
+        "set": 3193,
+        "programmaticSettingsOverride": 9540,
+        "environmentMapping": 10407
+      },
+      "finding": "providers 无需客户端声明；list 返回非秘密路由；set 进程内配置在后续 new/load 使用。路由同写入程序化 settings 并置空 apiKeyHelper，抵抗用户/项目 env 覆盖。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.88.0/src/session-model.ts",
+      "sha256": "e06356bac55f1d91813f1797a55c5064100884f81f2f32b2832eadf2b90b568a",
+      "lineEvidence": {
+        "customModelOption": 364,
+        "modelPriority": 405,
+        "resumeSetModel": 438
+      },
+      "finding": "模型优先级与恢复时再次 setModel；无法再确认时返回实际模型，由 Farfold 继续核对。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/claude-agent-acp/v0.88.0/package.json",
+      "sha256": "d86e05ffdf87a223d6c86766dc0b40cb00becc3ef28a01fb3ad853c0ce2ea519",
+      "finding": "此次公开源码版本 0.88.0，依赖官方 SDK 0.3.293；此信息仅是证据范围，不是运行准入/版本固定。"
+    },
+    {
+      "url": "https://geminicli.com/docs/reference/configuration/",
+      "finding": "Gemini API 的 GOOGLE_GEMINI_BASE_URL 以 gemini-api-key 认证使用；本片没有新增 Gemini API 格式。"
+    },
+    {
+      "url": "https://docs.rs/agent-client-protocol/2.2.0/agent_client_protocol/",
+      "finding": "本地官方 crate 2.2.0 + schema 1.9.1 提供 unstable_llm_providers；仅启用此 feature，并按主任务协调同时启用 unstable_end_turn_token_usage，不升级版本。"
+    }
+  ],
+  "red": {
+    "compile": {
+      "log": "service-red.txt",
+      "passed": 1,
+      "failed": 2,
+      "reason": "现有版本尚未提供 Claude Messages 能力与编译路径。"
+    },
+    "delivery": {
+      "log": "delivery-red-verified.txt",
+      "passed": 1,
+      "failed": 4,
+      "reason": "manager 尚未接 hook，未声明、无回读、拒绝/挂起都可在 initialize 后直接 ready。"
+    },
+    "invalidEvidence": [
+      "delivery-red.txt 是借用编译错误，不计红测；delivery-red-valid.txt 的正常路径断言曾误用 connected 而非 ready，后续以 delivery-red-verified.txt 为准。"
+    ]
+  },
+  "pending": [
+    "No real vendor model/account/billing request; eight standards remain separately tracked.",
+    "Installed Farfold UI and cold restore of the new service path remain unverified.",
+    "Only exactly mappable /v1 Messages bases supported; other formats, Gemini API and other Agents remain incomplete.",
+    "Controlled HTTP evidence covers installed Claude ACP 0.81.2 and one fake model/service only; 0.88.0 public source is not runtime evidence."
+  ],
+  "completedAt": "2026-10-09T10:11:28.072237+00:00",
+  "implementation": {
+    "newFiles": [
+      "src-tauri/src/acp_client/service_delivery.rs",
+      "src-tauri/src/acp_client/service_delivery_tests.rs",
+      "src-tauri/src/acp_client/service_config_claude_tests.rs"
+    ],
+    "changedFiles": [
+      "src-tauri/src/acp_client/service_config.rs",
+      "src-tauri/src/acp_client/service_connection.rs",
+      "src-tauri/src/acp_client/manager.rs",
+      "src-tauri/src/acp_client/mod.rs",
+      "src-tauri/Cargo.toml"
+    ],
+    "fixtureShapeOnly": [
+      "src-tauri/src/acp_client/account_logout_connections_tests.rs",
+      "src-tauri/src/acp_client/account_scope_tests.rs",
+      "src-tauri/src/acp_client/dependency_environment_tests.rs",
+      "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "src-tauri/src/acp_client/transient_mcp_route_tests.rs"
+    ],
+    "note": "Existing fixture edits only add delivery: None. End-turn usage feature coordinated with root; usage implementation owned by root/architecture."
+  },
+  "verification": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked service_ -- --nocapture",
+    "log": "service-green-final.txt",
+    "passed": 45,
+    "failed": 0,
+    "ignored": 0,
+    "filteredOut": 1037,
+    "durationSeconds": 3.56,
+    "newCompileTests": 3,
+    "newDeliveryTests": 6,
+    "coverage": [
+      "Registration, format and model admission; selected key/endpoint absent from launch env; inherited env unchanged.",
+      "Absent/unsupported/ambiguous/duplicate provider slots cannot receive the selected key.",
+      "Rejected, null, mismatched URL/protocol/slot and disconnected receipts never become ready; no retry.",
+      "Pending set blocks ready until readback; shutdown cannot revive from late success.",
+      "Exact initialize/list/set/list sequence; sensitive response headers/metadata and errors never enter status, registration or diagnostics.",
+      "Existing settings path never invokes providers; endpoint conversion preserves Messages request path.",
+      "Existing service identity/revision/restore/concurrency/credential guards."
+    ],
+    "scopeLimit": "Targeted service_ tests, not the full seven checks. Owned source formatted; full fmt/clippy/frontend/backend checks remain root integration work.",
+    "independentReview": {
+      "reviewer": "/root/architecture",
+      "result": "No blocker found",
+      "scope": "Declaration, unique slot, set/readback before ready; outer timeout/shutdown; secret boundaries; Cargo features."
+    }
+  },
+  "sourceHashes": {
+    "src-tauri/src/acp_client/service_delivery.rs": "67e05e0d591fb4ab81ccadec314887de85af87cbfd901a892276b3102f825fce",
+    "src-tauri/src/acp_client/service_delivery_tests.rs": "a133cdf534788e82e1df2a0704fe0211dfc0f9117d9a25925202ab57ec339b5e",
+    "src-tauri/src/acp_client/service_config_claude_tests.rs": "e739e6a63421226639840e3d09d3baebd8d9c42a22e723a4912392ae76640d49",
+    "src-tauri/src/acp_client/service_config.rs": "efb14f0d0598544323374b9f0e1911da966ae626e03bdc374e7c6a97fa26c109",
+    "src-tauri/src/acp_client/service_connection.rs": "6c1014a201cbe67761a50f73caf985a4716ceb6611fd8d8cabba59ba7b30827e",
+    "src-tauri/src/acp_client/manager.rs": "6c655b2864ea5352cefd309d64ac119e5f40b3760aba49043fb086ac6613d0ea",
+    "src-tauri/src/acp_client/mod.rs": "44bda0622dd895b465f594ca4a36b7a415f03e721ead601e08e0da4c4d894b41",
+    "src-tauri/Cargo.toml": "597f0f6a233a7bd56d20d596e30e91edc40d2bf96bec7efb629b770ac92ae1d0",
+    "src-tauri/src/acp_client/account_logout_connections_tests.rs": "c5679a423d2eda5124cb2e2c320603e34a491b4f1b08fc030b4d34304b596b63",
+    "src-tauri/src/acp_client/account_scope_tests.rs": "8f6fbad8293a20a132d6bd172a0e7d178ae28a276d31c821ae04015a684a64a7",
+    "src-tauri/src/acp_client/dependency_environment_tests.rs": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960",
+    "src-tauri/src/acp_client/lifecycle_tests.rs": "56a6bef4d549ca420896b796f2bcdc5483f28bab2d7e652943e1c192225cfd9b",
+    "src-tauri/src/acp_client/transient_mcp_route_tests.rs": "d7cd80c7f12940729ffbcda0173f6c758d4206ec3cadb8d7e53691233e6ce3db"
+  }
+}

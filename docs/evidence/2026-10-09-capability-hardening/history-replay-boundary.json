@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-09",
+  "status": "reproduced-fixed-targeted-passed",
+  "scope": "ARCH-30/ARCH-31/P33 的一个完成标记与 IPC 交付顺序缺陷；只修改 Farfold 内存呈现，不写 Agent 历史或新增正文账本。",
+  "evidenceKind": "实际执行的确定性前端 IPC fixture；没有使用真实 Agent、账号、模型或正式应用。",
+  "defect": [
+    "session_open 的可读历史准入检查原来读取全部 buffered 事件，因而标记后、invoke 返回前的正文可以把空回放误判为有历史，并替换原有内容。",
+    "成功恢复后的全部缓冲事件原来统一标为历史时间未知，使完成标记后的合法新消息和工具活动失去实际发生时间。",
+    "只读导入预览原来在标记后到 invoke 返回前继续吸收正文，可把空快照变成可导入，或把后续内容混进已确认快照。"
+  ],
+  "implementation": [
+    "HistoryReplayBuffer 只存单次打开请求的临时 IPC 缓冲，匹配标记记录当时位置；同一标记再次出现不能扩大前缀。",
+    "独立复核后将未匹配显式 token 的 prefix 收紧为空，预览不会把未确认片段写入正文视图；新对话 take(undefined) 仍保留全部缓冲事件。",
+    "恢复只以匹配标记前的前缀判断可读历史，空前缀继续保留原内容和历史不可用状态；晚消息不能修复这次失败。",
+    "正常恢复先应用历史前缀并封闭旧流、保留未知历史时间，再把随后缓冲事件按正常实时通道应用，不丢弃合法后续正文、工具活动或保护状态。",
+    "导入预览本来就是返回后封闭通道的只读快照；现在仅用匹配标记前的内容生成该快照，保留预览所有权和原有关闭/重试机制。",
+    "超时只是失败边界，不作为历史完整证明；错误 token、返回先于 Channel、附件正文、断连、配置重检继续由原保护规则处理。"
+  ],
+  "files": [
+    "src/runtime/history_replay.ts",
+    "src/runtime/history_import.ts",
+    "src/runtime/sessions.ts",
+    "src/runtime/history_replay_boundary.test.ts"
+  ],
+  "sharedFileBoundary": "sessions.ts 中 usage 的独立增量由 root 持有，本片只改 openTarget 的临时历史缓冲、准入与应用顺序。当前 sessions.ts 1473 行。",
+  "runs": [
+    {
+      "log": "history-replay-boundary-red.txt",
+      "stage": "initial-fixture",
+      "failed": 5,
+      "validity": "其中实时消息测试缺少 agent_work_get 返回，属于 fixture 错误，不计该项红测证明；其余失败已指向正文混入。保留原始记录不覆盖。",
+      "sha256": "c29d6c45117e14092389f3c243301865eedbc8106320376770e421e469e81c51"
+    },
+    {
+      "log": "history-replay-boundary-red-verified.txt",
+      "stage": "verified-before-production-fix",
+      "command": "corepack pnpm exec vitest run src/runtime/history_replay_boundary.test.ts",
+      "failed": 5,
+      "passed": 0,
+      "validity": "补齐 fixture 后五项均到达目标断言，失败来自误准入、快照吸收和实时消息时间清零。",
+      "sha256": "13ab08c383c22beb92e6cc2b4a75d5670e151d3b93c5ac7f7be592b73361085f"
+    },
+    {
+      "log": "history-replay-boundary-initial-green.txt",
+      "stage": "initial-fix-plus-existing-history-import",
+      "passed": 32,
+      "files": 3,
+      "sha256": "e1e1e643aeac07779c0475319593038f7594ecda7d61c3b4de2b95bdeec08503"
+    },
+    {
+      "log": "history-replay-boundary-regression.txt",
+      "stage": "expanded-history-usage-tool-regression",
+      "passed": 177,
+      "files": 10,
+      "newBoundaryTests": 8,
+      "note": "此命令附带的 session_config_recheck.test.ts selector 不存在，不计其通过；实际 sessions.config-recheck.test.ts 随后单独执行并记录。",
+      "sha256": "811d9af843396dcb948b41adea90d4b17cdb5669d14e7c44d958dc3e18099b48"
+    },
+    {
+      "log": "history-replay-boundary-config-recheck.txt",
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.config-recheck.test.ts",
+      "stage": "configuration-recheck-regression",
+      "passed": 28,
+      "files": 1,
+      "sha256": "b418d47dfb6ef104ca400b832937cc74d472fd3222e3c8de28bb85560bb6a15e"
+    },
+    {
+      "log": "history-replay-boundary-typecheck.txt",
+      "command": "corepack pnpm typecheck",
+      "stage": "before-final-review-tightening",
+      "exitCode": 0,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "log": "history-replay-boundary-review-red.txt",
+      "stage": "review-counterexample-before-tightening",
+      "passed": 8,
+      "failed": 2,
+      "sha256": "517c6d81401e69973c489dd652dc04505bdfc84b93bdbbc284f6c888883b42eb"
+    },
+    {
+      "log": "history-replay-boundary-final-green.txt",
+      "stage": "final-all-related-regression",
+      "passed": 207,
+      "failed": 0,
+      "files": 11,
+      "newBoundaryTests": 10,
+      "sha256": "98e30a06f19498b894a3a0d6274f704b5ebe217f7b2d1d86dde3dd6644c838a0"
+    },
+    {
+      "log": "history-replay-boundary-final-typecheck.txt",
+      "stage": "final-typecheck",
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "reviewCorrection": "root 独立复核发现 prefix 未匹配时 slice(0,undefined) 隐含返回全部片段；补两项确定性反例后修正，不依赖调用者额外 guard。",
+  "remaining": [
+    "不能据非空官方回放证明 Agent 未遗漏所有原始正文；Agent 本身的实际恢复完整性仍需逐家验证。",
+    "正式应用及全量整合检查由主任务单独执行，本回执不替代。",
+    "预览完成后的新活动不属于该只读快照；正式打开时重新执行来源、历史与配置确认。"
+  ],
+  "recordedHead": "bed3cbe290de26ebca3a6d74ab2581fe676bfc1a"
+}

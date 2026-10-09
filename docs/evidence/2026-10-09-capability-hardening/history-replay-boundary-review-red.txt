@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/history_replay_boundary.test.ts (10 tests | 2 failed) 11ms
+   × does not project an unconfirmed preview prefix (wrong token=false) 4ms
+   × does not project an unconfirmed preview prefix (wrong token=true) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > does not project an unconfirmed preview prefix (wrong token=false)
+AssertionError: expected [ { kind: 'agent', id: 'it-5', …(4) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "it-5",
++     "kind": "agent",
++     "messageId": "Unconfirmed preview fragment",
++     "streaming": false,
++     "text": "Unconfirmed preview fragment",
++     "time": 0,
++   },
++ ]
+
+ ❯ src/runtime/history_replay_boundary.test.ts:199:33
+    197|     const preview = await pending;
+    198|     expect(preview.replayComplete).toBe(false);
+    199|     expect(preview.state.items).toEqual([]);
+       |                                 ^
+    200|     expect(hasPreviewContent(preview)).toBe(false);
+    201|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > does not project an unconfirmed preview prefix (wrong token=true)
+AssertionError: expected [ { kind: 'agent', id: 'it-6', …(4) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "it-6",
++     "kind": "agent",
++     "messageId": "Unconfirmed preview fragment",
++     "streaming": false,
++     "text": "Unconfirmed preview fragment",
++     "time": 0,
++   },
++ ]
+
+ ❯ src/runtime/history_replay_boundary.test.ts:199:33
+    197|     const preview = await pending;
+    198|     expect(preview.replayComplete).toBe(false);
+    199|     expect(preview.state.items).toEqual([]);
+       |                                 ^
+    200|     expect(hasPreviewContent(preview)).toBe(false);
+    201|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  18:14:09
+   Duration  229ms (transform 124ms, setup 0ms, import 157ms, tests 11ms, environment 0ms)
+

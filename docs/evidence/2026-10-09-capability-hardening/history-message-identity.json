@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-09",
+  "status": "message_identity_projection_defect_reproduced_and_targeted_fix_passed",
+  "scope": "ARCH-30/ARCH-31/P33的一个已定位呈现缺陷；不代表全部历史、安全恢复、逐家Agent或正式应用已完成。",
+  "evidenceKind": "retained_raw_test_output",
+  "defect": "官方ACP v1带messageId的相邻同角色回放，在Farfold按role/streaming拼接时失去消息边界；不同ID的相同用户文字可能被当作乐观echo省略，附件可能并入前一条消息。",
+  "implementation": [
+    "ThreadItem的user/agent/thought仅在当前内存视图保留官方messageId，不写正文或事件账本。",
+    "appendStreamText与三类chunk分派承接messageId；已提供ID时不同ID分开，同ID分块保持正文/附件归属；缺ID继续原通用fallback，不伪造ID。",
+    "有显式ID时，按当前running请求的乐观用户项确认echo；历史正文相似本身不再作为不同官方消息同一性的依据。",
+    "Rust stdio证明manager/pump/preview channel原本已保留messageId及未知_meta，完成标记在正式load回放之后；部分load后error不出成功标记或索引。无需改pump/manager的透传逻辑。"
+  ],
+  "files": [
+    "src/runtime/session_projection.ts",
+    "src/runtime/session_types.ts",
+    "src/runtime/history_message_identity.test.ts",
+    "src-tauri/src/acp_client/history_replay_identity_tests.rs",
+    "src-tauri/src/acp_client/mod.rs"
+  ],
+  "sharedFileBoundary": "root同时拥有session_projection.ts的usage等独立片段；本记录仅描述appendStreamText、chunk分派、ThreadItem消息字段。最终整合格式、类型与全量检查由root负责。",
+  "runs": [
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/history-message-identity-red.txt",
+      "stage": "before_fix",
+      "passed": 1,
+      "failed": 5,
+      "sha256": "ab4b31bd4d1a369764dd334e3b9d642407d5ab910673bc139d05463d1e18d047"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/history-message-identity-initial-green.txt",
+      "stage": "initial_fix_plus_attachments",
+      "passed": 18,
+      "sha256": "06c41a23e94587cab19ab462e3740d49460d76bdcdab017b53ba3e8995813bd4"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/history-message-identity-regression.txt",
+      "stage": "final_message_identity_and_related_history_regression",
+      "passed": 150,
+      "files": 7,
+      "sha256": "e17a26628562d788a9a3da136db4e29bd05b1fd54818a3f9525072c295c6f1ff"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/history-replay-identity-wire.txt",
+      "stage": "synthetic_stdio_transport_regression",
+      "passed": 2,
+      "sha256": "9818f9b1aeae8ffcff78e4c901244e45052c74851fcbca2f29c41addd2ee1b54"
+    }
+  ],
+  "newTestCoverage": [
+    "不同ID的相邻user正文",
+    "不同ID的相邻agent正文",
+    "不同ID的重复user正文",
+    "user附件归属",
+    "agent附件归属",
+    "无messageId兼容分块",
+    "thought消息ID边界",
+    "当前乐观用户文字分块echo",
+    "当前乐观附件带ID echo"
+  ],
+  "protocolEvidence": "隔离Python stdio；当前Farfold已有透传和错误边界证明，不是真实Agent历史或端到端用户验收。",
+  "sources": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/session-setup",
+      "consulted": "2026-10-09",
+      "detail": "load必须先回放再回复，消息ID为不透明消息身份；回复是官方回放边界，不是客户端固定延时。"
+    },
+    {
+      "path": "agent-client-protocol-schema-1.9.1/src/v1/client.rs:714",
+      "kind": "installed_official_crate_source",
+      "detail": "ContentChunk.message_id可选；同消息chunks共享ID，ID改变表示新消息。"
+    },
+    {
+      "path": "agent-client-protocol-schema-1.9.1/src/serde_util.rs:231",
+      "kind": "installed_official_crate_source",
+      "detail": "官方crate将LoadSessionResponse null兼容为空响应；本片没有将null或合法空对象一刀切判错。"
+    }
+  ],
+  "remaining": [
+    "没有官方messageId或其他明确边界的相邻同角色历史不能由Host编造边界。",
+    "Agent实际是否回放全部内容、吞掉的读取错误、返回后才开始的回放仍需逐家可验证证据；本片不从load成功和非空文本推导任意历史完整。",
+    "没有运行真实Agent、模型或账号，没有修改Agent循环或配置。",
+    "后续独立验证并修复了完成标记后正文混入已确认回放前缀的问题；详见同目录 history-replay-boundary.json，不扩展本消息身份回执的证明范围。"
+  ],
+  "recordedHead": "bed3cbe290de26ebca3a6d74ab2581fe676bfc1a"
+}

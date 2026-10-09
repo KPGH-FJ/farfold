@@ -485,6 +485,9 @@ fn turn_end_event(outcome: Result<Value, String>) -> Value {
             if let Some(stop_reason) = response.get("stopReason") {
                 event.insert("stopReason".to_string(), stop_reason.clone());
             }
+            if let Some(usage) = response.get("usage") {
+                event.insert("usage".to_string(), usage.clone());
+            }
             if let Some(meta) = response.get("_meta") {
                 event.insert("meta".to_string(), meta.clone());
             }

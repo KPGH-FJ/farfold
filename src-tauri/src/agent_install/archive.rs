@@ -94,6 +94,7 @@ fn unpack_tar(reader: impl Read, dest: &Path, _label: &str, job: &Job) -> Result
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(not(unix))]
     use std::io::Write as _;
 
     fn job(name: &str) -> crate::install_job::Lease {

@@ -104,6 +104,7 @@ except Exception as error:
             ("PUBLIC_MARKER".into(), "controlled".into()),
         ]);
         let service = prepared.then_some(PreparedService {
+            delivery: None,
             environment,
             context: ServiceContext {
                 identity: crate::credentials::ServiceIdentity {

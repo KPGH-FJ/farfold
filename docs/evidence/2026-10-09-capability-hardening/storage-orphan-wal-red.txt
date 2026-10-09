@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.57s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-eb7350b2bfafe2df)
+
+running 1 test
+
+thread 'storage_recovery::tests::orphaned_wal_prevents_empty_initialization_and_can_be_preserved_on_its_own' (18734091) panicked at src/storage_recovery/tests.rs:346:5:
+a side file is evidence of prior storage
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test storage_recovery::tests::orphaned_wal_prevents_empty_initialization_and_can_be_preserved_on_its_own ... FAILED
+
+failures:
+
+failures:
+    storage_recovery::tests::orphaned_wal_prevents_empty_initialization_and_can_be_preserved_on_its_own
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1088 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

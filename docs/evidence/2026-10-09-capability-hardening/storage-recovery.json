@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T10:20:16.978827+00:00",
+  "scope": "H02 first increment: limited startup recovery, read-only preservation/export, typed draft-save feedback; full restore workflow is not implemented.",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "94e6de9b14049443ba1f7fa9f3f0e6c8ee93171e9b000e60d4de7efcf5164aa7",
+      "lines": 371
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "sha256": "00af5a7309bfb05f4aa97eabd7580f67673eb941285a9448b4273e80a2ca161a",
+      "lines": 1334
+    },
+    {
+      "path": "src-tauri/src/meta_store/recovery_tests.rs",
+      "sha256": "1125d93a60e642dada12d787474e19ec5900ebad871eedfacadf2aac4538338a",
+      "lines": 200
+    },
+    {
+      "path": "src-tauri/src/meta_store/storage_recovery.rs",
+      "sha256": "ab3681ad9eec8c854212efb5c5a8cb1d17e037053a523eb2a66833bcbbf190a8",
+      "lines": 79
+    },
+    {
+      "path": "src-tauri/src/storage_recovery.rs",
+      "sha256": "e5df9bba518c75cc8c48ea7ddf2aa2b217b04e40d7e8f527c63141bd4c6a9920",
+      "lines": 193
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/error.rs",
+      "sha256": "2507beccdf0c3a60b509fb0342c4821d2ea20af4078726bc48b47dadd1377d57",
+      "lines": 75
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/export.rs",
+      "sha256": "046009abed8201cd9527017c5fa74711198d1d591a23d0c5e1601a676577bc15",
+      "lines": 177
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/tests.rs",
+      "sha256": "4746d3ebcf9a47e3a3d82a4401d62ec61e9635009eb60032a05a89fe6903bd5e",
+      "lines": 387
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "9e8ceb7378432e8cca3d1c3c9df4b04d2d01dd984901d435edfec6d3ba387ce6",
+      "lines": 250
+    },
+    {
+      "path": "src/components/StorageRecovery.tsx",
+      "sha256": "50db040eb45c6d7dbe9359b549ffc84b65adc986e8254497c96d38582a3a172e",
+      "lines": 162
+    },
+    {
+      "path": "src/components/StorageRecovery.css",
+      "sha256": "ee907140154f0ade94f86ba82e9f4d5a7c098c1044c7646631c4ebdb803c55e1",
+      "lines": 59
+    },
+    {
+      "path": "src/components/StorageRecovery.test.tsx",
+      "sha256": "8744281f032394b8d26765d5c9d55e43e3fcc18aa940cc8332497ace4486bb17",
+      "lines": 199
+    },
+    {
+      "path": "src/components/StorageRecovery.visual.test.tsx",
+      "sha256": "b43481637d88446736faa741247b3ce3b1086ac58d34e14a7e2a796b51d6e057",
+      "lines": 41
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "65e2ec5417dfe0fbf5d572de7f4bd03b0ad96588cb895fcc051963518c54a1bc",
+      "lines": 25
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e",
+      "lines": 148
+    },
+    {
+      "path": "src/runtime/draft_storage.failure.test.ts",
+      "sha256": "3ec450855f03868b20e742c6074ea9dd17916adefced1d96167808f479d819da",
+      "lines": 43
+    },
+    {
+      "path": "src/runtime/storage_recovery.ts",
+      "sha256": "85bd6f5ae1a5b2d4685b66af6acd1d0d5e448a15ba60cea3e3b02297e1e9caeb",
+      "lines": 66
+    },
+    {
+      "path": "src/runtime/strings.ts",
+      "sha256": "625476305482f2701099b7baaad58396e5983a9417f7347b2d21d71fc03d6208",
+      "lines": 738
+    }
+  ],
+  "observedDefects": [
+    {
+      "cause": "MetaStore open/required defaults failure escaped Tauri setup and terminated build before React recovery could render.",
+      "evidence": "Source path trace lib.rs setup/build; controlled storage fixtures, not an installed startup failure injection."
+    },
+    {
+      "cause": "Readonly/full save errors reached the renderer as undifferentiated draft-save failure.",
+      "evidence": ["storage-feedback-red.txt", "storage-sqlite-red-valid.txt"]
+    },
+    {
+      "cause": "A missing primary database with an orphaned WAL was treated as a fresh installation and initialized an empty database.",
+      "evidence": "storage-orphan-wal-red.txt; fixed and green in storage-orphan-material-green.txt. All files temporary."
+    }
+  ],
+  "implemented": [
+    "Register non-storage states before initialization. Only storage-recovery commands are admitted while no MetaStore is ready. Notification delegate initialization is scheduled on the main thread only after MetaStore registration.",
+    "Mount StorageStartup outside DraftStartup; failures expose check/export/reveal actions without mounting the editable application.",
+    "Require a valid SQLite header and PRAGMA quick_check for an existing DB before initialization writes; refuse an existing zero-length/truncated/non-regular file rather than initializing a replacement.",
+    "Remember database observation within this process; refuse to recreate it on retry after disappearance. Remove SQLITE_OPEN_CREATE after existing-file validation to protect the subsequent open race.",
+    "Serialize retries/exports with the recovery mutex; install the store only once after a successful retry.",
+    "Use SQLite backup API for an open store; copy committed WAL data and retain malformed setting strings verbatim. Validate the snapshot with quick_check and sync its file.",
+    "When no store can be opened, copy only exact DB/-wal/-shm/-journal paths to a newly created private directory. Hash before/after/copy, reject changed or non-regular material, label files unverified.",
+    "Preserve incomplete export directory and return structured issue+partialPath. UI separately shows failure and incomplete location; old success receipt is removed at a new export attempt.",
+    "Write completion metadata under recovery.incomplete.json, sync, rename to recovery.json only after material validation, and sync directory on Unix.",
+    "Keep latest draft and previous saved snapshot after readonly/full failures; retry explicitly, never auto-send.",
+    "Presence of any exact DB/-wal/-shm/-journal path is existing recovery material. Startup and direct MetaStore open refuse a missing main DB with remaining side files. Export can preserve the remaining side files alone as unverified material; similarly named unrelated files are ignored."
+  ],
+  "rawRuns": [
+    {
+      "path": "storage-feedback-red.txt",
+      "result": "failed",
+      "failed": 3,
+      "sha256": "d77ac0973a7d07258cc2b231a8a8c7a1bf92597e47b4a8179dff0ac3fd97f513",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-sqlite-red.txt",
+      "result": "not_tested",
+      "reason": "Unrelated in-progress service_delivery code did not compile; not valid SQLite red evidence.",
+      "sha256": "23444f8f72e30f758dafab95899c8fb6a7aa94ee032c3a0269ec5039900b973e",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-sqlite-red-valid.txt",
+      "result": "failed",
+      "passed": 3,
+      "failed": 2,
+      "sha256": "086a0271af985b8ecfc38f77dcd5931eee7fd71ff9393717170b6f44efa0a205",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-ui-green.txt",
+      "result": "passed",
+      "passed": 42,
+      "sha256": "83e2c9925806deee81b6bb8741c86b9ca9d94568aec5f91c297cb9bd845b0c72",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-sqlite-first-green.txt",
+      "result": "not_tested",
+      "reason": "New export hash formatting did not compile; corrected, no runtime result claimed.",
+      "sha256": "9a2a6be21c8f9f6e3e078709a1152d25f97d933d772bf725f93ea001f0d3f037",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-sqlite-green.txt",
+      "result": "failed",
+      "passed": 7,
+      "failed": 1,
+      "reason": "Malformed SQLite header plus a journal required recovery; read-only preflight initially reported readonly. Header validation and precise extended-code handling corrected this.",
+      "sha256": "ea6088a9e159a8635863ec4085c38febed5917bba6b6e8c178f7637f73c9cb35",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-sqlite-verified-green.txt",
+      "result": "passed",
+      "passed": 8,
+      "sha256": "698121d5797b3d85066dacb3018dce17b5c7bc31accdf536b73627b8d37d223f",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-meta-regression.txt",
+      "result": "passed",
+      "passed": 22,
+      "sha256": "aa065e8b46ce97f799b892ac8d41040189302cc3d62486a637c9bb11aa1ae951",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-ui-partial-receipt.txt",
+      "result": "passed",
+      "passed": 46,
+      "sha256": "50d0d587d032231041d6bb0c723eda4515abb07a575a9f54657fe8fd07b73453",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-recovery-final.txt",
+      "result": "passed",
+      "passed": 11,
+      "sha256": "121ef88d581c75ed0e539f366f5dc0ff224ddf1051bc1956affcec4abf2af2c6",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-meta-final.txt",
+      "result": "passed",
+      "passed": 23,
+      "sha256": "edb736acfd122df49d76afa325b8a26ac2cc6625be39915019f93a679ddbc008",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-recovery-completion-final.txt",
+      "result": "passed",
+      "passed": 13,
+      "sha256": "855cdee45e1caeb87e745ac930756ce4ce5767732c877e3e8ef99dd4c5ccc006",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-orphan-wal-red.txt",
+      "result": "failed",
+      "passed": 0,
+      "failed": 1,
+      "sha256": "723acd944402e14f676b6958761e6c8bc9817c284e979e68cb3450ff9d6bfc26",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-orphan-material-green.txt",
+      "result": "passed",
+      "passed": 15,
+      "sha256": "4455f6a70b20843ce0d5101da69bd1c6711e730472923883b18d1d640747cfec",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    },
+    {
+      "path": "storage-meta-orphan-regression.txt",
+      "result": "passed",
+      "passed": 23,
+      "sha256": "e0b7575ccde0220449d4fb9fb41ce72072fd225fbaab363469f53d3d002a2c9c",
+      "provenance": "Actual subprocess stdout and stderr, verbatim"
+    }
+  ],
+  "additionalChecks": [
+    {
+      "check": "corepack pnpm typecheck",
+      "result": "passed",
+      "provenance": "Actual tool-output summary; stdout was not separately persisted."
+    },
+    {
+      "check": "Selected frontend Prettier check and scoped git diff --check",
+      "result": "passed",
+      "provenance": "Actual tool-output summary."
+    },
+    {
+      "check": "StorageRecovery.visual.test.tsx",
+      "result": "passed",
+      "tests": 2,
+      "provenance": "Actual Vitest tool output; server rendering the actual component into temporary light/dark HTML, external I/O mocked to throw."
+    }
+  ],
+  "finalDirectedCounts": {
+    "backendRecovery": 15,
+    "metaStore": 23,
+    "frontendAssociated": 46,
+    "componentSsr": 2
+  },
+  "uiReview": {
+    "skill": "/Users/tw/.codex/skills/ux-engineer/SKILL.md",
+    "goal": "Keep data-failure recovery understandable and preserve original material.",
+    "layout": "Existing light/dark grey-white tokens, bounded central card, reason first, retry/export/reveal actions, private-data copy notice and separate incomplete-copy path.",
+    "assets": "No graphic assets required.",
+    "fixtures": [
+      "/tmp/farfold-storage-recovery-20261009/light.html",
+      "/tmp/farfold-storage-recovery-20261009/dark.html"
+    ],
+    "screenshots": "Not verified. Child CUA chrome/iab unavailable; parent reports local-file URL blocked by policy. This visual route was stopped without workaround."
+  },
+  "boundaries": [
+    "All DB writes and fault injections were temporary test fixtures, not daily user data. No Agent/model/account/network run, application replacement, or real-user storage manipulation.",
+    "The command gate test enumerates current registered commands and checks dispatch order; run/menu callback tests are source-boundary checks. A native Tauri recovery-mode end-to-end launch was not performed.",
+    "Readonly permission fixture ran on Unix/macOS; SQLite-full used max_page_count. No physical-disk-full, hard power-loss, or Windows runtime experiment.",
+    "Raw copied files are preservation material, not verified recoverable data. A structurally valid SQLite snapshot can still contain invalid application JSON, deliberately retained verbatim.",
+    "Missing-database refusal covers a file observed during this process. No historical ledger was added; a DB removed externally before the current process starts cannot be inferred to have existed.",
+    "Required initialization can create schema/default records before a later failure. This code never manually deletes/replaces original DB/side files; SQLite normal journal/checkpoint behavior may change side-file layout when opening/closing a readable store. Exact raw byte preservation was tested for rejected physical corruption, not arbitrary partial migration failures.",
+    "No workflow for importing a selected recovery copy or repairing corrupt draft content yet; H02 is still incomplete.",
+    "After the final 15-test and 23-test runs, only the export durability comment and this evidence file changed. Full integrated checks belong to the parent.",
+    "A directory-sync failure after manifest rename still returns Err and partialPath; recovery.json may already exist. Manifest presence alone is not a durability or restoration receipt. Directory-fsync failure and hard power loss were not injected. A later importer must re-read and validate all materials."
+  ],
+  "nextIncrementDesign": {
+    "status": "Proposal for parent coordination; not implemented and not an additional product acceptance gate.",
+    "firstClosure": "For a structurally healthy DB with unreadable draft/setup records, add a startup-only selected-copy preview and explicit restore of those Farfold-owned keys. This smaller transaction can preserve all other records and avoid file replacement.",
+    "candidatePreparation": "Open only the selected file read-only; make a consistent temporary SQLite snapshot, verify integrity/schema, then run extracted pure draft/setup parsers on the selected raw values. Do not hydrate global UI state during preview. Reject an unreadable candidate without changing current records.",
+    "userReview": "Show the chosen copy, what will be replaced, the original-material copy location and any missing sections. Require an explicit restore action for that reviewed candidate. Never trust a manifest name alone or silently drop invalid fields.",
+    "backendAdmission": "Only allow restore before app_drafts_ready and with no Agent work admitted. Use the existing recovery mutex/state to close the command gate during preview/apply; do not replace a live editable workspace or discard current in-memory input.",
+    "atomicApply": "Save a verified copy of the current DB first. Restore selected raw values in one SQLite transaction; on any error leave previous values and source copies available. Reload both startup stores from confirmed data without auto-sending.",
+    "wholeDatabaseFollowup": "Physical DB corruption needs a separately verified cold replacement path. Before implementing, establish crash-safe ownership of staged candidate, original DB and exact side files, and handling of interruption at every move. A missing main DB while such recovery materials exist must remain a recovery state. Do not introduce a conversation/event ledger, or claim raw unverified material can necessarily be repaired.",
+    "tests": "Candidate invalid/version mismatch; preview/apply source change; readonly/full transaction rollback; concurrent restore/retry; old draft/setup state not published; interrupted material preparation; unknown result preserves original and never sends."
+  }
+}

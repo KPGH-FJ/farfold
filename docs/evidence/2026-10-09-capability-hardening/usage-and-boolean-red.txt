@@ -1,0 +1,244 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/config_value_label.test.ts (2 tests | 2 failed) 5ms
+   × shows a confirmed boolean value true 4ms
+   × shows a confirmed boolean value false 1ms
+ ❯ src/runtime/session_usage.test.ts (13 tests | 8 failed) 10ms
+   × preserves reported context and cumulative cost without rounding tiny costs 5ms
+   × does not turn malformed reports into measured zero or carry a previous report: {} 1ms
+   × does not turn malformed reports into measured zero or carry a previous report: {"used":"100","size":1000} 0ms
+   × does not turn malformed reports into measured zero or carry a previous report: {"used":-1,"size":1000} 0ms
+   × does not turn malformed reports into measured zero or carry a previous report: {"used":1.5,"size":1000} 0ms
+   × does not turn malformed reports into measured zero or carry a previous report: {"used":null,"size":1000} 0ms
+   × does not turn malformed reports into measured zero or carry a previous report: {"used":100,"size":9007199254740992} 0ms
+   × keeps a valid cost even when the context numbers are unavailable 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/config_value_label.test.ts > shows a confirmed boolean value true
+AssertionError: expected '' to be '开启' // Object.is equality
+
+- Expected
++ Received
+
+- 开启
+
+ ❯ src/runtime/config_value_label.test.ts:6:36
+      4| it.each([[true, "开启"], [false, "关闭"]])("shows a confirmed boolean valu…
+      5|   const option = normalizeConfigOptions([{ id: "feature", name: "Featu…
+      6|   expect(configValueLabel(option)).toBe(label);
+       |                                    ^
+      7| });
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/runtime/config_value_label.test.ts > shows a confirmed boolean value false
+AssertionError: expected '' to be '关闭' // Object.is equality
+
+- Expected
++ Received
+
+- 关闭
+
+ ❯ src/runtime/config_value_label.test.ts:6:36
+      4| it.each([[true, "开启"], [false, "关闭"]])("shows a confirmed boolean valu…
+      5|   const option = normalizeConfigOptions([{ id: "feature", name: "Featu…
+      6|   expect(configValueLabel(option)).toBe(label);
+       |                                    ^
+      7| });
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > preserves reported context and cumulative cost without rounding tiny costs
+AssertionError: expected { used: 125, size: 1000 } to deeply equal { used: 125, size: 1000, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "cost": {
+-     "amount": 0.000001,
+-     "currency": "USD",
+-   },
+    "size": 1000,
+    "used": 125,
+  }
+
+ ❯ src/runtime/session_usage.test.ts:12:23
+     10|     cost: { amount: 0.000001, currency: "USD" },
+     11|   });
+     12|   expect(state.usage).toEqual({ used: 125, size: 1000, cost: { amount:…
+       |                       ^
+     13|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     14|   expect(state.usage).toEqual({ used: 50, size: 1000 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {}
+AssertionError: expected { used: +0, size: +0 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 0,
+  "used": 0,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {"used":"100","size":1000}
+AssertionError: expected { used: 100, size: 1000 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 1000,
+  "used": 100,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {"used":-1,"size":1000}
+AssertionError: expected { used: -1, size: 1000 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 1000,
+  "used": -1,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {"used":1.5,"size":1000}
+AssertionError: expected { used: 1.5, size: 1000 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 1000,
+  "used": 1.5,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {"used":null,"size":1000}
+AssertionError: expected { used: Infinity, size: 1000 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 1000,
+  "used": Infinity,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > does not turn malformed reports into measured zero or carry a previous report: {"used":100,"size":9007199254740992}
+AssertionError: expected { used: 100, size: 9007199254740992 } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "size": 9007199254740992,
+  "used": 100,
+}
+
+ ❯ src/runtime/session_usage.test.ts:25:23
+     23|   applyUpdate(state, { sessionUpdate: "usage_update", used: 50, size: …
+     24|   applyUpdate(state, { sessionUpdate: "usage_update", ...update });
+     25|   expect(state.usage).toBeNull();
+       |                       ^
+     26| });
+     27|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/runtime/session_usage.test.ts > keeps a valid cost even when the context numbers are unavailable
+AssertionError: expected { used: +0, size: +0 } to deeply equal { used: null, size: null, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "cost": {
+-     "amount": 0,
+-     "currency": "CNY",
+-   },
+-   "size": null,
+-   "used": null,
++   "size": 0,
++   "used": 0,
+  }
+
+ ❯ src/runtime/session_usage.test.ts:41:23
+     39|   const state = fresh();
+     40|   applyUpdate(state, { sessionUpdate: "usage_update", cost: { amount: …
+     41|   expect(state.usage).toEqual({ used: null, size: null, cost: { amount…
+       |                       ^
+     42| });
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  10 failed | 5 passed (15)
+   Start at  17:54:33
+   Duration  328ms (transform 361ms, setup 0ms, import 407ms, tests 15ms, environment 0ms)
+

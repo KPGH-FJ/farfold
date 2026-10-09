@@ -1,0 +1,223 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/history_replay_boundary.test.ts (5 tests | 5 failed) 9ms
+   × does not admit text after the first matching empty history prefix (duplicate marker=false) 5ms
+   × does not admit text after the first matching empty history prefix (duplicate marker=true) 1ms
+   × preserves messages and tool activity after the history prefix as live updates 1ms
+   × keeps a read-only preview limited to its acknowledged prefix (readable=false) 1ms
+   × keeps a read-only preview limited to its acknowledged prefix (readable=true) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > does not admit text after the first matching empty history prefix (duplicate marker=false)
+AssertionError: promise resolved "{ …(46) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "activeToolCallIds": [],
++   "agentId": "boundary-fixture",
++   "artifactPaneOpen": false,
++   "artifactPaneSelection": null,
++   "artifactPaneTarget": null,
++   "availableCommands": [],
++   "configCheck": null,
++   "configError": null,
++   "configOptions": [],
++   "configuring": false,
++   "connectionId": undefined,
++   "connectionLost": false,
++   "connectionOutcomeUnknown": false,
++   "currentModeId": null,
++   "cwd": "/boundary",
++   "draftGroup": "boundary-fixture|/boundary|null||",
++   "historyUnavailable": null,
++   "identity": "established",
++   "items": [
++     {
++       "id": "it-2",
++       "kind": "agent",
++       "messageId": "Not part of the acknowledged history",
++       "streaming": true,
++       "text": "Not part of the acknowledged history",
++       "time": 0,
++     },
++   ],
++   "key": "boundary-fixture:/boundary:empty-prefix-false",
++   "metaDirty": false,
++   "modelDrift": false,
++   "modesSeparate": false,
++   "nativeSessionId": "empty-prefix-false",
++   "openError": null,
++   "pendingElicitations": [],
++   "pendingPermissions": [],
++   "permissionConfigId": undefined,
++   "permissionState": "ready",
++   "queuePaused": "unavailable",
++   "queued": [],
++   "reconnecting": false,
++   "resumed": true,
++   "roundItemBase": 0,
++   "running": false,
++   "service": undefined,
++   "serviceContext": undefined,
++   "sessionTokens": null,
++   "stopUnconfirmed": false,
++   "stopping": false,
++   "submitting": false,
++   "title": null,
++   "uncertainPrompt": null,
++   "unrecoverable": false,
++   "usage": null,
++   "workEnabled": true,
+  }
+
+ ❯ src/runtime/history_replay_boundary.test.ts:70:6
+     68|         nativeSessionId: native,
+     69|       }),
+     70|     ).rejects.toThrow();
+       |      ^
+     71|     expect(threads.thread(key)).toBe(prior);
+     72|     expect(prior.historyUnavailable?.reason).toBe("empty");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > does not admit text after the first matching empty history prefix (duplicate marker=true)
+AssertionError: promise resolved "{ …(46) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "activeToolCallIds": [],
++   "agentId": "boundary-fixture",
++   "artifactPaneOpen": false,
++   "artifactPaneSelection": null,
++   "artifactPaneTarget": null,
++   "availableCommands": [],
++   "configCheck": null,
++   "configError": null,
++   "configOptions": [],
++   "configuring": false,
++   "connectionId": undefined,
++   "connectionLost": false,
++   "connectionOutcomeUnknown": false,
++   "currentModeId": null,
++   "cwd": "/boundary",
++   "draftGroup": "boundary-fixture|/boundary|null||",
++   "historyUnavailable": null,
++   "identity": "established",
++   "items": [
++     {
++       "id": "it-4",
++       "kind": "agent",
++       "messageId": "Not part of the acknowledged history",
++       "streaming": true,
++       "text": "Not part of the acknowledged history",
++       "time": 0,
++     },
++   ],
++   "key": "boundary-fixture:/boundary:empty-prefix-true",
++   "metaDirty": false,
++   "modelDrift": false,
++   "modesSeparate": false,
++   "nativeSessionId": "empty-prefix-true",
++   "openError": null,
++   "pendingElicitations": [],
++   "pendingPermissions": [],
++   "permissionConfigId": undefined,
++   "permissionState": "ready",
++   "queuePaused": "unavailable",
++   "queued": [],
++   "reconnecting": false,
++   "resumed": true,
++   "roundItemBase": 0,
++   "running": false,
++   "service": undefined,
++   "serviceContext": undefined,
++   "sessionTokens": null,
++   "stopUnconfirmed": false,
++   "stopping": false,
++   "submitting": false,
++   "title": null,
++   "uncertainPrompt": null,
++   "unrecoverable": false,
++   "usage": null,
++   "workEnabled": true,
+  }
+
+ ❯ src/runtime/history_replay_boundary.test.ts:70:6
+     68|         nativeSessionId: native,
+     69|       }),
+     70|     ).rejects.toThrow();
+       |      ^
+     71|     expect(threads.thread(key)).toBe(prior);
+     72|     expect(prior.historyUnavailable?.reason).toBe("empty");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > preserves messages and tool activity after the history prefix as live updates
+Error: 重新连接失败，原内容已保留，请重试
+ ❯ canonicalRecoveryOpen src/runtime/session_recovery.ts:224:13
+    222|       value.cwd.includes("\0")
+    223|     )
+    224|       throw new Error(STRINGS.repair.reconnectFailed);
+       |             ^
+    225|     cwd = value.cwd;
+    226|   } catch (error) {
+ ❯ src/runtime/history_replay_boundary.test.ts:103:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > keeps a read-only preview limited to its acknowledged prefix (readable=false)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/history_replay_boundary.test.ts:154:40
+    152|     const preview = await previewHistory("boundary-fixture", row);
+    153|     expect(preview.replayComplete).toBe(true);
+    154|     expect(hasPreviewContent(preview)).toBe(readable);
+       |                                        ^
+    155|     expect(
+    156|       preview.state.items.flatMap((item) =>
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/history_replay_boundary.test.ts > keeps a read-only preview limited to its acknowledged prefix (readable=true)
+AssertionError: expected [ 'Historical preview body', …(1) ] to deeply equal [ 'Historical preview body' ]
+
+- Expected
++ Received
+
+  [
+    "Historical preview body",
++   "Late body is not in that snapshot",
+  ]
+
+ ❯ src/runtime/history_replay_boundary.test.ts:159:7
+    157|         item.kind === "agent" ? [item.text] : [],
+    158|       ),
+    159|     ).toEqual(readable ? ["Historical preview body"] : []);
+       |       ^
+    160|     if (!readable) {
+    161|       await expect(commitHistoryPreview(preview, null)).rejects.toThro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  18:10:05
+   Duration  231ms (transform 127ms, setup 0ms, import 161ms, tests 9ms, environment 0ms)
+

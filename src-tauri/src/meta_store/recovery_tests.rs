@@ -144,3 +144,57 @@ fn full_database_keeps_the_previous_unsent_snapshot_readable_after_reopening() {
         Some(recovered)
     );
 }
+
+#[test]
+fn read_only_save_has_a_specific_receipt_and_preserves_the_last_snapshot() {
+    let directory = tempfile::tempdir().unwrap();
+    let store = MetaStore::open(&directory.path().join("meta.sqlite3")).unwrap();
+    let original = json!({"version":1,"input":"keep original"});
+    store.set_setting("unsentWork.v1", &original).unwrap();
+    store
+        .lock()
+        .unwrap()
+        .pragma_update(None, "query_only", true)
+        .unwrap();
+    let failure = store
+        .set_setting("unsentWork.v1", &json!({"input":"new"}))
+        .unwrap_err();
+    assert!(
+        failure.starts_with("FARFOLD_STORAGE:readOnly:"),
+        "{failure}"
+    );
+    assert_eq!(store.get_setting("unsentWork.v1").unwrap(), Some(original));
+}
+
+#[test]
+fn storage_full_is_distinguished_from_unknown_save_failure() {
+    let directory = tempfile::tempdir().unwrap();
+    let store = MetaStore::open(&directory.path().join("meta.sqlite3")).unwrap();
+    let original = json!({"input":"saved"});
+    store.set_setting("unsentWork.v1", &original).unwrap();
+    let connection = store.lock().unwrap();
+    let pages: i64 = connection
+        .pragma_query_value(None, "page_count", |row| row.get(0))
+        .unwrap();
+    connection
+        .pragma_update(None, "max_page_count", pages)
+        .unwrap();
+    drop(connection);
+    let failure = store
+        .set_setting("unsentWork.v1", &json!("x".repeat(1024 * 1024)))
+        .unwrap_err();
+    assert!(failure.starts_with("FARFOLD_STORAGE:full:"), "{failure}");
+    assert_eq!(store.get_setting("unsentWork.v1").unwrap(), Some(original));
+}
+
+#[test]
+fn a_database_removed_after_validation_cannot_be_recreated_by_open() {
+    let directory = tempfile::tempdir().unwrap();
+    let path = directory.path().join("farfold.sqlite3");
+    drop(MetaStore::open(&path).unwrap());
+    let existing = storage_recovery::check_existing(&path).unwrap();
+    assert!(existing);
+    std::fs::rename(&path, directory.path().join("preserved.sqlite3")).unwrap();
+    assert!(storage_recovery::open_connection(&path, existing).is_err());
+    assert!(!path.exists());
+}

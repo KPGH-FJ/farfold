@@ -11,6 +11,7 @@ import type { ThreadState } from "./session_types";
 import type { IndexRow, OpenResult } from "./sessions";
 import { IMPORT_STRINGS as S } from "./import_strings";
 import { hasReadableMessages } from "./message_attachments";
+import { HistoryReplayBuffer, finishHistoryPrefix } from "./history_replay";
 
 export interface DiscoveredConversation {
   nativeSessionId: string;
@@ -58,11 +59,10 @@ export async function previewHistory(
     row.nativeSessionId,
   );
   const channel = new Channel<unknown>();
-  const completedTokens = new Set<string>();
+  const buffered = new HistoryReplayBuffer();
   let previewToken: string | null = null;
   let completeReplay: (() => void) | undefined;
   let receiving = true;
-  let configurationDelivered = false;
   channel.onmessage = (event) => {
     if (!receiving || !event || typeof event !== "object") return;
     if (
@@ -71,27 +71,9 @@ export async function previewHistory(
       "previewToken" in event &&
       typeof event.previewToken === "string"
     ) {
-      completedTokens.add(event.previewToken);
+      buffered.mark(event.previewToken);
       if (previewToken === event.previewToken) completeReplay?.();
-    } else if (
-      "kind" in event &&
-      event.kind === "configOptions" &&
-      "options" in event
-    ) {
-      configurationDelivered = true;
-      replaceConfigOptions(
-        state,
-        normalizeConfigOptions(event.options),
-        !("modern" in event && event.modern === false),
-      );
-    } else if ("update" in event) {
-      if (
-        (event.update as { sessionUpdate?: unknown } | null)?.sessionUpdate ===
-        "config_option_update"
-      )
-        pushRaw(state, event.update, "config_option_update");
-      else applyUpdate(state, event.update);
-    }
+    } else buffered.push(event);
   };
   try {
     const result = await invoke<OpenResult & { previewToken: string }>(
@@ -110,8 +92,7 @@ export async function previewHistory(
     state.identity = "established";
     state.service = result.service ?? undefined;
     state.serviceContext = result.serviceContext ?? undefined;
-    if (!configurationDelivered)
-      state.configOptions = normalizeConfigOptions(result.configOptions);
+    state.configOptions = normalizeConfigOptions(result.configOptions);
     state.permissionConfigId = result.permissionConfigId;
     state.permissionState = result.permissionConfigId ? "required" : "ready";
     if (result.configCheck) applyConfigCheck(state, result.configCheck);
@@ -119,7 +100,7 @@ export async function previewHistory(
     // Invoke and Channel delivery are independent. Only this ordered channel's
     // matching marker proves the renderer has consumed the replay prefix.
     const replayComplete =
-      completedTokens.has(previewToken) ||
+      buffered.complete(previewToken) ||
       (await new Promise<boolean>((resolve) => {
         const timer = setTimeout(() => resolve(false), 30_000);
         completeReplay = () => {
@@ -127,6 +108,30 @@ export async function previewHistory(
           resolve(true);
         };
       }));
+    // A preview is a read-only snapshot of the acknowledged load prefix.
+    // Traffic received after that boundary cannot make empty history readable.
+    for (const event of buffered.prefix(previewToken)) {
+      if (!event || typeof event !== "object") continue;
+      if (
+        "kind" in event &&
+        event.kind === "configOptions" &&
+        "options" in event
+      ) {
+        replaceConfigOptions(
+          state,
+          normalizeConfigOptions(event.options),
+          !("modern" in event && event.modern === false),
+        );
+      } else if ("update" in event) {
+        if (
+          (event.update as { sessionUpdate?: unknown } | null)
+            ?.sessionUpdate === "config_option_update"
+        )
+          pushRaw(state, event.update, "config_option_update");
+        else applyUpdate(state, event.update);
+      }
+    }
+    finishHistoryPrefix(state);
     // A delivery timeout keeps ownership available for the caller to close or
     // retry. Partial text is never eligible for display or admission.
     return { ...result, agentId, state, replayComplete };

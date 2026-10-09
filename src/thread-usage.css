@@ -1,0 +1,28 @@
+.thread-usage-control {
+  font-size: inherit;
+  color: inherit;
+}
+.thread-usage-details {
+  padding: 0 10px 6px;
+  max-width: 300px;
+}
+.thread-usage-details dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 16px;
+  font-size: 12px;
+}
+.thread-usage-details dt {
+  color: var(--ink-2);
+}
+.thread-usage-details dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.thread-usage-details p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink-3);
+}

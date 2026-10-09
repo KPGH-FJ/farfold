@@ -1,0 +1,31 @@
+{
+  "scope": ["ARCH-35", "boolean-setting-review-labels"],
+  "implementation": [
+    "Agent-reported context/cumulative cost and prompt-response session totals in shared composer popover",
+    "Zero versus unavailable; invalid counts rejected; optional malformed fields withheld; tiny costs preserved",
+    "No estimates, new event ledger, budget changes or sum of cumulative reports",
+    "Reconnection, failed history admission, source errors and disconnect label old reports; successful restored state starts fresh",
+    "Boolean values display explicit enabled/disabled labels in setting confirmation"
+  ],
+  "evidence": {
+    "usage-and-boolean-red.txt": "c27be0e8783ff5e434f12ffd4d97b7e1b6400c330841ec49f2b96443bb432dd0",
+    "usage-targeted.txt": "a58580def6da1e6036cc11ec064524548b101a6ad4321f87d576b2967a9e8481",
+    "usage-wire-tests.txt": "5aa24d092cabf6fe4dc88fb7bf7e10f4a1fd60d36cece5d7aca63ae3808c944a",
+    "usage-independent-review.json": "a574182fe1c2658e678421fca01d1d1a5f3a563be38b2063fab4fd21855cd512"
+  },
+  "tests": {
+    "initialRegression": "10 failed, 5 passed before implementation",
+    "frontendTargeted": "6 files, 64 passed",
+    "stdioWire": "4 passed; synthetic peers only"
+  },
+  "officialReferences": [
+    "https://agentclientprotocol.com/protocol/v1/prompt-turn",
+    "https://agentclientprotocol.com/protocol/v1/session-config-options"
+  ],
+  "installedUi": "not yet tested",
+  "realAgentReportedUsage": "not yet tested",
+  "remaining": [
+    "Installed keyboard/layout and popup behavior",
+    "Representative real Agent usage reports and missing-field feedback"
+  ]
+}

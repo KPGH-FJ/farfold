@@ -10,10 +10,14 @@ use sha2::{Digest, Sha256};
 
 use crate::{credentials::ServiceSnapshot, meta_store::AgentRow};
 
+#[cfg(test)]
+#[path = "service_config_claude_tests.rs"]
+mod claude_tests;
+
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ServiceCapability {
-    /// Configuration routes exercised for release, not a claim about arbitrary models.
+    /// Implemented official delivery routes, subject to live capability checks.
     pub api_types: Vec<&'static str>,
     /// Routes exercised with the current registered Agent and a controlled service.
     pub validated_api_types: Vec<&'static str>,
@@ -22,6 +26,9 @@ pub(crate) struct ServiceCapability {
 }
 
 fn catalog_id(agent: &AgentRow) -> Option<&str> {
+    if agent.source == "registry" && agent.id == "registry:claude-acp" {
+        return Some("claude-acp");
+    }
     if !matches!(agent.source.as_str(), "registry" | "discovered") {
         return None;
     }
@@ -40,6 +47,9 @@ pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
             None,
         ),
         Some("codex") => (vec!["responses"], vec!["responses"], None),
+        // Installed official Agent -> controlled HTTP routing was exercised;
+        // every process still has to declare and confirm the providers API.
+        Some("claude-acp") => (vec!["messages"], vec!["messages"], None),
         Some("pi") => (
             vec![],
             vec![],
@@ -62,6 +72,7 @@ pub(crate) fn capability(agent: &AgentRow) -> ServiceCapability {
 /// Includes secret-bearing env values. Deliberately not Debug or Serialize.
 pub(crate) struct LaunchConfig {
     pub env_overrides: Vec<(String, String)>,
+    pub delivery: Option<super::service_delivery::ServiceDelivery>,
     /// The concrete Agent model identifier expected after session/new or load.
     pub model_id: String,
 }
@@ -107,6 +118,24 @@ pub(crate) fn compile(
         || service.secret.is_empty()
     {
         return Err("API 配置已改变，请重新选择服务和模型".into());
+    }
+    if catalog_id(agent) == Some("claude-acp") {
+        return Ok(LaunchConfig {
+            // Routing and the key are deliberately absent: Claude settings
+            // can overwrite process env. The negotiated provider request
+            // below owns the route. A model mismatch still blocks new/load.
+            env_overrides: vec![
+                ("ANTHROPIC_MODEL".into(), service.identity.model.clone()),
+                (
+                    "ANTHROPIC_CUSTOM_MODEL_OPTION".into(),
+                    service.identity.model.clone(),
+                ),
+            ],
+            delivery: Some(super::service_delivery::ServiceDelivery::anthropic(
+                service,
+            )?),
+            model_id: service.identity.model.clone(),
+        });
     }
     // A URL/API identity change gives a different provider and env name. Never
     // reuse a user provider ID or derive identity from a display name.
@@ -162,6 +191,7 @@ pub(crate) fn compile(
     }
     Ok(LaunchConfig {
         env_overrides,
+        delivery: None,
         model_id,
     })
 }

@@ -38,6 +38,7 @@ pub mod pump;
 pub(crate) mod recipes;
 pub(crate) mod service_config;
 pub mod service_connection;
+mod service_delivery;
 pub mod session;
 pub mod session_commands;
 mod session_config;
@@ -66,6 +67,12 @@ mod lifecycle_tests;
 
 #[cfg(test)]
 mod discovery_tests;
+
+#[cfg(test)]
+mod history_replay_identity_tests;
+
+#[cfg(test)]
+mod usage_wire_tests;
 
 #[cfg(test)]
 mod route_registration_tests;

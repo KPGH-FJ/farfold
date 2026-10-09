@@ -45,6 +45,7 @@ mod program_launch_tests;
 mod project_index;
 mod pty;
 pub mod shell_env;
+mod storage_recovery;
 mod supervisor;
 mod transport_security;
 mod ui_transport;
@@ -113,8 +114,6 @@ pub fn run() {
                 .path()
                 .app_data_dir()
                 .map_err(|error| std::io::Error::other(error.to_string()))?;
-            std::fs::create_dir_all(&app_data_dir)
-                .map_err(|error| std::io::Error::other(error.to_string()))?;
             #[cfg(windows)]
             let log_dir = app
                 .path()
@@ -142,21 +141,20 @@ pub fn run() {
             ) {
                 return Err(std::io::Error::other("acp manager is already initialized").into());
             }
-            if !app.manage(meta_store::MetaStore::open(
-                &meta_store::MetaStore::default_path(&app_data_dir),
-            )?) {
-                return Err(std::io::Error::other("meta store is already initialized").into());
-            }
-            desktop_notifications::initialize(app.handle());
-            lifemodel::ensure_defaults(app.state::<meta_store::MetaStore>().inner())?;
             if !app.manage(agent_catalog::AgentCatalog::new(app_data_dir.clone())) {
                 return Err(std::io::Error::other("agent catalog is already initialized").into());
             }
-            if !app.manage(node_runtime::NodeRuntimeState::new(app_data_dir)) {
+            if !app.manage(node_runtime::NodeRuntimeState::new(app_data_dir.clone())) {
                 return Err(
                     std::io::Error::other("node runtime state is already initialized").into(),
                 );
             }
+            app.manage(storage_recovery::StorageRecoveryState::new(
+                meta_store::MetaStore::default_path(&app_data_dir),
+            ));
+            // Storage errors stay in a limited recovery shell. Do not mount the
+            // editable UI or expose commands that require a missing MetaStore.
+            storage_recovery::initialize(app.handle())?;
             Ok(())
         })
         .invoke_handler(|invoke| {
@@ -164,7 +162,20 @@ pub fn run() {
                 invoke.resolver.reject("此页面不能操作应用");
                 return true;
             }
+            let storage = invoke
+                .message
+                .webview_ref()
+                .app_handle()
+                .try_state::<storage_recovery::StorageRecoveryState>();
+            if !storage.is_some_and(|state| state.allows(invoke.message.command())) {
+                invoke.resolver.reject("本机资料尚未就绪，请先完成资料恢复");
+                return true;
+            }
             let handler: fn(tauri::ipc::Invoke<tauri::Wry>) -> bool = tauri::generate_handler![
+                storage_recovery::storage_recovery_status,
+                storage_recovery::storage_recovery_retry,
+                storage_recovery::storage_recovery_export,
+                storage_recovery::storage_recovery_reveal,
                 browser_sharing::browser_share_status,
                 browser_sharing::browser_share_allow,
                 browser_sharing::browser_share_respond,

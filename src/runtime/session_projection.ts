@@ -10,6 +10,7 @@ import { pauseQueue } from "./queue";
 import { forgetConfigurationPause } from "./configuration_pause";
 import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
+import { reportedTokens, reportedUsage } from "./session_usage";
 import { normalizeMessageAttachment } from "./message_attachments";
 import { streamTailItem } from "./session_streams";
 import type {
@@ -59,6 +60,7 @@ export function freshThreadState(
     configOptions: [],
     permissionState: "ready",
     usage: null,
+    sessionTokens: null,
     availableCommands: [],
     currentModeId: null,
     modesSeparate: false,
@@ -141,22 +143,36 @@ function appendStreamText(
   s: ThreadState,
   kind: "user" | "agent" | "thought",
   content: unknown,
+  declaredMessageId?: unknown,
 ): void {
+  const messageId =
+    typeof declaredMessageId === "string" ? declaredMessageId : undefined;
+  const tail = streamTailItem(s.items);
+  const last = lastItem(s);
+  // The current optimistic user message has not yet been assigned an Agent
+  // ID. Historical text similarity alone cannot identify an echo when the
+  // Agent has supplied an explicit, different message boundary.
+  const optimisticEcho =
+    kind === "user" &&
+    last?.kind === "user" &&
+    !last.streaming &&
+    s.running &&
+    s.roundItemBase === s.items.length &&
+    (last.messageId === undefined || last.messageId === messageId);
+  const sameMessage =
+    tail?.kind === kind &&
+    (messageId === undefined || tail.messageId === messageId) &&
+    (tail.streaming || (messageId !== undefined && !optimisticEcho));
   const text = textOf(content);
   if (text === null) {
     const attachment =
       kind === "thought" ? null : normalizeMessageAttachment(content);
     if (attachment && kind !== "thought") {
-      const tail = streamTailItem(s.items);
-      if (
-        tail?.kind === kind &&
-        (tail.kind === "user" || tail.kind === "agent") &&
-        tail.streaming
-      ) {
+      if (sameMessage && (tail.kind === "user" || tail.kind === "agent")) {
         tail.attachments = [...(tail.attachments ?? []), attachment];
+        tail.streaming = true;
         return;
       }
-      const last = lastItem(s);
       if (
         last?.kind === kind &&
         (last.kind === "user" || last.kind === "agent")
@@ -166,16 +182,21 @@ function appendStreamText(
         const duplicate =
           !last.streaming &&
           kind === "user" &&
+          (messageId === undefined || optimisticEcho) &&
           last.attachments?.some(
             (existing) =>
               JSON.stringify(existing) === JSON.stringify(attachment),
           );
-        if (duplicate) return;
+        if (duplicate) {
+          if (messageId !== undefined) last.messageId = messageId;
+          return;
+        }
       }
       sealStreams(s);
       s.items.push({
         kind,
         id: nextItemId(),
+        ...(messageId === undefined ? {} : { messageId }),
         text: "",
         attachments: [attachment],
         streaming: true,
@@ -186,26 +207,28 @@ function appendStreamText(
     pushRaw(s, content ?? {});
     return;
   }
-  const tail = streamTailItem(s.items);
-  if (tail && tail.kind === kind && tail.streaming) {
+  if (sameMessage) {
     tail.text += text;
+    tail.streaming = true;
     return;
   }
-  const last = lastItem(s);
   // Echo de-dup: a live agent may replay the user's message we already
   // rendered optimistically; skip chunks fully contained in it.
   if (
     kind === "user" &&
     last &&
     last.kind === "user" &&
+    (messageId === undefined || optimisticEcho) &&
     last.text.includes(text)
   ) {
+    if (messageId !== undefined) last.messageId = messageId;
     return;
   }
-  if (kind !== "user") sealStreams(s);
+  if (kind !== "user" || messageId !== undefined) sealStreams(s);
   s.items.push({
     kind,
     id: nextItemId(),
+    ...(messageId === undefined ? {} : { messageId }),
     text,
     streaming: true,
     time: Date.now(),
@@ -548,6 +571,10 @@ export function storedModelValue(
 
 export function configValueLabel(option: ConfigOptionView | null): string {
   if (!option) return "";
+  if (typeof option.currentValue === "boolean")
+    return option.currentValue
+      ? STRINGS.options.enabled
+      : STRINGS.options.disabled;
   const current =
     typeof option.currentValue === "string"
       ? option.currentValue
@@ -573,13 +600,13 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
   const kind = u?.sessionUpdate;
   switch (kind) {
     case "user_message_chunk":
-      appendStreamText(s, "user", u?.content);
+      appendStreamText(s, "user", u?.content, u?.messageId);
       return;
     case "agent_message_chunk":
-      appendStreamText(s, "agent", u?.content);
+      appendStreamText(s, "agent", u?.content, u?.messageId);
       return;
     case "agent_thought_chunk":
-      appendStreamText(s, "thought", u?.content);
+      appendStreamText(s, "thought", u?.content, u?.messageId);
       return;
     case "tool_call":
     case "tool_call_update":
@@ -621,10 +648,7 @@ export function applyUpdate(s: ThreadState, update: unknown): void {
         : [];
       return;
     case "usage_update":
-      s.usage = {
-        used: Number(u?.used ?? 0),
-        size: Number(u?.size ?? 0),
-      };
+      s.usage = reportedUsage(u);
       return;
     case "config_option_update":
       replaceConfigOptions(s, normalizeConfigOptions(u?.configOptions));
@@ -677,6 +701,7 @@ export function applyTurnEnd(
   s: ThreadState,
   event: CompletionEvent,
 ): RoundResult {
+  s.sessionTokens = reportedTokens(event.usage);
   s.running = false;
   s.stopping = false;
   s.stopUnconfirmed = false;

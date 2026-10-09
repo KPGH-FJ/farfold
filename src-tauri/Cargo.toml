@@ -14,7 +14,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-agent-client-protocol = "=2.2.0"
+agent-client-protocol = { version = "=2.2.0", features = ["unstable_llm_providers", "unstable_end_turn_token_usage"] }
 async-process = "=2.5.0"
 base64 = "0.22"
 flate2 = "=1.1.9"

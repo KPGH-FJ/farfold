@@ -3,6 +3,37 @@
  * 新增文案一律加进本文件；禁用词由 strings.test.ts 保证。
  */
 export const STRINGS = {
+  storageRecovery: {
+    title: "本机资料暂时无法使用",
+    loading: "正在检查本机资料…",
+    preserved: "资料文件会保留在原位置。请先保存恢复副本，再检查以下问题。",
+    retry: "重新检查",
+    checking: "正在检查…",
+    export: "保存恢复副本…",
+    exporting: "正在保存副本…",
+    reveal: "打开资料位置",
+    chooseFolder: "选择恢复副本的保存位置",
+    privacy:
+      "副本包含本机设置和未发送内容，请保存在可信位置。Agent 自有历史不在其中。",
+    snapshotSaved:
+      "资料副本已保存。无法读取的内容也会保留，这一步不会修复资料。",
+    filesSaved: "原文件副本已保存，尚未验证是否可以恢复。",
+    exportFailed: "恢复副本尚未保存，请检查保存位置和可用空间后重试。",
+    revealFailed: "无法打开资料位置，请检查目录是否可访问。",
+    partialSaved: "未完成的副本保留在下列位置，尚不能作为完整恢复副本使用。",
+    exportFull: "副本保存位置的空间不足，请换一个位置或腾出空间后重试。",
+    exportReadOnly: "副本保存位置无法写入，请换一个位置或检查权限后重试。",
+    unsaved: "未发送内容仍保留在当前窗口，请解决问题后重试保存，再关闭应用。",
+    issues: {
+      readOnly: "资料位置处于只读状态，请恢复写入权限后重试。",
+      full: "存储空间不足，请在资料所在磁盘腾出空间后重试。",
+      corrupt: "资料文件无法读取，可能已损坏。请先保存恢复副本。",
+      permission: "没有访问资料位置的权限，请检查目录权限后重试。",
+      missing: "之前的资料文件不在原位置。请找回原文件后重试。",
+      busy: "资料正在被其他操作使用，请等待操作结束后重试。",
+      unknown: "暂时无法读取或保存本机资料，请保留原文件并重试。",
+    },
+  },
   service: {
     source: "模型来源",
     existing: "沿用 Agent 已有设置",
@@ -438,6 +469,8 @@ export const STRINGS = {
     untitled: "Agent 请求更多信息",
   },
   options: {
+    enabled: "开启",
+    disabled: "关闭",
     modeName: "工作模式",
     menuTitle: "会话选项",
   },

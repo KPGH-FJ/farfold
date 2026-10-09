@@ -66,6 +66,8 @@ export type ThreadItem =
   | {
       kind: "user";
       id: string;
+      /** Official message identity, kept only in the current view. */
+      messageId?: string;
       text: string;
       attachments: Attachment[];
       streaming: boolean;
@@ -74,6 +76,7 @@ export type ThreadItem =
   | {
       kind: "agent";
       id: string;
+      messageId?: string;
       text: string;
       attachments?: Attachment[];
       streaming: boolean;
@@ -82,6 +85,7 @@ export type ThreadItem =
   | {
       kind: "thought";
       id: string;
+      messageId?: string;
       text: string;
       streaming: boolean;
       time: number;
@@ -227,7 +231,8 @@ export interface ThreadState {
   configOptions: ConfigOptionView[];
   permissionConfigId?: string;
   permissionState: "ready" | "required" | "changing" | "unknown";
-  usage: { used: number; size: number } | null;
+  usage: import("./session_usage").ReportedUsage | null;
+  sessionTokens: import("./session_usage").ReportedTokens | null;
   availableCommands: AvailableCommand[];
   currentModeId: string | null;
   /** Agent exposes `modes` outside `configOptions` — the synthetic `mode`

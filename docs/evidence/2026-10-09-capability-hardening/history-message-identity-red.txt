@@ -1,0 +1,113 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/history_message_identity.test.ts (6 tests | 5 failed) 6ms
+     × keeps distinct adjacent user message IDs separate while joining chunks of one message 3ms
+     × keeps distinct adjacent agent message IDs separate while joining chunks of one message 0ms
+     × does not discard an identical user message with a different official ID as an optimistic echo 0ms
+     × keeps user attachments on their declared message instead of the previous message 0ms
+     × keeps agent attachments on their declared message instead of the previous message 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/history_message_identity.test.ts > official replay message boundaries > keeps distinct adjacent user message IDs separate while joining chunks of one message
+AssertionError: expected [ { kind: 'user', id: 'it-1', …(4) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/history_message_identity.test.ts:29:27
+     27|       ])
+     28|         applyUpdate(state, event);
+     29|       expect(state.items).toHaveLength(2);
+       |                           ^
+     30|       expect(state.items[0]).toMatchObject({
+     31|         kind: role,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/history_message_identity.test.ts > official replay message boundaries > keeps distinct adjacent agent message IDs separate while joining chunks of one message
+AssertionError: expected [ { kind: 'agent', id: 'it-2', …(3) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/history_message_identity.test.ts:29:27
+     27|       ])
+     28|         applyUpdate(state, event);
+     29|       expect(state.items).toHaveLength(2);
+       |                           ^
+     30|       expect(state.items[0]).toMatchObject({
+     31|         kind: role,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/history_message_identity.test.ts > official replay message boundaries > does not discard an identical user message with a different official ID as an optimistic echo
+AssertionError: expected [ { kind: 'user', id: 'it-3', …(4) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/history_message_identity.test.ts:46:25
+     44|     sealStreams(state);
+     45|     applyUpdate(state, textChunk("user", "later", "Please continue"));
+     46|     expect(state.items).toHaveLength(2);
+       |                         ^
+     47|     expect(state.items.map((item) => "text" in item && item.text)).toE…
+     48|       "Please continue",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/history_message_identity.test.ts > official replay message boundaries > keeps user attachments on their declared message instead of the previous message
+AssertionError: expected [ { kind: 'user', id: 'it-4', …(4) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/history_message_identity.test.ts:65:27
+     63|       });
+     64|       applyUpdate(state, textChunk(role, "second", "Second caption"));
+     65|       expect(state.items).toHaveLength(2);
+       |                           ^
+     66|       expect(state.items[0]).toMatchObject({
+     67|         kind: role,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/history_message_identity.test.ts > official replay message boundaries > keeps agent attachments on their declared message instead of the previous message
+AssertionError: expected [ { kind: 'agent', id: 'it-5', …(4) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/history_message_identity.test.ts:65:27
+     63|       });
+     64|       applyUpdate(state, textChunk(role, "second", "Second caption"));
+     65|       expect(state.items).toHaveLength(2);
+       |                           ^
+     66|       expect(state.items[0]).toMatchObject({
+     67|         kind: role,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  17:50:10
+   Duration  147ms (transform 53ms, setup 0ms, import 67ms, tests 6ms, environment 0ms)
+
