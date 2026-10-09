@@ -1,0 +1,18 @@
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-bc6b4ff3bfd9658e)
+
+running 2 tests
+test acp_client::cancellation_tests::late_form_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+test acp_client::cancellation_tests::late_permission_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1055 filtered out; finished in 0.43s
+

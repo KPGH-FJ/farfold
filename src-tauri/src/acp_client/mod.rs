@@ -80,6 +80,12 @@ mod permission_request_tests;
 mod cancellation_tests;
 
 #[cfg(test)]
+mod cancel_starvation_tests;
+
+#[cfg(test)]
+mod boolean_configuration_tests;
+
+#[cfg(test)]
 mod archive_tests;
 
 #[cfg(test)]

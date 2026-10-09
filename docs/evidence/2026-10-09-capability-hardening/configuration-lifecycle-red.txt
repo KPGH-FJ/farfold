@@ -1,0 +1,81 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/session_configuration.boolean.test.ts (11 tests | 4 failed) 8ms
+   × rejects a setting for a conversation that no longer exists 2ms
+   × rejects a late modern receipt after the conversation object was replaced 1ms
+   × rejects a late legacy-mode receipt after the conversation object was replaced 0ms
+   × retains a replacement conversation's pending setter when the old receipt arrives 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > rejects a setting for a conversation that no longer exists
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/session_configuration.boolean.test.ts:135:56
+    133|   const { configuration, states } = fixture();
+    134|   states.delete("a");
+    135|   await expect(configuration.set("a", "feature", true)).rejects.toThro…
+       |                                                        ^
+    136|   expect(h.invoke).not.toHaveBeenCalled();
+    137| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > rejects a late modern receipt after the conversation object was replaced
+ FAIL  src/runtime/session_configuration.boolean.test.ts > rejects a late legacy-mode receipt after the conversation object was replaced
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/session_configuration.boolean.test.ts:164:26
+    162|     states.set("a", replacement);
+    163|     resolve(reply());
+    164|     await expect(pending).rejects.toThrow();
+       |                          ^
+    165|     expect(replacement.configOptions).toEqual([]);
+    166|     expect(replacement.configError).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > retains a replacement conversation's pending setter when the old receipt arrives
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/session_configuration.boolean.test.ts:185:20
+    183|   const tracked = configuration.requests.get("a");
+    184|   resolveOld(reply());
+    185|   await expect(old).rejects.toThrow();
+       |                    ^
+    186|   expect(configuration.requests.get("a")).toBe(tracked);
+    187|   expect(replacement.configuring).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 7 passed (11)
+   Start at  16:41:41
+   Duration  177ms (transform 78ms, setup 0ms, import 102ms, tests 8ms, environment 0ms)
+

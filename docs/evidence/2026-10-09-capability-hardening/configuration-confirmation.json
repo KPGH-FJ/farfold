@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "sourceBase": "be1364ca",
+  "scope": "Frontend confirmation for declared boolean/select options and conversation lifecycle",
+  "changes": [
+    "Require matching declared type and selected value before the setting operation resolves successfully",
+    "Reject missing or replaced conversation objects; an old setter cannot remove the replacement's tracked request",
+    "Use generic unconfirmed-setting copy rather than mislabeling every failure as a model failure"
+  ],
+  "evidence": [
+    {
+      "file": "boolean-confirmation-red.txt",
+      "kind": "raw output",
+      "result": "Initial fixture run also had an invalid beforeEach return; not the clean behavioral baseline"
+    },
+    {
+      "file": "boolean-confirmation-red-valid.txt",
+      "kind": "raw output",
+      "result": "After fixing the hook only: 4 failing mismatched-receipt cases and 3 passing cases"
+    },
+    {
+      "file": "boolean-confirmation-green.txt",
+      "kind": "raw output",
+      "result": "3 files, 60 passing tests"
+    },
+    {
+      "file": "configuration-lifecycle-red.txt",
+      "kind": "raw output",
+      "result": "4 additional lifecycle failures, 7 passing tests"
+    },
+    {
+      "file": "configuration-lifecycle-green.txt",
+      "kind": "raw output",
+      "result": "3 files, 64 passing tests"
+    },
+    {
+      "file": "final-frontend-checks.json",
+      "kind": "raw command receipts",
+      "result": "typecheck, 221 files / 2553 tests, build all passed"
+    }
+  ],
+  "independentReview": "product_coverage reviewed receipt semantics; verification reviewed lifecycle, caller catch paths and old/new request identity. Neither review claimed an installed or real-Agent test.",
+  "boundaries": [
+    "No installed app or UI navigation test",
+    "No real Agent/model/session invoked",
+    "Mismatched receipts mean the requested setting was not confirmed, not proof the Agent failed to change or was rolled back",
+    "Invalidated old callers reject; no new Agent loop, configuration file or event ledger"
+  ]
+}

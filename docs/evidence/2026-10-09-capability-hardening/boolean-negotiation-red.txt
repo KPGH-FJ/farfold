@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.49s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-bc6b4ff3bfd9658e)
+
+running 3 tests
+
+thread 'acp_client::boolean_configuration_tests::rejected_boolean_is_not_retried_and_next_explicit_choice_can_succeed' (18612712) panicked at src/acp_client/boolean_configuration_tests.rs:209:5:
+assertion `left == right` failed
+  left: None
+ right: Some(Bool(false))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::boolean_configuration_tests::select_only_peer_ignores_boolean_capability_and_keeps_its_existing_setter ... ok
+
+thread 'acp_client::boolean_configuration_tests::negotiated_boolean_is_visible_and_round_trips_without_losing_existing_capabilities' (18612711) panicked at src/acp_client/boolean_configuration_tests.rs:160:5:
+assertion `left == right` failed: a capability-gated peer must expose boolean options
+  left: None
+ right: Some(Bool(false))
+test acp_client::boolean_configuration_tests::rejected_boolean_is_not_retried_and_next_explicit_choice_can_succeed ... FAILED
+test acp_client::boolean_configuration_tests::negotiated_boolean_is_visible_and_round_trips_without_losing_existing_capabilities ... FAILED
+
+failures:
+
+failures:
+    acp_client::boolean_configuration_tests::negotiated_boolean_is_visible_and_round_trips_without_losing_existing_capabilities
+    acp_client::boolean_configuration_tests::rejected_boolean_is_not_retried_and_next_explicit_choice_can_succeed
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 1050 filtered out; finished in 0.38s
+
+error: test failed, to rerun pass `--lib`

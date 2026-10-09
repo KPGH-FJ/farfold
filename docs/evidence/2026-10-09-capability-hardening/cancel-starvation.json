@@ -1,0 +1,198 @@
+{
+  "date": "2026-10-09",
+  "status": "controlled_peer_counterexample_reproduced_and_final_fifo_fix_targeted_passed",
+  "recordedHead": "be1364ca635616f1b81860f4db96a78a29685baa",
+  "scope": "仅Farfold真实AcpManager/session_pump加隔离Python stdio协议对端及临时存储；没有真实Agent、账号、模型、正式应用或真实工具调用。未提交。",
+  "evidenceKind": "retained_raw_cargo_output_plus_current_source_hashes",
+  "sourceAtFinalTargetedFreeze": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "e218b18d07665802790f86b7602a8cae71397649e5662e773d98772da16a1372"
+    },
+    {
+      "path": "src-tauri/src/acp_client/cancel_starvation_tests.rs",
+      "sha256": "f2398f04d57b4113f8038b15f789d15caf55a520a31365ebc133e17824c3be72"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "8402d78a97a313e2ca02fcbc16465b49aeb405bc4b2db95d67584092a4b33970"
+    }
+  ],
+  "sourceHashBoundary": "哈希在最终5+2+3+4项定向测试及格式检查后记录；中间红绿版本已由实际日志阶段区分，不以这些最终哈希冒称中间源码快照。",
+  "reproduction": [
+    "测试sink在首条更新处设有可独立释放且有超时的屏障；此时真实session_pump暂停，协议reader仍工作。",
+    "peer共发送32条编号更新，随后发送不带sessionId的未知RPC。ACP 2.2.0顺序分派后回复method-not-found，peer原子写入fence回执；该回执证明其前更新已入会话inbox，非仅stdout.flush。",
+    "公开session_cancel在屏障释放前被手动poll一次，其首个Pending发生在同步排队之后。原实现实际先消费完32条再发送cancel。",
+    "最终版本仍保留所有32条原顺序和实际peer的cleanup-after-cancel更新，并等待原prompt返回cancelled；这不等于任何真实工具已停止。"
+  ],
+  "finalImplementation": [
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:744",
+      "detail": "每个pump局部保留一个buffered_control，先读取同一FIFO的队首；不扫描/越过普通命令，不增持久记录。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:746",
+      "detail": "先检查连接停止；仅prompt_in_flight且FIFO队首是Cancel时，在下一次消费inbox之前尝试取消。保留过期/调用者离开丢弃及恢复中拒绝。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:1078",
+      "detail": "普通命令仍在原select末尾消费局部buffer或原control；inbox→turnEnd与配置保护顺序保留。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/pump.rs:686",
+      "detail": "两条调度路径共用唯一session/cancel发送函数；同样取消已登记交互、保留晚到交互取消标识。"
+    },
+    {
+      "evidence": "src-tauri/src/acp_client/session.rs:522",
+      "detail": "公开session_cancel及身份/预览检查和10秒期限没有改变。第二通道实验对session.rs、pump/open.rs的改动已全部撤回。"
+    }
+  ],
+  "runs": [
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-red.txt",
+      "sha256": "47a4714b4eddb50d1353ce8aca02859b367183d6517e61dc2e47b7d80eb42e00",
+      "stage": "original_single_fifo_direct_control_red",
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "testSeconds": 0.47,
+      "meaning": "未修改调度时，直接排入真实会话control；已有31条inbox更新仍先消费完32条才发cancel。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-entrypoint-red.txt",
+      "sha256": "ce2f13133c8d33fde52e666ea635fe8ed6cfdde2b12b8d08e5d8e25b349d91ba",
+      "stage": "original_single_fifo_public_entrypoint_red",
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "testSeconds": 0.4,
+      "meaning": "改用公开session_cancel并手动poll一次建立排队屏障；仍精准复现原缺陷。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-entrypoint-green.txt",
+      "sha256": "4daab02d44802c0c101013c23d00a6fe08ff2321404286b9ffae9b5fbe6a4570",
+      "stage": "rejected_intermediate_priority_channel_green_not_final_evidence",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 0.38,
+      "meaning": "中间第二通道方案只通过有限积压；随后被排队顺序反例否定，已彻底撤回，不是最终版本证明。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-priority-counterexample.txt",
+      "sha256": "29063fa0dc747274141c408eadff5bcef67afaf2b76ed4f5b5b008a227120e52",
+      "stage": "rejected_intermediate_priority_channel_red",
+      "passed": 1,
+      "failed": 1,
+      "ignored": 0,
+      "testSeconds": 0.43,
+      "meaning": "第二通道方案越过此前排入的Prompt，对端明确返回cancel-without-prompt；新反例失败促成撤回。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-fifo-green.txt",
+      "sha256": "a7027eae421cc8afd23e91b8f5b2b50030bfc7ae5a23e3ed5c3e8d2de3f42608",
+      "stage": "final_fifo_three_ordering_cases",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 0.44,
+      "meaning": "保留单队列与局部一个待处理命令；有限积压、Prompt后Cancel、Cancel后明确新Prompt三项通过。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-fifo-deadlines-green.txt",
+      "sha256": "822da3523bbb115dec568eefb83436b20397242bff84c1d3b7941e056cc45571",
+      "stage": "final_fifo_five_case_superset",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 0.47,
+      "meaning": "最终新测试五项通过，新增调用者离开与已过期取消不发送；此文件是最终调度测试依据。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-late-interactions-regression.txt",
+      "sha256": "06d37a3b60ebed43ecf8c9e8a7e0fd2de997bd78438286343fa144dc695b543d",
+      "stage": "final_late_interaction_regression",
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 0.43,
+      "meaning": "迟到权限及表单请求自动取消；另一对话及下一请求仍可用；post-cancel更新先于终态。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-tool-tail-regression.txt",
+      "sha256": "5cac56803487ef3ec9de989081996aee14a9cf7dd8caeb6f1436300b8169890a",
+      "stage": "final_tool_tail_regression",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 0.37,
+      "meaning": "工具尾程仍保留工作/配置保护；冷或迟到历史不冒充新工作；测试peer进程结束才释放真实拥有的尾程。"
+    },
+    {
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation-restore-regression.txt",
+      "sha256": "34a28e913e2d1266a799d92c63da6a4e8905fce6695acb119b1a27f0854b0a52",
+      "stage": "final_restore_regression",
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "testSeconds": 1.11,
+      "meaning": "配置恢复顺序、漂移、保存失败、拒绝/错误回包四项受控回归通过。"
+    }
+  ],
+  "additionalChecks": [
+    {
+      "command": "rustfmt --edition 2024 --check src-tauri/src/acp_client/pump.rs src-tauri/src/acp_client/cancel_starvation_tests.rs",
+      "result": "passed",
+      "rawLogRetained": false,
+      "evidenceKind": "tool_output_summary_only"
+    },
+    {
+      "command": "git diff --check -- src-tauri/src/acp_client/pump.rs src-tauri/src/acp_client/cancel_starvation_tests.rs",
+      "result": "passed",
+      "rawLogRetained": false,
+      "evidenceKind": "tool_output_summary_only"
+    },
+    {
+      "check": "单文件上限",
+      "pumpLines": 1455,
+      "newTestLines": 371
+    },
+    {
+      "check": "修改范围",
+      "detail": "最终生产仅pump.rs变更；新增专用测试文件；mod.rs由root统一注册。session.rs/open.rs无本片差异。"
+    }
+  ],
+  "officialSources": [
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/prompt-turn#cancellation",
+      "consulted": "2026-10-09",
+      "detail": "发送cancel后仍接收更新，原prompt须以cancelled返回才构成协议取消确认。"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.1/tokio/macro.select.html#fairness",
+      "consulted": "2026-10-09",
+      "detail": "biased顺序轮询的公平性由调用者负责，高流量ready分支可能饿死后续分支。"
+    },
+    {
+      "path": "agent-client-protocol-2.2.0/src/jsonrpc/incoming_actor.rs",
+      "kind": "locally_installed_official_crate_source",
+      "detail": "入站消息顺序await dispatch；无sessionId且无人处理的request返回method-not-found，构成测试fence依据。"
+    }
+  ],
+  "limitationsAndRemaining": [
+    "修复范围仅为运行中prompt的FIFO队首Cancel被inbox积压延后。若前方已有Prompt/配置/关闭等普通控制，取消仍遵守这些命令原有保护顺序；没有证明所有队列组合均无饥饿。",
+    "有限32条积压已实测；无限持续事件流、原10秒取消超时与真实Agent/真实工具停止未实测，不将其写为已修复或已验收。",
+    "不能抢占已经开始执行的同步sink或当前await中的持久化操作；不会强杀Agent工具，不改变Agent自身abort实现。",
+    "空闲、打开恢复、已完成prompt后的工具尾程没有新增快速取消路径；现有尾程/恢复受控测试通过，不等于逐家真实恢复通过。",
+    "全部cargo日志仍有既有agent_install/archive.rs:97 unused std::io::Write警告；本片未修改该模块。",
+    "本记录只提供本子任务的定向实测。root已报告整仓Rust 1053通过/4项原忽略及clippy/fmt通过、第二次独立复核无阻断；正式完整记录由root维护，不以本记录冒充其原始输出或真实Agent/安装验收。"
+  ],
+  "parentReportedFinalValidation": {
+    "source": "root coordination message; not this subtask raw log",
+    "rustPassed": 1053,
+    "rustIgnored": 4,
+    "clippy": "passed",
+    "cargoFmt": "passed",
+    "independentSecondReview": "no blocking findings"
+  }
+}

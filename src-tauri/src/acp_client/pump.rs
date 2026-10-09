@@ -683,6 +683,28 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
     }
 }
 
+fn send_session_cancel(
+    cx: &ConnectionTo<Agent>,
+    ctx: &mut DispatchContext<'_>,
+    result: oneshot::Sender<Result<(), String>>,
+    prompt_in_flight: bool,
+    mcp_requests: Option<&super::transient_mcp::SessionMcpRequests>,
+) {
+    let sent = cx
+        .send_notification_to(Agent, CancelNotification::new(ctx.session_id.to_owned()))
+        .map_err(describe_acp_error);
+    if sent.is_ok() {
+        ctx.prompt_cancelling = prompt_in_flight;
+        cancel_permissions(ctx.pending, ctx.permission_ids);
+        cancel_elicitations(&ctx.ops.elicitations, ctx.elicitation_ids);
+        if let Some(requests) = mcp_requests {
+            requests.set_prompt_active(false);
+        }
+        (ctx.events)(serde_json::json!({"kind":"interactionsCancelled"}));
+    }
+    let _ = result.send(sent);
+}
+
 /// The session pump: owns one session's inbox, control channel, and event
 /// sink for the life of the session. Exits when the inbox or control channel
 /// closes (session closed or connection dead), then unregisters its pending
@@ -719,7 +741,11 @@ async fn session_pump(
     let mut failures = super::failures::FailureTracker::default();
     let mut elicitation_ids: Vec<String> = Vec::new();
     let (expiry_tx, mut expiry_rx) = mpsc::unbounded_channel::<String>();
+    let mut buffered_control = None;
     loop {
+        if *stopping.borrow() {
+            break;
+        }
         let mut ctx = DispatchContext {
             session_id: &session_id,
             events: &events,
@@ -731,6 +757,36 @@ async fn session_pump(
             tools: &mut tools,
             prompt_cancelling,
         };
+        // Inspect only the FIFO head: a running prompt's cancellation must
+        // not wait for a continuously ready inbox. Never pass an earlier
+        // Prompt/config/close command, or change idle/recovery ordering.
+        if buffered_control.is_none() {
+            buffered_control = control.try_recv().ok();
+        }
+        if prompt_in_flight
+            && matches!(buffered_control, Some(SessionControl::Cancel { .. }))
+            && let Some(command) = buffered_control.take()
+        {
+            if command.abandoned() {
+                continue;
+            }
+            ops.life.touch();
+            if let SessionControl::Cancel { result, .. } = command {
+                if opening.is_some() {
+                    let _ = result.send(Err("对话正在恢复，请稍后重试".into()));
+                } else {
+                    send_session_cancel(
+                        &cx,
+                        &mut ctx,
+                        result,
+                        prompt_in_flight,
+                        mcp_requests.as_ref(),
+                    );
+                    prompt_cancelling = ctx.prompt_cancelling;
+                }
+            }
+            continue;
+        }
         tokio::select! {
             // `biased` polls in order: queued session messages are always
             // delivered before a turn result, so `turnEnd` lands after every
@@ -1019,7 +1075,12 @@ async fn session_pump(
                     }
                 }
             }
-            command = control.recv() => match command {
+            command = async {
+                match buffered_control.take() {
+                    Some(command) => Some(command),
+                    None => control.recv().await,
+                }
+            } => match command {
                 None => break,
                 Some(command) => {
                     if command.abandoned() { continue; }
@@ -1142,20 +1203,8 @@ async fn session_pump(
                     let _ = result.send(sent);
                 }
                 SessionControl::Cancel { result, .. } => {
-                    let sent = cx
-                        .send_notification_to(
-                            Agent,
-                            CancelNotification::new(session_id.clone()),
-                        )
-                        .map_err(describe_acp_error);
-                    if sent.is_ok() {
-                        prompt_cancelling = prompt_in_flight;
-                        cancel_permissions(&pending, &mut permission_ids);
-                        cancel_elicitations(&ops.elicitations, &mut elicitation_ids);
-                        if let Some(requests) = &mcp_requests { requests.set_prompt_active(false); }
-                        events(serde_json::json!({"kind":"interactionsCancelled"}));
-                    }
-                    let _ = result.send(sent);
+                    send_session_cancel(&cx, &mut ctx, result, prompt_in_flight, mcp_requests.as_ref());
+                    prompt_cancelling = ctx.prompt_cancelling;
                 }
                 SessionControl::SetConfig { config_id, value, result, deadline } => {
                     let permission = permission_guard.is_permission(&config_id);

@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/session_configuration.boolean.test.ts (7 tests | 4 failed) 6ms
+   × does not confirm a boolean change when the receipt is unchanged 3ms
+   × does not confirm a boolean change when the receipt is missing 0ms
+   × does not confirm a boolean change when the receipt is string value 0ms
+   × does not confirm a boolean change when the receipt is changed type 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is unchanged
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is missing
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is string value
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is changed type
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/session_configuration.boolean.test.ts:58:56
+     56|   const { a, b, configuration, reply } = fixture();
+     57|   h.invoke.mockResolvedValue(reply(options));
+     58|   await expect(configuration.set("a", "feature", true)).rejects.toThro…
+       |                                                        ^
+     59|     STRINGS.repair.configFailed,
+     60|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  16:34:50
+   Duration  176ms (transform 79ms, setup 0ms, import 102ms, tests 6ms, environment 0ms)
+

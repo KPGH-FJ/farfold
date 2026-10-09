@@ -1,7 +1,6 @@
 {
   "date": "2026-10-09",
-  "status": "source_and_primary_documentation_hypothesis_only",
-  "implementedOrReproduced": false,
+  "status": "historical_hypothesis_superseded_by_followup_receipt",
   "scope": "按整合冻结要求，仅只读当前代码与官方规范；未改src/src-tauri或注册新测试，未运行真实Agent。",
   "observations": [
     {
@@ -50,5 +49,8 @@
     "当前真实pump持续事件协议反例",
     "实际取消截止超时实验"
   ],
-  "conclusion": "尚无可靠运行反例，不将此项写为已定位缺陷或已修复；下一片先完成上述受控因果实验。"
+  "conclusion": "尚无可靠运行反例，不将此项写为已定位缺陷或已修复；下一片先完成上述受控因果实验。",
+  "followupReceipt": "docs/evidence/2026-10-09-capability-hardening/cancel-starvation.json",
+  "implementedOrReproducedAtThisHistoricalStage": false,
+  "historicalBoundary": "此文件保留冻结期尚未复现时的分析；后续实际反例、否定的第二通道方案和最终FIFO修复以followupReceipt为准。"
 }

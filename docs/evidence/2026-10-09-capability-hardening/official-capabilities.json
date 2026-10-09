@@ -1,0 +1,1454 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-09",
+  "scope": "当前首批 29 项：只读官方资料、registry 及本地公开源码研究；账号、来源、模型、历史、停止接口。",
+  "catalogEvidence": "src-tauri/src/acp_client/first_release.rs:4",
+  "farfoldSourceHead": "847f248778b301db07d662f70a4315da89a7137c",
+  "farfoldSourceNote": "读取时工作区有并行增量；本表是该时间点研究快照，不是源码冻结或安装凭证。",
+  "boundaries": [
+    "没有启动 Agent、模型、账号流程、升级安装或读取用户凭据/会话正文。",
+    "今日逐项刷新 registry、访问每项维护者/厂商公开入口；官方文档、旧 tag/发行文本、公开探针和真实执行分别记录。",
+    "historicalVersion 是 2026-10-05 留存研究版本，不是 2026-10-09 本机盘点；没有把旧 33 项表直接当当前 29 项验收。",
+    "registry 收录不等于厂商原生实现，Amp/Pi 与 Codex/Claude 适配器明确标维护关系；未公开或未取得证据不是不支持。",
+    "源码/文档发现的某家扩展不自动成为 29 家统一门槛；八项产品标准不降低。",
+    "sourceURLs 中 tag 链接用于追溯旧实现；当日网页为浮动文档，不能倒推版本；文档 SHA 只校验研究素材，未校验 Agent 二进制。"
+  ],
+  "commonMechanisms": [
+    {
+      "id": "config-boolean-negotiation",
+      "status": "missing",
+      "detail": "当前 ACP 规范要求 clientCapabilities.session.configOptions 中存在 boolean 能力对象（boolean: {}，schema 类型为 BooleanConfigOptionCapabilities）后 Agent 才可发送 boolean 配置；该字段不是布尔值 true。Farfold 已有 boolean value 编码，initialize 未广告此能力；需要核通用控件和确认保存路径后补协商与 fixture。",
+      "sources": [
+        "https://agentclientprotocol.com/protocol/v1/session-config-options",
+        "src-tauri/src/acp_client/manager.rs:581",
+        "src-tauri/src/acp_client/pump.rs:420"
+      ],
+      "next": "可立即做通用机制，无需真实 Agent。"
+    },
+    {
+      "id": "service-config-coverage",
+      "status": "partial",
+      "detail": "Farfold 新服务编译仅 OpenCode 三种 API 与 Codex Responses；其他 Agent 可继续原 CLI 配置不等于新服务已可托管。每家只用已核官方临时面，不写私有 HOME/配置。",
+      "sources": ["src-tauri/src/acp_client/service_config.rs:35"],
+      "next": "按有公开临时配置面逐家补映射、秘密隔离与模型确认 fixture。"
+    },
+    {
+      "id": "modern-and-legacy-config",
+      "status": "implemented-unverified-real",
+      "detail": "当前 Farfold 现代 configOptions 优先、legacy models/set_model 已实现；旧调研的缺 legacy 结论撤回。现代 {} 与合法 legacy {} 不能混为相同确认。",
+      "sources": [
+        "src-tauri/src/acp_client/session_config.rs:110",
+        "src-tauri/src/acp_client/session_config.rs:135",
+        "src-tauri/src/acp_client/session_config.rs:235"
+      ],
+      "next": "以 currentValue/保存结果为准；真实模型切换仍待用户。"
+    },
+    {
+      "id": "history-replay-boundary",
+      "status": "partial",
+      "detail": "规范 load 必须先完成历史回放；多家旧实现晚回放、吞错或空建。本方已有 drain 和导入 channel 完成标记，不能将远端违规的 load 成功扩大为正文完整。",
+      "sources": [
+        "https://agentclientprotocol.com/protocol/v1/session-setup",
+        "src-tauri/src/acp_client/pump.rs:765",
+        "src-tauri/src/acp_client/session_discovery.rs:102"
+      ],
+      "next": "补可见性和可判定失败样本；没有远端完成证明时保留未知，不固定延时或自建事件账本。"
+    },
+    {
+      "id": "cancel-receipt",
+      "status": "implemented-unverified-real",
+      "detail": "session/cancel 是通知；要保留更新并等原 prompt 的 cancelled 回执。后台任务或进程树的停止不能由通知发送成功推断。",
+      "sources": [
+        "https://agentclientprotocol.com/protocol/v1/prompt-turn",
+        "src-tauri/src/acp_client/pump.rs:1144"
+      ],
+      "next": "继续按取消请求/执行/确认分别呈现，逐家真实停止测试待用户。"
+    },
+    {
+      "id": "account-scope",
+      "status": "partial",
+      "detail": "已有 authMethods、标准 logout、authStatus 推送与 Kimchi/Vibe/CodeBuddy 受限查询；credential presence 与账号权益分开。并非所有 Agent 都公开相同查询/退出 API。",
+      "sources": [
+        "src-tauri/src/acp_client/account_status.rs:48",
+        "src-tauri/src/acp_client/account_query.rs:17",
+        "src-tauri/src/acp_client/account_logout.rs:28"
+      ],
+      "next": "只扩已核官方只读字段与动作；避免 no-op authenticate 被标已登录。"
+    },
+    {
+      "id": "additional-directories",
+      "status": "decision",
+      "detail": "当前 ACP 已有协商后的 additionalDirectories；本方尚未接。多根目录属于产品范围决定，不自动加入 29 项门槛。",
+      "sources": [
+        "https://agentclientprotocol.com/protocol/v1/session-setup",
+        "src-tauri/src/acp_client/manager.rs:581"
+      ],
+      "next": "等待明确多根目录范围，再设计数据/许可/恢复。"
+    }
+  ],
+  "agents": [
+    {
+      "id": "amp-acp",
+      "name": "Amp",
+      "integration": "社区维护 ACP adapter→官方 Amp CLI/SDK",
+      "entry": "./amp-acp",
+      "registry": {
+        "version": "0.10.0",
+        "checkedAt": "2026-10-09T08:18:05.844707+00:00",
+        "documentSha256": "829bd05fe9de760ffe774f5fdb3f91ee4334a1315fb683d40121403372c7a37e"
+      },
+      "historicalVersion": "0.9.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/0",
+      "currentDocumentFinding": "维护者 README 描述 CLI 默认传输、amp login 与 API key、mode/permission 配置；今日另读 registry 0.10.0 tag，二者不自动等同。",
+      "implementationEvidenceScope": "0.10.0 tag 为本轮补核；其他旧实现按段落所列版本，不代表当前安装。",
+      "cancel": {
+        "known": "源码 cancel 标 cancelled 并 AbortController.abort；终端/工具是否全停仍须 prompt cancelled 回执。",
+        "scope": "0.10.0",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://github.com/tao12345666333/amp-acp/blob/v0.10.0/src/server.ts#L593"
+      },
+      "history": {
+        "known": "0.10.0 新增持久 ACP↔Amp thread mapping、load/resume；load 导出 thread 后回放，但导出/回放失败 catch 后仍成功。所读 server 未见 listSessions；不能把旧 0.9.0 的全无冷恢复沿用到 0.10.0。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C-mode-only",
+        "known": "0.10.0 的 configOptions 仍以 Amp 档位/权限/执行器为主；档位不等于底层任意模型，设置持久化 best-effort。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "0.10.0 authenticate 仅检查 AMP_API_KEY；main README 声称 amp login 共享凭据。CLI 执行认证与 ACP authenticate 的分歧需核完整版本入口，不能宣布账号复用已成功。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方 Amp CLI/API key；任意第三方 endpoint 的官方面未核清。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/amp-acp/agent.json",
+        "https://raw.githubusercontent.com/tao12345666333/amp-acp/main/README.md",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/server.ts",
+        "https://github.com/tao12345666333/amp-acp/blob/v0.9.0/src/index.ts",
+        "https://raw.githubusercontent.com/tao12345666333/amp-acp/v0.10.0/src/server.ts",
+        "https://raw.githubusercontent.com/tao12345666333/amp-acp/v0.10.0/src/index.ts"
+      ],
+      "nextStep": "补回放失败的可见性和无历史结果的诚实状态；核 exact 0.10.0 认证入口，保留社区适配器身份。"
+    },
+    {
+      "id": "antigravity-acp",
+      "name": "Google Antigravity",
+      "integration": "first-party-native-server-proprietary",
+      "entry": "./agy_acp_server.par",
+      "registry": {
+        "version": "1.3.0",
+        "checkedAt": "2026-10-09T08:18:05.638460+00:00",
+        "documentSha256": "d6d05fcd3d9781719d7535584f66168007a3f6ffcf78dfd513e0130bb7599b28"
+      },
+      "historicalVersion": "1.2.1",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/1",
+      "currentDocumentFinding": "Google 当前文档声明 IDE/CLI/桌面采用统一认证与权益，区分个人和企业；未给出 ACP 每方法语义。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.2.1 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 1.2.1 握手声明 list/load；正文回放、跨进程恢复和续答未有实现或实测。当前 1.3.0 不能由旧声明推出完成八项标准。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "U",
+        "known": "模型选择文档不能证明 ACP C/L setter；认证阻塞探针不能判断方法支持。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "旧声明含 personal/business OAuth、Gemini API key、agent-platform 和 logout；当前文档统一认证不等于机器上 CLI 与 IDE 凭据必然可复用。账号查询格式未知。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Gemini API key / 企业平台为声明路线；自定义 API base、模型绑定与刷新条件未知。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/antigravity-acp/agent.json",
+        "https://antigravity.google/docs/ide/extensions",
+        "https://antigravity.google/docs/ide/extensions/zed/"
+      ],
+      "nextStep": "按官方声明展示认证与未知状态；取得 1.3.0 ACP config/history 文档或允许后的行为证据，勿自造账号存储。"
+    },
+    {
+      "id": "autohand",
+      "name": "Autohand Code",
+      "integration": "Autohand 官方 ACP adapter→Autohand CLI",
+      "entry": "npx @autohandai/autohand-acp@0.2.1",
+      "registry": {
+        "version": "0.2.1",
+        "checkedAt": "2026-10-09T08:18:05.861254+00:00",
+        "documentSha256": "e2e934c738c6c4352fa8c1553b6b3b105e355d41fe52c65234d4096a2abb2309"
+      },
+      "historicalVersion": "0.2.1",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/3",
+      "currentDocumentFinding": "官方适配器 README 描述独立 Autohand CLI 依赖、resume、模型命令、工具和权限；本轮重取 0.2.1 tag。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.2.1 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "关闭 permission server，终端 handle.kill 或 activeProcess SIGTERM 后尝试 SIGKILL；实际子进程树结束未实测。",
+        "scope": "0.2.1",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/autohand-v0.2.1/autohand-acp-0.2.1/src/acp-agent.ts:1475"
+      },
+      "history": {
+        "known": "0.2.1 list 读 CLI session index，load 读 conversation.jsonl；回放主要文本，读失败可能仍返回，模型按当前默认重建。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "L",
+        "known": "旧 set_model 实现写 session.modelId 供下次 CLI --model；现代 setter 有类方法但所用 SDK 注册缺口仍需区分。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "终端 autohand login；authenticate 检查安装/token，不等于在协议内打开浏览器；未核到标准账号查询/logout。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "AUTOHAND_MODEL/正常 CLI provider 配置可继承；Farfold 托管任意 API 的官方临时配置方式未核清。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/autohand/agent.json",
+        "https://github.com/autohandai/autohand-acp",
+        "https://github.com/autohandai/autohand-acp/blob/v0.2.1/src/acp-agent.ts",
+        "https://registry.npmjs.org/@autohandai/autohand-acp/0.2.1",
+        "https://raw.githubusercontent.com/autohandai/autohand-acp/v0.2.1/src/acp-agent.ts"
+      ],
+      "nextStep": "继续沿 legacy 模型桥接；为 load 读失败/模型默认变化建立 fixture；复核官方 SDK 注册而非检测函数名。"
+    },
+    {
+      "id": "claude-acp",
+      "name": "Claude Agent ACP",
+      "integration": "ACP 维护者 adapter→Anthropic 官方 Agent SDK",
+      "entry": "npx @agentclientprotocol/claude-agent-acp@0.88.0",
+      "registry": {
+        "version": "0.88.0",
+        "checkedAt": "2026-10-09T08:18:05.713722+00:00",
+        "documentSha256": "7346d875ea93c24fc5a1e36da2563bdd02701b208efb1c60cdd0514766800e93"
+      },
+      "historicalVersion": "0.81.2",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/3",
+      "currentDocumentFinding": "当前适配器维护者仓库为 ACP 与 Anthropic 官方 Agent SDK 的连接；registry 已到 0.88.0。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.81.2 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 标记当前 session/队列并区分 query 已关闭；完整中断及所有工具停止仍未实测。",
+        "scope": "0.81.2",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/claude-acp/v0.81.2/src/acp-agent.ts:6497"
+      },
+      "history": {
+        "known": "旧 0.81.2 SDK listSessions、磁盘会话恢复及 await replay，resume 不回放；旧版本无 list 分页。新版完整语义未逐项重验。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "旧版本 model 调 query.setModel、effort 可配且保留 session；以 configOptions 当前值确认。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "原 CLI/SDK 登录复用；普通 authenticate 可能 no-op；terminal auth 执行登录。旧版本有 logout 与 authStatus 推送；环境 key/helper 不会因退出一处自动失效。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方 SDK/API 环境与 gateway 入口存在；Farfold 尚未把这个接入接入其统一自定义服务编译路径。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/claude-acp/agent.json",
+        "https://github.com/agentclientprotocol/claude-agent-acp",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2429",
+        "https://github.com/agentclientprotocol/claude-agent-acp/blob/v0.81.2/src/acp-agent.ts#L2448"
+      ],
+      "nextStep": "补公开 SDK/API 临时来源映射和来源说明；保持账号推送/退出现有白名单；对 0.88.0 分页/回放做版本复核。"
+    },
+    {
+      "id": "cline",
+      "name": "Cline CLI",
+      "integration": "native first-party ACP server",
+      "entry": "npx cline@3.0.70 --acp",
+      "registry": {
+        "version": "3.0.70",
+        "checkedAt": "2026-10-09T08:18:05.711413+00:00",
+        "documentSha256": "a0376a9f95e3be3fcc7d2848c72faa72cf12336e461b323f0f005ef155151fde"
+      },
+      "historicalVersion": "3.0.65",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/6",
+      "currentDocumentFinding": "当前官方仓库与 registry CLI --acp 入口可查；当前 registry 3.0.70，旧静态实现样本 3.0.65。",
+      "implementationEvidenceScope": "以下实现事实主要来自 3.0.65 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel abortController 覆盖 prompt 启动前和执行中；源码说明监听器调用 sessionManager.abort。",
+        "scope": "3.0.65",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/cline/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts:402"
+      },
+      "history": {
+        "known": "旧实现 load/replay 保留消息并可续答，但未声明标准 list；load 的 provider/model 从当前默认重建，恢复消息不等于恢复配置。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧版本 model/provider/mode C 与旧 setter；provider 切换保存消息后重建 manager，下一请求配置仍须确认。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "Cline/ClinePass/ChatGPT Subscription OAuth；旧 authenticate 可真实登录。未核到标准 ACP status/logout，CLI 登录动作与面板动作分开。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "原 CLI 多 provider 已实现；Farfold 管理的新 API 服务未编译给 Cline。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/cline/agent.json",
+        "https://github.com/cline/cline",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L127",
+        "https://github.com/cline/cline/blob/cli-v3.0.65/apps/cli/src/acp/acpAgent.ts#L246"
+      ],
+      "nextStep": "优先复核官方 provider 临时设置面和恢复模型变化的通用提示；list 缺口不靠重建 Agent 历史补齐。"
+    },
+    {
+      "id": "codebuddy-code",
+      "name": "Codebuddy Code",
+      "integration": "first-party-native-cli-proprietary-readable-bundle",
+      "entry": "npx @tencent-ai/codebuddy-code@2.163.0 --acp",
+      "registry": {
+        "version": "2.163.0",
+        "checkedAt": "2026-10-09T08:18:05.859968+00:00",
+        "documentSha256": "e543d8229e337901e3df9591ff1f3e890812effd8358be0c06446018b763b648"
+      },
+      "historicalVersion": "2.160.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/4",
+      "currentDocumentFinding": "官方当前文档说明 --acp、CODEBUDDY_API_KEY 与区域枚举，以及 session/set_config_option 的 boolean multitask 配置；不等同旧 2.160.0。",
+      "implementationEvidenceScope": "以下实现事实主要来自 2.160.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 2.160.0 有 load/transcript 回放与续答，无标准 list；媒体/压缩前历史和 persistence 参数影响可见内容。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧版本已具 model C/L；当前文档新增 boolean config，须客户端能力与通用控件承接，不用品牌面板。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "旧认证区分 internal/external/iOA/selfhosted；getUserInfo 可能携 token。Farfold 已有只输出白名单身份字段的查询实现，不应再记作完全缺账号查询。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方 key 加区域变量文档明确；新自定义 endpoint/API 格式不由有 key 推定。Farfold 自定义服务编译尚未覆盖。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "缺标准 boolean config 客户端协商；已有受限账号查询，不能记作完全缺失。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/manager.rs:581",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/codebuddy-code/agent.json",
+        "https://www.codebuddy.cn/docs/cli/acp",
+        "https://www.codebuddy.ai/docs/cli/acp",
+        "https://www.codebuddy.ai/docs/cli/cli-reference"
+      ],
+      "nextStep": "先补标准 boolean 协商/fixture；保留 getUserInfo 脱敏边界，再核当前版本 list 与 API 配置。"
+    },
+    {
+      "id": "codex-acp",
+      "name": "Codex ACP",
+      "integration": "ACP 维护者 adapter→OpenAI 官方 Codex app-server",
+      "entry": "npx @agentclientprotocol/codex-acp@2.1.1",
+      "registry": {
+        "version": "2.1.1",
+        "checkedAt": "2026-10-09T08:18:06.683977+00:00",
+        "documentSha256": "b7e125a21c36d564823068de04fb3c5fe2902fc11c15e777975608685f4e873c"
+      },
+      "historicalVersion": "1.13.1",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/0",
+      "currentDocumentFinding": "维护者当前主线描述官方 Codex app-server、账号/API/custom gateway、模型/推理和扩展能力；本轮另读 registry 2.1.1 tag。",
+      "implementationEvidenceScope": "2.1.1 tag 为本轮补核；其他旧实现按段落所列版本，不代表当前安装。",
+      "cancel": {
+        "known": "cancel 调 interruptSessionTurn，等待底层 turn/completed 完成原 prompt；已读 tag，实现不是本次执行证据。",
+        "scope": "2.1.1",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://github.com/agentclientprotocol/codex-acp/blob/v2.1.1/src/CodexAcpServer.ts#L3473"
+      },
+      "history": {
+        "known": "2.1.1 load 读原 thread 并 await 回放、失败清理；list 用原列表，resume 与 load 分开。不能把当前主线 AIR 扩展都倒推 2.1.1。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧 1.13.1 与所读 2.1.1 有模型/推理配置通道；Farfold 已现代优先并承接 legacy set_model。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "ChatGPT/device/API/gateway 与 authStatus/status/logout 为适配器能力；现有 Farfold 账号观察和退出非零实现。账户声明不证明余额/模型权限。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Farfold 已有 Responses 临时 provider 编译和受控服务证据；任意真实网关/模型仍未实测。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "通用模型/服务/账号已有实现，仍缺真实版本组合证据和更多已广告类型协商。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/codex-acp/agent.json",
+        "https://github.com/agentclientprotocol/codex-acp",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L791",
+        "https://github.com/agentclientprotocol/codex-acp/blob/v1.13.1/src/CodexAcpServer.ts#L857",
+        "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v2.1.1/src/CodexAcpServer.ts"
+      ],
+      "nextStep": "扩展能力按当前实际广告逐项接，优先通用 config 类型/失败状态；不把主线 subagent/goal/background-task 扩展强制给全部 Agent。"
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "integration": "first-party-native-cli-proprietary-readable-bundle",
+      "entry": "./dist-package/cursor-agent acp",
+      "registry": {
+        "version": "2026.10.01",
+        "checkedAt": "2026-10-09T08:18:06.745143+00:00",
+        "documentSha256": "46b7373f82fd15eb728c044b32b4bb98ec659169469f6f3c232a88ed620efcec"
+      },
+      "historicalVersion": "2026.09.28",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/6",
+      "currentDocumentFinding": "官方当前 ACP 文档明确 agent acp、cursor_login/API token、cancel，以及 cursor/ask_question/create_plan 等扩展请求。",
+      "implementationEvidenceScope": "以下实现事实主要来自 2026.09.28 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 流程明确 session/cancel；未静态核当前程序所有工具/子进程中断及 cancelled 回执。",
+        "scope": "当前未标版本官方文档",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://prod.cursor.com/docs/cli/acp"
+      },
+      "history": {
+        "known": "旧 2026.09.28 list+load 持久 agent store、正文 replay、后续 prompt；非空 cursor 被拒，不能统一假设分页。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧程序 set_config 的模型选择同步同进程所有 loaded sessions；根据 Farfold 每对话独立连接的源码设计，推断可隔离这种进程内共享状态；实际串改、恢复和并发结果未测。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "cursor_login 复用 CLI 现有认证，缺失时浏览器登录；官方 CLI status/logout 不等于已公开 ACP status/logout。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "CURSOR_API_KEY / CURSOR_AUTH_TOKEN 属官方认证；第三方模型网关不是由此推出。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "缺 cursor/ask_question、cursor/create_plan 公开扩展的接入层归一化；独立连接对进程级模型共享的隔离是源码层推断，未作真实并发验证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/manager.rs:581",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/cursor/agent.json",
+        "https://prod.cursor.com/docs/cli/acp",
+        "https://cursor.com/docs/cli/acp",
+        "https://docs.cursor.com/en/cli/reference/parameters"
+      ],
+      "nextStep": "官方 ask_question/create_plan 等扩展尚无通用映射；可经接入层协议归一化接入共用交互，先确定可降级行为。"
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "integration": "first-party-native-cli-proprietary",
+      "entry": "./bin/devin acp",
+      "registry": {
+        "version": "3000.11.3",
+        "checkedAt": "2026-10-09T08:18:06.834543+00:00",
+        "documentSha256": "5a85d68de68fcaf448d419ad1656bb7df83c47d651ee005dde099be8dbd0e54e"
+      },
+      "historicalVersion": "3000.11.3",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/7",
+      "currentDocumentFinding": "官方页面明确 registry/浏览器认证、从配置决定新会话模型、UI 可选模型，ACP 广告 slash；部分丰富交互仅 CLI。",
+      "implementationEvidenceScope": "以下实现事实主要来自 3000.11.3 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 3000.11.3 声明 list/load，公开列表探针；CLI 持久历史有文档，但 ACP 回放内容、冷恢复及续答未证明。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "U",
+        "known": "官方文档有模型菜单，精确 C/L wire 和同 session 切换/保存范围仍未知；不能因旧无响应探针判不支持。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "browser/terminal authenticate 与 CLI auth、ACP slash 登录/退出；标准 status/logout wire 未核到。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Devin 官方账号/API 路线；任意自定义服务配置未核到。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/devin/agent.json",
+        "https://docs.devin.ai/cli/acp/zed",
+        "https://docs.devin.ai/cli/reference/commands"
+      ],
+      "nextStep": "取得实际广告 configOptions 的受控证据后接入；保持未知状态和官方 slash 路由，不实现自有会话后端。"
+    },
+    {
+      "id": "dimcode",
+      "name": "DimCode",
+      "integration": "first-party-native-cli-proprietary-binary",
+      "entry": "npx dimcode@0.5.16 acp",
+      "registry": {
+        "version": "0.5.16",
+        "checkedAt": "2026-10-09T08:18:06.833811+00:00",
+        "documentSha256": "e5c90bde627f895a537647587b28e10830dc2d536c31efef6b862c1db5d5f681"
+      },
+      "historicalVersion": "0.5.16",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/8",
+      "currentDocumentFinding": "官方当前 DimAgent ACP 页写 dim acp 与 TUI 共用 SQLite provider/model、MCP 和凭据目录；文档品牌与 registry dimcode 分开记录。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.5.16 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 0.5.16 声明 list/load，CLI 持久管理有文档；ACP 回放、冷恢复、resume 实际语义未公开证明。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "U",
+        "known": "旧 set_model resource-not-found 仅说明路由信号；C/同会话新模型与配置保存语义未知。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "官方 ACP 与 TUI 共用凭据目录；CLI auth login/logout/status 不代表 ACP 账号方法已接通。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方文档声明 ACP 与 TUI 共享正常 provider/model 配置，本轮未验证实际读取；Farfold 可否通过不写文件的官方临时接口传新 endpoint 尚未知。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dimcode/agent.json",
+        "https://www.dimcode.dev/en/docs/acp/",
+        "https://www.dimcode.dev/en/docs/cli/"
+      ],
+      "nextStep": "复核产品改名和 registry 入口对应，不自动改命令/迁移配置；查明 config/恢复接口。"
+    },
+    {
+      "id": "dirac",
+      "name": "Dirac",
+      "integration": "first-party-native-open-source",
+      "entry": "npx dirac-cli@0.5.18 --acp",
+      "registry": {
+        "version": "0.5.18",
+        "checkedAt": "2026-10-09T08:18:06.812382+00:00",
+        "documentSha256": "103d6b6482003496680517f5a61569e1bcaa91b63aa459474672b61b130f92f7"
+      },
+      "historicalVersion": "0.5.17",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/9",
+      "currentDocumentFinding": "官方仓库与 registry Dirac ACP 入口可查；当前 0.5.18，旧完整样本 0.5.17。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.5.17 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 占用 prompt resolver，取消权限并待 cancelTask 后完成原 prompt，防止 watchdog 先给假 end_turn。",
+        "scope": "0.5.17",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-commercial-sources/dirac-v0.5.17/dirac-0.5.17/cli/src/agent/DiracAgent.ts:1965"
+      },
+      "history": {
+        "known": "旧 load 要求 task history + runtime snapshot，缺 snapshot/工作区拒绝；list 类方法存在却未注册/广告，resume 亦有旧 wire 差异。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "模型/provider/推理/速度/预算按 session runtime 串行改变和保存；源码函数存在仍须核 wire 注册。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "provider setup/OAuth；logout 和 dev.dirac auth 扩展作用范围有限，不能当清空所有 provider API 设置。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "provider config 和 ChatGPT OAuth 原设置可继承；Farfold 任意新 API 来源暂无配置编译。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/dirac/agent.json",
+        "https://github.com/dirac-run/dirac",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/acp/AcpAgent.ts",
+        "https://github.com/dirac-run/dirac/blob/v0.5.17/cli/src/agent/DiracAgent.ts"
+      ],
+      "nextStep": "复核 0.5.18 list/resume SDK 注册修复与官方来源临时注入面；对老无 snapshot 记录显示真实失败。"
+    },
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "integration": "first-party-native-cli-proprietary-readable-embedded-bundle",
+      "entry": "npx droid@0.237.0 exec --output-format acp-daemon",
+      "registry": {
+        "version": "0.237.0",
+        "checkedAt": "2026-10-09T08:18:06.772920+00:00",
+        "documentSha256": "d7bd78145db8ff17cc225faec5e37a16b518be9a514baed2ede6f4fddcea8baa"
+      },
+      "historicalVersion": "0.230.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-commercial.json#/agents/10",
+      "currentDocumentFinding": "官方当前 IDE 文档展示 exec --output-format acp、FACTORY_API_KEY 和设备登录；registry 当前启动 acp-daemon，不能混同两种历史行为。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.230.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 0.230.0 acp-daemon list 持久记录、每 session child load/replay/prompt；回放单块错误吞掉。官网 Zed 恢复限制不是 daemon 实现的反证。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧 daemon child 现代 setter 执行后返回 {}，不满足现代完整 configOptions 响应；Farfold 当前拒绝未确认值有依据，不能退化成猜测成功。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "已有凭据/设备配对/API key；CLI /status /logout 不是标准 ACP status/logout。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方文档列出 FACTORY_API_KEY 认证方式，本轮未执行认证；完整自定义模型 API 来源临时配置与恢复还未核清。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "旧现代 setter 空响应无法确认配置；新版本是否修复未知。不能放松现代回执规则。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/factory-droid/agent.json",
+        "https://docs.factory.com/ide-integrations",
+        "https://docs.factory.ai/changelog/release-notes"
+      ],
+      "nextStep": "重新核 0.237.0 现代 setter 回执是否修复；通用确认不能把 modern {} 当 legacy {}；保留暂停保护。"
+    },
+    {
+      "id": "fast-agent",
+      "name": "fast-agent",
+      "integration": "native first-party ACP facade in fast-agent Python package",
+      "entry": "uvx {\"package\":\"fast-agent-acp==0.10.1\",\"args\":[\"-x\"],\"env\":{\"FAST_AGENT_MODEL\":\"codexplan\"}}",
+      "registry": {
+        "version": "0.10.1",
+        "checkedAt": "2026-10-09T08:18:07.645209+00:00",
+        "documentSha256": "19bccb5c3864356c1d7046ade8f1b076e3fb57b059754ef0954f743da66ce734"
+      },
+      "historicalVersion": "0.10.1",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/10",
+      "currentDocumentFinding": "维护者官方仓库描述其 ACP server 和多模型配置；registry 仍 0.10.1，仓库主线不是该版本保证。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.10.1 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "已读 ACP cancel handler；其文档说明 task.cancel 取消当前 prompt，但外部工具停止和回执未实测。",
+        "scope": "0.10.1",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/fast-agent/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py:809"
+      },
+      "history": {
+        "known": "0.10.1 持久 list/load/hydrate 后继续；仅当前 active agent 内容回放，工具/子 agent 不完整，发送异常可能吞掉。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "N-at-0.10.1",
+        "known": "旧版本未实现 C/L 保留上下文模型 setter；/model 会替换 session 清历史。不是把该行为硬包装成同会话换模。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "authenticate 返回 setup 信息而非实际登录校验；原配置/CLI 完成认证，status/logout ACP 未核到。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Agent 原生多 provider 配置可用；Farfold 管理新 API 暂无官方临时配置映射。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "旧版本不提供保留历史的同会话切模，不应伪造；等待官方接口/产品明确行为。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/fast-agent/agent.json",
+        "https://github.com/evalstate/fast-agent",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/agent_acp_server.py#L320",
+        "https://github.com/evalstate/fast-agent/blob/v0.10.1/src/fast_agent/acp/server/session_store.py#L316"
+      ],
+      "nextStep": "明确会话内切模边界；先查新版官方接口再决定兼容，不 fork Agent 或自建 loop。"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "integration": "native first-party ACP server",
+      "entry": "npx @google/gemini-cli@0.63.0 --acp",
+      "registry": {
+        "version": "0.63.0",
+        "checkedAt": "2026-10-09T08:18:07.664191+00:00",
+        "documentSha256": "99dbbfdf8e63c1b7535604bdcb93e7dd8d670214cd2e7933a7b93493eb28c865"
+      },
+      "historicalVersion": "0.62.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/4",
+      "currentDocumentFinding": "Google 官方 CLI 仓库与 registry --acp 可查；当前 0.63.0，历史源码 0.62.0。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.62.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 找对应 session 并 await cancelPendingPrompt。",
+        "scope": "0.62.0",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/gemini/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts:189"
+      },
+      "history": {
+        "known": "旧 load 读持久 SessionSelector/resumeChat；未声明 list，streamHistory 调用未 await，回放可晚于 load。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "L",
+        "known": "旧 new/load 返回 models，set_model 调 session.config.setModel；没有现代 configOptions。当前 Farfold 已有 legacy 路线。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "authenticate 刷新 Google/CLI 认证；ACP status/logout 未核到，不从 CLI 登录缓存推出账号有效。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "正常 Google/Vertex/API key 配置属 Agent；Farfold 新自定义服务编译尚未覆盖。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/gemini/agent.json",
+        "https://github.com/google-gemini/gemini-cli",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L40",
+        "https://github.com/google-gemini/gemini-cli/blob/v0.62.0/packages/cli/src/acp/acpRpcDispatcher.ts#L106"
+      ],
+      "nextStep": "为迟到历史与 legacy 模型恢复做共用验证，复核 0.63.0 list/回放；不照搬旧“Farfold无模型通道”结论。"
+    },
+    {
+      "id": "github-copilot-cli",
+      "name": "GitHub Copilot CLI",
+      "integration": "closed-source native ACP executable; public official docs/changelog",
+      "entry": "npx @github/copilot@1.0.94 --acp",
+      "registry": {
+        "version": "1.0.94",
+        "checkedAt": "2026-10-09T08:18:07.694166+00:00",
+        "documentSha256": "88e6ea812cc378e6f5c05895b904daced8f08be3230f4dc1e35f7ff9829015d1"
+      },
+      "historicalVersion": "1.0.89",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/7",
+      "currentDocumentFinding": "GitHub 官方 CLI 仓库及官方 changelog 可查；核心实现未公开，registry 1.0.94 与旧样本 1.0.89 分开。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.0.89 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "官方发布记录说明 ACP list/load/replay/persistence；本轮未观察非空历史，具体正文和冷续答仍未实测。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C-documented",
+        "known": "发布记录说明模型 configOptions、变化通知和同 session 换模；当前实现未读，不能宣称真实执行。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "terminal copilot login、OAuth/token/gh 继承路径；官方更新已要求 authenticate 确有登录。ACP status/logout 未核到。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "GitHub 官方 token 属服务认证，不等于通用第三方 API provider 支持。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/github-copilot-cli/agent.json",
+        "https://github.com/github/copilot-cli",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2502",
+        "https://github.com/github/copilot-cli/blob/main/changelog.md#L2665"
+      ],
+      "nextStep": "保留官方 auth_route 的环境优先级边界；补当前版本 config/list/load 报告与可见性，待用户再做账号旅程。"
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "integration": "native first-party ACP server",
+      "entry": "./goose acp",
+      "registry": {
+        "version": "1.54.0",
+        "checkedAt": "2026-10-09T08:18:07.775780+00:00",
+        "documentSha256": "533f42526dbd4700985c31ab80e73a32572f0318fd78b46a40514bcaf81cb98f"
+      },
+      "historicalVersion": "1.52.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/8",
+      "currentDocumentFinding": "当前官方仓库已经 aaif-goose；registry 仍引用 block 地址可跳转。当前 1.54.0，静态样本 1.52.0。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.52.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "on_cancel 获取对应 active run token 并 cancel；未知 session 只警告。",
+        "scope": "1.52.0",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/goose/v1.52.0/crates/goose/src/acp/server.rs:2411"
+      },
+      "history": {
+        "known": "旧实现持久 list/load/replay/续答；显示层回放不等于原始 envelope 一字不差。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "旧 set_config model 重建目标 session provider 并保留历史；thinking/provider 同通道。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "标准 authenticate 可能空成功、真实配置走 goose configure；私有 provider/OAuth 接口不能泛化为全部 Agent 的 status/logout。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方多 provider 原设置可复用；Farfold 自定义服务编译仅覆盖其他两个入口。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/goose/agent.json",
+        "https://github.com/aaif-goose/goose",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server.rs#L1824",
+        "https://github.com/aaif-goose/goose/blob/v1.52.0/crates/goose/src/acp/server/load_session.rs#L382"
+      ],
+      "nextStep": "复核当前 provider 临时配置官方入口；账号面保留 unknown，不靠 authenticate 空响应变成已登录。"
+    },
+    {
+      "id": "grok-build",
+      "name": "Grok Build",
+      "integration": "官方原生 ACP server（Rust；非第三方 adapter）",
+      "entry": "npx @xai-official/grok@1.0.50 agent stdio",
+      "registry": {
+        "version": "1.0.50",
+        "checkedAt": "2026-10-09T08:18:07.796735+00:00",
+        "documentSha256": "9e70aaf0b0c6b42bfac0e076eb9ccdcce08d85e80f8d0019859daf155ac2c1d1"
+      },
+      "historicalVersion": "1.0.46",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/0",
+      "currentDocumentFinding": "xAI 官方公开实现仓库可读，但已装旧版与主线 commit 的对应未建立；registry 当前 1.0.50。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.0.46 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "公开 main 有 cancel handler、等待 session load 后处理 cancelTrigger；不倒推 registry 1.0.50 的完整停止语义。",
+        "scope": "main commit 2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-remaining-sources/grok-build/crates/codegen/xai-grok-shell/src/agent/mvp_agent/acp_agent.rs:1878"
+      },
+      "history": {
+        "known": "旧 1.0.46 只有 list/load 声明；已核主线有持久恢复实现，但不可倒推该发行。当前版本 exact-source mapping 仍待补。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "U-version-binding",
+        "known": "公开主线 C 实现可研究；1.0.46/1.0.50 是否相同、配置和恢复保存范围未完成版本绑定。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "旧声明 grok.com agent auth；主线账号扩展不能自动视为旧/当前发行具备。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "xAI 官方服务认证面可见；任意第三方 API 的能力未核清。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/grok-build/agent.json",
+        "https://github.com/xai-org/grok-build",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/acp_agent.rs#L635",
+        "https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-shell/src/agent/mvp_agent/session_setup.rs#L923"
+      ],
+      "nextStep": "优先绑定 release 与源提交，再提炼公开的 config/account/cancel；不把主线源码当本机实测。"
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo",
+      "integration": "Kilo官方CLI内置原生 ACP server；CLI本身为官方OpenCode派生项目，不是社区adapter",
+      "entry": "npx @kilocode/cli@7.8.8 acp",
+      "registry": {
+        "version": "7.8.8",
+        "checkedAt": "2026-10-09T08:18:07.822657+00:00",
+        "documentSha256": "73470fc726693c71f9de424ba03caa7d30d8671acea63d310f816db3d9dccb77"
+      },
+      "historicalVersion": "7.8.1",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/2",
+      "currentDocumentFinding": "官方仓库与 registry Kilo CLI 可查；当前 7.8.8，旧 7.8.1 源码路径明确。",
+      "implementationEvidenceScope": "以下实现事实主要来自 7.8.1 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "ACP cancel 获取当前 session，调用 abortBackingSession。",
+        "scope": "7.8.1",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kilo-source-installed-tag/packages/opencode/src/acp/service.ts:353"
+      },
+      "history": {
+        "known": "旧持久 list/load/replay/后续 prompt；回放异常处理需防成功空白。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧按 sessionId 设置 model/effort/mode，prompt 带当前 model/variant；不需新增品牌 UI。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "旧 authenticate 空成功不登录；kilo auth login 才完成。Farfold 已有旧 terminal 元数据误写 opencode 的窄修正。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "原 CLI provider/key 可复用；新 API 托管服务编译尚未覆盖 Kilo。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kilo/agent.json",
+        "https://github.com/Kilo-Org/kilocode",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L94",
+        "https://github.com/Kilo-Org/kilocode/blob/v7.8.3/packages/opencode/src/acp/service.ts#L143"
+      ],
+      "nextStep": "查 7.8.8 认证元数据与 API 官方注入配置；保留窄修正规则，补回放失败 fixture。"
+    },
+    {
+      "id": "kimchi",
+      "name": "Kimchi",
+      "integration": "官方原生ACP server；内部用Pi harness，非Pi账号共享承诺",
+      "entry": "./bin/kimchi --mode acp",
+      "registry": {
+        "version": "1.7.2",
+        "checkedAt": "2026-10-09T08:18:08.623438+00:00",
+        "documentSha256": "5cd9fe8d5b731cf3788a7440a13cfc97bb37a0d72ceeefb4d8bafd498140eb61"
+      },
+      "historicalVersion": "1.3.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/3",
+      "currentDocumentFinding": "官方仓库提供 ACP 与账号说明；registry 已 1.7.2，旧完整 tag 样本 1.3.0。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.3.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 先清待发送 steering/follow-up 队列并通知 dropped，再 await session.abort。",
+        "scope": "1.3.0",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-remaining-sources/kimchi-installed-tag/src/modes/acp/server.ts:1062"
+      },
+      "history": {
+        "known": "旧 list 在无 cwd/非默认 agentDir 下可能漏；load 缺文件会同 ID 空建；空新会话首 assistant 前不落盘。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧 C/L 校验 provider/model/auth，setModel persist:true 保留上下文但可能改变 Agent 默认。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "真实区域浏览器认证、标准 logout、auth_status 扩展；Farfold 已实现只读查询并将“有凭据”与“账号验证”分开。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Kimchi 自有目录与服务认证；底层 Pi 能力不能直接当 Kimchi 对外 API 承诺。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimchi/agent.json",
+        "https://github.com/getkimchi/kimchi",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L430",
+        "https://github.com/getkimchi/kimchi/blob/v1.5.1/src/modes/acp/server.ts#L492"
+      ],
+      "nextStep": "复核 1.7.2 空建/无 cwd 漏列是否修复；在 UI 保持有凭据和可请求分别表达，不复制私有凭据。"
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi CLI",
+      "integration": "Moonshot官方原生ACP server（Python）",
+      "entry": "./kimi acp",
+      "registry": {
+        "version": "1.52.0",
+        "checkedAt": "2026-10-09T08:18:08.614486+00:00",
+        "documentSha256": "19138a88833cbc24e6636853f651adf16db649e653c911264b34295a137a2d67"
+      },
+      "historicalVersion": "1.52.0",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/4",
+      "currentDocumentFinding": "官方旧 Python 仓库当前明确归档，指向 kimi-code；registry 仍 1.52.0，本轮重取该 tag，不擅自迁移产品。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.52.0 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 按 session_id 查 ACP session 并 await cancel；本轮重取同 tag。",
+        "scope": "1.52.0",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L410"
+      },
+      "history": {
+        "known": "1.52.0 list 需 cwd；持久 load 恢复，重复 load 可能不回放；load 返回 None 不带模型状态。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "L",
+        "known": "旧 set_session_model 替换同 session LLM，同时保存全局默认 model/thinking；load 无 models，不能猜恢复后配置已确认。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "ACP authenticate 检查已存 Kimi Code OAuth，不发起浏览器；需官方 kimi login。普通 provider/API 设置不等于 ACP OAuth 已满足。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "CLI 通用 provider 配置与 ACP OAuth 门禁分开；Farfold 尚无该接入的新 API 编译。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/kimi/agent.json",
+        "https://github.com/MoonshotAI/kimi-cli",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L42",
+        "https://github.com/MoonshotAI/kimi-cli/blob/1.52.0/src/kimi_cli/acp/server.py#L115",
+        "https://raw.githubusercontent.com/MoonshotAI/kimi-cli/1.52.0/src/kimi_cli/acp/server.py"
+      ],
+      "nextStep": "把维护迁移列为决策；现范围先处理 load 缺模型状态/重复回放的不确定，勿自动换 kimi-code。"
+    },
+    {
+      "id": "minimax-code",
+      "name": "MiniMax Code",
+      "integration": "MiniMax官方原生ACP server（npm JS发行）；另有官方公开source preview",
+      "entry": "npx @minimax-ai/code@0.2.7 acp",
+      "registry": {
+        "version": "0.2.7",
+        "checkedAt": "2026-10-09T08:18:08.613754+00:00",
+        "documentSha256": "f7de240a053d4b8980557f0e077023c9b90491805336901fbe0ab82e2a57dd62"
+      },
+      "historicalVersion": "0.2.7",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/5",
+      "currentDocumentFinding": "官方当前仓库说明 MiniMax 账号或自带模型；registry 仍 0.2.7，公开 source preview 与发行并非同版本保证。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.2.7 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧发行 JS 有持久 list/load 全消息分页及 await replay、同 session 续答；source preview 的 ledger 不能冒作发行构建同源证明。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "旧 model/thinkingEffort 调 selectSessionModel 并发 config_option_update，无旧 set_model。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "旧 terminal mcode login，authenticate assertAuthenticated；普通 CLI status/logout 不等于 ACP 方法；当前 BYOK 文档不能倒推 0.2.7 免登录。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "当前官方文档支持 BYOK，但 registry 0.2.7 的无文件写入临时配置与认证条件需精确核查。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/minimax-code/agent.json",
+        "https://github.com/MiniMax-AI/minimax-code",
+        "https://registry.npmjs.org/@minimax-ai/code/0.2.7",
+        "https://registry.npmjs.org/@minimax-ai/code/latest"
+      ],
+      "nextStep": "优先确认 registry 发行与公开 SDK 配置面，后再承接 API 服务；保持 source preview / 发行 / 当前文档三层证据。"
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "integration": "native first-party ACP server",
+      "entry": "./vibe-acp",
+      "registry": {
+        "version": "2.26.0",
+        "checkedAt": "2026-10-09T08:18:08.723376+00:00",
+        "documentSha256": "ab48227c7e390b8c9bc5eeced7d7d5abc5719d4d9803df4a13ebaabf9d1c6c8a"
+      },
+      "historicalVersion": "2.25.8",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/9",
+      "currentDocumentFinding": "Mistral 官方仓库与 ACP binary 发布可查；当前 registry 2.26.0，旧源码 2.25.8。",
+      "implementationEvidenceScope": "以下实现事实主要来自 2.25.8 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 查对应 session 并 await cancel_prompt；close 为另一个接口。",
+        "scope": "2.25.8",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/mistral-vibe/v2.25.8/vibe/acp/agent.py:951"
+      },
+      "history": {
+        "known": "旧持久 list/load/replay/续答实现可查；本轮无真实历史冷启动验证。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "旧 config active_model/thinking 修改资源配置并 reload runtime；下一请求同 session。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "浏览器/委托浏览器/terminal --setup；auth/status 区分 keyring/env/无需认证，signOut 仅合适来源。Farfold 已有该补充查询和条件退出。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Mistral key/provider 原设置可继承；Farfold 管理的任意新 API 尚无该接入编译。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/mistral-vibe/agent.json",
+        "https://github.com/mistralai/mistral-vibe",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L452",
+        "https://github.com/mistralai/mistral-vibe/blob/v2.25.8/vibe/acp/agent.py#L556"
+      ],
+      "nextStep": "补当前官方 provider 临时来源映射；账号流程不应把 process env 来源退出显示成成功清除所有认证。"
+    },
+    {
+      "id": "nova",
+      "name": "Nova",
+      "integration": "Compass官方原生ACP server；公开GitHub主要说明，已发行JS可静态检查",
+      "entry": "npx @compass-ai/nova@1.1.51 acp",
+      "registry": {
+        "version": "1.1.51",
+        "checkedAt": "2026-10-09T08:18:08.762188+00:00",
+        "documentSha256": "7619491b1225a526d552f5b381ee8029923d1af713c7c844135b8a5e3c117194"
+      },
+      "historicalVersion": "1.1.49",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/6",
+      "currentDocumentFinding": "官方 README 明确 nova setup 配 API/偏好后 nova acp；registry 1.1.51，旧发行 JS 样本 1.1.49。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.1.49 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧持久 list/load，但多数 load 失败回退同 ID 新空会话；replay setImmediate 晚于 load 响应，meta 可提示回放长度。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "L",
+        "known": "旧明确 wire session/set_model、按 session 保存并 snapshot；矩阵错误分类曾误判，不能只看 error code。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "setup 复用正常 CLI API/provider；terminal auth 有声明，账号 status/logout 精确面未完全核清。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "原配置 API 可复用；Farfold 管理的新 API 还未转成 Nova 官方配置入口。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/nova/agent.json",
+        "https://github.com/Compass-Agentic-Platform/nova",
+        "https://registry.npmjs.org/@compass-ai/nova/1.1.49"
+      ],
+      "nextStep": "优先补晚回放与空 load 可见性验证，复核 1.1.51 是否修复；不要用固定延时伪造完成。"
+    },
+    {
+      "id": "opencode",
+      "name": "OpenCode",
+      "integration": "native first-party ACP server",
+      "entry": "./opencode acp",
+      "registry": {
+        "version": "1.18.35",
+        "checkedAt": "2026-10-09T08:18:08.774045+00:00",
+        "documentSha256": "e790304e9e88dc61002f76a8a57a26a5188a9730a9eb67c89ed47e9fd459e966"
+      },
+      "historicalVersion": "1.18.31",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/1",
+      "currentDocumentFinding": "官方原生 ACP 及 registry opencode acp 可查；当前 1.18.35，旧样本 1.18.31。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.18.31 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "ACP cancel 读当前 session 并 await abortBackingSession。",
+        "scope": "1.18.31",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/opencode/v1.18.31/packages/opencode/src/acp/service.ts:357"
+      },
+      "history": {
+        "known": "旧持久 SDK list/messages/get、load 等待 replay、resume 不回放、同 session 继续；分页/cwd 可查。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧 model/variant config 和 legacy setter，恢复按保存 session/history；Farfold 已双路线支持。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "CLI 原认证与配置复用；terminal auth login 真正登录，ACP authenticate 空成功不表示凭据有效；status/logout 标准方法未核到。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "Farfold 已编译 Chat Completions/Responses/Messages 三类临时 provider，并核选中模型；任意真实 API 服务待实测。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "通用模型/服务/账号已有实现，仍缺真实版本组合证据和更多已广告类型协商。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/opencode/agent.json",
+        "https://github.com/anomalyco/opencode",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L95",
+        "https://github.com/anomalyco/opencode/blob/v1.18.31/packages/opencode/src/acp/service.ts#L209"
+      ],
+      "nextStep": "作为通用机制已实现样本，继续补错误/迟到状态与官方 provider 可见性，不扩大为 29 家认证全通过。"
+    },
+    {
+      "id": "pi-acp",
+      "name": "Pi ACP",
+      "integration": "社区维护 ACP adapter→Pi 官方 RPC",
+      "entry": "npx pi-acp@0.0.34",
+      "registry": {
+        "version": "0.0.34",
+        "checkedAt": "2026-10-09T08:18:09.563206+00:00",
+        "documentSha256": "37756495f686f065ea56a4d6be411220f7445129bf169f2c7e310a571689e337"
+      },
+      "historicalVersion": "0.0.34",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/2",
+      "currentDocumentFinding": "维护者 README 明确 adapter→Pi RPC 子进程、terminal-login；本轮重取 registry 0.0.34 tag。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.0.34 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "ACP cancel 转给 session.cancel；底层 Pi RPC/工具真正结束仍需后续回执。",
+        "scope": "0.0.34",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L903"
+      },
+      "history": {
+        "known": "0.0.34 源码具备原 Pi JSONL list/load+getMessages 回放、同文件继续；一次连接 new/load 会关闭其余 Pi session。根据 Farfold 独立连接设计，推断不同对话可避开此连接内共享限制，实际并发效果未测。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "model/thinking RPC 配置；类中旧 setter 不能证明 SDK wire 已注册。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "继承 Pi 环境和 HOME；terminal-login 进入 Pi 登录；authenticate no-op，未核到 ACP status/logout。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "底层 Pi 官方模型/provider 可配置；Farfold service_config 对 Pi 暂无新 API 编译，不能由 RPC set_model 构造秘密配置文件。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/pi-acp/agent.json",
+        "https://github.com/svkozak/pi-acp",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L909",
+        "https://github.com/svkozak/pi-acp/blob/v0.0.34/src/acp/agent.ts#L938",
+        "https://raw.githubusercontent.com/svkozak/pi-acp/v0.0.34/src/acp/agent.ts"
+      ],
+      "nextStep": "优先核 Pi 官方可临时注入 provider 的接口；不写私有 HOME，不把一个连接的共享假设带进多对话。"
+    },
+    {
+      "id": "poolside",
+      "name": "Poolside",
+      "integration": "Poolside官方原生ACP server；公开repo为说明/发行，核心实现闭源",
+      "entry": "./pool-darwin-arm64 acp",
+      "registry": {
+        "version": "1.0.16",
+        "checkedAt": "2026-10-09T08:18:09.533378+00:00",
+        "documentSha256": "21031de82e86eeae0cc123dd814de827c1b2f646c888700a84eb9067540f7448"
+      },
+      "historicalVersion": "1.0.16",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/7",
+      "currentDocumentFinding": "官方当前 README 明确 list/load、model/thought configOptions、steering capability 和 CLI 登录；核心 server 未公开。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.0.16 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "文档有持久 list/load 和 CLI resume；精确正文回放/ACP 冷启动继续未有源码或实测。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C-documented",
+        "known": "官方列 model/thought/approval/mode config；描述启动应用，不能仅凭文档宣布既有 session 换模已执行。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "pool login 正常凭据/设置、POOLSIDE_API_KEY；旧声明 logout，实际退出与账号查询语义未核。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "官方 Poolside key 支持；第三方服务配置要看实际 Agent 广告，client 模式支持别家不等于 server 可任意换 provider。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/poolside/agent.json",
+        "https://github.com/poolsideai/pool",
+        "https://docs.poolside.ai/cli/pool"
+      ],
+      "nextStep": "按公开能力接入通用 config；继续核标准 status/logout 和 replay 保证，steering 只在实际广告时评估。"
+    },
+    {
+      "id": "qoder",
+      "name": "Qoder CLI",
+      "integration": "Qoder官方原生ACP server（闭源/混淆npm JS发行）；非社区adapter",
+      "entry": "npx @qoder-ai/qodercli@0.2.14 --acp",
+      "registry": {
+        "version": "0.2.14",
+        "checkedAt": "2026-10-09T08:18:09.553337+00:00",
+        "documentSha256": "3114018b05f7dc8ef3bba4e7332f5529fd9fca0de217c43ff446dde8fff978be"
+      },
+      "historicalVersion": "0.2.14",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/8",
+      "currentDocumentFinding": "官方 ACP 与认证页面明确普通 CLI 能力、共享登录和 PAT；PAT 优先于交互登录，退出不移除环境 token。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.2.14 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "官方 ACP 接入和协议 cancel 规范可查；本轮未取得版本绑定的取消实施证据。",
+        "scope": "unknown",
+        "unknown": "具体中断实现、工具/后台范围及 cancelled 回执未知；不写成不支持。",
+        "evidence": "https://agentclientprotocol.com/protocol/v1/prompt-turn"
+      },
+      "history": {
+        "known": "旧 0.2.14 项目 JSONL list/load、QueryEngine.resume；streamHistory 未 await，晚于响应可能发生；当前 registry 仍此版本。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "L+unadvertised-C",
+        "known": "旧 new/load 只返回 models；C setter 存在但不初始广告/发更新，下一请求是否实际采纳完整链未核清。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "device flow/PAT；官方 CLI /status /logout，与标准 ACP status/logout 分开。环境 PAT 存在时下次仍会认证。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "PAT 属 Qoder 官方服务认证；当前 custom model 文档不能未经版本核查映射至 0.2.14。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/qoder/agent.json",
+        "https://docs.qoder.com/cli/acp",
+        "https://docs.qoder.com/cli/authentication"
+      ],
+      "nextStep": "补迟到回放 fixture，精确跟踪 L 值到下一请求；账号来源应解释环境优先级而非假退出。"
+    },
+    {
+      "id": "qwen-code",
+      "name": "Qwen Code",
+      "integration": "native first-party ACP server",
+      "entry": "npx @qwen-code/qwen-code@0.25.0 --acp --experimental-skills",
+      "registry": {
+        "version": "0.25.0",
+        "checkedAt": "2026-10-09T08:18:09.671980+00:00",
+        "documentSha256": "f252e7e71755461c952a1f08036491da25c820a4446f83fd77f91b709e53c50c"
+      },
+      "historicalVersion": "0.24.7",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-core.json#/agents/5",
+      "currentDocumentFinding": "Qwen 官方仓库与 registry --acp 可查；当前 0.25.0，本地已有旧 0.24.7 和 0.25.0 公开源码样本。",
+      "implementationEvidenceScope": "以下实现事实主要来自 0.24.7 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "cancel 在目标 session context await cancelPendingPrompt，并处理尚在准入队列的请求。",
+        "scope": "0.24.7",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "output/acp-first-batch-research-2026-10-05/group-core-sources/qwen-code/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts:6958"
+      },
+      "history": {
+        "known": "旧 SessionService 持久 list/load，标准 load 默认 await replayHistory，resume 明确不回放；继续使用恢复 session 和模型。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C+L",
+        "known": "旧 model config 委托 session.setModel(persistDefault:false)，reasoning_effort 及旧 set_model 均有；不会把 CLI 全局默认当当前 session 已确认值。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "Qwen OAuth/OpenAI-compatible 配置可见，authenticate/update 扩展给登录 URL；ACP status/logout 未核到。Farfold 已有官方旧 terminal metadata 的窄兼容路线。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "原 OpenAI-compatible provider 与官方 auth/setup 可继承；Farfold 新 API 托管服务未编译给此接入。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/qwen-code/agent.json",
+        "https://github.com/QwenLM/qwen-code",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L1050",
+        "https://github.com/QwenLM/qwen-code/blob/v0.24.7/packages/cli/src/acp-integration/acpAgent.ts#L5734"
+      ],
+      "nextStep": "优先对照 0.25.0 官方非持久环境/配置接口补服务来源映射；保持认证引导与账号是否可请求分开。"
+    },
+    {
+      "id": "sigit",
+      "name": "siGit Code",
+      "integration": "siGit官方原生ACP server（Rust）；非社区adapter",
+      "entry": "npx @smbcloud/sigit@1.6.5",
+      "registry": {
+        "version": "1.6.5",
+        "checkedAt": "2026-10-09T08:18:09.714965+00:00",
+        "documentSha256": "6df3ca18345c4df9eb756d8f3a9b9d901d66b99f853debb9a1a75224b18e2c6e"
+      },
+      "historicalVersion": "1.5.11",
+      "historicalEvidence": "docs/evidence/2026-10-05-first-batch-acp-research/group-remaining.json#/agents/9",
+      "currentDocumentFinding": "官方仓库与 current registry 1.6.5；本轮读 1.6.5 load/cancel，旧完整实现样本 1.5.11。",
+      "implementationEvidenceScope": "以下实现事实主要来自 1.5.11 的既有公开源码/发行文本；本轮重读研究与所列关键源码，当前 registry 更高版本未逐项验证。",
+      "cancel": {
+        "known": "handle_cancel 只给匹配 session cancellation flag 和 notify；原 prompt 完成仍为确认停止的必要证据。",
+        "scope": "1.6.5",
+        "unknown": "本轮没有发送 session/cancel，也没有证明模型/工具/后台工作真正停止；完整确认仍待用户授权真实测试。",
+        "evidence": "https://github.com/getsigit/sigit/blob/v1.6.5/src/main.rs#L3996"
+      },
+      "history": {
+        "known": "旧 JSONL+meta 持久 list/load，缺文件可能空建；1.6.5 已经统一 restore_session 路线，但本轮未完整核其错误/回放新语义。",
+        "unknown": "非空真实历史、冷恢复、恢复后续答本轮均未执行；load 成功不能单独证明完整正文。"
+      },
+      "configuration": {
+        "route": "C",
+        "known": "旧先 activate_session 再保留 conversation 换 backend；认证失败可能回未改 configOptions，必须检查 currentValue。",
+        "unknown": "所有真实模型/推理切换及跨进程保存本轮未执行；新版本未核项不按旧实现断言。"
+      },
+      "account": {
+        "known": "复用 siGit 凭据，authenticate 验已有登录或浏览器；/whoami /logout 是公开 slash，不能当标准 ACP logout 广告。",
+        "unknown": "实际登录账号、凭据有效性、权益和退出结果均未触碰；未公开方法保留未知。"
+      },
+      "serviceApi": {
+        "known": "原生本地模型/remote provider 配置可用；Farfold 任意新 API 服务编译未覆盖。",
+        "unknown": "接口/环境变量存在不等于该版本任意 API 协议/模型或账号可用；不替 Agent 写配置。"
+      },
+      "farfoldGap": "统一新 API 来源配置尚未覆盖此 Agent；具体公开官方临时接口与账号/历史边界还需补证。",
+      "farfoldEvidence": "src-tauri/src/acp_client/service_config.rs:35; src-tauri/src/acp_client/session_config.rs:135; src-tauri/src/acp_client/account_query.rs:17",
+      "sourceURLs": [
+        "https://raw.githubusercontent.com/agentclientprotocol/registry/main/sigit/agent.json",
+        "https://github.com/getsigit/sigit",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1570",
+        "https://github.com/getsigit/sigit/blob/v1.6.0/src/main.rs#L1605",
+        "https://raw.githubusercontent.com/getsigit/sigit/v1.6.5/src/main.rs"
+      ],
+      "nextStep": "保持对 setter 确认值的核验；复核 1.6.5 restore missing-record，按标准广告显示账号动作。"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+warning: unused import: `std::io::Write`
+  --> src/agent_install/archive.rs:97:9
+   |
+97 |     use std::io::Write as _;
+   |         ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.50s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-bc6b4ff3bfd9658e)
+
+running 17 tests
+test acp_client::session_config::tests::actual_modern_model_declaration_takes_precedence_without_fallback ... ok
+test acp_client::session_config::tests::old_model_ack_never_invents_reasoning_choices_when_no_new_declaration_arrives ... ok
+test acp_client::session_config::tests::malformed_and_duplicate_model_lists_are_not_invented_choices ... ok
+test acp_client::session_config::tests::unrelated_model_configuration_does_not_hide_the_declared_old_model_picker ... ok
+test acp_client::session_config::tests::legacy_models_become_one_generic_option_without_changing_ids_or_labels ... ok
+test acp_client::session_config::tests::configuration_origin_does_not_confuse_old_model_projection_with_a_modern_declaration ... ok
+test acp_client::session_config::tests::legacy_receipt_preserves_concurrent_reasoning_declarations ... ok
+test acp_client::session_config::tests::valid_empty_configuration_notification_can_remove_reasoning_options ... ok
+test acp_client::session_config::tests::legacy_ack_does_not_require_an_optional_notification_but_conflicts_block ... ok
+test acp_client::session_config::tests::malformed_configuration_notifications_never_confirm_a_legacy_model_change ... ok
+test acp_client::session_config::transport_tests::legacy_transport_save_failure_retains_old_baseline_and_exact_retry ... ok
+test acp_client::session_config::transport_tests::modern_transport_rejects_old_mode_but_confirms_and_saves_thinking_before_next_prompt ... ok
+test acp_client::session_config::transport_tests::legacy_transport_conflicting_notification_blocks_without_overwriting_saved_model ... ok
+test acp_client::session_config::transport_tests::legacy_transport_modern_empty_result_does_not_fallback_to_set_model ... ok
+test acp_client::session_config::transport_tests::legacy_transport_late_empty_ack_cannot_authorize_an_unknown_change ... ok
+test acp_client::session_config::transport_tests::legacy_transport_malformed_configuration_cannot_remove_saved_reasoning_or_confirm ... ok
+test acp_client::session_config::transport_tests::legacy_transport_empty_ack_updates_original_session_and_cold_restores_before_next_prompt ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 1036 filtered out; finished in 0.61s
+

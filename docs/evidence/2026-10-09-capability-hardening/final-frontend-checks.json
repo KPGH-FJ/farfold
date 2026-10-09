@@ -1,0 +1,23 @@
+[
+  {
+    "name": "typecheck",
+    "command": ["corepack", "pnpm", "typecheck"],
+    "exitCode": 0,
+    "seconds": 5.506,
+    "log": "docs/evidence/2026-10-09-capability-hardening/final-frontend-typecheck.txt"
+  },
+  {
+    "name": "test",
+    "command": ["corepack", "pnpm", "test"],
+    "exitCode": 0,
+    "seconds": 23.888,
+    "log": "docs/evidence/2026-10-09-capability-hardening/final-frontend-test.txt"
+  },
+  {
+    "name": "build",
+    "command": ["corepack", "pnpm", "build"],
+    "exitCode": 0,
+    "seconds": 5.823,
+    "log": "docs/evidence/2026-10-09-capability-hardening/final-frontend-build.txt"
+  }
+]

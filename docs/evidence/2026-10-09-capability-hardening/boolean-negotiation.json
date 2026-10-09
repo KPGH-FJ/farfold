@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-09",
+  "recordedHead": "be1364ca635616f1b81860f4db96a78a29685baa",
+  "scope": "Official ACP boolean configuration negotiation through Farfold initialization and the existing shared setter. Controlled manager/protocol fixture only.",
+  "evidenceKind": "raw-tool-stdout-stderr-and-source-review",
+  "rawLogBoundary": "Each .txt is the original cargo subprocess stdout and stderr combined directly into a file. No output was reconstructed. JSON counts were parsed from those logs.",
+  "sourceIdentityBoundary": "Source hashes identify the two owned working-tree files at receipt creation; this is not a freeze of the entire concurrent workspace or of each earlier red run.",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256AtRecording": "7ffbe2f2c63db4a05dd13f8304d81a32d94514b191a17578984eea054cc45e3b",
+      "lines": 1180
+    },
+    {
+      "path": "src-tauri/src/acp_client/boolean_configuration_tests.rs",
+      "sha256AtRecording": "0c1b3fc931b5f2fbe6e15c0439ef8b35138adc4316c3121ec5351b2454690e2f",
+      "lines": 240
+    }
+  ],
+  "integrationRegistration": {
+    "path": "src-tauri/src/acp_client/mod.rs",
+    "owner": "parent agent",
+    "change": "Register #[cfg(test)] mod boolean_configuration_tests; child did not edit this file."
+  },
+  "dependencyBasis": {
+    "runtimeCrate": "agent-client-protocol 2.2.0",
+    "schemaCrate": "agent-client-protocol-schema 1.9.1",
+    "officialSchemaSource": "agent-client-protocol-schema-1.9.1/src/v1/client.rs:2403-2413,3502-3513",
+    "builder": "ClientCapabilities::session(ClientSessionCapabilities::config_options(SessionConfigOptionsCapabilities::boolean(BooleanConfigOptionCapabilities::new())))",
+    "wireDeclaration": {
+      "clientCapabilities": {
+        "session": {
+          "configOptions": {
+            "boolean": {}
+          }
+        }
+      }
+    },
+    "interpretation": "The installed official schema defines an omitted/null boolean capability as unsupported and an object declaration as permitting boolean options and typed boolean setters. No upstream fork, patch or new dependency."
+  },
+  "defect": "Farfold already rendered and sent boolean configuration values but did not advertise support during initialize. A compliant capability-gated peer withheld those options.",
+  "minimalFix": "Add the official schema boolean capability builder to the existing initialization request, preserving terminal authentication, form elicitation and existing metadata.",
+  "redObservation": "Both boolean cases failed before any setter: initial boolean option was None rather than Some(Bool(false)). The select-only peer passed. This is a behavioral red run, not a compile failure.",
+  "runs": [
+    {
+      "stage": "red",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib boolean_configuration_tests -- --nocapture",
+      "exitCode": 101,
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/boolean-negotiation-red.txt",
+      "rawLogSha256": "abb29f3c981f4c51997156997b9e49890ad258b0141c0e0e1658a45ee9557771",
+      "result": "FAILED",
+      "passed": 1,
+      "failed": 2,
+      "ignored": 0,
+      "filteredOut": 1050,
+      "durationSeconds": 0.38
+    },
+    {
+      "stage": "green",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib boolean_configuration_tests -- --nocapture",
+      "exitCode": 0,
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/boolean-negotiation-green.txt",
+      "rawLogSha256": "6c8cf7c36bc68b538f72541f378831e88ce79d5d483662727155544023a2268a",
+      "result": "ok",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "filteredOut": 1050,
+      "durationSeconds": 0.39
+    },
+    {
+      "stage": "configuration-regression",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib session_config::",
+      "exitCode": 0,
+      "rawLog": "docs/evidence/2026-10-09-capability-hardening/boolean-negotiation-config-regression.txt",
+      "rawLogSha256": "612f72d55a124d298d7f8ba19c83954902f1f1efabd58f1ad57910f23190d250",
+      "result": "ok",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 0,
+      "filteredOut": 1036,
+      "durationSeconds": 0.61
+    }
+  ],
+  "additionalChecks": [
+    {
+      "command": "rustfmt --edition 2024 --config skip_children=true --check src-tauri/src/acp_client/manager.rs src-tauri/src/acp_client/boolean_configuration_tests.rs",
+      "exitCode": 0,
+      "evidenceKind": "tool-output-summary"
+    },
+    {
+      "command": "git diff --check -- src-tauri/src/acp_client/manager.rs src-tauri/src/acp_client/boolean_configuration_tests.rs",
+      "exitCode": 0,
+      "evidenceKind": "tool-output-summary"
+    }
+  ],
+  "coverage": [
+    "Real AcpManager initialization and session opening against an owned Python JSON-RPC peer; the peer returns a boolean option only after receiving the declared capability.",
+    "Initial false and explicit true then false round trips, with exact session/config ids, type:boolean and actual boolean wire values; complete configOptions receipts retain the unrelated select value.",
+    "Terminal authentication, form elicitation, terminal-auth metadata and the existing sessionFailure metadata remain advertised.",
+    "Explicit protocol rejection keeps the peer value false and produces exactly one setter call; a later explicit choice succeeds without an automatic retry.",
+    "A select-only peer ignores the extension and retains the existing string-value setter; Farfold invents no boolean option.",
+    "Existing 17 session_config tests cover modern and older model/config methods, malformed or conflicting receipts, late acknowledgement, persistence failure and cold restore against controlled peers."
+  ],
+  "observedWarning": "Cargo emitted an existing unused std::io::Write import warning at src/agent_install/archive.rs:97; this subtask did not edit that file.",
+  "notProven": [
+    "Actual availability and use of boolean configuration in any real Agent, provider, account or model.",
+    "Installed application UI behavior, complete 29-Agent integration, Windows execution or full product acceptance.",
+    "General boolean response mismatch handling is a separate parent-owned frontend change and is not credited to this manager fix."
+  ],
+  "notPerformed": [
+    "Real Agent/model/network calls",
+    "Formal application replacement or launch",
+    "Upstream modifications",
+    "New persistent ledger",
+    "Changes to pump.rs or session_configuration.ts",
+    "Commit"
+  ]
+}

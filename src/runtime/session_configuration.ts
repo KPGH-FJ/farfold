@@ -89,7 +89,7 @@ export class SessionConfiguration {
 
   async set(key: string, configId: string, value: unknown): Promise<void> {
     const s = this.hooks.thread(key);
-    if (!s) return;
+    if (!s) throw new Error(STRINGS.repair.configFailed);
     if (configOptionChangeBlocked(s, configId))
       throw new Error(STRINGS.repair.configFailed);
     const option = s.configOptions.find((option) => option.id === configId)!;
@@ -129,7 +129,8 @@ export class SessionConfiguration {
             sessionId: s.nativeSessionId,
             modeId: String(value),
           });
-          if (this.hooks.thread(key) !== s) return;
+          if (this.hooks.thread(key) !== s)
+            throw new Error(STRINGS.repair.configFailed);
           if (s.connectionLost || s.reconnecting)
             throw new Error(STRINGS.repair.configFailed);
           s.currentModeId = String(value);
@@ -146,7 +147,8 @@ export class SessionConfiguration {
               value,
             },
           );
-          if (this.hooks.thread(key) !== s) return;
+          if (this.hooks.thread(key) !== s)
+            throw new Error(STRINGS.repair.configFailed);
           if (
             !updated ||
             Array.isArray(updated) ||
@@ -166,8 +168,8 @@ export class SessionConfiguration {
                 change.pending.current,
                 updated.configCheck.current,
               )) ||
-            ((protectedChoice || permission) &&
-              actual?.currentValue !== value) ||
+            actual?.type !== option.type ||
+            actual?.currentValue !== value ||
             (protectedChoice && updated.configCheck.status !== "ready") ||
             (s.service
               ? !updated.service ||
@@ -199,8 +201,10 @@ export class SessionConfiguration {
         s.configError = STRINGS.repair.configFailed;
         throw new Error(s.configError);
       } finally {
-        if (this.changes.get(key) === change) this.changes.delete(key);
-        this.requests.delete(key);
+        if (this.changes.get(key) === change) {
+          this.changes.delete(key);
+          this.requests.delete(key);
+        }
         s.configuring = false;
         this.hooks.emit();
         this.hooks.finish(s);

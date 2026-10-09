@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-09T08:52:17.340017+00:00",
+  "sourceBase": "be1364ca635616f1b81860f4db96a78a29685baa",
+  "inputEvidence": "final-inputs.json",
+  "inputCount": 745,
+  "sourceUnchangedAfterFinalFreeze": true,
+  "protectedExistingDirtyFiles": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "frontend": {
+    "files": 221,
+    "passed": 2553,
+    "failed": 0,
+    "checks": "final-frontend-checks.json"
+  },
+  "rust": {
+    "passed": 1053,
+    "failed": 0,
+    "ignored": 4,
+    "checks": "final-rust-checks.json"
+  },
+  "format": {
+    "log": "final-format-check.txt",
+    "exitCode": 0
+  },
+  "documentation": {
+    "uniqueOriginalPlanIds": 122,
+    "officialRowsMatchingCatalog": 29,
+    "authority": ["PRODUCT.md", "plans/agent-access.md", "docs/status.md"],
+    "scopeNotReduced": true,
+    "validLocalLinks": 38
+  },
+  "independentReviews": [
+    "Late cancellation interactions and local preparation: architecture and verification",
+    "Strict saved settings and ordering correction: architecture and verification",
+    "Boolean handshake and declared option confirmation: product_coverage and verification",
+    "Configuration lifecycle replacement and request tracking: verification",
+    "Final FIFO scheduling and targeted evidence: root and verification"
+  ],
+  "evidenceBoundary": [
+    "Source, unit tests and synthetic official-protocol peers only",
+    "No installed application replacement or new installed UI claim",
+    "No real Agent/account/model exercised",
+    "Four existing ignored Rust tests remain untested",
+    "Whole database recovery, physical disk-full, real cancellation tails, 29-by-8 real coverage and Windows runtime remain open"
+  ],
+  "rawOutputPolicy": "Raw .txt logs preserve stdout bytes including trailing spaces and terminal blank lines; scoped source/document diff checks exclude those raw logs."
+}

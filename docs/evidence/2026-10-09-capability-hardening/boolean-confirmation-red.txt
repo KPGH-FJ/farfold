@@ -1,0 +1,68 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/session_configuration.boolean.test.ts (7 tests | 6 failed) 10009ms
+   × does not confirm a boolean change when the receipt is unchanged 3ms
+   × does not confirm a boolean change when the receipt is missing 1ms
+   × does not confirm a boolean change when the receipt is string value 0ms
+   × does not confirm a boolean change when the receipt is changed type 0ms
+   × retains the old value and reports a rejected setter without retry 0ms
+   × does not accept a late receipt after the connection was lost 10003ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is unchanged
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is missing
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is string value
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not confirm a boolean change when the receipt is changed type
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/session_configuration.boolean.test.ts:56:56
+     54|   const { a, b, configuration, reply } = fixture();
+     55|   h.invoke.mockResolvedValue(reply(options));
+     56|   await expect(configuration.set("a", "feature", true)).rejects.toThro…
+       |                                                        ^
+     57|     STRINGS.repair.configFailed,
+     58|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > retains the old value and reports a rejected setter without retry
+Error: fixture rejection
+ ❯ src/runtime/session_configuration.boolean.test.ts:94:30
+     92| it("retains the old value and reports a rejected setter without retry"…
+     93|   const { a, configuration } = fixture();
+     94|   h.invoke.mockRejectedValue(new Error("fixture rejection"));
+       |                              ^
+     95|   await expect(configuration.set("a", "feature", true)).rejects.toThro…
+     96|   expect(a.configOptions[0].currentValue).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/session_configuration.boolean.test.ts > does not accept a late receipt after the connection was lost
+Error: Hook timed out in 10000ms.
+If this is a long-running hook, pass a timeout value as the last argument or configure it globally with "hookTimeout".
+ ❯ src/runtime/session_configuration.boolean.test.ts:46:1
+     44| }
+     45|
+     46| beforeEach(() => h.invoke.mockReset());
+       | ^
+     47|
+     48| it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  16:34:28
+   Duration  10.18s (transform 79ms, setup 0ms, import 104ms, tests 10.01s, environment 0ms)
+
