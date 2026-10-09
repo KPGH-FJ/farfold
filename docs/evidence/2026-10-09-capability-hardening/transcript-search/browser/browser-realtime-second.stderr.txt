@@ -1,0 +1,17 @@
+
+DevTools listening on ws://127.0.0.1:63134/devtools/browser/c95b8a3f-a272-44ef-88da-c163d442d687
+Trying to load the allocator multiple times. This is *not* supported.
+[84816:19431940:1009/204945.319361:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.319578:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19431940:1009/204945.321302:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.321331:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19431940:1009/204945.322102:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.322122:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19431940:1009/204945.322222:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.322251:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19431940:1009/204945.322349:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.322392:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19431940:1009/204945.332316:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84816:19432015:1009/204945.332350:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84811:19431883:1009/204946.223880:ERROR:content/browser/network_service_instance_impl.cc:653] Network service crashed or was terminated, restarting service.
+[84811:19431883:1009/204946.224792:ERROR:content/browser/gpu/gpu_process_host.cc:1130] GPU process exited unexpectedly: exit_code=15

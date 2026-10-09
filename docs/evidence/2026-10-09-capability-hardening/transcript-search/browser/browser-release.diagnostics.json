@@ -1,0 +1,165 @@
+[
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550640652.155,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550640763.293,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "info",
+      "args": [
+        {
+          "type": "string",
+          "value": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"
+        },
+        {
+          "type": "string",
+          "value": "font-weight:bold"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550640849.824,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14335,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14372,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "",
+            "scriptId": "34",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14377,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "",
+            "scriptId": "34",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14380,
+            "columnNumber": 15
+          }
+        ]
+      }
+    }
+  }
+]

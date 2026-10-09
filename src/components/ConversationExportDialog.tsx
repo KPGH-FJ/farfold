@@ -1,7 +1,7 @@
 import { useRef, useState, type RefObject } from "react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { fileDelivery } from "../runtime/file_delivery";
-import { uiError } from "../runtime/ui_error";
+import { EXPORT_STRINGS as E } from "../runtime/export_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 
@@ -18,6 +18,7 @@ export function ConversationExportDialog({
 }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState<string | null>(null);
+  const [cancelled, setCancelled] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const writing = useRef(false);
   const close = () => {
@@ -28,6 +29,8 @@ export function ConversationExportDialog({
     writing.current = true;
     setSaving(true);
     setError(null);
+    setSaved(null);
+    setCancelled(false);
     try {
       const destination = await save({
         defaultPath: name,
@@ -36,9 +39,11 @@ export function ConversationExportDialog({
       if (destination) {
         await fileDelivery.exportText(text, destination);
         setSaved(destination);
+      } else {
+        setCancelled(true);
       }
-    } catch (reason) {
-      setError(uiError(reason, R.exportFailed));
+    } catch {
+      setError(E.failed);
     } finally {
       writing.current = false;
       setSaving(false);
@@ -53,10 +58,26 @@ export function ConversationExportDialog({
     >
       <div className="conversation-export-body">
         <strong role="status">
-          {saving ? R.exportSaving : saved ? R.exportSaved : R.exportReady}
+          {saving
+            ? R.exportSaving
+            : saved
+              ? R.exportSaved
+              : error
+                ? E.unconfirmed
+                : cancelled
+                  ? E.cancelled
+                  : R.exportReady}
         </strong>
         <code>{saved ?? name}</code>
-        <p>{R.exportScope}</p>
+        <p>{E.dialogSummary}</p>
+        <details>
+          <summary>{E.details}</summary>
+          <p>{E.dialogScope}</p>
+          <p>{E.excludedScope}</p>
+          <p>{E.attachmentsScope}</p>
+          <p>{E.lineScope}</p>
+          <p>{E.privacyScope}</p>
+        </details>
         {error && <p role="alert">{error}</p>}
         <footer>
           <button

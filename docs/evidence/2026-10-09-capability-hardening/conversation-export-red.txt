@@ -1,0 +1,262 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_export.test.ts (14 tests | 12 failed) 7ms
+   × preserves a media-only image reply as an attachment description without embedding its body 3ms
+   × preserves a media-only audio reply as an attachment description without embedding its body 0ms
+   × preserves a media-only resource reply as an attachment description without embedding its body 0ms
+   × preserves a media-only resource_link reply as an attachment description without embedding its body 0ms
+   × retains source-less media and does not invent a file path 0ms
+   × does not export pending as a successful operation 0ms
+   × does not export in_progress as a successful operation 0ms
+   × does not export failed as a successful operation 0ms
+   × does not export future_status as a successful operation 1ms
+   × retains all reported locations, diff and attachment sources without turning them into verified artifacts 0ms
+   × exports only safe source metadata, omitting embedded URIs, URL credentials and query fragments 0ms
+   × marks a streaming snapshot, remains immutable after later events, and never includes draft or raw detail 0ms
+ ❯ src/components/ConversationExportDialog.test.tsx (5 tests | 4 failed) 17ms
+   × a second pickerFailure cannot leave the previous success presented as this attempt's receipt 7ms
+   × a second writeFailure cannot leave the previous success presented as this attempt's receipt 2ms
+   × a second cancel cannot leave the previous success presented as this attempt's receipt 3ms
+   × clears an old success as soon as the next location picker opens 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationExportDialog.test.tsx > a second pickerFailure cannot leave the previous success presented as this attempt's receipt
+ FAIL  src/components/ConversationExportDialog.test.tsx > a second writeFailure cannot leave the previous success presented as this attempt's receipt
+ FAIL  src/components/ConversationExportDialog.test.tsx > a second cancel cannot leave the previous success presented as this attempt's receipt
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ConversationExportDialog.test.tsx:39:34
+     37|   if (outcome === "writeFailure") h.write.mockRejectedValueOnce(new Er…
+     38|   save(); await flush();
+     39|   expect(visible(R.exportSaved)).toBe(false);
+       |                                  ^
+     40|   expect(visible("/first.md")).toBe(false);
+     41|   expect(nodes().filter(n => n.props.role === "status")).toHaveLength(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/components/ConversationExportDialog.test.tsx > clears an old success as soon as the next location picker opens
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/ConversationExportDialog.test.tsx:50:32
+     48|   h.pick.mockReturnValueOnce(new Promise(() => {}));
+     49|   save();
+     50|   expect(visible("/first.md")).toBe(false);
+       |                                ^
+     51|   expect(visible(R.exportSaved)).toBe(false);
+     52|   expect(visible(R.exportSaving)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only image reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only audio reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only resource reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only resource_link reply as an attachment description without embedding its body
+AssertionError: expected '# 当前对话\n' to contain '**助手**'
+
+- Expected
++ Received
+
+- **助手**
++ # 当前对话
++
+
+ ❯ src/runtime/conversation_export.test.ts:20:20
+     18|   "preserves a media-only %s reply as an attachment description withou…
+     19|     const result = render([message([{ kind, name: "附件一", mimeType: "ex…
+     20|     expect(result).toContain("**助手**");
+       |                    ^
+     21|     expect(result).toContain("附件一 — /work/附件一");
+     22|     expect(result).toContain("example/type");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > retains source-less media and does not invent a file path
+AssertionError: expected '# 当前对话\n' to contain '图片'
+
+- Expected
++ Received
+
+- 图片
++ # 当前对话
++
+
+ ❯ src/runtime/conversation_export.test.ts:30:18
+     28| it("retains source-less media and does not invent a file path", () => {
+     29|   const result = render([message([{ kind: "image", name: "图片", data: "…
+     30|   expect(result).toContain("图片");
+       |                  ^
+     31|   expect(result).toContain("未提供来源位置");
+     32|   expect(result).not.toContain("BINARY_SECRET");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > does not export pending as a successful operation
+AssertionError: expected '# 当前对话\n\n- 查看了文件\n' to contain '等待中'
+
+- Expected
++ Received
+
+- 等待中
++ # 当前对话
++
++ - 查看了文件
++
+
+ ❯ src/runtime/conversation_export.test.ts:38:18
+     36| ])("does not export %s as a successful operation", (status, label) => {
+     37|   const result = render([tool({ status })]);
+     38|   expect(result).toContain(label);
+       |                  ^
+     39|   expect(result).not.toContain("查看了文件");
+     40|   expect(result).not.toContain("future_status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > does not export in_progress as a successful operation
+AssertionError: expected '# 当前对话\n\n- 查看了文件\n' to contain '进行中'
+
+- Expected
++ Received
+
+- 进行中
++ # 当前对话
++
++ - 查看了文件
++
+
+ ❯ src/runtime/conversation_export.test.ts:38:18
+     36| ])("does not export %s as a successful operation", (status, label) => {
+     37|   const result = render([tool({ status })]);
+     38|   expect(result).toContain(label);
+       |                  ^
+     39|   expect(result).not.toContain("查看了文件");
+     40|   expect(result).not.toContain("future_status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > does not export failed as a successful operation
+AssertionError: expected '# 当前对话\n\n- 查看了文件\n' to contain '失败'
+
+- Expected
++ Received
+
+- 失败
++ # 当前对话
++
++ - 查看了文件
++
+
+ ❯ src/runtime/conversation_export.test.ts:38:18
+     36| ])("does not export %s as a successful operation", (status, label) => {
+     37|   const result = render([tool({ status })]);
+     38|   expect(result).toContain(label);
+       |                  ^
+     39|   expect(result).not.toContain("查看了文件");
+     40|   expect(result).not.toContain("future_status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > does not export future_status as a successful operation
+AssertionError: expected '# 当前对话\n\n- 查看了文件\n' to contain '状态未确认'
+
+- Expected
++ Received
+
+- 状态未确认
++ # 当前对话
++
++ - 查看了文件
++
+
+ ❯ src/runtime/conversation_export.test.ts:38:18
+     36| ])("does not export %s as a successful operation", (status, label) => {
+     37|   const result = render([tool({ status })]);
+     38|   expect(result).toContain(label);
+       |                  ^
+     39|   expect(result).not.toContain("查看了文件");
+     40|   expect(result).not.toContain("future_status");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > retains all reported locations, diff and attachment sources without turning them into verified artifacts
+AssertionError: expected '# 当前对话\n\n- 查看了文件 — /first.ts\n' to contain '第 2 行'
+
+- Expected
++ Received
+
+- 第 2 行
++ # 当前对话
++
++ - 查看了文件 — /first.ts
++
+
+ ❯ src/runtime/conversation_export.test.ts:53:169
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > exports only safe source metadata, omitting embedded URIs, URL credentials and query fragments
+AssertionError: expected '# 当前对话\n' to contain 'https://example.test/a'
+
+- Expected
++ Received
+
+- https://example.test/a
++ # 当前对话
++
+
+ ❯ src/runtime/conversation_export.test.ts:62:18
+     60|     { name: "未知地址", uri: "custom:OPAQUE_SECRET" },
+     61|   ])]);
+     62|   expect(result).toContain("https://example.test/a");
+       |                  ^
+     63|   expect(result).toContain("地址中的认证与附加参数未导出");
+     64|   for (const part of ["URL_PASSWORD", "QUERY_SECRET", "FRAGMENT_SECRET…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > marks a streaming snapshot, remains immutable after later events, and never includes draft or raw detail
+AssertionError: expected '# 当前对话\n\n**助手**\n\n已收到的片段\n' to contain '当前已载入'
+
+- Expected
++ Received
+
+- 当前已载入
++ # 当前对话
++
++ **助手**
++
++ 已收到的片段
++
+
+ ❯ src/runtime/conversation_export.test.ts:70:18
+     68|   const thread = { items: [item], composerDraft: "DRAFT_SECRET", queue…
+     69|   const result = transcriptMarkdown(thread, "当前对话", "助手");
+     70|   expect(result).toContain("当前已载入");
+       |                  ^
+     71|   expect(result).toContain("仍在接收");
+     72|   expect(result).toContain("导出时");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  16 failed | 3 passed (19)
+   Start at  20:43:13
+   Duration  189ms (transform 105ms, setup 0ms, import 150ms, tests 25ms, environment 0ms)
+

@@ -1,0 +1,100 @@
+{
+  "checkedAtUtc": "2026-10-09T13:13:56.627998+00:00",
+  "status": "passed",
+  "sourceBase": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "inputCount": 932,
+  "inputsSha256": "cafeadd016af13e03c3eaa20d001b00a6701b0c96b3cff88124b84262f0ae87d",
+  "sourceUnchanged": true,
+  "changedInputs": [],
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 17.432,
+      "log": "format.txt"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.621,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 31.501,
+      "log": "frontend.txt"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 6.72,
+      "log": "build.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.922,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.809,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 37.13,
+      "log": "rust.txt"
+    }
+  ],
+  "finalFormat": {
+    "exitCode": 0,
+    "log": "format-after-receipts.txt"
+  },
+  "frontend": {
+    "files": 260,
+    "passed": 2887,
+    "failed": 0
+  },
+  "rust": {
+    "passed": 1134,
+    "ignored": 5,
+    "failed": 0
+  },
+  "firstRun": "../sixth-checks/receipt.json",
+  "initialFailure": "One old ApprovalInput SSR useState override no longer set expansion. Only the test fixture was corrected; original content assertions retained and expansion assertions added.",
+  "finalFormatFailure": "Generated first-run receipt.json required formatting; original format stdout retained. No source changed for formatting.",
+  "installed": false,
+  "realAgentsValidated": false
+}

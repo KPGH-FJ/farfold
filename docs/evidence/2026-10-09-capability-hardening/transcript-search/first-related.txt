@@ -1,0 +1,84 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ✓ src/runtime/transcript_search.test.ts > temporarily reveals a closed disclosure and restores its user's choice 3ms
+ ✓ src/runtime/transcript_search.test.ts > does not close a disclosure the user had opened 0ms
+ ✓ src/runtime/transcript_search.test.ts > a stale release cannot close the next search's reveal 0ms
+ ✓ src/runtime/transcript_search.test.ts > manual choices supersede a temporary reveal without being undone on close 0ms
+ × src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after toggle without changing the query or thread revision 9ms
+   → expected '没有匹配内容' to be '1 / 1' // Object.is equality
+ × src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after mutate without changing the query or thread revision 1ms
+   → expected '没有匹配内容' to be '1 / 1' // Object.is equality
+ ✓ src/components/ConversationInteractions.review.test.tsx > keeps the export dialog open during the write and shows the saved receipt 106ms
+ ✓ src/components/ConversationInteractions.review.test.tsx > keeps the export dialog open during the write and shows the failed receipt 102ms
+ ✓ src/components/ConversationInteractions.review.test.tsx > leaves 'Enter' to the composing input method 1ms
+ ✓ src/components/ConversationInteractions.review.test.tsx > leaves 'Enter' to the composing input method 1ms
+ ✓ src/components/ConversationInteractions.review.test.tsx > leaves 'Escape' to the composing input method 1ms
+ ✓ src/components/ConversationInteractions.review.test.tsx > releases the export close guard after cancelling the location picker and never writes a file 54ms
+ ✓ src/components/MessageContent.test.tsx > preserves Markdown after remount and renders new text for the same streaming message 25ms
+ × src/components/MessageContent.test.tsx > renders actual image, audio, file and text-resource messages without raw or executable markup 18ms
+   → expected '<div class="message-text markdown-bod…' to contain '<img'
+ ✓ src/components/MessageContent.test.tsx > starts structured attachments as compact file items while retaining the original details for explicit expansion 2ms
+ ✓ src/components/MessageContent.test.tsx > keeps attachment keyboard actions from triggering conversation approval without preventing expansion or media controls 3ms
+ ✓ src/components/MessageContent.test.tsx > does not infer structured attachments from ordinary text resembling a file context 7ms
+ ✓ src/components/MessageContent.test.tsx > opens an exact inline path only after a click, preserving its code appearance 5ms
+ ✓ src/components/MessageContent.test.tsx > keeps cached Markdown bound to the latest file callback and permits old messages to become clickable 6ms
+ ✓ src/components/MessageContent.test.tsx > never activates paths inside plain or language-labelled code blocks, or shell commands 3ms
+ ✓ src/components/MessageContent.test.tsx > uses the same callback for structured local resources and ordinary Markdown filenames 4ms
+ ✓ src/components/MessageContent.test.tsx > isolates file-link keyboard actions without suppressing the native button click 3ms
+ ✓ src/components/MessageContent.test.tsx > uses the outer Markdown destination when a link label itself is an inline path 3ms
+ ✓ src/components/TranscriptSearch.presentation.test.tsx > materializes the fourth attachment's loaded text while search is active 15ms
+ ✓ src/components/TranscriptSearch.presentation.test.tsx > search materialization never introduces image or audio decoders 4ms
+ ✓ src/components/TranscriptSearch.presentation.test.tsx > registers ordinary user text separately from historical embedded image data 1ms
+ ✓ src/components/TranscriptSearch.presentation.test.tsx > registers an already loaded compaction summary even while folded 3ms
+ ✓ src/components/ThreadView.cold-images.test.tsx > presents a replayed text image as an explicit unopened attachment while preserving the original message and copy 20ms
+ ✓ src/components/ThreadView.compaction.test.tsx > shows the actual in_progress lifecycle state in a shared card 16ms
+ ✓ src/components/ThreadView.compaction.test.tsx > shows the actual completed lifecycle state in a shared card 5ms
+ ✓ src/components/ThreadView.compaction.test.tsx > shows the actual failed lifecycle state in a shared card 4ms
+ ✓ src/components/ThreadView.compaction.test.tsx > shows the actual cancelled lifecycle state in a shared card 5ms
+ ✓ src/components/ThreadView.compaction.test.tsx > shows the actual _future lifecycle state in a shared card 3ms
+ ✓ src/components/ThreadView.compaction.test.tsx > renders an accessible retained summary, non-text blocks and original details without a fake reply 11ms
+ ✓ src/components/ThreadView.compaction.test.tsx > labels partial failed content and connection loss honestly 22ms
+ ✓ src/components/ThreadView.compaction.test.tsx > joins adjacent streamed text blocks into the same retained Markdown content 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after toggle without changing the query or thread revision
+ FAIL  src/components/ConversationInteractions.review.test.tsx > refreshes visible search matches after mutate without changing the query or thread revision
+AssertionError: expected '没有匹配内容' to be '1 / 1' // Object.is equality
+
+Expected: "1 / 1"
+Received: "没有匹配内容"
+
+ ❯ src/components/ConversationInteractions.review.test.tsx:160:21
+    158|     expect(count()).toBe(LIBRARY.findEmpty);
+    159|     fixture[kind](true);
+    160|     expect(count()).toBe(R.findPosition(1, 1));
+       |                     ^
+    161|     fixture[kind](false);
+    162|     expect(count()).toBe(LIBRARY.findEmpty);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/MessageContent.test.tsx > renders actual image, audio, file and text-resource messages without raw or executable markup
+AssertionError: expected '<div class="message-text markdown-bod…' to contain '<img'
+
+Expected: "<img"
+Received: "<div class="message-text markdown-body" data-find-block="true"><div class="message-attachments" data-find-exclude-children="true" role="group" aria-label="消息附件"><div id="_R_2_"><div><details class="message-attachment"><summary title="图片"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name" data-find-block="true">图片</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">图片</span><small> · <span data-find-block="true">image/png</span></small></figcaption><p>此附件暂不支持预览</p></figure></details></div></div></div></div><div class="message-text markdown-body" data-find-block="true"><div class="message-attachments" data-find-exclude-children="true" role="group" aria-label="消息附件"><div id="_R_2_"><div><details class="message-attachment"><summary title="音频"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name" data-find-block="true">音频</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">音频</span><small> · <span data-find-block="true">audio/wav</span></small></figcaption><p>此附件暂不支持预览</p></figure></details></div></div></div></div><div class="message-text markdown-body" data-find-block="true"><div class="message-attachments" data-find-exclude-children="true" role="group" aria-label="消息附件"><div id="_R_2_"><div><details class="message-attachment"><summary title="file:///notes.md"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name" data-find-block="true"><span class="message-file-link">notes.md</span></span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">notes.md</span></figcaption><div class="message-file-link" data-find-block="true">file:///notes.md</div><pre data-find-block="true">&lt;script&gt;not executable&lt;/script&gt;</pre></figure></details></div></div></div></div><div class="message-text markdown-body" data-find-block="true"><div class="message-attachments" data-find-exclude-children="true" role="group" aria-label="消息附件"><div id="_R_2_"><div><details class="message-attachment"><summary title="https://example.com/file"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name" data-find-block="true">external</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><a href="https://example.com/file" target="_blank" rel="noreferrer noopener">external</a></figcaption><div class="message-file-link" data-find-block="true">https://example.com/file</div></figure></details></div></div></div></div><div class="message-text markdown-body" data-find-block="true"><div class="message-attachments" data-find-exclude-children="true" role="group" aria-label="消息附件"><div id="_R_2_"><div><details class="message-attachment"><summary title="javascript:alert(1)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name" data-find-block="true">unsupported</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">unsupported</span><small> · <span data-find-block="true">text/html</span></small></figcaption><div class="message-file-link" data-find-block="true">javascript:alert(1)</div><p>此附件暂不支持预览</p></figure></details></div></div></div></div>"
+
+ ❯ src/components/MessageContent.test.tsx:95:16
+     93|     )
+     94|     .join("");
+     95|   expect(html).toContain("<img");
+       |                ^
+     96|   expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
+     97|   expect(html).toContain('<audio controls="" preload="none"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  2 failed | 4 passed (6)
+      Tests  3 failed | 33 passed (36)
+   Start at  20:38:25
+   Duration  2.90s (transform 1.83s, setup 0ms, import 10.15s, tests 479ms, environment 0ms)
+

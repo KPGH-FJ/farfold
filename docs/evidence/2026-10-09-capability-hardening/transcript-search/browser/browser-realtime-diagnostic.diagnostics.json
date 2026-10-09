@@ -1,0 +1,334 @@
+[
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connecting..."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550283324.504,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 858,
+            "columnNumber": 8
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "debug",
+      "args": [
+        {
+          "type": "string",
+          "value": "[vite] connected."
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550283396.419,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "handleMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 967,
+            "columnNumber": 11
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 41
+          },
+          {
+            "functionName": "dequeue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 481,
+            "columnNumber": 7
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 473,
+            "columnNumber": 8
+          },
+          {
+            "functionName": "enqueue",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 467,
+            "columnNumber": 9
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 459,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "onMessage",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 297,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 415,
+            "columnNumber": 4
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "info",
+      "args": [
+        {
+          "type": "string",
+          "value": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"
+        },
+        {
+          "type": "string",
+          "value": "font-weight:bold"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550283548.382,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14335,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14372,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14377,
+            "columnNumber": 18
+          },
+          {
+            "functionName": "",
+            "scriptId": "21",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae",
+            "lineNumber": 7,
+            "columnNumber": 48
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14380,
+            "columnNumber": 15
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "error",
+      "args": [
+        {
+          "type": "string",
+          "value": "Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version."
+        },
+        {
+          "type": "string",
+          "value": "A"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1791550284079.36,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "console.<computed>",
+            "scriptId": "5",
+            "url": "http://127.0.0.1:1457/@vite/client",
+            "lineNumber": 532,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 3712,
+            "columnNumber": 15
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 850,
+            "columnNumber": 65
+          },
+          {
+            "functionName": "warnOnInvalidKey",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 3711,
+            "columnNumber": 6
+          },
+          {
+            "functionName": "reconcileChildrenArray",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 3740,
+            "columnNumber": 218
+          },
+          {
+            "functionName": "reconcileChildFibersImpl",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 3841,
+            "columnNumber": 105
+          },
+          {
+            "functionName": "",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 3868,
+            "columnNumber": 27
+          },
+          {
+            "functionName": "reconcileChildren",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 5385,
+            "columnNumber": 113
+          },
+          {
+            "functionName": "beginWork",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 6199,
+            "columnNumber": 1568
+          },
+          {
+            "functionName": "runWithFiberInDEV",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 850,
+            "columnNumber": 65
+          },
+          {
+            "functionName": "performUnitOfWork",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 8428,
+            "columnNumber": 91
+          },
+          {
+            "functionName": "workLoopSync",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 8324,
+            "columnNumber": 36
+          },
+          {
+            "functionName": "renderRootSync",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 8308,
+            "columnNumber": 5
+          },
+          {
+            "functionName": "performWorkOnRoot",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 7956,
+            "columnNumber": 180
+          },
+          {
+            "functionName": "performSyncWorkOnRoot",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 9066,
+            "columnNumber": 3
+          },
+          {
+            "functionName": "flushSyncWorkAcrossRoots_impl",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 8983,
+            "columnNumber": 301
+          },
+          {
+            "functionName": "flushSyncWork$1",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 8121,
+            "columnNumber": 80
+          },
+          {
+            "functionName": "f",
+            "scriptId": "13",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0",
+            "lineNumber": 14056,
+            "columnNumber": 70
+          },
+          {
+            "functionName": "exports.flushSync",
+            "scriptId": "17",
+            "url": "http://127.0.0.1:1457/node_modules/.vite/deps/react-dom.js?v=d568a382",
+            "lineNumber": 80,
+            "columnNumber": 99
+          },
+          {
+            "functionName": "find",
+            "scriptId": "6",
+            "url": "http://127.0.0.1:1457/docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx?t=1791550258603",
+            "lineNumber": 205,
+            "columnNumber": 1
+          },
+          {
+            "functionName": "run",
+            "scriptId": "6",
+            "url": "http://127.0.0.1:1457/docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx?t=1791550258603",
+            "lineNumber": 223,
+            "columnNumber": 7
+          }
+        ]
+      }
+    }
+  }
+]

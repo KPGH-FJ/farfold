@@ -1,0 +1,265 @@
+{
+  "recordType": "review_followup_increment_receipt",
+  "capability": "P35",
+  "date": "2026-10-09",
+  "priorReceipt": "conversation-export.json",
+  "status": "final_owned_inputs_frozen_targeted_pass_pending_independent_prefix_review",
+  "changes": [
+    "Both the saved Markdown and save dialog state exact included and excluded categories. This selected readable export is explicitly not a complete conversation archive.",
+    "Included: user/Agent messages, attachment descriptors, tool summaries/reported positions, plan entries, approval/refusal records, stopped/failed/unknown result hints.",
+    "Excluded: thought, general notice, compaction records, raw events, collapsed tool details, unloaded history, drafts and queued content. Attachment bundles and complete archival coverage remain unfinished.",
+    "Tool location line values remain unchanged. Values 0, 1 and 42 are described as reported line numbers with unconfirmed coordinate base; no zero/one conversion or invented line is used.",
+    "Plan content and decision labels are single-line escaped metadata. Newlines, Markdown role/header syntax, remote images and HTML cannot add export structure through these fields. User/Agent message Markdown is intentionally retained.",
+    "Contract layering follow-up: default export explanation is one short sentence; full included/excluded/attachment/privacy/line-base scope remains in a native details element closed by default. Saved Markdown retains all scope statements. Each location only reports its received number, with the unconfirmed base explained once in shared scope.",
+    "Independent-review prefix counterexamples fixed: all CommonMark-escapable ASCII punctuation is escaped in metadata, and initial spaces are encoded as literal text so they cannot create an indented code block. Actual Markdown rendering verifies heading, rule, ordered/unordered list, tilde/backtick fence and quotation prefixes, as well as all punctuation and Chinese/macOS/Windows paths. Message-body Markdown remains unchanged."
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "lines": 128
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816",
+      "lines": 35
+    },
+    {
+      "path": "src/runtime/conversation_export.test.ts",
+      "sha256": "9f1498257ab08c9be2276d92c103a1f1679ce286c09f08a7c7cc83868bc40234",
+      "lines": 389
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079",
+      "lines": 103
+    },
+    {
+      "path": "src/components/ConversationExportDialog.test.tsx",
+      "sha256": "c6b63b868d04a5e4b12a035ec16bfb6ee81f21288cc8eaaf4321fefeda66451c",
+      "lines": 187
+    },
+    {
+      "path": "src/runtime/conversation_actions.test.ts",
+      "sha256": "e52cd82c0bca50a1b3e4ce8ed1053b9251980157e9e1b7fdd3c782375bf7d4dd",
+      "lines": 256
+    }
+  ],
+  "checks": [
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-red.txt",
+      "sha256": "a910a26cc456f19c809353cded4e0b834d9254a4a33c8bf35d8ba95b45625c5f",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 2,
+        "failed": 7,
+        "passed": 22
+      },
+      "meaning": "Effective review counterexamples against prior implementation: scope omissions, unproven line base, plan/decision structural injection."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-before-fix-failed.txt",
+      "sha256": "6fab3ca95941e20c85d464523e102723e467757ff03ffc9f8051eb293591eb09",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 2,
+        "filesPassed": 4,
+        "failed": 7,
+        "passed": 87
+      },
+      "meaning": "The preceding Python edit command had failed with an encoding error; production remained unchanged. This is not new product behavior or successful repair."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-metadata-assertion-failed.txt",
+      "sha256": "d9ff499110dde19698da2336f12b7fd091780b8eb49ed7bff5c759ebe996f3b6",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 1,
+        "filesPassed": 5,
+        "failed": 2,
+        "passed": 92
+      },
+      "meaning": "Repair applied; two source-text assertions incorrectly rejected an escaped HTML opener. Replaced the invalid source substring assertion with actual react-markdown static-render checks; retained role/image source assertions."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-green.txt",
+      "sha256": "bce5034ece69abd6a31b72e13a7174ed1bc919b027f9d5d3b5d4690d1ab43745",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 6,
+        "passed": 95
+      },
+      "meaning": "Final related regression. Shared P12 tests changed during independent work; this count describes this execution only."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-owned-green.txt",
+      "sha256": "17b45de359e689530d2940d3b944acd2829a36391d0ac37ec0d4bff12ecfaf3c",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 3,
+        "passed": 49
+      },
+      "meaning": "Stable owned export tests plus existing conversation_actions regression."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "exitCode": 0,
+      "result": null,
+      "meaning": "TypeScript project typecheck after final changes."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-layering-red.txt",
+      "sha256": "8a3c97f8f05fc2a275041548195fa65a718729b7c93afc3db5a715c20b7b26a0",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 2,
+        "failed": 5,
+        "passed": 26
+      },
+      "meaning": "Default closed details and one shared line-base disclosure fail against the prior layout."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-layering-green.txt",
+      "sha256": "7bc51a70c13063988f0bb086f3fda7d8405c551e4b41bf9aa83db2f19a87eb2b",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 4,
+        "passed": 61
+      },
+      "meaning": "All owned export regressions plus shared interaction checks pass after the minimal layering change."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-layering-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "exitCode": 0,
+      "result": null,
+      "meaning": "Typecheck after final layering source changes."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-red.txt",
+      "sha256": "9c3c3e671f285532151651db4be003d114480426dd50fcd9a596081e232f5ee9",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 1,
+        "failed": 7,
+        "passed": 28
+      },
+      "meaning": "Effective first-character metadata reproduction before the punctuation fix; 11 added literal-rendering cases."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-initial-green-check.txt",
+      "sha256": "7ff1d9122bc4b9455b3dc34906776eb0f8edc1509855bb5a045534c7bc3a0728",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 2,
+        "failed": 7,
+        "passed": 48
+      },
+      "meaning": "New metadata rendering cases pass after repair; 7 existing raw Markdown substring assertions still expected unescaped path punctuation. Corrected those checks to compare actual rendered path/type/summary text while retaining all hidden-detail checks."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-green.txt",
+      "sha256": "d572cc8ec90392c57f6b80f766019989feb2375c2eb0ed6967c9b7e00854942c",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 4,
+        "passed": 72
+      },
+      "meaning": "Final owned export and shared interaction regressions pass; SSR proves literal metadata without executing or fetching remote content."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "exitCode": 0,
+      "result": null,
+      "meaning": "Typecheck after the final metadata-prefix repair."
+    }
+  ],
+  "boundaries": [
+    "Markdown parsing checks use react-markdown and react-dom/server without fetching any remote image or launching a browser; no screenshot or installed visual acceptance is claimed.",
+    "Picker and write interactions remain mocked. No actual installed export, attachment packaging, complete archive, history loading, Agent operation or persistent transcript created.",
+    "Only owned export production/tests changed. Shared P12 components/tests were not edited by this child; repository integration checks remain the root owner."
+  ],
+  "independentReview": {
+    "owner": "root",
+    "status": "scope_metadata_corrections_accepted_layering_followup_ready",
+    "acceptedScope": "Root reviewed exact included/excluded categories, unchanged reported line values and plan/decision metadata escaping.",
+    "requestedFollowup": "One short default sentence, full scope in closed native details, one shared line-base explanation; now implemented and fixture-checked.",
+    "prefixFollowup": {
+      "owner": "architecture",
+      "status": "requested_final_read_only_review",
+      "counterexample": "conversation-export-decision-structure-counterexample.txt",
+      "changes": "Full CommonMark punctuation escaping and leading-indent handling; no change to visible user/Agent body Markdown."
+    }
+  },
+  "priorReviewOwnedFiles": [
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "lines": 128
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "79e0263d06714e64875768bc549b6481b3d054aeabb1490bec72f5d337a7f160",
+      "lines": 144
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "1d5c7e8f2499e0ca21471187f3c954b185de41789742c4f34b92185da4938552",
+      "lines": 33
+    },
+    {
+      "path": "src/runtime/conversation_export.test.ts",
+      "sha256": "36601d21991d56422e90298a261a84c89cef3c951b32e9d4b15b4ec96168e942",
+      "lines": 317
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "d21576d5c9a3e612c833bf33f8ea87ce731e269f183f69a024c96fa73621e027",
+      "lines": 97
+    },
+    {
+      "path": "src/components/ConversationExportDialog.test.tsx",
+      "sha256": "67e0f320e5d4afb62a6ba8101d221d0e1ceec6775bffd156b704e00d63f0601c",
+      "lines": 164
+    }
+  ],
+  "layeringOwnedFiles": [
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "lines": 128
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "6bb2274428f0fe2e24b2271f6779e16e7cc6b40615e07587fe46777486ab6758",
+      "lines": 145
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816",
+      "lines": 35
+    },
+    {
+      "path": "src/runtime/conversation_export.test.ts",
+      "sha256": "02efd574e3d11121d77c23142a754d1332ddfcd9ef728d7de51fc00cd52049f7",
+      "lines": 331
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079",
+      "lines": 103
+    },
+    {
+      "path": "src/components/ConversationExportDialog.test.tsx",
+      "sha256": "c6b63b868d04a5e4b12a035ec16bfb6ee81f21288cc8eaaf4321fefeda66451c",
+      "lines": 187
+    }
+  ]
+}

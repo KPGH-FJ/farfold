@@ -1,0 +1,17 @@
+
+DevTools listening on ws://127.0.0.1:63105/devtools/browser/9964f10c-fe9f-4fb0-b614-2bd1c400d141
+Trying to load the allocator multiple times. This is *not* supported.
+[84762:19430782:1009/204930.603403:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.603614:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430782:1009/204930.605121:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.605147:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430782:1009/204930.605836:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.605859:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430782:1009/204930.605945:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.605962:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430782:1009/204930.606022:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.606039:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430782:1009/204930.616172:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84762:19430855:1009/204930.616224:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[84756:19430708:1009/204931.119409:ERROR:content/browser/gpu/gpu_process_host.cc:1130] GPU process exited unexpectedly: exit_code=15
+[84756:19430708:1009/204931.122587:ERROR:content/browser/network_service_instance_impl.cc:653] Network service crashed or was terminated, restarting service.

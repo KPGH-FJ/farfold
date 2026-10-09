@@ -1,0 +1,421 @@
+{
+  "id": "P12-loaded-transcript-search",
+  "date": "2026-10-09",
+  "status": "implemented-and-targeted-tested-not-installed",
+  "scope": "当前对话已加载文字，包括折叠正文、工具文字详情、diff剩余行、计划、整理摘要、已加载附件文字与名称/URI/MIME；未加载历史、文件正文、图片OCR、音频、网页不纳入。",
+  "implementation": [
+    "显式data-find-block登记同一React树；仅查找打开时挂载原来条件隐藏的文字，无第二棵离屏树或持久正文索引。",
+    "单次DOM序遍历，父/子字段、段落、按钮边界不拼出伪命中；CSS Range/Highlight不改正文节点。",
+    "内存WeakMap记录折叠引用；搜索临时展开与用户选择分开，释放仅匹配当前owner；明确打开子项保留必要祖先选择。",
+    "search触发的附件展开不生成img/audio，只有明确用户展开或显示媒体才加载；文件链接定位不触发文件打开。",
+    "revision与DOM变化合并至一个pending RAF；当前范围仍完整计数，Highlights逐项add避免函数参数上限。",
+    "ThreadView→ArtifactPane显式search=false；当前内容栏本来使用独立FileDifference/DocumentText，新边界另有真实ThreadView+替换pane叶节点反例。"
+  ],
+  "validation": {
+    "targeted": {
+      "command": "corepack pnpm exec vitest run (29个关联文件，精确筛选见运行记录)",
+      "passedFiles": 29,
+      "passedTests": 203,
+      "raw": "targeted-scope-final.txt"
+    },
+    "typecheck": {
+      "passed": true,
+      "raw": "typecheck-final.txt",
+      "finalBuildAlsoRunsTsc": true
+    },
+    "build": {
+      "command": "corepack pnpm build",
+      "passed": true,
+      "raw": "build-scope-final.txt",
+      "warning": "Vite既有大chunk提示；未打包或安装正式应用。"
+    },
+    "browser": {
+      "kind": "独立临时Chrome profile，headless Chrome 154，真实React19组件、DOM/CSSHighlight，最终生产CSS与StrictMode；全为固定合成文本。",
+      "passedChecks": 31,
+      "raw": "browser/browser-release.json",
+      "diagnostics": "browser/browser-release.diagnostics.json",
+      "harness": "browser/run.mjs",
+      "fixture": "browser/fixture.tsx",
+      "agentProcesses": 0,
+      "appIpcCallsFromSearchFixture": 0,
+      "fileActions": 0,
+      "formalAppOperated": false,
+      "covers": [
+        "计数/定位/临时展开释放/手动展开与折叠保留",
+        "第4附件、嵌套工具、长diff尾部、计划、压缩摘要",
+        "行段/字段边界、内联跨节点文本",
+        "流式新增与对话切换",
+        "原始文本和原生选择保持，无mark包裹",
+        "无Custom Highlight时仍定位",
+        "图像只在明确操作后挂载",
+        "四次现实量级DOM恢复与高密度160000命中不截断"
+      ]
+    },
+    "effectiveRed": [
+      "expansion-red.txt（2项有效失败）",
+      "presentation-red.txt（4项有效失败）",
+      "nested-order-red.txt（1项有效失败）",
+      "browser/browser-high-red.json（160000参数导致RangeError）",
+      "scope-red.txt（pane继承搜索上下文，边界反例）"
+    ],
+    "harnessCorrections": [
+      "first-related.txt中旧测试把折叠文字排除/闭合媒体提前渲染作为预期，已随新契约更新，保留其余断言。",
+      "reading-harness-red.txt的11项属于旧direct-call hook缺useContext；补明示search=false，不降低原阅读断言。",
+      "scope-import-harness.txt为既有模块初始化host_performance_origin记在计数内；测试开始后清mock，再断言本次渲染零IPC。",
+      "browser-first/browser-realtime-*先未等RAF，后发现fixture两个同级元素重复key=A；均不计产品失败，修键和帧等待后原onToggle实现通过。run.py虚拟时间版本一次超时，已清理自身进程组，最终使用有界实时run.mjs。"
+    ]
+  },
+  "resourceMeasurements": {
+    "browser-valid-first": {
+      "passed": true,
+      "checks": 27,
+      "scale": [
+        {
+          "messages": 1000,
+          "tools": 120,
+          "loadedCharacters": 3281560,
+          "baseNodes": 2722,
+          "baseHeap": 62573517,
+          "cycles": [
+            {
+              "openCloseMs": 128.10000002384186,
+              "scanMs": 3.599999964237213,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 67052490
+            },
+            {
+              "openCloseMs": 77.70000004768372,
+              "scanMs": 3.5,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64624858
+            },
+            {
+              "openCloseMs": 75.5,
+              "scanMs": 3.399999976158142,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64640978
+            },
+            {
+              "openCloseMs": 64.69999998807907,
+              "scanMs": 3.200000047683716,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64658858
+            }
+          ]
+        }
+      ],
+      "dense": []
+    },
+    "browser-final": {
+      "passed": true,
+      "checks": 28,
+      "scale": [
+        {
+          "messages": 1000,
+          "tools": 120,
+          "loadedCharacters": 3281560,
+          "baseNodes": 2722,
+          "baseHeap": 62578447,
+          "cycles": [
+            {
+              "openCloseMs": 119.40000003576279,
+              "scanMs": 3.699999988079071,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 67062960
+            },
+            {
+              "openCloseMs": 67.60000002384186,
+              "scanMs": 3.099999964237213,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64633032
+            },
+            {
+              "openCloseMs": 73.5,
+              "scanMs": 3.199999988079071,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64650400
+            },
+            {
+              "openCloseMs": 75.19999998807907,
+              "scanMs": 3,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64668432
+            }
+          ]
+        }
+      ],
+      "dense": [
+        {
+          "count": "1 / 160000",
+          "errors": [],
+          "elapsedMs": 968,
+          "highlights": 160000
+        }
+      ]
+    },
+    "browser-styled-final": {
+      "passed": true,
+      "checks": 28,
+      "scale": [
+        {
+          "messages": 1000,
+          "tools": 120,
+          "loadedCharacters": 3281560,
+          "baseNodes": 2722,
+          "baseHeap": 63187536,
+          "cycles": [
+            {
+              "openCloseMs": 78.80000001192093,
+              "scanMs": 3.399999976158142,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 65127793
+            },
+            {
+              "openCloseMs": 72.5,
+              "scanMs": 3.5,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 65174913
+            },
+            {
+              "openCloseMs": 155.89999997615814,
+              "scanMs": 3.299999952316284,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 67537921
+            },
+            {
+              "openCloseMs": 67.80000001192093,
+              "scanMs": 3.100000023841858,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 65296689
+            }
+          ]
+        }
+      ],
+      "dense": [
+        {
+          "count": "1 / 160000",
+          "errors": [],
+          "elapsedMs": 222.39999997615814,
+          "highlights": 160000
+        }
+      ]
+    },
+    "browser-release": {
+      "passed": true,
+      "checks": 31,
+      "scale": [
+        {
+          "messages": 1000,
+          "tools": 120,
+          "loadedCharacters": 3281560,
+          "baseNodes": 2722,
+          "baseHeap": 62944165,
+          "cycles": [
+            {
+              "openCloseMs": 71,
+              "scanMs": 3.699999988079071,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 64876926
+            },
+            {
+              "openCloseMs": 144.69999998807907,
+              "scanMs": 3.199999988079071,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 67020854
+            },
+            {
+              "openCloseMs": 91.30000001192093,
+              "scanMs": 3.5,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 65871574
+            },
+            {
+              "openCloseMs": 70.40000003576279,
+              "scanMs": 3.199999988079071,
+              "matches": 120,
+              "openNodes": 3329,
+              "closedNodes": 2722,
+              "heapAfterClose": 65050298
+            }
+          ]
+        }
+      ],
+      "dense": [
+        {
+          "count": "1 / 160000",
+          "errors": [],
+          "elapsedMs": 218.39999997615814,
+          "highlights": 160000
+        }
+      ]
+    }
+  },
+  "limits": [
+    "浏览器样本是Chromium合成组件与实际CSS，并非macOS WebKit或正式Farfold安装验收。",
+    "现实量级为1000条消息+120折叠工具、3281560字符；量级结果不保证任意数据、硬件或长会话性能。",
+    "极端16万命中的完整高亮有明显成本，已记录多轮实际耗时约218–968ms，不择优声称性能上限。",
+    "未重跑Rust、未调用真实Agent、未访问用户附件/历史、未修改Agent配置。"
+  ],
+  "independentReview": "independent-review.json（architecture只读复核peer核心；自有thread-items由root复核）",
+  "sourceFiles": [
+    {
+      "path": "src/runtime/transcript_find_dom.ts",
+      "sha256": "c724532e10d797dee4998d48c96bdd3407e96fea539374c98f084a55678f162a",
+      "lines": 79
+    },
+    {
+      "path": "src/runtime/transcript_find_dom.test.ts",
+      "sha256": "c5dfb07759d1efb161c023a01e83dbeb098248bf1d96164abaa854ee555feacb",
+      "lines": 140
+    },
+    {
+      "path": "src/runtime/transcript_search.ts",
+      "sha256": "140e3627ec63df594f7172fcb3a74a3e211d9fa669f4606367e3b37bf425ec31",
+      "lines": 65
+    },
+    {
+      "path": "src/runtime/transcript_search.test.ts",
+      "sha256": "c1570e50dd3e653d6a1e8e0ce71eca5a9dbe8e213ea6dd9da9f8871ace0414ff",
+      "lines": 63
+    },
+    {
+      "path": "src/runtime/transcript_search_strings.ts",
+      "sha256": "ae78e84f03fde4a1e21c55d21f4ab2729643128a6e12eec433a4b0e937d52729",
+      "lines": 4
+    },
+    {
+      "path": "src/runtime/conversation_redesign_strings.ts",
+      "sha256": "f4b8901be6e3175ec6e98457d08a2d5fc15b9b6f5c19b181e751b1fb783be130",
+      "lines": 54
+    },
+    {
+      "path": "src/components/transcript-search.tsx",
+      "sha256": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8",
+      "lines": 73
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "sha256": "8b2e06505e1b7691f763b20c9fc40f0ac4eeeed3460c8e682ff08f81791c6af7",
+      "lines": 218
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "40113bc89d0a318afea747cc7a3bebafc2e559af8185ca1d5d1545e9cbcd3eea",
+      "lines": 540
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "53eb93807fdb0f439304096a4b8eb5a93c1c1b4998e4a157501e73b6de68cad3",
+      "lines": 1357
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "d98391f759e38ada42b500a8f66c0273ee85717685f39ffd69659c30ac351806",
+      "lines": 320
+    },
+    {
+      "path": "src/components/UserMessageContent.tsx",
+      "sha256": "7133eeedd67a9de27d4c6b0ad76cf04cf9d84f6e422103f5af6b7cb886613587",
+      "lines": 133
+    },
+    {
+      "path": "src/components/CompactionCard.tsx",
+      "sha256": "97e06c21ac7e29fbecf3ddd2bb06777b145bb36f9271b7f2c79168492acb1fe6",
+      "lines": 101
+    },
+    {
+      "path": "src/components/ReportedDetails.tsx",
+      "sha256": "55877624c1b14e782afcecbf12e4e47537ac0b51f058848c6170bf48733bcb5a",
+      "lines": 18
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "abe60e7ef61e34c29dc3a3303d87382705369af1a30033003f77bcf5520bd0b0",
+      "lines": 575
+    },
+    {
+      "path": "src/components/TranscriptSearch.presentation.test.tsx",
+      "sha256": "25bc2cabc07351aee1d08357630701f7481cd3b1bf1e1be9cadc479cc1919360",
+      "lines": 66
+    },
+    {
+      "path": "src/components/ConversationInteractions.review.test.tsx",
+      "sha256": "18afb5cfeaa941ee02b82c3056e668ac76203e1cb99eba8b3831926972015f12",
+      "lines": 390
+    },
+    {
+      "path": "src/components/MessageContent.test.tsx",
+      "sha256": "5ceb592630050e212a374d4c3ac67cef973c00955f936d979d5725df0fc88cc2",
+      "lines": 324
+    },
+    {
+      "path": "src/components/ThreadView.reading.test.tsx",
+      "sha256": "fe71c96b01c0314e697b9316e945533257954030ee60ebf9dacd698d892f683d",
+      "lines": 484
+    },
+    {
+      "path": "src/components/ThreadView.search-scope.test.tsx",
+      "sha256": "a7de73b9f40a11b4660667dbb30d2df08b999d247a3b0e9ea42d119489ed8043",
+      "lines": 73
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "f89f8da4bad7ee9c1b99eea2a8a54772179f92f7b8ea44c096f357d99a9f554b",
+      "lines": 126
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "sha256": "30d0b6c77dfac2957e759512b4b60dff706a1a79c3c1344b929c4b91266a1ee8",
+      "lines": 173
+    },
+    {
+      "path": "src/components/thread-items.file-links.test.tsx",
+      "sha256": "9fcb642ac46496e11874eaa347513ddfe6d27f53dd34edff3170dd7e5014a07d",
+      "lines": 157
+    },
+    {
+      "path": "src/components/ApprovalInput.test.tsx",
+      "sha256": "867194cdf34b35b358af1d92b6aa11c8c8f69cb4f0e9eabbd7bda60ae6fb0528",
+      "lines": 203
+    }
+  ],
+  "next": "root进行第六批全仓检查、集成和安装后确认；本分工不修改公共计划或提交。",
+  "integrationFixtureCorrection": {
+    "cause": "ApprovalInput旧SSR夹具强制React.useState=true；新useSearchExpansion将open保存在useRef的真实SearchExpansion对象，useState仅刷新，故夹具未设置展开状态。",
+    "changed": "只替换为共享hook初始值的SSR夹具，保留真实useSearchExpansion和原命令/cwd断言，增aria-expanded false/true；未改生产源码。",
+    "red": "approval-input-harness-red.txt",
+    "green": "approval-input-harness-green.txt",
+    "scope": "6个关联文件定向；完整第六片七项由root运行。",
+    "originalFullRun": "../sixth-checks/frontend.txt"
+  }
+}

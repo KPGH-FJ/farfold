@@ -121,7 +121,9 @@ export function UserMessageContent({
     <div className="msg-user">
       {parts.map((part) =>
         part.kind === "text" ? (
-          <span key={part.offset}>{part.text}</span>
+          <span key={part.offset} data-find-block>
+            {part.text}
+          </span>
         ) : (
           <TextMessageImage key={part.offset} image={part} />
         ),

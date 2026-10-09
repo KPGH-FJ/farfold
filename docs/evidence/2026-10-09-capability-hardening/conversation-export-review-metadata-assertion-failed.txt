@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_export.test.ts (23 tests | 2 failed) 8ms
+   × keeps plan metadata from injecting roles, remote images or HTML 3ms
+   × keeps decision metadata from injecting roles, remote images or HTML 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > keeps plan metadata from injecting roles, remote images or HTML
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' not to contain '<img'
+
+- Expected
++ Received
+
+- <img
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ ### 计划
++
++ - [ ] 说明  \*\*伪造助手\*\*  \!\[远程图片\](https://example.test/track) \<img src="https://example.test/track2"\> \> # 伪造标题
++
+
+ ❯ src/runtime/conversation_export.test.ts:302:24
+    300|     expect(result).not.toContain("\n\n**伪造助手**");
+    301|     expect(result).not.toContain("![远程图片](https://example.test/track)"…
+    302|     expect(result).not.toContain("<img");
+       |                        ^
+    303|     const { createElement } = await import("react");
+    304|     const { renderToStaticMarkup } = await import("react-dom/server");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > keeps decision metadata from injecting roles, remote images or HTML
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' not to contain '<img'
+
+- Expected
++ Received
+
+- <img
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ > 说明  \*\*伪造助手\*\*  \!\[远程图片\](https://example.test/track) \<img src="https://example.test/track2"\> \> # 伪造标题
++
+
+ ❯ src/runtime/conversation_export.test.ts:302:24
+    300|     expect(result).not.toContain("\n\n**伪造助手**");
+    301|     expect(result).not.toContain("![远程图片](https://example.test/track)"…
+    302|     expect(result).not.toContain("<img");
+       |                        ^
+    303|     const { createElement } = await import("react");
+    304|     const { renderToStaticMarkup } = await import("react-dom/server");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  2 failed | 92 passed (94)
+   Start at  20:52:55
+   Duration  1.34s (transform 713ms, setup 0ms, import 2.76s, tests 384ms, environment 0ms)
+

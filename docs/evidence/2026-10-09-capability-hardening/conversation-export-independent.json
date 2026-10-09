@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-09",
+  "mode": "independent-read-only-code-challenge",
+  "status": "confirmed-prefix-finding-fixed-no-open-blocking-finding-in-reviewed-scope",
+  "scope": "P35当前已载入类别快照的导出模块、保存dialog、原ThreadPage/ConversationLibrary调用方与既有后端文本交付边界；不扩大为完整归档。",
+  "findings": [
+    {
+      "id": "P35-independent-01",
+      "status": "fixed-and-independently-rechecked",
+      "location": "src/runtime/conversation_export.ts:5",
+      "detail": "label未转义行首Markdown结构标点；decision直接放在blockquote内，首字符#、有序列表或+列表可生成新的heading/list。原回归payload以普通说明开头，未覆盖首字符。",
+      "counterexample": "conversation-export-decision-structure-counterexample.txt",
+      "actualResults": {
+        "# 伪造标题": "blockquote内h1",
+        "1. 伪造列表": "blockquote内ol/li",
+        "+ 伪造列表": "blockquote内ul/li",
+        "---": "blockquote内hr"
+      },
+      "measurementNote": "原输出hasStructure regex未包含hr自闭合的/，所以hr布尔值为false；原quote明确含<hr/>，其他三项为true，未伪称自动四项断言全覆盖。",
+      "requestedRepair": "只扩共用metadata label转义或首结构保护，保留用户/助手正文Markdown；补首字符heading/hr/list实际Markdown渲染反例。",
+      "resolution": "共同metadata label转义全部CommonMark ASCII标点，并以字符实体保留前导空格，阻止标题/列表/分隔线/代码块结构；用户/助手消息正文保持原样。",
+      "verification": {
+        "peerRed": "conversation-export-prefix-red.txt: 7 failed, 28 passed",
+        "peerGreen": "conversation-export-prefix-green.txt: 72 passed in 4 files",
+        "peerTypecheck": "conversation-export-prefix-typecheck.txt: success",
+        "independentSsrResults": [
+          {
+            "payload": "# 伪造标题",
+            "passed": true
+          },
+          {
+            "payload": "---",
+            "passed": true
+          },
+          {
+            "payload": "1. 伪造列表",
+            "passed": true
+          },
+          {
+            "payload": "+ 伪造列表",
+            "passed": true
+          },
+          {
+            "payload": "- 伪造列表",
+            "passed": true
+          },
+          {
+            "payload": "* 伪造列表",
+            "passed": true
+          },
+          {
+            "payload": "~~~js\nCODE\n~~~",
+            "passed": true
+          },
+          {
+            "payload": "```js\nCODE\n```",
+            "passed": true
+          },
+          {
+            "payload": "> 伪造引用",
+            "passed": true
+          },
+          {
+            "payload": "    # 缩进标题",
+            "passed": true
+          },
+          {
+            "payload": "允许读取：/Users/张三/a-b_1+(2).ts 与 C:\\work\\a.ts；标点 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
+            "passed": true
+          },
+          {
+            "name": "intentional-message-markdown-preserved",
+            "passed": true
+          }
+        ]
+      }
+    }
+  ],
+  "checksWithoutNewBlockingFinding": [
+    "导出同步生成不可变string，消息后续更新不会补入；纳入类别/排除类别与附件未打包披露明确。",
+    "只遍历内存items和元数据；URL只解析/移除认证query/hash，不自动打开文件、读取正文或下载媒体。",
+    "dialog同步writing ref在await选择器前占有，重复点击不再派发；旧saved在新尝试开始清除；写入Promise resolve才显示成功，拒绝只显示固定未确认文案。",
+    "ThreadPage持有打开窗口时的text/name；library仅使用已加载对话，并保留header-only空结果guard。两处都走既有fileDelivery.exportText。",
+    "后端export_text受文本容量限制，write_new先写/同步临时文件再不覆盖发布，发布后检查目标父目录和文件身份；此次未修改该机制或重跑Rust。"
+  ],
+  "ownedInputHashesComparedToPeerReceipt": [
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "expected": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "actual": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "matches": true
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "expected": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439",
+      "actual": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439",
+      "matches": true
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "expected": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816",
+      "actual": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816",
+      "matches": true
+    },
+    {
+      "path": "src/runtime/conversation_export.test.ts",
+      "expected": "9f1498257ab08c9be2276d92c103a1f1679ce286c09f08a7c7cc83868bc40234",
+      "actual": "9f1498257ab08c9be2276d92c103a1f1679ce286c09f08a7c7cc83868bc40234",
+      "matches": true
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "expected": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079",
+      "actual": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079",
+      "matches": true
+    },
+    {
+      "path": "src/components/ConversationExportDialog.test.tsx",
+      "expected": "c6b63b868d04a5e4b12a035ec16bfb6ee81f21288cc8eaaf4321fefeda66451c",
+      "actual": "c6b63b868d04a5e4b12a035ec16bfb6ee81f21288cc8eaaf4321fefeda66451c",
+      "matches": true
+    },
+    {
+      "path": "src/runtime/conversation_actions.test.ts",
+      "expected": "e52cd82c0bca50a1b3e4ce8ed1053b9251980157e9e1b7fdd3c782375bf7d4dd",
+      "actual": "e52cd82c0bca50a1b3e4ce8ed1053b9251980157e9e1b7fdd3c782375bf7d4dd",
+      "matches": true
+    }
+  ],
+  "sourceRead": [
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439"
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816"
+    },
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d"
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "40113bc89d0a318afea747cc7a3bebafc2e559af8185ca1d5d1545e9cbcd3eea"
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "54b4f7163727e0aa00cdd7de5d6589ddcbb8c64290638d87daa6d71aa696054a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "698be8b84aa0b055e5181745f2cfb039c6f6ff670f9c436b645e4b565c7e9021"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "c9a48b924ff07084314b3c843f68ca328f0f3c4e16ca9a9bfc059f45cb58b21a"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-decision-structure-counterexample.txt",
+      "sha256": "eca66012790bd891fe985263826f082004141eb2db90a356a8e510b82058ad53"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review.json",
+      "sha256": "d2dc646b5022d06c695a4f3f0a823f46b28686792be2716da2af59290ed4ec21"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-red.txt",
+      "sha256": "9c3c3e671f285532151651db4be003d114480426dd50fcd9a596081e232f5ee9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-green.txt",
+      "sha256": "d572cc8ec90392c57f6b80f766019989feb2375c2eb0ed6967c9b7e00854942c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-prefix-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "executionAttribution": {
+    "architecture": "用Vite ssrLoadModule加载实际导出函数，经react-markdown+react-dom/server受控渲染四个合成decision；无浏览器、实际文件导出、选择器、Agent或外部资源读取。 最后修复后独立重复真实导出→Markdown SSR：11种前缀/标点场景和1项正文保留均通过，并核7项peer冻结文件hash全部匹配；未重跑整套测试。",
+    "verification": "此前定向红绿/typecheck由peer receipt记载；本审查者未重跑完整测试。"
+  },
+  "limits": [
+    "thought、notice、compaction、raw、工具详情、未载入历史、附件文件打包仍在明确排除范围；本片不关闭完整P35。",
+    "保存对话框实文件/真实选择器和安装版行为未在本审查实测。",
+    "用户/助手消息Markdown按现有范围原样保留，外部Markdown阅读器对正文中的链接/图片行为不由该metadata防护承诺。"
+  ]
+}

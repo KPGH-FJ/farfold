@@ -1,0 +1,4 @@
+{"payload":"# 伪造标题","quote":"<blockquote>\n<h1>伪造标题</h1>\n</blockquote>","hasStructure":true}
+{"payload":"---","quote":"<blockquote>\n<hr/>\n</blockquote>","hasStructure":false}
+{"payload":"1. 伪造列表","quote":"<blockquote>\n<ol>\n<li>伪造列表</li>\n</ol>\n</blockquote>","hasStructure":true}
+{"payload":"+ 伪造列表","quote":"<blockquote>\n<ul>\n<li>伪造列表</li>\n</ul>\n</blockquote>","hasStructure":true}

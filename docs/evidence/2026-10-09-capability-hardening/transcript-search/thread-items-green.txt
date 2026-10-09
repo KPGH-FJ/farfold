@@ -1,0 +1,37 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/thread-items.search.test.tsx (7 tests | 1 failed) 18ms
+   × registers raw and reported extension payloads without indexing generated explanatory copy 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers raw and reported extension payloads without indexing generated explanatory copy
+AssertionError: expected '<details class="raw-block"><summary>未…' not to match /<p[^>]*data-find-block/
+
+- Expected:
+/<p[^>]*data-find-block/
+
++ Received:
+"<details class=\"raw-block\"><summary>未识别的更新</summary><pre data-find-block=\"true\">{
+  &quot;unknown&quot;: &quot;raw-needle&quot;
+}</pre></details><details class=\"raw-block\"><summary>最近收到的扩展字段</summary><p>按字段保留最近收到的值；这里不是完整消息，也不表示额外功能已生效。</p><pre data-find-block=\"true\">{
+  &quot;extra&quot;: &quot;extension-needle&quot;
+}</pre></details>"
+
+ ❯ src/components/thread-items.search.test.tsx:125:20
+    123|   expect(html.match(/<pre data-find-block="true">/g)).toHaveLength(2);
+    124|   expect(html).not.toMatch(/<summary[^>]*data-find-block/);
+    125|   expect(html).not.toMatch(/<p[^>]*data-find-block/);
+       |                    ^
+    126| });
+    127|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 12 passed (13)
+   Start at  20:36:47
+   Duration  1.79s (transform 677ms, setup 0ms, import 4.58s, tests 49ms, environment 0ms)
+

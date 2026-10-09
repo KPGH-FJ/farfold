@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/thread-items.search.test.tsx (7 tests | 6 failed) 15ms
+   × materializes folded tool text for search without visibly opening or navigating 8ms
+   × registers tool fields separately while leaving action labels outside the text blocks 1ms
+   × retains all old and new diff lines in the same searchable tree including clipped tails 2ms
+   × offers a real expansion control for long diffs outside search 1ms
+   × registers each plan entry without including the generated status glyph or heading 1ms
+   × registers raw and reported extension payloads without indexing generated explanatory copy 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > materializes folded tool text for search without visibly opening or navigating
+AssertionError: expected '<div class="step"><span class="g ok">…' to contain 'folded-body-needle'
+
+Expected: "folded-body-needle"
+Received: "<div class="step"><span class="g ok">✓</span><span class="cmd">运行了命令<span class="loc"><button type="button" class="message-file-link message-file-button" title="/work/location-needle">/work/location-needle</button></span></span><button type="button" class="step-toggle">技术详情</button><span class="tail">&lt;1s</span></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:33:16
+     31|   const onOpenFile = vi.fn();
+     32|   const html = render(<ToolStep call={call} onOpenFile={onOpenFile} />…
+     33|   expect(html).toContain("folded-body-needle");
+       |                ^
+     34|   expect(html).toMatch(/hidden=""[^>]*>[\s\S]*class="step-detail"/);
+     35|   expect(html).toContain('aria-expanded="false"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers tool fields separately while leaving action labels outside the text blocks
+AssertionError: expected '<div class="step"><span class="g ok">…' to match /data-find-block=""[^>]*>tool-title-ne…/
+
+- Expected:
+/data-find-block=""[^>]*>tool-title-needle/
+
++ Received:
+"<div class=\"step\"><span class=\"g ok\">✓</span><span class=\"cmd\">运行了命令<span class=\"loc\"><span class=\"message-file-link\">/work/location-needle</span></span></span><button type=\"button\" class=\"step-toggle\">技术详情</button><span class=\"tail\">&lt;1s</span></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:49:18
+     47|   const html = render(<ToolStep call={call} />);
+     48|   for (const text of ["tool-title-needle", "command-needle", "/work/cw…
+     49|     expect(html).toMatch(new RegExp(`data-find-block=""[^>]*>${text}`)…
+       |                  ^
+     50|   }
+     51|   expect(html).not.toMatch(/<button[^>]*data-find-block/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > retains all old and new diff lines in the same searchable tree including clipped tails
+AssertionError: expected '<div class="diff"><div class="h"><spa…' to contain 'old-line-29'
+
+Expected: "old-line-29"
+Received: "<div class="diff"><div class="h"><span>/work/diff-needle</span><span>修改</span></div><div class="del">− old-line-0</div><div class="del">− old-line-1</div><div class="del">− old-line-2</div><div class="del">− old-line-3</div><div class="del">− old-line-4</div><div class="del">− old-line-5</div><div class="del">− old-line-6</div><div class="del">− old-line-7</div><div class="add">+ new-line-0</div><div class="add">+ new-line-1</div><div class="add">+ new-line-2</div><div class="add">+ new-line-3</div><div class="add">+ new-line-4</div><div class="add">+ new-line-5</div><div class="add">+ new-line-6</div><div class="add">+ new-line-7</div><div class="add">+ new-line-8</div><div class="add">+ new-line-9</div><div class="add">+ new-line-10</div><div class="add">+ new-line-11</div><div class="add">+ new-line-12</div><div class="add">+ new-line-13</div><div class="add">+ new-line-14</div><div class="add">+ new-line-15</div><div class="add">+ new-line-16</div><div class="add">+ new-line-17</div><div class="add">+ new-line-18</div><div class="add">+ new-line-19</div><div class="add">+ new-line-20</div><div class="add">+ new-line-21</div><div class="add">+ new-line-22</div><div class="add">+ new-line-23</div><div class="more">… 其余 53 行</div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:59:16
+     57|   const newText = Array.from({ length: 55 }, (_, i) => `new-line-${i}`…
+     58|   const html = render(<DiffView path="/work/diff-needle" oldText={oldT…
+     59|   expect(html).toContain("old-line-29");
+       |                ^
+     60|   expect(html).toContain("new-line-54");
+     61|   expect(html.match(/old-line-29/g)).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > offers a real expansion control for long diffs outside search
+AssertionError: expected '<div class="diff"><div class="h"><spa…' to match /<button[^>]*aria-expanded="false"/
+
+- Expected:
+/<button[^>]*aria-expanded="false"/
+
++ Received:
+"<div class=\"diff\"><div class=\"h\"><span>/work/result</span><span>新文件</span></div><div class=\"del\">− </div><div class=\"add\">+ line-0</div><div class=\"add\">+ line-1</div><div class=\"add\">+ line-2</div><div class=\"add\">+ line-3</div><div class=\"add\">+ line-4</div><div class=\"add\">+ line-5</div><div class=\"add\">+ line-6</div><div class=\"add\">+ line-7</div><div class=\"add\">+ line-8</div><div class=\"add\">+ line-9</div><div class=\"add\">+ line-10</div><div class=\"add\">+ line-11</div><div class=\"add\">+ line-12</div><div class=\"add\">+ line-13</div><div class=\"add\">+ line-14</div><div class=\"add\">+ line-15</div><div class=\"add\">+ line-16</div><div class=\"add\">+ line-17</div><div class=\"add\">+ line-18</div><div class=\"add\">+ line-19</div><div class=\"add\">+ line-20</div><div class=\"add\">+ line-21</div><div class=\"add\">+ line-22</div><div class=\"add\">+ line-23</div><div class=\"more\">… 其余 19 行</div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:72:16
+     70|   const html = render(<DiffView path="/work/result" oldText={null} new…
+     71|   expect(html).not.toContain("line-49");
+     72|   expect(html).toMatch(/<button[^>]*aria-expanded="false"/);
+       |                ^
+     73|   expect(html).toContain("26");
+     74| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers each plan entry without including the generated status glyph or heading
+AssertionError: expected '<div class="plan"><div class="plan-la…' to contain '<span data-find-block="">first-plan-n…'
+
+Expected: "<span data-find-block="">first-plan-needle</span>"
+Received: "<div class="plan"><div class="plan-label">计划</div><div class="plan-item done"><span class="pg">✓</span><span>first-plan-needle</span></div><div class="plan-item "><span class="pg">○</span><span>second-plan-needle</span></div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:81:16
+     79|     { content: "second-plan-needle", status: "pending", priority: "med…
+     80|   ]} />);
+     81|   expect(html).toContain('<span data-find-block="">first-plan-needle</…
+       |                ^
+     82|   expect(html).toContain('<span data-find-block="">second-plan-needle<…
+     83|   expect(html.match(/data-find-block/g)).toHaveLength(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers raw and reported extension payloads without indexing generated explanatory copy
+AssertionError: Target cannot be null or undefined.
+ ❯ src/components/thread-items.search.test.tsx:88:51
+     86| it("registers raw and reported extension payloads without indexing gen…
+     87|   const html = render(<><RawBlock update={{ unknown: "raw-needle" }} /…
+     88|   expect(html.match(/<pre data-find-block="">/g)).toHaveLength(2);
+       |                                                   ^
+     89|   expect(html).not.toMatch(/<summary[^>]*data-find-block/);
+     90|   expect(html).not.toMatch(/<p[^>]*data-find-block/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  20:35:27
+   Duration  880ms (transform 70ms, setup 0ms, import 796ms, tests 15ms, environment 0ms)
+

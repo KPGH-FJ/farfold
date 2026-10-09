@@ -1,0 +1,198 @@
+{
+  "engine": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "results": [
+    {
+      "name": "folded thought counted and revealed",
+      "ok": true,
+      "detail": {
+        "count": "1 / 1",
+        "open": true,
+        "value": "thought-needle",
+        "direct": 1
+      }
+    },
+    {
+      "name": "temporary thought expansion revoked",
+      "ok": true,
+      "detail": {
+        "html": "<details class=\"thought\"><summary>Thought</summary><p data-find-block=\"true\" class=\"\">thought-needle</p></details>",
+        "props": [
+          {
+            "open": false,
+            "click": false,
+            "toggle": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "preexisting user expansion survives",
+      "ok": true
+    },
+    {
+      "name": "manual collapse stays collapsed without losing count",
+      "ok": true
+    },
+    {
+      "name": "fourth attachment text located",
+      "ok": true
+    },
+    {
+      "name": "search adds no image or audio decoder",
+      "ok": true
+    },
+    {
+      "name": "automatic attachment opening still does not mount media",
+      "ok": true
+    },
+    {
+      "name": "explicit media action admits only selected image",
+      "ok": true
+    },
+    {
+      "name": "user media and ancestor choice survive search close",
+      "ok": true
+    },
+    {
+      "name": "manual media close removes decoder",
+      "ok": true
+    },
+    {
+      "name": "paragraph boundary cannot create phantom phrase",
+      "ok": true
+    },
+    {
+      "name": "inline formatting matches as one phrase",
+      "ok": true
+    },
+    {
+      "name": "native text selection remains exact across formatting",
+      "ok": true
+    },
+    {
+      "name": "file-link button body remains searchable",
+      "ok": true
+    },
+    {
+      "name": "nested tool text is visible at its hit",
+      "ok": true
+    },
+    {
+      "name": "clipped diff tail resolves exact loaded line",
+      "ok": true
+    },
+    {
+      "name": "plan is searchable",
+      "ok": true
+    },
+    {
+      "name": "folded compaction summary is searchable",
+      "ok": true
+    },
+    {
+      "name": "stream updates refresh occurrence count",
+      "ok": true
+    },
+    {
+      "name": "thread switch discards old query and highlights",
+      "ok": true
+    },
+    {
+      "name": "no leaked temporary disclosure or text mutation",
+      "ok": true
+    },
+    {
+      "name": "search preserves the original displayed message text",
+      "ok": true
+    },
+    {
+      "name": "without Custom Highlight support the hit still counts and reveals",
+      "ok": true
+    },
+    {
+      "name": "no app IPC or file action",
+      "ok": true,
+      "detail": {
+        "ipc": 0,
+        "fileOpens": 0
+      }
+    },
+    {
+      "name": "large search cycle 1 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 2 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 3 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 4 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "controlled scale",
+      "ok": true,
+      "detail": {
+        "messages": 1000,
+        "tools": 120,
+        "loadedCharacters": 3281560,
+        "baseNodes": 2722,
+        "baseHeap": 62944165,
+        "cycles": [
+          {
+            "openCloseMs": 71,
+            "scanMs": 3.699999988079071,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 64876926
+          },
+          {
+            "openCloseMs": 144.69999998807907,
+            "scanMs": 3.199999988079071,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 67020854
+          },
+          {
+            "openCloseMs": 91.30000001192093,
+            "scanMs": 3.5,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 65871574
+          },
+          {
+            "openCloseMs": 70.40000003576279,
+            "scanMs": 3.199999988079071,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 65050298
+          }
+        ]
+      }
+    },
+    {
+      "name": "160000 matches do not exceed highlight argument limit",
+      "ok": true,
+      "detail": {
+        "count": "1 / 160000",
+        "errors": [],
+        "elapsedMs": 218.39999997615814,
+        "highlights": 160000
+      }
+    },
+    {
+      "name": "highlights released on close",
+      "ok": true
+    }
+  ],
+  "passed": true
+}
+[{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connecting..."}],"executionContextId":2,"timestamp":1791550640652.155,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":858,"columnNumber":8}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"debug","args":[{"type":"string","value":"[vite] connected."}],"executionContextId":2,"timestamp":1791550640763.293,"stackTrace":{"callFrames":[{"functionName":"handleMessage","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":967,"columnNumber":11},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":459,"columnNumber":41},{"functionName":"dequeue","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":481,"columnNumber":7},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":473,"columnNumber":8},{"functionName":"enqueue","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":467,"columnNumber":9},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":459,"columnNumber":27},{"functionName":"onMessage","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":297,"columnNumber":5},{"functionName":"","scriptId":"5","url":"http://127.0.0.1:1457/@vite/client","lineNumber":415,"columnNumber":4}]}}},{"method":"Runtime.consoleAPICalled","params":{"type":"info","args":[{"type":"string","value":"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools"},{"type":"string","value":"font-weight:bold"}],"executionContextId":2,"timestamp":1791550640849.824,"stackTrace":{"callFrames":[{"functionName":"","scriptId":"13","url":"http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0","lineNumber":14335,"columnNumber":48},{"functionName":"","scriptId":"13","url":"http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0","lineNumber":14372,"columnNumber":3},{"functionName":"","scriptId":"34","url":"http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"13","url":"http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0","lineNumber":14377,"columnNumber":18},{"functionName":"","scriptId":"34","url":"http://127.0.0.1:1457/node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js?v=e4c758ae","lineNumber":7,"columnNumber":48},{"functionName":"","scriptId":"13","url":"http://127.0.0.1:1457/node_modules/.vite/deps/react-dom_client.js?v=7b7676c0","lineNumber":14380,"columnNumber":15}]}}}]

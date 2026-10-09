@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ApprovalInput.test.tsx (5 tests | 1 failed) 34ms
+   × offers and renders details for a tool whose only detail is raw input 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ApprovalInput.test.tsx > offers and renders details for a tool whose only detail is raw input
+AssertionError: expected '<div><div class="step"><span class="g…' to contain 'touch /tmp/input-only'
+
+Expected: "touch /tmp/input-only"
+Received: "<div><div class="step"><span class="g wait">○</span><span class="cmd">运行了命令</span><button type="button" class="step-toggle" aria-expanded="false">技术详情</button><span class="tail"></span></div></div>"
+
+ ❯ src/components/ApprovalInput.test.tsx:197:18
+    195|   h.expanded = true;
+    196|   const detail = renderToStaticMarkup(<ToolStep call={call} />);
+    197|   expect(detail).toContain("touch /tmp/input-only");
+       |                  ^
+    198|   expect(detail).toContain("执行目录");
+    199| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  21:09:32
+   Duration  1.41s (transform 339ms, setup 0ms, import 1.31s, tests 34ms, environment 0ms)
+

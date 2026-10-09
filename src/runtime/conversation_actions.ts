@@ -1,7 +1,6 @@
 import type { Credential, ServiceSelection } from "./credentials";
-import type { ThreadState } from "./sessions";
 import { STRINGS } from "./strings";
-import { THREAD_VIEW_STRINGS as T } from "./thread_view_strings";
+export { transcriptMarkdown } from "./conversation_export";
 
 /**
  * W3-9 对话管理：导出与“相同设置再开一段”的纯数据助手。
@@ -126,62 +125,4 @@ const UNSAFE_FILENAME = /[\\/:*?"<>|\u0000-\u001f]/g;
 export function exportFileName(title: string): string {
   const base = title.replace(UNSAFE_FILENAME, " ").replace(/\s+/g, " ").trim();
   return `${base.slice(0, 60) || STRINGS.sessions.untitled}.md`;
-}
-
-function toolSummary(kind: string): string {
-  return Object.hasOwn(T.toolSummaries, kind)
-    ? T.toolSummaries[kind as keyof typeof T.toolSummaries]
-    : T.toolSummaries.other;
-}
-
-/** The readable conversation surface as Markdown — user/agent text, tool
- *  one-line summaries and round results; collapsed technical detail and raw
- *  updates stay out, matching `readableTranscript`'s layer. */
-export function transcriptMarkdown(
-  thread: Pick<ThreadState, "items">,
-  title: string,
-  agentName: string,
-): string {
-  const out: string[] = [`# ${title}`, ""];
-  for (const item of thread.items) {
-    switch (item.kind) {
-      case "user":
-        out.push(`**${STRINGS.thread.you}**`, "");
-        if (item.text.trim()) out.push(item.text.trim(), "");
-        for (const attachment of item.attachments)
-          out.push(
-            `- ${attachment.name}${attachment.uri ? ` — ${attachment.uri}` : ""}`,
-          );
-        if (item.attachments.length) out.push("");
-        break;
-      case "agent":
-        if (!item.text.trim()) break;
-        out.push(`**${agentName}**`, "", item.text.trim(), "");
-        break;
-      case "tool":
-        out.push(
-          `- ${toolSummary(item.call.kind)}${item.call.locations[0] ? ` — ${item.call.locations[0].path}` : ""}`,
-        );
-        break;
-      case "plan":
-        out.push(`### ${STRINGS.thread.plan}`, "");
-        for (const entry of item.entries)
-          out.push(
-            `- ${entry.status === "completed" ? "[x]" : "[ ]"} ${entry.content}`,
-          );
-        out.push("");
-        break;
-      case "decision":
-        out.push(`> ${item.label}`, "");
-        break;
-      case "settled":
-        if (item.status !== "done")
-          out.push(`> ${STRINGS.thread[item.status]}`, "");
-        break;
-      default:
-        break;
-    }
-  }
-  while (out.length && out[out.length - 1] === "") out.pop();
-  return out.join("\n") + "\n";
 }

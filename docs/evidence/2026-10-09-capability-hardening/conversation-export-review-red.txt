@@ -1,0 +1,205 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_export.test.ts (23 tests | 6 failed) 10ms
+   × declares the selected export categories and the loaded categories intentionally omitted 3ms
+   × reports the received line value 0 without assuming a zero/one based coordinate 1ms
+   × reports the received line value 1 without assuming a zero/one based coordinate 1ms
+   × reports the received line value 42 without assuming a zero/one based coordinate 0ms
+   × keeps plan metadata from injecting roles, remote images or HTML 1ms
+   × keeps decision metadata from injecting roles, remote images or HTML 1ms
+ ❯ src/components/ConversationExportDialog.test.tsx (6 tests | 1 failed) 21ms
+   × shows the exact included and excluded content categories before saving 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationExportDialog.test.tsx > shows the exact included and excluded content categories before saving
+AssertionError: expected '保存的是打开此窗口时已载入内容的 Markdown 快照，不包含后续消息、…' to contain '用户与助手消息'
+
+Expected: "用户与助手消息"
+Received: "保存的是打开此窗口时已载入内容的 Markdown 快照，不包含后续消息、草稿与待发内容。附件只保留说明与来源，文件未打包。保存前请检查正文和来源中的私人信息。"
+
+ ❯ src/components/ConversationExportDialog.test.tsx:143:161
+    141| it("shows the exact included and excluded content categories before sa…
+    142|   const text = nodes().filter(n => n.type === "p").map(n => n.props.ch…
+    143|   for (const category of ["用户与助手消息", "附件说明", "工具摘要", "报告位置", "计划", "批准…
+       |                                                                                                                                                                 ^
+    144|   expect(h.pick).not.toHaveBeenCalled();
+    145|   expect(h.write).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > declares the selected export categories and the loaded categories intentionally omitted
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' to contain '用户与助手消息'
+
+- Expected
++ Received
+
+- 用户与助手消息
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ **助手**
++
++ INCLUDEDMESSAGE
++
+
+ ❯ src/runtime/conversation_export.test.ts:232:198
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 0 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' to contain '报告行号：0；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：0；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（第 0 行）
++
+
+ ❯ src/runtime/conversation_export.test.ts:237:18
+    235| it.each([0, 1, 42])("reports the received line value %s without assumi…
+    236|   const result = render([tool({ locations: [{ path: "/file.ts", line }…
+    237|   expect(result).toContain(`报告行号：${line}；起始基准未确认`);
+       |                  ^
+    238|   expect(result).not.toContain(`第 ${line} 行`);
+    239| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 1 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' to contain '报告行号：1；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：1；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（第 1 行）
++
+
+ ❯ src/runtime/conversation_export.test.ts:237:18
+    235| it.each([0, 1, 42])("reports the received line value %s without assumi…
+    236|   const result = render([tool({ locations: [{ path: "/file.ts", line }…
+    237|   expect(result).toContain(`报告行号：${line}；起始基准未确认`);
+       |                  ^
+    238|   expect(result).not.toContain(`第 ${line} 行`);
+    239| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 42 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' to contain '报告行号：42；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：42；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（第 42 行）
++
+
+ ❯ src/runtime/conversation_export.test.ts:237:18
+    235| it.each([0, 1, 42])("reports the received line value %s without assumi…
+    236|   const result = render([tool({ locations: [{ path: "/file.ts", line }…
+    237|   expect(result).toContain(`报告行号：${line}；起始基准未确认`);
+       |                  ^
+    238|   expect(result).not.toContain(`第 ${line} 行`);
+    239| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > keeps plan metadata from injecting roles, remote images or HTML
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' not to contain '\n\n**伪造助手**'
+
+- Expected
++ Received
+
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
+
++ ### 计划
+
++ - [ ] 说明
++
+  **伪造助手**
++
++ ![远程图片](https://example.test/track)
++ <img src="https://example.test/track2">
++ > # 伪造标题
++
+
+ ❯ src/runtime/conversation_export.test.ts:246:22
+    244|     : { kind, id: "d", time: 1, label: payload, allow: true };
+    245|   const result = render([item]);
+    246|   expect(result).not.toContain("\n\n**伪造助手**");
+       |                      ^
+    247|   expect(result).not.toContain("![远程图片](https://example.test/track)");
+    248|   expect(result).not.toContain("<img");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > keeps decision metadata from injecting roles, remote images or HTML
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' not to contain '\n\n**伪造助手**'
+
+- Expected
++ Received
+
++ # 当前对话
+
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
+
++ > 说明
++
+  **伪造助手**
++
++ ![远程图片](https://example.test/track)
++ <img src="https://example.test/track2">
++ > # 伪造标题
++
+
+ ❯ src/runtime/conversation_export.test.ts:246:22
+    244|     : { kind, id: "d", time: 1, label: payload, allow: true };
+    245|   const result = render([item]);
+    246|   expect(result).not.toContain("\n\n**伪造助手**");
+       |                      ^
+    247|   expect(result).not.toContain("![远程图片](https://example.test/track)");
+    248|   expect(result).not.toContain("<img");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  7 failed | 22 passed (29)
+   Start at  20:51:43
+   Duration  177ms (transform 92ms, setup 0ms, import 140ms, tests 30ms, environment 0ms)
+

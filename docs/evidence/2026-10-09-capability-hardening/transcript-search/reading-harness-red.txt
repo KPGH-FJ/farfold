@@ -1,0 +1,127 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes read in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes edit in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes delete in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes move in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes search in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes execute in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes think in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes fetch in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes switch_mode in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes other in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/ThreadView.reading.test.tsx > summarizes custom_check in user language while the raw kind and title stay in technical details
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/components/ThreadView.reading.test.tsx (27 tests | 11 failed) 52ms
+   × summarizes read in user language while the raw kind and title stay in technical details 11ms
+   × summarizes edit in user language while the raw kind and title stay in technical details 1ms
+   × summarizes delete in user language while the raw kind and title stay in technical details 1ms
+   × summarizes move in user language while the raw kind and title stay in technical details 0ms
+   × summarizes search in user language while the raw kind and title stay in technical details 0ms
+   × summarizes execute in user language while the raw kind and title stay in technical details 1ms
+   × summarizes think in user language while the raw kind and title stay in technical details 1ms
+   × summarizes fetch in user language while the raw kind and title stay in technical details 1ms
+   × summarizes switch_mode in user language while the raw kind and title stay in technical details 2ms
+   × summarizes other in user language while the raw kind and title stay in technical details 1ms
+   × summarizes custom_check in user language while the raw kind and title stay in technical details 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes read in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes edit in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes delete in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes move in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes search in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes execute in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes think in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes fetch in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes switch_mode in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes other in user language while the raw kind and title stay in technical details
+ FAIL  src/components/ThreadView.reading.test.tsx > summarizes custom_check in user language while the raw kind and title stay in technical details
+TypeError: Cannot read properties of null (reading 'useContext')
+ ❯ process.env.NODE_ENV.exports.useContext node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1212:25
+ ❯ useTranscriptSearchActive src/components/transcript-search.tsx:17:10
+     15| export const TranscriptSearchContext = createContext(false);
+     16| export function useTranscriptSearchActive() {
+     17|   return useContext(TranscriptSearchContext);
+       |          ^
+     18| }
+     19|
+ ❯ useSearchExpansion src/components/transcript-search.tsx:21:18
+ ❯ Module.ToolStep src/components/thread-items.tsx:349:21
+ ❯ src/components/ThreadView.reading.test.tsx:186:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+
+ Test Files  1 failed | 23 passed (24)
+      Tests  11 failed | 154 passed (165)
+   Start at  20:54:45
+   Duration  7.43s (transform 4.48s, setup 0ms, import 58.70s, tests 2.28s, environment 7ms)
+

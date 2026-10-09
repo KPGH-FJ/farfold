@@ -1,0 +1,134 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ConversationExportDialog.test.tsx (7 tests | 1 failed) 17ms
+   × keeps the default explanation short and the full scope accessible in closed native details 2ms
+ ❯ src/runtime/conversation_export.test.ts (24 tests | 4 failed) 66ms
+   × reports the received line value 0 without assuming a zero/one based coordinate 3ms
+   × reports the received line value 1 without assuming a zero/one based coordinate 1ms
+   × reports the received line value 42 without assuming a zero/one based coordinate 1ms
+   × explains the unconfirmed line-number base once for multiple reported positions 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationExportDialog.test.tsx > keeps the default explanation short and the full scope accessible in closed native details
+AssertionError: expected undefined to be defined
+ ❯ src/components/ConversationExportDialog.test.tsx:169:19
+    167|   const view = nodes();
+    168|   const details = view.find((node) => node.type === "details");
+    169|   expect(details).toBeDefined();
+       |                   ^
+    170|   expect(details!.props.open).not.toBe(true);
+    171|   expect(nodes(details!.props.children as ReactNode).find((node) => no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 0 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' not to contain '报告行号：0；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：0；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（报告行号：0；起始基准未确认）
++
+
+ ❯ src/runtime/conversation_export.test.ts:281:24
+    279|     expect(result).toContain(`报告行号：${line}`);
+    280|     expect(result).not.toContain(`第 ${line} 行`);
+    281|     expect(result).not.toContain(`报告行号：${line}；起始基准未确认`);
+       |                        ^
+    282|   },
+    283| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 1 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' not to contain '报告行号：1；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：1；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（报告行号：1；起始基准未确认）
++
+
+ ❯ src/runtime/conversation_export.test.ts:281:24
+    279|     expect(result).toContain(`报告行号：${line}`);
+    280|     expect(result).not.toContain(`第 ${line} 行`);
+    281|     expect(result).not.toContain(`报告行号：${line}；起始基准未确认`);
+       |                        ^
+    282|   },
+    283| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > reports the received line value 42 without assuming a zero/one based coordinate
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' not to contain '报告行号：42；起始基准未确认'
+
+- Expected
++ Received
+
+- 报告行号：42；起始基准未确认
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ - 查看了文件 — /file.ts（已完成）
++   - 报告位置：/file.ts（报告行号：42；起始基准未确认）
++
+
+ ❯ src/runtime/conversation_export.test.ts:281:24
+    279|     expect(result).toContain(`报告行号：${line}`);
+    280|     expect(result).not.toContain(`第 ${line} 行`);
+    281|     expect(result).not.toContain(`报告行号：${line}；起始基准未确认`);
+       |                        ^
+    282|   },
+    283| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > explains the unconfirmed line-number base once for multiple reported positions
+AssertionError: expected [ '起始基准未确认', '起始基准未确认' ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/runtime/conversation_export.test.ts:286:36
+    284| it("explains the unconfirmed line-number base once for multiple report…
+    285|   const result = render([tool({ locations: [{ path: "/a.ts", line: 0 }…
+    286|   expect(result.match(/起始基准未确认/g)).toHaveLength(1);
+       |                                    ^
+    287|   expect(result).toContain("报告行号：0");
+    288|   expect(result).toContain("报告行号：42");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 26 passed (31)
+   Start at  20:55:25
+   Duration  187ms (transform 85ms, setup 0ms, import 124ms, tests 83ms, environment 0ms)
+

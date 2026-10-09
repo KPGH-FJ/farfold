@@ -1,3 +1,4 @@
+import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import { MessageResendDialog } from "./MessageResendDialog";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
@@ -785,7 +786,7 @@ export function ThreadView({
               const first = block[0]!;
               if (first.kind === "tool") {
                 return (
-                  <details key={first.id} className="workspace-steps">
+                  <SearchDisclosure key={first.id} className="workspace-steps">
                     <summary>
                       <BookOpenIcon size={15} aria-hidden="true" />
                       <span>{T.process}</span>
@@ -855,7 +856,7 @@ export function ThreadView({
                           ),
                       )}
                     </div>
-                  </details>
+                  </SearchDisclosure>
                 );
               }
               switch (first.kind) {
@@ -929,14 +930,14 @@ export function ThreadView({
                   );
                 case "thought":
                   return (
-                    <details
+                    <SearchDisclosure
                       key={first.id}
                       className={`thinking-block${thread.running && first.streaming ? " streaming" : ""}`}
                     >
                       <summary>{STRINGS.thread.thinking}</summary>
-                      <p>{first.text}</p>
+                      <p data-find-block>{first.text}</p>
                       <ReportedDetails details={first.reportedDetails} />
-                    </details>
+                    </SearchDisclosure>
                   );
                 case "plan":
                   return (
@@ -1332,23 +1333,25 @@ export function ThreadView({
           onGoSettings={onGoSettings}
         />
       )}
-      <ArtifactPane
-        thread={thread}
-        active={active}
-        open={thread.artifactPaneOpen}
-        contentMode={contentMode}
-        onContentModeChange={onContentModeChange}
-        onBrowserStateChange={setBrowserPage}
-        fileRequest={fileRequest}
-        browserToolbar={
-          <BrowserShareControls
-            sharing={sharing}
-            page={browserPage}
-            onViewRequest={viewRequests}
-          />
-        }
-        returnFocusRef={artifactReturnFocus}
-      />
+      <TranscriptSearchContext.Provider value={false}>
+        <ArtifactPane
+          thread={thread}
+          active={active}
+          open={thread.artifactPaneOpen}
+          contentMode={contentMode}
+          onContentModeChange={onContentModeChange}
+          onBrowserStateChange={setBrowserPage}
+          fileRequest={fileRequest}
+          browserToolbar={
+            <BrowserShareControls
+              sharing={sharing}
+              page={browserPage}
+              onViewRequest={viewRequests}
+            />
+          }
+          returnFocusRef={artifactReturnFocus}
+        />
+      </TranscriptSearchContext.Provider>
     </div>
   );
 }

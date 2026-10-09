@@ -27,7 +27,10 @@ export const CONVERSATION_REDESIGN = {
   findPrevious: "上一处",
   findNext: "下一处",
   findPosition: (current: number, total: number) => `${current} / ${total}`,
-  findScope: "仅查找已展示正文",
+  findScope: "查找已加载文字（含折叠内容）",
+  findShowMedia: "显示图片或音频",
+  findScopeDetails:
+    "包括当前对话已加载的正文、文字详情和附件文字。不读取未加载历史、附件文件、图片、音频或网页内容。",
   exportTitle: "导出对话",
   exportScope: "只导出当前已载入的消息，不包含草稿与待发内容。",
   exportReady: "Markdown 已准备好",

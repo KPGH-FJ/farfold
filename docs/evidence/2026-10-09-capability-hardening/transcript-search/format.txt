@@ -1,0 +1,20 @@
+src/runtime/transcript_find_dom.ts 28ms
+src/runtime/transcript_find_dom.test.ts 13ms
+src/runtime/transcript_search.ts 7ms
+src/runtime/transcript_search.test.ts 6ms
+src/runtime/transcript_search_strings.ts 2ms (unchanged)
+src/runtime/conversation_redesign_strings.ts 3ms
+src/components/transcript-search.tsx 5ms
+src/components/ConversationFind.tsx 13ms
+src/components/ThreadPage.tsx 26ms
+src/components/ThreadView.tsx 44ms (unchanged)
+src/components/MessageContent.tsx 11ms
+src/components/UserMessageContent.tsx 4ms
+src/components/CompactionCard.tsx 3ms
+src/components/MessageContent.test.tsx 11ms (unchanged)
+src/components/ConversationInteractions.review.test.tsx 18ms
+src/components/TranscriptSearch.presentation.test.tsx 2ms
+src/components/thread-items.tsx 15ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx 22ms
+docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/run.mjs 13ms
+docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/index.html 11ms

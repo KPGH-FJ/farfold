@@ -4,12 +4,15 @@ const h = vi.hoisted(() => ({
   expanded: false,
   invoke: vi.fn().mockResolvedValue(null),
 }));
-vi.mock("react", async (original) => {
-  const react = await original<typeof import("react")>();
+// These SSR cases deliberately request a collapsed/expanded initial view.
+// Keep the real expansion model; its open state lives in a ref, while useState
+// only requests a rerender. Globally forcing useState no longer sets it.
+vi.mock("./transcript-search", async (original) => {
+  const actual = await original<typeof import("./transcript-search")>();
   return {
-    ...react,
-    useState: (initial: unknown) =>
-      h.expanded ? [true, () => {}] : react.useState(initial),
+    ...actual,
+    useSearchExpansion: (initial = false) =>
+      actual.useSearchExpansion(h.expanded || initial),
   };
 });
 vi.mock("@tauri-apps/api/core", () => ({
@@ -189,11 +192,12 @@ it("offers and renders details for a tool whose only detail is raw input", () =>
     startedAt: 1,
     rawInput: { command: "touch /tmp/input-only", cwd: "/tmp" },
   };
-  expect(renderToStaticMarkup(<ToolStep call={call} />)).toContain(
-    'class="step-toggle"',
-  );
+  const collapsed = renderToStaticMarkup(<ToolStep call={call} />);
+  expect(collapsed).toContain('class="step-toggle"');
+  expect(collapsed).toContain('aria-expanded="false"');
   h.expanded = true;
   const detail = renderToStaticMarkup(<ToolStep call={call} />);
+  expect(detail).toContain('aria-expanded="true"');
   expect(detail).toContain("touch /tmp/input-only");
   expect(detail).toContain("执行目录");
 });

@@ -1,0 +1,109 @@
+{
+  "recordType": "read_only_diagnostic_summary",
+  "date": "2026-10-09",
+  "candidateCommit": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "subject": {
+    "pid": 82280,
+    "bundleId": "ai.farfold.desktop",
+    "executable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "cdhash": "97657c84962827080473b129ad6f2674337089a8"
+  },
+  "observedFailure": {
+    "owner": "root installed UI check",
+    "operation": "fileDelivery.inspectSelected for controlled PDF under Desktop",
+    "outcome": "15 second timeout before PDF rendering"
+  },
+  "sample": {
+    "path": "output/2026-10-09-fifth-install/file-open-process-sample.txt",
+    "mode": "0600",
+    "bytes": 255235,
+    "sha256": "04e32ba987413893a091b64bfd874018dae43b4b5c6c98935c1e4898fdaaa0a7",
+    "timestamp": "2026-10-09T20:34:50.181+08:00",
+    "lines": [517, 522],
+    "samples": 764,
+    "stack": [
+      "file_delivery::capture",
+      "file_delivery::open_source",
+      "file_access::unix::open_directory",
+      "open_at",
+      "openat",
+      "__openat"
+    ]
+  },
+  "systemLogRead": {
+    "tool": "/usr/bin/log show",
+    "mode": "read-only, no elevated privilege or TCC changes",
+    "windowStart": "2026-10-09T20:34:20+08:00",
+    "windowEnd": "2026-10-09T20:36:10+08:00",
+    "predicate": "process == \"tccd\" AND (eventMessage CONTAINS \"70435.38\" OR eventMessage CONTAINS \"70435.37\" OR (eventMessage CONTAINS \"ai.farfold.desktop\" AND eventMessage CONTAINS \"SystemPolicy\"))",
+    "exitCode": 0,
+    "retention": "Actual tool output was inspected; this record retains only the relevant attribution summary. No independent raw system-log file was saved."
+  },
+  "requests": [
+    {
+      "messageId": "70435.37",
+      "service": "kTCCServiceSystemPolicyAllFiles",
+      "preflight": true,
+      "requestAt": "20:34:27.051+08:00",
+      "accessingPid": 82280,
+      "requestingPid": 70435,
+      "requestingProcess": "sandboxd",
+      "oldRequirementCdhash": "e1b59adcad5da1d4c6d66c28546ba0c6f678ea77",
+      "currentRequirementCdhash": "97657c84962827080473b129ad6f2674337089a8",
+      "requirementMismatch": true,
+      "resultAt": "20:34:27.057+08:00",
+      "result": {
+        "authValue": 0,
+        "authReason": 5,
+        "authVersion": 1,
+        "desired_auth": 0,
+        "error": null
+      },
+      "replyObserved": true
+    },
+    {
+      "messageId": "70435.38",
+      "service": "kTCCServiceSystemPolicyDesktopFolder",
+      "preflight": false,
+      "requestAt": "20:34:27.058+08:00",
+      "accessingPid": 82280,
+      "requestingPid": 70435,
+      "requestingProcess": "sandboxd",
+      "oldRequirementCdhash": "ce8312762bb30d3f0b5fd61d8232ddfe0278c744",
+      "currentRequirementCdhash": "97657c84962827080473b129ad6f2674337089a8",
+      "requirementMismatch": true,
+      "promptingAt": "20:34:27.063+08:00",
+      "resultOrReplyObservedInWindow": false
+    }
+  ],
+  "conclusion": {
+    "classification": "macOS Desktop-folder authorization boundary; correlated process stack and exact TCC attribution",
+    "supported": "The sampled formal app was blocked opening the Desktop path, and the same PID had a DesktopFolder authorization request in prompting state without a result/reply in the queried window. This operation had not reached the PDF worker.",
+    "notEstablished": [
+      "Whether a prompt was visibly presented",
+      "Whether the user accepted or rejected permission",
+      "The eventual authorization result outside the queried window",
+      "A need for Full Disk Access",
+      "A fix for Desktop access",
+      "A general PDF-worker failure"
+    ]
+  },
+  "separateRenderingCheck": {
+    "owner": "root report, not independently repeated by this reviewer",
+    "input": "controlled fixtures copied to a fresh 0700 temporary directory",
+    "passed": [
+      "two-page PDF",
+      "Type3 Chinese character",
+      "PNG",
+      "accurate missing-font/damaged/password failure presentation"
+    ],
+    "boundary": "Proves the separately exercised rendering paths only; does not fix or accept Desktop-folder access."
+  },
+  "actionsNotTaken": [
+    "No app launch, quit, install, or UI operation by this reviewer",
+    "No Agent invocation",
+    "No credentials, user conversation contents, or TCC database read",
+    "No permission reset or system-permission expansion",
+    "No private full sample or unified-log copy into public evidence"
+  ]
+}

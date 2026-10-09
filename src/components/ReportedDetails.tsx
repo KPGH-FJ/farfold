@@ -1,4 +1,5 @@
 import type { ReportedDetails as Fields } from "../runtime/reported_details";
+import { SearchDisclosure } from "./transcript-search";
 
 export const REPORTED_DETAILS_STRINGS = {
   title: "最近收到的扩展字段",
@@ -8,10 +9,10 @@ export const REPORTED_DETAILS_STRINGS = {
 export function ReportedDetails({ details }: { details?: Fields }) {
   if (!details || Object.keys(details).length === 0) return null;
   return (
-    <details className="raw-block">
+    <SearchDisclosure className="raw-block">
       <summary>{REPORTED_DETAILS_STRINGS.title}</summary>
       <p>{REPORTED_DETAILS_STRINGS.note}</p>
-      <pre>{JSON.stringify(details, null, 2)}</pre>
-    </details>
+      <pre data-find-block>{JSON.stringify(details, null, 2)}</pre>
+    </SearchDisclosure>
   );
 }

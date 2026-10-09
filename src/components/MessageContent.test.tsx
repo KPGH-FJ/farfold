@@ -52,7 +52,7 @@ it("preserves Markdown after remount and renders new text for the same streaming
   expect(updated).not.toContain("javascript:");
 });
 
-it("renders actual image, audio, file and text-resource messages without raw or executable markup", () => {
+it("retains media attachments unopened and renders file/text resources without executable markup", () => {
   const attachments = [
     {
       name: "图片",
@@ -92,9 +92,10 @@ it("renders actual image, audio, file and text-resource messages without raw or 
       ),
     )
     .join("");
-  expect(html).toContain("<img");
-  expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
-  expect(html).toContain('<audio controls="" preload="none"');
+  expect(html).not.toContain("<img");
+  expect(html).not.toContain("<audio");
+  expect(html).toContain("image/png");
+  expect(html).toContain("audio/wav");
   expect(html).toContain("notes.md");
   expect(html).toContain("&lt;script&gt;not executable&lt;/script&gt;");
   expect(html).toContain('href="https://example.com/file"');

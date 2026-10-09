@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { segmentedMatches } from "../runtime/transcript_find";
+import {
+  transcriptRanges,
+  sameTextRange,
+} from "../runtime/transcript_find_dom";
+import { revealSearchAncestors } from "../runtime/transcript_search";
 import { LIBRARY } from "../runtime/library_strings";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 
@@ -18,66 +22,73 @@ export function ConversationFind({
   const [position, setPosition] = useState(0);
   const [ranges, setRanges] = useState<Range[]>([]);
   const input = useRef<HTMLInputElement>(null);
+  const selected = useRef<Range | undefined>(undefined);
+  selected.current = ranges[position];
+  const [navigation, setNavigation] = useState(0);
+  const scheduleRefresh = useRef<(() => void) | undefined>(undefined);
   useEffect(() => {
-    const root = host.current?.querySelector(".transcript");
+    let root = host.current?.querySelector(".transcript");
+    let pending = false;
+    let frame = 0;
+    const schedule = () => {
+      if (pending) return;
+      pending = true;
+      frame = requestAnimationFrame(() => {
+        pending = false;
+        refresh();
+      });
+    };
+    const observer = new MutationObserver(schedule);
     const refresh = () => {
-      const found: Range[] = [];
-      if (root && query.trim()) {
-        for (const block of root.querySelectorAll(
-          ".msg-user, .assistant, .thinking-block, .steps",
-        )) {
-          const texts: Node[] = [];
-          const walker = document.createTreeWalker(block, NodeFilter.SHOW_TEXT);
-          while (walker.nextNode()) {
-            const node = walker.currentNode;
-            const parent = node.parentElement;
-            if (
-              !parent ||
-              parent.closest("button, [data-copy-exclude], .who") ||
-              !parent.getClientRects().length
-            )
-              continue;
-            texts.push(node);
-          }
-          for (const match of segmentedMatches(
-            texts.map((node) => node.textContent ?? ""),
-            query,
-          )) {
-            const range = document.createRange();
-            range.setStart(texts[match.startIndex], match.startOffset);
-            range.setEnd(texts[match.endIndex], match.endOffset);
-            found.push(range);
-          }
-        }
+      const currentRoot = host.current?.querySelector(".transcript");
+      if (root !== currentRoot) {
+        root?.removeEventListener("toggle", schedule, true);
+        observer.disconnect();
+        root = currentRoot;
+        observe();
       }
+      if (!root || !root.isConnected) return;
+      const found = transcriptRanges(root as HTMLElement, query);
+      const retained = found.findIndex((range) =>
+        sameTextRange(range, selected.current),
+      );
       setRanges(found);
       setPosition((current) =>
-        Math.min(current, Math.max(0, found.length - 1)),
+        retained >= 0
+          ? retained
+          : Math.min(current, Math.max(0, found.length - 1)),
       );
     };
-    refresh();
-    if (!root) return;
-    // Native details and local attachment expansion do not update the thread
-    // revision. Watch the visible transcript without observing our highlight class.
-    root.addEventListener("toggle", refresh, true);
-    const observer = new MutationObserver(refresh);
-    observer.observe(root, {
-      childList: true,
-      characterData: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["open", "hidden"],
-    });
+    const observe = () => {
+      if (!root) return;
+      root.addEventListener("toggle", schedule, true);
+      observer.observe(root, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["open", "hidden"],
+      });
+    };
+    observe();
+    scheduleRefresh.current = schedule;
+    schedule();
     return () => {
-      root.removeEventListener("toggle", refresh, true);
+      scheduleRefresh.current = undefined;
+      cancelAnimationFrame(frame);
+      root?.removeEventListener("toggle", schedule, true);
       observer.disconnect();
     };
-  }, [query, revision, host]);
+  }, [query, host]);
+  // Many streamed updates in the same frame share one scan. Revision updates
+  // do not tear down pending work or re-create ranges before the next frame.
+  useEffect(() => {
+    scheduleRefresh.current?.();
+  }, [revision]);
   useEffect(() => {
     const current = ranges[position];
     const parent = current?.startContainer.parentElement;
     parent?.classList.add("search-match");
-    parent?.scrollIntoView({ block: "center" });
     // CSS Custom Highlight API does not alter message text or copying.
     const registry =
       typeof CSS !== "undefined"
@@ -85,15 +96,18 @@ export function ConversationFind({
         : undefined;
     const HighlightClass = (
       globalThis as typeof globalThis & {
-        Highlight?: new (...ranges: Range[]) => unknown;
+        Highlight?: new () => { add: (range: Range) => unknown };
       }
     ).Highlight;
     if (registry && HighlightClass) {
-      registry.set("conversation-find", new HighlightClass(...ranges));
-      registry.set(
-        "conversation-find-current",
-        new HighlightClass(...(current ? [current] : [])),
-      );
+      // A one-character query can have hundreds of thousands of occurrences.
+      // Incremental add avoids the JavaScript function-argument count limit.
+      const all = new HighlightClass();
+      for (const range of ranges) all.add(range);
+      const active = new HighlightClass();
+      if (current) active.add(current);
+      registry.set("conversation-find", all);
+      registry.set("conversation-find-current", active);
     }
     return () => {
       parent?.classList.remove("search-match");
@@ -101,6 +115,38 @@ export function ConversationFind({
       registry?.delete("conversation-find-current");
     };
   }, [ranges, position]);
+  const current = ranges[position];
+  useEffect(() => {
+    const root = host.current?.querySelector<HTMLElement>(".transcript");
+    const parent = current?.startContainer.parentElement;
+    if (!root || !parent || !root.contains(parent)) return;
+    const release = revealSearchAncestors(parent, root);
+    const frame = requestAnimationFrame(() => {
+      if (
+        root.isConnected &&
+        parent.isConnected &&
+        root.contains(parent) &&
+        parent.getClientRects().length
+      )
+        parent.scrollIntoView({ block: "center" });
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      release();
+    };
+  }, [
+    host,
+    current?.startContainer,
+    current?.startOffset,
+    current?.endContainer,
+    current?.endOffset,
+    navigation,
+  ]);
+  const move = (direction: number) => {
+    if (!ranges.length) return;
+    setPosition((value) => (value + ranges.length + direction) % ranges.length);
+    setNavigation((value) => value + 1);
+  };
   return (
     <div
       className="thread-find"
@@ -114,18 +160,19 @@ export function ConversationFind({
         if (event.key === "Enter") {
           event.preventDefault();
           event.stopPropagation();
-          if (ranges.length)
-            setPosition(
-              (position + (event.shiftKey ? ranges.length - 1 : 1)) %
-                ranges.length,
-            );
+          move(event.shiftKey ? -1 : 1);
         }
       }}
     >
+      <span className="sr-only" id="conversation-find-scope">
+        {R.findScopeDetails}
+      </span>
       <input
         ref={input}
         autoFocus
         aria-label={LIBRARY.find}
+        aria-describedby="conversation-find-scope"
+        title={R.findScopeDetails}
         placeholder={R.findScope}
         value={query}
         onChange={(event) => {
@@ -145,9 +192,7 @@ export function ConversationFind({
         className="icon-button"
         aria-label={R.findPrevious}
         disabled={!ranges.length}
-        onClick={() =>
-          setPosition((position + ranges.length - 1) % ranges.length)
-        }
+        onClick={() => move(-1)}
       >
         ↑
       </button>
@@ -156,7 +201,7 @@ export function ConversationFind({
         className="icon-button"
         aria-label={R.findNext}
         disabled={!ranges.length}
-        onClick={() => setPosition((position + 1) % ranges.length)}
+        onClick={() => move(1)}
       >
         ↓
       </button>

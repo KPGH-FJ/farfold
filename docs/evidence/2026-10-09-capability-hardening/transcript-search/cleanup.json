@@ -1,0 +1,8 @@
+{
+  "ownedViteSession": 51980,
+  "exitCode": 130,
+  "port1457ListenerAbsent": true,
+  "browserHarness": "browser/run.mjs",
+  "browserProcesses": "Each successful run ended its own detached process group and removed its temporary profile in finally; no user Chrome profile was selected.",
+  "formalAppOrAgentProcessesModified": false
+}

@@ -1,0 +1,25 @@
+{
+  "engine": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "results": [
+    {
+      "name": "folded thought counted and revealed",
+      "ok": true,
+      "detail": {
+        "count": "1 / 1",
+        "open": true,
+        "value": "thought-needle",
+        "direct": 1
+      }
+    },
+    {
+      "name": "temporary thought expansion revoked",
+      "ok": false
+    },
+    {
+      "name": "exception",
+      "ok": false,
+      "detail": "Error: temporary thought expansion revoked\n    at check (http://127.0.0.1:1457/docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx?t=1791550234609:28:17)\n    at run (http://127.0.0.1:1457/docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx?t=1791550234609:231:2)"
+    }
+  ],
+  "passed": false
+}

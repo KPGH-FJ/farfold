@@ -1,0 +1,36 @@
+
+DevTools listening on ws://127.0.0.1:63300/devtools/browser/1ed21b47-50a9-4448-9e3b-89b890fe817f
+Trying to load the allocator multiple times. This is *not* supported.
+[85104:19439964:1009/205148.574458:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.574646:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205148.576810:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.576844:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205148.577934:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.577956:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205148.578027:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.578050:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205148.578108:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.578125:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205148.586311:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205148.586355:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.620056:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.620126:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.685614:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.685668:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.710853:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.710901:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.752660:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.752737:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.773856:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.773895:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.817790:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.817841:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19439964:1009/205150.841054:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85104:19440041:1009/205150.841094:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[85097:19439950:1009/205151.354459:ERROR:google_apis/gcm/engine/registration_request.cc:275] Registration URL fetching failed.
+[85097:19439950:1009/205151.354513:ERROR:google_apis/gcm/engine/registration_request.cc:275] Registration URL fetching failed.
+[85097:19439950:1009/205151.354571:ERROR:google_apis/gcm/engine/registration_request.cc:275] Registration URL fetching failed.
+[85097:19439878:1009/205151.361523:ERROR:content/browser/network_service_instance_impl.cc:653] Network service crashed or was terminated, restarting service.
+[85097:19439878:1009/205151.370073:ERROR:content/browser/gpu/gpu_process_host.cc:1130] GPU process exited unexpectedly: exit_code=15
+[85131:19440530:1009/205151.393996:ERROR:base/apple/mach_port_rendezvous_mac.cc:256] bootstrap_look_up com.google.Chrome.MachPortRendezvousServer.85097: Unknown service name (1102)
+[85131:19440530:1009/205151.394143:ERROR:base/memory/shared_memory_switch.cc:261] No rendezvous client, terminating process (parent died?)

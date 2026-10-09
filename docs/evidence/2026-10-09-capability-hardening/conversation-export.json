@@ -1,0 +1,138 @@
+{
+  "recordType": "capability_increment_receipt",
+  "capability": "P35",
+  "date": "2026-10-09",
+  "status": "implemented_targeted_checks_passed_pending_independent_review_and_installed_acceptance",
+  "scope": "Readable Markdown snapshot of loaded conversation content only. Portable attachment bundle and full Agent-history export remain outside this increment.",
+  "changes": [
+    "Agent media-only replies and user/Agent/tool attachment descriptors remain in the export. Binary and embedded resource bodies are not copied.",
+    "All reported tool locations (including line numbers), diff paths and declared links/attachment sources are included; exported locations are explicitly unverified.",
+    "Pending, in-progress, failed and unknown tools no longer use successful-operation summaries. Completed tools retain the existing summary with explicit status.",
+    "Loaded-only scope and streaming snapshot boundaries travel in the Markdown file; later events cannot alter the already serialized string. Message indentation is retained.",
+    "Metadata is escaped as text. HTTP(S)/file URL credentials, query and fragment are omitted; unsupported or embedded URI payloads are not exported.",
+    "A new save attempt clears the current success receipt. Cancellation is distinct; rejection is unconfirmed and asks the user to inspect the destination before deciding whether to retry. No automatic repeat writes."
+  ],
+  "privacyBoundary": [
+    "No rawInput/rawOutput/tool title/text/diff body/terminal body/raw event/thought export.",
+    "Ordinary user/Agent message text remains unchanged, including any private information the user put in that visible text; the dialog explicitly asks the user to review it.",
+    "Declared names, types and paths are metadata, not proof files exist or were created. URL path components and ordinary local paths are retained and may contain personal information.",
+    "No file/URL fetch, history load, new persistent transcript or Agent operation. No service credentials or account configuration are read."
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/runtime/conversation_actions.ts",
+      "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d",
+      "lines": 128
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "dfaaf2451954b6a5c009251c570dc61cf1a14148e62bcb4e7c9a1b1a65d9fa23",
+      "lines": 143
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "c8910dc3c85b946dafda149071d5e0d6fa16b615452dddd3d324675884d4d3dd",
+      "lines": 29
+    },
+    {
+      "path": "src/runtime/conversation_export.test.ts",
+      "sha256": "f0d358058d0e3de0fc5cd0ccfba27259baf8ff2d7067a1a9a8e19185d8251210",
+      "lines": 222
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "ed95cb73c832dc8f4dbc3d259d559e8e24d8425437ac10348b41714547bf1582",
+      "lines": 95
+    },
+    {
+      "path": "src/components/ConversationExportDialog.test.tsx",
+      "sha256": "137e168c4d30e791bb4d035dc5759a32715e660e9141251cdc3ce08d32c4216b",
+      "lines": 139
+    }
+  ],
+  "checks": [
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-red.txt",
+      "sha256": "68b8956ab3e501010dca13aa91e6d7609f04ddc45ef80b70c3400f649a614934",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 2,
+        "failed": 16,
+        "passed": 3
+      },
+      "meaning": "Original implementation; missing media/metadata/status/snapshot and stale save receipt counterexamples."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-green.txt",
+      "sha256": "208f8d1a348a43cccae0c18bc41eef56916360b831b8e0b30eaaf149349806f5",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 3,
+        "passed": 39
+      },
+      "meaning": "First implementation plus existing conversation_actions regression."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-edge-red.txt",
+      "sha256": "37aad451ea38005be10a141bfe46fb72c2545acc83c77968280bbe81b1e84c3d",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 1,
+        "failed": 1,
+        "passed": 15
+      },
+      "meaning": "Whitespace reproduction valid. URL secrecy assertion used underscore markers escaped by Markdown; the URL pass is not relied upon."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-edge-red-valid.txt",
+      "sha256": "1a531519ddd1608b84e298c62959fb11b93dcbd3b31b702fefe6b5d99353af25",
+      "exitCode": 1,
+      "result": {
+        "filesFailed": 1,
+        "failed": 2,
+        "passed": 14
+      },
+      "meaning": "Corrected alphanumeric secret markers; whitespace and URL whitespace/protocol-relative counterexamples both fail."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-regression.txt",
+      "sha256": "7ef5493f872f3f7911c07f90b00909f5de1b071f803d41c3c8437533e377eed7",
+      "exitCode": 0,
+      "result": {
+        "filesPassed": 6,
+        "passed": 86
+      },
+      "meaning": "Final targeted regression, including current sibling P12 changes in shared interaction tests."
+    },
+    {
+      "log": "docs/evidence/2026-10-09-capability-hardening/conversation-export-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "exitCode": 0,
+      "result": null,
+      "meaning": "TypeScript project typecheck."
+    }
+  ],
+  "coverage": [
+    "4 media kinds with no message text; source-less attachment descriptor",
+    "all reported tool sources and tool statuses including unknown",
+    "raw/collapsed/terminal/diff and embedded attachment contents excluded",
+    "URL authentication/parameters, whitespace and protocol-relative URI counterexamples",
+    "streaming snapshot, absent draft/queue contents, empty-readable guard",
+    "metadata Markdown/HTML escaping and body indentation",
+    "success followed by picker failure, write failure or cancellation; success cleared at next picker start",
+    "in-flight deduplication, busy close guard and fixed text during asynchronous location selection"
+  ],
+  "evidenceLimits": [
+    "React state/handler fixtures mock the file picker and fileDelivery; they are not real Tauri filesystem or installed UI acceptance.",
+    "No rendering screenshot was claimed; the previously blocked SSR browser path was not retried.",
+    "No attachment packaging, remote retrieval, unloaded-history export or cross-device restore claim.",
+    "No full repository check, app packaging/install, Agent prompt or live user-data read performed by this child for P35."
+  ],
+  "independentReview": {
+    "status": "requested",
+    "owner": "root",
+    "scope": "final source/test and evidence review; not yet completed"
+  },
+  "relatedDiagnostic": "fifth-candidate/desktop-file-access.json",
+  "followUpReceipt": "conversation-export-review.json"
+}

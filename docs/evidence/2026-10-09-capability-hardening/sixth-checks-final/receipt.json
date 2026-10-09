@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-10-09T13:12:36.273547+00:00",
+  "sourceBase": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "inputCount": 932,
+  "sourceUnchanged": true,
+  "changedInputs": [],
+  "checks": [
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 17.432,
+      "log": "format.txt"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 6.621,
+      "log": "typecheck.txt"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 31.501,
+      "log": "frontend.txt"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 6.72,
+      "log": "build.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.922,
+      "log": "cargo-fmt.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.809,
+      "log": "clippy.txt"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 37.13,
+      "log": "rust.txt"
+    }
+  ],
+  "passed": false
+}

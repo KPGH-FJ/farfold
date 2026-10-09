@@ -1,0 +1,234 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_export.test.ts (35 tests | 7 failed) 84ms
+   × renders leading decision metadata literally: # 伪造标题 6ms
+   × renders leading decision metadata literally: --- 2ms
+   × renders leading decision metadata literally: 1. 伪造列表 1ms
+   × renders leading decision metadata literally: + 伪造列表 2ms
+   × renders leading decision metadata literally: - 伪造列表 1ms
+   × renders leading decision metadata literally: ~~~js
+FENCEDCONTENT
+~~~ 2ms
+   × renders leading decision metadata literally:     # 缩进标题 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: # 伪造标题
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p># 伪造标题</p>\n</blockq…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p># 伪造标题</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <h1>伪造标题</h1>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: ---
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>---</p>\n</blockquot…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>---</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <hr/>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: 1. 伪造列表
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>1. 伪造列表</p>\n</block…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>1. 伪造列表</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <ol>
++ <li>伪造列表</li>
++ </ol>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: + 伪造列表
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>+ 伪造列表</p>\n</blockq…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>+ 伪造列表</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <ul>
++ <li>伪造列表</li>
++ </ul>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: - 伪造列表
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>- 伪造列表</p>\n</blockq…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>- 伪造列表</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <ul>
++ <li>伪造列表</li>
++ </ul>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally: ~~~js
+FENCEDCONTENT
+~~~
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>~~~js FENCEDCONTENT …'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>~~~js FENCEDCONTENT ~~~</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <pre><code class="language-js"></code></pre>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > renders leading decision metadata literally:     # 缩进标题
+AssertionError: expected '<h1>当前对话</h1>\n<blockquote>\n<p>导出时当前…' to contain '<blockquote>\n<p>    # 缩进标题</p>\n</bl…'
+
+- Expected
++ Received
+
++ <h1>当前对话</h1>
+  <blockquote>
+- <p>    # 缩进标题</p>
++ <p>导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ 报告行号保留对话提供的原值，起始基准未确认。
++ 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。</p>
++ </blockquote>
++ <blockquote>
++ <pre><code># 缩进标题
++ </code></pre>
+  </blockquote>
+
+ ❯ src/runtime/conversation_export.test.ts:343:16
+    341|   const html = renderToStaticMarkup(createElement(Markdown, { children…
+    342|   const literalParagraph = renderToStaticMarkup(createElement("p", nul…
+    343|   expect(html).toContain(`<blockquote>\n${literalParagraph}\n</blockqu…
+       |                ^
+    344|   for (const structural of ["<hr", "<ul", "<ol", "<pre", "<code", "<h1…
+    345| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 28 passed (35)
+   Start at  21:02:30
+   Duration  189ms (transform 38ms, setup 0ms, import 47ms, tests 84ms, environment 0ms)
+

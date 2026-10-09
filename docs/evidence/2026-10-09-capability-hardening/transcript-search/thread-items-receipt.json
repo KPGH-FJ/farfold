@@ -1,0 +1,80 @@
+{
+  "scope": "P12 工具详情、差异、计划与原始扩展字段的查找呈现子范围",
+  "status": "targeted-tests-passed-awaiting-integrated-verification",
+  "implementation": [
+    "搜索活动时沿现有呈现树挂载隐藏工具文字；按正文、字段、路径、计划条目和差异行登记查找边界，生成的按钮和状态说明不计。",
+    "长差异提供真实展开/收起；搜索仅临时展开命中项祖先，退出后恢复且不覆盖用户主动折叠选择。",
+    "未知详情继续仅显示当前内存字段；不新增持久正文索引。"
+  ],
+  "source": [
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "abe60e7ef61e34c29dc3a3303d87382705369af1a30033003f77bcf5520bd0b0"
+    },
+    {
+      "path": "src/components/ReportedDetails.tsx",
+      "sha256": "55877624c1b14e782afcecbf12e4e47537ac0b51f058848c6170bf48733bcb5a"
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "f89f8da4bad7ee9c1b99eea2a8a54772179f92f7b8ea44c096f357d99a9f554b"
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "sha256": "30d0b6c77dfac2957e759512b4b60dff706a1a79c3c1344b929c4b91266a1ee8"
+    },
+    {
+      "path": "src/components/thread-items.file-links.test.tsx",
+      "sha256": "9fcb642ac46496e11874eaa347513ddfe6d27f53dd34edff3170dd7e5014a07d"
+    }
+  ],
+  "tests": [
+    {
+      "log": "thread-items-red.txt",
+      "result": "6 failed, 1 passed",
+      "meaning": "旧实现缺少折叠正文挂载、差异尾部及文本边界的有效反例"
+    },
+    {
+      "log": "thread-items-first-green.txt",
+      "result": "8 failed, 2 passed",
+      "meaning": "首次接线后，SSR data属性值断言不符及既有直接调用Hook测试harness未更新；不是成功回执"
+    },
+    {
+      "log": "thread-items-green.txt",
+      "result": "1 failed, 12 passed",
+      "meaning": "测试正则<p误匹配pre；不是成功回执"
+    },
+    {
+      "log": "thread-items-final.txt",
+      "result": "16 passed in 4 files",
+      "meaning": "真实共享hook SSR、真实ref登记及祖先展开/释放/用户意图、原文件链接及扩展详情关联通过"
+    }
+  ],
+  "rawLogs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/thread-items-red.txt",
+      "sha256": "569f731ad429e8a9825b9059c4735c1cf7ba16baf5f6242eeb58c669b3d53a8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/thread-items-first-green.txt",
+      "sha256": "f8593a7eee2131c54de1e01131950d995480981cbe2f6c6959f250e81c2c0994"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/thread-items-green.txt",
+      "sha256": "3f504b40342260ba073d0920d0ed7f3d9fcf62fe253ab057500335ef4d3d7b58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/thread-items-final.txt",
+      "sha256": "f090f299e5281f04d6815ede395a11f0f62e64e65fc10c82c0d7ad33e7c0393e"
+    }
+  ],
+  "limits": [
+    "交互测试以受控DOM祖先/React hook harness执行，未冒称浏览器或安装版端到端；搜索计数/定位由同批其他模块负责，等待整合验证。",
+    "附件媒体加载开关由同批MessageAttachments负责，单独挂载hidden不能保证无解码；不以本子范围测试证明媒体或IPC为零。",
+    "大文本和大量差异的真实性能仍需单独量测；此片不宣称解决资源上限。"
+  ],
+  "integrationNotes": [
+    "product_coverage只将差异展开/收起文案迁入transcript_search_strings.ts；这里source hash已按格式化后当前源码更新。",
+    "当前定向16项日志来自迁文案前；合并态测试与浏览器证据单列主回执，不能把本日志冒称最终全仓验证。"
+  ]
+}

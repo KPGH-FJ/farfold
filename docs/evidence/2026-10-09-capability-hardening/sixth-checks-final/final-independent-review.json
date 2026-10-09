@@ -1,0 +1,272 @@
+{
+  "checkedAtUtc": "2026-10-09T13:19:14.734941+00:00",
+  "status": "completed_no_blocker_in_reviewed_scope",
+  "reviewer": "verification subagent",
+  "mode": "read_only_independent_review_of_final_integration_evidence",
+  "sourceBase": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "scope": [
+    "第六片最终日志、冻结输入、31项P12/P35源码与现有独立审查回执。",
+    "本回执独立于root整合；P35由本审查者实现，其代码独立审查归architecture，不把自审称独立代码审查。"
+  ],
+  "inputs": {
+    "count": 932,
+    "sha256": "cafeadd016af13e03c3eaa20d001b00a6701b0c96b3cff88124b84262f0ae87d",
+    "allCurrentHashesMatch": true,
+    "changed": [],
+    "symlinks": []
+  },
+  "ownedSources": {
+    "p12Count": 24,
+    "p35Count": 7,
+    "uniqueCount": 31,
+    "exactlyMatchesCurrentGitSourceDiff": true,
+    "allCurrentHashesMatch": true,
+    "files": [
+      {
+        "path": "src/components/ApprovalInput.test.tsx",
+        "sha256": "867194cdf34b35b358af1d92b6aa11c8c8f69cb4f0e9eabbd7bda60ae6fb0528"
+      },
+      {
+        "path": "src/components/CompactionCard.tsx",
+        "sha256": "97e06c21ac7e29fbecf3ddd2bb06777b145bb36f9271b7f2c79168492acb1fe6"
+      },
+      {
+        "path": "src/components/ConversationExportDialog.test.tsx",
+        "sha256": "c6b63b868d04a5e4b12a035ec16bfb6ee81f21288cc8eaaf4321fefeda66451c"
+      },
+      {
+        "path": "src/components/ConversationExportDialog.tsx",
+        "sha256": "15eec2ef011d12ff071c361f5d5a96fbf672927f236774c49444ae22a7695079"
+      },
+      {
+        "path": "src/components/ConversationFind.tsx",
+        "sha256": "8b2e06505e1b7691f763b20c9fc40f0ac4eeeed3460c8e682ff08f81791c6af7"
+      },
+      {
+        "path": "src/components/ConversationInteractions.review.test.tsx",
+        "sha256": "18afb5cfeaa941ee02b82c3056e668ac76203e1cb99eba8b3831926972015f12"
+      },
+      {
+        "path": "src/components/MessageContent.test.tsx",
+        "sha256": "5ceb592630050e212a374d4c3ac67cef973c00955f936d979d5725df0fc88cc2"
+      },
+      {
+        "path": "src/components/MessageContent.tsx",
+        "sha256": "d98391f759e38ada42b500a8f66c0273ee85717685f39ffd69659c30ac351806"
+      },
+      {
+        "path": "src/components/ReportedDetails.tsx",
+        "sha256": "55877624c1b14e782afcecbf12e4e47537ac0b51f058848c6170bf48733bcb5a"
+      },
+      {
+        "path": "src/components/ThreadPage.tsx",
+        "sha256": "40113bc89d0a318afea747cc7a3bebafc2e559af8185ca1d5d1545e9cbcd3eea"
+      },
+      {
+        "path": "src/components/ThreadView.reading.test.tsx",
+        "sha256": "fe71c96b01c0314e697b9316e945533257954030ee60ebf9dacd698d892f683d"
+      },
+      {
+        "path": "src/components/ThreadView.search-scope.test.tsx",
+        "sha256": "a7de73b9f40a11b4660667dbb30d2df08b999d247a3b0e9ea42d119489ed8043"
+      },
+      {
+        "path": "src/components/ThreadView.tsx",
+        "sha256": "53eb93807fdb0f439304096a4b8eb5a93c1c1b4998e4a157501e73b6de68cad3"
+      },
+      {
+        "path": "src/components/TranscriptSearch.presentation.test.tsx",
+        "sha256": "25bc2cabc07351aee1d08357630701f7481cd3b1bf1e1be9cadc479cc1919360"
+      },
+      {
+        "path": "src/components/UserMessageContent.tsx",
+        "sha256": "7133eeedd67a9de27d4c6b0ad76cf04cf9d84f6e422103f5af6b7cb886613587"
+      },
+      {
+        "path": "src/components/thread-items.file-links.test.tsx",
+        "sha256": "9fcb642ac46496e11874eaa347513ddfe6d27f53dd34edff3170dd7e5014a07d"
+      },
+      {
+        "path": "src/components/thread-items.search-expansion.test.tsx",
+        "sha256": "30d0b6c77dfac2957e759512b4b60dff706a1a79c3c1344b929c4b91266a1ee8"
+      },
+      {
+        "path": "src/components/thread-items.search.test.tsx",
+        "sha256": "f89f8da4bad7ee9c1b99eea2a8a54772179f92f7b8ea44c096f357d99a9f554b"
+      },
+      {
+        "path": "src/components/thread-items.tsx",
+        "sha256": "abe60e7ef61e34c29dc3a3303d87382705369af1a30033003f77bcf5520bd0b0"
+      },
+      {
+        "path": "src/components/transcript-search.tsx",
+        "sha256": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8"
+      },
+      {
+        "path": "src/runtime/conversation_actions.test.ts",
+        "sha256": "e52cd82c0bca50a1b3e4ce8ed1053b9251980157e9e1b7fdd3c782375bf7d4dd"
+      },
+      {
+        "path": "src/runtime/conversation_actions.ts",
+        "sha256": "cc971d696f1276c2e8acbc6718d51e49a6f060ae9073dfdcd054f3bc6d13049d"
+      },
+      {
+        "path": "src/runtime/conversation_export.test.ts",
+        "sha256": "9f1498257ab08c9be2276d92c103a1f1679ce286c09f08a7c7cc83868bc40234"
+      },
+      {
+        "path": "src/runtime/conversation_export.ts",
+        "sha256": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439"
+      },
+      {
+        "path": "src/runtime/conversation_redesign_strings.ts",
+        "sha256": "f4b8901be6e3175ec6e98457d08a2d5fc15b9b6f5c19b181e751b1fb783be130"
+      },
+      {
+        "path": "src/runtime/export_strings.ts",
+        "sha256": "4406456bafca9f7b57d70782c1665f6d19022eeb874c8a7deb24ba2564b04816"
+      },
+      {
+        "path": "src/runtime/transcript_find_dom.test.ts",
+        "sha256": "c5dfb07759d1efb161c023a01e83dbeb098248bf1d96164abaa854ee555feacb"
+      },
+      {
+        "path": "src/runtime/transcript_find_dom.ts",
+        "sha256": "c724532e10d797dee4998d48c96bdd3407e96fea539374c98f084a55678f162a"
+      },
+      {
+        "path": "src/runtime/transcript_search.test.ts",
+        "sha256": "c1570e50dd3e653d6a1e8e0ce71eca5a9dbe8e213ea6dd9da9f8871ace0414ff"
+      },
+      {
+        "path": "src/runtime/transcript_search.ts",
+        "sha256": "140e3627ec63df594f7172fcb3a74a3e211d9fa669f4606367e3b37bf425ec31"
+      },
+      {
+        "path": "src/runtime/transcript_search_strings.ts",
+        "sha256": "ae78e84f03fde4a1e21c55d21f4ab2729643128a6e12eec433a4b0e937d52729"
+      }
+    ]
+  },
+  "checks": {
+    "result": "all_seven_have_successful_results",
+    "execution": "Root执行；本审查者读取原始stdout、回执并核hash，未重跑工程检查。",
+    "frontend": {
+      "files": 260,
+      "passed": 2887,
+      "failed": 0
+    },
+    "rust": {
+      "passed": 1134,
+      "ignored": 5,
+      "failed": 0
+    },
+    "initialFormatExitCode": 1,
+    "initialFormatCause": "首次全仓生成的sixth-checks/receipt.json排版；原始失败stdout保留。",
+    "finalFormatExitCode": 0,
+    "logsSha256": {
+      "rust.txt": "a0bffa3c323fd3d7e42021b32def897b4968a4038f3a3f6487faa2bd71d20777",
+      "format-after-receipts.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "build.txt": "d5522a6e390945a4f17bfb8571a8a88041ab66589441b5a49aaeeef708acf043",
+      "cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "frontend.txt": "729a299f3768c459f453232e6bbf86bcbec0fc0aea3598eb3646b46acc91415c",
+      "format.txt": "9e27b76b11e75eb1a74dc126c36b82b9f38863b36e7a456111a5fdf38410cd1b",
+      "clippy.txt": "182e0273ab1d85020feb801d5e48b162fe456a7158fff856876f75864df8bcb0",
+      "typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "buildWarning": "Vite chunk >500 kB提示仍存在，构建exit 0；不冒称无警告。"
+  },
+  "initialToFinal": {
+    "changedInputs": ["src/components/ApprovalInput.test.tsx"],
+    "productionChanged": false,
+    "fixtureReview": "SSR夹具由全局React useState替换改为调用真实useSearchExpansion并指定初始状态；原工具命令/目录/展开按钮断言保留，增加aria-expanded=false/true断言。"
+  },
+  "originalScopeIds": {
+    "originalCount": 122,
+    "planCount": 122,
+    "unique": true,
+    "sameSet": true,
+    "missing": [],
+    "extra": [],
+    "new01": "追加问题单保留，不计入原122项，也未宣称解决。"
+  },
+  "protectedDocuments": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "unchanged": true
+    }
+  ],
+  "fileSizePolicy": {
+    "scope": "Frozen inputs under src, src-tauri/src and src-tauri/native; .ts/.tsx/.rs/.css/.m/.h; exclude tests, fixtures, test_support and test/spec filenames.",
+    "productionFilesChecked": 482,
+    "limitLines": 1500,
+    "overLimit": [],
+    "largest": {
+      "path": "src/components/Composer.tsx",
+      "lines": 1489
+    },
+    "all31OwnedAtOrBelowLimit": true
+  },
+  "capabilityBoundaries": {
+    "P12": "定向29文件203项与受控HeadlessChrome154/React fixture 31项成功；已加载折叠文字纳入，无未加载历史索引、附件实体读取或安装版WK验证。160000命中及四次DOM恢复只证明受控样本，不构成无限规模/长期性能保证。",
+    "P35": "关联72项及architecture独立实际Markdown SSR 12项成功；元数据首字符结构反例已闭合，正文Markdown有意保留。导出为明确类别的已加载Markdown快照，排除thought/notice/compaction/raw工具详情及附件打包；未完成完整可迁移归档。",
+    "documentation": "已读docs/status.md、plans/agent-access.md和本轮README当前第六片声明；工程通过与尚待安装分开，P12/P35余项及NEW-01未关闭。",
+    "candidate": "本回执未构建/验证/安装候选，未操作正式应用或Agent。"
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/receipt.json",
+      "sha256": "060ab146a46e2744e9ef42eee329d3b85339720d53e10225cab72516a30a5686"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/thread-items-receipt.json",
+      "sha256": "d5cc9f4b8faa9e916014a6d88dcdd28b3f99b800c4920dd15c4a67050741e016"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/independent-review.json",
+      "sha256": "73b5ff47ab82485ca9a1c1a4276d62b9b6aadf169d10d3c1fea1a9c02814c5a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/browser-release.json",
+      "sha256": "e5f7b7c74b358184cf094881d0ff76e18d59783de18c5a659060ee65e5c73949"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-review.json",
+      "sha256": "d2dc646b5022d06c695a4f3f0a823f46b28686792be2716da2af59290ed4ec21"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/conversation-export-independent.json",
+      "sha256": "e580f21f265d31a0e1e27a52941af541580d8f8b9c719c8c77b863d911de346c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/sixth-checks-final/receipt.json",
+      "sha256": "f47dd1c7c5668641e53cc383c58cc561d5163e4586fe677c8f57fca7835b2f51"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/sixth-checks-final/final-verification.json",
+      "sha256": "6b3e303d4eec6a3551d2d4a87aa3caa955fbfd196740ff73ac57e66acf995c61"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/sixth-checks-final/inputs.json",
+      "sha256": "cafeadd016af13e03c3eaa20d001b00a6701b0c96b3cff88124b84262f0ae87d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/sixth-checks/inputs.json",
+      "sha256": "2205852ff8d5f44d6ce4d2be5856bf41195f6a96629a5eafb850fe5d2e4dc997"
+    }
+  ],
+  "blockingFindings": [],
+  "notPerformed": [
+    "未重跑构建或测试",
+    "未执行候选verify脚本",
+    "未操作UI、Agent、账号或系统权限",
+    "未读取用户会话正文或凭据",
+    "未修改产品源码、状态或计划"
+  ]
+}

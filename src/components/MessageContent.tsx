@@ -16,6 +16,7 @@ import { attachmentMedia } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
+import { useSearchExpansion } from "./transcript-search";
 
 export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
 const FileOpenContext = createContext<OpenMessageFile | null>(null);
@@ -79,12 +80,14 @@ export function MessageAttachments({
   attachments: readonly Attachment[];
   onOpenFile?: OpenMessageFile;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const expansion = useSearchExpansion();
   const listId = useId();
   if (!attachments.length) return null;
   const content = (
     <div
       className="message-attachments"
+      ref={expansion.ref}
+      data-find-exclude-children
       role="group"
       aria-label={A.label}
       onKeyDown={(event) => {
@@ -98,66 +101,22 @@ export function MessageAttachments({
         <button
           type="button"
           className="message-attachments-toggle"
-          aria-expanded={expanded}
+          aria-expanded={expansion.open}
           aria-controls={listId}
-          onClick={() => setExpanded(!expanded)}
+          onClick={expansion.toggle}
         >
-          {expanded
+          {expansion.open
             ? R.collapseAttachments
             : R.expandAttachments(attachments.length)}
         </button>
       )}
       <div id={listId}>
-        {(expanded ? attachments : attachments.slice(0, 3)).map(
-          (attachment, index) => {
-            const media = attachmentMedia(attachment);
-            return (
-              <details className="message-attachment" key={index}>
-                <summary title={attachment.uri ?? attachment.name}>
-                  <Paperclip size={14} aria-hidden="true" />
-                  <span className="message-attachment-name">
-                    {messageLink(attachment.uri).kind === "file" ? (
-                      <MessageResultLink href={attachment.uri}>
-                        {attachment.name}
-                      </MessageResultLink>
-                    ) : (
-                      attachment.name
-                    )}
-                  </span>
-                  <CaretDown
-                    className="message-attachment-chevron"
-                    size={12}
-                    aria-hidden="true"
-                  />
-                </summary>
-                <figure className="message-attachment-content">
-                  <figcaption>
-                    <MessageResultLink href={attachment.uri}>
-                      {attachment.name}
-                    </MessageResultLink>
-                    {attachment.mimeType && (
-                      <small> · {attachment.mimeType}</small>
-                    )}
-                  </figcaption>
-                  {media?.kind === "image" && (
-                    <img src={media.src} alt={attachment.name} />
-                  )}
-                  {media?.kind === "audio" && (
-                    <audio controls preload="none" src={media.src}>
-                      {A.audioUnavailable}
-                    </audio>
-                  )}
-                  {attachment.uri && (
-                    <div className="message-file-link">{attachment.uri}</div>
-                  )}
-                  {attachment.text !== undefined && (
-                    <pre>{attachment.text}</pre>
-                  )}
-                  {!media && attachment.data && <p>{A.previewUnavailable}</p>}
-                </figure>
-              </details>
-            );
-          },
+        {(expansion.materialized ? attachments : attachments.slice(0, 3)).map(
+          (attachment, index) => (
+            <div key={index} hidden={index >= 3 && !expansion.open}>
+              <MessageAttachment attachment={attachment} />
+            </div>
+          ),
         )}
       </div>
     </div>
@@ -168,6 +127,79 @@ export function MessageAttachments({
     </FileOpenContext.Provider>
   ) : (
     content
+  );
+}
+
+function MessageAttachment({ attachment }: { attachment: Attachment }) {
+  const expansion = useSearchExpansion();
+  // Search may reveal loaded text, but only the user's own expansion admits media.
+  const media = expansion.userOpen ? attachmentMedia(attachment) : null;
+  const mediaWaiting =
+    !expansion.userOpen &&
+    !!attachment.data &&
+    /^(image|audio)\//.test(attachment.mimeType ?? "");
+  return (
+    <details
+      className="message-attachment"
+      ref={expansion.ref}
+      open={expansion.open}
+      onToggle={expansion.onToggle}
+    >
+      <summary title={attachment.uri ?? attachment.name}>
+        <Paperclip size={14} aria-hidden="true" />
+        <span className="message-attachment-name" data-find-block>
+          {messageLink(attachment.uri).kind === "file" ? (
+            <MessageResultLink href={attachment.uri}>
+              {attachment.name}
+            </MessageResultLink>
+          ) : (
+            attachment.name
+          )}
+        </span>
+        <CaretDown
+          className="message-attachment-chevron"
+          size={12}
+          aria-hidden="true"
+        />
+      </summary>
+      <figure className="message-attachment-content">
+        <figcaption>
+          <MessageResultLink href={attachment.uri}>
+            {attachment.name}
+          </MessageResultLink>
+          {attachment.mimeType && (
+            <small>
+              {" "}
+              · <span data-find-block>{attachment.mimeType}</span>
+            </small>
+          )}
+        </figcaption>
+        {media?.kind === "image" && (
+          <img src={media.src} alt={attachment.name} />
+        )}
+        {media?.kind === "audio" && (
+          <audio controls preload="none" src={media.src}>
+            {A.audioUnavailable}
+          </audio>
+        )}
+        {attachment.uri && (
+          <div className="message-file-link" data-find-block>
+            {attachment.uri}
+          </div>
+        )}
+        {attachment.text !== undefined && (
+          <pre data-find-block>{attachment.text}</pre>
+        )}
+        {mediaWaiting && (
+          <button type="button" onClick={() => expansion.choose(true)}>
+            {R.findShowMedia}
+          </button>
+        )}
+        {!mediaWaiting && !media && attachment.data && (
+          <p>{A.previewUnavailable}</p>
+        )}
+      </figure>
+    </details>
   );
 }
 
@@ -279,7 +311,7 @@ export const MessageContent = memo(function MessageContent({
 }) {
   return (
     <FileOpenContext.Provider value={onOpenFile ?? null}>
-      <div className="message-text markdown-body">
+      <div className="message-text markdown-body" data-find-block>
         {messageTree(source, text)}
         <MessageAttachments attachments={attachments} />
       </div>

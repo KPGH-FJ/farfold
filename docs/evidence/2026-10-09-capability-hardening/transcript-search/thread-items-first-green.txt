@@ -1,0 +1,168 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/thread-items.search.test.tsx (7 tests | 5 failed) 20ms
+   × materializes folded tool text for search without visibly opening or navigating 9ms
+   × registers tool fields separately while leaving action labels outside the text blocks 1ms
+   × retains all old and new diff lines in the same searchable tree including clipped tails 4ms
+   × registers each plan entry without including the generated status glyph or heading 2ms
+   × registers raw and reported extension payloads without indexing generated explanatory copy 1ms
+stderr | src/components/thread-items.file-links.test.tsx > keeps details collapsed and preserves artifact and expand actions while wiring exact location paths
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/components/thread-items.file-links.test.tsx (3 tests | 3 failed) 12ms
+   × keeps details collapsed and preserves artifact and expand actions while wiring exact location paths 3ms
+   × retains inert file locations when no file navigation callback is supplied 6ms
+   × renders declared tool media and resources safely without reading files or loading remote images 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/thread-items.file-links.test.tsx > keeps details collapsed and preserves artifact and expand actions while wiring exact location paths
+TypeError: Cannot read properties of null (reading 'useContext')
+ ❯ process.env.NODE_ENV.exports.useContext node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1212:25
+ ❯ useTranscriptSearchActive src/components/transcript-search.tsx:5:54
+      3|
+      4| export const TranscriptSearchContext = createContext(false);
+      5| export function useTranscriptSearchActive() { return useContext(Transc…
+       |                                                      ^
+      6|
+      7| export function useSearchExpansion(initial = false) {
+ ❯ useSearchExpansion src/components/transcript-search.tsx:8:18
+ ❯ Module.ToolStep src/components/thread-items.tsx:322:21
+ ❯ src/components/thread-items.file-links.test.tsx:58:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/thread-items.file-links.test.tsx > retains inert file locations when no file navigation callback is supplied
+AssertionError: expected '<div><div class="step"><span class="g…' to contain '/work/game.html'
+
+Expected: "/work/game.html"
+Received: "<div><div class="step"><span class="g ok">✓</span><span class="cmd">修改了文件<span class="loc"><span class="message-file-link">/work/a%20b.html</span></span></span><button type="button" class="step-toggle" aria-expanded="false">技术详情</button><span class="tail">&lt;1s</span></div></div>"
+
+ ❯ src/components/thread-items.file-links.test.tsx:93:16
+     91|   const html = renderToStaticMarkup(<ToolStep call={call} />);
+     92|   expect(html).not.toContain("message-file-button");
+     93|   expect(html).toContain("/work/game.html");
+       |                ^
+     94| });
+     95|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/thread-items.file-links.test.tsx > renders declared tool media and resources safely without reading files or loading remote images
+AssertionError: expected '<div><div class="step"><span class="g…' to contain 'src="data:image/png;base64,aW1hZ2U="'
+
+Expected: "src="data:image/png;base64,aW1hZ2U=""
+Received: "<div><div class="step"><span class="g ok">✓</span><span class="cmd">执行了操作</span><button type="button" class="step-toggle" aria-expanded="false">技术详情</button><span class="tail">耗时未知</span></div></div>"
+
+ ❯ src/components/thread-items.file-links.test.tsx:133:16
+    131|     <ToolStep call={item.call} onOpenFile={onOpenFile} />,
+    132|   );
+    133|   expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
+       |                ^
+    134|   expect(html).toContain('<audio controls="" preload="none"');
+    135|   expect(html).toContain("&lt;script&gt;escaped&lt;/script&gt;");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > materializes folded tool text for search without visibly opening or navigating
+AssertionError: expected '<div><div class="step"><span class="g…' to match /data-find-block=""[^>]*>folded-body-n…/
+
+- Expected:
+/data-find-block=""[^>]*>folded-body-needle/
+
++ Received:
+"<div><div class=\"step\"><span class=\"g ok\">✓</span><span class=\"cmd\">运行了命令<span class=\"loc\"><button type=\"button\" class=\"message-file-link message-file-button\" title=\"/work/location-needle\">/work/location-needle</button></span></span><button type=\"button\" class=\"step-toggle\" aria-expanded=\"false\">技术详情</button><span class=\"tail\">&lt;1s</span></div><div hidden=\"\"><div class=\"step-detail\"><div class=\"step-locs\">执行 · <span data-find-block=\"true\">tool-title-needle</span></div><div class=\"tool-input\"><div class=\"step-locs\">命令</div><pre class=\"step-text\" data-find-block=\"true\">command-needle</pre><div class=\"step-locs\">执行目录</div><pre class=\"step-text\" data-find-block=\"true\">/work/cwd-needle</pre><details class=\"raw-block\"><summary>完整输入</summary><pre data-find-block=\"true\">{
+  &quot;command&quot;: &quot;command-needle&quot;,
+  &quot;cwd&quot;: &quot;/work/cwd-needle&quot;
+}</pre></details></div><div class=\"step-locs\"><span data-find-block=\"true\"><button type=\"button\" class=\"message-file-link message-file-button\" title=\"/work/location-needle\">/work/location-needle:9</button></span></div><pre class=\"step-text\" data-find-block=\"true\">folded-body-needle</pre><pre class=\"step-text\" data-find-block=\"true\">output-needle</pre></div></div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:36:16
+     34|   expect(html).toMatch(/hidden=""[^>]*>[\s\S]*class="step-detail"/);
+     35|   expect(html).toContain('aria-expanded="false"');
+     36|   expect(html).toMatch(/data-find-block=""[^>]*>folded-body-needle/);
+       |                ^
+     37|   expect(onOpenFile).not.toHaveBeenCalled();
+     38| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers tool fields separately while leaving action labels outside the text blocks
+AssertionError: expected '<div><div class="step"><span class="g…' to match /data-find-block=""[^>]*>tool-title-ne…/
+
+- Expected:
+/data-find-block=""[^>]*>tool-title-needle/
+
++ Received:
+"<div><div class=\"step\"><span class=\"g ok\">✓</span><span class=\"cmd\">运行了命令<span class=\"loc\"><span class=\"message-file-link\">/work/location-needle</span></span></span><button type=\"button\" class=\"step-toggle\" aria-expanded=\"false\">技术详情</button><span class=\"tail\">&lt;1s</span></div><div hidden=\"\"><div class=\"step-detail\"><div class=\"step-locs\">执行 · <span data-find-block=\"true\">tool-title-needle</span></div><div class=\"tool-input\"><div class=\"step-locs\">命令</div><pre class=\"step-text\" data-find-block=\"true\">command-needle</pre><div class=\"step-locs\">执行目录</div><pre class=\"step-text\" data-find-block=\"true\">/work/cwd-needle</pre><details class=\"raw-block\"><summary>完整输入</summary><pre data-find-block=\"true\">{
+  &quot;command&quot;: &quot;command-needle&quot;,
+  &quot;cwd&quot;: &quot;/work/cwd-needle&quot;
+}</pre></details></div><div class=\"step-locs\"><span data-find-block=\"true\"><span class=\"message-file-link\">/work/location-needle:9</span></span></div><pre class=\"step-text\" data-find-block=\"true\">folded-body-needle</pre><pre class=\"step-text\" data-find-block=\"true\">output-needle</pre></div></div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:49:18
+     47|   const html = render(<ToolStep call={call} />);
+     48|   for (const text of ["tool-title-needle", "command-needle", "/work/cw…
+     49|     expect(html).toMatch(new RegExp(`data-find-block=""[^>]*>${text}`)…
+       |                  ^
+     50|   }
+     51|   expect(html).not.toMatch(/<button[^>]*data-find-block/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > retains all old and new diff lines in the same searchable tree including clipped tails
+AssertionError: expected '<div class="diff"><div class="h"><spa…' to match /hidden=""[^>]*>[^<]*<span data-find-b…/
+
+- Expected:
+/hidden=""[^>]*>[^<]*<span data-find-block="">old-line-29/
+
++ Received:
+"<div class=\"diff\"><div class=\"h\"><span data-find-block=\"true\">/work/diff-needle</span><span>修改</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-0</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-1</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-2</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-3</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-4</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-5</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-6</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-7</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-8</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-9</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-10</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-11</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-12</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-13</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-14</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-15</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-16</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-17</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-18</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-19</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-20</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-21</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-22</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-23</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-24</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-25</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-26</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-27</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-28</span></div><div class=\"del\" hidden=\"\">− <span data-find-block=\"true\">old-line-29</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-0</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-1</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-2</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-3</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-4</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-5</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-6</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-7</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-8</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-9</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-10</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-11</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-12</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-13</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-14</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-15</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-16</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-17</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-18</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-19</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-20</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-21</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-22</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-23</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-24</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-25</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-26</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-27</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-28</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-29</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-30</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-31</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-32</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-33</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-34</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-35</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-36</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-37</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-38</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-39</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-40</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-41</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-42</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-43</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-44</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-45</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-46</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-47</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-48</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-49</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-50</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-51</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-52</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-53</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-54</span></div><div class=\"more\"><button type=\"button\" class=\"step-toggle\" aria-expanded=\"false\">展开其余 53 行</button></div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:63:16
+     61|   expect(html.match(/old-line-29/g)).toHaveLength(1);
+     62|   expect(html.match(/new-line-54/g)).toHaveLength(1);
+     63|   expect(html).toMatch(/hidden=""[^>]*>[^<]*<span data-find-block="">o…
+       |                ^
+     64|   expect(html).toMatch(/hidden=""[^>]*>[^<]*<span data-find-block="">n…
+     65|   expect(html.match(/data-find-block/g)?.length).toBeGreaterThanOrEqua…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers each plan entry without including the generated status glyph or heading
+AssertionError: expected '<div class="plan"><div class="plan-la…' to contain '<span data-find-block="">first-plan-n…'
+
+Expected: "<span data-find-block="">first-plan-needle</span>"
+Received: "<div class="plan"><div class="plan-label">计划</div><div class="plan-item done"><span class="pg">✓</span><span data-find-block="true">first-plan-needle</span></div><div class="plan-item "><span class="pg">○</span><span data-find-block="true">second-plan-needle</span></div></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:81:16
+     79|     { content: "second-plan-needle", status: "pending", priority: "med…
+     80|   ]} />);
+     81|   expect(html).toContain('<span data-find-block="">first-plan-needle</…
+       |                ^
+     82|   expect(html).toContain('<span data-find-block="">second-plan-needle<…
+     83|   expect(html.match(/data-find-block/g)).toHaveLength(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > registers raw and reported extension payloads without indexing generated explanatory copy
+AssertionError: Target cannot be null or undefined.
+ ❯ src/components/thread-items.search.test.tsx:88:51
+     86| it("registers raw and reported extension payloads without indexing gen…
+     87|   const html = render(<><RawBlock update={{ unknown: "raw-needle" }} /…
+     88|   expect(html.match(/<pre data-find-block="">/g)).toHaveLength(2);
+       |                                                   ^
+     89|   expect(html).not.toMatch(/<summary[^>]*data-find-block/);
+     90|   expect(html).not.toMatch(/<p[^>]*data-find-block/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 2 passed (10)
+   Start at  20:36:17
+   Duration  1.50s (transform 230ms, setup 0ms, import 2.74s, tests 32ms, environment 0ms)
+

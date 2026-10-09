@@ -1,0 +1,87 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ × src/components/TranscriptSearch.presentation.test.tsx > materializes the fourth attachment's loaded text while search is active 13ms
+   → expected '<div class="message-text markdown-bod…' to contain 'loaded-attachment-3'
+ × src/components/TranscriptSearch.presentation.test.tsx > search materialization never introduces image or audio decoders 2ms
+   → expected '<div class="message-text markdown-bod…' not to contain '<img'
+ × src/components/TranscriptSearch.presentation.test.tsx > registers ordinary user text separately from historical embedded image data 1ms
+   → expected '<div class="msg-user"><span>before </…' to match /data-find-block[^>]*>before /
+ × src/components/TranscriptSearch.presentation.test.tsx > registers an already loaded compaction summary even while folded 2ms
+   → expected '<section class="compaction-card" aria…' to contain 'data-find-block'
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/TranscriptSearch.presentation.test.tsx > materializes the fourth attachment's loaded text while search is active
+AssertionError: expected '<div class="message-text markdown-bod…' to contain 'loaded-attachment-3'
+
+Expected: "loaded-attachment-3"
+Received: "<div class="message-text markdown-body"><p>body</p><div class="message-attachments" role="group" aria-label="消息附件"><button type="button" class="message-attachments-toggle" aria-expanded="false" aria-controls="_R_2_">展开全部 4 个附件</button><div id="_R_2_"><details class="message-attachment"><summary title="file-0"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name">file-0</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">file-0</span></figcaption><pre>loaded-attachment-0</pre></figure></details><details class="message-attachment"><summary title="file-1"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name">file-1</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">file-1</span></figcaption><pre>loaded-attachment-1</pre></figure></details><details class="message-attachment"><summary title="file-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name">file-2</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">file-2</span></figcaption><pre>loaded-attachment-2</pre></figure></details></div></div></div>"
+
+ ❯ src/components/TranscriptSearch.presentation.test.tsx:11:16
+      9| it("materializes the fourth attachment's loaded text while search is a…
+     10|   const html = renderToStaticMarkup(<TranscriptSearchContext.Provider …
+     11|   expect(html).toContain("loaded-attachment-3");
+       |                ^
+     12|   expect(html).toContain("data-find-block");
+     13| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/TranscriptSearch.presentation.test.tsx > search materialization never introduces image or audio decoders
+AssertionError: expected '<div class="message-text markdown-bod…' not to contain '<img'
+
+Expected: "<img"
+Received: "<div class="message-text markdown-body"><p>body</p><div class="message-attachments" role="group" aria-label="消息附件"><div id="_R_2_"><details class="message-attachment"><summary title="image"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name">image</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">image</span><small> · image/png</small></figcaption><img src="data:image/png;base64,AAAA" alt="image"/></figure></details><details class="message-attachment"><summary title="audio"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z"></path></svg><span class="message-attachment-name">audio</span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256" class="message-attachment-chevron" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></summary><figure class="message-attachment-content"><figcaption><span class="message-file-link">audio</span><small> · audio/wav</small></figcaption><audio controls="" preload="none" src="data:audio/wav;base64,AAAA">音频暂时无法播放</audio></figure></details></div></div></div>"
+
+ ❯ src/components/TranscriptSearch.presentation.test.tsx:17:20
+     15|   const media = [{name:"image",kind:"image" as const,mimeType:"image/p…
+     16|   const html = renderToStaticMarkup(<TranscriptSearchContext.Provider …
+     17|   expect(html).not.toContain("<img"); expect(html).not.toContain("<aud…
+       |                    ^
+     18| });
+     19| it("registers ordinary user text separately from historical embedded i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/TranscriptSearch.presentation.test.tsx > registers ordinary user text separately from historical embedded image data
+AssertionError: expected '<div class="msg-user"><span>before </…' to match /data-find-block[^>]*>before /
+
+- Expected:
+/data-find-block[^>]*>before /
+
++ Received:
+"<div class=\"msg-user\"><span>before </span><div class=\"message-attachments\" role=\"group\" aria-label=\"消息附件\"><details class=\"message-attachment\"><summary><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" fill=\"currentColor\" viewBox=\"0 0 256 256\" aria-hidden=\"true\"><path d=\"M209.66,122.34a8,8,0,0,1,0,11.32l-82.05,82a56,56,0,0,1-79.2-79.21L147.67,35.73a40,40,0,1,1,56.61,56.55L105,193A24,24,0,1,1,71,159L154.3,74.38A8,8,0,1,1,165.7,85.6L82.39,170.31a8,8,0,1,0,11.27,11.36L192.93,81A24,24,0,1,0,159,47L59.76,147.68a40,40,0,1,0,56.53,56.62l82.06-82A8,8,0,0,1,209.66,122.34Z\"></path></svg><span class=\"message-attachment-name\">历史图片</span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" fill=\"currentColor\" viewBox=\"0 0 256 256\" class=\"message-attachment-chevron\" aria-hidden=\"true\"><path d=\"M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z\"></path></svg></summary></details></div><span> after</span></div>"
+
+ ❯ src/components/TranscriptSearch.presentation.test.tsx:21:16
+     19| it("registers ordinary user text separately from historical embedded i…
+     20|   const html = renderToStaticMarkup(<UserMessageContent historical tex…
+     21|   expect(html).toMatch(/data-find-block[^>]*>before /);
+       |                ^
+     22|   expect(html).not.toContain("base64,AAAA");
+     23| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/components/TranscriptSearch.presentation.test.tsx > registers an already loaded compaction summary even while folded
+AssertionError: expected '<section class="compaction-card" aria…' to contain 'data-find-block'
+
+Expected: "data-find-block"
+Received: "<section class="compaction-card" aria-label="上下文已整理"><p class="compaction-status" role="status">上下文已整理</p><details class="compaction-summary"><summary>保留的摘要</summary><div class="message-text markdown-body"><p>loaded summary</p></div></details><details class="raw-block"><summary>整理详情</summary><pre>{}</pre></details></section>"
+
+ ❯ src/components/TranscriptSearch.presentation.test.tsx:27:16
+     25|   const item = {id:"compact",kind:"compaction",status:"completed",summ…
+     26|   const html = renderToStaticMarkup(<CompactionCard item={item}/>);
+     27|   expect(html).toContain("data-find-block");
+       |                ^
+     28|   expect(html).toContain("loaded summary");
+     29| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  20:35:24
+   Duration  1.28s (transform 82ms, setup 0ms, import 1.19s, tests 19ms, environment 0ms)
+

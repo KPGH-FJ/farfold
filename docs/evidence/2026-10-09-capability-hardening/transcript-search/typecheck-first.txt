@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/transcript_find_dom.test.ts(4,6): error TS2456: Type alias 'TestNode' circularly references itself.
+src/runtime/transcript_find_dom.test.ts(6,10): error TS7023: 'element' implicitly has return type 'any' because it does not have a return type annotation and is referenced directly or indirectly in one of its return expressions.
+src/runtime/transcript_find_dom.test.ts(6,57): error TS2502: 'children' is referenced directly or indirectly in its own type annotation.
+src/runtime/transcript_find_dom.test.ts(7,9): error TS7022: 'node' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+src/runtime/transcript_find_dom.test.ts(12,76): error TS7006: Parameter 'child' implicitly has an 'any' type.
+ ELIFECYCLE  Command failed with exit code 1.

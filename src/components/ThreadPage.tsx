@@ -1,4 +1,5 @@
 import { ConversationExportDialog } from "./ConversationExportDialog";
+import { TranscriptSearchContext } from "./transcript-search";
 import { ConversationFind } from "./ConversationFind";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
@@ -242,6 +243,7 @@ export function ThreadPage({
       </header>
       {active && finding && (
         <ConversationFind
+          key={viewKey}
           host={host}
           revision={snapshot.version}
           onClose={() => setFinding(false)}
@@ -250,285 +252,289 @@ export function ThreadPage({
     </>
   );
   return (
-    <main className="main workspace-thread" ref={host}>
-      {thread ? (
-        <ThreadView
-          contentMode={contentMode}
-          onContentModeChange={setContentMode}
-          key={thread.key}
-          thread={thread}
-          active={
-            active && !menu && !rename && !moving && !deleting && !exported
-          }
-          agents={agents.cards}
-          onGoSettings={onGoSettings}
-          onOpened={onOpened}
-          onRecover={onRecover}
-          onNew={onNew}
-          onNewFromMessage={
-            onNewFromMessage
-              ? (item) => onNewFromMessage(thread, item)
-              : undefined
-          }
-          header={header}
-          artifactReturnFocusRef={artifactReturnFocus}
-          onBrowserStateChange={onBrowserStateChange}
-          draftComposerRef={draftComposerRef}
-        />
-      ) : (
-        <>
-          {header}
-          <div className="library-empty">
-            {onManualOpen ? (
-              <>
-                <p>{NOTICES.coldConversation}</p>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={onManualOpen}
-                >
-                  {NOTICES.openConversation}
-                </button>
-              </>
-            ) : (
-              STRINGS.common.loading
-            )}
-          </div>
-        </>
-      )}
-      {active && menu && (
-        <WorkspaceActionMenu
-          anchor={menuAnchor.current}
-          title={title}
-          onClose={closeDialog}
-        >
-          <div className="workspace-action-body">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!canCopy || saving}
-              onClick={() =>
-                void mutate(() =>
-                  navigator.clipboard.writeText(
-                    readableTranscript(
-                      host.current?.querySelector(".transcript") ?? null,
-                      title,
+    <TranscriptSearchContext.Provider value={active && finding}>
+      <main className="main workspace-thread" ref={host}>
+        {thread ? (
+          <ThreadView
+            contentMode={contentMode}
+            onContentModeChange={setContentMode}
+            key={thread.key}
+            thread={thread}
+            active={
+              active && !menu && !rename && !moving && !deleting && !exported
+            }
+            agents={agents.cards}
+            onGoSettings={onGoSettings}
+            onOpened={onOpened}
+            onRecover={onRecover}
+            onNew={onNew}
+            onNewFromMessage={
+              onNewFromMessage
+                ? (item) => onNewFromMessage(thread, item)
+                : undefined
+            }
+            header={header}
+            artifactReturnFocusRef={artifactReturnFocus}
+            onBrowserStateChange={onBrowserStateChange}
+            draftComposerRef={draftComposerRef}
+          />
+        ) : (
+          <>
+            {header}
+            <div className="library-empty">
+              {onManualOpen ? (
+                <>
+                  <p>{NOTICES.coldConversation}</p>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={onManualOpen}
+                  >
+                    {NOTICES.openConversation}
+                  </button>
+                </>
+              ) : (
+                STRINGS.common.loading
+              )}
+            </div>
+          </>
+        )}
+        {active && menu && (
+          <WorkspaceActionMenu
+            anchor={menuAnchor.current}
+            title={title}
+            onClose={closeDialog}
+          >
+            <div className="workspace-action-body">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!canCopy || saving}
+                onClick={() =>
+                  void mutate(() =>
+                    navigator.clipboard.writeText(
+                      readableTranscript(
+                        host.current?.querySelector(".transcript") ?? null,
+                        title,
+                      ),
                     ),
-                  ),
-                )
-              }
-            >
-              {LIBRARY.copy}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!row || saving}
-              onClick={() => {
-                setName(title);
-                setRename(true);
-                setMenu(false);
-              }}
-            >
-              {LIBRARY.rename}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!row || saving}
-              onClick={() =>
-                void mutate(() => threads.setPinned(viewKey, !row?.pinned))
-              }
-            >
-              {row?.pinned ? LIBRARY.unfavorite : LIBRARY.favorite}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!row || saving || Boolean(archiveBlocked)}
-              aria-describedby={
-                archiveBlocked ? "thread-archive-reason" : undefined
-              }
-              onClick={() =>
-                void mutate(() => threads.setArchived(viewKey, !row?.archived))
-              }
-            >
-              {row?.archived ? LIBRARY.restore : LIBRARY.archive}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={
-                !thread ||
-                saving ||
-                !thread.items.some(
-                  (item) => item.kind === "user" || item.kind === "agent",
-                )
-              }
-              onClick={() => {
-                if (!thread) return;
-                setExported({
-                  text: transcriptMarkdown(
-                    thread,
-                    title,
-                    agents.cards.find((agent) => agent.id === thread.agentId)
-                      ?.name ?? thread.agentId,
-                  ),
-                  name: exportFileName(title),
-                });
-                setMenu(false);
-              }}
-            >
-              {LIBRARY.exportMarkdown}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={
-                !row ||
-                saving ||
-                !collectionsData.ready ||
-                collectionsData.saving
-              }
-              onClick={() => {
-                setMenu(false);
-                setMoving(true);
-              }}
-            >
-              {LIBRARY.assign}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={saving || !(thread?.cwd ?? row?.cwd)}
-              onClick={() =>
-                void mutate(() =>
-                  fileDelivery.revealLocation(
-                    (thread?.cwd ?? row?.cwd) as string,
-                  ),
-                )
-              }
-            >
-              {LIBRARY.revealLocation}
-            </button>
-            {onReopenSame && (
+                  )
+                }
+              >
+                {LIBRARY.copy}
+              </button>
               <button
                 type="button"
                 className="btn btn-ghost"
                 disabled={!row || saving}
                 onClick={() => {
+                  setName(title);
+                  setRename(true);
                   setMenu(false);
-                  if (row) onReopenSame(row);
                 }}
               >
-                {LIBRARY.reopenSame}
+                {LIBRARY.rename}
               </button>
-            )}
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!row || saving || Boolean(deleteBlocked)}
-              aria-describedby={
-                deleteBlocked ? "thread-delete-reason" : undefined
-              }
-              onClick={() => {
-                setMenu(false);
-                setDeleting(true);
-              }}
-            >
-              {LIBRARY.deleteAction}
-            </button>
-            {deleteBlocked && (
-              <p className="archive-block-reason" id="thread-delete-reason">
-                {LIBRARY.deleteReasons[deleteBlocked]}
-              </p>
-            )}
-            {archiveBlocked && (
-              <p className="archive-block-reason" id="thread-archive-reason">
-                {LIBRARY.archiveReasons[archiveBlocked]}
-              </p>
-            )}
-            {error && <p role="alert">{error}</p>}
-          </div>
-        </WorkspaceActionMenu>
-      )}
-      {active && exported && (
-        <ConversationExportDialog
-          {...exported}
-          returnFocusRef={menuAnchor}
-          onClose={() => setExported(null)}
-        />
-      )}
-      {active && moving && row && (
-        <MoveConversationsDialog
-          count={1}
-          rows={[
-            { title, groupId: collectionsData.assignments[viewKey] ?? "" },
-          ]}
-          returnFocusRef={menuAnchor}
-          groups={collectionsData.groups}
-          busy={saving || !collectionsData.ready || collectionsData.saving}
-          error={error}
-          onClose={closeDialog}
-          onMove={(groupId) =>
-            void mutate(() => collections.assign([viewKey], groupId))
-          }
-        />
-      )}
-      {active && deleting && row && (
-        <DeleteConversationsDialog
-          title={LIBRARY.deleteTitle(1)}
-          targets={[title]}
-          hint={LIBRARY.deleteHintOne(title)}
-          busy={saving}
-          error={error}
-          returnFocusRef={menuAnchor}
-          onClose={closeDialog}
-          onDelete={() =>
-            void mutate(async () => {
-              await threads.delete(row);
-              onBack();
-            })
-          }
-        />
-      )}
-      {active && rename && (
-        <WorkspaceDialog
-          title={LIBRARY.rename}
-          busy={saving}
-          onClose={closeDialog}
-          returnFocusRef={menuAnchor}
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (name.trim())
-                void mutate(() => threads.rename(viewKey, name.trim()));
-            }}
-          >
-            <div className="workspace-dialog-body">
-              <label>
-                {LIBRARY.title}
-                <input
-                  autoFocus
-                  maxLength={200}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </label>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!row || saving}
+                onClick={() =>
+                  void mutate(() => threads.setPinned(viewKey, !row?.pinned))
+                }
+              >
+                {row?.pinned ? LIBRARY.unfavorite : LIBRARY.favorite}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!row || saving || Boolean(archiveBlocked)}
+                aria-describedby={
+                  archiveBlocked ? "thread-archive-reason" : undefined
+                }
+                onClick={() =>
+                  void mutate(() =>
+                    threads.setArchived(viewKey, !row?.archived),
+                  )
+                }
+              >
+                {row?.archived ? LIBRARY.restore : LIBRARY.archive}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={
+                  !thread ||
+                  saving ||
+                  !thread.items.some(
+                    (item) => item.kind === "user" || item.kind === "agent",
+                  )
+                }
+                onClick={() => {
+                  if (!thread) return;
+                  setExported({
+                    text: transcriptMarkdown(
+                      thread,
+                      title,
+                      agents.cards.find((agent) => agent.id === thread.agentId)
+                        ?.name ?? thread.agentId,
+                    ),
+                    name: exportFileName(title),
+                  });
+                  setMenu(false);
+                }}
+              >
+                {LIBRARY.exportMarkdown}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={
+                  !row ||
+                  saving ||
+                  !collectionsData.ready ||
+                  collectionsData.saving
+                }
+                onClick={() => {
+                  setMenu(false);
+                  setMoving(true);
+                }}
+              >
+                {LIBRARY.assign}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={saving || !(thread?.cwd ?? row?.cwd)}
+                onClick={() =>
+                  void mutate(() =>
+                    fileDelivery.revealLocation(
+                      (thread?.cwd ?? row?.cwd) as string,
+                    ),
+                  )
+                }
+              >
+                {LIBRARY.revealLocation}
+              </button>
+              {onReopenSame && (
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={!row || saving}
+                  onClick={() => {
+                    setMenu(false);
+                    if (row) onReopenSame(row);
+                  }}
+                >
+                  {LIBRARY.reopenSame}
+                </button>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!row || saving || Boolean(deleteBlocked)}
+                aria-describedby={
+                  deleteBlocked ? "thread-delete-reason" : undefined
+                }
+                onClick={() => {
+                  setMenu(false);
+                  setDeleting(true);
+                }}
+              >
+                {LIBRARY.deleteAction}
+              </button>
+              {deleteBlocked && (
+                <p className="archive-block-reason" id="thread-delete-reason">
+                  {LIBRARY.deleteReasons[deleteBlocked]}
+                </p>
+              )}
+              {archiveBlocked && (
+                <p className="archive-block-reason" id="thread-archive-reason">
+                  {LIBRARY.archiveReasons[archiveBlocked]}
+                </p>
+              )}
               {error && <p role="alert">{error}</p>}
             </div>
-            <footer>
-              <button
-                className="btn btn-primary"
-                disabled={!name.trim() || saving}
-              >
-                {LIBRARY.save}
-              </button>
-            </footer>
-          </form>
-        </WorkspaceDialog>
-      )}
-    </main>
+          </WorkspaceActionMenu>
+        )}
+        {active && exported && (
+          <ConversationExportDialog
+            {...exported}
+            returnFocusRef={menuAnchor}
+            onClose={() => setExported(null)}
+          />
+        )}
+        {active && moving && row && (
+          <MoveConversationsDialog
+            count={1}
+            rows={[
+              { title, groupId: collectionsData.assignments[viewKey] ?? "" },
+            ]}
+            returnFocusRef={menuAnchor}
+            groups={collectionsData.groups}
+            busy={saving || !collectionsData.ready || collectionsData.saving}
+            error={error}
+            onClose={closeDialog}
+            onMove={(groupId) =>
+              void mutate(() => collections.assign([viewKey], groupId))
+            }
+          />
+        )}
+        {active && deleting && row && (
+          <DeleteConversationsDialog
+            title={LIBRARY.deleteTitle(1)}
+            targets={[title]}
+            hint={LIBRARY.deleteHintOne(title)}
+            busy={saving}
+            error={error}
+            returnFocusRef={menuAnchor}
+            onClose={closeDialog}
+            onDelete={() =>
+              void mutate(async () => {
+                await threads.delete(row);
+                onBack();
+              })
+            }
+          />
+        )}
+        {active && rename && (
+          <WorkspaceDialog
+            title={LIBRARY.rename}
+            busy={saving}
+            onClose={closeDialog}
+            returnFocusRef={menuAnchor}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (name.trim())
+                  void mutate(() => threads.rename(viewKey, name.trim()));
+              }}
+            >
+              <div className="workspace-dialog-body">
+                <label>
+                  {LIBRARY.title}
+                  <input
+                    autoFocus
+                    maxLength={200}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </label>
+                {error && <p role="alert">{error}</p>}
+              </div>
+              <footer>
+                <button
+                  className="btn btn-primary"
+                  disabled={!name.trim() || saving}
+                >
+                  {LIBRARY.save}
+                </button>
+              </footer>
+            </form>
+          </WorkspaceDialog>
+        )}
+      </main>
+    </TranscriptSearchContext.Provider>
   );
 }

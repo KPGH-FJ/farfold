@@ -17,6 +17,20 @@ vi.mock("react", async (original) => ({
     },
   ],
 }));
+// The direct-call harness below owns the disclosure value. The actual search
+// context and shared expansion model are covered by the dedicated search tests.
+vi.mock("./transcript-search", async (original) => ({
+  ...(await original<typeof import("./transcript-search")>()),
+  useSearchExpansion: () => ({
+    open: h.open,
+    userOpen: h.open,
+    materialized: h.open,
+    ref: () => {},
+    toggle: () => {
+      h.open = !h.open;
+    },
+  }),
+}));
 import { ToolStep } from "./thread-items";
 import { MessageFileLink } from "./MessageContent";
 import type { ToolCallView } from "../runtime/session_types";

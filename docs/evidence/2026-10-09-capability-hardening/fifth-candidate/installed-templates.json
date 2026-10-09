@@ -1,0 +1,82 @@
+{
+  "recordedAt": "2026-10-09T12:36:07.963605+00:00",
+  "commit": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "surface": "/Applications/Farfold.app native AX UI",
+  "result": "coveredOperationsPassed",
+  "templateName": "验收 CE9659D1 模板",
+  "marker": "FARFOLD_TEMPLATE_CE9659D1_20261009",
+  "observations": [
+    {
+      "action": "create and close unsaved editor",
+      "result": "reopened with exact name and two-line text"
+    },
+    {
+      "action": "normal quit and cold launch",
+      "result": "original unsaved name and two-line text recovered; empty new-conversation composer, send disabled, 111 conversations; no automatic send"
+    },
+    {
+      "action": "save recovered template",
+      "result": "list contains exact name and body"
+    },
+    {
+      "action": "edit existing template and save",
+      "result": "list contains appended 已编辑保存。"
+    },
+    {
+      "action": "insert saved template into owned nonempty composer",
+      "result": "original FARFOLD_EXISTING_DRAFT_CE9659D1 text retained, template appended exactly once; no automatic send; conversation still unstarted"
+    },
+    {
+      "action": "insert saved template into an owned composer with text and a native-picked synthetic PDF attachment",
+      "result": "exact original text and one mixed-two-pages.pdf attachment retained with appended template; UI remains 未在运行; no automatic send. Owned test attachment removed and composer cleared afterwards, send disabled."
+    },
+    {
+      "action": "select live Agent-declared /status command, then explicitly send",
+      "result": "menu selection fills /status into composer without dispatch; explicit send returns completed Codex status with gpt-6-astra[ultra], current directory and configuration; no tool execution shown; final composer empty/send disabled",
+      "privacy": "Account identity, native conversation identifier, credit and usage details not copied into this public receipt"
+    }
+  ],
+  "configuration": {
+    "agent": "Codex",
+    "source": "existing Agent settings",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "changed": false
+  },
+  "notCovered": [
+    "permanent deletion via installed UI",
+    "failure and conflict injection in installed UI",
+    "other Agents command execution",
+    "parameterized or stale command execution in installed UI"
+  ],
+  "dataBoundary": "One owned synthetic template retained. Owned test composer was cleared after checking and its attachment reference removed without deleting the file. All seven pre-existing composer/feedback/queue entries match the before-install values.",
+  "postUiNormalExit": {
+    "ui": "super+q returned App quit",
+    "processCheck": "pgrep exact formal executable prefix: exit 1, zero matches including browser helper",
+    "activeAgentBeforeExit": false,
+    "context": "Desktop file read had previously exceeded its reply deadline; normal exit still completed"
+  },
+  "postUiDraftRetention": {
+    "method": "read-only comparison of before-install backup and captured post-quit private working copy; no original DB opened by SQLite",
+    "receiptSha256": "ab346d8747557610f19bfef05dd602dda7b06ad1c544ac99277bd4c24089f458",
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "originalEntriesChanged": 0,
+    "scope": "All seven existing composer/feedback/queue entries exactly equal as parsed JSON; not a claim that all native Agent data stayed unchanged during the authorized tests"
+  }
+}

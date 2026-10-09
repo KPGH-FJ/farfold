@@ -1,0 +1,68 @@
+{
+  "recordedAtUtc": "2026-10-09T12:28:07.213261+00:00",
+  "installedCommit": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "installedVersion": "0.1.7",
+  "candidateIndependentChecks": 9,
+  "candidateIndependentSha256": "9b70cb538b3cab7dae59f8513f5967bc7dfbdad1f37eed5a2db9865e2da0014e",
+  "normalExit": {
+    "observedAtUtc": "2026-10-09T12:13:41.910573+00:00",
+    "userAuthorizedContinuousDevelopment": true,
+    "sourceInstalledBefore": "63ed89ff86a1e2e088b482d250df3d36a88d199e",
+    "uiBefore": {
+      "allConversations": 111,
+      "unsent": 7,
+      "waitingForResponse": 0,
+      "running": 0,
+      "lastOwnedConversation": "FARFOLD_STOP_63ED89FF_20261009",
+      "lastOwnedConversationState": "completed; composer empty; send disabled"
+    },
+    "normalQuitObserved": true,
+    "action": "CUA super+q; subsequent AX returned App quit",
+    "forcedQuit": false,
+    "formalProcessCountAfter": 0,
+    "unknownHistoricalProcessesTouched": false
+  },
+  "exactInstalledBundleVerified": true,
+  "signature": "ad-hoc; not public distribution signed or notarized",
+  "comparisonScope": "All captured entries in Farfold appData/WebKit/cache compared after normal exit and after replacement, before relaunch; no claim that normal startup causes no later writes.",
+  "dataRetention": {
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256": "37bf398ad9fa2ca8d5610309cff67fe1fd7c08e00995d7f4426b38adcfeedcb6",
+    "entryCount": 217400,
+    "beforePreinstallAfterEqual": true,
+    "privateManifestsCommitted": false
+  },
+  "backup": {
+    "mode": "0600",
+    "integrity": "ok",
+    "sourceUnchanged": true,
+    "capturedSidecarsIncluded": true,
+    "method": "Capture database and all existing sidecars read-only; SQLite backup runs only on a second private working copy; original data and first captured copies untouched."
+  },
+  "relaunch": {
+    "observed": true,
+    "conversationsVisible": 111,
+    "initialState": "New conversation is preparing; no prompt sent during startup observation"
+  },
+  "unrelatedHistoricalProcessesTouched": false,
+  "installedCapabilityAcceptance": "Pending individual template/preview desktop journeys; not 29-Agent or physical fault acceptance."
+}

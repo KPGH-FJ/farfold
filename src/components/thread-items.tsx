@@ -11,9 +11,11 @@ import {
   MessageResultLink,
   type OpenMessageFile,
 } from "./MessageContent";
+import { TRANSCRIPT_SEARCH as S } from "../runtime/transcript_search_strings";
 import { STRINGS } from "../runtime/strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 import { ReportedDetails } from "./ReportedDetails";
+import { SearchDisclosure, useSearchExpansion } from "./transcript-search";
 import type {
   PermissionOption,
   PlanEntry,
@@ -147,30 +149,45 @@ export function DiffView({
   oldText: string | null;
   newText: string;
 }) {
-  const oldLines = (oldText ?? "").split("\n");
+  const expansion = useSearchExpansion();
+  const oldLines = oldText === null ? [] : oldText.split("\n");
   const newLines = newText.split("\n");
   const clipped = oldLines.length + newLines.length > DIFF_LINE_CAP;
+  const hiddenLines =
+    Math.max(0, oldLines.length - 8) + Math.max(0, newLines.length - 24);
+  const lines = (values: string[], cap: number, kind: "del" | "add") =>
+    values
+      .slice(0, !clipped || expansion.materialized ? values.length : cap)
+      .map((line, index) => (
+        <div
+          key={`${kind}${index}`}
+          className={kind}
+          hidden={clipped && !expansion.open && index >= cap}
+        >
+          {kind === "del" ? "− " : "+ "}
+          <span data-find-block>{line}</span>
+        </div>
+      ));
   return (
-    <div className="diff">
+    <div className="diff" ref={expansion.ref}>
       <div className="h">
-        <span>{path}</span>
+        <span data-find-block>{path}</span>
         <span>
           {oldText === null ? STRINGS.thread.diffNew : STRINGS.thread.diffEdit}
         </span>
       </div>
-      {oldLines.slice(0, clipped ? 8 : oldLines.length).map((l, i) => (
-        <div key={`d${i}`} className="del">
-          {"− " + l}
-        </div>
-      ))}
-      {newLines.slice(0, clipped ? 24 : newLines.length).map((l, i) => (
-        <div key={`a${i}`} className="add">
-          {"+ " + l}
-        </div>
-      ))}
+      {lines(oldLines, 8, "del")}
+      {lines(newLines, 24, "add")}
       {clipped && (
         <div className="more">
-          … 其余 {oldLines.length + newLines.length - 32} 行
+          <button
+            type="button"
+            className="step-toggle"
+            aria-expanded={expansion.open}
+            onClick={expansion.toggle}
+          >
+            {expansion.open ? S.collapseDiff : S.expandDiff(hiddenLines)}
+          </button>
         </div>
       )}
     </div>
@@ -210,19 +227,23 @@ function ToolInput({
       {command !== null && (
         <>
           <div className="step-locs">{STRINGS.thread.inputCommand}</div>
-          <pre className="step-text">{command}</pre>
+          <pre className="step-text" data-find-block>
+            {command}
+          </pre>
         </>
       )}
       {cwd !== null && (
         <>
           <div className="step-locs">{STRINGS.thread.inputCwd}</div>
-          <pre className="step-text">{cwd}</pre>
+          <pre className="step-text" data-find-block>
+            {cwd}
+          </pre>
         </>
       )}
-      <details className="raw-block">
+      <SearchDisclosure className="raw-block">
         <summary>{STRINGS.thread.fullInput}</summary>
-        <pre>{safeStringify(input)}</pre>
-      </details>
+        <pre data-find-block>{safeStringify(input)}</pre>
+      </SearchDisclosure>
     </div>
   );
 }
@@ -238,13 +259,20 @@ function ToolDetail({
     <div className="step-detail">
       <div className="step-locs">
         {kindLabel(call.kind)}
-        {call.title || call.name ? ` · ${call.title || call.name}` : ""}
+        {call.title || call.name ? (
+          <>
+            {" "}
+            · <span data-find-block>{call.title || call.name}</span>
+          </>
+        ) : (
+          ""
+        )}
       </div>
       <ToolInput input={call.rawInput} />
       {call.locations.length > 0 && (
         <div className="step-locs">
           {call.locations.map((location, index) => (
-            <span key={index}>
+            <span key={index} data-find-block>
               {index > 0 && "  "}
               <MessageFileLink path={location.path} onOpenFile={onOpenFile}>
                 {location.path}
@@ -267,14 +295,14 @@ function ToolDetail({
         }
         if (c.type === "text") {
           return (
-            <pre key={i} className="step-text">
+            <pre key={i} className="step-text" data-find-block>
               {c.text}
             </pre>
           );
         }
         if (c.type === "link") {
           return (
-            <pre key={i} className="step-text">
+            <pre key={i} className="step-text" data-find-block>
               <MessageResultLink href={c.uri} onOpenFile={onOpenFile}>
                 {c.name}
               </MessageResultLink>
@@ -292,13 +320,15 @@ function ToolDetail({
           );
         }
         return (
-          <pre key={i} className="step-text">
+          <pre key={i} className="step-text" data-find-block>
             {safeStringify(c.type === "raw" ? c.value : c)}
           </pre>
         );
       })}
       {call.rawOutput !== undefined && (
-        <pre className="step-text">{rawOutputText(call.rawOutput)}</pre>
+        <pre className="step-text" data-find-block>
+          {rawOutputText(call.rawOutput)}
+        </pre>
       )}
       <ReportedDetails details={call.reportedDetails} />
     </div>
@@ -316,14 +346,14 @@ export function ToolStep({
   onOpenArtifacts?: MouseEventHandler<HTMLButtonElement>;
   onOpenFile?: OpenMessageFile;
 }) {
-  const [open, setOpen] = useState(false);
+  const expansion = useSearchExpansion();
   const glyph =
     activity === "unknown" ? { cls: "wait", ch: "?" } : stepGlyph(call.status);
   const stats = diffStats(call.content);
   const duration = durationLabel(call);
   const loc = call.locations[0]?.path;
   return (
-    <>
+    <div ref={expansion.ref}>
       <div className="step">
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">
@@ -340,7 +370,8 @@ export function ToolStep({
           <button
             type="button"
             className="step-toggle"
-            onClick={() => setOpen((v) => !v)}
+            aria-expanded={expansion.open}
+            onClick={expansion.toggle}
           >
             {STRINGS.thread.toolDetail}
           </button>
@@ -369,8 +400,12 @@ export function ToolStep({
               : (duration ?? "")}
         </span>
       </div>
-      {open && <ToolDetail call={call} onOpenFile={onOpenFile} />}
-    </>
+      {expansion.materialized && (
+        <div hidden={!expansion.open}>
+          <ToolDetail call={call} onOpenFile={onOpenFile} />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -396,7 +431,7 @@ export function PlanBlock({ entries }: { entries: PlanEntry[] }) {
         return (
           <div key={i} className={`plan-item ${cls}`}>
             <span className="pg">{ch}</span>
-            <span>{e.content}</span>
+            <span data-find-block>{e.content}</span>
           </div>
         );
       })}
@@ -422,10 +457,10 @@ export function RawBlock({
   label?: string;
 }) {
   return (
-    <details className="raw-block">
+    <SearchDisclosure className="raw-block">
       <summary>{label ?? STRINGS.thread.rawUpdate}</summary>
-      <pre>{safeStringify(update)}</pre>
-    </details>
+      <pre data-find-block>{safeStringify(update)}</pre>
+    </SearchDisclosure>
   );
 }
 

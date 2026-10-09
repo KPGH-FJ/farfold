@@ -4,6 +4,7 @@ import { normalizeMessageAttachment } from "../runtime/message_attachments";
 import { MessageContent, type OpenMessageFile } from "./MessageContent";
 import { RawBlock } from "./thread-items";
 import "../compaction.css";
+import { SearchDisclosure } from "./transcript-search";
 
 function summaryParts(values: readonly unknown[]): Record<string, unknown>[] {
   const parts: Record<string, unknown>[] = [];
@@ -49,10 +50,12 @@ export function CompactionCard({
         {label}
       </p>
       {item.error !== undefined && (
-        <p className="compaction-error">{item.error}</p>
+        <p className="compaction-error" data-find-block>
+          {item.error}
+        </p>
       )}
       {item.summary.length > 0 ? (
-        <details className="compaction-summary">
+        <SearchDisclosure className="compaction-summary">
           <summary>
             {item.status === "completed" && !item.observation
               ? C.summary
@@ -80,7 +83,7 @@ export function CompactionCard({
               <RawBlock key={index} update={block} />
             );
           })}
-        </details>
+        </SearchDisclosure>
       ) : item.status === "completed" ? (
         <p className="compaction-note">{C.noSummary}</p>
       ) : null}

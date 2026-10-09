@@ -89,15 +89,43 @@ function transcript() {
     classList: { add: vi.fn(), remove: vi.fn() },
     scrollIntoView: vi.fn(),
   };
-  const text = { textContent: "展开后的正文", parentElement: parent };
-  const block = {};
+  const text = {
+    nodeType: 3,
+    textContent: "展开后的正文",
+    data: "展开后的正文",
+    parentElement: parent,
+  };
+  const block = {
+    nodeType: 1,
+    tagName: "P",
+    matches: () => false,
+    hasAttribute: (name: string) => name === "data-find-block",
+    childNodes: [text],
+  };
   const root = {
+    nodeType: 1,
+    tagName: "DIV",
+    matches: () => false,
+    hasAttribute: () => false,
+    childNodes: [block],
+    isConnected: true,
+    contains: () => true,
     querySelectorAll: () => [block],
     addEventListener: (type: string, callback: () => void) =>
       listeners.set(type, callback),
     removeEventListener: (type: string) => listeners.delete(type),
   };
+  vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+    callback();
+    return 1;
+  });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
   vi.stubGlobal("NodeFilter", { SHOW_TEXT: 4 });
+  const rangeCreated = vi.fn(() => ({
+    startContainer: text,
+    setStart: vi.fn(),
+    setEnd: vi.fn(),
+  }));
   vi.stubGlobal("document", {
     createTreeWalker: () => {
       let visited = false;
@@ -110,11 +138,7 @@ function transcript() {
         },
       };
     },
-    createRange: () => ({
-      startContainer: text,
-      setStart: vi.fn(),
-      setEnd: vi.fn(),
-    }),
+    createRange: rangeCreated,
   });
   const observe = vi.fn();
   const disconnect = vi.fn();
@@ -140,11 +164,12 @@ function transcript() {
     },
     observe,
     disconnect,
+    rangeCreated,
   };
 }
 
 it.each(["toggle", "mutate"] as const)(
-  "refreshes visible search matches after %s without changing the query or thread revision",
+  "keeps loaded text searchable through %s without changing the query or thread revision",
   (kind) => {
     const fixture = transcript();
     const read = () =>
@@ -155,11 +180,11 @@ it.each(["toggle", "mutate"] as const)(
     });
     const count = () =>
       render(read).find((node) => node.props.role === "status")!.props.children;
-    expect(count()).toBe(LIBRARY.findEmpty);
+    expect(count()).toBe(R.findPosition(1, 1));
     fixture[kind](true);
     expect(count()).toBe(R.findPosition(1, 1));
     fixture[kind](false);
-    expect(count()).toBe(LIBRARY.findEmpty);
+    expect(count()).toBe(R.findPosition(1, 1));
     expect(fixture.observe).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
@@ -294,4 +319,72 @@ it("releases the export close guard after cancelling the location picker and nev
       .onClose as () => void
   )();
   expect(close).toHaveBeenCalledOnce();
+});
+
+it("coalesces streamed revisions and DOM mutations into one pending frame", () => {
+  const fixture = transcript();
+  const frames = new Map<number, () => void>();
+  let id = 0,
+    revision = 0;
+  vi.stubGlobal("requestAnimationFrame", (callback: () => void) => {
+    frames.set(++id, callback);
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (frame: number) =>
+    frames.delete(frame),
+  );
+  const nextFrame = () => {
+    const pending = [...frames.values()];
+    frames.clear();
+    pending.forEach((callback) => callback());
+  };
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision, onClose: vi.fn() });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  render(read);
+  for (let i = 0; i < 20; i++) {
+    fixture.mutate(true);
+    revision++;
+    render(read);
+  }
+  expect(frames.size).toBe(1);
+  expect(fixture.rangeCreated).not.toHaveBeenCalled();
+  nextFrame();
+  expect(fixture.rangeCreated).toHaveBeenCalledOnce();
+  expect(
+    render(read).find((node) => node.props.role === "status")!.props.children,
+  ).toBe(R.findPosition(1, 1));
+  h.slots.forEach((slot) => slot.cleanup?.());
+  expect(frames.size).toBe(0);
+});
+
+it("adds highlights incrementally instead of passing every match as an argument", () => {
+  const fixture = transcript();
+  const highlights = new Map<string, { ranges: Range[] }>();
+  vi.stubGlobal("CSS", { highlights });
+  vi.stubGlobal(
+    "Highlight",
+    class {
+      ranges: Range[] = [];
+      constructor(...args: unknown[]) {
+        expect(args).toHaveLength(0);
+      }
+      add(range: Range) {
+        this.ranges.push(range);
+      }
+    },
+  );
+  const read = () =>
+    ConversationFind({ host: fixture.host, revision: 1, onClose: vi.fn() });
+  const input = render(read).find((node) => node.type === "input")!;
+  (input.props.onChange as (event: unknown) => void)({
+    target: { value: "正文" },
+  });
+  render(read);
+  expect(highlights.get("conversation-find")!.ranges).toHaveLength(1);
+  h.slots.forEach((slot) => slot.cleanup?.());
+  expect(highlights.size).toBe(0);
 });

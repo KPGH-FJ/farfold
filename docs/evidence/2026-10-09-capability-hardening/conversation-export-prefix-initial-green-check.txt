@@ -1,0 +1,160 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_actions.test.ts (20 tests | 1 failed) 8ms
+   × exports the readable surface as Markdown without collapsed technical detail 4ms
+ ❯ src/runtime/conversation_export.test.ts (35 tests | 6 failed) 78ms
+   × preserves a media-only image reply as an attachment description without embedding its body 4ms
+   × preserves a media-only audio reply as an attachment description without embedding its body 1ms
+   × preserves a media-only resource reply as an attachment description without embedding its body 1ms
+   × preserves a media-only resource_link reply as an attachment description without embedding its body 1ms
+   × retains all reported locations, diff and attachment sources without turning them into verified artifacts 1ms
+   × exports only safe source metadata, omitting embedded URIs, URL credentials and query fragments 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_actions.test.ts > exports the readable surface as Markdown without collapsed technical detail
+AssertionError: expected '# 对话标题\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' to contain 'note.txt — /work/note.txt'
+
+- Expected
++ Received
+
+- note.txt — /work/note.txt
++ # 对话标题
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 报告行号保留对话提供的原值，起始基准未确认。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ **你**
++
++ 看下这个项目
++
++ - note\.txt — \/work\/note\.txt（类型：resource）
++
++ - 查看了文件 — \/work\/a\.ts（已完成）
++   - 报告位置：\/work\/a\.ts
++
++ **Codex**
++
++ 已经看过文件了。
++
++ > 已停止
++
+
+ ❯ src/runtime/conversation_actions.test.ts:196:20
+    194|   expect(markdown).toContain("**你**");
+    195|   expect(markdown).toContain("看下这个项目");
+    196|   expect(markdown).toContain("note.txt — /work/note.txt");
+       |                    ^
+    197|   expect(markdown).toContain("- 查看了文件 — /work/a.ts");
+    198|   expect(markdown).toContain("**Codex**");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only image reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only audio reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only resource reply as an attachment description without embedding its body
+ FAIL  src/runtime/conversation_export.test.ts > preserves a media-only resource_link reply as an attachment description without embedding its body
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' to contain '附件一 — /work/附件一'
+
+- Expected
++ Received
+
+- 附件一 — /work/附件一
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 报告行号保留对话提供的原值，起始基准未确认。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ **助手**
++
++ - 附件一 — \/work\/附件一（类型：example\/type）
++
+
+ ❯ src/runtime/conversation_export.test.ts:46:20
+     44|     ]);
+     45|     expect(result).toContain("**助手**");
+     46|     expect(result).toContain("附件一 — /work/附件一");
+       |                    ^
+     47|     expect(result).toContain("example/type");
+     48|     expect(result).toContain("附件文件未打包");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > retains all reported locations, diff and attachment sources without turning them into verified artifacts
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' to contain '/first.ts'
+
+- Expected
++ Received
+
+- /first.ts
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 报告行号保留对话提供的原值，起始基准未确认。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ - 查看了文件 — \/first\.ts（已完成）
++   - 报告位置：\/first\.ts（报告行号：2）
++   - 报告位置：\/second\.ts（报告行号：9）
++   - 修改位置：\/third\.ts
++   - 链接：网页 — https\:\/\/example\.test\/read
++   - 附件：音频 — \/sound\.wav（类型：audio\/wav）
++
+
+ ❯ src/runtime/conversation_export.test.ts:118:20
+    116|     "未核验文件",
+    117|   ])
+    118|     expect(result).toContain(part);
+       |                    ^
+    119|   for (const part of [
+    120|     "OLDSECRET",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > exports only safe source metadata, omitting embedded URIs, URL credentials and query fragments
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的用户与助手消息、附件说明、工具摘…' to contain 'https://example.test/a'
+
+- Expected
++ Received
+
+- https://example.test/a
++ # 当前对话
++
++ > 导出时当前已载入的用户与助手消息、附件说明、工具摘要与报告位置、计划、批准或拒绝记录，以及停止、失败或结果未确认的提示。
++ > 这不是完整对话归档：不包含思考内容、一般通知、上下文整理记录、原始事件、折叠的工具详情、未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 报告行号保留对话提供的原值，起始基准未确认。
++ > 地址中的认证与附加参数未导出。导出前请自行检查正文与来源中的私人信息。
++
++ **助手**
++
++ - 远程附件 — https\:\/\/example\.test\/a
++ - 内嵌附件 — 来源地址未导出
++ - 未知地址 — 来源地址未导出
++
+
+ ❯ src/runtime/conversation_export.test.ts:144:18
+    142|     ]),
+    143|   ]);
+    144|   expect(result).toContain("https://example.test/a");
+       |                  ^
+    145|   expect(result).toContain("地址中的认证与附加参数未导出");
+    146|   for (const part of [
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  7 failed | 48 passed (55)
+   Start at  21:03:02
+   Duration  191ms (transform 77ms, setup 0ms, import 96ms, tests 86ms, environment 0ms)
+

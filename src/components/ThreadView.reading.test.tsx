@@ -20,6 +20,8 @@ vi.mock("react", async (original) => ({
   },
   useRef: (initial: unknown) =>
     (h.slots[h.cursor++] ??= { value: { current: initial } }).value,
+  // Direct-call reading tests run outside the search provider.
+  useContext: () => false,
   useMemo: (read: () => unknown) => read(),
   useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
   useEffect: (effect: () => void | (() => void), deps: unknown[]) => {

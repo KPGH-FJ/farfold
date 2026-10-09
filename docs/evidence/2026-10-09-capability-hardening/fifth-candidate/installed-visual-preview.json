@@ -1,0 +1,135 @@
+{
+  "recordedAt": "2026-10-09T12:39:37.750038+00:00",
+  "commit": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "surface": "/Applications/Farfold.app native AX plus CUA screenshots",
+  "result": "controlledTemporaryCopiesRendered;DesktopAccessUnresolved",
+  "conversationMarker": "FARFOLD_PREVIEW_CE9659D1_20261009",
+  "agentLinkEcho": {
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "source": "existing Agent settings",
+    "requests": 2,
+    "instruction": "No tools or file reads, echo six provided Markdown links only",
+    "observed": "two completed replies, twelve file-link buttons, no tool steps or new permission prompts",
+    "boundary": "Link presentation only, not Agent file understanding or all-Agent acceptance"
+  },
+  "desktopAttempt": {
+    "file": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+    "observed": "read-only file inspection exceeded 15 second reply deadline; UI showed bounded waiting message and reopen action",
+    "process": 82280,
+    "sample": "private output/2026-10-09-fifth-install/file-open-process-sample.txt",
+    "stack": "file_delivery::capture -> open_source -> file_access::unix::open_directory -> openat",
+    "furtherDiagnosis": "desktop-file-access.json",
+    "workerStarted": false,
+    "fixed": false
+  },
+  "temporaryCopyChecks": [
+    {
+      "file": "mixed-two-pages.pdf",
+      "result": "page 1 visible Embedded font and image with blue/orange rectangles; page 2 visible Local standard font with green circle; page label and disabled next/previous correctly change; widen/restore content retains page 2"
+    },
+    {
+      "file": "embedded-chinese.pdf",
+      "result": "single Type3 中 visible, page 1 / 1; prior PDF page count and pixels not retained"
+    },
+    {
+      "file": "unembedded-chinese.pdf",
+      "result": "failed notice and no old preview image"
+    },
+    {
+      "file": "password.pdf",
+      "result": "specific password-required notice"
+    },
+    {
+      "file": "damaged.pdf",
+      "result": "failed notice and no old preview image"
+    },
+    {
+      "file": "mixed-1.png",
+      "result": "image visible with expected title and blue/orange shapes; hide removes content panel, reopen restores correct image"
+    }
+  ],
+  "fixtureIntegrity": {
+    "copiedBytesMatchCommittedSyntheticFiles": true,
+    "temporaryDirectoryMode": "0700",
+    "fileMode": "0600",
+    "files": [
+      {
+        "name": "mixed-two-pages.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+        "sha256": "d4550cd1b8b2bbb0133bfe4f8a8f3968105c8b094ab9539082698c40679def6a",
+        "size": 22643
+      },
+      {
+        "name": "embedded-chinese.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/embedded-chinese.pdf",
+        "sha256": "d3e7db77631b7ee358ad16d6f4554b42a9c69448dc268b788c4208f632c08cf8",
+        "size": 1321
+      },
+      {
+        "name": "unembedded-chinese.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/unembedded-chinese.pdf",
+        "sha256": "2e6a9e617cc96e57ba4577babd20e020d5cec3cfab5543c2ff1a45b9797e1bc7",
+        "size": 2341
+      },
+      {
+        "name": "password.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/password.pdf",
+        "sha256": "4185a72bd0969f39ced917e2fb20a28329824a9d4e385df6c49c4a1aa370efbc",
+        "size": 22890
+      },
+      {
+        "name": "damaged.pdf",
+        "source": "src/runtime/fixtures/pdf-preview/damaged.pdf",
+        "sha256": "27791e883da34365bf2b5f07a8b48636861a75f5d6a1fd41f52775a1df1f49e3",
+        "size": 24
+      },
+      {
+        "name": "mixed-1.png",
+        "source": "docs/evidence/2026-10-09-capability-hardening/visual-preview-renders/mixed-1.png",
+        "sha256": "266425f22f934eb472be8ab5df73272ea64be68dd4621a94e1b427be242430ab",
+        "size": 6665
+      }
+    ]
+  },
+  "notCovered": [
+    "ordinary embedded CJK fonts beyond the synthetic Type3 glyph",
+    "Office formats",
+    "JPEG/GIF/WebP installed rendering",
+    "file changes while preview is open",
+    "cancellation during a deliberately slow render",
+    "all supported maximum-size files",
+    "Desktop folder authorization completion"
+  ],
+  "boundary": "Successful temporary-file rendering does not resolve Desktop access. Existing OS or Agent permissions were not broadened. No user document bytes were sent to the Agent.",
+  "postUiNormalExit": {
+    "ui": "super+q returned App quit",
+    "processCheck": "pgrep exact formal executable prefix: exit 1, zero matches including browser helper",
+    "activeAgentBeforeExit": false,
+    "context": "Desktop file read had previously exceeded its reply deadline; normal exit still completed"
+  },
+  "postUiDraftRetention": {
+    "method": "read-only comparison of before-install backup and captured post-quit private working copy; no original DB opened by SQLite",
+    "receiptSha256": "ab346d8747557610f19bfef05dd602dda7b06ad1c544ac99277bd4c24089f458",
+    "groups": {
+      "composers": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      },
+      "feedback": {
+        "beforeEntries": 1,
+        "afterEntries": 1,
+        "existingEntriesUnchanged": 1
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "originalEntriesChanged": 0,
+    "scope": "All seven existing composer/feedback/queue entries exactly equal as parsed JSON; not a claim that all native Agent data stayed unchanged during the authorized tests"
+  }
+}

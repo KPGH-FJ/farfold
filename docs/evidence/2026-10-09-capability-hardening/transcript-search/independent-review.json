@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-09",
+  "reviewer": "architecture subagent",
+  "mode": "independent-read-only-review-of-peer-search-core-and-media-boundary",
+  "conclusion": "reviewed-scope-no-open-blocking-finding-after-confirmed-high-density-fix",
+  "scope": [
+    "查找block边界与文档顺序；流式更新和过期Range；临时/用户折叠意图；媒体与文件副作用；大文本/密集命中资源。",
+    "thread-items与ReportedDetails由本审查者实现，此记录不冒称对自有实现的独立审查；自有定向16项另见thread-items-receipt.json。"
+  ],
+  "findings": [
+    {
+      "id": "P12-review-01",
+      "status": "fixed-and-counterexample-closed",
+      "detail": "一次性把所有Range作为Highlight构造参数，大量单字命中可触发函数实参数量限制；独立审查要求高命中浏览器反例，主开发得到160000命中RangeError有效红。现零参构造并逐项add，不截断计数；最终受控浏览器计数和Highlight size均160000。",
+      "red": "browser/browser-high-red.json",
+      "green": "browser/browser-final.json",
+      "styledStrictModeGreen": "browser/browser-styled-final.json"
+    }
+  ],
+  "readOnlyChecks": [
+    "每字段/段落单独匹配；嵌套block按文档序一次遍历，不跨生成控件或兄弟字段拼造句子。",
+    "MutationObserver和revision共用RAF合并；保留同文本Range，定位只对仍属当前transcript且连接中的祖先；切会话key隔离查询。",
+    "SearchExpansion按单次临时owner回收，用户choose覆盖临时状态；嵌套用户展开会保留已可见祖先，不依赖程序toggle冒充用户选择。",
+    "attachmentMedia仅在附件自身userOpen时求值；搜索临时open不创建img/audio。查找模块不调用invoke或文件API；明确文件点击回调保留原用户动作。"
+  ],
+  "evidenceRead": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/browser-valid-first.json",
+      "sha256": "4ea572a7b46b72d5c9db164b2929432502defffd1c6e1a86d5d6a3e461e7d1be"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/browser-high-red.json",
+      "sha256": "9e653852623692b33f877e4b37c590693e0d8bab61c10675a864664aff404e64"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/browser-final.json",
+      "sha256": "411d7a72fbd0a6a5911d6b547582bc132713123ce874b9a9a7849e54d1b4c709"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/browser-styled-final.json",
+      "sha256": "6b800b99db6d3239fb554f12961b5e95f6091b5b92aea7d7a3faf0d75062bfb8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/transcript-search/browser/fixture.tsx",
+      "sha256": "7234660497f1bef59e4526fa136b960302619cc8e07c91a0863ed86185083553"
+    }
+  ],
+  "sourceRead": [
+    {
+      "path": "src/runtime/transcript_find_dom.ts",
+      "sha256": "c724532e10d797dee4998d48c96bdd3407e96fea539374c98f084a55678f162a"
+    },
+    {
+      "path": "src/runtime/transcript_find.ts",
+      "sha256": "9cc8f9278387802edf45ef98b4116f3857b7cdf633f5d793fedf5761ce1f10f2"
+    },
+    {
+      "path": "src/runtime/transcript_search.ts",
+      "sha256": "140e3627ec63df594f7172fcb3a74a3e211d9fa669f4606367e3b37bf425ec31"
+    },
+    {
+      "path": "src/runtime/transcript_search_strings.ts",
+      "sha256": "ae78e84f03fde4a1e21c55d21f4ab2729643128a6e12eec433a4b0e937d52729"
+    },
+    {
+      "path": "src/components/transcript-search.tsx",
+      "sha256": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8"
+    },
+    {
+      "path": "src/components/ConversationFind.tsx",
+      "sha256": "8b2e06505e1b7691f763b20c9fc40f0ac4eeeed3460c8e682ff08f81791c6af7"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "d98391f759e38ada42b500a8f66c0273ee85717685f39ffd69659c30ac351806"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "40113bc89d0a318afea747cc7a3bebafc2e559af8185ca1d5d1545e9cbcd3eea"
+    },
+    {
+      "path": "src/components/CompactionCard.tsx",
+      "sha256": "97e06c21ac7e29fbecf3ddd2bb06777b145bb36f9271b7f2c79168492acb1fe6"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "53eb93807fdb0f439304096a4b8eb5a93c1c1b4998e4a157501e73b6de68cad3"
+    },
+    {
+      "path": "src/components/ThreadView.search-scope.test.tsx",
+      "sha256": "a7de73b9f40a11b4660667dbb30d2df08b999d247a3b0e9ea42d119489ed8043"
+    }
+  ],
+  "executionAttribution": {
+    "architecture": "只读复核同批核心和原始JSON/fixture；未运行浏览器、Tauri或真实Agent；自己的工具子范围定向测试另记。",
+    "product_coverage": "实际执行受控Chromium fixture，最终带生产CSS和React StrictMode的28项均通过；此结论依据已读原始回执，非审查者重复实跑。"
+  },
+  "measuredScope": {
+    "browser": "HeadlessChrome154，受控fixture，不是安装版WKWebView",
+    "loadedCharacters": 3281560,
+    "messages": 1000,
+    "tools": 120,
+    "styledCycles": 4,
+    "styledScanMsRange": [3.1, 3.5],
+    "domBeforeAndAfter": 2722,
+    "domSearchOpen": 3329,
+    "styledHighDensityMatches": 160000,
+    "styledHighDensityElapsedMs": 222.39999997615814,
+    "priorHighDensityElapsedMs": 968,
+    "interpretation": "两次命中耗时差异大，保留实际值；扫描与开关周期不能混为产品延迟。4次DOM恢复与堆趋稳只证明该样本，不证明无限规模无泄漏。"
+  },
+  "limits": [
+    "未跑安装版WK或真实Agent；未加载历史/附件文件仍不在搜索范围，不新增永久正文索引。",
+    "搜索会把已加载折叠文字挂载至DOM；高密度命中仍按数量创建Range，未证明任意规模或长时间资源上限。",
+    "浏览器0IPC/0file动作覆盖fixture所用呈现和搜索路径，不扩大为所有应用功能无副作用。",
+    "大规模正文/内联分段的极端分布、长期稳定性与Windows仍需各自实证。"
+  ],
+  "scopeAddendum": {
+    "change": "ThreadView在ArtifactPane外显式包裹TranscriptSearchContext.Provider value=false。",
+    "review": "已只读核3行provider接入及真实ThreadView/context probe+DiffView测试，限定内容栏不因正文查找挂载折叠内容。未修改查找计算、动作或媒体权限，未见新阻断。",
+    "evidenceBoundary": "测试仅替换pane叶节点以验证外层权限边界，未冒称真实整个ArtifactPane或文件预览端到端。product_coverage负责实际红绿和合并回归；本审查者未重跑。"
+  }
+}

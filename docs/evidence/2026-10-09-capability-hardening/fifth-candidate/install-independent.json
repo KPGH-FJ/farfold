@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-09T12:33:30.637Z",
+  "reviewer": "verification",
+  "mode": "independent_read_only_artifact_and_private_manifest_review",
+  "result": "passed_with_recorded_method_boundary",
+  "installedCommit": "ce9659d12d141ecafa08d8ba31f9c4c5b342937e",
+  "formalMatchesExactCandidateFiles": true,
+  "archiveMatchesFormal": true,
+  "archiveSha256": "5d7f70875a82984061f42fa54615acd208197ab7356dfcde4242b23e65173bd2",
+  "formalChecks": {
+    "signature": {
+      "exitCode": 0,
+      "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+    },
+    "architecture": {
+      "exitCode": 0,
+      "output": "arm64"
+    }
+  },
+  "duplicateBundleAbsent": true,
+  "frozenCandidateReceiptsUnchanged": true,
+  "privateDirectoryMode": "0700",
+  "manifestChecks": [
+    {
+      "phase": "before",
+      "sha256": "37bf398ad9fa2ca8d5610309cff67fe1fd7c08e00995d7f4426b38adcfeedcb6",
+      "entries": 217400,
+      "mode": "0600",
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "rawDatabaseFilesMatch": true
+    },
+    {
+      "phase": "preinstall",
+      "sha256": "37bf398ad9fa2ca8d5610309cff67fe1fd7c08e00995d7f4426b38adcfeedcb6",
+      "entries": 217400,
+      "mode": "0600",
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "rawDatabaseFilesMatch": true
+    },
+    {
+      "phase": "after",
+      "sha256": "37bf398ad9fa2ca8d5610309cff67fe1fd7c08e00995d7f4426b38adcfeedcb6",
+      "entries": 217400,
+      "mode": "0600",
+      "countsMatch": true,
+      "duplicateEntries": 0,
+      "rawDatabaseFilesMatch": true
+    }
+  ],
+  "capturedFiles": {
+    "farfold.sqlite3": {
+      "bytes": 323584,
+      "sha256": "c5e1610d7f333007db282aef96e1f922667c4bc18c3c24827fc7ed7dd4bca7df",
+      "mode": "0o600"
+    },
+    "farfold.sqlite3-wal": {
+      "bytes": 4140632,
+      "sha256": "7a372551a340235a7461eda6847b87ce1213c2ebb64f640efb28b650b1236e60",
+      "mode": "0o600"
+    },
+    "farfold.sqlite3-shm": {
+      "bytes": 32768,
+      "sha256": "cea796a362bf70a91342d10126791d4943da0a72b8a9f5a201bf659d76278540",
+      "mode": "0o600"
+    }
+  },
+  "backup": {
+    "sha256": "1e7422b1a9a730919f450b5e2b08b50fc8d4a5b64efb76d0f8582bd4c0a7373f",
+    "mode": "0600",
+    "integrity": "ok",
+    "readMode": "private backup immutable read-only, PRAGMA integrity_check only; no rows/settings read",
+    "unchangedAfterIntegrity": true
+  },
+  "installationReceiptVerified": true,
+  "privateReceiptHashes": {
+    "metadata-backup-receipt.json": "7109f3cd39c2b4dd60f571e547a85bc6a4917a4a5592d28ea2994c279bb6a4af",
+    "install-operation.json": "2794797c07c54f1e4a5e42d6710215bc31472436ac4cebedc2e8ec93ca15e47c",
+    "normal-exit-observation.json": "3e3cea9cb78740f426a00f60ad790d270abea0282b92f62b2fe187b0a5eb968f",
+    "install_data_snapshot.py": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+    "install_verified_candidate.py": "67b48a22a92acb44a44b9d2116681eaa9169b5fcb575b15b07a11d5b480fb1fc"
+  },
+  "captureSourceHashCorrelation": "Raw captured main/WAL/SHM match the exact source entries in all three whole-data manifests. Live post-relaunch data not inspected.",
+  "backupMethodEvidence": {
+    "parentRecordedMethod": "Capture main and all existing sidecars read-only; SQLite backup on second private working copy, first capture unchanged.",
+    "executionEvidence": "Parent confirms one-off Python in original functions.exec; no separately retained execution script or raw stdout. This review does not reconstruct or rerun that command.",
+    "independentlyEstablished": "Current raw capture hashes match backup receipt and main/WAL/SHM entries in all three identical installation manifests; captured files are 0600; standalone backup hash/mode match receipt and immutable read-only integrity_check returns ok.",
+    "notIndependentlyEstablished": "Exact backup invocation and working-copy sequence were not independently replayed. Artifact integrity alone is not a semantic proof that every historical conversation is recovered."
+  },
+  "sourceProtectionReview": [
+    "Snapshot script uses directory descriptors and O_NOFOLLOW, records symlink targets instead of following them, verifies file/directory stability, and writes exclusive 0600 manifests.",
+    "Installer requires normal exit evidence and no formal app process, verifies exact approved candidate/source/archive identities, mutates only formal bundle with ditto, then verifies five hashes and signature while app remains stopped.",
+    "All three private manifests independently rehashed and parsed: equal bytes/digests, 217400 unique root/path records each, counts match summaries. Comparison window is after normal exit through replacement before relaunch.",
+    "No live post-relaunch DB comparison was made; subsequent normal work/cold-recovery tests can legitimately change current data."
+  ],
+  "claimReview": {
+    "installedBundle": "Confirmed current formal app equals verified ce9659d1 candidate archive.",
+    "dataRetention": "Confirmed exact recorded file inventories across installation window; no broad future-data/no-startup-write claim.",
+    "backup": "Confirmed retained raw materials and private backup integrity; execution method remains parent-recorded.",
+    "launchAndCapabilities": "Relaunch/111 visible conversations and subsequent template/PDF UI journeys belong to parent's UI evidence; this review did not operate UI.",
+    "notAcceptance": [
+      "No 29-Agent acceptance",
+      "No physical corrupt-database recovery acceptance",
+      "No real power-loss/full-disk guarantee",
+      "No Office or Windows acceptance",
+      "Ad-hoc signature is not public signing/notarization"
+    ]
+  },
+  "actions": "Only read receipts/scripts/manifests, hash retained artifacts, codesign/lipo/ZIP inspection and immutable integrity_check of the private standalone backup; wrote only this independent receipt. No UI, Agent, launch/quit/install/cleanup, source/status/plan/README or frozen candidate receipt changes."
+}

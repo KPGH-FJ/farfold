@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.search-scope.test.tsx (1 test | 1 failed) 30ms
+   × limits find materialization to the transcript and keeps the content pane outside search 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.search-scope.test.tsx > limits find materialization to the transcript and keeps the content pane outside search
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "host_performance_origin",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/ThreadView.search-scope.test.tsx:69:22
+     67|   expect(html).toContain('data-search-active="false"');
+     68|   expect(html).not.toContain("pane-tail-must-stay-unmounted");
+     69|   expect(invoke).not.toHaveBeenCalled();
+       |                      ^
+     70| });
+     71|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 28 passed (29)
+      Tests  1 failed | 202 passed (203)
+   Start at  20:59:06
+   Duration  7.61s (transform 3.72s, setup 0ms, import 56.86s, tests 2.16s, environment 2ms)
+

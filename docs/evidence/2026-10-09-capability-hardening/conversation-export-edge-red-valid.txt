@@ -1,0 +1,73 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_export.test.ts (16 tests | 2 failed) 7ms
+   × retains message whitespace that changes Markdown code-block meaning 3ms
+   × removes credentials from a URL even with surrounding whitespace or a relative scheme 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > retains message whitespace that changes Markdown code-block meaning
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' to contain '    const value = 1;\n    return valu…'
+
+- Expected
++ Received
+
+-     const value = 1;
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ **助手**
++
++ const value = 1;
+      return value;
+
+
+ ❯ src/runtime/conversation_export.test.ts:204:39
+    202| it("retains message whitespace that changes Markdown code-block meanin…
+    203|   const text = "    const value = 1;\n    return value;\n";
+    204|   expect(render([message([], text)])).toContain(text);
+       |                                       ^
+    205| });
+    206| it("removes credentials from a URL even with surrounding whitespace or…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/conversation_export.test.ts > removes credentials from a URL even with surrounding whitespace or a relative scheme
+AssertionError: expected '# 当前对话\n\n> 导出时当前已载入的内容；不包含未载入的历史、草稿与…' not to contain 'WHITESPACESECRET'
+
+- Expected
++ Received
+
+- WHITESPACESECRET
++ # 当前对话
++
++ > 导出时当前已载入的内容；不包含未载入的历史、草稿与待发内容。
++ > 附件文件未打包，只保留名称、类型与来源；来源由对话提供，未核验文件，也未下载网页内容。
++ > 不包含折叠的工具详情；地址中的认证与附加参数未导出。导出前请自行检查正文中的私人信息。
++
++ **助手**
++
++ - 地址一 —   https://user:WHITESPACESECRET@example.test/a?token=QUERYSECRET  
++ - 地址二 — //user:RELATIVESECRET@example.test/b?token=QUERYSECRET
++
+
+ ❯ src/runtime/conversation_export.test.ts:211:22
+    209|     { name: "地址二", uri: "//user:RELATIVESECRET@example.test/b?token=QU…
+    210|   ])]);
+    211|   expect(result).not.toContain("WHITESPACESECRET");
+       |                      ^
+    212|   expect(result).not.toContain("RELATIVESECRET");
+    213|   expect(result).not.toContain("QUERYSECRET");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  20:45:07
+   Duration  115ms (transform 34ms, setup 0ms, import 45ms, tests 7ms, environment 0ms)
+

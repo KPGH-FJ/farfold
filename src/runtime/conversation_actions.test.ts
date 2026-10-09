@@ -1,4 +1,7 @@
 import { expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import Markdown from "react-markdown";
 import type { Credential } from "./credentials";
 import type { ThreadState } from "./sessions";
 import {
@@ -193,8 +196,11 @@ it("exports the readable surface as Markdown without collapsed technical detail"
   expect(markdown).toContain("# 对话标题");
   expect(markdown).toContain("**你**");
   expect(markdown).toContain("看下这个项目");
-  expect(markdown).toContain("note.txt — /work/note.txt");
-  expect(markdown).toContain("- 查看了文件 — /work/a.ts");
+  const readable = renderToStaticMarkup(
+    createElement(Markdown, { children: markdown }),
+  );
+  expect(readable).toContain("note.txt — /work/note.txt");
+  expect(readable).toContain("查看了文件 — /work/a.ts");
   expect(markdown).toContain("**Codex**");
   expect(markdown).toContain("已经看过文件了。");
   expect(markdown).toContain("> 已停止");

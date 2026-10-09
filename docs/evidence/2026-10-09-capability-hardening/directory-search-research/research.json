@@ -1,0 +1,131 @@
+{
+  "recordType": "read_only_research_with_authorized_synthetic_probe",
+  "date": "2026-10-09",
+  "issue": "NEW-01",
+  "conclusion": "Current directory traversal imposes directory-read access beyond the search access needed for a known file. Confirmed for synthetic POSIX modes on this macOS. The existing Desktop TCC wait remains unproven as a consequence of this policy.",
+  "environment": {
+    "macOS": "15.6",
+    "build": "24G84",
+    "kernel": "xnu-11417.140.69",
+    "sdk": "MacOSX15.5.sdk",
+    "euid": 501,
+    "rustLibc": "0.2.189",
+    "localSdkHeader": "/Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/fcntl.h:161",
+    "localLibcHeader": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libc-0.2.189/src/unix/bsd/apple/mod.rs:2090"
+  },
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11417.140.69/bsd/man/man2/open.2",
+      "lines": [102, 159, 299, 304],
+      "finding": "openat resolves relative paths from a directory descriptor; O_SEARCH is search-only access. Search permission and requested read/write/search permission are distinct."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11417.140.69/bsd/vfs/vfs_subr.c",
+      "lines": [7831, 7866, 7879, 7904, 9147, 9163],
+      "finding": "Directory authorization maps FREAD to read data/listing and FSEARCH to search, still through MAC open checks and vnode authorization."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11417.140.69/bsd/vfs/vfs_syscalls.c",
+      "lines": [4421, 4428, 8142, 8160],
+      "finding": "Search/execute are not combined with read/write modes; fsync obtains the vnode and calls the filesystem sync operation."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11417.140.69/bsd/vfs/vfs_vnops.c",
+      "lines": [566, 576, 632, 644],
+      "finding": "Some filesystem open implementations are retried with FREAD internally, so behavior across all filesystems is not established by the local probe."
+    }
+  ],
+  "callers": [
+    {
+      "path": "src-tauri/src/file_access/unix.rs",
+      "lines": [25, 39, 57, 69, 92, 127, 147],
+      "uses": "Metadata, absolute/relative no-follow directory traversal, temp creation, exclusive rename, cleanup."
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "lines": [124, 127, 144, 163, 167, 184, 199, 335, 360, 369, 383],
+      "uses": "Open/recheck sources, identity stamps, chosen export/copy destination operations. sync_all here is on the writable temporary file, not the search directory."
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "lines": [33, 38, 40, 46],
+      "uses": "A single selected file uses its parent only as an implementation bound, not a reusable directory grant."
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/local_preview/directory.rs",
+      "lines": [14, 72, 116, 166, 199, 203],
+      "uses": "Exact authorized local webpage resources and repeated root identity checks, no directory listing API."
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability.rs",
+      "lines": [61, 63, 64],
+      "uses": "The file_access open helpers here are Windows-only; Unix takes a separate ordinary file-open path."
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/export.rs",
+      "lines": [172, 175],
+      "uses": "Uses independent File::open plus directory sync, not file_access::open_directory; not affected by a scoped helper change."
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/database_restore/files.rs",
+      "lines": [131, 135],
+      "uses": "Likewise independent directory File::open and sync; do not sweep into this fix."
+    }
+  ],
+  "probe": {
+    "directory": "/private/tmp/farfold-new01-29odhh5k",
+    "compileExitCode": 0,
+    "runExitCode": 0,
+    "sourceSha256": "aee36084d2f0d63b4acbf1a18fa62279a5d36ac8b0d6b24345616060ab415e8c",
+    "stdoutSha256": "1bd21941c71b405a71f99a5f72d80b9f039236c6ed5ef9b086c10f1f6eef37de",
+    "checks": {
+      "execute_only_parent_difference": true,
+      "missing_search_denied": true,
+      "missing_file_read_denied": true,
+      "intermediate_symlink_refused": true,
+      "leaf_symlink_refused": true,
+      "metadata_calls": true,
+      "close_on_exec": true,
+      "directory_read_denied": true,
+      "directory_sync_current_filesystem": true,
+      "create_without_write_denied": true,
+      "destination_operations": true,
+      "existing_destination_not_replaced": true,
+      "unlink_owned_outputs": true,
+      "revocation_not_bypassed_in_fixture": true
+    },
+    "note": "The probe compares the syscall pattern, not production Rust entrypoints. It created/chmodded only synthetic objects under this fresh 0700 directory. All expected cases were checked against retained original stdout."
+  },
+  "recommendation": {
+    "decision": "Worth a separate subsequent slice after the sixth batch, not an untested patch to frozen sources.",
+    "minimalChange": "Use macOS O_SEARCH for directory handles (including the initial / handle), keep O_NOFOLLOW/CLOEXEC and single-component traversal. Keep final file O_RDONLY/NOFOLLOW/NONBLOCK. Do not substitute O_EVTONLY or Linux O_PATH.",
+    "necessaryTests": [
+      "Run the execute-only parent counterexample through actual file_access and file_delivery, preserving canonicalization/root/identity checks.",
+      "Cover local HTML directory resources and no-listing behavior, image/draft attachment checks, copy/export create/rename-no-replace/cleanup, metadata checks.",
+      "Retain intermediate and final symlink refusal, non-directory/FIFO rejection, missing search/read/write permissions, replacement identity and concurrent path-change regressions.",
+      "Check supported macOS deployment versions and additional filesystems explicitly; do not assume current SDK macros prove all-version behavior."
+    ],
+    "remaining": [
+      "No Desktop/Documents TCC probe, permission reset, or system-permission change occurred.",
+      "No formal app, Agent, user file, credential or database was accessed or changed.",
+      "No production Rust/frontend source was edited for this investigation.",
+      "No evidence that O_SEARCH fixes the prior Desktop waiting symptom; final leaf access is still subject to OS authorization.",
+      "Current local fsync success is not a crash-durability or all-filesystem guarantee.",
+      "Do not introduce fallback that drops no-follow restrictions or silent permission expansion."
+    ]
+  },
+  "archivalRetention": {
+    "originalDirectory": "/private/tmp/farfold-new01-29odhh5k",
+    "originalSha256": {
+      "research.json": "63d4e2d6b439561c9487edb8a1ca3ecdcadd57079f77f76b363e5c589ffb7d02",
+      "probe.c": "aee36084d2f0d63b4acbf1a18fa62279a5d36ac8b0d6b24345616060ab415e8c",
+      "probe.txt": "1bd21941c71b405a71f99a5f72d80b9f039236c6ed5ef9b086c10f1f6eef37de",
+      "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "files": ["research.json", "probe.c", "probe.txt", "compile.txt"],
+    "rawStdoutAndCompileOutput": "probe.txt and compile.txt preserve the executed bytes without formatting.",
+    "probeSource": "probe.c preserves the exact compiled bytes. The repository has no configured C formatter and Prettier does not support C; no speculative reformatter is introduced.",
+    "jsonChanges": "Only this archivalRetention field is added; Prettier applies the repository JSON layout. All prior research facts and probe results remain equal to the original object.",
+    "compiledBinaryExcluded": true
+  }
+}

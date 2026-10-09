@@ -1,0 +1,56 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ × src/runtime/transcript_search.test.ts > temporarily reveals a closed disclosure and restores its user's choice 3ms
+   → expected false to be true // Object.is equality
+ ✓ src/runtime/transcript_search.test.ts > does not close a disclosure the user had opened 0ms
+ × src/runtime/transcript_search.test.ts > a stale release cannot close the next search's reveal 0ms
+   → expected false to be true // Object.is equality
+ ✓ src/runtime/transcript_search.test.ts > manual choices supersede a temporary reveal without being undone on close 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/transcript_search.test.ts > temporarily reveals a closed disclosure and restores its user's choice
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/transcript_search.test.ts:7:21
+      5|   const changed = vi.fn(), fold = new SearchExpansion(false, changed);
+      6|   const release = fold.reveal();
+      7|   expect(fold.open).toBe(true);
+       |                     ^
+      8|   expect(fold.userOpen).toBe(false);
+      9|   release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/transcript_search.test.ts > a stale release cannot close the next search's reveal
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/transcript_search.test.ts:22:21
+     20|   const old = fold.reveal(), current = fold.reveal();
+     21|   old();
+     22|   expect(fold.open).toBe(true);
+       |                     ^
+     23|   current();
+     24|   expect(fold.open).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  20:33:38
+   Duration  98ms (transform 12ms, setup 0ms, import 17ms, tests 4ms, environment 0ms)
+

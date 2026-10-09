@@ -1,0 +1,175 @@
+{
+  "engine": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "results": [
+    {
+      "name": "folded thought counted and revealed",
+      "ok": true,
+      "detail": {
+        "count": "1 / 1",
+        "open": true,
+        "value": "thought-needle",
+        "direct": 1
+      }
+    },
+    {
+      "name": "temporary thought expansion revoked",
+      "ok": true,
+      "detail": {
+        "html": "<details class=\"thought\"><summary>Thought</summary><p data-find-block=\"true\" class=\"\">thought-needle</p></details>",
+        "props": [
+          {
+            "open": false,
+            "click": false,
+            "toggle": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "preexisting user expansion survives",
+      "ok": true
+    },
+    {
+      "name": "manual collapse stays collapsed without losing count",
+      "ok": true
+    },
+    {
+      "name": "fourth attachment text located",
+      "ok": true
+    },
+    {
+      "name": "search adds no image or audio decoder",
+      "ok": true
+    },
+    {
+      "name": "automatic attachment opening still does not mount media",
+      "ok": true
+    },
+    {
+      "name": "explicit media action admits only selected image",
+      "ok": true
+    },
+    {
+      "name": "user media and ancestor choice survive search close",
+      "ok": true
+    },
+    {
+      "name": "manual media close removes decoder",
+      "ok": true
+    },
+    {
+      "name": "paragraph boundary cannot create phantom phrase",
+      "ok": true
+    },
+    {
+      "name": "inline formatting matches as one phrase",
+      "ok": true
+    },
+    {
+      "name": "file-link button body remains searchable",
+      "ok": true
+    },
+    {
+      "name": "nested tool text is visible at its hit",
+      "ok": true
+    },
+    {
+      "name": "clipped diff tail resolves exact loaded line",
+      "ok": true
+    },
+    {
+      "name": "plan is searchable",
+      "ok": true
+    },
+    {
+      "name": "folded compaction summary is searchable",
+      "ok": true
+    },
+    {
+      "name": "stream updates refresh occurrence count",
+      "ok": true
+    },
+    {
+      "name": "thread switch discards old query and highlights",
+      "ok": true
+    },
+    {
+      "name": "no leaked temporary disclosure or text mutation",
+      "ok": true
+    },
+    {
+      "name": "no app IPC or file action",
+      "ok": true,
+      "detail": {
+        "ipc": 0,
+        "fileOpens": 0
+      }
+    },
+    {
+      "name": "large search cycle 1 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 2 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 3 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "large search cycle 4 returns original DOM",
+      "ok": true
+    },
+    {
+      "name": "controlled scale",
+      "ok": true,
+      "detail": {
+        "messages": 1000,
+        "tools": 120,
+        "loadedCharacters": 3281560,
+        "baseNodes": 2722,
+        "baseHeap": 62573517,
+        "cycles": [
+          {
+            "openCloseMs": 128.10000002384186,
+            "scanMs": 3.599999964237213,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 67052490
+          },
+          {
+            "openCloseMs": 77.70000004768372,
+            "scanMs": 3.5,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 64624858
+          },
+          {
+            "openCloseMs": 75.5,
+            "scanMs": 3.399999976158142,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 64640978
+          },
+          {
+            "openCloseMs": 64.69999998807907,
+            "scanMs": 3.200000047683716,
+            "matches": 120,
+            "openNodes": 3329,
+            "closedNodes": 2722,
+            "heapAfterClose": 64658858
+          }
+        ]
+      }
+    },
+    {
+      "name": "highlights released on close",
+      "ok": true
+    }
+  ],
+  "passed": true
+}

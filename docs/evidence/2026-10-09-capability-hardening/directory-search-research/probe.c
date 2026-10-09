@@ -1,0 +1,20 @@
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <limits.h>
+static int report(const char *label,const char *op,int result) { int error=result<0?errno:0; printf("{\"case\":\"%s\",\"operation\":\"%s\",\"result\":%d,\"errno\":%d}\n",label,op,result,error); return result; }
+static int directory(const char *path,int mode) { char buf[PATH_MAX]; if(strlen(path)>=sizeof(buf)){errno=ENAMETOOLONG;return -1;}strcpy(buf,path);int fd=open("/",mode|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);if(fd<0)return fd;char *save=NULL;for(char *part=strtok_r(buf,"/",&save);part;part=strtok_r(NULL,"/",&save)){int next=openat(fd,part,mode|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);int e=errno;close(fd);if(next<0){errno=e;return next;}fd=next;}return fd; }
+static int leaf(const char *path,int mode) { char buf[PATH_MAX];strcpy(buf,path);char *name=strrchr(buf,'/');*name++=0;int fd=directory(buf,mode);if(fd<0)return fd;int file=openat(fd,name,O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_NONBLOCK);int e=errno;close(fd);errno=e;return file; }
+static void reading(const char *label,const char *path,int mode) { int fd=mode<0?open(path,O_RDONLY|O_NOFOLLOW|O_CLOEXEC|O_NONBLOCK):leaf(path,mode);report(label,"open_file",fd);if(fd>=0){char bytes[16]={0};int n=(int)read(fd,bytes,sizeof(bytes));report(label,"read_known_bytes",n==10&&!memcmp(bytes,"SYNTHETIC\n",10)?n:-1);close(fd);} }
+int main(int argc,char **argv) { if(argc!=2||geteuid()==0)return 2;printf("{\"euid\":%u,\"O_SEARCH\":%u,\"O_RDONLY\":%u,\"O_NOFOLLOW\":%u}\n",geteuid(),O_SEARCH,O_RDONLY,O_NOFOLLOW);char p[PATH_MAX];
+const char *names[]={"traverse","no_search","no_file_read","link_dir"};for(size_t i=0;i<4;i++){snprintf(p,sizeof(p),"%s/%s/fixture.txt",argv[1],names[i]);char label[64];snprintf(label,sizeof(label),"%s_direct",names[i]);reading(label,p,-1);snprintf(label,sizeof(label),"%s_rdonly_walk",names[i]);reading(label,p,O_RDONLY);snprintf(label,sizeof(label),"%s_search_walk",names[i]);reading(label,p,O_SEARCH);}
+snprintf(p,sizeof(p),"%s/link_file",argv[1]);reading("leaf_symlink_search",p,O_SEARCH);
+snprintf(p,sizeof(p),"%s/traverse",argv[1]);int fd=directory(p,O_SEARCH);report("search_fd","open_directory",fd);if(fd>=0){struct stat st;report("search_fd","fstat",fstat(fd,&st));report("search_fd","fstatat_child",fstatat(fd,"fixture.txt",&st,AT_SYMLINK_NOFOLLOW));report("search_fd","cloexec",fcntl(fd,F_GETFD)&FD_CLOEXEC);char b;report("search_fd","read_directory",(int)read(fd,&b,1));report("search_fd","fsync_directory",fsync(fd));int created=openat(fd,"should_not_exist",O_CREAT|O_WRONLY|O_EXCL|O_NOFOLLOW,0600);report("search_fd","create_without_write",created);if(created>=0){close(created);unlinkat(fd,"should_not_exist",0);}close(fd);}
+snprintf(p,sizeof(p),"%s/destination",argv[1]);fd=directory(p,O_SEARCH);report("destination","open_search",fd);if(fd>=0){int f=openat(fd,"partial",O_CREAT|O_WRONLY|O_EXCL|O_NOFOLLOW|O_CLOEXEC,0600);report("destination","create",f);if(f>=0){report("destination","write",(int)write(f,"COPY",4));report("destination","fsync_file",fsync(f));close(f);report("destination","rename_exclusive",renameatx_np(fd,"partial",fd,"complete",RENAME_EXCL));int duplicate=openat(fd,"second",O_CREAT|O_WRONLY|O_EXCL|O_NOFOLLOW,0600);if(duplicate>=0){close(duplicate);report("destination","refuse_overwrite",renameatx_np(fd,"second",fd,"complete",RENAME_EXCL));report("destination","unlink_partial",unlinkat(fd,"second",0));}report("destination","fsync_directory",fsync(fd));report("destination","unlink_completed",unlinkat(fd,"complete",0));}close(fd);}
+snprintf(p,sizeof(p),"%s/revoke",argv[1]);fd=directory(p,O_SEARCH);report("revoke","open_search_before_change",fd);if(fd>=0){report("revoke","chmod_own_fixture_0000",chmod(p,0000));int f=openat(fd,"fixture.txt",O_RDONLY|O_NOFOLLOW|O_CLOEXEC);report("revoke","open_child_existing_search_fd",f);if(f>=0)close(f);int fresh=directory(p,O_SEARCH);report("revoke","fresh_search_fd_after_change",fresh);if(fresh>=0)close(fresh);report("revoke","restore_own_fixture_0700",chmod(p,0700));close(fd);}return 0;}

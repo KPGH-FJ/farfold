@@ -1,0 +1,10 @@
+{
+  "atUtc": "2026-10-09T12:28:07.316919+00:00",
+  "removedOnly": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "generatedDuplicateOnly": true,
+  "formalAppRetained": "/Applications/Farfold.app",
+  "formalFilesMatchCandidate": true,
+  "archiveRetained": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-09-ce9659d1/Farfold-0.1.7-ce9659d1.zip",
+  "archiveSha256": "5d7f70875a82984061f42fa54615acd208197ab7356dfcde4242b23e65173bd2",
+  "result": "passed"
+}

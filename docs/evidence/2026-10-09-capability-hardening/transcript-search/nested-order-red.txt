@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/transcript_find_dom.test.ts (3 tests | 1 failed) 6ms
+   × returns nested registered fields in document order without joining parent text across a child 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/transcript_find_dom.test.ts > returns nested registered fields in document order without joining parent text across a child
+AssertionError: expected [ { nodeType: 3, …(2) }, …(2) ] to deeply equal [ { nodeType: 3, …(2) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -3,15 +3,15 @@
+      "data": "hit before",
+      "nodeType": 3,
+      "textContent": "hit before",
+    },
+    {
+-     "data": "hit inside",
++     "data": "hit after",
+      "nodeType": 3,
+-     "textContent": "hit inside",
++     "textContent": "hit after",
+    },
+    {
+-     "data": "hit after",
++     "data": "hit inside",
+      "nodeType": 3,
+-     "textContent": "hit after",
++     "textContent": "hit inside",
+    },
+  ]
+
+ ❯ src/runtime/transcript_find_dom.test.ts:29:67
+     27|   const before = text("hit before"), inside = text("hit inside"), afte…
+     28|   const root = element("DIV", [], [element("DIV", ["data-find-block"],…
+     29|   expect(matches(root, "hit").map(range => range.startContainer)).toEq…
+       |                                                                   ^
+     30|   expect(matches(root, "beforehit")).toHaveLength(0);
+     31| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  20:46:41
+   Duration  83ms (transform 14ms, setup 0ms, import 19ms, tests 6ms, environment 0ms)
+

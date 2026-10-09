@@ -1,0 +1,135 @@
+{
+  "date": "2026-10-09",
+  "mode": "read-only-technical-research",
+  "status": "proposal-only-no-dependency-added-no-implementation-started",
+  "recommendation": {
+    "slice": "先实现 XLSX 只读工作表视觉预览，保留 DOCX/PPTX 与复杂 Office 保真为未完成。",
+    "flow": "VerifiedFile exact capture → OOXML包受限预检 → 可终止的独立Worker解析 → 白名单结构数据 → 分窗格的只读工作表网格。",
+    "visibleScope": [
+      "工作表切换、行列坐标、行高列宽、合并单元格、基础字体/边框/对齐/填充",
+      "明确支持的数字/日期格式；公式只呈现文件保存的缓存结果，缺失单独说明",
+      "刷新/取消/隐藏/换文件/换表的独立操作归属与旧结果丢弃"
+    ],
+    "notClaimed": [
+      "完整Office排版保真",
+      "打印分页、图表、透视表、复杂条件格式",
+      "公式计算或更新外部数据",
+      "仅凭parser成功就判定整份文件完整显示"
+    ],
+    "formatBoundary": "不能把cell.text或raw value当格式保真。数字小数/百分比/货币/科学计数/自定义格式需明确支持集；日期需正确处理1900/1904日期系统与时区；公式缓存0、false、空字符串、错误值和缺值必须区别，不能用truthy判断吞掉0。未知格式或复杂内容需要明确限制反馈。"
+  },
+  "reuse": [
+    {
+      "evidence": "src/runtime/file_delivery.ts:12",
+      "detail": "VerifiedFile包含真实路径、size、sha256和version；以全部身份字段约束同一版本。"
+    },
+    {
+      "evidence": "src-tauri/src/file_delivery/visual.rs:30",
+      "detail": "已有capture_expected，但当前visual入口仅识别PDF/静态图像；Office需明确独立格式入口而非改扩展名。"
+    },
+    {
+      "evidence": "src/components/OpenedFileView.tsx:217",
+      "detail": "已有显式文件选择、操作归属、读取后完整receipt比较和失败退路。"
+    },
+    {
+      "evidence": "src/components/OpenedFileView.tsx:472",
+      "detail": "现预览生命周期可用于新独立Office组件；不得借browser_workspace或主应用HTML权限。"
+    },
+    {
+      "evidence": "src-tauri/Cargo.toml:41",
+      "detail": "zip =4.6.1已直接依赖，可复用ZIP预检；quick-xml目前只在锁文件中，不能把传递依赖当现成直接API。"
+    }
+  ],
+  "officialCandidates": [
+    {
+      "package": "exceljs",
+      "version": "4.4.0",
+      "publishedAt": "2023-10-19T19:49:55.669Z",
+      "olderThanSevenDays": true,
+      "license": "MIT",
+      "registry": "https://registry.npmjs.org/exceljs",
+      "versionMetadata": "https://registry.npmjs.org/exceljs/4.4.0",
+      "source": "https://github.com/exceljs/exceljs/tree/ac96f9a61e9799c7776bd940f05c4a51d7200209",
+      "documentation": "https://github.com/exceljs/exceljs/blob/v4.4.0/README.md",
+      "browser": "官方提供browserified bundles，浏览器仅document workbook；不是视觉渲染引擎，公式结果须由文件提供。",
+      "assessment": "推荐作为最小XLSX片的待验证解析器，尚未安装/构建/运行；实际采用前需审完整传递图、日期、license和browser bundle安全。"
+    },
+    {
+      "package": "docx-preview",
+      "version": "0.4.1",
+      "publishedAt": "2026-09-21T16:47:25.799Z",
+      "olderThanSevenDays": true,
+      "license": "Apache-2.0",
+      "registry": "https://registry.npmjs.org/docx-preview",
+      "versionMetadata": "https://registry.npmjs.org/docx-preview/0.4.1",
+      "source": "https://github.com/VolodymyrBaydalka/docxjs/tree/c533f383069008d4a1e05c6171ef8777fd078385",
+      "documentation": "https://github.com/VolodymyrBaydalka/docxjs",
+      "browser": "渲染为DOM/HTML，不能复用PDF纯像素Worker方案；官方明确实时分页未实现，fields/TOC有限。",
+      "securityEvidence": "https://github.com/VolodymyrBaydalka/docxjs/blob/c533f383069008d4a1e05c6171ef8777fd078385/src/html-renderer.ts#L929",
+      "assessment": "发布源码renderHyperlink直接使用External关系target；renderAltChunk创建iframe.srcdoc，且默认renderAltChunks=true。不可直接把默认输出挂主应用。后续需独立无权限隔离、禁altChunks/外链/动作、资源预检；HTML近似不能宣称Word分页保真。"
+    },
+    {
+      "package": "pptx-preview",
+      "version": "1.0.7",
+      "publishedAt": "2025-10-17T12:24:41.062Z",
+      "olderThanSevenDays": true,
+      "license": "ISC",
+      "registry": "https://registry.npmjs.org/pptx-preview",
+      "versionMetadata": "https://registry.npmjs.org/pptx-preview/1.0.7",
+      "source": null,
+      "assessment": "registry未给repository，本轮未建立发布物到官方源码的一致性，不推荐直接采用。"
+    },
+    {
+      "package": "meshesha/PPTXjs",
+      "version": "README记载v1.21.1，未验证对应发布物",
+      "publishedAt": null,
+      "olderThanSevenDays": null,
+      "license": "MIT",
+      "source": "https://github.com/meshesha/PPTXjs",
+      "assessment": "官方使用说明依赖jQuery1.11.3与JSZip2，支持外链YouTube/Vimeo媒体；不适合作为本片最小安全接入。"
+    },
+    {
+      "package": "jszip",
+      "version": "3.10.2",
+      "publishedAt": "2026-09-08T22:31:16.671Z",
+      "olderThanSevenDays": true,
+      "license": "MIT OR GPL-3.0-or-later",
+      "registry": "https://registry.npmjs.org/jszip",
+      "versionMetadata": "https://registry.npmjs.org/jszip/3.10.2",
+      "source": "https://github.com/Stuk/jszip",
+      "documentation": "https://stuk.github.io/jszip/documentation/limitations.html",
+      "assessment": "仅核候选传递组件元信息；async结果仍整体留内存，不能用压缩体积限额证明解压堆上限。"
+    },
+    {
+      "package": "@office-kit/pptx-preview",
+      "version": "0.15.0",
+      "publishedAt": "2026-10-09T05:00:53.405Z",
+      "olderThanSevenDays": false,
+      "license": "MIT",
+      "registry": "https://registry.npmjs.org/@office-kit/pptx-preview",
+      "versionMetadata": "https://registry.npmjs.org/@office-kit/pptx-preview/0.15.0",
+      "source": "https://github.com/office-kit/pptx",
+      "assessment": "所查最新版本不足7天，不采用；未评价其他旧版本是否合适。"
+    }
+  ],
+  "isolationAndLimits": [
+    "不执行脚本、宏、公式或外部数据刷新；超链接和外部关系只保留安全文字/限制提示，不产生网络资源节点。",
+    "解析器输出只传白名单结构化数据，单元格文本由React文本节点呈现，CSS值限制到明确安全类型；不接受HTML/CSS脚本片段。",
+    "OOXML不能只核中央目录声明大小；逐项实际受限解压核CRC、总量/单项/数量、重复名称、路径越界、压缩方法/加密/ZIP64及格式身份；不提取到用户目录。",
+    "Worker可取消/超时销毁、限定并发；行列/合并/稀疏坐标/单元格及字符串总量预检；分窗格只渲染可见区域。限額与超时不等于OS硬堆限制。"
+  ],
+  "necessaryCounterexamples": [
+    "中文/换行/合并/行列大小/隐藏表与隐藏行列/日期1900与1904/数字格式",
+    "公式缓存0、false、空串、错误值、缺缓存；不求值也不取外链结果",
+    "巨大稀疏坐标、超长sharedStrings、重复entry、损坏CRC、ZIP炸弹、深层XML、加密与宏伪装",
+    "外链图像/外部工作簿关系/危险URL/带HTML和CSS样式的单元格内容",
+    "读后替换文件、取消/换版本/换表/隐藏、Worker无响应与迟到回复",
+    "正常基础XLSX实际视觉样本与参考截图比对；不能以全部拒绝或只展示文字算完成"
+  ],
+  "unverified": [
+    "没有安装新依赖，没有写生产源码，没有读取或下载用户文档。",
+    "未做浏览器或WKWebView/Tauri安装版测试；浏览器支持声明不能替代WK实测。",
+    "未完成任何候选完整依赖图、安全审计或复杂Office一致性实测；版本满足7天不代表能力和安全已验证。",
+    "DOCX/PPTX视觉保真、XLSX复杂样式/图表/打印布局等仍未完成；此建议不降低P16原完成条件。"
+  ]
+}
