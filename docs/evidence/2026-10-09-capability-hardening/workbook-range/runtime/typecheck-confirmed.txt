@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/preview_reading_position.ts(68,35): error TS2345: Argument of type 'FilePosition & { positions: Map<string, DocumentBlockPosition>; }' is not assignable to parameter of type 'PreviewReadingPosition | null | undefined'.
+  Type 'FilePosition & { positions: Map<string, DocumentBlockPosition>; }' is not assignable to type 'FilePosition & { kind: "document"; story: Pick<DocxStory, "id" | "kind" | "noteId"> | null; segment: number; }'.
+    Type 'FilePosition & { positions: Map<string, DocumentBlockPosition>; }' is missing the following properties from type '{ kind: "document"; story: Pick<DocxStory, "id" | "kind" | "noteId"> | null; segment: number; }': kind, story, segment
+ ELIFECYCLE  Command failed with exit code 1.

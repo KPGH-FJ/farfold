@@ -1,0 +1,144 @@
+{
+  "recordedAtUtc": "2026-10-10T01:27:45.802849+00:00",
+  "verdict": "No newly reproduced blocking defect in reviewed scope. Production source unchanged by this review.",
+  "independence": "Peer review of architecture runtime and root parent integration; Workbook UI was written by this reviewer and is explicitly a self-review. Full App dual-engine browser belongs to verification and is not claimed here.",
+  "reviewed": [
+    {
+      "path": "src/components/WorkbookRangeSelection.tsx",
+      "sha256": "d5d498c9fb4ff3343c4bd7fe2a25231693a887222f7e983de66f03ffd1af5c79"
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "3c1e07f16a764f7f2afa197df3ba05bc953e98c2f08bad9e564a4804c9c899f1"
+    },
+    {
+      "path": "src/runtime/workbook_feedback_range.ts",
+      "sha256": "eda9e9b048d8cedcc24c42e6c35c2b0659a73faeef1a30ddc97c9a02481b2562"
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "49a5ad9761de3afb2ac9056bd0600d4c51454d995f78c58ca9306ca9a847db70"
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "198767f573d5d5077a584a1c1537eb20c6419ea02c2dde02b0e1e2ac1d005af5"
+    },
+    {
+      "path": "src/runtime/office_target_editing.ts",
+      "sha256": "d14f4169c92c74ae8a4c667bb6604fc398d2cc8443912fb741ef9170a5d314db"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f7c4bd70ab722b8959dfad3d420c7bf29c6c56a87d4e5b7687d0c939ef134fda"
+    },
+    {
+      "path": "src/components/OpenedFileView.workbook-feedback.test.tsx",
+      "sha256": "b8a921a260142579862ad9dbf4b5533cb6a00eb646d022a94a993b20f8e7e268"
+    },
+    {
+      "path": "src/components/OpenedFileView.range-recovery-review.test.tsx",
+      "sha256": "6a63ddf85f4c9a9ad5df562fe689c183acfbb3d3aed58a8177dd1253ad712883"
+    }
+  ],
+  "confirmedBoundaries": [
+    {
+      "topic": "Exact range and hidden acknowledgement",
+      "evidence": [
+        "src/runtime/workbook_feedback_range.ts:125",
+        "src/runtime/workbook_feedback_range.ts:230",
+        "src/runtime/workbook_feedback_target.ts:269"
+      ],
+      "finding": "Actual bounded row/column/merge metadata determines hidden spans and partial merges; all-sheet coordinates do not enumerate cell area. Hidden inclusion requires the exact analysis and includeHidden=true; cloned or changed metadata invalidates the analysis. Exact rectangle is preserved; no implicit merge expansion."
+    },
+    {
+      "topic": "Source and capture ownership",
+      "evidence": [
+        "src/runtime/workbook_feedback_target.ts:273",
+        "src/runtime/workbook_feedback_target.ts:361",
+        "src/components/WorkbookFilePreview.tsx:307"
+      ],
+      "finding": "New source uses exact capture/preview/selection/analysis relationships and 7-field version identity; target reads recheck captured parts/entries and metadata. Leaf verifies loaded operation/current file/active/not-blocked. Retired sources cannot be reused."
+    },
+    {
+      "topic": "Editing and automatic replacement",
+      "evidence": [
+        "src/components/OpenedFileView.tsx:807",
+        "src/components/OpenedFileView.tsx:880",
+        "src/components/WorkbookRangeSelection.tsx:95"
+      ],
+      "finding": "Office owner+file editing state is distinct from a valid feedback target. Invalid/empty input holds automatic replacement; only matching owner/file false releases it. Retired owner true, different file and late callbacks cannot create a new hold. Blocked form retains editing while source is withdrawn."
+    },
+    {
+      "topic": "Explicit feedback confirmation",
+      "evidence": [
+        "src/components/OpenedFileView.tsx:839",
+        "src/components/WorkbookRangeSelection.tsx:299"
+      ],
+      "finding": "Parent requires current ready file, exact announced source, current identity and correlated anchor match. Only explicit confirmation updates anchor while preserving opinion text; input/checkbox/browsing alone do not rewrite drafts."
+    },
+    {
+      "topic": "Strict effects and cancellation",
+      "evidence": [
+        "src/components/WorkbookRangeSelection.tsx:68",
+        "src/components/WorkbookRangeSelection.tsx:95",
+        "src/components/WorkbookRangeSelection.tsx:113"
+      ],
+      "finding": "Effect setup creates new editing/source owners. Cleanup retires; blocked/unblocked produces a new candidate. Current draft identity and post-retirement context guards reject old confirm/cancel/change callbacks. Own 58/87 earlier tests retained; not independently rerun wholesale."
+    }
+  ],
+  "focusedReviewTests": {
+    "path": "src/components/OpenedFileView.range-recovery-review.test.tsx",
+    "command": "corepack pnpm exec vitest run src/components/OpenedFileView.range-recovery-review.test.tsx",
+    "raw": "review-tests.txt",
+    "result": "3 passed / 3, exit 0",
+    "coverage": [
+      "Actual OpenedFileView plus actual range leaf with controlled hook ownership/capture/IPC: invalid visible range blocks automatic replacement with no live target.",
+      "External-open pending/finish retains invalid draft and editing hold. No external application is launched; opener is mocked.",
+      "Office explicit re-read conditionally unmounts the form before inspect returns; after new ready result, old editing does not suppress a legitimate later refresh."
+    ],
+    "limits": "Grid/parser and real browser DOM are not executed by this focused combined fixture; no browser or all-project test run."
+  },
+  "rejectedHypothesis": {
+    "hypothesis": "Failed explicit Office refresh might keep invalid form after parent retires editor, losing automatic-replacement protection.",
+    "resolution": "Incorrect: the actual Office refresh button calls load(undefined,false), phase becomes loading and the form unmounts. Only large text uses preserve=true for explicit refresh. Automatic Office stage already checks editing.",
+    "firstProbe": "refresh-recovery-first.txt failed at a harness assumption (expected blocked=true although Office form was removed); NOT a valid product red. Original executed source preserved in refresh-recovery-first-source.raw.txt. Test corrected to follow actual conditional child removal; production unchanged."
+  },
+  "nextImplementationRecommendation": {
+    "priority": "P21 shared PDF/image rectangular region feedback after this increment is installed and verified.",
+    "currentGap": "visual_feedback.ts exposes only file-level image readiness or actual PDF page/pageCount, not frame geometry or regional anchor.",
+    "minimalSlice": [
+      "Expose one ephemeral owner for the actual drawn image/PDF page with exact VisualPreview, page and oriented displayed-frame dimensions; revoke on load/page/hidden/error/version change.",
+      "One shared drag plus keyboard numeric region selector with explicit choose→confirm, normalized bounded rectangle in the displayed orientation. Cold anchor retains original version/page/region coordinates, never live readiness. No new file reads, screenshot, OCR or Agent request.",
+      "Reuse common temporary editing deferral and existing feedback draft lifecycle. Test resize/device pixel ratio, PDF crop/rotation, EXIF orientation, reverse drag, edges, no-area ranges, cancel, hidden/late render and old draft restoration."
+    ],
+    "likelyFiles": [
+      "src/components/VisualFilePreview.tsx",
+      "new shared visual region component/CSS",
+      "src/runtime/visual_feedback.ts",
+      "src/runtime/file_feedback_anchor.ts and cold parser/formatter",
+      "src/components/OpenedFileView.tsx"
+    ],
+    "notClosed": [
+      "Full P16 Office/PPTX fidelity",
+      "P22 actual Agent rework/export",
+      "P27 protected-content-safe production screenshots",
+      "29×8 official capability/real environment evidence",
+      "Cross-conversation search/notifications/Windows and other status backlog"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent-ui-review/refresh-recovery-first.txt",
+      "sha256": "90280943fbd2b0402785364e6db61cc23bb8b6d225c5e6663cb27cb0d5903a9c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent-ui-review/refresh-recovery-first-source.raw.txt",
+      "sha256": "ad44222f7b8a15cba06323ab33d195653d0995dd2a65341e50417cb17515f139"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent-ui-review/review-tests.txt",
+      "sha256": "774ae8035d928e6ff580d39fd2924484c051ba89048cf3a666094dfa01fab8b4"
+    }
+  ],
+  "constraint": "No production/runtime/parent source edit, no browser, no full tests, no app/Agent/user-data operations during this review."
+}

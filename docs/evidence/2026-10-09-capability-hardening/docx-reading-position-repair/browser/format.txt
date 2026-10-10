@@ -1,0 +1,6 @@
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/browser-common.mjs 30ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/run.mjs 7ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/serve.mjs 2ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/fixture.tsx 30ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/index.html 16ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/inputs.json 1ms (unchanged)

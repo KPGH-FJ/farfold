@@ -49,6 +49,9 @@ import {
   type OfficeTargetAvailability,
   type OfficeTargetConfirmation,
 } from "../runtime/office_feedback_target";
+import type { OfficeTargetEditing } from "../runtime/office_target_editing";
+import type { WorkbookFeedbackRange } from "../runtime/workbook_feedback_range";
+import { WorkbookRangeSelection } from "./WorkbookRangeSelection";
 import "./WorkbookFilePreview.css";
 
 function cellValue(cell: XlsxCell | undefined): string {
@@ -93,6 +96,7 @@ export function WorkbookFilePreview({
   onStatus,
   onOfficeTargetAvailability,
   onOfficeTargetConfirm,
+  onOfficeTargetEditing,
 }: {
   file: VerifiedFile;
   active: boolean;
@@ -102,6 +106,7 @@ export function WorkbookFilePreview({
   onStatus?: (status: PreviewContentStatus) => void;
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
+  onOfficeTargetEditing?: (value: OfficeTargetEditing) => void;
 }) {
   const capture = useRef<{ file: VerifiedFile; value: WorkbookCapture } | null>(
     null,
@@ -322,6 +327,7 @@ export function WorkbookFilePreview({
             }}
             onOfficeTargetAvailability={onOfficeTargetAvailability}
             onOfficeTargetConfirm={onOfficeTargetConfirm}
+            onOfficeTargetEditing={onOfficeTargetEditing}
           />
         )}
     </section>
@@ -339,6 +345,7 @@ function WorkbookGrid({
   isCurrent,
   onOfficeTargetAvailability,
   onOfficeTargetConfirm,
+  onOfficeTargetEditing,
 }: {
   file: VerifiedFile;
   workbook: WorkbookPreview;
@@ -350,6 +357,7 @@ function WorkbookGrid({
   isCurrent: () => boolean;
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
+  onOfficeTargetEditing?: (value: OfficeTargetEditing) => void;
 }) {
   const sheet = workbook.sheet!;
   const restored = restoredWorkbookWindow(file, workbook, readingPosition);
@@ -387,6 +395,19 @@ function WorkbookGrid({
   const [address, setAddress] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [selection, setSelection] = useState<WorkbookPosition | null>(null);
+  const [rangeOpen, setRangeOpen] = useState(false);
+  const rangeActive = useRef(false);
+  rangeActive.current = rangeOpen;
+  const [range, setRange] = useState<WorkbookFeedbackRange | null>(null);
+  const rangeRetire = useRef<(() => void) | null>(null);
+  const rangeTrigger = useRef<HTMLButtonElement>(null);
+  const wasRangeOpen = useRef(false);
+  useLayoutEffect(() => {
+    const was = wasRangeOpen.current;
+    wasRangeOpen.current = rangeOpen;
+    if (was && !rangeOpen && isCurrent())
+      rangeTrigger.current?.focus({ preventScroll: true });
+  }, [rangeOpen]);
   const grid = useRef<HTMLDivElement>(null);
   const detail = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -415,6 +436,7 @@ function WorkbookGrid({
     isCurrent,
     onOfficeTargetAvailability,
     onOfficeTargetConfirm,
+    onOfficeTargetEditing,
   });
   latest.current = {
     selection,
@@ -422,6 +444,7 @@ function WorkbookGrid({
     isCurrent,
     onOfficeTargetAvailability,
     onOfficeTargetConfirm,
+    onOfficeTargetEditing,
   };
   const retire = () => {
     const previous = feedback.current;
@@ -436,8 +459,17 @@ function WorkbookGrid({
   };
   useLayoutEffect(() => {
     // Create within the effect, so StrictMode's replay cannot reuse a retired source.
-    retireSelection.current = retire;
-    if (selection && onOfficeTargetConfirm && latest.current.isCurrent()) {
+    const retireAll = () => {
+      retire();
+      rangeRetire.current?.();
+    };
+    retireSelection.current = retireAll;
+    if (
+      !rangeOpen &&
+      selection &&
+      onOfficeTargetConfirm &&
+      latest.current.isCurrent()
+    ) {
       const source = createWorkbookFeedbackSource({
         capture,
         preview: workbook,
@@ -458,7 +490,7 @@ function WorkbookGrid({
     }
     return () => {
       retire();
-      if (retireSelection.current === retire) retireSelection.current = null;
+      if (retireSelection.current === retireAll) retireSelection.current = null;
     };
   }, [
     capture,
@@ -469,12 +501,23 @@ function WorkbookGrid({
     showHidden,
     hiddenSheetSelected,
     interactionBlocked,
+    rangeOpen,
     Boolean(onOfficeTargetConfirm),
     retireSelection,
   ]);
+  const closeRange = () => {
+    rangeActive.current = false;
+    setRange(null);
+    setRangeOpen(false);
+    rangeRetire.current?.();
+  };
   const chooseWindow = (next: typeof start) => {
     if (!latest.current.isCurrent()) return;
+    const owner = latest.current;
     retire();
+    if (latest.current !== owner || !owner.isCurrent()) return;
+    closeRange();
+    if (latest.current !== owner || !owner.isCurrent()) return;
     setStart(next);
     setSelection(null);
     if (grid.current) {
@@ -514,6 +557,44 @@ function WorkbookGrid({
           </ul>
         </details>
       )}
+      {onOfficeTargetConfirm && !rangeOpen && (
+        <button
+          className="btn btn-ghost"
+          type="button"
+          ref={rangeTrigger}
+          onClick={() => {
+            if (!latest.current.isCurrent() || rangeActive.current) return;
+            retire();
+            if (!latest.current.isCurrent()) return;
+            setSelection(null);
+            rangeActive.current = true;
+            setRangeOpen(true);
+          }}
+        >
+          {S.feedbackRangeOpen}
+        </button>
+      )}
+      {rangeOpen && onOfficeTargetConfirm && (
+        <WorkbookRangeSelection
+          file={file}
+          capture={capture}
+          preview={workbook}
+          hiddenSheetSelected={hiddenSheetSelected}
+          interactionBlocked={interactionBlocked}
+          window={window}
+          retireSelection={rangeRetire}
+          isCurrent={() => rangeActive.current && latest.current.isCurrent()}
+          onOfficeTargetAvailability={onOfficeTargetAvailability}
+          onOfficeTargetConfirm={onOfficeTargetConfirm}
+          onOfficeTargetEditing={onOfficeTargetEditing}
+          onRange={setRange}
+          onClose={() => {
+            if (!rangeActive.current || !latest.current.isCurrent()) return;
+            closeRange();
+            // Focus is restored after the entry button is mounted below.
+          }}
+        />
+      )}
       <form
         className="workbook-controls"
         onSubmit={(event) => {
@@ -552,7 +633,11 @@ function WorkbookGrid({
               checked={showHidden}
               onChange={(event) => {
                 if (!latest.current.isCurrent()) return;
+                const owner = latest.current;
                 retire();
+                if (latest.current !== owner || !owner.isCurrent()) return;
+                closeRange();
+                if (latest.current !== owner || !owner.isCurrent()) return;
                 setShowHidden(event.target.checked);
                 setSelection(null);
               }}
@@ -614,7 +699,7 @@ function WorkbookGrid({
           cellAddress(window.lastRow, window.lastColumn),
         )}
       </p>
-      {selection && (
+      {selection && !rangeOpen && (
         <div
           className="workbook-cell-detail"
           aria-label={S.detail}
@@ -652,6 +737,7 @@ function WorkbookGrid({
                 onClick={() => {
                   const now = latest.current;
                   if (
+                    rangeActive.current ||
                     feedback.current !== shownFeedback ||
                     now.selection !== selection ||
                     now.window !== window ||
@@ -783,6 +869,26 @@ function WorkbookGrid({
                       cell.display === cell.value &&
                       cell.display ===
                         cell.runs.map((run) => run.text).join("");
+                    const displayed = position.merge ?? {
+                      fromRow: position.row,
+                      toRow: position.row,
+                      fromColumn: position.column,
+                      toColumn: position.column,
+                    };
+                    const intersects =
+                      range &&
+                      displayed.toRow >= range.fromRow &&
+                      displayed.fromRow <= range.toRow &&
+                      displayed.toColumn >= range.fromColumn &&
+                      displayed.fromColumn <= range.toColumn;
+                    const rangeState = intersects
+                      ? range!.fromRow <= displayed.fromRow &&
+                        range!.toRow >= displayed.toRow &&
+                        range!.fromColumn <= displayed.fromColumn &&
+                        range!.toColumn >= displayed.toColumn
+                        ? "inside"
+                        : "partial"
+                      : undefined;
                     return (
                       <td
                         key={position.column}
@@ -790,6 +896,7 @@ function WorkbookGrid({
                         colSpan={position.colSpan}
                         style={{ ...cellStyle, textDecoration: undefined }}
                         data-cell={cellAddress(position.row, position.column)}
+                        data-opinion-range={rangeState}
                       >
                         <button
                           type="button"
@@ -801,13 +908,31 @@ function WorkbookGrid({
                           }}
                           aria-label={`${S.selected(cellAddress(position.row, position.column))}${text ? `：${text.slice(0, 200)}` : ""}`}
                           title={
-                            [description, issue].filter(Boolean).join(" · ") ||
-                            undefined
+                            [
+                              description,
+                              issue,
+                              rangeState === "partial" &&
+                                S.feedbackRangeIntersection,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ") || undefined
                           }
                           onClick={() => {
                             if (!latest.current.isCurrent()) return;
-                            if (position !== selection) {
+                            if (position !== selection || rangeActive.current) {
+                              const owner = latest.current;
                               retire();
+                              if (
+                                latest.current !== owner ||
+                                !owner.isCurrent()
+                              )
+                                return;
+                              closeRange();
+                              if (
+                                latest.current !== owner ||
+                                !owner.isCurrent()
+                              )
+                                return;
                               setSelection(position);
                             }
                           }}

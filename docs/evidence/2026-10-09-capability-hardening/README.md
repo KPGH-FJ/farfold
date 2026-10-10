@@ -2,9 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：DOCX初轮实机完成，继续修复阅读位置并补表格矩形
+## 当前衔接：表格任意矩形与DOCX阅读位置修复待安装复验
 
-当前正式应用为 `8c2f5e29` / 0.1.7 arm64，[DOCX初轮实机](docx-feedback-candidate/installed-docx-feedback-initial.json)完成位置意见和冷恢复分项，NEW-03阅读位置缺口待修；最终正常退出。原未发送内容保持，严格逐值检查仅发现1条旧输入缺省sendPending规范为false，具体差异与原失败保留。XLSX任意矩形与阅读位置修复继续开发。
+当前正式应用为 `8c2f5e29` / 0.1.7 arm64，[DOCX初轮实机](docx-feedback-candidate/installed-docx-feedback-initial.json)完成位置意见和冷恢复分项，NEW-03阅读位置修复待安装复验；最终正常退出。原未发送内容保持，严格逐值检查仅发现1条旧输入缺省sendPending规范为false，具体差异与原失败保留。
+
+本片 XLSX 任意矩形与 DOCX 内层阅读位置修复已完成源码及受控检查，见[工程汇总](workbook-range-checks-final/final-verification.json)、[阅读位置修复](docx-reading-position-repair/implementation.json)、[表格完整界面](workbook-range/independent/implementation.json)、[解析兼容修复与独立Worker](workbook-range/content-types/implementation.json)。前端323文件/3,811项及类型、打包、全仓格式通过，1,171输入稳定；Rust按未变输入复用。完整App两浏览器各74断言、Worker各404、DOCX常规与窄窗共208断言分层记录。独立写出器原样本拒绝的实际失败及修复保留，原ZIP未改。接续唯一正式应用更新和分项实机；PDF/图片区域、P22真实返工及全域其余条目继续开放。
 
 前一正式应用为 `4952c692` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`，已完成[表格位置分项实机验证](workbook-feedback-candidate/installed-workbook-feedback.json)并正常退出；原4条输入、2组意见、3组待发逐值保留。此前e98的[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)已确认文字选段Enter和局部滚动修复，原4条输入、2组意见、3组待发逐值保留。XLSX单元格/合并范围意见的源码与受控浏览器检查已完成。此前 `cd66aae7` 的[实机初轮](text-feedback-candidate/installed-text-feedback-initial.json)所发现失败保持原记录。前一版本 `e8d76d4c` 的[修复复验](inspection-limit-candidate/installed-inspection-limit.json)确认大小限制提示、无效编码独立提示及16 MiB首段读取正常。候选独立核验9/9、安装10/10，三份217,400条数据一致；正常退出后原7项未发内容保持，无新Agent请求或权限变更。重复应用产物已精确移除。原[初轮失败](large-file-candidate/installed-large-file-initial.json)保留。前一P20版本 `fa235998` 的[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
 

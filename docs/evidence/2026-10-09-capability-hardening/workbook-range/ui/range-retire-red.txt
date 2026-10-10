@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkbookFilePreview.range.test.tsx (29 tests | 1 failed | 28 skipped) 10ms
+   × retirement that synchronously removes the form cannot report a range to its retired owner 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > retirement that synchronously removes the form cannot report a range to its retired owner
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      null,
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:626:23
+    624|   (v.all.find(n=>n.type === "input" && n.props["aria-label"]===INPUT)!…
+    625|   expect(live).toBe(false);
+    626|   expect(onRange).not.toHaveBeenCalled();
+       |                       ^
+    627| });
+    628|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  09:13:42
+   Duration  187ms (transform 87ms, setup 0ms, import 117ms, tests 10ms, environment 0ms)
+

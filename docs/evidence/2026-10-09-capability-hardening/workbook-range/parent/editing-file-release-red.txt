@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx (20 tests | 1 failed | 19 skipped) 73ms
+   × does not release the active editor with a mismatched file report 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > does not release the active editor with a mismatched file report
+AssertionError: expected 'applied' to be 'deferred' // Object.is equality
+
+Expected: "deferred"
+Received: "applied"
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:543:73
+    541|   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+    542|   p.onOfficeTargetEditing({ owner, file: { ...p.file, version: "other"…
+    543|   expect(await monitor().apply({ ...file, version: "v2" }, () => true)…
+       |                                                                         ^
+    544|   p.onOfficeTargetEditing({ owner, file: p.file, editing: false });
+    545|   expect(await monitor().apply({ ...file, version: "v2" }, () => true)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 skipped (20)
+   Start at  09:19:37
+   Duration  924ms (transform 511ms, setup 0ms, import 720ms, tests 73ms, environment 0ms)
+

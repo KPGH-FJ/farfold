@@ -1,0 +1,182 @@
+{
+  "createdAtUtc": "2026-10-10T01:07:23.488435+00:00",
+  "status": "test_design_only_not_executed_against_product",
+  "authorization": "Parent subsequently authorized rectangle implementation and transfer to new fixture directory; original oracle remains unchanged historical geometry-only record.",
+  "policySource": {
+    "path": "output/2026-10-10-workbook-range/interaction-design.json",
+    "sha256": "9a74c87724be1fb539794310ff5986718da400ea98d77e381d72b2d7a23a8baf"
+  },
+  "rulesBoundary": [
+    "Partial merge preserves exact entered rectangle; existing clicked merge remains whole merge.",
+    "Hidden-coordinate acknowledgement is scoped to precise current range/sheet/version; no hidden-value disclosure or showHidden toggle.",
+    "Large blank valid coordinates are structural targets, not a claim that all cell content was inspected."
+  ],
+  "cases": [
+    {
+      "id": "R01",
+      "kind": "literal_rectangle",
+      "range": "B3:G6",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Exact rows3..6, columns2..7; confirmation records rectangle only. Selecting is not confirming.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R02",
+      "kind": "cross_both_windows",
+      "range": "W98:AB103",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Exact rows98..103, columns23..28; viewport intersection never truncates anchor. Includes full X99:AA102 and partial W103:X104.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R03",
+      "kind": "full_merge_compatibility",
+      "range": "C8:F9",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Address form and existing click-merge action remain distinguishable; both full coordinates are correct when expressly chosen.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R04",
+      "kind": "partial_merge",
+      "range": "D8:E8",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Exact rows8..8, columns4..5; report intersected full merge C8:F9 without silently expanding.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R05",
+      "kind": "expansion_cascade",
+      "range": "Z101:AC103",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Only X99:AA102 intersects exact request. Expanding to its bounding box would additionally touch W103:X104; no automatic enlargement or recursive merge closure.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R06",
+      "kind": "hidden_interior",
+      "range": "B20:E24",
+      "fixture": "range-nonordinal-hidden.xlsx",
+      "expectedTestBoundary": "Visible endpoints do not prove visibility of row22 or columnD. Separate explicit acknowledgement is required under accepted design; hidden values remain undisplayed.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R07",
+      "kind": "hidden_cross_window",
+      "range": "W98:AB103",
+      "fixture": "range-nonordinal-hidden.xlsx",
+      "expectedTestBoundary": "Hidden row100 and columnY both intersect; partial merge and hidden-coordinate disclosures coexist. No showHidden toggle as a side effect.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R08",
+      "kind": "normalized_reverse",
+      "range": "E24:B20",
+      "fixture": "range-nonordinal-hidden.xlsx",
+      "expectedTestBoundary": "Normalizes geometrically to B20:E24. Equality is geometry, but any edit must revoke earlier confirmation/hidden acknowledgement before reuse.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R09",
+      "kind": "blank_maximum_four_cells",
+      "range": "XFC1048575:XFD1048576",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "Four valid blank cells; no stored value/formula/merge intersects. Actual sheet exists, and blank coordinates are not rejected solely beyond used cells.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R10",
+      "kind": "blank_last_cell",
+      "range": "XFD1048576",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "One legal blank cell at maximum row/column; no content-read claim.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R11",
+      "kind": "large_rectangle_constant_state",
+      "range": "A1:XFD1048576",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "17179869184 cells by integer arithmetic. Scan finite stored metadata, never allocate/iterate all coordinates or DOM nodes.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R12",
+      "kind": "nonordinal_identity",
+      "range": "B3:G6",
+      "fixture": "range-nonordinal-hidden.xlsx",
+      "expectedTestBoundary": "In derivative actual r:id are sheet-main-A9/sheet-other-17, numeric sheetId17/4, two distinct names and identical cells. Bind actual current relationship target, not ordinal/name/text matching.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R13",
+      "kind": "typed_values",
+      "range": "A2:F2",
+      "fixture": "range-layout.xlsx",
+      "expectedTestBoundary": "A2 numeric0, B2 boolean false, C2 empty text representation, F2 formula1+1/cache2 remain typed. Coordinates do not trigger new calculation or body persistence. Existing empty-formula-cache regressions remain required separately.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R14",
+      "kind": "grammar_rejections",
+      "range": null,
+      "fixture": null,
+      "expectedTestBoundary": "Reject sheet prefix/external/multi-range/formula/A0/XFE1/A1048577/nonintegers; trim/case normalization only when explicit grammar allows, never evaluate input.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R15",
+      "kind": "owner_retirement_and_hidden_ack",
+      "range": null,
+      "fixture": null,
+      "expectedTestBoundary": "After range text, hidden acknowledgement, sheet/version/metadata or owner changes, old confirm/cancel/checkbox callbacks cannot affect current selection. Blocked retires without pausing reader; same coordinates require current source.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R16",
+      "kind": "editing_refresh_boundary",
+      "range": null,
+      "fixture": null,
+      "expectedTestBoundary": "Open form and invalid/unfinished input defer automatic replacement through a separate current-owner editing state, not a forged confirmable source. Late false from old owner cannot clear new owner.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R17",
+      "kind": "drafts_and_cold_restore",
+      "range": null,
+      "fixture": null,
+      "expectedTestBoundary": "Viewing/selecting/cancelling preserves old text/anchor; explicit confirm changes only target. Cold union rejects unknown fields, stale anchor remains historical. Take once into original composer, no send or second body ledger.",
+      "observedProductResult": "not_run"
+    },
+    {
+      "id": "R18",
+      "kind": "full_app_keyboard_layout",
+      "range": null,
+      "fixture": null,
+      "expectedTestBoundary": "Actual full App WebKit+Chromium, 900x620 and1280x820, long composer+feedback: controls reachable; document/root stays fixed. Pointer/Tab/Enter selects then separately confirms; cancel focuses current form without scroll jump.",
+      "observedProductResult": "not_run"
+    }
+  ],
+  "invalidInputs": [
+    "Sheet2!A1",
+    "'范围''与&0'!A1",
+    "[external.xlsx]Sheet1!A1",
+    "A1,C2",
+    "=A1:C2",
+    "A0",
+    "XFE1",
+    "A1048577",
+    "A1.5",
+    "A1:B2:C3",
+    "A1 B2"
+  ],
+  "evidenceLevels": {
+    "fixtureZipXml": "passed exact bytes/CRC/XML and geometry checks",
+    "writerPreview": "three static artifact-tool renderer images inspected by verification agent; not Farfold or Excel",
+    "FarfoldParser": "not_run",
+    "FarfoldWorker": "not_run",
+    "controlledFullAppBrowser": "not_run",
+    "TauriNative": "not_run"
+  },
+  "remainingCompatibility": "The original writer package includes featurePropertyBag metadata and absolute OPC targets. If current product rejects it, record exact cause; do not silently edit originals or treat a rejection as ordinary-display success."
+}

@@ -1,0 +1,6717 @@
+{
+  "createdAtUtc": "2026-10-10T01:03:19.563999+00:00",
+  "method": "stdlib ZIP CRC + ElementTree geometry; minidom independently checks all stored cells and merge refs. No Farfold parser/Worker/app, no openpyxl writer readback.",
+  "writerBase": "bundled @oai/artifact-tool; unchanged export bytes",
+  "controlledDerivative": {
+    "file": "range-nonordinal-hidden.xlsx",
+    "from": "range-layout.xlsx",
+    "relationshipMapping": {
+      "Rdc1d8e8f2cb54514": "sheet-main-A9",
+      "R57b8ce6a81ae48a6": "sheet-other-17"
+    },
+    "modifications": [
+      "Two r:id and matching relationships remapped to named nonordinal IDs; sheetId attributes17 and4 are distinct from tab order/relationship id.",
+      "Only row22/100 and columnD/Y hidden flags added in both sheets."
+    ],
+    "notOrdinaryWriterOutput": true
+  },
+  "files": [
+    {
+      "file": "range-layout.xlsx",
+      "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d",
+      "bytes": 6547,
+      "zipCrcAllPassed": true,
+      "sheets": [
+        {
+          "name": "范围'与&0",
+          "relationshipId": "Rdc1d8e8f2cb54514",
+          "sheetIdAttribute": "1",
+          "state": "visible",
+          "part": "xl/worksheets/sheet1.xml",
+          "partSha256": "1b8e177b70ad699f285977e7a0271cffac47b1e74eebaeadb07a1e1c535dbb84",
+          "cells": {
+            "A1": {
+              "row": 1,
+              "column": 1,
+              "type": "str",
+              "rawValue": "RECTANGLE SOURCE",
+              "valueNode": true,
+              "formula": null
+            },
+            "B1": {
+              "row": 1,
+              "column": 2,
+              "type": "str",
+              "rawValue": "数值",
+              "valueNode": true,
+              "formula": null
+            },
+            "C1": {
+              "row": 1,
+              "column": 3,
+              "type": "str",
+              "rawValue": "布尔",
+              "valueNode": true,
+              "formula": null
+            },
+            "D1": {
+              "row": 1,
+              "column": 4,
+              "type": "str",
+              "rawValue": "空位",
+              "valueNode": true,
+              "formula": null
+            },
+            "E1": {
+              "row": 1,
+              "column": 5,
+              "type": "str",
+              "rawValue": "原始范围",
+              "valueNode": true,
+              "formula": null
+            },
+            "F1": {
+              "row": 1,
+              "column": 6,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G1": {
+              "row": 1,
+              "column": 7,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H1": {
+              "row": 1,
+              "column": 8,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A2": {
+              "row": 2,
+              "column": 1,
+              "type": "n",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "B2": {
+              "row": 2,
+              "column": 2,
+              "type": "b",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "C2": {
+              "row": 2,
+              "column": 3,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D2": {
+              "row": 2,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E2": {
+              "row": 2,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F2": {
+              "row": 2,
+              "column": 6,
+              "type": "n",
+              "rawValue": "2",
+              "valueNode": true,
+              "formula": "1+1"
+            },
+            "G2": {
+              "row": 2,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H2": {
+              "row": 2,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A3": {
+              "row": 3,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B3": {
+              "row": 3,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C3": {
+              "row": 3,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D3": {
+              "row": 3,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E3": {
+              "row": 3,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F3": {
+              "row": 3,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G3": {
+              "row": 3,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H3": {
+              "row": 3,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A4": {
+              "row": 4,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B4": {
+              "row": 4,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C4": {
+              "row": 4,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D4": {
+              "row": 4,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E4": {
+              "row": 4,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F4": {
+              "row": 4,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G4": {
+              "row": 4,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H4": {
+              "row": 4,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A5": {
+              "row": 5,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B5": {
+              "row": 5,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C5": {
+              "row": 5,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D5": {
+              "row": 5,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E5": {
+              "row": 5,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F5": {
+              "row": 5,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G5": {
+              "row": 5,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H5": {
+              "row": 5,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A6": {
+              "row": 6,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B6": {
+              "row": 6,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C6": {
+              "row": 6,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D6": {
+              "row": 6,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E6": {
+              "row": 6,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F6": {
+              "row": 6,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G6": {
+              "row": 6,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H6": {
+              "row": 6,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A7": {
+              "row": 7,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B7": {
+              "row": 7,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C7": {
+              "row": 7,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D7": {
+              "row": 7,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E7": {
+              "row": 7,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F7": {
+              "row": 7,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G7": {
+              "row": 7,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H7": {
+              "row": 7,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A8": {
+              "row": 8,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B8": {
+              "row": 8,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C8": {
+              "row": 8,
+              "column": 3,
+              "type": "str",
+              "rawValue": "MERGE C8:F9",
+              "valueNode": true,
+              "formula": null
+            },
+            "D8": {
+              "row": 8,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E8": {
+              "row": 8,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F8": {
+              "row": 8,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G8": {
+              "row": 8,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H8": {
+              "row": 8,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A9": {
+              "row": 9,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B9": {
+              "row": 9,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C9": {
+              "row": 9,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D9": {
+              "row": 9,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E9": {
+              "row": 9,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F9": {
+              "row": 9,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G9": {
+              "row": 9,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H9": {
+              "row": 9,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A10": {
+              "row": 10,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B10": {
+              "row": 10,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C10": {
+              "row": 10,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D10": {
+              "row": 10,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E10": {
+              "row": 10,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F10": {
+              "row": 10,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G10": {
+              "row": 10,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H10": {
+              "row": 10,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A11": {
+              "row": 11,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B11": {
+              "row": 11,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C11": {
+              "row": 11,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D11": {
+              "row": 11,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E11": {
+              "row": 11,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F11": {
+              "row": 11,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G11": {
+              "row": 11,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H11": {
+              "row": 11,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A12": {
+              "row": 12,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B12": {
+              "row": 12,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C12": {
+              "row": 12,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D12": {
+              "row": 12,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E12": {
+              "row": 12,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F12": {
+              "row": 12,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G12": {
+              "row": 12,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H12": {
+              "row": 12,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B20": {
+              "row": 20,
+              "column": 2,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT B20",
+              "valueNode": true,
+              "formula": null
+            },
+            "D21": {
+              "row": 21,
+              "column": 4,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR COLUMN D",
+              "valueNode": true,
+              "formula": null
+            },
+            "C22": {
+              "row": 22,
+              "column": 3,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR ROW22",
+              "valueNode": true,
+              "formula": null
+            },
+            "E24": {
+              "row": 24,
+              "column": 5,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT E24",
+              "valueNode": true,
+              "formula": null
+            },
+            "W98": {
+              "row": 98,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R98 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X98": {
+              "row": 98,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R98 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y98": {
+              "row": 98,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R98 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z98": {
+              "row": 98,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R98 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA98": {
+              "row": 98,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R98 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB98": {
+              "row": 98,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R98 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W99": {
+              "row": 99,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R99 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X99": {
+              "row": 99,
+              "column": 24,
+              "type": "str",
+              "rawValue": "CROSS WINDOW X99:AA102",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y99": {
+              "row": 99,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R99 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z99": {
+              "row": 99,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R99 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA99": {
+              "row": 99,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R99 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB99": {
+              "row": 99,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R99 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W100": {
+              "row": 100,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R100 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X100": {
+              "row": 100,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R100 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y100": {
+              "row": 100,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R100 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z100": {
+              "row": 100,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R100 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA100": {
+              "row": 100,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R100 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB100": {
+              "row": 100,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R100 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W101": {
+              "row": 101,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R101 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X101": {
+              "row": 101,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R101 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y101": {
+              "row": 101,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R101 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z101": {
+              "row": 101,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R101 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA101": {
+              "row": 101,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R101 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB101": {
+              "row": 101,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R101 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W102": {
+              "row": 102,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R102 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X102": {
+              "row": 102,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R102 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y102": {
+              "row": 102,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R102 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z102": {
+              "row": 102,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R102 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA102": {
+              "row": 102,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R102 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB102": {
+              "row": 102,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R102 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W103": {
+              "row": 103,
+              "column": 23,
+              "type": "str",
+              "rawValue": "CHAIN MERGE W103:X104",
+              "valueNode": true,
+              "formula": null
+            },
+            "X103": {
+              "row": 103,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R103 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y103": {
+              "row": 103,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R103 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z103": {
+              "row": 103,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R103 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA103": {
+              "row": 103,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R103 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB103": {
+              "row": 103,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R103 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "AD105": {
+              "row": 105,
+              "column": 30,
+              "type": "str",
+              "rawValue": "FAR MERGE AD105:AE106",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB205": {
+              "row": 205,
+              "column": 28,
+              "type": "str",
+              "rawValue": "SPARSE TAIL AB205",
+              "valueNode": true,
+              "formula": null
+            }
+          },
+          "merges": {
+            "C8:F9": {
+              "fromRow": 8,
+              "toRow": 9,
+              "fromColumn": 3,
+              "toColumn": 6
+            },
+            "X99:AA102": {
+              "fromRow": 99,
+              "toRow": 102,
+              "fromColumn": 24,
+              "toColumn": 27
+            },
+            "W103:X104": {
+              "fromRow": 103,
+              "toRow": 104,
+              "fromColumn": 23,
+              "toColumn": 24
+            },
+            "AD105:AE106": {
+              "fromRow": 105,
+              "toRow": 106,
+              "fromColumn": 30,
+              "toColumn": 31
+            }
+          },
+          "hiddenRows": [],
+          "hiddenColumns": [],
+          "ranges": [
+            {
+              "input": "B3:G6",
+              "normalized": {
+                "fromRow": 3,
+                "toRow": 6,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "W98:AB103",
+              "normalized": {
+                "fromRow": 98,
+                "toRow": 103,
+                "fromColumn": 23,
+                "toColumn": 28
+              },
+              "areaArithmeticOnly": 36,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 103,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["W103:X104"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "C8:F9",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 9,
+                "fromColumn": 3,
+                "toColumn": 6
+              },
+              "areaArithmeticOnly": 8,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "D8:E8",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 8,
+                "fromColumn": 4,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 2,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 8,
+                    "fromColumn": 4,
+                    "toColumn": 5
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["C8:F9"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B7:G10",
+              "normalized": {
+                "fromRow": 7,
+                "toRow": 10,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "Z101:AC103",
+              "normalized": {
+                "fromRow": 101,
+                "toRow": 103,
+                "fromColumn": 26,
+                "toColumn": 29
+              },
+              "areaArithmeticOnly": 12,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 101,
+                    "toRow": 102,
+                    "fromColumn": 26,
+                    "toColumn": 27
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["X99:AA102"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "Z101",
+                "AA101",
+                "AB101",
+                "Z102",
+                "AA102",
+                "AB102",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B20:E24",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "E24:B20",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFC1048575:XFD1048576",
+              "normalized": {
+                "fromRow": 1048575,
+                "toRow": 1048576,
+                "fromColumn": 16383,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFD1048576",
+              "normalized": {
+                "fromRow": 1048576,
+                "toRow": 1048576,
+                "fromColumn": 16384,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 1,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "A1:XFD1048576",
+              "normalized": {
+                "fromRow": 1,
+                "toRow": 1048576,
+                "fromColumn": 1,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 17179869184,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "A1",
+                "B1",
+                "C1",
+                "D1",
+                "E1",
+                "A2",
+                "B2",
+                "F2",
+                "C8",
+                "B20",
+                "D21",
+                "C22",
+                "E24",
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103",
+                "AD105",
+                "AB205"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "AD105:AE106",
+              "normalized": {
+                "fromRow": 105,
+                "toRow": 106,
+                "fromColumn": 30,
+                "toColumn": 31
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["AD105"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            }
+          ]
+        },
+        {
+          "name": "同文副页",
+          "relationshipId": "R57b8ce6a81ae48a6",
+          "sheetIdAttribute": "2",
+          "state": "visible",
+          "part": "xl/worksheets/sheet2.xml",
+          "partSha256": "1b8e177b70ad699f285977e7a0271cffac47b1e74eebaeadb07a1e1c535dbb84",
+          "cells": {
+            "A1": {
+              "row": 1,
+              "column": 1,
+              "type": "str",
+              "rawValue": "RECTANGLE SOURCE",
+              "valueNode": true,
+              "formula": null
+            },
+            "B1": {
+              "row": 1,
+              "column": 2,
+              "type": "str",
+              "rawValue": "数值",
+              "valueNode": true,
+              "formula": null
+            },
+            "C1": {
+              "row": 1,
+              "column": 3,
+              "type": "str",
+              "rawValue": "布尔",
+              "valueNode": true,
+              "formula": null
+            },
+            "D1": {
+              "row": 1,
+              "column": 4,
+              "type": "str",
+              "rawValue": "空位",
+              "valueNode": true,
+              "formula": null
+            },
+            "E1": {
+              "row": 1,
+              "column": 5,
+              "type": "str",
+              "rawValue": "原始范围",
+              "valueNode": true,
+              "formula": null
+            },
+            "F1": {
+              "row": 1,
+              "column": 6,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G1": {
+              "row": 1,
+              "column": 7,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H1": {
+              "row": 1,
+              "column": 8,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A2": {
+              "row": 2,
+              "column": 1,
+              "type": "n",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "B2": {
+              "row": 2,
+              "column": 2,
+              "type": "b",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "C2": {
+              "row": 2,
+              "column": 3,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D2": {
+              "row": 2,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E2": {
+              "row": 2,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F2": {
+              "row": 2,
+              "column": 6,
+              "type": "n",
+              "rawValue": "2",
+              "valueNode": true,
+              "formula": "1+1"
+            },
+            "G2": {
+              "row": 2,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H2": {
+              "row": 2,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A3": {
+              "row": 3,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B3": {
+              "row": 3,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C3": {
+              "row": 3,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D3": {
+              "row": 3,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E3": {
+              "row": 3,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F3": {
+              "row": 3,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G3": {
+              "row": 3,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H3": {
+              "row": 3,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A4": {
+              "row": 4,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B4": {
+              "row": 4,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C4": {
+              "row": 4,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D4": {
+              "row": 4,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E4": {
+              "row": 4,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F4": {
+              "row": 4,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G4": {
+              "row": 4,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H4": {
+              "row": 4,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A5": {
+              "row": 5,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B5": {
+              "row": 5,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C5": {
+              "row": 5,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D5": {
+              "row": 5,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E5": {
+              "row": 5,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F5": {
+              "row": 5,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G5": {
+              "row": 5,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H5": {
+              "row": 5,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A6": {
+              "row": 6,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B6": {
+              "row": 6,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C6": {
+              "row": 6,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D6": {
+              "row": 6,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E6": {
+              "row": 6,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F6": {
+              "row": 6,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G6": {
+              "row": 6,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H6": {
+              "row": 6,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A7": {
+              "row": 7,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B7": {
+              "row": 7,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C7": {
+              "row": 7,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D7": {
+              "row": 7,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E7": {
+              "row": 7,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F7": {
+              "row": 7,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G7": {
+              "row": 7,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H7": {
+              "row": 7,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A8": {
+              "row": 8,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B8": {
+              "row": 8,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C8": {
+              "row": 8,
+              "column": 3,
+              "type": "str",
+              "rawValue": "MERGE C8:F9",
+              "valueNode": true,
+              "formula": null
+            },
+            "D8": {
+              "row": 8,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E8": {
+              "row": 8,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F8": {
+              "row": 8,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G8": {
+              "row": 8,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H8": {
+              "row": 8,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A9": {
+              "row": 9,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B9": {
+              "row": 9,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C9": {
+              "row": 9,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D9": {
+              "row": 9,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E9": {
+              "row": 9,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F9": {
+              "row": 9,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G9": {
+              "row": 9,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H9": {
+              "row": 9,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A10": {
+              "row": 10,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B10": {
+              "row": 10,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C10": {
+              "row": 10,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D10": {
+              "row": 10,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E10": {
+              "row": 10,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F10": {
+              "row": 10,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G10": {
+              "row": 10,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H10": {
+              "row": 10,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A11": {
+              "row": 11,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B11": {
+              "row": 11,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C11": {
+              "row": 11,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D11": {
+              "row": 11,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E11": {
+              "row": 11,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F11": {
+              "row": 11,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G11": {
+              "row": 11,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H11": {
+              "row": 11,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A12": {
+              "row": 12,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B12": {
+              "row": 12,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C12": {
+              "row": 12,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D12": {
+              "row": 12,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E12": {
+              "row": 12,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F12": {
+              "row": 12,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G12": {
+              "row": 12,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H12": {
+              "row": 12,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B20": {
+              "row": 20,
+              "column": 2,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT B20",
+              "valueNode": true,
+              "formula": null
+            },
+            "D21": {
+              "row": 21,
+              "column": 4,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR COLUMN D",
+              "valueNode": true,
+              "formula": null
+            },
+            "C22": {
+              "row": 22,
+              "column": 3,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR ROW22",
+              "valueNode": true,
+              "formula": null
+            },
+            "E24": {
+              "row": 24,
+              "column": 5,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT E24",
+              "valueNode": true,
+              "formula": null
+            },
+            "W98": {
+              "row": 98,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R98 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X98": {
+              "row": 98,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R98 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y98": {
+              "row": 98,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R98 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z98": {
+              "row": 98,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R98 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA98": {
+              "row": 98,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R98 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB98": {
+              "row": 98,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R98 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W99": {
+              "row": 99,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R99 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X99": {
+              "row": 99,
+              "column": 24,
+              "type": "str",
+              "rawValue": "CROSS WINDOW X99:AA102",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y99": {
+              "row": 99,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R99 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z99": {
+              "row": 99,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R99 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA99": {
+              "row": 99,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R99 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB99": {
+              "row": 99,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R99 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W100": {
+              "row": 100,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R100 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X100": {
+              "row": 100,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R100 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y100": {
+              "row": 100,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R100 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z100": {
+              "row": 100,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R100 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA100": {
+              "row": 100,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R100 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB100": {
+              "row": 100,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R100 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W101": {
+              "row": 101,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R101 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X101": {
+              "row": 101,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R101 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y101": {
+              "row": 101,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R101 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z101": {
+              "row": 101,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R101 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA101": {
+              "row": 101,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R101 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB101": {
+              "row": 101,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R101 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W102": {
+              "row": 102,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R102 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X102": {
+              "row": 102,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R102 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y102": {
+              "row": 102,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R102 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z102": {
+              "row": 102,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R102 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA102": {
+              "row": 102,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R102 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB102": {
+              "row": 102,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R102 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W103": {
+              "row": 103,
+              "column": 23,
+              "type": "str",
+              "rawValue": "CHAIN MERGE W103:X104",
+              "valueNode": true,
+              "formula": null
+            },
+            "X103": {
+              "row": 103,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R103 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y103": {
+              "row": 103,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R103 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z103": {
+              "row": 103,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R103 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA103": {
+              "row": 103,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R103 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB103": {
+              "row": 103,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R103 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "AD105": {
+              "row": 105,
+              "column": 30,
+              "type": "str",
+              "rawValue": "FAR MERGE AD105:AE106",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB205": {
+              "row": 205,
+              "column": 28,
+              "type": "str",
+              "rawValue": "SPARSE TAIL AB205",
+              "valueNode": true,
+              "formula": null
+            }
+          },
+          "merges": {
+            "C8:F9": {
+              "fromRow": 8,
+              "toRow": 9,
+              "fromColumn": 3,
+              "toColumn": 6
+            },
+            "X99:AA102": {
+              "fromRow": 99,
+              "toRow": 102,
+              "fromColumn": 24,
+              "toColumn": 27
+            },
+            "W103:X104": {
+              "fromRow": 103,
+              "toRow": 104,
+              "fromColumn": 23,
+              "toColumn": 24
+            },
+            "AD105:AE106": {
+              "fromRow": 105,
+              "toRow": 106,
+              "fromColumn": 30,
+              "toColumn": 31
+            }
+          },
+          "hiddenRows": [],
+          "hiddenColumns": [],
+          "ranges": [
+            {
+              "input": "B3:G6",
+              "normalized": {
+                "fromRow": 3,
+                "toRow": 6,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "W98:AB103",
+              "normalized": {
+                "fromRow": 98,
+                "toRow": 103,
+                "fromColumn": 23,
+                "toColumn": 28
+              },
+              "areaArithmeticOnly": 36,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 103,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["W103:X104"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "C8:F9",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 9,
+                "fromColumn": 3,
+                "toColumn": 6
+              },
+              "areaArithmeticOnly": 8,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "D8:E8",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 8,
+                "fromColumn": 4,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 2,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 8,
+                    "fromColumn": 4,
+                    "toColumn": 5
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["C8:F9"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B7:G10",
+              "normalized": {
+                "fromRow": 7,
+                "toRow": 10,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "Z101:AC103",
+              "normalized": {
+                "fromRow": 101,
+                "toRow": 103,
+                "fromColumn": 26,
+                "toColumn": 29
+              },
+              "areaArithmeticOnly": 12,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 101,
+                    "toRow": 102,
+                    "fromColumn": 26,
+                    "toColumn": 27
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["X99:AA102"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "Z101",
+                "AA101",
+                "AB101",
+                "Z102",
+                "AA102",
+                "AB102",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B20:E24",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "E24:B20",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFC1048575:XFD1048576",
+              "normalized": {
+                "fromRow": 1048575,
+                "toRow": 1048576,
+                "fromColumn": 16383,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFD1048576",
+              "normalized": {
+                "fromRow": 1048576,
+                "toRow": 1048576,
+                "fromColumn": 16384,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 1,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "A1:XFD1048576",
+              "normalized": {
+                "fromRow": 1,
+                "toRow": 1048576,
+                "fromColumn": 1,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 17179869184,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "A1",
+                "B1",
+                "C1",
+                "D1",
+                "E1",
+                "A2",
+                "B2",
+                "F2",
+                "C8",
+                "B20",
+                "D21",
+                "C22",
+                "E24",
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103",
+                "AD105",
+                "AB205"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "AD105:AE106",
+              "normalized": {
+                "fromRow": 105,
+                "toRow": 106,
+                "fromColumn": 30,
+                "toColumn": 31
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["AD105"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "range-nonordinal-hidden.xlsx",
+      "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde",
+      "bytes": 6522,
+      "zipCrcAllPassed": true,
+      "sheets": [
+        {
+          "name": "范围'与&0",
+          "relationshipId": "sheet-main-A9",
+          "sheetIdAttribute": "17",
+          "state": "visible",
+          "part": "xl/worksheets/sheet1.xml",
+          "partSha256": "8f08020725ca0a22b7424f67fafedb6b246dfda9bcb159cc39571cf022e33871",
+          "cells": {
+            "A1": {
+              "row": 1,
+              "column": 1,
+              "type": "str",
+              "rawValue": "RECTANGLE SOURCE",
+              "valueNode": true,
+              "formula": null
+            },
+            "B1": {
+              "row": 1,
+              "column": 2,
+              "type": "str",
+              "rawValue": "数值",
+              "valueNode": true,
+              "formula": null
+            },
+            "C1": {
+              "row": 1,
+              "column": 3,
+              "type": "str",
+              "rawValue": "布尔",
+              "valueNode": true,
+              "formula": null
+            },
+            "D1": {
+              "row": 1,
+              "column": 4,
+              "type": "str",
+              "rawValue": "空位",
+              "valueNode": true,
+              "formula": null
+            },
+            "E1": {
+              "row": 1,
+              "column": 5,
+              "type": "str",
+              "rawValue": "原始范围",
+              "valueNode": true,
+              "formula": null
+            },
+            "F1": {
+              "row": 1,
+              "column": 6,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G1": {
+              "row": 1,
+              "column": 7,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H1": {
+              "row": 1,
+              "column": 8,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A2": {
+              "row": 2,
+              "column": 1,
+              "type": "n",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "B2": {
+              "row": 2,
+              "column": 2,
+              "type": "b",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "C2": {
+              "row": 2,
+              "column": 3,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D2": {
+              "row": 2,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E2": {
+              "row": 2,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F2": {
+              "row": 2,
+              "column": 6,
+              "type": "n",
+              "rawValue": "2",
+              "valueNode": true,
+              "formula": "1+1"
+            },
+            "G2": {
+              "row": 2,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H2": {
+              "row": 2,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A3": {
+              "row": 3,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B3": {
+              "row": 3,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C3": {
+              "row": 3,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D3": {
+              "row": 3,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E3": {
+              "row": 3,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F3": {
+              "row": 3,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G3": {
+              "row": 3,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H3": {
+              "row": 3,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A4": {
+              "row": 4,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B4": {
+              "row": 4,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C4": {
+              "row": 4,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D4": {
+              "row": 4,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E4": {
+              "row": 4,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F4": {
+              "row": 4,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G4": {
+              "row": 4,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H4": {
+              "row": 4,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A5": {
+              "row": 5,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B5": {
+              "row": 5,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C5": {
+              "row": 5,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D5": {
+              "row": 5,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E5": {
+              "row": 5,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F5": {
+              "row": 5,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G5": {
+              "row": 5,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H5": {
+              "row": 5,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A6": {
+              "row": 6,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B6": {
+              "row": 6,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C6": {
+              "row": 6,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D6": {
+              "row": 6,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E6": {
+              "row": 6,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F6": {
+              "row": 6,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G6": {
+              "row": 6,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H6": {
+              "row": 6,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A7": {
+              "row": 7,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B7": {
+              "row": 7,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C7": {
+              "row": 7,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D7": {
+              "row": 7,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E7": {
+              "row": 7,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F7": {
+              "row": 7,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G7": {
+              "row": 7,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H7": {
+              "row": 7,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A8": {
+              "row": 8,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B8": {
+              "row": 8,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C8": {
+              "row": 8,
+              "column": 3,
+              "type": "str",
+              "rawValue": "MERGE C8:F9",
+              "valueNode": true,
+              "formula": null
+            },
+            "D8": {
+              "row": 8,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E8": {
+              "row": 8,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F8": {
+              "row": 8,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G8": {
+              "row": 8,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H8": {
+              "row": 8,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A9": {
+              "row": 9,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B9": {
+              "row": 9,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C9": {
+              "row": 9,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D9": {
+              "row": 9,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E9": {
+              "row": 9,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F9": {
+              "row": 9,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G9": {
+              "row": 9,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H9": {
+              "row": 9,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A10": {
+              "row": 10,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B10": {
+              "row": 10,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C10": {
+              "row": 10,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D10": {
+              "row": 10,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E10": {
+              "row": 10,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F10": {
+              "row": 10,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G10": {
+              "row": 10,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H10": {
+              "row": 10,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A11": {
+              "row": 11,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B11": {
+              "row": 11,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C11": {
+              "row": 11,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D11": {
+              "row": 11,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E11": {
+              "row": 11,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F11": {
+              "row": 11,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G11": {
+              "row": 11,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H11": {
+              "row": 11,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A12": {
+              "row": 12,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B12": {
+              "row": 12,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C12": {
+              "row": 12,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D12": {
+              "row": 12,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E12": {
+              "row": 12,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F12": {
+              "row": 12,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G12": {
+              "row": 12,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H12": {
+              "row": 12,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B20": {
+              "row": 20,
+              "column": 2,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT B20",
+              "valueNode": true,
+              "formula": null
+            },
+            "D21": {
+              "row": 21,
+              "column": 4,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR COLUMN D",
+              "valueNode": true,
+              "formula": null
+            },
+            "C22": {
+              "row": 22,
+              "column": 3,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR ROW22",
+              "valueNode": true,
+              "formula": null
+            },
+            "E24": {
+              "row": 24,
+              "column": 5,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT E24",
+              "valueNode": true,
+              "formula": null
+            },
+            "W98": {
+              "row": 98,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R98 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X98": {
+              "row": 98,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R98 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y98": {
+              "row": 98,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R98 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z98": {
+              "row": 98,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R98 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA98": {
+              "row": 98,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R98 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB98": {
+              "row": 98,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R98 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W99": {
+              "row": 99,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R99 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X99": {
+              "row": 99,
+              "column": 24,
+              "type": "str",
+              "rawValue": "CROSS WINDOW X99:AA102",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y99": {
+              "row": 99,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R99 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z99": {
+              "row": 99,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R99 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA99": {
+              "row": 99,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R99 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB99": {
+              "row": 99,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R99 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W100": {
+              "row": 100,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R100 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X100": {
+              "row": 100,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R100 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y100": {
+              "row": 100,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R100 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z100": {
+              "row": 100,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R100 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA100": {
+              "row": 100,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R100 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB100": {
+              "row": 100,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R100 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W101": {
+              "row": 101,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R101 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X101": {
+              "row": 101,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R101 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y101": {
+              "row": 101,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R101 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z101": {
+              "row": 101,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R101 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA101": {
+              "row": 101,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R101 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB101": {
+              "row": 101,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R101 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W102": {
+              "row": 102,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R102 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X102": {
+              "row": 102,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R102 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y102": {
+              "row": 102,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R102 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z102": {
+              "row": 102,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R102 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA102": {
+              "row": 102,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R102 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB102": {
+              "row": 102,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R102 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W103": {
+              "row": 103,
+              "column": 23,
+              "type": "str",
+              "rawValue": "CHAIN MERGE W103:X104",
+              "valueNode": true,
+              "formula": null
+            },
+            "X103": {
+              "row": 103,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R103 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y103": {
+              "row": 103,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R103 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z103": {
+              "row": 103,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R103 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA103": {
+              "row": 103,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R103 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB103": {
+              "row": 103,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R103 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "AD105": {
+              "row": 105,
+              "column": 30,
+              "type": "str",
+              "rawValue": "FAR MERGE AD105:AE106",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB205": {
+              "row": 205,
+              "column": 28,
+              "type": "str",
+              "rawValue": "SPARSE TAIL AB205",
+              "valueNode": true,
+              "formula": null
+            }
+          },
+          "merges": {
+            "C8:F9": {
+              "fromRow": 8,
+              "toRow": 9,
+              "fromColumn": 3,
+              "toColumn": 6
+            },
+            "X99:AA102": {
+              "fromRow": 99,
+              "toRow": 102,
+              "fromColumn": 24,
+              "toColumn": 27
+            },
+            "W103:X104": {
+              "fromRow": 103,
+              "toRow": 104,
+              "fromColumn": 23,
+              "toColumn": 24
+            },
+            "AD105:AE106": {
+              "fromRow": 105,
+              "toRow": 106,
+              "fromColumn": 30,
+              "toColumn": 31
+            }
+          },
+          "hiddenRows": [22, 100],
+          "hiddenColumns": [
+            {
+              "min": 4,
+              "max": 4
+            },
+            {
+              "min": 25,
+              "max": 25
+            }
+          ],
+          "ranges": [
+            {
+              "input": "B3:G6",
+              "normalized": {
+                "fromRow": 3,
+                "toRow": 6,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "W98:AB103",
+              "normalized": {
+                "fromRow": 98,
+                "toRow": 103,
+                "fromColumn": 23,
+                "toColumn": 28
+              },
+              "areaArithmeticOnly": 36,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 103,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["W103:X104"],
+              "hiddenRowsIntersecting": [100],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 25,
+                  "max": 25
+                }
+              ],
+              "storedValueOrFormulaCells": [
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "C8:F9",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 9,
+                "fromColumn": 3,
+                "toColumn": 6
+              },
+              "areaArithmeticOnly": 8,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "D8:E8",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 8,
+                "fromColumn": 4,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 2,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 8,
+                    "fromColumn": 4,
+                    "toColumn": 5
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["C8:F9"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B7:G10",
+              "normalized": {
+                "fromRow": 7,
+                "toRow": 10,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "Z101:AC103",
+              "normalized": {
+                "fromRow": 101,
+                "toRow": 103,
+                "fromColumn": 26,
+                "toColumn": 29
+              },
+              "areaArithmeticOnly": 12,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 101,
+                    "toRow": 102,
+                    "fromColumn": 26,
+                    "toColumn": 27
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["X99:AA102"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "Z101",
+                "AA101",
+                "AB101",
+                "Z102",
+                "AA102",
+                "AB102",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B20:E24",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "E24:B20",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFC1048575:XFD1048576",
+              "normalized": {
+                "fromRow": 1048575,
+                "toRow": 1048576,
+                "fromColumn": 16383,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFD1048576",
+              "normalized": {
+                "fromRow": 1048576,
+                "toRow": 1048576,
+                "fromColumn": 16384,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 1,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "A1:XFD1048576",
+              "normalized": {
+                "fromRow": 1,
+                "toRow": 1048576,
+                "fromColumn": 1,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 17179869184,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22, 100],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                },
+                {
+                  "min": 25,
+                  "max": 25
+                }
+              ],
+              "storedValueOrFormulaCells": [
+                "A1",
+                "B1",
+                "C1",
+                "D1",
+                "E1",
+                "A2",
+                "B2",
+                "F2",
+                "C8",
+                "B20",
+                "D21",
+                "C22",
+                "E24",
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103",
+                "AD105",
+                "AB205"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "AD105:AE106",
+              "normalized": {
+                "fromRow": 105,
+                "toRow": 106,
+                "fromColumn": 30,
+                "toColumn": 31
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["AD105"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            }
+          ]
+        },
+        {
+          "name": "同文副页",
+          "relationshipId": "sheet-other-17",
+          "sheetIdAttribute": "4",
+          "state": "visible",
+          "part": "xl/worksheets/sheet2.xml",
+          "partSha256": "8f08020725ca0a22b7424f67fafedb6b246dfda9bcb159cc39571cf022e33871",
+          "cells": {
+            "A1": {
+              "row": 1,
+              "column": 1,
+              "type": "str",
+              "rawValue": "RECTANGLE SOURCE",
+              "valueNode": true,
+              "formula": null
+            },
+            "B1": {
+              "row": 1,
+              "column": 2,
+              "type": "str",
+              "rawValue": "数值",
+              "valueNode": true,
+              "formula": null
+            },
+            "C1": {
+              "row": 1,
+              "column": 3,
+              "type": "str",
+              "rawValue": "布尔",
+              "valueNode": true,
+              "formula": null
+            },
+            "D1": {
+              "row": 1,
+              "column": 4,
+              "type": "str",
+              "rawValue": "空位",
+              "valueNode": true,
+              "formula": null
+            },
+            "E1": {
+              "row": 1,
+              "column": 5,
+              "type": "str",
+              "rawValue": "原始范围",
+              "valueNode": true,
+              "formula": null
+            },
+            "F1": {
+              "row": 1,
+              "column": 6,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G1": {
+              "row": 1,
+              "column": 7,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H1": {
+              "row": 1,
+              "column": 8,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A2": {
+              "row": 2,
+              "column": 1,
+              "type": "n",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "B2": {
+              "row": 2,
+              "column": 2,
+              "type": "b",
+              "rawValue": "0",
+              "valueNode": true,
+              "formula": null
+            },
+            "C2": {
+              "row": 2,
+              "column": 3,
+              "type": "str",
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D2": {
+              "row": 2,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E2": {
+              "row": 2,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F2": {
+              "row": 2,
+              "column": 6,
+              "type": "n",
+              "rawValue": "2",
+              "valueNode": true,
+              "formula": "1+1"
+            },
+            "G2": {
+              "row": 2,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H2": {
+              "row": 2,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A3": {
+              "row": 3,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B3": {
+              "row": 3,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C3": {
+              "row": 3,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D3": {
+              "row": 3,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E3": {
+              "row": 3,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F3": {
+              "row": 3,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G3": {
+              "row": 3,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H3": {
+              "row": 3,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A4": {
+              "row": 4,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B4": {
+              "row": 4,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C4": {
+              "row": 4,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D4": {
+              "row": 4,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E4": {
+              "row": 4,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F4": {
+              "row": 4,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G4": {
+              "row": 4,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H4": {
+              "row": 4,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A5": {
+              "row": 5,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B5": {
+              "row": 5,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C5": {
+              "row": 5,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D5": {
+              "row": 5,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E5": {
+              "row": 5,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F5": {
+              "row": 5,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G5": {
+              "row": 5,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H5": {
+              "row": 5,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A6": {
+              "row": 6,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B6": {
+              "row": 6,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C6": {
+              "row": 6,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D6": {
+              "row": 6,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E6": {
+              "row": 6,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F6": {
+              "row": 6,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G6": {
+              "row": 6,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H6": {
+              "row": 6,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A7": {
+              "row": 7,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B7": {
+              "row": 7,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C7": {
+              "row": 7,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D7": {
+              "row": 7,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E7": {
+              "row": 7,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F7": {
+              "row": 7,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G7": {
+              "row": 7,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H7": {
+              "row": 7,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A8": {
+              "row": 8,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B8": {
+              "row": 8,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C8": {
+              "row": 8,
+              "column": 3,
+              "type": "str",
+              "rawValue": "MERGE C8:F9",
+              "valueNode": true,
+              "formula": null
+            },
+            "D8": {
+              "row": 8,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E8": {
+              "row": 8,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F8": {
+              "row": 8,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G8": {
+              "row": 8,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H8": {
+              "row": 8,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A9": {
+              "row": 9,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B9": {
+              "row": 9,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C9": {
+              "row": 9,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D9": {
+              "row": 9,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E9": {
+              "row": 9,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F9": {
+              "row": 9,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G9": {
+              "row": 9,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H9": {
+              "row": 9,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A10": {
+              "row": 10,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B10": {
+              "row": 10,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C10": {
+              "row": 10,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D10": {
+              "row": 10,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E10": {
+              "row": 10,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F10": {
+              "row": 10,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G10": {
+              "row": 10,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H10": {
+              "row": 10,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A11": {
+              "row": 11,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B11": {
+              "row": 11,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C11": {
+              "row": 11,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D11": {
+              "row": 11,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E11": {
+              "row": 11,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F11": {
+              "row": 11,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G11": {
+              "row": 11,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H11": {
+              "row": 11,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "A12": {
+              "row": 12,
+              "column": 1,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B12": {
+              "row": 12,
+              "column": 2,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "C12": {
+              "row": 12,
+              "column": 3,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "D12": {
+              "row": 12,
+              "column": 4,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "E12": {
+              "row": 12,
+              "column": 5,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "F12": {
+              "row": 12,
+              "column": 6,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "G12": {
+              "row": 12,
+              "column": 7,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "H12": {
+              "row": 12,
+              "column": 8,
+              "type": null,
+              "rawValue": null,
+              "valueNode": false,
+              "formula": null
+            },
+            "B20": {
+              "row": 20,
+              "column": 2,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT B20",
+              "valueNode": true,
+              "formula": null
+            },
+            "D21": {
+              "row": 21,
+              "column": 4,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR COLUMN D",
+              "valueNode": true,
+              "formula": null
+            },
+            "C22": {
+              "row": 22,
+              "column": 3,
+              "type": "str",
+              "rawValue": "HIDDEN INTERIOR ROW22",
+              "valueNode": true,
+              "formula": null
+            },
+            "E24": {
+              "row": 24,
+              "column": 5,
+              "type": "str",
+              "rawValue": "VISIBLE ENDPOINT E24",
+              "valueNode": true,
+              "formula": null
+            },
+            "W98": {
+              "row": 98,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R98 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X98": {
+              "row": 98,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R98 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y98": {
+              "row": 98,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R98 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z98": {
+              "row": 98,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R98 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA98": {
+              "row": 98,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R98 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB98": {
+              "row": 98,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R98 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W99": {
+              "row": 99,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R99 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X99": {
+              "row": 99,
+              "column": 24,
+              "type": "str",
+              "rawValue": "CROSS WINDOW X99:AA102",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y99": {
+              "row": 99,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R99 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z99": {
+              "row": 99,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R99 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA99": {
+              "row": 99,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R99 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB99": {
+              "row": 99,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R99 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W100": {
+              "row": 100,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R100 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X100": {
+              "row": 100,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R100 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y100": {
+              "row": 100,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R100 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z100": {
+              "row": 100,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R100 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA100": {
+              "row": 100,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R100 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB100": {
+              "row": 100,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R100 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W101": {
+              "row": 101,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R101 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X101": {
+              "row": 101,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R101 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y101": {
+              "row": 101,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R101 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z101": {
+              "row": 101,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R101 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA101": {
+              "row": 101,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R101 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB101": {
+              "row": 101,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R101 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W102": {
+              "row": 102,
+              "column": 23,
+              "type": "str",
+              "rawValue": "R102 C23",
+              "valueNode": true,
+              "formula": null
+            },
+            "X102": {
+              "row": 102,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R102 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y102": {
+              "row": 102,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R102 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z102": {
+              "row": 102,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R102 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA102": {
+              "row": 102,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R102 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB102": {
+              "row": 102,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R102 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "W103": {
+              "row": 103,
+              "column": 23,
+              "type": "str",
+              "rawValue": "CHAIN MERGE W103:X104",
+              "valueNode": true,
+              "formula": null
+            },
+            "X103": {
+              "row": 103,
+              "column": 24,
+              "type": "str",
+              "rawValue": "R103 C24",
+              "valueNode": true,
+              "formula": null
+            },
+            "Y103": {
+              "row": 103,
+              "column": 25,
+              "type": "str",
+              "rawValue": "R103 C25",
+              "valueNode": true,
+              "formula": null
+            },
+            "Z103": {
+              "row": 103,
+              "column": 26,
+              "type": "str",
+              "rawValue": "R103 C26",
+              "valueNode": true,
+              "formula": null
+            },
+            "AA103": {
+              "row": 103,
+              "column": 27,
+              "type": "str",
+              "rawValue": "R103 C27",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB103": {
+              "row": 103,
+              "column": 28,
+              "type": "str",
+              "rawValue": "R103 C28",
+              "valueNode": true,
+              "formula": null
+            },
+            "AD105": {
+              "row": 105,
+              "column": 30,
+              "type": "str",
+              "rawValue": "FAR MERGE AD105:AE106",
+              "valueNode": true,
+              "formula": null
+            },
+            "AB205": {
+              "row": 205,
+              "column": 28,
+              "type": "str",
+              "rawValue": "SPARSE TAIL AB205",
+              "valueNode": true,
+              "formula": null
+            }
+          },
+          "merges": {
+            "C8:F9": {
+              "fromRow": 8,
+              "toRow": 9,
+              "fromColumn": 3,
+              "toColumn": 6
+            },
+            "X99:AA102": {
+              "fromRow": 99,
+              "toRow": 102,
+              "fromColumn": 24,
+              "toColumn": 27
+            },
+            "W103:X104": {
+              "fromRow": 103,
+              "toRow": 104,
+              "fromColumn": 23,
+              "toColumn": 24
+            },
+            "AD105:AE106": {
+              "fromRow": 105,
+              "toRow": 106,
+              "fromColumn": 30,
+              "toColumn": 31
+            }
+          },
+          "hiddenRows": [22, 100],
+          "hiddenColumns": [
+            {
+              "min": 4,
+              "max": 4
+            },
+            {
+              "min": 25,
+              "max": 25
+            }
+          ],
+          "ranges": [
+            {
+              "input": "B3:G6",
+              "normalized": {
+                "fromRow": 3,
+                "toRow": 6,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "W98:AB103",
+              "normalized": {
+                "fromRow": 98,
+                "toRow": 103,
+                "fromColumn": 23,
+                "toColumn": 28
+              },
+              "areaArithmeticOnly": 36,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 103,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["W103:X104"],
+              "hiddenRowsIntersecting": [100],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 25,
+                  "max": 25
+                }
+              ],
+              "storedValueOrFormulaCells": [
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "C8:F9",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 9,
+                "fromColumn": 3,
+                "toColumn": 6
+              },
+              "areaArithmeticOnly": 8,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "D8:E8",
+              "normalized": {
+                "fromRow": 8,
+                "toRow": 8,
+                "fromColumn": 4,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 2,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 8,
+                    "fromColumn": 4,
+                    "toColumn": 5
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["C8:F9"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B7:G10",
+              "normalized": {
+                "fromRow": 7,
+                "toRow": 10,
+                "fromColumn": 2,
+                "toColumn": 7
+              },
+              "areaArithmeticOnly": 24,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["C8"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "Z101:AC103",
+              "normalized": {
+                "fromRow": 101,
+                "toRow": 103,
+                "fromColumn": 26,
+                "toColumn": 29
+              },
+              "areaArithmeticOnly": 12,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 101,
+                    "toRow": 102,
+                    "fromColumn": 26,
+                    "toColumn": 27
+                  },
+                  "fullyContained": false
+                }
+              ],
+              "partialMerges": ["X99:AA102"],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [
+                "Z101",
+                "AA101",
+                "AB101",
+                "Z102",
+                "AA102",
+                "AB102",
+                "Z103",
+                "AA103",
+                "AB103"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "B20:E24",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "E24:B20",
+              "normalized": {
+                "fromRow": 20,
+                "toRow": 24,
+                "fromColumn": 2,
+                "toColumn": 5
+              },
+              "areaArithmeticOnly": 20,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                }
+              ],
+              "storedValueOrFormulaCells": ["B20", "D21", "C22", "E24"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFC1048575:XFD1048576",
+              "normalized": {
+                "fromRow": 1048575,
+                "toRow": 1048576,
+                "fromColumn": 16383,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "XFD1048576",
+              "normalized": {
+                "fromRow": 1048576,
+                "toRow": 1048576,
+                "fromColumn": 16384,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 1,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": [],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "A1:XFD1048576",
+              "normalized": {
+                "fromRow": 1,
+                "toRow": 1048576,
+                "fromColumn": 1,
+                "toColumn": 16384
+              },
+              "areaArithmeticOnly": 17179869184,
+              "crossesFirst100RowWindow": true,
+              "crossesFirst24ColumnWindow": true,
+              "merges": [
+                {
+                  "merge": "C8:F9",
+                  "fullMerge": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "intersection": {
+                    "fromRow": 8,
+                    "toRow": 9,
+                    "fromColumn": 3,
+                    "toColumn": 6
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "X99:AA102",
+                  "fullMerge": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "intersection": {
+                    "fromRow": 99,
+                    "toRow": 102,
+                    "fromColumn": 24,
+                    "toColumn": 27
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "W103:X104",
+                  "fullMerge": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "intersection": {
+                    "fromRow": 103,
+                    "toRow": 104,
+                    "fromColumn": 23,
+                    "toColumn": 24
+                  },
+                  "fullyContained": true
+                },
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [22, 100],
+              "hiddenColumnsIntersecting": [
+                {
+                  "min": 4,
+                  "max": 4
+                },
+                {
+                  "min": 25,
+                  "max": 25
+                }
+              ],
+              "storedValueOrFormulaCells": [
+                "A1",
+                "B1",
+                "C1",
+                "D1",
+                "E1",
+                "A2",
+                "B2",
+                "F2",
+                "C8",
+                "B20",
+                "D21",
+                "C22",
+                "E24",
+                "W98",
+                "X98",
+                "Y98",
+                "Z98",
+                "AA98",
+                "AB98",
+                "W99",
+                "X99",
+                "Y99",
+                "Z99",
+                "AA99",
+                "AB99",
+                "W100",
+                "X100",
+                "Y100",
+                "Z100",
+                "AA100",
+                "AB100",
+                "W101",
+                "X101",
+                "Y101",
+                "Z101",
+                "AA101",
+                "AB101",
+                "W102",
+                "X102",
+                "Y102",
+                "Z102",
+                "AA102",
+                "AB102",
+                "W103",
+                "X103",
+                "Y103",
+                "Z103",
+                "AA103",
+                "AB103",
+                "AD105",
+                "AB205"
+              ],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            },
+            {
+              "input": "AD105:AE106",
+              "normalized": {
+                "fromRow": 105,
+                "toRow": 106,
+                "fromColumn": 30,
+                "toColumn": 31
+              },
+              "areaArithmeticOnly": 4,
+              "crossesFirst100RowWindow": false,
+              "crossesFirst24ColumnWindow": false,
+              "merges": [
+                {
+                  "merge": "AD105:AE106",
+                  "fullMerge": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "intersection": {
+                    "fromRow": 105,
+                    "toRow": 106,
+                    "fromColumn": 30,
+                    "toColumn": 31
+                  },
+                  "fullyContained": true
+                }
+              ],
+              "partialMerges": [],
+              "hiddenRowsIntersecting": [],
+              "hiddenColumnsIntersecting": [],
+              "storedValueOrFormulaCells": ["AD105"],
+              "interpretation": "Structural facts only; no acceptance policy or rendered-read proof."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "semanticStatus": "geometry_only_pending_product_policy_confirmation",
+  "limits": [
+    "No XLSX parser or new rectangle capability was executed. Generated samples can expose writer compatibility differences; do not silently rewrite them to pass.",
+    "No full-grid allocation or enumeration: inspect only stored XML cells and merge metadata; huge legal rectangle area calculated arithmetically.",
+    "Artifact-tool renderer previews are writer-engine views, not Farfold/Excel/native proof.",
+    "Hidden cells remain in the ZIP by design; hiding is display behavior, not removal or secrecy."
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "recordedAtUtc": "2026-10-10T01:29:20.760254+00:00",
+  "status": "No remaining blocking finding in the reviewed source checkpoint; browser, integration and installed acceptance remain separate.",
+  "scope": "NEW03 inner paragraph/table reading coordinates and retained current-file reference; check/candidate input collector readiness.",
+  "reviewerActions": [
+    "Read four production files and three focused test files; did not edit production or repeat owner suites.",
+    "Added and executed one component/key/effect adversarial test in evidence. IPC/parser and browser layout are mocked.",
+    "Read owner green stdout after its one-line production guard fix; did not rerun the same green test.",
+    "Independently enumerated collector constants using AST-selected literal assignments only. No check/build/candidate helper main executed."
+  ],
+  "finding": {
+    "id": "navigation-withdrawal-reentry",
+    "before": "navigate checked current ownership before withdraw only. Its available:false callback could synchronously block the current view, after which the old action still saved paragraph part 1.",
+    "red": {
+      "executor": "architecture",
+      "passed": 0,
+      "failed": 1,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry-red.txt"
+    },
+    "fix": "DocxDocumentView navigate rechecks allowed() after withdraw() and before action().",
+    "green": {
+      "executor": "verification",
+      "passed": 1,
+      "failed": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-targeted-green.txt"
+    },
+    "classification": "Actual controlled component reentry defect, not an installed-app reproduction.",
+    "harnessNotes": [
+      "The initial red config import omitted a .ts extension; the Vite warning did not prevent the actual failing assertion. Config extension and formatting were corrected afterward without changing the test expectation.",
+      "Owner first omitted the exact test filter and unintentionally ran the merged-config source suite (323 files / 3786 passed). This review does not count that accidental breadth as its own targeted proof; the subsequent exact-path run passed 1/1."
+    ]
+  },
+  "reviewedInvariants": [
+    "One transient ArtifactPane reading entry is scoped by exact thread key, cwd and requested path; the same explicit selection path keeps the entry while its reader key still remounts/re-reads.",
+    "A different thread/cwd replaces the full ref even while currentFile is null. A different requested path also replaces it; late writes to the old object do not mutate the new entry. No alias equivalence is inferred before the read.",
+    "DocumentReadingWindows borrows only matching root/resolvedPath coordinates, filters against actual original part/elementPath/kind and clamps to the new document. A new document object remounts local paragraph/table state even if file fields match.",
+    "The map stores at most 128 bounded coordinate records and no body text. Save requires the exact known block and current active ref owner; an old different owner cannot overwrite or release a newer one.",
+    "Parent callback ownership, active/ready and feedback gates remain separate from approximate reading location. A reading position is not a live feedback anchor or proof of semantic continuity across versions."
+  ],
+  "collectorReview": {
+    "priorInputCount": 1145,
+    "currentObservedInputCount": 1170,
+    "changedInputCount": 34,
+    "checkAndCandidateInventoryEqual": true,
+    "priorSevenLogHashesMatched": true,
+    "rustConfigAndExistingExternalInputsExact": true,
+    "runtimeSharedFixtureSetAndHashesExact": true,
+    "priorAllPassedSourceStableAndCountVerified": true,
+    "allowedDelta": "src/ plus newly added complete workbook-range/fixtures directory only",
+    "reuse": "Three original cargo-fmt/clippy/rust log hashes verified; scripts explicitly mark executedNow=false. This is readiness, not a new full check result.",
+    "limitation": "Checks skip __pycache__ whereas candidate collector does not. No such inventory discrepancy currently exists; a later generated cache would cause candidate commit-inventory rejection, not silent acceptance."
+  },
+  "boundaries": [
+    "No formal application/UI/Agent/user-data action. Native NEW03 remains to be reverified after installation.",
+    "Actual dual-engine browser validation is owned by verification and was still running at this checkpoint.",
+    "Nested table-cell detail open state and its BlockSequence segment are outside this increment; P20 is not globally closed.",
+    "Coordinates are in-memory reading hints; they do not prove identical semantic content after a file revision.",
+    "Root must freeze final inputs and run required frontend/integration checks. This receipt does not substitute for them."
+  ],
+  "sources": [
+    {
+      "path": "src/runtime/preview_reading_position.ts",
+      "sha256": "cfa0879f1178da159b52af4510d941bd527791d240b9b5b992453ced57ee6323",
+      "bytes": 9049
+    },
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "ca47b5f29f28a5aa61363f7696286805083bbe9dbdeef29a7c7f2765ab1d3e9c",
+      "bytes": 26068
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "19ac80ca7f6d9bcf99dec5c9a7e6169e517240a31efc8da6493278ca5b6ce4d9",
+      "bytes": 19269
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f7c4bd70ab722b8959dfad3d420c7bf29c6c56a87d4e5b7687d0c939ef134fda",
+      "bytes": 46920
+    }
+  ],
+  "reviewedTests": [
+    {
+      "path": "src/runtime/preview_reading_position.windows.test.ts",
+      "sha256": "4bf940b51064d6fb38d2bf171258387f0547299e9e66e769d3f6732629c5e805",
+      "bytes": 5585
+    },
+    {
+      "path": "src/components/DocxReadingWindows.test.tsx",
+      "sha256": "f470f99d1fb2ce95c6fed13566828c95cb06670acaa03ab214955669816423b3",
+      "bytes": 9524
+    },
+    {
+      "path": "src/components/ArtifactPane.reading-position.test.tsx",
+      "sha256": "ea22a71f1aaa5ea3e0a0facb11763a3821a3e601a545e604d250ab463523b69c",
+      "bytes": 6673
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/implementation.json",
+      "sha256": "f793a053e27e7f1c1f62f90ef304529df3445957327b9bd1229e8f10989a9c66",
+      "bytes": 3854
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-targeted-green.txt",
+      "sha256": "560d69c875461efae6d47bf4b68aa23670c0f1eaef5af08276e76740aabf0bf1",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-green.txt",
+      "sha256": "a27d64614b9ac85e3141809b17f9c5640f6f85b4fd7ef4bf981b92464342aad1",
+      "bytes": 226
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/related-green.txt",
+      "sha256": "980224688e96e0a8763eb73b02a924d15179492af6c4e4c67f79c5d843b91532",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/owned-format.txt",
+      "sha256": "96dda1101f20d2908a23ef3cfbe68eef0e60f6065c32e4701d5051ef9c9a866d",
+      "bytes": 193
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry.test.tsx",
+      "sha256": "4f4caebe17c588337dabb096a5002a406b5836a99ac28f4749edaa8bbae7af9f",
+      "bytes": 7600
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/vitest.config.ts",
+      "sha256": "7d2770c92c11925c0c6be501bf03a179b6b8d05f5d04e80c00672f31c67ea803",
+      "bytes": 336
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry-red.txt",
+      "sha256": "c34a6d56879deeacb6ec14af36064600634b16449487e8e5e4e11c92bcfb1cc9",
+      "bytes": 1824
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/run-workbook-range-checks.py",
+      "sha256": "4d233a85efc130480fff59f210d513822b858f817b484640ffba69be99892752",
+      "bytes": 7124
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/prepare-candidate.py",
+      "sha256": "f6aa7a6aa417c45d2ed2ca3703a137cec719c8c074949428d93ae8669083d693",
+      "bytes": 7973
+    }
+  ]
+}

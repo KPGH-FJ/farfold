@@ -1,0 +1,6 @@
+{"pid":69340,"baseline":true,"port":1467}
+9:22:20 AM [vite] (client) dependency optimized: saxes
+9:22:20 AM [vite] (client) optimized dependencies changed. reloading
+9:22:29 AM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+9:22:29 AM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+9:26:52 AM [vite] (client) hmr update /src/components/DocxDocumentView.tsx

@@ -1,0 +1,162 @@
+{
+  "kind": "read-only-next-slice-design",
+  "date": "2026-10-10",
+  "scope": "P21 PDF/静态图片的单个矩形区域版本意见；不是活动计划，也不是区域能力已实现或已验证。",
+  "recommendation": "复用已有成功绘制和意见草稿链，增加一个共享区域选择组件与严格的显示坐标目标。建议作为下一依赖闭合增量，不扩 Agent 接口或文件解码范围。",
+  "currentFacts": [
+    {
+      "fact": "图片当前只有整文件意见；PDF有整文件和实际成功显示页级意见，尚无区域目标或画面几何登记。",
+      "evidence": [
+        "src/runtime/visual_feedback.ts:4",
+        "src/components/OpenedFileView.tsx:1205",
+        "src/components/VisualFilePreview.tsx:227"
+      ]
+    },
+    {
+      "fact": "PDF在独立worker中getViewport(scale=1)取尺寸，再以受限scale绘制；返回实际pageNumber/pages及bitmap。主线程真正drawImage后才完成，当前没有回传viewport方向/范围。",
+      "evidence": [
+        "src/runtime/pdf_render_core.ts:155",
+        "src/runtime/pdf_render_core.ts:194",
+        "src/runtime/pdf_preview.ts:74"
+      ]
+    },
+    {
+      "fact": "已安装依赖的PDFPageProxy.getViewport默认rotation=this.rotate，PageViewport根据page.view、userUnit、rotation得到朝上的画面和变换；不能把canvas坐标直接叫PDF内部坐标。",
+      "evidence": [
+        "node_modules/pdfjs-dist/legacy/build/pdf.mjs:7070",
+        "node_modules/pdfjs-dist/legacy/build/pdf.mjs:22354"
+      ]
+    },
+    {
+      "fact": "图片先检查容器/大小，再真实Image.decode并核naturalWidth/Height；VisualFilePreview最终img的onLoad仅登记image，不登记该显示元素的尺寸/操作身份。当前定义应沿浏览器实际显示方向，不能从JPEG SOF宽高猜EXIF。",
+      "evidence": [
+        "src/runtime/draft_images.ts:91",
+        "src/runtime/draft_images.ts:133",
+        "src/components/VisualFilePreview.tsx:227"
+      ]
+    },
+    {
+      "fact": "意见按thread+path+disk contentId版本保存；anchor冷解析要求scope=file、selection=null、无lineInput和有效disk身份，未知字段整份拒绝。take只原子移入当前对话草稿。",
+      "evidence": [
+        "src/runtime/drafts.ts:280",
+        "src/runtime/drafts.ts:329",
+        "src/runtime/drafts.ts:651",
+        "src/runtime/file_feedback_anchor.ts:139"
+      ]
+    }
+  ],
+  "coordinateDecision": {
+    "space": "display-oriented-v1：当时成功绘制画面的左上为原点，向右/下增加；仅指完整显示像素内容，不含控件、边框或留白。",
+    "representation": "建议DisplayRect={left,top,right,bottom}，四个安全整数，0..1000000，left<right、top<bottom。UI用百分比表达，冷存不存DOM尺寸、CSS位置、截图或正文。",
+    "rounding": "拖动结束先归一/反向排序并限制到画面内，再按约定固定精度转换；零面积先拒绝，不通过四舍五入创造面积。左右/上下量化规则必须有独立oracle，且选择后的精确范围可见。数字输入越界或逆序明确拒绝，不暗中修改。",
+    "anchors": [
+      "ImageAreaAnchor={kind:image-area,space:display-oriented-v1,left,top,right,bottom}",
+      "PdfAreaAnchor={kind:pdf-area,space:display-oriented-v1,page,pageCount,left,top,right,bottom}"
+    ],
+    "direction": "PDF指当前renderer应用文件固有旋转和可见页面框后的完整bitmap；图片指浏览器解码/方向处理后的完整画面。第一片不提供用户旋转/裁剪，也不转换到PDF user space或未旋转JPEG像素。",
+    "limits": "现有PDF页数/像素/文件与静态图片字节/尺寸/动画限制全部保留；没有预览成功就没有live区域目标。每次仅一个矩形，O(1)位置状态。",
+    "historical": "冷恢复只显示历史方向和百分比，不能凭坐标自动登记live source或覆盖新版本。第一片无需自动重新画出历史区域；未来如重显必须重新核实际版本和当前frame。"
+  },
+  "minimumInterfaces": {
+    "frame": "新增只在真实绘制成功后创建的VisualFeedbackFrame：关联exact VisualPreview、当前draw owner、actual canvas/img、实际page/pageCount、成功画面的尺寸；PDF可附受检viewport.rotation/width/height作临时一致性信息。没有预先声明的ready。",
+    "runtime": "createVisualAreaFeedbackSource({frame,selection,expectedFile})、visualAreaFeedbackTarget(source)、visualAreaFeedbackSourceIsValid(source)、retireVisualAreaFeedbackSource(source)。source公开只读kind/file；WeakMap保实际frame/selection/读取对象与唯一anchor，不建立持久证明账本。",
+    "callbacks": "VisualFilePreview新增onVisualTargetAvailability({source,available})和onVisualTargetConfirm({source,anchor})；父层再次核active/当前文件/当前readiness/没有pending operation/exact当前source。",
+    "editing": "使用现有owner+file+editing临时语义；可把OfficeTargetEditing抽为通用FileTargetEditing并保留兼容type alias，避免建立第二套松散布尔值。无效数字草稿也延后自动替换，editing绝不代表可确认目标。",
+    "blocked": "新增interactionBlocked独立于active与绘制effect；锁控件并退休候选，不清像素、不报告paused、不触发重绘或自动刷新自取消循环。解锁需新source，旧回调永久失效。",
+    "shapeValidation": "新增anchor必须exact keys、有限整数、非零矩形、有效pdf页；旧pdf-page/text/xlsx/docx及无anchor草稿继续兼容；未知/混合结构仍整体拒绝，不降级为整文件意见。"
+  },
+  "interaction": [
+    "保持现有整文件/当前PDF页意见。选择区域进入局部模式，正常查看/滚动不拦截指针。",
+    "拖动：仅从真实画面内部起点开始，pointer capture只接一个pointer；反向拖动归一，画面外终点限制到实际内容边缘；pointercancel/lostcapture/Escape撤未确认候选，旧意见不动。",
+    "键盘：同一局部表单提供左/上/右/下四个百分比边界及当前完整画面范围说明；Tab/Shift-Tab可达，Enter只执行“选择区域”，随后焦点到“对此区域提意见”，第二次明确确认才改意见。无需假装canvas tabindex就能选择。",
+    "候选显示边框及准确百分比摘要；“取消选择”在确认之后，清候选/释放editing并回到仍属于当前frame的入口，不清已确认意见。focus后也核重入归属。",
+    "真正画面内容矩形必须由无padding/border的专用stage与实际img/canvas同盒定位；若未来object-fit/letterbox，要计算实际像素区域，不能用外部容器getBoundingClientRect代替。",
+    "CSS尺寸/object-fit或新bitmap变化撤旧candidate/source并保留用户数字输入以重新选择；滚动只改变屏幕位置不改变历史坐标，但进行中的drag遇几何变化取消。不能沿pointerdown的旧矩形完成到新画面。",
+    "窄窗/长composer/反馈框focus只滚动局部预览，不抬走整个App；不能只用独立组件截图验布局。"
+  ],
+  "lifecycleAndPersistence": [
+    "frame与source在layout登记/cleanup清ref后退休；StrictMode重放新建，不能重用已退休source。",
+    "翻页、换文件、刷新、hidden、取消、错误或卸载先同步撤candidate；迟到onLoad/worker bitmap/旧button handler不能重新登记。已确认意见仍指原版本和原页。",
+    "旧版手工重新读取后不自动套用旧rect；新增版本通过相同path但不同contentId形成不同意见项，失败保留原snapshot和原稿。",
+    "格式化消息明确文件/SHA、PDF第几页、显示方向左上原点和四边百分比、历史位置未重核。继承现verifyVersion提示；仅take到原对话输入框，不自动发附件、截图、OCR或模型请求。",
+    "保存失败/未知沿既有unsentWork保护，非法新anchor整份拒绝且不覆盖旧存储。只保存坐标不保存frame对象、图片数据或live许可。"
+  ],
+  "acceptance": [
+    "纯坐标oracle：四角/边界、反向、零面积、极窄矩形、量化、NaN/Infinity、越界/额外字段、逆序数字输入；copy/retired frame和selection拒绝。",
+    "绘制oracle：自有非对称色块PDF，CropBox偏移/非方形页/0-90-180-270固有旋转；在DPR1/2及不同栏宽对同一色块定位。不把bitmap宽高等于原PDF大小当断言。",
+    "图片oracle：PNG及非对称JPEG EXIF1..8，实际HTML图片和选区覆盖一致；静态GIF/WebP受控路径，动画/损坏/超限仍拒绝且无可选frame。",
+    "双引擎真实指针及数字输入Enter两阶段：录实际focus、可见边界、确认后anchor；不能仅调用handler或程序化Range冒充鼠标/键盘。",
+    "所有权：同页重渲染迟到、翻页旧bitmap、image onLoad迟到、hide/unmount、错误、pending锁再解锁、StrictMode；新source不等于旧source且旧回调无效。",
+    "自动检查：无效数字编辑也保持hold；有candidate延后换版；取消释放；自动stage只读一次且interactionBlocked不会使ready变paused形成循环。",
+    "历史/草稿：确认前旧意见文本和anchor不变；切页/换版/重启保留准确旧目标；坏结构拒绝全部恢复；持久化失败与take仅一次且不发送。",
+    "完整App宽/窄窗、长输入、区域与意见控件可达、焦点回位、局部滚动；之后固定candidate安装macOS分项，受控浏览器不得替代native。"
+  ],
+  "implementationSplit": [
+    {
+      "owner": "runtime",
+      "files": [
+        "src/runtime/visual_feedback.ts",
+        "新 visual_feedback_target/area 坐标 helper",
+        "src/runtime/file_feedback_anchor.ts",
+        "src/runtime/feedback_strings.ts",
+        "对应解析/持久化专项"
+      ],
+      "task": "严格live frame/selection归属、两类历史anchor、formatter与旧格式兼容。"
+    },
+    {
+      "owner": "preview/UI",
+      "files": [
+        "src/components/VisualFilePreview.tsx",
+        "src/components/VisualFilePreview.css",
+        "新 VisualAreaSelection 共享组件/集中字符串",
+        "src/runtime/pdf_preview.ts",
+        "src/runtime/pdf_render_core.ts",
+        "相关worker及专项"
+      ],
+      "task": "实际frame回执、局部矩形与键盘同路径、blocked/取消/失效，不放宽绘制限额。"
+    },
+    {
+      "owner": "parent/integration",
+      "files": [
+        "src/components/OpenedFileView.tsx",
+        "通用临时editing类型/父层保护",
+        "父层反馈测试"
+      ],
+      "task": "ready/current source复核、旧意见保留、自动刷新hold与失败保护；不扩Office接口为不相关Agent能力。"
+    },
+    {
+      "owner": "independent verification",
+      "files": ["仅新受控样本与独立测试/evidence"],
+      "task": "独立像素/方向/归属oracle、双引擎完整App和后续native分项，先保留失败原始输出。"
+    }
+  ],
+  "peerChallenge": {
+    "reviewer": "architecture",
+    "coverage": "仅窄坐标方向/letterbox/DPR/同页新frame挑战；不是实施或浏览器审查。",
+    "accepted": "element外框不能代表真实像素内容；新frame/方向/内容尺寸变化退休旧source，未知几何不生成candidate。"
+  },
+  "notClaimed": [
+    "区域功能已开发或实测",
+    "PDF原始文本/内部坐标编辑、图片裁剪文件或OCR",
+    "P16全部格式/完整Office/PPTX",
+    "P20全部环境",
+    "P21全项完成",
+    "P22真实Agent修改与完整返工",
+    "Windows实机"
+  ],
+  "verificationPerformed": "本文件仅对当前源码和已安装PDF.js依赖源码只读核查，未跑测试/浏览器/正式应用/Agent；只写此设计回执并定向格式。",
+  "sourceSha256": {
+    "src/components/VisualFilePreview.tsx": "b6cf6df1172ee5af245621b3168203b81961b82fdfeba5e85ac47b4c53a47571",
+    "src/components/VisualFilePreview.css": "f94dc2a3334875e20b8ebc8e248ec3d5a0410e46a97e95877658a9f25ef2cad4",
+    "src/runtime/visual_feedback.ts": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef",
+    "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+    "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+    "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+    "src/runtime/file_feedback_anchor.ts": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a",
+    "src/runtime/drafts.ts": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+    "src/runtime/feedback_strings.ts": "919335f8c79178b7d5802b35fb43b7479ab35b697ad72a5dfcb94528b22e98f5",
+    "src/runtime/draft_images.ts": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86",
+    "src/runtime/visual_preview.ts": "4dfc24d0c69496bd4e93bf4e6211d144b97af1e8d411a0a3451b6538db196141",
+    "src/runtime/office_target_editing.ts": "d14f4169c92c74ae8a4c667bb6604fc398d2cc8443912fb741ef9170a5d314db"
+  }
+}

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.range-recovery-review.test.tsx (1 test | 1 failed) 8ms
+   × failed explicit refresh preserves an invalid visible range draft and its automatic-replacement hold 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.range-recovery-review.test.tsx > failed explicit refresh preserves an invalid visible range draft and its automatic-replacement hold
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/OpenedFileView.range-recovery-review.test.tsx:46:37
+     44|  const refresh=parent().find(n=>n.type === "button" && n.props.childre…
+     45|  (refresh.props.onClick as()=>void)();await drain();leaf();
+     46|  expect(child().interactionBlocked).toBe(true);
+       |                                     ^
+     47|  finish(new Error("controlled stage failure"));await drain();tree=leaf…
+     48|  expect(child().interactionBlocked).toBe(false);expect(field().props.v…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:24:46
+   Duration  307ms (transform 151ms, setup 0ms, import 238ms, tests 8ms, environment 0ms)
+

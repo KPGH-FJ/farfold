@@ -1,0 +1,50 @@
+{
+  "updatedAtUtc": "2026-10-10T01:53:20.452185+00:00",
+  "goal": "Continue the sole active market-readiness plan; global completion remains false.",
+  "head": "840972b705e9bc142d70857e80570e149ae33ded",
+  "formalApp": {
+    "commit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+    "version": "0.1.7",
+    "state": "Normally closed; no replacement since DOCX initial native checks"
+  },
+  "currentSlice": [
+    "XLSX exact arbitrary rectangle feedback, partial merge/hidden acknowledgement and editing protection",
+    "NEW03 DOCX inner paragraph/table reading windows and same-link reselection",
+    "Independent writer compatibility: OPC Default content-type fallback with Override priority and ASCII matching"
+  ],
+  "completedEvidence": [
+    "DOCX initial native plus private copy normalization analysis committed in 840972b7; NEW03 failure preserved",
+    "Parent 128 related checks; UI/runtime/independent receipts in this directory",
+    "NEW03 source and full-App dual browser verification, separate receipt under docx-reading-position-repair",
+    "First engineering: 322 files/3785 tests,type/build pass; format failed and original result retained",
+    "Writer original Worker rejection diagnosed; two source files repaired; 203 related checks and dual-engine 404 checks reported by independent reviewer",
+    "Final engineering: 323 files/3811 tests, type/build/full format pass; 1171 inputs stable; unchanged Rust evidence explicitly reused",
+    "Independent full-App rectangle 148 assertions and DOCX 208 assertions passed across WebKit/Chromium",
+    "Final integration-independent.json: no blocker, 1171 exact candidate inputs and receipt hashes verified"
+  ],
+  "inProgress": [
+    "Scoped commit, followed by exact committed candidate preparation"
+  ],
+  "preparedNotExecuted": [
+    "workbook-range-candidate helpers and private output/2026-10-10-workbook-range-install installer; no candidate build or install yet",
+    "Owned native fixture /private/tmp/farfold-workbook-range-ugrktdm1; current v1; guarded switch helper self-checked and restored"
+  ],
+  "dataProtection": {
+    "privateBackup": "output/2026-10-10-workbook-range-install/metadata-before.sqlite3",
+    "beforeManifestEntries": 217400,
+    "beforeManifestSha256": "465640b0dbd7f3f7e2594897f073b693eccdfbc0d5a4e1213fe058c1c3b6d7dd",
+    "originalDbOpened": false
+  },
+  "next": [
+    "Scoped source commit, exact candidate build and 9-check verification",
+    "Capture preinstall, guarded sole-app replacement, postinstall retention and 10-check review, remove exact duplicate build bundle",
+    "Native XLSX rectangle and NEW03 recheck; preserve all original drafts and record actual results",
+    "Then continue PDF/image areas and real-Agent rework; both remain open"
+  ],
+  "boundaries": [
+    "No blanket P20/P21/P22 or market-complete claim",
+    "Existing source/fixture/controlled browser/candidate/native/real-Agent proof levels remain distinct",
+    "Two unrelated dirty 2026-10-08 review Markdown files are protected; no push",
+    "Deferred monitor means explicit reread after an editing hold. Test harness assumptions that expected automatic reattempt were corrected and failures preserved."
+  ]
+}

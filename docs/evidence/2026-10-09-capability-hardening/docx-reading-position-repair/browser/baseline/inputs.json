@@ -1,0 +1,26 @@
+{
+  "commit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+  "method": "Test-harness Vite load overlay for these four exact committed source bytes only; current workspace is untouched. Other imports use frozen current source. This is controlled source replay, not a formal installed application.",
+  "files": [
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "snapshot": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/DocxDocumentView.tsx.source.txt",
+      "sha256": "ccf57d848e16ee117b3f9493bd82a85fa84f514e5b0875d2f0f9414a259dfea0"
+    },
+    {
+      "path": "src/runtime/preview_reading_position.ts",
+      "snapshot": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/preview_reading_position.ts.source.txt",
+      "sha256": "6e928a9a6cfba4c7187560b44a6e19a2356b428e732d52b3faab0be6e3c85168"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "snapshot": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/ArtifactPane.tsx.source.txt",
+      "sha256": "cfed4403a9070469930c66c8388709b62625f74f39627390d49ea0bbdb483c33"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "snapshot": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/OpenedFileView.tsx.source.txt",
+      "sha256": "5c78c204200dc4625dcee6ecff1614fab4d8599c3ab4930ff1adb74f6304187e"
+    }
+  ]
+}

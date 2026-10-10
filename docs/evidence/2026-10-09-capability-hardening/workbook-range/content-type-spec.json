@@ -1,0 +1,28 @@
+{
+  "checkedAtUtc": "2026-10-10T01:41:30.381754+00:00",
+  "source": {
+    "publisher": "Ecma International",
+    "document": "ECMA-376 Part 2, fifth edition, December 2021",
+    "url": "https://ecma-international.org/wp-content/uploads/ECMA-376-2_5th_edition_december_2021.zip",
+    "zipSha256": "1d489dc491168ea1f9e9a59063acc8dd5f02b4ad1d21aa7ec19ba9a58d020c70",
+    "entry": "Ecma Office Open XML Part 2 - Open Packaging Conventions.pdf",
+    "pdfSha256": "18701071fe15f39389761f82512c70d2effbf22bd16dd034f2939797ff5f6147",
+    "localPrivateCopy": "output/2026-10-10-workbook-range/opc-spec/part2.pdf"
+  },
+  "reviewedSections": [
+    {
+      "section": "7.2.3.2.1",
+      "printedPage": 28,
+      "pdfPage": 38,
+      "finding": "Content types may be supplied by a matching Default, Override, or both; Override wins. Duplicate mappings are prohibited; mapping order does not matter."
+    },
+    {
+      "section": "7.2.3.5",
+      "printedPage": 31,
+      "pdfPage": 41,
+      "finding": "Look up the part name in Overrides first, then use the final path segment extension in Defaults. Both comparisons use ASCII case-insensitive matching."
+    }
+  ],
+  "application": "The independent writer uses a Default for the workbook main XML and Overrides for other XML parts. Current failure was caused by missing Default lookup, not by a modified or malformed fixture. Macro/unknown workbook types still require the existing explicit rejection.",
+  "boundary": "Specification review only; source, Worker and full-App behavior have separate evidence."
+}

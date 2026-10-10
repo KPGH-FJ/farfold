@@ -1,0 +1,12 @@
+src/components/DocxReadingWindows.test.tsx 63ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/app-captures.json 37ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.json 73ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.json 20ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.json 14ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.json 29ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.json 26ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.json 32ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.json 28ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.json 13ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.json 38ms
+docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.json 19ms

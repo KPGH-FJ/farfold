@@ -1,0 +1,1 @@
+{"passed":true,"sourceUnchanged":true,"cases":[{"name":"literal-partial-cross-maximum","pass":36},{"name":"hidden-ack-sheet-retire","pass":16},{"name":"editing-defers-manual-hide-and-version","pass":13},{"name":"unblocked-automatic-stage","pass":9}]}

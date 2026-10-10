@@ -1,0 +1,14 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.json
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.json
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.json
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.json
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.json
+[warn] docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.json
+[warn] src/components/DocxReadingWindows.test.tsx
+[warn] Code style issues found in 7 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

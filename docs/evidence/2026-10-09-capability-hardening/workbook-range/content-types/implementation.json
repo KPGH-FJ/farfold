@@ -1,0 +1,305 @@
+{
+  "recordedAt": "2026-10-10T01:47:19.548327+00:00",
+  "status": "targeted_fix_verified_source_frozen",
+  "scope": "XLSX OPC 主工作簿内容类型解析；独立真实 Worker 精确矩形 oracle，非正式安装或真实 Agent 验收。",
+  "originalFailure": {
+    "observed": "未经修改的两个独立普通 writer ZIP 在真实 WebKit Worker 首个 sheet 即 unsupported；受控同步诊断定位 xlsx_parse 的仅 Override 查找。",
+    "classification": "Farfold parser 兼容缺陷；不是样本 capture 字节损坏，也不是范围 factory 或 oracle 期望错误。",
+    "originalEvidence": [
+      {
+        "name": "webkit-worker-first",
+        "passed": false,
+        "assertionCount": 0,
+        "failedAssertions": [],
+        "outputCount": 1,
+        "inputCount": 729,
+        "inputChangedDuringExecution": [],
+        "differencesFromCurrentInputsAtReceipt": [
+          "src/runtime/xlsx_parse.ts",
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.ts"
+        ],
+        "blockedNetworkCount": 0,
+        "pageErrors": [],
+        "jsonSemanticallyEqualsOriginalRaw": true,
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.json",
+          "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.raw.txt",
+          "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.txt",
+          "sha256": "b51edd8bed682da874984fba72688515e2d2f9c12c3002dcc1f5577b975918b6"
+        }
+      },
+      {
+        "name": "webkit-worker-diagnostic",
+        "passed": false,
+        "assertionCount": 0,
+        "failedAssertions": [],
+        "outputCount": 1,
+        "inputCount": 731,
+        "inputChangedDuringExecution": [],
+        "differencesFromCurrentInputsAtReceipt": [
+          "src/runtime/xlsx_parse.ts",
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run.mjs",
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.ts"
+        ],
+        "blockedNetworkCount": 0,
+        "pageErrors": [],
+        "jsonSemanticallyEqualsOriginalRaw": true,
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.json",
+          "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.raw.txt",
+          "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.txt",
+          "sha256": "b51edd8bed682da874984fba72688515e2d2f9c12c3002dcc1f5577b975918b6"
+        }
+      }
+    ]
+  },
+  "officialSemantics": {
+    "rule": "OPC Part 2 §7.2.3.5 先按 partName 的 ASCII 不区分大小写匹配 Override；无匹配时取最后路径段最后点后的 extension，以 ASCII 不区分大小写匹配 Default。§7.2.3.4 规定扩展比较。",
+    "primary": [
+      {
+        "url": "https://ecma-international.org/wp-content/uploads/ECMA-376-2_5th_edition_december_2021.zip",
+        "section": "7.2.3.4–7.2.3.5；印刷第31页/PDF第41页",
+        "sourceVerification": "root 独立提取并核阅；当前实现依该规则，未把 .NET 实现当作规范本身。",
+        "pdfSha256": "18701071fe15f39389761f82512c70d2effbf22bd16dd034f2939797ff5f6147",
+        "zipSha256": "1d489dc491168ea1f9e9a59063acc8dd5f02b4ad1d21aa7ec19ba9a58d020c70"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/dotnet/runtime/main/src/libraries/System.IO.Packaging/src/System/IO/Packaging/ZipPackage.cs",
+        "scope": "官方实现交叉核查 GetContentType 的 Override/Default 顺序及 ExtensionEqualityComparer；可变 main 链接，不用于 pin 运行行为。"
+      }
+    ]
+  },
+  "change": {
+    "ownedSources": [
+      {
+        "path": "src/runtime/xlsx_parse.ts",
+        "sha256": "99a63a367bfedf3175614e000032cb43507baa7a69343b5ef6aca013c5042b43"
+      },
+      {
+        "path": "src/runtime/xlsx_content_types.test.ts",
+        "sha256": "d05d0d27976083975f77d6b15783096391f31ef243a422a4d8b58f0e736e778f"
+      }
+    ],
+    "behavior": [
+      "正确识别合法 Default 主类型回退，Override 在任意声明顺序均优先。",
+      "Override 和 Default 使用 ASCII 大小写等价匹配，重复等价声明拒绝；非法/缺失字段、陌生命名空间或嵌套结构保持拒绝。",
+      "主类型只接受原有 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml；macro/template/未知类型不因 Default 或文件扩展被放开。",
+      "没有增加 MIME 解析器、依赖、网络访问或格式/资源上限；未编辑原 ZIP、oracle、UI 或 Rust。"
+    ]
+  },
+  "controlledTests": [
+    {
+      "checkpoint": "original",
+      "tests": 24,
+      "passed": 8,
+      "failed": 16,
+      "log": "red.txt"
+    },
+    {
+      "checkpoint": "default_fix",
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "log": "green-first.txt"
+    },
+    {
+      "checkpoint": "ASCII_override_counterexample",
+      "tests": 26,
+      "passed": 24,
+      "failed": 2,
+      "log": "ascii-red.txt"
+    },
+    {
+      "checkpoint": "final_related",
+      "files": 6,
+      "tests": 203,
+      "passed": 203,
+      "failed": 0,
+      "log": "related-final.txt"
+    }
+  ],
+  "commands": {
+    "related": "corepack pnpm exec vitest run src/runtime/xlsx_content_types.test.ts src/runtime/xlsx_parse.test.ts src/runtime/xlsx_writer_compatibility.test.ts src/runtime/xlsx_preview.test.ts src/runtime/workbook_feedback_range.test.ts src/runtime/workbook_feedback_target.test.ts",
+    "finalTypecheck": "corepack pnpm typecheck",
+    "finalTypecheckExitCode": 0,
+    "helperFormatCheckExitCode": 0
+  },
+  "workerOracle": {
+    "fixtures": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-layout.xlsx",
+        "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d",
+        "bytes": 6547,
+        "allXmlPartBytesMatchCapture": true,
+        "partCount": 10,
+        "inflatedBytes": 22649
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-nonordinal-hidden.xlsx",
+        "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde",
+        "bytes": 6522,
+        "allXmlPartBytesMatchCapture": true,
+        "partCount": 10,
+        "inflatedBytes": 22680
+      }
+    ],
+    "capture": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/capture-data.json",
+      "sha256": "04cba52c9f9555763ba6e2e5ce8d300b2a032214299a1f7917039d47410c7f59"
+    },
+    "fixtureOracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.json",
+      "sha256": "09cf15c9eaeec8600dbe0463f02a6a0752a23f7470cc1d810cba8a045243fc55"
+    },
+    "fixtureManifest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/manifest.json",
+      "sha256": "c07a82fe65894feb438353ac40d394772eea2ce101f4eab6afa5445f24bbd250"
+    },
+    "scope": "每引擎 2 个原 ZIP × 2 个 sheet × 12 个范围，使用真实 readWorkbookPreview/Worker 输出；另核实际 sheet id、0/false/公式缓存、live factory、hidden ack 和不可逆退休。总 404 个断言不是 404 个独立文件样本。",
+    "reports": [
+      {
+        "name": "webkit-worker-fixed",
+        "passed": true,
+        "assertionCount": 404,
+        "failedAssertions": [],
+        "outputCount": 4,
+        "inputCount": 732,
+        "inputChangedDuringExecution": [],
+        "differencesFromCurrentInputsAtReceipt": [
+          "src/runtime/xlsx_content_types.test.ts",
+          "src/runtime/xlsx_parse.ts",
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run.mjs"
+        ],
+        "blockedNetworkCount": 0,
+        "pageErrors": [],
+        "jsonSemanticallyEqualsOriginalRaw": true,
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.json",
+          "sha256": "66594b1d5db8d0e928488eb2df893aad3ca0cad67c05c03198185aed1edf94aa"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.raw.txt",
+          "sha256": "595062924a43354877740b2aa58280684b8a6dcc8b22f45fe5a1849197292b46"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.txt",
+          "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712"
+        }
+      },
+      {
+        "name": "webkit-worker-final",
+        "passed": true,
+        "assertionCount": 404,
+        "failedAssertions": [],
+        "outputCount": 4,
+        "inputCount": 732,
+        "inputChangedDuringExecution": [],
+        "differencesFromCurrentInputsAtReceipt": [
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run.mjs"
+        ],
+        "blockedNetworkCount": 0,
+        "pageErrors": [],
+        "jsonSemanticallyEqualsOriginalRaw": true,
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.json",
+          "sha256": "634198e62071083d96b88eab94d83432360e772d0f7071a5d5de8e42977ce102"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.raw.txt",
+          "sha256": "16f0433b3e4555312383b96782c43b98375c347a7bc2d3b9dccb383d8c5fd71e"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.txt",
+          "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712"
+        }
+      },
+      {
+        "name": "chromium-worker-final",
+        "passed": true,
+        "assertionCount": 404,
+        "failedAssertions": [],
+        "outputCount": 4,
+        "inputCount": 732,
+        "inputChangedDuringExecution": [],
+        "differencesFromCurrentInputsAtReceipt": [
+          "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run.mjs"
+        ],
+        "blockedNetworkCount": 0,
+        "pageErrors": [],
+        "jsonSemanticallyEqualsOriginalRaw": true,
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.json",
+          "sha256": "89d4dcfd8df6285b20463da13329c3ca56cb661700ea0cceb307aeef0afba248"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.raw.txt",
+          "sha256": "c31b4143c89803864aacb3a7348b2628ef178eef77fd124ebc35cf87be9cc5fb"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.txt",
+          "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712"
+        }
+      }
+    ],
+    "cleanup": "每次 runner finally 关闭其专用浏览器；共享 Vite 1466 属 verification，未停止。",
+    "boundaries": [
+      "独立 ZIP 解包后的实际 part 字节注入 WorkbookCapture，不声明此次浏览器重复验证 Rust ZIP 安全预检或 IPC。",
+      "纯 Worker/oracle 通过不代替完整 App UI、正式 WK 安装验收或所有 Excel 格式兼容；完整 App 由 verification 独立续验。",
+      "App run.mjs 后续改动若列于 current delta，仅表示其他 owner 的受控驱动演进；各次记录输入在运行时前后均一致，最终生产 source 当前匹配。"
+    ]
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/red.txt",
+      "sha256": "cd76dfc5712c702858cc4b2a6c0f3d3415db5684362392df7299545ae2c5d32a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/green-first.txt",
+      "sha256": "f6d76ab7a6aaf166be7db48ebb4b549523406dcbe002a0d7f8a25685c119d3f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/related-green.txt",
+      "sha256": "40e3bb552c9a26fd238aa9a262eff6077fe06e699eeea1d91f737d6ad51feef2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/ascii-red.txt",
+      "sha256": "fd5fa3bf21030ed4934eafbac8717a9cb15c2639787eead59387059ac540b7e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/related-final.txt",
+      "sha256": "6fa22d6c7c4927b82108e88e9c916b7cc194e31420ae5524bafd54a651e11060"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/helper-format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/evidence-format.txt",
+      "sha256": "2276a038f06bd485a90a8612c6737aa8e36a03ad719ed3f8a8a512d1091c38ba"
+    }
+  ],
+  "pending": [
+    "root 针对此新生产变化重跑全前端/类型/构建/格式等整合，Rust 输入未变是否复用由精确输入核验决定。",
+    "候选及安装/native 仍待 root 后续阶段。"
+  ]
+}

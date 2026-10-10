@@ -1,0 +1,91 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx (19 tests | 6 failed) 1160ms
+   × defers replacement for incomplete range editing without inventing feedback 56ms
+   × only the current editing owner can release the replacement hold 53ms
+   × rejects a retired editing owner and permits a new effect owner 54ms
+   × rejects an editing report for a different verified file 52ms
+   × clears and retires editing on hide, rejecting a late reopen callback 57ms
+   × rejects old editing callbacks after explicit same-file reread 59ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > defers replacement for incomplete range editing without inventing feedback
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:489:5
+    487| it("defers replacement for incomplete range editing without inventing …
+    488|   const p = await ready();
+    489|   p.onOfficeTargetEditing({ owner: {}, file: p.file, editing: true });
+       |     ^
+    490|   expect(await monitor().apply({ ...file, version: "v2" }, () => true)…
+    491|   expect(h.prepare).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > only the current editing owner can release the replacement hold
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:496:5
+    494| it("only the current editing owner can release the replacement hold", …
+    495|   const p = await ready(), a = {}, b = {};
+    496|   p.onOfficeTargetEditing({ owner: a, file: p.file, editing: true });
+       |     ^
+    497|   p.onOfficeTargetEditing({ owner: b, file: p.file, editing: true });
+    498|   p.onOfficeTargetEditing({ owner: a, file: p.file, editing: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects a retired editing owner and permits a new effect owner
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:505:5
+    503| it("rejects a retired editing owner and permits a new effect owner", a…
+    504|   const p = await ready(), owner = {};
+    505|   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+       |     ^
+    506|   p.onOfficeTargetEditing({ owner, file: p.file, editing: false });
+    507|   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects an editing report for a different verified file
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:517:5
+    515| it("rejects an editing report for a different verified file", async ()…
+    516|   const p = await ready();
+    517|   p.onOfficeTargetEditing({ owner: {}, file: { ...p.file, sha256: "f".…
+       |     ^
+    518|   expect(await monitor().apply({ ...file, version: "v2" }, () => true)…
+    519| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > clears and retires editing on hide, rejecting a late reopen callback
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:522:5
+    520| it("clears and retires editing on hide, rejecting a late reopen callba…
+    521|   const p = await ready(), owner = {};
+    522|   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+       |     ^
+    523|   render({ ...props, active: false });
+    524|   render({ ...props, active: true });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects old editing callbacks after explicit same-file reread
+TypeError: p.onOfficeTargetEditing is not a function
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:531:5
+    529| it("rejects old editing callbacks after explicit same-file reread", as…
+    530|   const p = await ready(), owner = {};
+    531|   p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+       |     ^
+    532|   click(S.refresh);
+    533|   await vi.waitFor(() => expect(child().file).toBe(file));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 13 passed (19)
+   Start at  09:17:19
+   Duration  1.64s (transform 177ms, setup 0ms, import 328ms, tests 1.16s, environment 0ms)
+

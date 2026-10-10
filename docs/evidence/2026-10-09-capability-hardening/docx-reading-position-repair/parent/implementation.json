@@ -1,0 +1,73 @@
+{
+  "recordedAtUtc": "2026-10-10T01:20:17.812022+00:00",
+  "status": "source frozen; parent component tests passed; native re-selection remains separately verified by root",
+  "scope": "NEW03 current content-bar reading ref retention across same-file explicit selections",
+  "implementation": [
+    "ArtifactPane keeps one transient entry scoped by exact thread.key + cwd + requested path. A selection counter change keeps this entry while preserving the existing OpenedFileView key/remount and re-read behavior.",
+    "Path/thread/cwd changes synchronously replace the complete position object, including when no current file is displayed. A late write to an earlier entry cannot mutate the new object.",
+    "Hide/show, browser mode and temporary back-to-artifact-list keep the current single entry. Selecting another file discards it; selecting the first file again starts with a new empty ref.",
+    "Requested path strings are compared exactly. The parent does not infer path aliases, verified version identity, content or feedback. Children retain their existing actual-read and stale-result protections."
+  ],
+  "owned": [
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "19ac80ca7f6d9bcf99dec5c9a7e6169e517240a31efc8da6493278ca5b6ce4d9",
+      "lines": 569
+    },
+    {
+      "path": "src/components/ArtifactPane.reading-position.test.tsx",
+      "sha256": "ea22a71f1aaa5ea3e0a0facb11763a3821a3e601a545e604d250ab463523b69c",
+      "lines": 203
+    }
+  ],
+  "tests": [
+    {
+      "raw": "red.txt",
+      "result": "8 failed / 8: original ArtifactPane supplies no readingPosition prop"
+    },
+    {
+      "raw": "green.txt",
+      "result": "8 passed / 8 after implementation"
+    },
+    {
+      "raw": "related.txt",
+      "result": "5 files / 45 passed, exit 0",
+      "command": "corepack pnpm exec vitest run src/components/ArtifactPane.reading-position.test.tsx src/components/ArtifactPane.browser.test.tsx src/components/ArtifactPane.copy.test.tsx src/components/ArtifactPane.focus.test.tsx src/components/ArtifactPane.rounds.test.tsx"
+    },
+    {
+      "raw": "typecheck.txt",
+      "result": "corepack pnpm typecheck, exit 0"
+    },
+    {
+      "raw": "format.txt",
+      "result": "targeted Prettier check on two owned files, exit 0"
+    }
+  ],
+  "raw": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/red.txt",
+      "sha256": "7eff6714e66c93c6b38b31603b259655715ede6497dda5528b49060d6f2199be"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/green.txt",
+      "sha256": "64040e7ab81722407a7e9e72cc14580fb4a16eebde85f0e031235ec33d913f47"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/related.txt",
+      "sha256": "40642bf8d4bc26d8e1a1895c50e8028cfb5e03d89cf3a99983a8058e066cb595"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "boundaries": [
+    "Tests inspect the actual ArtifactPane component, persistent hook slots, child key/props and exact object identity; child reads/DOM/native rendering are not executed by this fixture.",
+    "OpenedFileView optional readingPosition prop and internal fallback are root-owned; DOCX internal paragraph/table-window storage and browser validation are verification-owned.",
+    "No original 8c2f evidence, DOCX source, OpenedFileView, runtime position helper, application, Agent or user data modified."
+  ]
+}

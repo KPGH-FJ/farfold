@@ -1,5 +1,6 @@
 import { OpenedFileView } from "./OpenedFileView";
 import type { VerifiedFile } from "../runtime/file_delivery";
+import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { BrowserWorkspace } from "./BrowserWorkspace";
 import { browserWorkspaceClient } from "../runtime/browser_surface";
 import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_strings";
@@ -141,6 +142,29 @@ export function ArtifactPane({
     chooseContent("files");
   };
   const currentFile = openedFile?.taskKey === thread.key ? openedFile : null;
+  // One transient entry, not a per-file cache. Selection IDs still remount the
+  // reader; only the same request path within this thread/directory keeps location.
+  const reading = useRef<{
+    threadKey: string;
+    cwd: string;
+    path: string | null;
+    position: PreviewReadingPositionRef;
+  } | null>(null);
+  if (
+    !reading.current ||
+    reading.current.threadKey !== thread.key ||
+    reading.current.cwd !== thread.cwd ||
+    (currentFile && reading.current.path !== currentFile.path)
+  )
+    reading.current = {
+      threadKey: thread.key,
+      cwd: thread.cwd,
+      path: currentFile?.path ?? null,
+      position: { current: null },
+    };
+  // Replace the object, rather than clearing an old object's current value:
+  // a late write from an old mount can then touch only its own retired entry.
+  const readingPosition = reading.current.position;
   const openHtml = (file: VerifiedFile) => {
     if (!active || !open) return;
     setHtmlRequest({ taskKey: thread.key, file });
@@ -464,6 +488,7 @@ export function ArtifactPane({
             path={currentFile.path}
             threadKey={thread.key}
             workingDirectory={thread.cwd}
+            readingPosition={readingPosition}
             active={active && open && !showingBrowser}
             onOpenHtml={openHtml}
             headerActions={headerActions}

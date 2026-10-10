@@ -28,6 +28,34 @@ export const WORKBOOK_STRINGS = {
   warnings: "预览范围说明",
   detail: "单元格内容",
   closeDetail: "收起单元格内容",
+  feedbackRangeOpen: "选择意见范围",
+  feedbackRangeInput: "意见范围",
+  feedbackRangeSelect: "选择范围",
+  feedbackRangeConfirm: "对此范围提意见",
+  feedbackRangeCancel: "取消选择",
+  feedbackRangeInvalid: "请输入当前工作表的范围，例如 A1 或 A1:C200。",
+  feedbackRangeScope:
+    "填写坐标仅指定意见位置，不表示已查看其中所有内容。选择范围后需明确确认，才会更换意见目标。",
+  feedbackRangeOutside: "意见针对所填范围，当前仅显示其中一部分。",
+  feedbackRangeSummary: (
+    sheet: string,
+    range: string,
+    rows: number,
+    columns: number,
+  ) => `工作表“${sheet}” · ${range} · ${rows} 行 × ${columns} 列`,
+  feedbackRangeHidden: (rows: number, columns: number) =>
+    `此范围包含 ${rows} 个隐藏行、${columns} 个隐藏列。确认只包括这些位置，不会显示隐藏内容。`,
+  feedbackRangeHiddenRows: "隐藏行位置",
+  feedbackRangeHiddenColumns: "隐藏列位置",
+  feedbackRangeIncludeHidden: "范围包括这些隐藏行列",
+  feedbackRangePartialMerges: (count: number) =>
+    `此范围与 ${count} 个合并单元格部分相交，意见仍针对所填范围，不会扩大到整个合并范围。`,
+  feedbackRangeMerges: "涉及的完整合并范围",
+  feedbackRangeListPage: (from: number, to: number, count: number) =>
+    `显示第 ${from}–${to} 项，共 ${count} 项`,
+  feedbackRangeListPrevious: "上一组位置",
+  feedbackRangeListNext: "下一组位置",
+  feedbackRangeIntersection: "此单元格与意见范围部分相交；意见仍针对所填坐标。",
   feedbackCell: "对此单元格提意见",
   feedbackMerge: "对整个合并范围提意见",
   feedbackTarget: (anchor: XlsxRangeAnchor) => {

@@ -1,0 +1,119 @@
+{
+  "recordedAtUtc": "2026-10-10T01:08:00.661805+00:00",
+  "status": "independent_fixtures_frozen_product_verification_pending",
+  "owner": "verification",
+  "scope": "New synthetic fixtures only. No existing fixture, candidate input, production source, Agent, formal App, or user data was changed.",
+  "authoring": {
+    "writer": "bundled @oai/artifact-tool",
+    "version": "2.8.89",
+    "runtime": "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "originalExecutedSource": "build.raw.txt",
+    "formattedSource": "build.mjs",
+    "originalOutput": "build.txt",
+    "rerunPolicy": "Do not rerun writer/oracle in this frozen directory. Copy scripts to a new owned staging directory; writer output has random relationship IDs.",
+    "originalWriterFile": "range-layout.xlsx",
+    "controlledXmlDerivative": "range-nonordinal-hidden.xlsx",
+    "derivativeIsOrdinaryWriterOutput": false
+  },
+  "verified": {
+    "zipFiles": 2,
+    "sheetsAcrossBothFiles": 4,
+    "rangeGeometryFacts": 48,
+    "crcAndSecondXmlParser": true,
+    "cellTypeValueFormulaMergeEqualityAcrossDerivative": true,
+    "changedZipParts": [
+      "xl/workbook.xml",
+      "xl/_rels/workbook.xml.rels",
+      "xl/worksheets/sheet1.xml",
+      "xl/worksheets/sheet2.xml"
+    ],
+    "oracleJsonFormattingSemanticEqual": true,
+    "publishedBinaryCopiesExact": true,
+    "writerPreviewImagesActuallyViewed": [
+      "main-preview.png",
+      "duplicate-preview.png",
+      "cross-window-preview.png"
+    ]
+  },
+  "notVerified": [
+    "Farfold parser/Worker compatibility and rendering",
+    "The new rectangle capability or any current API",
+    "Controlled full App browser behavior",
+    "Tauri native behavior",
+    "Third-party Excel/LibreOffice opening"
+  ],
+  "policy": "Current root-authorized product rules are test design only in counterexamples.json. oracle.json keeps original pending-policy wording because its immutable factual snapshot preceded authorization; no geometry changed.",
+  "next": "After owners freeze the new implementation, run actual parser/Worker against original files and compare exact relationship mapping/coordinates before full App dual-engine scenarios. Preserve incompatibilities as real failures.",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.mjs",
+      "bytes": 3084,
+      "sha256": "ee26503721e1325837b2f9654ab31f3e98acd029f6e97b71c6c85b058b6990eb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.raw.txt",
+      "bytes": 2915,
+      "sha256": "c606d47a9eafd40048a5d483151936a9f080a965d6f4b021b12d20a909adfe55"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.txt",
+      "bytes": 700,
+      "sha256": "4e90395cc82325ba7cdeb816bc8b36c2d4b42c38513dd50cca18ac2fc8f51740"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/counterexamples.json",
+      "bytes": 8254,
+      "sha256": "780c14a50dbf148f4d1d0414c1f359bf713ee4cd63e1556f751247f4e58c51fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/cross-window-preview.png",
+      "bytes": 29840,
+      "sha256": "1f579a6fe8dbe217879d3e483adff55268cd92ab58b64ff63a73a934eadf89ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/duplicate-preview.png",
+      "bytes": 18243,
+      "sha256": "f90bc93c0a1acde89735a6684b24580c85ae07ee2e875d23ccbefe371281f2de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/fixture-integrity.txt",
+      "bytes": 620,
+      "sha256": "31e46d4df14f83ec6534d52a13753ea45553ce86998b6c1bf753fac09af1f08d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/main-preview.png",
+      "bytes": 18243,
+      "sha256": "f90bc93c0a1acde89735a6684b24580c85ae07ee2e875d23ccbefe371281f2de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle-check.txt",
+      "bytes": 307,
+      "sha256": "de9f5926e128267ae3fa51c66735496a41046af3ccd19873dee09b206d4e327c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.json",
+      "bytes": 192185,
+      "sha256": "09cf15c9eaeec8600dbe0463f02a6a0752a23f7470cc1d810cba8a045243fc55"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.py",
+      "bytes": 10657,
+      "sha256": "443f392107e642c87788765ad714eda4b098580c94d1216712a6997656ab1b4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.raw.txt",
+      "bytes": 193953,
+      "sha256": "68f716b58e880906af8a02b46ad3c16844f05dda2b2e507beb6a903cddfdbe9a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-layout.xlsx",
+      "bytes": 6547,
+      "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-nonordinal-hidden.xlsx",
+      "bytes": 6522,
+      "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde"
+    }
+  ]
+}

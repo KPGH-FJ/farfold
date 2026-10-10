@@ -1,0 +1,101 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ArtifactPane.reading-position.test.tsx (8 tests | 8 failed) 7ms
+   × same requested path reuses its position but each explicit selection still remounts the reader 4ms
+   × path identity gets a new ref and old late writes cannot pollute it 1ms
+   × thread identity gets a new ref and old late writes cannot pollute it 1ms
+   × cwd identity gets a new ref and old late writes cannot pollute it 0ms
+   × only one file position is retained; visiting another file discards the first 1ms
+   × hide/show, browser mode and back-to-list keep the current single-file ref 0ms
+   × a thread round-trip without a current file cannot revive the earlier thread position 0ms
+   × distinct requested path strings do not borrow a position before the new read verifies them 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > same requested path reuses its position but each explicit selection still remounts the reader
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:55:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > path identity gets a new ref and old late writes cannot pollute it
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > thread identity gets a new ref and old late writes cannot pollute it
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > cwd identity gets a new ref and old late writes cannot pollute it
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:63:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > only one file position is retained; visiting another file discards the first
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:73:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > hide/show, browser mode and back-to-list keep the current single-file ref
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:78:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > a thread round-trip without a current file cannot revive the earlier thread position
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:86:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/components/ArtifactPane.reading-position.test.tsx > distinct requested path strings do not borrow a position before the new read verifies them
+AssertionError: expected undefined to be defined
+ ❯ ref src/components/ArtifactPane.reading-position.test.tsx:46:64
+     44| }
+     45| function ref(node:Element):PreviewReadingPositionRef {
+     46|  expect(node).toBeDefined();expect(node.props.readingPosition).toBeDef…
+       |                                                                ^
+     47| }
+     48| beforeEach(()=>{
+ ❯ src/components/ArtifactPane.reading-position.test.tsx:92:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  09:19:06
+   Duration  1.33s (transform 231ms, setup 0ms, import 1.25s, tests 7ms, environment 0ms)
+

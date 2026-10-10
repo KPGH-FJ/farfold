@@ -1,0 +1,18 @@
+{
+  "recordedAtUtc": "2026-10-10T01:47:31.568138+00:00",
+  "ownedPid": 75062,
+  "signal": "SIGTERM",
+  "wrapperExit": 143,
+  "processCheck": {
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "portCheck": {
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "allRunnersClosedOwnedBrowsersInFinally": true,
+  "noAppOrAgentActions": true
+}

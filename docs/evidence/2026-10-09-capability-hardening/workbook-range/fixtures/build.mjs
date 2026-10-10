@@ -1,0 +1,92 @@
+import fs from "node:fs/promises";
+import { Workbook, SpreadsheetFile } from "@oai/artifact-tool";
+
+// Independent writer output. Test coordinates, not production parser decisions.
+const out = new URL("./", import.meta.url).pathname;
+const workbook = Workbook.create();
+for (const name of ["范围'与&0", "同文副页"]) {
+  const sheet = workbook.worksheets.add(name);
+  sheet.showGridLines = true;
+  sheet.getRange("A1:H1").values = [
+    ["RECTANGLE SOURCE", "数值", "布尔", "空位", "原始范围", "", "", ""],
+  ];
+  sheet.getRange("A2:C2").values = [[0, false, ""]];
+  sheet.getRange("F2").formulas = [["=1+1"]];
+  sheet.getRange("A1:H12").format.font = { name: "Arial", size: 10 };
+  sheet.getRange("A1:H1").format.font = { name: "Arial", size: 10, bold: true };
+  sheet.getRange("A1:H12").format.columnWidth = 18;
+  sheet.getRange("A1:H12").format.rowHeight = 22;
+  sheet.getRange("C8:F9").merge();
+  sheet.getRange("C8").values = [["MERGE C8:F9"]];
+  sheet.getRange("B20").values = [["VISIBLE ENDPOINT B20"]];
+  sheet.getRange("E24").values = [["VISIBLE ENDPOINT E24"]];
+  sheet.getRange("C22").values = [["HIDDEN INTERIOR ROW22"]];
+  sheet.getRange("D21").values = [["HIDDEN INTERIOR COLUMN D"]];
+  sheet.getRange("W98:AB103").values = Array.from({ length: 6 }, (_, r) =>
+    Array.from({ length: 6 }, (_, c) => `R${r + 98} C${c + 23}`),
+  );
+  sheet.getRange("W97:AC105").format.columnWidth = 16;
+  sheet.getRange("W97:AC105").format.rowHeight = 24;
+  sheet.getRange("X99:AA102").merge();
+  sheet.getRange("X99").values = [["CROSS WINDOW X99:AA102"]];
+  sheet.getRange("W103:X104").merge();
+  sheet.getRange("W103").values = [["CHAIN MERGE W103:X104"]];
+  sheet.getRange("AD105:AE106").merge();
+  sheet.getRange("AD105").values = [["FAR MERGE AD105:AE106"]];
+  sheet.getRange("AB205").values = [["SPARSE TAIL AB205"]];
+}
+workbook.recalculate();
+console.log(
+  (
+    await workbook.inspect({
+      kind: "sheet",
+      include: "id,name",
+      maxChars: 1500,
+    })
+  ).ndjson,
+);
+console.log(
+  (
+    await workbook.inspect({
+      kind: "table",
+      range: "'范围''与&0'!A1:F3",
+      include: "values,formulas",
+      tableMaxRows: 3,
+      tableMaxCols: 6,
+      maxChars: 2500,
+    })
+  ).ndjson,
+);
+for (const [sheetName, file] of [
+  ["范围'与&0", "main-preview.png"],
+  ["同文副页", "duplicate-preview.png"],
+]) {
+  const preview = await workbook.render({
+    sheetName,
+    range: "A1:H12",
+    scale: 1,
+    format: "png",
+  });
+  await fs.writeFile(out + file, new Uint8Array(await preview.arrayBuffer()));
+}
+const capture = await workbook.render({
+  sheetName: "范围'与&0",
+  range: "W97:AC105",
+  scale: 1,
+  format: "png",
+});
+await fs.writeFile(
+  out + "cross-window-preview.png",
+  new Uint8Array(await capture.arrayBuffer()),
+);
+const file = await SpreadsheetFile.exportXlsx(workbook);
+await file.save(out + "range-layout.xlsx");
+console.log(
+  JSON.stringify({
+    saved: "range-layout.xlsx",
+    writer: "bundled @oai/artifact-tool",
+    formulasRecalculated: true,
+    formalApp: false,
+    productionParserRun: false,
+  }),
+);

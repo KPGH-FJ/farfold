@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"name":"pane-paragraph","pass":4,"failure":"Error: paragraph exact window retained"},{"name":"pane-table","pass":4,"failure":"Error: table exact window retained"},{"name":"link-paragraph","pass":3,"failure":"Error: hide retires candidate"},{"name":"link-table","pass":3,"failure":"Error: hide retires candidate"}]}

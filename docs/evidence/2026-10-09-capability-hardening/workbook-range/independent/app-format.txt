@@ -1,0 +1,4 @@
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.json 90ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.json 30ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.json 20ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.json 18ms (unchanged)

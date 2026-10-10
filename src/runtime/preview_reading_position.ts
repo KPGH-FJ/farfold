@@ -1,8 +1,14 @@
-import type { DocxPreview, DocxStory } from "./docx_types";
+import type {
+  DocxBlock,
+  DocxParagraph,
+  DocxPreview,
+  DocxStory,
+  DocxTable,
+} from "./docx_types";
 import type { VerifiedFile } from "./file_delivery";
 import type { WorkbookPreview } from "./xlsx_types";
 import { sheetExtent } from "./workbook_view";
-import { DOCUMENT_WINDOW } from "./document_view";
+import { DOCUMENT_WINDOW, paragraphParts } from "./document_view";
 import { MAX_PDF_PAGES } from "./visual_preview";
 
 interface FilePosition {
@@ -29,9 +35,131 @@ export type PreviewReadingPosition = FilePosition &
 /** Current content-bar reading location only. No content, selection, or feedback. */
 export interface PreviewReadingPositionRef {
   current: PreviewReadingPosition | null;
+  documentWindows?: FilePosition & {
+    positions: Map<string, DocumentBlockPosition>;
+  };
+}
+
+type DocumentBlockPosition =
+  | { kind: "paragraph"; part: number }
+  | { kind: "table"; row: number; column: number };
+export const DOCUMENT_READING_WINDOW_LIMIT = 128;
+const documentReadingOwners = new WeakMap<PreviewReadingPositionRef, object>();
+const blockPositionKey = (block: DocxParagraph | DocxTable) =>
+  JSON.stringify([block.source.part, block.source.elementPath]);
+const windowStart = (value: number, count: number, size: number) =>
+  Math.floor(clamp(value, 0, Math.max(0, count - 1)) / size) * size;
+
+/** Bounded, transient viewport coordinates only. A source path is a reading
+ * location, never proof that a new revision contains the same semantic block.
+ * New previews reconcile actual paths/types and clamp against their own bounds. */
+export class DocumentReadingWindows {
+  private readonly positions = new Map<string, DocumentBlockPosition>();
+  private readonly blocks = new WeakSet<DocxParagraph | DocxTable>();
+  private readonly owner = {};
+  private active = false;
+
+  constructor(
+    private readonly document: DocxPreview,
+    private readonly ref?: PreviewReadingPositionRef,
+  ) {
+    const previous = ref?.documentWindows;
+    const saved =
+      previous && sameReadingFile(previous, document.file)
+        ? new Map([...previous.positions].slice(-DOCUMENT_READING_WINDOW_LIMIT))
+        : new Map<string, DocumentBlockPosition>();
+    const visit = (blocks: DocxBlock[]) => {
+      for (const block of blocks) {
+        if (block.kind === "notice") continue;
+        this.blocks.add(block);
+        const old = saved.get(blockPositionKey(block));
+        if (old?.kind === block.kind)
+          this.positions.set(blockPositionKey(block), this.clamped(block, old));
+        if (block.kind === "table")
+          for (const row of block.rows)
+            for (const cell of row.cells) visit(cell.blocks);
+      }
+    };
+    visit(document.blocks);
+    for (const story of document.stories) visit(story.blocks);
+  }
+
+  activate(): () => void {
+    this.active = true;
+    if (this.ref) {
+      documentReadingOwners.set(this.ref, this.owner);
+      this.ref.documentWindows = {
+        root: this.document.file.root,
+        resolvedPath: this.document.file.resolvedPath,
+        positions: this.positions,
+      };
+    }
+    return () => {
+      this.active = false;
+      if (this.ref && documentReadingOwners.get(this.ref) === this.owner)
+        documentReadingOwners.delete(this.ref);
+    };
+  }
+
+  paragraph(block: DocxParagraph): number {
+    const p = this.positions.get(blockPositionKey(block));
+    return p?.kind === "paragraph" ? p.part : 0;
+  }
+
+  table(block: DocxTable): { row: number; column: number } {
+    const p = this.positions.get(blockPositionKey(block));
+    return p?.kind === "table" ? p : { row: 0, column: 0 };
+  }
+
+  save(
+    block: DocxParagraph | DocxTable,
+    position: DocumentBlockPosition,
+  ): void {
+    if (
+      !this.active ||
+      !this.blocks.has(block) ||
+      position.kind !== block.kind ||
+      (this.ref && documentReadingOwners.get(this.ref) !== this.owner)
+    )
+      return;
+    const key = blockPositionKey(block);
+    this.positions.delete(key);
+    this.positions.set(key, this.clamped(block, position));
+    if (this.positions.size > DOCUMENT_READING_WINDOW_LIMIT)
+      this.positions.delete(this.positions.keys().next().value!);
+  }
+
+  private clamped(
+    block: DocxParagraph | DocxTable,
+    position: DocumentBlockPosition,
+  ): DocumentBlockPosition {
+    if (block.kind === "paragraph" && position.kind === "paragraph")
+      return {
+        kind: "paragraph",
+        part: clamp(position.part, 0, paragraphParts(block.runs).length - 1),
+      };
+    if (block.kind === "table" && position.kind === "table") {
+      const columns = block.rows.reduce(
+        (n, row) =>
+          row.cells.reduce(
+            (m, cell) => Math.max(m, cell.column + cell.columnSpan),
+            n,
+          ),
+        block.columnsPt.length,
+      );
+      return {
+        kind: "table",
+        row: windowStart(position.row, block.rows.length, DOCUMENT_WINDOW.rows),
+        column: windowStart(position.column, columns, DOCUMENT_WINDOW.columns),
+      };
+    }
+    return block.kind === "paragraph"
+      ? { kind: "paragraph", part: 0 }
+      : { kind: "table", row: 0, column: 0 };
+  }
 }
 export function sameReadingFile(
-  position: PreviewReadingPosition | null | undefined,
+  position: FilePosition | null | undefined,
   file: VerifiedFile,
 ): boolean {
   return (

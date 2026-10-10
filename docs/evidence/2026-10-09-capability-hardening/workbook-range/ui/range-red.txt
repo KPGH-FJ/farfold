@@ -1,0 +1,133 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkbookFilePreview.range.test.tsx (8 tests | 8 failed) 593ms
+   × range editing is reported before a valid coordinate exists, without creating a target 137ms
+   × reverse cross-window coordinates are exact and require a separate confirmation 72ms
+   × partial merges keep the typed rectangle and disclose the full merge without expanding 68ms
+   × hidden interior coordinates require separate acceptance and do not reveal values 63ms
+   × editing immediately retires a candidate and queued confirmation cannot change the opinion 64ms
+   × the last blank rectangle is bounded without allocating its cell area 61ms
+   × cancel clears only the candidate, leaves the old opinion untouched and ends editing 61ms
+   × blocking keeps the parsed sheet and input while recreating only a fresh candidate on unblock 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > range editing is reported before a valid coordinate exists, without creating a target
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:258:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > reverse cross-window coordinates are exact and require a separate confirmation
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:266:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > partial merges keep the typed rectangle and disclose the full merge without expanding
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:275:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > hidden interior coordinates require separate acceptance and do not reveal values
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:282:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > editing immediately retires a candidate and queued confirmation cannot change the opinion
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:292:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > the last blank rectangle is bounded without allocating its cell area
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:300:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > cancel clears only the candidate, leaves the old opinion untouched and ends editing
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:309:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/components/WorkbookFilePreview.range.test.tsx > blocking keeps the parsed sheet and input while recreating only a fresh candidate on unblock
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.range.test.tsx:193:13
+    191| }
+    192| function click(n: Element | undefined) {
+    193|   expect(n).toBeDefined();
+       |             ^
+    194|   expect(n!.props.disabled).not.toBe(true);
+    195|   (n!.props.onClick as () => void)();
+ ❯ openRange src/components/WorkbookFilePreview.range.test.tsx:253:3
+ ❯ src/components/WorkbookFilePreview.range.test.tsx:316:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  09:07:05
+   Duration  780ms (transform 82ms, setup 0ms, import 115ms, tests 593ms, environment 0ms)
+

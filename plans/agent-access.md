@@ -329,3 +329,5 @@ P21实机后的两项修复已提交安装 `e98e2a46`：[最终工程整合](../
 DOCX 原段落/整表位置意见已完成源码及受控验证：实际 XML 路径与版本对应，当前可见候选经明确确认，切区/隐藏/换版后失效，旧意见保持并只加入原输入框。长段落和窗口表格仍指向原完整对象，隐藏或未支持内容不生成可用位置。[工程整合](../docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/final-verification.json)前端315文件/3,651项、类型/打包/格式通过，1,145输入稳定；Rust与共享夹具未变，明确复用。独立双浏览器各89项DOCX及15项XLSX自动刷新回归通过，原布局失败与修复保留，见[独立回执](../docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/receipt.json)。接续本片正式安装/实机；该源码阶段正式版本仍为4952；后续8c2f初轮实机见下段。任意表格矩形、PDF/图片区域、完整Office及P22保持未完成。
 
 DOCX 8c2f5e29 已安装（候选9/9、安装10/10、三份217,400记录一致）。[正式初轮](../docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/installed-docx-feedback-initial.json)完成段落/页眉/整表、换版、键盘与冷恢复的分项验证；NEW-03长段和表格阅读位置仍失败，原始观察保留并接续修复。原未发送内容保留，1条旧输入缺省sendPending规范为false，严格逐值失败单列；不关闭P20/P21全项。下一增量并行补XLSX任意矩形与阅读位置修复，正式应用已正常退出。
+
+XLSX 任意矩形与 NEW-03 源码及受控验证已完成，正式8c2f仍保持退出，接续本片候选和实机。矩形准确范围、部分合并提示、隐藏确认及编辑保护共用既有意见机制；独立写出器原样本默认内容类型拒绝已修，原ZIP未改。[最终工程](../docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/final-verification.json)323文件/3,811项及类型、打包、格式通过，1,171输入稳定；Rust按未变输入复用。DOCX阅读恢复双浏览器208断言、矩形全App各74与真实解析各404分别留证，不计正式实机或P20/P21全项完成。

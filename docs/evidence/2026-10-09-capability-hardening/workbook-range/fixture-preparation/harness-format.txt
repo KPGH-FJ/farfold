@@ -1,0 +1,5 @@
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/fixture.tsx 46ms
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/index.html 20ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/serve.mjs 3ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/capture-data.json 3ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/preparation.json 1ms (unchanged)

@@ -1,0 +1,8 @@
+Owned full-app rectangle Vite PID 75062
+9:35:54 AM [vite] (client) dependency optimized: ssf
+9:35:54 AM [vite] (client) optimized dependencies changed. reloading
+9:37:03 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.ts
+9:40:10 AM [vite] (client) page reload src/runtime/xlsx_parse.ts
+9:40:22 AM [vite] (client) page reload src/runtime/xlsx_parse.ts
+9:40:22 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.ts
+9:41:23 AM [vite] (client) page reload src/runtime/xlsx_parse.ts

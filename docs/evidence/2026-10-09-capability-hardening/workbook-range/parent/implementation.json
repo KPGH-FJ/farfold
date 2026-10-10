@@ -1,0 +1,79 @@
+{
+  "checkedAtUtc": "2026-10-10T01:27:05.266595+00:00",
+  "scope": "Parent-side temporary Office input editing ownership and externally retained reading-position ref wiring",
+  "source": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f7c4bd70ab722b8959dfad3d420c7bf29c6c56a87d4e5b7687d0c939ef134fda",
+      "bytes": 46920
+    },
+    {
+      "path": "src/components/OpenedFileView.workbook-feedback.test.tsx",
+      "sha256": "b8a921a260142579862ad9dbf4b5533cb6a00eb646d022a94a993b20f8e7e268",
+      "bytes": 20323
+    },
+    {
+      "path": "src/runtime/office_target_editing.ts",
+      "sha256": "d14f4169c92c74ae8a4c667bb6604fc398d2cc8443912fb741ef9170a5d314db",
+      "bytes": 253
+    }
+  ],
+  "checks": [
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/editing-red.txt",
+        "sha256": "95d41066387c062204093fd18b9d2adb60585b349671c6791daf6151b037bafd",
+        "bytes": 4901
+      },
+      "result": "6 meaningful failing editing/refresh cases; 13 existing cases pass"
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/editing-first-green.txt",
+        "sha256": "2dd1659faddc96d2210242f01ea0322bf4d3f11ac81c0a2b0ee0066ee6b12188",
+        "bytes": 212
+      },
+      "result": "3 files / 41 tests pass at first guard implementation"
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/editing-file-release-red.txt",
+        "sha256": "dff3b912e31e94d3a8b043b9c36927afc6909cdf689e01e63abb5203e133e6b7",
+        "bytes": 1347
+      },
+      "result": "1 meaningful wrong-file release failure; 19 skipped"
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/editing-final-green.txt",
+        "sha256": "b6ccc4e65294e94ef437145286c09781be310e891f69a6a17f835fd2527ddff7",
+        "bytes": 212
+      },
+      "result": "2 files / 31 tests pass after immutable file snapshot release guard",
+      "commandCorrection": "The supplied components/useFileRevisionMonitor.test.ts path does not exist. Vitest matched only the two real parent files; no monitor-test pass is claimed for this run."
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/related-green.txt",
+        "sha256": "36ee53d5a4d5b684d66b81b49c6a2caa7aa7a83d5ed32be2686e9177b1d3135b",
+        "bytes": 214
+      },
+      "result": "6 real files / 128 tests pass, including runtime/file_revision_monitor.test.ts"
+    }
+  ],
+  "behavior": [
+    "Invalid or incomplete rectangle input defers automatic file replacement without creating a feedback target",
+    "A retired owner or a foreign verified file cannot acquire the editing hold",
+    "An old owner cannot release a newer editor; same-owner false with mismatched file is ignored",
+    "Hide/unmount/manual reread retires the old editor; only a fresh owner may reacquire",
+    "Existing Office candidate and opinion ownership checks remain separate",
+    "Optional parent-owned readingPosition ref is passed through the common preview readers; same-path reselection retained by ArtifactPane"
+  ],
+  "notClaimed": [
+    "Actual browser input behavior",
+    "Installed application behavior",
+    "Real Agent work",
+    "Completion of P20/P21 or all product capabilities"
+  ],
+  "integration": "Full source checks, independent full-App browsers and new candidate follow. NEW03 inner reading-state repair and ArtifactPane tests are recorded separately."
+}

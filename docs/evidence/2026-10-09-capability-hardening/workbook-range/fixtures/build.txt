@@ -1,0 +1,5 @@
+{"kind":"sheet","id":"ws/xwsomz","name":"范围'与&0","index":0,"range":"A1:AD205","address":"A1:AD205"}
+{"kind":"sheet","id":"ws/sokntx","name":"同文副页","index":1,"range":"A1:AD205","address":"A1:AD205"}
+{"kind":"table","sheet":"范围'与&0","address":"A1:F3","rows":3,"cols":6,"values":[["RECTANGLE SOURCE","数值","布尔","空位","原始范围",""],[0,false,"",null,null,2],[null,null,null,null,null,null]]}
+Inspect result written to file: /Users/tw/Desktop/farfold/output/2026-10-10-workbook-range-independent/range-layout.xlsx.inspect.ndjson
+{"saved":"range-layout.xlsx","writer":"bundled @oai/artifact-tool","formulasRecalculated":true,"formalApp":false,"productionParserRun":false}

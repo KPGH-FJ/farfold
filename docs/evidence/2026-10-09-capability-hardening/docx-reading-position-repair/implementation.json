@@ -1,0 +1,576 @@
+{
+  "recordedAtUtc": "2026-10-10T01:32:46.166547+00:00",
+  "status": "implemented_and_controlled_browser_verified_not_installed",
+  "problem": "DOCX long paragraph part and table row/column viewport were local state; hiding discarded them. Same-path file reselection additionally remounted the parent reading ref.",
+  "implementation": [
+    "Store at most 128 in-memory scalar reading records keyed by original part/elementPath, with paragraph/table kind; no body, feedback, or selection persisted.",
+    "Reconcile known blocks and clamp on new actual document; each active document owns its reading ref lease, and retired callbacks cannot write to a newer owner.",
+    "New document identity remounts local blocks; navigation checks ownership again after synchronous candidate withdrawal callbacks.",
+    "Parent single reading ref is scoped to exact thread/cwd/request path, preserves explicit same-path remount and replaces object on scope change. Parent implementation is separately authored and reviewed."
+  ],
+  "ownedSources": [
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "ca47b5f29f28a5aa61363f7696286805083bbe9dbdeef29a7c7f2765ab1d3e9c",
+      "bytes": 26068
+    },
+    {
+      "path": "src/runtime/preview_reading_position.ts",
+      "sha256": "cfa0879f1178da159b52af4510d941bd527791d240b9b5b992453ced57ee6323",
+      "bytes": 9049
+    },
+    {
+      "path": "src/components/DocxReadingWindows.test.tsx",
+      "sha256": "0b8f24f9602ce3975a6e7b216d07e2af79267c707e079795a60628bfd59c0d38",
+      "bytes": 9498
+    },
+    {
+      "path": "src/runtime/preview_reading_position.windows.test.ts",
+      "sha256": "4bf940b51064d6fb38d2bf171258387f0547299e9e66e769d3f6732629c5e805",
+      "bytes": 5585
+    }
+  ],
+  "parentSources": [
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "19ac80ca7f6d9bcf99dec5c9a7e6169e517240a31efc8da6493278ca5b6ce4d9",
+      "bytes": 19269
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f7c4bd70ab722b8959dfad3d420c7bf29c6c56a87d4e5b7687d0c939ef134fda",
+      "bytes": 46920
+    }
+  ],
+  "unitEvidence": {
+    "originalFailure": {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-red.txt",
+        "sha256": "4f6b21dd15f0e87e65ce43a7e3c50c61fd36ffa3f1442e74a582c98af43b7066",
+        "bytes": 282330
+      },
+      "passed": 0,
+      "failed": 2,
+      "scope": "controlled production components with hook/key/effect SSR fixture; not DOM/native"
+    },
+    "firstGreen": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-first-green.txt",
+      "sha256": "949f380069f50ee693cdacadbdbedeca2770353e45657e16b7d7a61ce1941ab4",
+      "bytes": 207
+    },
+    "expandedGreen": {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-expanded.txt",
+        "sha256": "1318c2ace8cd81eccd44d5c068303c87f6d902f21a906deab4fb415fd3b90209",
+        "bytes": 212
+      },
+      "tests": 11
+    },
+    "relatedGreen": {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/related-green.txt",
+        "sha256": "980224688e96e0a8763eb73b02a924d15179492af6c4e4c67f79c5d843b91532",
+        "bytes": 212
+      },
+      "files": 7,
+      "tests": 67,
+      "timing": "before one-line reentry guard"
+    },
+    "reentryRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry-red.txt",
+      "sha256": "c34a6d56879deeacb6ec14af36064600634b16449487e8e5e4e11c92bcfb1cc9",
+      "bytes": 1824
+    },
+    "reentryGreen": {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-targeted-green.txt",
+        "sha256": "560d69c875461efae6d47bf4b68aa23670c0f1eaef5af08276e76740aabf0bf1",
+        "bytes": 207
+      },
+      "tests": 1
+    },
+    "typecheck": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    "accidentalBroadRun": {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-green.txt",
+        "sha256": "a27d64614b9ac85e3141809b17f9c5640f6f85b4fd7ef4bf981b92464342aad1",
+        "bytes": 226
+      },
+      "files": 323,
+      "tests": 3786,
+      "cause": "exact test filter omitted; mergeConfig retained default src include as well as independent test",
+      "notStandardFrozenAcceptance": true,
+      "noCompletePreRunInputHash": true
+    }
+  },
+  "browser": {
+    "scope": "Actual complete App/Thread/ArtifactPane/OpenedFileView, StrictMode, real DOCX parser Worker and original controlled capture bytes; in-memory mocked Tauri IPC/settings/drafts. No formal app, OS file reads, real Agent, or account activity.",
+    "baseline": "Four production files replay exact committed 8c2f source using evidence-only Vite load overlay. Remaining source is current frozen source, so this is controlled source replay, not native installed verification.",
+    "baselineInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/inputs.json",
+      "sha256": "406e96fe9cae393f4614eec5e70c2ec3d725d856c6fec0e1ba41306e8b7f88f9",
+      "bytes": 1490
+    },
+    "runs": [
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.json",
+          "sha256": "f80d940ac0fe255950e3049b646dbea633647a0a7da9cbcb354171dcd2e0f368",
+          "bytes": 844602
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.raw.txt",
+          "sha256": "a64518866923cdbaaece15d580f9a8758020c9aa5d082c1b8e44deabd46a9559",
+          "bytes": 845538
+        },
+        "engine": "webkit",
+        "label": "baseline-native-size",
+        "sourceUnchanged": true,
+        "passed": false,
+        "passedAssertions": 16,
+        "failedScenarios": 4,
+        "scenarioCount": 4
+      },
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.json",
+          "sha256": "ac7ae9a461e9c99d5ec8eee4be33ac3c898ef46f6c3d4759e6f3df72c60b8897",
+          "bytes": 219113
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.raw.txt",
+          "sha256": "faa3f28fe7e793afd3075eedb346217313c8b336051fdd91bc0d5882d88dbd72",
+          "bytes": 219305
+        },
+        "engine": "webkit",
+        "label": "current-final",
+        "sourceUnchanged": true,
+        "passed": true,
+        "passedAssertions": 52,
+        "failedScenarios": 0,
+        "scenarioCount": 4
+      },
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.json",
+          "sha256": "a047a0059a4477d9ca4d029467241bdafdad6d3c1a8e94989685384d154e3505",
+          "bytes": 222976
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.raw.txt",
+          "sha256": "2895f7e2c85476d7a34a82682bc009dfc7ace3cbddada985e519d0540b88a4af",
+          "bytes": 223168
+        },
+        "engine": "webkit",
+        "label": "narrow-aside",
+        "sourceUnchanged": true,
+        "passed": true,
+        "passedAssertions": 52,
+        "failedScenarios": 0,
+        "scenarioCount": 4
+      },
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.json",
+          "sha256": "b4bf1297fc9866e1d6b17eed3f4dfe7f0c6b414bf86bd0e1cb8fe8376730615e",
+          "bytes": 855402
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.raw.txt",
+          "sha256": "e1efdaa711ffeada34a4d2001eafda50c8b2b2a0dee26daf2e8f6baa36b6a4af",
+          "bytes": 856338
+        },
+        "engine": "chromium",
+        "label": "baseline-native-size",
+        "sourceUnchanged": true,
+        "passed": false,
+        "passedAssertions": 16,
+        "failedScenarios": 4,
+        "scenarioCount": 4
+      },
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.json",
+          "sha256": "98ad2677e01e4f9df29ae909aa0857ba5b0f61bbecbde49f63388eb8d6f53d66",
+          "bytes": 218809
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.raw.txt",
+          "sha256": "c9ceefde4484d2ab534d0ca4f61ff5aa53e595d4005788523fa995f2c87cf593",
+          "bytes": 219001
+        },
+        "engine": "chromium",
+        "label": "current-final",
+        "sourceUnchanged": true,
+        "passed": true,
+        "passedAssertions": 52,
+        "failedScenarios": 0,
+        "scenarioCount": 4
+      },
+      {
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.json",
+          "sha256": "3d528ad7f97e4669eec918a036cb6c282981b41388b19783aae7df13210cc84b",
+          "bytes": 222846
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.raw.txt",
+          "sha256": "6fd6fc51eb33fb18faf3ef48e58e50714e68f411c6a0bbae0ae10a5644e05c29",
+          "bytes": 223038
+        },
+        "engine": "chromium",
+        "label": "narrow-aside",
+        "sourceUnchanged": true,
+        "passed": true,
+        "passedAssertions": 52,
+        "failedScenarios": 0,
+        "scenarioCount": 4
+      }
+    ],
+    "observedScreenshots": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first-link-table-failure.png",
+        "sha256": "f50aac2799a6535250b787961cbb94b04f3f2a0ecdc9f788fa6141177921576c",
+        "bytes": 124357
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final-link-table.png",
+        "sha256": "888ae29a0a52ed986ae5b455a1cb707fe808eb68f797ff8137fa8f09bac1f51e",
+        "bytes": 237862
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside-link-table.png",
+        "sha256": "f30db8d20139a47c25e38eea72bcd7a50de83938bf6e58b8f0f0d89f408ec860",
+        "bytes": 120643
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final-link-table.png",
+        "sha256": "20a95dd6723baf03822505bc051299e764e367ce0014b7ecb33d1ddc12afaed8",
+        "bytes": 172592
+      }
+    ],
+    "passedAssertionsCurrent": 208,
+    "effectiveBaselineFailures": 8,
+    "boundaries": [
+      "Current 1280x820 and 900x620 each cover paragraph/table after pane hide/reopen and explicit same-link reader remount.",
+      "Full restored opinion object and original composer bytes remain equal; source XML table path remains [0,1]; no old candidate revives; expected capture count 1 vs 2 and no send/external calls.",
+      "Version shrink, kind/path removal, owner reentry and cap128 are unit/component proof, not additional browser/native cases."
+    ],
+    "firstRunIssues": [
+      "webkit-baseline-first input changed in OpenedFileView and its test; first case reset to home during development reload. Remaining narrow cases used the first same-name topbar collapse action under an overlay, so they are not reading-position red evidence.",
+      "webkit-baseline-stable/final narrow failures retained. Screenshot and final button pointReceiver data show the content pane overlays the thread topbar at 900px. Final narrow run uses the actual visible aside collapse control, and all 4 scenarios pass in both engines. This does not establish an inaccessible product exit.",
+      "webkit-current-native-size first case was reset by Vite saxes optimization reload; server-current.txt proves timing. Three other cases passed. Stable rerun is current-final."
+    ]
+  },
+  "formatAndCleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/format-and-cleanup.json",
+    "sha256": "94111471dacc2780bd4433ce701c41d323afd42c169460d3a1a4242daf0c1553",
+    "bytes": 7216
+  },
+  "independentReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/independent-review.json",
+    "sha256": "e44be4f3022b7b9287089f3e0d769f9e44338d9f5742167191667fc5c89b8d00",
+    "bytes": 8715
+  },
+  "parentImplementation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/implementation.json",
+    "sha256": "f793a053e27e7f1c1f62f90ef304529df3445957327b9bd1229e8f10989a9c66",
+    "bytes": 3854
+  },
+  "remaining": [
+    "Installed NEW03 verification remains root-owned and pending. This receipt does not independently observe native pixels.",
+    "Nested table-cell detail open state and nested BlockSequence segment are not retained in this slice. No multi-file history/cache promise or global P20 completion.",
+    "Coordinates are approximate reading locations, not semantic sameness across versions or live feedback-target evidence."
+  ],
+  "evidenceFiles": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/DocxReadingWindows.before-format.raw.txt",
+      "sha256": "f470f99d1fb2ce95c6fed13566828c95cb06670acaa03ab214955669816423b3",
+      "bytes": 9524
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/app-captures.json",
+      "sha256": "fc70b852e5a3e74e6bd52db06bc8c750052ddfe2757ca38d24e8460eab28f21e",
+      "bytes": 4653625
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/app-captures.raw.txt",
+      "sha256": "fc70b852e5a3e74e6bd52db06bc8c750052ddfe2757ca38d24e8460eab28f21e",
+      "bytes": 4653625
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/ArtifactPane.tsx.source.txt",
+      "sha256": "cfed4403a9070469930c66c8388709b62625f74f39627390d49ea0bbdb483c33",
+      "bytes": 18267
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/DocxDocumentView.tsx.source.txt",
+      "sha256": "ccf57d848e16ee117b3f9493bd82a85fa84f514e5b0875d2f0f9414a259dfea0",
+      "bytes": 25287
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/OpenedFileView.tsx.source.txt",
+      "sha256": "5c78c204200dc4625dcee6ecff1614fab4d8599c3ab4930ff1adb74f6304187e",
+      "bytes": 44982
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/inputs.json",
+      "sha256": "406e96fe9cae393f4614eec5e70c2ec3d725d856c6fec0e1ba41306e8b7f88f9",
+      "bytes": 1490
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/baseline/preview_reading_position.ts.source.txt",
+      "sha256": "6e928a9a6cfba4c7187560b44a6e19a2356b428e732d52b3faab0be6e3c85168",
+      "bytes": 4615
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/browser-common.mjs",
+      "sha256": "8c2235980c5bfd6b1c1f8a271148cbeebe9f73243ac56742f091955385ec7307",
+      "bytes": 7144
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.json",
+      "sha256": "b4bf1297fc9866e1d6b17eed3f4dfe7f0c6b414bf86bd0e1cb8fe8376730615e",
+      "bytes": 855402
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.raw.txt",
+      "sha256": "e1efdaa711ffeada34a4d2001eafda50c8b2b2a0dee26daf2e8f6baa36b6a4af",
+      "bytes": 856338
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.txt",
+      "sha256": "edd2a041261f98cf39ce80b507dff603c5eefd7a5a4c3d79cb5c29d5d9aa1851",
+      "bytes": 378
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.json",
+      "sha256": "98ad2677e01e4f9df29ae909aa0857ba5b0f61bbecbde49f63388eb8d6f53d66",
+      "bytes": 218809
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.raw.txt",
+      "sha256": "c9ceefde4484d2ab534d0ca4f61ff5aa53e595d4005788523fa995f2c87cf593",
+      "bytes": 219001
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.txt",
+      "sha256": "d9bfa28ad859a96d9f7b43ebd2d2a5a258bb0202704dea185e0cc2103351630d",
+      "bytes": 185
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.json",
+      "sha256": "3d528ad7f97e4669eec918a036cb6c282981b41388b19783aae7df13210cc84b",
+      "bytes": 222846
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.raw.txt",
+      "sha256": "6fd6fc51eb33fb18faf3ef48e58e50714e68f411c6a0bbae0ae10a5644e05c29",
+      "bytes": 223038
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.txt",
+      "sha256": "d9bfa28ad859a96d9f7b43ebd2d2a5a258bb0202704dea185e0cc2103351630d",
+      "bytes": 185
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/fixture.tsx",
+      "sha256": "3f41cf216235156549cccb56e3764247ab0912f23e47b6de9f2f9b43e167d4d2",
+      "bytes": 7892
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/format.txt",
+      "sha256": "8529506d8929f24c2670a56e9608676b35eeb48d0ce2dfdee48a90a0941c0fd8",
+      "bytes": 642
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/index.html",
+      "sha256": "6a243d3961f0023f65dec97c26d09753b76eb6e0c929f86ef3b6e50d66992552",
+      "bytes": 949
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/run-narrow.mjs",
+      "sha256": "29688725a6cf81c5830acb95144f06ce1093d84081d8e7662713ca0c748aa6c2",
+      "bytes": 4784
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/run.mjs",
+      "sha256": "432f930be7d784cc94b2b132fcc44006c9fbaae95d63450302d32683c679ea10",
+      "bytes": 4181
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/serve.mjs",
+      "sha256": "19df9db16cc4b8a661338a7a6e4d96333c6706ff2c2eb498814e3ee1d9069fc7",
+      "bytes": 1287
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/server-baseline.txt",
+      "sha256": "e87a8a924d91411f32761b9989b0b7c4e6fa357d1904df37590a08e993dcfab5",
+      "bytes": 387
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/server-current.txt",
+      "sha256": "35fa63b07087c623a3e1d48b41aea4db32bccde335918067830b5eb7c4eabf69",
+      "bytes": 317
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.json",
+      "sha256": "69424ae37be9fd59b3ba31ba3878cac3ffa3b7943c774b7a3bb48669f94544b0",
+      "bytes": 593426
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.raw.txt",
+      "sha256": "b074a31582d206e687d845bb2debd18cfcee234a81e3d0675100cda5d8c8f893",
+      "bytes": 594506
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.txt",
+      "sha256": "94d7281cb0fe6591691dcb11cbc6bf2a082bd317ee9fb707156583018df28e75",
+      "bytes": 912
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.json",
+      "sha256": "dbe6e00884c2296bcd4780df5af42382a6616bbb4a88ce55fe25536c90348f2e",
+      "bytes": 437673
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.raw.txt",
+      "sha256": "19c96f1cadb2beef418de9d632f195f1669148daeef8d7c5520ca7bb74ce7f4a",
+      "bytes": 438375
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.txt",
+      "sha256": "c9b491c9be3d18bd7f0cd730827b12a043142c1c1d9b567ee549f4371ed1614d",
+      "bytes": 4812
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.json",
+      "sha256": "f80d940ac0fe255950e3049b646dbea633647a0a7da9cbcb354171dcd2e0f368",
+      "bytes": 844602
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.raw.txt",
+      "sha256": "a64518866923cdbaaece15d580f9a8758020c9aa5d082c1b8e44deabd46a9559",
+      "bytes": 845538
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.txt",
+      "sha256": "edd2a041261f98cf39ce80b507dff603c5eefd7a5a4c3d79cb5c29d5d9aa1851",
+      "bytes": 378
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.json",
+      "sha256": "445b6091a31df944e34c5166b9b5ade71fae46b0c4e77461ce70ba86b88ae943",
+      "bytes": 590947
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.raw.txt",
+      "sha256": "37458b1b643de66647d84fe15fed60977bec64427c5beeea4fb5658df0c6781a",
+      "bytes": 592027
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.txt",
+      "sha256": "ac2102a10fedac4d734881355334250e47a92fb6634353f2c929df74e7283f70",
+      "bytes": 364
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.json",
+      "sha256": "ac7ae9a461e9c99d5ec8eee4be33ac3c898ef46f6c3d4759e6f3df72c60b8897",
+      "bytes": 219113
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.raw.txt",
+      "sha256": "faa3f28fe7e793afd3075eedb346217313c8b336051fdd91bc0d5882d88dbd72",
+      "bytes": 219305
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.txt",
+      "sha256": "d9bfa28ad859a96d9f7b43ebd2d2a5a258bb0202704dea185e0cc2103351630d",
+      "bytes": 185
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.json",
+      "sha256": "81426bd259ffe8c04285078aa3a01378531c062caa9a4aea1250bb4a8dc9c060",
+      "bytes": 222938
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.raw.txt",
+      "sha256": "cf054a59161c7cfc6699923ab159095cd6ea79076ab8d277efa90e40c5e8061c",
+      "bytes": 223082
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.txt",
+      "sha256": "fc27ecf6a1681f140177d94b74a5f3e52a971900d62fb5f335dd4f5b7efbbeca",
+      "bytes": 415
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.json",
+      "sha256": "a047a0059a4477d9ca4d029467241bdafdad6d3c1a8e94989685384d154e3505",
+      "bytes": 222976
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.raw.txt",
+      "sha256": "2895f7e2c85476d7a34a82682bc009dfc7ace3cbddada985e519d0540b88a4af",
+      "bytes": 223168
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.txt",
+      "sha256": "d9bfa28ad859a96d9f7b43ebd2d2a5a258bb0202704dea185e0cc2103351630d",
+      "bytes": 185
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/final-format.txt",
+      "sha256": "b3feaf9b4388dcc6e491eb072b1b8c1d32f17ff47f349dcb86dddd2a03cb5015",
+      "bytes": 1334
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/format-and-cleanup.json",
+      "sha256": "94111471dacc2780bd4433ce701c41d323afd42c169460d3a1a4242daf0c1553",
+      "bytes": 7216
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-expanded.txt",
+      "sha256": "1318c2ace8cd81eccd44d5c068303c87f6d902f21a906deab4fb415fd3b90209",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-first-green.txt",
+      "sha256": "949f380069f50ee693cdacadbdbedeca2770353e45657e16b7d7a61ce1941ab4",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/inner-windows-red.txt",
+      "sha256": "4f6b21dd15f0e87e65ce43a7e3c50c61fd36ffa3f1442e74a582c98af43b7066",
+      "bytes": 282330
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-green.txt",
+      "sha256": "a27d64614b9ac85e3141809b17f9c5640f6f85b4fd7ef4bf981b92464342aad1",
+      "bytes": 226
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/navigation-reentry-targeted-green.txt",
+      "sha256": "560d69c875461efae6d47bf4b68aa23670c0f1eaef5af08276e76740aabf0bf1",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/owned-format.txt",
+      "sha256": "96dda1101f20d2908a23ef3cfbe68eef0e60f6065c32e4701d5051ef9c9a866d",
+      "bytes": 193
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/related-green.txt",
+      "sha256": "980224688e96e0a8763eb73b02a924d15179492af6c4e4c67f79c5d843b91532",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    }
+  ]
+}

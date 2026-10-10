@@ -1,0 +1,147 @@
+{
+  "recordedAtUtc": "2026-10-10T01:17:05.914169+00:00",
+  "scope": "P21 single-sheet exact rectangle coordinate factory; no UI/backend/Agent/source document mutation",
+  "status": "owned source frozen; independent browser and installed acceptance not claimed",
+  "ownedFiles": [
+    {
+      "path": "src/runtime/workbook_feedback_range.ts",
+      "sha256": "eda9e9b048d8cedcc24c42e6c35c2b0659a73faeef1a30ddc97c9a02481b2562",
+      "bytes": 10355
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "49a5ad9761de3afb2ac9056bd0600d4c51454d995f78c58ca9306ca9a847db70",
+      "bytes": 12734
+    },
+    {
+      "path": "src/runtime/workbook_feedback_range.test.ts",
+      "sha256": "129d761a0c855d25081562f3b3a14c34e263296bae9f90c9c3b97c27416a9a9c",
+      "bytes": 16278
+    },
+    {
+      "path": "src/runtime/workbook_feedback_range.resources.test.ts",
+      "sha256": "fd9d5087176a651c0a312cb057950c47850b4696430eb367694fcf8f2cd408ba",
+      "bytes": 1557
+    }
+  ],
+  "api": {
+    "parse": "parseWorkbookFeedbackRange: ASCII A1 or A1:C200; reverse endpoints normalize; limits 1048576 rows/16384 columns",
+    "analysis": "analyzeWorkbookFeedbackRange: exact preview-bound metadata snapshot; compressed hidden spans/counts and exact partially intersected merges; no cell values",
+    "factory": "createWorkbookRangeFeedbackSource: exact capture file seven fields + preview + original analysis + current submitted selection; explicit includeHidden independent of hidden-sheet selection; common WorkbookFeedbackSource/target/retire API",
+    "history": "Existing strict xlsx-range shape and historical formatter reused; no hidden acknowledgement or live ownership persisted"
+  },
+  "invariants": [
+    "No rectangle-area allocation. Only bounded actual rows/column spans/merges traversed. Full-sheet area 17179869184 stays four integers.",
+    "Partial merges never expand, clip or replace requested rectangle; adjacent merge does not cascade into target.",
+    "Hidden interior coordinates require explicit acknowledgement associated with prior exact analysis; no hidden values returned/revealed.",
+    "Analysis snapshots verify preview/sheet/directory/metadata object identities and coordinate/visibility signature. Changed metadata or failed owner check retires analysis.",
+    "Range source retains capture file/part/entry identity and values, selection values and acknowledgement; detected mismatch and explicit retirement are irreversible for that source.",
+    "Original position/whole-merge branch remains separately validated; invalid source lookups now retire instead of allowing revival after detected mutation.",
+    "Live registries are weak in-memory identities, not a persisted ledger or independent disk/DOM authentication. Caller still owns actual successful capture/parser and active/current/blocked selection checks."
+  ],
+  "tests": [
+    {
+      "log": "api-red.txt",
+      "exitCode": 1,
+      "failed": 1,
+      "classification": "New exported range capability absent; API-presence assertion, not an existing semantic defect."
+    },
+    {
+      "log": "targeted-first.txt",
+      "exitCode": 0,
+      "files": 2,
+      "passed": 102
+    },
+    {
+      "log": "related-green.txt",
+      "exitCode": 0,
+      "files": 6,
+      "passed": 169,
+      "checkpoint": "Before strict-extra-key hardening and its additional test."
+    },
+    {
+      "log": "related-final.txt",
+      "exitCode": 0,
+      "files": 6,
+      "passed": 170,
+      "command": "corepack pnpm exec vitest run src/runtime/workbook_feedback_range.test.ts src/runtime/workbook_feedback_range.resources.test.ts src/runtime/workbook_feedback_target.test.ts src/runtime/file_feedback_anchor.workbook.test.ts src/runtime/workbook_feedback_persistence.test.ts src/runtime/docx_feedback_target.test.ts"
+    },
+    {
+      "log": "typecheck.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm typecheck",
+      "checkpoint": "Earlier whole-project state before concurrent NEW-03 type change; not claimed as final merged input validation."
+    },
+    {
+      "log": "typecheck-confirmed.txt",
+      "exitCode": 1,
+      "command": "corepack pnpm typecheck",
+      "classification": "Concurrent NEW-03 work in preview_reading_position.ts:68; missing kind/story/segment in its current WIP type, outside four owned files. Reported to owner; final integration must recheck."
+    },
+    {
+      "log": "format-final.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm exec prettier --check <four owned files>"
+    }
+  ],
+  "resourceBoundary": {
+    "test": "Actual 100000 rows,16384 column spans,4096 merges plus whole-sheet declaration; confirms bounded compressed output and current-analysis verification.",
+    "observationAttempt": "resource-observation.txt passed 1/1; per-operation console metrics were not emitted by this runner. Instrumentation was removed. No timing or heap figures claimed.",
+    "notClaimed": [
+      "Hard heap bound",
+      "Browser interaction latency",
+      "All real spreadsheet files or Windows performance"
+    ]
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/api-red.txt",
+      "sha256": "9517a6f523cc7333239d6b105842ad444847dbed691ea45b682562cb09783ba2",
+      "bytes": 1024
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/targeted-first.txt",
+      "sha256": "fecd30a51cf4fcb0730335211bb31bbfd26729f9eda05fda13c2784db42ad4ed",
+      "bytes": 213
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/related-green.txt",
+      "sha256": "0297030665dcd32aed235353ec90ea7632ead315aca868180c21d54f3ac2070d",
+      "bytes": 214
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/related-final.txt",
+      "sha256": "7c3d99e6aab00c68d009c7b6db0a1b0352516647f10b36173db9e57a7f45eebc",
+      "bytes": 214
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/typecheck-confirmed.txt",
+      "sha256": "0c38cd2797d55e15508732ddadd44b0b39237cde5016ce221ddc2d4a8d508895",
+      "bytes": 817
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/resource-observation.txt",
+      "sha256": "30e28d0eaa34cba64ed0d0563d9058c9eafad192863db38d33397b252902ebed",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    }
+  ],
+  "reviewFindings": {
+    "componentReentrancy": "Independent static challenge to change→retire→available:false was reproduced/fixed by product owner; its red/green and UI source are separate evidence, not counted in this runtime suite."
+  },
+  "remaining": [
+    "Independent actual Worker/XML oracle and full-app browser verification",
+    "Root parent scoped editing integration",
+    "Installed application verification",
+    "Other P21/P16 capabilities and real-Agent round trip remain open"
+  ]
+}

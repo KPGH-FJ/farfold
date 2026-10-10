@@ -7,7 +7,17 @@ import {
   type WorkbookPosition,
   type workbookWindow,
 } from "./workbook_view";
-import type { WorkbookCapture, WorkbookPreview, XlsxSheet } from "./xlsx_types";
+import {
+  XLSX_LIMITS,
+  type WorkbookCapture,
+  type WorkbookPreview,
+  type XlsxSheet,
+} from "./xlsx_types";
+import {
+  workbookFeedbackRangeAnalysisIsCurrent,
+  type WorkbookFeedbackRange,
+  type WorkbookFeedbackRangeAnalysis,
+} from "./workbook_feedback_range";
 
 /** Ephemeral owner identity. This object is never stored in a draft. */
 export type WorkbookFeedbackSource = Readonly<{
@@ -26,12 +36,42 @@ export interface WorkbookFeedbackSourceInput {
   expectedFile: VerifiedFile;
 }
 
-interface SourceRecord {
+interface PositionRecord {
+  mode: "position";
   input: WorkbookFeedbackSourceInput;
   sheet: XlsxSheet;
   captureFile: VerifiedFile;
   anchor: Readonly<XlsxRangeAnchor>;
 }
+export interface WorkbookRangeSelection extends WorkbookFeedbackRange {
+  readonly includeHidden: boolean;
+}
+export interface WorkbookRangeFeedbackSourceInput {
+  capture: WorkbookCapture;
+  preview: WorkbookPreview;
+  selection: WorkbookRangeSelection;
+  analysis: WorkbookFeedbackRangeAnalysis;
+  hiddenSheetSelected: boolean;
+  expectedFile: VerifiedFile;
+}
+interface RangeRecord {
+  mode: "range";
+  input: WorkbookRangeFeedbackSourceInput;
+  captureFile: VerifiedFile;
+  sheet: XlsxSheet;
+  anchor: Readonly<XlsxRangeAnchor>;
+  includeHidden: boolean;
+  parts: WorkbookCapture["parts"];
+  partValues: {
+    part: WorkbookCapture["parts"][number];
+    name: string;
+    data: string;
+  }[];
+  entries: string[];
+  entryValues: string[];
+  inflatedBytes: number;
+}
+type SourceRecord = PositionRecord | RangeRecord;
 const sources = new WeakMap<WorkbookFeedbackSource, SourceRecord>();
 const fileKeys = [
   "root",
@@ -215,10 +255,108 @@ export function createWorkbookFeedbackSource(
     ),
   });
   sources.set(source, {
+    mode: "position",
     input: { ...input },
     sheet: input.preview.sheet!,
     captureFile: input.capture.file,
     anchor: Object.freeze(anchor),
+  });
+  return source;
+}
+
+function rangeCoordinates(
+  input: WorkbookRangeFeedbackSourceInput,
+): XlsxRangeAnchor | null {
+  const {
+    capture,
+    preview,
+    expectedFile,
+    selection,
+    analysis,
+    hiddenSheetSelected,
+  } = input;
+  if (
+    !capture ||
+    !validFile(capture.file) ||
+    !validFile(expectedFile) ||
+    !samePreviewFile(capture.file, expectedFile) ||
+    !Array.isArray(capture.parts) ||
+    capture.parts.length > XLSX_LIMITS.parts ||
+    !Array.isArray(capture.entries) ||
+    capture.entries.length > XLSX_LIMITS.parts ||
+    !Number.isSafeInteger(capture.inflatedBytes) ||
+    capture.inflatedBytes < 0 ||
+    capture.inflatedBytes > XLSX_LIMITS.bytes ||
+    !selection ||
+    typeof selection !== "object" ||
+    Array.isArray(selection) ||
+    Object.keys(selection).length !== 5 ||
+    !Object.keys(selection).every((key) =>
+      ["fromRow", "toRow", "fromColumn", "toColumn", "includeHidden"].includes(
+        key,
+      ),
+    ) ||
+    typeof selection.includeHidden !== "boolean" ||
+    typeof hiddenSheetSelected !== "boolean"
+  )
+    return null;
+  for (const part of capture.parts)
+    if (!part || typeof part.name !== "string" || typeof part.data !== "string")
+      return null;
+  for (const name of capture.entries) if (typeof name !== "string") return null;
+  const range = {
+    fromRow: selection.fromRow,
+    toRow: selection.toRow,
+    fromColumn: selection.fromColumn,
+    toColumn: selection.toColumn,
+  };
+  if (
+    !workbookFeedbackRangeAnalysisIsCurrent(analysis, preview, range) ||
+    (analysis.requiresHiddenConfirmation && !selection.includeHidden)
+  )
+    return null;
+  const info = preview.sheets.find((sheet) => sheet.id === analysis.sheetId)!;
+  if (info.state !== "visible" && !hiddenSheetSelected) return null;
+  const anchor: XlsxRangeAnchor = {
+    kind: "xlsx-range",
+    sheetId: analysis.sheetId,
+    sheetName: analysis.sheetName,
+    ...range,
+  };
+  return validXlsxRange(anchor) ? anchor : null;
+}
+
+/** A coordinate declaration on one parsed sheet. It does not imply the entire
+ * rectangle was displayed, reveal hidden values, or extend the clicked-cell path. */
+export function createWorkbookRangeFeedbackSource(
+  input: WorkbookRangeFeedbackSourceInput,
+): WorkbookFeedbackSource | null {
+  const anchor = rangeCoordinates(input);
+  if (!anchor) return null;
+  const source: WorkbookFeedbackSource = Object.freeze({
+    kind: "xlsx",
+    file: Object.freeze(
+      Object.fromEntries(
+        fileKeys.map((key) => [key, input.capture.file[key]]),
+      ) as unknown as VerifiedFile,
+    ),
+  });
+  sources.set(source, {
+    mode: "range",
+    input: { ...input },
+    sheet: input.preview.sheet!,
+    captureFile: input.capture.file,
+    anchor: Object.freeze(anchor),
+    includeHidden: input.selection.includeHidden,
+    parts: input.capture.parts,
+    partValues: input.capture.parts.map((part) => ({
+      part,
+      name: part.name,
+      data: part.data,
+    })),
+    entries: input.capture.entries,
+    entryValues: [...input.capture.entries],
+    inflatedBytes: input.capture.inflatedBytes,
   });
   return source;
 }
@@ -233,9 +371,36 @@ export function workbookFeedbackTarget(
     record.input.capture.file !== record.captureFile ||
     !samePreviewFile(source.file, record.captureFile) ||
     !samePreviewFile(source.file, record.input.expectedFile)
-  )
+  ) {
+    sources.delete(source);
     return null;
-  const current = coordinates(record.input);
+  }
+  if (
+    record.mode === "range" &&
+    (record.input.selection.includeHidden !== record.includeHidden ||
+      record.input.capture.parts !== record.parts ||
+      record.input.capture.entries !== record.entries ||
+      record.input.capture.inflatedBytes !== record.inflatedBytes ||
+      record.parts.length !== record.partValues.length ||
+      record.entries.length !== record.entryValues.length ||
+      record.parts.some(
+        (part, index) =>
+          part !== record.partValues[index].part ||
+          part.name !== record.partValues[index].name ||
+          part.data !== record.partValues[index].data,
+      ) ||
+      record.entries.some(
+        (value, index) => value !== record.entryValues[index],
+      ))
+  ) {
+    sources.delete(source);
+    return null;
+  }
+  const current =
+    record.mode === "position"
+      ? coordinates(record.input)
+      : rangeCoordinates(record.input);
+  if (!current || !sameAnchor(current, record.anchor)) sources.delete(source);
   return current && sameAnchor(current, record.anchor)
     ? { ...record.anchor }
     : null;

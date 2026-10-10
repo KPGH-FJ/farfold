@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"name":"literal-partial-cross-maximum","pass":36},{"name":"hidden-ack-sheet-retire","pass":16},{"name":"editing-defers-auto-and-hidden-late","pass":1,"failure":"TimeoutError: page.waitForFunction: Timeout 12000ms exceeded."}]}

@@ -1,0 +1,1 @@
+{"files": 2, "sheets": 4, "ranges": 48, "allCrcAndLiteralAssertions": "passed", "hashes": {"range-layout.xlsx": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d", "range-nonordinal-hidden.xlsx": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde"}, "productTestsRun": false}

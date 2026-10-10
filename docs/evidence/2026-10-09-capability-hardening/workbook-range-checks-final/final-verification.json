@@ -1,0 +1,82 @@
+{
+  "checkedAtUtc": "2026-10-10T01:47:09.262809+00:00",
+  "sourceBase": "840972b705e9bc142d70857e80570e149ae33ded",
+  "inputCount": 1171,
+  "sourceStable": true,
+  "changedInputsSinceFullChecks": [
+    "src/components/DocxReadingWindows.test.tsx",
+    "src/runtime/xlsx_content_types.test.ts",
+    "src/runtime/xlsx_parse.ts"
+  ],
+  "formatOnlyProof": {
+    "path": "src/components/DocxReadingWindows.test.tsx",
+    "executedRaw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/DocxReadingWindows.before-format.raw.txt",
+    "executedSha256": "f470f99d1fb2ce95c6fed13566828c95cb06670acaa03ab214955669816423b3",
+    "formattedSha256": "0b8f24f9602ce3975a6e7b216d07e2af79267c707e079795a60628bfd59c0d38",
+    "prettierOfExecutedBytesExactlyMatchesCurrent": true
+  },
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/final-verification.json",
+    "sha256": "a5f0491965be1b58d290b3b9b4c3dad245772c9b0264dbf85deb9d616ae6b4f8"
+  },
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/frontend.txt",
+      "sha256": "6c7c52a75208c6e5f31c0e9a3cf0fd436eba307deb90fa821b05673bdf07c622"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/build.txt",
+      "sha256": "7e8177aec2cdbc27b308a01592182f9720218ae0308e6826eb5fb5380478fa8d"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "Delta is confined to the enumerated frontend parser/helper/tests plus a previously proved test formatting change. All Rust, configuration, shared fixtures and external fixtures remain byte-identical to the prior stable-input record; prior Rust reuse retains its original scope."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "Delta is confined to the enumerated frontend parser/helper/tests plus a previously proved test formatting change. All Rust, configuration, shared fixtures and external fixtures remain byte-identical to the prior stable-input record; prior Rust reuse retains its original scope."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "Delta is confined to the enumerated frontend parser/helper/tests plus a previously proved test formatting change. All Rust, configuration, shared fixtures and external fixtures remain byte-identical to the prior stable-input record; prior Rust reuse retains its original scope."
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Engineering evidence only. Four frontend/build/format checks rerun after the actual writer compatibility repair. Original green checks and format failure remain preserved at their input level. Browser, installation and real-Agent results remain separate."
+}

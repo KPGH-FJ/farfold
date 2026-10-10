@@ -1,0 +1,138 @@
+{
+  "recordedAtUtc": "2026-10-10T01:16:31.506343+00:00",
+  "status": "source frozen; controlled component tests passed; full App browser and installed-product verification pending separately",
+  "scope": "Current actual workbook: explicit same-sheet rectangle feedback UI. Existing single-cell/whole-merge selection remains; no parser/Agent/OS/file capability added.",
+  "owned": [
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "3c1e07f16a764f7f2afa197df3ba05bc953e98c2f08bad9e564a4804c9c899f1",
+      "lines": 977
+    },
+    {
+      "path": "src/components/WorkbookRangeSelection.tsx",
+      "sha256": "d5d498c9fb4ff3343c4bd7fe2a25231693a887222f7e983de66f03ffd1af5c79",
+      "lines": 387
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.range.test.tsx",
+      "sha256": "e71b763a29e7e5481457c8d1b00b631534f29e705ef69bfe2372ff3bd9c7d448",
+      "lines": 717
+    },
+    {
+      "path": "src/runtime/workbook_strings.ts",
+      "sha256": "7453dec8917e061683d8cebfb1731c6898b192b17ac8c14f8e617de630bc9858",
+      "lines": 166
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.css",
+      "sha256": "c123d708d526f0bc54562a256a713a98c566d7aa5490b8fff7e245a199b9a0f2",
+      "lines": 182
+    }
+  ],
+  "behavior": [
+    "Open range form reports scoped Office editing owner/file, including invalid or empty input; this is not a target proof. Unmount emits false for the exact owner. Blocking keeps input/editing and parsed grid without a read or paused status.",
+    "Input, selection and explicit confirmation are separate. Each input change retires the previous source immediately. Range source references actual capture/preview, submitted selection and runtime analysis; cold opinion is changed only by the shared explicit confirmation callback.",
+    "Reverse/lowercase/outside whitespace normalize exact coordinates. Cross-window targets state that only part is currently displayed. Partial merges keep the exact rectangle and disclose full intersecting merge boundaries; no silent expansion.",
+    "Hidden row/column coordinates require independent acceptance for the current submitted range. Input changes discard acceptance; hidden values are never displayed by the range UI and showHidden is unchanged.",
+    "Coordinate metadata lists display 20 spans per page; legal whole-sheet rectangles never allocate cells by area. Visible exact inclusion is outlined; partial intersecting merged cells have a distinct dashed outline and explanatory title.",
+    "Sheet/window/show-hidden/cell navigation leaves the range form and retires its candidate. Cancel selection affects only the candidate and returns focus to the current entry. Old opinions remain intact.",
+    "Callbacks recheck mounted/current file-capture-preview/blocked state, current draft object and source. Synchronous unmount during retirement cannot send the old range to a new owner. StrictMode registrations use new source and editing owner identities."
+  ],
+  "validation": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.range.test.tsx",
+      "raw": "range-red.txt",
+      "result": "8 failed / 8; actual original UI has no range entry"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.range.test.tsx src/components/WorkbookFilePreview.feedback.test.tsx",
+      "raw": "range-first.txt",
+      "result": "52 passed / 52"
+    },
+    {
+      "raw": "typecheck-first.txt",
+      "result": "failed only new test Mock generic annotation; corrected typed callback; not counted as product failure"
+    },
+    {
+      "raw": "range-owner.txt",
+      "result": "57 passed / 57; includes strict effect replay, stale handlers, bounded disclosure and existing cell/merge behavior"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.range.test.tsx -t 'synchronously removes'",
+      "raw": "range-retire-red.txt",
+      "result": "1 failed / 1 selected, 28 skipped; a synchronous unmount during unavailable callback still allowed one onRange(null)"
+    },
+    {
+      "raw": "range-retire-green.txt",
+      "result": "58 passed / 58 after owner recheck; original red retained"
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.range.test.tsx src/components/WorkbookFilePreview.feedback.test.tsx src/components/OfficePreview.revision-review.test.tsx src/components/PreviewReadingPosition.test.tsx src/runtime/workbook_view.test.ts src/runtime/strings.test.ts",
+      "raw": "related-final.txt",
+      "result": "6 files, 87 passed, exit 0"
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "raw": "typecheck-final.txt",
+      "result": "exit 0"
+    },
+    {
+      "command": "corepack pnpm exec prettier --check src/components/WorkbookFilePreview.tsx src/components/WorkbookRangeSelection.tsx src/components/WorkbookFilePreview.range.test.tsx src/runtime/workbook_strings.ts src/components/WorkbookFilePreview.css",
+      "raw": "format-final.txt",
+      "result": "exit 0"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/range-red.txt",
+      "sha256": "0effa0fcc7c556a2175fd3d57e097f884d592de0dc77aa69dac30db2314ce29a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/range-first.txt",
+      "sha256": "48c3057c4cc16092ad0c267e3eebd1355c50ac31a7b4be72c6b2d43808751c96"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/typecheck-first.txt",
+      "sha256": "f39ffb3cfc5ccd5efe408ae81d7936e50b105e175d362649a5c96c62831a7739"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/typecheck-green.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/range-owner.txt",
+      "sha256": "d0902e6063aee57367857664e9767b4826bcd6f1bcdf88688fd816c8e9ce866d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/range-retire-red.txt",
+      "sha256": "939e0ba6f440500716ae8fd285711263fcd4fe7ade88d9f0ae6abe53b1052134"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/range-retire-green.txt",
+      "sha256": "59e83aa79f2b73a9235343e428b47b7c8369a070a466b326278a53bd524d32c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/related-final.txt",
+      "sha256": "8c8a4d29b415ef167b7ef6e91ae5c005ebc36045886c99c89850f614cf58bbfa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "evidenceBoundary": [
+    "Component tests use actual production components/runtime range factory with controlled capture/parser and hook lifecycle; they do not prove real browser focus, visual layout, real ZIP parsing or native installation.",
+    "No browser/server/app/Agent was started by this implementation task. Verification owns dual-engine full-App checks, root owns parent integration and native acceptance.",
+    "This slice does not complete all P21 formats/regions, P16 Office fidelity/PPTX, P22 or per-Agent acceptance."
+  ],
+  "coordination": {
+    "runtime": "architecture owns workbook_feedback_range / target factory and related tests",
+    "parent": "root owns OfficeTargetEditing type and OpenedFileView automatic refresh deferral",
+    "independent": "verification owns original writer/derived ZIP XML oracle and full-App browser probes"
+  },
+  "untouched": "No DOCX, OpenedFileView, runtime factory, original fixture, prior installed/candidate receipt, public plan, application or user data modified."
+}

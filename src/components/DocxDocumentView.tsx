@@ -42,6 +42,7 @@ import {
 } from "../runtime/document_view";
 
 import {
+  DocumentReadingWindows,
   restoredDocumentPosition,
   saveReadingPosition,
   type PreviewReadingPositionRef,
@@ -51,12 +52,14 @@ type FeedbackBlock = DocxParagraph | DocxTable;
 type FeedbackSelection = { owner: object; block: FeedbackBlock };
 function useDocumentFeedback({
   document,
+  reading,
   interactionBlocked,
   isCurrent,
   onOfficeTargetAvailability,
   onOfficeTargetConfirm,
 }: {
   document: DocxPreview;
+  reading: DocumentReadingWindows;
   interactionBlocked: boolean;
   isCurrent?: () => boolean;
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
@@ -114,6 +117,7 @@ function useDocumentFeedback({
   }, [document]);
   return {
     document,
+    reading,
     interactionBlocked,
     selection,
     integrated: !!onOfficeTargetConfirm,
@@ -121,6 +125,7 @@ function useDocumentFeedback({
     navigate: (action: () => void) => {
       if (!allowed()) return;
       withdraw();
+      if (!allowed()) return;
       action();
     },
     choose: (owner: object, block: FeedbackBlock) => {
@@ -427,7 +432,7 @@ function Paragraph({
   images: Images;
   feedback: Feedback;
 }) {
-  const [part, setPart] = useState(0);
+  const [part, setPart] = useState(() => feedback.reading.paragraph(block));
   const parts = useMemo(() => paragraphParts(block.runs), [block]);
   const level = block.headingLevel;
   return (
@@ -437,7 +442,12 @@ function Paragraph({
       <Pagination
         page={part}
         pages={parts.length}
-        onChange={(next) => feedback.navigate(() => setPart(next))}
+        onChange={(next) =>
+          feedback.navigate(() => {
+            feedback.reading.save(block, { kind: "paragraph", part: next });
+            setPart(next);
+          })
+        }
         label={S.paragraphPart(part + 1, parts.length)}
       />
       <p
@@ -463,8 +473,20 @@ function Table({
   images: Images;
   feedback: Feedback;
 }) {
-  const [row, setRow] = useState(0);
-  const [column, setColumn] = useState(0);
+  const [row, setRow] = useState(() => feedback.reading.table(block).row);
+  const [column, setColumn] = useState(
+    () => feedback.reading.table(block).column,
+  );
+  const move = (nextRow: number, nextColumn: number) =>
+    feedback.navigate(() => {
+      feedback.reading.save(block, {
+        kind: "table",
+        row: nextRow,
+        column: nextColumn,
+      });
+      setRow(nextRow);
+      setColumn(nextColumn);
+    });
   const [selection, setSelection] = useState<DocumentCellPosition | null>(null);
   const focusTarget = useRef<string | null>(null);
   const detail = useRef<HTMLDivElement | null>(null);
@@ -533,9 +555,7 @@ function Table({
               className="btn btn-ghost"
               disabled={!row}
               onClick={() =>
-                feedback.navigate(() =>
-                  setRow(Math.max(0, row - DOCUMENT_WINDOW.rows)),
-                )
+                move(Math.max(0, row - DOCUMENT_WINDOW.rows), column)
               }
             >
               {S.previousRows}
@@ -544,9 +564,7 @@ function Table({
               type="button"
               className="btn btn-ghost"
               disabled={window.endRow >= block.rows.length}
-              onClick={() =>
-                feedback.navigate(() => setRow(row + DOCUMENT_WINDOW.rows))
-              }
+              onClick={() => move(row + DOCUMENT_WINDOW.rows, column)}
             >
               {S.nextRows}
             </button>
@@ -555,9 +573,7 @@ function Table({
               className="btn btn-ghost"
               disabled={!column}
               onClick={() =>
-                feedback.navigate(() =>
-                  setColumn(Math.max(0, column - DOCUMENT_WINDOW.columns)),
-                )
+                move(row, Math.max(0, column - DOCUMENT_WINDOW.columns))
               }
             >
               {S.previousColumns}
@@ -566,11 +582,7 @@ function Table({
               type="button"
               className="btn btn-ghost"
               disabled={window.endColumn >= window.columns}
-              onClick={() =>
-                feedback.navigate(() =>
-                  setColumn(column + DOCUMENT_WINDOW.columns),
-                )
-              }
+              onClick={() => move(row, column + DOCUMENT_WINDOW.columns)}
             >
               {S.nextColumns}
             </button>
@@ -757,8 +769,17 @@ export function DocxDocumentView({
   onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
+  const reading = useMemo(
+    () => new DocumentReadingWindows(document, readingPosition),
+    [document, readingPosition],
+  );
+  useLayoutEffect(() => reading.activate(), [reading]);
+  const renderOwner = useRef({ document, index: 0 });
+  if (renderOwner.current.document !== document)
+    renderOwner.current = { document, index: renderOwner.current.index + 1 };
   const feedback = useDocumentFeedback({
     document,
+    reading,
     interactionBlocked,
     isCurrent,
     onOfficeTargetAvailability,
@@ -821,7 +842,7 @@ export function DocxDocumentView({
       )}
       {selected && <p className="document-scope">{S.separateStory}</p>}
       <BlockSequence
-        key={`${document.file.root}:${document.file.resolvedPath}:${document.file.version}:${document.file.sha256}:${selected?.id ?? "body"}`}
+        key={`${document.file.root}:${document.file.resolvedPath}:${document.file.version}:${document.file.sha256}:${renderOwner.current.index}:${selected?.id ?? "body"}`}
         blocks={selected?.blocks ?? document.blocks}
         feedback={feedback}
         images={images}

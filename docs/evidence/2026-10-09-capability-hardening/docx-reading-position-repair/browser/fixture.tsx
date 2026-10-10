@@ -1,0 +1,277 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "/src/App";
+import { threads, freshThreadState } from "/src/runtime/sessions";
+import {
+  composerDrafts,
+  fileFeedbackDrafts,
+  draftPersistence,
+  parseDraftSnapshot,
+} from "/src/runtime/drafts";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/history-import.css";
+import "/src/desktop-workbench.css";
+import captures from "./app-captures.json";
+const key = "codex:/controlled:docx-fixture";
+const title = "CONTROLLED_DOCX_READING";
+const params = new URLSearchParams(location.search);
+const originalName = params.get("fixture") ?? "repeated-locations.docx";
+let currentName = originalName as keyof typeof captures;
+const path = "/controlled/current.docx";
+const settings = new Map<string, unknown>();
+const fileFor = (name: keyof typeof captures) => ({
+  root: "/controlled",
+  path,
+  resolvedPath: path,
+  name: "current.docx",
+  size: captures[name].file.size,
+  sha256: captures[name].file.sha256,
+  version: "controlled:" + name,
+});
+let stagedRead: { promise: Promise<unknown>; release: () => void } | null =
+  null;
+const captureFor = (f: any) => {
+  const name = Object.keys(captures).find(
+    (n) => captures[n as keyof typeof captures].file.sha256 === f.sha256,
+  ) as keyof typeof captures;
+  if (!name) throw new Error("Unknown controlled file version");
+  const { parts, entries, inflatedBytes } = captures[name];
+  return { file: f, parts, entries, inflatedBytes };
+};
+const row = {
+  id: key,
+  agentId: "codex",
+  cwd: "/controlled",
+  nativeSessionId: "docx-fixture",
+  title,
+  configOptions: null,
+  pinned: false,
+  archived: false,
+  createdAt: 1,
+  updatedAt: Date.now(),
+};
+(window as any).testInvoke = async (cmd: string, args: any) => {
+  (window as any).calls.push({ cmd, args });
+  if (cmd === "settings_get")
+    return args.key === "autoArchiveDays"
+      ? 0
+      : (settings.get(args.key) ?? null);
+  if (cmd === "settings_set") {
+    settings.set(args.key, args.value);
+    return;
+  }
+  if (
+    [
+      "settings_set",
+      "host_performance_sample",
+      "session_mark_read",
+      "session_index_mark_read",
+    ].includes(cmd)
+  )
+    return;
+  if (cmd === "host_performance_origin") return null;
+  if (cmd === "plugin:event|listen") return 1;
+  if (cmd === "plugin:event|unlisten") return;
+  if (cmd === "app_initial_snapshot") return { agents: [], settings: {} };
+  if (
+    [
+      "catalog_list",
+      "catalog_scan",
+      "credential_list",
+      "desktop_notification_take_pending",
+      "prompt_templates_list",
+    ].includes(cmd)
+  )
+    return [];
+  if (cmd === "app_default_working_directory") return "/controlled";
+  if (cmd === "session_index_list") return [row];
+  if (cmd === "agent_work_get")
+    return {
+      cwd: "/controlled",
+      enabled: { codex: true },
+      locationEnabled: true,
+    };
+  if (cmd === "browser_share_status")
+    return {
+      taskKey: args.taskKey,
+      label: args.label,
+      agentId: "codex",
+      phase: "unshared",
+      revision: 0,
+      reason: null,
+      pendingRequest: null,
+    };
+  if (cmd === "agent_status") return [];
+  if (cmd === "desktop_notifications_get")
+    return { enabled: false, sound: false };
+  if (
+    cmd === "file_delivery_inspect" ||
+    cmd === "file_delivery_inspect_selected"
+  )
+    return fileFor(currentName);
+  if (cmd === "file_delivery_read_docx") {
+    const reply = captureFor(args.file);
+    if (stagedRead) {
+      await stagedRead.promise;
+    }
+    return reply;
+  }
+  if (cmd === "file_delivery_check_revision")
+    return args.file.sha256 === captures[currentName].file.sha256
+      ? { kind: "hintUnchanged" }
+      : { kind: "verified", file: fileFor(currentName) };
+  (window as any).unexpected.push(cmd);
+  throw new Error("Unexpected controlled IPC " + cmd);
+};
+await draftPersistence.load();
+const state = freshThreadState(key, "codex", "/controlled", "docx-fixture");
+state.title = title;
+state.identity = "established";
+state.items = [
+  {
+    id: "reply",
+    kind: "agent",
+    text: "[文档样本](/controlled/current.docx)",
+    streaming: false,
+    time: Date.now(),
+  },
+];
+threads.getSnapshot().threads.set(key, state);
+await threads.refreshIndex();
+const length = Number(params.get("length") ?? 640);
+composerDrafts.update("session:" + key, () => ({
+  text: "原有受控输入内容保持不发送。"
+    .repeat(Math.ceil(length / 14))
+    .slice(0, length),
+  attachments: [],
+}));
+function metrics() {
+  const selectors = [
+    "html",
+    "body",
+    "#root",
+    ".app",
+    ".body-row",
+    ".product-sidebar",
+    ".product-brand",
+    ".workspace-thread",
+    ".thread-body",
+    ".thread-main",
+    ".workspace-topbar",
+    ".transcript",
+    ".composer-wrap",
+    ".composer",
+    ".c-input",
+    ".artifact-pane",
+    ".artifact-opened-file-body",
+    ".file-artifact-view",
+    ".document-preview",
+    ".document-surface",
+    ".document-paragraph",
+    ".document-table",
+    ".document-table-scroll",
+    ".source-text-selection",
+    ".source-text-selection-controls",
+    ".text-block-content",
+  ];
+  const elements = Object.fromEntries(
+    selectors.map((s) => {
+      const e =
+        [...document.querySelectorAll<HTMLElement>(s)].find(
+          (e) => e.getBoundingClientRect().height > 0,
+        ) ?? null;
+      if (!e) return [s, null];
+      const r = e.getBoundingClientRect(),
+        c = getComputedStyle(e);
+      return [
+        s,
+        {
+          x: r.x,
+          y: r.y,
+          width: r.width,
+          height: r.height,
+          scrollTop: e.scrollTop,
+          scrollHeight: e.scrollHeight,
+          clientHeight: e.clientHeight,
+          overflowX: c.overflowX,
+          overflowY: c.overflowY,
+          minHeight: c.minHeight,
+          flex: c.flex,
+          position: c.position,
+        },
+      ];
+    }),
+  );
+  return {
+    windowY: window.scrollY,
+    visualViewport: window.visualViewport
+      ? {
+          offsetTop: window.visualViewport.offsetTop,
+          pageTop: window.visualViewport.pageTop,
+          height: window.visualViewport.height,
+        }
+      : null,
+    scrollingTag: document.scrollingElement?.tagName,
+    active: document.activeElement?.outerHTML.slice(0, 240),
+    elements,
+  };
+}
+const events: any[] = [];
+for (const t of ["scroll", "focusin", "focusout"])
+  document.addEventListener(
+    t,
+    (e) => {
+      events.push({
+        t,
+        target:
+          e.target instanceof Element
+            ? e.target.tagName + ":" + e.target.className
+            : "document",
+        windowY: window.scrollY,
+        rootTop: document.querySelector(".app")?.getBoundingClientRect().top,
+      });
+    },
+    true,
+  );
+(window as any).fixture = {
+  metrics,
+  events,
+  state,
+  sourceLength: length,
+  composer: () => composerDrafts.read("session:" + key),
+  clearEvents: () => events.splice(0),
+  feedback: () => fileFeedbackDrafts.entries(key),
+  currentFile: () => fileFor(currentName),
+  replace: (name: keyof typeof captures) => {
+    currentName = name;
+  },
+  blockCapture: () => {
+    let release!: () => void;
+    const promise = new Promise<void>((r) => (release = r));
+    stagedRead = { promise, release };
+  },
+  releaseCapture: () => {
+    stagedRead?.release();
+    stagedRead = null;
+  },
+  settings: () => Object.fromEntries(settings),
+  parseSaved: () => {
+    const raw = settings.get("unsentWork.v1");
+    return raw
+      ? parseDraftSnapshot(typeof raw === "string" ? JSON.parse(raw) : raw)
+      : null;
+  },
+  saveNow: () => draftPersistence.flush(),
+};
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

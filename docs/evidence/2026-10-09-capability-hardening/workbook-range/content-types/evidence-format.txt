@@ -1,0 +1,5 @@
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.json 90ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.json 52ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.json 201ms
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.json 169ms
+docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.json 187ms

@@ -1,0 +1,85 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_content_types.test.ts (24 tests | 16 failed) 28ms
+   × resolves an ordinary workbook from extension Default xml 4ms
+   × resolves an ordinary workbook from extension Default XML 1ms
+   × resolves an ordinary workbook from extension Default xMl 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (0) 2ms
+   × rejects ambiguous or malformed mappings instead of selecting one (1) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (2) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (3) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (4) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (5) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (6) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (7) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (8) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (9) 1ms
+   × rejects ambiguous or malformed mappings instead of selecting one (11) 0ms
+   × reads every original sheet without rewriting range-layout.xlsx 3ms
+   × reads every original sheet without rewriting range-nonordinal-hidden.xlsx 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_content_types.test.ts > resolves an ordinary workbook from extension Default xml
+ FAIL  src/runtime/xlsx_content_types.test.ts > resolves an ordinary workbook from extension Default XML
+ FAIL  src/runtime/xlsx_content_types.test.ts > resolves an ordinary workbook from extension Default xMl
+Error: unsupported
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:182:11
+    180|     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet…
+    181|   )
+    182|     throw new XlsxError("unsupported");
+       |           ^
+    183|   const workbook = read(document.target);
+    184|   requireRoot(workbook, "workbook");
+ ❯ src/runtime/xlsx_content_types.test.ts:23:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (0)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (1)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (2)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (3)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (4)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (5)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (6)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (7)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (8)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (9)
+ FAIL  src/runtime/xlsx_content_types.test.ts > rejects ambiguous or malformed mappings instead of selecting one (11)
+AssertionError: expected 'unsupported' to be 'invalid' // Object.is equality
+
+Expected: "invalid"
+Received: "unsupported"
+
+ ❯ rejects src/runtime/xlsx_content_types.test.ts:20:82
+     18| function rejects(types: string, code: "invalid" | "unsupported") {
+     19|   expect(() => parseWorkbook(input(types))).toThrowError(XlsxError);
+     20|   try { parseWorkbook(input(types)); } catch (e) { expect((e as XlsxEr…
+       |                                                                                  ^
+     21| }
+     22| it.each(["xml", "XML", "xMl"])("resolves an ordinary workbook from ext…
+ ❯ src/runtime/xlsx_content_types.test.ts:55:88
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/runtime/xlsx_content_types.test.ts > reads every original sheet without rewriting range-layout.xlsx
+ FAIL  src/runtime/xlsx_content_types.test.ts > reads every original sheet without rewriting range-nonordinal-hidden.xlsx
+Error: unsupported
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:182:11
+    180|     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet…
+    181|   )
+    182|     throw new XlsxError("unsupported");
+       |           ^
+    183|   const workbook = read(document.target);
+    184|   requireRoot(workbook, "workbook");
+ ❯ src/runtime/xlsx_content_types.test.ts:87:44
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 8 passed (24)
+   Start at  09:39:52
+   Duration  165ms (transform 44ms, setup 0ms, import 65ms, tests 28ms, environment 0ms)
+

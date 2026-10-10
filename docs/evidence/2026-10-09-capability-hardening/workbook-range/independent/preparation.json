@@ -1,0 +1,33 @@
+{
+  "status": "prepared_not_started",
+  "boundaries": [
+    "Actual production App/Thread/ArtifactPane/OpenedFileView and Worker imports; IPC is controlled in-memory only.",
+    "ZIP parts are exact bytes from independent fixtures, no parser or source-generated expected coordinates.",
+    "No server/browser/product parser invocation has run for this fixture set.",
+    "Full App uses the same nine global CSS imports as the established full App harness; StrictMode enabled.",
+    "settings and drafts are in-memory, synthetic controlled paths; no user database, formal App, Agent, account, or file opener."
+  ],
+  "reusedFrom": [
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/fixture.tsx",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/index.html",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/serve.mjs"
+  ],
+  "baseUrl": "http://127.0.0.1:1466",
+  "captureMethod": "Python stdlib zipfile CRC+base64 exact .xml/.rels bytes; this simulates Rust capture and does not claim OS evidence.",
+  "files": {
+    "range-layout.xlsx": {
+      "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d",
+      "bytes": 6547,
+      "parts": 10,
+      "entries": 10,
+      "inflatedBytes": 22649
+    },
+    "range-nonordinal-hidden.xlsx": {
+      "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde",
+      "bytes": 6522,
+      "parts": 10,
+      "entries": 10,
+      "inflatedBytes": 22680
+    }
+  }
+}

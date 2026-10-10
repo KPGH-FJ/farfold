@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/WorkbookFilePreview.range.test.tsx(229,5): error TS2322: Type 'Mock<Procedure | Constructable>' is not assignable to type '(((value: Readonly<{ owner: object; file: Readonly<VerifiedFile>; editing: boolean; }>) => void) | undefined) & Mock<Procedure | Constructable>'.
+  Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(((value: Readonly<{ owner: object; file: Readonly<VerifiedFile>; editing: boolean; }>) => void) | undefined) & Mock<Procedure | Constructable>'.
+    Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '((value: Readonly<{ owner: object; file: Readonly<VerifiedFile>; editing: boolean; }>) => void) & MockInstance<Procedure | Constructable> & { ...; } & {}'.
+      Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(value: Readonly<{ owner: object; file: Readonly<VerifiedFile>; editing: boolean; }>) => void'.
+        Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' provides no match for the signature '(value: Readonly<{ owner: object; file: Readonly<VerifiedFile>; editing: boolean; }>): void'.
+ ELIFECYCLE  Command failed with exit code 1.

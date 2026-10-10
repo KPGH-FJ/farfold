@@ -34,6 +34,7 @@ import {
   type OfficeTargetAvailability,
   type OfficeTargetConfirmation,
 } from "../runtime/office_feedback_target";
+import type { OfficeTargetEditing } from "../runtime/office_target_editing";
 import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
 import { DOCUMENT_STRINGS as DOC } from "../runtime/document_strings";
 import {
@@ -51,7 +52,10 @@ import { VisualFilePreview } from "./VisualFilePreview";
 import { WorkbookFilePreview } from "./WorkbookFilePreview";
 import { DocxFilePreview } from "./DocxFilePreview";
 import { useFileRevisionMonitor } from "./useFileRevisionMonitor";
-import type { PreviewReadingPosition } from "../runtime/preview_reading_position";
+import type {
+  PreviewReadingPosition,
+  PreviewReadingPositionRef,
+} from "../runtime/preview_reading_position";
 import type { PreviewContentStatus } from "../runtime/preview_capture";
 import {
   prepareOfficePreview,
@@ -82,6 +86,8 @@ export interface OpenedFileViewProps {
   active: boolean;
   /** Changes for an explicit new selection, including the same path in another task. */
   selectionKey?: string;
+  /** Caller-owned current-file location, never an opinion or selection. */
+  readingPosition?: PreviewReadingPositionRef;
   onOpenHtml: (file: VerifiedFile) => void;
   headerActions?: ReactNode;
   onBack?: () => void;
@@ -221,6 +227,7 @@ export function OpenedFileView({
   workingDirectory,
   active,
   selectionKey,
+  readingPosition: retainedReadingPosition,
   onOpenHtml,
   headerActions,
   onBack,
@@ -239,7 +246,8 @@ export function OpenedFileView({
   const [view, setView] = useState<View>({ identity, phase: "loading" });
   const latestView = useRef(view);
   latestView.current = view;
-  const readingPosition = useRef<PreviewReadingPosition | null>(null);
+  const localReadingPosition = useRef<PreviewReadingPosition | null>(null);
+  const readingPosition = retainedReadingPosition ?? localReadingPosition;
   const readingOwner = useRef(identity);
   const textContent = useRef<HTMLDivElement>(null);
   const textScroll = useRef(0);
@@ -251,6 +259,17 @@ export function OpenedFileView({
     identity: string;
     source: OfficeFeedbackSource;
   } | null>(null);
+  const officeEditing = useRef<{
+    identity: string;
+    owner: object;
+    file: Readonly<VerifiedFile>;
+  } | null>(null);
+  const retiredEditors = useRef(new WeakSet<object>());
+  const clearOfficeEditing = () => {
+    if (officeEditing.current)
+      retiredEditors.current.add(officeEditing.current.owner);
+    officeEditing.current = null;
+  };
   const clearOfficeSelection = () => {
     if (officeSelection.current)
       retireOfficeFeedbackSource(officeSelection.current.source);
@@ -263,6 +282,7 @@ export function OpenedFileView({
     textScroll.current = 0;
     textSelection.current = null;
     clearOfficeSelection();
+    clearOfficeEditing();
   }
   const [visualReadiness, setVisualReadiness] =
     useState<VisualPreviewReadiness | null>(null);
@@ -334,6 +354,7 @@ export function OpenedFileView({
     return () => {
       mounted.current = false;
       clearOfficeSelection();
+      clearOfficeEditing();
       operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
@@ -344,6 +365,7 @@ export function OpenedFileView({
     if (!active) {
       textSelection.current = null;
       clearOfficeSelection();
+      clearOfficeEditing();
       const refreshing = operation.current?.kind === "refresh";
       operation.current?.parser?.abort();
       operation.current = null;
@@ -383,6 +405,7 @@ export function OpenedFileView({
     operation.current = owner;
     textSelection.current = null;
     clearOfficeSelection();
+    clearOfficeEditing();
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
@@ -781,6 +804,38 @@ export function OpenedFileView({
       officeSelection.current = { identity, source };
     }
   };
+  const reportOfficeEditing = (value: OfficeTargetEditing) => {
+    if (!value.owner || typeof value.owner !== "object") return;
+    if (value.editing === false) {
+      if (
+        officeEditing.current?.owner === value.owner &&
+        !sameFile(officeEditing.current.file, value.file)
+      )
+        return;
+      retiredEditors.current.add(value.owner);
+      if (officeEditing.current?.owner === value.owner)
+        officeEditing.current = null;
+      return;
+    }
+    const latest = latestView.current;
+    if (
+      value.editing !== true ||
+      retiredEditors.current.has(value.owner) ||
+      !canEditFeedback() ||
+      latest.file !== file ||
+      latest.office !== shown.office ||
+      !file ||
+      (!isWorkbook(file) && !isDocument(file)) ||
+      !sameFile(file, value.file)
+    )
+      return;
+    if (officeEditing.current?.owner !== value.owner) clearOfficeEditing();
+    officeEditing.current = {
+      identity,
+      owner: value.owner,
+      file: { ...value.file },
+    };
+  };
   const confirmOfficeSelection = (value: OfficeTargetConfirmation) => {
     if (
       !canEditFeedback() ||
@@ -833,7 +888,8 @@ export function OpenedFileView({
       if (
         feedbackOpen ||
         textSelection.current?.identity === identity ||
-        officeSelection.current?.identity === identity
+        officeSelection.current?.identity === identity ||
+        officeEditing.current?.identity === identity
       )
         return "deferred";
       if (await load(next, true, valid)) return "applied";
@@ -1047,6 +1103,7 @@ export function OpenedFileView({
           onStatus={reportOfficeStatus}
           onOfficeTargetAvailability={reportOfficeSelection}
           onOfficeTargetConfirm={confirmOfficeSelection}
+          onOfficeTargetEditing={reportOfficeEditing}
         />
       )}
       {file && shown.phase === "ready" && isDocument(file) && (

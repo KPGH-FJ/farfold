@@ -1,0 +1,159 @@
+{
+  "checkedAtUtc": "2026-10-10T01:51:18.702237+00:00",
+  "result": "no_integration_blocker_found",
+  "method": "Read-only source/input/hash/log audit. No repeated engineering suites, browser execution, installation, app launch or user-data access. Only Prettier stdout was invoked against preserved test bytes to verify a formatting-only delta.",
+  "reviewerBoundary": "Architecture authored the rectangle runtime and OPC repair. This receipt audits the integrated evidence, not an independent code review of its own implementation. Verification supplied separate read-only code challenge and full-App browser evidence.",
+  "engineering": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/final-verification.json",
+      "sha256": "c34b616600a301e969bca534bae33dcc42b79b072c4ed445e2a6dbc98cf735c7"
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/inputs.json",
+      "sha256": "50e2b19a2b07e2e9aced48f3bd7293d5e0eb80dad398de1087f584f3cb487716"
+    },
+    "inputCount": 1171,
+    "allCurrentBytesMatch": true,
+    "exactDeltaSinceFirstChecks": [
+      "src/components/DocxReadingWindows.test.tsx",
+      "src/runtime/xlsx_content_types.test.ts",
+      "src/runtime/xlsx_parse.ts"
+    ],
+    "frontend": {
+      "files": 323,
+      "tests": 3811,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/frontend.txt",
+        "sha256": "6c7c52a75208c6e5f31c0e9a3cf0fd436eba307deb90fa821b05673bdf07c622"
+      }
+    },
+    "executedNow": ["frontend", "typecheck", "build", "format"],
+    "explicitlyReused": ["cargo-fmt", "clippy", "rust"],
+    "allSevenLogHashesMatch": true,
+    "rustReuseReason": "Compared with docx-feedback-checks: every non-frontend/configuration/external shared input is byte-identical, with only the newly frozen range fixture directory added. The entire src/runtime/fixtures set and bytes match exactly. Final versus first-round changes are confined to frontend parser/test and proven test formatting. Reuse is not a new Rust execution.",
+    "formatProof": {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/DocxReadingWindows.before-format.raw.txt",
+        "sha256": "f470f99d1fb2ce95c6fed13566828c95cb06670acaa03ab214955669816423b3"
+      },
+      "current": {
+        "path": "src/components/DocxReadingWindows.test.tsx",
+        "sha256": "0b8f24f9602ce3975a6e7b216d07e2af79267c707e079795a60628bfd59c0d38"
+      },
+      "prettierStdoutExactlyEqualsCurrent": true
+    },
+    "firstFailurePreserved": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/final-verification.json",
+      "sha256": "a5f0491965be1b58d290b3b9b4c3dad245772c9b0264dbf85deb9d616ae6b4f8"
+    },
+    "firstFormatLogPreserved": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/format.txt",
+      "sha256": "0cf6f98d39e9ed55ae7231dd864e1fef656ecf899e36289d8638286200476e6c"
+    }
+  },
+  "ownerAndBrowserReceipts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/runtime/implementation.json",
+      "sha256": "a99728a3df29934c911d094375ed57a308797a196fb654ac46ccb9bea6560ca1",
+      "referencedHashesChecked": 12,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/ui/implementation.json",
+      "sha256": "87c4a9373b817e151d020cc6ea07a6f395aab1488642cd31436e28cef7ff63c3",
+      "referencedHashesChecked": 15,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/parent/implementation.json",
+      "sha256": "de98db60b79e5a142f1667ac498d50e63d146476bae6c24a9cfa553a1d7f7639",
+      "referencedHashesChecked": 8,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/implementation.json",
+      "sha256": "cecf0347025e077d1de1d5fea01c237a00b10a827511f97056c8a49a61383c1e",
+      "referencedHashesChecked": 31,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/implementation.json",
+      "sha256": "6b3cc5e1700e1a06ec02ac24e1a391c4f70e94df967d52b1d4b4191dfb5ce17a",
+      "referencedHashesChecked": 97,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/implementation.json",
+      "sha256": "f922d2be77ccf5318fcc70279c90d5a65e3e249cc20b5f1df065f7b4f253e897",
+      "referencedHashesChecked": 91,
+      "allReferencedHashesMatch": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/parent/implementation.json",
+      "sha256": "f793a053e27e7f1c1f62f90ef304529df3445957327b9bd1229e8f10989a9c66",
+      "referencedHashesChecked": 7,
+      "allReferencedHashesMatch": true
+    }
+  ],
+  "rectangleBrowser": {
+    "fullApp": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.json",
+        "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+        "productionInputsCurrentlyMatch": true,
+        "assertions": 74,
+        "executor": "verification"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.json",
+        "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+        "productionInputsCurrentlyMatch": true,
+        "assertions": 74,
+        "executor": "verification"
+      }
+    ],
+    "worker": "Each engine: 404 assertions over 2 original ZIPs, 2 sheets and 12 exact range oracles, plus live source/retirement checks; see content-types/implementation.json. Worker evidence does not repeat OS/IPC capture verification.",
+    "driverCorrections": "Original ZIP unsupported was an actual parser defect, now repaired. Later missing fresh hidden-sheet acknowledgement and wrong automatic-resume expectations were driver errors; original outputs remain. Final App assertions pass separately from these earlier checkpoints."
+  },
+  "new03": "The original 8c2f four-file controlled replay and final source browser results are separately referenced by the peer receipt. The effective navigate/withdraw reentrancy red and minimal fresh guard are preserved. Native installed 8c2f reading-position failure still requires future candidate native verification. Nested cell-detail opening and its internal block-segment state remain outside this slice.",
+  "candidateReadiness": {
+    "collectors": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/prepare-candidate.py",
+        "sha256": "da50585fd289afef7bdaf7fca66755b4c9bf226a34db8203a7fdb5e6415f3ce8",
+        "inputCount": 1171,
+        "sameAsEngineeringInputs": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/verify-candidate.py",
+        "sha256": "d46b1f32d36768f0ef162fce2a7f784665f60268b060607e77b27d9ba9bce8ae",
+        "inputCount": 1171,
+        "sameAsEngineeringInputs": true
+      },
+      {
+        "path": "output/2026-10-10-workbook-range-install/install_verified_candidate.py",
+        "sha256": "6ae830a260a6d24fec2e99f89b093dbb752bf4a924b925e56ac62f2d3fbf75d0",
+        "inputCount": 1171,
+        "sameAsEngineeringInputs": true
+      }
+    ],
+    "verifiedBy": "Only AST-extracted TOP/SCOPES assignments and read-only directory enumeration were evaluated; helper main/build/install was not executed.",
+    "behaviorReview": "Exact commit/blob/input set, five-file bundle/plist/arm64/signature/ZIP, old formal app and process-exit/data preconditions remain. Candidate verification must wait for root to confirm preparation completion."
+  },
+  "sourceReview": "Scoped runtime/UI/parent/NEW03 source reviews and resolved counterexamples were sent to owners. Every current owner source in the receipts matches. Macro/unknown MIME restrictions, hidden-range acknowledgement, exact sheet identity, non-expanding coordinates and irreversible retirement were not weakened.",
+  "protectedFilesObserved": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "limitations": [
+    "Engineering and controlled real-browser results do not prove installed/native behavior, real Agents/accounts or all Office compatibility.",
+    "Rust was not rerun. This slice does not close unrelated worktree, PPTX or steering gaps.",
+    "Later maintained Markdown updates are outside the 1171 engineering inputs. Any production/fixture change requires proportionate re-verification."
+  ]
+}

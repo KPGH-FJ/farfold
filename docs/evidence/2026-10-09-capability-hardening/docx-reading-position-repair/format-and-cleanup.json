@@ -1,0 +1,119 @@
+{
+  "recordedAtUtc": "2026-10-10T01:31:59.850628+00:00",
+  "records": [
+    {
+      "path": "src/components/DocxReadingWindows.test.tsx",
+      "beforeSha256": "f470f99d1fb2ce95c6fed13566828c95cb06670acaa03ab214955669816423b3",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/DocxReadingWindows.before-format.raw.txt",
+      "afterSha256": "0b8f24f9602ce3975a6e7b216d07e2af79267c707e079795a60628bfd59c0d38",
+      "changed": true,
+      "equalsPrettierOriginal": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/app-captures.json",
+      "beforeSha256": "fc70b852e5a3e74e6bd52db06bc8c750052ddfe2757ca38d24e8460eab28f21e",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/app-captures.raw.txt",
+      "rawSha256": "fc70b852e5a3e74e6bd52db06bc8c750052ddfe2757ca38d24e8460eab28f21e",
+      "afterSha256": "fc70b852e5a3e74e6bd52db06bc8c750052ddfe2757ca38d24e8460eab28f21e",
+      "changed": false,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.json",
+      "beforeSha256": "e1efdaa711ffeada34a4d2001eafda50c8b2b2a0dee26daf2e8f6baa36b6a4af",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-baseline-native-size.raw.txt",
+      "rawSha256": "e1efdaa711ffeada34a4d2001eafda50c8b2b2a0dee26daf2e8f6baa36b6a4af",
+      "afterSha256": "b4bf1297fc9866e1d6b17eed3f4dfe7f0c6b414bf86bd0e1cb8fe8376730615e",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.json",
+      "beforeSha256": "c9ceefde4484d2ab534d0ca4f61ff5aa53e595d4005788523fa995f2c87cf593",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-current-final.raw.txt",
+      "rawSha256": "c9ceefde4484d2ab534d0ca4f61ff5aa53e595d4005788523fa995f2c87cf593",
+      "afterSha256": "98ad2677e01e4f9df29ae909aa0857ba5b0f61bbecbde49f63388eb8d6f53d66",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.json",
+      "beforeSha256": "6fd6fc51eb33fb18faf3ef48e58e50714e68f411c6a0bbae0ae10a5644e05c29",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/chromium-narrow-aside.raw.txt",
+      "rawSha256": "6fd6fc51eb33fb18faf3ef48e58e50714e68f411c6a0bbae0ae10a5644e05c29",
+      "afterSha256": "3d528ad7f97e4669eec918a036cb6c282981b41388b19783aae7df13210cc84b",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.json",
+      "beforeSha256": "b074a31582d206e687d845bb2debd18cfcee234a81e3d0675100cda5d8c8f893",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-final.raw.txt",
+      "rawSha256": "b074a31582d206e687d845bb2debd18cfcee234a81e3d0675100cda5d8c8f893",
+      "afterSha256": "69424ae37be9fd59b3ba31ba3878cac3ffa3b7943c774b7a3bb48669f94544b0",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.json",
+      "beforeSha256": "19c96f1cadb2beef418de9d632f195f1669148daeef8d7c5520ca7bb74ce7f4a",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-first.raw.txt",
+      "rawSha256": "19c96f1cadb2beef418de9d632f195f1669148daeef8d7c5520ca7bb74ce7f4a",
+      "afterSha256": "dbe6e00884c2296bcd4780df5af42382a6616bbb4a88ce55fe25536c90348f2e",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.json",
+      "beforeSha256": "a64518866923cdbaaece15d580f9a8758020c9aa5d082c1b8e44deabd46a9559",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-native-size.raw.txt",
+      "rawSha256": "a64518866923cdbaaece15d580f9a8758020c9aa5d082c1b8e44deabd46a9559",
+      "afterSha256": "f80d940ac0fe255950e3049b646dbea633647a0a7da9cbcb354171dcd2e0f368",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.json",
+      "beforeSha256": "37458b1b643de66647d84fe15fed60977bec64427c5beeea4fb5658df0c6781a",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-baseline-stable.raw.txt",
+      "rawSha256": "37458b1b643de66647d84fe15fed60977bec64427c5beeea4fb5658df0c6781a",
+      "afterSha256": "445b6091a31df944e34c5166b9b5ade71fae46b0c4e77461ce70ba86b88ae943",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.json",
+      "beforeSha256": "faa3f28fe7e793afd3075eedb346217313c8b336051fdd91bc0d5882d88dbd72",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-final.raw.txt",
+      "rawSha256": "faa3f28fe7e793afd3075eedb346217313c8b336051fdd91bc0d5882d88dbd72",
+      "afterSha256": "ac7ae9a461e9c99d5ec8eee4be33ac3c898ef46f6c3d4759e6f3df72c60b8897",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.json",
+      "beforeSha256": "cf054a59161c7cfc6699923ab159095cd6ea79076ab8d277efa90e40c5e8061c",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-current-native-size.raw.txt",
+      "rawSha256": "cf054a59161c7cfc6699923ab159095cd6ea79076ab8d277efa90e40c5e8061c",
+      "afterSha256": "81426bd259ffe8c04285078aa3a01378531c062caa9a4aea1250bb4a8dc9c060",
+      "changed": true,
+      "semanticEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.json",
+      "beforeSha256": "2895f7e2c85476d7a34a82682bc009dfc7ace3cbddada985e519d0540b88a4af",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/docx-reading-position-repair/browser/webkit-narrow-aside.raw.txt",
+      "rawSha256": "2895f7e2c85476d7a34a82682bc009dfc7ace3cbddada985e519d0540b88a4af",
+      "afterSha256": "a047a0059a4477d9ca4d029467241bdafdad6d3c1a8e94989685384d154e3505",
+      "changed": true,
+      "semanticEqual": true
+    }
+  ],
+  "cleanup": {
+    "baselinePid": 69340,
+    "baselineExit": 143,
+    "currentPid": 72352,
+    "currentExit": 143,
+    "mechanism": "SIGTERM exact owned Vite PID; wrappers reaped; browser runner finally closed owned browser"
+  }
+}

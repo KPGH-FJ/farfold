@@ -98,6 +98,7 @@ import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
 import { VISUAL_FEEDBACK_STRINGS as V } from "../runtime/visual_feedback_strings";
+import type { OfficeTargetEditing } from "../runtime/office_target_editing";
 import { FileRevisionMonitor } from "../runtime/file_revision_monitor";
 
 const file: VerifiedFile = {
@@ -119,6 +120,7 @@ type WorkbookProps = {
   onStatus: (s: PreviewContentStatus) => void;
   onOfficeTargetAvailability: (v: OfficeTargetAvailability) => void;
   onOfficeTargetConfirm: (v: OfficeTargetConfirmation) => void;
+  onOfficeTargetEditing: (v: OfficeTargetEditing) => void;
 };
 function elements(tree: ReactNode): Element[] {
   const result: Element[] = [];
@@ -479,4 +481,101 @@ it("keeps old-version opinions across replacement and joins exact coordinates on
   expect(second.fromColumn).toBe(2);
   expect(saved(next).text).toBe("");
   expect(saved().anchor).toEqual(anchor);
+});
+
+it("defers replacement for incomplete range editing without inventing feedback", async () => {
+  const p = await ready();
+  p.onOfficeTargetEditing({ owner: {}, file: p.file, editing: true });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "deferred",
+  );
+  expect(h.prepare).not.toHaveBeenCalled();
+  expect(saved().anchor).toBeUndefined();
+});
+it("only the current editing owner can release the replacement hold", async () => {
+  const p = await ready(),
+    a = {},
+    b = {};
+  p.onOfficeTargetEditing({ owner: a, file: p.file, editing: true });
+  p.onOfficeTargetEditing({ owner: b, file: p.file, editing: true });
+  p.onOfficeTargetEditing({ owner: a, file: p.file, editing: false });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "deferred",
+  );
+  p.onOfficeTargetEditing({ owner: b, file: p.file, editing: false });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "applied",
+  );
+});
+it("rejects a retired editing owner and permits a new effect owner", async () => {
+  const p = await ready(),
+    owner = {};
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: false });
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  const next = { ...file, version: "v2" };
+  expect(await monitor().apply(next, () => true)).toBe("applied");
+  const current = child();
+  current.onStatus({ file: current.file, state: "ready" });
+  child().onOfficeTargetEditing({
+    owner: {},
+    file: current.file,
+    editing: true,
+  });
+  expect(await monitor().apply({ ...next, version: "v3" }, () => true)).toBe(
+    "deferred",
+  );
+});
+it("rejects an editing report for a different verified file", async () => {
+  const p = await ready();
+  p.onOfficeTargetEditing({
+    owner: {},
+    file: { ...p.file, sha256: "f".repeat(64) },
+    editing: true,
+  });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "applied",
+  );
+});
+it("clears and retires editing on hide, rejecting a late reopen callback", async () => {
+  const p = await ready(),
+    owner = {};
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  child().onStatus({ file: child().file, state: "ready" });
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "applied",
+  );
+});
+it("rejects old editing callbacks after explicit same-file reread", async () => {
+  const p = await ready(),
+    owner = {};
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  click(S.refresh);
+  await vi.waitFor(() => expect(child().file).toBe(file));
+  child().onStatus({ file: child().file, state: "ready" });
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "applied",
+  );
+});
+
+it("does not release the active editor with a mismatched file report", async () => {
+  const p = await ready(),
+    owner = {};
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: true });
+  p.onOfficeTargetEditing({
+    owner,
+    file: { ...p.file, version: "other" },
+    editing: false,
+  });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "deferred",
+  );
+  p.onOfficeTargetEditing({ owner, file: p.file, editing: false });
+  expect(await monitor().apply({ ...file, version: "v2" }, () => true)).toBe(
+    "applied",
+  );
 });

@@ -1,0 +1,44 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "../../../../../vitest.config" without a file extension (docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/vitest.config.ts:2:18). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry.test.tsx (1 test | 1 failed) 84ms
+   × withdrawal reentry that blocks the current view cannot save an old navigation 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry.test.tsx > withdrawal reentry that blocks the current view cannot save an old navigation
+AssertionError: expected [ [ …(2) ] ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "[\"word/document.xml\",[0,0]]",
++     {
++       "kind": "paragraph",
++       "part": 1,
++     },
++   ],
++ ]
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/workbook-range/new03-independent/navigation-reentry.test.tsx:249:52
+    247|   view();
+    248|   (next.props.onClick as () => void)();
+    249|   expect([...position.documentWindows!.positions]).toEqual(before);
+       |                                                    ^
+    250|   expect(view().html.includes(S.paragraphPart(2,2))).toBe(false);
+    251| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:25:46
+   Duration  242ms (transform 73ms, setup 0ms, import 102ms, tests 84ms, environment 0ms)
+

@@ -1,0 +1,107 @@
+{
+  "checkedAtUtc": "2026-10-10T01:30:39.872996+00:00",
+  "sourceBase": "840972b705e9bc142d70857e80570e149ae33ded",
+  "inputCount": 1170,
+  "sourceStable": true,
+  "formatDeferredUntilEvidenceFreeze": false,
+  "changedInputsFromPreviousCheck": [
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.mjs",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.raw.txt",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/build.txt",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/counterexamples.json",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/cross-window-preview.png",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/duplicate-preview.png",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/fixture-integrity.txt",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/main-preview.png",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/manifest.json",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle-check.txt",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.json",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.py",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.raw.txt",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-layout.xlsx",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-nonordinal-hidden.xlsx",
+    "src/components/ArtifactPane.reading-position.test.tsx",
+    "src/components/ArtifactPane.tsx",
+    "src/components/DocxDocumentView.tsx",
+    "src/components/DocxReadingWindows.test.tsx",
+    "src/components/OpenedFileView.range-recovery-review.test.tsx",
+    "src/components/OpenedFileView.tsx",
+    "src/components/OpenedFileView.workbook-feedback.test.tsx",
+    "src/components/WorkbookFilePreview.css",
+    "src/components/WorkbookFilePreview.range.test.tsx",
+    "src/components/WorkbookFilePreview.tsx",
+    "src/components/WorkbookRangeSelection.tsx",
+    "src/runtime/office_target_editing.ts",
+    "src/runtime/preview_reading_position.ts",
+    "src/runtime/preview_reading_position.windows.test.ts",
+    "src/runtime/workbook_feedback_range.resources.test.ts",
+    "src/runtime/workbook_feedback_range.test.ts",
+    "src/runtime/workbook_feedback_range.ts",
+    "src/runtime/workbook_feedback_target.ts",
+    "src/runtime/workbook_strings.ts"
+  ],
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 50.362,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/frontend.txt",
+      "sha256": "9ab3cf2904a7339b31ba9cb849d1d0d2bce91181d0c0958f5efd1ddbf1c1a8d5",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 33.5,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.166,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/build.txt",
+      "sha256": "d98da00b1a46b16a85d9ff0fd4484bc0d432d55e31d3945dfd3aa0fe64d3c812",
+      "executedNow": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 24.623,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks/format.txt",
+      "sha256": "0cf6f98d39e9ed55ae7231dd864e1fef656ecf899e36289d8638286200476e6c",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Added XLSX rectangle fixtures and independent oracle materials are explicitly frozen; they are not read by Rust checks."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Added XLSX rectangle fixtures and independent oracle materials are explicitly frozen; they are not read by Rust checks."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Added XLSX rectangle fixtures and independent oracle materials are explicitly frozen; they are not read by Rust checks."
+    }
+  ],
+  "allPassed": false,
+  "boundary": "Frontend source and test checks rerun; identical Rust checks explicitly reused. Whole-repository formatting executes after frontend build; all seven checks are required. No installed interaction or real Agent claim."
+}

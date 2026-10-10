@@ -144,3 +144,39 @@
   margin: 0;
   font: inherit;
 }
+
+.workbook-range-selection {
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid var(--line, #ddd);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.workbook-range-summary {
+  margin: 10px 0;
+}
+.workbook-range-summary strong {
+  overflow-wrap: anywhere;
+}
+.workbook-range-hidden {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0;
+}
+.workbook-range-coordinates {
+  margin: 6px 0;
+}
+.workbook-range-coordinates p {
+  overflow-wrap: anywhere;
+  max-height: 100px;
+  overflow: auto;
+}
+.workbook-grid td[data-opinion-range="inside"] {
+  outline: 2px solid #4474a6;
+  outline-offset: -2px;
+}
+.workbook-grid td[data-opinion-range="partial"] {
+  outline: 2px dashed #4474a6;
+  outline-offset: -2px;
+}

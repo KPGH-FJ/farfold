@@ -27,6 +27,8 @@ interface Relation {
   target: string;
   external: boolean;
 }
+const asciiLower = (value: string) =>
+  value.replace(/[A-Z]/g, (letter) => letter.toLowerCase());
 function partName(name: string): void {
   if (
     !name ||
@@ -166,17 +168,40 @@ export function parseWorkbook(input: XlsxWorkerInput): WorkbookPreview {
   const document = single(relations(""), "officeDocument", true)!;
   const content = read("[Content_Types].xml");
   requireRoot(content, "Types", CONTENT_NS);
-  const overrides = new Map<string, string>();
-  for (const n of children(content, "Override")) {
-    const name = attr(n, "PartName"),
-      type = attr(n, "ContentType");
-    if (!name?.startsWith("/") || !type) throw new XlsxError("invalid");
-    const key = resolvePart("", name);
-    if (overrides.has(key)) throw new XlsxError("invalid");
-    overrides.set(key, type);
+  const overrides = new Map<string, string>(),
+    defaults = new Map<string, string>();
+  for (const n of content.children) {
+    if (n.uri !== CONTENT_NS || !["Override", "Default"].includes(n.name))
+      throw new XlsxError("unsupported");
+    const type = attr(n, "ContentType");
+    if (!type || n.children.length || n.text.trim())
+      throw new XlsxError("invalid");
+    if (n.name === "Override") {
+      const name = attr(n, "PartName");
+      if (!name?.startsWith("/")) throw new XlsxError("invalid");
+      const key = asciiLower(resolvePart("", name));
+      if (overrides.has(key)) throw new XlsxError("invalid");
+      overrides.set(key, type);
+    } else {
+      const extension = attr(n, "Extension");
+      if (!extension || /[.\\/%:#?\s\x00-\x1f\x7f]/.test(extension))
+        throw new XlsxError("invalid");
+      const key = asciiLower(extension);
+      if (defaults.has(key)) throw new XlsxError("invalid");
+      defaults.set(key, type);
+    }
   }
+  // OPC uses the exact part override first, then its extension default.
+  // Neither lookup relaxes the supported non-macro workbook type below.
+  const extension = document.target
+    .split("/")
+    .at(-1)!
+    .split(".")
+    .slice(1)
+    .at(-1);
   if (
-    overrides.get(document.target) !==
+    (overrides.get(asciiLower(document.target)) ??
+      defaults.get(asciiLower(extension ?? ""))) !==
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"
   )
     throw new XlsxError("unsupported");

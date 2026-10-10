@@ -1,0 +1,664 @@
+{
+  "recordedAtUtc": "2026-10-10T01:48:47.445954+00:00",
+  "status": "controlled_parser_worker_and_full_app_browser_passed_native_not_run",
+  "scope": "Independent original ZIP/XML oracle and full App rectangle interactions. No production edits for rectangle by this reviewer; parser fix authored by architecture and reviewed read-only.",
+  "fixtureTruth": {
+    "manifest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/manifest.json",
+      "sha256": "c07a82fe65894feb438353ac40d394772eea2ce101f4eab6afa5445f24bbd250",
+      "bytes": 5363
+    },
+    "oracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/oracle.json",
+      "sha256": "09cf15c9eaeec8600dbe0463f02a6a0752a23f7470cc1d810cba8a045243fc55",
+      "bytes": 192185
+    },
+    "design": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/counterexamples.json",
+      "sha256": "780c14a50dbf148f4d1d0414c1f359bf713ee4cd63e1556f751247f4e58c51fa",
+      "bytes": 8254
+    },
+    "samples": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-layout.xlsx",
+        "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d",
+        "bytes": 6547
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-nonordinal-hidden.xlsx",
+        "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde",
+        "bytes": 6522
+      }
+    ],
+    "description": "First is unchanged bundled independent writer export; second is separately declared controlled XML derivative with nonordinal relationships and hidden interior rows/columns. Independent ZIP/ElementTree/minidom geometry was frozen before implementation. No oracle or original ZIP edits to fit the product.",
+    "structuralFacts": 48,
+    "structuralFactsNotVisibleCellClaim": true
+  },
+  "actualWorker": {
+    "executor": "architecture, using independently authored oracle/probe",
+    "implementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/implementation.json",
+      "sha256": "cecf0347025e077d1de1d5fea01c237a00b10a827511f97056c8a49a61383c1e",
+      "bytes": 14463
+    },
+    "webKitAssertions": 404,
+    "chromiumAssertions": 404,
+    "boundary": "Actual packaged Worker code in controlled local browser; bytes copied exactly from fixture ZIPs. No OS capture/native IPC acceptance asserted."
+  },
+  "actualApp": {
+    "executor": "verification",
+    "apps": [
+      {
+        "engine": "webkit",
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.json",
+          "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+          "bytes": 214626
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.raw.txt",
+          "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+          "bytes": 214626
+        },
+        "cases": [
+          {
+            "name": "literal-partial-cross-maximum",
+            "assertionsPassed": 36,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          },
+          {
+            "name": "hidden-ack-sheet-retire",
+            "assertionsPassed": 16,
+            "viewport": {
+              "width": 900,
+              "height": 620
+            }
+          },
+          {
+            "name": "editing-defers-manual-hide-and-version",
+            "assertionsPassed": 13,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          },
+          {
+            "name": "unblocked-automatic-stage",
+            "assertionsPassed": 9,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          }
+        ],
+        "currentSourceMatches": true
+      },
+      {
+        "engine": "chromium",
+        "receipt": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.json",
+          "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+          "bytes": 214638
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.raw.txt",
+          "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+          "bytes": 214638
+        },
+        "cases": [
+          {
+            "name": "literal-partial-cross-maximum",
+            "assertionsPassed": 36,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          },
+          {
+            "name": "hidden-ack-sheet-retire",
+            "assertionsPassed": 16,
+            "viewport": {
+              "width": 900,
+              "height": 620
+            }
+          },
+          {
+            "name": "editing-defers-manual-hide-and-version",
+            "assertionsPassed": 13,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          },
+          {
+            "name": "unblocked-automatic-stage",
+            "assertionsPassed": 9,
+            "viewport": {
+              "width": 1280,
+              "height": 820
+            }
+          }
+        ],
+        "currentSourceMatches": true
+      }
+    ],
+    "assertionsPassed": 148,
+    "scope": "Actual App/Thread/ArtifactPane/OpenedFileView/Workbook components, StrictMode and real parser Worker. Only Tauri IPC/settings/drafts controlled in memory. Source and scenario helper hashes bracket each run.",
+    "interactions": [
+      "Exact literal, partial-merge D8:E8, cross-window W98:AB103, no-cascade Z101:AC103, blank maximal four cells and whole-sheet coordinates. Selection alone does not create feedback; explicit confirmation stores the exact rectangle.",
+      "Partial-merge complete-coordinate disclosure does not enlarge selected range. DOM remains at most2400 cells for huge coordinate declarations; this is a DOM observation, not process/RSS benchmarking.",
+      "Hidden interior row22/columnD require unchecked acknowledgement. Coordinates, not hidden values, are shown; showHidden stays false. Editing/reversal and switching actual nonordinal sheet require fresh acknowledgement.",
+      "Cold parse of saved raw draft preserves the exact anchor; taking opinion appends to unchanged original composer once and removes only consumed opinion, without dispatch.",
+      "Invalid form text holds replacement; once a changed version is observed the existing monitor halts with an explicit reread notice. Canceling the form does not promise automatic retry. Manual reread preserves old opinion and new-version confirmation creates a separate versioned record.",
+      "Hide/reopen withdraws old rectangle candidate while preserving the saved opinion.",
+      "Separate no-edit journey proves automatic staging retains old grid under inert gate and only reveals new snapshot after actual Worker readiness; keyboard Enter then confirms new-version coordinates.",
+      "1280x820 ordinary journeys and900x620 hidden journey keep app/document root bounded with long synthetic composer and opinion form. Pointer clicks and input/button Enter were exercised; this is not an exhaustive keyboard/accessibility audit."
+    ],
+    "noUnintendedAgentExternalIPC": true,
+    "observedScreenshots": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first-literal-partial-cross-maximum-failure.png",
+        "sha256": "2935a037679bc7588ea357c1e0354f27b70357d7378141db171609a221fe744b",
+        "bytes": 166152
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys-hidden-ack-sheet-retire.png",
+        "sha256": "968682f77ceeb337f4fbdac7cbcf1410aef11917510d7d140d1848334254c9ad",
+        "bytes": 139041
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys-unblocked-automatic-stage.png",
+        "sha256": "c0069f8bf22b3de9823dcc6c5f217d5751270fdba63266b6f17e98f9771b35ac",
+        "bytes": 175069
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "OPC-main-content-type-Default",
+      "classification": "actual product compatibility defect",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.json",
+        "sha256": "3e8e303012ffee6de6b36529b598a5389d7a6f07daf5b9f8e430fb1d8ec5d8ca",
+        "bytes": 249260
+      },
+      "rootCause": "Ordinary writer uses extension Default for main workbook with per-part worksheet/style Overrides; parser previously looked only for main Override.",
+      "resolvedBy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/content-types/implementation.json",
+        "sha256": "cecf0347025e077d1de1d5fea01c237a00b10a827511f97056c8a49a61383c1e",
+        "bytes": 14463
+      },
+      "independentSourceReview": "Read diff/tests: supported exact nonmacro MIME remains mandatory, Override precedes extension Default, duplicate/foreign/malformed mappings reject. No new blocker found; did not rerun author suite."
+    }
+  ],
+  "driverCorrections": [
+    {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.json",
+        "sha256": "bb51bf673335683a6b0420b6e0c82336ae6dbbb44cc95f411590c39ba731576d",
+        "bytes": 258127
+      },
+      "facts": [
+        "36 assertions passed in basic journey.",
+        "Second hidden sheet also hides columnD; runner originally omitted the required fresh acknowledgement. Product correctly withheld confirmation.",
+        "Runner wrongly expected auto replacement after a deferred revision with existing opinion. No production failure inferred."
+      ]
+    },
+    {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.json",
+        "sha256": "5fe75adc447bd4b38b0b0a9c68724c90252dd2dc0177f1f22f63504084dd585a",
+        "bytes": 223471
+      },
+      "facts": [
+        "52 assertions passed in first two journeys.",
+        "Even without saved opinion, already-deferred FileRevisionMonitor intentionally halts and asks explicit reread. Runner was corrected to that behavior; a separate fresh no-edit page verifies automatic replacement."
+      ]
+    }
+  ],
+  "reviewedSources": [
+    {
+      "path": "src/components/WorkbookRangeSelection.tsx",
+      "sha256": "d5d498c9fb4ff3343c4bd7fe2a25231693a887222f7e983de66f03ffd1af5c79",
+      "bytes": 12457
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "3c1e07f16a764f7f2afa197df3ba05bc953e98c2f08bad9e564a4804c9c899f1",
+      "bytes": 33047
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.css",
+      "sha256": "c123d708d526f0bc54562a256a713a98c566d7aa5490b8fff7e245a199b9a0f2",
+      "bytes": 3386
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "f7c4bd70ab722b8959dfad3d420c7bf29c6c56a87d4e5b7687d0c939ef134fda",
+      "bytes": 46920
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "19ac80ca7f6d9bcf99dec5c9a7e6169e517240a31efc8da6493278ca5b6ce4d9",
+      "bytes": 19269
+    },
+    {
+      "path": "src/runtime/workbook_feedback_range.ts",
+      "sha256": "eda9e9b048d8cedcc24c42e6c35c2b0659a73faeef1a30ddc97c9a02481b2562",
+      "bytes": 10355
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "49a5ad9761de3afb2ac9056bd0600d4c51454d995f78c58ca9306ca9a847db70",
+      "bytes": 12734
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "198767f573d5d5077a584a1c1537eb20c6419ea02c2dde02b0e1e2ac1d005af5",
+      "bytes": 2302
+    },
+    {
+      "path": "src/runtime/office_target_editing.ts",
+      "sha256": "d14f4169c92c74ae8a4c667bb6604fc398d2cc8443912fb741ef9170a5d314db",
+      "bytes": 253
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a",
+      "bytes": 5201
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "919335f8c79178b7d5802b35fb43b7479ab35b697ad72a5dfcb94528b22e98f5",
+      "bytes": 3726
+    },
+    {
+      "path": "src/runtime/workbook_strings.ts",
+      "sha256": "7453dec8917e061683d8cebfb1731c6898b192b17ac8c14f8e617de630bc9858",
+      "bytes": 8230
+    },
+    {
+      "path": "src/runtime/xlsx_parse.ts",
+      "sha256": "99a63a367bfedf3175614e000032cb43507baa7a69343b5ef6aca013c5042b43",
+      "bytes": 10024
+    },
+    {
+      "path": "src/runtime/xlsx_preview.ts",
+      "sha256": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+      "bytes": 6091
+    },
+    {
+      "path": "src/workers/xlsx_preview.worker.ts",
+      "sha256": "1c5be8d16e6237c571efc709253d52f7fcdadebe54d1787c2330f3c14674f13c",
+      "bytes": 738
+    }
+  ],
+  "rawPreservation": [
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.json",
+        "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+        "bytes": 214638
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.raw.txt",
+        "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+        "bytes": 214638
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.json",
+        "sha256": "89d4dcfd8df6285b20463da13329c3ca56cb661700ea0cceb307aeef0afba248",
+        "bytes": 462973
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.raw.txt",
+        "sha256": "c31b4143c89803864aacb3a7348b2628ef178eef77fd124ebc35cf87be9cc5fb",
+        "bytes": 463789
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.json",
+        "sha256": "bb51bf673335683a6b0420b6e0c82336ae6dbbb44cc95f411590c39ba731576d",
+        "bytes": 258127
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.raw.txt",
+        "sha256": "bb51bf673335683a6b0420b6e0c82336ae6dbbb44cc95f411590c39ba731576d",
+        "bytes": 258127
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.json",
+        "sha256": "5fe75adc447bd4b38b0b0a9c68724c90252dd2dc0177f1f22f63504084dd585a",
+        "bytes": 223471
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.raw.txt",
+        "sha256": "5fe75adc447bd4b38b0b0a9c68724c90252dd2dc0177f1f22f63504084dd585a",
+        "bytes": 223471
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.json",
+        "sha256": "3e8e303012ffee6de6b36529b598a5389d7a6f07daf5b9f8e430fb1d8ec5d8ca",
+        "bytes": 249260
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.raw.txt",
+        "sha256": "3e8e303012ffee6de6b36529b598a5389d7a6f07daf5b9f8e430fb1d8ec5d8ca",
+        "bytes": 249260
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.json",
+        "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+        "bytes": 214626
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.raw.txt",
+        "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+        "bytes": 214626
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.json",
+        "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3",
+        "bytes": 167070
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.raw.txt",
+        "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3",
+        "bytes": 167070
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.json",
+        "sha256": "634198e62071083d96b88eab94d83432360e772d0f7071a5d5de8e42977ce102",
+        "bytes": 462971
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.raw.txt",
+        "sha256": "16f0433b3e4555312383b96782c43b98375c347a7bc2d3b9dccb383d8c5fd71e",
+        "bytes": 463787
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.json",
+        "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88",
+        "bytes": 166137
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.raw.txt",
+        "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88",
+        "bytes": 166137
+      },
+      "semanticEqual": true
+    },
+    {
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.json",
+        "sha256": "66594b1d5db8d0e928488eb2df893aad3ca0cad67c05c03198185aed1edf94aa",
+        "bytes": 462971
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.raw.txt",
+        "sha256": "595062924a43354877740b2aa58280684b8a6dcc8b22f45fe5a1849197292b46",
+        "bytes": 463787
+      },
+      "semanticEqual": true
+    }
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/cleanup.json",
+    "sha256": "23ca40b27c50e262942c4ee3e2dd05712cd28200422ec820b4d50158a432275a",
+    "bytes": 360
+  },
+  "limitations": [
+    "No formal Tauri application, native WebKit installation, real Agent, account, system permission, OS capture, or user data activity in this review. Root owns later installed verification.",
+    "Worker and browser passes prove covered fixture structures and interactions, not all Office compatibility or all workbook features.",
+    "Whole-sheet target is constant-size coordinate metadata. No claim all cells were read/displayed or resource benchmark measured.",
+    "Cold parser correctness is controlled settings snapshot parsing here; application process restart persistence remains separate."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/app-first-format.txt",
+      "sha256": "c915517763427ca7e7047f109a03d4249a923ceccdba5244925ae6cbf9bce27f",
+      "bytes": 112
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/app-format.txt",
+      "sha256": "12e3822e1fafdff8649de616ecce5678370ef4e186c21bddec169186370194a4",
+      "bytes": 467
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/browser-common.mjs",
+      "sha256": "807282efae06ffc9011bd37974e0368cffaef1aa1b4b6d0b1cdd094f8b257a0b",
+      "bytes": 6968
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/capture-data.json",
+      "sha256": "04cba52c9f9555763ba6e2e5ce8d300b2a032214299a1f7917039d47410c7f59",
+      "bytes": 63062
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.json",
+      "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+      "bytes": 214638
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.raw.txt",
+      "sha256": "693825b25b713d453526e1a49c8d5501267bfe22d49f926839ddad44c7f09ec5",
+      "bytes": 214638
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-app-journeys.txt",
+      "sha256": "f74fcc107f043475a184ec56af912b1d22629b7cedd3f65334d64c61e58bca35",
+      "bytes": 251
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.json",
+      "sha256": "89d4dcfd8df6285b20463da13329c3ca56cb661700ea0cceb307aeef0afba248",
+      "bytes": 462973
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.raw.txt",
+      "sha256": "c31b4143c89803864aacb3a7348b2628ef178eef77fd124ebc35cf87be9cc5fb",
+      "bytes": 463789
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/chromium-worker-final.txt",
+      "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712",
+      "bytes": 29
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/cleanup.json",
+      "sha256": "23ca40b27c50e262942c4ee3e2dd05712cd28200422ec820b4d50158a432275a",
+      "bytes": 360
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/fixture.tsx",
+      "sha256": "5729e727f24a04a416eb97b13dbb597c424e78ad72c3a1298d2d8d85093c8aff",
+      "bytes": 7870
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/index.html",
+      "sha256": "ff21b9fd640192ec90e8701629181a5398cf7def3a4ca56fdddd54bffefbe8ad",
+      "bytes": 963
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/preparation.json",
+      "sha256": "e9572ad2736e7fe99d2055fe3d329a8de2651d5198e9842fb6ecc5ace547c56c",
+      "bytes": 1540
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run-worker.mjs",
+      "sha256": "2dfd463aabce45240aa55994c471a23ed1ad550be0a6cf009a21aa3399511e70",
+      "bytes": 2591
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/run.mjs",
+      "sha256": "d2219d4bdc76284c46a5ef74500b26778469930fde788b08596be3c52624893e",
+      "bytes": 14891
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/serve.mjs",
+      "sha256": "b84eadf123fc431a4b1685079d296d4e5a47c8631b50a1b29c15ecc4f92b5ba4",
+      "bytes": 728
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/server.txt",
+      "sha256": "b180eb47949101b59aa5bb3365df496cb68da38c805dcd4fc0cc04954ec5e759",
+      "bytes": 601
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.json",
+      "sha256": "bb51bf673335683a6b0420b6e0c82336ae6dbbb44cc95f411590c39ba731576d",
+      "bytes": 258127
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.raw.txt",
+      "sha256": "bb51bf673335683a6b0420b6e0c82336ae6dbbb44cc95f411590c39ba731576d",
+      "bytes": 258127
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-compatible-first.txt",
+      "sha256": "aedbb5671e6fb0277ab7d97cda1dc262bc67d7b9fe92269289ffd92499b3d746",
+      "bytes": 460
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.json",
+      "sha256": "5fe75adc447bd4b38b0b0a9c68724c90252dd2dc0177f1f22f63504084dd585a",
+      "bytes": 223471
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.raw.txt",
+      "sha256": "5fe75adc447bd4b38b0b0a9c68724c90252dd2dc0177f1f22f63504084dd585a",
+      "bytes": 223471
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-final.txt",
+      "sha256": "a48e7aa9e1f058646d566337d3edf044ed6b5ccba2e38cc5fedcb20fd7f9e284",
+      "bytes": 276
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.json",
+      "sha256": "3e8e303012ffee6de6b36529b598a5389d7a6f07daf5b9f8e430fb1d8ec5d8ca",
+      "bytes": 249260
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.raw.txt",
+      "sha256": "3e8e303012ffee6de6b36529b598a5389d7a6f07daf5b9f8e430fb1d8ec5d8ca",
+      "bytes": 249260
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-first.txt",
+      "sha256": "6cb86ee0271eeb9c7803de25eb98e93597519a686502549c85bb3f2b4c6f094e",
+      "bytes": 770
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.json",
+      "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+      "bytes": 214626
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.raw.txt",
+      "sha256": "f25b01350af1c36aede7f4507f5d5356b30913da04396ea3b3f807468c17b15e",
+      "bytes": 214626
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-app-journeys.txt",
+      "sha256": "f74fcc107f043475a184ec56af912b1d22629b7cedd3f65334d64c61e58bca35",
+      "bytes": 251
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.json",
+      "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3",
+      "bytes": 167070
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.raw.txt",
+      "sha256": "b73f855c76c819b10cc94dcd17b9cc3f03d51cc58da024a5a267dfc5ecb991b3",
+      "bytes": 167070
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-diagnostic.txt",
+      "sha256": "b51edd8bed682da874984fba72688515e2d2f9c12c3002dcc1f5577b975918b6",
+      "bytes": 62
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.json",
+      "sha256": "634198e62071083d96b88eab94d83432360e772d0f7071a5d5de8e42977ce102",
+      "bytes": 462971
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.raw.txt",
+      "sha256": "16f0433b3e4555312383b96782c43b98375c347a7bc2d3b9dccb383d8c5fd71e",
+      "bytes": 463787
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-final.txt",
+      "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712",
+      "bytes": 29
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.json",
+      "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88",
+      "bytes": 166137
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.raw.txt",
+      "sha256": "52a9ac0080a5536839a8dcc9d1d3264a7210152e09e025d0fcbeb28242a29b88",
+      "bytes": 166137
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-first.txt",
+      "sha256": "b51edd8bed682da874984fba72688515e2d2f9c12c3002dcc1f5577b975918b6",
+      "bytes": 62
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.json",
+      "sha256": "66594b1d5db8d0e928488eb2df893aad3ca0cad67c05c03198185aed1edf94aa",
+      "bytes": 462971
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.raw.txt",
+      "sha256": "595062924a43354877740b2aa58280684b8a6dcc8b22f45fe5a1849197292b46",
+      "bytes": 463787
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/webkit-worker-fixed.txt",
+      "sha256": "c6fafce8aa179b0387551818417e0d41f81cff685deb5522451e886421846712",
+      "bytes": 29
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.html",
+      "sha256": "06e78ee1087d85f3628cd252841429f735d1f315c4598c650b9ba8a3eb529e26",
+      "bytes": 200
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/worker.ts",
+      "sha256": "f315e3fd1c1b818068ccb3676db691ef0e45a45b6351d5a8f16e553410a29397",
+      "bytes": 5413
+    }
+  ]
+}
