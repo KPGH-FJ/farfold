@@ -22,6 +22,10 @@ pub(super) enum Input {
         item: usize,
         enabled: bool,
     },
+    InspectRemove {
+        inventory: String,
+        item: usize,
+    },
     InspectAdd {
         inventory: String,
         input_id: String,
@@ -46,6 +50,7 @@ pub(super) struct Job {
     touched: Mutex<Instant>,
     final_outcome: Mutex<Option<Outcome>>,
     pending_review: Mutex<Option<Review>>,
+    pending_observation: Mutex<Option<Observation>>,
 }
 impl Job {
     pub fn snapshot(&self) -> ChangeOperation {
@@ -69,10 +74,21 @@ impl Job {
     pub fn observed_outcome(&self, outcome: Outcome) {
         *self.final_outcome.lock().unwrap_or_else(|p| p.into_inner()) = Some(outcome);
     }
+    pub fn observed(&self, observation: Observation) {
+        *self
+            .pending_observation
+            .lock()
+            .unwrap_or_else(|p| p.into_inner()) = Some(observation);
+    }
     pub fn finish(&self, error: Option<Failure>) {
         let outcome = *self.final_outcome.lock().unwrap_or_else(|p| p.into_inner());
         let review = self
             .pending_review
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .take();
+        let observation = self
+            .pending_observation
             .lock()
             .unwrap_or_else(|p| p.into_inner())
             .take();
@@ -93,7 +109,8 @@ impl Job {
             });
             v.settled = true;
             v.phase = Phase::Complete;
-            if v.write_ack == Ack::Rejected && matches!(v.action, Action::SetEnabled | Action::Add)
+            if v.write_ack == Ack::Rejected
+                && matches!(v.action, Action::SetEnabled | Action::Add | Action::Remove)
             {
                 // The official pre-write refusal remains a fact even if cleanup fails.
                 v.state = State::Failed;
@@ -106,7 +123,9 @@ impl Job {
                 } else {
                     State::Failed
                 };
-                if v.action != Action::Inspect || self.source.domain() == Domain::McpAdd {
+                if v.action != Action::Inspect
+                    || matches!(self.source.domain(), Domain::McpAdd | Domain::McpRemove)
+                {
                     v.outcome = Some(if v.write_dispatched {
                         Outcome::Unknown
                     } else {
@@ -121,6 +140,9 @@ impl Job {
                 v.code = None;
                 v.outcome = outcome;
                 v.review = review;
+                if self.source.domain() == Domain::McpRemove {
+                    v.observation = observation;
+                }
             }
         });
         *self.touched.lock().unwrap_or_else(|p| p.into_inner()) = Instant::now();
@@ -244,7 +266,7 @@ impl RegistryState {
         source: Source,
         plan: Option<Arc<Plan>>,
         original: Option<&ChangeOperation>,
-        enabled: bool,
+        enabled: Option<bool>,
     ) -> Result<Arc<Job>> {
         let agent = source.row().id.as_str();
         if self.entries.len() >= 64
@@ -255,14 +277,14 @@ impl RegistryState {
             return Err(Code::Busy.into());
         }
         let action = match input {
-            Input::Inspect { .. } | Input::InspectAdd { .. } => Action::Inspect,
-            Input::Confirm { .. } => {
-                if source.domain() == Domain::McpAdd {
-                    Action::Add
-                } else {
-                    Action::SetEnabled
-                }
+            Input::Inspect { .. } | Input::InspectAdd { .. } | Input::InspectRemove { .. } => {
+                Action::Inspect
             }
+            Input::Confirm { .. } => match source.domain() {
+                Domain::McpAdd => Action::Add,
+                Domain::McpRemove => Action::Remove,
+                _ => Action::SetEnabled,
+            },
             Input::Recheck { .. } => Action::Recheck,
         };
         let target = source.public()?;
@@ -296,6 +318,7 @@ impl RegistryState {
             touched: Mutex::new(Instant::now()),
             final_outcome: Mutex::new(None),
             pending_review: Mutex::new(None),
+            pending_observation: Mutex::new(None),
         });
         self.entries.insert(id.into(), Entry::Job(j.clone()));
         Ok(j)
@@ -340,7 +363,35 @@ impl Requests {
                 agent, inventory, item,
             )?),
         };
-        s.insert(id, input, source, None, None, enabled)
+        s.insert(id, input, source, None, None, Some(enabled))
+            .map(|j| (j, true))
+    }
+    pub fn begin_remove_inspect(
+        &self,
+        agent: &str,
+        id: &str,
+        inventory: &str,
+        item: usize,
+    ) -> Result<(Arc<Job>, bool)> {
+        validate(agent, id)?;
+        let input = Input::InspectRemove {
+            inventory: inventory.into(),
+            item,
+        };
+        let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
+        s.prune();
+        if let Some(j) = s.existing(agent, id, &input, Domain::McpRemove)? {
+            return Ok((j, false));
+        }
+        let source =
+            crate::acp_client::extension_inventory::mcp_targets::get(agent, inventory, item)?;
+        if !source.request.snapshot().is_some_and(|v| matches!(v.snapshot, Some(crate::acp_client::extension_inventory::InventorySnapshot::Mcp(ref m)) if m.complete)) {
+            return Err(Code::InventoryIncomplete.into());
+        }
+        if !source.request.snapshot().is_some_and(|v| matches!(v.snapshot, Some(crate::acp_client::extension_inventory::InventorySnapshot::Mcp(ref m)) if m.items.iter().any(|v|v.id == item && !v.reported_enabled))) {
+            return Err(Code::TargetEnabled.into());
+        }
+        s.insert(id, input, Source::Removal(source), None, None, None)
             .map(|j| (j, true))
     }
     pub fn begin_add_inspect(
@@ -371,7 +422,7 @@ impl Requests {
             input_id: input_id.into(),
             input: value,
         });
-        s.insert(id, input, source, None, None, false)
+        s.insert(id, input, source, None, None, Some(false))
             .map(|j| (j, true))
     }
     pub fn begin_confirm(&self, agent: &str, id: &str, review: &str) -> Result<(Arc<Job>, bool)> {
@@ -462,10 +513,10 @@ impl Requests {
         if op.agent_id != agent
             || old.source.domain() != domain
             || op.action
-                != if domain == Domain::McpAdd {
-                    Action::Add
-                } else {
-                    Action::SetEnabled
+                != match domain {
+                    Domain::McpAdd => Action::Add,
+                    Domain::McpRemove => Action::Remove,
+                    _ => Action::SetEnabled,
                 }
             || !op.settled
         {

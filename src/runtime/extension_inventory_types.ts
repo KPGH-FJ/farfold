@@ -32,6 +32,7 @@ export interface ExtensionCapabilities {
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
   skillEnablement: InventoryCapability;
+  mcpRemoval?: InventoryCapability; // Missing legacy report grants no removal.
   mcpAddition?: InventoryCapability; // Legacy absence never grants addition authority.
   mcpEnablement?: InventoryCapability; // Missing legacy report never grants management.
   toolInventory: "unavailable";
@@ -160,11 +161,12 @@ export function parseExtensionCapabilities(
       "skillEnablement",
       "toolInventory",
     ],
-    ["mcpEnablement", "mcpAddition"],
+    ["mcpEnablement", "mcpAddition", "mcpRemoval"],
   );
   const capability = (
     raw: unknown,
     source: "officialCli" | "officialAppServer",
+    allReasons = false,
   ): InventoryCapability => {
     const m = object(raw, ["availability", "source", "reason"]);
     const availability = one(m.availability, ["available", "unavailable"]);
@@ -174,12 +176,16 @@ export function parseExtensionCapabilities(
     }
     if (
       m.source !== null ||
-      ![
-        "notReviewed",
-        "entryUnverified",
-        "platformUnsupported",
-        "environmentUnavailable",
-      ].includes(String(m.reason))
+      !(
+        allReasons
+          ? EXTENSION_CODES
+          : [
+              "notReviewed",
+              "entryUnverified",
+              "platformUnsupported",
+              "environmentUnavailable",
+            ]
+      ).includes(String(m.reason) as ExtensionCode)
     )
       return invalid();
     return {
@@ -212,6 +218,14 @@ export function parseExtensionCapabilities(
     mcpInventory.availability !== "available"
   )
     return invalid();
+  const mcpRemoval = Object.hasOwn(v, "mcpRemoval")
+    ? capability(v.mcpRemoval, "officialAppServer", true)
+    : undefined;
+  if (
+    mcpRemoval?.availability === "available" &&
+    mcpInventory.availability !== "available"
+  )
+    return invalid();
   const available =
     mcpInventory.availability === "available" ||
     skillsInventory.availability === "available";
@@ -227,6 +241,7 @@ export function parseExtensionCapabilities(
     skillEnablement,
     ...(mcpEnablement ? { mcpEnablement } : {}),
     ...(mcpAddition ? { mcpAddition } : {}),
+    ...(mcpRemoval ? { mcpRemoval } : {}),
     toolInventory: "unavailable",
   };
 }

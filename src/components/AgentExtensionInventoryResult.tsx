@@ -1,3 +1,4 @@
+import { MCP_REMOVE_STRINGS as R } from "../runtime/mcp_remove_strings";
 import type { InventoryResult } from "../runtime/extension_inventory_controller";
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
 import { SKILL_MANAGEMENT_STRINGS as M } from "../runtime/skill_management_strings";
@@ -12,9 +13,11 @@ export function AgentExtensionInventoryResult({
   result,
   stale,
   management,
+  removal,
 }: {
   result: InventoryResult;
   stale: boolean;
+  removal?: { enabled: boolean; inspect(item: InventoryItem): void };
   management?: {
     enabled: boolean;
     inspect(
@@ -89,6 +92,23 @@ export function AgentExtensionInventoryResult({
                         : C.legacy}
                     </span>
                   ) : null}
+                  {removal &&
+                    snapshot.complete &&
+                    item.reportedEnabled === false &&
+                    item.enablement?.availability === "available" &&
+                    item.name &&
+                    item.transport !== "unknown" && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        disabled={stale || !removal.enabled}
+                        onClick={() => {
+                          if (!stale && removal.enabled) removal.inspect(item);
+                        }}
+                      >
+                        {R.reviewRemove}
+                      </button>
+                    )}
                 </li>
               ))
             : snapshot.items.map((item) => (

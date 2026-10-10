@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SkillChangeReview.remove.test.tsx (4 tests | 1 failed) 34ms
+   × allows a separate explicit remove confirmation without requiring addition input 29ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SkillChangeReview.remove.test.tsx > allows a separate explicit remove confirmation without requiring addition input
+AssertionError: expected '<button type="button" class="btn btn-…' not to contain 'disabled'
+
+Expected: "disabled"
+Received: "<button type="button" class="btn btn-primary" disabled="">确认移除配置</button>"
+
+ ❯ src/components/SkillChangeReview.remove.test.tsx:32:50
+     30|  expect(html).toContain("移除 MCP 配置"); expect(html).toContain("所选操作：移除已…
+     31|  const button = html.match(/<button[^>]*>确认移除配置<\/button>/)?.[0];
+     32|  expect(button).toBeTruthy(); expect(button).not.toContain("disabled");
+       |                                                  ^
+     33|  expect(h.confirm).not.toHaveBeenCalled(); expect(html).not.toContain(…
+     34|  expect(html).toContain("可能保留空的 MCP 配置容器");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  03:42:34
+   Duration  298ms (transform 131ms, setup 0ms, import 177ms, tests 34ms, environment 0ms)
+

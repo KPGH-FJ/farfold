@@ -327,6 +327,7 @@ export function parseSkillChangeOperation(
   raw: unknown,
   expected: SkillChangeRequest,
 ): SkillChangeOperation {
+  if (typeof expected.requestedEnabled !== "boolean") invalid();
   const v = record(raw, OPERATION_KEYS);
   operationIdentity(v, expected);
   const obs = v.observation === null ? null : observation(v.observation);

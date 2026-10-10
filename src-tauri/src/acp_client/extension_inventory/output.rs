@@ -146,3 +146,11 @@ pub(in crate::acp_client) fn names(bytes: &[u8]) -> Result<HashSet<String>> {
     let rows: Vec<Row> = serde_json::from_slice(bytes).map_err(|_| Code::InvalidOutput)?;
     Ok(rows.into_iter().map(|v| v.name).collect())
 }
+
+// A strict complete raw list is the only absence proof. Public hidden/unknown
+// rows remain present; duplicate names and malformed peers fail the whole read.
+pub(in crate::acp_client) fn presence(bytes: &[u8], name: &str) -> Result<Option<bool>> {
+    parse(bytes)?;
+    let rows: Vec<Row> = serde_json::from_slice(bytes).map_err(|_| Code::InvalidOutput)?;
+    Ok(rows.into_iter().find(|v| v.name == name).map(|v| v.enabled))
+}

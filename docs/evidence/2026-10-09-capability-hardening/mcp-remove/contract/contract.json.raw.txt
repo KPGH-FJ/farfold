@@ -1,0 +1,526 @@
+{
+  "status": "strict contract draft finalized for root review; output only; implementation awaits explicit freeze release",
+  "createdAtUtc": "2026-10-10T19:29:53.976108+00:00",
+  "version": "v2-leaf strict protocol",
+  "originalExit": {
+    "id": "P41",
+    "title": "任意MCP服务器的统一添加、连接和诊断管理",
+    "condition": "用户可经官方方式添加、连接、停用和诊断MCP服务器，作用域、凭据及工具可用状态可核查；失败/取消不污染其他会话，不代写私有配置，缺接口保持未完成。",
+    "unchanged": true
+  },
+  "scope": {
+    "value": "Remove a reviewed already-disabled complete MCP configuration entry from its exact highest writable User/profile file through the official config API; show observed removal and remaining container, without manually editing configuration or starting the MCP command.",
+    "supported": "Existing eligible stdio or streamableHttp entry, exact original complete MCP inventory/source, explicit raw enabled:false, fresh get reported false without policy-disabled reason; same highest writable User file/raw layer/version in global and selected-directory config reads.",
+    "excluded": "Inherited-only/plugin-only/ambiguous/unsafe-label/unknown-transport entries, enabled entries, multiple same-name entries across any returned layer including disabled layers, malformed parents, missing User layer and incompatible official output refuse. No forced disable, disconnect, OAuth logout, credential erase, process kill of an MCP, install/uninstall, file deletion or dynamic tools lookup.",
+    "notComplete": "Original arbitrary-server/all-Agent/Windows coverage and live connection/authentication/tools/diagnostics exits remain open. Deleting a saved entry does not stop an already active connection or prove a session has adopted the change."
+  },
+  "protocol": {
+    "typescript": "contract.ts",
+    "commands": [
+      {
+        "name": "agent_mcp_remove_inspect",
+        "args": [
+          "agentId",
+          "requestId",
+          "inventoryRequestId",
+          "itemId"
+        ],
+        "returns": "McpRemoveOperation",
+        "effect": "inspect only; no configuration write"
+      },
+      {
+        "name": "agent_mcp_remove_confirm",
+        "args": [
+          "agentId",
+          "requestId",
+          "reviewId"
+        ],
+        "returns": "McpRemoveOperation",
+        "effect": "one reviewed write at most; operation.action=remove"
+      },
+      {
+        "name": "agent_mcp_remove_status",
+        "args": [
+          "agentId",
+          "requestId"
+        ],
+        "returns": "McpRemoveOperation",
+        "effect": "RAM observation only"
+      },
+      {
+        "name": "agent_mcp_remove_cancel",
+        "args": [
+          "agentId",
+          "requestId"
+        ],
+        "returns": "McpRemoveCancellation",
+        "effect": "exact interest retirement/tombstone; request cancellation, not rollback"
+      },
+      {
+        "name": "agent_mcp_remove_recheck",
+        "args": [
+          "agentId",
+          "requestId",
+          "operationId"
+        ],
+        "returns": "McpRemoveOperation",
+        "effect": "explicit readonly fresh observation of the original settled remove Plan; no new write"
+      }
+    ],
+    "arguments": "Main window only; flat camelCase. Agent ID same existing 1..256 UTF8/no controls validation; UUIDs use the existing validInventoryId/valid_id grammar; itemId safe integer 0..511. No frontend cwd/name/transport/filePath/keyPath/version/enabled/config/secret/argv parameters. Backend derives everything from the original private source.",
+    "capability": "ExtensionCapabilities gains mcpRemoval with exactly availability/source/reason. Available => source=officialAppServer,reason=null plus valid common selectionId. Unavailable => source=null and required reason from the existing18 inventory codes, never targetEnabled (capabilities do not inspect a target). No authority. Old field absence grants no removal action. Present unknown fields/enums or partial shapes reject; current backend must emit the field.",
+    "rowEligibility": "No new row permission property. UI needs fresh original complete MCP result, mcpRemoval available, exact current row reference, existing enablement.availability=available (only an exact supported private-target eligibility signal), known transport/name and reportedEnabled=false. This authorizes inspection only; it is not proof of unique User scope or deletion permission. Backend independently rechecks all conditions. Enabled rows retain existing disable workflow; never auto-disable before removal.",
+    "publicPrivacy": "Only original safe name, transport, source request/item, cwd, redacted configDisplayPath scope, fixed enum facts and times leave backend. No old env/header/URL/auth/command/args/body/version/raw official error, raw list/config or unknown fields. Existing safe_name 256-byte display subset remains unchanged; this is not proof that arbitrary user labels contain no secret.",
+    "newCode": "targetEnabled is the only proposed new failure code, emitted inside a registered remove-inspect/confirm job after a reliable true enabled value is seen; UI says to disable and refresh first. Existing codes retain their meanings. Add-only input codes need not enter removal parser."
+  },
+  "reuseAndChanges": {
+    "registry": "Add private Domain::McpRemove while inventory Kind stays Skills|Mcp. Source::Removal wraps the same exact MCP private Source; Input::InspectRemove contains original inventory ID/item only. Reuse the one Requests/review/tombstone registry, global2 real execution lease, AccountScope and configuration guard; no new persistent table/controller/Agent loop/flag.",
+    "enums": "Add management Action::Remove. Removal public requestedEnabled is always null, never false. Common BE requested_enabled can become Option<bool> with old domains always Some(old_bool), preserving old JSON values and keys; all old bool consumers must extract only for their own domain. Add optional domain-only parentHandling review and parentOutcome observation fields with old domains omitted, preserving old wire bytes. Private Plan/Source switch must explicitly match all four domains.",
+    "finish": "Extend write-action classification from SetEnabled|Add to include Remove and remove-domain inspect error handling to outcome=notDispatched. Recheck inherits original dispatched/ack facts. Exact official rejected write facts survive cleanup errors. For this new domain publish review only atomically Ready; keep observation private until full finite read/cleanup completes, then publish it with terminal outcome. Errors must not leak a pending success observation.",
+    "frontend": "Add strict removal parser and fixed port to the existing common controller union. Narrowly extend common Identity requestedEnabled to boolean|null and action/verified whitelist to remove while old domain parsers still demand their exact bools. Explicit remove branches in requestForTarget, confirmedRequest, port selection, stale-result handling and review/result copy; never let null fall into the current false=>disable branch. Flight stores original domain port across tab/selection changes.",
+    "size": "Keep new remove command/plan/tests small separate modules and every source under1500 lines. No removal-specific second flight map or worker quota.",
+    "frontendDomainDispatch": "Every request/parser/confirm-port/render branch discriminates target.kind=mcpRemoval and explicit action=remove; never infer domain or mutation from !requestedEnabled, Boolean(requestedEnabled), null-coalescing false, transport or current selected tab. A removal target cannot fall through to the skill or enabled-preference default branch. Strict TS union/explicit variant extraction keeps old domain boolean requirements; no unsafe cast to reuse false."
+  },
+  "admissionAndPlan": {
+    "source": "The same original ready settled complete MCP request owns a private raw target. Cancel/prune of the original inventory revokes inspection/review rights, including held Arc sources. Original captured row/env identity and directory identity are rechecked after waits and before write. No fresh capability or equal values after A-B-A revive the old UI owner.",
+    "freshReads": "Fixed configured get captures the full private target report; list-to-first-get compares only fields actually reported by list, then the complete captured get projection is frozen and later compared exactly. Both official config/read(includeLayers:true,cwd:null) and cwd:original must agree on the same highest writable User identity/profile/file/raw content/version.",
+    "entry": "Exact literal raw target is a complete stdio(command, no conflicting url) or streamableHttp(url, no conflicting command) object with explicit enabled:false. Report must be false, compatible and not policy-disabled. All returned layers including disabled layers are scanned for same literal name; malformed ancestors refuse. Retain arbitrary other raw JSON fields and ordered arrays privately, never rebuild a typed full MCP map.",
+    "authorityBoundary": "A matching get is configured-report evidence, not universal provenance or active-connection proof. User deletion authority comes from the exact complete raw User entry and explicit review; plugin-only/other-source entry cannot grant it. Remaining configured winner after write is mismatch.",
+    "review": "Private plan freezes exact complete raw layers in both scopes, their order/versions/source identities, full get identity, quoted literal key and one or two intended complete candidates. Public review has requestedEnabled:null; configuredEnabled=false; reportedEnabled=false; mutation=removeDisabledMcp; parentHandling=mayRemainEmpty iff full raw parent has exactly one key, otherwise preserveSiblings. Count all raw siblings, not visible/supported rows. Public review is issued only after actual inspection child/group/pipes finish; TTL300000ms; once only.",
+    "existingHelperGap": "Current mcp_targets::get checks ready/settled/kind but not complete, while catalogue explicitly checks McpInventory complete:true. Remove admission must explicitly verify completeness on the same retained original Request before accepting it (or tighten a shared helper with old regressions preserved). Do not assume today's decoder always producing complete:true is the entire new API guard."
+  },
+  "officialSequence": {
+    "inspect": [
+      "Capture exact original private source and fixed get under shared admission.",
+      "Initialize/initialized official app-server; read both config scopes; build private leaf-removal plan, no write.",
+      "After all real process/group/pipe cleanup and source checks, atomically publish Ready+Review."
+    ],
+    "confirm": [
+      "Consume original unexpired nonrevoked same-domain review using a new request UUID. Same UUID observes original rather than dispatching twice.",
+      "Fresh get then both config scopes; require full captured identity/layers/versions unchanged, explicit disabled and source still valid. No new target or silent branch change.",
+      "Send exactly one config/value/write with private filePath, expectedVersion, keyPath=mcp_servers.<quoted escaped literal target>, value:null, mergeStrategy:replace. Never root clear or typed-map replacement. Mark writeDispatched true/ack unknown before attempting any partial frame.",
+      "Read both complete raw scopes back; retain readbacks privately. Finish app-server actual cleanup.",
+      "Run fixed official relay cli mcp list --json at original cwd; strict entire bounded array and complete raw exact-name test. Finish its actual cleanup. Publish observation plus Verified only when config candidate and list absence both match."
+    ],
+    "recheck": [
+      "Reference the original settled remove request in the same domain, not an inspect or another recheck. Preserve original plan/target/writeDispatched/writeAck.",
+      "Fresh both config reads and complete configured list only; no get-as-absence shortcut and no write/consumed-review restoration. Current row/directory still exact, but original inventory may be stale/revoked after write.",
+      "Matching becomes Observed, never Verified and never retrospective proof our unknown prior write succeeded. Different is Mismatch; read/cleanup/cancel failures preserve unknown attribution."
+    ],
+    "forbidden": [
+      "mcpServerStatus/list or tools/resources initialization",
+      "get nonzero/error as proof of absence",
+      "another parent cleanup write",
+      "automatic retry, restore old config or rollback",
+      "re-enabling/disabling before removal",
+      "process discovery/kill outside the existing owned official process group"
+    ]
+  },
+  "fullConfigurationComparison": {
+    "retainedCandidate": "Clone full original selected User JSON, remove only exact target child. All unrelated keys/values/arrays and every raw sibling stay unchanged.",
+    "absentCandidate": "Construct only if original raw mcp_servers has exactly one own key, the target: clone retained candidate and remove just its empty mcp_servers root key. This is an allowed official serialization result, never an additional write.",
+    "exactComparison": "Both current raw User readbacks must independently equal the SAME one of those full candidates. Selected layer identity/file/profile/disabledReason remain identical; its postwrite version may change. All other layers (identity, order, version, disabledReason, whole raw config) stay equal to their respective inspected scope. No recursive or global absent/empty normalization.",
+    "parentOutcome": "Report absent if both raw readbacks lack this parent key; empty if both contain exactly an empty object; nonempty if both contain an object with entries. Null only when parent structure cannot be coherently classified across successful reads; then configuration must be different. Never treat missing expected User layer or a failed config read as parent absent.",
+    "matchingConstraints": "configuration=matching implies configuredEnabled=null and parentOutcome is non-null. For original mayRemainEmpty, matching parentOutcome must be absent|empty. For preserveSiblings it must be nonempty. Full comparison, not enum combinations alone, proves matching.",
+    "drift": "Any sibling insertion/removal, other-layer change, unknown-field loss, array change, null/scalar parent or two-scope candidate disagreement prevents verified. Retain actual mismatch evidence without echoing raw values.",
+    "sourceBoundary": "Official pinned toml_edit retains explicit empty table and omits empty implicit/inline-converted table. Source semantics verified statically, not actual runtime tested in this contract. expectedVersion is prewrite version validation, not cross-process CAS. Root clear is explicitly rejected because its reread window can silently delete an externally inserted sibling; exact leaf avoids that specific broad delete but cannot guarantee against other external whole-file races."
+  },
+  "observationTruth": {
+    "mcpAbsent": "Only a successful strict bounded complete configured list has no raw exact target name. reportedEnabled must be null. Hidden labels, unknown transports and disabled rows still count as present; never use visible managed-target projection for absence.",
+    "mcpPresent": "Complete list has exactly the target name; reportedEnabled is its required bool even if false. This is present configured entry, not connected/running proof. Duplicate names invalidate the whole result.",
+    "configuredEnabled": "On successful raw config reads: bool is the selected User target enabled value (missing leaf on an existing object follows official default true); null means target absent or no valid bool could be derived. Null by itself never proves absence. configuration=matching is stronger: exact full candidate has target absent.",
+    "unknown": "No partial-success observation on failed/incomplete/oversize/malformed list or failed/missing-layer config reads. Return code and unknown/notDispatched outcome according to write facts, observation=null. Do not fabricate absent/present from errors.",
+    "sessionApplicability": "Always unverified; no connection/tool/auth effects inferred.",
+    "strictFields": "All declared operation/review/observation keys required, nullable fields explicitly null. Reject unknown or missing fields/enums. Old domain optional-field compatibility remains confined to old declared parser rules; removal never accepts an old mcp/add target.",
+    "crossFieldInvariants": [
+      "mcp=absent requires reportedEnabled=null; mcp=present requires reportedEnabled to be a bool, including false. Neither false nor null alone is absence.",
+      "configuration=matching requires configuredEnabled=null and parentOutcome non-null. parentOutcome=absent|empty requires configuredEnabled=null even when some other configuration value differs.",
+      "parentOutcome=null requires configuration=different. parentOutcome=nonempty permits configuredEnabled null (only siblings remain) or bool (target still present); full complete candidate comparison remains decisive.",
+      "When the original review is available, frontend additionally checks its frozen parentHandling against matching parentOutcome. Backend always enforces that relationship from its private Plan. A status-only view without the original live owner/review never gains confirmation authority or invents original cardinality."
+    ]
+  },
+  "eventMatrix": [
+    {
+      "event": "inspect admitted / running / cancelling / pending cleanup",
+      "action": "inspect",
+      "settled": false,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "inspect completes review",
+      "action": "inspect",
+      "state": "ready",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "code": null,
+      "review": "required exact review",
+      "observation": null
+    },
+    {
+      "event": "inspect reliable refusal or failure after registry admission",
+      "action": "inspect",
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": "notDispatched",
+      "code": "required fixed code",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "inspect cancelled before any write (inspect never writes)",
+      "action": "inspect",
+      "state": "cancelled",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": "notDispatched",
+      "code": "cancelled",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "remove waiting/fresh checks",
+      "action": "remove",
+      "settled": false,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": null,
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "remove write may have begun / checking / cleanup",
+      "action": "remove",
+      "settled": false,
+      "writeDispatched": true,
+      "writeAck": "unknown|ok|okOverridden|rejected (actual last receipt)",
+      "outcome": null,
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "remove predispatch failure",
+      "action": "remove",
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": "notDispatched",
+      "code": "required fixed code",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "remove predispatch cancellation",
+      "action": "remove",
+      "state": "cancelled",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": false,
+      "writeAck": "none",
+      "outcome": "notDispatched",
+      "code": "cancelled",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "exact official prewrite error reply, even if later cleanup error",
+      "action": "remove",
+      "state": "failed",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": true,
+      "writeAck": "rejected",
+      "outcome": "rejected",
+      "code": "configurationReadOnly|configurationChanged|configurationRejected",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "ack plus matching complete readbacks and actual cleanup",
+      "action": "remove",
+      "state": "ready",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": true,
+      "writeAck": "ok|okOverridden",
+      "outcome": "verified",
+      "code": null,
+      "review": null,
+      "observation": "required configuration=matching,mcp=absent,exact parentOutcome"
+    },
+    {
+      "event": "ack plus complete readbacks differ",
+      "action": "remove",
+      "state": "ready",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": true,
+      "writeAck": "ok|okOverridden",
+      "outcome": "mismatch",
+      "code": null,
+      "review": null,
+      "observation": "required configuration=different OR mcp=present"
+    },
+    {
+      "event": "after may-dispatch timeout/cancel/lostACK/readback/cleanup failure, no exact prewrite rejection",
+      "action": "remove",
+      "state": "failed",
+      "phase": "complete",
+      "settled": "only after actual cleanup",
+      "writeDispatched": true,
+      "writeAck": "unknown|ok|okOverridden; retain actual fact",
+      "outcome": "unknown",
+      "code": "required fixed failure; cancelled is cancellation request, NOT rollback",
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "readonly recheck active",
+      "action": "recheck",
+      "operationId": "original settled remove UUID",
+      "settled": false,
+      "writeDispatched": "exact inherited original",
+      "writeAck": "exact inherited original",
+      "outcome": null,
+      "review": null,
+      "observation": null
+    },
+    {
+      "event": "readonly recheck complete matches",
+      "action": "recheck",
+      "state": "ready",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": "exact inherited original",
+      "writeAck": "exact inherited original",
+      "outcome": "observed",
+      "code": null,
+      "review": null,
+      "observation": "required configuration=matching,mcp=absent,exact parentOutcome"
+    },
+    {
+      "event": "readonly recheck complete differs",
+      "action": "recheck",
+      "state": "ready",
+      "phase": "complete",
+      "settled": true,
+      "writeDispatched": "exact inherited original",
+      "writeAck": "exact inherited original",
+      "outcome": "mismatch",
+      "code": null,
+      "review": null,
+      "observation": "required configuration=different OR mcp=present"
+    },
+    {
+      "event": "readonly recheck failure/cancel",
+      "action": "recheck",
+      "state": "failed; cancelled only if code=cancelled AND inherited writeDispatched=false",
+      "phase": "complete",
+      "settled": "only after actual cleanup",
+      "writeDispatched": "exact inherited original",
+      "writeAck": "exact inherited original, including rejected",
+      "outcome": "unknown if inherited dispatched, otherwise notDispatched",
+      "code": "required fixed code",
+      "review": null,
+      "observation": null
+    }
+  ],
+  "globalPublicationInvariants": [
+    "settled iff state is ready|failed|cancelled iff phase=complete. Active outcome/review/observation are null; pendingCleanup is not permission to release a real worker/ActivityPermit/AccountScope.",
+    "No writeDispatched implies writeAck=none. Once possibly dispatched it never reverts; ack must not be none, cancelled terminal is forbidden. Recheck copies original facts and does not imply another write.",
+    "Only inspect Ready has review. Only remove/recheck Ready has a complete observation. Ready code=null; failed/cancelled code fixed and non-null. Rejected requires the exact official whitelist, not generic method error.",
+    "Verified only for remove Ready with actual ok/okOverridden, matching exact configuration and complete list absence. Observed only for recheck Ready, independent of whether the original ack was unknown/rejected. Mismatch requires actual differing full reads. ParentOutcome is an observation, not input authority."
+  ],
+  "errorsAndLostReceipts": {
+    "bareAdmission": "Before a Job exists, invalid IDs, invalid/unavailable original source, busy/capacity, conflicting UUID/domain, expired or consumed review may return only {code}. Do not fabricate a failed operation. Registered fresh-read targetEnabled/layer rejection produces exact-ID failed/notDispatched after actual cleanup.",
+    "frontendWhitelist": "Retain existing narrow fresh direct-confirm reviewExpired/reviewConsumed admissionRejected treatment only before timeout, operation observation or newer request epoch. Same code from status/cancel, late direct rejection or after observed running never releases tracking. All other bare errors remain uncertain until exact status or an explicit exact cancel-null exit; do not broaden by code spelling.",
+    "writeRejectWhitelist": "Only structurally exact official -32600 error with string message and data.config_write_error_code configLayerReadonly|configRequirementReadonly|configVersionConflict|configValidationError proves prewrite rejection. UserLayerNotFound, internal, malformed error/result, partial frame, broken pipe and lost ack remain unknown.",
+    "cancelNull": "Exact cancellation returning operation:null atomically creates/reuses that Agent+Domain+UUID tombstone and proves no currently tracked worker for this ID. It is not proof that no historical write ever occurred. UI may retire unresolved tracking only after its explicit recovery action; do not display cancelled/success/rollback.",
+    "retention": "Same existing64 jobs/tombstones,32 reviews,300s TTL; active jobs never evicted. Tombstone does not become a durable forever claim. Original sources/reviews have bounded authority and IDs are never intentionally reused by UI. Wrong-domain calls cannot rewrite tombstones. After restart/expired history, unknownRequest remains unknown and never auto-replays a write.",
+    "recheckAttribution": "Readonly recheck creates a different requestUUID with operationId=original remove UUID; it copies original writeDispatched/writeAck unchanged and never mutates the original remove operation, its outcome or rejection/unknown code. Even outcome=observed with inherited writeAck=rejected means only current values match after a previously rejected request, not our write succeeded. UI retains the original result separately and uses current-observation wording, never replaces historical rejected/unknown with verified. A failed recheck likewise cannot erase the original known prewrite rejection."
+  },
+  "domainAndOwnerMatrix": [
+    "McpRemove inspect/confirm/status/cancel/recheck never consume, cancel, observe or relabel Skill/McpEnabled/McpAdd state. Wrong-domain existing UUID admission/cancel=>requestConflict; status=>unknownRequest; wrong-domain review=>fixed targetUnavailable; wrong-domain original recheck=>fixed busy/unknownRequest as current registry. No state changes on refusal.",
+    "Early cancel in each of four domains establishes a domain-tagged tombstone; same-domain late inspect/confirm is rejected cancelled, other domain cannot reuse/replace it. Capacity exhaustion does not evict active jobs or create a false cancellation receipt.",
+    "Same exact requestUUID+complete original input observes original job only, no second worker. Change item/inventory/domain/review/original operation conflicts; review consumed once even if confirmation reply is lost.",
+    "Close/new selection/source row change/directory change/refresh/tab-domain switch retires original inspection owner and exact backend review interest. Reopen/status Ready is historical fact, not new confirmation permission. First Enter/key-up cannot trigger second confirmation.",
+    "After write may dispatch, retirement requests exact cancel but preserves original-domain status/readonly recheck and unknown result. No other Agent/service/model/permission/draft/attachment changes, no prompt, no Agent loop.",
+    "Original inventory expiry/cancel revokes ready management rights even if a review holds its old Arc. Recheck of a settled removal still uses stored original Plan and current same row/directory, without requiring a refreshed public catalogue to resurrect authority."
+  ],
+  "processBounds": {
+    "unchanged": "Use reviewed official relay, captured row env and existing cached shell environment only; no service-secret injection, private HOME, env_clear, binary pin or installation. Fixed get/config/list calls only. Shared two real workers and one unsettled management per Agent across all four domains; no new write queue.",
+    "limits": "Existing30s absolute operation deadline,1MiB list/get stdout,4MiB app-server total stdout,1MiB JSONL frame,64KiB stderr; same actual cleanup mechanism/observer behavior. Deadline/IPC drop retires interest but does not prove process or pipe ended.",
+    "sideEffects": "Official startup can maintain Agent-owned state; mcp list may perform existing HTTP authentication-status discovery. This slice does not initialize an MCP/server command or claim zero-network/zero-write. AccountScope covers known same-entry aliases, not every external CLI or account process.",
+    "finality": "Final state only once actual owned official leader/group/pipes settle; hold lease/scope/ActivityPermit through all sequential children and postwrite list cleanup. Never kill an unrelated MCP group or use generic process scanning."
+  },
+  "testsRequiredBeforeFreeze": [
+    "Exact quoted literal a.b (and eligible space/Unicode labels) vs nested a->b; both transports; secret env/header/URL/args canaries stay out of public operations/diagnostics.",
+    "Originally sole explicit parent, implicit parent, inline representation produce separately observed exact parent outcomes; no root request and no second write. Multi-entry/hidden/unsupported sibling always preserved. Reject null parent or missing expected User layer.",
+    "All returned lower/profile/disabled layers same-name conflict refuse; report/config enabled mismatch or true enabled refuse; original public eligibility never bypasses fresh User proof.",
+    "Whole unknown raw values, arrays, untouched layers/versions preserved; two-scope candidate disagreement and external sibling between baseline/version/reread cannot verified. Model the rejected root-clear data-loss counterexample separately; do not execute root clear as product behavior.",
+    "Strict list raw-name absence includes hidden/unsupported rows, empty list works; duplicate/truncated/oversize/malformed output or generic get failure never proves absent.",
+    "Exact original ready inventory revoke/prune, pending inspect source changes, same UUID changed source/target, four-domain wrong cancel/status/confirm/recheck and early tombstones, fresh-review expiry while queued: no unintended write.",
+    "Real synthetic peer proves finite calls/one leaf null and no MCP-command marker; rejected write then cleanup failure preserves rejection; postapply UserLayerNotFound/lostack/timeout/cancel/postlist failure remain unknown, no automatic second write.",
+    "Held official leader/child pipe cleanup and observer drop keep shared global2/AccountScope busy; terminal only after exact owned cleanup, no fake cancelled if may-dispatched.",
+    "Actual Rust serialized inspectReady, inspectRefused/Cancelled, queued/pendingCleanup, removeVerified(parent empty/absent/nonempty), mismatchPresentFalse, postwriteUnknown, cancelNull, recheckObserved chain -> strict TS/component/controller with original IDs and values. Handwritten examples are not actual wire.",
+    "Full common UI owner/A-B-A, close/reopen, first Enter vs second confirmation, stale review, inherited rejected/unknown recheck, parent outcome/plain disabled distinction; all original P40/enable/add tests/wires retained unchanged.",
+    "Only after separate authorization: installed inert synthetic entry via official config APIs, both supported existing transports without connections, exact old raw config/other data comparison and original state restore reviewed separately. Current task runs none.",
+    "Reject contradictory wire: absent+reportedfalse, present+reportednull, matching+configuredfalse, matching+parentnull, empty/absent parent+configuredtrue; retain legitimate mismatchPresentFalse and nonempty parent with only preserved siblings.",
+    "Ready original Request with retained private target but public complete:false must refuse remove inspection without a write; tests must not fabricate a successful complete catalogue from managed-target presence. This is contract coverage, not a claim of a current installed decoder defect.",
+    "Exact remove/null target must route only to remove confirm/status/cancel/recheck port and removal wording, never setEnabled(false). Recheck inherited Ack::Rejected and Ack::Unknown chains must leave original operation structurally unchanged; Observed/mismatch/error results never revise original attribution."
+  ],
+  "fileOwnershipProposal": {
+    "backend": [
+      "skill_management/mcp_remove.rs and mcp_remove_plan.rs + scoped tests/peer",
+      "domain/types/requests/rpc/mod small exhaustive-domain changes; extension_inventory capability and bounded raw list presence helper; necessary lib command registration"
+    ],
+    "frontend": [
+      "mcp_remove_types/api + exact wire tests",
+      "existing extension_management/controller/Review and inventory action/capability strings with explicit removal branches; no brand-specific panel"
+    ],
+    "actualWireProposedPath": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json (to be agreed at implementation; not created by this contract task)"
+  },
+  "reviewNotes": [
+    "No blocking unknown official deletion syntax remains: quoted leaf null and exact serialization boundary are sourced. Controlled runtime proof is pending; do not label source inspection actual config validation.",
+    "ParentOutcome-null and configuredEnabled-null carry no absence proof alone. No old shared bool fallback may label removal as disabling; old parser constraints must not be broadened.",
+    "Root must review this new strict contract before any implementation. Earlier drafts and root-clear rejection evidence remain byte-identical."
+  ],
+  "performed": {
+    "productionChanged": false,
+    "cargoOrProjectTests": false,
+    "officialCLIOrAppOrMCPStarted": false,
+    "realUserConfigurationOrDatabaseRead": false,
+    "outputOnlyContract": true
+  },
+  "refs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "fab8f3cac8f1d4e68d911cc789db1818149a022a823c9df02446af41c7d85002"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract-draft.json",
+      "sha256": "3200d49bc00cd5e673fa7e0c4a4ff7b1c0759c232852b554b75e205dd32fd6bf"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract-draft-v2.json",
+      "sha256": "973936ee8ac57ed50ee4195d6ca7b9cab442534b6e06cce8b886a71f006c4db5"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract-draft-v2-leaf.json",
+      "sha256": "bf987a0c38d99375a26a7a38ddcd12dd0e0c221af439fd1419149819bd3c552d"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract.ts",
+      "sha256": "a7bba8b8a4cbdcacb71e9993953b27cf3d00109a55bab982be3795e0f709b740"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "2764ee3d959bc1612963cf0f637556acc3a6e62a096d325ee47d526cc092d076"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "f765feeb5a0c620c92f84d79fa0e810907297b991c84ddc05f7731f5698e1d57"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "a9a53a6d6b5b9c66bc7c41b05c9a7ca2413ef99a938cfc8be13e1f73209b9196"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "8e04c6d020a534ea6f4664f3ae02bb4e42e5cf0e36e025285771a5973e29a91c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "08d155a48c180bfcf788e0aa7f48088d486a5e2a39694ead634045c263fd792d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add.rs",
+      "sha256": "d0ee96b20ecbc46e45f8a95d58991ae62b392cb5b1ba18e076efc94055beaf2c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "6dd28e0f033fc4e818c54f55d9255379b42ce94c9f8b9e945c841f8e759ef5ef"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "6043d70c7bd7ac62395fdc8e843f434da62eb952ec30f3a114ede659d3d0619c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "9c574b3ac38cd2765d36ffa4b0eb7a6bd1f83de8667248fcd61f0466a25914b8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "fe2f4123b71a0ac69a5b9620c7e10873be5cc03729b75b8ce5809ab832ebc0d7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "5d626d4cbe88c39fc9dbdfd086ca2f70d269ee1438ba7aed6424fe57faa464c4"
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "6964c014e571eac8a01aa8d24124ec1ea788e56b619ea5e583f533f5c7b28576"
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "c1293360faf983107bff826c9eaf835953fc148e7a9e1eac54fc127971646a32"
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "09a55589476e3ec5805e52f8cc771d09b9df51f3cdb151b8db7bd8f8c83284e3"
+    },
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "bb95be455f8d19457e3a1924afef628bad96de442c6b55984797a0dc42552850"
+    },
+    {
+      "path": "src/runtime/mcp_management_types.ts",
+      "sha256": "23324851b320da17d2b0c41bd103536148eb223406517b4d3ce217798ec87e26"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+      "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit.rs",
+      "sha256": "02159e7636fa00ed5ea3788b697d94e909420e6366299a1bfa3ca77808987485"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit/document_helpers.rs",
+      "sha256": "676e6013454041629917ba6c7cbaf9472cbd0fc0efb07869919a57f591bfe0e6"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/official-toml-edit/source-receipt.json",
+      "sha256": "79876724311561cfb5e98711b8b7d568ecf646b67a8c1f0b08cfe6908e88beb9"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/official-toml-edit/src/encode.rs",
+      "sha256": "6b8b5eea034479a75356468b0e0e5b313a10df21ddf142015cff496b775874bb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "a515a03eac439e950a9bead186692a4138d0130343f4bef5d7ace2feda2f3df0"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "64a0952957e1f2cb2d571a301da122d2069e3183853d9468d69402b21aaa40ef"
+    }
+  ]
+}

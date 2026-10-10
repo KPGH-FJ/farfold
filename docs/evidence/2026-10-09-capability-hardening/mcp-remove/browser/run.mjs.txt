@@ -1,0 +1,121 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+const {webkit,chromium}=await import('/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const base='output/2026-10-11-mcp-remove-browser',engine=process.argv[2]??'webkit',label=process.argv[3]??'run01';
+if(!['webkit','chromium'].includes(engine)||!/^run[0-9]+$/.test(label))throw Error('invalid run identity');
+const scan=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?scan(p+'/'+e.name):[p+'/'+e.name]);
+const inputs=[...scan('src'),...['index.html','fixture.tsx','run.mjs','serve.mjs'].map(n=>base+'/'+n)];
+const hashes=()=>Object.fromEntries(inputs.map(p=>[p,createHash('sha256').update(fs.readFileSync(p)).digest('hex')]));
+const result={engine,label,scope:'Actual full App and StrictMode with production frontend/controller; controlled IPC and folders only. No official Agent/configuration/app invocation.',before:hashes(),checks:[],errors:[]};
+const b=await(engine==='webkit'?webkit:chromium).launch({headless:true,executablePath:engine==='webkit'?path.resolve('output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh'):'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+const p=await b.newPage({viewport:{width:1100,height:800}});p.setDefaultTimeout(8000);p.on('pageerror',e=>result.errors.push(String(e)));
+const check=(name,pass,detail)=>{result.checks.push({name,pass,...(detail===undefined?{}:{detail})});if(!pass)throw Error(name);};
+const state=()=>p.evaluate(()=>window.fixture.current());
+const count=async cmd=>(await state()).calls.filter(c=>c.cmd===cmd).length;
+const dialog=()=>p.locator('dialog.agent-detail-dialog[open]');
+const section=()=>dialog().getByRole('region',{name:'技能与工具',exact:true});
+const panel=()=>dialog().getByRole('region',{name:'移除 MCP 配置',exact:true});
+const button=name=>dialog().getByRole('button',{name,exact:true});
+const row=name=>dialog().locator('.agent-extension-items > li').filter({has:p.getByText(name,{exact:true})});
+const inspect='agent_mcp_remove_inspect',confirm='agent_mcp_remove_confirm';
+const unknown='本次移除结果仍未确认。可以只读核对当前配置；不会自动重试移除。';
+const verified='所选配置条目已移除，此次完整配置报告中已无该名称。';
+const observed='当前核对未见所选条目，配置符合移除预期；不能据此确认此前移除是否成功。';
+const mismatch='此次配置核对或完整报告与移除预期不同，请查看下方结果。';
+const rejected='官方程序拒绝了本次移除。请重新查询并审阅当前配置。';
+async function open(id='A'){await p.getByRole('button',{name:`查看详情 · Controlled ${id}`,exact:true}).click();await dialog().waitFor();await button('选择工作文件夹').waitFor();}
+async function close(){await button('关闭').first().click();await dialog().waitFor({state:'hidden'});}
+async function choose(){await button('选择工作文件夹').click();await p.evaluate(()=>window.fixture.choose('/controlled/project-A'));}
+async function query(){
+ await section().getByLabel('清单类型',{exact:true}).selectOption('mcp');const n=(await state()).queries.length;
+ await button(await button('重新查询配置').count()?'重新查询配置':'检查 MCP 配置').click();
+ await p.waitForFunction(n=>window.fixture.current().queries.length===n+1,n);
+ const q=(await state()).queries.at(-1);await p.evaluate(id=>window.fixture.finish(id),q.requestId);
+ await row('Fixture local').waitFor();await button('重新查询配置').waitFor();return q;
+}
+async function startInspect(name='Fixture local',enter=false){
+ const n=await count(inspect),target=row(name).getByRole('button',{name:'审阅移除…',exact:true});
+ if(enter)await target.press('Enter');else await target.click();
+ await p.waitForFunction(n=>window.fixture.current().calls.filter(c=>c.cmd==='agent_mcp_remove_inspect').length===n+1,n);
+ return(await state()).removals.at(-1);
+}
+async function finish(q,mode){await p.evaluate(({id,mode})=>window.fixture.removeResult(id,mode),{id:q.requestId,mode});}
+async function review(name='Fixture local'){const q=await startInspect(name);await finish(q,'review');await button('确认移除配置').waitFor();return q;}
+async function write(){const n=await count(confirm);await button('确认移除配置').click();await p.waitForFunction(n=>window.fixture.current().calls.filter(c=>c.cmd==='agent_mcp_remove_confirm').length===n+1,n);return(await state()).removals.at(-1);}
+async function recheck(){const n=(await state()).removals.length;await button('核对修改结果').click();await p.waitForFunction(n=>window.fixture.current().removals.length===n+1,n);return(await state()).removals.at(-1);}
+async function fresh(){await close();await open();await choose();return query();}
+try{
+ await p.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:1507/')?r.continue():r.abort());
+ await p.goto('http://127.0.0.1:1507/'+base+'/index.html');await p.getByRole('button',{name:'探索 Agent',exact:true}).first().click();await open();const baseline=await state();await choose();const source=await query();
+ check('only explicitly disabled eligible rows offer removal, for stdio and HTTP',await button('审阅移除…').count()===2&&await row('Fixture local').getByRole('button',{name:'审阅移除…',exact:true}).isEnabled()&&await row('Fixture HTTP').getByRole('button',{name:'审阅移除…',exact:true}).isEnabled()&&await row('Fixture enabled').getByRole('button',{name:'审阅移除…',exact:true}).count()===0);
+ const first=await startInspect('Fixture local',true);
+ const inspectArgs=(await state()).calls.find(c=>c.cmd===inspect).args;
+ check('Enter dispatches only inspect with exact original inventory and no enabled field',await count(confirm)===0&&first.target.inventoryRequestId===source.requestId&&first.requestedEnabled===null&&Object.keys(inspectArgs).filter(k=>inspectArgs[k]!==undefined).sort().join(',')==='agentId,inventoryRequestId,itemId,requestId');
+ await finish(first,'review');await button('确认移除配置').waitFor();
+ check('review enables a separate explicit removal confirmation without addition input',await button('确认移除配置').isEnabled()&&await count(confirm)===0);
+ let text=await panel().innerText();
+ check('review names removal and empty-parent possibility with accurate connection and credential limits',text.includes('移除已停用的配置条目')&&text.includes('可能保留空的 MCP 配置容器')&&text.includes('不删除文件、不退出认证或清除凭据')&&!text.includes('所选操作：停用'));
+ await p.setViewportSize({width:390,height:720});await button('确认移除配置').scrollIntoViewIfNeeded();
+ const metrics=await dialog().evaluate(d=>{const r=d.getBoundingClientRect();return{x:r.x,right:r.right,width:innerWidth,scroll:d.scrollWidth,client:d.clientWidth};});
+ check('narrow full dialog has no horizontal overflow',metrics.x>=0&&metrics.right<=metrics.width+1&&metrics.scroll<=metrics.client+1,metrics);
+ await p.screenshot({path:`${base}/${engine}-${label}-review.png`});await p.setViewportSize({width:1100,height:800});
+ await button('收起审阅').click();await button('查看 MCP 移除状态').waitFor();
+ check('withdrawal focuses the removal reopen action',await button('查看 MCP 移除状态').evaluate(e=>e===document.activeElement));
+ await button('查看 MCP 移除状态').click();check('reopening withdrawn review cannot authorize a write',await button('确认移除配置').count()===0&&await count(confirm)===0);
+ await fresh();const refused=await startInspect();await finish(refused,'targetEnabled');
+ await panel().getByText('条目尚未明确停用。请先停用并重新查询清单，再审阅移除。',{exact:true}).waitFor();
+ check('fresh enabled-target refusal releases controls without auto-disable or removal',await button('确认移除配置').count()===0&&await button('检查操作状态').count()===0&&await count(confirm)===0);
+ await fresh();const cancelled=await startInspect();await button('请求取消本次操作').click();
+ await p.waitForFunction(id=>window.fixture.current().calls.some(c=>c.cmd==='agent_mcp_remove_cancel'&&c.args.requestId===id),cancelled.requestId);
+ await finish(cancelled,'cancelled');await panel().getByText('本次没有发出配置修改请求。',{exact:true}).waitFor();
+ check('confirmed pre-write cancellation settles only the selected request',await button('检查操作状态').count()===0&&await count(confirm)===0);
+ await fresh();await p.evaluate(()=>window.fixture.parent('preserveSiblings'));await review('Fixture HTTP');
+ check('HTTP removal review describes sibling preservation', (await panel().innerText()).includes('保留其他 MCP 配置条目'));
+ const uncertain=await write();await p.keyboard.press('Enter');const sent=(await state()).calls.find(c=>c.cmd===confirm).args;
+ check('one confirmation sends only the reviewed identity and never a disable request',await count(confirm)===1&&Object.keys(sent).filter(k=>sent[k]!==undefined).sort().join(',')==='agentId,requestId,reviewId');
+ await finish(uncertain,'unknown');await panel().getByText(unknown,{exact:true}).waitFor();
+ const originalUnknown=JSON.stringify((await state()).removals.find(q=>q.requestId===uncertain.requestId).status);
+ check('unknown result leaves old inventory stale and never auto-retries',await count(confirm)===1&&(await section().innerText()).includes('此前结果，已过期'));
+ const current=await recheck();check('readonly recheck has its own identity and retains original unknown acknowledgment',current.operationId===uncertain.requestId&&current.requestId!==uncertain.requestId&&current.status.writeAck==='unknown');
+ await finish(current,'success');await panel().getByText(observed,{exact:true}).waitFor();
+ text=await panel().innerText();
+ check('later absence is an observation, preserving the original unknown outcome',text.includes('此前移除请求的结果')&&text.includes(unknown)&&!text.includes(verified)&&JSON.stringify((await state()).removals.find(q=>q.requestId===uncertain.requestId).status)===originalUnknown&&await count(confirm)===1);
+ await fresh();await review();const rejectedWrite=await write();await finish(rejectedWrite,'rejected');await panel().getByText(rejected,{exact:true}).waitFor();
+ const originalRejected=JSON.stringify((await state()).removals.find(q=>q.requestId===rejectedWrite.requestId).status);
+ const afterRejected=await recheck();await finish(afterRejected,'success');await panel().getByText(observed,{exact:true}).waitFor();
+ check('matching recheck cannot rewrite the original rejected operation',afterRejected.status.writeAck==='rejected'&&(await panel().innerText()).includes(rejected)&&JSON.stringify((await state()).removals.find(q=>q.requestId===rejectedWrite.requestId).status)===originalRejected);
+ await fresh();await review();const remains=await write();await finish(remains,'presentDisabled');await panel().getByText(mismatch,{exact:true}).waitFor();
+ check('disabled but present stays mismatch and never means removed',(await panel().innerText()).includes('此次完整配置报告中仍有此名称')&&!(await panel().innerText()).includes(verified));
+ await p.screenshot({path:`${base}/${engine}-${label}-mismatch.png`});
+ await fresh();await review();const changed=await write();await finish(changed,'differentAbsent');await panel().getByText(mismatch,{exact:true}).waitFor();
+ check('absence cannot hide unrelated configuration drift',!(await panel().innerText()).includes(verified)&&(await panel().innerText()).includes('此次完整配置报告中无此名称'));
+ for(const [parent,mode,display] of [['mayRemainEmpty','success','保留空容器'],['mayRemainEmpty','absentParent','已不存在'],['preserveSiblings','success','仍有配置内容']]){
+  await fresh();await p.evaluate(value=>window.fixture.parent(value),parent);await review();const q=await write();await finish(q,mode);await panel().getByText(verified,{exact:true}).waitFor();
+  check('verified exact configuration and complete absence shows parent outcome: '+display,(await panel().innerText()).includes('MCP 配置容器：'+display));
+ }
+ await fresh();await p.evaluate(()=>window.fixture.parent('preserveSiblings'));await review();const contradiction=await write();const beforeContradiction=await count(confirm);await p.evaluate(id=>window.fixture.parentContradiction(id),contradiction.requestId);await button('检查操作状态').waitFor();
+ check('matching enum cannot hide a parent outcome inconsistent with the original reviewed scope',!(await panel().innerText()).includes(verified)&&await button('确认移除配置').count()===0&&await count(confirm)===beforeContradiction);
+ await finish(contradiction,'success');await button('检查操作状态').click();await panel().getByText(verified,{exact:true}).waitFor();
+ check('a valid later status recovers the same operation without another write',await count(confirm)===beforeContradiction&&await button('检查操作状态').count()===0);
+ await fresh();await review();const held=await write();await finish(held,'pending');await button('检查操作状态').waitFor();
+ check('pending cleanup does not release a new confirmation or publish success',await button('确认移除配置').count()===0&&await row('Fixture local').getByRole('button',{name:'审阅移除…',exact:true}).isDisabled()&&!(await panel().innerText()).includes(verified));
+ await finish(held,'success');await button('检查操作状态').click();await panel().getByText(verified,{exact:true}).waitFor();
+ check('only settled status permits final success publication',await button('检查操作状态').count()===0);
+ await fresh();const aba=await startInspect();await p.evaluate(()=>{window.fixture.update('fixture-a','B');window.fixture.update('fixture-a','A');});await finish(aba,'review');
+ await p.waitForFunction(()=>window.fixture.current().calls.filter(c=>c.cmd==='app_initial_snapshot').length>1);
+ check('agent selection A-B-A cannot revive the old review',await button('确认移除配置').count()===0);
+ await fresh();await review();const late=await write();await close();await open('B');await finish(late,'success');
+ check('late A result does not enter the B panel',await panel().count()===0);await close();await open();
+ check('reopening completed historical operation cannot grant fresh confirmation',await button('确认移除配置').count()===0);
+ await close();await p.evaluate(()=>window.fixture.removalCapability(false));await open('B');await choose();await query();
+ check('legacy capability absence grants no removal action',await button('审阅移除…').count()===0);
+ await close();await p.evaluate(()=>window.fixture.removalCapability(true));await open();await choose();await query();await review();const invalid=await write();await p.evaluate(id=>window.fixture.malformed(id),invalid.requestId);
+ await button('检查操作状态').waitFor();
+ check('contradictory missing report and enabled values cannot publish success',!(await panel().innerText()).includes(verified)&&await button('确认移除配置').count()===0);
+ await close();const end=await state();
+ check('no prompt, MCP connection, enablement/addition command or unexpected IPC',end.unexpected.length===0&&!end.calls.some(c=>['session_open','session_prompt','agent_connect'].includes(c.cmd)||c.cmd.startsWith('agent_mcp_change_')||c.cmd.startsWith('agent_mcp_add_')));
+ check('existing draft and new conversation folder preserved',end.draft.text==='KEEP P41 REMOVE DRAFT'&&end.cwd===baseline.cwd);
+ result.final={calls:end.calls,removals:end.removals};
+}catch(e){result.failure=String(e);result.body=await p.locator('body').innerText().catch(()=>null);result.state=await state().catch(()=>null);await p.screenshot({path:`${base}/${engine}-${label}-failure.png`}).catch(()=>{});}
+finally{await b.close();result.after=hashes();result.stable=JSON.stringify(result.before)===JSON.stringify(result.after);result.passed=!result.failure&&!result.errors.length&&result.stable&&result.checks.every(c=>c.pass);fs.writeFileSync(`${base}/${engine}-${label}.raw.txt`,JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:result.passed,checks:result.checks.length,failure:result.failure,errors:result.errors,stable:result.stable}));process.exitCode=result.passed?0:1;}

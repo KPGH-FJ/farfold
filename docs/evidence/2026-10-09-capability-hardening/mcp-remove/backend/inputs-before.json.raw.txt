@@ -1,0 +1,668 @@
+{
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/account_launch.rs",
+      "sha256": "81d9060d4db2cc9d99e2292672aa8c1321a557e01c1e6675027abe0af7dd5283"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_launch_tests.rs",
+      "sha256": "05163467a85a05ed2056dbed0dda457243aea5a5ac54676214eb072f3857e924"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_logout.rs",
+      "sha256": "1afcbd097b38f7b10a2f0a712e5d045203dd258b1e9edb8fc15d8ac7ae41a505"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_logout_connections_tests.rs",
+      "sha256": "c5679a423d2eda5124cb2e2c320603e34a491b4f1b08fc030b4d34304b596b63"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_logout_tests.rs",
+      "sha256": "a048af983de5d77798ec616fb7c27cb634a2616918cf83041575cd8c104c7546"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_observer.rs",
+      "sha256": "7cf2f87fbb4c76b5c7b5332c9a0bc42baf37f66920b5620150fa104849f90942"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_query.rs",
+      "sha256": "daa39f4ef7623da3d3bfa7f2e4e30f52a3a5af62ed8b838ed09c7ac81c0e8a7d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_query_wire_tests.rs",
+      "sha256": "d32a18137a3affd15ff840b8813db1efe060162d432e3f038520ad24c3c05088"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_scope.rs",
+      "sha256": "040457f028f178db9096effe873493150ae7ad1a340054d90f05e31f4ebdee15"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_scope_identity_tests.rs",
+      "sha256": "be0478cf38beed7f0da2131f3083778b951fa90fce5409360758e7410bb3e64e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_scope_tests.rs",
+      "sha256": "8f6fbad8293a20a132d6bd172a0e7d178ae28a276d31c821ae04015a684a64a7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_status.rs",
+      "sha256": "67e5a758d5c14727340812bc7a2c07b196c37b87472a4775e749da70de887549"
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_status_tests.rs",
+      "sha256": "e225bfb8e5b843719978939ad03e6696910dbba05cfa169506ffb279b326b47b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/api_key_auth/tests.rs",
+      "sha256": "e566c6d5401264af679e9393a49677e17c4ef2db339c0c74b5caee18ade5921a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/api_key_auth.rs",
+      "sha256": "9a219276c8464a5b8aae853cccc38d95d73ae3b9ec54bc56192f516e45700420"
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_alias_tests.rs",
+      "sha256": "085017dcf1946d648910abfb690c8eb4b9b5d92905cd19dcdf7ae5b158fc3ceb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/archive_tests.rs",
+      "sha256": "51ded4f126fbd704b5296c1144d524a4017347470b21b4d52d19049637a32329"
+    },
+    {
+      "path": "src-tauri/src/acp_client/async_task_wire_tests.rs",
+      "sha256": "3aab04d02a2770f12b43ead490fbb597bd2f3abef15d47d78fab686c5b8638b8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/async_tasks.rs",
+      "sha256": "567536a89a852c273c9c167625f4f3ff8fbb5b341ff0752cef1296982d4b39bc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/async_tasks_tests.rs",
+      "sha256": "29535336fcb89f09c382c7158dd926988077ccf611fffa4802ee401866a373a7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_compat.rs",
+      "sha256": "efc1b695ee4214fc328c43727e9ca402d437d904bea1705d64f6f5b7ad492354"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_connection.rs",
+      "sha256": "390b0334c0edda6c4d81142a566c8ea32c59b82c5e0856257fd65b63e9436b8a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/copilot.rs",
+      "sha256": "40bfed6d09d13ada56a537d4e609ecaadf7eff368e350eb927cde3e972e62858"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/legacy_env_tests.rs",
+      "sha256": "9b78352e1470a8fd599f6b11439e2c160fed333040e3366f2a094b8a82fbb462"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route/tests.rs",
+      "sha256": "d4b334f3b467a070560d38ab99853908fdedf310dee24d68b11584ab51800913"
+    },
+    {
+      "path": "src-tauri/src/acp_client/auth_route.rs",
+      "sha256": "dff45f0d8ed88c4a4454284c23f85a5f71a83b94d4fe1185c41c79c2cdbcdd27"
+    },
+    {
+      "path": "src-tauri/src/acp_client/boolean_configuration_tests.rs",
+      "sha256": "0c1b3fc931b5f2fbe6e15c0439ef8b35138adc4316c3121ec5351b2454690e2f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability.rs",
+      "sha256": "628253ee2d050016b5127202f5b2f0aeaf01e4738bbcb7ad04653f0632e1ab62"
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability_tests.rs",
+      "sha256": "64706624031bf49662dd73503089af6e09c7637b76c11b05905021fa739ed676"
+    },
+    {
+      "path": "src-tauri/src/acp_client/cancel_starvation_tests.rs",
+      "sha256": "f2398f04d57b4113f8038b15f789d15caf55a520a31365ebc133e17824c3be72"
+    },
+    {
+      "path": "src-tauri/src/acp_client/cancellation_tests.rs",
+      "sha256": "5fbdf482da7d0377395a3a66d93a5e158749532aef477caec308890943750149"
+    },
+    {
+      "path": "src-tauri/src/acp_client/category_guard_tests.rs",
+      "sha256": "70b868b1fdc8bd4f72a3adbd84973e625f39251bd5fad3dd32668246f9f5c60a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/compaction_wire_tests.rs",
+      "sha256": "24d5055f983a0b8e4bdb65f168beb865a827769d2d20e5a0faed7e0ff3fc0809"
+    },
+    {
+      "path": "src-tauri/src/acp_client/config_change/tests.rs",
+      "sha256": "5792911aa59f095c189e0e1cb2ce3595cb7b62d142844e11039996863709a540"
+    },
+    {
+      "path": "src-tauri/src/acp_client/config_change.rs",
+      "sha256": "8937de613f49a527e9c96d461ec22a4efd16a281e2d2027afa672c9ff41016ab"
+    },
+    {
+      "path": "src-tauri/src/acp_client/config_guard_tests.rs",
+      "sha256": "c8ff2858efd1648854982178b9771c6511b8700f2f5c98cbd52a960cbaf0e8a7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "sha256": "842d7484d7435257344232486a076e9f90d5b321ccdb107e70c4b8f54d7ab2e1"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_identity.rs",
+      "sha256": "8359462d0417e86632346eea13e008518d1d3c4095db430f25427bf3bd307a97"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_isolation_tests.rs",
+      "sha256": "91b98d7d4e5ce1d0288577d3db5de4ce0db78b5d2b7dc5b010af00a8bea946d2"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_retention.rs",
+      "sha256": "8379be011f8fcb40ebab73227d9191faef92adeee9b31cb68cb159734f9ad5e5"
+    },
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment.rs",
+      "sha256": "3710f77d1e46fcbaa26a2fbc3b09a1dcfd9dcd181b5e7353adf7406c9a94ca4f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment_tests.rs",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment_windows_tests.rs",
+      "sha256": "6a79cb1ca1ba6fe0ba24cbaab16ffcae052bc9d880ce6b56ec45a2e9d87570f9"
+    },
+    {
+      "path": "src-tauri/src/acp_client/directory_maintenance.rs",
+      "sha256": "de185fec12a93d920ef492b078592ecfa64f000c283f9c963b4ad0973a6c6d20"
+    },
+    {
+      "path": "src-tauri/src/acp_client/directory_maintenance_tests.rs",
+      "sha256": "619694579ca7151efdd9a0ebada1bf6de045c42f483dea98c5c26e718873bacb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/directory_presentation.rs",
+      "sha256": "925ad6e6013678dc91fb496e80a1bc55b50e944846f69185cec0b928fcbd6bd9"
+    },
+    {
+      "path": "src-tauri/src/acp_client/discovery_tests.rs",
+      "sha256": "f81c174c591bd165bd4ff960db1e00d12986a9cb9efb9550a540e665f079c9e9"
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation.rs",
+      "sha256": "8643692757557a8020d99355c2078cee0e39cee27b651fde122d13c4c6895a12"
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation_request_tests.rs",
+      "sha256": "a0447568391b5c357668d98ff2c23c85d2c58e4cd17ade04061f76d1996149cf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/elicitation_wire_tests.rs",
+      "sha256": "5e2050cd47250429d0955bce5af5566d7f4c270f5eaf3b8ec72f803ae3e633a6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution.rs",
+      "sha256": "c0f7c25f093856d42ca41e3cafa2b250e7c1f801b680bcf65a2e87b042d8b4af"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution_tests.rs",
+      "sha256": "956cde3ab25a10b862ad4ed629d7f7848305c47b7caff39ed0db8602031e5a48"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "a515a03eac439e950a9bead186692a4138d0130343f4bef5d7ace2feda2f3df0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "5d626d4cbe88c39fc9dbdfd086ca2f70d269ee1438ba7aed6424fe57faa464c4"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "15700f3640d9a0b8b230bf7a5f78670cc57ea5b13f7320b9254a03baf4170228"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "fe2f4123b71a0ac69a5b9620c7e10873be5cc03729b75b8ce5809ab832ebc0d7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "4fbb156d8136aec4ee55e1d69b56dfd6290803484617b5998a4cf96ac3493db8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests_tests.rs",
+      "sha256": "be587749d04d4efa33f88228a45e6c1065a5edb7db4282c5e07d0c6992a646ba"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "2471f37d0077d67e2f8cdd8277dd735b9de743f61599b6363c19d0e67d6edd86"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "sha256": "8eeb00b2bbe4017f81c86dcc30e55d2e6c639f04eb0389739268be00fdc15517"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "302710d64b223d3964b0b28b436ea5df2b3a67819c50d407e5d782afb8cc212b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/targets.rs",
+      "sha256": "10ebd93de2deea94e1bb1a4d4d4bac25aca4d2f2bb9bfc22bf66a8c7b3760f24"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "9c574b3ac38cd2765d36ffa4b0eb7a6bd1f83de8667248fcd61f0466a25914b8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/failures.rs",
+      "sha256": "2b53e950ba4fd95036df5c091a717ea97252347b42ecf8e3b1089b7020dfe16a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/first_release.rs",
+      "sha256": "c14410373522baa96975a4d60f01baae43a3f26847632b32a456febad9e65eab"
+    },
+    {
+      "path": "src-tauri/src/acp_client/handshake/tests.rs",
+      "sha256": "f911af58f1ca1b69abf675e4be518d99295ef0ea1174820f633d0f3cd2ba1513"
+    },
+    {
+      "path": "src-tauri/src/acp_client/handshake.rs",
+      "sha256": "3ef9b22d780a1170686edbcc08d0f4b5ffc3b0d08ddc30a88c68ca67c2f11860"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_replay_identity_tests.rs",
+      "sha256": "f4ef1209ce5a1e74b21e808aac8d1caf27126cb4793d7b55cc359cc52197f422"
+    },
+    {
+      "path": "src-tauri/src/acp_client/initialization.rs",
+      "sha256": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03"
+    },
+    {
+      "path": "src-tauri/src/acp_client/installation_parameters/tests.rs",
+      "sha256": "d2cc4ad3051bd38895a5b8c4ac2ba169fc3ee07ae15a0ce397a3cf0f0eb2fb78"
+    },
+    {
+      "path": "src-tauri/src/acp_client/installation_parameters.rs",
+      "sha256": "4ca964416ddd83f4ceacfe94924eebe27f5b903b43d9399182474bef1a7bdf78"
+    },
+    {
+      "path": "src-tauri/src/acp_client/installed_initialize_probe.rs",
+      "sha256": "6662e5f095e6ab80c87d167cce72cf7a99dac6c56752a8724649529758349447"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle/retention_tests.rs",
+      "sha256": "4c721f1a645d34b427bc49e3e96b73fb65a924d24a9d3ea5997f0ce14300c8e3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle_tests.rs",
+      "sha256": "885bdf35c208cafc307b53f4d561f6827a8d4dc6995e7fbf1d8e487c40e48cd5"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager/authentication_tests.rs",
+      "sha256": "ec30a7026719a0ccfec1327dea9c71af49af7dbf30d74b7f9094af6ee0c2c3cf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "9d37c2c88fdf65b4f42dd999694caa600590b86bc9bb196cfa2ab7a9c98f091a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "ba65f41a1ca6fb55ad6519205b259cabd798702e6884c3d3beebd3f84f4085d4"
+    },
+    {
+      "path": "src-tauri/src/acp_client/model_guard/change_tests.rs",
+      "sha256": "5e6e453b67e31f24385a25615bb3ef554dcc704d49794fa5cc9f16b22fcb145b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/model_guard/format.rs",
+      "sha256": "e459cfd891badef8e9dfb51be009f6aa02d96ebd8bc12b502d218e12129ec821"
+    },
+    {
+      "path": "src-tauri/src/acp_client/model_guard/switch_transport_tests.rs",
+      "sha256": "f25f9acd346579be8628e5592de9f8a9f1ef35b72ff31209a7ab819c4c50533c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/model_guard.rs",
+      "sha256": "a2efa610d4b189c2a1788fb9b9f4fae0fcb9274576e2a6643ffcc5f8aeac1999"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mutation/restore_tests.rs",
+      "sha256": "eecaffc0aac301c1179941b25b19020d436d79898fa7226ced878de92223556c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mutation/tests.rs",
+      "sha256": "c95061a1433935cd7d6d917fc6efb56f00310998eb6d090186df082c216651f3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mutation.rs",
+      "sha256": "33bc797ef900e055422fea082e8447378b478003aa5a1f7ddb1c204912e25211"
+    },
+    {
+      "path": "src-tauri/src/acp_client/open_delivery_tests.rs",
+      "sha256": "083abf1854335f2e32b1cfff2207f1d3806c798388c3d6fd2b55703b4f0e0544"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/auth_result_tests.rs",
+      "sha256": "5216bc0c0ba4872a93a67ed608ebca10334ef72bb7af5637792d2686929adcbf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/list_result_tests.rs",
+      "sha256": "2ef6b4ada3776de450c6b7a90e0dfef73a30da2cb53d4ac1d49efe5d86448094"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations/open_result.rs",
+      "sha256": "8012e0f0722342336a8758fc4fcdbb10dcda835b619566d0d2626cf68b834d40"
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "e46f9cc19da8f9c68afd72df34c9917f1d8c6136d144973f1f16297280acacff"
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_guard.rs",
+      "sha256": "8854db3836028da85385826c0c840c5084c0c50a3fabf67554522c7940649163"
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_guard_tests.rs",
+      "sha256": "62a73752d82df52c62775094da1fd8a07a056ad85ab731694c615b0c884cca5f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_request_tests.rs",
+      "sha256": "9ed3230a329f840df790b8129525a05efbfc3901174a68e466614f469611fca2"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation/companion_preparation_tests.rs",
+      "sha256": "225929a34358c0a5218752ac17431ddd712a7fe6e40e901accf724bd86a9d116"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation.rs",
+      "sha256": "e16aaba7fdc814e5e4ebfce78f31232220ef9f2ec23db9a203358faf8783993a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+      "sha256": "31f636392e1e317fc5547a06198f909a3c6f982d238db2be62e18a927f81bc3b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "sha256": "f160e72374889c0a03b4d208f6dec099a2f012bec34172005ba14cd1ba1c60f8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_cwd_tests.rs",
+      "sha256": "4b9d4cec1eb043d9568cbe3027a2c9befdf5e4a158ff53ab0aa0ecf7b6056df9"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_mcp_tests.rs",
+      "sha256": "2da6705df1aee3fdf4f509f16529fafe92cb057fa9e57f3015fd3add6594f9f3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_startup_tests.rs",
+      "sha256": "f8469efbcb4a8e16c2da5e1f670965eba70d1315116495fccb128690cf6d56cf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_stdio.rs",
+      "sha256": "78203306a1907021b946e820a4ac5f2ed03a929dd7fbad225b05cb53fd101162"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process_stdio_tests.rs",
+      "sha256": "8bbc1ba56203f2acaf008c5c429fe1e3f3dec8a5a816ddae3c4cde33566b19a4"
+    },
+    {
+      "path": "src-tauri/src/acp_client/protocol_error_tests.rs",
+      "sha256": "495435504d77ba33eceab2e96d0d43400064753c997bee0601fa60aab2bb5430"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/open.rs",
+      "sha256": "c2c701bda7597a21a59ef7034a112cbfd3654990d2bd894420e9b6d6c3a9fa33"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_config.rs",
+      "sha256": "093c4aefc412389473ffbb2cfc918ccbc039b7349f5377bf5b6628acd8975a04"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_tests.rs",
+      "sha256": "3b29692ea2666a441662d9da860bd274815012a46f281c47377fd96f46523bcf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "159189718fbdbbe63e8271bd3e5131a3afed7bbc33e6ea4a71c647fb52a20ecc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/recipes/companion_recipe_tests.rs",
+      "sha256": "fa78a2c5dca6d30e18407092cf4c77458962cade1c993332f61bd9608ef97dc6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/recipes.rs",
+      "sha256": "8f2fb50b047571b08ac887be05dcf464736155039dd5993e8b1a843a387ffb66"
+    },
+    {
+      "path": "src-tauri/src/acp_client/regression_tests.rs",
+      "sha256": "9ebeb61beb81c838e56259d4c2ef38a825fd7541687daa4497d4c7c741518a07"
+    },
+    {
+      "path": "src-tauri/src/acp_client/retention_tests.rs",
+      "sha256": "3d617e7e57aa02dba61d769be7a1792ca84e1d4e43449ac87819fd523e5e0159"
+    },
+    {
+      "path": "src-tauri/src/acp_client/route_registration_tests.rs",
+      "sha256": "e792da8498a7e09c68359377e19f996f43910ca2df63431a0489f47b88c7ef3f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_config.rs",
+      "sha256": "efb14f0d0598544323374b9f0e1911da966ae626e03bdc374e7c6a97fa26c109"
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_config_claude_tests.rs",
+      "sha256": "e739e6a63421226639840e3d09d3baebd8d9c42a22e723a4912392ae76640d49"
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_connection.rs",
+      "sha256": "6c1014a201cbe67761a50f73caf985a4716ceb6611fd8d8cabba59ba7b30827e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_delivery.rs",
+      "sha256": "67e05e0d591fb4ab81ccadec314887de85af87cbfd901a892276b3102f825fce"
+    },
+    {
+      "path": "src-tauri/src/acp_client/service_delivery_tests.rs",
+      "sha256": "a133cdf534788e82e1df2a0704fe0211dfc0f9117d9a25925202ab57ec339b5e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/close_tests.rs",
+      "sha256": "53a8e23dba4a464ff9cf6b27b683299b26628fbd6db55b7e987a35fd7b94c28b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/recheck_tests.rs",
+      "sha256": "e13fb8227d2552ba516d144c8379758dada9627ace9ed7300964801304b61bbf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_config/tests.rs",
+      "sha256": "b8881275a54fc19f00845fd134f4d38d99c656976b8b061fcde04c5960f07b77"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_config/transport_tests.rs",
+      "sha256": "a9babedfd53e5af8c67e5ec60755e2463c4606f3a8155e627c8beef31decf162"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_config.rs",
+      "sha256": "4ab3db6b3900a26828b6c078ae5b69a504b2aafb9e6af05ac8d2e663816edc66"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "sha256": "bbbd6ad135ccb0d1f47934ed458f73a4f08afc1f17962cbe48199b999ad65edb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_index.rs",
+      "sha256": "4cd95b6e6710b6bd9410219cf8bbfc046657f3af5e24e2f15d02fc3a6103a398"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "f765feeb5a0c620c92f84d79fa0e810907297b991c84ddc05f7731f5698e1d57"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_tests.rs",
+      "sha256": "83fabf6618dcf1b5486b0f47eb3cf386dd60b76eb4d3a145bdd5452e98132b7e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp.rs",
+      "sha256": "adfbe0604a7343048cf3cf17301bb93d858da670354f198e5b5dd5cd594fd597"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add.rs",
+      "sha256": "d0ee96b20ecbc46e45f8a95d58991ae62b392cb5b1ba18e076efc94055beaf2c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+      "sha256": "14840351585044c51187fe7cdee59dbb90bb0caa965d11f15b4a45124677ff34"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_input.rs",
+      "sha256": "c0ca244a235e4e675b68900a45db71afd1c2778864d2de12c16900e74a7e753e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "85a5d14d81e320ae942f814c1f53e496c853d1b74c45e4ed9fb5acc358924a9b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs",
+      "sha256": "dc897bd7065deb37b7ab0887012e44b29401b69b5a2c3d21bc073ef7fcf4203a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_independent_tests.rs",
+      "sha256": "d65fe20255633b6438ee6af2822d7c10a90ec92344f1b07b38cef7af1a014dd8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "08d155a48c180bfcf788e0aa7f48088d486a5e2a39694ead634045c263fd792d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+      "sha256": "b93d44a7d7234575849a38c5672e35628d2fb4ab3c789d6abc700a170abce89a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "6043d70c7bd7ac62395fdc8e843f434da62eb952ec30f3a114ede659d3d0619c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "8e04c6d020a534ea6f4664f3ae02bb4e42e5cf0e36e025285771a5973e29a91c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "a9a53a6d6b5b9c66bc7c41b05c9a7ca2413ef99a938cfc8be13e1f73209b9196"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "6dd28e0f033fc4e818c54f55d9255379b42ce94c9f8b9e945c841f8e759ef5ef"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "f01507fd7d44062ad1c9c80ba53c1a6abd8a931ac282070161354180f8180d0a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "2764ee3d959bc1612963cf0f637556acc3a6e62a096d325ee47d526cc092d076"
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_cleanup_tests.rs",
+      "sha256": "6ba84c84b1a6c7a83cb587ae6801391033e72ef58405939615082eb55899fda6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics/tests.rs",
+      "sha256": "3592a58a300521ea0690edd9fcc9bf6d7378d5b8d5e936e7d851a5a10c97a8f7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics.rs",
+      "sha256": "5f17579dd0fd9bfef540571e39759c605b4e32b08a551ad2da2202d88cc77e81"
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_diagnostics_tests.rs",
+      "sha256": "da4418514a172222cd0c6416e22efa641f4de3a59726d7e9b10d8aaa9e22eca6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/startup_tests.rs",
+      "sha256": "e7dc883c2167e9a28755df68feab61c7a9865595845242f48b9b518bb1ed206f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/tap.rs",
+      "sha256": "5106bf33514aaeb3ee6bd6e2fd7e13599b22500d37d48c5bf29158e6a3583e2d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/terminal_output.rs",
+      "sha256": "8576f2b978ea96262d3ed372d08adfb54877e24081c34cf4d666881fb4868a71"
+    },
+    {
+      "path": "src-tauri/src/acp_client/tool_activity.rs",
+      "sha256": "fee09478d578213f6dcbf1d565d8568346cf092cef60df73ed0f18bbfb37bfcd"
+    },
+    {
+      "path": "src-tauri/src/acp_client/tool_activity_tests.rs",
+      "sha256": "b25b3f2f927c8706adba3ec5c63afddc6f5e87c38e9968f875181207cd7a6e0e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/transient_mcp.rs",
+      "sha256": "90617c98aea5d4d5dc57adadf572dbb7a2d05a8c4583fabf2ad197d04e02f715"
+    },
+    {
+      "path": "src-tauri/src/acp_client/transient_mcp_route_tests.rs",
+      "sha256": "d7cd80c7f12940729ffbcda0173f6c758d4206ec3cadb8d7e53691233e6ce3db"
+    },
+    {
+      "path": "src-tauri/src/acp_client/usage_wire_tests.rs",
+      "sha256": "aa78184b9e17c7a91ef09757e32201c9908ba69e6c2518fa366288c8f1079cb3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/versions.rs",
+      "sha256": "3e5f0d9fa5d5d519d93ae607446d6eebd95c1db2388fe56a24f2daeca44247fd"
+    },
+    {
+      "path": "src-tauri/src/acp_client/wait.rs",
+      "sha256": "a633a5ad5af0c39d8a80ef7ebbd4e964375d534d5783231f1a4a084231f30bdc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_peer.py",
+      "sha256": "3ff798c1dfe22252ac16aae8ef7ebd45ee79dce96cf09d4d15cacc2bab1a0fcc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_peer.py",
+      "sha256": "4ebebed8943854437f7bc0c99eea75cb1917624b23e8f686b22300920296327d"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_peer.py",
+      "sha256": "313197a14ee31306a253cf77a221a461bebd7f5a1ed00264436e89a587522d76"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "719ff34eb3525d48ae082d28eef46556ea9cf9067de2ff3a75c2275040d0eac4"
+    }
+  ]
+}

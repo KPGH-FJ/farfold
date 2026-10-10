@@ -76,6 +76,7 @@ impl Plan {
                 }),
                 configured_enabled: Some(mcp_plan::configured(after, &self.input.name)),
                 reported_enabled: reported,
+                parent_outcome: None,
                 session_applicability: "unverified",
             },
             matching && matches_report,

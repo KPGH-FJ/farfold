@@ -5,6 +5,8 @@ pub mod mcp_add;
 mod mcp_add_input;
 mod mcp_add_plan;
 mod mcp_plan;
+pub mod mcp_remove;
+mod mcp_remove_plan;
 mod plan;
 mod requests;
 mod rpc;
@@ -16,6 +18,9 @@ use tauri::{AppHandle, Manager, Webview};
 pub use types::*;
 
 fn query(store: &MetaStore, job: &Job) -> Result<()> {
+    if job.source.domain() == domain::Domain::McpRemove {
+        return mcp_remove::query(store, job);
+    }
     if job.source.domain() == domain::Domain::McpAdd {
         return mcp_add::query(store, job);
     }
@@ -234,3 +239,9 @@ mod mcp_add_tests;
 
 #[cfg(test)]
 mod mcp_add_independent_tests;
+
+#[cfg(test)]
+mod mcp_remove_tests;
+
+#[cfg(test)]
+mod mcp_remove_independent_tests;

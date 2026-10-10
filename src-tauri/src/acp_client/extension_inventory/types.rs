@@ -24,6 +24,7 @@ pub enum Code {
     Unavailable,
     TargetUnavailable,
     TargetChanged,
+    TargetEnabled,
     InventoryIncomplete,
     ReviewExpired,
     ReviewConsumed,
@@ -64,6 +65,7 @@ pub struct ExtensionCapabilities {
     pub skill_enablement: InventoryCapability,
     pub mcp_enablement: InventoryCapability,
     pub mcp_addition: InventoryCapability,
+    pub mcp_removal: InventoryCapability,
     pub tool_inventory: &'static str,
 }
 

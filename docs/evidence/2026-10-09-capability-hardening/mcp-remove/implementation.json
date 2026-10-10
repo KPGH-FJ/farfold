@@ -1,0 +1,44 @@
+{
+  "phase": "sourceAndControlledVerificationCompleteNotInstalled",
+  "installedBaseline": "51c5159fe5d446ce5eab8d20051ea6d703ca1e86",
+  "changes": [
+    "Explicitly disabled eligible MCP entries can be reviewed for exact quoted leaf removal through the official configuration surface",
+    "Whole two-scope candidates and complete raw configured list distinguish verified removal from disabled presence or unrelated configuration drift",
+    "One common bounded controller and request registry preserve prior rejected/unknown write facts during independent read-only rechecks",
+    "No private config file editing, second Agent loop, root clear, MCP execution, credential cleanup or automatic write retry"
+  ],
+  "engineering": {
+    "inputCount": 1497,
+    "sourceStable": true,
+    "sevenChecks": "passed",
+    "frontendFiles": 420,
+    "frontendTests": 4854,
+    "rustPassed": 1546,
+    "rustIgnored": 6
+  },
+  "controlledBrowser": {
+    "webkitChecks": 31,
+    "chromiumChecks": 31,
+    "pageErrors": 0,
+    "sourceAndHarnessStable": true
+  },
+  "independentSourceReview": "passedWithinSyntheticScope",
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/verification.json": "e6a815248b91cfc974e3664097d0a2acc3dc35757b5d20291ccefb31c19edcf5",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/inputs-after.json": "a7ad38b4d26303f3638703cdad8b7309e8ff41db5d0741d1527710530316040a",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/implementation.json": "32c33a109b1296758c598a0481e1b9568fdaea90eb6e0054c6b4f4804ce39edb",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/implementation.json": "7a4c3a6c1871acd795ea2880008a7b8c28acffb1d73567cbe5799e609403a1f5",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/independent/review.json": "ca4c4c70fb968c43289d56cfaefc56d8e03fa92b843d818816ce8193670a107f",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/receipt.json": "51929a82edd62a61911aa20a63492965340f3f60e0c8eb7935b3bc4beee91168",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/contract/receipt.json": "f473e3387009eaebc79b03452b2c839d2226ffc954452bbb4ed58ae2ac2281df",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf"
+  },
+  "notYetVerified": [
+    "Current installed UI",
+    "Real official leaf write for this removal feature",
+    "Other Agent surfaces",
+    "Connections, tools, credential lifecycle and full P41 completion"
+  ],
+  "productComplete": false,
+  "original122ConditionsAnd29By8Unchanged": true
+}

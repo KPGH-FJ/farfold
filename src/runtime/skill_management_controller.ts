@@ -1,3 +1,5 @@
+import { mcpRemovePort } from "./mcp_remove";
+import { mcpRemoveFailure, type McpRemoveCode } from "./mcp_remove_types";
 import { mcpAddPort } from "./mcp_add";
 import {
   freezeMcpAddInput,
@@ -25,6 +27,7 @@ import {
   confirmedRequest,
   isMcpRequest,
   isAddRequest,
+  isRemoveRequest,
 } from "./extension_management_types";
 export type { ExtensionChangeTargetOwner as SkillChangeTargetOwner } from "./extension_management_types";
 
@@ -38,7 +41,8 @@ export interface SkillManagementView {
   cancelRequested: boolean;
   trackingReleased: boolean;
   admissionRejected: boolean;
-  error: McpAddCode | null;
+  error: McpAddCode | McpRemoveCode | null;
+  originalOperation: SkillChangeOperation | null;
   additionInput: McpAddInput | null;
 }
 const EMPTY: SkillManagementView = Object.freeze({
@@ -53,6 +57,7 @@ const EMPTY: SkillManagementView = Object.freeze({
   admissionRejected: false,
   error: null,
   additionInput: null,
+  originalOperation: null,
 });
 interface Flight {
   port: SkillManagementPort;
@@ -67,6 +72,7 @@ interface Flight {
   inspectionRevoked: boolean;
   confirmation: SkillChangeRequest | null;
   reviewDeadline: number | null;
+  removalParent: "mayRemainEmpty" | "preserveSiblings" | null;
   inheritedWrite: Pick<
     SkillChangeOperation,
     "writeDispatched" | "writeAck"
@@ -83,6 +89,7 @@ export class SkillManagementController {
     private now = () => Date.now(),
     private mcpPort: SkillManagementPort = mcpManagementPort,
     private addPort: SkillManagementPort = mcpAddPort,
+    private removePort: SkillManagementPort = mcpRemovePort,
   ) {}
   subscribe = (fn: () => void) => {
     this.listeners.add(fn);
@@ -128,6 +135,16 @@ export class SkillManagementController {
       f.inheritedWrite &&
       (op.writeDispatched !== f.inheritedWrite.writeDispatched ||
         op.writeAck !== f.inheritedWrite.writeAck)
+    )
+      throw { code: "invalidOutput" };
+    if (
+      f.removalParent !== null &&
+      op.observation &&
+      "parentOutcome" in op.observation &&
+      op.observation.configuration === "matching" &&
+      (f.removalParent === "preserveSiblings"
+        ? op.observation.parentOutcome !== "nonempty"
+        : !["empty", "absent"].includes(op.observation.parentOutcome ?? ""))
     )
       throw { code: "invalidOutput" };
     // Concurrent read/status/cancel replies cannot erase already observed write facts.
@@ -183,7 +200,9 @@ export class SkillManagementController {
     const timer = setTimeout(() => {
       if (this.attached(f) && f.view.unresolved) {
         f.lost = true;
-        if (["setEnabled", "add"].includes(f.view.request?.action ?? ""))
+        if (
+          ["setEnabled", "add", "remove"].includes(f.view.request?.action ?? "")
+        )
           f.target.changed();
         this.publish(f, { checking: false, error: "timedOut" });
       }
@@ -213,7 +232,10 @@ export class SkillManagementController {
         clearTimeout(timer);
         if (!this.attached(f) || !f.view.unresolved || epoch !== f.epoch)
           return;
-        const code = mcpAddFailure(reason) ?? "unavailable";
+        const code =
+          (f.view.request && isRemoveRequest(f.view.request)
+            ? mcpRemoveFailure(reason)
+            : mcpAddFailure(reason)) ?? "unavailable";
         // Only these direct, fresh confirm errors are guaranteed before admission.
         // A timeout/status/other failure cannot be reclassified as an unwritten request.
         if (
@@ -265,11 +287,13 @@ export class SkillManagementController {
       this.revokeReview(previous);
     }
     const f: Flight = {
-      port: isAddRequest(request)
-        ? this.addPort
-        : isMcpRequest(request)
-          ? this.mcpPort
-          : this.port,
+      port: isRemoveRequest(request)
+        ? this.removePort
+        : isAddRequest(request)
+          ? this.addPort
+          : isMcpRequest(request)
+            ? this.mcpPort
+            : this.port,
       target,
       view: {
         ...EMPTY,
@@ -287,6 +311,7 @@ export class SkillManagementController {
       confirmation: null,
       reviewDeadline: null,
       inheritedWrite: null,
+      removalParent: null,
     };
     this.entries.set(owner.agentId, f);
     this.publish(f, {});
@@ -318,6 +343,13 @@ export class SkillManagementController {
           input: f.view.additionInput,
         });
       }
+      if (isRemoveRequest(request))
+        return f.port.inspect({
+          agentId: request.agentId,
+          requestId: request.requestId,
+          inventoryRequestId: request.target.inventoryRequestId,
+          itemId: request.target.itemId,
+        });
       return f.port.inspect({
         agentId: request.agentId,
         requestId: request.requestId,
@@ -363,6 +395,7 @@ export class SkillManagementController {
       epoch: 0,
       lost: false,
       confirmation: request,
+      removalParent: "parentHandling" in review ? review.parentHandling : null,
     };
     this.entries.set(owner.agentId, f);
     this.publish(f, {});
@@ -483,6 +516,7 @@ export class SkillManagementController {
         unresolved: true,
         reviewRetired: true,
         additionInput: old.view.additionInput,
+        originalOperation: old.view.originalOperation ?? old.view.operation,
       },
       retired: true,
       dispatched: true,

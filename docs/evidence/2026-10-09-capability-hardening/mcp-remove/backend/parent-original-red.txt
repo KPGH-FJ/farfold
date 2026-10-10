@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.92s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::mcp_remove_tests::mcp_remove_parent_fact_requires_agreement_between_scopes' (26239312) panicked at src/acp_client/skill_management/mcp_remove_tests.rs:481:9:
+assertion `left == right` failed: cross-scope absent
+  left: Some(Some("empty"))
+ right: Some(None)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::mcp_remove_tests::mcp_remove_parent_fact_requires_agreement_between_scopes ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::mcp_remove_tests::mcp_remove_parent_fact_requires_agreement_between_scopes
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1550 filtered out; finished in 0.18s
+
+error: test failed, to rerun pass `--lib`

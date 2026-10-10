@@ -1,0 +1,85 @@
+{
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "9e66763f817b2cee937e341412a48de531550e3221168770e9b22f1d1568f12f",
+      "lines": 238
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "cab231f51ad47da6840326f8132a6b88d04da610bdad2269848222add9678a99",
+      "lines": 156
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "2d2eea04d88f10842e544983a3d9b7f14d6df75a9dc4d727a56d893d5b95446c",
+      "lines": 174
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "d19cf61c331312ea869bbf2273cd0cad842ceba1569cb3b474c808436a7986e2",
+      "lines": 236
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "ceb62951ead55df80d3fb3c36eb16efc60ba110967b55e0b44c19f0f8b246290",
+      "lines": 140
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "a6e2efa9f4b1d366eab8a33877cd5d41682710668038355c5cc7f788569df8dc",
+      "lines": 156
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "8a2d026a57450bc674b7c3d7e77eaa181209fee1bfc398d33143d2a25444bfab",
+      "lines": 247
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "bf092d67f0985a2b5e5bed357fe85c3bb1877e47ee5a1797b701116155565588",
+      "lines": 647
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "e305deba649151a6884e7c62ae6376e7aa1592691dd4af500be82b96ef357105",
+      "lines": 555
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "173cf1ff56408d4c716a518ffc7b596a87c752d9be0bff8002e62d773b901a74",
+      "lines": 151
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_remove.rs",
+      "sha256": "51beb1008f4c4714fc9683d5b10fb4add749c8cada8ea19def590c6c678aa644",
+      "lines": 178
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_remove_plan.rs",
+      "sha256": "cf7037d4dee3d7133909d08d6ba4191688c5686237211b0e869764ba4ae132e5",
+      "lines": 113
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_remove_tests.rs",
+      "sha256": "76bd8909d90324dde1feef3e1f72b2df914f67bb6becbf503a1dd15efb127ddb",
+      "lines": 512
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_remove_independent_tests.rs",
+      "sha256": "73040034af03fca62cee4539c4cded78e410488758ed72e0ec5b30dc7089fa3f",
+      "lines": 306
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_remove_peer.py",
+      "sha256": "d7c6b0bd6b3882a90e6e0f90056be60fb0d49456a967415701837eaea1ff22a7",
+      "lines": 113
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "839eb9fea22c9ec3fba63bf7bf518c32fc6031877871cd76f679d202a75ea01a",
+      "lines": 451
+    }
+  ],
+  "claim": "Current final author production and tests, before final related inventory result; no official CLI executed."
+}

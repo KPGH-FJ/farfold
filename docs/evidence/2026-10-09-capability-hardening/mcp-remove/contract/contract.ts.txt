@@ -1,0 +1,99 @@
+// Proposed protocol for review only. No production implementation or actual wire.
+// Existing skills, MCP enabled-preference and MCP-add wire shapes stay unchanged.
+export type McpRemoveCode =
+  | "notReviewed" | "entryUnverified" | "platformUnsupported" | "environmentUnavailable"
+  | "selectionChanged" | "cwdUnavailable" | "busy" | "spawnFailed" | "queryFailed"
+  | "invalidOutput" | "outputLimit" | "timedOut" | "cancelled" | "pendingCleanup"
+  | "unknownRequest" | "invalidRequest" | "requestConflict" | "unavailable"
+  | "targetUnavailable" | "targetChanged" | "inventoryIncomplete"
+  | "reviewExpired" | "reviewConsumed" | "configurationUnsupported"
+  | "configurationChanged" | "configurationReadOnly" | "configurationRejected"
+  | "writeUncertain" | "targetEnabled";
+export type Failure = { code: McpRemoveCode };
+export type CapabilityReason =
+  | "notReviewed" | "entryUnverified" | "platformUnsupported" | "environmentUnavailable"
+  | "selectionChanged" | "cwdUnavailable" | "busy" | "spawnFailed" | "queryFailed"
+  | "invalidOutput" | "outputLimit" | "timedOut" | "cancelled" | "pendingCleanup"
+  | "unknownRequest" | "invalidRequest" | "requestConflict" | "unavailable";
+export type RemovalCapability =
+  | { availability: "available"; source: "officialAppServer"; reason: null }
+  | { availability: "unavailable"; source: null; reason: CapabilityReason };
+// New backend always emits this field. Legacy absence grants no removal authority.
+export type CapabilityDelta = { mcpRemoval: RemovalCapability };
+// No new row permission field: existing exact private-target eligibility is reused,
+// together with mcpRemoval and reportedEnabled === false. Inspect is final admission.
+export type McpRemoveKey = { agentId: string; requestId: string };
+export type McpRemoveInspect = McpRemoveKey & {
+  inventoryRequestId: string;
+  itemId: number; // safe integer 0..511 from that exact original complete MCP snapshot
+};
+export type McpRemoveConfirm = McpRemoveKey & { reviewId: string };
+export type McpRemoveRecheck = McpRemoveKey & { operationId: string };
+export type McpRemoveTarget = {
+  kind: "mcpRemoval";
+  inventoryRequestId: string;
+  itemId: number;
+  name: string; // same safe label and byte limit as the original eligible inventory row
+  transport: "stdio" | "streamableHttp";
+};
+export type ParentHandling = "mayRemainEmpty" | "preserveSiblings";
+export type ParentOutcome = "absent" | "empty" | "nonempty";
+export type McpRemoveReview = {
+  reviewId: string;
+  agentId: string;
+  cwd: string;
+  target: McpRemoveTarget;
+  requestedEnabled: null; // removal is not requestedEnabled:false
+  configuredEnabled: false; // explicit false in complete selected writable User entry
+  reportedEnabled: false; // fresh official configured-get report; not disconnected proof
+  writeScope: { kind: "user" | "profile"; configDisplayPath: string };
+  observedAtMs: number;
+  validForMs: 300000;
+  mutation: "removeDisabledMcp";
+  parentHandling: ParentHandling;
+  preservation: "otherConfigurationSemanticsPreserved";
+  sessionApplicability: "unverified";
+};
+// Strict cross-field truth: absent => reportedEnabled:null; present => bool.
+// matching => configuredEnabled:null and parentOutcome non-null.
+// parent absent|empty => configuredEnabled:null; parent null => configuration:different.
+export type McpRemoveObservation = {
+  observedAtMs: number;
+  configuration: "matching" | "different";
+  mcp: "absent" | "present"; // from a strict complete official list; not get failure
+  configuredEnabled: boolean | null;
+  reportedEnabled: boolean | null;
+  parentOutcome: ParentOutcome | null;
+  sessionApplicability: "unverified";
+};
+export type McpRemoveOperation = {
+  agentId: string;
+  requestId: string;
+  action: "inspect" | "remove" | "recheck";
+  cwd: string;
+  target: McpRemoveTarget;
+  requestedEnabled: null;
+  operationId: string | null; // original remove request UUID only for recheck
+  state: "running" | "cancelling" | "pendingCleanup" | "ready" | "failed" | "cancelled";
+  phase: "queued" | "starting" | "reading" | "writing" | "checking" | "cleaning" | "complete";
+  settled: boolean;
+  writeDispatched: boolean; // frame may have been sent; NOT successful write proof
+  writeAck: "none" | "ok" | "okOverridden" | "rejected" | "unknown";
+  outcome: "notDispatched" | "rejected" | "verified" | "observed" | "mismatch" | "unknown" | null;
+  code: McpRemoveCode | null;
+  review: McpRemoveReview | null;
+  observation: McpRemoveObservation | null;
+};
+export type McpRemoveCancellation = McpRemoveKey & {
+  cancelRequested: true;
+  operation: McpRemoveOperation | null;
+};
+// Main window only; flat camelCase args; finite existing shared management registry.
+// agent_mcp_remove_inspect(McpRemoveInspect) -> McpRemoveOperation
+// agent_mcp_remove_confirm(McpRemoveConfirm) -> McpRemoveOperation
+// agent_mcp_remove_status(McpRemoveKey) -> McpRemoveOperation
+// agent_mcp_remove_cancel(McpRemoveKey) -> McpRemoveCancellation
+// agent_mcp_remove_recheck(McpRemoveRecheck) -> McpRemoveOperation
+// All may fail with exact Failure. No frontend supplied cwd/name/path/keyPath/version,
+// enabled field, config bytes, env/header/credential values or arbitrary RPC/command.
+// See contract.json for strict lifecycle/null/publication matrix and bounded tombstones.

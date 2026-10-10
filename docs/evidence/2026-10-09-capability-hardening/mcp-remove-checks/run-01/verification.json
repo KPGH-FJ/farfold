@@ -1,0 +1,104 @@
+{
+  "checkedAtUtc": "2026-10-10T19:58:33.415036+00:00",
+  "sourceBase": "e8c3294f45a6bf46ad792503333f2c7ad2b34594",
+  "inputCount": 1497,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 19.72,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 75.734,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/frontend.txt",
+      "sha256": "431f9569251a4df7c9ea6fff52e219fd730221caa3a02b0f08fcdfb391217e70",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 13.62,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/build.txt",
+      "sha256": "541e9f01e340d8d08189fbbd63341cc71c75227368c7c3ed6454264588a023ed",
+      "executedInThisRun": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.69,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 11.974,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/clippy.txt",
+      "sha256": "d185e0b93e62ab751cc8830fc761d75e61b840044dac8f4540623469cdcb068d",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 162.313,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/rust.txt",
+      "sha256": "884e73fcb60e6b03928fdc50ca2db77da6d08f726a35846bd6a5c558774c858f",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 40.125,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  420 passed (420)", "Tests  4854 passed (4854)"],
+    "rust": [
+      "test result: ok. 1546 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 122.91s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "allPassed": true,
+  "boundary": "Seven commands executed sequentially on the recorded source set, including the actual Rust skill-management and MCP-management and MCP-add and MCP-remove wire consumed by the frontend. Engineering evidence only; not installed UI, real Agent, Windows, or full product acceptance."
+}

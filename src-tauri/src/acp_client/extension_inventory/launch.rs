@@ -96,6 +96,15 @@ pub(in crate::acp_client) fn capabilities(row: &AgentRow) -> Result<ExtensionCap
             source: reason.is_none().then_some("officialAppServer"),
             reason,
         },
+        mcp_removal: InventoryCapability {
+            availability: if reason.is_none() {
+                "available"
+            } else {
+                "unavailable"
+            },
+            source: reason.is_none().then_some("officialAppServer"),
+            reason,
+        },
         tool_inventory: "unavailable",
     })
 }

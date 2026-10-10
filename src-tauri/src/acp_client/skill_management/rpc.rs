@@ -182,7 +182,10 @@ impl<'a> Exchange<'a> {
                         let plan = Arc::new(Plan::new(
                             before,
                             target.ok_or(Code::TargetChanged)?,
-                            self.job.snapshot().requested_enabled,
+                            self.job
+                                .snapshot()
+                                .requested_enabled
+                                .ok_or(Code::RequestConflict)?,
                         )?);
                         *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
                             Some(Arc::new(PreparedPlan::Skill((*plan).clone())));
@@ -207,7 +210,7 @@ impl<'a> Exchange<'a> {
                         )?;
                         self.step = Step::Write;
                     }
-                    Action::Add => return Err(Code::RequestConflict.into()),
+                    Action::Add | Action::Remove => return Err(Code::RequestConflict.into()),
                     Action::Recheck => {
                         self.observe(before, target.map(|v| v.enabled), false)?;
                         self.step = Step::Done;
@@ -272,6 +275,9 @@ impl<'a> Exchange<'a> {
         Ok(())
     }
     fn before_mcp(&mut self, before: Config, directory: Config) -> Result<()> {
+        if self.job.source.domain() == super::domain::Domain::McpRemove {
+            return self.before_remove(before, directory);
+        }
         if self.job.source.domain() == super::domain::Domain::McpAdd {
             return self.before_add(before, directory);
         }
@@ -294,7 +300,10 @@ impl<'a> Exchange<'a> {
                     before,
                     directory,
                     report,
-                    self.job.snapshot().requested_enabled,
+                    self.job
+                        .snapshot()
+                        .requested_enabled
+                        .ok_or(Code::RequestConflict)?,
                 )?;
                 *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
                     Some(Arc::new(PreparedPlan::Mcp(plan)));
@@ -313,11 +322,57 @@ impl<'a> Exchange<'a> {
                 self.queue(json!({"id":4,"method":"config/value/write","params":plan.params()}))?;
                 self.step = Step::Write;
             }
-            Action::Add => return Err(Code::RequestConflict.into()),
+            Action::Add | Action::Remove => return Err(Code::RequestConflict.into()),
             Action::Recheck => {
                 observe_mcp(self.job, &before, &directory, &report, false)?;
                 self.step = Step::Done;
             }
+        }
+        Ok(())
+    }
+    fn before_remove(&mut self, before: Config, directory: Config) -> Result<()> {
+        let action = self.job.snapshot().action;
+        self.job.within()?;
+        self.job
+            .source
+            .current(self.store, action != Action::Recheck)?;
+        if action == Action::Recheck {
+            *self
+                .job
+                .mcp_readback
+                .lock()
+                .unwrap_or_else(|p| p.into_inner()) = Some((before, directory));
+            self.step = Step::Done;
+            return Ok(());
+        }
+        let report = self
+            .job
+            .mcp_report
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .clone()
+            .ok_or(Code::InvalidOutput)?;
+        match action {
+            Action::Inspect => {
+                let plan = super::mcp_remove_plan::Plan::new(before, directory, report)?;
+                *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
+                    Some(Arc::new(PreparedPlan::Removal(plan)));
+                self.step = Step::Done;
+            }
+            Action::Remove => {
+                let plan = self.plan()?;
+                if !plan.removal()?.unchanged(&before, &directory, &report) {
+                    return Err(Code::ConfigurationChanged.into());
+                }
+                self.job.update(|v| {
+                    v.write_dispatched = true;
+                    v.write_ack = Ack::Unknown;
+                    v.phase = Phase::Writing;
+                });
+                self.queue(json!({"id":4,"method":"config/value/write","params":plan.params()}))?;
+                self.step = Step::Write;
+            }
+            _ => return Err(Code::RequestConflict.into()),
         }
         Ok(())
     }
@@ -385,6 +440,7 @@ impl<'a> Exchange<'a> {
                 "differs"
             }),
             reported_enabled: enabled,
+            parent_outcome: None,
             session_applicability: "unverified",
         };
         self.job.update(|v| v.observation = Some(observation));
@@ -409,7 +465,12 @@ impl<'a> Exchange<'a> {
         if self.sent == self.pending.len() {
             return Ok(());
         }
-        if self.step == Step::Write && self.job.source.domain() == super::domain::Domain::McpAdd {
+        if self.step == Step::Write
+            && matches!(
+                self.job.source.domain(),
+                super::domain::Domain::McpAdd | super::domain::Domain::McpRemove
+            )
+        {
             self.job.within()?;
             self.job.source.current(self.store, true)?;
         }

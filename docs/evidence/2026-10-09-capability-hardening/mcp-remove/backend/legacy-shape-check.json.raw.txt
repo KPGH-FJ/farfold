@@ -1,0 +1,19 @@
+{
+  "raw": {
+    "path": "output/2026-10-11-mcp-remove-backend/targeted-green.txt",
+    "sha256": "8347b3405e7050ae942297a8c8bc7a642039fa4481d30a99384d36ca33aab829"
+  },
+  "markers": [
+    "MCP_ADD_LIFECYCLE_WIRE",
+    "MCP_ADD_CANCEL_WIRE",
+    "MCP_ADD_REFUSAL_WIRE",
+    "MCP_ADD_WIRE",
+    "MCP_ADD_INSPECT_CANCEL_WIRE",
+    "MCP_ADD_MISMATCH_WIRE",
+    "MCP_ADD_RECOVERY_WIRE",
+    "MCP_MANAGEMENT_WIRE",
+    "MCP_LIFECYCLE_WIRE"
+  ],
+  "requestedBooleanObjects": 24,
+  "claim": "Actual prior MCP enable/add replies retained boolean requestedEnabled and omitted removal-only parent fields. This is value-shape verification, not byte equality across fresh UUID/time/cwd fixtures."
+}

@@ -1,0 +1,32 @@
+"""Extract exact Rust serde values; never synthesize or complete a reply."""
+import hashlib
+import json
+import pathlib
+import re
+
+root = pathlib.Path(__file__).resolve().parents[2]
+owned = pathlib.Path(__file__).resolve().parent
+raw = owned / "targeted-final.txt"
+source = raw.read_text()
+values = {}
+markers = []
+for number, line in enumerate(source.splitlines(), 1):
+    match = re.search(r"(MCP_REMOVE_[A-Z_]*WIRE)=(\{.*\})$", line)
+    if not match:
+        continue
+    value = json.loads(match[2])
+    for name, item in value.items():
+        if name in values:
+            raise ValueError("duplicate capture key")
+        values[name] = item
+    markers.append({"marker": match[1], "line": number, "keys": list(value)})
+assert "test result: ok. 15 passed; 0 failed" in source
+assert len(values) == 17 and len(markers) == 10, (len(values), len(markers))
+path = root / "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json"
+path.parent.mkdir(parents=True, exist_ok=True)
+with path.open("x") as stream:
+    json.dump(values, stream, ensure_ascii=False, indent=2)
+    stream.write("\n")
+receipt = {"raw": str(raw.relative_to(root)), "rawSha256": hashlib.sha256(raw.read_bytes()).hexdigest(), "wire": str(path.relative_to(root)), "wireSha256": hashlib.sha256(path.read_bytes()).hexdigest(), "markerCount": len(markers), "topLevelValues": len(values), "markers": markers, "claim": "Values parsed from actual Rust serde in synthetic temporary fixtures; no real official program or user configuration was invoked."}
+(owned / "wire-capture.json").write_text(json.dumps(receipt, indent=2) + "\n")
+print(json.dumps({"wire": receipt["wire"], "sha256": receipt["wireSha256"], "values": len(values), "markers": len(markers)}))

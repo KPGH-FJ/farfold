@@ -1,0 +1,26 @@
+{
+  "status": "acceptedStrictContractRetained",
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-remove-contract/contract.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/contract/contract.json.raw.txt",
+      "sha256": "c589cb676294849549996d75d0f6670e9f8bde303a4d0c06bd74098ccdb91f99"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-contract/contract.ts",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/contract/contract.ts.txt",
+      "sha256": "a7bba8b8a4cbdcacb71e9993953b27cf3d00109a55bab982be3795e0f709b740"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-independent/contract-independent.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/contract/contract-independent.json.raw.txt",
+      "sha256": "8b4d0afdfbc5c3f6decdafb46fe2531cd6041baf766041016097cead69d7f085"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-root/contract-acceptance.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/contract/contract-acceptance.json.raw.txt",
+      "sha256": "b5426580e10891791db8082661928d45fae0f8bc8939316096d49de5ab0db725"
+    }
+  ],
+  "boundary": "Design/admission contract and independent review; implementation and execution evidence are separate."
+}

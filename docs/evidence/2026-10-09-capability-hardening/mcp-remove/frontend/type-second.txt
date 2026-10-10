@@ -1,0 +1,16 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/mcp_remove_controller.test.ts(70,64): error TS2322: Type '{ complete: false; observedAtMs: number; scope: "officialCliConfigurationForDirectory"; source: "officialCli"; sessionApplicability: "unverified"; items: InventoryItem[]; } | { ...; }' is not assignable to type 'InventorySnapshot'.
+  Type '{ complete: false; observedAtMs: number; scope: "officialCliConfigurationForDirectory"; source: "officialCli"; sessionApplicability: "unverified"; items: InventoryItem[]; }' is not assignable to type 'InventorySnapshot'.
+    Property 'errorCount' is missing in type '{ complete: false; observedAtMs: number; scope: "officialCliConfigurationForDirectory"; source: "officialCli"; sessionApplicability: "unverified"; items: InventoryItem[]; }' but required in type 'SkillsInventory'.
+src/runtime/mcp_remove_controller.test.ts(72,56): error TS2322: Type '{ snapshot: { items: { reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }[]; ... 4 more ...; sessionApplicability: "unverified"; } | { ...; ...' is not assignable to type 'InventoryResult'.
+  Types of property 'snapshot' are incompatible.
+    Type '{ items: { reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }[]; ... 4 more ...; sessionApplicability: "unverified"; } | { ...; }' is not assignable to type 'InventorySnapshot'.
+      Type '{ items: { reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }[]; ... 5 more ...; errorCount: number; }' is not assignable to type 'InventorySnapshot'.
+        Type '{ items: { reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }[]; ... 5 more ...; errorCount: number; }' is not assignable to type 'SkillsInventory'.
+          Types of property 'items' are incompatible.
+            Type '{ reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }[]' is not assignable to type 'SkillInventoryItem[]'.
+              Type '{ reportedEnabled: boolean; id: number; name: string; transport: "stdio"; reportedAuth: "unsupported"; origin: "unreported"; configurationLayer: "unreported"; connection: "unverified"; tools: "unreported"; enablement: { ...; }; }' is missing the following properties from type 'SkillInventoryItem': description, descriptionTruncated, descriptionRedacted, pluginReported
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,128 @@
+{
+  "status": "passedControlledFullAppBothEngines",
+  "atUtc": "2026-10-10T19:55:06.991346+00:00",
+  "engines": [
+    {
+      "engine": "webkit",
+      "checks": 31,
+      "errors": [],
+      "sourceAndHarnessStable": true,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run03.raw.txt",
+      "sha256": "001bcbe67b5668e3ccc995f03bdbde1601a536a92ff8d8249a53273381417fc9"
+    },
+    {
+      "engine": "chromium",
+      "checks": 31,
+      "errors": [],
+      "sourceAndHarnessStable": true,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/chromium-run03.raw.txt",
+      "sha256": "3ea0570b871b7eb8aecadf61ecca686d428ba6f101617df1987f80a3a7dbe1a8"
+    }
+  ],
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/index.html",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/index.html.txt",
+      "sha256": "77130d42b9a43803fec3360b5c243371558a6e2ed83e17a5ce5d76fdc4c62a79"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/fixture.tsx",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/fixture.tsx.txt",
+      "sha256": "8d500e8416ab82aacaed61247c3ccde2f7619b4a7c5ca21f3c721290f864e0d8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/serve.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/serve.mjs.txt",
+      "sha256": "b25b7b66ccf3988eafe82c40ed0c78541e27f718fef98e73bf2e42a0ae3c3161"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/run.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/run.mjs.txt",
+      "sha256": "1c4e9ab9a8bea3df889d4ad5560350bf941a46b8c438d4b532a7493642f4896f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/server.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/server.txt",
+      "sha256": "835278e7f360bf15a188899750a50cad9a103ef580d527f9639dac300c3558d2"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run01.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run01.raw.txt",
+      "sha256": "4451f8028731b48ef5c09d8e82df8aeee556bfd453ae7c79e82fbd2227ed88c5"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run02.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run02.raw.txt",
+      "sha256": "7186ce6eb44b43f66805512a0f3da30a6c57ce4c568f1cb6b58bb0ba73b3439f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run03.raw.txt",
+      "sha256": "001bcbe67b5668e3ccc995f03bdbde1601a536a92ff8d8249a53273381417fc9"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/chromium-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/chromium-run03.raw.txt",
+      "sha256": "3ea0570b871b7eb8aecadf61ecca686d428ba6f101617df1987f80a3a7dbe1a8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/chromium-run03-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/chromium-run03-mismatch.png",
+      "sha256": "057a9a5ecb18917022c42e57861d68a098c7860c381048d21d06b441efb471d9"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/chromium-run03-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/chromium-run03-review.png",
+      "sha256": "c2574249a3f9a7e32551892b2a17e4f799ad71785c71969deba4bcd418fe6e35"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run01-failure.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run01-failure.png",
+      "sha256": "a3452d093db65e7037bb0a90d83c31ca6f75f257b740b5e043a87442bdd5eee4"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run01-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run01-mismatch.png",
+      "sha256": "692b1e4277d7dfd3834fb6b58d111984ed114a20d614ae182f7b3e9782a9600a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run01-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run01-review.png",
+      "sha256": "14c8f666b572d5b70a4c07491716c1af0447faedde4fe81d0ae7969112799099"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run02-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run02-mismatch.png",
+      "sha256": "692b1e4277d7dfd3834fb6b58d111984ed114a20d614ae182f7b3e9782a9600a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run02-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run02-review.png",
+      "sha256": "14c8f666b572d5b70a4c07491716c1af0447faedde4fe81d0ae7969112799099"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run03-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run03-mismatch.png",
+      "sha256": "692b1e4277d7dfd3834fb6b58d111984ed114a20d614ae182f7b3e9782a9600a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-browser/webkit-run03-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/webkit-run03-review.png",
+      "sha256": "14c8f666b572d5b70a4c07491716c1af0447faedde4fe81d0ae7969112799099"
+    }
+  ],
+  "priorRuns": [
+    {
+      "raw": "webkit-run01.raw.txt",
+      "passed": false,
+      "cause": "Mock completed status retained pendingCleanup code; strict production parser correctly rejected. Mock alone clears code on completion; original raw retained."
+    },
+    {
+      "raw": "webkit-run02.raw.txt",
+      "passed": true,
+      "checks": 29,
+      "scope": "Earlier frontend freeze before additional original-parent correlation checks; not current final evidence."
+    }
+  ],
+  "boundary": "Actual full App, common controller and StrictMode. All command receipts and folders are controlled; no official Agent, user configuration, installed application, prompt, MCP connection or execution claim."
+}

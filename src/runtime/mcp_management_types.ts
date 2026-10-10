@@ -259,6 +259,7 @@ export function parseMcpChangeOperation(
   raw: unknown,
   expected: McpChangeRequest,
 ): McpChangeOperation {
+  if (typeof expected.requestedEnabled !== "boolean") invalid();
   const v = record(raw, OPERATION_KEYS);
   operationIdentity(v, expected);
   const parsedTarget = target(v.target, expected),

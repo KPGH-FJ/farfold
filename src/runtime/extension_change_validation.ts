@@ -64,8 +64,12 @@ export const OPERATION_KEYS = [
   "review",
   "observation",
 ];
-type Identity = Omit<SkillChangeRequest, "target" | "action"> & {
-  action: "inspect" | "setEnabled" | "add" | "recheck";
+type Identity = Omit<
+  SkillChangeRequest,
+  "target" | "action" | "requestedEnabled"
+> & {
+  action: "inspect" | "setEnabled" | "add" | "remove" | "recheck";
+  requestedEnabled: boolean | null;
 };
 export function operationIdentity(
   v: Record<string, unknown>,
@@ -164,7 +168,7 @@ export function lifecycle<C extends string = SkillChangeCode>(
     if (facts.hasReview || (settled && outcome === null)) invalid();
     if (
       outcome === "verified" &&
-      (!["setEnabled", "add"].includes(expected.action) ||
+      (!["setEnabled", "add", "remove"].includes(expected.action) ||
         !dispatched ||
         !["ok", "okOverridden"].includes(ack) ||
         !facts.matching ||

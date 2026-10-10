@@ -1,0 +1,61 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_remove_admission.test.tsx (3 tests | 3 failed) 26ms
+   × admits removal as null intent instead of a false enabled preference 6ms
+   × accepts an explicit removal capability without granting it to legacy capabilities 0ms
+   × offers a separate removal review only for eligible disabled rows 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_remove_admission.test.tsx > admits removal as null intent instead of a false enabled preference
+AssertionError: expected null to match object { requestedEnabled: null, …(2) }
+
+- Expected:
+{
+  "action": "inspect",
+  "requestedEnabled": null,
+  "target": {
+    "kind": "mcpRemoval",
+  },
+}
+
++ Received:
+null
+
+ ❯ src/runtime/mcp_remove_admission.test.tsx:13:70
+     11|   const result = { ...h.result, snapshot: { ...h.result.snapshot, item…
+     12|   const target = { ...h.target, kind: "mcpRemoval", item, result, curr…
+     13|   expect(requestForTarget(target as ExtensionChangeTargetOwner, id)).t…
+       |                                                                      ^
+     14|     requestedEnabled: null, action: "inspect", target: { kind: "mcpRem…
+     15|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/mcp_remove_admission.test.tsx > accepts an explicit removal capability without granting it to legacy capabilities
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/mcp_remove_admission.test.tsx > offers a separate removal review only for eligible disabled rows
+AssertionError: expected '<div class="agent-extension-result"><…' to contain '审阅移除…'
+
+Expected: "审阅移除…"
+Received: "<div class="agent-extension-result"><p class="agent-extension-directory">/controlled</p><p>查询时间：<time>1/1/1970, 8:00:00 AM</time></p><p>信息来源：官方程序的配置报告</p><ul class="agent-extension-items"><li><strong>local-tools</strong><span>本地程序</span><span>配置报告：未启用</span><span>认证报告：未提供</span></li></ul></div>"
+
+ ❯ src/runtime/mcp_remove_admission.test.tsx:29:78
+     27|     items: [{ ...h.target.item, reportedEnabled: false }] } }, stale: …
+     28|     removal: { enabled: true, inspect: () => {} } };
+     29|   expect(renderToStaticMarkup(<AgentExtensionInventoryResult {...props…
+       |                                                                              ^
+     30| });
+     31|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  03:37:29
+   Duration  232ms (transform 82ms, setup 0ms, import 118ms, tests 26ms, environment 0ms)
+

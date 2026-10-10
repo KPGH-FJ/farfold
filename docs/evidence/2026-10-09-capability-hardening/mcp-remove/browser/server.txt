@@ -1,0 +1,10 @@
+{"pid":41571,"port":1507}
+3:45:58 AM [vite] (client) page reload output/2026-10-11-mcp-remove-browser/fixture.tsx
+3:46:45 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/McpAddForm.tsx, /src/components/SkillChangeReview.tsx
+3:47:51 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/AgentExtensionInventoryResult.tsx, /src/components/SkillChangeReview.tsx
+3:47:51 AM [vite] (client) hmr update /src/components/SkillChangeReview.tsx
+3:48:54 AM [vite] (client) hmr update /src/components/SkillChangeReview.tsx
+3:48:55 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/AgentExtensionInventoryResult.tsx, /src/components/SkillChangeReview.tsx
+3:48:55 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/McpAddForm.tsx, /src/components/SkillChangeReview.tsx
+3:51:47 AM [vite] (client) page reload output/2026-10-11-mcp-remove-browser/index.html
+3:51:47 AM [vite] (client) page reload output/2026-10-11-mcp-remove-browser/fixture.tsx

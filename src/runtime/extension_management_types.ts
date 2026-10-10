@@ -1,4 +1,11 @@
 import {
+  parseMcpRemoveOperation,
+  parseMcpRemoveCancellation,
+  type McpRemoveRequest,
+  type McpRemoveOperation,
+  type McpRemoveReview,
+} from "./mcp_remove_types";
+import {
   parseMcpAddOperation,
   parseMcpAddCancellation,
   freezeMcpAddInput,
@@ -32,11 +39,14 @@ import {
   type McpChangeReview,
 } from "./mcp_management_types";
 export type ExtensionChangeRequest =
-  SkillChangeRequest | McpChangeRequest | McpAddRequest;
+  SkillChangeRequest | McpChangeRequest | McpAddRequest | McpRemoveRequest;
 export type ExtensionChangeOperation =
-  SkillChangeOperation | McpChangeOperation | McpAddOperation;
+  | SkillChangeOperation
+  | McpChangeOperation
+  | McpAddOperation
+  | McpRemoveOperation;
 export type ExtensionChangeReview =
-  SkillChangeReview | McpChangeReview | McpAddReview;
+  SkillChangeReview | McpChangeReview | McpAddReview | McpRemoveReview;
 interface TargetOwnerBase {
   owner: InventoryOwner;
   result: InventoryResult;
@@ -46,8 +56,14 @@ interface TargetOwnerBase {
 export type ExtensionChangeTargetOwner = TargetOwnerBase &
   (
     | { item: InventoryItem | SkillInventoryItem; requestedEnabled?: boolean }
+    | { kind: "mcpRemoval"; item: InventoryItem }
     | { kind: "mcpAddition"; inputId: string; input: McpAddInput }
   );
+export function isRemoveRequest(
+  r: ExtensionChangeRequest,
+): r is McpRemoveRequest {
+  return "kind" in r.target && r.target.kind === "mcpRemoval";
+}
 export function isAddRequest(r: ExtensionChangeRequest): r is McpAddRequest {
   return "kind" in r.target && r.target.kind === "mcpAddition";
 }
@@ -58,21 +74,25 @@ export function parseExtensionChangeOperation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation {
-  return isAddRequest(r)
-    ? parseMcpAddOperation(raw, r)
-    : isMcpRequest(r)
-      ? parseMcpChangeOperation(raw, r)
-      : parseSkillChangeOperation(raw, r);
+  return isRemoveRequest(r)
+    ? parseMcpRemoveOperation(raw, r)
+    : isAddRequest(r)
+      ? parseMcpAddOperation(raw, r)
+      : isMcpRequest(r)
+        ? parseMcpChangeOperation(raw, r)
+        : parseSkillChangeOperation(raw, r);
 }
 export function parseExtensionChangeCancellation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation | null {
-  return isAddRequest(r)
-    ? parseMcpAddCancellation(raw, r)
-    : isMcpRequest(r)
-      ? parseMcpChangeCancellation(raw, r)
-      : parseSkillChangeCancellation(raw, r);
+  return isRemoveRequest(r)
+    ? parseMcpRemoveCancellation(raw, r)
+    : isAddRequest(r)
+      ? parseMcpAddCancellation(raw, r)
+      : isMcpRequest(r)
+        ? parseMcpChangeCancellation(raw, r)
+        : parseSkillChangeCancellation(raw, r);
 }
 export function requestForTarget(
   t: ExtensionChangeTargetOwner,
@@ -88,6 +108,34 @@ export function requestForTarget(
     !result.snapshot.complete
   )
     return null;
+  if ("kind" in t && t.kind === "mcpRemoval") {
+    const item = t.item;
+    if (
+      result.request.kind !== "mcp" ||
+      result.snapshot.source !== "officialCli" ||
+      result.snapshot.items[item.id] !== item ||
+      !item.name ||
+      item.reportedEnabled !== false ||
+      item.enablement?.availability !== "available" ||
+      item.transport === "unknown"
+    )
+      return null;
+    return Object.freeze({
+      agentId: owner.agentId,
+      requestId,
+      action: "inspect",
+      cwd: result.request.cwd,
+      requestedEnabled: null,
+      operationId: null,
+      target: Object.freeze({
+        kind: "mcpRemoval",
+        inventoryRequestId: result.request.requestId,
+        itemId: item.id,
+        name: item.name,
+        transport: item.transport,
+      }),
+    });
+  }
   if ("kind" in t) {
     if (
       t.kind !== "mcpAddition" ||
@@ -175,6 +223,16 @@ export function confirmedRequest(
   requestId: string,
 ): ExtensionChangeRequest {
   // Both the exact review object and its target were validated before this point.
+  if (isRemoveRequest(old)) {
+    if (review.mutation !== "removeDisabledMcp")
+      throw { code: "invalidOutput" };
+    return {
+      ...old,
+      requestId,
+      action: "remove",
+      target: Object.freeze({ ...review.target }),
+    };
+  }
   if (isAddRequest(old)) {
     if (review.mutation !== "addDisabledStdioMcp")
       throw { code: "invalidOutput" };

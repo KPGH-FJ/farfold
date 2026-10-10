@@ -1,0 +1,10 @@
+{
+  "result": "passedIndependentSourceReviewWithinSyntheticScope",
+  "review": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/independent/source-independent.json.raw.txt",
+    "sha256": "7642563bfe4cb3047c778c756990a9b697778b81c66816f0d435b3df556c0cad"
+  },
+  "source": "output/2026-10-11-mcp-remove-independent/source-independent.json",
+  "findingCount": 0,
+  "boundary": "Read final source and original author/independent-test logs; no repeat execution, official Agent, installed UI, Windows or market-ready claim."
+}

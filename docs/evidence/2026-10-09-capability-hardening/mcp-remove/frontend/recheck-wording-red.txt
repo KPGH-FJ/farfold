@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SkillChangeReview.remove.test.tsx (5 tests | 1 failed) 33ms
+   × distinguishes failed readonly recheck from the original rejected removal 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SkillChangeReview.remove.test.tsx > distinguishes failed readonly recheck from the original rejected removal
+AssertionError: expected '<section class="skill-change-review" …' to contain '此次只读核对未能确认当前配置。此前请求的结果不变，不会再次移除。'
+
+Expected: "此次只读核对未能确认当前配置。此前请求的结果不变，不会再次移除。"
+Received: "<section class="skill-change-review" aria-label="移除 MCP 配置"><div class="skill-change-header"><h5 tabindex="-1">移除 MCP 配置</h5><button type="button" class="btn btn-ghost">收起审阅</button></div><strong>local-tools</strong><p class="skill-change-path">/controlled</p><p>所选操作：移除已停用的配置条目</p><p>本地程序</p><p>此前移除请求的结果：官方程序拒绝了本次移除。请重新查询并审阅当前配置。</p><p role="status">本次移除结果仍未确认。可以只读核对当前配置；不会自动重试移除。</p><p role="status">本次读取未完成，未能核实结果。</p><p>移除配置不代表已断开当前连接或停止程序，也不证明当前对话已更新。不删除文件、不退出认证或清除凭据。</p><div class="agent-extension-actions"><button type="button" class="btn btn-ghost">核对修改结果</button></div></section>"
+
+ ❯ src/components/SkillChangeReview.remove.test.tsx:152:16
+    150|   const html = h.render();
+    151|   expect(html).toContain("官方程序拒绝了本次移除");
+    152|   expect(html).toContain("此次只读核对未能确认当前配置。此前请求的结果不变，不会再次移除。");
+       |                ^
+    153|   expect(html).not.toContain("本次移除结果仍未确认");
+    154| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  03:47:50
+   Duration  243ms (transform 95ms, setup 0ms, import 135ms, tests 33ms, environment 0ms)
+

@@ -1,0 +1,98 @@
+{
+  "status": "controlledAuthorEvidenceRetained",
+  "originalReport": "output/2026-10-11-mcp-remove-backend/implementation.json",
+  "originalSha256": "c55745dc6bbec72362394e1e12f264d3be88d9c0e78e21f1c4c997375ee919d7",
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/targeted-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/targeted-first.txt",
+      "sha256": "2dd4f6b0c5e95d10b38694f0cdc22e0ddb4440996537a3307c1796651fdb38f0"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/parent-original-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/parent-original-red.txt",
+      "sha256": "99d7da056462f3c92aa8d849e86300f6a491c6c61edda6b0950023a97d2bef52"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/parent-before.rs.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/parent-before.rs.txt",
+      "sha256": "744b29965feb487e6556930368c5af1937f765c0f3c67e3ba79acd8271508721"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/targeted-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/targeted-green.txt",
+      "sha256": "8347b3405e7050ae942297a8c8bc7a642039fa4481d30a99384d36ca33aab829"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/targeted-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/targeted-final.txt",
+      "sha256": "f27cebba9f231cfd6f1a1b91bbd8f0a46e434855ad1181a60b2f4b202140e9ba"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/inventory-related.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/inventory-related.txt",
+      "sha256": "769e19a861d8616fe6f23835ca89151a5405d3c53527fe7da14611c18b37c2e8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/owned-format.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/owned-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/wire-format.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/wire-format.txt",
+      "sha256": "57228a7f5c1c146b983d70aa74987b5cb5ca06fdc2997ab0676a9d4a87d931d4"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/wire-capture.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/wire-capture.json.raw.txt",
+      "sha256": "b3f4edcc1e5ccd70308fe00022909fcd1ca13806676894a218fba2e362090c5f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/capture_wire.py",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/capture_wire.py.txt",
+      "sha256": "97977e42e4980d25fd2950432881b322dc8687ca55a2c307c7339444a3ec84cb"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/legacy-shape-check.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/legacy-shape-check.json.raw.txt",
+      "sha256": "d2f78bc8248c58e77e9833a0ff740bf8dd43e2d48f95b8280daa021e4289b830"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/inputs-before.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/inputs-before.json.raw.txt",
+      "sha256": "6d79cbb0fcf6099ce3ce13ab5f2578caf420bbbfe04030a516a10839d00d36fc"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/targeted-before.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/targeted-before.json.raw.txt",
+      "sha256": "f1fe6375746763be53c15036e195799145b4ee3fca47588b3183549146b67d45"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/targeted-after.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/targeted-after.json.raw.txt",
+      "sha256": "f1fe6375746763be53c15036e195799145b4ee3fca47588b3183549146b67d45"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/final-before.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/final-before.json.raw.txt",
+      "sha256": "df1ac48324409d1029fd7d73696f59e6e6d639d39489825ce5ce39e18ad3d72f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/final-after.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/final-after.json.raw.txt",
+      "sha256": "df1ac48324409d1029fd7d73696f59e6e6d639d39489825ce5ce39e18ad3d72f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/source-checkpoint.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/source-checkpoint.json.raw.txt",
+      "sha256": "d565cd748c77647eee4d6477908f0147009ea1bec5b94328763b4ac3d6c92b3a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-backend/implementation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/implementation.json.raw.txt",
+      "sha256": "c55745dc6bbec72362394e1e12f264d3be88d9c0e78e21f1c4c997375ee919d7"
+    }
+  ],
+  "scope": "Actual shared registry and owned synthetic processes; no real official Agent or installed app proof."
+}

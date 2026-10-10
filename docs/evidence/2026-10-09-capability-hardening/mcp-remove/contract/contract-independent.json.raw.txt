@@ -1,0 +1,110 @@
+{
+  "status": "noContractBlockerFoundImplementationAndRuntimeProofPending",
+  "atUtc": "2026-10-10T19:35:14.060744+00:00",
+  "method": "Read-only adversarial review of frozen leaf-delete and strict DTO contracts against existing registry/domain/list/config mechanisms; no unchanged official material reread, no source edit or experiment. Final check hashes all 29 direct refs and the two strict contract files.",
+  "finalContractReferencesMatched": 29,
+  "findingsResolvedInContract": [
+    {
+      "topic": "Original inventory completeness",
+      "location": "admissionAndPlan.existingHelperGap; testsRequiredBeforeFreeze",
+      "conclusion": "Remove explicitly checks complete on its same retained original request. A new complete list cannot repair incomplete original authority. Existing get omission is an implementation reuse gap, not an observed installed decoder failure."
+    },
+    {
+      "topic": "Observation cross-field truth",
+      "location": "observationTruth.crossFieldInvariants; contradictory-wire counterexamples",
+      "conclusion": "Absent requires reportedEnabled null; present requires bool including false; matching requires configuredEnabled null and parent outcome; empty/absent parent requires configured null; parent null requires different. No boolean/default coercion can turn disabled into absent."
+    }
+  ],
+  "finalChecks": [
+    {
+      "topic": "Exact leaf and candidate comparison",
+      "conclusion": "One literal quoted child null write only; sole raw parent allows two separately constructed complete candidates, two scopes must choose the same candidate. Multi-key raw parent allows only sibling-preserving candidate. Never normalize arbitrary empties or clear the root."
+    },
+    {
+      "topic": "All-layer and raw-list authority",
+      "conclusion": "All layers including disabled layers reject same-name contributions; strict complete raw name membership establishes absent/present, not managed-target subset, get failure or disabled boolean."
+    },
+    {
+      "topic": "Domain and early cancel",
+      "conclusion": "McpRemove remains distinct from Skill/McpEnabled/McpAdd; wrong-domain calls cannot consume reviews, mutate jobs or retype tombstones. Old DTO boolean meaning remains intact."
+    },
+    {
+      "topic": "Read-only recheck",
+      "conclusion": "Fresh UUID references only settled original remove; inherits write facts and leaves original operation structurally unchanged. Current matching is Observed, never retroactive Verified; recheck never writes or restores confirmation."
+    },
+    {
+      "topic": "Publication and cleanup",
+      "conclusion": "Remove success requires ack plus full config/list matching and actual cleanup. Active review/outcome/observation remain null; dispatched cancellation or failure retains unknown except exact prewrite rejection facts."
+    },
+    {
+      "topic": "Remaining non-CAS and scope limits",
+      "conclusion": "Leaf removal avoids extra broad-parent hazard but does not supply cross-process CAS, guarantee all external writes survive, disconnect existing MCP processes, erase credentials, or prove current conversation/tool readiness."
+    }
+  ],
+  "implementationFollowup": [
+    "Explicit original complete=false/private-target admission counterexample.",
+    "Complete list malformed/duplicate/unknown-transport and hidden-name presence refusal cases.",
+    "Exact two-candidate vs sibling preservation and cross-scope disagreement.",
+    "Four-domain wrong endpoint/tombstones and immutable original recheck facts.",
+    "Actual intermediate and terminal Rust wire through strict TypeScript; no source inspection promoted to runtime proof."
+  ],
+  "performed": {
+    "sourceChanged": false,
+    "cargoOrProjectTests": false,
+    "officialCLIAppOrMCP": false,
+    "configurationOrDatabaseRead": false,
+    "runtimeClaims": false
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract-draft-v2-leaf.json",
+      "sha256": "bf987a0c38d99375a26a7a38ddcd12dd0e0c221af439fd1419149819bd3c552d",
+      "bytes": 21461
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract.json",
+      "sha256": "c589cb676294849549996d75d0f6670e9f8bde303a4d0c06bd74098ccdb91f99",
+      "bytes": 39812
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract.ts",
+      "sha256": "a7bba8b8a4cbdcacb71e9993953b27cf3d00109a55bab982be3795e0f709b740",
+      "bytes": 5284
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "5d626d4cbe88c39fc9dbdfd086ca2f70d269ee1438ba7aed6424fe57faa464c4",
+      "bytes": 7686
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "fe2f4123b71a0ac69a5b9620c7e10873be5cc03729b75b8ce5809ab832ebc0d7",
+      "bytes": 5295
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "a9a53a6d6b5b9c66bc7c41b05c9a7ca2413ef99a938cfc8be13e1f73209b9196",
+      "bytes": 19316
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "f765feeb5a0c620c92f84d79fa0e810907297b991c84ddc05f7731f5698e1d57",
+      "bytes": 6425
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "08d155a48c180bfcf788e0aa7f48088d486a5e2a39694ead634045c263fd792d",
+      "bytes": 5732
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "85a5d14d81e320ae942f814c1f53e496c853d1b74c45e4ed9fb5acc358924a9b",
+      "bytes": 5382
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "6dd28e0f033fc4e818c54f55d9255379b42ce94c9f8b9e945c841f8e759ef5ef",
+      "bytes": 18685
+    }
+  ]
+}

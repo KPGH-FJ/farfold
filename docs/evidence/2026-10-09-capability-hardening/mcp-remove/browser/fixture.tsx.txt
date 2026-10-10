@@ -1,0 +1,113 @@
+import React, { StrictMode } from "react";
+import {createRoot} from "react-dom/client";
+import App from "/src/App";
+import {DraftStartup} from "/src/components/DraftStartup";
+import {StorageStartup} from "/src/components/StorageRecovery";
+import {draftPersistence, composerDrafts, newConversationChoice} from "/src/runtime/drafts";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css"; import "/src/styles-settings.css"; import "/src/styles-content.css";
+import "/src/styles-thread.css"; import "/src/styles-artifact.css"; import "/src/product-shell.css";
+import "/src/conversation-workspace.css"; import "/src/history-import.css"; import "/src/desktop-workbench.css";
+const w = window as any;
+const settings = new Map<string, unknown>();
+const agents = ["a", "b"].map(id => ({id: `fixture-${id}`, name: `Controlled ${id.toUpperCase()}`, source: "custom", command: "/controlled/never-executed", args: [], env: [["CONTROLLED_VALUE", "A"]], version: null, handshake: null, createdAt: 1, updatedAt: 1}));
+const listeners = new Map<number, {event: string; handler: number}>();
+let nextListener = 1, nextTicket = 1;
+let capabilityMode = "available";
+let heldCapabilities: {resolve: (v: unknown) => void; agentId: string}[] = [];
+let chooser: ((v: string | null) => void) | null = null;
+const queries = new Map<string, any>();
+let cancelNull = false, readRefusal: string | null = null;
+const capability = () => ({selectionId: capabilityMode === "available" ? `bbbbbbbb-bbbb-bbbb-bbbb-${String(nextTicket++).padStart(12, "0")}` : null, mcpInventory: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialCli" : null, reason: capabilityMode === "available" ? null : capabilityMode}, skillsInventory: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialAppServer" : null, reason: capabilityMode === "available" ? null : capabilityMode}, skillEnablement: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialAppServer" : null, reason: capabilityMode === "available" ? null : capabilityMode}, mcpEnablement: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialAppServer" : null, reason: capabilityMode === "available" ? null : capabilityMode}, mcpAddition: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialAppServer" : null, reason: capabilityMode === "available" ? null : capabilityMode}, mcpRemoval: {availability: capabilityMode === "available" ? "available" : "unavailable", source: capabilityMode === "available" ? "officialAppServer" : null, reason: capabilityMode === "available" ? null : capabilityMode}, toolInventory: "unavailable"});
+function op(q: any, patch: any = {}) {return {agentId: q.agentId, requestId: q.requestId, cwd: q.cwd, kind: q.kind, state: "running", settled: false, ...patch};}
+function snapshot() {return {observedAtMs:1791605000000,source:"officialCli",scope:"officialCliConfigurationForDirectory",complete:true,sessionApplicability:"unverified",items:[
+ {id:0,name:"Fixture local",transport:"stdio",reportedEnabled:false},
+ {id:1,name:"Fixture enabled",transport:"stdio",reportedEnabled:true},
+ {id:2,name:"Fixture HTTP",transport:"streamableHttp",reportedEnabled:false},
+].map(item=>({...item,reportedAuth:"notLoggedIn",origin:"unreported",configurationLayer:"unreported",connection:"unverified",tools:"unreported",enablement:{availability:"available"}}))};}
+
+w.testInvoke = async (cmd: string, args: any) => {
+ w.calls.push({cmd, args: args ? {...args, channel: undefined} : args});
+ if (cmd === "settings_get") return args.key === "autoArchiveDays" ? 0 : settings.get(args.key) ?? null;
+ if (cmd === "settings_set") {settings.set(args.key, structuredClone(args.value));return;}
+ if (cmd === "storage_recovery_status") return {ready:true,issue:null,dataDirectory:"/controlled/data",databaseReplacementAvailable:false,databaseReplacement:null};
+ if (cmd === "app_initial_snapshot") return {agents: structuredClone(agents), settings:{}};
+ if (cmd === "app_default_working_directory") return "/controlled/project-A";
+ if (["session_index_list","catalog_list","catalog_scan","credential_list","desktop_notification_take_pending","prompt_templates_list","agent_status"].includes(cmd)) return [];
+ if (["app_drafts_ready","host_performance_sample","session_mark_read","session_index_mark_read","session_close","session_dismiss","plugin:event|unlisten"].includes(cmd)) return;
+ if (cmd === "host_performance_origin") return null;
+ if (cmd === "plugin:event|listen") {const id=nextListener++;listeners.set(id,args);return id;}
+ if (cmd === "agent_work_get") return {cwd:args.cwd,enabled:{},locationEnabled:true};
+ if (cmd === "desktop_notifications_get") return {enabled:false,successEnabled:false,sound:false};
+ if (cmd === "worktree_list") return {locations:[],archives:[],recoveries:[],materials:[],operation:null};
+ if (cmd === "service_capabilities") return {apiTypes:[],customService:false};
+ if (cmd === "agent_extension_capabilities") {
+  if(capabilityMode === "hold") return new Promise(resolve=>heldCapabilities.push({resolve,agentId:args.agentId}));
+  return capability();
+ }
+ if (cmd === "agent_extension_inventory_read") {
+  if (!["mcp", "skills"].includes(args.kind) || !args.selectionId || queries.has(args.requestId)) throw Error("missing ticket or duplicate query");
+  if(readRefusal) throw {code:readRefusal};
+  return new Promise((resolve,reject)=>queries.set(args.requestId,{...args,resolve,reject,status:op(args)}));
+ }
+ if (cmd === "agent_extension_inventory_status") {const q=queries.get(args.requestId);if(!q || q.absent || q.agentId!==args.agentId)throw{code:"unknownRequest"};return q.status;}
+ if (cmd === "agent_extension_inventory_cancel") {const q=queries.get(args.requestId);return {agentId:args.agentId,requestId:args.requestId,cancelRequested:true,operation:cancelNull?null:q?op(q,{state:"cancelling",code:"cancelled"}):null};}
+ if (cmd.startsWith("agent_mcp_remove_")) return removal(cmd,args);
+ if (cmd === "plugin:dialog|open") return new Promise(resolve=>{chooser=resolve;});
+ w.unexpected.push(cmd); throw Error("Unexpected controlled IPC " + cmd);
+};
+await draftPersistence.load(); composerDrafts.update("new",()=>({text:"KEEP P41 REMOVE DRAFT",attachments:[]}));newConversationChoice.cwd="/controlled/project-A";await draftPersistence.flush();
+
+const removals=new Map<string,any>();
+const reviews=new Map<string,any>();
+let parentHandling="mayRemainEmpty";
+let removalCapability=true;
+const previousInvoke=w.testInvoke;
+w.testInvoke=async(cmd:string,args:any)=>{
+ const value=await previousInvoke(cmd,args);
+ if(cmd==="agent_extension_capabilities"&&!removalCapability){const {mcpRemoval,...legacy}=value;return legacy;}
+ return value;
+};
+w.fixture={
+ current:()=>({calls:w.calls,unexpected:w.unexpected,removals:[...removals.values()].map(({resolve,reject,...q})=>q),queries:[...queries.values()].map(({resolve,reject,...q})=>q),draft:composerDrafts.read("new"),cwd:newConversationChoice.cwd}),
+ choose:(path:string|null)=>{if(!chooser)throw Error("no chooser");const r=chooser;chooser=null;r(path);},
+ finish:(id:string)=>{const q=queries.get(id);q.status=op(q,{state:"ready",settled:true,snapshot:snapshot()});q.resolve(q.status);},
+ parent:(value:string)=>{parentHandling=value;},
+ removalCapability:(value:boolean)=>{removalCapability=value;},
+ capability:(value:string)=>{capabilityMode=value;},
+ releaseCapabilities:()=>{capabilityMode="available";for(const q of heldCapabilities)q.resolve(capability());heldCapabilities=[];},
+ update:(id:string,value:string)=>{const row=agents.find(a=>a.id===id)!;row.env[0][1]=value;row.updatedAt++;for(const l of listeners.values())if(l.event==="catalog:updated")w.callbacks.get(l.handler)?.({event:l.event,payload:null});},
+ removeResult:(id:string,mode:string)=>{
+  const q=removals.get(id);if(!q)throw Error("unknown controlled removal");let s={...q.status};
+  if(mode==="review"){
+   const review={reviewId:crypto.randomUUID(),agentId:q.agentId,cwd:q.cwd,target:q.target,requestedEnabled:null,configuredEnabled:false,reportedEnabled:false,writeScope:{kind:"user",configDisplayPath:"~/.example/config.toml"},observedAtMs:Date.now(),validForMs:300000,mutation:"removeDisabledMcp",parentHandling:q.parentHandling,preservation:"otherConfigurationSemanticsPreserved",sessionApplicability:"unverified"};
+   reviews.set(q.agentId,review);s={...s,state:"ready",phase:"complete",settled:true,review};
+  } else if(mode==="targetEnabled")s={...s,state:"failed",phase:"complete",settled:true,outcome:"notDispatched",code:"targetEnabled"};
+  else if(mode==="cancelled")s={...s,state:"cancelled",phase:"complete",settled:true,outcome:"notDispatched",code:"cancelled"};
+  else if(mode==="pending")s={...s,state:"pendingCleanup",phase:"cleaning",code:"pendingCleanup"};
+  else if(mode==="unknown")s={...s,state:"failed",phase:"complete",settled:true,writeDispatched:true,writeAck:"unknown",outcome:"unknown",code:"writeUncertain"};
+  else if(mode==="rejected")s={...s,state:"failed",phase:"complete",settled:true,writeDispatched:true,writeAck:"rejected",outcome:"rejected",code:"configurationChanged"};
+  else {
+   const present=mode==="presentDisabled",different=mode==="differentAbsent"||present;
+   const parentOutcome=mode==="absentParent"?"absent":present||q.parentHandling==="preserveSiblings"?"nonempty":"empty";
+   s={...s,state:"ready",phase:"complete",settled:true,code:null,writeDispatched:q.action==="recheck"?s.writeDispatched:true,writeAck:q.action==="recheck"?s.writeAck:"ok",outcome:different?"mismatch":q.action==="recheck"?"observed":"verified",observation:{observedAtMs:Date.now(),configuration:different?"different":"matching",mcp:present?"present":"absent",configuredEnabled:present?false:null,reportedEnabled:present?false:null,parentOutcome,sessionApplicability:"unverified"}};
+  }
+  q.status=s;q.resolve(s);
+ },
+ parentContradiction:(id:string)=>{const q=removals.get(id);q.status={...q.status,state:"ready",phase:"complete",settled:true,code:null,writeDispatched:true,writeAck:"ok",outcome:"verified",observation:{observedAtMs:Date.now(),configuration:"matching",mcp:"absent",configuredEnabled:null,reportedEnabled:null,parentOutcome:q.parentHandling==="preserveSiblings"?"empty":"nonempty",sessionApplicability:"unverified"}};q.resolve(q.status);},
+ malformed:(id:string)=>{const q=removals.get(id);q.resolve({...q.status,state:"ready",phase:"complete",settled:true,writeDispatched:true,writeAck:"ok",outcome:"verified",observation:{observedAtMs:Date.now(),configuration:"matching",mcp:"absent",configuredEnabled:false,reportedEnabled:false,parentOutcome:"empty",sessionApplicability:"unverified"}});},
+};
+function removal(cmd:string,args:any){
+ if(cmd.endsWith("_status")){const q=removals.get(args.requestId);if(!q||q.agentId!==args.agentId)throw{code:"unknownRequest"};return q.status;}
+ if(cmd.endsWith("_cancel")){const q=removals.get(args.requestId);return{agentId:args.agentId,requestId:args.requestId,cancelRequested:true,operation:q?.status??null};}
+ const action=cmd.endsWith("_inspect")?"inspect":cmd.endsWith("_confirm")?"remove":"recheck";
+ const previous=action==="recheck"?removals.get(args.operationId):null,review=reviews.get(args.agentId);
+ if(action==="remove"&&review?.reviewId!==args.reviewId)throw{code:"reviewExpired"};
+ const query=queries.get(action==="inspect"?args.inventoryRequestId:previous?.target.inventoryRequestId??review.target.inventoryRequestId);
+ const item=action==="inspect"?query.status.snapshot.items[args.itemId]:null;
+ const target=action==="inspect"?{kind:"mcpRemoval",inventoryRequestId:args.inventoryRequestId,itemId:item.id,name:item.name,transport:item.transport}:previous?.target??review.target;
+ const base={agentId:args.agentId,requestId:args.requestId,action,cwd:query.cwd,target,requestedEnabled:null,operationId:previous?.requestId??null};
+ const status={...base,state:"running",phase:"reading",settled:false,writeDispatched:previous?.status.writeDispatched??false,writeAck:previous?.status.writeAck??"none",outcome:null,code:null,review:null,observation:null};
+ return new Promise((resolve,reject)=>removals.set(args.requestId,{...base,parentHandling:action==="inspect"?parentHandling:previous?.parentHandling??review.parentHandling,status,resolve,reject}));
+}
+createRoot(document.getElementById("root")!).render(<StrictMode><StorageStartup><DraftStartup><App/></DraftStartup></StorageStartup></StrictMode>);

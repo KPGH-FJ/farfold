@@ -1,0 +1,138 @@
+{
+  "status": "controlledAuthorEvidenceRetained",
+  "originalReport": "output/2026-10-11-mcp-remove-frontend/implementation.json",
+  "originalSha256": "b5f4d83a2e5885ec9a7aef7004b4a172bf0809c644695c915b33e9f09f7956b2",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/source-final.json.raw.txt",
+    "sha256": "4149a8ca091f8fef85cbd5de9855360d6707ddfd6555f782a459890027086ad2",
+    "ownedSourceCount": 22
+  },
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+    "sha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf",
+    "bytes": 22909
+  },
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/actual-wire-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/actual-wire-first.txt",
+      "sha256": "c35c2752aa3b9820e9674745a201735246dca0543be4ca2e145b53445338b9fa"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/admission-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/admission-green.txt",
+      "sha256": "e51166af533c209b8f4ec47248754e8fda9fd4d23109fef21afe8b61d63fccef"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/admission-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/admission-red.txt",
+      "sha256": "693a0241a00b57f41c1e62bb3c73e9880a15d8ccbcce197202bba30bac7ba7de"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/final-execution.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/final-execution.json.raw.txt",
+      "sha256": "a1d9bc8f5ba71dbfcf9d7824d083cdab24c4ddb45f682442c407f8e6ea4df080"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/format-final-write.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/format-final-write.txt",
+      "sha256": "6dc8f1adf09b84dee3cf73b3945c764c0a78bbe6e5a49ea2dbb688c251f93fe3"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/format-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/implementation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/implementation.json.raw.txt",
+      "sha256": "b5f4d83a2e5885ec9a7aef7004b4a172bf0809c644695c915b33e9f09f7956b2"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/parent-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/parent-green.txt",
+      "sha256": "ed842570e9163f9a77fb9a18fff80e987be79a605076b9ac6eb0845de51314ee"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/parent-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/parent-red.txt",
+      "sha256": "b145c25a4b0b3418f48126e16601d100bb7b03066351401b23e4f5a60f63bd3a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/recheck-wording-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/recheck-wording-green.txt",
+      "sha256": "2137c8761bec9d6d91b02fb3e45da5588453db06b398b729a53ca6dc2e5e10b6"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/recheck-wording-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/recheck-wording-red.txt",
+      "sha256": "b4208b18b532cd45a795b6a00a025ca7bea8e17ecbe83414874f4c9a9fb76faf"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/related-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/related-final.txt",
+      "sha256": "385807b549a5cb3710eb9668c2028f230c3154aac3ede3859dad651aa9bf43cd"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/related-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/related-first.txt",
+      "sha256": "f7274e19baff23b7c30d52e2cda9cd6740adec6dac0f60ba5075d8c9945b4ded"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/related-parent-execution.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/related-parent-execution.json.raw.txt",
+      "sha256": "917b0df4029caa8939147ca38df00eb90a461459bc5b4ca996e43ff2ddd8e902"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/related-parent.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/related-parent.txt",
+      "sha256": "eefae6a1ae9adfb3c65fc6d9b64a663996c959c9c08d9ae912bee61f9ce4a344"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/remove-confirm-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/remove-confirm-green.txt",
+      "sha256": "d408825238417c194e23acfd3f40bd9cf1fb6ad25fdfbc3c68f34941e1b10c76"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/remove-confirm-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/remove-confirm-red.txt",
+      "sha256": "cf8b51ea5b5d3fd0371a4bfe14a427b11f11cf3e4253a3c741e295c59d28bc7b"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/source-checkpoint-first.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/source-checkpoint-first.json.raw.txt",
+      "sha256": "766a263cf2f55cbd6fde6bd94e639261a88da3109a01283572f27b69619afbb8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/source-final.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/source-final.json.raw.txt",
+      "sha256": "4149a8ca091f8fef85cbd5de9855360d6707ddfd6555f782a459890027086ad2"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/targeted-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/targeted-first.txt",
+      "sha256": "d4266909c3a132d58806ec1fdaf002ce4e4d9b4c7bb0671427d480e6e1a90b9b"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/type-complete.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/type-complete.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/type-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/type-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/type-first.txt",
+      "sha256": "271af963492541a530173a7d572506cd38cdab57518d33dc3a5db9fead46b158"
+    },
+    {
+      "source": "output/2026-10-11-mcp-remove-frontend/type-second.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/frontend/type-second.txt",
+      "sha256": "46ed9a46fa8524daabf6ba048a109f0ee9c1b416e3286f0b6d0b37e26f8ce704"
+    }
+  ],
+  "boundary": "Exact original author source and controlled evidence. Historical failures, test-harness corrections and the accidentally broader final test selection remain recorded in the original report. Root full-App browser, engineering integration, installation and official native validation are separate."
+}

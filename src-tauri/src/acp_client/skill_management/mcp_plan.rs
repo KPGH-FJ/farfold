@@ -147,6 +147,7 @@ impl Plan {
                 }),
                 configured_enabled: Some(configured(after, &self.report.target.name)),
                 reported_enabled: Some(report.enabled),
+                parent_outcome: None,
                 session_applicability: "unverified",
             },
             matching && matches_report,

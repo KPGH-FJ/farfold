@@ -1,0 +1,218 @@
+{
+  "status": "independentSourceReviewCompleteNoNewBlockingFinding",
+  "scope": "Final frozen MCP remove frontend/backend, exact contract, source and author-run synthetic evidence. Not installed-product acceptance.",
+  "reviewer": "verification",
+  "reviewedAtUtc": "2026-10-10T19:56:13.823535+00:00",
+  "source": {
+    "backendFiles": 16,
+    "frontendFiles": 22,
+    "allCheckpointHashesMatchCurrentFiles": true,
+    "backendFinal404InputsMatchBeforeAfterAndCurrent": true,
+    "frontend22SourcesAndWireMatchBeforeAfterAndCurrent": true,
+    "uniqueReferencedFilesIndependentlyHashed": 82
+  },
+  "findings": [
+    {
+      "topic": "Admission and four domains",
+      "result": "No new blocking finding",
+      "basis": "Original complete ready inventory is checked before remove job admission; exact private item/report and captured row/cwd are revalidated. Remove has its own domain, null intent and fixed command route. Wrong-domain requests/tombstones do not borrow authority or consume a valid review. Old skills/MCP enabled require bool; add remains false."
+    },
+    {
+      "topic": "Single leaf and complete configuration preservation",
+      "result": "No new blocking finding",
+      "basis": "Plan only emits a quoted literal mcp_servers child key with null/replace and the exact selected file/version. No root clear exists. It rejects same-name contributions in all other layers, including disabled layers, and requires raw/report disabled. After a sole-entry deletion, both scopes must equal the same complete retained-empty or parent-absent candidate; siblings and other layers must remain equal."
+    },
+    {
+      "topic": "Raw report and postwrite outcome",
+      "result": "No new blocking finding",
+      "basis": "Presence uses the complete strict raw Vec, including hidden names and unknown transports; malformed/duplicate/oversized/failed list cannot become absence. Matching configuration plus successful full-list absence and acknowledged write is required for verified. ExpectedVersion remains a pre-write guard, not external-process CAS."
+    },
+    {
+      "topic": "Actual lifecycle and publication",
+      "result": "No new blocking finding",
+      "basis": "Remove observation and review stay private until successful atomic terminal finish. Postwrite cleanup/cancellation failure retains unknown without publishing pending verified observation. Known pre-write rejection preserves its Ack fact. Real synthetic child/group/pipes and shared lease coverage is author-run and distinct from method-level finish tests."
+    },
+    {
+      "topic": "Readonly recheck and original operation",
+      "result": "No new blocking finding",
+      "basis": "Recheck creates a separate exact-domain job from the settled original plan/write facts and issues read-only configuration/list requests. Original operation is unchanged, including rejected/unknown states. Frontend retains originalOperation separately and never relabels an observed state as proof that the original write succeeded."
+    },
+    {
+      "topic": "Original parentHandling linkage",
+      "result": "Independently found defect repaired with effective red/green",
+      "basis": "Initial FE accepted matching parent category inconsistent with the original review. Four preserved failing cases cover preserveSiblings->empty/absent, mayRemainEmpty->nonempty and inherited lost-ack recheck. Final Flight freezes parentHandling at confirm, checks matching observations and inherits it into recheck. Standalone parsing does not invent an absent review."
+    },
+    {
+      "topic": "Shared UI and authority",
+      "result": "No new blocking finding",
+      "basis": "Capability-driven row action uses original result/request/item and current owner, complete catalogue and explicit null removal intent; no Agent-name branch. Review/confirm are distinct actions, late/closed owners cannot regain confirmation, and status/cancel keep the original port. Text separates removal, report absence, parent result and session applicability; cancellation is not unwritten proof."
+    }
+  ],
+  "observedAuthorExecutions": {
+    "backendManagement": {
+      "passed": 67,
+      "failed": 0,
+      "log": "output/2026-10-11-mcp-remove-backend/targeted-green.txt"
+    },
+    "backendFinalRemove": {
+      "passed": 15,
+      "failed": 0,
+      "authorTests": 10,
+      "independentTests": 5,
+      "log": "output/2026-10-11-mcp-remove-backend/targeted-final.txt"
+    },
+    "backendInventory": {
+      "passed": 56,
+      "failed": 0,
+      "log": "output/2026-10-11-mcp-remove-backend/inventory-related.txt"
+    },
+    "independentTests": [
+      "acp_client::skill_management::mcp_remove_independent_tests::mcp_remove_independent_incomplete_original_cannot_borrow_a_fresh_complete_list",
+      "acp_client::skill_management::mcp_remove_independent_tests::mcp_remove_independent_failed_finish_discards_pending_verified_observation",
+      "acp_client::skill_management::mcp_remove_independent_tests::mcp_remove_independent_four_domain_tombstones_and_real_review_stay_separate",
+      "acp_client::skill_management::mcp_remove_independent_tests::mcp_remove_independent_pending_facts_publish_only_at_terminal_finish",
+      "acp_client::skill_management::mcp_remove_independent_tests::mcp_remove_independent_unknown_and_rejected_rechecks_never_rewrite_original"
+    ],
+    "frontendActualWire": {
+      "passed": 28,
+      "rawProtocolValues": 23,
+      "controllerAndSsrCases": 5,
+      "log": "output/2026-10-11-mcp-remove-frontend/actual-wire-first.txt"
+    },
+    "frontendRelatedFinal": {
+      "files": 244,
+      "passed": 2981,
+      "failed": 0,
+      "scope": "Actual broader runtime-related selection caused by an extra literal run filter; not the complete project suite.",
+      "log": "output/2026-10-11-mcp-remove-frontend/related-final.txt"
+    },
+    "frontendTypecheckAndOwnedFormatExitCodes": [
+      0,
+      0
+    ],
+    "notRerunByReviewer": true
+  },
+  "retainedFailures": {
+    "backendCrossScopeParent": "1 effective red, final repaired; originally parent category only came from global scope.",
+    "frontendParentAssociation": "4 effective reds, related 17 passed after repair.",
+    "frontendRecheckWording": "1 effective red with 4 passes, repaired 5 passed; failed readonly check no longer relabels original rejected removal."
+  },
+  "wireAudit": {
+    "rawMarkerCount": 10,
+    "topLevelValues": 17,
+    "protocolValuesIncludingNestedChains": 23,
+    "reconstructedValuesEqualPublishedWire": true,
+    "legacyMcpEnableAndAddBooleanObjects": 24,
+    "legacyRemovalOnlyFieldsAbsent": true,
+    "labelCaveat": "pendingInspection is ready+review despite its name; active-null coverage comes from inspectCancellation/pendingCleanup and separate actual tests.",
+    "controllerCaveat": "Normal/lost-ack/refused use real same-chain Rust values. Two failed-inspection UI prerequisites are explicitly controlled inventory envelopes; their failed operation bytes are unmodified."
+  },
+  "limits": [
+    "No new Cargo, frontend tests, browser, App, official CLI, MCP server, configuration mutation or database access was executed for this review.",
+    "Owned synthetic tests do not prove official null-leaf serialization, installed interaction, connection termination, authentication cleanup or current-session applicability.",
+    "Root owns complete engineering checks, browser integration and any future native fixture execution. Their results are not asserted here.",
+    "No source, author receipt, active document or prior evidence was modified."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/implementation.json",
+      "sha256": "c55745dc6bbec72362394e1e12f264d3be88d9c0e78e21f1c4c997375ee919d7"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/source-checkpoint.json",
+      "sha256": "d565cd748c77647eee4d6477908f0147009ea1bec5b94328763b4ac3d6c92b3a"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/implementation.json",
+      "sha256": "b5f4d83a2e5885ec9a7aef7004b4a172bf0809c644695c915b33e9f09f7956b2"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/source-final.json",
+      "sha256": "4149a8ca091f8fef85cbd5de9855360d6707ddfd6555f782a459890027086ad2"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/final-execution.json",
+      "sha256": "a1d9bc8f5ba71dbfcf9d7824d083cdab24c4ddb45f682442c407f8e6ea4df080"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/wire-capture.json",
+      "sha256": "b3f4edcc1e5ccd70308fe00022909fcd1ca13806676894a218fba2e362090c5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+      "sha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/targeted-green.txt",
+      "sha256": "8347b3405e7050ae942297a8c8bc7a642039fa4481d30a99384d36ca33aab829"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/targeted-final.txt",
+      "sha256": "f27cebba9f231cfd6f1a1b91bbd8f0a46e434855ad1181a60b2f4b202140e9ba"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/inventory-related.txt",
+      "sha256": "769e19a861d8616fe6f23835ca89151a5405d3c53527fe7da14611c18b37c2e8"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/parent-original-red.txt",
+      "sha256": "99d7da056462f3c92aa8d849e86300f6a491c6c61edda6b0950023a97d2bef52"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/parent-before.rs.txt",
+      "sha256": "744b29965feb487e6556930368c5af1937f765c0f3c67e3ba79acd8271508721"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/legacy-shape-check.json",
+      "sha256": "d2f78bc8248c58e77e9833a0ff740bf8dd43e2d48f95b8280daa021e4289b830"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/final-before.json",
+      "sha256": "df1ac48324409d1029fd7d73696f59e6e6d639d39489825ce5ce39e18ad3d72f"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-backend/final-after.json",
+      "sha256": "df1ac48324409d1029fd7d73696f59e6e6d639d39489825ce5ce39e18ad3d72f"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/parent-red.txt",
+      "sha256": "b145c25a4b0b3418f48126e16601d100bb7b03066351401b23e4f5a60f63bd3a"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/parent-green.txt",
+      "sha256": "ed842570e9163f9a77fb9a18fff80e987be79a605076b9ac6eb0845de51314ee"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/recheck-wording-red.txt",
+      "sha256": "b4208b18b532cd45a795b6a00a025ca7bea8e17ecbe83414874f4c9a9fb76faf"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/recheck-wording-green.txt",
+      "sha256": "2137c8761bec9d6d91b02fb3e45da5588453db06b398b729a53ca6dc2e5e10b6"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/actual-wire-first.txt",
+      "sha256": "c35c2752aa3b9820e9674745a201735246dca0543be4ca2e145b53445338b9fa"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-frontend/related-final.txt",
+      "sha256": "385807b549a5cb3710eb9668c2028f230c3154aac3ede3859dad651aa9bf43cd"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-independent/contract-independent.json",
+      "sha256": "8b4d0afdfbc5c3f6decdafb46fe2531cd6041baf766041016097cead69d7f085"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-independent/test-execution-first.json",
+      "sha256": "23acad0fdd05b6081210627c1f7b80710b1ca053753b983424c6b757afe5b59e"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract.json",
+      "sha256": "c589cb676294849549996d75d0f6670e9f8bde303a4d0c06bd74098ccdb91f99"
+    },
+    {
+      "path": "output/2026-10-11-mcp-remove-contract/contract.ts",
+      "sha256": "a7bba8b8a4cbdcacb71e9993953b27cf3d00109a55bab982be3795e0f709b740"
+    }
+  ]
+}

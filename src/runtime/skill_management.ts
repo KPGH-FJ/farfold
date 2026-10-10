@@ -1,3 +1,4 @@
+import type { McpRemoveInspectInput } from "./mcp_remove_types";
 import type { McpAddInspectInput } from "./mcp_add_types";
 import { invoke } from "@tauri-apps/api/core";
 import type {
@@ -8,7 +9,7 @@ import type {
 } from "./skill_management_types";
 export interface SkillManagementPort {
   inspect(
-    input: SkillChangeInspectInput | McpAddInspectInput,
+    input: SkillChangeInspectInput | McpAddInspectInput | McpRemoveInspectInput,
   ): Promise<unknown>;
   confirm(input: SkillChangeConfirmInput): Promise<unknown>;
   status(input: SkillChangeRequestKey): Promise<unknown>;

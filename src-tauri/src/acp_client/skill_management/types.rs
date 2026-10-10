@@ -8,6 +8,7 @@ pub enum Action {
     Inspect,
     SetEnabled,
     Add,
+    Remove,
     Recheck,
 }
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
@@ -64,6 +65,7 @@ pub enum Target {
     Skill(SkillChangeTarget),
     Mcp(McpChangeTarget),
     McpAddition(super::mcp_add_input::PublicTarget),
+    McpRemoval(McpChangeTarget),
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -78,7 +80,7 @@ pub struct Review {
     pub agent_id: String,
     pub cwd: String,
     pub target: Target,
-    pub requested_enabled: bool,
+    pub requested_enabled: Option<bool>,
     pub reported_enabled: Option<bool>,
     pub write_scope: Scope,
     pub observed_at_ms: u64,
@@ -91,6 +93,8 @@ pub struct Review {
     pub configured_enabled: Option<Option<bool>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name_availability: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent_handling: Option<&'static str>,
     pub mutation: &'static str,
     pub preservation: &'static str,
     pub session_applicability: &'static str,
@@ -107,6 +111,8 @@ pub struct Observation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub configured_enabled: Option<Option<bool>>,
     pub reported_enabled: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent_outcome: Option<Option<&'static str>>,
     pub session_applicability: &'static str,
 }
 #[derive(Clone, Debug, Serialize)]
@@ -117,7 +123,7 @@ pub struct ChangeOperation {
     pub action: Action,
     pub cwd: String,
     pub target: Target,
-    pub requested_enabled: bool,
+    pub requested_enabled: Option<bool>,
     pub operation_id: Option<String>,
     pub state: State,
     pub phase: Phase,

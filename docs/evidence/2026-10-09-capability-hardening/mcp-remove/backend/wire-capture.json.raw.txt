@@ -1,0 +1,88 @@
+{
+  "raw": "output/2026-10-11-mcp-remove-backend/targeted-final.txt",
+  "rawSha256": "f27cebba9f231cfd6f1a1b91bbd8f0a46e434855ad1181a60b2f4b202140e9ba",
+  "wire": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+  "wireSha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf",
+  "markerCount": 10,
+  "topLevelValues": 17,
+  "markers": [
+    {
+      "marker": "MCP_REMOVE_REFUSAL_WIRE",
+      "line": 8,
+      "keys": [
+        "disabled-layer"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_CANCEL_WIRE",
+      "line": 10,
+      "keys": [
+        "inspectCancellation",
+        "inspectCancelled",
+        "unavailableCapabilities"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_LIFECYCLE_WIRE",
+      "line": 13,
+      "keys": [
+        "pendingInspection",
+        "pendingCleanup",
+        "cancellation",
+        "cancelledAfterWrite"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_PARENT_WIRE",
+      "line": 16,
+      "keys": [
+        "normal"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_WIRE",
+      "line": 17,
+      "keys": [
+        "inventory",
+        "inspection",
+        "verified"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_REFUSAL_WIRE",
+      "line": 19,
+      "keys": [
+        "policy-disabled"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_PRESENT_WIRE",
+      "line": 23,
+      "keys": [
+        "mismatchPresentFalse"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_RECHECK_WIRE",
+      "line": 24,
+      "keys": [
+        "lost-ack"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_PARENT_WIRE",
+      "line": 25,
+      "keys": [
+        "absent-parent"
+      ]
+    },
+    {
+      "marker": "MCP_REMOVE_RECHECK_WIRE",
+      "line": 27,
+      "keys": [
+        "refused"
+      ]
+    }
+  ],
+  "claim": "Values parsed from actual Rust serde in synthetic temporary fixtures; no real official program or user configuration was invoked."
+}

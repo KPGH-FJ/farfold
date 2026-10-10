@@ -1,3 +1,4 @@
+import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
 import { McpAddForm } from "./McpAddForm";
 import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
 import {
@@ -152,6 +153,8 @@ export function AgentExtensionInventory({
   useEffect(() => {
     skillManagement.retireInspectionForResult(owner, result);
   }, [owner, result]);
+  const removalAvailable =
+    kind === "mcp" && cap?.value?.mcpRemoval?.availability === "available";
   const additionAvailable =
     kind === "mcp" && cap?.value?.mcpAddition?.availability === "available";
   const stale =
@@ -298,6 +301,29 @@ export function AgentExtensionInventory({
         <AgentExtensionInventoryResult
           result={result}
           stale={!!stale}
+          removal={
+            removalAvailable
+              ? {
+                  enabled: active && !blocked && !managementView.unresolved,
+                  inspect: (item) => {
+                    const current = () =>
+                      owner.current() &&
+                      liveCapability.current === capabilityKey &&
+                      removalAvailable &&
+                      extensionInventory.isCurrentResult(owner, result);
+                    if (current())
+                      skillManagement.inspect({
+                        kind: "mcpRemoval",
+                        owner,
+                        result,
+                        item,
+                        current,
+                        changed: () => extensionInventory.markStale(result),
+                      });
+                  },
+                }
+              : undefined
+          }
           management={
             managementAvailable
               ? {
@@ -363,6 +389,7 @@ export function AgentExtensionInventory({
               ? S.skillManagementLimits
               : S.skillLimits}
         </p>
+        {removalAvailable && <p>{REMOVE.limits}</p>}
         <p>{S.sideEffects}</p>
       </details>
     </section>

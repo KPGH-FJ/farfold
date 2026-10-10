@@ -1,0 +1,382 @@
+{
+  "inputsBefore": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "007d14eb61ea2500293ca737b82e6ecd2289b7a1ebed42fb170f6937630846cc",
+      "bytes": 13517,
+      "lines": 397
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "c025c8f7b6137314433c98af4f7be19c96e2087cdd1f5d48ed67446915433e5e",
+      "bytes": 6043,
+      "lines": 158
+    },
+    {
+      "path": "src/components/SkillChangeReview.remove.test.tsx",
+      "sha256": "3abd1fe3b683597ee3a2b242bf9443fcbda7c6ce6dfe1988c7fa5f8827c22c4c",
+      "bytes": 6196,
+      "lines": 167
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "54ad2fdfafd26b6fab894b5994181d37ac636d43c50c6c0ea6869c394da2b532",
+      "bytes": 12228,
+      "lines": 370
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "76f8f3b3a270b6c2f504da3d24ca3889f334c8d87c00c62da81c2d1ab374c1b0",
+      "bytes": 5719,
+      "lines": 226
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "3427841a60d49a10f15b91758fc950d2ab38be10a12e9d4fbcfd6c779b205819",
+      "bytes": 14931,
+      "lines": 525
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "1b1f64afbddb34eb1ec7be36361ea876e54321382cc8386d2b5862c7e75d0ea3",
+      "bytes": 7391,
+      "lines": 263
+    },
+    {
+      "path": "src/runtime/mcp_management_types.ts",
+      "sha256": "0f8d82c469a273a35b6add3d919bf0e820b66de18ae6967246b3a423cb42d4d6",
+      "bytes": 8226,
+      "lines": 290
+    },
+    {
+      "path": "src/runtime/mcp_remove.test-support.ts",
+      "sha256": "35b3d14f20e615fc3c1a75732612105a26c1c8f5f8dd7e30c42c9accb1e176c0",
+      "bytes": 5568,
+      "lines": 199
+    },
+    {
+      "path": "src/runtime/mcp_remove.ts",
+      "sha256": "1b613e38d047e2dd510c27735c8667e01e4e1fd0058f15ead88d98d32db50096",
+      "bytes": 583,
+      "lines": 11
+    },
+    {
+      "path": "src/runtime/mcp_remove.wire.test.tsx",
+      "sha256": "73559bc5da90b4c1769ba5fbc646b20d03edfd19fed6b954f9b3494a3de57505",
+      "bytes": 7587,
+      "lines": 197
+    },
+    {
+      "path": "src/runtime/mcp_remove_admission.test.tsx",
+      "sha256": "ecf1ed23d37de412a5eacaed6c3e522c3f6ffbdaedba33a6f9e8a4e665152fc4",
+      "bytes": 4528,
+      "lines": 141
+    },
+    {
+      "path": "src/runtime/mcp_remove_api.test.ts",
+      "sha256": "3ddb85fe4135efd6fa6b60bb3d6014a3aa22ee117e1f6ec514431684872a7bb0",
+      "bytes": 1203,
+      "lines": 33
+    },
+    {
+      "path": "src/runtime/mcp_remove_controller.test.ts",
+      "sha256": "11f68d5399eb15562019abc146750505e51f71b56fd2cb7e959ccf5945ca75d3",
+      "bytes": 9969,
+      "lines": 299
+    },
+    {
+      "path": "src/runtime/mcp_remove_parent.test.ts",
+      "sha256": "00119eb7da66d62d6e6a6987c44b70b5283580254ff2aee3c1e851e43ce2eceb",
+      "bytes": 2181,
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/mcp_remove_strings.ts",
+      "sha256": "a421aad372c025a9d948467e0a34befe8e30cdad19997ec0c2ebff0fcac2b80b",
+      "bytes": 2666,
+      "lines": 48
+    },
+    {
+      "path": "src/runtime/mcp_remove_types.test.ts",
+      "sha256": "047c533ac6cbdabf8a56bc351453cc823eac20ba8c11bcd103ffb160b9bac3b8",
+      "bytes": 5924,
+      "lines": 203
+    },
+    {
+      "path": "src/runtime/mcp_remove_types.ts",
+      "sha256": "8d57c0890bcfbe7575be1eb45cc60405e31fc9a2c87a6168bb17f1cf0ba1162e",
+      "bytes": 9574,
+      "lines": 328
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "2cdbed117a2f947508e0ddfc9b58af27544e26b97f6cc2ba4de0abdaa2d83f31",
+      "bytes": 5426,
+      "lines": 189
+    },
+    {
+      "path": "src/runtime/skill_management.ts",
+      "sha256": "e009594d49d3218d788d9e3af6a3979021fb4578b407cfc0a2f44e6213002641",
+      "bytes": 1209,
+      "lines": 27
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "e1d94677ea761ebcb1fab1e73be94bacd08689a9f8eac57f6fd96b77783da12c",
+      "bytes": 16706,
+      "lines": 543
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "e22f1d0fdab3a69c32a8309d4b176470d3c07d15f4b6f8a2ead120db718a2ab4",
+      "bytes": 10303,
+      "lines": 370
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+      "sha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf",
+      "bytes": 22909,
+      "lines": 746
+    }
+  ],
+  "inputsAfter": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "007d14eb61ea2500293ca737b82e6ecd2289b7a1ebed42fb170f6937630846cc",
+      "bytes": 13517,
+      "lines": 397
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "c025c8f7b6137314433c98af4f7be19c96e2087cdd1f5d48ed67446915433e5e",
+      "bytes": 6043,
+      "lines": 158
+    },
+    {
+      "path": "src/components/SkillChangeReview.remove.test.tsx",
+      "sha256": "3abd1fe3b683597ee3a2b242bf9443fcbda7c6ce6dfe1988c7fa5f8827c22c4c",
+      "bytes": 6196,
+      "lines": 167
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "54ad2fdfafd26b6fab894b5994181d37ac636d43c50c6c0ea6869c394da2b532",
+      "bytes": 12228,
+      "lines": 370
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "76f8f3b3a270b6c2f504da3d24ca3889f334c8d87c00c62da81c2d1ab374c1b0",
+      "bytes": 5719,
+      "lines": 226
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "3427841a60d49a10f15b91758fc950d2ab38be10a12e9d4fbcfd6c779b205819",
+      "bytes": 14931,
+      "lines": 525
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "1b1f64afbddb34eb1ec7be36361ea876e54321382cc8386d2b5862c7e75d0ea3",
+      "bytes": 7391,
+      "lines": 263
+    },
+    {
+      "path": "src/runtime/mcp_management_types.ts",
+      "sha256": "0f8d82c469a273a35b6add3d919bf0e820b66de18ae6967246b3a423cb42d4d6",
+      "bytes": 8226,
+      "lines": 290
+    },
+    {
+      "path": "src/runtime/mcp_remove.test-support.ts",
+      "sha256": "35b3d14f20e615fc3c1a75732612105a26c1c8f5f8dd7e30c42c9accb1e176c0",
+      "bytes": 5568,
+      "lines": 199
+    },
+    {
+      "path": "src/runtime/mcp_remove.ts",
+      "sha256": "1b613e38d047e2dd510c27735c8667e01e4e1fd0058f15ead88d98d32db50096",
+      "bytes": 583,
+      "lines": 11
+    },
+    {
+      "path": "src/runtime/mcp_remove.wire.test.tsx",
+      "sha256": "73559bc5da90b4c1769ba5fbc646b20d03edfd19fed6b954f9b3494a3de57505",
+      "bytes": 7587,
+      "lines": 197
+    },
+    {
+      "path": "src/runtime/mcp_remove_admission.test.tsx",
+      "sha256": "ecf1ed23d37de412a5eacaed6c3e522c3f6ffbdaedba33a6f9e8a4e665152fc4",
+      "bytes": 4528,
+      "lines": 141
+    },
+    {
+      "path": "src/runtime/mcp_remove_api.test.ts",
+      "sha256": "3ddb85fe4135efd6fa6b60bb3d6014a3aa22ee117e1f6ec514431684872a7bb0",
+      "bytes": 1203,
+      "lines": 33
+    },
+    {
+      "path": "src/runtime/mcp_remove_controller.test.ts",
+      "sha256": "11f68d5399eb15562019abc146750505e51f71b56fd2cb7e959ccf5945ca75d3",
+      "bytes": 9969,
+      "lines": 299
+    },
+    {
+      "path": "src/runtime/mcp_remove_parent.test.ts",
+      "sha256": "00119eb7da66d62d6e6a6987c44b70b5283580254ff2aee3c1e851e43ce2eceb",
+      "bytes": 2181,
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/mcp_remove_strings.ts",
+      "sha256": "a421aad372c025a9d948467e0a34befe8e30cdad19997ec0c2ebff0fcac2b80b",
+      "bytes": 2666,
+      "lines": 48
+    },
+    {
+      "path": "src/runtime/mcp_remove_types.test.ts",
+      "sha256": "047c533ac6cbdabf8a56bc351453cc823eac20ba8c11bcd103ffb160b9bac3b8",
+      "bytes": 5924,
+      "lines": 203
+    },
+    {
+      "path": "src/runtime/mcp_remove_types.ts",
+      "sha256": "8d57c0890bcfbe7575be1eb45cc60405e31fc9a2c87a6168bb17f1cf0ba1162e",
+      "bytes": 9574,
+      "lines": 328
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "2cdbed117a2f947508e0ddfc9b58af27544e26b97f6cc2ba4de0abdaa2d83f31",
+      "bytes": 5426,
+      "lines": 189
+    },
+    {
+      "path": "src/runtime/skill_management.ts",
+      "sha256": "e009594d49d3218d788d9e3af6a3979021fb4578b407cfc0a2f44e6213002641",
+      "bytes": 1209,
+      "lines": 27
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "e1d94677ea761ebcb1fab1e73be94bacd08689a9f8eac57f6fd96b77783da12c",
+      "bytes": 16706,
+      "lines": 543
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "e22f1d0fdab3a69c32a8309d4b176470d3c07d15f4b6f8a2ead120db718a2ab4",
+      "bytes": 10303,
+      "lines": 370
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+      "sha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf",
+      "bytes": 22909,
+      "lines": 746
+    }
+  ],
+  "sourceStable": true,
+  "results": [
+    {
+      "name": "related-final",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "run",
+        "src/components/AgentExtensionInventory.mcp-management.test.tsx",
+        "src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+        "src/components/AgentExtensionInventoryResult.test.tsx",
+        "src/components/SkillChangeReview.add.test.tsx",
+        "src/components/SkillChangeReview.mcp.test.tsx",
+        "src/components/SkillChangeReview.remove.test.tsx",
+        "src/runtime/extension_inventory.management.test.ts",
+        "src/runtime/extension_inventory.qualified-names.test.tsx",
+        "src/runtime/extension_inventory.qualified-wire.test.tsx",
+        "src/runtime/extension_inventory.skills.test.ts",
+        "src/runtime/extension_inventory.wire.test.ts",
+        "src/runtime/extension_inventory_controller.test.ts",
+        "src/runtime/extension_inventory_types.test.ts",
+        "src/runtime/mcp_add.ipc.test.ts",
+        "src/runtime/mcp_add.wire.test.tsx",
+        "src/runtime/mcp_add_controller.test.ts",
+        "src/runtime/mcp_add_types.test.ts",
+        "src/runtime/mcp_management.ipc.test.ts",
+        "src/runtime/mcp_management.wire.test.tsx",
+        "src/runtime/mcp_management_controller.test.ts",
+        "src/runtime/mcp_management_types.test.ts",
+        "src/runtime/mcp_remove.wire.test.tsx",
+        "src/runtime/mcp_remove_admission.test.tsx",
+        "src/runtime/mcp_remove_api.test.ts",
+        "src/runtime/mcp_remove_controller.test.ts",
+        "src/runtime/mcp_remove_parent.test.ts",
+        "src/runtime/mcp_remove_types.test.ts",
+        "src/runtime/skill_management.wire.test.ts",
+        "src/runtime/skill_management_controller.test.ts",
+        "src/runtime/skill_management_types.test.ts"
+      ],
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-mcp-remove-frontend/related-final.txt",
+        "sha256": "385807b549a5cb3710eb9668c2028f230c3154aac3ede3859dad651aa9bf43cd"
+      }
+    },
+    {
+      "name": "type-final",
+      "command": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-mcp-remove-frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "name": "format-final",
+      "command": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/components/AgentExtensionInventory.tsx",
+        "src/components/AgentExtensionInventoryResult.tsx",
+        "src/components/SkillChangeReview.remove.test.tsx",
+        "src/components/SkillChangeReview.tsx",
+        "src/runtime/extension_change_validation.ts",
+        "src/runtime/extension_inventory_types.ts",
+        "src/runtime/extension_management_types.ts",
+        "src/runtime/mcp_management_types.ts",
+        "src/runtime/mcp_remove.test-support.ts",
+        "src/runtime/mcp_remove.ts",
+        "src/runtime/mcp_remove.wire.test.tsx",
+        "src/runtime/mcp_remove_admission.test.tsx",
+        "src/runtime/mcp_remove_api.test.ts",
+        "src/runtime/mcp_remove_controller.test.ts",
+        "src/runtime/mcp_remove_parent.test.ts",
+        "src/runtime/mcp_remove_strings.ts",
+        "src/runtime/mcp_remove_types.test.ts",
+        "src/runtime/mcp_remove_types.ts",
+        "src/runtime/skill_management.test-support.ts",
+        "src/runtime/skill_management.ts",
+        "src/runtime/skill_management_controller.ts",
+        "src/runtime/skill_management_types.ts"
+      ],
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-mcp-remove-frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    }
+  ],
+  "allPassed": true
+}

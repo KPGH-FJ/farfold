@@ -1,0 +1,111 @@
+//! One literal leaf deletion; only two exact whole-layer outcomes for a sole entry.
+use super::{mcp_plan, plan::Config, types::*};
+use crate::acp_client::extension_inventory::mcp_targets::Report;
+use serde_json::{Value, json};
+#[derive(Clone)]
+pub(super) struct Plan {
+    pub before: Config,
+    pub directory: Config,
+    pub report: Report,
+    pub retained: Value,
+    pub absent: Option<Value>,
+}
+fn unique(config: &Config, name: &str) -> bool {
+    // Disabled layers are still real definitions, not evidence of absence.
+    config.layers.iter().enumerate().all(|(i, layer)| {
+        layer.config.get("mcp_servers").is_none_or(|v| {
+            v.as_object()
+                .is_some_and(|v| i == config.active || !v.contains_key(name))
+        })
+    })
+}
+fn parent(config: &Config) -> Option<&'static str> {
+    match config.layers[config.active].config.get("mcp_servers") {
+        None => Some("absent"),
+        Some(Value::Object(v)) if v.is_empty() => Some("empty"),
+        Some(Value::Object(_)) => Some("nonempty"),
+        _ => None,
+    }
+}
+impl Plan {
+    pub fn new(before: Config, directory: Config, report: Report) -> Result<Self> {
+        let name = &report.target.name;
+        if !unique(&before, name) || !unique(&directory, name) {
+            return Err(Code::ConfigurationUnsupported.into());
+        }
+        // Reuse the exact scope/complete-transport checks, without its weaker
+        // treatment of disabled layers. Both raw and reported flags must be false.
+        let checked = mcp_plan::Plan::new(before, directory, report, false)?;
+        if checked.configured || checked.report.enabled {
+            return Err(Code::TargetEnabled.into());
+        }
+        let mut retained = checked.before.layers[checked.before.active].config.clone();
+        let table = retained
+            .get_mut("mcp_servers")
+            .and_then(Value::as_object_mut)
+            .ok_or(Code::ConfigurationUnsupported)?;
+        table
+            .remove(&checked.report.target.name)
+            .ok_or(Code::ConfigurationUnsupported)?;
+        let absent = if table.is_empty() {
+            let mut candidate = retained.clone();
+            candidate
+                .as_object_mut()
+                .ok_or(Code::ConfigurationUnsupported)?
+                .remove("mcp_servers");
+            Some(candidate)
+        } else {
+            None
+        };
+        Ok(Self {
+            before: checked.before,
+            directory: checked.directory,
+            report: checked.report,
+            retained,
+            absent,
+        })
+    }
+    pub fn params(&self) -> Value {
+        let name = self
+            .report
+            .target
+            .name
+            .replace('\\', "\\\\")
+            .replace('"', "\\\"");
+        json!({"keyPath":format!("mcp_servers.\"{name}\""),"value":null,"mergeStrategy":"replace","filePath":self.before.file,"expectedVersion":self.before.version()})
+    }
+    pub fn unchanged(&self, before: &Config, directory: &Config, report: &Report) -> bool {
+        self.before == *before && self.directory == *directory && self.report == *report
+    }
+    pub fn observation(
+        &self,
+        after: &Config,
+        directory: &Config,
+        reported: Option<bool>,
+    ) -> (Observation, bool) {
+        // Both scopes must match the SAME complete candidate. No normalization.
+        let matching = std::iter::once(&self.retained)
+            .chain(self.absent.iter())
+            .any(|candidate| {
+                mcp_plan::preserved(&self.before, after, candidate)
+                    && mcp_plan::preserved(&self.directory, directory, candidate)
+            });
+        (
+            Observation {
+                observed_at_ms: now_ms(),
+                configuration: if matching { "matching" } else { "different" },
+                skill: None,
+                mcp: Some(if reported.is_none() {
+                    "absent"
+                } else {
+                    "present"
+                }),
+                configured_enabled: Some(mcp_plan::configured(after, &self.report.target.name)),
+                reported_enabled: reported,
+                parent_outcome: Some(parent(after)),
+                session_applicability: "unverified",
+            },
+            matching && reported.is_none(),
+        )
+    }
+}

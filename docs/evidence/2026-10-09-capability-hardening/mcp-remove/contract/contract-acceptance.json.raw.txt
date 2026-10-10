@@ -1,0 +1,27 @@
+{
+  "atUtc": "2026-10-10T19:35:53.674877+00:00",
+  "decision": "acceptStrictMcpRemovalContractAndReleaseSourceForImplementation",
+  "baselineCommit": "e8c3294f45a6bf46ad792503333f2c7ad2b34594",
+  "installedCommit": "51c5159fe5d446ce5eab8d20051ea6d703ca1e86",
+  "installedAppNormallyClosed": true,
+  "refs": {
+    "output/2026-10-11-mcp-remove-contract/contract.json": "c589cb676294849549996d75d0f6670e9f8bde303a4d0c06bd74098ccdb91f99",
+    "output/2026-10-11-mcp-remove-contract/contract.ts": "a7bba8b8a4cbdcacb71e9993953b27cf3d00109a55bab982be3795e0f709b740",
+    "output/2026-10-11-mcp-remove-independent/contract-independent.json": "8b4d0afdfbc5c3f6decdafb46fe2531cd6041baf766041016097cead69d7f085"
+  },
+  "rootReview": [
+    "Read strict TS DTO and all contract sections; reviewed independent original-completeness and observation truth safeguards",
+    "Only literal child null; one or two exact full candidates; never clear parent or normalize recursively",
+    "All four domains use one finite registry/real process owner; old boolean wire remains strict",
+    "No runtime rewrite, private configuration writes, credential display, new durable event state or environment flags",
+    "Existing user continuous-development authorization covers necessary bounded native tests after a separately reviewed concrete preparation; no new user approval is imposed by draft wording"
+  ],
+  "owners": {
+    "product_coverage": "Backend src-tauri and scoped author tests/actual wire",
+    "architecture": "Frontend src and scoped tests; common UI/controller only",
+    "verification": "Independent contract/risk then independently owned test after authors ready",
+    "root": "Integration/browser/docs/full checks/candidate/native and commits"
+  },
+  "runtimeExecutionBoundary": "During implementation no formal App or real official Agent/config invocation; synthetic owned peers/fixtures only. Preserve sole installed app and all real data.",
+  "originalExitUnchanged": true
+}

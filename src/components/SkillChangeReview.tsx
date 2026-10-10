@@ -1,3 +1,4 @@
+import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
 import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
 import "./McpAddForm.css";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -64,9 +65,11 @@ export function SkillChangeReview({
       >
         {
           ("kind" in request.target
-            ? request.target.kind === "mcpAddition"
-              ? ADD
-              : MCP
+            ? request.target.kind === "mcpRemoval"
+              ? REMOVE
+              : request.target.kind === "mcpAddition"
+                ? ADD
+                : MCP
             : SKILLS
           ).reopen
         }
@@ -75,12 +78,14 @@ export function SkillChangeReview({
   const isMcp = "kind" in request.target;
   const isAddition =
     "kind" in request.target && request.target.kind === "mcpAddition";
-  const S = isAddition ? ADD : isMcp ? MCP : SKILLS;
+  const isRemoval =
+    "kind" in request.target && request.target.kind === "mcpRemoval";
+  const S = isRemoval ? REMOVE : isAddition ? ADD : isMcp ? MCP : SKILLS;
   const outcome = op?.outcome;
   const summary = view.trackingReleased
     ? S.trackingReleased
     : view.admissionRejected ||
-        (isAddition &&
+        ((isAddition || isRemoval) &&
           request.action === "inspect" &&
           outcome === "notDispatched")
       ? S.notDispatched
@@ -91,13 +96,19 @@ export function SkillChangeReview({
             ? S.pending
             : request.action === "inspect"
               ? S.inspect
-              : S.waiting
+              : isRemoval && request.action === "recheck"
+                ? REMOVE.checkingResult
+                : S.waiting
         : request.action === "inspect"
           ? review && skillManagement.canConfirm(owner, review)
             ? null
             : S.retired
           : outcome
-            ? S[outcome]
+            ? isRemoval &&
+              request.action === "recheck" &&
+              ["unknown", "notDispatched"].includes(outcome)
+              ? REMOVE.checkUnknown
+              : S[outcome]
             : S.unknown;
   return (
     <section className="skill-change-review" aria-label={S.heading}>
@@ -130,8 +141,24 @@ export function SkillChangeReview({
         </p>
       )}
       <p>
-        {S.requested}：{request.requestedEnabled ? S.enabled : S.disabled}
+        {S.requested}：
+        {isRemoval
+          ? REMOVE.remove
+          : request.requestedEnabled
+            ? S.enabled
+            : S.disabled}
       </p>
+      {isRemoval && "transport" in request.target && (
+        <p>{I.transport[request.target.transport]}</p>
+      )}
+      {isRemoval && view.originalOperation && (
+        <p>
+          {REMOVE.original}：
+          {view.originalOperation.outcome
+            ? REMOVE[view.originalOperation.outcome]
+            : REMOVE.unknown}
+        </p>
+      )}
       {summary && <p role="status">{summary}</p>}
       {view.error && !view.trackingReleased && (
         <p role="status">
@@ -199,6 +226,9 @@ export function SkillChangeReview({
           <p className="skill-change-path">
             {review.writeScope.configDisplayPath}
           </p>
+          {"parentHandling" in review && (
+            <p>{REMOVE.parentHandling[review.parentHandling]}</p>
+          )}
           <p>{S.notice}</p>
           <details>
             <summary>{S.details}</summary>
@@ -228,11 +258,13 @@ export function SkillChangeReview({
                 skillManagement.confirm(owner, review);
             }}
           >
-            {isAddition
-              ? ADD.confirm
-              : review.requestedEnabled
-                ? S.enable
-                : S.disable}
+            {isRemoval
+              ? REMOVE.confirm
+              : isAddition
+                ? ADD.confirm
+                : review.requestedEnabled
+                  ? S.enable
+                  : S.disable}
           </button>
         </>
       )}
@@ -246,7 +278,9 @@ export function SkillChangeReview({
             <p>
               {MCP.configured}：
               {op.observation.configuredEnabled === null
-                ? S.unverified
+                ? isRemoval && op.observation.configuration === "matching"
+                  ? REMOVE.configurationAbsent
+                  : S.unverified
                 : op.observation.configuredEnabled
                   ? S.enabled
                   : S.disabled}
@@ -265,15 +299,28 @@ export function SkillChangeReview({
           <p>
             {S.reported}：
             {op.observation.reportedEnabled === null
-              ? ("skill" in op.observation
-                  ? op.observation.skill
-                  : op.observation.mcp) === "missing"
-                ? S.missing
-                : S.unverified
+              ? "mcp" in op.observation && op.observation.mcp === "absent"
+                ? REMOVE.missing
+                : ("skill" in op.observation
+                      ? op.observation.skill
+                      : op.observation.mcp) === "missing"
+                  ? S.missing
+                  : S.unverified
               : op.observation.reportedEnabled
                 ? S.enabled
                 : S.disabled}
           </p>
+          {"parentOutcome" in op.observation && (
+            <>
+              {op.observation.mcp === "present" && <p>{REMOVE.present}</p>}
+              <p>
+                {REMOVE.parent}：
+                {op.observation.parentOutcome === null
+                  ? S.unverified
+                  : REMOVE.parentOutcomes[op.observation.parentOutcome]}
+              </p>
+            </>
+          )}
         </>
       )}
       <p>{S.applicability}</p>

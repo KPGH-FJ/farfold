@@ -1,0 +1,257 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_remove_parent.test.ts (4 tests | 4 failed) 15ms
+   × rejects matching preserveSiblings review → empty parent while retaining unknown tracking 9ms
+   × rejects matching preserveSiblings review → absent parent while retaining unknown tracking 1ms
+   × rejects matching mayRemainEmpty review → nonempty parent while retaining unknown tracking 1ms
+   × keeps the original parent constraint for readonly observations after a lost acknowledgement 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_remove_parent.test.ts > rejects matching preserveSiblings review → empty parent while retaining unknown tracking
+AssertionError: expected { request: { …(7) }, …(11) } to match object { unresolved: true, …(2) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "error": "invalidOutput",
+-   "operation": null,
+-   "unresolved": true,
++   "error": null,
++   "operation": {
++     "action": "remove",
++     "agentId": "mcp-fixture",
++     "code": null,
++     "cwd": "/controlled",
++     "observation": {
++       "configuration": "matching",
++       "configuredEnabled": null,
++       "mcp": "absent",
++       "observedAtMs": 1791661596570,
++       "parentOutcome": "empty",
++       "reportedEnabled": null,
++       "sessionApplicability": "unverified",
++     },
++     "operationId": null,
++     "outcome": "verified",
++     "phase": "complete",
++     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
++     "requestedEnabled": null,
++     "review": null,
++     "settled": true,
++     "state": "ready",
++     "target": {
++       "inventoryRequestId": "4ead5329-ea8b-4740-9e47-372c06b80fe2",
++       "itemId": 0,
++       "kind": "mcpRemoval",
++       "name": "local-tools",
++       "transport": "stdio",
++     },
++     "writeAck": "ok",
++     "writeDispatched": true,
++   },
++   "unresolved": false,
+  }
+
+ ❯ src/runtime/mcp_remove_parent.test.ts:13:44
+     11|  const done=written(h.controller.get(h.owner.agentId).request!);done.o…
+     12|  h.pending.confirm.resolve(done);await flush();
+     13|  expect(h.controller.get(h.owner.agentId)).toMatchObject({unresolved:t…
+       |                                            ^
+     14|  expect(h.port.confirm).toHaveBeenCalledTimes(1);h.close();
+     15| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/mcp_remove_parent.test.ts > rejects matching preserveSiblings review → absent parent while retaining unknown tracking
+AssertionError: expected { request: { …(7) }, …(11) } to match object { unresolved: true, …(2) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "error": "invalidOutput",
+-   "operation": null,
+-   "unresolved": true,
++   "error": null,
++   "operation": {
++     "action": "remove",
++     "agentId": "mcp-fixture",
++     "code": null,
++     "cwd": "/controlled",
++     "observation": {
++       "configuration": "matching",
++       "configuredEnabled": null,
++       "mcp": "absent",
++       "observedAtMs": 1791661596576,
++       "parentOutcome": "absent",
++       "reportedEnabled": null,
++       "sessionApplicability": "unverified",
++     },
++     "operationId": null,
++     "outcome": "verified",
++     "phase": "complete",
++     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
++     "requestedEnabled": null,
++     "review": null,
++     "settled": true,
++     "state": "ready",
++     "target": {
++       "inventoryRequestId": "9a7bfe1a-8ad7-4ba3-b81e-330244480a6f",
++       "itemId": 0,
++       "kind": "mcpRemoval",
++       "name": "local-tools",
++       "transport": "stdio",
++     },
++     "writeAck": "ok",
++     "writeDispatched": true,
++   },
++   "unresolved": false,
+  }
+
+ ❯ src/runtime/mcp_remove_parent.test.ts:13:44
+     11|  const done=written(h.controller.get(h.owner.agentId).request!);done.o…
+     12|  h.pending.confirm.resolve(done);await flush();
+     13|  expect(h.controller.get(h.owner.agentId)).toMatchObject({unresolved:t…
+       |                                            ^
+     14|  expect(h.port.confirm).toHaveBeenCalledTimes(1);h.close();
+     15| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/mcp_remove_parent.test.ts > rejects matching mayRemainEmpty review → nonempty parent while retaining unknown tracking
+AssertionError: expected { request: { …(7) }, …(11) } to match object { unresolved: true, …(2) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "error": "invalidOutput",
+-   "operation": null,
+-   "unresolved": true,
++   "error": null,
++   "operation": {
++     "action": "remove",
++     "agentId": "mcp-fixture",
++     "code": null,
++     "cwd": "/controlled",
++     "observation": {
++       "configuration": "matching",
++       "configuredEnabled": null,
++       "mcp": "absent",
++       "observedAtMs": 1791661596577,
++       "parentOutcome": "nonempty",
++       "reportedEnabled": null,
++       "sessionApplicability": "unverified",
++     },
++     "operationId": null,
++     "outcome": "verified",
++     "phase": "complete",
++     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
++     "requestedEnabled": null,
++     "review": null,
++     "settled": true,
++     "state": "ready",
++     "target": {
++       "inventoryRequestId": "e6e30405-2f16-4230-bb78-dfae52a3fffc",
++       "itemId": 0,
++       "kind": "mcpRemoval",
++       "name": "local-tools",
++       "transport": "stdio",
++     },
++     "writeAck": "ok",
++     "writeDispatched": true,
++   },
++   "unresolved": false,
+  }
+
+ ❯ src/runtime/mcp_remove_parent.test.ts:13:44
+     11|  const done=written(h.controller.get(h.owner.agentId).request!);done.o…
+     12|  h.pending.confirm.resolve(done);await flush();
+     13|  expect(h.controller.get(h.owner.agentId)).toMatchObject({unresolved:t…
+       |                                            ^
+     14|  expect(h.port.confirm).toHaveBeenCalledTimes(1);h.close();
+     15| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/mcp_remove_parent.test.ts > keeps the original parent constraint for readonly observations after a lost acknowledgement
+AssertionError: expected { request: { …(7) }, …(11) } to match object { unresolved: true, …(3) }
+(15 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,39 @@
+  {
+-   "error": "invalidOutput",
+-   "operation": null,
++   "error": null,
++   "operation": {
++     "action": "recheck",
++     "agentId": "mcp-fixture",
++     "code": null,
++     "cwd": "/controlled",
++     "observation": {
++       "configuration": "matching",
++       "configuredEnabled": null,
++       "mcp": "absent",
++       "observedAtMs": 1791661596579,
++       "parentOutcome": "nonempty",
++       "reportedEnabled": null,
++       "sessionApplicability": "unverified",
++     },
++     "operationId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000002",
++     "outcome": "observed",
++     "phase": "complete",
++     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000003",
++     "requestedEnabled": null,
++     "review": null,
++     "settled": true,
++     "state": "ready",
++     "target": {
++       "inventoryRequestId": "9f6c3027-3328-4946-8c13-dff168fb6a85",
++       "itemId": 0,
++       "kind": "mcpRemoval",
++       "name": "local-tools",
++       "transport": "stdio",
++     },
++     "writeAck": "unknown",
++     "writeDispatched": true,
++   },
+    "originalOperation": {
+      "action": "remove",
+      "agentId": "mcp-fixture",
+      "code": "writeUncertain",
+      "cwd": "/controlled",
+@@ -23,7 +54,7 @@
+        "transport": "stdio",
+      },
+      "writeAck": "unknown",
+      "writeDispatched": true,
+    },
+-   "unresolved": true,
++   "unresolved": false,
+  }
+
+ ❯ src/runtime/mcp_remove_parent.test.ts:24:44
+     22|  const checked=written(h.controller.get(h.owner.agentId).request!,true…
+     23|  h.pending.recheck.resolve(checked);await flush();
+     24|  expect(h.controller.get(h.owner.agentId)).toMatchObject({unresolved:t…
+       |                                            ^
+     25| });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  03:46:36
+   Duration  210ms (transform 78ms, setup 0ms, import 101ms, tests 15ms, environment 0ms)
+
