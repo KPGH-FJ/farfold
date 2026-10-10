@@ -4,9 +4,9 @@
 
 ## 当前基线与证据边界
 
-P40技能启停首片已完成源码、[独立复核](evidence/2026-10-09-capability-hardening/skill-management/independent/implementation.json)与[七项工程检查](evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/verification.json)：1,439输入稳定，前端400文件/4,670项、Rust1,502项通过/6项忽略。共用界面经已核官方接口提供审阅、一次确认和结果核对；保留完整规则值与顺序，关闭、取消或过期撤销旧审阅，未知写入不自动重试。已修取消与终态发布竞态；最终实际Rust输出通过严格解析及两条控制流程验证。首轮仅两份原始回执触发格式检查的失败保留，按精确路径保留原字节后复验通过。当前准备候选与正式分项验证，下述已安装版尚不含此片。配置保存、技能报告和当前对话是否采用分别核验；技能发现、安装、其余作用域、其他Agent及P40完整条件仍未完成。
+P40技能启停首片已提交安装 `4d3bd81e` / 0.1.7 arm64，并完成[正式分项验证](evidence/2026-10-09-capability-hardening/skill-management-candidate/installed-skill-management.json)及[独立收口](evidence/2026-10-09-capability-hardening/skill-management-candidate/native-independent.json)。专用项目技能的审阅撤回、停用、独立核对、重新启用和官方配置语义恢复均有实测。七项工程通过（1,439输入稳定，前端4,670项、Rust1,502项/6忽略），候选9/9、安装10/10，三份217,400条快照相同。正常退出后131条完整会话、168条屏蔽、53项设置原值、未发8/8/3整个对象及工作树清单相同，只有Codex更新时间变化；没有经界面发送消息，启动准备空会话不能据此说没有任何官方建会话调用。NEW-16：后续清单刷新被拒时，失效许可误统称“Agent或程序选择变化”；手动重查后恢复，原失败保留，先修正说明并复验。当前对话采用、技能发现/安装、其他来源/Agent和P40整项仍未完成。
 
-最新实装为 `6c37a012` / 0.1.7 arm64，见[完成提醒正式分项验证](evidence/2026-10-09-capability-hardening/notification-media-candidate/installed-notification-media.json)。同一新建受控对话三次请求沿用 Codex / 6 Astra / Ultra 及已有服务，均明确正常完成。开启完成提醒且隐藏窗口时，macOS 接受提交；实际显示、声音与点击尚未验证。三项偏好已恢复原来关闭状态，后台补测明确因 `disabled` 跳过且未提交系统；另一次因 `foreground` 跳过的反例保留，不并称关闭开关证明。
+此前提醒批次实装为 `6c37a012` / 0.1.7 arm64，见[完成提醒正式分项验证](evidence/2026-10-09-capability-hardening/notification-media-candidate/installed-notification-media.json)。同一新建受控对话三次请求沿用 Codex / 6 Astra / Ultra 及已有服务，均明确正常完成。开启完成提醒且隐藏窗口时，macOS 接受提交；实际显示、声音与点击尚未验证。三项偏好已恢复原来关闭状态，后台补测明确因 `disabled` 跳过且未提交系统；另一次因 `foreground` 跳过的反例保留，不并称关闭开关证明。
 
 本片候选9/9、安装10/10；三份217,400条安装前后数据快照相同。正常退出后，1,415输入及正式五文件保持，130条旧对话完整行、168条已屏蔽记录、整个未发内容8/8/3和工作树清单不变；仅新增本轮1条对话及相应未读/活动记录、Codex更新时间、完成提醒由缺省关闭保存为显式关闭，其余50项设置原值相同。隐藏窗口的工具交互限制及恢复过程单列，不据此声称产品故障。
 
@@ -26,6 +26,8 @@ P13已补坏图片/音频反馈、同一来源的显式重试及收起播放器�
 
 P39首片已补共用“技能与工具”入口，按官方能力显示可查询范围；当时该首片只支持已核官方Codex入口对用户明确选择目录的MCP配置只读查询。配置清单不等于当前对话实际可用工具；该MCP报告不能提供技能、工具详情及官方未报告的配置来源层，不读取私有配置补猜、不添加或修改配置，P39/P40/P41均未完成。见[后端实现与独立复核](evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json)及[共用界面受控证据](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json)。
 
+P39动态工具清单仍有一项已核边界：[官方路径与清理反例](evidence/2026-10-09-capability-hardening/mcp-tool-lifecycle-review.json)表明，查询会新建MCP连接，而部分命令会创建独立进程组，现有父进程退出检查不能证明其全部退出。该限制只针对当前动态发现路径，不据此停下其他能力；P41接续官方配置接口的启停管理，连接与工具可用性另验。
+
 查询使用当前程序选择的短期票据，选择变化后旧票和迟到结果不能冒充新结果。取消或超时后，实际进程与输出尚未结束仍保留清理中状态并阻止新查询；旧结果标为过期。请求记录过期后，只有用户明确结束等待且取得准确回执才释放本次跟踪，结果仍未知，不宣称原命令已取消；[独立反例](evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-independent.json)由1项失败、5项通过复验为6项通过。
 
 P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮失败](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/verification.json)保留：前端28项失败、其余6项检查通过；3份旧React模拟未提供useMemo，[各补一行后28项定向通过](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。受控完整App的WebKit与Chromium各27项通过，目录选择和命令回执由测试控制。该首片随后已提交安装08cff0ac，正式分项结果见本节首段。查询取消、超时、过期跟踪和官方命令失败仍未在正式窗口覆盖，不能用受控结果替代；技能清单实装与名称缺陷接续见本节首段，限定名已按本节新记录复验，P39/P40/P41、29家、Windows与全量市场目标仍未完成。
@@ -34,7 +36,7 @@ P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extens
 | ------------ | ------------------------------------------------------------------------------ | ------------------------------------------------ |
 | 产品源码     | NEW-07–12与H11分项实装；P39的Codex MCP及技能清单分项实测，限定名修复已正式复验 | 完整技能/工具清单与管理或所有已列能力已补齐      |
 | 工程检查     | 技能启停七项通过；1,439输入稳定，前端4,670项、Rust1,502项/6忽略                | 正式界面、官方CLI、所有Agent与系统环境均通过     |
-| 正式安装     | 当前 `6c37a012` / 0.1.7 arm64；完成提醒提交与关闭分项实测；已正常退出          | 服务器/工具可用、查询取消及29家完整接入通过      |
+| 正式安装     | 当前 `4d3bd81e` / 0.1.7 arm64；技能启停与恢复分项已测；NEW-16待修；正常退出    | 服务器/工具可用、查询取消及29家完整接入通过      |
 | 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本           | 跨版本累计成功等于当前 29 家全部通过             |
 | 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                      | 122 个缺陷、122 个已获批准的新功能或市场达标证明 |
 

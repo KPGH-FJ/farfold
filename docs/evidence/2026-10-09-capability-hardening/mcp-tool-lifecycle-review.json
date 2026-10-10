@@ -1,0 +1,31 @@
+{
+  "atUtc": "2026-10-10T17:18:01.999239+00:00",
+  "status": "readOnlyResearchAndSyntheticCleanupCounterexamples",
+  "productItems": ["P39", "P41"],
+  "result": "Do not open arbitrary configured stdio MCP discovery with the current finite subprocess cleanup guarantee. Preserve the gap while continuing independently implementable management work.",
+  "officialSourceFindings": [
+    "mcpServerStatus/list without threadId reports a new discovery snapshot; runtimeStatus null is not current conversation status.",
+    "The implementation creates a new eager MCP connection set even with a loaded threadId; repeated calls may launch distinct processes.",
+    "Some MCP stdio children create independent process groups. Parent process reap, parent group disappearance and pipe EOF do not prove those groups stopped.",
+    "EOF supports graceful app-server exit but the ephemeral collector does not await an all-descendant exit barrier. No reviewed public shutdown RPC returns that barrier.",
+    "ACP mcp/message is a different unstable transport, not enumeration of this Agent configured tools. The reviewed adapter does not provide this alternate enumeration/cleanup surface."
+  ],
+  "syntheticValidation": {
+    "scenarios": 5,
+    "checksPassed": 11,
+    "counterexamples": [
+      "Primary group gone plus EOF while exact self-owned independent child remained alive.",
+      "Parent exit before delayed KILL worker completed prevented that worker from running."
+    ],
+    "positiveControl": "An owner retained through exact child reap can observe complete cleanup; current official response does not expose that mechanism.",
+    "allOwnedPidsAndGroupsAbsentAfter": 11,
+    "boundary": "Synthetic Python peers only; no real official CLI, MCP server, user configuration or production code mutation. Original observation EPERM retained; refused checks are unknown, not success."
+  },
+  "next": "Implement the smallest useful configuration-management slice only after its official API, source scope, credentials and cancellation boundaries are reviewed. Do not mark live tools/connection/diagnostics complete from saved configuration.",
+  "refs": {
+    "output/2026-10-11-mcp-tool-inventory-design/design.json": "b2137d07dd6f184b2e2068868eac89fcb7a8d9f84927b07467ddce4b2835a303",
+    "output/2026-10-11-mcp-tool-inventory-design/validation.json": "a46d33ecf2d49c88e58323662d438b55690cbdb32398b690780f5777f7d1e0ad",
+    "output/2026-10-11-mcp-tool-inventory-design/cleanup-probe/receipt.json": "eac26b2c629e3ff858da40de70ad4d322231f6e35be7ecb4efcde12cab2a1047",
+    "output/2026-10-11-mcp-tool-inventory-design/architecture-independent-review.json": "f10310dbd9d3c638208aa01084204ac0b845be555c96f67e6c4f8d149b935466"
+  }
+}

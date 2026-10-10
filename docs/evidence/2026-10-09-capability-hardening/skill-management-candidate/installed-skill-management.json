@@ -1,0 +1,181 @@
+{
+  "checkedAtUtc": "2026-10-10T17:13:57.598023+00:00",
+  "sourceCommit": "4d3bd81e86cbd7a877055d321f89fb8de494fbf8",
+  "phase": "installedBoundedSkillManagementVerifiedWithQueryExplanationDefect",
+  "productComplete": false,
+  "environment": {
+    "platform": "macOS arm64",
+    "formalApp": "/Applications/Farfold.app",
+    "version": "0.1.7",
+    "agent": "Codex",
+    "connectionVersionShown": "1.13.1",
+    "officialEntry": "Existing registered Codex entry, official app-server via supported CLI surface",
+    "serviceModelReasoning": "Existing settings; no UI service/model/reasoning selection changed; no prompt sent. Empty draft showed 6 Astra / Ultra before quit.",
+    "fixture": "New inert repo skill, unique path; ordinary non-plugin skill; no workflow or tool actions."
+  },
+  "engineering": {
+    "inputCount": 1439,
+    "stable": true,
+    "sevenChecks": "passed",
+    "frontendTests": 4670,
+    "rustPassed": 1502,
+    "rustIgnored": 6,
+    "candidateChecks": 9,
+    "installationChecks": 10,
+    "installationSnapshotEntries": 217400,
+    "threeInstallationSnapshotsIdentical": true
+  },
+  "observations": [
+    {
+      "case": "officialBaseline",
+      "result": "passed",
+      "evidence": ["baseline.json"],
+      "observed": "One bounded official read found 24 skills, exact inert repo fixture enabled, no pre-existing skills section or matching fixture rule. Raw config remained only in RAM; direct child exit0, both EOF and owned group gone."
+    },
+    {
+      "case": "reviewWithdrawal",
+      "result": "passedInThisUIPath",
+      "evidence": [
+        "03-first-review.txt",
+        "04-first-review-visible.png",
+        "05-review-closed.txt",
+        "07-review-invalidated.txt",
+        "07-review-invalidated.png",
+        "08-requery-after-close.txt",
+        "09-second-review.txt"
+      ],
+      "observed": "Fresh review identified fixture path, repo source and user configuration write scope. Close/reopen showed review invalid and no confirm. Explicit fresh query and second review still reported enabled. Not a forced concurrent cancel or guessed backend trace."
+    },
+    {
+      "case": "disable",
+      "result": "passed",
+      "evidence": [
+        "09-second-review.txt",
+        "10-disable-confirmed.txt",
+        "11-disable-result.txt",
+        "11-disable-result.png",
+        "13-disabled-fresh-list.txt"
+      ],
+      "observed": "One explicit confirm; result showed expected configuration and skill report both disabled. Old inventory marked stale; later explicit inventory query reported disabled."
+    },
+    {
+      "case": "independentResultRecheck",
+      "result": "passed",
+      "evidence": ["12-disable-rechecked.txt", "12-disable-rechecked.png"],
+      "observed": "Explicit recheck showed current configuration/skill report matching disabled, and correctly distinguished current observation from proof about a prior write."
+    },
+    {
+      "case": "enable",
+      "result": "passed",
+      "evidence": [
+        "14-enable-review.txt",
+        "15-enable-confirmed.txt",
+        "16-enable-result.txt",
+        "16-enable-result.png"
+      ],
+      "observed": "New review from disabled inventory, one explicit confirm, result showed expected configuration and skill report enabled. No auto restart or current conversation adoption claim."
+    },
+    {
+      "case": "subsequentInventoryRefresh",
+      "result": "failedThenManualRecovery",
+      "evidence": [
+        "17-enabled-fresh-list.txt",
+        "18-enabled-list-result.txt",
+        "20-query-rejection.txt",
+        "20-query-rejection.png",
+        "21-enabled-after-capability-refresh.txt"
+      ],
+      "observed": "Fresh query was rejected with Agent/program-selection-changed message; old disabled inventory remained clearly stale. User did not change Agent/program/directory. Explicit recheck-reading-method then a separate query succeeded and showed enabled. NEW-16: expired/missing/changed capability selection share this misleading reason; this instance exact rejection branch was not captured, TTL cause remains inferred. Manual recovery does not fix original defect."
+    },
+    {
+      "case": "fixtureRuleCleanup",
+      "result": "passed",
+      "evidence": ["baseline.json", "cleanup-result.json"],
+      "observed": "After normal app quit, one official config/value/write removed exactly the test-added skills section using fresh source/version. Fresh full layer semantics and target effective enabled state matched baseline; direct child exit0, two pipe EOF, group gone, no signals. Does not prove unchanged TOML formatting/comments or opaque version."
+    }
+  ],
+  "closeout": {
+    "normalQuit": true,
+    "forceQuit": false,
+    "source1439Unchanged": true,
+    "formalFiveFilesUnchanged": true,
+    "originalWholeSessions": 131,
+    "newRetainedSessionRows": 0,
+    "dismissedSessions": 168,
+    "all53SettingsRawEqual": true,
+    "unsentWholeObjectEqual": true,
+    "unsentGroups": [8, 8, 3],
+    "worktreeCatalogueWholeEqual": true,
+    "onlyAgentRowDelta": "Codex updated_at 1791645810048 -> 1791651774403; every other Agent column/row unchanged.",
+    "noPromptSentViaUI": true,
+    "officialSessionNewCount": "not measured; startup visibly prepared an empty conversation",
+    "configurationRestoration": "All reported layer semantics and exact fixture effective state restored; no direct private config edits."
+  },
+  "notVerified": [
+    "Skill execution/current conversation adopting new preference",
+    "Other Agents, management of a user-origin skill (fixture origin was repo), profile-v2, plugin/builtin modification",
+    "Skill discovery/install/scope management and complete P40",
+    "Actual write cancellation, loss of acknowledgement, drift/readback failures, other environments",
+    "NEW-16 corrected installed explanation; the current build still has the original wording",
+    "P39 dynamic MCP tools and P41 management; all 122 original requirements and 29x8 conditions remain"
+  ],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate.json": "8d14ddd9dfd9f56978582be04652566cbe8da01a3a9540f4665f84ad289ea6eb",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate-inputs.json": "7decb2785ce9d7f3b4bb5155b18aeb4f2674bf5eab9f5aac5dd4aa8afdadcafc",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate-inputs-after.json": "7decb2785ce9d7f3b4bb5155b18aeb4f2674bf5eab9f5aac5dd4aa8afdadcafc",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate-independent.json": "989f1664a79f815fed24ba82b4103783a347aaf0e69645cedc0f6cae2fc2f282",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/install-independent.json": "e89238f4b500632b6c8c1087e8bd0f5df430d207a0db8fc0a545c2afadce6449",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/duplicate-bundle-cleanup.json": "ec08841adc649060dbd9cc18b1181ef7b443a1c4fff6f29f831a0a24657427ec",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/verification.json": "b9c633a51d03462309f4df1b8abc2d64b48f2c0529e44ec186c1702d4de68f43",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/engineering-independent.json": "acdec3edae242ed5cf304e244a4c89b57cf4a50fab8b370d12a15f380032753f",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/implementation.json": "82903731f51cc2e8f5ca6cec9d048ca57fda5b7650be674b0f2cb8c3d3d03456",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/implementation.json": "2b6befc29b0be7e267085d22a099dec046c1f0b136137e0a10a8f8c0ffd87bfd",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management/independent/implementation.json": "512abc8e578b86febc10d053cab5d37ef28ac0f90d749d707b2e9c20970ef025",
+    "output/2026-10-11-skill-management-native/preflight.json": "200de9cef236e8a6d3865c190ba800f3c2c78a264f41122eebde3e6a04b93302",
+    "output/2026-10-11-skill-management-native/final-normal-exit.json": "a4f961bf8cfde97dd6fa8e7469831134e593b76315a0cf1dc0b05284cce8eebf",
+    "output/2026-10-11-skill-management-native/root-data-acceptance.json": "db3f33e5a042c3cd66d980e4a1c125ccd2c414a63caee6c4ac605fa49c6cea35",
+    "output/2026-10-11-skill-management-native-preparation/baseline.json": "cb4fd7e888e51f0b7f97dfb8762601d44ca59ed06b65a461d80c47ff3d9bf5e7",
+    "output/2026-10-11-skill-management-native-preparation/cleanup-result.json": "1e72e013afd1369935c828214c2bfa26335f465e0d6daa3d14d5ea24c37807dd",
+    "output/2026-10-11-skill-management-native-preparation/fixture-created.json": "9fa7baee4975fe786d5c2eff6bf5a85b6aad04515ebdfb63ea89e9c9ca679e57",
+    "output/2026-10-11-skill-management-native-preparation/constructor-followup.json": "7a06ea8efafcc58dc1c21a669aeb793bcc63926c49e526f8a38eb4243860e53e",
+    "output/2026-10-11-skill-management-native-preparation/data-review/final-data-comparison-independent.json": "f9f2c3ed21144904dda4050301af5f02b38bff7e936859bdbfc2038dfe3c3c46",
+    "output/2026-10-11-skill-management-native/01-open.png": "68b51208c964e27a7c65272c496919efff7725c76622e735fd4d82052bfbbfa2",
+    "output/2026-10-11-skill-management-native/01-open.txt": "46013d6edd39439dc0d82ca83d203e248ed5f44415f5e90647fa03eb26d7ab54",
+    "output/2026-10-11-skill-management-native/02-fixture-selected.png": "534ea62abcc2d876e664c194d3e13572dbadd5b67e6f5d2cd61af08b3d9532cf",
+    "output/2026-10-11-skill-management-native/02-fixture-selected.txt": "21461897e8cf3c34a1aceff424a95236e6bc687521577953d747b3b57db0180e",
+    "output/2026-10-11-skill-management-native/03-first-review.png": "426472920c8b7c90e42d0b5464b02092589e56eeaa90ef7390588bc923326462",
+    "output/2026-10-11-skill-management-native/03-first-review.txt": "b0837de214ae8c1b497120ba53654e7a6451b86d308ccafdae68d05cd87e75c1",
+    "output/2026-10-11-skill-management-native/04-first-review-visible.png": "49bd2689ccc2f47e4da25bed63b321ea4ea7e07c4405154589ac0738de4ec6b2",
+    "output/2026-10-11-skill-management-native/04-first-review-visible.txt": "b0837de214ae8c1b497120ba53654e7a6451b86d308ccafdae68d05cd87e75c1",
+    "output/2026-10-11-skill-management-native/05-review-closed.txt": "149c6f71cada4f8b87139be85d5a6b7135b451a2bba212d09fde02273dc4bb4a",
+    "output/2026-10-11-skill-management-native/06-closed-review-state.png": "c2b56cf71c9308d332c254360a9167e0b7ab859ba19c1b9a4738a024dadbe02b",
+    "output/2026-10-11-skill-management-native/06-closed-review-state.txt": "e523d8f39929839b70b9579500daf64d4b888f805f89f8b7178fca8fcd60bec9",
+    "output/2026-10-11-skill-management-native/07-review-invalidated.png": "1827a6bf29bf256f3ae4a311fd7353c3a929297febb7fb7fb551bcc9aa0fe0c4",
+    "output/2026-10-11-skill-management-native/07-review-invalidated.txt": "e523d8f39929839b70b9579500daf64d4b888f805f89f8b7178fca8fcd60bec9",
+    "output/2026-10-11-skill-management-native/08-requery-after-close.txt": "2cc37bdbaaf909fc4ab87deffbe3e4da2e3ad49aba3c249d0886266be75706c7",
+    "output/2026-10-11-skill-management-native/09-second-review.txt": "e6bb673ccfd23b6444f1dfce9e4ba805a72de49be51ba8524967e798d716e4a5",
+    "output/2026-10-11-skill-management-native/10-disable-confirmed.txt": "0f6059cd66a81dfecb26b50d6f3b0aabc9db704b7599f9f100d029e5e84ea313",
+    "output/2026-10-11-skill-management-native/11-disable-result.png": "c8cc6affb1875679f2c1ba6727a6f331e1c5f3ea12bc1381a3c0355a062f9a9c",
+    "output/2026-10-11-skill-management-native/11-disable-result.txt": "b0e88da848fc804d1c5cdde2d9da486465510202d35f8265ba2ad744aa47ac04",
+    "output/2026-10-11-skill-management-native/12-disable-rechecked.png": "3103007791fcac2c16f448257ebb60c4d46576ec056d722bb31415f000088821",
+    "output/2026-10-11-skill-management-native/12-disable-rechecked.txt": "53b0544b796270a6291647aacdc059e9c6da373dffc60ac7637affda20c94b2d",
+    "output/2026-10-11-skill-management-native/13-disabled-fresh-list.txt": "322fd85017772983597c42a789362c5a5441050beca17fcda41d81fe5f6f8d06",
+    "output/2026-10-11-skill-management-native/14-enable-review.txt": "e99a86093e7dceb4e3dfa7e0174979f448cc07dfcabf7e487d7279d4833974e2",
+    "output/2026-10-11-skill-management-native/15-enable-confirmed.txt": "cf6c9f547d09d8294013dd6aeac3298356d591832251b282da28362d0bb3f82e",
+    "output/2026-10-11-skill-management-native/16-enable-result.png": "e3d8d7e8b2579f77f43af5e8694674a35d27b9b8abbe4270a3662aa70de3d8c8",
+    "output/2026-10-11-skill-management-native/16-enable-result.txt": "af62ec0d4036e384fc20dc1c5b2f3634ed5877a0ac2dd95abdbd81f245b53a87",
+    "output/2026-10-11-skill-management-native/17-enabled-fresh-list.txt": "c351e366f130ce45c0816e1e18f6b4cf3c3457b648ebe1a3c778f6506ee4aa62",
+    "output/2026-10-11-skill-management-native/18-enabled-list-result.txt": "c351e366f130ce45c0816e1e18f6b4cf3c3457b648ebe1a3c778f6506ee4aa62",
+    "output/2026-10-11-skill-management-native/19-query-rejected-visible.png": "66a629e7d58748f33b67dace248f5e5c562018eeddeea600c444f61001596fe3",
+    "output/2026-10-11-skill-management-native/19-query-rejected-visible.txt": "c351e366f130ce45c0816e1e18f6b4cf3c3457b648ebe1a3c778f6506ee4aa62",
+    "output/2026-10-11-skill-management-native/20-query-rejection.png": "8022b512127840107d0c34b49c98b1ef6152ff5ec64056fc6798ab244d66942a",
+    "output/2026-10-11-skill-management-native/20-query-rejection.txt": "c351e366f130ce45c0816e1e18f6b4cf3c3457b648ebe1a3c778f6506ee4aa62",
+    "output/2026-10-11-skill-management-native/21-enabled-after-capability-refresh.txt": "75f67717e13599ccf12b5f653349181817327d5c285e69e330ff10c149c2a9f6",
+    "output/2026-10-11-skill-management-native/22-draft-before-quit.png": "16df56f9d13c82b7b7f7f033c1b4cf3fe32fa8d90681fa7d5b3c7c3281ba1d7d",
+    "output/2026-10-11-skill-management-native/22-draft-before-quit.txt": "f1691cd67c148fbf0e01910fccc9c04454aad65f245890deee818816be8212a7",
+    "output/2026-10-11-skill-management-native/23-empty-draft-restored.txt": "712ab2d68452b94e273fd269052dc527deb8ac5dd54f2f00c7b89cbc1cc61e0c",
+    "output/2026-10-11-skill-management-native/24-quit-dialog.png": "362b50982cfaff78ec8985b3284e2b220a6d9986d59a8775641762ec31494203",
+    "output/2026-10-11-skill-management-native/24-quit-dialog.txt": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf"
+  },
+  "boundary": "Installed UI and official report/semantic restoration evidence for exact macOS/Codex fixture only. Synthetic engineering evidence and helper tests remain separate. Private raw captures/backups not embedded in public receipt."
+}

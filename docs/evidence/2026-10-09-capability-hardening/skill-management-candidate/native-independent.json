@@ -1,0 +1,104 @@
+{
+  "checkedAtUtc": "2026-10-10T17:15:55.547515+00:00",
+  "sourceCommit": "4d3bd81e86cbd7a877055d321f89fb8de494fbf8",
+  "result": "independentEvidenceReviewPassedWithKnownNew16Unresolved",
+  "performed": "Read-only review of the existing installed journey, all 56 public references, 24 AX captures and 13 screenshots; fresh disposable secondary-copy database comparison and current source/formal bundle/archive identity verification. This is not another native journey.",
+  "checks": {
+    "all56PublicReferencesMatch": true,
+    "nestedPreflightExitAndAcceptanceReferencesMatch": true,
+    "current1439InputsMatchCandidate": true,
+    "formalFiveHashesAndModesMatchCandidate": true,
+    "archiveFiveFilesMatch": true,
+    "formalExactProcessAbsent": true,
+    "fixtureFileUnchanged": true,
+    "fullCapturedWalAndConsolidatedIterdumpEqualInBothNewSecondaryCopies": true,
+    "originalCapturedAndBackupBytesSizesModesUnchanged": true,
+    "old131WholeSessionRowsEqual": true,
+    "newRetainedSessionRows": 0,
+    "dismissed168RowsEqual": true,
+    "all53SettingsRawEqual": true,
+    "wholeUnsentObjectEqual": true,
+    "unsentGroups": [8, 8, 3],
+    "wholeWorktreeCatalogueEqual": true,
+    "agent40RowsComparedByAllColumns": true,
+    "onlyChangedColumn": "codex.updated_at",
+    "acceptedTimestampBefore": 1791645810048,
+    "acceptedTimestampAfter": 1791651774403,
+    "officialLayerSemanticDigestRestored": true,
+    "fixtureEffectiveEnabledRestored": true,
+    "reviewedHelperCleanupReceiptDirectReapedEofGroupGone": true
+  },
+  "nativeEvidence": [
+    {
+      "case": "reviewWithdrawal",
+      "finding": "04 identifies repo fixture path and user configuration write scope; 07 reports expired review without confirm. 08 is only a time-change AX diff; 09 separately confirms the refreshed report remained enabled."
+    },
+    {
+      "case": "disableAndReadOnlyRecheck",
+      "finding": "11 reports configuration and skill disabled; 12 explicitly reports current observation without reclassifying prior-write certainty; 13 fresh inventory reports disabled."
+    },
+    {
+      "case": "enable",
+      "finding": "14/15 are a new review and explicit confirmation; 16 reports configuration and skill enabled. No current-conversation adoption claim."
+    },
+    {
+      "case": "new16",
+      "finding": "17/18 AX and 20 screenshot preserve misleading selection-changed rejection with query disabled. 19 image does not itself show the error. 21 manual capability refresh followed by explicit query reports enabled; this is recovery, not a fix. Exact TTL-only cause was not captured."
+    },
+    {
+      "case": "closeout",
+      "finding": "01 visibly prepares an empty conversation; 22/23 show the restored empty TR draft. 24 plus the normal-exit receipt document Save and Quit. Zero retained new rows cannot prove zero official session/new calls."
+    }
+  ],
+  "boundaries": [
+    "No App/UI/official CLI/Agent/config operation was performed by this independent reviewer; only the authored comparison functions were reused on newly copied private snapshots.",
+    "No model prompt sent is the recorded root interaction scope, not a conclusion derived only from database equality.",
+    "This macOS/Codex inert repo-origin fixture validates user-configuration preference changes, not skill execution, current-session effect, other Agents, user-origin skill samples, profiles, plugins or built-ins.",
+    "Semantic configuration restoration is supported by the reviewed official helper receipts; TOML comments/formatting, opaque versions and arbitrary external side effects are not claimed equal.",
+    "Source/controlled tests/official installed journey remain separate. Actual lost write acknowledgement, concurrent cancellation and drift paths were not exercised in this native run.",
+    "NEW-16 remains uncorrected in the installed build. P40 and the broader product completion conditions remain open."
+  ],
+  "releaseRecommendation": "No additional blocker to releasing this evidence-stage source freeze. Preserve NEW-16 for the separately authorized minimal explanation fix; this does not approve another installation or broader P40 completion.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/installed-skill-management.json",
+      "sha256": "b8dcc142bfbd6c1c8842a540cd71f86935489768b40d5cdefb76133f4daa6d79"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native/root-data-acceptance.json",
+      "sha256": "db3f33e5a042c3cd66d980e4a1c125ccd2c414a63caee6c4ac605fa49c6cea35"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native/final-normal-exit.json",
+      "sha256": "a4f961bf8cfde97dd6fa8e7469831134e593b76315a0cf1dc0b05284cce8eebf"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native-preparation/baseline.json",
+      "sha256": "cb4fd7e888e51f0b7f97dfb8762601d44ca59ed06b65a461d80c47ff3d9bf5e7"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native-preparation/cleanup-result.json",
+      "sha256": "1e72e013afd1369935c828214c2bfa26335f465e0d6daa3d14d5ea24c37807dd"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native-preparation/data-review/final-data-comparison-independent.json",
+      "sha256": "f9f2c3ed21144904dda4050301af5f02b38bff7e936859bdbfc2038dfe3c3c46"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native-preparation/data-review/native-data-recheck.json",
+      "sha256": "fcc0767492bcc6cebab60f37362226501b8cb416b6753fd382a13ac411d494dc"
+    },
+    {
+      "path": "output/2026-10-11-skill-management-native-preparation/data-review/independent_native_recheck.py",
+      "sha256": "d8415258861fbe10cfbb3a5193c03394250742ba2b4767b9b7a7e0871fea38fe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate.json",
+      "sha256": "8d14ddd9dfd9f56978582be04652566cbe8da01a3a9540f4665f84ad289ea6eb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/candidate-inputs.json",
+      "sha256": "7decb2785ce9d7f3b4bb5155b18aeb4f2674bf5eab9f5aac5dd4aa8afdadcafc"
+    }
+  ]
+}

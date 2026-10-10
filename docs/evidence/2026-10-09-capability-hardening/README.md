@@ -2,11 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：技能启停通过工程检查，准备正式分项验证
+## 当前衔接：技能启停已安装分项验证，修正读取许可提示
 
-2026-10-11，P40共用审阅、一次确认、取消/状态及只读核对已完成本片实现与[独立复核](skill-management/independent/implementation.json)。[七项工程检查](skill-management-checks/run-02/verification.json)全部通过：1,439输入稳定，前端400文件/4,670项、Rust1,502项通过/6项忽略。官方配置完整规则值与顺序保留，旧清单撤权、真实进程清理和未知写入分别处理；不自动重试修改，不把只读观察追认为此前写入成功。最终实际Rust输出的[严格解析及控制流程复核](skill-management/frontend/backend-final-publication-review.json)通过。首轮仅两份原始回执的格式失败及[精确范围修正](skill-management-checks/raw-evidence-format-followup.json)保留。接续候选、安装和正式配置实测，尚未完成该层证据。P40发现/安装及其他管理、P39完整清单、P41和29家八项标准均继续，未关闭原条件。
+2026-10-11，P40启停首片已提交安装`4d3bd81e` / 0.1.7 arm64，见[正式分项验证](skill-management-candidate/installed-skill-management.json)及[独立收口](skill-management-candidate/native-independent.json)。专用项目技能关闭审阅后确认失效，停用与重新启用均核到配置和技能报告；另行只读核对不追认为此前写入成功，正常退出后经官方接口恢复全部配置层语义与测试技能状态。七项工程通过（1,439输入稳定，前端4,670项、Rust1,502项/6忽略）、候选9/9、安装10/10；三份217,400条快照相同，实测后131会话、168屏蔽、53项设置、未发8/8/3整个对象及工作树清单保持，仅Codex更新时间变化。原格式失败、辅助工具构造清理红例和未定位EPERM分别保留。NEW-16刷新拒绝提示不准确，显式重查后恢复；继续修正并正式复验，不据手动恢复关闭缺陷。P39完整工具、P40其余管理、P41和29家原条件保持未完成。
 
-正式版为 `6c37a012` / 0.1.7 arm64，[正式提醒分项验证](notification-media-candidate/installed-notification-media.json)确认默认偏好、后台正常完成的系统接受及后台关闭偏好后不提交；实际显示/声音/点击、P47撤回及P13媒体仍待正式实证。三次受控请求沿用既有Codex选择，三项偏好恢复关闭且已正常退出；旧130对话、168屏蔽、未发8/8/3及工作树清单保留，新增仅本轮对话及关联状态、Codex更新时间和显式关闭字段，其他50项设置原值不变。候选9/9、安装10/10及三份217,400条快照相同。
+此前提醒批正式版为 `6c37a012` / 0.1.7 arm64，[正式提醒分项验证](notification-media-candidate/installed-notification-media.json)确认默认偏好、后台正常完成的系统接受及后台关闭偏好后不提交；实际显示/声音/点击、P47撤回及P13媒体仍待正式实证。三次受控请求沿用既有Codex选择，三项偏好恢复关闭且已正常退出；旧130对话、168屏蔽、未发8/8/3及工作树清单保留，新增仅本轮对话及关联状态、Codex更新时间和显式关闭字段，其他50项设置原值不变。候选9/9、安装10/10及三份217,400条快照相同。
 
 此前 `39955ec6` 的[名称修复正式复验](skills-qualified-names-candidate/installed-qualified-names.json)一次查询返回24项，7个扩展技能限定名完整、0项隐藏；项目技能及查询范围说明保持。此前 `aadbe0f2` 的[技能实测](skills-inventory-candidate/installed-skills-inventory.json)覆盖正常/损坏目录、1项未读取提示、目录取消、类型/Agent隔离及过期处理，并有MCP返回5项；保留当时证据，不当作本版重复执行。
 
@@ -14,7 +14,7 @@
 
 实测后正常退出，原130会话完整行、168条已屏蔽记录、整个未发对象8/8/3、工作树清单及53项设置全等。40条Agent记录仅Codex更新时间变化，其余9列及存储模型/推理/来源保持；无模型发送或新会话。正式五文件及1,407输入到退出不变。
 
-当前P48成功完成提醒与P47过时提醒精确撤回已补源码，见[前端实现](success-notification/frontend/implementation.json)和[后端实现](success-notification/backend/implementation.json)；前端143项关联测试与双引擎各19项受控检查通过，[后端最终派发边界独立复核](success-notification/independent-review.json)已通过。P13坏媒体反馈、重试及收起清理见[实现](media-feedback/implementation.json)和[独立复核](media-feedback/independent-review.json)：组件各21项、精确媒体策略各6项通过；正式策略曾阻止有效音频的原失败保留，已最小修复。[全仓七项](notification-media-checks/run-01/verification.json)全部通过，1,415输入稳定，前端4,621项、Rust1,477项/6忽略；已安装后的提醒分项见本节首段，未把受控结果或系统接受当成实际显示、点击或真实Agent媒体验收。P13/P47/P48整项、P39完整工具、P40/P41管理和全部原条件继续保留；接续P40官方技能启停的审阅、写入及回读，全量市场目标仍未完成。
+当前P48成功完成提醒与P47过时提醒精确撤回已补源码，见[前端实现](success-notification/frontend/implementation.json)和[后端实现](success-notification/backend/implementation.json)；前端143项关联测试与双引擎各19项受控检查通过，[后端最终派发边界独立复核](success-notification/independent-review.json)已通过。P13坏媒体反馈、重试及收起清理见[实现](media-feedback/implementation.json)和[独立复核](media-feedback/independent-review.json)：组件各21项、精确媒体策略各6项通过；正式策略曾阻止有效音频的原失败保留，已最小修复。[全仓七项](notification-media-checks/run-01/verification.json)全部通过，1,415输入稳定，前端4,621项、Rust1,477项/6忽略；已安装后的提醒分项见本节首段，未把受控结果或系统接受当成实际显示、点击或真实Agent媒体验收。P13/P47/P48整项、P39完整工具、P40/P41管理和全部原条件继续保留；P40启停实测及新增提示问题见本节首段，全量市场目标仍未完成。
 
 此前MCP首片已实现共用“技能与工具”入口与已核官方Codex入口的MCP配置只读查询：用户明确选择目录，结果只说明该次官方配置清单；该MCP报告不提供技能、工具详情、配置来源层和当前对话适用性，不补猜，不写Agent配置。当前选择的短期票据阻止旧选择和迟到回执串用；实际进程/输出未结束时保留清理中状态，旧结果标为过期。记录过期后只在用户明确结束等待且准确回执成立时释放跟踪，结果仍未知，不称原命令已取消。见[后端独立复核](extension-inventory/backend/independent-review.json)、[过期跟踪1红后6绿](extension-inventory/independent/expired-tracking-independent.json)。
 
