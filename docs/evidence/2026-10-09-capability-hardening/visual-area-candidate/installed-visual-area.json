@@ -1,0 +1,397 @@
+{
+  "kind": "installed-native-scope-verification",
+  "observedAtUtc": "2026-10-10T03:02:45.624022+00:00",
+  "sourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "application": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "controlledConversation": "session:codex:/Users/tw/Desktop/TR:01a123b8-3a02-7dd1-9ea8-081376d46227",
+  "cases": [
+    {
+      "id": "configuration",
+      "status": "passed",
+      "observations": [
+        "01-launch-ready",
+        "02-model-source",
+        "04-existing-permission"
+      ],
+      "result": "One new controlled Codex conversation; existing 6 Astra / Ultra / service / Approve for me unchanged."
+    },
+    {
+      "id": "bounded-response",
+      "status": "passed",
+      "observations": [
+        "06-bounded-prompt",
+        "07-bounded-request-sent",
+        "08-bounded-response"
+      ],
+      "result": "One no-tool link-echo request completed. No feedback or second Agent request sent."
+    },
+    {
+      "id": "pdf-page-selection",
+      "status": "passed",
+      "observations": [
+        "09-pdf-open",
+        "10-pdf-page2",
+        "11-pdf-area-input",
+        "12-pdf-keyboard-candidate",
+        "13-pdf-area-confirmed"
+      ],
+      "result": "Actual cropped/rotated PDF page 2/4; 60/10/80/40 percent selected with Enter then separately confirmed with Enter. Purple marker visually enclosed."
+    },
+    {
+      "id": "page-and-hide-retention",
+      "status": "passed",
+      "observations": [
+        "14-pdf-page-change-preserves-target",
+        "15-pdf-hidden",
+        "16-pdf-reopened"
+      ],
+      "result": "Page 3 reading survives hide/reopen; feedback still targets page2 and exact original rectangle/text."
+    },
+    {
+      "id": "invalid-input",
+      "status": "passed",
+      "observations": ["17-pdf-second-area", "18-pdf-invalid-range"],
+      "result": "101 percent rejected, confirmation unavailable; original opinion unchanged."
+    },
+    {
+      "id": "pdf-version",
+      "status": "passed",
+      "observations": [
+        "19-pdf-changed-while-editing",
+        "20-pdf-new-version-old-opinion",
+        "21-pdf-old-version-detail"
+      ],
+      "result": "Editing held old display when controlled file changed; explicit reread exposes new version, old opinion retains v1 SHA and exact page/area."
+    },
+    {
+      "id": "image-reverse-drag",
+      "status": "passed",
+      "observations": [
+        "22-oriented-image-open",
+        "23-image-select-open",
+        "24-image-reverse-drag",
+        "25-image-drag-confirm"
+      ],
+      "result": "Actual EXIF6 displayed orientation; reverse drag encloses purple marker; normalized 49.75/9.9414/79.75/39.9415 percent then separately confirmed."
+    },
+    {
+      "id": "target-text-preservation",
+      "status": "passed",
+      "observations": [
+        "26-image-whole-target-preserves-text",
+        "27-image-precise-pending",
+        "28-image-precise-confirmed"
+      ],
+      "result": "Whole-file switch retains text; four-decimal 10.1234/20.5678/70.4321/80.8765 candidate does not retarget until confirmation, text preserved."
+    },
+    {
+      "id": "image-version-and-take",
+      "status": "passed",
+      "observations": [
+        "29-image-changed-draft-hold",
+        "30-image-new-version",
+        "31-image-old-version-and-composer",
+        "32-image-taken-once"
+      ],
+      "result": "EXIF6→8 file replacement waits during editing; explicit reread separates old opinion. Join once preserves composer prefix and v1 SHA; opinion disappears, no request dispatched."
+    },
+    {
+      "id": "pointer-clipping-cancel",
+      "status": "passed",
+      "observations": [
+        "33-plain-image-open",
+        "34-plain-select",
+        "35-plain-clipped-drag",
+        "36-plain-cancel-selection"
+      ],
+      "result": "Actual drag outside PNG bounds clips to left/top zero and right49.8438/bottom49.9063; cancel selection creates no opinion and retains existing drafts."
+    },
+    {
+      "id": "cold-restore",
+      "status": "passed",
+      "observations": ["37-cold-open-thread", "38-cold-pdf-opinion-restored"],
+      "result": "After normal quit and restart, image composer text remains once; unsent PDF exact page/area/SHA restored. Cold permission pending remains unconfirmed; no send."
+    }
+  ],
+  "nativeObservationCount": 38,
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/01-launch-ready.txt",
+      "sha256": "f4f5d4df5297244d5f03012539ca5ccb623ac258bbe50219fc34f6a93bba0153"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/02-model-source.txt",
+      "sha256": "59cde29f6d94428ee2c654ab3ef9f716a4c3e8f39fdae8f895fa887c4ecd2768"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/03-model-closed.txt",
+      "sha256": "f6297b2fbaa8ac269fe781ad587d42a6bab068ca55f7888405678273cb73f9e8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/04-existing-permission.txt",
+      "sha256": "a216a2e34afa53d34190c241ab2ebf55634db1e7e42dc6f99394aaf140ba2bb7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/05-permission-closed.txt",
+      "sha256": "9121b22733a2305e725ece59a7bcc928d5f42283d38ba6d525f3098db74078b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/06-bounded-prompt.txt",
+      "sha256": "43341a25e4f5773a9a6313fd5bf2668485f7c98dadd1781696bf596f399732ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/07-bounded-request-sent.txt",
+      "sha256": "7944fc295448108cc663a9283eca24b2b29725ba93482169c86c279a523a1215"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/08-bounded-response.png",
+      "sha256": "09ccd44a562f9c7cf8a1182431c2db13f85386cb240461cd8fc471c952cd69e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/08-bounded-response.txt",
+      "sha256": "e5ec1c8fc99914840af4a8bfcf56242649cecbdd0b79abbc11f41ad6581cb606"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/09-pdf-open.png",
+      "sha256": "e37202720da1aa8e63523375bf678d1b9009b4fc656ee773596f9edcaf4b7f8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/09-pdf-open.txt",
+      "sha256": "8b8d11b12352f1880a57e933e5541e52968b5e877de1fef1679e597f0c1e36f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/10-pdf-page2.txt",
+      "sha256": "88db746c80ceacf207664c2783806525f7586ded4c42fba934c0d9a8c84ce3ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/11-pdf-area-input.txt",
+      "sha256": "9007468bede34b131312b0a2aefc0d7bf51a5761bf6e015d4f4eeb002a5fed32"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/12-pdf-keyboard-candidate.png",
+      "sha256": "6cfe363c91e4ec95aff32d08f64e9d80123567d33ac47b17b3fd00a32975b715"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/12-pdf-keyboard-candidate.txt",
+      "sha256": "cbef0d2299130e1a407f2936408e9334ff0a2f3395edcc7c84f53bd3cdc2d514"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/13-pdf-area-confirmed.png",
+      "sha256": "1ae5bab2757a7822036daa37e7ed4a96410e6f302f0513331aa52aad605e8830"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/13-pdf-area-confirmed.txt",
+      "sha256": "30aa44cfa17ee80bb4fea3b2d58811d13cdd6b6cf0c444ca9806d8a190983f09"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/14-pdf-page-change-preserves-target.txt",
+      "sha256": "3bb41cbee1f28485f619a11390da4dde904df8b5ebc54ac54de5fe25106f062a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/15-pdf-hidden.txt",
+      "sha256": "657583413e9ad6cd772525eb34594842eb89e24f14c6ee1d200e1673f15d24bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/16-pdf-reopened.txt",
+      "sha256": "f99e0e38f0b3b79eddb3ec7ec3296fa1237c695907e859443bfdde80178e197e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/17-pdf-second-area.txt",
+      "sha256": "d48498451ddb6d808ac092ac5bdf79c329216b88953c34b06db64e291fdf109e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/18-pdf-invalid-range.txt",
+      "sha256": "026e78482ca57a1400d13d8e8cb9d54b385191d05abbabec32b11ccda38f0552"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/19-pdf-changed-while-editing.txt",
+      "sha256": "d6c4ece0b534580674a7cb047ae0ce10cdf242d2d832d4c1288c35623fd97654"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/20-pdf-new-version-old-opinion.png",
+      "sha256": "c210789f684ca5605354cca89f55db1ecdd2fff7e084019e7f993ea289fa9fc3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/20-pdf-new-version-old-opinion.txt",
+      "sha256": "65f87fa4fbac66b5a723908646f257d82e3edd109f4968ff61e1a5b617876066"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/21-pdf-old-version-detail.txt",
+      "sha256": "6e6902970807a240707b40d64dfce8c18c061ded6bb8561f7c90ee928cbb19ec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/22-oriented-image-open.txt",
+      "sha256": "46fbcb5f000b6d5eda30c0f61c69bb946f156b44aad3da5d1e58b5749b0d4347"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/23-image-select-open.png",
+      "sha256": "c3bb84af4776e3236ee28fa758880ce2d3b523a05b8094c2d583bc6c48765328"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/23-image-select-open.txt",
+      "sha256": "ac486ee74db69ab56223a0eeb42c63818a09920ee99f06ffb3e202fca482764a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/24-image-reverse-drag.png",
+      "sha256": "edbc3f2edc4ff1affe80080703c5dc903c54b358b9ca0b248ff7868a4be02ad0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/24-image-reverse-drag.txt",
+      "sha256": "b894d313c4b6ababf41a79e091acefbb71863f5a38f0e340e2fc1ce56af27024"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/25-image-drag-confirm.txt",
+      "sha256": "e8ae052b716c9ec6c197d015d063ea8e1d3cb3911053b957382f5d81a46ca967"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/26-image-whole-target-preserves-text.txt",
+      "sha256": "bc04be2eadd1f22e4f2b22af4bdae1b13f737ef1252a80fba55f293176175806"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/27-image-precise-pending.txt",
+      "sha256": "8c7cd71b45a04135f16638609e3bf6a28861e6b7670ef6ac4e0570015c751726"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/28-image-precise-confirmed.txt",
+      "sha256": "2c1865c53027c98a8176e1449094f855d7cd891c45659903f9bd9cb0b83cc411"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/29-image-changed-draft-hold.txt",
+      "sha256": "46b6933ec2979ce7f6cc9b669b8cbde6ab45e81651b403df74b3408e90f8e10a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/30-image-new-version.txt",
+      "sha256": "8714a9d9da58daf68995c0a82da44cb9da48a850f5105dc32be475df803f24ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/31-image-old-version-and-composer.txt",
+      "sha256": "d25825c94e84ad57403eab5971a0c62159cdf217d278d5cb87d80a773abc523f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/32-image-taken-once.txt",
+      "sha256": "677ee8e3bc2581e88b42d28427d8126842bc1bd480ac2c69d265427d505e267f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/33-plain-image-open.txt",
+      "sha256": "50dc7321e5075fb853c2539e35c7d0f65b8c4c9cb5acc18bc6a4810519e651e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/34-plain-select.png",
+      "sha256": "3ced1da8f3d3e60b2770cb4ecccfff0688834a71cb1e918cc655cc16042c3e29"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/34-plain-select.txt",
+      "sha256": "bf44fce19ae162008879f82b4998ac46e8100d6b63012cd67236330371864eed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/35-plain-clipped-drag.txt",
+      "sha256": "7f059cdc706aaa2b4270f49bf6533b0caab167940c30c5a8dd9bd0f0e5f7be5b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/36-plain-cancel-selection.txt",
+      "sha256": "213f15df9148540a2015c2e683d689aedcfadaf8efae0f2d3c75f331da2cf8bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/37-cold-open-thread.txt",
+      "sha256": "d67fe4d2aba10c8701d6c0ab881ba11096875af7fadd93d55ed17e435119708d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/38-cold-pdf-opinion-restored.png",
+      "sha256": "7e18b14f81f282b6df19455ef51bcc958ac861d2b014d44636e7ec6480c1b526"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native/38-cold-pdf-opinion-restored.txt",
+      "sha256": "15e79ff5da5baf38bce40cc88aaa1f094d85f8d05de7abd4f19d4f59d7ecb003"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json",
+      "sha256": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/install-independent.json",
+      "sha256": "cbb635080edc96bf21a1cd5f9881eb7d43193305397d822cfd42f990486ec480"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-data-retention.json",
+      "sha256": "f74bf5760dc7c590d94024e0a5630063552b117d5bad3f884f707a4afaf76dd5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "2ffa24db3c9364c4b199f0bc98a8146d64117cb1b12820d367b98bf3d5b4fab7"
+    }
+  ],
+  "draftRetention": {
+    "originalDatabaseOpened": false,
+    "copyOnlyPrivateReceipts": [
+      {
+        "path": "output/2026-10-10-visual-area-install/pre-cold-draft-retention.json",
+        "sha256": "2f7543f8349a2be2990094fc296981d754570da4d25cacbdf598ec5feb216438"
+      },
+      {
+        "path": "output/2026-10-10-visual-area-install/cold-draft-retention.json",
+        "sha256": "6f82f709be1e1f39bd11928e614edc5ab3ea72655158fd64de868761fc89fecf"
+      }
+    ],
+    "groups": {
+      "composers": {
+        "beforeEntries": 7,
+        "afterEntries": 8,
+        "existingEntriesExactlyUnchanged": 6
+      },
+      "feedback": {
+        "beforeEntries": 5,
+        "afterEntries": 6,
+        "existingEntriesExactlyUnchanged": 5
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesExactlyUnchanged": 3
+      }
+    },
+    "unexpectedDifferences": [],
+    "normalization": [
+      {
+        "group": "composers",
+        "keySha256": "36eaa827d6752a334b33367cb4dc5a88e49c1d376adc2f02566d2cd834840fe1",
+        "onlyChange": "absent sendPending -> false; same inactive decoding"
+      }
+    ],
+    "retainedPdf": [
+      {
+        "marker": "AREA_A47A6652_PDF",
+        "anchor": {
+          "kind": "pdf-area",
+          "space": "display-oriented-v1",
+          "page": 2,
+          "pageCount": 4,
+          "left": 600000,
+          "top": 100000,
+          "right": 800000,
+          "bottom": 400000
+        },
+        "contentId": "disk:[\"/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf\",\"f585959c7513efef14f02909db99faf7b6c1b56eea0a43761d744654123333d2\",\"56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060\"]"
+      }
+    ],
+    "imageComposerOccursOnce": true
+  },
+  "finish": {
+    "normalQuit": true,
+    "formalProcessAbsent": true,
+    "testFixturesRestoredToV1": true,
+    "testFixtureManifest": {
+      "path": "output/2026-10-10-visual-area-install/native-fixtures/manifest.json",
+      "sha256": "df018747ccf8857cbf01a9f3a39275e2aeccbdaa3a45daa30c1ef043b7505fac"
+    },
+    "duplicateAppRemoved": true
+  },
+  "notProven": [
+    "NEW04 actual failed-start storage restore UI not exercised; no user-data corruption to expose it.",
+    "No actual Agent file rework, area understanding, accepted-request failure or confirmed Agent cancellation.",
+    "No native mid-drag scrolling interruption test; that remains unit/browser scope.",
+    "No complete P21/P22/29-Agent/market/Windows acceptance.",
+    "Native screenshots observed by root; independent receipt review is not another native execution."
+  ]
+}

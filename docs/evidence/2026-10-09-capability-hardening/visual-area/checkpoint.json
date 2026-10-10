@@ -1,11 +1,11 @@
 {
-  "updatedAtUtc": "2026-10-10T02:43:01.074720+00:00",
+  "updatedAtUtc": "2026-10-10T03:06:28.167386+00:00",
   "goal": "Complete the active market-readiness plan; global completion remains false.",
-  "head": "be4965d19f8563ba33ddba1c349c2f8dc897718b",
+  "head": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
   "formalApp": {
-    "sourceCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+    "sourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
     "version": "0.1.7",
-    "state": "normally closed; native workbook-range checks committed in be4965d1; no visual-area app build/install yet"
+    "state": "Installed; candidate9/9 and install10/10 independently passed; native scoped observations and cold restore completed. Normally quit, process absent; exact duplicate bundle removed."
   },
   "implemented": [
     "P21 exact display-oriented PDF/image region target, keyboard percentages/pointer selection, current actual draw/source ownership and explicit confirmation.",
@@ -47,6 +47,34 @@
     {
       "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/implementation.json",
       "sha256": "b6fd23d88470d1f8a7c7e305be0be4f6cc834009dfffdf2ea773038482f895df"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/integration-independent.json",
+      "sha256": "b3a1b5b6474b92131f2eb0913bb542ff40b450de5309e6b1bb49dd4742d68360"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate.json",
+      "sha256": "53222552bb7589be1a6f59b9f93742fd2727281f1e8827b3f77dde410e8097a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json",
+      "sha256": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-data-retention.json",
+      "sha256": "f74bf5760dc7c590d94024e0a5630063552b117d5bad3f884f707a4afaf76dd5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/install-independent.json",
+      "sha256": "cbb635080edc96bf21a1cd5f9881eb7d43193305397d822cfd42f990486ec480"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-visual-area.json",
+      "sha256": "b56c201106a2fe805a14c8656bd27e04b7ab81ad22260f3c89fc3e925983eea3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/native-closeout-independent.json",
+      "sha256": "c3add58b2250680fa2b071d53b694f6b8378d39617e7c42c7c8f065c0143935d"
     }
   ],
   "privatePreparation": {
@@ -58,14 +86,18 @@
     "nativeFixtures": "three owned copies at v1; switch helper guards directory identity, owner and exact known hashes"
   },
   "next": [
-    "Independent final integration receipt; dependency-closed source commit.",
-    "Candidate build and independent verification; preinstall snapshot, sole-app replacement and after-data review.",
-    "Native area feedback checks and old draft retention; normal exit.",
-    "Continue P22 bounded real rework and P19 reported-file aggregation; global market plan remains incomplete."
+    "P22 bounded same-session real rework; P19 reported-file aggregation continues in parallel.",
+    "Keep original active-plan completion conditions; overall market readiness not complete."
   ],
   "boundaries": [
     "No complete P21/P22/market or 29-Agent eight-standard claim.",
     "NEW04 native startup-recovery UI remains untested; do not corrupt real user data to create the entry.",
     "Two Oct8 dirty markdown files remain protected; no push."
-  ]
+  ],
+  "candidate": {
+    "archive": "src-tauri/target/internal-candidate/2026-10-10-a47a6652/Farfold-0.1.7-a47a6652.zip",
+    "bytes": 12865703,
+    "sha256": "2f9becb6769ebc7a67fa627e8f67aba580808fb0b6ae51fdaaac0957849d3d00",
+    "independent": "9/9 passed; candidate-independent.json"
+  }
 }

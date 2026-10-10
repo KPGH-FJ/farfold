@@ -1,0 +1,95 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 120
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				14 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				15 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				16 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				17 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				18 按钮 FARFOLD_LARGE_F71A3434_20261010。不要调用任何工具
+				19 按钮 FARFOLD_DOCX_AF66F006_20261010。不要调用任何工具，
+				20 按钮 FARFOLD_PREVIEW_0DE05B0A_20261009：这是一项文件
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 24
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 9 新回复
+				41 按钮 设置
+				42 文本 属于你的 Agent，在一处相遇。
+				43 container
+					44 按钮 返回
+					45 标题 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，, Value: 1
+						46 文本 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+					47 text TR · 未在运行
+					48 按钮 查找当前对话
+					49 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+					50 按钮 浏览器
+					51 弹出式按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，的操作
+					52 text 你  ·  10:51
+					53 按钮 复制消息
+					54 弹出式按钮 消息操作
+					55 text FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，不要读取或修改任何文件，不要访问网络。只原样回复下面三行 Markdown 链接，不添加其他文字。
+
+[区域 PDF](/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf)
+[方向图片](/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg)
+[普通图片](/private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png) Codex  · 10:51
+					56 按钮 复制消息
+					57 弹出式按钮 消息操作
+					58 按钮 区域 PDF, Help: /private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf
+					59 按钮 方向图片, Help: /private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg
+					60 按钮 普通图片, Help: /private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png
+					61 摘要 最近收到的扩展字段, Value: off
+						62 文本 最近收到的扩展字段
+					63 text ✓  已完成 10:51
+					64 摘要 最近收到的扩展字段, Value: off
+						65 文本 最近收到的扩展字段
+					66 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
+						67 文本 发送消息…
+					68 弹出式按钮 添加文件或图片
+					69 弹出式按钮 模型与来源
+					70 文本 思考
+					71 弹出式按钮 思考深度: Ultra, Help: Ultra
+					72 弹出式按钮 对话权限
+					73 弹出式按钮 命令与模板
+					74 按钮 (disabled) 发送
+					75 弹出式按钮 对话用量
+					76 文本 Enter 发送 · Shift Enter 换行
+	77 关闭按钮
+	78 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	79 最小化按钮
+	80 文本 Farfold
+81 menu bar
+	82 Farfold
+	83 文件
+	84 编辑
+	85 显示
+	86 窗口
+	87 帮助
+
+The focused UI element is 66 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

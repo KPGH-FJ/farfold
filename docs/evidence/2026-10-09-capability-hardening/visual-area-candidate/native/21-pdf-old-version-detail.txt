@@ -1,0 +1,16 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 103-104
++							116 container (expanded) Secondary Actions: Collapse
++								117 摘要 其他内容版本的意见, Value: on
++									118 文本 其他内容版本的意见
++								119 文本 意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。
++								120 container
++									121 text /private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf  ·  保留的意见 1
++								122 文本 关于 "/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf"（当时查看的内容，第 2 / 4 页，以当时显示画面左上角为起点，左 60%、上 10%、右 80%、下 40%（按显示方向），位置未重新核对）：
+文件 SHA-256：56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060
+AREA_A47A6652_PDF
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++								123 按钮 加入输入框
++								124 按钮 复制意见
+The focused UI element is 117 摘要 其他内容版本的意见, Value: on

@@ -1,0 +1,193 @@
+{
+  "checkedAtUtc": "2026-10-10T02:49:39.584040+00:00",
+  "sourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json",
+        "sha256": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd",
+        "bytes": 3624
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": true,
+      "normalExitObservedBy": "Root; independent review verifies records/hashes, not a second native observation.",
+      "operation": {
+        "path": "output/2026-10-10-visual-area-install/install-operation.json",
+        "sha256": "2a86b5e078e1319bf6a6f3623d5b1d06c160cc5a668a9a92d35d6c2cf74d80ff",
+        "bytes": 2871
+      },
+      "phase": "installedVerifiedNotLaunched",
+      "copyStarted": true,
+      "dataRetentionComparisonPending": "Historical installer flag; completed aggregate and independent raw manifest checks below close this step."
+    },
+    "completePrivateManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "0e07a6501b63f862c8cd79bca3c2cf3937a892474e663b4bbca387478338fa38",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "0e07a6501b63f862c8cd79bca3c2cf3937a892474e663b4bbca387478338fa38",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "0e07a6501b63f862c8cd79bca3c2cf3937a892474e663b4bbca387478338fa38",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "counts": {
+        "appData": {
+          "directory": 21360,
+          "file": 195450,
+          "special": 0,
+          "symlink": 328
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "special": 0,
+          "symlink": 0
+        },
+        "webkit": {
+          "directory": 152,
+          "file": 100,
+          "special": 0,
+          "symlink": 0
+        }
+      },
+      "allThreeEqual": true,
+      "contentsPrinted": false
+    },
+    "metadataCopyProtection": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "ac2163eddcfd2ae438f13ccbe4f592f000512fceea0fd49e823a96da55ff16f7",
+      "rawRowsPrintedOrSaved": false
+    },
+    "formalCandidateExactFiles": {
+      "passed": true,
+      "exactFileCount": 5,
+      "hashes": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "965d31beed9f6d488b955977705919a98eac581b07803ceea0b0e3695e1dacfa",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/_CodeSignature/CodeResources": "0o644"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "path": "src-tauri/target/internal-candidate/2026-10-10-a47a6652/Farfold-0.1.7-a47a6652.zip",
+      "sha256": "2f9becb6769ebc7a67fa627e8f67aba580808fb0b6ae51fdaaac0957849d3d00",
+      "bytes": 12865703,
+      "crc": "passed",
+      "exactFiveContentsAndModes": true
+    },
+    "formalIdentitySignature": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc; no public signing/notarization claim"
+    },
+    "exactCandidateSource": {
+      "passed": true,
+      "commit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+      "inputCount": 1201,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed",
+      "currentBytesAndGitBlobsMatch": true
+    },
+    "formalProcessAbsent": {
+      "passed": true,
+      "exitCode": 1,
+      "matched": 0
+    },
+    "verificationInputsStable": {
+      "passed": true,
+      "publicAndPrivateReceiptHashesUnchanged": true,
+      "formalCandidateArchiveRechecked": true
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed workbook-range ten-check verifier with corrected previousNativeReceipt schema; this is the visual-area invocation.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate.json": "53222552bb7589be1a6f59b9f93742fd2727281f1e8827b3f77dde410e8097a8",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-inputs.json": "0121c3205b3731d7197023b3de45862ca2b72935705f8445c8ef1c83ce7b673f",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-data-retention.json": "f74bf5760dc7c590d94024e0a5630063552b117d5bad3f884f707a4afaf76dd5",
+    "output/2026-10-10-visual-area-install/install-operation.json": "2a86b5e078e1319bf6a6f3623d5b1d06c160cc5a668a9a92d35d6c2cf74d80ff",
+    "output/2026-10-10-visual-area-install/normal-exit-observation.json": "dba88f60134260a8c7001eb40faee26226bb1574290340d1efc5e660e0427683",
+    "output/2026-10-10-visual-area-install/metadata-backup-receipt.json": "cfac7cd684ee4cdb01696a9f11c29f42beb44490bb3a412435d25919f9927abe",
+    "output/2026-10-10-visual-area-install/install-data-before-summary.json": "810d26a582b20ecc5defca57ba5a1cfce3de3d5302a4facc8d950fc4f557c3cc",
+    "output/2026-10-10-visual-area-install/install-data-preinstall-summary.json": "810d26a582b20ecc5defca57ba5a1cfce3de3d5302a4facc8d950fc4f557c3cc",
+    "output/2026-10-10-visual-area-install/install-data-after-summary.json": "810d26a582b20ecc5defca57ba5a1cfce3de3d5302a4facc8d950fc4f557c3cc"
+  },
+  "reviewedHelpers": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/verify-install-independent.py",
+      "sha256": "85ea48571d4254bd230b1d277152b139cb0954cc18ca21960b083e0142796d67",
+      "bytes": 19456
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/verify-candidate.py",
+      "sha256": "f3b8ebd4b8533b237b9b8465c5b7c4efb4da0c1a629e50dc43764717bd485368",
+      "bytes": 13770
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/verify-data-retention.py",
+      "sha256": "4b72b8ff1b473af7f4e5cad4d5c98fb9fe54c0aeba32fe68d0a93a1e593eeb75",
+      "bytes": 3988
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/install_verified_candidate.py",
+      "sha256": "f3ab5972495483911158ae46ba95bbe7fc46a37da64aa4dccbc3f24dbeb86f39",
+      "bytes": 15198
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    }
+  ],
+  "boundaries": [
+    "Disk/hash/ZIP/signature/manifests and disposable SQLite verification only; root observed Cmd-Q.",
+    "No original database opened with SQLite; no rows or credentials printed or saved.",
+    "No app launch, replacement, quit, or duplicate bundle deletion by this verifier.",
+    "Installed PDF/image region interaction, historical-anchor recovery journey and real-Agent acceptance remain untested in this receipt.",
+    "Snapshot equivalence includes captured WAL; no claim beyond captured stable-source checks and equal installation manifests."
+  ],
+  "nativeReadyAfterRootDuplicateCleanup": true,
+  "completedAtUtc": "2026-10-10T02:49:42.057205+00:00"
+}

@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 84-90, 137-145, 149
++						149 container 文件
++							150 文本 plain-image.png
++							151 按钮 返回文件与输出
++							152 按钮 放大内容
++							153 按钮 收起对话内容
++							154 摘要 文件位置, Value: off
++								155 文本 文件位置
++							156 按钮 重新读取
++							157 按钮 (collapsed) 修改意见, Secondary Actions: Expand
++							158 按钮 用默认应用打开
++							159 按钮 在文件夹中显示
++							160 按钮 完整文件另存为…
++							161 container
++								162 文本 当前显示的是已读取的文件版本。
++								163 按钮 选择意见区域
++								164 图像 plain-image.png
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

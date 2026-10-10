@@ -1,0 +1,29 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 43-63
++				75 container
++					76 按钮 返回
++					77 标题 新会话, Value: 1
++						78 文本 新会话
++					79 text TR · 未在运行
++					80 按钮 查找当前对话
++					81 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					82 按钮 浏览器
++					83 弹出式按钮 新会话的操作
++					84 文本 第一条消息即开始会话
++					85 摘要 最近收到的扩展字段, Value: off
++						86 文本 最近收到的扩展字段
++					87 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
++						88 文本 把想法放在这里…
++					89 弹出式按钮 添加文件或图片
++					90 弹出式按钮 选择 Agent
++					91 弹出式按钮 模型与来源
++					92 文本 思考
++					93 弹出式按钮 思考深度: Ultra, Help: Ultra
++					94 弹出式按钮 对话权限
++					95 弹出式按钮 更多设置
++					96 弹出式按钮 命令与模板
++					97 按钮 (disabled) 发送
++					98 text Enter 发送 · Shift Enter 换行 工作文件夹
++					99 按钮 更换工作文件夹, Help: /Users/tw/Desktop/TR
++					100 按钮 移除文件夹
++					101 文本 仅作为工作位置，权限另行确认

@@ -1,0 +1,154 @@
+{
+  "checkedAtUtc": "2026-10-10T03:05:52.506985+00:00",
+  "result": "passed",
+  "sourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "reviewType": "Independent receipt/hash/private-copy review; reviewer did not operate or observe the native journey live.",
+  "checks": {
+    "nativeReferences": {
+      "count": 54,
+      "allHashesMatch": true,
+      "recordedObservations": 38,
+      "textRecords": 38,
+      "screenshots": 9,
+      "cases": 11,
+      "pixelClaimsAttributedTo": "root; screenshots hashed, not re-observed in this review"
+    },
+    "candidateInstallChain": {
+      "allInputReceiptHashesMatch": true,
+      "candidateIndependentChecks": 9,
+      "installIndependentChecks": 10,
+      "historicalInstallationManifests": "217400 entries each, identical installation-time hashes; existing independently verified receipt retained, not confused with post-native data."
+    },
+    "formalPackage": {
+      "exactFiveFilesMatch": true,
+      "binarySha256": "965d31beed9f6d488b955977705919a98eac581b07803ceea0b0e3695e1dacfa",
+      "archiveSha256": "2f9becb6769ebc7a67fa627e8f67aba580808fb0b6ae51fdaaac0957849d3d00",
+      "archiveCrcAndExactContentsMatch": true,
+      "archiveScope": "Five Farfold.app regular contents; standard __MACOSX AppleDouble metadata excluded from app file map.",
+      "strictCodesignExitCode": 0,
+      "formalProcessCount": 0,
+      "duplicateBuildAppAbsent": true
+    },
+    "privateCopyDrafts": {
+      "phases": {
+        "pre-cold": {
+          "integrity": "ok",
+          "capturedAndWorkingUnsentExactlyEqual": true,
+          "groups": {
+            "composers": {
+              "beforeEntries": 7,
+              "afterEntries": 8,
+              "existingEntriesExactlyUnchanged": 6
+            },
+            "feedback": {
+              "beforeEntries": 5,
+              "afterEntries": 6,
+              "existingEntriesExactlyUnchanged": 5
+            },
+            "queues": {
+              "beforeEntries": 3,
+              "afterEntries": 3,
+              "existingEntriesExactlyUnchanged": 3
+            }
+          },
+          "normalizationCount": 1,
+          "unanticipatedDifferences": 0,
+          "controlledComposerExactDecimalAndShaOccurrences": 1,
+          "retainedPdfExactVersionAndArea": true,
+          "receipt": {
+            "path": "output/2026-10-10-visual-area-install/pre-cold-draft-retention.json",
+            "sha256": "2f7543f8349a2be2990094fc296981d754570da4d25cacbdf598ec5feb216438"
+          }
+        },
+        "cold": {
+          "integrity": "ok",
+          "capturedAndWorkingUnsentExactlyEqual": true,
+          "groups": {
+            "composers": {
+              "beforeEntries": 7,
+              "afterEntries": 8,
+              "existingEntriesExactlyUnchanged": 6
+            },
+            "feedback": {
+              "beforeEntries": 5,
+              "afterEntries": 6,
+              "existingEntriesExactlyUnchanged": 5
+            },
+            "queues": {
+              "beforeEntries": 3,
+              "afterEntries": 3,
+              "existingEntriesExactlyUnchanged": 3
+            }
+          },
+          "normalizationCount": 1,
+          "unanticipatedDifferences": 0,
+          "controlledComposerExactDecimalAndShaOccurrences": 1,
+          "retainedPdfExactVersionAndArea": true,
+          "receipt": {
+            "path": "output/2026-10-10-visual-area-install/cold-draft-retention.json",
+            "sha256": "6f82f709be1e1f39bd11928e614edc5ab3ea72655158fd64de868761fc89fecf"
+          }
+        }
+      },
+      "preColdAndColdFullUnsentSnapshotEqual": true,
+      "retainedCopyHashesUnchanged": true,
+      "originalDatabaseOpened": false,
+      "userBodyPrintedOrSaved": false,
+      "method": "Copy retained private baseline/main/WAL/SHM to separate disposable directory; query settings unsentWork.v1 with mode=ro; integrity check; compare original entries exactly, allowing only documented absent sendPending to false."
+    },
+    "controlledFixtures": {
+      "originalFiveVersionedAssetsHashMatch": true,
+      "threeNativeFilesRestoredToV1": true,
+      "temporaryDirectoryIdentityMatches": true,
+      "manifest": {
+        "path": "output/2026-10-10-visual-area-install/native-fixtures/manifest.json",
+        "sha256": "df018747ccf8857cbf01a9f3a39275e2aeccbdaa3a45daa30c1ef043b7505fac"
+      }
+    }
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-visual-area.json",
+      "sha256": "b56c201106a2fe805a14c8656bd27e04b7ab81ad22260f3c89fc3e925983eea3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate.json",
+      "sha256": "53222552bb7589be1a6f59b9f93742fd2727281f1e8827b3f77dde410e8097a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-inputs.json",
+      "sha256": "0121c3205b3731d7197023b3de45862ca2b72935705f8445c8ef1c83ce7b673f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json",
+      "sha256": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-data-retention.json",
+      "sha256": "f74bf5760dc7c590d94024e0a5630063552b117d5bad3f884f707a4afaf76dd5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/install-independent.json",
+      "sha256": "cbb635080edc96bf21a1cd5f9881eb7d43193305397d822cfd42f990486ec480"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "2ffa24db3c9364c4b199f0bc98a8146d64117cb1b12820d367b98bf3d5b4fab7"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/check_native_drafts.py",
+      "sha256": "12d76b89db338abc476197d0f6bde1fc41568814331771f5241e7736673cda67"
+    }
+  ],
+  "reviewerDiagnostics": [
+    "First helper assertion included __MACOSX AppleDouble entries in the app file map and stopped before SQLite; corrected to exact Farfold.app/ prefix. No product failure or artifact mutation."
+  ],
+  "boundaries": [
+    "Source workspace now contains P19 WIP; this review ties installed immutable binary to retained a47 candidate, not current source bytes.",
+    "Root recorded the native clicks, screenshots, one bounded no-tool response and normal quits; this is not a second native execution.",
+    "Original seven composer entries: six exactly unchanged, one differs only by absent sendPending becoming false; five feedback groups and three queues exactly unchanged.",
+    "One controlled composer and one controlled feedback group added; image opinion occurs once in composer and PDF area/version retained across cold restart.",
+    "No real Agent rework/area interpretation, complete P21/P22/29-Agent acceptance, Windows or damaged-start recovery UI proven.",
+    "Independent browser did not execute mid-drag scroll interruption; native receipt lists that native path untested."
+  ]
+}

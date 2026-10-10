@@ -1,0 +1,10 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 128
+~				78 按钮 新对话 草稿 ⌘ N
++						142 文本 (settable) FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，不要读取或修改任何文件，不要访问网络。只原样回复下面三行 Markdown 链接，不添加其他文字。
+
+[区域 PDF](/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf)
+[方向图片](/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg)
+[普通图片](/private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png)
+~					137 按钮 发送
+The focused UI element is 127 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…

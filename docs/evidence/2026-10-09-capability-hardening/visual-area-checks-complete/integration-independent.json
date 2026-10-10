@@ -1,0 +1,231 @@
+{
+  "reviewedAtUtc": "2026-10-10T02:45:42.234906+00:00",
+  "result": "no_open_blocker_in_reviewed_source_and_exact_final_integration_evidence",
+  "independence": "Reviewer independently reviewed root/peer parent/UI and integration evidence; reviewer authored area runtime and candidate helpers. Runtime/helper independent review is attributed to verification peer, not self-certified.",
+  "method": "Read source and original logs/JSON; recompute SHA256, compare inventories and raw/formatted JSON semantics. Evaluate only pure inventory constants through AST, never helper top-level. No tests/build/browser/application/Agent/database operations rerun.",
+  "engineering": {
+    "aggregate": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/final-verification.json",
+      "sha256": "80e7466614e121a3099c268df302f4e2f335b55fe4981399ca05717dbe9ceb15"
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/inputs.json",
+      "sha256": "644793269722418fdaeddc06866fc83c30669d03280bcde77a7be60f853c9fb2"
+    },
+    "inputCount": 1201,
+    "allCurrentInputHashesMatch": true,
+    "phases": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/final-verification.json",
+        "sha256": "b6b201347e8e4bce14b50f46dbe6e4625df0bc6c98aaf2e08a14dfe194a46565"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/final-verification.json",
+        "sha256": "80e7466614e121a3099c268df302f4e2f335b55fe4981399ca05717dbe9ceb15"
+      }
+    ],
+    "firstToFinalDelta": [
+      ".prettierignore",
+      "src/components/VisualFilePreview.area.test.tsx",
+      "src/components/VisualFilePreview.tsx"
+    ],
+    "finalToCompleteDelta": [],
+    "backendSharedConfigurationLockUnchangedCount": 350,
+    "frontend": {
+      "files": 331,
+      "tests": 3977,
+      "origin": "visual-area-checks-final/frontend.txt"
+    },
+    "rust": {
+      "passed": 1230,
+      "ignored": 6,
+      "origin": "visual-area-checks/rust.txt",
+      "reused": true,
+      "reason": "Current-slice Rust, shared restore fixture and configuration bytes identical from initial through final snapshots; not reuse from preceding feature batch."
+    },
+    "allPhaseLogHashesRecomputed": true,
+    "executionClassification": "Frontend/type/build ran after PDF width repair. Rust/cargo-fmt/clippy ran during this slice initial check and are explicitly reused. Only format reran in completion. executedNow retains origin-phase metadata; executedInThisCompletion identifies the format-only execution.",
+    "retainedFailures": [
+      "Initial sourceStable=false because frontend test drift; format failed for frozen historical receipt and two maintained docs. Initial aggregate is not a pass.",
+      "Second aggregate format failed only for webkit-geometry-scrolled.json. Original log retained; completion format exited0 at unchanged1201 source inputs."
+    ]
+  },
+  "sourceReview": {
+    "prior": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/architecture-source-review.json",
+      "sha256": "e562f707d68cc03e01336803cfa2e13b293e37b2537512aa67c8b1e39d2c895a"
+    },
+    "deltaSincePrior": [
+      "src/components/VisualFilePreview.tsx",
+      "src/components/VisualFilePreview.area.test.tsx"
+    ],
+    "repair": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-fix.json",
+      "sha256": "7a78c16a348d521f9ef44e9ff9e400da181153a62609babde753b755941a836a"
+    },
+    "conclusions": [
+      "PDF measures stable preview clientWidth minus actual horizontal padding, avoiding hidden fit-content parent width0. Existing DPR cap, renderer and draw ownership remain unchanged.",
+      "Root hook and parent match previous exact checkpoint. Current policy, source and actual preview are checked again after renderer matcher callbacks; stale registration or synchronous revocation cannot apply a target.",
+      "Runtime12-source checkpoint remains current. Actual-source eligibility, coordinate conversion, strict cold union and recovery allowlist match verification peer source review.",
+      "Interaction blocking remains separate from reading/drawing lifetime. Old pixels stay visible while target ownership retires; new frame after unblock cannot revive old source. Actual browser evidence covers the declared flow."
+    ],
+    "runtimeIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/runtime-source-review.json",
+      "sha256": "232d13e492fe4e251cf3ef5e45d89df54c732ca0932e5a779ec55ffb5236866b"
+    },
+    "parentAddendum": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/parent-addendum.json",
+      "sha256": "69e3c230420266bc7ecba63fef763c158136852761ea6f1ca0b0451c67926087"
+    },
+    "historicalUiCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/implementation.json",
+      "sha256": "94acf5a35313fa5139aba82cf81415980070b74fc7982973df313c9c6ee73639"
+    },
+    "historicalUiHashDeltaExplained": true,
+    "currentSourceHashes": {
+      "src-tauri/src/storage_recovery/restore_tests.rs": "98cd6b0e75177ab6c5376dd7fc0ec0ac86fbd548ebd6e9356b091658d4dc5590",
+      "src/components/OpenedFileView.tsx": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829",
+      "src/components/OpenedFileView.visual-area.test.tsx": "9279bc4e66dba9a69f2a1642501bac6c9d27d3145f7cb18968254abe7f5bca91",
+      "src/components/VisualAreaSelection.test.tsx": "7d3e7ac50bdd59589a86b8d4c515c4ef5d7fbc8f52bdbcc6290d400d1448ad9d",
+      "src/components/VisualAreaSelection.tsx": "17937afb5697fc32f78dc8102d2b8ed6d5b08d7294d4648f8a6cfa8a8a8616d3",
+      "src/components/VisualFilePreview.area.test.tsx": "f76ccfbd96f9c57565fd25b5944841cf4458fcada0c9e178fed8ca123d114e10",
+      "src/components/VisualFilePreview.css": "d8577f691f6a607239b647f60894030ee1b70a8e86a17fb42b64597ba3bb1eb0",
+      "src/components/VisualFilePreview.tsx": "13f2b34344e514ed1999836a8ba032b0f657669a72d18a742e9ec0e59e1c6512",
+      "src/components/useFileFeedbackTargets.ts": "7b9e3fd34f600ccb397ce7c87d02877336f8844eb733cc63bd19d50a4a91fce8",
+      "src/runtime/feedback_strings.ts": "a9ae75471bc166b09f73a7f115c8231e11c5eff222d81055634201764595b751",
+      "src/runtime/file_feedback_anchor.ts": "d347868cac0a4b4af2caaf72004af1dba438248836455d15e7c3102396a33b9e",
+      "src/runtime/file_feedback_anchor.visual.test.ts": "ac2b7c88b8df3b7f4e1112e783331fefd18f3910bf55231286717d456731c754",
+      "src/runtime/file_target_editing.ts": "fc11063ecd641109c16088ec40727a9467d931718d770be984f65e2b176db4a5",
+      "src/runtime/fixtures/storage-restore-v1.json": "ff1d062e932e32c058502cec401f578e81e7eda55e6aedca3741acd3a6f5d859",
+      "src/runtime/storage_restore.ts": "5a55825117e244abbceb350a2b46fa7f558fcb81c0517e8cd42a346b582c50c3",
+      "src/runtime/storage_restore.visual.test.ts": "c10eb7c77a07b1dd0b9e8684fc495a24d4f80598eedb29f06c8838649795fa6c",
+      "src/runtime/visual_area_coordinates.test.ts": "868a242ff006ebddf568379e40475cfcfe7d52caef35f4e431d919ffc3c82497",
+      "src/runtime/visual_area_coordinates.ts": "fba785dab77ccbf5fd9790ea51cba6e0e211148c5774346ab2056732af158d27",
+      "src/runtime/visual_area_strings.ts": "db6d0159d9d537dace4d09b3585eb95dc1daaf00b8f6533851ff74224000722d",
+      "src/runtime/visual_feedback_persistence.test.ts": "2424d12aad92dfef8dc24af89615bde7b9b7064922dd332cc635c91d3434f163",
+      "src/runtime/visual_feedback_target.test.ts": "ba0c141f6143fddd8521d921379e065bdcc35c8894065b801e8da3e001d7bba4",
+      "src/runtime/visual_feedback_target.ts": "2942f814a2fedfdfd01b769ca817ab1bd6f5ef07801a97bd8c5111dc26e71fdb"
+    }
+  },
+  "browserEvidence": {
+    "peerReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/implementation.json",
+      "sha256": "b6fd23d88470d1f8a7c7e305be0be4f6cc834009dfffdf2ea773038482f895df"
+    },
+    "peerReferencesRehashed": 135,
+    "rawFormattedPairsSemanticallyEqual": 18,
+    "results": [
+      {
+        "scope": "full_app_geometry",
+        "engine": "webkit",
+        "checksPassed": 147,
+        "caseCount": 13,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.json",
+          "sha256": "3fbc4b8f45628f3a1bcabc8e84f09d516f373563c2eb25bf76f7e3e0c457af7d"
+        }
+      },
+      {
+        "scope": "full_app_geometry",
+        "engine": "chromium",
+        "checksPassed": 147,
+        "caseCount": 13,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.json",
+          "sha256": "6c48e6d2fe77ac9699dbb7926059f7e2afe599b534a4f070e2fafd00a1559bf1"
+        }
+      },
+      {
+        "scope": "full_app_lifecycle",
+        "engine": "webkit",
+        "checksPassed": 30,
+        "caseCount": 2,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.json",
+          "sha256": "3d74d81cc50a7de3e6ebc511af5dddb681f5eed56b32c8af9c4fa57eaf70a18a"
+        }
+      },
+      {
+        "scope": "full_app_lifecycle",
+        "engine": "chromium",
+        "checksPassed": 30,
+        "caseCount": 2,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.json",
+          "sha256": "96a48da3d6343989dd419f92ac76ec25b6e7dae0629fd813b79420bf5ecf6e07"
+        }
+      },
+      {
+        "scope": "restore_component_preview_only",
+        "engine": "webkit",
+        "checksPassed": 16,
+        "caseCount": 3,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.json",
+          "sha256": "0d613a4963841d017442980848b1eae4e1e6b5a96f0dd598f820be0972ddfc6e"
+        }
+      },
+      {
+        "scope": "restore_component_preview_only",
+        "engine": "chromium",
+        "checksPassed": 16,
+        "caseCount": 3,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.json",
+          "sha256": "d3a583c68204592cf2f723ebb285c6fd49030a6eda3fe915d4ba5f926ac12a46"
+        }
+      }
+    ],
+    "currentBrowserSrcFilesMatched": 722,
+    "standaloneRenderer": {
+      "checksPerEngine": 38,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/renderer-checkpoint.json",
+        "sha256": "272eb097fa61f8854de343622ebbe9f350b38d808409cb4b6451bfb6b76657be"
+      },
+      "separateFromFullApp": true
+    },
+    "pdfCounterexample": "Original actual WebKit1x1 product failure retained; same smoke8 green after repair, then both full-App147-check geometry matrices. Controlled unit1664-pixel expectation at cappedDPR2 is separate evidence.",
+    "driverFailures": "Out-of-view pointer, object property order, unchanged actual box after resize, ambiguous close control, cold visibility and unrelated evidence-collector drift are separately retained/classified; not counted as product fixes.",
+    "restoreBoundary": "NEW04 actual StorageRestore component with controlled preview only: shared legal six-kind anchors selectable; invalid area forms disabled. No apply or daily database/native restoration. Rust temporary-DB retention and TS semantics remain separate.",
+    "notRerunByThisReviewer": true,
+    "screenshotsIndependentlyViewedByThisReviewer": false
+  },
+  "candidateReadiness": {
+    "inventoryEqualToEngineering": true,
+    "inputCount": 1201,
+    "visualFixtureFiles": 16,
+    "helpers": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/run-visual-area-checks.py",
+        "sha256": "a2afc1496436f7844a919d19fd8ccb9a5e2d9b1c43be1ac801002cf8fb3a0b8e"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/prepare-candidate.py",
+        "sha256": "4a2b2019909831378bda728cdd34c952bba5f49663bac764965cd5b767f43dc7"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/verify-candidate.py",
+        "sha256": "f3b8ebd4b8533b237b9b8465c5b7c4efb4da0c1a629e50dc43764717bd485368"
+      }
+    ],
+    "helperIndependentStaticReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/install-helpers-static-review.json",
+      "sha256": "d62bbec0caa9cdce614230669cc707159253c8437015b840b24e2385f9941f7d"
+    },
+    "formalBaselineCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "executionStillRequired": "Exact source commit and successful prepare must precede nine candidate checks. Guarded installation/data retention/ten checks remain separate and were not executed here."
+  },
+  "diagnostic": "First receipt-generation attempt stopped before writing because reviewer typed root[path] instead of root/path. Subsequent Prettier correctly reported missing receipt. Corrected read-only audit revalidated all assertions before creating this file; no production change or test failure.",
+  "limits": [
+    "No installed/native UI/real Agent/Windows conclusion. P22 still requires actual same-conversation Agent rework and disk export.",
+    "No production or protected README changes by reviewer; old receipts were not rewritten.",
+    "Owner unit tests, controlled browser, temporary SQLite, future built candidate and installed application are distinct proof levels."
+  ]
+}

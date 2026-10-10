@@ -1,0 +1,6 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 98-116
+~								97 文本 当前显示的是已读取的文件版本。
++								128 按钮 选择意见区域
++								129 图像 plain-image.png
+The focused UI element is 128 按钮 选择意见区域

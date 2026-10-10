@@ -1,0 +1,35 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					49 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					139 container 对话内容面板
++						140 分离器 调整内容宽度, Value: 510
++						141 container 对话内容面板
++							142 开关按钮 文件与输出, Value: on
++							143 开关按钮 网页, Value: off
++						144 container 文件
++							145 文本 crop-rotations.pdf
++							146 按钮 返回文件与输出
++							147 按钮 放大内容
++							148 按钮 收起对话内容
++							149 摘要 文件位置, Value: off
++								150 文本 文件位置
++							151 按钮 重新读取
++							152 按钮 (expanded) 修改意见, Secondary Actions: Collapse
++							153 按钮 用默认应用打开
++							154 按钮 在文件夹中显示
++							155 按钮 完整文件另存为…
++							156 container
++								157 按钮 上一页
++								158 文本 第 3 / 4 页
++								159 按钮 下一页
++								160 文本 当前显示的是已读取的文件版本。
++								161 按钮 选择意见区域
++								162 图像 第 3 / 4 页
++							163 文本 第 2 / 4 页，以当时显示画面左上角为起点，左 60%、上 10%、右 80%、下 40%（按显示方向），位置未重新核对
++							164 开关按钮 针对整个文件, Value: off
++							165 开关按钮 针对当前第 3 页, Value: off
++							166 文本 意见保留原来的页码和内容版本，翻页不会改变意见目标。
++							167 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
++								168 文本 (settable) AREA_A47A6652_PDF
++							169 文本 意见对应当前查看的内容，加入输入框后由你发送。
++							170 按钮 加入对话
+The focused UI element is 167 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？

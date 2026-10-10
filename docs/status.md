@@ -4,13 +4,13 @@
 
 ## 当前基线与证据边界
 
-| 层级         | 已有证据                                                                                         | 不能据此推出                                             |
-| ------------ | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------- |
-| 产品源码     | PDF/图片区域和恢复预览修复已完成源码及受控检查，待本片正式安装；XLSX矩形与DOCX阅读位置已安装验证 | 所有已列能力已补齐                                       |
-| 工程检查     | 1,201输入稳定；前端331文件/3,977项、类型、打包、格式通过；本轮Rust1,230项/6忽略按精确输入复用    | 所有 Agent、系统权限及安装环境通过                       |
-| 正式安装     | 当前 `2e976168` / 0.1.7 arm64；XLSX范围与NEW-03正式窗口复验通过；已正常退出                      | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
-| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                             | 跨版本累计成功等于当前 29 家全部通过                     |
-| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                        | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
+| 层级         | 已有证据                                                                                      | 不能据此推出                                             |
+| ------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 产品源码     | PDF/图片区域及恢复预览修复已安装，区域分项实机通过；P19清单继续开发                           | 所有已列能力已补齐                                       |
+| 工程检查     | 1,201输入稳定；前端331文件/3,977项、类型、打包、格式通过；本轮Rust1,230项/6忽略按精确输入复用 | 所有 Agent、系统权限及安装环境通过                       |
+| 正式安装     | 当前 `a47a6652` / 0.1.7 arm64；区域意见与冷恢复分项通过；已正常退出                           | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
+| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                          | 跨版本累计成功等于当前 29 家全部通过                     |
+| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                     | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
 
 安装细节见[正式落地](evidence/2026-10-09-prototype07-landing/README.md)和[最终布局安装](evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md)。本轮源码与受控检查见[能力补强证据](evidence/2026-10-09-capability-hardening/README.md)。接续已调用已安装的官方 Claude 0.81.2 对接受控 HTTP 服务，确认实际路径、模型与测试认证头，并核本次进程组退出，见[路由实证](evidence/2026-10-09-capability-hardening/claude-service-delivery/installed-route.json)；不是实际模型回答、付费服务或新安装版 UI 证明。第三片[安装与数据保留](evidence/2026-10-09-capability-hardening/candidate/installed-data-retention.json)及[实际用量/冷恢复](evidence/2026-10-09-capability-hardening/candidate/installed-usage-progress.json)已有回执：Codex 1.13.1、gpt-6-astra / ultra 单次回复及累计用量显示，重启后正文恢复、未重报用量明确未知；继续发送仍需权限确认，本轮没有确认该权限或再次发送。第四片[安装与数据保留](evidence/2026-10-09-capability-hardening/fourth-candidate/installed-data-retention.json)核验完成，独立候选检查9/9通过，启动后110段对话可见；新能力仍逐项验证。OpenCode 1.18.31 在前三次 GUI 初始化超时后，本片重启恢复新草稿时再次自动准备并超时，没有手动点重试或发送。独立环境和真实传输探针均成功；第三次观测确认请求已写入、子进程卡在文件打开，macOS 同期出现桌面文件夹授权等待，结果仍未知且无可见弹窗。见[诊断回执](evidence/2026-10-09-capability-hardening/opencode-initialize-diagnosis.json)，不算恢复成功，不要求扩大到完全磁盘访问。
 
@@ -59,7 +59,9 @@ XLSX 任意矩形与 NEW-03 阅读位置修复在完成源码检查后，已提�
 
 历史故障与局部成功原始入口：[macOS 第一批](evidence/2026-10-06-macos-batch1/README.md)、[代表实测](evidence/2026-10-06-real-use/README.md)、[源级补强及 Windows 检查](evidence/2026-10-06-product-development/README.md)。未在新证据中关闭的旧故障继续保留，但不把旧版本失败直接判为当前复现。
 
-最新增量已提交安装 `2e976168` / 0.1.7：[正式窗口分项验证](evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json)通过XLSX准确矩形、隐藏行列确认、部分合并、无效输入保护、手动重读与自动刷新、跨版本意见及冷恢复；NEW-03同文件重开阅读位置通过。候选独立9/9、安装10/10及三份217,400条快照一致；旧未发送内容保持，1条可选sendPending缺省规范为false单列，最终正常退出。第二工作表实际可见，旧记录误称隐藏的范围已纠正，原始证据未改。前述8c2f和待安装说明为对应阶段记录，不覆盖本段。当前继续PDF/图片区域及NEW-04恢复预览白名单修复；源码与受控测试成功不等于已安装。
+此前增量已提交安装 `2e976168` / 0.1.7：[正式窗口分项验证](evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json)通过XLSX准确矩形、隐藏行列确认、部分合并、无效输入保护、手动重读与自动刷新、跨版本意见及冷恢复；NEW-03同文件重开阅读位置通过。候选独立9/9、安装10/10及三份217,400条快照一致；旧未发送内容保持，1条可选sendPending缺省规范为false单列，最终正常退出。第二工作表实际可见，旧记录误称隐藏的范围已纠正，原始证据未改。前述8c2f和待安装说明为对应阶段记录，不覆盖本段。随后区域安装结果见下段。
+
+PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据一致。[正式窗口分项验证](evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-visual-area.json)覆盖旋转PDF页的键盘区域、图片反向拖选/边界裁切、四位小数、明确确认、目标切换保留文字、无效输入、翻页/收起、换版旧意见及冷恢复。一次受限无工具链接回显沿用 Codex 6 Astra / Ultra 和既有服务权限；图片意见只加入原输入一次，保留前缀且未发送。正常退出后原7条输入中6条逐值相同、1条仅sendPending缺省规范为false；5组意见和3组待发逐值相同。新增仅本轮受控输入和PDF意见。NEW-04源码与受控恢复预览已通过，真实故障恢复入口仍未验，不破坏用户数据制造入口。当前继续P19清单和P22真实返工，全量计划未完成。
 
 ## 当前边界与下一步
 
@@ -69,7 +71,7 @@ XLSX 任意矩形与 NEW-03 阅读位置修复在完成源码检查后，已提�
 - 首批已推进停止竞态、数据保护、布尔协商和配置确认；接续官方来源映射、历史回放可见性、数据恢复与真实负载剩余条件。29 家公开资料见[官方能力基线](evidence/2026-10-09-capability-hardening/official-capabilities.json)，其中旧源码缺口与本轮修正按增量证据对照，不把资料核查算作真实通过。
 - 第五片整库恢复、PDF/图片预览与用户模板已完成源码整合及独立复核；[七项检查](evidence/2026-10-09-capability-hardening/fifth-checks-final/final-verification.json)通过，前端2,820项、Rust1,134项/5项忽略。首轮失败及修复证据保留；第五片已安装并启动，[数据留存](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-data-retention.json)及[独立核验](evidence/2026-10-09-capability-hardening/fifth-candidate/install-independent.json)通过。[模板实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-templates.json)覆盖创建/编辑/保存、关闭与重启恢复、保留草稿与附件且不自动发送；[预览实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-visual-preview.json)覆盖临时受控副本两页PDF、Type3中文单字、PNG及损坏/密码反馈。桌面路径读取等候系统许可，未解决；该次尚无Office预览，后续XLSX/DOCX进展见前文；整库恢复未破坏日常数据进行验收。第六片已补强P12已加载内容检索和P35导出保真，分项实机结果见上文。运行中引导的[官方接口核查](evidence/2026-10-09-capability-hardening/official-steering-surfaces.json)发现旧接口能力声明不足以保证只作用于当前工作，ARCH-37继续未完成。
 
-- P21 的文字、XLSX单元格/合并范围/任意矩形、DOCX段落/整表位置意见已分项安装验证，NEW-03具体阅读位置缺陷已复验关闭；继续PDF/图片区域与P22真实返工。NEW-04恢复预览拒绝合法位置已定位和修复，仍待当前增量整合及实际入口验证；这些分项不代表完整P21完成。
+- P21 的文字、XLSX单元格/合并范围/任意矩形、DOCX段落/整表、PDF/图片区域意见已分项安装验证，NEW-03具体阅读位置缺陷已复验关闭；继续P19清单与P22真实返工。NEW-04恢复预览修复已安装，实际故障入口仍待验证；这些分项不代表完整P21完成。
 
 ## 历史与维护记录
 

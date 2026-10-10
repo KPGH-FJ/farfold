@@ -1,0 +1,7 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~										101 文本栏 (settable) 左边（%）, Value: 10.1234
+~										104 文本栏 (settable) 上边（%）, Value: 20.5678
+~										107 文本栏 (settable) 右边（%）, Value: 70.4321
+~										110 文本栏 (settable) 下边（%）, Value: 80.8765
+~								112 文本 已选择：左 10.1234%，上 20.5678%，右 70.4321%，下 80.8765%。
+The focused UI element is 113 按钮 对此区域提意见

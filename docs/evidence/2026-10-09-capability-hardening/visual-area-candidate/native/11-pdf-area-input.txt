@@ -1,0 +1,23 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 116
+~								98 text 当前显示的是已读取的文件版本。 按当前画面的显示方向，从左上角起计算。可拖动选择，或填写四条边的位置（0–100%）。
+~								115 container 意见区域
++									116 container
++										117 文本 左边（%）
++										118 文本栏 (settable) 左边（%）
++									119 container
++										120 文本 上边（%）
++										121 文本栏 (settable) 上边（%）
++									122 container
++										123 文本 右边（%）
++										124 文本栏 (settable) 右边（%）
++									125 container
++										126 文本 下边（%）
++										127 文本栏 (settable) 下边（%）
++									128 按钮 选择区域
++								129 文本 选择区域后，再明确提意见；原有意见不会自动改变。
++								130 按钮 (disabled) 对此区域提意见
++								131 按钮 取消选择
++								132 container 当前显示画面的区域选择
++									133 图像 第 2 / 4 页
+The focused UI element is 118 文本栏 (settable) 左边（%）

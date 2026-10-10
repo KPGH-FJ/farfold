@@ -2,11 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：PDF/图片区域源码已验证，接续正式安装
+## 当前衔接：区域意见已安装验证，继续成果清单与真实返工
 
-PDF/图片区域意见及NEW-04恢复预览修复已完成[最终工程整合](visual-area-checks-complete/final-verification.json)：1,201输入稳定，前端331文件/3,977项及类型、打包、全仓格式通过；本轮Rust1,230项/6忽略按精确未变输入复用。[独立完整界面](visual-area/independent/implementation.json)双引擎各147项几何、30项生命周期、16项恢复预览通过，独立渲染各38项单列。实际PDF测宽1像素缺陷及修复、父层重入反例、驱动错误均保留。当前准备提交和候选；正式应用仍为下述2e976168，区域意见尚未安装，NEW-04不冒称正式故障恢复入口已验。
+PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据一致。[正式窗口分项验证](visual-area-candidate/installed-visual-area.json)覆盖旋转PDF页的键盘区域、图片反向拖选/边界裁切、四位小数、明确确认、目标切换保留文字、无效输入、翻页/收起、换版旧意见及冷恢复。一次受限无工具链接回显沿用 Codex 6 Astra / Ultra 和既有服务权限；图片意见只加入原输入一次，保留前缀且未发送。正常退出后原7条输入中6条逐值相同、1条仅sendPending缺省规范为false；5组意见和3组待发逐值相同。新增仅本轮受控输入和PDF意见。NEW-04源码与受控恢复预览已通过，真实故障恢复入口仍未验，不破坏用户数据制造入口。当前继续P19清单和P22真实返工，全量计划未完成。
 
-当前正式应用为 `2e976168` / 0.1.7 arm64，[XLSX矩形与阅读位置实机](workbook-range-candidate/installed-workbook-range.json)完成分项验证及冷恢复，NEW-03具体缺陷复验通过；最终正常退出。原未发送内容保持，1条可选sendPending缺省规范为false单列，旧原始失败保留。候选9/9、安装10/10与三份217,400条快照一致；[独立收口](workbook-range-candidate/native-closeout-independent.json)未冒称独立界面重演。当前接续PDF/图片区域及恢复预览修复；[维护衔接记录](workbook-range/checkpoint.json)已收齐本片提交、安装、分项实机和下一步，下文按阶段保留当时状态。
+本片[最终工程](visual-area-checks-complete/final-verification.json)1,201输入稳定，前端331文件/3,977项及类型、打包、全仓格式通过；本轮Rust1,230项/6忽略按精确输入复用。[独立完整界面](visual-area/independent/implementation.json)双引擎各147几何、30生命周期、16恢复预览通过，独立渲染各38单列。PDF测宽缺陷、父层重入反例及驱动错误均保留；[维护衔接记录](visual-area/checkpoint.json)记录本片状态。下文为此前阶段，不覆盖当前正式版本。
 
 本片 XLSX 任意矩形与 DOCX 内层阅读位置修复已完成源码及受控检查，见[工程汇总](workbook-range-checks-final/final-verification.json)、[阅读位置修复](docx-reading-position-repair/implementation.json)、[表格完整界面](workbook-range/independent/implementation.json)、[解析兼容修复与独立Worker](workbook-range/content-types/implementation.json)。前端323文件/3,811项及类型、打包、全仓格式通过，1,171输入稳定；Rust按未变输入复用。完整App两浏览器各74断言、Worker各404、DOCX常规与窄窗共208断言分层记录。独立写出器原样本拒绝的实际失败及修复保留，原ZIP未改。正式安装及实机结果见首段；第二工作表实际可见，旧记录误称隐藏的[范围纠正](workbook-range/independent/hidden-sheet-scope-correction.json)单列，隐藏行列确有覆盖。PDF/图片区域、P22真实返工及全域其余条目继续开放。
 

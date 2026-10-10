@@ -1,0 +1,18 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 69, 146-147
++						146 文本 (settable) AREA_A47A6652_COMPOSER_PREFIX
+~					76 按钮 发送
++							147 container (expanded) Secondary Actions: Collapse
++								148 摘要 其他内容版本的意见, Value: on
++									149 文本 其他内容版本的意见
++								150 文本 意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。
++								151 container
++									152 text /private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg  ·  保留的意见 1
++								153 文本 关于 "/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg"（当时查看的内容，以当时显示画面左上角为起点，左 10.1234%、上 20.5678%、右 70.4321%、下 80.8765%（按显示方向），位置未重新核对）：
+文件 SHA-256：4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df
+AREA_A47A6652_IMAGE
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++								154 按钮 加入输入框
++								155 按钮 复制意见
+The focused UI element is 68 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

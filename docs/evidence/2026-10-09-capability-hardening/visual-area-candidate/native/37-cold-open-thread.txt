@@ -1,0 +1,50 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 43-63
+~				13 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具， 需要你
++					75 按钮 1 等你回应
++				76 container
++					77 按钮 返回
++					78 标题 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，, Value: 1
++						79 文本 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++					80 text TR · 等你回应
++					81 按钮 查找当前对话
++					82 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					83 按钮 浏览器
++					84 弹出式按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，的操作
++					85 text 你  ·  历史消息
++					86 按钮 复制消息
++					87 弹出式按钮 消息操作
++					88 text FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，不要读取或修改任何文件，不要访问网络。只原样回复下面三行 Markdown 链接，不添加其他文字。
+
+[区域 PDF](/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf)
+[方向图片](/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg)
+[普通图片](/private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png) Codex  · 历史消息
++					89 按钮 复制消息
++					90 弹出式按钮 消息操作
++					91 按钮 区域 PDF, Help: /private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf
++					92 按钮 方向图片, Help: /private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg
++					93 按钮 普通图片, Help: /private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png
++					94 摘要 最近收到的扩展字段, Value: off
++						95 文本 最近收到的扩展字段
++					96 摘要 最近收到的扩展字段, Value: off
++						97 文本 最近收到的扩展字段
++					98 摘要 未发送的文件意见（1）, Value: off
++						99 文本 未发送的文件意见（1）
++					100 文本 继续发送前，请重新确认这条对话的权限。
++					101 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						102 container (settable)
++							103 文本 (settable) AREA_A47A6652_COMPOSER_PREFIX
++							104 文本 (settable) 关于 "/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg"（当时查看的内容，以当时显示画面左上角为起点，左 10.1234%、上 20.5678%、右 70.4321%、下 80.8765%（按显示方向），位置未重新核对）：
++							105 文本 (settable) 文件 SHA-256：4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df
++							106 文本 (settable) AREA_A47A6652_IMAGE
++							107 文本 (settable) 此意见针对上述版本；若文件已变化，请先核对位置与内容。
++					108 弹出式按钮 添加文件或图片
++					109 弹出式按钮 模型与来源
++					110 文本 思考
++					111 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					112 弹出式按钮 对话权限
++					113 弹出式按钮 命令与模板
++					114 按钮 (disabled) 加入待发
++					115 弹出式按钮 对话用量
++					116 文本 Enter 发送 · Shift Enter 换行
+The focused UI element is 101 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

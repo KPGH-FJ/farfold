@@ -1,0 +1,34 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 92, 124, 127, 134, 142
+~				78 按钮 新对话 ⌘ N
+~					81 按钮 所有对话 120
++				127 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具， 进行中
+~				96 按钮 Codex 24
++					128 按钮 1 进行中
+~					117 标题 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，, Value: 1
+~						118 文本 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+~					119 text TR · 进行中
+~					123 弹出式按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，的操作
+~					129 text 你  ·  10:51
+~					130 按钮 复制消息
+~					131 弹出式按钮 消息操作
+~					132 文本 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，不要读取或修改任何文件，不要访问网络。只原样回复下面三行 Markdown 链接，不添加其他文字。
+
+[区域 PDF](/private/tmp/farfold-visual-area-_eo3oy6p/crop-rotations.pdf)
+[方向图片](/private/tmp/farfold-visual-area-_eo3oy6p/image-orientation.jpg)
+[普通图片](/private/tmp/farfold-visual-area-_eo3oy6p/plain-image.png)
++					125 摘要 最近收到的扩展字段, Value: off
++						126 文本 最近收到的扩展字段
+~					133 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）
++						134 文本 转向当前任务…（运行中发送将进入队列）
+~					135 弹出式按钮 添加文件或图片
+~					136 弹出式按钮 模型与来源
+~					137 文本 思考
+~					138 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
+~					139 弹出式按钮 (disabled) 对话权限
+~					140 弹出式按钮 命令与模板
+~					141 按钮 停止
++					142 按钮 (disabled) 加入待发
++					143 弹出式按钮 对话用量
++					144 文本 ⏎ 排队
+The focused UI element is 133 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）

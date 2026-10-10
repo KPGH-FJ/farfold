@@ -1,0 +1,10 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~							92 按钮 (expanded) 修改意见, Secondary Actions: Collapse
++							128 文本 以当时显示画面左上角为起点，左 49.75%、上 9.9414%、右 79.75%、下 39.9415%（按显示方向），位置未重新核对
++							129 开关按钮 针对整个文件, Value: off
++							130 文本 意见保留原来的页码和内容版本，翻页不会改变意见目标。
++							131 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
++								132 文本 对这份内容有什么想法？
++							133 文本 意见对应当前查看的内容，加入输入框后由你发送。
++							134 按钮 (disabled) 加入对话
+The focused UI element is 131 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
