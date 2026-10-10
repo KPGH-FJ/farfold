@@ -2,15 +2,15 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：P39只读首片待整合，正式版仍为3632acb0
+## 当前衔接：08cff0ac官方MCP配置查询分项通过，继续P39
 
-正式版为 `3632acb0` / 0.1.7 arm64。[正式分项实测](project-file-scan-candidate/installed-project-files.json)确认小目录与2,200文件目录扫描的范围、截断、缩小匹配、重扫、特殊文件名、未列文件选择及选择器取消保留草稿；三份附件重启后核对保留。受控工作树归档、恢复、重启后明确重新核查通过，NEW-12冷恢复缺陷关闭。扫描本身取消未在正式窗口实测，工程和受控浏览器证据不替代它。
+正式版为 `08cff0ac` / 0.1.7 arm64。[正式分项实测](extension-inventory-candidate/installed-extension-inventory.json)通过共用入口在一个明确目录执行两次官方Codex MCP配置查询，各返回5条（2启用/3停用）；选择器取消保留原目录、结果和时间，关闭重开显示过期，OpenCode未核查入口不串入清单，明确重选重查更新时间。不证明MCP服务器连接、工具调用或当前对话实际可用。
 
-正常退出后原130条完整会话、8条输入、8组意见、3组待发与其他设置保持；无新消息和会话。清单仅受控位置版本及其最新操作变化，材料另核。候选9/9、安装10/10独立核对通过，三份217,400条快照一致。[此前七项工程检查](project-file-scan-checks/run-01/verification.json)通过（1,375输入、前端4,508项、Rust1,402项/6忽略）。H17已有依赖准备、失败及任务停止分项证据仍保留；EPERM端口失败不称冲突/启动/恢复成功。该正式版本不含下述P39增量；完整技能、工具、管理动作、29家、Windows和全量市场目标仍未完成。
+候选9/9、安装10/10独立核对及三份217,400条快照一致；1,396输入和正式五文件保持至正常退出。原130条完整会话、整个未发送内容8/8/3及工作树清单相同，0新增会话、0模型请求。设置唯一差异是agentSetup新增1条误入管理设置后放弃选择的准备进度，原67条和已完成/待处理/已确认选择均保持，不称全部设置相同。此前[3632acb0的H11与NEW-12分项实测](project-file-scan-candidate/installed-project-files.json)保留；正式扫描取消仍未测，H17的EPERM端口失败不称冲突、启动或恢复成功。
 
 P39本片已实现共用“技能与工具”入口与已核官方Codex入口的MCP配置只读查询：用户明确选择目录，结果只说明该次官方配置清单；技能、工具详情、配置来源层和当前对话适用性均不猜测，不写Agent配置。当前选择的短期票据阻止旧选择和迟到回执串用；实际进程/输出未结束时保留清理中状态，旧结果标为过期。记录过期后只在用户明确结束等待且准确回执成立时释放跟踪，结果仍未知，不称原命令已取消。见[后端独立复核](extension-inventory/backend/independent-review.json)、[过期跟踪1红后6绿](extension-inventory/independent/expired-tracking-independent.json)。
 
-[本轮第二轮七项检查](extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮](extension-inventory-checks/run-01/verification.json)前端28项失败、其余6项通过的原证据保留；[3份旧React模拟各补一行useMemo后28项定向通过](extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。[受控完整App](extension-inventory/frontend/implementation.json)WebKit与Chromium各27项通过，使用受控命令回执及目录选择。本轮待提交、候选核验和安装验证，不称已安装、真实官方CLI或P39全项完成；P40/P41后续操作继续按原条件推进。
+[本轮第二轮七项检查](extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮](extension-inventory-checks/run-01/verification.json)前端28项失败、其余6项通过的原证据保留；[3份旧React模拟各补一行useMemo后28项定向通过](extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。[受控完整App](extension-inventory/frontend/implementation.json)WebKit与Chromium各27项通过，使用受控命令回执及目录选择。该首片已提交安装并完成上述正式分项验证。查询取消、超时、过期跟踪与官方命令失败仍只有受控证据；下一步核对官方skills/list路径并设计技能清单增量，完整技能/工具清单、P40/P41管理动作、29家和Windows继续按原条件推进，P39尚未全项完成。
 
 以下保留原阶段成功与失败，历史“当前/待安装/待修复”描述均指当时阶段，不覆盖本节最新结论。
 

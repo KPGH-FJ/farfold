@@ -1,0 +1,72 @@
+{
+  "status": "independent receipt and fixed-evidence review passed within the stated subcases; no new blocker",
+  "sourceCommit": "08cff0acf9798060d600cc56a87bd8a8d7923abc",
+  "reviewedReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/installed-extension-inventory.json",
+    "sha256": "a893e5be29d75e5ae3d669618924f1667f58d5fd630080f83fe3d5d7206fddb3"
+  },
+  "evidenceReferences": {
+    "count": 36,
+    "allHashesMatch": true
+  },
+  "independentReadOnlyIdentityChecks": {
+    "sourceInputs": 1396,
+    "allCurrentHashesMatchFrozenSnapshot": true,
+    "formalFiles": 5,
+    "allCurrentFormalHashesMatchFrozenSnapshot": true,
+    "controlledDirectoryEntryNamesAndFileHashesMatch": true
+  },
+  "axChecks": {
+    "fiveReportedItems": true,
+    "enabled2disabled3": true,
+    "unprovidedAuth5localTransport5": true,
+    "initialQueryDisabled": true,
+    "scopeAndLimitShown": true,
+    "pickerCancelWholeAXUnchanged": true,
+    "oldTimeRetained": true,
+    "reopenedStaleAndQueryDisabled": true,
+    "OpenCodeUnreviewedNoReport": true,
+    "explicitRequeryNewTimeNoStale": true,
+    "scopeDirectoryRetained": true,
+    "finalEmptyTRDraft": true
+  },
+  "reportedTimes": {
+    "firstAndPickerCancelledAndReopened": "2026/10/10 21:16:26",
+    "explicitRequery": "2026/10/10 21:18:34"
+  },
+  "visualReview": {
+    "screenshots": ["06-visible-report.png", "08-reopened-stale.png"],
+    "scope": "Reviewed existing root screenshots, not a second native run. Screenshot 06 shows the scrolled report; the exact stale text/control state in 08 is established by its full AX tree, not claimed visible in the screenshot viewport."
+  },
+  "dataReview": "Reused previously completed independent secondary-copy/WAL data comparison without reopening databases. Original130 full rows, zero additions, complete8/8/3 unsent object/activity and catalogue unchanged. Exactly one additive agentSetup progress from the disclosed mistaken settings navigation is accepted by root; original67 progress and other setup fields intact. No blanket all-settings-unchanged claim.",
+  "boundaries": [
+    "Native cancellation, timeout, failed official command and expired-tracking recovery were not tested; controlled engineering evidence remains separate.",
+    "Zero model sends relies on root controlled-action account and frozen query-only path, not on zero new indexed conversations alone.",
+    "Two native query actions/two report timestamps belong to root observation; this reviewer did not rerun official CLI or operate App/Agent.",
+    "Configuration enabled/auth report does not establish MCP server connection, actual tools or current conversation effectiveness.",
+    "Skill/tool lists, unreviewed Agents, Windows, management actions and complete P39/P40/P41 remain incomplete."
+  ],
+  "operationsDuringReview": "Read fixed evidence, source hashes, formal bundle file hashes and controlled fixture file hashes only; no UI/Agent/CLI/DB or material experiment repeated.",
+  "supportingRefs": [
+    {
+      "path": "output/2026-10-10-extension-inventory-native/comparison-independent.json",
+      "sha256": "c54114e91291d2001c9d4a56ab5af01a361188933346be38a98ee2001792eb43"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/freeze-before-native.json",
+      "sha256": "db2902b81b5bc704cbbf437172379dda294a53b9366014796f969c321a94b1ae"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/source-after-native.json",
+      "sha256": "070ea8169bbf74b2e2a51a54e9d386fef782c1440af3bf9f4d1b24e8d9402eac"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/fixture.json",
+      "sha256": "e3cc5e4937b068bf29410732d5d25c821e0837edad87a531b824bb1ce5b4adb2"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/final-normal-exit.json",
+      "sha256": "af5fc25f0c5dff8ce30a382f542ba930c519e4865648bb1fe584a727a88f2390"
+    }
+  ]
+}

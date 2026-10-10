@@ -1,0 +1,224 @@
+{
+  "verifiedAtUtc": "2026-10-10T13:22:56.149358+00:00",
+  "sourceCommit": "08cff0acf9798060d600cc56a87bd8a8d7923abc",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "status": "installed official configuration inventory subcases passed; P39 remains incomplete",
+  "officialQuery": {
+    "entryAccessVersionReported": "1.13.1",
+    "queryCount": 2,
+    "mechanism": "User clicked the frozen common details UI; production adapter executed its reviewed official cli mcp list --json relay. No mock IPC, direct DB-derived list, model prompt or write command.",
+    "scope": "One explicit controlled directory using the already selected registered program and existing official configuration.",
+    "reportedItems": 5,
+    "reportedEnabled": 2,
+    "reportedDisabled": 3,
+    "reportedAuthUnsupported": 5,
+    "reportedLocalTransports": 5,
+    "privateNamesExcluded": true,
+    "serverConnectionsVerified": false,
+    "toolCallsVerified": false,
+    "currentConversationApplicabilityVerified": false
+  },
+  "uiObservations": {
+    "commonDetailsEntry": true,
+    "queryDisabledUntilExplicitDirectory": true,
+    "explicitScopeAndUnverifiedItemsShown": true,
+    "directoryCancelPreservedPriorDirectoryReportAndTime": true,
+    "closedReopenedReportMarkedStaleAndQueryDisabled": true,
+    "otherAgentReportedUnreviewedWithoutShowingCodexItems": true,
+    "explicitReselectionAndRequeryUpdatedTimeAndClearedStale": true,
+    "emptyOriginalTRDraftRetained": true,
+    "listScrollInspected": true
+  },
+  "dataAfterNative": {
+    "originalWholeSessionRows": 130,
+    "allOriginalRowsExact": true,
+    "addedSessionRows": 0,
+    "unsentWholeObjectExact": true,
+    "unsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "worktreeCatalogueWholeObjectExact": true,
+    "allOtherSettingsExactExcept": "agentSetup.v1",
+    "agentSetup": {
+      "originalProgressCount": 67,
+      "allOriginalProgressExact": true,
+      "addedProgressCount": 1,
+      "versionCompletedPendingSelectionsExact": true,
+      "rootReviewedDelta": "One preparation progress entry was added by initially opening Codex manage settings instead of details and discarding this run selection without changing/confirming settings. No prior progress, confirmed choice or pending selection was lost. This test-owned navigation progress is retained; no direct database edit."
+    },
+    "rootModelPromptsSent": 0,
+    "promptEvidenceBoundary": "Root controlled UI actions and frozen query-only command path; zero model prompts is not inferred merely from zero indexed conversations."
+  },
+  "exit": {
+    "normalQuit": true,
+    "forcedQuit": false,
+    "flow": "Cmd-Q then Save and exit; pre-existing uncertain work retains that status.",
+    "formalProcessCountAfter": 0
+  },
+  "sourceAndFixture": {
+    "inputCount": 1396,
+    "allInputsUnchangedThroughNative": true,
+    "formalFiveFilesUnchanged": true,
+    "controlledDirectoryFilesUnchanged": true
+  },
+  "driverCorrections": [
+    "The first navigation opened manage settings; no selection, authentication or model was changed or confirmed before returning to details. The one new progress entry is disclosed above.",
+    "The macOS Go to folder initial typing did not produce the full path. The observed path was corrected before selecting the directory; this is a driver correction, not a product failure.",
+    "Capture 01 AX is a diff; later captures are complete trees."
+  ],
+  "unverified": [
+    "Native query cancellation/timeout/expired tracking and failed official command; these remain controlled engineering/browser cases in this slice.",
+    "Other Agents, Windows, complete skill/tool lists, P40/P41 actions, all 29 by eight standards and complete market readiness.",
+    "Official program cache/network side effects and actual MCP server/tool readiness are not established by this configuration report."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/candidate.json",
+      "sha256": "725417f66229c41c57daa0cfeda47ceb30e44748311ae9246a683f754fd5ff77"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/candidate-independent.json",
+      "sha256": "45f462696ca9dadf5f0b69614bad5c187cb77a8f2f2137861dfdb15fc2e1bb6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/installed-data-retention.json",
+      "sha256": "b9a732fee55276ae1735ac47ea0370e119d2e5ff36c8e3fbf482302a4dd126ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/install-independent.json",
+      "sha256": "b82946db7a6c124d8fb1595b581e2573168b988c66802d14f0c40ba576bee242"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "e3277f239c3f9264ec37da2a95f71af24325716e6bf4d2a5328af5bdd32574f8"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/freeze-before-native.json",
+      "sha256": "db2902b81b5bc704cbbf437172379dda294a53b9366014796f969c321a94b1ae"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/source-after-native.json",
+      "sha256": "070ea8169bbf74b2e2a51a54e9d386fef782c1440af3bf9f4d1b24e8d9402eac"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/final-normal-exit.json",
+      "sha256": "af5fc25f0c5dff8ce30a382f542ba930c519e4865648bb1fe584a727a88f2390"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/final-data-comparison-independent.json",
+      "sha256": "653670f104193296c4b5b0ea7f558a3ffa3d65717f04bb1981940f18c25b66ce"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/agent-setup-difference-independent.json",
+      "sha256": "c7d2287a99afe5b1ec778613a26d347e076f870326627601875b2657fc2837ce"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/final-snapshot/metadata-backup-receipt.json",
+      "sha256": "1a50512ea43b8191b51015baf39e218ed0c0de2fc99c1c9266b187575726de1d"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/01-startup.png",
+      "sha256": "070095191745038f8a529ccbdecb9f6d09998cbf382542d0668d49188c7db195"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/01-startup.txt",
+      "sha256": "1085bbd6090fa7132e2a9d996132247d8ff40cfb283a966018f7ca4cae08bb07"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/02-codex-details.png",
+      "sha256": "7165e7e840a6bd6ad851fce595242acf36deeb85394311fe767f0247c0d93e50"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/02-codex-details.txt",
+      "sha256": "41f65bb0e6bd3ca4aae7007277f8f308bdb06d27c416f26716d1b91c6cc86cae"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/03-query-scope.png",
+      "sha256": "6f45828a0faa88b329afd249bec29479e81b4a395b6485e1409098991a2fba08"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/03-query-scope.txt",
+      "sha256": "61542e29352ec213e6cab75fbcf541a7d54eb11e980635a2a129fc32e62c8dbb"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/04-directory-selected.png",
+      "sha256": "ee25949ac8c9a9d660bcda7d5d660b53807f0f9364a8e73719cc4b3eec94fd0b"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/04-directory-selected.txt",
+      "sha256": "35742cfbd2817e78313df3a99166303ba93d615b975a649fca950c2c7acd6bbf"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/05-official-query.png",
+      "sha256": "bf58447051cb1c1657086874ee2e6610155b494a222aa98f0fa014cfade06706"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/05-official-query.txt",
+      "sha256": "5becd54a933fbaae17eb2b9080182f60661b2555bbd6e5c935e7e079a4415e09"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/06-visible-report.png",
+      "sha256": "b7b05e37a0cf87e473f2bc1abdd790e1f8f58e5a1f6db25fceb783aaffa17df5"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/06-visible-report.txt",
+      "sha256": "5becd54a933fbaae17eb2b9080182f60661b2555bbd6e5c935e7e079a4415e09"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/07-picker-cancel-preserved.png",
+      "sha256": "451c0bba8aced28c6eed5afdc8943287de0cee931f56e3dcb4e6fcb206eea82a"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/07-picker-cancel-preserved.txt",
+      "sha256": "5becd54a933fbaae17eb2b9080182f60661b2555bbd6e5c935e7e079a4415e09"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/08-reopened-stale.png",
+      "sha256": "dcfe238382a82b20ce7c2f8e18763531609a9dbf594224352c71f41ba77bb3bc"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/08-reopened-stale.txt",
+      "sha256": "3919349e7fbf554d2fcf7d5231852d9feda411f4433de6793bcfd0edd6d52a7a"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/09-unreviewed-agent.png",
+      "sha256": "0740ce7b65bd71ae36e54bd763b3f4cdff569033152e7b68ce5653c09bbc4db7"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/09-unreviewed-agent.txt",
+      "sha256": "81e0226dfaa10d9021759f0fabee768c46b2b5bb8a41543c737a341e7eeef5e6"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/10-explicit-requery.png",
+      "sha256": "9c2ef0c6947e51dd1705ee1f204772751860d0ebf1d9c05510e6a49b1f63f2e9"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/10-explicit-requery.txt",
+      "sha256": "1ad11ac41503c360557c7e60da43ee2a14704b1341c09a1066c99d11c6d1672e"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/11-final-draft.png",
+      "sha256": "3c47bab208bdd6e2eb1aa3e68435538afc31982270b04bceeb2b5d72feaf1a9e"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/11-final-draft.txt",
+      "sha256": "c1bcb76e0997fa079d141a41fcc47d7557675bb0e907d66a1f4cf11ea67cb7e3"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/12-normal-exit-confirmation.png",
+      "sha256": "0eb29cd8539066750ca49302c8702a2355bdeff70836b5cd89b99514fa483348"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/12-normal-exit-confirmation.txt",
+      "sha256": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-native/comparison-independent.json",
+      "sha256": "c54114e91291d2001c9d4a56ab5af01a361188933346be38a98ee2001792eb43"
+    }
+  ]
+}
