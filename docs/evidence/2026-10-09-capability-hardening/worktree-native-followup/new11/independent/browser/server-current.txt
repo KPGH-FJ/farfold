@@ -1,0 +1,2 @@
+6:46:02 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+{"pid":12560,"port":1480,"baseline":false,"overlaySha256":null}

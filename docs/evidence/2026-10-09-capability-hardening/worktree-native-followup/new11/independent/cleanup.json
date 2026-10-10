@@ -1,0 +1,17 @@
+{
+  "currentServer": {
+    "pid": 12560,
+    "command": "node docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/serve.mjs",
+    "terminationSignal": "SIGTERM",
+    "processAbsent": true,
+    "wrapperExitCode": 143
+  },
+  "port": 1480,
+  "noListener": true,
+  "formalAppTouched": false,
+  "priorBaselineServer": {
+    "pid": 11469,
+    "wrapperExitCode": 143,
+    "note": "Exact owned server had already been terminated before current-source tests."
+  }
+}

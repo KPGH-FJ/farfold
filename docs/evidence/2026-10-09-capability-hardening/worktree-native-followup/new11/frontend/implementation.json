@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-10T10:45:24.922526+00:00",
+  "status": "source-frozen-targeted-green-independent-full-app-pending",
+  "sourceBase": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "problem": "NEW-11: already presented empty draft is retired after archiving its cwd, but presentedDraft retained a nonexistent thread key. App hid EmptyState and ThreadPage showed loading indefinitely; New conversation selected the same stale prepared key. Cold archive guidance was a separate already-working path.",
+  "change": "One production condition: workspaceKey now requires draft?.key === draftKey. A retained presentation flag can preserve a real disconnected/configuring or protected thread, but cannot authorize a missing thread. Existing onPreparedKey(null) restores the original new-draft surface without navigation, clearing user content, changing configuration, reconnecting or sending.",
+  "ownedFiles": [
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "38f72647e0d3ecca4f22840a73ddb8644098fd4443efa358c6cd23327a0ad366",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "09542ed83b302b3bb2d48ec260b28444ed5e8d5c8d97f6958cc0c74357b0b928",
+      "lines": 687
+    },
+    {
+      "path": "src/App.prepared-draft-retirement.test.tsx",
+      "sha256": "a4853429579d4526704af1205ee1a5e491f8362fe87ac401d7a9b750428eff37",
+      "lines": 50
+    }
+  ],
+  "validation": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/EmptyState.archived-draft.test.tsx src/App.prepared-draft-retirement.test.tsx",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/targeted-red.txt",
+        "sha256": "d051ecc75628be69d1499da755a7fd33096ae824ff589e51e7911620434adaa8"
+      },
+      "exitCode": 1,
+      "passed": 29,
+      "failed": 2,
+      "meaning": "Both reached already-presented warm-ready then production discardEmptyDraft removed it; callback incorrectly retained warm-ready instead of null. Later preservation assertions were not reached in those failing cases."
+    },
+    {
+      "command": "same two test files after condition fix",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/targeted-green.txt",
+        "sha256": "5c76bec808c819653ba8760cecd1fc13f095a95120b893664bba4e414974a2d6"
+      },
+      "exitCode": 0,
+      "passed": 31,
+      "failed": 0
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/typecheck.txt",
+        "sha256": "9843cad98a2abb442da079bb1392636178946e008f6cb6bdedfbcaf992ca6598"
+      },
+      "exitCode": 1,
+      "meaning": "Test fixture ServiceIdentity omitted required fingerprint; production had no type error. Add the fixture field without changing production; retain this original log."
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/EmptyState.archived-draft.test.tsx src/components/EmptyState.selection.test.tsx src/components/EmptyState.worktree-owner.test.tsx src/App.prepared-draft-retirement.test.tsx src/App.navigation.test.tsx src/runtime/sessions.regression.test.ts",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/related-final.txt",
+        "sha256": "df3968315e93729595a40307703f727ba74ea4fc929b645201076e4ce28f988f"
+      },
+      "exitCode": 0,
+      "files": 6,
+      "passed": 213,
+      "failed": 0
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/typecheck-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm exec prettier --check src/components/EmptyState.tsx src/components/EmptyState.archived-draft.test.tsx src/App.prepared-draft-retirement.test.tsx",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "exitCode": 0
+    }
+  ],
+  "covered": [
+    "Previously presented draft then explicit discard or archive-triggered cleanup: withdraw prepared callback; production emptyDraft guard executes behind controlled IPC.",
+    "Original composer object, attachments, file feedback entries and Agent/service/model choice remain unchanged; no send/onStarted or second automatic open.",
+    "Existing connectionLost/configuring threads retain their workspace and disabled composer.",
+    "Established, queued and uncertain content is refused by actual empty-draft cleanup and retains its workspace.",
+    "App callback withdrawal on start or library does not steal navigation; explicit New conversation returns to original EmptyState without open/clear. This shell test controls the child callback; actual parent-child rendered integration is the independent browser layer."
+  ],
+  "boundaries": [
+    "No formal App, actual Agent, Cargo, all-repository build or full test suite run by this owner.",
+    "Original native AX/PNG and prior frozen receipts were not modified; unit tests are controlled bridge evidence, not installed acceptance.",
+    "Independent full-App baseline overlay/red and current-source dual-engine validation belong to architecture. Current receipt does not preclaim those results.",
+    "EmptyState remains 1500 lines. No App/ThreadPage production, session lifetime, draft storage, permissions, catalogue or H17 implementation changed."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/inputs-before.json",
+      "sha256": "b26cc59b6c765cfdea2554e8eda3a35cc8c9885347d7eadf2068b3980606ef7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/source-checkpoint.json",
+      "sha256": "7b60db9b4bddef0ec231a5d0a8ca577f5db13dad2a2dc123af01a6195baebf89"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/source-checkpoint-final.json",
+      "sha256": "7aa8c4d8dfd707703d9fa7c9c261ed1e47b75d120e1c5f4642486f92f74533aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/tracked-delta.diff",
+      "sha256": "2ec3d34afa36bf38ca25ad37ffb9425cfda9707b2e5a197ae07ad32c71614063"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/related-green.txt",
+      "sha256": "b5f1c23689431881d72fbeb50ceb762e96f9306fe3a9df5a07d000658963b1f0"
+    }
+  ]
+}

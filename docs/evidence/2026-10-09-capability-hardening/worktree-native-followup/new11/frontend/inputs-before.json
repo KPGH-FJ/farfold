@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/components/EmptyState.tsx",
+    "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748"
+  },
+  {
+    "path": "src/components/EmptyState.archived-draft.test.tsx",
+    "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8"
+  }
+]

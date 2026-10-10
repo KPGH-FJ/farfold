@@ -1,0 +1,347 @@
+{
+  "kind": "installed-worktree-native-followup-with-new-warm-draft-defect",
+  "observedAtUtc": "2026-10-10T10:39:43.115Z",
+  "formalSourceCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "formalAppNormallyClosed": true,
+  "allPlanComplete": false,
+  "H15Closed": false,
+  "cases": [
+    {
+      "id": "owned-git-lock",
+      "status": "passed",
+      "captures": ["04-lock-refused"],
+      "result": "An official Git worktree lock prevented archive; no files, source index or registration changed. Only the exact root-owned lock was later removed."
+    },
+    {
+      "id": "NEW-07-cold-archived-draft",
+      "status": "passed",
+      "captures": ["08-cold-archive-guidance"],
+      "result": "A cold new draft remembered the archived location and showed precise archive/recovery guidance with send disabled, without eager preparation failure."
+    },
+    {
+      "id": "NEW-08-cold-delete-unknown",
+      "status": "passed",
+      "captures": ["13-cold-delete-unknown"],
+      "result": "Cold deletion recheck explanation appeared once, with recovery disabled while unknown."
+    },
+    {
+      "id": "NEW-09-preparation-confirmation",
+      "status": "passed",
+      "captures": [
+        "09-preparing-step-one",
+        "10-prepared-second-confirmation",
+        "11-deletion-completed"
+      ],
+      "result": "Observed pending first-step preparation before a distinct verified second step; second checkbox initially unchecked and delete disabled. Only explicit second confirmation deleted the controlled worktree; dispatched verification did not claim files would remain."
+    },
+    {
+      "id": "NEW-10-cold-direct-recovery",
+      "status": "passed",
+      "captures": [
+        "13-cold-delete-unknown",
+        "14-cold-delete-rechecked-canonical-ready",
+        "15-cold-direct-recovery-passed"
+      ],
+      "result": "After cold start a single main operation recheck published the verified recovery. Direct recovery to a new directory then succeeded without a separate recovery-copy verification click; all seven material checks passed."
+    },
+    {
+      "id": "NEW-11-warm-archived-prepared-draft",
+      "status": "failed",
+      "captures": [
+        "05-archived-current-draft",
+        "06-new-draft-archive-guidance",
+        "07-archive-loading-persisted"
+      ],
+      "result": "Archiving the current empty prepared draft discarded its thread, but retained the presented draft key. The full window stayed loading, including after New conversation. Capture06 name is not a success assertion. Cold restart recovered precise guidance; warm-path fix remains required."
+    }
+  ],
+  "agent": {
+    "promptDispatches": 0,
+    "selected": "Codex / 6 Astra / Ultra",
+    "selectionChanged": false,
+    "boundary": "Empty native sessions were prepared by the product. Zero prompt dispatches does not mean zero native session preparation or absence of Agent activity."
+  },
+  "dataRetention": {
+    "replacementFilesIdentical": 217400,
+    "nativeSnapshots": "Independent comparison: all original128 whole session rows,8 composers,8 feedback groups,3 queues and activity preserved; no new persisted session rows. Final complete unsent object equals baseline. Formal closeout pending exact catalogue-delta audit.",
+    "temporaryChoice": "Archive snapshot cwd changed only to the controlled worktree; delete/final restored TR with entire choice preserved.",
+    "openCatalogueReview": "Two previous verification statuses cooled to unknown; controlled archive/recovery and restored-location records pending exact per-record closeout."
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/candidate-independent.json",
+      "sha256": "a8cbcf63962a6a215a91a83ab007c7d2d51f2de0fb7b769cdf732549a008b74a",
+      "bytes": 4530
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-independent.json",
+      "sha256": "d1bca0ad11fe0c679ba720377768202e50ea4b60e32380191bd2bd7328016cc5",
+      "bytes": 10137
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-data-retention.json",
+      "sha256": "b323fe8f32aae60d0680b9456337ff67c19601501f274fe0ef367397999e47aa",
+      "bytes": 3208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "9398dc91f83e4e12229903def2b4edafc42444da5ccc9d2871f1be7365b9b286",
+      "bytes": 1210
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-helper-correction/correction.json",
+      "sha256": "854df88cb0d34cbf9c789efaad5b5196bd11e307a929bb3524a9a916b300427f",
+      "bytes": 5098
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json",
+      "sha256": "3354703eb1feaf182b1e128adc3b184ab4381eb401ba477f920ea2f2cf6bdfda",
+      "bytes": 3709
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/h15-evidence-map.json",
+      "sha256": "844cff2405e429d7701d4b9cfbde79ac88d83eb6ac847ddbc39be583b43940a4",
+      "bytes": 12763
+    }
+  ],
+  "privateReferences": [
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/capture-events.jsonl",
+      "sha256": "56ec8a711b75cc321d5f41f62945d06b8a7d1220a2f55850a1957026d2eee0be",
+      "bytes": 7487
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/fixture-before.json",
+      "sha256": "616146d7d970942bc1b01166e1a17678bfe1d740e52dd83fb8c51f3916607ada",
+      "bytes": 4628
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/created-material.json",
+      "sha256": "4e51632a41afd52821f615e7d86b9ed6efc9afe6efc229b4590e790594f7c9e7",
+      "bytes": 1970
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/controlled-lock.json",
+      "sha256": "207a20e7acbc897122b9d709da2403dbae6da46d350bcc98999b6ac6428600ad",
+      "bytes": 1389
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/lock-refused-material.json",
+      "sha256": "6de0e1e222ac8d82c9d259baea5343ce3509f81d23b3d3aa10cddcfa806ba2dc",
+      "bytes": 2027
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/controlled-unlock.json",
+      "sha256": "09f60352baa092449a895b7e604d58f9bce4de90eb02e0c75fbb585ed42bcf65",
+      "bytes": 1198
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/archived-material.json",
+      "sha256": "8027d3f379ea17a207e6df6ac7ef5de481f56338d6256d4309f8982c50bbe3d9",
+      "bytes": 2074
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/deleted-material.json",
+      "sha256": "8836652d2cab57b172f719d9a006569e021a31438ba55009955749acdc35c88a",
+      "bytes": 675
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/cold-direct-restored-material.json",
+      "sha256": "844034c3f9bb424104b5b45764af34868d48a12b84024517e8ea3639d89323b0",
+      "bytes": 1862
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/archive-normal-exit.json",
+      "sha256": "849836af5d923af537cd807f20dc0102682f28e210a382fefa41bb65f33b7f8f",
+      "bytes": 317
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/delete-normal-exit.json",
+      "sha256": "0d34ac19f8563c895a75a899757d4018488a9248f52ab5a43cfe7575b2176d81",
+      "bytes": 204
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/final-normal-exit.json",
+      "sha256": "2b4143158b33a61f494f4146816db9393ec84efd8c2e341b2d3d5aa565381461",
+      "bytes": 981
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/snapshot-differences-independent.json",
+      "sha256": "9f10cfe06c31f4c2ae3802b32854743f30a062604f1e70f56e135b8c1c08da08",
+      "bytes": 88196
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/archive-settings-addendum.json",
+      "sha256": "92b696555c78feaa778ddac8ef1cbcf06184369c579bb79437f7e0628021cccb",
+      "bytes": 5818
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/01-installed-start.ax.txt",
+      "sha256": "bfbfa28b0570f55acee277976e6f22b55a27bdb61e2ef042e94215b632964b0a",
+      "bytes": 3326
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/01-installed-start.png",
+      "sha256": "0cb3e71962387c91de9da7b3fe598af49e579464b7c82dfdb45d7c94948d0227",
+      "bytes": 221057
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/02-prior-operation-rechecked.ax.txt",
+      "sha256": "d38cb58b4a237be65fe142f0e9c1dbc1f13d248fce85389dbf8f49dad4d5637f",
+      "bytes": 4505
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/02-prior-operation-rechecked.png",
+      "sha256": "d77000e42342abb628e28fd00f1c6d26fcf01733d29de04c007c80b5fedac66b",
+      "bytes": 326182
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/03-created.ax.txt",
+      "sha256": "b7c8a367de86460d40343de3eb43e3f0945de25e5c457b39388da09fb3ff3de8",
+      "bytes": 5765
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/03-created.png",
+      "sha256": "823882b92a4479bf24b61f40e77c91afa8ef9b19beb1442a0a181a8bc906f150",
+      "bytes": 272900
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/04-lock-refused.ax.txt",
+      "sha256": "7d5ba0a55a866130a7876ea77a09b976eaa0492ebd74451ab1b0a91f71211e94",
+      "bytes": 6225
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/04-lock-refused.png",
+      "sha256": "198f4b4b365fa0b795cb7d1180ad9fe4ce8fd4ef1d1b14e7194247f503b7fa65",
+      "bytes": 348196
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/05-archived-current-draft.ax.txt",
+      "sha256": "85ea715bd77b74199e4881c886c79bf8616a8c04fb5e71e599099df96a2fb2e7",
+      "bytes": 2516
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/05-archived-current-draft.png",
+      "sha256": "e408b228122c2eca8e2e33551907ba55cbba9a5416010b1c7771c4372c96ac69",
+      "bytes": 172016
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/06-new-draft-archive-guidance.ax.txt",
+      "sha256": "85ea715bd77b74199e4881c886c79bf8616a8c04fb5e71e599099df96a2fb2e7",
+      "bytes": 2516
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/06-new-draft-archive-guidance.png",
+      "sha256": "6315e22bd35606ed98597af24893e11d7a47ca307c6f8a60db58057b1148c5c1",
+      "bytes": 171194
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/07-archive-loading-persisted.ax.txt",
+      "sha256": "85ea715bd77b74199e4881c886c79bf8616a8c04fb5e71e599099df96a2fb2e7",
+      "bytes": 2516
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/07-archive-loading-persisted.png",
+      "sha256": "e00326c219f80fb4c851ea16d8e28b4e2a5ea3d639d1d16de3babe83b6e95468",
+      "bytes": 171191
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/08-cold-archive-guidance.ax.txt",
+      "sha256": "43d63ba7cc9866f1d2ceb6338bb775f844f3955f30111005ebaff9c49c15bb15",
+      "bytes": 3240
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/08-cold-archive-guidance.png",
+      "sha256": "9fbcff43239247b492cc0c66cf16138297eaa0d04c00d0e50511fdedbcdeb78e",
+      "bytes": 258385
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/09-preparing-step-one.ax.txt",
+      "sha256": "3bccd3317b312067cfcc23e05cb0a2c9ba399eeb11e2c981a2872fc4609bcd2b",
+      "bytes": 5581
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/09-preparing-step-one.png",
+      "sha256": "04a0d24dcd38e28ca333e27801bde011b9050fa276d50700a7f18c3d77029d17",
+      "bytes": 374703
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/10-prepared-second-confirmation.ax.txt",
+      "sha256": "4a8551c76087146fa65c2a238f2981c31c018a5fcf0de8cd67496b92c1e97bef",
+      "bytes": 7038
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/10-prepared-second-confirmation.png",
+      "sha256": "09b1100c5c51ff9d24d9548d30e686b647f6ce4766181da0bfcc3518fc2b577d",
+      "bytes": 318581
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/11-deletion-completed.ax.txt",
+      "sha256": "1667e2c284612ff70c7e7110eb5e9fa65ce08aed2d3c8caf2096332839cc0738",
+      "bytes": 6343
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/11-deletion-completed.png",
+      "sha256": "cbb2bde345bf1f80312993c95e7e10983b83e1263e28b46dcb706531b1d7f8ec",
+      "bytes": 355213
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/12-tr-before-cold-delete-check.ax.txt",
+      "sha256": "bf3e409f51261ed266b6afa028d74554228e035b7fb7e1d8fa0ed78b34f93d41",
+      "bytes": 3410
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/12-tr-before-cold-delete-check.png",
+      "sha256": "d4f9ff212173e3df65521c665e995dd0024d127a2c036cacb480fc53ce2e7a0d",
+      "bytes": 222724
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/13-cold-delete-unknown.ax.txt",
+      "sha256": "538b99aec8585fed96bad54612f490f18c78906c49752cd272da91e78430cd68",
+      "bytes": 5178
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/13-cold-delete-unknown.png",
+      "sha256": "52d7dc0b3618d87bbb7b629d1da93b8afee47f0909ec605cf330c3111efddd20",
+      "bytes": 316603
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/14-cold-delete-rechecked-canonical-ready.ax.txt",
+      "sha256": "4ce5bb9b9c2d20586a9e6a6e11e1485cb5f01ee0770e57f06749895a0a960f70",
+      "bytes": 5084
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/14-cold-delete-rechecked-canonical-ready.png",
+      "sha256": "6cda7168c8526d118c66b61f66b65a44add571287d3eaa4b8b34329b8f685a00",
+      "bytes": 311696
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/15-cold-direct-recovery-passed.ax.txt",
+      "sha256": "d04a3ae4d579af853f7c465b7de9e5ca80291f26b4c7ee9cebe3f341575ad5f6",
+      "bytes": 6157
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/15-cold-direct-recovery-passed.png",
+      "sha256": "25b41d51e3e56af8b306476944083759f13d31a70c163b4f5414f6166302fece",
+      "bytes": 340782
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/16-final-empty-tr.ax.txt",
+      "sha256": "bf3e409f51261ed266b6afa028d74554228e035b7fb7e1d8fa0ed78b34f93d41",
+      "bytes": 3410
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-native/16-final-empty-tr.png",
+      "sha256": "afb7a711dffb0402dc1debc7dc98ecfe744e74146ac6e409692f42b5acc0c5e0",
+      "bytes": 222425
+    }
+  ],
+  "limitations": [
+    "Root performed the native UI journey; independent data review is not a second native UI journey.",
+    "H15 remains open for NEW-11 warm prepared draft and final closeout. H17,29-Agent standards,Windows and full market goal remain open.",
+    "Only root-owned synthetic fixtures were deleted. User history, credentials, drafts and previous native evidence were retained."
+  ]
+}

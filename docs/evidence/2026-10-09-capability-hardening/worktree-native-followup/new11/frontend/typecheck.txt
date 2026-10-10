@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/EmptyState.archived-draft.test.tsx(227,3): error TS2741: Property 'fingerprint' is missing in type '{ id: string; model: string; }' but required in type 'ServiceIdentity'.
+ ELIFECYCLE  Command failed with exit code 1.

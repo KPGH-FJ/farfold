@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "owner": "architecture",
+  "recordedAtUTC": "2026-10-10T10:36:24.830135+00:00",
+  "status": "read-only-concrete-implementation-design; no implementation or acceptance claimed",
+  "headAtReview": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "scope": {
+    "productionChanged": false,
+    "contractOrPlanChanged": false,
+    "existingEvidenceChanged": false,
+    "cargoOrAppOrAgentExecuted": false,
+    "gitMutation": false,
+    "nextActionRequiresParentSourceUnfreeze": true
+  },
+  "originalRequirement": {
+    "path": "plans/agent-access.md",
+    "line": 249,
+    "text": "明确基础工作树依赖、端口、忽略文件和秘密的准备设计；纳入后准备/取消/失败有可核查结果且不影响其他对话，不自动复制秘密、不设私有HOME，文件分离不冒称完全环境隔离。"
+  },
+  "decision": {
+    "increment": "已登记工作位置的有界只读事实检查、用户审阅后单次加入原新草稿、用户沿既有 Agent 明确发送并核查实际执行结果。",
+    "firstScope": "Only a fresh verified catalogue location, root or an explicitly selected non-symlink relative project directory. Both created and existing locations are eligible to inspect; inspection grants no archive/delete authority.",
+    "ordinaryDirectory": "Do not infer a location ID or created provenance from cwd. An unregistered or ambiguous cwd remains usable through the existing ordinary Agent request. The inspected-facts action explains that it needs an explicitly selected registered location. No automatic adoption, registration or cwd change.",
+    "notCompletion": "Filename detection, reviewed request creation and draft persistence are implementation milestones, not a successful preparation. H17 requires measured installed success/failure/cancel and protected sibling work for this supported workflow.",
+    "contract": "No new Agent loop, package-manager/project-shell execution in Farfold, Agent HOME/config/env mutation, persistent preparation/event ledger, secret copying, port takeover or migration of historical cwd."
+  },
+  "currentFindings": [
+    {
+      "finding": "check_location increments and saves revision on every attempt.",
+      "source": "src-tauri/src/worktrees/manager.rs:736",
+      "consequence": "Use it once for fresh location eligibility before inspecting. Validation of an existing inspection must compare the unchanged saved revision and actual identity directly, not call check_location again and invalidate its own ticket."
+    },
+    {
+      "finding": "useDraftWorkLocation retires the token before applying only a path.",
+      "source": "src/components/useDraftWorkLocation.ts:31",
+      "consequence": "A preparation action starts a separate transient draft owner after location choice. Manager target:null and a consumed Use token confer no authority to append."
+    },
+    {
+      "finding": "ComposerDraft.generation changes on clear/restore but ordinary update only changes the object/revision.",
+      "source": "src/runtime/drafts.ts:169",
+      "consequence": "Generation alone cannot protect an awaited append. Require the exact draft object plus fresh choice/owner guards after every await."
+    },
+    {
+      "finding": "EmptyState is 1500 lines and Composer is 1461 at this review.",
+      "source": "src/components/EmptyState.tsx",
+      "consequence": "Put dialog, owner and IPC in separate modules. Small integration must remove/extract enough existing lines to keep every production file at or below 1500."
+    },
+    {
+      "finding": "file_read_check retains real worker and global activity permits after a 15-second reply timeout; admission capacity is two.",
+      "source": "src-tauri/src/file_read_check.rs:15",
+      "consequence": "Reuse this read-only observer instead of treating Promise cancellation as OS termination. Local worktree admission must also remain in the real worker until it returns."
+    }
+  ],
+  "proposedBackend": {
+    "commands": [
+      {
+        "name": "worktree_preparation_inspect",
+        "input": {
+          "locationId": "UUID of an existing catalogue entry",
+          "expectedRevision": "safe positive integer from fresh check_location",
+          "projectRelativePath": "empty string for root or explicit relative directory"
+        },
+        "output": "PreparationInspection"
+      },
+      {
+        "name": "worktree_preparation_validate",
+        "input": {
+          "inspectionId": "opaque bounded in-memory ticket"
+        },
+        "output": {
+          "inspectionId": "same exact ticket",
+          "valid": true
+        }
+      }
+    ],
+    "inspectionDTO": {
+      "inspectionId": "opaque UUID, not persisted or a conversation/operation identity",
+      "location": "full current WorktreeLocation, including exact id/revision/path/repositoryRoot/headOid/branch/ownership/verified availability",
+      "projectRelativePath": "validated relative selection, root represented by empty string",
+      "projectPath": "actual checked directory under location.path; no implicit cwd change",
+      "observedAtMs": "observation time, not a lease or expiry proof",
+      "git": {
+        "kind": "main | linked",
+        "otherWorktreeCount": "bounded count from this Git worktree list; not count of active conversations"
+      },
+      "facts": "exact fixed-name list of {name,role:manifest|lock|dependencyDirectory,nodeKind:missing|file|directory|symlink|other|unreadable}",
+      "coverage": {
+        "scope": "fixedNameMetadata",
+        "checkedNames": 22,
+        "complete": "only whether all listed metadata probes returned a known kind; never whole-environment readiness"
+      }
+    },
+    "fixedNames": {
+      "manifests": [
+        "package.json",
+        "pyproject.toml",
+        "requirements.txt",
+        "Pipfile",
+        "Cargo.toml",
+        "go.mod"
+      ],
+      "locks": [
+        "package-lock.json",
+        "npm-shrinkwrap.json",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+        "bun.lock",
+        "bun.lockb",
+        "uv.lock",
+        "poetry.lock",
+        "Pipfile.lock",
+        "Cargo.lock",
+        "go.sum"
+      ],
+      "dependencyDirectories": [
+        "node_modules",
+        ".venv",
+        "venv",
+        "target",
+        "vendor"
+      ]
+    },
+    "inputBudget": {
+      "relativePathUtf8Bytes": 1024,
+      "relativePathSegments": 8,
+      "metadataProbes": 22,
+      "maxLiveTickets": 32,
+      "ticketLifetimeSeconds": 300,
+      "replyDeadline": "existing 15-second read observer; not a guaranteed OS execution deadline"
+    },
+    "pathPolicy": "Reject absolute/traversal/dot/empty-intermediate/control/NUL/backslash paths and .git segments. Anchor to an opened verified root directory, walk with no-follow directory handles, and inspect fixed children with no-follow metadata calls. Do not follow or readlink dependency symlinks or enumerate arbitrary entries. Recheck root and each directory identity against its path before publishing.",
+    "collection": "Under manager mutex, load and capture the exact SavedLocation including availability/revision and private root/git/common directory identities, then release mutex for reads while holding per-worktree and global activity. Verify real HEAD and membership via existing fixed local Git read helpers with optional locks disabled and no lazy fetch/helper execution. No git status, index refresh, checkout, config write, package-manager version probe or shell.",
+    "publication": "Compare exact catalogue entry again under mutex and recheck physical identities/HEAD and each checked metadata stamp. On a change, return changed and publish no valid ticket. Partial permission errors become unreadable facts with coverage.complete=false; they are not missing. Root access/identity failure fails the whole request.",
+    "validation": "Re-read the same scope and compare internal saved physical and metadata observations plus complete current SavedLocation equality. Do not merely compare client-supplied fields, HEAD alone or ticket age. Return valid only for the same stored ticket. It proves the listed metadata observation, not unchanged file contents, atomic filesystem isolation or execution permission after return.",
+    "contentBoundary": "No content read/hash/parse for manifests, lockfiles, .env, credential/config files or ignored files. Stat equality is never described as verified content. A fixed manifest name or a dependency directory does not identify commands, installed versions, usability or absence of scripts.",
+    "lifecycle": "Completed tickets are bounded in memory and expire after five minutes; restart/reopen re-inspects. Same process late response cannot create UI ownership. Inspect and validate both use the existing bounded read observer and retain real permits through actual blocking work; do not add a durable worktree Operation or poll the catalogue.",
+    "cancel": "Closing/cancelling retires only the UI intent and suppresses late presentation/append. It may leave an already-started read running; show this accurately on pending and never claim OS termination. There is no destructive operation to roll back and no automatic retry. A future hard-cancel API is not required to truthfully provide this bounded read-only stage.",
+    "errors": [
+      "unavailable",
+      "storageUnavailable",
+      "storageUnknown",
+      "busy",
+      "changed",
+      "missing",
+      "unsafePath",
+      "unsupportedGit",
+      "inspectionExpired",
+      "readPending",
+      "readBusy"
+    ],
+    "errorMapping": "Only fixed codes leave the new IPC. Map file_read_check FailureKind to readPending/readBusy/unavailable, not raw OS or Git strings. Pending/busy stops automatic attempts; retry is an explicit new inspection. Wrong caller/recovery shell never starts a filesystem check.",
+    "modules": [
+      {
+        "path": "src-tauri/src/worktrees/preparation_types.rs",
+        "responsibility": "bounded request/receipt DTOs; no durable schema"
+      },
+      {
+        "path": "src-tauri/src/worktrees/preparation.rs",
+        "responsibility": "handle-anchored metadata collection, fixed-name policy and before/after verification"
+      },
+      {
+        "path": "src-tauri/src/worktrees/preparation_manager.rs",
+        "responsibility": "fresh SavedLocation snapshot, memory tickets, TTL/capacity, exact current comparison; scoped manager submodule"
+      },
+      {
+        "path": "src-tauri/src/worktree_preparation_commands.rs",
+        "responsibility": "main-only/recovery guards and file_read_check observer mapping"
+      },
+      {
+        "path": "src-tauri/src/worktrees/preparation_tests.rs",
+        "responsibility": "temp repositories/files only; controlled barriers for mutation and blocking reader ownership"
+      },
+      {
+        "path": "src-tauri/src/worktrees/{manager.rs,mod.rs} + src-tauri/src/lib.rs",
+        "responsibility": "small state/module/command registration; do not enlarge durable Request or Document union"
+      }
+    ]
+  },
+  "frontendHandoff": {
+    "modules": [
+      "src/runtime/worktree_preparation_types.ts",
+      "src/runtime/worktree_preparation.ts",
+      "src/runtime/worktree_preparation_strings.ts",
+      "src/components/WorktreePreparationDialog.tsx",
+      "src/components/useDraftPreparation.ts"
+    ],
+    "owner": "Fresh non-reusable token scopes active new draft, generation, actual draft object, Agent, saved service revision, model/reasoning selection, cwd and projectRelativePath. A->B->A, hide/close, restore/clear, direct send, choice change or maintenance/storage lock retires it synchronously where possible.",
+    "flow": [
+      "Resolve exactly one current registered location for the already selected cwd; explicitly check_location for fresh identity. No automatic first selection.",
+      "User clicks inspect and reviews bounded facts plus their own preparation goal and optional port preference. Changing project/scope retires the old receipt.",
+      "User explicitly clicks add; flush existing draft, recheck owner, call preparation_validate with the exact ticket, and recheck owner/choice/draft object after await.",
+      "Consume this confirmation before a synchronous composerDrafts.update that appends only text and spreads all existing draft fields. Do not call fileFeedbackDrafts.take, change cwd/config or send.",
+      "Flush through the existing persistence mechanism. Save failure leaves appended text present; retry saves only, never appends again. No preparation-ready badge is persisted.",
+      "The user reviews/edits the resulting normal request and explicitly sends through the existing Composer."
+    ],
+    "autoSend": "Clear sendAfterFolder on opening this preparation flow and before applying its text. Never reuse sendOrPickFolder, increment sendRequest, invoke a prompt, open another session or start a background preparation automatically.",
+    "sharedFacts": "Use actual git.kind/otherWorktreeCount only for Git layout. Possible shared account/config/cache/ports and lack of environment isolation are fixed explanations, not newly detected facts.",
+    "promptContent": "State the exact project directory and timestamped metadata scope, user goal and optional integer port preference. Ask the existing Agent to inspect project instructions, explain relevant commands/shared effects, avoid copying secrets or sibling dependency trees and never stop an unrelated listener. Path/metadata are quoted data, not generated shell commands. This text is reviewable guidance, not an enforced sandbox.",
+    "noForcedWorkflow": "No recognized manifest is a valid metadata result. Unregistered folders and other ecosystems retain ordinary user-authored Agent requests without manufactured inspected facts."
+  },
+  "valueAndOutcome": {
+    "dependencies": "A useful completed journey must actually make a selected project dependency usable and run a reproducible check in the selected location. Directory existence alone is not acceptance; shared caches and scripts remain the Agent/user execution responsibility.",
+    "ports": "Optional port input is a requested number, never reservation/free-port detection. Existing Agent may explain collisions and propose another number. Exact listener/task/process and observable service outcome must be established before claiming the chosen service is usable. No arbitrary kill, port stealing, auto-attach or retries.",
+    "ignoredAndSecrets": "Farfold never automatically copies ignored files or secrets. No automatic .env search/read, credential extraction or private HOME. If preparation needs user secrets, the workflow pauses for existing authorized configuration/user handling; missing secrets remain actionable and never trigger broader scans.",
+    "execution": "Use existing selected Agent/service/model/reasoning, official tool/permission path, reported file list, real disk checks, browser observation and official background task events. Do not translate natural-language success into a durable Farfold readiness flag.",
+    "cancellation": "Before append: no added request. After append but before send: ordinary unsent text remains editable. After send: use original conversation cancellation; background work needs the exact official task stop when supported. Acknowledgement or stopped response does not prove rollback/all subprocesses gone. Preserve partial files and unknown outcomes.",
+    "nonInterference": "The inspector and draft update are narrowly enforced. Arbitrary Agent scripts are not globally sandboxed. The required other-conversation protection must be demonstrated for the supported actual fixture including sibling worktree/index/config, drafts/queues/model/service and unrelated process. Do not close this requirement with warning text alone."
+  },
+  "requiredTests": {
+    "backend": [
+      "Exact root and explicit nested project directory; independent recovered repository remains existing; ordinary or duplicate cwd does not gain location authority.",
+      "All 22 fixed names, multiple competing lockfiles, no recognized files, unreadable entries, FIFOs/devices, very large unrelated directories; no arbitrary enumeration or file-content reads.",
+      "Dependency symlink and intermediate/root alias replacement, directory rename, concurrent HEAD/catalogue revision/availability changes, forget/archive and A->B->A; reject stale receipt and preserve every source byte/index/config.",
+      "Expiry/capacity plus forged/unknown ticket; validate cannot upgrade old check_location revision or cached verified state.",
+      "Held OS probe with dropped/expired wait retains real read/worktree/global permits; maintenance and excessive new reads cannot bypass it. End of UI wait is not claimed as IO completion.",
+      "Non-main/recovery-shell requests reject without reads; actual Rust receipt through strict TS parser with unknown fields and wrong shape negatives."
+    ],
+    "frontend": [
+      "StrictMode and synchronous reentry; context/Agent/model/service/cwd/draft A->B->A during inspect/validate/flush; stale result never appends, switches location or sends.",
+      "Existing text, attachments including pending reads, file opinions, queue fields and pendingConversation remain intact; pending send and maintenance disallow append.",
+      "Repeated confirmation/Enter adds once; failed save then retry only saves; restart retains ordinary request text and requires a fresh metadata check before adding another.",
+      "Cancelled inspect, delayed readPending and explicit retry do not generate duplicate IPC loops; incomplete facts and ordinary-folder fallback labels remain accurate.",
+      "Keyboard/focus/local scroll in complete App at narrow and wide widths, with current owner and no file/shell/Agent IPC automatically triggered."
+    ],
+    "installedAndRealAgent": [
+      "After source/engine/candidate/install/data checks, explicit current-model preparation in an owned small project: offline local dependency install/import or equivalent proof, generated file readback and exact project cwd; do not begin during this design task.",
+      "Success, a deterministic command failure/permission rejection, foreground cancel and where applicable exact background stop; retain actual official response/tool/task and disk outcomes. Do not substitute protocol fixture success for installed Agent behavior.",
+      "Use a sibling owned worktree and an independently owned unrelated loopback listener. Occupied requested port must not terminate or reuse that listener; chosen service uses a separately approved target and marker, then its exact task stops.",
+      "Before/after sibling tree bytes/index/HEAD/branch/config, ignored and tracked secret canaries, old drafts/feedback/queues and selected service/model; no automatic secret content in prompt/attachment/diagnostic.",
+      "Normal exit and data-retention checks, cold ordinary draft recovery without automatically restarting preparation."
+    ]
+  },
+  "implementationSequence": [
+    "After root unfreezes: architecture owns Rust inspection/manager/commands and actual wire; product_coverage owns strict TS/owner/dialog/text and small EmptyState extraction; verification owns independent race and complete-App observations. Coordinate lib.rs only once.",
+    "First leave effective red cases for revision self-invalidation, owner late append, no-follow traversal and preserved save-failure text, then implement bounded path and DTO together.",
+    "Freeze source with targeted results; root runs full seven checks, candidate/installation verification. Preserve old native evidence separately from next source.",
+    "Run bounded installed real-Agent success/failure/cancel with the exact chosen configuration and independent outcome/non-interference evidence. Classify gaps by Farfold/protocol/Agent/service/environment; do not claim generic H17 or 29-Agent/Windows acceptance from one journey."
+  ],
+  "acceptanceDecision": "This record supplies an implementation decision, not a new active plan or proof that preparation works. No product-contract conflict is needed for the proposed client-read/draft handoff. A general client-side package/script runner, private Agent HOME or arbitrary environment sandbox would conflict and must not be smuggled into this increment.",
+  "references": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "lines": [49, 142, 146, 148, 151, 154, 183]
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "3215e8daea3a063b71f4162a001e5875e195154ca43bdd7872a94c89511a1e04",
+      "lines": [64, 249]
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "1d1efa336d1c2c30c07c2faecf76d568d624b015943f42c8101fe408070c046a",
+      "lines": [88, 92, 100]
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/next-h17-review.json",
+      "sha256": "b66be857b4ad55395ebf30c5ca44f03a8191427174ddd12d76d3769f6fc4b187",
+      "lines": []
+    },
+    {
+      "path": "src-tauri/src/worktree_commands.rs",
+      "sha256": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+      "lines": [6, 22, 127]
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "9df75ab21992e441b2a87050d362926bfddfe50d2fe11b2b502478eee1ae0ebd",
+      "lines": [36, 736, 775]
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+      "lines": [12, 34, 52]
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd",
+      "lines": [11, 48, 156]
+    },
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "6c614ad712dc7cf54a65f3af9d76a072be34b2e7dc44c64b992db697df2edf23",
+      "lines": [16, 32, 118]
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2",
+      "lines": [15, 16, 35, 45, 69]
+    },
+    {
+      "path": "src-tauri/src/managed_update.rs",
+      "sha256": "8c45f7702260fb76293e461055cd58522c497e61a16af76030b24f6f14692fdd",
+      "lines": [30, 50, 57]
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "10751edeeb677b70d3c57a8e0e1a1dde032641e16ca6b57ff65d96e0915da570",
+      "lines": [279]
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47",
+      "lines": [14]
+    },
+    {
+      "path": "src/runtime/draft_location_owner.ts",
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602",
+      "lines": [1]
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+      "lines": [7, 31]
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748",
+      "lines": [323, 339, 355, 367, 892]
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "lines": [171]
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+      "lines": [37, 169, 201, 234]
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+      "lines": [69, 108]
+    },
+    {
+      "path": "src/components/FileFeedbackDrafts.tsx",
+      "sha256": "a66891bc8746f4b73305edeff17b9e7a8d72a79d7d6ee5ed46050efef336734b",
+      "lines": [45]
+    }
+  ]
+}

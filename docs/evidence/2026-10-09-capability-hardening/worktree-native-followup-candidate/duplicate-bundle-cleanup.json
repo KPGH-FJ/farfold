@@ -1,0 +1,21 @@
+{
+  "checkedAtUtc": "2026-10-10T10:30:25.545695+00:00",
+  "removedOnly": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalPath": "/Applications/Farfold.app",
+  "formalFiveFileHashesPreserved": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "fd1313a48404f8139c82ea775836def1c77e333048c700a238bc154c1ceb1274",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archive": {
+    "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-9cbb3db9/Farfold-0.1.7-9cbb3db9.zip",
+    "sha256": "0eb97e1a799eaf180ce2602e1f16867fdea693d679af5f191b5c7a647f2a0fa8",
+    "bytes": 13689821,
+    "exactContentsAndModes": true
+  },
+  "beforeDeletionAllThreeEqual": true,
+  "scope": "Verified duplicate build bundle only; no user data or formal application removed.",
+  "duplicateAbsent": true
+}

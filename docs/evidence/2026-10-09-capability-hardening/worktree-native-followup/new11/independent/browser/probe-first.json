@@ -1,0 +1,755 @@
+{
+  "state": {
+    "mode": "archive",
+    "cwd": "/controlled/new11-tree",
+    "draft": {
+      "text": "",
+      "attachments": []
+    },
+    "snapshot": {
+      "locations": [
+        {
+          "id": "new11-location",
+          "revision": 1,
+          "path": "/controlled/new11-tree",
+          "repositoryRoot": "/controlled/new11-repo",
+          "branch": "refs/heads/new11",
+          "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "ownership": "created",
+          "availability": "verified"
+        }
+      ],
+      "materials": [],
+      "archives": [],
+      "recoveries": [],
+      "maintenanceLocked": false,
+      "ready": true,
+      "loading": false,
+      "working": false,
+      "operationId": null,
+      "operation": null,
+      "uncertain": false,
+      "error": null
+    },
+    "threads": [
+      {
+        "key": "fixture:/controlled/other:existing",
+        "identity": "established",
+        "connectionLost": false,
+        "configuring": false,
+        "items": 1
+      },
+      {
+        "key": "fixture:/controlled/new11-tree:prepared-1",
+        "identity": "draft",
+        "connectionLost": false,
+        "configuring": false,
+        "items": 0
+      }
+    ],
+    "draftKey": "fixture:/controlled/new11-tree:prepared-1",
+    "calls": [
+      {
+        "cmd": "host_performance_origin",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "unsentWork.v1"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": "fixture",
+              "cwd": "/controlled/new11-tree",
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {}
+          }
+        }
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "agentSetup.v1"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-exit",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-restart",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 2
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:exit-deferred",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 3
+        }
+      },
+      {
+        "cmd": "app_drafts_ready",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationGroups.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationReadState.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "themeMode"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 4
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 5
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 6
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 7
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 8
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 9
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 10
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 11
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 12
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 13
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "catalog:updated",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent-work-changed",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "app-menu",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "desktop-notification:activate",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/new11-tree"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 14
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/new11-tree"
+        }
+      },
+      {
+        "cmd": "catalog_scan",
+        "args": {}
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/new11-tree"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 15
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/new11-tree"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "promptTemplates.v1"
+        }
+      },
+      {
+        "cmd": "worktree_list",
+        "args": {}
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 16
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 17
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 18
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 19
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 20
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 21
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-enter",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-drop",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-over",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-leave",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "session_open",
+        "args": {
+          "agentId": "fixture",
+          "cwd": "/controlled/new11-tree",
+          "nativeSessionId": null,
+          "configOptions": null,
+          "service": null,
+          "openToken": "f7a36227-4997-4712-9e53-23531f125448",
+          "channel": "controlled-real-Channel"
+        }
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 23
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-workspace:state",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 24
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-sharing:changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 25
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 26
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-workspace:state",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 27
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-sharing:changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 28
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 29
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": "fixture",
+              "cwd": "/controlled/new11-tree",
+              "reviewRequired": false,
+              "service": null,
+              "config": {
+                "model": "one"
+              }
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {}
+          }
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "browser-workspace:state",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "browser-sharing:changed",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "browser_share_status",
+        "args": {
+          "taskKey": "fixture:/controlled/new11-tree:prepared-1",
+          "target": {
+            "agentId": "fixture",
+            "cwd": "/controlled/new11-tree",
+            "nativeSessionId": "prepared-1"
+          },
+          "label": ""
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      }
+    ],
+    "unexpected": [],
+    "settings": [
+      [
+        "agentSetup.v1",
+        {
+          "version": 1,
+          "completed": ["fixture"],
+          "pending": {},
+          "progress": {},
+          "selections": {
+            "fixture": {
+              "service": null,
+              "config": {}
+            }
+          }
+        }
+      ],
+      [
+        "unsentWork.v1",
+        {
+          "version": 1,
+          "composers": {},
+          "choice": {
+            "agentId": "fixture",
+            "cwd": "/controlled/new11-tree",
+            "reviewRequired": false,
+            "service": null,
+            "config": {
+              "model": "one"
+            }
+          },
+          "feedback": {},
+          "queues": {},
+          "activity": {}
+        }
+      ]
+    ],
+    "request": null
+  },
+  "body": "新对话\n⌘ N\n搜索对话\n⌘ K\n所有对话\n1\n收藏\n0\n探索 Agent\n最近\nC\nNEW11_OTHER_HISTORY\n我的 Agent\nC\nControlled Agent\n1\n分组\n设置\n属于你的 Agent，在一处相遇。\n新会话\nnew11-tree · 未在运行\n内容\n第一条消息即开始会话\nC\nControlled Agent\nOne\nEnter 发送 · Shift Enter 换行\n工作文件夹\nnew11-tree\n工作树\n仅作为工作位置，权限另行确认",
+  "buttons": [
+    "",
+    "新对话⌘ N",
+    "搜索对话⌘ K",
+    "所有对话1",
+    "收藏0",
+    "探索 Agent",
+    "最近",
+    "CNEW11_OTHER_HISTORY",
+    "我的 Agent",
+    "",
+    "CControlled Agent1",
+    "分组",
+    "",
+    "设置",
+    "",
+    "",
+    "内容",
+    "",
+    "",
+    "",
+    "CControlled Agent",
+    "One",
+    "",
+    "",
+    "new11-tree",
+    "",
+    "工作树"
+  ],
+  "errors": []
+}

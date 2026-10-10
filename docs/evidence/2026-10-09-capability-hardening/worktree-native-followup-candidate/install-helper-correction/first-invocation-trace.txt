@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py", line 280, in <module>
+    sys.exit(main())
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py", line 145, in main
+    require(OUT == ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate', 'Unexpected verifier directory')
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-candidate.py", line 43, in require
+    raise RuntimeError(message)
+RuntimeError: Unexpected verifier directory

@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "status": "evidence_mapping_with_specific_native_items_pending",
+  "recordedAtUtc": "2026-10-10T10:22:51.034412+00:00",
+  "originalCondition": {
+    "path": "plans/agent-access.md",
+    "observedLine": 248,
+    "exactRow": "| H15     | 工作树安全归档和删除             | 删除/独立恢复实机分项通过；冷恢复源码已修待复测 | 明确基础工作树归档/删除范围和恢复方案；纳入后逐项保护脏/未跟踪/忽略文件、未推送提交、锁及活动进程，只处置明确归属对象，不默认force；失败和未知保留可恢复工作。                 |",
+    "condition": "明确基础工作树归档/删除范围和恢复方案；纳入后逐项保护脏/未跟踪/忽略文件、未推送提交、锁及活动进程，只处置明确归属对象，不默认force；失败和未知保留可恢复工作。"
+  },
+  "method": "只读现有源码、原始定向日志及已冻结正式/独立回执；不重跑Git、Cargo、浏览器或正式App，不更改活动计划。旧回执中的“未来工作”按其当时源码阶段理解，以下只用后续实际证据补齐，不改旧字节。",
+  "conditions": [
+    {
+      "condition": "明确归档/删除范围和恢复方案",
+      "evidence": [
+        "archiveNative",
+        "removeNative",
+        "removeBackend",
+        "removeIndependent"
+      ],
+      "demonstrated": "418880a2正式归档与原路径恢复；ecc78ce3正式准备副本、单独确认删除、独立新目录恢复。仅created linked归档可删除；恢复后的普通仓库为existing，不获created删除权限。副本在源objects暂不可读时仍实际恢复。",
+      "boundary": "本机受支持Git状态和有界材料；不承诺ACL/xattr系统备份、跨卷移动或所有Git布局。",
+      "remaining": "本轮冷删除重新核查→直接恢复不走旧绕路的正式复验，见NEW-10。"
+    },
+    {
+      "condition": "保护脏/未跟踪/忽略文件",
+      "evidence": [
+        "archiveNative",
+        "maintenance",
+        "removeBackend",
+        "gitTestsLog"
+      ],
+      "demonstrated": "正式归档/恢复逐值保留暂存、未暂存、未跟踪、忽略文件、符号链接、执行位和空目录。删除先比较真实物理内容与独立checkout；assume-unchanged脏字节和ignored空目录tempGit反例均拒绝且材料不变。不能独立复原的内容不进入删除。",
+      "boundary": "删除拒绝变体的受控Git证据与正式保留式归档证据分列；没有把所有变体都称正式删除实测。",
+      "remaining": "无本条新增实现要求；原材料保护证据复用。"
+    },
+    {
+      "condition": "保护未推送提交",
+      "evidence": ["removeBackend", "gitTestsLog", "removeNative"],
+      "demonstrated": "无upstream的小型仓库可在本地完整恢复证明后明确删除；HEAD、支持的私有refs、独立枚举的reflog旧/新根含孤立日志均保存。受控private-ref/orphan-only提交在源objects移走后仍从副本恢复并逐OID核为commit；正式离线独立恢复与分支保留通过。",
+      "boundary": "本地tracking不声称远端已推送或当前可用；未知私有布局、浅/缺对象等拒绝，保留原材料。",
+      "remaining": "无新增push/联网/真实Agent实验要求。"
+    },
+    {
+      "condition": "保护Git锁",
+      "evidence": ["removeBackend"],
+      "sourceEvidence": [
+        "src-tauri/src/worktrees/inspect.rs",
+        "src-tauri/src/worktrees/recycle.rs",
+        "src-tauri/src/worktrees/removal.rs"
+      ],
+      "demonstrated": "源码读取官方worktree locked状态，verify_at拒锁；删除前重新核验且官方remove不传force。",
+      "boundary": "本次检索未找到Git worktree lock本身的直接已执行拒绝反例；不能将ACP活动锁证据替代它。",
+      "remaining": "明确待root本次正式自有夹具补证：新测试tree设置官方worktree lock，界面归档/删除拒绝并核材料不变；只移除自建测试锁后继续。root已接纳，不修改冻结源码或重跑七项。"
+    },
+    {
+      "condition": "保护活动及未知进程",
+      "evidence": [
+        "maintenance",
+        "maintenanceReview",
+        "directoryPeerLog",
+        "exportAdmission",
+        "archiveNative"
+      ],
+      "demonstrated": "受控实际ACP peer覆盖alias/subdirectory精确idle退役并等待finished、active/unconfirmed拒绝；正式归档后受控idle Agent/helper消失且其他TR连接保留。维护准入阻后继启动/工作，read/export真实blocking worker保permit至结束；取消/等待者消失不等于停止。",
+      "boundary": "应用只控制自有活动和已知连接，不用lsof瞬时结果宣称全机排他；外部程序需用户明确停止，前后身份/材料变化拒绝。cold settled只表本实例无worker，不证明旧进程已停止。",
+      "remaining": "无新增强杀真实Agent要求；保持外部并发/崩溃恢复边界，不将其推广为系统沙箱。"
+    },
+    {
+      "condition": "只处置明确归属对象；不默认force",
+      "evidence": [
+        "maintenance",
+        "removeBackend",
+        "removeReview",
+        "removeNative"
+      ],
+      "demonstrated": "created provenance、record/revision、原/保留/父目录、Git/common身份、恢复包摘要与同一操作确认绑定。已有/替换/子模块/特殊对象拒绝；恢复目标已存在不覆盖。两阶段确认，旧start不能删除；Git remove不传force、不删branch、不改历史cwd，ready需实际缺失与登记移除。",
+      "boundary": "路径操作前后核验不能消灭外部TOCTOU；发生替换可留下材料并unknown，不假称已回滚。",
+      "remaining": "本轮NEW-09/NEW-08正式文案和独立第二次确认复验；不另造默认force路径。"
+    },
+    {
+      "condition": "失败和未知保留可恢复工作",
+      "evidence": [
+        "maintenance",
+        "removeBackend",
+        "removeNative",
+        "removeIndependent",
+        "coldFix",
+        "coldReview",
+        "frontendFollowup"
+      ],
+      "demonstrated": "正式准备后取消保留归档和副本；首次index缓存干扰拒删保留全部现场；独立核查和单独副本验证后恢复已实测。取消/损坏/目录替换/写封印失败/metadata保存失败保材料与unknown，冷状态不重放操作。新修复完整验证后同锁CAS更新canonical、intent和返回revision，不接受旧/篡改proof；6项manager与实际wire通过。",
+      "boundary": "ecc旧cold核查→直接恢复真实失败仍保留；单独核验副本的成功绕路不能替代它。",
+      "remaining": "新包正式重启→重新核查删除→直接恢复新目录、持久列表一致、恢复后材料/旧数据保持；与NEW-07已归档记住cwd阻启动一并复验。"
+    }
+  ],
+  "closureSequence": [
+    "当前根正在执行本轮统一工程检查；其后exact候选/安装/数据保持证明是本次改动安装前置，不能用旧ecc替代。",
+    "正式复验NEW-07/08/09/10，尤其cold删除核查后不额外点“核验恢复副本”即可使用canonical已验证记录恢复；正常退出后核持久状态/材料及用户数据。",
+    "补上述一项明确Git worktree lock拒绝证据，root已在即将的自有native夹具流程中安排。",
+    "上述全部通过且无新发现后，当前H15原条目在已明确的macOS基础工作树范围内没有本review另外发现的未实现必做项；可将H15记为已完成该范围的归档/安全删除/独立恢复，同时保留下列限制，不再仅因H17或29家/Windows未完成而笼统拖延H15。"
+  ],
+  "notNewExitGates": [
+    "不追加另一台电脑、每家Agent回收验证、完整OS外部进程排他、任意ACL/xattr备份或破坏性断电实验作为本H15收口条件。",
+    "H17依赖/端口/秘密准备是独立后续条目，不视为本H15缺陷。"
+  ],
+  "independentBoundaries": [
+    "真实Agent证据只覆盖所记录的Codex 6 Astra/Ultra及原服务/权限，不推广29家八项标准。",
+    "Windows、SHA-256仓库执行与最大资源规模未在本轮实测；保留当前平台/格式/限额边界。",
+    "本JSON是现有证据映射及条件性收口建议，不是当前H15已验收声明，也不改plan/status/PRODUCT。"
+  ],
+  "references": {
+    "archiveNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+      "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386"
+    },
+    "archiveIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.json",
+      "sha256": "ef0efdfd834ff51ebb3e44c6334d71bbc283465b05db2d6b5c171b31642d6ef3"
+    },
+    "removeNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json",
+      "sha256": "e0b9cc37b22e8cf13e9ef99460b5c946733e1da00f52ddf186de7b0eddca88ce"
+    },
+    "removeIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-native-closeout.json",
+      "sha256": "4e7ba37dfec59ca92bad65f65d6367cf39af525f1455c633b1de1c374c249e61"
+    },
+    "maintenance": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/implementation.json",
+      "sha256": "20c1f6fdd289429081a84217d49aea7fbd10c0dd0c1668bed7e36ceb1f495d15"
+    },
+    "maintenanceReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/backend-independent.json",
+      "sha256": "e3db464e20ce48c87549e22c75ec8aecad4281132a542c5b2b6cb1d07366763f"
+    },
+    "removeBackend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/implementation.json",
+      "sha256": "cd8b327d15983a6df3dfceec989e1818183c634092aaed917cf0522d8fa5e3b7"
+    },
+    "removeReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/backend-review-final.json",
+      "sha256": "96a388fd9ed4eab51582b58c190d59584ff328b1170cea6d964610b7a66ebc2a"
+    },
+    "coldFix": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/implementation.json",
+      "sha256": "e793f3455bd1fff7adbd693a5e8e7498c804dc9ef46cae8fdb120ce311c5a92d"
+    },
+    "coldReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/independent-publication-review.json",
+      "sha256": "52e387a63151d82abcd63180f09e88116580f713a2494f29268a87fc3cc80e27"
+    },
+    "frontendFollowup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/implementation.json",
+      "sha256": "fb49623a0007d5514ec508011036e70fa9c57131a6a3277d3c37e4da7706601a"
+    },
+    "exportAdmission": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/export-admission/implementation.json",
+      "sha256": "a6507366bc80f7d6cb797a05249989cc945b84ecb6e70e95da700bb6731a14c6"
+    },
+    "directoryPeerLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/retirement-frozen.txt",
+      "sha256": "e145f28b57af397f6d3e7843692cd9f55967bef532c8f0794a9d6286051f1a42"
+    },
+    "gitTestsLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+      "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394"
+    }
+  },
+  "sourceReferences": [
+    {
+      "path": "src-tauri/src/worktrees/recycle.rs",
+      "sha256": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c"
+    },
+    {
+      "path": "src-tauri/src/worktrees/removal.rs",
+      "sha256": "2e8ca41584a56a68fb32691d17141f6c0ca82f51d2599e92227479e016ab4410"
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recovery_tests.rs",
+      "sha256": "04781d6e10bdf150ee162f2a2e71c6177d9bb7fe22b2f1885ebe7346df170f1a"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recover_tests.rs",
+      "sha256": "0d675f62dd7b818d891c756b26a20fbdf07edb89a0ad3058a9c8bf8f589922ed"
+    },
+    {
+      "path": "src-tauri/src/worktrees/remove_boundary_tests.rs",
+      "sha256": "7eb75c61086c231c898593dfbbf72cbed03acde74f474ebf51d1dfd4f0660ed8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/directory_maintenance_tests.rs",
+      "sha256": "619694579ca7151efdd9a0ebada1bf6de045c42f483dea98c5c26e718873bacb"
+    }
+  ]
+}

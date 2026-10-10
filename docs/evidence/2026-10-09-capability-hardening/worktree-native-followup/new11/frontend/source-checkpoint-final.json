@@ -1,0 +1,17 @@
+[
+  {
+    "path": "src/components/EmptyState.tsx",
+    "sha256": "38f72647e0d3ecca4f22840a73ddb8644098fd4443efa358c6cd23327a0ad366",
+    "lines": 1500
+  },
+  {
+    "path": "src/components/EmptyState.archived-draft.test.tsx",
+    "sha256": "09542ed83b302b3bb2d48ec260b28444ed5e8d5c8d97f6958cc0c74357b0b928",
+    "lines": 687
+  },
+  {
+    "path": "src/App.prepared-draft-retirement.test.tsx",
+    "sha256": "a4853429579d4526704af1205ee1a5e491f8362fe87ac401d7a9b750428eff37",
+    "lines": 50
+  }
+]

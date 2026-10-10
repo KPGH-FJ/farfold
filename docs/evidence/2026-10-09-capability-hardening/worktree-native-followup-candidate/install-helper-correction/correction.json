@@ -1,0 +1,103 @@
+{
+  "status": "verifier-directory-migration-corrected-install-checks-passed",
+  "checkedAtUtc": "2026-10-10T10:29:53.489921+00:00",
+  "sourceCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "firstInvocation": {
+    "argv": [
+      "python3",
+      "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py",
+      "9cbb3db9c43296865d954e45d13d483c55c51f94",
+      "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json"
+    ],
+    "exitCode": 1,
+    "trace": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-helper-correction/first-invocation-trace.txt",
+      "sha256": "1d91a1320015fc8edd4655376f07fe82c545ed53d27c035c38a44711c3e6e8db",
+      "bytes": 757
+    },
+    "traceProvenance": "Exact traceback preserved from tool output; no repeat failure invocation.",
+    "receiptCreated": false,
+    "checksStarted": 0,
+    "classification": "Verifier migration defect, not a product, artifact or user-data failure."
+  },
+  "correction": {
+    "scope": "One exact OUT-directory literal changed from worktree-remove-candidate to worktree-native-followup-candidate. All other gates unchanged.",
+    "oldScript": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-helper-correction/verify-install-independent.before.py.txt",
+      "sha256": "8f91670754bf0f7ce4b5bbce3eb4764aef3a378d111f375998ee2dbf1e746ec4",
+      "bytes": 22727
+    },
+    "newScript": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py",
+      "sha256": "0749127e2ddad8682f3623a4310d48b923a260e3b82bf1d96649e3fe5db0fafe",
+      "bytes": 22736
+    },
+    "diff": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-helper-correction/single-line.diff.txt",
+      "sha256": "d6249c8954929f86e625fa17d64f5e4bdd8e525d1a15491afcfab010f4e46dd6",
+      "bytes": 1035
+    },
+    "singleLiteralReplacementVerified": true,
+    "pythonAstValid": true,
+    "rootExplicitlyAuthorized": true
+  },
+  "originalPreparationReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/helper-preparation.json",
+    "sha256": "14c500449f34c11d1716490c10d1f4b70a519213448caddff359f32f6aadb83b",
+    "bytes": 6696
+  },
+  "otherSevenHelperBytesStillMatchOriginalPreparation": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/prepare-candidate.py",
+      "sha256": "74ea93f630edb7550b1a28c0c29e64d56ac78a4961731546aee5930b4393fa2a",
+      "bytes": 15499
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-candidate.py",
+      "sha256": "061cc71bb930ff278e2ee6fa3fc3fa9c3c817d41b5c8895df6172d53ff9057c9",
+      "bytes": 20462
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-data-retention.py",
+      "sha256": "e19f9494b185152a4d79ed5a6cd3a517ad086c62de6200a31485169d84367bf7",
+      "bytes": 4029
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-install/cleanup_duplicate.py",
+      "sha256": "bf8c3f962bf0107ba5a74192b7de17e2d6694a18f4d90f5487c0b30ef02b10e9",
+      "bytes": 2085
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    },
+    {
+      "path": "output/2026-10-10-worktree-native-followup-install/install_verified_candidate.py",
+      "sha256": "db28a4751574c9ae032fcde80a937b8c6ac9e08c116d05f66b3627db183536d5",
+      "bytes": 15440
+    }
+  ],
+  "secondInvocation": {
+    "exitCode": 0,
+    "result": "passed",
+    "checks": 10,
+    "failures": [],
+    "independentReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/install-independent.json",
+      "sha256": "d1bca0ad11fe0c679ba720377768202e50ea4b60e32380191bd2bd7328016cc5",
+      "bytes": 10137
+    }
+  },
+  "historicalTextBoundary": "The unchanged methodOrigin field retains the old template wording about 8780. It is not authority for this installation. sourceCommit and the checked candidate/engineering/normal-exit references bind 9cbb and the actual ecc installed baseline. No normal-exit evidence or gate was weakened.",
+  "boundary": [
+    "Original helper-preparation historical hashes not overwritten.",
+    "Verifier hashes files, full three manifests, and reconstructed disposable metadata copies; it does not open the original DB with SQLite.",
+    "No launch, quit, install, cleanup, Cargo, or Agent execution by this independent verification."
+  ]
+}

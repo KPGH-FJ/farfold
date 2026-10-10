@@ -142,7 +142,7 @@ def main():
     require(len(sys.argv) == 3, 'Pass exact commit and current engineering receipt path')
     require(not candidate_helpers.engineering_argument.is_absolute() and '..' not in candidate_helpers.engineering_argument.parts and candidate_helpers.ENGINEERING_RECEIPT.is_relative_to(candidate_helpers.ENGINEERING_ROOT), 'Invalid current engineering receipt path')
     require(len(EXPECTED) == 40 and all(c in '0123456789abcdef' for c in EXPECTED), 'A full candidate commit is required')
-    require(OUT == ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate', 'Unexpected verifier directory')
+    require(OUT == ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate', 'Unexpected verifier directory')
     regular(PRIVATE, directory=True)
     require(PRIVATE.stat().st_uid == os.getuid(), 'Private directory owner differs')
     receipt_path = OUT / 'install-independent.json'

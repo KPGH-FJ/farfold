@@ -929,7 +929,7 @@ export function EmptyState({
   useEffect(() => () => editorRoot?.remove(), [editorRoot]);
   const presentedDraft = useRef<string | null>(null);
   const workspaceKey =
-    draftKey &&
+    draft?.key === draftKey &&
     (ready ||
       handedOffKeys.current.has(draftKey) ||
       presentedDraft.current === draftKey)

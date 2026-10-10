@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-10T10:50:13.230801+00:00",
+  "status": "passed-receipt-and-data-review-with-known-installed-failure",
+  "installedCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "scope": "Independent review of frozen root-native records, exact data-delta closeout, current formal bundle and retained archive. No second native journey.",
+  "installedReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.json",
+    "sha256": "239c896f538dd1e3cdb75708db3d81ee036f180fc927a64a43a3be8325b60966",
+    "bytes": 17367
+  },
+  "originalPendingReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.before-closeout.json.txt",
+    "sha256": "04a4052caddcedb5dff791e73abdad5dc41cd8e6adf7dcce812d03a47754b51e",
+    "bytes": 15638
+  },
+  "updateScope": "Only dataRetention, four closeout private references and removal of the obsolete data-closeout-pending limitation; original native cases remain unchanged.",
+  "allOriginalPublicPrivateRefsMatched": 80,
+  "currentInstalledDirectReferencesMatched": 57,
+  "closeout": {
+    "checks": 12,
+    "status": "passed",
+    "rootApproval": {
+      "path": "output/2026-10-10-worktree-native-followup-native/closeout-root-approval.json",
+      "sha256": "fccc1b5d2fdc3d8a6fb7fd0d983a73f4bf6c0a1e5b457f29a0a56b7f6dfa67df",
+      "bytes": 744
+    },
+    "receipt": {
+      "path": "output/2026-10-10-worktree-native-followup-native/native-closeout.json",
+      "sha256": "4b4c6fd8d9b7dd8270802f402ecf05ba9b86f1b7fc16abfba413c52022118c0a",
+      "bytes": 12743
+    },
+    "approvedSpec": {
+      "path": "output/2026-10-10-worktree-native-followup-native/closeout-spec.draft.json",
+      "sha256": "a9355f35ddcf4d25d27371e3a875a2b3e7f2a8a9fe5e8ba11ba2f046877c4b84",
+      "bytes": 19245
+    },
+    "helper": {
+      "path": "output/2026-10-10-worktree-native-followup-native/verify_native_closeout.py",
+      "sha256": "86513333047bd55d1068e74e9d1415d995fe7b3828c7a6099394611419c54d4d",
+      "bytes": 31893
+    },
+    "data": "Original128 full session rows and8/8/3 groups/activity exact at all three stages; zero added persisted rows. Archive only approved exact choice.cwd; delete/final full unsent exact. Per-record catalogue changes approved and exact.",
+    "sqliteBoundary": "The approved closeout and prior independent diagnostic reconstructed secondary WAL-aware copies; this receipt review did not reopen SQLite."
+  },
+  "formalBundle": {
+    "fiveFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "fd1313a48404f8139c82ea775836def1c77e333048c700a238bc154c1ceb1274",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "strictCodesign": {
+      "exitCode": 0,
+      "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement\n"
+    },
+    "archive": {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-10-9cbb3db9/Farfold-0.1.7-9cbb3db9.zip",
+      "sha256": "0eb97e1a799eaf180ce2602e1f16867fdea693d679af5f191b5c7a647f2a0fa8",
+      "bytes": 13689821,
+      "exactFilesAndModes": true,
+      "appleDoubleMetadataEntries": 9
+    },
+    "formalProcessCheck": {
+      "argv": [
+        "/usr/bin/pgrep",
+        "-f",
+        "^/Applications/Farfold[.]app/Contents/"
+      ],
+      "exitCode": 1,
+      "count": 0
+    },
+    "duplicateBuildBundleAbsent": true
+  },
+  "materials": {
+    "fullManifestReceipts": 4,
+    "separateRecordedDeletionChecks": 7,
+    "rerun": false,
+    "shapeAndFixtureManifestMatched": true
+  },
+  "nativeEvidenceScope": {
+    "rootUiObserved": true,
+    "reviewerRepeatedUi": false,
+    "readCapturedAccessibility": true,
+    "new11": "failed in installed9cbb; not closed by current source or data review",
+    "H15Closed": false,
+    "allPlanComplete": false,
+    "noPersistedNewSession": "Does not claim no transient prepared native sessions or no Agent activity."
+  },
+  "reviewerHarnessCorrection": {
+    "originalTrace": {
+      "path": "output/2026-10-10-worktree-native-followup-native/public-closeout-first-trace.txt",
+      "sha256": "217fe95e840cb3f23dbea4f1972e50fdca106be4f7d8e902dd59a4909a9d63a4",
+      "bytes": 211
+    },
+    "originalScript": {
+      "path": "output/2026-10-10-worktree-native-followup-native/review_public_closeout.before-zip-filter.py.txt",
+      "sha256": "1a4c126ccef821d55daf747fd08c254a1068e6ff0cdcc7dd687077299ba2418d",
+      "bytes": 7317
+    },
+    "finalScript": {
+      "path": "output/2026-10-10-worktree-native-followup-native/review_public_closeout.py",
+      "sha256": "902ee1cfe8d88961df184eb50280c27fa285428c585fadc4209e57cf990bf86c",
+      "bytes": 7705
+    },
+    "cause": "Initial reviewer script counted AppleDouble __MACOSX metadata as application files. Corrected to the established candidate verifier filter and explicitly counted metadata. No bundle/source change, no product failure."
+  },
+  "rawReview": {
+    "path": "output/2026-10-10-worktree-native-followup-native/public-closeout-review.raw.json",
+    "sha256": "dedbd2a660be873e3417454cebd74a4f3a4dffe737cb474f3f087b72f06565f4",
+    "bytes": 19750
+  },
+  "rawHistoricalReferenceMapping": {
+    "originalReference": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.json",
+      "sha256": "04a4052caddcedb5dff791e73abdad5dc41cd8e6adf7dcce812d03a47754b51e",
+      "bytes": 15638
+    },
+    "preservedAt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.before-closeout.json.txt",
+      "sha256": "04a4052caddcedb5dff791e73abdad5dc41cd8e6adf7dcce812d03a47754b51e",
+      "bytes": 15638
+    },
+    "reason": "Raw review preceded the requested derived-report dataRetention update. Original bytes remain preserved; current receipt is bound separately."
+  },
+  "limits": [
+    "Root performed the installed UI journey; this is independent receipt and current package identity review.",
+    "No SQLite connection, official Agent run, application launch, Git operation, or material experiment was repeated.",
+    "No new persisted sessions and root reports zero prompts; transient prepared native sessions are not counted as absent.",
+    "NEW11 remains an installed failure; current source repair does not change that historical result. H15 and full plan remain open."
+  ]
+}

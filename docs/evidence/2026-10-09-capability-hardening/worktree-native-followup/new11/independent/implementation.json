@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUtc": "2026-10-10T10:50:12.101706+00:00",
+  "result": "passed_with_explicit_boundaries",
+  "issue": "NEW11 warm prepared draft retirement leaves stale presented key",
+  "scope": {
+    "actual": "Full production App, EmptyState, ThreadPage, useThread, thread/draft/worktree stores and real CSS under React StrictMode in actual WebKit and Chrome. Only Tauri IPC, Git/filesystem results and backend persistence are controlled in memory.",
+    "mutation": "Only independent evidence/harness files; production fix belongs to product_coverage.",
+    "notExecuted": [
+      "Formal Farfold app",
+      "Real Agent or real configuration change",
+      "Git/worktree operations",
+      "Live or copied user database",
+      "Cargo or full frontend suite"
+    ]
+  },
+  "causeAndFix": {
+    "cause": "After the real production store removed an already-presented prepared draft, presentedDraft could keep its stale key and App continued rendering ThreadPage for a missing thread.",
+    "fix": "workspaceKey additionally requires the actual current draft key to equal draftKey. Existing null callback restores the start surface; a present disconnected/configuring draft stays displayed.",
+    "authorReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/implementation.json",
+      "sha256": "98c6aab8199d1fc0cef48e9e75a045143a06501adc5d35af1d2a4fb70a11e6ea"
+    },
+    "oldProduction": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/EmptyState.tsx.before.txt",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748"
+    },
+    "newProduction": {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "38f72647e0d3ecca4f22840a73ddb8644098fd4443efa358c6cd23327a0ad366"
+    },
+    "productionDeltaIsExactOneCondition": true,
+    "diff": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/production-diff.txt",
+      "sha256": "7a1431d917e3e15336d026d611edc74e8cd65ab7a2dfca25aed01e25aa1920ee"
+    }
+  },
+  "baseline": {
+    "sourceCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+    "checkpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/source-checkpoint.json",
+      "sha256": "0f770798c775f2ebbb4b6c7b2e48f4e3a757b430bff7fa3fabc97ba7f91cfb9c"
+    },
+    "initialSourceCount": 809,
+    "finalSourceCount": 810,
+    "deltaFromInitial": [
+      "src/App.prepared-draft-retirement.test.tsx",
+      "src/components/EmptyState.archived-draft.test.tsx",
+      "src/components/EmptyState.tsx"
+    ],
+    "effectiveRedInput": "Current frozen tree with only EmptyState.tsx served from the SHA-verified exact old saved bytes through a read-only Vite overlay. Result before/after maps record filesystem inputs (already fixed), not the overlaid effective EmptyState; baselineOverlay and server-baseline.txt identify that exception. No claim of running a complete old commit.",
+    "sameDriverAndFixtureAcrossRedGreen": true,
+    "all817InputsSameAcrossRunsAndCurrent": true
+  },
+  "runs": [
+    {
+      "engine": "webkit",
+      "label": "red-first",
+      "summary": {
+        "passed": 25,
+        "failed": 4,
+        "errors": 0
+      },
+      "commandExitCode": 1,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.json",
+        "sha256": "950c4f4cb5c49a9909d011bfc9b904f0a247a4245826a53cc3429ed930e09d18"
+      },
+      "rawLog": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.txt",
+        "sha256": "132fbde8bd68242339ea9eeb9a73185812413b115c02b7fb836000b748a41494"
+      },
+      "sourceUnchanged": true,
+      "driverErrors": []
+    },
+    {
+      "engine": "webkit",
+      "label": "green-first",
+      "summary": {
+        "passed": 29,
+        "failed": 0,
+        "errors": 0
+      },
+      "commandExitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.json",
+        "sha256": "a61a5a8eb33bad55c746c9ff522322faa1c5938f8c759896d08b4a6d971387f2"
+      },
+      "rawLog": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.txt",
+        "sha256": "0ce40e580d3ea44bf66ce41921bee4d4c9035e44c5b67ff2048879f8619e7228"
+      },
+      "sourceUnchanged": true,
+      "driverErrors": []
+    },
+    {
+      "engine": "chromium",
+      "label": "final",
+      "summary": {
+        "passed": 29,
+        "failed": 0,
+        "errors": 0
+      },
+      "commandExitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.json",
+        "sha256": "6d4fec52da2680c45ff0a46f1b327f1cdbb2459ba6385d0d7e31ab6f018ccdcd"
+      },
+      "rawLog": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.txt",
+        "sha256": "0ce40e580d3ea44bf66ce41921bee4d4c9035e44c5b67ff2048879f8619e7228"
+      },
+      "sourceUnchanged": true,
+      "driverErrors": []
+    }
+  ],
+  "effectiveRedFailures": [
+    "archive: visible start shows exact archive management instead of missing-key loading",
+    "archive: explicit New conversation retains blocked cwd notice without reopening",
+    "retire: same unsent composer is visible on start with contents retained",
+    "other route: later explicit New shows remembered archive barrier"
+  ],
+  "verifiedBehaviors": [
+    "Each scenario first rendered a real ready prepared draft through one controlled session_open, with no prompt.",
+    "Visible manager archive used actual store discard and exact close/dismiss; manager close and explicit New display the archive management notice without reopening.",
+    "Actual public retirePreparationDraft removes the exact draft and retained synthetic unsent text becomes visible in the original start composer.",
+    "A still-present prepared draft remains displayed after actual Channel connectionLost or while a real setConfig call awaits its controlled response.",
+    "Library route is not stolen by draft retirement; established fixture history remains; explicit later New shows the archived-location barrier.",
+    "Every scenario has no unexpected IPC, zero session_prompt, and only its initial one session_open."
+  ],
+  "boundaries": [
+    "The disconnected/configuring positive cases concern a still-present prepared draft, not a new proof of established conversation reconnection or successful configuration completion.",
+    "The seeded established history demonstrates unchanged route/content only.",
+    "The archive backend receipt is synthetic; this does not independently prove Git archival, process retirement or disk persistence.",
+    "The one-field unsent marker is retained in the real production store and rendered composer; no real user content is read or sent.",
+    "Installed native NEW11 verification remains root-owned."
+  ],
+  "screenshotsPersonallyInspected": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-archive-after-close.png",
+      "sha256": "0ec5a9289264310482dc40c9f58c9f5964bfdd9c85901bce9e719d4600828747"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-retired-back-to-draft.png",
+      "sha256": "b91ce4366a04ab65eb3192997c6eee905e1d059320ce9d01dae9815d3900a584"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-archive-after-close.png",
+      "sha256": "2becc76eea54cc00fc243382c04f280be9ed4f3f8096309e995df56c395fd1bb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-retired-back-to-draft.png",
+      "sha256": "f58a33553b867185800e1486d7f221f3c373cd8c439a080c8200b7a73c9439cc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-retained-configuring.png",
+      "sha256": "a21cdd86a85f20f947bb168e0c6d3aa9179ea77817dc6fee460829405c278d81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-archive-after-close.png",
+      "sha256": "cf4edccb8ce114467579df1728cd971fc0dfb703eb52ff034a445c55f8ce2dfe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-retired-back-to-draft.png",
+      "sha256": "dd874d29b4656c8d198055ba6b9edb8191539f4bae0f1d9e3ff255354a096bed"
+    }
+  ],
+  "probe": {
+    "result": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.json",
+      "sha256": "bf5f7449f43444a94e7462133e282717cbc7cd6b88dfb4736a7fd43dc1fe2207"
+    },
+    "classification": "Successful initial harness observation, separate from the 29-check matrix. probe.mjs later received formatting only; original helper bytes are retained in probe-before-format.txt."
+  },
+  "rawJsonPairs": [
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/cleanup.json",
+        "sha256": "4a5c47d9c64780f66cbafe1c6bdb0ea5e381cdb0d398c5897c50d61494d6ee3b"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/cleanup.raw.txt",
+        "sha256": "4a5c47d9c64780f66cbafe1c6bdb0ea5e381cdb0d398c5897c50d61494d6ee3b"
+      },
+      "semanticEquality": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/source-checkpoint.json",
+        "sha256": "0f770798c775f2ebbb4b6c7b2e48f4e3a757b430bff7fa3fabc97ba7f91cfb9c"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/source-checkpoint.raw.txt",
+        "sha256": "0f770798c775f2ebbb4b6c7b2e48f4e3a757b430bff7fa3fabc97ba7f91cfb9c"
+      },
+      "semanticEquality": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.json",
+        "sha256": "a61a5a8eb33bad55c746c9ff522322faa1c5938f8c759896d08b4a6d971387f2"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.raw.txt",
+        "sha256": "76f0951938f1f5cfc01fe6e8c8fce1fb496c83080a7a8d0ea0ecb6c1f5008e51"
+      },
+      "semanticEquality": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.json",
+        "sha256": "950c4f4cb5c49a9909d011bfc9b904f0a247a4245826a53cc3429ed930e09d18"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.raw.txt",
+        "sha256": "32b96810abbb5a5e6d7fe2e1bfcde3a8b80b4f0bf79fc92aaa90b33e3d9a3c25"
+      },
+      "semanticEquality": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.json",
+        "sha256": "6d4fec52da2680c45ff0a46f1b327f1cdbb2459ba6385d0d7e31ab6f018ccdcd"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.raw.txt",
+        "sha256": "fecda5697777e22aac647ad7850bcd048ab88eba064f60dd14384c467775f0ca"
+      },
+      "semanticEquality": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.json",
+        "sha256": "bf5f7449f43444a94e7462133e282717cbc7cd6b88dfb4736a7fd43dc1fe2207"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.raw.txt",
+        "sha256": "a8f96ae48133e7cb1a194358efc2cad9c48ed1c1f1ca713c21fcc3d5fa5295c3"
+      },
+      "semanticEquality": true
+    }
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/cleanup.json",
+    "sha256": "4a5c47d9c64780f66cbafe1c6bdb0ea5e381cdb0d398c5897c50d61494d6ee3b"
+  },
+  "assemblyNote": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/receipt-assembly-note.txt",
+    "sha256": "9aa1d90957c9248feb81e8ed256a6cb5bd2d7848d25ffc7c80eda650cf08e333"
+  },
+  "artifactRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/EmptyState.tsx.before.txt",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/source-checkpoint.json",
+      "sha256": "0f770798c775f2ebbb4b6c7b2e48f4e3a757b430bff7fa3fabc97ba7f91cfb9c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/baseline/source-checkpoint.raw.txt",
+      "sha256": "0f770798c775f2ebbb4b6c7b2e48f4e3a757b430bff7fa3fabc97ba7f91cfb9c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-archive-after-close.png",
+      "sha256": "cf4edccb8ce114467579df1728cd971fc0dfb703eb52ff034a445c55f8ce2dfe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-library-not-stolen.png",
+      "sha256": "94966b8f7fd2c77c6e810b9d87858bac882f7c715081d6a0335f5bc825754ca1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-ready-draft.png",
+      "sha256": "be00b7b8ddaba549a3b31e4b4fdafd401d7ed81b87aa4fd1742a01aa44c7e742"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-retained-configuring.png",
+      "sha256": "be00b7b8ddaba549a3b31e4b4fdafd401d7ed81b87aa4fd1742a01aa44c7e742"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-retained-disconnected.png",
+      "sha256": "6ba13d6f1502c8065706ac9925f27d62eec23bf1c2715c9e53d39411103894d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final-retired-back-to-draft.png",
+      "sha256": "dd874d29b4656c8d198055ba6b9edb8191539f4bae0f1d9e3ff255354a096bed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.json",
+      "sha256": "6d4fec52da2680c45ff0a46f1b327f1cdbb2459ba6385d0d7e31ab6f018ccdcd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.raw.txt",
+      "sha256": "fecda5697777e22aac647ad7850bcd048ab88eba064f60dd14384c467775f0ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/chromium-final.txt",
+      "sha256": "0ce40e580d3ea44bf66ce41921bee4d4c9035e44c5b67ff2048879f8619e7228"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/fixture.tsx",
+      "sha256": "a051449f338dec9d879169eefd3a4871c4296f3c6bb50fcddcb13891747a669c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/index.html",
+      "sha256": "1735ee8b60d02e69e3f5443f880e11ef2bea1e3f1a857531d101cdbbe652adbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-before-format.txt",
+      "sha256": "065bf677c60dd3f3a82e18cf0c70e9b45f6153df4338ab1e4f121867b034e3e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.json",
+      "sha256": "bf5f7449f43444a94e7462133e282717cbc7cd6b88dfb4736a7fd43dc1fe2207"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.raw.txt",
+      "sha256": "a8f96ae48133e7cb1a194358efc2cad9c48ed1c1f1ca713c21fcc3d5fa5295c3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe-first.txt",
+      "sha256": "7f5b1236f1d14b907987c1cee14f26abfe841adda878d595cdf6df69a1a655ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/probe.mjs",
+      "sha256": "6e33fd2fabca627c79bbdadfc70267434b6cc913cb65b2bf5cfcaefab639cd1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/run.mjs",
+      "sha256": "9927b92b4cde3e81f66cafe98533bb7217273e211a3acd62377221313c02e633"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/serve.mjs",
+      "sha256": "8ebe742b0de106c859a354c4188a78d408bd532bd854160fd3861523a1e9c3ef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/server-baseline.txt",
+      "sha256": "9236cc584acf4f2c2c3329fddda58d698a66d22d204be02415b04d5b8f1f3e6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/server-current.txt",
+      "sha256": "881054d141e4cb1f945a9fd52c19e13ba60907ba503b3e6d5051c52a3cca767e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-archive-after-close.png",
+      "sha256": "2becc76eea54cc00fc243382c04f280be9ed4f3f8096309e995df56c395fd1bb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-library-not-stolen.png",
+      "sha256": "14cb5e6e7dbb9a64aa074b30e969cb84c3c4d129c94dba0b93508fda0b35d15b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-ready-draft.png",
+      "sha256": "a21cdd86a85f20f947bb168e0c6d3aa9179ea77817dc6fee460829405c278d81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-retained-configuring.png",
+      "sha256": "a21cdd86a85f20f947bb168e0c6d3aa9179ea77817dc6fee460829405c278d81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-retained-disconnected.png",
+      "sha256": "e70540d5abd7d4fe46bd89fc18388da0ead58bab42d4fad5b0ad90aeda59f7ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first-retired-back-to-draft.png",
+      "sha256": "f58a33553b867185800e1486d7f221f3c373cd8c439a080c8200b7a73c9439cc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.json",
+      "sha256": "a61a5a8eb33bad55c746c9ff522322faa1c5938f8c759896d08b4a6d971387f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.raw.txt",
+      "sha256": "76f0951938f1f5cfc01fe6e8c8fce1fb496c83080a7a8d0ea0ecb6c1f5008e51"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-green-first.txt",
+      "sha256": "0ce40e580d3ea44bf66ce41921bee4d4c9035e44c5b67ff2048879f8619e7228"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-archive-after-close.png",
+      "sha256": "0ec5a9289264310482dc40c9f58c9f5964bfdd9c85901bce9e719d4600828747"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-library-not-stolen.png",
+      "sha256": "14cb5e6e7dbb9a64aa074b30e969cb84c3c4d129c94dba0b93508fda0b35d15b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-ready-draft.png",
+      "sha256": "a21cdd86a85f20f947bb168e0c6d3aa9179ea77817dc6fee460829405c278d81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-retained-configuring.png",
+      "sha256": "a21cdd86a85f20f947bb168e0c6d3aa9179ea77817dc6fee460829405c278d81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-retained-disconnected.png",
+      "sha256": "e70540d5abd7d4fe46bd89fc18388da0ead58bab42d4fad5b0ad90aeda59f7ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first-retired-back-to-draft.png",
+      "sha256": "b91ce4366a04ab65eb3192997c6eee905e1d059320ce9d01dae9815d3900a584"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.json",
+      "sha256": "950c4f4cb5c49a9909d011bfc9b904f0a247a4245826a53cc3429ed930e09d18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.raw.txt",
+      "sha256": "32b96810abbb5a5e6d7fe2e1bfcde3a8b80b4f0bf79fc92aaa90b33e3d9a3c25"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/browser/webkit-red-first.txt",
+      "sha256": "132fbde8bd68242339ea9eeb9a73185812413b115c02b7fb836000b748a41494"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/cleanup.json",
+      "sha256": "4a5c47d9c64780f66cbafe1c6bdb0ea5e381cdb0d398c5897c50d61494d6ee3b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/cleanup.raw.txt",
+      "sha256": "4a5c47d9c64780f66cbafe1c6bdb0ea5e381cdb0d398c5897c50d61494d6ee3b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/production-diff.txt",
+      "sha256": "7a1431d917e3e15336d026d611edc74e8cd65ab7a2dfca25aed01e25aa1920ee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/receipt-assembly-note.txt",
+      "sha256": "9aa1d90957c9248feb81e8ed256a6cb5bd2d7848d25ffc7c80eda650cf08e333"
+    }
+  ]
+}

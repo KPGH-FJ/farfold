@@ -1,0 +1,186 @@
+diff --git a/src/components/EmptyState.archived-draft.test.tsx b/src/components/EmptyState.archived-draft.test.tsx
+index 412f0273..aeada938 100644
+--- a/src/components/EmptyState.archived-draft.test.tsx
++++ b/src/components/EmptyState.archived-draft.test.tsx
+@@ -6,6 +6,7 @@ import {
+   type ReactNode,
+ } from "react";
+ import type { Credential } from "../runtime/credentials";
++import type { ThreadState } from "../runtime/session_types";
+ const h = vi.hoisted(() => ({
+   cursor: 0,
+   slots: [] as { value?: unknown; deps?: unknown[]; cleanup?: () => void }[],
+@@ -17,7 +18,7 @@ const h = vi.hoisted(() => ({
+   discard: vi.fn(),
+   load: vi.fn(),
+   setConfig: vi.fn(),
+-  thread: null as unknown,
++  thread: null as ThreadState | null,
+   catalogue: {
+     ready: true,
+     loading: false,
+@@ -86,7 +87,7 @@ vi.mock("../runtime/setup_storage", () => ({
+ }));
+ vi.mock("../runtime/sessions", async (original) => ({
+   ...(await original<typeof import("../runtime/sessions")>()),
+-  useThread: () => null,
++  useThread: (key: string | null) => (key === h.thread?.key ? h.thread : null),
+   threads: {
+     open: h.open,
+     thread: () => h.thread,
+@@ -105,7 +106,12 @@ import {
+   removalArchive,
+   removalRecovery,
+ } from "../runtime/worktree_remove.test-fixtures";
+-import { composerDrafts, newConversationChoice } from "../runtime/drafts";
++import {
++  composerDrafts,
++  fileFeedbackDrafts,
++  newConversationChoice,
++} from "../runtime/drafts";
++import { discardEmptyDraft } from "../runtime/session_draft_cleanup";
+ import { allowAutomaticConnection } from "../runtime/connection_intent";
+ import { freshThreadState } from "../runtime/session_projection";
+ import type { AgentCardModel } from "../runtime/agents";
+@@ -121,6 +127,7 @@ const props = {
+   ],
+   onGoSettings: vi.fn(),
+   onStarted: vi.fn(),
++  onPreparedKey: vi.fn(),
+   onProjectChange: vi.fn(),
+ };
+ function nodes(node: ReactNode): Element[] {
+@@ -177,6 +184,8 @@ beforeEach(() => {
+   h.load.mockReset().mockResolvedValue(undefined);
+   h.setConfig.mockReset();
+   h.thread = null;
++  props.onPreparedKey.mockClear();
++  props.onStarted.mockClear();
+   h.chooseDirectory.mockReset();
+   props.active = true;
+   allowAutomaticConnection("service-review");
+@@ -203,9 +212,111 @@ afterEach(() => {
+   h.slots.forEach((slot) => slot.cleanup?.());
+   vi.useRealTimers();
+   composerDrafts.clear("new");
++  fileFeedbackDrafts.clear("warm-ready", "/project/report.pdf");
+ });
+ 
+ const archived = { ...removalArchive, originalPath: "/project" };
++
++async function presentWarmDraft() {
++  const state = freshThreadState(
++    "warm-ready",
++    "service-review",
++    "/project",
++    "native",
++  );
++  state.service = { id: "api", model: "model", fingerprint: "new-source" };
++  h.open.mockImplementation(async () => {
++    h.thread = state;
++    return state;
++  });
++  // Execute the production empty-draft guard and its synchronous retirement,
++  // not just a discard spy. The bridge is controlled; no Agent is launched.
++  h.discard.mockImplementation(async (key: string) => {
++    await discardEmptyDraft(
++      h.thread?.key === key ? h.thread : undefined,
++      (removed) => {
++        if (h.thread === removed) h.thread = null;
++      },
++    );
++  });
++  render();
++  await vi.advanceTimersByTimeAsync(300);
++  render();
++  expect(props.onPreparedKey).toHaveBeenLastCalledWith(state.key);
++  expect(h.thread).toBe(state);
++  expect(h.open).toHaveBeenCalledOnce();
++  return state;
++}
++
++it.each(["explicit-discard", "archive-cleanup"])(
++  "withdraws the already presented workspace after %s without consuming the original draft",
++  async (retirement) => {
++    const state = await presentWarmDraft();
++    fileFeedbackDrafts.update(state.key, "/project/report.pdf", {
++      text: "Keep the old version opinion",
++      selection: null,
++      contentId: 'disk:["/project/report.pdf","old","hash"]',
++      scope: "file",
++      anchor: { kind: "pdf-page", page: 2, pageCount: 3 },
++    });
++    const original = composerDrafts.read("new");
++    const feedback = fileFeedbackDrafts.entries(state.key);
++    const choice = structuredClone({ ...newConversationChoice });
++    if (retirement === "archive-cleanup") {
++      h.catalogue.archives = [archived];
++      render();
++    } else await h.discard(state.key);
++    render();
++    expect(h.thread).toBeNull();
++    expect(props.onPreparedKey).toHaveBeenLastCalledWith(null);
++    expect(composerDrafts.read("new")).toBe(original);
++    expect(fileFeedbackDrafts.entries(state.key)).toBe(feedback);
++    expect({ ...newConversationChoice }).toEqual(choice);
++    expect(composer().props.draftKey).toBe("new");
++    if (retirement === "archive-cleanup")
++      expect(
++        render().some((node) => node.type === ArchivedWorkLocationNotice),
++      ).toBe(true);
++    await vi.advanceTimersByTimeAsync(600);
++    expect(h.open).toHaveBeenCalledOnce();
++    expect(h.send).not.toHaveBeenCalled();
++    expect(props.onStarted).not.toHaveBeenCalled();
++  },
++);
++
++it.each(["connectionLost", "configuring"] as const)(
++  "retains the same still-existing workspace during %s",
++  async (field) => {
++    const state = await presentWarmDraft();
++    const original = composerDrafts.read("new");
++    state[field] = true;
++    render();
++    expect(props.onPreparedKey).toHaveBeenLastCalledWith(state.key);
++    expect(h.thread).toBe(state);
++    expect(composer().props.disabled).toBe(true);
++    expect(h.discard).not.toHaveBeenCalled();
++    expect(composerDrafts.read("new")).toBe(original);
++  },
++);
++
++it.each(["established", "queued", "uncertain"])(
++  "does not retire protected %s content when the empty-draft cleanup is attempted",
++  async (protection) => {
++    const state = await presentWarmDraft();
++    if (protection === "established") state.identity = "established";
++    else if (protection === "queued")
++      state.queued = [[{ type: "text", text: "Keep queued request" }]];
++    else state.uncertainPrompt = [{ type: "text", text: "Unconfirmed send" }];
++    h.catalogue.archives = [archived];
++    render();
++    expect(h.discard).toHaveBeenCalledWith(state.key);
++    expect(h.thread).toBe(state);
++    expect(props.onPreparedKey).toHaveBeenLastCalledWith(state.key);
++    expect(h.send).not.toHaveBeenCalled();
++    expect(props.onStarted).not.toHaveBeenCalled();
++  },
++);
++
+ async function send() {
+   const view = composer();
+   return (
+diff --git a/src/components/EmptyState.tsx b/src/components/EmptyState.tsx
+index d5dc8a48..a66b19eb 100644
+--- a/src/components/EmptyState.tsx
++++ b/src/components/EmptyState.tsx
+@@ -929,7 +929,7 @@ export function EmptyState({
+   useEffect(() => () => editorRoot?.remove(), [editorRoot]);
+   const presentedDraft = useRef<string | null>(null);
+   const workspaceKey =
+-    draftKey &&
++    draft?.key === draftKey &&
+     (ready ||
+       handedOffKeys.current.has(draftKey) ||
+       presentedDraft.current === draftKey)

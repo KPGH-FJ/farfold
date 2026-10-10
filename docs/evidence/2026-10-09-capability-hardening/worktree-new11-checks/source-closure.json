@@ -1,0 +1,36 @@
+{
+  "checkedAtUtc": "2026-10-10T10:51:00.302038+00:00",
+  "sourceBase": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "priorInstalledCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "fileCount": 3,
+  "files": {
+    "src/components/EmptyState.tsx": {
+      "sha256": "38f72647e0d3ecca4f22840a73ddb8644098fd4443efa358c6cd23327a0ad366",
+      "lines": 1500
+    },
+    "src/components/EmptyState.archived-draft.test.tsx": {
+      "sha256": "09542ed83b302b3bb2d48ec260b28444ed5e8d5c8d97f6958cc0c74357b0b928",
+      "lines": 687
+    },
+    "src/App.prepared-draft-retirement.test.tsx": {
+      "sha256": "a4853429579d4526704af1205ee1a5e491f8362fe87ac401d7a9b750428eff37",
+      "lines": 50
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/implementation.json",
+      "sha256": "98c6aab8199d1fc0cef48e9e75a045143a06501adc5d35af1d2a4fb70a11e6ea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/implementation.json",
+      "sha256": "4dd2723626c997f1eea371a358d69a6099f55b40aa3cfc7d7a15e4cf48f7cd8d"
+    }
+  ],
+  "original122TitlesAndConditionsUnchanged": true,
+  "boundary": "One production condition and two regression test files. Native9cbb failure preserved. Current engineering is still completing; closure alone does not claim engineering or installed acceptance."
+}

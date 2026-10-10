@@ -1,0 +1,45 @@
+{
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json",
+    "sha256": "3354703eb1feaf182b1e128adc3b184ab4381eb401ba477f920ea2f2cf6bdfda"
+  },
+  "priorInputsBefore": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/inputs-before.json",
+    "sha256": "1ead91e7af944b8fe4ff1095bf7d00ba76db4784a8cabbbc8ccc3993f4252004"
+  },
+  "priorInputsAfter": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/inputs-after.json",
+    "sha256": "1ead91e7af944b8fe4ff1095bf7d00ba76db4784a8cabbbc8ccc3993f4252004"
+  },
+  "candidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/candidate.json",
+    "sha256": "479be53583f0efc5349c3e78c3bbdd87e05d2b89e5689ec67e324918a67e916a"
+  },
+  "candidateInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/candidate-inputs.json",
+    "sha256": "1ead91e7af944b8fe4ff1095bf7d00ba76db4784a8cabbbc8ccc3993f4252004"
+  },
+  "candidateCommit": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "changedInputs": [
+    "src/App.prepared-draft-retirement.test.tsx",
+    "src/components/EmptyState.archived-draft.test.tsx",
+    "src/components/EmptyState.tsx"
+  ],
+  "previousInputCount": 1336,
+  "currentInputCount": 1337,
+  "allOtherInputHashesIdentical": true,
+  "rustInputCount": 380,
+  "nonFrontendInputCount": 527,
+  "sharedFixtureHashesUnchanged": true,
+  "rustWorkingTreeClean": true,
+  "absentRepositoryCargoToolchainOverrides": [
+    ".cargo",
+    "rust-toolchain",
+    "rust-toolchain.toml",
+    "src-tauri/.cargo",
+    "src-tauri/rust-toolchain",
+    "src-tauri/rust-toolchain.toml"
+  ],
+  "allSevenOriginalLogHashesMatch": true,
+  "boundary": "Actual previous Rust fmt/clippy/test evidence is reused, not executed now. This is not a fresh dependency/toolchain/environment revalidation or installed product acceptance."
+}

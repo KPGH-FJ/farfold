@@ -1,0 +1,113 @@
+{
+  "checkedAtUtc": "2026-10-10T10:51:03.119037+00:00",
+  "sourceBase": "9cbb3db9c43296865d954e45d13d483c55c51f94",
+  "inputCount": 1337,
+  "sourceStable": true,
+  "changedDuringChecks": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.4,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "reused": true,
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json",
+        "sha256": "3354703eb1feaf182b1e128adc3b184ab4381eb401ba477f920ea2f2cf6bdfda"
+      },
+      "reason": "Exact Rust/native/Cargo/config/lock/shared-fixture inputs unchanged; only the three allowlisted frontend paths differ."
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.691,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/clippy.txt",
+      "sha256": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0",
+      "executedInThisRun": false,
+      "reused": true,
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json",
+        "sha256": "3354703eb1feaf182b1e128adc3b184ab4381eb401ba477f920ea2f2cf6bdfda"
+      },
+      "reason": "Exact Rust/native/Cargo/config/lock/shared-fixture inputs unchanged; only the three allowlisted frontend paths differ."
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 81.46,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/rust.txt",
+      "sha256": "a96ff11941945bae9c192a9523c840328407223e129f1a6c3864eef69e4ea564",
+      "executedInThisRun": false,
+      "reused": true,
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json",
+        "sha256": "3354703eb1feaf182b1e128adc3b184ab4381eb401ba477f920ea2f2cf6bdfda"
+      },
+      "reason": "Exact Rust/native/Cargo/config/lock/shared-fixture inputs unchanged; only the three allowlisted frontend paths differ."
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.693,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 65.312,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-checks/run-01/frontend.txt",
+      "sha256": "79d9120a23fa8b728d0486189b54af46f138edb22bdf6217535f75e85309de2a",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 12.081,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-checks/run-01/build.txt",
+      "sha256": "a5f44de8e0d12bf7f6ebecdd315328194b3d4349c46675290bcf141ec6066488",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "rust": [
+      "test result: ok. 1348 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 79.04s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "frontend": ["Test Files  375 passed (375)", "Tests  4433 passed (4433)"]
+  },
+  "formatPending": true,
+  "sourceChecksPassed": true
+}
