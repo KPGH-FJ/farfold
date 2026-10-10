@@ -1,0 +1,224 @@
+{
+  "kind": "installed-NEW-11-warm-prepared-draft-repair",
+  "observedAtUtc": "2026-10-10T11:10:16.220606+00:00",
+  "formalSourceCommit": "c6356d429dc961671704efb6bc045076eec4446e",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "formalAppNormallyClosed": true,
+  "allPlanComplete": false,
+  "cases": [
+    {
+      "id": "ready-prepared-empty-draft",
+      "status": "passed",
+      "captures": ["02-ready-prepared-worktree-draft"],
+      "result": "Explicitly selected new owned worktree; prepared empty conversation was idle before archive."
+    },
+    {
+      "id": "NEW-11-warm-archive",
+      "status": "passed",
+      "captures": [
+        "03-warm-archive-guidance-immediate",
+        "04-new-conversation-after-archive"
+      ],
+      "result": "Archive immediately showed precise archived-location recovery guidance with send disabled. New conversation retained guidance without a stuck loading view or generic error."
+    },
+    {
+      "id": "restore-hint-clear",
+      "status": "passed",
+      "captures": ["05-restored-archive-hint-cleared"],
+      "result": "Explicit restore succeeded at original path; archive guidance cleared and empty prepared conversation returned idle. All seven material checks passed."
+    },
+    {
+      "id": "normal-exit",
+      "status": "passed",
+      "captures": ["06-final-empty-tr"],
+      "result": "Returned to original empty TR choice, observed idle and disabled send, then normal Cmd+Q; zero app process verified."
+    }
+  ],
+  "agent": {
+    "promptDispatches": 0,
+    "selected": "Codex / 6 Astra / Ultra",
+    "selectionChanged": false,
+    "boundary": "The product prepared empty native sessions; this is not a new real-Agent execution acceptance."
+  },
+  "dataRetention": {
+    "status": "passed",
+    "originalCompleteSessions": 128,
+    "addedPersistedSessions": 0,
+    "wholeUnsentObjectEqual": true,
+    "composers": 8,
+    "feedbackGroups": 8,
+    "queues": 3,
+    "oldActivityEqual": true,
+    "otherSettingsEqual": true,
+    "catalogueDeltas": "Four exact controlled/cold-load changes reviewed individually by root; detailed hashes and paths retained privately.",
+    "comparison": {
+      "path": "output/2026-10-10-worktree-new11-native/final-data-comparison-independent.json",
+      "sha256": "c6770aaaf71320502dd7cf7f6d24e246be7f3bc0eec4a3761e80f173eff7351d",
+      "bytes": 15083
+    },
+    "rootReview": {
+      "path": "output/2026-10-10-worktree-new11-native/root-data-delta-review.json",
+      "sha256": "61876cee3ec65f124c8ac310f5c7629d8444ad176ce755177610039758103324",
+      "bytes": 11759
+    },
+    "installationManifestEntries": 217400,
+    "threeReplacementManifestsEqual": true
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/candidate.json",
+      "sha256": "f4c45431c2bfefe27052f77102ee7c13266579fac8f1f8a237c7d4487847c852",
+      "bytes": 8218
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/candidate-independent.json",
+      "sha256": "6ff2d3d6f2aae40fb7180b53a06e01e86bad8b1c85126418479c5515aedd0eaa",
+      "bytes": 4756
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/install-independent.json",
+      "sha256": "24d9868e74d3c50706fee4c05f5acae03e4c5d97a04aa3b7be0f88c85dea4e48",
+      "bytes": 10213
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/installed-data-retention.json",
+      "sha256": "b87f1c42b86b1e1c3fcad46422a63293e55e4cf69f7539e0a08f55e2288f6e40",
+      "bytes": 3208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "468e25169b082d4879eb8012ef0383ac3da788a5871ae5dfb57ec61fec03643a",
+      "bytes": 1210
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-checks/final-verification.json",
+      "sha256": "329b2e009420c59434b6614f5eecb66d00d55d2a45192a6eedad0e41780b8317",
+      "bytes": 6392
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/frontend/implementation.json",
+      "sha256": "98c6aab8199d1fc0cef48e9e75a045143a06501adc5d35af1d2a4fb70a11e6ea",
+      "bytes": 6964
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/new11/independent/implementation.json",
+      "sha256": "4dd2723626c997f1eea371a358d69a6099f55b40aa3cfc7d7a15e4cf48f7cd8d",
+      "bytes": 23944
+    }
+  ],
+  "privateReferences": [
+    {
+      "path": "output/2026-10-10-worktree-new11-native/capture-events.jsonl",
+      "sha256": "dc4e18cd6e4dd63b344b02757d8bdb9edf35923d3dd0d8663980d1d9ce41a9da",
+      "bytes": 2757
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/fixture-before.json",
+      "sha256": "9a86915feeddd8992318b0f84c001cda6a787eac0ecfc73efb78607d82bb44a0",
+      "bytes": 4548
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/created-material.json",
+      "sha256": "e749da0d349f4f0c18f9d79f1b0d4b21331cea60ddcc1ae38b8f72263bafed86",
+      "bytes": 1928
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/archived-material.json",
+      "sha256": "0f8f6633d36ef09e7f388fb6a81aa6c3738bc88f850cffbf7b3b332fb7c4db44",
+      "bytes": 2034
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/restored-material.json",
+      "sha256": "9c59411c200d5129a4ef4c0616d288c66fc0948422bde331767e80e6d9264103",
+      "bytes": 1928
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/final-normal-exit.json",
+      "sha256": "acac5da64f1660889a3afade258d6c4e14bb87ec00256b8edadf8f052fe49cc7",
+      "bytes": 971
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/final-data-comparison-independent.json",
+      "sha256": "c6770aaaf71320502dd7cf7f6d24e246be7f3bc0eec4a3761e80f173eff7351d",
+      "bytes": 15083
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/availability-values-addendum.json",
+      "sha256": "b3bc85eb2f30e078041e2ee330a656e8ca66a7017c16c8186a20187b167d6e2b",
+      "bytes": 760
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/root-data-delta-review.json",
+      "sha256": "61876cee3ec65f124c8ac310f5c7629d8444ad176ce755177610039758103324",
+      "bytes": 11759
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/01-installed-empty-tr.ax.txt",
+      "sha256": "bfbfa28b0570f55acee277976e6f22b55a27bdb61e2ef042e94215b632964b0a",
+      "bytes": 3326
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/01-installed-empty-tr.png",
+      "sha256": "da8020597387d8a6ccdc6ab1de6d3ea2489f851dbd1cb7beba0681744ee5ecf9",
+      "bytes": 220579
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/02-ready-prepared-worktree-draft.ax.txt",
+      "sha256": "c812d1256913a9d6e165579aa7b31e96219171355e4b9f890a7f4d9980bc4732",
+      "bytes": 3428
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/02-ready-prepared-worktree-draft.png",
+      "sha256": "7a5d2c78d7708650009b4e167255c0c8a6283aa66dd181b4e8f1f437860ab0ed",
+      "bytes": 225176
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/03-warm-archive-guidance-immediate.ax.txt",
+      "sha256": "cbb77c2ebf20e65d16c6516f675ef705baee2b4f011be71870fb959e73a95080",
+      "bytes": 3287
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/03-warm-archive-guidance-immediate.png",
+      "sha256": "e9a241b465dab28bac518c7aa3d44f0962121a9e805e9f909ceda011ee146833",
+      "bytes": 259523
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/04-new-conversation-after-archive.ax.txt",
+      "sha256": "0bceedd2bef46fb0281dfcb868d5f48aa22259ce464f854cfa7e9f0700fb2bde",
+      "bytes": 3316
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/04-new-conversation-after-archive.png",
+      "sha256": "3841d909aa7fb20443381578874805b30e9404eed03effe81673fab76987be5b",
+      "bytes": 258740
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/05-restored-archive-hint-cleared.ax.txt",
+      "sha256": "2b15d6a891b5d3b024c8cd35753d78ac0e1dfbbba5faf90ed3010e41b2ee2047",
+      "bytes": 3457
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/05-restored-archive-hint-cleared.png",
+      "sha256": "b381cad6dfba59e15fb30efb8b72b9fb74903e867deb78d30645b47fc497ae18",
+      "bytes": 226278
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/06-final-empty-tr.ax.txt",
+      "sha256": "bf3e409f51261ed266b6afa028d74554228e035b7fb7e1d8fa0ed78b34f93d41",
+      "bytes": 3410
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/06-final-empty-tr.png",
+      "sha256": "1efd78f136fde93a97d8c18157e3dda75059aa107598f67995161b6c3384300c",
+      "bytes": 223483
+    }
+  ],
+  "limits": [
+    "Root performed native observations; independent data comparison is not a second native UI run.",
+    "Six captures and three material checks cover this exact warm archive/new conversation/restore route. Prior failure and source/browser adverse cases remain separate.",
+    "H17,29 Agent standards,Windows and full market-readiness goal remain incomplete.",
+    "Public signing, notarization and update distribution remain deferred by user."
+  ]
+}

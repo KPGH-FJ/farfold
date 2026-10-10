@@ -1,0 +1,136 @@
+--- docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-candidate.py
++++ docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/verify-candidate.py
+@@ -29,9 +29,9 @@
+ SCOPES += ['docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/']
+ TOP += ['src-tauri/examples/windows_process_fixture.rs', 'src-tauri/testdata/signed-update-metadata.json']
+ TOP += ['docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json']
+-BASELINE_COMMIT = 'ecc78ce3acb2c2d6be94809dadf7220e7199ad7b'
+-BASELINE_RECEIPT = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/candidate.json'
+-ENGINEERING_ROOT = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks'
++BASELINE_COMMIT = '9cbb3db9c43296865d954e45d13d483c55c51f94'
++BASELINE_RECEIPT = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/candidate.json'
++ENGINEERING_ROOT = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-new11-checks'
+ engineering_argument = Path(sys.argv[2]) if len(sys.argv) == 3 else Path('missing-engineering-receipt')
+ ENGINEERING_RECEIPT = ROOT / engineering_argument
+ 
+@@ -138,11 +138,100 @@
+     checks = final.get("checks", [])
+     must(len(checks) == 7 and {c["name"] for c in checks} == set(expected_commands), "Engineering requires all seven actual commands")
+     refs = {final_path: sha(final_path)}
++    # This verifier supports only NEW11's exact three-file frontend delta.
++    # Reuse is not a general escape hatch for incomplete commands.
++    must(final_path == ENGINEERING_ROOT / "final-verification.json", "Unexpected NEW11 final receipt")
++    must(final.get("sourceBase") == BASELINE_COMMIT
++         and final.get("executedCheckCount") == 4 and final.get("reusedCheckCount") == 3,
++         "NEW11 source base or execution counts differ")
++    allowed = {"src/components/EmptyState.tsx", "src/components/EmptyState.archived-draft.test.tsx",
++               "src/App.prepared-draft-retirement.test.tsx"}
++    rust_names = {"cargo-fmt", "clippy", "rust"}
++    prior_root = ROOT / "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02"
++    def bound(value, exact=None):
++        path = evidence_path(value["path"])
++        must(exact is None or path == exact, "Unexpected engineering proof location")
++        must(sha(path) == value["sha256"], "Engineering proof changed")
++        refs[path] = value["sha256"]
++        return path
++    reuse_path = bound(final["rustReuse"], ENGINEERING_ROOT / "run-01/rust-reuse.json")
++    reuse = json.loads(reuse_path.read_text())
++    prior_path = bound(reuse["priorReceipt"], prior_root / "verification.json")
++    prior = json.loads(prior_path.read_text())
++    must(prior.get("allPassed") is True and prior.get("sourceStable") is True
++         and prior.get("protectedUnchanged") is True, "Prior Rust evidence incomplete")
++    old_before = bound(reuse["priorInputsBefore"], prior_root / "inputs-before.json")
++    old_after = bound(reuse["priorInputsAfter"], prior_root / "inputs-after.json")
++    baseline_path = bound(reuse["candidate"], BASELINE_RECEIPT)
++    baseline_inputs = bound(reuse["candidateInputs"], BASELINE_RECEIPT.parent / "candidate-inputs.json")
++    previous = json.loads(old_before.read_text())
++    baseline = json.loads(baseline_path.read_text())
++    must(previous == json.loads(old_after.read_text()) == json.loads(baseline_inputs.read_text()),
++         "Prior executed and candidate input maps differ")
++    must(baseline["sourceCommit"] == reuse["candidateCommit"] == BASELINE_COMMIT,
++         "Reuse does not belong to exact installed 9cbb baseline")
++    engineering = baseline["engineeringVerification"]
++    must(engineering["receipt"] == str(prior_path.relative_to(ROOT))
++         and engineering["sha256"] == sha(prior_path)
++         and engineering["inputsSha256"] == sha(old_before)
++         and engineering["inputsAfterSha256"] == sha(old_after), "Prior candidate engineering binding differs")
++    delta = {p for p in set(previous) | set(current) if previous.get(p) != current.get(p)}
++    must(delta == allowed and reuse["changedInputs"] == sorted(allowed), "Reuse delta is not exact NEW11 frontend change")
++    must(len(previous) == 1336 and len(current) == 1337
++         and reuse["previousInputCount"] == 1336 and reuse["currentInputCount"] == 1337,
++         "Unexpected NEW11 inventory size")
++    old_nonfront = {p: h for p, h in previous.items() if not p.startswith("src/")}
++    new_nonfront = {p: h for p, h in current.items() if not p.startswith("src/")}
++    old_rust = {p: h for p, h in previous.items() if p.startswith("src-tauri/")}
++    new_rust = {p: h for p, h in current.items() if p.startswith("src-tauri/")}
++    must(old_nonfront == new_nonfront and len(old_nonfront) == reuse["nonFrontendInputCount"] == 527,
++         "A config/lock/native/shared-fixture input changed")
++    must(old_rust == new_rust and len(old_rust) == reuse["rustInputCount"] == 380,
++         "Rust input hashes changed")
++    must(all(current.get(p) == h for p, h in previous.items() if p not in allowed),
++         "Unapproved input change outside NEW11 delta")
++    absent = [".cargo", "rust-toolchain", "rust-toolchain.toml", "src-tauri/.cargo",
++              "src-tauri/rust-toolchain", "src-tauri/rust-toolchain.toml"]
++    must(reuse["absentRepositoryCargoToolchainOverrides"] == absent
++         and all(not (ROOT / p).exists() for p in absent), "Cargo/toolchain override present")
++    must(all(reuse[k] is True for k in ("allOtherInputHashesIdentical", "sharedFixtureHashesUnchanged",
++             "rustWorkingTreeClean", "allSevenOriginalLogHashesMatch")), "Reuse proof incomplete")
++    original = prior.get("checks", [])
++    must(len(original) == 7 and {c["name"] for c in original} == set(expected_commands),
++         "Original seven checks missing")
++    originals = {}
++    for check in original:
++        path = evidence_path(check["log"])
++        must(path.parent == prior_root and check.get("executedInThisRun") is True
++             and check["argv"] == expected_commands[check["name"]] and check["exitCode"] == 0
++             and sha(path) == check["sha256"], "Original check command/result/log differs")
++        refs[path] = check["sha256"]
++        originals[check["name"]] = check
++    must("test result: ok. 1348 passed; 0 failed; 6 ignored;" in
++         (ROOT / originals["rust"]["log"]).read_text(), "Original Rust result differs")
+     for check in checks:
++        name = check["name"]
+         path = evidence_path(check["log"])
+-        must(check.get("executedInThisRun") is True and check["argv"] == expected_commands[check["name"]], "Unexpected reused or partial engineering command")
+-        must(check["exitCode"] == 0 and sha(path) == check["sha256"], "Engineering log failed or changed")
++        must(check["argv"] == expected_commands[name] and check["exitCode"] == 0
++             and sha(path) == check["sha256"], "Engineering command/result/log differs")
++        if name in rust_names:
++            must(check.get("executedInThisRun") is False and check.get("reused") is True,
++                 "Rust evidence must explicitly report reused execution")
++            bound(check["originalExecutionReceipt"], prior_path)
++            must(all(check.get(k) == v for k, v in originals[name].items() if k != "executedInThisRun"),
++                 "Reused Rust result is not exact original command record")
++        else:
++            must(check.get("executedInThisRun") is True and check.get("reused") is not True
++                 and path.parent == ENGINEERING_ROOT / "run-01", "Frontend check was not executed in NEW11")
+         refs[path] = check["sha256"]
++    stage_path = bound(final["sourceStageReceipt"], ENGINEERING_ROOT / "run-01/source-verification.json")
++    stage = json.loads(stage_path.read_text())
++    must(stage["sourceChecksPassed"] is True and stage["sourceStable"] is True
++         and stage["protectedUnchanged"] is True and stage["inputCount"] == len(current),
++         "NEW11 source-stage checks incomplete")
++    must(stage["checks"] == [c for c in checks if c["name"] != "format"],
++         "Final result differs from original source-stage commands")
++    bound(final["runner"], ENGINEERING_ROOT / "run-checks.py")
+     inventory_paths = []
+     for key, filename in (("inputsBefore", "inputs-before.json"), ("inputsAfter", "inputs-after.json")):
+         reference = final.get(key)
+@@ -160,6 +249,7 @@
+     must(len(closure_paths) == 1, "Missing or ambiguous source closure")
+     closure_path = closure_paths[0]
+     must(closure_path == ENGINEERING_ROOT / "source-closure.json", "Unexpected closure location")
++    bound(final["sourceClosure"], closure_path)
+     closure = json.loads(closure_path.read_text())
+     previous_path = BASELINE_RECEIPT.parent / "candidate-inputs.json"
+     previous = json.loads(previous_path.read_text())
+@@ -192,7 +282,8 @@
+              "inputs": str(inventory_paths[0].relative_to(ROOT)), "inputsSha256": sha(inventory_paths[0]),
+              "inputsAfter": str(inventory_paths[1].relative_to(ROOT)), "inputsAfterSha256": sha(inventory_paths[1]),
+              "sourceClosure": str(closure_path.relative_to(ROOT)), "sourceClosureSha256": sha(closure_path),
+-             "inputCount": len(current)}, refs)
++             "inputCount": len(current), "executedCheckCount": 4, "reusedCheckCount": 3,
++             "rustReuse": str(reuse_path.relative_to(ROOT)), "rustReuseSha256": sha(reuse_path)}, refs)
+ 
+ 
+ def main():

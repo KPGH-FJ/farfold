@@ -1,0 +1,11 @@
+--- docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-data-retention.py
++++ docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/verify-data-retention.py
+@@ -7,7 +7,7 @@
+ 
+ ROOT = Path('/Users/tw/Desktop/farfold')
+ OUT = Path(__file__).resolve().parent
+-PRIVATE = ROOT / 'output/2026-10-10-worktree-native-followup-install'
++PRIVATE = ROOT / 'output/2026-10-10-worktree-new11-install'
+ 
+ def sha(path):
+     digest = hashlib.sha256()

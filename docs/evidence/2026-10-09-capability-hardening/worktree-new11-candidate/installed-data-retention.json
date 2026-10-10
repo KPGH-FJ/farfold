@@ -1,0 +1,74 @@
+{
+  "checkedAtUtc": "2026-10-10T10:59:25.560139+00:00",
+  "sourceCommit": "c6356d429dc961671704efb6bc045076eec4446e",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "formalApp": "/Applications/Farfold.app",
+  "phase": "installedVerifiedNotLaunched",
+  "normalExit": {
+    "observedByRoot": true,
+    "forcedQuit": false,
+    "processesBefore": 0,
+    "processesAfter": 0
+  },
+  "bundleMatchesCandidate": true,
+  "installedFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "237c26778d0b4f99ddf3b5f4462fcfe8c94e58efc5f87c97ba755a36439627b1",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "dataRetention": {
+    "allThreeSnapshotsEqual": true,
+    "entries": 217400,
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256": "207887976e490c70217517961695d7c6cc1bb1c1a506a798672ea188e9b7ac60",
+    "scope": "App data, WebKit and cache before/preinstall/after; formal app not launched between manifests."
+  },
+  "metadataRecoveryCopy": {
+    "integrity": "ok",
+    "method": "Capture original main/WAL/SHM; SQLite backup exclusively from second private working copy",
+    "sourceAndCaptureUnchanged": true,
+    "backupSha256": "9088f444673680579a5287303bb0115086fe5215c399eb9e7ae2b99ecabca80d",
+    "privateMode": "0600"
+  },
+  "privateEvidence": {
+    "normal-exit-observation.json": "fdb708a6bd26b92f83b7a74eca7a701e299599a1538cf4daf720f1f6acb8e476",
+    "metadata-backup-receipt.json": "be9633e5348e752aa7b272e1fb8e0d7256397dd3d71451fb79610e843a5fdfbb",
+    "backup_metadata.py": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+    "install_verified_candidate.py": "43f292e199310ea39e51358316a601d471aa0530dc8d50580875c9019ff47517",
+    "install-operation.json": "f8f10cea673f1f28de05542d19a164b194d7321f98f3b64343f0d566b5fa080b",
+    "install-data-before.jsonl": "207887976e490c70217517961695d7c6cc1bb1c1a506a798672ea188e9b7ac60",
+    "install-data-preinstall.jsonl": "207887976e490c70217517961695d7c6cc1bb1c1a506a798672ea188e9b7ac60",
+    "install-data-after.jsonl": "207887976e490c70217517961695d7c6cc1bb1c1a506a798672ea188e9b7ac60"
+  },
+  "candidateIndependentSha256": "6ff2d3d6f2aae40fb7180b53a06e01e86bad8b1c85126418479c5515aedd0eaa",
+  "installedInteractionVerified": false,
+  "realAgentAcceptance": false,
+  "remaining": [
+    "Installed recovery copies, separate delete confirmation, independent restoration and location guidance",
+    "Desktop access wait NEW-01",
+    "All remaining capability and Agent standards",
+    "Public distribution remains deferred"
+  ]
+}

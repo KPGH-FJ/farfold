@@ -1,0 +1,13 @@
+--- output/2026-10-10-worktree-native-followup-install/install_verified_candidate.py
++++ output/2026-10-10-worktree-new11-install/install_verified_candidate.py
+@@ -12,8 +12,8 @@
+ from pathlib import Path
+ 
+ ROOT = Path('/Users/tw/Desktop/farfold')
+-OUT = ROOT / 'output/2026-10-10-worktree-native-followup-install'
+-EVIDENCE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate'
++OUT = ROOT / 'output/2026-10-10-worktree-new11-install'
++EVIDENCE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate'
+ COMMIT = sys.argv[1]
+ CANDIDATE = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+ FORMAL = Path('/Applications/Farfold.app')

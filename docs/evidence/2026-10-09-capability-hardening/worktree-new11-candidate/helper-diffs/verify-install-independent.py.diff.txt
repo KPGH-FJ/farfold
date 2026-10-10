@@ -1,0 +1,54 @@
+--- docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py
++++ docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/verify-install-independent.py
+@@ -1,4 +1,4 @@
+-"""Worktree native followup installation verifier, using ten scoped checks.
++"""NEW11 warm draft installation verifier, using ten scoped checks.
+ 
+ Usage: python3 verify-install-independent.py FULL_COMMIT CURRENT_ENGINEERING_RECEIPT
+ Run only after root confirms installation and completed retention evidence.
+@@ -24,9 +24,9 @@
+ 
+ ROOT = Path('/Users/tw/Desktop/farfold')
+ OUT = Path(__file__).resolve().parent
+-PRIVATE = ROOT / 'output/2026-10-10-worktree-native-followup-install'
++PRIVATE = ROOT / 'output/2026-10-10-worktree-new11-install'
+ EXPECTED = sys.argv[1] if len(sys.argv) == 3 else ''
+-BASELINE_COMMIT = 'ecc78ce3acb2c2d6be94809dadf7220e7199ad7b'
++BASELINE_COMMIT = '9cbb3db9c43296865d954e45d13d483c55c51f94'
+ FORMAL = Path('/Applications/Farfold.app')
+ APP = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+ NAMES = {'farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm'}
+@@ -142,12 +142,12 @@
+     require(len(sys.argv) == 3, 'Pass exact commit and current engineering receipt path')
+     require(not candidate_helpers.engineering_argument.is_absolute() and '..' not in candidate_helpers.engineering_argument.parts and candidate_helpers.ENGINEERING_RECEIPT.is_relative_to(candidate_helpers.ENGINEERING_ROOT), 'Invalid current engineering receipt path')
+     require(len(EXPECTED) == 40 and all(c in '0123456789abcdef' for c in EXPECTED), 'A full candidate commit is required')
+-    require(OUT == ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate', 'Unexpected verifier directory')
++    require(OUT == ROOT / 'docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate', 'Unexpected verifier directory')
+     regular(PRIVATE, directory=True)
+     require(PRIVATE.stat().st_uid == os.getuid(), 'Private directory owner differs')
+     receipt_path = OUT / 'install-independent.json'
+     descriptor = os.open(receipt_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+-    record = {'checkedAtUtc': datetime.now(timezone.utc).isoformat(), 'sourceCommit': EXPECTED, 'result': 'failed', 'failures': [], 'checks': {}, 'methodOrigin': 'Adapted from the reviewed browser-search ten-check verifier. This worktree archive/restore invocation binds 8780 normal-exit evidence, current candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.'}
++    record = {'checkedAtUtc': datetime.now(timezone.utc).isoformat(), 'sourceCommit': EXPECTED, 'result': 'failed', 'failures': [], 'checks': {}, 'methodOrigin': 'Adapted from the reviewed browser-search ten-check verifier. This NEW11 invocation binds 9cbb normal-exit and completed native data-review evidence, current candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.'}
+     stage = 'receiptChain'
+     with os.fdopen(descriptor, 'w') as handle:
+         try:
+@@ -181,13 +181,13 @@
+                 require(not path.is_absolute() and '..' not in path.parts and path.parts[0] in ('docs', 'output'), 'Normal exit reference outside evidence')
+                 require(path.as_posix() not in normal_evidence and sha(ROOT / path) == item['sha256'], 'Normal exit reference duplicate or changed')
+                 normal_evidence[path.as_posix()] = item['sha256']
+-            exit_path = 'output/2026-10-10-worktree-remove-native/final-normal-exit.json'
+-            journey_path = 'docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json'
+-            closeout_path = 'docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-native-closeout.json'
++            exit_path = 'output/2026-10-10-worktree-native-followup-native/final-normal-exit.json'
++            journey_path = 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.json'
++            closeout_path = 'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/native-closeout-independent.json'
+             require({exit_path, journey_path, closeout_path} <= set(normal_evidence), 'Current installed-baseline normal-exit references missing')
+             observed_exit = read(ROOT / exit_path)
+-            require(observed_exit['method'] == 'Native Cmd+Q after observed idle empty TR draft; explicit separate recovery verification enabled independent restore, original cold recheck failure retained' and observed_exit['normalExit'] is True and observed_exit['rootOsSignalsSent'] is False and observed_exit['pgrepExit'] == 1 and observed_exit['pgrepStdout'] == '', 'Prior normally closed baseline differs')
+-            require(read(ROOT / journey_path)['formalSourceCommit'] == read(ROOT / closeout_path)['formalSourceCommit'] == BASELINE_COMMIT, 'Normal-exit evidence belongs to another installed baseline')
++            require(observed_exit['normalQuitObservedByRoot'] is True and observed_exit['forcedQuit'] is False and observed_exit['processExit'] == 1 and observed_exit['processes'] == 0 and observed_exit['sourceCommit'] == BASELINE_COMMIT, 'Prior normally closed baseline differs')
++            require(read(ROOT / journey_path)['formalSourceCommit'] == read(ROOT / closeout_path)['installedCommit'] == BASELINE_COMMIT and observed_exit['formalFiles'] == read(candidate_helpers.BASELINE_RECEIPT)['candidateFiles'], 'Normal-exit evidence belongs to another installed baseline')
+             require(candidate_helpers.BASELINE_COMMIT == BASELINE_COMMIT, 'Candidate helper uses a different installed baseline')
+             initial.update({ROOT / p: h for p, h in normal_evidence.items()})
+             require(operation['candidateCommit'] == EXPECTED and operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] is True and operation['copyStarted'] is True and operation['launched'] is False and operation['forcedQuit'] is False, 'Install operation did not finish closed')

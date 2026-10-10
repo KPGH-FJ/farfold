@@ -1,0 +1,11 @@
+--- output/2026-10-10-worktree-native-followup-install/cleanup_duplicate.py
++++ output/2026-10-10-worktree-new11-install/cleanup_duplicate.py
+@@ -2,7 +2,7 @@
+ import hashlib,json,shutil,stat,zipfile
+ from datetime import datetime,timezone
+ ROOT=Path('/Users/tw/Desktop/farfold')
+-OUT=ROOT/'docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate'
++OUT=ROOT/'docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate'
+ c=json.loads((OUT/'candidate.json').read_text())
+ i=json.loads((OUT/'install-independent.json').read_text())
+ assert i['result']=='passed'

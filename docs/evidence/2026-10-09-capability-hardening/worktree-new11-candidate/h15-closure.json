@@ -1,0 +1,45 @@
+{
+  "recordedAtUtc": "2026-10-10T11:10:16.220606+00:00",
+  "item": "H15",
+  "status": "completed_within_supported_macos_basic_worktree_scope",
+  "originalCondition": "明确基础工作树归档/删除范围和恢复方案；纳入后逐项保护脏/未跟踪/忽略文件、未推送提交、锁及活动进程，只处置明确归属对象，不默认force；失败和未知保留可恢复工作。",
+  "conditionChanges": false,
+  "scope": "macOS基础工作树保留归档、安全删除、原路径恢复和独立副本恢复；限定已支持Git布局和有界材料。",
+  "basis": "原条件逐项映射的材料/提交/锁/活动/归属/无force/失败未知保护证据保留；其待补正式Git锁、冷核查直接恢复、确认和提示已由9cbb复验补齐，随后新发现的暖态草稿NEW-11由c635本次正式复验闭合。",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/h15-evidence-map.json",
+      "sha256": "844cff2405e429d7701d4b9cfbde79ac88d83eb6ac847ddbc39be583b43940a4",
+      "bytes": 12763
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.json",
+      "sha256": "239c896f538dd1e3cdb75708db3d81ee036f180fc927a64a43a3be8325b60966",
+      "bytes": 17367
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/native-closeout-independent.json",
+      "sha256": "4bfaafe083d7573ad7ef1436284eb5f52b54f699df117c535d8253070d0d5c40",
+      "bytes": 6861
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/installed-new11.json",
+      "sha256": "61b445da67ecd676d0fa6b88c515aa70459cc736d77bfb3901323938388c5697",
+      "bytes": 9406
+    }
+  ],
+  "notCompletedByThis": [
+    "H17环境准备",
+    "Windows",
+    "29家完整八项标准",
+    "全部122项市场能力"
+  ],
+  "limits": [
+    "真实Agent证据只覆盖所记录的Codex 6 Astra/Ultra及原服务/权限，不推广29家八项标准。",
+    "Windows、SHA-256仓库执行与最大资源规模未在本轮实测；保留当前平台/格式/限额边界。"
+  ],
+  "noNewAcceptanceGates": [
+    "不追加另一台电脑、每家Agent回收验证、完整OS外部进程排他、任意ACL/xattr备份或破坏性断电实验作为本H15收口条件。",
+    "H17依赖/端口/秘密准备是独立后续条目，不视为本H15缺陷。"
+  ]
+}
