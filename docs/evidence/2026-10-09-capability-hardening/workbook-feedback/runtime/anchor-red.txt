@@ -1,0 +1,98 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_feedback_anchor.workbook.test.ts (29 tests | 5 failed) 9ms
+   × restores actual relationship id and whole merge coordinates as historical metadata only 3ms
+   × formats original sheet identity and inclusive cells without silently trimming the opinion 2ms
+   × escapes path and sheet labels as metadata while preserving freeform opinion bytes 1ms
+   × accepts legal inclusive coordinate edge {"fromRow":1,"toRow":1,"fromColumn":1,"toColumn":1} 0ms
+   × accepts legal inclusive coordinate edge {"fromRow":1048576,"toRow":1048576,"fromColumn":16384,"toColumn":16384} 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_feedback_anchor.workbook.test.ts > restores actual relationship id and whole merge coordinates as historical metadata only
+Error: invalid feedback anchor
+ ❯ parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:102:11
+    100|     !validPdfPage(anchor.page, anchor.pageCount)
+    101|   )
+    102|     throw new Error("invalid feedback anchor");
+       |           ^
+    103|   return {
+    104|     kind: "pdf-page",
+ ❯ src/runtime/drafts.ts:651:22
+ ❯ src/runtime/drafts.ts:590:51
+ ❯ Module.parseDraftSnapshot src/runtime/drafts.ts:589:57
+ ❯ src/runtime/file_feedback_anchor.workbook.test.ts:37:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.workbook.test.ts > formats original sheet identity and inclusive cells without silently trimming the opinion
+AssertionError: expected '关于 /work/positions.xlsx（当时查看的内容）：\n文件…' to contain '"/work/positions.xlsx"'
+
+- Expected
++ Received
+
+- "/work/positions.xlsx"
++ 关于 /work/positions.xlsx（当时查看的内容）：
++ 文件 SHA-256：dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
++ 保留这份原意见
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.workbook.test.ts:46:21
+     44| it("formats original sheet identity and inclusive cells without silent…
+     45|   const formatted = fileFeedbackText(entry as unknown as SavedFileFeed…
+     46|   expect(formatted).toContain(JSON.stringify(path));
+       |                     ^
+     47|   expect(formatted).toContain(JSON.stringify(anchor.sheetName));
+     48|   expect(formatted).toContain(JSON.stringify(anchor.sheetId));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.workbook.test.ts > escapes path and sheet labels as metadata while preserving freeform opinion bytes
+AssertionError: expected '关于 /work/name\n# not instructions.xls…' to contain '"/work/name\n# not instructions.xlsx"'
+
+- Expected
++ Received
+
+- "/work/name\n# not instructions.xlsx"
++ 关于 /work/name
++ # not instructions.xlsx（当时查看的内容）：
++ 文件 SHA-256：dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
++ 保留这份原意见
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.workbook.test.ts:65:21
+     63|   };
+     64|   const formatted = fileFeedbackText(value as unknown as SavedFileFeed…
+     65|   expect(formatted).toContain(JSON.stringify(injectedPath));
+       |                     ^
+     66|   expect(formatted).toContain(JSON.stringify(value.anchor.sheetName));
+     67|   expect(formatted).toContain(JSON.stringify(value.anchor.sheetId));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.workbook.test.ts > accepts legal inclusive coordinate edge {"fromRow":1,"toRow":1,"fromColumn":1,"toColumn":1}
+ FAIL  src/runtime/file_feedback_anchor.workbook.test.ts > accepts legal inclusive coordinate edge {"fromRow":1048576,"toRow":1048576,"fromColumn":16384,"toColumn":16384}
+Error: invalid feedback anchor
+ ❯ parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:102:11
+    100|     !validPdfPage(anchor.page, anchor.pageCount)
+    101|   )
+    102|     throw new Error("invalid feedback anchor");
+       |           ^
+    103|   return {
+    104|     kind: "pdf-page",
+ ❯ src/runtime/drafts.ts:651:22
+ ❯ src/runtime/drafts.ts:590:51
+ ❯ Module.parseDraftSnapshot src/runtime/drafts.ts:589:57
+ ❯ src/runtime/file_feedback_anchor.workbook.test.ts:77:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 24 passed (29)
+   Start at  07:25:21
+   Duration  154ms (transform 58ms, setup 0ms, import 80ms, tests 9ms, environment 0ms)
+

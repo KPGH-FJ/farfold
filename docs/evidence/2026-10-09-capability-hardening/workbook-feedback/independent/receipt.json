@@ -1,0 +1,262 @@
+{
+  "kind": "XLSX feedback full-App browser validation and independent peer-source review",
+  "recordedAtUtc": "2026-10-09T23:58:33.639013+00:00",
+  "reviewer": "verification",
+  "status": "passed_scoped_controlled_browser",
+  "currentBlockers": [],
+  "independence": [
+    "Runtime factory/union and UI parent/leaf were authored by architecture/product_coverage/root. This reviewer read those paths and independently ran the full-App browser harness.",
+    "This reviewer authored the narrow parser and two-line workbook CSS repairs. Their source review is not independently claimed here; architecture separately reviewed them. Browser coverage of these owned changes is actual self-verification.",
+    "No duplicate full frontend/Rust/build suite was run to create this receipt. Final engineering and native installation are separate root records."
+  ],
+  "finalResult": {
+    "runs": 8,
+    "cases": 12,
+    "assertions": 286,
+    "failed": 0,
+    "byEngine": {
+      "webkit": {
+        "cases": 6,
+        "assertions": 143
+      },
+      "chromium": {
+        "cases": 6,
+        "assertions": 143
+      }
+    },
+    "allRunExitCodes": 0,
+    "allSrcSnapshotsEqualCurrent": true,
+    "srcFiles": 688,
+    "scope": "All files under src/, not the complete build/dependency input set"
+  },
+  "environment": {
+    "actual": "Production App/ThreadPage/Sidebar/Composer/ArtifactPane/OpenedFileView/WorkbookFilePreview, React StrictMode and all global CSS; actual XLSX Worker/parser; actual pointer, keyboard, focus and DOM.",
+    "controlled": "Native capture/revision/settings IPC mocked; original SHA-checked writer ZIPs converted to capture DTOs, synthetic thread/path/composer and in-memory saved drafts. No formal App, Agent, account or user data.",
+    "engines": {
+      "webkit": "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+      "chromium": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    },
+    "keyboard": "Cell Enter, WebKit Option-Tab (Alt+Tab) or Chromium Tab, then Enter on explicit opinion button. WebKit bare-Tab navigation is not claimed.",
+    "viewports": "Main matrix v1 and nonordinal IDs1280x820; v2 900x620 in each engine. Not every sample at both sizes.",
+    "network": "Runner restricts network to the owned localhost harness. No new dependency or network font."
+  },
+  "coverage": {
+    "main": "Three original ZIPs per engine,96 checks: zero/false/blank/cache, legal nonordinal relation IDs, actual keyboard explicit feedback, selection alone does not retarget, retain opinion text, complete merges, hidden/veryHidden and hidden-anchor opt-in, cold parsing, take once preserving original composer, zero automatic send/external action, bounded root.",
+    "manualLifecycle": "22 per engine: selection defers external refresh; manual reread may show loading with old confirmation disabled and saved opinion retained; hide/late capture cannot retarget; reopen adopts parsedv2; same relation ID/new name/version stays separate; explicit new opinion and take preserve old materials.",
+    "automaticLifecycle": "15 per engine: held capture keeps actual A2=0 and inert workbook. Real pointer cannot select cell, pointer/key cannot change sheet, Tab skips inert controls. Release parsesv2 before ready; one v2 capture, correct new sheet name/id/version, bounded root.",
+    "actualClippedMerge": "10 per engine: initial X99 rowSpan2/colSpan1 in A1-X100, then X101 row continuation and Y101 column continuation retain complete X99:AA102. Paging withdraws candidate without changing saved opinion; actual pointer confirmation/root bounds checked.",
+    "claimCorrection": "Main runner check named clipped merge jumped to X99 and only proves full rectangle. Separate final run-clipped results supply true clipping proof. Historical failure-classification future-tense note predates this result."
+  },
+  "resolvedFindings": [
+    {
+      "id": "NEW-02-workbook-extension",
+      "red": "Three full-App WebKit opinion-focus cases moved window/app511/511/654 CSSpx with document above viewport.",
+      "fix": "Only .workbook-preview adds min-height:0 and overflow:auto; no body-clipping change. Workbook local scroll preserves controls/detail/grid access. Existing TextBlockPreview fix unchanged.",
+      "contrast": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate3.json",
+        "sha256": "004286ff3ef4520332aa318cbcdbbecd5e85537811eab657eb0109982cee0150",
+        "bytes": 261568
+      },
+      "green": "Final main/lifecycle/clipped/automatic runs use production CSS with no injection."
+    },
+    {
+      "id": "XLSX-automatic-refresh-self-cancellation",
+      "red": "Actual10s observation: WebKit88revision/87v2capture, Chromium102/101, no v2. Counts reflect controlled IPC scheduling, not native IO load.",
+      "fix": "Root keeps actual active distinct from interactionBlocked; peer preserves read/ready/grid, retires source and blocks actions without pausing the monitor. Explicit confirmation remains required.",
+      "parent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/refresh-repair/parent-repair.json",
+        "sha256": "0ff9a778e1cbd631bf9b4039f8036d4419e9c4ad1001d547a7b45d1b70e66506",
+        "bytes": 2362
+      },
+      "leaf": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-fix.json",
+        "sha256": "2ddb418b08f0ed9eda350f9cc2a4d74e33a126beadd433f17890e376db1cf1d9",
+        "bytes": 6632
+      },
+      "authorTestBoundary": "Parent two new scenarios included only one valid pre-fix failure (1red/12green); real hide already passed. Peer strengthened11red became29component/63relatedgreen. Read-only reviewed, not rerun by this reviewer.",
+      "green": "Each actual automatic-inert-final15/15; visible old grid during hold, exactly one v2 capture."
+    }
+  ],
+  "evidence": {
+    "ownedSources": [
+      {
+        "path": "src/runtime/xlsx_sheet.ts",
+        "sha256": "757471213e28653e39a25abbafd8bfb2007904e1cc61fafd9523167243850775",
+        "bytes": 11813
+      },
+      {
+        "path": "src/runtime/xlsx_writer_compatibility.test.ts",
+        "sha256": "2baf506f772c5968602351a20e7c173269b924eba55f449af084dd3e711fd387",
+        "bytes": 7443
+      },
+      {
+        "path": "src/components/WorkbookFilePreview.css",
+        "sha256": "98436ecfc27d54edbeca0a4ff618da7edfd01c07ea15f93be98bb20352ba7ac0",
+        "bytes": 2675
+      }
+    ],
+    "sourceCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/browser-source-checkpoint.json",
+      "sha256": "69ddbd5f9125d07a57660776f70c7bef952534e6606ba390b4cc9293ad2afaa4",
+      "bytes": 77182
+    },
+    "finalRuns": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/final-run-index.json",
+      "sha256": "45e8c4baa9d50448edcf7a65af4259aa025ee0a42d4ef9b9d7e99b2cccf0011d",
+      "bytes": 7364
+    },
+    "harness": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/fixture.tsx",
+        "sha256": "33d9c4dccf442d2a5841c53ac9265a58a39ff4ab96af3f62dabfdc361f15ad6a",
+        "bytes": 7844
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/index.html",
+        "sha256": "dde45142c0c64132e7bd376590b1ac2a3443eed77af05e6199a57e846dc89085",
+        "bytes": 953
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/serve.mjs",
+        "sha256": "3f000412e2e49594b38eae0c85ba649fb444ac4bf84536d91e06f980a9c55483",
+        "bytes": 679
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/capture-fixtures.py",
+        "sha256": "4821ac3b9961b502ee3c4556defe74747dfeaff35c916f445da6b02153be4c91",
+        "bytes": 1197
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/capture-data.json",
+        "sha256": "f4519ba9676ffb876b5d94a5775ed0f966f72526d9bc8e6302bf6d6ec12ac6f7",
+        "bytes": 122256
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run.mjs",
+        "sha256": "2e2433003c866f69f68946ac4d958c179ec24ce477190bd56a398214d196c9fd",
+        "bytes": 12564
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-lifecycle.mjs",
+        "sha256": "df85bbb29e6ac299a0bc45024f975880d7c9d0934eafc0997e8383f731b8581a",
+        "bytes": 9288
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-automatic.mjs",
+        "sha256": "35190254b021b59576703e39c6a998bfd343976d5d8858a6d07f6b3a19a0f309",
+        "bytes": 7497
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-clipped.mjs",
+        "sha256": "8775ff2a8c4724f97e2b7bda361ffb9ceb8c30dc0b385a9740c1f3254343b8c9",
+        "bytes": 5578
+      }
+    ],
+    "originalFixtures": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1.xlsx",
+        "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+        "bytes": 8694
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v2.xlsx",
+        "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+        "bytes": 8710
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1-nonordinal-ids.xlsx",
+        "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+        "bytes": 8733
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json",
+        "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+        "bytes": 133141
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/manifest.json",
+        "sha256": "af0ce4d37328bff26da02dd60f1ea59f030616e07085a57ac03b0b9660334004",
+        "bytes": 4281
+      }
+    ],
+    "parserAuthorCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/implementation.json",
+      "sha256": "513a8be824cacac0b30735e070b9297d7fe84adcedffeb83e0fc79e391a636ab",
+      "bytes": 6745
+    },
+    "runtimeIndependentHistoricalCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/runtime-review.json",
+      "sha256": "c1377997db51eec346a6a347f43123ee95a5d387d7d65ac5adb00e2f76e39af5",
+      "bytes": 3550
+    },
+    "runtimeAuthorHistoricalCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/implementation.json",
+      "sha256": "0e1b2e2ad8f461d015940ed0f6130a3b1a20c6751650ef15f2c1a96a95953de4",
+      "bytes": 12743
+    },
+    "historicalHashBoundary": "Runtime author checkpoint includes three pre-refresh-repair shared UI/test hashes. It remains historical; current688src map and latest parent/leaf repair receipts are the final tested inputs. No old hash was overwritten.",
+    "preservedFailuresAndDriverCorrections": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/failure-classification.json",
+      "sha256": "2a98dd9edc8f798dc6f1f79a78fc7f4d35888dc08272adfc9e7a457f1337179a",
+      "bytes": 6815
+    },
+    "formatPreservation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/format-preservation-final.json",
+      "sha256": "ea6596c1bd4e46c4cd788d6a7a80ce34f22350dd7b6c56f3554cc67d30d70a4c",
+      "bytes": 11730
+    },
+    "rawFormattedSemanticPairs": 22,
+    "personallyViewedScreenshots": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-second-positions-v1-failure.png",
+        "sha256": "2997c4e2d15d35cbd6938e2c11bddedd3095869448ab5bf796e9abb86520eba8",
+        "bytes": 155313
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-final-positions-v1.png",
+        "sha256": "7517a8be498a790c0af21c6572bfd826e1da514f1a6cb1733053cde2c8fbdbf3",
+        "bytes": 214099
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-final-positions-v2.png",
+        "sha256": "2da31bebab041d7877009e620ddc35bf0cfe1e410fbb0a366935b692244d25a1",
+        "bytes": 68327
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-fixed.png",
+        "sha256": "7a0f33ec429e6f830e9d916d0f78f71a96d8d68757685d7bdc5c9b54fb1c146e",
+        "bytes": 228703
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.png",
+        "sha256": "fd1bf155d9560cfb9bb08eba9d97dccfff2c381d137a367e2ebd81ff94e32c2f",
+        "bytes": 219181
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed-positions-v2.png",
+        "sha256": "2da31bebab041d7877009e620ddc35bf0cfe1e410fbb0a366935b692244d25a1",
+        "bytes": 68327
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.png",
+        "sha256": "bd723e65254634e288a1ae1e74a497599566be5e78e6e7cf048ba3cd594b254b",
+        "bytes": 228686
+      }
+    ],
+    "screenshotScope": "Only the listed images are claimed personally viewed; other retained screenshots were not all inspected. None is a formal installed-window observation.",
+    "cleanup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/cleanup.json",
+      "sha256": "880fe5f3e06ffb5e409981dd12a3cef8e59ee483d1b054777a3c3ab9a6954dac",
+      "bytes": 483
+    }
+  },
+  "cleanupSummary": "Exact ownedPID23228/port1464 received one SIGTERM after all own browsers closed; tool session26254 exit143, then PID/listener absent. No global process cleanup.",
+  "limits": [
+    "Controlled development browser, not Tauri native capture/CRC/filesystem, installed CSP or native draft persistence. No real Agent/account/formal App.",
+    "WeakMap registration proves in-memory source/owner relationships, not authenticity of a native read; actual parser/current parent relationships are the provenance exercised here.",
+    "Manual reread may show loading. Automatic preparation retains old parsed grid while awaiting replacement.",
+    "Only selected cell or original complete merge; no arbitrary range selection, editable spreadsheet, recalculation, full OOXML conformance or DOCX/PPTX feedback.",
+    "Parser87 and runtime195 associated author tests are separate source-level counts, not additional browser assertions.",
+    "Installed candidate acceptance remains a separate root task; no such completion is inferred here."
+  ]
+}

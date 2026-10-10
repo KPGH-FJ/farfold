@@ -1,0 +1,136 @@
+{
+  "kind": "Preserved independent browser failures and driver corrections",
+  "productionFailures": [
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-second.json",
+        "sha256": "0106b925808839e32af51fba9277c60f203b595c14c5e48ce95b8189133c925a"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-second.raw.txt",
+        "sha256": "0106b925808839e32af51fba9277c60f203b595c14c5e48ce95b8189133c925a"
+      },
+      "finding": "Opinion textarea focus overflows the workbook flex child and scrolls full App root. Three original fixture cases at 1280x820 / 900x620.",
+      "metrics": [
+        {
+          "windowY": 511,
+          "appY": -511,
+          "documentHeight": 1331,
+          "viewportHeight": 820
+        },
+        {
+          "windowY": 511,
+          "appY": -511,
+          "documentHeight": 1331,
+          "viewportHeight": 820
+        },
+        {
+          "windowY": 654,
+          "appY": -654,
+          "documentHeight": 1274,
+          "viewportHeight": 620
+        }
+      ],
+      "disposition": "Candidate local CSS contrast then two-line WorkbookFilePreview.css repair; final behavior rerun tracked separately. TextBlockPreview repair is unchanged; this is another preview child discovered through XLSX feedback."
+    },
+    {
+      "evidence": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-final.json",
+          "sha256": "019b9aa03f9e82a24044b12475971a8dee8037ea482494d39a7596451e6c0f55"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-final.json",
+          "sha256": "98324b20ce9604ae1ebaad822d37f39d6275db445528197fd41c0b4d956cbe56"
+        }
+      ],
+      "raw": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-final.raw.txt",
+          "sha256": "019b9aa03f9e82a24044b12475971a8dee8037ea482494d39a7596451e6c0f55"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-final.raw.txt",
+          "sha256": "98324b20ce9604ae1ebaad822d37f39d6275db445528197fd41c0b4d956cbe56"
+        }
+      ],
+      "finding": "Automatic refresh with no active feedback/candidate repeatedly cancels its own prepared read, never displays v2 within actual 10-second observation.",
+      "counts": {
+        "webkit": {
+          "revision": 88,
+          "v2Capture": 87
+        },
+        "chromium": {
+          "revision": 102,
+          "v2Capture": 101
+        }
+      },
+      "disposition": "Root owns parent/leaf interaction gate repair; these exact failed checkpoints remain immutable."
+    }
+  ],
+  "driverCorrections": [
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-first.json",
+        "sha256": "e25d5544e306ebeeec671513990952a0b47befaf530a84556f22757b24d3c95e"
+      },
+      "classification": "Not promoted to product failure",
+      "details": [
+        "First fixture timed out during Vite initial saxes/ssf optimization and reload recorded in server.txt; later warm runs with unchanged product source parsed successfully.",
+        "Other two cases assumed bare Tab traverses WebKit buttons; actual platform Option-Tab reached close and explicit confirm. Keyboard navigation is reported with the actual key sequence."
+      ],
+      "sourceCopy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-first.raw.txt",
+        "sha256": "515af4cba82f5b6ea5c57b2a4aa49547497684751251f60e5b1cc942345c6b0f"
+      }
+    },
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate.json",
+        "sha256": "1ca8bc0cee63e1155186f5c1815ede917969e4c92532c887ee4ef3d659e0b366"
+      },
+      "classification": "Driver selector mismatch",
+      "details": [
+        "getByLabel matched both input and table header with same label; corrected to role textbox. Earlier 19 checks in each case passed."
+      ],
+      "sourceCopy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-candidate.raw.txt",
+        "sha256": "a1a33078175bfedf62674c3f66ca2bf718801c3e25c19e3f07b58a59d7eb622f"
+      }
+    },
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate2.json",
+        "sha256": "d4272c09dfd95a3a06437848cae8cfc61c20ab3ab78ca7584ebf30c473fe6692"
+      },
+      "classification": "Driver expected label / oracle mismatch",
+      "details": [
+        "Submit button actual name is 加入对话, not 加入输入框.",
+        "v2 original hidden merge is V10:W11; fixed hardcoded v1 rectangle to use original independent XML oracle."
+      ],
+      "sourceCopy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-candidate2.raw.txt",
+        "sha256": "0c0447b03390687326b46f1385f25edbabbe7948c66e7331e447fcbcd37ebac1"
+      }
+    },
+    {
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-first.json",
+        "sha256": "a5ce1fdb5906afa14b7cec88fb1c2d3bd7e2d5fc229e1791339ececbc717c383"
+      },
+      "classification": "Unspecified stronger driver assumption rejected after source/contract review",
+      "details": [
+        "Driver assumed manual Office reload preserves old grid; current authorized contract permits loading replacement while keeping saved opinion and disabling confirmation. Root confirmed no scope expansion.",
+        "A not-yet-reached hardcoded new A2 value9 was also corrected to original oracle value17."
+      ],
+      "sourceCopy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/run-lifecycle-first.raw.txt",
+        "sha256": "4e2dc2bb6833e6d66e56c2af8f6f7af983d6638177be17746e6b1a97255fbbf1"
+      }
+    }
+  ],
+  "claimCorrection": [
+    "Earlier main matrix assertion named clipped merge actually jumped to X99 before selecting, so that checkpoint proves full original rectangle but not actual clipping at window edges. Separate run-clipped.mjs is prepared for actual first-window spans and row/column continuation; only its future observed result may prove clipping."
+  ],
+  "unchangedRawRule": "All original browser JSON bytes remain .raw.txt; formatted JSON is semantically equal as recorded in format-preservation.json. No failed output was replaced by a later green."
+}

@@ -1,0 +1,42 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx (13 tests | 1 failed) 842ms
+   × stages one automatic workbook refresh without cancelling its own monitor (hidden: false) 68ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > stages one automatic workbook refresh without cancelling its own monitor (hidden: false)
+AssertionError: expected { root: '/work', …(6) } to be { root: '/work', …(6) } // Object.is equality
+
+- Expected
++ Received
+
+  {
+    "name": "result.xlsx",
+    "path": "/work/result.xlsx",
+    "resolvedPath": "/work/result.xlsx",
+    "root": "/work",
+-   "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
++   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size": 200,
+-   "version": "v2",
++   "version": "v1",
+  }
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:309:28
+    307|       finish({ kind: "workbook", file: next });
+    308|       await vi.advanceTimersByTimeAsync(0);
+    309|       expect(child().file).toBe(hide ? file : next);
+       |                            ^
+    310|       expect(check).toHaveBeenCalledTimes(1);
+    311|       expect(h.prepare).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  07:45:23
+   Duration  1.22s (transform 141ms, setup 0ms, import 307ms, tests 842ms, environment 0ms)
+

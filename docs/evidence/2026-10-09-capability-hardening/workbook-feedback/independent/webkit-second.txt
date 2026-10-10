@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"file":"positions-v1.xlsx","pass":8,"failure":"Error: opinion focused with long composer root bounded"},{"file":"positions-v1-nonordinal-ids.xlsx","pass":8,"failure":"Error: opinion focused with long composer root bounded"},{"file":"positions-v2.xlsx","pass":8,"failure":"Error: opinion focused with long composer root bounded"}]}

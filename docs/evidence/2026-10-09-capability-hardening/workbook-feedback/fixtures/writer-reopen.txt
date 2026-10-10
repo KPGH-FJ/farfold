@@ -1,0 +1,35 @@
+[
+  {
+    "file": "positions-v1-nonordinal-ids.xlsx",
+    "sheets": [
+      "数据一",
+      "副本'与&同文",
+      "隐藏资料",
+      "深藏资料"
+    ],
+    "cachedFormulaResultsAbsent": true,
+    "blankCellsRetained": true
+  },
+  {
+    "file": "positions-v1.xlsx",
+    "sheets": [
+      "数据一",
+      "副本'与&同文",
+      "隐藏资料",
+      "深藏资料"
+    ],
+    "cachedFormulaResultsAbsent": true,
+    "blankCellsRetained": true
+  },
+  {
+    "file": "positions-v2.xlsx",
+    "sheets": [
+      "副本'与&同文",
+      "数据一已改名",
+      "隐藏资料",
+      "深藏资料"
+    ],
+    "cachedFormulaResultsAbsent": true,
+    "blankCellsRetained": true
+  }
+]

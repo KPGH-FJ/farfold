@@ -1,6 +1,8 @@
 .workbook-preview {
   padding: 16px;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 .workbook-preview p,
 .workbook-warnings {

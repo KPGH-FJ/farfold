@@ -41,6 +41,7 @@ export function richText(
   themes: (string | undefined)[],
   warnings: Set<string>,
 ): { text: string; runs?: XlsxCell["runs"] } {
+  if (node.text.trim()) throw new XlsxError("invalid");
   if (
     node.children.some(
       (n) =>
@@ -98,6 +99,16 @@ function readCell(
     v = child(node, "v"),
     inline = child(node, "is"),
     t = attr(node, "t") ?? "n";
+  if (node.text.trim()) throw new XlsxError("invalid");
+  if (f?.children.length || v?.children.length)
+    throw new XlsxError("unsupported");
+  if (!["inlineStr", "s", "str", "n", "b", "e", "d"].includes(t))
+    throw new XlsxError("unsupported");
+  // Validate the cell shape before the missing-cache early return. An absent
+  // result must not conceal conflicting inline text or a malformed formula.
+  if (t === "inlineStr" ? f || v : inline || (t === "s" && f))
+    throw new XlsxError("invalid");
+  const missingCache = !!f && (!v || (t === "n" && v.text === ""));
   const result: XlsxCell = {
     reference: ref,
     ...coordinate(ref),
@@ -107,7 +118,7 @@ function readCell(
     value: null,
     formulaPresent: !!f,
     formula: f?.text.trim() ? f.text : null,
-    cacheState: f ? (v ? "present" : "missing") : "notFormula",
+    cacheState: f ? (missingCache ? "missing" : "present") : "notFormula",
     display: "",
   };
   if (f) {
@@ -118,22 +129,22 @@ function readCell(
     )
       warnings.add("formulaVariant");
   }
-  if (f && !v) {
+  if (missingCache) {
     result.display = null;
     result.formatIssue = "missingCache";
     return result;
   }
   if (t === "inlineStr") {
-    if (f || v || !inline) throw new XlsxError("invalid");
+    // Ordinary writers can retain an empty inline-typed cell without an is
+    // payload. Keep its coordinate/style, without inventing encoded text.
+    if (!inline) return result;
     const rich = richText(inline, themes, warnings);
     result.type = "text";
     result.raw = rich.text;
     result.value = rich.text;
     result.runs = rich.runs;
-  } else if (inline) throw new XlsxError("invalid");
-  else if (!v) return result;
+  } else if (!v) return result;
   else if (t === "s") {
-    if (f) throw new XlsxError("invalid");
     const rich = strings[integer(v.text, 0, strings.length - 1)];
     result.type = "text";
     result.value = rich.text;

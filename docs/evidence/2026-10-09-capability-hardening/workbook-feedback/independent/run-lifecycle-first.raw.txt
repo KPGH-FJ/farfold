@@ -1,0 +1,276 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "lifecycle";
+const files = (dir) =>
+  fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((x) =>
+      x.isDirectory()
+        ? files(path.join(dir, x.name))
+        : [path.join(dir, x.name)],
+    );
+const inputs = [
+  ...files("src"),
+  base + "/fixture.tsx",
+  base + "/capture-data.json",
+  base + "/run-lifecycle.mjs",
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const r = {
+  engine,
+  label,
+  at: new Date().toISOString(),
+  before: hashes(),
+  checks: [],
+  errors: [],
+  blocked: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const page = await browser.newPage({ viewport: { width: 1280, height: 820 } });
+page.setDefaultTimeout(10000);
+page.on("pageerror", (e) => r.errors.push(String(e)));
+await page.route("**/*", (route) => {
+  if (!route.request().url().startsWith("http://127.0.0.1:1464/")) {
+    r.blocked.push(route.request().url());
+    return route.abort();
+  }
+  return route.continue();
+});
+const check = (name, pass, detail) => {
+  r.checks.push({ name, pass, detail });
+  if (!pass) throw new Error(name);
+};
+const feedback = () =>
+  page.evaluate(() => Object.values(window.fixture.feedback()));
+const select = async (address) => {
+  await page.locator(`[data-cell="${address}"] button`).click();
+  await page.locator(".workbook-cell-detail").waitFor();
+};
+try {
+  await page.goto(`http://127.0.0.1:1464/${base}/index.html?length=640`, {
+    waitUntil: "networkidle",
+  });
+  await page
+    .getByText("CONTROLLED_WORKBOOK_FEEDBACK", { exact: true })
+    .first()
+    .click();
+  await page.getByRole("button", { name: "工作表样本", exact: true }).click();
+  await page.locator('[data-cell="A2"] button').waitFor();
+  await select("A2");
+  await page
+    .getByRole("button", { name: "对此单元格提意见", exact: true })
+    .click();
+  await page
+    .getByLabel("补充给 Agent 的意见", { exact: true })
+    .fill("旧版意见保留原表名与A2。");
+  const old = await feedback();
+  await select("B2");
+  const oldReads = await page.evaluate(
+    () =>
+      window.calls.filter((x) => x.cmd === "file_delivery_read_workbook")
+        .length,
+  );
+  await page.evaluate(() => {
+    window.fixture.replace("positions-v2.xlsx");
+    window.dispatchEvent(new Event("focus"));
+  });
+  await page
+    .getByText("文件已变化。当前内容和意见保持不变，重新读取可查看新内容。", {
+      exact: true,
+    })
+    .waitFor();
+  check(
+    "selection/edit defers new version capture",
+    (await page.evaluate(
+      () =>
+        window.calls.filter((x) => x.cmd === "file_delivery_read_workbook")
+          .length,
+    )) === oldReads,
+  );
+  check(
+    "old opinion remains exact after revision notice",
+    JSON.stringify(await feedback()) === JSON.stringify(old),
+  );
+  check(
+    "old visible value remains until explicit reload",
+    (await page.locator('[data-cell="A2"] button').innerText()).trim() === "0",
+  );
+  await page.evaluate(() => window.fixture.blockCapture());
+  await page.getByRole("button", { name: "重新读取", exact: true }).click();
+  await page.waitForFunction(() =>
+    window.calls.some(
+      (x) =>
+        x.cmd === "file_delivery_read_workbook" &&
+        x.args.file.version === "controlled:positions-v2.xlsx",
+    ),
+  );
+  check(
+    "staging retains old grid",
+    (await page.locator('[data-cell="A2"] button').innerText()).trim() === "0",
+  );
+  check(
+    "pending capture disables feedback input",
+    await page.getByLabel("补充给 Agent 的意见", { exact: true }).isDisabled(),
+  );
+  await page
+    .getByRole("button", { name: "对此单元格提意见", exact: true })
+    .click();
+  check(
+    "pending old source cannot retarget A2 to B2",
+    JSON.stringify(await feedback()) === JSON.stringify(old),
+  );
+  await page
+    .getByRole("button", { name: "收起对话内容", exact: true })
+    .first()
+    .click();
+  await page.evaluate(() => window.fixture.releaseCapture());
+  await page.waitForTimeout(100);
+  check(
+    "hidden late capture does not retarget old opinion",
+    JSON.stringify(await feedback()) === JSON.stringify(old),
+  );
+  check(
+    "hidden old confirmation inaccessible",
+    (await page
+      .getByRole("button", { name: "对此单元格提意见", exact: true })
+      .count()) === 0,
+  );
+  await page.getByRole("button", { name: "查看对话内容", exact: true }).click();
+  await page.locator('[data-cell="A2"] button').waitFor();
+  check(
+    "reopen retains old version after discarded late result",
+    (await page.locator('[data-cell="A2"] button').innerText()).trim() === "0",
+  );
+  await page.getByRole("button", { name: "重新读取", exact: true }).click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector('[data-cell="A2"] button')?.textContent.trim() ===
+      "9",
+  );
+  check(
+    "same-path replacement uses actual new sheet directory",
+    (await page.getByLabel("工作表", { exact: true }).inputValue()) === "rId1",
+    await page
+      .getByLabel("工作表", { exact: true })
+      .evaluate((e) => e.selectedOptions[0].textContent),
+  );
+  check(
+    "old group exact after new parse/visible swap",
+    JSON.stringify(await feedback()) === JSON.stringify(old),
+  );
+  await select("A2");
+  await page
+    .getByRole("button", { name: "对此单元格提意见", exact: true })
+    .click();
+  await page
+    .getByLabel("补充给 Agent 的意见", { exact: true })
+    .fill("新版意见明确确认。");
+  const next = await feedback(),
+    newer = next.find((x) => x.contentId.includes("positions-v2.xlsx"));
+  check("new version adds separate draft", next.length === 2 && !!newer, next);
+  check(
+    "recycled rId1 does not reuse old sheet name",
+    newer.anchor.sheetId === old[0].anchor.sheetId &&
+      newer.anchor.sheetName !== old[0].anchor.sheetName,
+  );
+  check(
+    "old draft still unchanged beside new draft",
+    JSON.stringify(next.find((x) => x.contentId === old[0].contentId)) ===
+      JSON.stringify(old[0]),
+  );
+  await page.evaluate(() => window.fixture.saveNow());
+  const parsed = await page.evaluate(() => window.fixture.parseSaved());
+  check("strict cold parser accepts two version groups", !!parsed);
+  const oldComposer = await page.evaluate(() => window.fixture.composer().text);
+  await page
+    .locator(".artifact-feedback")
+    .getByRole("button", { name: "加入对话", exact: true })
+    .click();
+  const composer = await page.evaluate(() => window.fixture.composer().text);
+  check(
+    "take new version once preserves existing input",
+    composer.startsWith(oldComposer + "\n\n") &&
+      composer.split("新版意见明确确认。").length === 2,
+  );
+  check(
+    "take new version does not remove original version group",
+    JSON.stringify(await feedback()) === JSON.stringify(old),
+  );
+  check(
+    "no real send/external operation",
+    await page.evaluate(
+      () =>
+        !window.calls.some((x) =>
+          [
+            "session_prompt",
+            "session_send",
+            "file_delivery_open",
+            "file_delivery_reveal",
+          ].includes(x.cmd),
+        ),
+    ),
+  );
+  const metrics = await page.evaluate(() => window.fixture.metrics());
+  r.metrics = metrics;
+  check(
+    "version/take keeps full App bounded",
+    metrics.windowY === 0 &&
+      metrics.elements[".app"].y === 0 &&
+      metrics.elements.html.scrollHeight === 820,
+  );
+  check(
+    "no unexpected IPC",
+    await page.evaluate(() => window.unexpected.length === 0),
+    await page.evaluate(() => window.unexpected),
+  );
+  check("no page errors", r.errors.length === 0, r.errors);
+  r.screenshot = `${base}/${engine}-${label}.png`;
+  await page.screenshot({ path: r.screenshot });
+} catch (error) {
+  r.failure = String(error);
+  r.body = await page.locator("body").innerText();
+  r.feedback = await feedback();
+  r.calls = await page.evaluate(() => window.calls);
+  await page.screenshot({ path: `${base}/${engine}-${label}-failure.png` });
+} finally {
+  await browser.close();
+  r.after = hashes();
+  r.sourceUnchanged = JSON.stringify(r.before) === JSON.stringify(r.after);
+  r.passed = !r.failure;
+  fs.writeFileSync(
+    `${base}/${engine}-${label}.raw.txt`,
+    JSON.stringify(r, null, 2) + "\n",
+  );
+  fs.writeFileSync(
+    `${base}/${engine}-${label}.json`,
+    JSON.stringify(r, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify({
+      passed: r.passed,
+      sourceUnchanged: r.sourceUnchanged,
+      checks: r.checks.length,
+      failure: r.failure,
+    }),
+  );
+}

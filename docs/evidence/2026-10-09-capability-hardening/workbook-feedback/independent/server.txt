@@ -1,0 +1,7 @@
+Owned full-app workbook Vite PID 23228
+7:34:27 AM [vite] (client) dependencies optimized: saxes, ssf
+7:34:27 AM [vite] (client) optimized dependencies changed. reloading
+7:38:58 AM [vite] (client) hmr update /src/components/WorkbookFilePreview.css
+7:38:58 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/fixture.tsx
+7:45:37 AM [vite] (client) hmr update /src/components/OpenedFileView.tsx
+7:48:35 AM [vite] (client) hmr update /src/components/WorkbookFilePreview.tsx

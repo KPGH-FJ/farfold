@@ -1,0 +1,70 @@
+{
+  "kind": "Exact ordinary-writer bytes through current pure parser; no Worker/native/UI/feedback acceptance",
+  "before": {
+    "src/runtime/xlsx_fixture.ts": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+    "src/runtime/xlsx_format.ts": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+    "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+    "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+    "src/runtime/xlsx_sheet.ts": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+    "src/runtime/xlsx_styles.ts": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+    "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+    "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+    "src/runtime/xlsx_xstring.ts": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d"
+  },
+  "after": {
+    "src/runtime/xlsx_fixture.ts": "5af031a1fbdd8955bd3435718cfdddf1806342247ba48183c0939d61b493fd05",
+    "src/runtime/xlsx_format.ts": "ec2cc89924c094e2e27bee7a8438f01f8219e6674f7c6e0d5fbff137eadf1bb2",
+    "src/runtime/xlsx_parse.ts": "3ea21a5c018fe9ea4c91398a42977bf8b74d0c3a0a6dce786131bad4d11a7417",
+    "src/runtime/xlsx_preview.ts": "bfa5f79db3cd45b5f0b30e2e02516fe80a36f5645f91275439e4288aa5b3f20f",
+    "src/runtime/xlsx_sheet.ts": "a35236005442404bf6d36040d4ab420478840aa85d0a0304c9d3bdc0408fb1ec",
+    "src/runtime/xlsx_styles.ts": "ffd24680f506bba9cfb58f291687d3a5b34dc4694968adba80215097e78db1bf",
+    "src/runtime/xlsx_types.ts": "4c11b6f98fd759bd4d5807f9299ed3e5baf12d29288bf09957e8528a194ec3a6",
+    "src/runtime/xlsx_xml.ts": "3987773e0225ab2163404ca18d4567630a11d33a04e4fce184480205ecb2f1ee",
+    "src/runtime/xlsx_xstring.ts": "1a9e6b45eba4e2aaaacb6213a5d36df3f1184ba5d9bac6e72e210a2df1bc561d"
+  },
+  "sourceUnchanged": true,
+  "results": [
+    {
+      "file": "positions-v1.xlsx",
+      "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+      "status": "rejected",
+      "elapsedMs": 5.97566599999999,
+      "code": "invalid",
+      "stack": [
+        "Error: invalid",
+        "    at readCell (controlled-parser-bundle:3715:32)",
+        "    at parseSheet (controlled-parser-bundle:3814:17)",
+        "    at parseWorkbook (controlled-parser-bundle:4002:16)",
+        "    at file:///Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/preflight.mjs:77:21"
+      ]
+    },
+    {
+      "file": "positions-v2.xlsx",
+      "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+      "status": "rejected",
+      "elapsedMs": 2.401374999999973,
+      "code": "invalid",
+      "stack": [
+        "Error: invalid",
+        "    at readCell (controlled-parser-bundle:3715:32)",
+        "    at parseSheet (controlled-parser-bundle:3814:17)",
+        "    at parseWorkbook (controlled-parser-bundle:4002:16)",
+        "    at file:///Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/preflight.mjs:77:21"
+      ]
+    },
+    {
+      "file": "positions-v1-nonordinal-ids.xlsx",
+      "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+      "status": "rejected",
+      "elapsedMs": 2.0535410000000525,
+      "code": "invalid",
+      "stack": [
+        "Error: invalid",
+        "    at readCell (controlled-parser-bundle:3715:32)",
+        "    at parseSheet (controlled-parser-bundle:3814:17)",
+        "    at parseWorkbook (controlled-parser-bundle:4002:16)",
+        "    at file:///Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/preflight.mjs:77:21"
+      ]
+    }
+  ]
+}

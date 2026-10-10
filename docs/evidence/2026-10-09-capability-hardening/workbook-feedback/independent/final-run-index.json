@@ -1,0 +1,183 @@
+{
+  "runs": [
+    {
+      "engine": "webkit",
+      "phase": "sealed",
+      "assertions": 96,
+      "cases": 3,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.json",
+        "sha256": "2688c3d0c9a6b9f916b8524a184ae4e5cca42a04cd3f9cc150e72dc328d1a25d",
+        "bytes": 261553
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.raw.txt",
+        "sha256": "2688c3d0c9a6b9f916b8524a184ae4e5cca42a04cd3f9cc150e72dc328d1a25d",
+        "bytes": 261553
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.txt",
+        "sha256": "6dd850b053159e4bd0bd8f1467a43fc7497a96e5d86f5a5858490e0bb743ed96",
+        "bytes": 181
+      }
+    },
+    {
+      "engine": "webkit",
+      "phase": "automatic-inert-final",
+      "assertions": 15,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.json",
+        "sha256": "6e8b3221f6f1dc07c44c7f539ba77a2acde11d40fdf3efb4ebb8d9261aaf4b88",
+        "bytes": 165046
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.raw.txt",
+        "sha256": "6e8b3221f6f1dc07c44c7f539ba77a2acde11d40fdf3efb4ebb8d9261aaf4b88",
+        "bytes": 165046
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.txt",
+        "sha256": "af6e97268992b298f2f376bdfb98a4dadf6b3aef6254a071a2d53db5bbcc6f10",
+        "bytes": 51
+      }
+    },
+    {
+      "engine": "webkit",
+      "phase": "clipped-final",
+      "assertions": 10,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.json",
+        "sha256": "e4cde3cef049fd13fda80387a1dd5451e4ecb3c6d005491b74dd9d691f93434b",
+        "bytes": 164857
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.raw.txt",
+        "sha256": "e4cde3cef049fd13fda80387a1dd5451e4ecb3c6d005491b74dd9d691f93434b",
+        "bytes": 164857
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.txt",
+        "sha256": "ed49dbe850a029e8251227b8e471dd81b7d7a202acf105d0c61fe6627280cc6b",
+        "bytes": 51
+      }
+    },
+    {
+      "engine": "webkit",
+      "phase": "lifecycle-sealed",
+      "assertions": 22,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.json",
+        "sha256": "ed9dc3ca6cb7f8c40e401257a9a30dbe727d5d4d1dedebf58c94a6025ed63021",
+        "bytes": 166519
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.raw.txt",
+        "sha256": "ed9dc3ca6cb7f8c40e401257a9a30dbe727d5d4d1dedebf58c94a6025ed63021",
+        "bytes": 166519
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.txt",
+        "sha256": "dae5e4cedc28b2dda35f1d6b1e022ce3f5acdd5a5a114cce48ed73329a781f75",
+        "bytes": 51
+      }
+    },
+    {
+      "engine": "chromium",
+      "phase": "sealed",
+      "assertions": 96,
+      "cases": 3,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.json",
+        "sha256": "c719f483d84513b193d4bb8d95aaec097ff8bd0cbaa09edce79c4c4bac736edd",
+        "bytes": 261563
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.raw.txt",
+        "sha256": "c719f483d84513b193d4bb8d95aaec097ff8bd0cbaa09edce79c4c4bac736edd",
+        "bytes": 261563
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.txt",
+        "sha256": "6dd850b053159e4bd0bd8f1467a43fc7497a96e5d86f5a5858490e0bb743ed96",
+        "bytes": 181
+      }
+    },
+    {
+      "engine": "chromium",
+      "phase": "automatic-inert-final",
+      "assertions": 15,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.json",
+        "sha256": "4ca93c5b2b0c38e12d3608cb8410331e7ce4e87ff77eb50e8b021a07e036eca4",
+        "bytes": 165050
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.raw.txt",
+        "sha256": "4ca93c5b2b0c38e12d3608cb8410331e7ce4e87ff77eb50e8b021a07e036eca4",
+        "bytes": 165050
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.txt",
+        "sha256": "af6e97268992b298f2f376bdfb98a4dadf6b3aef6254a071a2d53db5bbcc6f10",
+        "bytes": 51
+      }
+    },
+    {
+      "engine": "chromium",
+      "phase": "clipped-final",
+      "assertions": 10,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.json",
+        "sha256": "6810b7027477f65f7650056553b5fca3b8e89a913728298408cb1116309fd274",
+        "bytes": 164861
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.raw.txt",
+        "sha256": "6810b7027477f65f7650056553b5fca3b8e89a913728298408cb1116309fd274",
+        "bytes": 164861
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.txt",
+        "sha256": "ed49dbe850a029e8251227b8e471dd81b7d7a202acf105d0c61fe6627280cc6b",
+        "bytes": 51
+      }
+    },
+    {
+      "engine": "chromium",
+      "phase": "lifecycle-sealed",
+      "assertions": 22,
+      "cases": 1,
+      "exitCode": 0,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.json",
+        "sha256": "1e0bda71d1056444cbe6d91ba0265e6fdcde0c04e3397c96ce43d558ac60f7ce",
+        "bytes": 166523
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.raw.txt",
+        "sha256": "1e0bda71d1056444cbe6d91ba0265e6fdcde0c04e3397c96ce43d558ac60f7ce",
+        "bytes": 166523
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.txt",
+        "sha256": "dae5e4cedc28b2dda35f1d6b1e022ce3f5acdd5a5a114cce48ed73329a781f75",
+        "bytes": 51
+      }
+    }
+  ],
+  "cases": 12,
+  "assertions": 286,
+  "sourceUnchanged": true
+}

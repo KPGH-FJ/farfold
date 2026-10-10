@@ -1,0 +1,77 @@
+{
+  "checkedAtUtc": "2026-10-09T23:51:12.264339+00:00",
+  "sourceBase": "43274e1cc598eff3150198c17da5606bcf66c5c9",
+  "inputCount": 1128,
+  "sourceStable": true,
+  "changedInputsSinceFullFrontendCheck": [
+    "src/components/OpenedFileView.tsx",
+    "src/components/OpenedFileView.workbook-feedback.test.tsx",
+    "src/components/WorkbookFilePreview.css",
+    "src/components/WorkbookFilePreview.feedback.test.tsx",
+    "src/components/WorkbookFilePreview.tsx"
+  ],
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks/receipt.json",
+    "sha256": "dff06afd6c1ead42e3fb81f041d5f282883f8c51cdf9aec5762b5b701045fd71"
+  },
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/frontend.txt",
+      "sha256": "6c066fa261020e626d3e454cab4764f38e0495b4bc9a081ba6f8211bc8dc5640"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/build.txt",
+      "sha256": "a83152665bd3a0ad157ce483c11353434e96a0735e1adf28e731e68bcf29e939"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "executedNow": true,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Engineering checks only. Full frontend/type/build/whole-repository formatting rerun after actual-browser layout and refresh repairs. Identical Rust results are explicitly reused. Controlled-browser and native receipts are separate."
+}

@@ -1,0 +1,125 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx (11 tests | 11 failed) 603ms
+   × requires actual current workbook readiness before creating whole-file opinions 62ms
+   × does not retarget on viewing a cell and only accepts the exact current confirmed position 56ms
+   × rejects mismatched coordinates and shape-valid but unregistered source objects 55ms
+   × rejects late callbacks after hidden 54ms
+   × rejects late callbacks after other conversation 56ms
+   × rejects late callbacks after new selection 53ms
+   × withdraws eligibility synchronously on loading without losing retained opinion 54ms
+   × withdraws eligibility synchronously on failed without losing retained opinion 53ms
+   × withdraws eligibility synchronously on paused without losing retained opinion 53ms
+   × defers automatic replacement while a cell candidate exists and retires it before explicit reread 52ms
+   × keeps old-version opinions across replacement and joins exact coordinates once without sending 54ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > requires actual current workbook readiness before creating whole-file opinions
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:270:46
+    268|     ),
+    269|   );
+    270|   expect(button(S.feedback)?.props.disabled).toBe(true);
+       |                                              ^
+    271|   const p = child();
+    272|   p.onStatus({ file: p.file, state: "ready" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > does not retarget on viewing a cell and only accepts the exact current confirmed position
+TypeError: p.onOfficeTargetConfirm is not a function
+ ❯ confirm src/components/OpenedFileView.workbook-feedback.test.tsx:195:17
+    193|   anchor = workbookFeedbackTarget(s),
+    194| ) {
+    195|   if (anchor) p.onOfficeTargetConfirm({ source: s, anchor });
+       |                 ^
+    196|   return anchor;
+    197| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:295:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects mismatched coordinates and shape-valid but unregistered source objects
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.workbook-feedback.test.tsx:187:5
+    185| }
+    186| function announce(p: WorkbookProps, s = source(), available = true) {
+    187|   p.onOfficeTargetAvailability({ source: s, available });
+       |     ^
+    188|   return s;
+    189| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:319:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects late callbacks after hidden
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects late callbacks after other conversation
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > rejects late callbacks after new selection
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.workbook-feedback.test.tsx:187:5
+    185| }
+    186| function announce(p: WorkbookProps, s = source(), available = true) {
+    187|   p.onOfficeTargetAvailability({ source: s, available });
+       |     ^
+    188|   return s;
+    189| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:338:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > withdraws eligibility synchronously on loading without losing retained opinion
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > withdraws eligibility synchronously on failed without losing retained opinion
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > withdraws eligibility synchronously on paused without losing retained opinion
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.workbook-feedback.test.tsx:187:5
+    185| }
+    186| function announce(p: WorkbookProps, s = source(), available = true) {
+    187|   p.onOfficeTargetAvailability({ source: s, available });
+       |     ^
+    188|   return s;
+    189| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:356:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > defers automatic replacement while a cell candidate exists and retires it before explicit reread
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.workbook-feedback.test.tsx:187:5
+    185| }
+    186| function announce(p: WorkbookProps, s = source(), available = true) {
+    187|   p.onOfficeTargetAvailability({ source: s, available });
+       |     ^
+    188|   return s;
+    189| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:371:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > keeps old-version opinions across replacement and joins exact coordinates once without sending
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.workbook-feedback.test.tsx:187:5
+    185| }
+    186| function announce(p: WorkbookProps, s = source(), available = true) {
+    187|   p.onOfficeTargetAvailability({ source: s, available });
+       |     ^
+    188|   return s;
+    189| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:393:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed (11)
+   Start at  07:31:53
+   Duration  1.01s (transform 173ms, setup 0ms, import 340ms, tests 603ms, environment 0ms)
+

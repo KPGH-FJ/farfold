@@ -1,0 +1,148 @@
+{
+  "kind": "P21 XLSX fixture preparation and bounded parser preflight; no capability completion claim",
+  "recordedAt": "2026-10-09T23:10:31.695910+00:00",
+  "inputsRead": {
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/office-next-design.json": "7343ce916a5cfc93b1bdb5594cde2f111447a75646a520d3630aadf1b6631e93",
+    "docs/evidence/2026-10-09-capability-hardening/text-feedback/next-office-api-review.json": "1ad8eb19f368ea94540e99144c09f775d78cbf3f4f7b66ed319ebabffaeada20"
+  },
+  "scope": "Only the new workbook-feedback/fixtures directory was written. No src, production configuration, dependency, existing fixture, public plan, or candidate input inventory was modified.",
+  "generation": {
+    "ordinaryWriterFiles": 2,
+    "controlledRelationshipIdDerivative": 1,
+    "independentOracle": "Standard-library ZIP/XML reads actual r:id -> worksheet part and source cells/merges/hidden metadata. No Farfold parser-derived expectations.",
+    "byteReproduction": "Each revision regenerated twice in memory; later complete regeneration matched all three original preflight SHA values.",
+    "writerReopen": "All three packages reopened with installed openpyxl; all 12 worksheets retain formula syntax and absent F2 cached result. No Office/native-render claim.",
+    "rowColumnEdges": [
+      "A2 numeric0; B2 booleanfalse; C2 empty inlineStr record; D2 absent coordinate; E2 styled blank; F2 no cache",
+      "X99:AA102 crosses row100 and column24",
+      "V10:W12 anchor hidden by row10 and columnV",
+      "v2 changes same-path bytes, tab order/name/state, reused relationship IDs, values, merge bounds and extent",
+      "third derivative uses nonordinal actual relationship ids, retaining all original cell/merge bytes"
+    ]
+  },
+  "preflight": {
+    "command": "node preflight.mjs parser-preflight-red (bundled Node v24.19.0; existing Vite parser-only in-memory build, no configFile, envDir false, write false)",
+    "result": "3/3 rejected with XlsxError code invalid, in 2–6ms per call. No modified ZIP content or cell deletion.",
+    "attribution": "parser-bundle.raw.txt:3715 is the exact throw `if (f || v || !inline)`, corresponding to src/runtime/xlsx_sheet.ts:127. The independent oracle records openpyxl C2 inlineStr without an is child.",
+    "sourceHashesBeforeAfterEqual": true,
+    "transport": "stdlib ZIP parts directly to real pure parser; not Rust capture, Worker, browser UI, or formal-app evidence",
+    "next": "Retain these exact bytes for a red-to-green compatibility fix in the separately authorized XLSX implementation slice."
+  },
+  "nonProductFailures": [
+    {
+      "file": "generate-first.txt",
+      "reason": "Fixture assertion compared copied style indices. Ordinary writer assigned distinct style table IDs to equivalent copied merge anchor; corrected expectation compares content/coordinates while oracle retains real IDs."
+    },
+    {
+      "file": "preflight-node-interop-failure.json",
+      "reason": "Bare Node TS import lacked Vite CommonJS named-export interoperability for SSF.get_table; this is not the product rejection. Parser-only real Vite bundling supplied actual production import semantics for parser-preflight-red."
+    }
+  ],
+  "limitations": [
+    "No new XLSX feedback runtime or UI has been implemented or validated.",
+    "No browser/native preview or Agent was started.",
+    "No cache recalculation, macros or external links were executed.",
+    "The empty inlineStr remains in both ordinary-writer files and the derivative; it was not repaired inside the fixture.",
+    "Manifest initial-generation raw predates the authorized parser preflight. Current manifest clarifies that generator execution and subsequent preflight are separate evidence levels."
+  ],
+  "sourceReferences": [
+    {
+      "url": "https://pypi.org/project/openpyxl/3.1.5/",
+      "checked": "Installed 3.1.5 matches the official release of 2024-06-28, MIT; no new dependency was added."
+    },
+    {
+      "url": "https://openpyxl.readthedocs.io/en/stable/tutorial.html",
+      "checked": "Public Workbook/worksheet/cell/copy/save APIs used for ordinary fixture generation."
+    }
+  ],
+  "files": {
+    "generate-final.txt": {
+      "sha256": "de465e3405203a6d4a2ecdbe8c9e1903d4bf91ea44e7c4a02ab61fca31549e9c",
+      "bytes": 531
+    },
+    "generate-first.txt": {
+      "sha256": "66c2da631745dfc2227b60583df9e14112301a215dfd6f49c4ffe62978592ea4",
+      "bytes": 483
+    },
+    "generate.py": {
+      "sha256": "62cf64969e1f5457ef4abf91e79032a40e2c2cc7d5eaea3cb367c9f6a9cec0fc",
+      "bytes": 12027
+    },
+    "manifest-initial-generation.raw.txt": {
+      "sha256": "062982fbe26d04a6cef485c79cbccf51e9fb2d14f726e3e43b03839ad9366ad3",
+      "bytes": 4208
+    },
+    "manifest.json": {
+      "sha256": "af0ce4d37328bff26da02dd60f1ea59f030616e07085a57ac03b0b9660334004",
+      "bytes": 4281
+    },
+    "manifest.raw.txt": {
+      "sha256": "57d691afeb2dc7b182ffab2e88ca03f410009584cfb09a455055c237b7344d47",
+      "bytes": 4299
+    },
+    "oracle.json": {
+      "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+      "bytes": 133141
+    },
+    "oracle.py": {
+      "sha256": "b6ca6ba3bbe24e01c72c790a778317faa62b276878dc3d1bda0631b1376d0e18",
+      "bytes": 4889
+    },
+    "oracle.raw.txt": {
+      "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+      "bytes": 133141
+    },
+    "parser-bundle.raw.txt": {
+      "sha256": "5be499e1a5cdcb2a7e2a5004a863ffed642dbb1c2e4a41c3cd380ecac4252cc8",
+      "bytes": 127219
+    },
+    "parser-preflight-red.json": {
+      "sha256": "d0802c1dfd249dd3105374e0c4dd896139ab99c95cc710ea23f952d62d309b61",
+      "bytes": 3869
+    },
+    "parser-preflight-red.raw.txt": {
+      "sha256": "d0802c1dfd249dd3105374e0c4dd896139ab99c95cc710ea23f952d62d309b61",
+      "bytes": 3869
+    },
+    "parser-preflight-red.txt": {
+      "sha256": "d0802c1dfd249dd3105374e0c4dd896139ab99c95cc710ea23f952d62d309b61",
+      "bytes": 3869
+    },
+    "positions-v1-nonordinal-ids.xlsx": {
+      "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+      "bytes": 8733
+    },
+    "positions-v1.xlsx": {
+      "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+      "bytes": 8694
+    },
+    "positions-v2.xlsx": {
+      "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+      "bytes": 8710
+    },
+    "preflight-node-interop-failure.json": {
+      "sha256": "846988addf18a029b92228a307eed610eb8b301a2c0929bbe88d9c4dca6c4149",
+      "bytes": 3916
+    },
+    "preflight-node-interop-failure.raw.txt": {
+      "sha256": "846988addf18a029b92228a307eed610eb8b301a2c0929bbe88d9c4dca6c4149",
+      "bytes": 3916
+    },
+    "preflight-node-interop-failure.txt": {
+      "sha256": "4f9b2439416c4c970cd1f8a10c046c1ebcf7e1f138d38ee5f4b2ba46a1bc8c26",
+      "bytes": 4094
+    },
+    "preflight.mjs": {
+      "sha256": "46303d1e9050336eac014c7961abe1f25bff1d6b35f261c4e704ec3b928c748a",
+      "bytes": 4203
+    },
+    "reproduction-final.txt": {
+      "sha256": "de465e3405203a6d4a2ecdbe8c9e1903d4bf91ea44e7c4a02ab61fca31549e9c",
+      "bytes": 531
+    },
+    "writer-reopen.txt": {
+      "sha256": "560e31f97362fafe81cc9d620d523cfe0147051a3dcab7d711f53d87385de79d",
+      "bytes": 702
+    }
+  }
+}

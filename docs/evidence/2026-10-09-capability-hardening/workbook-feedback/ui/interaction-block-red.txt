@@ -1,0 +1,185 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx (29 tests | 9 failed) 3772ms
+   × interaction blocking preserves the loaded grid and ready state without another read 137ms
+   × blocking retires the source and unblocking creates only a fresh candidate for the same cell 119ms
+   × a queued sheet action cannot change the blocked display 160ms
+   × a queued window action cannot change the blocked display 220ms
+   × a queued hidden action cannot change the blocked display 175ms
+   × a queued address action cannot change the blocked display 172ms
+   × a queued jump action cannot change the blocked display 147ms
+   × blocking an in-progress parse does not pause or restart it 1ms
+   × a queued retry remains inert until an explicit unblocked action 37ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > interaction blocking preserves the loaded grid and ready state without another read
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:460:31
+    458|   const blocked = view();
+    459|   const section = blocked.all.find((n) => n.type === "section")!;
+    460|   expect(section.props.inert).toBe(true);
+       |                               ^
+    461|   expect(section.props["aria-busy"]).toBe(false);
+    462|   expect(blocked.html).toContain('data-cell="B1"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > blocking retires the source and unblocking creates only a fresh candidate for the same cell
+AssertionError: expected last "vi.fn()" call to have been called with [ { …(2) } ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  [
+    {
+-     "available": false,
++     "available": true,
+      "source": {
+        "file": {
+          "name": "positions.xlsx",
+          "path": "/work/positions.xlsx",
+          "resolvedPath": "/work/positions.xlsx",
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:483:44
+    481|   props = { ...props, interactionBlocked: true };
+    482|   view();
+    483|   expect(props.onOfficeTargetAvailability).toHaveBeenLastCalledWith({
+       |                                            ^
+    484|     source,
+    485|     available: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued sheet action cannot change the blocked display
+AssertionError: expected 'rel_17' to be 'sheet-main' // Object.is equality
+
+Expected: "sheet-main"
+Received: "rel_17"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:550:71
+    548|     expect(blocked.html).toContain(S.selected("A1"));
+    549|     expect(blocked.html).toContain('data-cell="A1"');
+    550|     expect(blocked.all.find((n) => n.type === "select")!.props.value).…
+       |                                                                       ^
+    551|       "sheet-main",
+    552|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued window action cannot change the blocked display
+AssertionError: expected '<section class="workbook-preview" ari…' to contain 'data-cell="A1"'
+
+Expected: "data-cell="A1""
+Received: "<section class="workbook-preview" aria-label="表格预览" aria-busy="false"><div class="workbook-controls"><label>工作表<select aria-label="工作表"><option value="sheet-main" selected="">数据一</option><option value="rel_17">同文副本</option><option value="hidden.note">隐藏资料 · 隐藏</option></select></label></div><p role="status">只读预览，显示文件保存时的内容。公式不重新计算。</p><p>每次显示最多 100 行、24 列，尺寸会适配预览。可翻页或输入单元格位置。</p><form class="workbook-controls"><label>单元格位置<input aria-label="单元格位置" aria-invalid="false" placeholder="A1" maxLength="10" value="B101"/></label><button type="submit" class="btn btn-ghost">前往</button><label><input type="checkbox"/>显示隐藏行列</label></form><div class="workbook-controls workbook-pagination"><button class="btn btn-text" type="button">上一组行</button><button class="btn btn-text" type="button" disabled="">下一组行</button><button class="btn btn-text" type="button" disabled="">上一组列</button><button class="btn btn-text" type="button">下一组列</button></div><p role="status">当前范围 A101–X102</p><div class="workbook-grid-scroll" tabindex="0" aria-label="表格预览"><table class="workbook-grid" style="width:2099px"><caption>数据一</caption><colgroup><col style="width:52px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/></colgroup><thead><tr><th aria-label="单元格位置"></th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th><th scope="col">D</th><th scope="col">E</th><th scope="col">F</th><th scope="col">G</th><th scope="col">H</th><th scope="col">I</th><th scope="col">J</th><th scope="col">K</th><th scope="col">L</th><th scope="col">M</th><th scope="col">N</th><th scope="col">O</th><th scope="col">P</th><th scope="col">Q</th><th scope="col">R</th><th scope="col">S</th><th scope="col">T</th><th scope="col">U</th><th scope="col">W</th><th scope="col">X</th></tr></thead><tbody><tr style="height:24px"><th scope="row">101</th><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="A101"><button type="button" class="workbook-cell" aria-label="单元格 A101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="B101"><button type="button" class="workbook-cell" aria-label="单元格 B101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="C101"><button type="button" class="workbook-cell" aria-label="单元格 C101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="D101"><button type="button" class="workbook-cell" aria-label="单元格 D101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="E101"><button type="button" class="workbook-cell" aria-label="单元格 E101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="F101"><button type="button" class="workbook-cell" aria-label="单元格 F101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="G101"><button type="button" class="workbook-cell" aria-label="单元格 G101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="H101"><button type="button" class="workbook-cell" aria-label="单元格 H101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="I101"><button type="button" class="workbook-cell" aria-label="单元格 I101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="J101"><button type="button" class="workbook-cell" aria-label="单元格 J101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="K101"><button type="button" class="workbook-cell" aria-label="单元格 K101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="L101"><button type="button" class="workbook-cell" aria-label="单元格 L101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="M101"><button type="button" class="workbook-cell" aria-label="单元格 M101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="N101"><button type="button" class="workbook-cell" aria-label="单元格 N101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="O101"><button type="button" class="workbook-cell" aria-label="单元格 O101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="P101"><button type="button" class="workbook-cell" aria-label="单元格 P101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="Q101"><button type="button" class="workbook-cell" aria-label="单元格 Q101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="R101"><button type="button" class="workbook-cell" aria-label="单元格 R101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="S101"><button type="button" class="workbook-cell" aria-label="单元格 S101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="T101"><button type="button" class="workbook-cell" aria-label="单元格 T101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="U101"><button type="button" class="workbook-cell" aria-label="单元格 U101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="W101"><button type="button" class="workbook-cell" aria-label="单元格 W101"></button></td><td rowSpan="2" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="X101"><button type="button" class="workbook-cell" aria-label="单元格 X101" title="合并范围 X99–AA102 · 合并范围跨越当前显示范围"><span class="workbook-cell-note" aria-label="合并范围 X99–AA102 · 合并范围跨越当前显示范围">*</span></button></td></tr><tr style="height:24px"><th scope="row">102</th><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="A102"><button type="button" class="workbook-cell" aria-label="单元格 A102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="B102"><button type="button" class="workbook-cell" aria-label="单元格 B102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="C102"><button type="button" class="workbook-cell" aria-label="单元格 C102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="D102"><button type="button" class="workbook-cell" aria-label="单元格 D102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="E102"><button type="button" class="workbook-cell" aria-label="单元格 E102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="F102"><button type="button" class="workbook-cell" aria-label="单元格 F102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="G102"><button type="button" class="workbook-cell" aria-label="单元格 G102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="H102"><button type="button" class="workbook-cell" aria-label="单元格 H102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="I102"><button type="button" class="workbook-cell" aria-label="单元格 I102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="J102"><button type="button" class="workbook-cell" aria-label="单元格 J102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="K102"><button type="button" class="workbook-cell" aria-label="单元格 K102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="L102"><button type="button" class="workbook-cell" aria-label="单元格 L102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="M102"><button type="button" class="workbook-cell" aria-label="单元格 M102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="N102"><button type="button" class="workbook-cell" aria-label="单元格 N102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="O102"><button type="button" class="workbook-cell" aria-label="单元格 O102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="P102"><button type="button" class="workbook-cell" aria-label="单元格 P102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="Q102"><button type="button" class="workbook-cell" aria-label="单元格 Q102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="R102"><button type="button" class="workbook-cell" aria-label="单元格 R102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="S102"><button type="button" class="workbook-cell" aria-label="单元格 S102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="T102"><button type="button" class="workbook-cell" aria-label="单元格 T102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="U102"><button type="button" class="workbook-cell" aria-label="单元格 U102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="W102"><button type="button" class="workbook-cell" aria-label="单元格 W102"></button></td></tr></tbody></table></div></section>"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:549:26
+    547|     const blocked = view();
+    548|     expect(blocked.html).toContain(S.selected("A1"));
+    549|     expect(blocked.html).toContain('data-cell="A1"');
+       |                          ^
+    550|     expect(blocked.all.find((n) => n.type === "select")!.props.value).…
+    551|       "sheet-main",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued hidden action cannot change the blocked display
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:557:7
+    555|         (n) => n.type === "input" && n.props.type === "checkbox",
+    556|       )!.props.checked,
+    557|     ).toBe(false);
+       |       ^
+    558|     expect(
+    559|       blocked.all.find(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued address action cannot change the blocked display
+AssertionError: expected 'C201' to be 'B101' // Object.is equality
+
+Expected: "B101"
+Received: "C201"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:562:7
+    560|         (n) => n.type === "input" && n.props["aria-label"] === S.addre…
+    561|       )!.props.value,
+    562|     ).toBe("B101");
+       |       ^
+    563|     expect(h.capture).toHaveBeenCalledTimes(reads);
+    564|     expect(h.parse).toHaveBeenCalledTimes(parses);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued jump action cannot change the blocked display
+AssertionError: expected '<section class="workbook-preview" ari…' to contain '单元格 A1'
+
+Expected: "单元格 A1"
+Received: "<section class="workbook-preview" aria-label="表格预览" aria-busy="false"><div class="workbook-controls"><label>工作表<select aria-label="工作表"><option value="sheet-main" selected="">数据一</option><option value="rel_17">同文副本</option><option value="hidden.note">隐藏资料 · 隐藏</option></select></label></div><p role="status">只读预览，显示文件保存时的内容。公式不重新计算。</p><p>每次显示最多 100 行、24 列，尺寸会适配预览。可翻页或输入单元格位置。</p><form class="workbook-controls"><label>单元格位置<input aria-label="单元格位置" aria-invalid="false" placeholder="A1" maxLength="10" value="B101"/></label><button type="submit" class="btn btn-ghost">前往</button><label><input type="checkbox"/>显示隐藏行列</label></form><div class="workbook-controls workbook-pagination"><button class="btn btn-text" type="button">上一组行</button><button class="btn btn-text" type="button" disabled="">下一组行</button><button class="btn btn-text" type="button">上一组列</button><button class="btn btn-text" type="button">下一组列</button></div><p role="status">当前范围 B101–Y102</p><div class="workbook-grid-scroll" tabindex="0" aria-label="表格预览"><table class="workbook-grid" style="width:2099px"><caption>数据一</caption><colgroup><col style="width:52px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/><col style="width:89px"/></colgroup><thead><tr><th aria-label="单元格位置"></th><th scope="col">B</th><th scope="col">C</th><th scope="col">D</th><th scope="col">E</th><th scope="col">F</th><th scope="col">G</th><th scope="col">H</th><th scope="col">I</th><th scope="col">J</th><th scope="col">K</th><th scope="col">L</th><th scope="col">M</th><th scope="col">N</th><th scope="col">O</th><th scope="col">P</th><th scope="col">Q</th><th scope="col">R</th><th scope="col">S</th><th scope="col">T</th><th scope="col">U</th><th scope="col">W</th><th scope="col">X</th><th scope="col">Y</th></tr></thead><tbody><tr style="height:24px"><th scope="row">101</th><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="B101"><button type="button" class="workbook-cell" aria-label="单元格 B101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="C101"><button type="button" class="workbook-cell" aria-label="单元格 C101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="D101"><button type="button" class="workbook-cell" aria-label="单元格 D101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="E101"><button type="button" class="workbook-cell" aria-label="单元格 E101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="F101"><button type="button" class="workbook-cell" aria-label="单元格 F101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="G101"><button type="button" class="workbook-cell" aria-label="单元格 G101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="H101"><button type="button" class="workbook-cell" aria-label="单元格 H101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="I101"><button type="button" class="workbook-cell" aria-label="单元格 I101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="J101"><button type="button" class="workbook-cell" aria-label="单元格 J101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="K101"><button type="button" class="workbook-cell" aria-label="单元格 K101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="L101"><button type="button" class="workbook-cell" aria-label="单元格 L101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="M101"><button type="button" class="workbook-cell" aria-label="单元格 M101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="N101"><button type="button" class="workbook-cell" aria-label="单元格 N101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="O101"><button type="button" class="workbook-cell" aria-label="单元格 O101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="P101"><button type="button" class="workbook-cell" aria-label="单元格 P101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="Q101"><button type="button" class="workbook-cell" aria-label="单元格 Q101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="R101"><button type="button" class="workbook-cell" aria-label="单元格 R101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="S101"><button type="button" class="workbook-cell" aria-label="单元格 S101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="T101"><button type="button" class="workbook-cell" aria-label="单元格 T101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="U101"><button type="button" class="workbook-cell" aria-label="单元格 U101"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="W101"><button type="button" class="workbook-cell" aria-label="单元格 W101"></button></td><td rowSpan="2" colSpan="2" style="vertical-align:middle;white-space:pre" data-cell="X101"><button type="button" class="workbook-cell" aria-label="单元格 X101" title="合并范围 X99–AA102 · 合并范围跨越当前显示范围"><span class="workbook-cell-note" aria-label="合并范围 X99–AA102 · 合并范围跨越当前显示范围">*</span></button></td></tr><tr style="height:24px"><th scope="row">102</th><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="B102"><button type="button" class="workbook-cell" aria-label="单元格 B102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="C102"><button type="button" class="workbook-cell" aria-label="单元格 C102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="D102"><button type="button" class="workbook-cell" aria-label="单元格 D102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="E102"><button type="button" class="workbook-cell" aria-label="单元格 E102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="F102"><button type="button" class="workbook-cell" aria-label="单元格 F102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="G102"><button type="button" class="workbook-cell" aria-label="单元格 G102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="H102"><button type="button" class="workbook-cell" aria-label="单元格 H102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="I102"><button type="button" class="workbook-cell" aria-label="单元格 I102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="J102"><button type="button" class="workbook-cell" aria-label="单元格 J102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="K102"><button type="button" class="workbook-cell" aria-label="单元格 K102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="L102"><button type="button" class="workbook-cell" aria-label="单元格 L102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="M102"><button type="button" class="workbook-cell" aria-label="单元格 M102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="N102"><button type="button" class="workbook-cell" aria-label="单元格 N102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="O102"><button type="button" class="workbook-cell" aria-label="单元格 O102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="P102"><button type="button" class="workbook-cell" aria-label="单元格 P102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="Q102"><button type="button" class="workbook-cell" aria-label="单元格 Q102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="R102"><button type="button" class="workbook-cell" aria-label="单元格 R102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="S102"><button type="button" class="workbook-cell" aria-label="单元格 S102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="T102"><button type="button" class="workbook-cell" aria-label="单元格 T102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="U102"><button type="button" class="workbook-cell" aria-label="单元格 U102"></button></td><td rowSpan="1" colSpan="1" style="vertical-align:middle;white-space:pre" data-cell="W102"><button type="button" class="workbook-cell" aria-label="单元格 W102"></button></td></tr></tbody></table></div></section>"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:548:26
+    546|     await drain();
+    547|     const blocked = view();
+    548|     expect(blocked.html).toContain(S.selected("A1"));
+       |                          ^
+    549|     expect(blocked.html).toContain('data-cell="A1"');
+    550|     expect(blocked.all.find((n) => n.type === "select")!.props.value).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > blocking an in-progress parse does not pause or restart it
+AssertionError: expected [ 'loading', 'paused' ] to deeply equal [ 'loading', 'ready' ]
+
+- Expected
++ Received
+
+  [
+    "loading",
+-   "ready",
++   "paused",
+  ]
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:591:61
+    589|   view();
+    590|   const blocked = view();
+    591|   expect(onStatus.mock.calls.map(([value]) => value.state)).toEqual([
+       |                                                             ^
+    592|     "loading",
+    593|     "ready",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued retry remains inert until an explicit unblocked action
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:609:21
+    607|   click(oldRetry);
+    608|   await ready();
+    609|   expect(h.capture).toHaveBeenCalledOnce();
+       |                     ^
+    610|   props = { ...props, interactionBlocked: false };
+    611|   click(button(view(), S.retry));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 20 passed (29)
+   Start at  07:47:46
+   Duration  3.94s (transform 76ms, setup 0ms, import 106ms, tests 3.77s, environment 0ms)
+

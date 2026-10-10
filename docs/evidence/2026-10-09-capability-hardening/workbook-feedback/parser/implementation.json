@@ -1,0 +1,159 @@
+{
+  "kind": "Ordinary XLSX writer compatibility repair",
+  "at": "2026-10-09T23:35:39.700681+00:00",
+  "status": "targeted_passed_pending_browser_native",
+  "ownedSources": [
+    {
+      "path": "src/runtime/xlsx_sheet.ts",
+      "sha256": "757471213e28653e39a25abbafd8bfb2007904e1cc61fafd9523167243850775",
+      "bytes": 11813
+    },
+    {
+      "path": "src/runtime/xlsx_writer_compatibility.test.ts",
+      "sha256": "2baf506f772c5968602351a20e7c173269b924eba55f449af084dd3e711fd387",
+      "bytes": 7443
+    }
+  ],
+  "changes": [
+    "Missing inlineStr is payload is retained as an existing blank cell, distinct from encoded empty text and absent coordinate.",
+    "Only numeric formula with a physically present empty v is treated as missing cached result; text empty cache, numeric zero and boolean false retain type/value.",
+    "Child shape and supported type checks precede missing-cache early return; mixed f/is/v and unknown child structures remain rejected."
+  ],
+  "validation": [
+    {
+      "stage": "original source with final semantic cases",
+      "passed": 17,
+      "failed": 13,
+      "exitCode": 1,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/red.txt",
+        "sha256": "6afed438aad8d5cda9b81a7a0246d5ee1064e1cfc2a893f959c0255154296d04",
+        "bytes": 7232
+      }
+    },
+    {
+      "stage": "only empty inline fix; exact three original writer files",
+      "passed": 0,
+      "failed": 3,
+      "skipped": 27,
+      "exitCode": 1,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/inline-only-still-red.txt",
+        "sha256": "d1fb957f181e13077729567cb8fa1627e75692f77bd2b1d9141fd6558d1f765f",
+        "bytes": 1725
+      },
+      "meaning": "Empty numeric formula cache remains a distinct cause after inline repair."
+    },
+    {
+      "stage": "full fix associated suite",
+      "files": 5,
+      "passed": 87,
+      "failed": 0,
+      "exitCode": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/green.txt",
+        "sha256": "417df0ccc28fb4657b9aff53565f1509701070e708ff27bf3577a2e9587464e1",
+        "bytes": 212
+      }
+    },
+    {
+      "stage": "formatted final owned source",
+      "files": 5,
+      "passed": 87,
+      "failed": 0,
+      "exitCode": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/final-green.txt",
+        "sha256": "29832b3c707d0194a16878f764844bced72737a280f2f0cfff97396097cf56e2",
+        "bytes": 212
+      }
+    },
+    {
+      "stage": "typecheck during peer callback test editing",
+      "exitCode": 1,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/typecheck.txt",
+        "sha256": "01ea2dc7ed924864b46a5d73c77f75097b8ac75968edbf1ea48230c5ea534d00",
+        "bytes": 2204
+      },
+      "classification": "Concurrent peer Mock callback fixture mismatch; preserved, not counted as parser red."
+    },
+    {
+      "stage": "typecheck during root new test editing",
+      "exitCode": 1,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/typecheck-final.txt",
+        "sha256": "0a731ea107865e69599fa2710eb9bb41777be7aff6d9bcb046effff93106fe48",
+        "bytes": 1092
+      },
+      "classification": "Concurrent root S.reload fixture references; preserved, no own source errors."
+    },
+    {
+      "stage": "root final whole-project typecheck after fixing the test names",
+      "exitCode": 0,
+      "performedBy": "root; original log reviewed, not rerun",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parent/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    {
+      "stage": "owned source Prettier",
+      "exitCode": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/format.txt",
+        "sha256": "4a8a04268223b8c5f512b69b8d449d8d4f60fff3583400e34a70299693414532",
+        "bytes": 94
+      }
+    }
+  ],
+  "exactFixtures": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1.xlsx",
+      "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+      "bytes": 8694
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v2.xlsx",
+      "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+      "bytes": 8710
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1-nonordinal-ids.xlsx",
+      "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+      "bytes": 8733
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json",
+      "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+      "bytes": 133141
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/manifest.json",
+      "sha256": "af0ce4d37328bff26da02dd60f1ea59f030616e07085a57ac03b0b9660334004",
+      "bytes": 4281
+    }
+  ],
+  "sourceReferences": [
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.cell?view=openxml-3.0.1",
+    "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.cellvalue?view=openxml-3.0.1"
+  ],
+  "independentReview": {
+    "reviewer": "architecture",
+    "method": "Read-only production diff and 30 semantic tests; no duplicate suite execution",
+    "result": "completed_no_blocker",
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/implementation.json",
+      "sha256": "0e1b2e2ad8f461d015940ed0f6130a3b1a20c6751650ef15f2c1a96a95953de4",
+      "bytes": 12743
+    }
+  },
+  "boundaries": [
+    "Original three writer files were not modified; expected cells and sheet relationships come from the separate stdlib ZIP/XML oracle.",
+    "Test-only ZIP reader is restricted to three expected SHA inputs; no claim of testing native ZIP capture/CRC defenses through this helper.",
+    "87 passed includes 30 new tests and existing associated tests, not 87 new counterexamples.",
+    "Actual browser/Worker and native installation are separate later receipts. No user file, account, Agent or original database read/write.",
+    "This is not full OOXML conformance; unsupported structures and format limitations remain explicit."
+  ]
+}

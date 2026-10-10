@@ -1,0 +1,15 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/WorkbookFilePreview.feedback.test.tsx(217,5): error TS2322: Type 'Mock<Procedure | Constructable>' is not assignable to type '(((value: OfficeTargetAvailability) => void) | undefined) & Mock<Procedure | Constructable>'.
+  Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(((value: OfficeTargetAvailability) => void) | undefined) & Mock<Procedure | Constructable>'.
+    Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '((value: OfficeTargetAvailability) => void) & MockInstance<Procedure | Constructable> & { (...args: any[]): any; new (...args: any[]): any; } & {}'.
+      Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(value: OfficeTargetAvailability) => void'.
+        Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' provides no match for the signature '(value: OfficeTargetAvailability): void'.
+src/components/WorkbookFilePreview.feedback.test.tsx(218,5): error TS2322: Type 'Mock<Procedure | Constructable>' is not assignable to type '(((value: OfficeTargetConfirmation) => void) | undefined) & Mock<Procedure | Constructable>'.
+  Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(((value: OfficeTargetConfirmation) => void) | undefined) & Mock<Procedure | Constructable>'.
+    Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '((value: OfficeTargetConfirmation) => void) & MockInstance<Procedure | Constructable> & { (...args: any[]): any; new (...args: any[]): any; } & {}'.
+      Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' is not assignable to type '(value: OfficeTargetConfirmation) => void'.
+        Type 'MockInstance<Procedure | Constructable> & (new (...args: any[]) => any) & {}' provides no match for the signature '(value: OfficeTargetConfirmation): void'.
+ ELIFECYCLE  Command failed with exit code 1.

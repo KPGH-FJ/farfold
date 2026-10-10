@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-09T23:33:59.910179+00:00",
+  "task": "P21 XLSX 单元格/完整合并区域意见：坐标工厂、严格历史 union 与现有草稿存储接入",
+  "author": "architecture subagent",
+  "status": "owned_source_frozen_targeted_passed_global_integration_and_installed_acceptance_pending",
+  "baseCommit": "43274e1cc598eff3150198c17da5606bcf66c5c9",
+  "ownedFiles": [
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "493790dea2c2798567eec2e7f967b8b4184061b6e214ac9a940ff6759a2e8286",
+      "bytes": 4364
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "ddb59fcba2f1e3cf4534d733b4bc15233081744f98c4970501d8fd27d930a9b4",
+      "bytes": 3268
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "d65651a08b796fed361fb553166195d7d32c27ec95b004bf20427dd941d91cc7",
+      "bytes": 7621
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "f170eea47a4f60419f9ddb3cece6ede46866658366238c2abcf6f16b4c0b4532",
+      "bytes": 1145
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.workbook.test.ts",
+      "sha256": "887a6ae948e426e2fc10606440c8fe404256c4cb23741442ea4ad5a152e06c19",
+      "bytes": 4155
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.test.ts",
+      "sha256": "4f5d1e955ddcd5d229c19a6977729f14206fa3ab171dbe004d5bc6e875613a9a",
+      "bytes": 10484
+    },
+    {
+      "path": "src/runtime/workbook_feedback_persistence.test.ts",
+      "sha256": "08c29c890f191b74043b6962df3a036ce17b38184c405a07fe5c7a43b7d0a30e",
+      "bytes": 6302
+    }
+  ],
+  "implementation": [
+    "以实际成功 capture/parser/window/selected-position 引用生成不透明内存来源；七个 VerifiedFile 字段一致，来源只公开冻结文件元数据。WeakMap 不持久化正文、事件或操作账本。",
+    "使用当前工作表真实 relationship ID 与文件内名称；普通空格可定位但不生成值。合并仅接受实际 merge 引用并记录完整原区域，显示窗口裁切不改变原坐标。",
+    "隐藏工作表必须是明确选择或核对过的恢复；此许可与显示隐藏行列独立。隐藏原合并锚点不因部分区域可见而可定位。",
+    "来源按所选位置归属并可永久退休；复制/重建对象无登记，退休后晚确认失败。来源/文件/工作表/所选位置被替换或关键元数据变化会失效。组件仍负责 current/active/ready/最新选择 gate。",
+    "xlsx-range 与 PDF/text 构成严格历史 union，拒绝额外字段、未来 kind、非法坐标或不相容上下文。历史恢复不生成当前可信 source。",
+    "继续使用现有 draft settings 快照，无 drafts.ts 或 schema 版本变化。格式保留原意见空白，路径/工作表名称/标识 JSON 引号转义，提示当时内容、原 SHA 与位置未重新核对。"
+  ],
+  "checks": [
+    {
+      "stage": "existing persistence/formatter counterexamples",
+      "command": "corepack pnpm exec vitest run src/runtime/file_feedback_anchor.workbook.test.ts",
+      "exitCode": 1,
+      "passed": 24,
+      "failed": 5,
+      "scope": "新 XLSX 历史坐标原实现不接受、格式不含工作表及合并位置；其余拒绝条件在原实现即通过。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/anchor-red.txt",
+        "sha256": "0d50fb9eb0c4590bfcb4e994a67a1a186f241be388fb6f0755038199112b61f0",
+        "bytes": 4718
+      }
+    },
+    {
+      "stage": "anchor green",
+      "command": "corepack pnpm exec vitest run src/runtime/file_feedback_anchor.workbook.test.ts",
+      "exitCode": 0,
+      "passed": 29,
+      "failed": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/anchor-green.txt",
+        "sha256": "cd9d14c3b2ac1048a3476783a3075fc13f2558fdf980eaa03f85167c7a2a7e4a",
+        "bytes": 208
+      }
+    },
+    {
+      "stage": "new source and cold persistence boundary tests",
+      "command": "corepack pnpm exec vitest run src/runtime/workbook_feedback_target.test.ts src/runtime/workbook_feedback_persistence.test.ts src/runtime/file_feedback_anchor.workbook.test.ts",
+      "exitCode": 0,
+      "passed": 61,
+      "failed": 0,
+      "scope": "新工厂 API 实现后的首次边界验证，不声称工厂测试曾有效红。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/boundaries-first.txt",
+        "sha256": "59fe3ce515b50246cb9a5e32015d8b4b467644dcab5236a5ea69382645cdce89",
+        "bytes": 211
+      }
+    },
+    {
+      "stage": "associated initial",
+      "command": "corepack pnpm exec vitest run src/runtime/workbook_feedback_target.test.ts src/runtime/workbook_feedback_persistence.test.ts src/runtime/file_feedback_anchor.workbook.test.ts src/runtime/file_feedback_anchor.test.ts src/runtime/file_feedback_anchor.text.test.ts src/runtime/file_feedback_anchor.persistence.test.ts src/runtime/text_feedback_range.test.ts src/runtime/text_feedback_persistence.test.ts src/runtime/drafts.test.ts src/runtime/draft_storage.test.ts src/runtime/draft_storage.recovery.test.ts src/runtime/draft_storage.failure.test.ts src/runtime/draft_preservation.test.ts src/runtime/strings.test.ts",
+      "exitCode": 0,
+      "files": 14,
+      "passed": 193,
+      "failed": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/targeted-final.txt",
+        "sha256": "747e022d99f9cfdb8653e4143d630d51eaa7679a56144c40917c52d95d6d052d",
+        "bytes": 216
+      }
+    },
+    {
+      "stage": "associated final with identical sheet values and ambiguous directory cases",
+      "command": "corepack pnpm exec vitest run src/runtime/workbook_feedback_target.test.ts src/runtime/workbook_feedback_persistence.test.ts src/runtime/file_feedback_anchor.workbook.test.ts src/runtime/file_feedback_anchor.test.ts src/runtime/file_feedback_anchor.text.test.ts src/runtime/file_feedback_anchor.persistence.test.ts src/runtime/text_feedback_range.test.ts src/runtime/text_feedback_persistence.test.ts src/runtime/drafts.test.ts src/runtime/draft_storage.test.ts src/runtime/draft_storage.recovery.test.ts src/runtime/draft_storage.failure.test.ts src/runtime/draft_preservation.test.ts src/runtime/strings.test.ts",
+      "exitCode": 0,
+      "files": 14,
+      "passed": 195,
+      "failed": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/targeted-complete.txt",
+        "sha256": "967a83015c4f511eb4cddd397b83826a4d67ac6f634a652fe5d2e2f1d679b58c",
+        "bytes": 216
+      }
+    },
+    {
+      "stage": "project typecheck during concurrent parent test editing",
+      "command": "corepack pnpm typecheck",
+      "exitCode": 1,
+      "scope": "仅父层新增 OpenedFileView.workbook-feedback.test.tsx:377,397 使用不存在的 FILE_OPEN_STRINGS.reload；root 已负责改为 refresh，最终全工程复验由 root 记录，不把本日志写为通过。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/typecheck-first.txt",
+        "sha256": "0a731ea107865e69599fa2710eb9bb41777be7aff6d9bcb046effff93106fe48",
+        "bytes": 1092
+      }
+    },
+    {
+      "stage": "owned source formatting",
+      "command": "corepack pnpm exec prettier --check src/runtime/file_feedback_anchor.ts src/runtime/feedback_strings.ts src/runtime/workbook_feedback_target.ts src/runtime/office_feedback_target.ts src/runtime/file_feedback_anchor.workbook.test.ts src/runtime/workbook_feedback_target.test.ts src/runtime/workbook_feedback_persistence.test.ts",
+      "exitCode": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    }
+  ],
+  "coverage": [
+    "任意非数字 relationship ID",
+    "同值不同名称工作表与不同 ID 不混同",
+    "真实当前 position/cell/merge 引用",
+    "跨100×24窗口完整merge",
+    "隐藏sheet与隐藏行列的独立许可",
+    "空白/0/false/missing cache 不复制成意见正文",
+    "七文件元数据不一致",
+    "永久retire/复制来源/StrictMode新setup来源独立",
+    "冻结来源文件元数据与返回anchor副本",
+    "最大稀疏合法单格不分配全表",
+    "额外字段与混合历史anchor拒绝",
+    "冷恢复相同路径不同版本",
+    "take一次且附件/未发队列/队列编辑/sendPending不变",
+    "失败保存保留内存及旧磁盘快照"
+  ],
+  "unchangedPersistenceInputs": [
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+      "bytes": 24631
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e",
+      "bytes": 5132
+    }
+  ],
+  "proofBoundary": [
+    "工厂测试运行实际 parseWorkbook 与 workbookWindow，但输入为自制 OOXML parts 和受控 VerifiedFile；不是实际文件 IPC/Worker/安装版证明。",
+    "持久化测试只用受控 settings_get/settings_set；未启动 Agent、读取用户文件、写正式数据库或自动发送。",
+    "工厂验证调用者提交的引用/元数据关系，不能凭内存对象自行认证磁盘读取或跨快照 capture-parser 的真实性；成功读取和解析归属由既有组件管线提供。",
+    "本阶段仅 XLSX 单格/完整合并，不实现任意拖选区域、DOCX part 坐标、PPTX 页级意见或公式求值。",
+    "源码、受控测试、真实浏览器、正式安装分别验；本回执不声称后两者完成。"
+  ],
+  "crossReviewsAtCheckpoint": [
+    {
+      "target": "verification parser compatibility",
+      "method": "只读当前最小差异及新测试，不重跑作者套件",
+      "result": "未见新增阻断：仅空inline无is保留blank，空numeric公式cache保留missing；str空cache/0/false保持，结构先于early return检查。",
+      "inputs": [
+        {
+          "path": "src/runtime/xlsx_sheet.ts",
+          "sha256": "757471213e28653e39a25abbafd8bfb2007904e1cc61fafd9523167243850775",
+          "bytes": 11813
+        },
+        {
+          "path": "src/runtime/xlsx_writer_compatibility.test.ts",
+          "sha256": "2baf506f772c5968602351a20e7c173269b924eba55f449af084dd3e711fd387",
+          "bytes": 7443
+        }
+      ]
+    },
+    {
+      "target": "product workbook leaf",
+      "method": "只读生产 Grid/operation/status/selection 生命周期",
+      "result": "未见新增阻断：来源逐setup创建、同步退场退休，confirm核exact来源/selection/window与当前operation。",
+      "inputs": [
+        {
+          "path": "src/components/WorkbookFilePreview.tsx",
+          "sha256": "100b93d8562b750360b00622bbd40dd18498b08ea0b794b0ecce2075c50cb56d",
+          "bytes": 26695
+        }
+      ]
+    },
+    {
+      "target": "root parent",
+      "method": "只读生产差异与11case；未运行其测试",
+      "result": "未见新增阻断：同步ready ref、换版/操作/隐藏撤回、精确登记/confirm、旧意见保留及自动刷新延后；叶status依其attempt gate。",
+      "inputs": [
+        {
+          "path": "src/components/OpenedFileView.tsx",
+          "sha256": "e5b28673e6015d7ae07136d7607edec87c106f0a99d1d38831758921b1779933",
+          "bytes": 44200
+        },
+        {
+          "path": "src/components/OpenedFileView.workbook-feedback.test.tsx",
+          "sha256": "ea274946fed06fee754e4736ade2c99500aec7da47f3b0150ca8b5273409a321",
+          "bytes": 14466
+        }
+      ]
+    },
+    {
+      "target": "root existing XLSX route test adjustment",
+      "method": "只读一项断言增量，未运行作者测试",
+      "result": "旧无修改意见入口断言改为子读取尚未ready时按钮存在且disabled；保留原不读text/visual、不外部打开和换版断言。与新增XLSX入口一致；新父层11case负责ready/failed门禁，不将夹具scope更新写为生产修复。",
+      "inputs": [
+        {
+          "path": "src/components/OpenedFileView.test.tsx",
+          "sha256": "5a0c076504d1fa1bc636dafa7556ba1596ae4b1dde4d58f860077a878ce2fba1",
+          "bytes": 46024
+        }
+      ]
+    }
+  ],
+  "pending": [
+    "root最终typecheck与全仓工程检查",
+    "独立runtime代码复核",
+    "统一实际React/Worker浏览器验证",
+    "后续候选与正式安装原生验收"
+  ]
+}

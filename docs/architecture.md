@@ -53,7 +53,7 @@ Node/uv/Python 与 Registry 安装按官方 Windows 发行布局处理，不猜�
 
 `browser_sharing.ts` 区分无可查询目标、断开、查询与失败，暂离保留观察但禁止动作。`browser_sharing_attention.ts` 仅保存当前 task/request，按controller所有者清理；`session_browser_attention.ts` 映射到现有 ThreadState/hasPendingRequests，刷新不持久化队列。未知回执保留pending并禁批准，可信结束才清；断连保留原未知结果保护。ThreadView显式返回原卡并尊重用户上翻位置。
 
-`OpenedFileView` 重读继续沿 inspectLink/readText；失败撤下旧正文。反馈以原thread、规范路径、磁盘version/sha构成disk专用版本标识，复用fileFeedbackDrafts和原子take，只追加原输入，不伪造diff或toolCallId，不自动发送。隐藏、换任务、卸载、重读及版本变化使旧回调失效。
+`OpenedFileView` 重读继续沿 inspectLink/readText；失败撤下旧正文。反馈以原thread、规范路径、磁盘version/sha构成disk专用版本标识，复用fileFeedbackDrafts和原子take，只追加原输入，不伪造diff或toolCallId，不自动发送。隐藏、换任务、卸载、重读及版本变化使旧回调失效。 XLSX位置意见由实际捕获、已解析工作表、当前窗口与当前单元格生成短期有效的候选；只在明确确认后保存真实工作表关系ID、名称、行列范围和文件版本，合并单元格保留完整范围。隐藏内容须明确显示后才可作为目标，切换、隐藏、失败或重读立即撤回旧候选。保存坐标供历史意见表达，不作为当前文件仍在相同位置的证明；共用意见草稿和加入输入流程，不改变Agent执行。
 
 ## 2026-10-04 桌面界面与读取确认增量
 

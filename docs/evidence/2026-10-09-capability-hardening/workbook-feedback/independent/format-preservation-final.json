@@ -1,0 +1,269 @@
+{
+  "semanticUnchanged": true,
+  "rawPairs": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.raw.txt",
+        "sha256": "1e0bda71d1056444cbe6d91ba0265e6fdcde0c04e3397c96ce43d558ac60f7ce",
+        "bytes": 166523
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.json",
+        "sha256": "1e0bda71d1056444cbe6d91ba0265e6fdcde0c04e3397c96ce43d558ac60f7ce",
+        "bytes": 166523
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.raw.txt",
+        "sha256": "4ca93c5b2b0c38e12d3608cb8410331e7ce4e87ff77eb50e8b021a07e036eca4",
+        "bytes": 165050
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.json",
+        "sha256": "4ca93c5b2b0c38e12d3608cb8410331e7ce4e87ff77eb50e8b021a07e036eca4",
+        "bytes": 165050
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-first.raw.txt",
+        "sha256": "e25d5544e306ebeeec671513990952a0b47befaf530a84556f22757b24d3c95e",
+        "bytes": 209796
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-first.json",
+        "sha256": "e25d5544e306ebeeec671513990952a0b47befaf530a84556f22757b24d3c95e",
+        "bytes": 209796
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-second.raw.txt",
+        "sha256": "0106b925808839e32af51fba9277c60f203b595c14c5e48ce95b8189133c925a",
+        "bytes": 277213
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-second.json",
+        "sha256": "0106b925808839e32af51fba9277c60f203b595c14c5e48ce95b8189133c925a",
+        "bytes": 277213
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.raw.txt",
+        "sha256": "e4cde3cef049fd13fda80387a1dd5451e4ecb3c6d005491b74dd9d691f93434b",
+        "bytes": 164857
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.json",
+        "sha256": "e4cde3cef049fd13fda80387a1dd5451e4ecb3c6d005491b74dd9d691f93434b",
+        "bytes": 164857
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-fixed.raw.txt",
+        "sha256": "f1ab4d09316c4e0b76cca50d45372fa3374c993eeaaee9e6725c84e4329314da",
+        "bytes": 164583
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-fixed.json",
+        "sha256": "f1ab4d09316c4e0b76cca50d45372fa3374c993eeaaee9e6725c84e4329314da",
+        "bytes": 164583
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-final.raw.txt",
+        "sha256": "98324b20ce9604ae1ebaad822d37f39d6275db445528197fd41c0b4d956cbe56",
+        "bytes": 263514
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-final.json",
+        "sha256": "98324b20ce9604ae1ebaad822d37f39d6275db445528197fd41c0b4d956cbe56",
+        "bytes": 263514
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate.raw.txt",
+        "sha256": "1ca8bc0cee63e1155186f5c1815ede917969e4c92532c887ee4ef3d659e0b366",
+        "bytes": 340448
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate.json",
+        "sha256": "1ca8bc0cee63e1155186f5c1815ede917969e4c92532c887ee4ef3d659e0b366",
+        "bytes": 340448
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.raw.txt",
+        "sha256": "6810b7027477f65f7650056553b5fca3b8e89a913728298408cb1116309fd274",
+        "bytes": 164861
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.json",
+        "sha256": "6810b7027477f65f7650056553b5fca3b8e89a913728298408cb1116309fd274",
+        "bytes": 164861
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.raw.txt",
+        "sha256": "c719f483d84513b193d4bb8d95aaec097ff8bd0cbaa09edce79c4c4bac736edd",
+        "bytes": 261563
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.json",
+        "sha256": "c719f483d84513b193d4bb8d95aaec097ff8bd0cbaa09edce79c4c4bac736edd",
+        "bytes": 261563
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-final.raw.txt",
+        "sha256": "c3ff2b1a191611a0c603667753300e6702b3494cf80235fe419ed83767bf16d5",
+        "bytes": 166521
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-final.json",
+        "sha256": "c3ff2b1a191611a0c603667753300e6702b3494cf80235fe419ed83767bf16d5",
+        "bytes": 166521
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.raw.txt",
+        "sha256": "2688c3d0c9a6b9f916b8524a184ae4e5cca42a04cd3f9cc150e72dc328d1a25d",
+        "bytes": 261553
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.json",
+        "sha256": "2688c3d0c9a6b9f916b8524a184ae4e5cca42a04cd3f9cc150e72dc328d1a25d",
+        "bytes": 261553
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-first.raw.txt",
+        "sha256": "a5ce1fdb5906afa14b7cec88fb1c2d3bd7e2d5fc229e1791339ececbc717c383",
+        "bytes": 180458
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-first.json",
+        "sha256": "a5ce1fdb5906afa14b7cec88fb1c2d3bd7e2d5fc229e1791339ececbc717c383",
+        "bytes": 180458
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-second.raw.txt",
+        "sha256": "6a185b165d919e74f34a567820a33339ae1715d515e92988669a2ed56de35881",
+        "bytes": 166519
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-second.json",
+        "sha256": "6a185b165d919e74f34a567820a33339ae1715d515e92988669a2ed56de35881",
+        "bytes": 166519
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-final.raw.txt",
+        "sha256": "019b9aa03f9e82a24044b12475971a8dee8037ea482494d39a7596451e6c0f55",
+        "bytes": 250692
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-final.json",
+        "sha256": "019b9aa03f9e82a24044b12475971a8dee8037ea482494d39a7596451e6c0f55",
+        "bytes": 250692
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-fixed.raw.txt",
+        "sha256": "6d922cb16f13b1c620c4720b87b7efac7114a9c9c7a4eddeec5cf9165283ed4f",
+        "bytes": 164587
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-fixed.json",
+        "sha256": "6d922cb16f13b1c620c4720b87b7efac7114a9c9c7a4eddeec5cf9165283ed4f",
+        "bytes": 164587
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-final.raw.txt",
+        "sha256": "4c088b589f83ab39c6cee0c2dd9cfa64c896443d56f493e8152ef454d79046c6",
+        "bytes": 261559
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-final.json",
+        "sha256": "4c088b589f83ab39c6cee0c2dd9cfa64c896443d56f493e8152ef454d79046c6",
+        "bytes": 261559
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-final.raw.txt",
+        "sha256": "1ebd16a8ed0f3733d87e9d3b9d8cd0223d77247f983105f7dbeee7d8873c8a81",
+        "bytes": 261549
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-final.json",
+        "sha256": "1ebd16a8ed0f3733d87e9d3b9d8cd0223d77247f983105f7dbeee7d8873c8a81",
+        "bytes": 261549
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate3.raw.txt",
+        "sha256": "004286ff3ef4520332aa318cbcdbbecd5e85537811eab657eb0109982cee0150",
+        "bytes": 261568
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate3.json",
+        "sha256": "004286ff3ef4520332aa318cbcdbbecd5e85537811eab657eb0109982cee0150",
+        "bytes": 261568
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.raw.txt",
+        "sha256": "6e8b3221f6f1dc07c44c7f539ba77a2acde11d40fdf3efb4ebb8d9261aaf4b88",
+        "bytes": 165046
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.json",
+        "sha256": "6e8b3221f6f1dc07c44c7f539ba77a2acde11d40fdf3efb4ebb8d9261aaf4b88",
+        "bytes": 165046
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.raw.txt",
+        "sha256": "ed9dc3ca6cb7f8c40e401257a9a30dbe727d5d4d1dedebf58c94a6025ed63021",
+        "bytes": 166519
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.json",
+        "sha256": "ed9dc3ca6cb7f8c40e401257a9a30dbe727d5d4d1dedebf58c94a6025ed63021",
+        "bytes": 166519
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate2.raw.txt",
+        "sha256": "d4272c09dfd95a3a06437848cae8cfc61c20ab3ab78ca7584ebf30c473fe6692",
+        "bytes": 405756
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate2.json",
+        "sha256": "d4272c09dfd95a3a06437848cae8cfc61c20ab3ab78ca7584ebf30c473fe6692",
+        "bytes": 405756
+      }
+    }
+  ]
+}

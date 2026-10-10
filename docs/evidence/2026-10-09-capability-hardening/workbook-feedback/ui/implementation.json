@@ -1,0 +1,115 @@
+{
+  "recordedAtUtc": "2026-10-09T23:31:13.993293+00:00",
+  "scope": "P21 XLSX单元格及完整原合并范围的组件接入；不包含任意矩形、DOCX位置或正式应用验收。",
+  "status": "owned source stable; pending independent whole-App browser and integration",
+  "owned": [
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "100b93d8562b750360b00622bbd40dd18498b08ea0b794b0ecce2075c50cb56d"
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.feedback.test.tsx",
+      "sha256": "4ed3fcc8a7e397d860dca15cf575af5abe09616f5273c89ffe6e3d0f74f0d7f8"
+    },
+    {
+      "path": "src/runtime/workbook_strings.ts",
+      "sha256": "0c756281a5c1e74705aff554ccce58e987ac10a598e2c0628f6908ebb686dc33"
+    }
+  ],
+  "behavior": [
+    "沿现有单元格详情增加显式按钮；选择只登记候选，不写意见。",
+    "每个实际position独立source；StrictMode注册effect setup内创建，cleanup删除live登记。",
+    "换cell/窗口/showHidden/sheet/关闭详情同步撤回；隐藏/文件版本/prepared换及操作取消不接受旧回调。",
+    "确认重核当前操作、真实capture/parser结果、current position/window/source、活动状态；无新IPC或内容持久副本。",
+    "跨窗merge使用原完整范围并注明局部显示；隐藏原anchor不提供意见，明确显示隐藏后方可。",
+    "保存目标文案显示工作表名称及A1范围，不在此UI显示r:id。"
+  ],
+  "testEvidence": {
+    "effectiveRed": {
+      "log": "component-red.txt",
+      "exitCode": 1,
+      "tests": 6,
+      "failed": 6,
+      "scope": "original component lacks availability and explicit cell/merge actions"
+    },
+    "targetedGreen": {
+      "log": "targeted-green.txt",
+      "exitCode": 0,
+      "files": 6,
+      "tests": 52,
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.feedback.test.tsx src/components/PreviewReadingPosition.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/workbook_view.test.ts src/runtime/preview_reading_position.test.ts src/runtime/strings.test.ts",
+      "componentTests": 18
+    },
+    "typecheck": {
+      "log": "typecheck-final.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm typecheck"
+    },
+    "format": {
+      "log": "format-green.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm exec prettier --check src/components/WorkbookFilePreview.tsx src/components/WorkbookFilePreview.feedback.test.tsx src/runtime/workbook_strings.ts"
+    },
+    "nonProductFailures": [
+      {
+        "log": "component-harness-parse-failure.txt",
+        "detail": "new harness missing closing brace; no tests executed; not counted as effective red"
+      },
+      {
+        "log": "typecheck-first.txt",
+        "detail": "new test used overly broad overloaded Mock type; changed to shared callback signatures; no production defect claim"
+      }
+    ],
+    "layer": "Component/key/effect ownership tests use real component/helper with mocked React hook runner and mocked capture/parser; not actual DOM keyboard/scroll/Worker/Tauri proof."
+  },
+  "logs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/component-harness-parse-failure.txt",
+      "sha256": "3893961e797aa77b37b1d13a9b6e8c3aa064e38d3b404e30f9af4cc99099ece2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/component-red.txt",
+      "sha256": "39336266b0a58b8e0f0011db20740644f0267130e42544f584daf881b33d5930"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/component-first.txt",
+      "sha256": "773f013dcbcf9aab6e1bc9a7e049ce284c42d6d313afe0baba481003d2a41d20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/targeted-first.txt",
+      "sha256": "87e37bc0e743e8fb813c45e08c1a78d42f2057b6583787e38887da8d42eec522"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/targeted-green.txt",
+      "sha256": "45faad92cfe7e34abe64b1dc40f35d5758326842721c52929e80f7b0bc272bd6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/typecheck-first.txt",
+      "sha256": "49a944a6ee4354f2e96c689967972b21316abbe9bf09eb12f5ec68a9beebff5d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/typecheck-green.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/format-green.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "unchangedScope": [
+    "No CSS changes.",
+    "Original ordinary openpyxl XLSX files and independent ZIP/XML oracle remain unchanged.",
+    "No source outside the three owned paths modified by this agent.",
+    "No browser/server/app/Agent process started for this increment; independent browser is owned by verification.",
+    "No parent/drafts/parser/union implementation claimed as owned work."
+  ],
+  "pending": [
+    "Independent browser actual whole-App mouse/keyboard/focus/scroll and real Worker on ordinary writer files.",
+    "Root parent feedback/draft take/version and full integration checks.",
+    "Installed application and real-Agent rework are separate proof levels."
+  ]
+}

@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"checks":3,"failure":"TimeoutError: locator.innerText: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-cell=\"A2\"] button')\u001b[22m\n"}

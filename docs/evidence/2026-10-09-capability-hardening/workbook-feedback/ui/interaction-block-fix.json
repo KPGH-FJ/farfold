@@ -1,0 +1,137 @@
+{
+  "recordedAtUtc": "2026-10-09T23:50:20.123244+00:00",
+  "scope": "XLSX 预览刷新期间独立交互锁；只修改 WorkbookFilePreview 与其反馈专项测试。",
+  "status": "owned source frozen; parent and whole-App browser recheck owned by root/verification",
+  "previousCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/implementation.json",
+    "sha256": "1acd5551c6e64a37594020c544a656b3582ecc56dabdf362ed0f0cb44d915560"
+  },
+  "owned": [
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "915935ec554b682676ebe6df3fe4e26469362c5550eea9c31802b84fb495d9a9"
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.feedback.test.tsx",
+      "sha256": "0c93467cfcc595ec7373670de47be9c4592eb176dd1fcad1ac02eed763e3fcce"
+    }
+  ],
+  "trigger": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-final.json",
+      "sha256": "019b9aa03f9e82a24044b12475971a8dee8037ea482494d39a7596451e6c0f55",
+      "engine": "webkit",
+      "readOnlyReviewed": true,
+      "executedBy": "verification",
+      "passed": false,
+      "sourceUnchanged": true,
+      "failure": "TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.",
+      "counts": {
+        "file_delivery_read_workbook": 88,
+        "file_delivery_check_revision": 88
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-final.json",
+      "sha256": "98324b20ce9604ae1ebaad822d37f39d6275db445528197fd41c0b4d956cbe56",
+      "engine": "chromium",
+      "readOnlyReviewed": true,
+      "executedBy": "verification",
+      "passed": false,
+      "sourceUnchanged": true,
+      "failure": "TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.",
+      "counts": {
+        "file_delivery_read_workbook": 102,
+        "file_delivery_check_revision": 102
+      }
+    }
+  ],
+  "cause": "父层暂存新版时把 active 设为 false，触发子组件加载 effect 的 abort/paused；父层监测有效性随之撤销。实际整条循环由独立全 App 浏览器复现，本修复只提供叶组件独立交互门禁，父层另接 active 保持与 interactionBlocked。",
+  "changes": [
+    "interactionBlocked 默认 false，仅 section inert 与当前操作门禁使用，不加入读取 effect 依赖，不改变 active，不发送 paused/loading。",
+    "锁期间保留已加载表格、当前窗口和单元格详情；当前 source 在 layout cleanup 退休，解锁后为同一真实 position 创建新 source。",
+    "旧 source 永不复活；新 source 只是候选，仍须显式确认按钮才上报意见。",
+    "顶层 sheet/cancel/retry 以及 Grid 单元格、窗口、隐藏切换、详情关闭、地址输入/提交均另核当前状态与归属，排队中的旧事件不能只依赖 inert。"
+  ],
+  "checks": {
+    "initialRed": {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.feedback.test.tsx",
+      "log": "interaction-block-red.txt",
+      "exitCode": 1,
+      "tests": 29,
+      "failed": 9,
+      "passed": 20,
+      "note": "随后将 cell/detail 断言由包含文案加强为实际详情 strong 节点，原日志保留。"
+    },
+    "effectiveRed": {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.feedback.test.tsx",
+      "log": "interaction-block-strengthened-red.txt",
+      "exitCode": 1,
+      "tests": 29,
+      "failed": 11,
+      "passed": 18
+    },
+    "componentGreen": {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.feedback.test.tsx",
+      "log": "interaction-block-first-green.txt",
+      "exitCode": 0,
+      "tests": 29
+    },
+    "relatedGreen": {
+      "command": "corepack pnpm exec vitest run src/components/WorkbookFilePreview.feedback.test.tsx src/components/PreviewReadingPosition.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/workbook_view.test.ts src/runtime/preview_reading_position.test.ts src/runtime/strings.test.ts",
+      "log": "interaction-block-related-green.txt",
+      "exitCode": 0,
+      "files": 6,
+      "tests": 63
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "log": "interaction-block-typecheck.txt",
+      "exitCode": 0
+    },
+    "format": {
+      "command": "corepack pnpm exec prettier --check src/components/WorkbookFilePreview.tsx src/components/WorkbookFilePreview.feedback.test.tsx",
+      "log": "interaction-block-format.txt",
+      "exitCode": 0
+    }
+  },
+  "coverage": [
+    "锁定/解锁不重复 capture/parse 且不额外发状态",
+    "旧 source 退休，解锁产生新 source，旧确认拒绝",
+    "七类排队控件事件不改显示",
+    "锁期间旧取消回调不 abort 正在完成的 parse",
+    "旧 retry 不能越过锁；解锁显式重试正常"
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-red.txt",
+      "sha256": "84bb7babf68c6846777b5b4cf8c04769ce6ea00d714627afd4869f8d03da1c42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-strengthened-red.txt",
+      "sha256": "f70df3b3d5916fed289de665a6d9394748977afa2c78265d2a8365b3133be9a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-first-green.txt",
+      "sha256": "65e4491294fcb62d08979fce21365f62a76690863c42bdf156f966f7b7c1b74d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-related-green.txt",
+      "sha256": "b66bbbcbc21cc311cd5aaf56b1bd0fc771f8b0f6aa0f63c5b2bf0450741ecce4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "boundaries": [
+    "测试运行真实组件与共享 helper，但 hook runner、IPC/parser 模拟；未把它当成浏览器 inert/键鼠证明。",
+    "真实全 App 自动刷新路径由 verification 续验；本记录不宣布其已绿。",
+    "未改 Workbook CSS、parent、parser、原 ZIP/独立 oracle、旧 implementation.json。",
+    "未启动正式应用、Agent 或新服务器。"
+  ]
+}

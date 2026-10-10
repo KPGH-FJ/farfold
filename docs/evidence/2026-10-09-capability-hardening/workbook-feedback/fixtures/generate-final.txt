@@ -1,0 +1,19 @@
+{
+  "writer": "3.1.5",
+  "files": {
+    "positions-v1.xlsx": {
+      "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+      "bytes": 8694
+    },
+    "positions-v2.xlsx": {
+      "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+      "bytes": 8710
+    },
+    "positions-v1-nonordinal-ids.xlsx": {
+      "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+      "bytes": 8733
+    }
+  },
+  "independentChecks": "passed",
+  "productTestsRun": false
+}

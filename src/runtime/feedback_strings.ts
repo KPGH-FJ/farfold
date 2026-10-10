@@ -1,6 +1,8 @@
 import type { SavedFileFeedback } from "./drafts";
 import { feedbackDiskVersion } from "./file_feedback_anchor";
 import { VISUAL_FEEDBACK_STRINGS as V } from "./visual_feedback_strings";
+import { cellAddress } from "./workbook_view";
+import type { XlsxRangeAnchor } from "./file_feedback_anchor";
 
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
@@ -20,6 +22,11 @@ export const FEEDBACK_STRINGS = {
     byteEnd: number,
   ) =>
     `第 ${startLine}${endLine === startLine ? "" : `–${endLine}`} 行，字节 ${byteStart}–${byteEnd}（从 0 起，末位不含），位置未重新核对`,
+  workbookRange: (anchor: XlsxRangeAnchor) => {
+    const first = cellAddress(anchor.fromRow, anchor.fromColumn);
+    const last = cellAddress(anchor.toRow, anchor.toColumn);
+    return `工作表 ${JSON.stringify(anchor.sheetName)}（文件内标识 ${JSON.stringify(anchor.sheetId)}），单元格 ${first}${first === last ? "" : `:${last}`}，位置未重新核对`;
+  },
 } as const;
 
 export function fileFeedbackText(entry: SavedFileFeedback): string {
@@ -35,18 +42,21 @@ export function fileFeedbackText(entry: SavedFileFeedback): string {
           entry.anchor.byteStart,
           entry.anchor.byteEnd,
         )
-      : entry.anchor?.kind === "pdf-page"
-        ? `第 ${entry.anchor.page} / ${entry.anchor.pageCount} 页`
-        : entry.selection
-          ? entry.scope === "fragment"
-            ? `${side}片段第 ${lines} 行`
-            : entry.scope === "file"
-              ? `${side}第 ${lines} 行`
-              : `当时标记的第 ${lines} 行，位置未重新核对`
-          : entry.lineInput?.text.trim()
-            ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
-            : "";
+      : entry.anchor?.kind === "xlsx-range"
+        ? FEEDBACK_STRINGS.workbookRange(entry.anchor)
+        : entry.anchor?.kind === "pdf-page"
+          ? `第 ${entry.anchor.page} / ${entry.anchor.pageCount} 页`
+          : entry.selection
+            ? entry.scope === "fragment"
+              ? `${side}片段第 ${lines} 行`
+              : entry.scope === "file"
+                ? `${side}第 ${lines} 行`
+                : `当时标记的第 ${lines} 行，位置未重新核对`
+            : entry.lineInput?.text.trim()
+              ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
+              : "";
   const disk = feedbackDiskVersion(entry.path, entry.contentId);
-  const textRange = entry.anchor?.kind === "text-range";
-  return `关于 ${textRange ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${textRange ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
+  const exactOpinion =
+    entry.anchor?.kind === "text-range" || entry.anchor?.kind === "xlsx-range";
+  return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
 }

@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.test.tsx (71 tests | 1 failed) 4214ms
+   × routes a verified workbook to its snapshot preview and refreshes to the new exact version 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.test.tsx > routes a verified workbook to its snapshot preview and refreshes to the new exact version
+AssertionError: expected { …(10) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+<button
+  aria-expanded={false}
+  className="btn btn-text"
+  disabled={true}
+  onClick={[Function onClick]}
+  type="button"
+>
+  修改意见
+</button>
+
+ ❯ src/components/OpenedFileView.test.tsx:424:30
+    422|   expect(h.readVisual).not.toHaveBeenCalled();
+    423|   expect(h.open).not.toHaveBeenCalled();
+    424|   expect(button(S.feedback)).toBeUndefined();
+       |                              ^
+    425|   h.inspectLink.mockResolvedValueOnce({
+    426|     ...file,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 116 passed (117)
+   Start at  07:32:47
+   Duration  4.63s (transform 827ms, setup 0ms, import 1.72s, tests 8.15s, environment 0ms)
+

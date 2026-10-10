@@ -38,6 +38,17 @@ import {
   type PreviewContentStatus,
 } from "../runtime/preview_capture";
 import type { PreparedWorkbookPreview } from "../runtime/office_preview_prepare";
+import {
+  createWorkbookFeedbackSource,
+  workbookFeedbackTarget,
+  type WorkbookFeedbackSource,
+} from "../runtime/workbook_feedback_target";
+import {
+  officeFeedbackSourceIsValid,
+  retireOfficeFeedbackSource,
+  type OfficeTargetAvailability,
+  type OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
 import "./WorkbookFilePreview.css";
 
 function cellValue(cell: XlsxCell | undefined): string {
@@ -76,15 +87,21 @@ function mergeDescription(position: WorkbookPosition): string | undefined {
 export function WorkbookFilePreview({
   file,
   active,
+  interactionBlocked = false,
   readingPosition,
   prepared,
   onStatus,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   file: VerifiedFile;
   active: boolean;
+  interactionBlocked?: boolean;
   readingPosition?: PreviewReadingPositionRef;
   prepared?: PreparedWorkbookPreview;
   onStatus?: (status: PreviewContentStatus) => void;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
   const capture = useRef<{ file: VerifiedFile; value: WorkbookCapture } | null>(
     null,
@@ -92,9 +109,10 @@ export function WorkbookFilePreview({
   const status = useRef(onStatus);
   status.current = onStatus;
   const current = useRef<AbortController | null>(null);
+  const retireSelection = useRef<(() => void) | null>(null);
   const captureReader = useRef(new PreviewCapture<WorkbookCapture>());
-  const props = useRef({ file, active });
-  props.current = { file, active };
+  const props = useRef({ file, active, interactionBlocked });
+  props.current = { file, active, interactionBlocked };
   const [selection, setSelection] = useState<{
     file: VerifiedFile;
     id: string;
@@ -110,8 +128,13 @@ export function WorkbookFilePreview({
   const [loaded, setLoaded] = useState<{
     file: VerifiedFile;
     value: WorkbookPreview;
+    capture: WorkbookCapture;
+    operation: AbortController;
   } | null>(null);
+  const feedbackState = useRef({ state, loaded, sheetId });
+  feedbackState.current = { state, loaded, sheetId };
   useLayoutEffect(() => {
+    retireSelection.current?.();
     const operation = new AbortController();
     current.current = operation;
     const owns = () =>
@@ -168,7 +191,7 @@ export function WorkbookFilePreview({
           if (!owns()) return;
         }
       }
-      setLoaded({ file, value: workbook });
+      setLoaded({ file, value: workbook, capture: value, operation });
       setState("ready");
       status.current?.({ file, state: "ready" });
       setMessage(S.snapshot);
@@ -186,17 +209,26 @@ export function WorkbookFilePreview({
       setMessage(workbookFailure(error));
     });
     return () => {
+      retireSelection.current?.();
       operation.abort();
       if (current.current === operation) current.current = null;
     };
   }, [file, active, sheetId, retry, readingPosition, prepared]);
   const workbook = loaded?.file === file ? loaded.value : null;
   const selectedId = sheetId ?? workbook?.sheet?.id;
+  const canInteract = () =>
+    props.current.active &&
+    !props.current.interactionBlocked &&
+    props.current.file === file &&
+    attempt.current.retry === retry &&
+    attempt.current.prepared === prepared &&
+    feedbackState.current.sheetId === sheetId;
   return (
     <section
       className="workbook-preview"
       aria-label={S.title}
       aria-busy={state === "loading"}
+      inert={interactionBlocked}
     >
       <div className="workbook-controls">
         {workbook && (
@@ -206,9 +238,12 @@ export function WorkbookFilePreview({
               aria-label={S.sheet}
               value={selectedId}
               disabled={!active || state === "loading"}
-              onChange={(event) =>
-                setSelection({ file, id: event.target.value })
-              }
+              onChange={(event) => {
+                if (!canInteract() || feedbackState.current.state !== "ready")
+                  return;
+                retireSelection.current?.();
+                setSelection({ file, id: event.target.value });
+              }}
             >
               {workbook.sheets.map((sheet) => (
                 <option key={sheet.id} value={sheet.id}>
@@ -226,6 +261,9 @@ export function WorkbookFilePreview({
             className="btn btn-text"
             type="button"
             onClick={() => {
+              if (!canInteract() || feedbackState.current.state !== "loading")
+                return;
+              retireSelection.current?.();
               current.current?.abort();
               setState("paused");
               setMessage(S.cancelled);
@@ -240,7 +278,15 @@ export function WorkbookFilePreview({
             className="btn btn-text"
             type="button"
             disabled={!active}
-            onClick={() => setRetry((value) => value + 1)}
+            onClick={() => {
+              if (
+                !canInteract() ||
+                !["failed", "paused"].includes(feedbackState.current.state)
+              )
+                return;
+              retireSelection.current?.();
+              setRetry((value) => value + 1);
+            }}
           >
             {S.retry}
           </button>
@@ -257,6 +303,25 @@ export function WorkbookFilePreview({
             file={file}
             explicitSheetSelection={sheetId === workbook.sheet.id}
             readingPosition={readingPosition}
+            capture={loaded!.capture}
+            interactionBlocked={interactionBlocked}
+            retireSelection={retireSelection}
+            isCurrent={() => {
+              const now = feedbackState.current;
+              return (
+                props.current.active &&
+                !props.current.interactionBlocked &&
+                props.current.file === file &&
+                now.state === "ready" &&
+                now.loaded === loaded &&
+                current.current === loaded!.operation &&
+                !loaded!.operation.signal.aborted &&
+                (now.sheetId === undefined ||
+                  now.sheetId === workbook.sheet!.id)
+              );
+            }}
+            onOfficeTargetAvailability={onOfficeTargetAvailability}
+            onOfficeTargetConfirm={onOfficeTargetConfirm}
           />
         )}
     </section>
@@ -268,11 +333,23 @@ function WorkbookGrid({
   workbook,
   readingPosition,
   explicitSheetSelection,
+  capture,
+  interactionBlocked,
+  retireSelection,
+  isCurrent,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   file: VerifiedFile;
   workbook: WorkbookPreview;
   explicitSheetSelection: boolean;
   readingPosition?: PreviewReadingPositionRef;
+  capture: WorkbookCapture;
+  interactionBlocked: boolean;
+  retireSelection: { current: (() => void) | null };
+  isCurrent: () => boolean;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
   const sheet = workbook.sheet!;
   const restored = restoredWorkbookWindow(file, workbook, readingPosition);
@@ -326,7 +403,78 @@ function WorkbookGrid({
     () => workbookWindow(sheet, cells, start, showHidden),
     [sheet, cells, start, showHidden],
   );
+  const hiddenSheetSelected =
+    explicitSheetSelection ||
+    restoredWorkbookSheet(file, workbook, readingPosition) === sheet.id;
+  const feedback = useRef<WorkbookFeedbackSource | null>(null);
+  const [shownFeedback, setShownFeedback] =
+    useState<WorkbookFeedbackSource | null>(null);
+  const latest = useRef({
+    selection,
+    window,
+    isCurrent,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
+  });
+  latest.current = {
+    selection,
+    window,
+    isCurrent,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
+  };
+  const retire = () => {
+    const previous = feedback.current;
+    feedback.current = null;
+    if (!previous) return;
+    retireOfficeFeedbackSource(previous);
+    setShownFeedback(null);
+    latest.current.onOfficeTargetAvailability?.({
+      source: previous,
+      available: false,
+    });
+  };
+  useLayoutEffect(() => {
+    // Create within the effect, so StrictMode's replay cannot reuse a retired source.
+    retireSelection.current = retire;
+    if (selection && onOfficeTargetConfirm && latest.current.isCurrent()) {
+      const source = createWorkbookFeedbackSource({
+        capture,
+        preview: workbook,
+        window,
+        position: selection,
+        showHidden,
+        hiddenSheetSelected,
+        expectedFile: file,
+      });
+      if (source) {
+        feedback.current = source;
+        setShownFeedback(source);
+        latest.current.onOfficeTargetAvailability?.({
+          source,
+          available: true,
+        });
+      }
+    }
+    return () => {
+      retire();
+      if (retireSelection.current === retire) retireSelection.current = null;
+    };
+  }, [
+    capture,
+    workbook,
+    file,
+    window,
+    selection,
+    showHidden,
+    hiddenSheetSelected,
+    interactionBlocked,
+    Boolean(onOfficeTargetConfirm),
+    retireSelection,
+  ]);
   const chooseWindow = (next: typeof start) => {
+    if (!latest.current.isCurrent()) return;
+    retire();
     setStart(next);
     setSelection(null);
     if (grid.current) {
@@ -370,6 +518,7 @@ function WorkbookGrid({
         className="workbook-controls"
         onSubmit={(event) => {
           event.preventDefault();
+          if (!latest.current.isCurrent()) return;
           const next = parseCellAddress(address);
           setInvalid(!next);
           if (next) {
@@ -387,6 +536,7 @@ function WorkbookGrid({
             placeholder="A1"
             maxLength={10}
             onChange={(event) => {
+              if (!latest.current.isCurrent()) return;
               setAddress(event.target.value);
               setInvalid(false);
             }}
@@ -401,6 +551,8 @@ function WorkbookGrid({
               type="checkbox"
               checked={showHidden}
               onChange={(event) => {
+                if (!latest.current.isCurrent()) return;
+                retire();
                 setShowHidden(event.target.checked);
                 setSelection(null);
               }}
@@ -480,6 +632,8 @@ function WorkbookGrid({
               type="button"
               className="btn btn-text"
               onClick={() => {
+                if (!latest.current.isCurrent()) return;
+                retire();
                 const address = cellAddress(selection.row, selection.column);
                 setSelection(null);
                 grid.current
@@ -491,6 +645,31 @@ function WorkbookGrid({
             >
               {S.closeDetail}
             </button>
+            {shownFeedback && !selection.hiddenAnchor && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => {
+                  const now = latest.current;
+                  if (
+                    feedback.current !== shownFeedback ||
+                    now.selection !== selection ||
+                    now.window !== window ||
+                    !now.isCurrent() ||
+                    !officeFeedbackSourceIsValid(shownFeedback)
+                  )
+                    return;
+                  const anchor = workbookFeedbackTarget(shownFeedback);
+                  if (anchor)
+                    now.onOfficeTargetConfirm?.({
+                      source: shownFeedback,
+                      anchor,
+                    });
+                }}
+              >
+                {selection.merge ? S.feedbackMerge : S.feedbackCell}
+              </button>
+            )}
           </div>
           {selection.merge && <p>{mergeDescription(selection)}</p>}
           {!selection.hiddenAnchor && (
@@ -625,7 +804,13 @@ function WorkbookGrid({
                             [description, issue].filter(Boolean).join(" · ") ||
                             undefined
                           }
-                          onClick={() => setSelection(position)}
+                          onClick={() => {
+                            if (!latest.current.isCurrent()) return;
+                            if (position !== selection) {
+                              retire();
+                              setSelection(position);
+                            }
+                          }}
                         >
                           {showRuns
                             ? cell!.runs!.map((run, i) => (

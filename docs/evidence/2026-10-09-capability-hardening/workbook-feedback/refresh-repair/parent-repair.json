@@ -1,0 +1,50 @@
+{
+  "checkedAtUtc": "2026-10-09T23:50:33.083620+00:00",
+  "scope": "XLSX automatic preview replacement and feedback ownership",
+  "originalBehavior": "Pending refresh deactivated the old workbook; paused status disabled its own revision monitor and invalidated the replacement. Restoration reactivated the monitor and caused immediate repeated capture.",
+  "fix": "Keep actual view activity distinct from temporary interaction blocking. Existing parent pending/operation guards remain; the workbook adds its own current-owner interaction guard and retires/re-registers sources without restarting its reading effect.",
+  "checks": [
+    {
+      "name": "effective parent regression before fix",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/refresh-repair/parent-red.txt",
+        "sha256": "d1450533ea07501b4575fd1db4fcd91386b54210387e42f7a24b417460d36e0c",
+        "bytes": 1588
+      },
+      "result": "1 failed, 12 passed",
+      "failure": "Unhidden automatic refresh kept v1 instead of adopting v2. Real hiding case already rejected late adoption."
+    },
+    {
+      "name": "parent repair and existing revision cases",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/refresh-repair/parent-green.txt",
+        "sha256": "58094e5a317e38bbefcfeac3c1d6748369bd77553a9e70ddcffb1ac47d841a6d",
+        "bytes": 212
+      },
+      "result": "2 files, 20 passed"
+    }
+  ],
+  "sources": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "3790cadc22fef51149c0661fd3c0da71f50cbc07098b970619ee003ed6d44d76",
+      "bytes": 44236
+    },
+    {
+      "path": "src/components/OpenedFileView.workbook-feedback.test.tsx",
+      "sha256": "bcbc55ee815ef8b3e0ddb64c1cb768d40a4366837d62098f8d17afa7714b35e3",
+      "bytes": 16560
+    }
+  ],
+  "boundary": [
+    "Parent regression uses mocked React/leaf/IPC and the real FileRevisionMonitor; it is not DOM or native proof.",
+    "Real browser failure and repair have separate independent receipts.",
+    "CSS and workbook leaf repair are independently recorded.",
+    "No runtime, backend, schema, Agent service/model or permission change."
+  ],
+  "remaining": [
+    "Final full engineering checks",
+    "Final full-App browser checks",
+    "Candidate and installed native verification"
+  ]
+}

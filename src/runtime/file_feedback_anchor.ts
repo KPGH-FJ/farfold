@@ -15,16 +15,64 @@ export type TextRangeAnchor = {
   endLine: number;
 };
 
-export type FileFeedbackAnchor = PdfPageAnchor | TextRangeAnchor;
+/** One cell or a whole merge in the workbook version saved with the opinion. */
+export type XlsxRangeAnchor = {
+  kind: "xlsx-range";
+  sheetId: string;
+  sheetName: string;
+  fromRow: number;
+  toRow: number;
+  fromColumn: number;
+  toColumn: number;
+};
+
+export type FileFeedbackAnchor =
+  PdfPageAnchor | TextRangeAnchor | XlsxRangeAnchor;
+
+function exactKeys(value: object, keys: readonly string[]): boolean {
+  const actual = Object.keys(value);
+  return (
+    actual.length === keys.length && actual.every((key) => keys.includes(key))
+  );
+}
+
+export function validXlsxRange(value: unknown): value is XlsxRangeAnchor {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const a = value as XlsxRangeAnchor;
+  return (
+    exactKeys(a, [
+      "kind",
+      "sheetId",
+      "sheetName",
+      "fromRow",
+      "toRow",
+      "fromColumn",
+      "toColumn",
+    ]) &&
+    a.kind === "xlsx-range" &&
+    typeof a.sheetId === "string" &&
+    a.sheetId.length > 0 &&
+    a.sheetId.length <= 4096 &&
+    typeof a.sheetName === "string" &&
+    a.sheetName.length > 0 &&
+    a.sheetName.length <= 128 &&
+    [a.fromRow, a.toRow, a.fromColumn, a.toColumn].every(
+      Number.isSafeInteger,
+    ) &&
+    a.fromRow >= 1 &&
+    a.toRow >= a.fromRow &&
+    a.toRow <= 1_048_576 &&
+    a.fromColumn >= 1 &&
+    a.toColumn >= a.fromColumn &&
+    a.toColumn <= 16_384
+  );
+}
 
 export function validTextRange(value: unknown): value is TextRangeAnchor {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const a = value as TextRangeAnchor;
   return (
-    Object.keys(a).length === 5 &&
-    Object.keys(a).every((key) =>
-      ["kind", "byteStart", "byteEnd", "startLine", "endLine"].includes(key),
-    ) &&
+    exactKeys(a, ["kind", "byteStart", "byteEnd", "startLine", "endLine"]) &&
     a.kind === "text-range" &&
     [a.byteStart, a.byteEnd, a.startLine, a.endLine].every(
       Number.isSafeInteger,
@@ -92,10 +140,9 @@ export function parseFeedbackAnchor(
   )
     throw new Error("invalid feedback anchor");
   if (validTextRange(value)) return { ...value };
+  if (validXlsxRange(value)) return { ...value };
   if (
-    Object.keys(anchor).some(
-      (key) => !["kind", "page", "pageCount"].includes(key),
-    ) ||
+    !exactKeys(anchor, ["kind", "page", "pageCount"]) ||
     anchor.kind !== "pdf-page" ||
     !validPdfPage(anchor.page, anchor.pageCount)
   )

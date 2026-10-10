@@ -1,0 +1,159 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx (29 tests | 11 failed) 3760ms
+   × interaction blocking preserves the loaded grid and ready state without another read 141ms
+   × blocking retires the source and unblocking creates only a fresh candidate for the same cell 119ms
+   × a queued cell action cannot change the blocked display 189ms
+   × a queued sheet action cannot change the blocked display 157ms
+   × a queued window action cannot change the blocked display 229ms
+   × a queued hidden action cannot change the blocked display 174ms
+   × a queued detail action cannot change the blocked display 172ms
+   × a queued address action cannot change the blocked display 194ms
+   × a queued jump action cannot change the blocked display 136ms
+   × blocking an in-progress parse does not pause or restart it 1ms
+   × a queued retry remains inert until an explicit unblocked action 37ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > interaction blocking preserves the loaded grid and ready state without another read
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:460:31
+    458|   const blocked = view();
+    459|   const section = blocked.all.find((n) => n.type === "section")!;
+    460|   expect(section.props.inert).toBe(true);
+       |                               ^
+    461|   expect(section.props["aria-busy"]).toBe(false);
+    462|   expect(blocked.html).toContain('data-cell="B1"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > blocking retires the source and unblocking creates only a fresh candidate for the same cell
+AssertionError: expected last "vi.fn()" call to have been called with [ { …(2) } ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  [
+    {
+-     "available": false,
++     "available": true,
+      "source": {
+        "file": {
+          "name": "positions.xlsx",
+          "path": "/work/positions.xlsx",
+          "resolvedPath": "/work/positions.xlsx",
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:483:44
+    481|   props = { ...props, interactionBlocked: true };
+    482|   view();
+    483|   expect(props.onOfficeTargetAvailability).toHaveBeenLastCalledWith({
+       |                                            ^
+    484|     source,
+    485|     available: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued cell action cannot change the blocked display
+AssertionError: expected '单元格 B1' to be '单元格 A1' // Object.is equality
+
+Expected: "单元格 A1"
+Received: "单元格 B1"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:548:74
+    546|     await drain();
+    547|     const blocked = view();
+    548|     expect(blocked.all.find((n) => n.type === "strong")?.props.childre…
+       |                                                                          ^
+    549|       S.selected("A1"),
+    550|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued sheet action cannot change the blocked display
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued window action cannot change the blocked display
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued hidden action cannot change the blocked display
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued detail action cannot change the blocked display
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued jump action cannot change the blocked display
+AssertionError: expected undefined to be '单元格 A1' // Object.is equality
+
+- Expected:
+"单元格 A1"
+
++ Received:
+undefined
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:548:74
+    546|     await drain();
+    547|     const blocked = view();
+    548|     expect(blocked.all.find((n) => n.type === "strong")?.props.childre…
+       |                                                                          ^
+    549|       S.selected("A1"),
+    550|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued address action cannot change the blocked display
+AssertionError: expected 'C201' to be 'B101' // Object.is equality
+
+Expected: "B101"
+Received: "C201"
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:564:7
+    562|         (n) => n.type === "input" && n.props["aria-label"] === S.addre…
+    563|       )!.props.value,
+    564|     ).toBe("B101");
+       |       ^
+    565|     expect(h.capture).toHaveBeenCalledTimes(reads);
+    566|     expect(h.parse).toHaveBeenCalledTimes(parses);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > blocking an in-progress parse does not pause or restart it
+AssertionError: expected [ 'loading', 'paused' ] to deeply equal [ 'loading', 'ready' ]
+
+- Expected
++ Received
+
+  [
+    "loading",
+-   "ready",
++   "paused",
+  ]
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:593:61
+    591|   view();
+    592|   const blocked = view();
+    593|   expect(onStatus.mock.calls.map(([value]) => value.state)).toEqual([
+       |                                                             ^
+    594|     "loading",
+    595|     "ready",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a queued retry remains inert until an explicit unblocked action
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:611:21
+    609|   click(oldRetry);
+    610|   await ready();
+    611|   expect(h.capture).toHaveBeenCalledOnce();
+       |                     ^
+    612|   props = { ...props, interactionBlocked: false };
+    613|   click(button(view(), S.retry));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 18 passed (29)
+   Start at  07:48:11
+   Duration  3.92s (transform 72ms, setup 0ms, import 102ms, tests 3.76s, environment 0ms)
+

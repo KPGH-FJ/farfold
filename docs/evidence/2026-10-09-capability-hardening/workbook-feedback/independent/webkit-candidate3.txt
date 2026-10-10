@@ -1,0 +1,1 @@
+{"passed":true,"sourceUnchanged":true,"cases":[{"file":"positions-v1.xlsx","pass":32},{"file":"positions-v1-nonordinal-ids.xlsx","pass":32},{"file":"positions-v2.xlsx","pass":32}]}

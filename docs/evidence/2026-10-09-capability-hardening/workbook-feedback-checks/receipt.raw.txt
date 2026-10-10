@@ -1,0 +1,95 @@
+{
+  "checkedAtUtc": "2026-10-09T23:35:31.994133+00:00",
+  "sourceBase": "43274e1cc598eff3150198c17da5606bcf66c5c9",
+  "inputCount": 1128,
+  "sourceStable": true,
+  "formatDeferredUntilEvidenceFreeze": true,
+  "changedInputsFromPreviousCheck": [
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1-nonordinal-ids.xlsx",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1.xlsx",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v2.xlsx",
+    "src/components/OpenedFileView.test.tsx",
+    "src/components/OpenedFileView.tsx",
+    "src/components/OpenedFileView.workbook-feedback.test.tsx",
+    "src/components/WorkbookFilePreview.feedback.test.tsx",
+    "src/components/WorkbookFilePreview.tsx",
+    "src/runtime/feedback_strings.ts",
+    "src/runtime/file_feedback_anchor.ts",
+    "src/runtime/file_feedback_anchor.workbook.test.ts",
+    "src/runtime/office_feedback_target.ts",
+    "src/runtime/workbook_feedback_persistence.test.ts",
+    "src/runtime/workbook_feedback_target.test.ts",
+    "src/runtime/workbook_feedback_target.ts",
+    "src/runtime/workbook_strings.ts",
+    "src/runtime/xlsx_sheet.ts",
+    "src/runtime/xlsx_writer_compatibility.test.ts"
+  ],
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "exitCode": 0,
+      "seconds": 34.385,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks/frontend.txt",
+      "sha256": "4cae61c97883d01684315dbada0010a7076f3a00c704dc48f89b6ea7f4a48bfc",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "seconds": 19.469,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "exitCode": 0,
+      "seconds": 7.623,
+      "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks/build.txt",
+      "sha256": "edad39b440bf99f13acf299a04db851b2dbd093c7b16f4cc7f863466ad755760",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Four added XLSX frontend-only test files are explicitly frozen; they are not read by Rust checks."
+    },
+    {
+      "name": "clippy",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+      "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Four added XLSX frontend-only test files are explicitly frozen; they are not read by Rust checks."
+    },
+    {
+      "name": "rust",
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+      "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+      "executedNow": false,
+      "reason": "All previous Rust/config/shared fixture inputs exactly match. Four added XLSX frontend-only test files are explicitly frozen; they are not read by Rust checks."
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Frontend source and test checks rerun; identical Rust checks explicitly reused. Whole-repository formatting is deferred until concurrent evidence writers finish and is not included in allPassed here. No installed interaction or real Agent claim."
+}

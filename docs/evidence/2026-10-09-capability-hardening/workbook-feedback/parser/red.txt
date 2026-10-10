@@ -1,0 +1,124 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts (30 tests | 13 failed) 57ms
+     × reads all original sheets without modifying positions-v1.xlsx 17ms
+     × reads all original sheets without modifying positions-v2.xlsx 5ms
+     × reads all original sheets without modifying positions-v1-nonordinal-ids.xlsx 5ms
+     × accepts absent inline payload as an existing styled blank without inventing text 1ms
+     × keeps missing numeric formula results uncomputed <f>1+1</f><v/> 1ms
+     × rejects conflicting or unrepresented content <c t="inlineStr"><f>1+1</f></c> 1ms
+     × rejects conflicting or unrepresented content <c t="inlineStr"><f>1+1</f><is><t>x</t></is></c> 1ms
+     × rejects conflicting or unrepresented content <c><f>1+1</f><is><t>x</t></is></c> 1ms
+     × rejects conflicting or unrepresented content <c t="s"><f>1+1</f></c> 0ms
+     × rejects conflicting or unrepresented content <c t="inlineStr"><is>lost text</is></c> 0ms
+     × rejects unknown leaf/type structure <c><f>1+1</f><v><future>lost</future></v></c> 2ms
+     × rejects unknown leaf/type structure <c><f><future>lost</future></f></c> 0ms
+     × rejects unknown leaf/type structure <c t="future"><f>1+1</f></c> 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v1.xlsx
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v2.xlsx
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v1-nonordinal-ids.xlsx
+Error: invalid
+ ❯ readCell src/runtime/xlsx_sheet.ts:127:34
+    125|   }
+    126|   if (t === "inlineStr") {
+    127|     if (f || v || !inline) throw new XlsxError("invalid");
+       |                                  ^
+    128|     const rich = richText(inline, themes, warnings);
+    129|     result.type = "text";
+ ❯ parseSheet src/runtime/xlsx_sheet.ts:262:20
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:248:17
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:72:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty records preserve encoded meaning > accepts absent inline payload as an existing styled blank without inventing text
+Error: invalid
+ ❯ readCell src/runtime/xlsx_sheet.ts:127:34
+    125|   }
+    126|   if (t === "inlineStr") {
+    127|     if (f || v || !inline) throw new XlsxError("invalid");
+       |                                  ^
+    128|     const rich = richText(inline, themes, warnings);
+    129|     result.type = "text";
+ ❯ parseSheet src/runtime/xlsx_sheet.ts:262:20
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:248:17
+ ❯ cell src/runtime/xlsx_writer_compatibility.test.ts:57:10
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:128:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty records preserve encoded meaning > keeps missing numeric formula results uncomputed <f>1+1</f><v/>
+Error: invalid
+ ❯ decimal src/runtime/xlsx_xml.ts:62:11
+     60|     !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][+-]?\d+)?$/.test(raw)
+     61|   )
+     62|     throw new XlsxError("invalid");
+       |           ^
+     63|   const value = Number(raw);
+     64|   if (!Number.isFinite(value) || value < min || value > max)
+ ❯ readCell src/runtime/xlsx_sheet.ts:146:20
+ ❯ parseSheet src/runtime/xlsx_sheet.ts:262:20
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:248:17
+ ❯ cell src/runtime/xlsx_writer_compatibility.test.ts:57:10
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:154:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects conflicting or unrepresented content <c t="inlineStr"><f>1+1</f></c>
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects conflicting or unrepresented content <c t="inlineStr"><f>1+1</f><is><t>x</t></is></c>
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects conflicting or unrepresented content <c><f>1+1</f><is><t>x</t></is></c>
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects conflicting or unrepresented content <c t="s"><f>1+1</f></c>
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects conflicting or unrepresented content <c t="inlineStr"><is>lost text</is></c>
+AssertionError: expected function to throw an error, but it didn't
+ ❯ rejected src/runtime/xlsx_writer_compatibility.test.ts:60:27
+     58| }
+     59| function rejected(xml: string, code: "invalid" | "unsupported") {
+     60|   expect(() => cell(xml)).toThrowError(XlsxError);
+       |                           ^
+     61|   try {
+     62|     cell(xml);
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:212:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects unknown leaf/type structure <c><f>1+1</f><v><future>lost</future></v></c>
+AssertionError: expected 'invalid' to be 'unsupported' // Object.is equality
+
+Expected: "unsupported"
+Received: "invalid"
+
+ ❯ rejected src/runtime/xlsx_writer_compatibility.test.ts:64:39
+     62|     cell(xml);
+     63|   } catch (error) {
+     64|     expect((error as XlsxError).code).toBe(code);
+       |                                       ^
+     65|   }
+     66| }
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:221:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects unknown leaf/type structure <c><f><future>lost</future></f></c>
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > empty compatibility must not hide malformed cell structure > rejects unknown leaf/type structure <c t="future"><f>1+1</f></c>
+AssertionError: expected function to throw an error, but it didn't
+ ❯ rejected src/runtime/xlsx_writer_compatibility.test.ts:60:27
+     58| }
+     59| function rejected(xml: string, code: "invalid" | "unsupported") {
+     60|   expect(() => cell(xml)).toThrowError(XlsxError);
+       |                           ^
+     61|   try {
+     62|     cell(xml);
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:221:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 17 passed (30)
+   Start at  07:25:25
+   Duration  211ms (transform 53ms, setup 0ms, import 82ms, tests 57ms, environment 0ms)
+

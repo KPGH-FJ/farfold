@@ -1,0 +1,74 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base="docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent";
+const engine=process.argv[2]??"webkit", label=process.argv[3]??"first"; const candidate=process.argv[4]==="candidate";
+const oracle=JSON.parse(fs.readFileSync(base+"/../fixtures/oracle.json"));
+const inputs=(dir)=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(x=>x.isDirectory()?inputs(path.join(dir,x.name)):[path.join(dir,x.name)]);
+const paths=[...inputs("src"),base+"/fixture.tsx",base+"/index.html",base+"/capture-data.json",base+"/run.mjs"];
+const hashes=()=>Object.fromEntries(paths.map(p=>[p,createHash("sha256").update(fs.readFileSync(p)).digest("hex")]));
+const result={engine,label,candidate,at:new Date().toISOString(),before:hashes(),cases:[]};
+const browser=await (engine==="webkit"?webkit:chromium).launch({headless:true,executablePath:engine==="webkit"?path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh"):"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"});
+try {
+ for(const [file,viewport] of [["positions-v1.xlsx",{width:1280,height:820}],["positions-v1-nonordinal-ids.xlsx",{width:1280,height:820}],["positions-v2.xlsx",{width:900,height:620}]]) {
+  const item={file,viewport,checks:[],errors:[],blocked:[],metrics:[]}; result.cases.push(item);
+  const page=await browser.newPage({viewport});page.setDefaultTimeout(10000);
+  page.on("pageerror",e=>item.errors.push(String(e)));
+  await page.route("**/*",route=>{if(!route.request().url().startsWith("http://127.0.0.1:1464/")){item.blocked.push(route.request().url());return route.abort();}return route.continue();});
+  const check=(name,pass,detail)=>{item.checks.push({name,pass,detail});if(!pass)throw new Error(name);};
+  const feedback=()=>page.evaluate(()=>Object.values(window.fixture.feedback()));
+  const latest=async()=> (await feedback()).at(-1);
+  const select=async(address)=>{await page.locator(`[data-cell="${address}"] button`).click();await page.locator(".workbook-cell-detail").waitFor();};
+  const confirm=async(merge=false)=>{await page.getByRole("button",{name:merge?"对整个合并范围提意见":"对此单元格提意见",exact:true}).click();await page.getByLabel("补充给 Agent 的意见",{exact:true}).waitFor();};
+  const go=async(address)=>{await page.getByRole("textbox",{name:"单元格位置",exact:true}).fill(address);await page.getByRole("button",{name:"前往",exact:true}).click();};
+  const root=async(name)=>{const m=await page.evaluate(()=>window.fixture.metrics());item.metrics.push({name,...m});check(name+" root bounded",m.windowY===0&&m.elements[".app"].y===0&&m.elements.html.scrollHeight<=viewport.height,{windowY:m.windowY,appY:m.elements[".app"].y,height:m.elements.html.scrollHeight});};
+  try {
+   await page.goto(`http://127.0.0.1:1464/${base}/index.html?fixture=${file}&length=640`,{waitUntil:"networkidle"});
+   if(candidate) await page.addStyleTag({content:".workbook-preview { min-height:0; overflow:auto; }"});
+   await page.getByText("CONTROLLED_WORKBOOK_FEEDBACK",{exact:true}).first().click();
+   const original=await page.evaluate(()=>window.fixture.composer().text);
+   await page.getByRole("button",{name:"工作表样本",exact:true}).click();
+   await page.locator('[data-cell="A2"] button').waitFor();
+   const sheet=oracle[file].sheets.find(s=>s.state==="visible");
+   check("actual worker initial sheet ID",await page.getByLabel("工作表",{exact:true}).inputValue()===sheet.relationshipId);
+   check("0 remains numeric",(await page.locator('[data-cell="A2"] button').innerText()).trim()===sheet.cells.A2.rawValue);
+   check("false remains boolean",(await page.locator('[data-cell="B2"] button').innerText()).trim()===(sheet.cells.B2.rawValue==="1"?"TRUE":"FALSE"));
+   await page.locator('[data-cell="A2"] button').focus();await page.keyboard.press("Enter");
+   check("cell Enter focuses detail",await page.locator(".workbook-cell-detail").evaluate(e=>e===document.activeElement));
+   check("select alone leaves draft empty",(await feedback()).length===0);
+   await page.keyboard.press(engine==="webkit"?"Alt+Tab":"Tab");check("first platform navigation reaches close",await page.getByRole("button",{name:"收起单元格内容",exact:true}).evaluate(e=>e===document.activeElement),await page.evaluate(()=>document.activeElement.outerHTML));
+   await page.keyboard.press(engine==="webkit"?"Alt+Tab":"Tab");check("second platform navigation reaches explicit opinion",await page.getByRole("button",{name:"对此单元格提意见",exact:true}).evaluate(e=>e===document.activeElement),await page.evaluate(()=>document.activeElement.outerHTML));
+   await page.keyboard.press("Enter");await page.getByLabel("补充给 Agent 的意见",{exact:true}).waitFor();
+   check("keyboard explicit confirmation exact A2",JSON.stringify((await latest()).anchor)===JSON.stringify({kind:"xlsx-range",sheetId:sheet.relationshipId,sheetName:sheet.name,fromRow:2,toRow:2,fromColumn:1,toColumn:1}),await latest());
+   await page.getByLabel("补充给 Agent 的意见",{exact:true}).fill("保留受控意见文字，不自动发送。");
+   await root("opinion focused with long composer");
+   const previous=await latest();await select("B2");
+   check("same-window cell change does not retarget old opinion",JSON.stringify(await latest())===JSON.stringify(previous));
+   await confirm();check("explicit B2 preserves text",(await latest()).anchor.fromColumn===2&&(await latest()).text===previous.text);
+   for(const [address,expected] of [["C2","空单元格"],["D2","空单元格"],["E2","空单元格"],["F2","未保存计算结果"]]){
+    await select(address);const text=await page.locator(".workbook-cell-detail").innerText();check(address+" truthful encoded value",text.includes(expected),text);await confirm();check(address+" exact coordinate",(await latest()).anchor.fromColumn===address.charCodeAt(0)-64);
+   }
+   await go("X99");await select("X99");await confirm(true);
+   let a=(await latest()).anchor;const merge=sheet.merges[Object.keys(sheet.merges).find(k=>k.startsWith("X99:"))];
+   check("clipped merge keeps complete original rectangle",a.fromRow===merge.fromRow&&a.toRow===merge.toRow&&a.fromColumn===merge.fromColumn&&a.toColumn===merge.toColumn,a);
+   await go("W11");await select("W11");check("hidden anchor fragment has no opinion action",await page.getByRole("button",{name:"对整个合并范围提意见",exact:true}).count()===0);check("hidden anchor states limitation",(await page.locator(".workbook-cell-detail").innerText()).includes("起始单元格已隐藏"));
+   await page.getByLabel("显示隐藏行列",{exact:true}).check();await go("V10");await select("V10");await confirm(true);a=(await latest()).anchor;check("explicit hidden reveal uses full original V10 W12",a.fromRow===10&&a.toRow===12&&a.fromColumn===22&&a.toColumn===23,a);
+   for(const hidden of oracle[file].sheets.filter(s=>s.state!=="visible")){
+    await page.getByLabel("工作表",{exact:true}).selectOption(hidden.relationshipId);
+    await page.locator('[data-cell="A2"] button').waitFor();await select("A2");await confirm();a=(await latest()).anchor;
+    check("explicit "+hidden.state+" actual relationship",a.sheetId===hidden.relationshipId&&a.sheetName===hidden.name,a);
+   }
+   await root("hidden sheet opinion reachable");
+   await page.evaluate(()=>window.fixture.saveNow());
+   const saved=await page.evaluate(()=>window.fixture.parseSaved());check("strict cold parser accepts saved anchored draft",!!saved);
+   await page.locator(".artifact-feedback").getByRole("button",{name:"加入输入框",exact:true}).click();
+   const composer=await page.evaluate(()=>window.fixture.composer().text);check("take preserves original composer and moves exactly once",composer.startsWith(original+"\n\n")&&composer.split(previous.text).length===2&&(await feedback()).length===0);
+   check("no automatic send or external action",await page.evaluate(()=>!window.calls.some(x=>["session_prompt","session_send","file_delivery_open","file_delivery_reveal"].includes(x.cmd))));
+   await root("after take");
+   item.screenshot=`${base}/${engine}-${label}-${file.replace('.xlsx','')}.png`;await page.screenshot({path:item.screenshot});
+   check("no unexpected IPC",await page.evaluate(()=>window.unexpected.length===0),await page.evaluate(()=>window.unexpected));check("no page errors",item.errors.length===0,item.errors);
+  }catch(error){item.failure=String(error);item.body=await page.locator("body").innerText();item.calls=await page.evaluate(()=>window.calls);item.feedback=await feedback();await page.screenshot({path:`${base}/${engine}-${label}-${file.replace('.xlsx','')}-failure.png`});}
+  await page.close();
+ }
+}finally{await browser.close();result.after=hashes();result.sourceUnchanged=JSON.stringify(result.before)===JSON.stringify(result.after);result.passed=result.cases.every(x=>!x.failure);fs.writeFileSync(`${base}/${engine}-${label}.raw.txt`,JSON.stringify(result,null,2)+"\n");fs.writeFileSync(`${base}/${engine}-${label}.json`,JSON.stringify(result,null,2)+"\n");console.log(JSON.stringify({passed:result.passed,sourceUnchanged:result.sourceUnchanged,cases:result.cases.map(x=>({file:x.file,pass:x.checks.filter(c=>c.pass).length,failure:x.failure}))}));}

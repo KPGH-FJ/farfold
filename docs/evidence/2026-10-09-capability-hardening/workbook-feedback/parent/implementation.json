@@ -1,0 +1,38 @@
+{
+  "checkedAtUtc": "2026-10-09T23:35:24.234586+00:00",
+  "sourceBase": "43274e1cc598eff3150198c17da5606bcf66c5c9",
+  "scope": "XLSX parent-level precise-position feedback; no DOCX or arbitrary rectangular selection",
+  "sourceHashes": {
+    "src/components/OpenedFileView.tsx": "e5b28673e6015d7ae07136d7607edec87c106f0a99d1d38831758921b1779933",
+    "src/components/OpenedFileView.test.tsx": "5a0c076504d1fa1bc636dafa7556ba1596ae4b1dde4d58f860077a878ce2fba1",
+    "src/components/OpenedFileView.workbook-feedback.test.tsx": "ea274946fed06fee754e4736ade2c99500aec7da47f3b0150ca8b5273409a321"
+  },
+  "checks": {
+    "oldParent": "11 failed using exact committed old parent with new runtime/leaf integration; source restored in finally",
+    "firstCurrent": "9 passed; 2 failures from test-only nonexistent S.reload key",
+    "correctedCurrent": "11 passed after using existing S.refresh key",
+    "firstRelated": "116 passed /1 failed; old workbook routing assertion required absent feedback entry",
+    "finalRelated": "6 files /117 passed after old assertion now requires disabled until workbook read succeeds",
+    "typecheckExitCode": 0,
+    "ownedFormatExitCode": 0
+  },
+  "behavior": [
+    "Requires current successful child read, same file version and active original conversation",
+    "Candidates carry actual ephemeral source; seeing another cell does not rewrite saved target",
+    "Explicit confirm preserves opinion text and original version; stale or retired or mismatched sources cannot change it",
+    "Non-ready status, refresh, hide and owner change synchronously withdraw source",
+    "Automatic replacement waits for selected cell or open feedback; explicit refresh preserves earlier opinions",
+    "Whole-file reset removes coordinates only; adding to composer moves an exact opinion once without sending"
+  ],
+  "logs": {
+    "format.txt": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+    "parent-first.txt": "e8b58cf68ae3bb7729c0da4f7b1637a2e41379d16a020b5bb5da8980b42b3ac1",
+    "parent-red.txt": "24fdff63aa9ee8aac17978e8bb180ad0b1988ee63cf54c479e2604bd0219a948",
+    "parent-related-final.txt": "2f72a99646b5bea8aa07b22c141a8b2131f0e6f4c17f45ce673642aa2f03a955",
+    "parent-related.txt": "6e67f5b49ba1b9dda40f0c913712ef739e7faa07020bc73e7f5e5d42b261ddc9",
+    "parent-second.txt": "4a4eb08742fe90549efaa75e5fd5411a1609d52faa821473c9be6647631c79d9",
+    "typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+  },
+  "independentReview": "architecture read-only reviewed actual parent/leaf/status ownership plus the changed legacy assertion; full browser, engineering and native evidence remain separate",
+  "boundary": "Mocked IPC/component receipt callbacks and deterministic React-hook harness. Does not prove real Worker, native window or Agent effect."
+}

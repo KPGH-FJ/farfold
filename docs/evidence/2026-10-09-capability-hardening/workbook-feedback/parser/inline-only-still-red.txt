@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts (30 tests | 3 failed | 27 skipped) 23ms
+     × reads all original sheets without modifying positions-v1.xlsx 14ms
+     × reads all original sheets without modifying positions-v2.xlsx 4ms
+     × reads all original sheets without modifying positions-v1-nonordinal-ids.xlsx 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v1.xlsx
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v2.xlsx
+ FAIL  src/runtime/xlsx_writer_compatibility.test.ts > exact ordinary-writer workbook compatibility > reads all original sheets without modifying positions-v1-nonordinal-ids.xlsx
+Error: invalid
+ ❯ decimal src/runtime/xlsx_xml.ts:62:11
+     60|     !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][+-]?\d+)?$/.test(raw)
+     61|   )
+     62|     throw new XlsxError("invalid");
+       |           ^
+     63|   const value = Number(raw);
+     64|   if (!Number.isFinite(value) || value < min || value > max)
+ ❯ readCell src/runtime/xlsx_sheet.ts:147:20
+ ❯ parseSheet src/runtime/xlsx_sheet.ts:263:20
+ ❯ parseWorkbook src/runtime/xlsx_parse.ts:248:17
+ ❯ src/runtime/xlsx_writer_compatibility.test.ts:72:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 27 skipped (30)
+   Start at  07:25:44
+   Duration  149ms (transform 43ms, setup 0ms, import 64ms, tests 23ms, environment 0ms)
+

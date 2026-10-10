@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx (6 tests | 6 failed) 763ms
+   × A1 creates an explicit candidate without changing opinion first 170ms
+   × B1 creates an explicit candidate without changing opinion first 102ms
+   × C1 creates an explicit candidate without changing opinion first 100ms
+   × D1 creates an explicit candidate without changing opinion first 97ms
+   × a clipped merge confirms the entire original range 103ms
+   × a hidden original anchor cannot become feedback until explicitly shown 190ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > A1 creates an explicit candidate without changing opinion first
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > B1 creates an explicit candidate without changing opinion first
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > C1 creates an explicit candidate without changing opinion first
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > D1 creates an explicit candidate without changing opinion first
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected:
+[
+  ObjectContaining {
+    "available": true,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:170:44
+    168|   const v = select(address);
+    169|   expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    170|   expect(props.onOfficeTargetAvailability).toHaveBeenLastCalledWith(ex…
+       |                                            ^
+    171|   click(button(v, confirmLabel));
+    172|   expect(props.onOfficeTargetConfirm).toHaveBeenCalledExactlyOnceWith(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a clipped merge confirms the entire original range
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.feedback.test.tsx:144:13
+    142| }
+    143| function click(n: Element | undefined) {
+    144|   expect(n).toBeDefined();
+       |             ^
+    145|   expect(n!.props.disabled).not.toBe(true);
+    146|   (n!.props.onClick as () => void)();
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:181:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/WorkbookFilePreview.feedback.test.tsx > a hidden original anchor cannot become feedback until explicitly shown
+AssertionError: expected undefined to be defined
+ ❯ click src/components/WorkbookFilePreview.feedback.test.tsx:144:13
+    142| }
+    143| function click(n: Element | undefined) {
+    144|   expect(n).toBeDefined();
+       |             ^
+    145|   expect(n!.props.disabled).not.toBe(true);
+    146|   (n!.props.onClick as () => void)();
+ ❯ src/components/WorkbookFilePreview.feedback.test.tsx:194:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  07:25:09
+   Duration  921ms (transform 60ms, setup 0ms, import 92ms, tests 763ms, environment 0ms)
+

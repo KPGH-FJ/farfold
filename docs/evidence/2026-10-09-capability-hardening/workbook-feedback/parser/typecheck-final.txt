@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/OpenedFileView.workbook-feedback.test.tsx(377,11): error TS2339: Property 'reload' does not exist on type '{ readonly title: "文件"; readonly back: "返回文件与输出"; readonly loading: "正在打开文件…"; readonly failed: "未能打开文件，请检查位置后重试。"; readonly actionFailed: "文件操作未完成，请重新打开后再试。"; readonly paused: "此次打开已暂停。"; ... 21 more ...; readonly revisionNotices: { ...; }; }'.
+src/components/OpenedFileView.workbook-feedback.test.tsx(397,11): error TS2339: Property 'reload' does not exist on type '{ readonly title: "文件"; readonly back: "返回文件与输出"; readonly loading: "正在打开文件…"; readonly failed: "未能打开文件，请检查位置后重试。"; readonly actionFailed: "文件操作未完成，请重新打开后再试。"; readonly paused: "此次打开已暂停。"; ... 21 more ...; readonly revisionNotices: { ...; }; }'.
+ ELIFECYCLE  Command failed with exit code 1.

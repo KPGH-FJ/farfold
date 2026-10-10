@@ -27,6 +27,15 @@ import {
 } from "../runtime/text_feedback_range";
 import type { TextRangeAnchor } from "../runtime/file_feedback_anchor";
 import {
+  officeFeedbackSourceIsValid,
+  officeFeedbackTargetMatches,
+  retireOfficeFeedbackSource,
+  type OfficeFeedbackSource,
+  type OfficeTargetAvailability,
+  type OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
+import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
+import {
   readTextBlock,
   textBlockFailure,
   type TextBlockPreview as TextBlock,
@@ -237,25 +246,40 @@ export function OpenedFileView({
     identity: string;
     source: TextFeedbackSource;
   } | null>(null);
+  const officeSelection = useRef<{
+    identity: string;
+    source: OfficeFeedbackSource;
+  } | null>(null);
+  const clearOfficeSelection = () => {
+    if (officeSelection.current)
+      retireOfficeFeedbackSource(officeSelection.current.source);
+    officeSelection.current = null;
+  };
   const [sourceMode, setSourceMode] = useState<string | null>(null);
   if (readingOwner.current !== identity) {
     readingOwner.current = identity;
     readingPosition.current = null;
     textScroll.current = 0;
     textSelection.current = null;
+    clearOfficeSelection();
   }
   const [visualReadiness, setVisualReadiness] =
     useState<VisualPreviewReadiness | null>(null);
   const [officeStatus, setOfficeStatus] = useState<PreviewContentStatus | null>(
     null,
   );
+  const latestOfficeStatus = useRef(officeStatus);
   const reportOfficeStatus = (status: PreviewContentStatus) => {
     if (
       mounted.current &&
       currentProps.current.identity === identity &&
       latestView.current.file === status.file
-    )
+    ) {
+      latestOfficeStatus.current = status;
+      if (status.state !== "ready" || status.readInFlight)
+        clearOfficeSelection();
       setOfficeStatus(status);
+    }
   };
   const [blockStatus, setBlockStatus] = useState<PreviewContentStatus | null>(
     null,
@@ -308,6 +332,7 @@ export function OpenedFileView({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      clearOfficeSelection();
       operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
@@ -317,6 +342,7 @@ export function OpenedFileView({
   useLayoutEffect(() => {
     if (!active) {
       textSelection.current = null;
+      clearOfficeSelection();
       const refreshing = operation.current?.kind === "refresh";
       operation.current?.parser?.abort();
       operation.current = null;
@@ -355,6 +381,7 @@ export function OpenedFileView({
     };
     operation.current = owner;
     textSelection.current = null;
+    clearOfficeSelection();
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
@@ -627,7 +654,11 @@ export function OpenedFileView({
   const supportsFeedback =
     shown.text !== undefined ||
     Boolean(shown.block) ||
-    Boolean(file && visualFileKind(file.name));
+    Boolean(file && (visualFileKind(file.name) || isWorkbook(file)));
+  const officeReady = () =>
+    latestOfficeStatus.current?.file === latestView.current.file &&
+    latestOfficeStatus.current?.state === "ready" &&
+    !latestOfficeStatus.current.readInFlight;
   const hasRetainedFeedback = () => {
     const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
     return Boolean(saved.text || saved.anchor);
@@ -638,10 +669,13 @@ export function OpenedFileView({
     currentProps.current.identity === identity &&
     currentFeedback.current === feedbackOwner &&
     !operation.current &&
+    !latestView.current.pending &&
+    (!file || !isWorkbook(file) || officeReady()) &&
     !(shown.block && latestBlockStatus.current?.readInFlight) &&
     shown.phase === "ready" &&
     (shown.text !== undefined ||
       Boolean(shown.block) ||
+      (Boolean(file && isWorkbook(file)) && officeReady()) ||
       (latestReadiness.current?.source === shown.visual &&
         Boolean(latestReadiness.current?.location)) ||
       (supportsFeedback && hasRetainedFeedback())) &&
@@ -711,6 +745,59 @@ export function OpenedFileView({
     setFeedbackOpen(true);
     feedbackInput.current?.focus();
   };
+  const acceptsOfficeSource = (source: OfficeFeedbackSource) => {
+    const latest = latestView.current;
+    return (
+      mounted.current &&
+      currentProps.current.active &&
+      currentProps.current.identity === identity &&
+      latest.identity === identity &&
+      latest.phase === "ready" &&
+      !latest.pending &&
+      !operation.current &&
+      officeReady() &&
+      source.kind === "xlsx" &&
+      Boolean(
+        latest.file &&
+        isWorkbook(latest.file) &&
+        sameFile(latest.file, source.file),
+      ) &&
+      officeFeedbackSourceIsValid(source)
+    );
+  };
+  const reportOfficeSelection = ({
+    source,
+    available,
+  }: OfficeTargetAvailability) => {
+    if (!available) {
+      if (officeSelection.current?.source === source) clearOfficeSelection();
+    } else if (acceptsOfficeSource(source)) {
+      if (officeSelection.current?.source !== source) clearOfficeSelection();
+      officeSelection.current = { identity, source };
+    }
+  };
+  const confirmOfficeSelection = (value: OfficeTargetConfirmation) => {
+    if (
+      !canEditFeedback() ||
+      !acceptsOfficeSource(value.source) ||
+      officeSelection.current?.identity !== identity ||
+      officeSelection.current.source !== value.source ||
+      !officeFeedbackTargetMatches(value)
+    )
+      return;
+    const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
+    const { lineInput: _lineInput, ...retained } = saved;
+    fileFeedbackDrafts.update(threadKey, feedbackPath, {
+      ...retained,
+      contentId,
+      scope: "file",
+      selection: null,
+      anchor: value.anchor,
+    });
+    setFeedbackAdded(false);
+    setFeedbackOpen(true);
+    feedbackInput.current?.focus();
+  };
   const revisionNotice = useFileRevisionMonitor({
     identity,
     file: file && !isHtml(file) ? file : undefined,
@@ -738,7 +825,11 @@ export function OpenedFileView({
       )
         return "deferred";
       // Do not replace the text beneath an opinion the user is editing.
-      if (feedbackOpen || textSelection.current?.identity === identity)
+      if (
+        feedbackOpen ||
+        textSelection.current?.identity === identity ||
+        officeSelection.current?.identity === identity
+      )
         return "deferred";
       if (await load(next, true, valid)) return "applied";
       return valid() ? "failed" : "cancelled";
@@ -943,11 +1034,14 @@ export function OpenedFileView({
           key={`${identity}:${file.version}:${file.sha256}`}
           file={file}
           active={active}
+          interactionBlocked={Boolean(shown.pending)}
           readingPosition={readingPosition}
           prepared={
             shown.office?.kind === "workbook" ? shown.office : undefined
           }
           onStatus={reportOfficeStatus}
+          onOfficeTargetAvailability={reportOfficeSelection}
+          onOfficeTargetConfirm={confirmOfficeSelection}
         />
       )}
       {file && shown.phase === "ready" && isDocument(file) && (
@@ -1162,6 +1256,46 @@ export function OpenedFileView({
                 </>
               )}
               {shown.block && !feedback.anchor && <p>{T.feedback}</p>}
+            </div>
+          )}
+          {file && isWorkbook(file) && (
+            <div>
+              <p role="status">
+                {feedback.anchor?.kind === "xlsx-range"
+                  ? B.feedbackTarget(feedback.anchor)
+                  : F.fileTarget}
+              </p>
+              {feedback.anchor?.kind === "xlsx-range" && (
+                <>
+                  <p>{B.feedbackRetained}</p>
+                  <button
+                    type="button"
+                    className="btn btn-text"
+                    disabled={disabled || !canEditFeedback()}
+                    onClick={() => {
+                      if (!canEditFeedback()) return;
+                      const saved = fileFeedbackDrafts.read(
+                        threadKey,
+                        feedbackPath,
+                        contentId,
+                      );
+                      const {
+                        anchor: _anchor,
+                        lineInput: _lineInput,
+                        ...retained
+                      } = saved;
+                      fileFeedbackDrafts.update(threadKey, feedbackPath, {
+                        ...retained,
+                        contentId,
+                        scope: "file",
+                        selection: null,
+                      });
+                    }}
+                  >
+                    {F.wholeFile}
+                  </button>
+                </>
+              )}
             </div>
           )}
           <textarea

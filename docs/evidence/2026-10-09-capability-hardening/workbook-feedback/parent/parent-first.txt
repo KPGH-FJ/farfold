@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx (11 tests | 2 failed) 631ms
+   × defers automatic replacement while a cell candidate exists and retires it before explicit reread 58ms
+   × keeps old-version opinions across replacement and joins exact coordinates once without sending 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > defers automatic replacement while a cell candidate exists and retires it before explicit reread
+AssertionError: expected undefined to be defined
+ ❯ click src/components/OpenedFileView.workbook-feedback.test.tsx:144:20
+    142| function click(label: string) {
+    143|   const b = button(label);
+    144|   expect(b, label).toBeDefined();
+       |                    ^
+    145|   (b!.props.onClick as () => void)();
+    146| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:377:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/OpenedFileView.workbook-feedback.test.tsx > keeps old-version opinions across replacement and joins exact coordinates once without sending
+AssertionError: expected undefined to be defined
+ ❯ click src/components/OpenedFileView.workbook-feedback.test.tsx:144:20
+    142| function click(label: string) {
+    143|   const b = button(label);
+    144|   expect(b, label).toBeDefined();
+       |                    ^
+    145|   (b!.props.onClick as () => void)();
+    146| }
+ ❯ src/components/OpenedFileView.workbook-feedback.test.tsx:397:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  07:31:54
+   Duration  913ms (transform 130ms, setup 0ms, import 217ms, tests 631ms, environment 0ms)
+

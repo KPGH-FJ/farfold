@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/generate.py", line 185, in <module>
+    main()
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/generate.py", line 153, in main
+    assert first["sheets"][0]["cells"] == first["sheets"][1]["cells"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,4 +1,6 @@
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
+import type { XlsxRangeAnchor } from "./file_feedback_anchor";
+import { cellAddress } from "./workbook_view";
 import { XlsxError, type XLSX_WARNING_CODES } from "./xlsx_types";
 
 export const WORKBOOK_STRINGS = {
@@ -26,6 +28,15 @@ export const WORKBOOK_STRINGS = {
   warnings: "预览范围说明",
   detail: "单元格内容",
   closeDetail: "收起单元格内容",
+  feedbackCell: "对此单元格提意见",
+  feedbackMerge: "对整个合并范围提意见",
+  feedbackTarget: (anchor: XlsxRangeAnchor) => {
+    const first = cellAddress(anchor.fromRow, anchor.fromColumn);
+    const last = cellAddress(anchor.toRow, anchor.toColumn);
+    return `意见针对工作表“${anchor.sheetName}”的 ${first === last ? first : `${first}:${last}`}`;
+  },
+  feedbackRetained:
+    "意见保留当时的工作表、位置和文件版本；查看其他单元格不会改变目标，明确提意见才更换。",
   value: "保存的值",
   formatted: "显示值",
   formula: "公式",

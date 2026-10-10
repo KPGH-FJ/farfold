@@ -1,0 +1,11 @@
+{
+  "ownedServerPid": 23228,
+  "ownedServerCommand": "node docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/serve.mjs",
+  "port": 1464,
+  "action": "Single SIGTERM after all owned browser runs completed; no other process targeted",
+  "serverToolSession": 26254,
+  "serverToolExitCode": 143,
+  "pidAbsent": true,
+  "portHasNoListener": true,
+  "browsers": "Every runner awaited its own browser.close() in finally; no global browser/process cleanup used."
+}

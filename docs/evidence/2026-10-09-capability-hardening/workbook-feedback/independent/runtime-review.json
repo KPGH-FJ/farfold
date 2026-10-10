@@ -1,0 +1,66 @@
+{
+  "kind": "Independent read-only workbook target/runtime review",
+  "reviewer": "verification; not runtime author",
+  "at": "2026-10-09T23:37:48.270378+00:00",
+  "status": "completed_no_blocker_with_browser_pending",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/implementation.json",
+    "sha256": "0e1b2e2ad8f461d015940ed0f6130a3b1a20c6751650ef15f2c1a96a95953de4",
+    "bytes": 12743
+  },
+  "sources": [
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "d65651a08b796fed361fb553166195d7d32c27ec95b004bf20427dd941d91cc7",
+      "bytes": 7621
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "f170eea47a4f60419f9ddb3cece6ede46866658366238c2abcf6f16b4c0b4532",
+      "bytes": 1145
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "493790dea2c2798567eec2e7f967b8b4184061b6e214ac9a940ff6759a2e8286",
+      "bytes": 4364
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "ddb59fcba2f1e3cf4534d733b4bc15233081744f98c4970501d8fd27d930a9b4",
+      "bytes": 3268
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.workbook.test.ts",
+      "sha256": "887a6ae948e426e2fc10606440c8fe404256c4cb23741442ea4ad5a152e06c19",
+      "bytes": 4155
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.test.ts",
+      "sha256": "4f5d1e955ddcd5d229c19a6977729f14206fa3ab171dbe004d5bc6e875613a9a",
+      "bytes": 10484
+    },
+    {
+      "path": "src/runtime/workbook_feedback_persistence.test.ts",
+      "sha256": "08c29c890f191b74043b6962df3a036ce17b38184c405a07fe5c7a43b7d0a30e",
+      "bytes": 6302
+    }
+  ],
+  "checked": [
+    "Source registration retains capture/preview/window/position relationships; copied/unregistered and retired source objects cannot yield a target. Factory does not authenticate disk I/O by itself.",
+    "Merge coordinates use full original merge rectangle and actual original cell identity, not visible clipped rectangle; hidden original anchor is rejected unless rows/columns explicitly shown.",
+    "Hidden worksheet permission is separate from hidden rows/columns. Production leaf accepts explicit selected or identity-verified restored hidden sheet.",
+    "Target is recomputed on confirmation; file seven-field identity, worksheet object, merge/cell references, window membership and saved anchor all remain checked.",
+    "Closed union requires exact keys and safe integer bounds; context additionally requires whole-file scope, null legacy selection, no lineInput and syntactically valid versioned disk identity.",
+    "Cold stored anchors retain historical coordinates only; formatter labels position not rechecked, includes stored SHA and does not fabricate worksheet content.",
+    "Reviewed cold restore/future field/save failure/take preservation tests and their actual logs; no independent rerun of author suite."
+  ],
+  "boundary": [
+    "Author 195 passing tests are reported as reviewed author evidence, not my test execution.",
+    "Factory cannot prove capture bytes/parser provenance against arbitrary in-process callers; production capture/parse ownership and current UI gates provide that relationship.",
+    "Actual full App/Worker browser checks are recorded separately under independent/. No installed UI, real disk read, Agent or user-data work is claimed here."
+  ],
+  "pending": [
+    "Full App browser ownership, layout, refresh and keyboard behavior",
+    "Later installed-product verification"
+  ]
+}

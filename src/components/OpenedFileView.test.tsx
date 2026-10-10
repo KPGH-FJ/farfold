@@ -421,7 +421,8 @@ it("routes a verified workbook to its snapshot preview and refreshes to the new 
   expect(h.readText).not.toHaveBeenCalled();
   expect(h.readVisual).not.toHaveBeenCalled();
   expect(h.open).not.toHaveBeenCalled();
-  expect(button(S.feedback)).toBeUndefined();
+  // The snapshot child has not yet reported a successful workbook read.
+  expect(button(S.feedback)?.props.disabled).toBe(true);
   h.inspectLink.mockResolvedValueOnce({
     ...file,
     version: "v2",
