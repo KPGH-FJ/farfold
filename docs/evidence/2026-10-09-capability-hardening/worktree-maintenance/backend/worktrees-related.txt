@@ -1,0 +1,149 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.21s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 41 tests
+test worktrees::git::tests::child_exit_with_live_output_holder_is_not_success ... ok
+
+thread 'worktrees::git::unwind_reaps_owned_process_before_directory_permit_can_drop' (23431309) panicked at src/worktrees/git.rs:307:9:
+controlled process-owner unwind
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::git::unwind_reaps_owned_process_before_directory_permit_can_drop ... ok
+test worktrees::git::tests::fast_stderr_over_limit_cannot_be_success ... ok
+test worktrees::manager::tests::cancellation_before_prepare_retires_the_exact_fresh_id_with_a_confirmed_no_start_receipt ... ok
+test worktrees::checkout_boundary_tests::private_object_read_cannot_lazy_fetch_a_missing_target_from_new_source_promisor_config ... ok
+test worktrees::config_compatibility_tests::explicit_disabled_sparse_checkout_is_not_an_enabled_sparse_profile ... ok
+test worktrees::checkout_boundary_tests::add_after_preflight_cannot_lazy_fetch_from_mutated_source_configuration ... ok
+test worktrees::checkout_boundary_tests::literal_filter_sentinel_names_cannot_silently_skip_a_real_registered_transform ... ok
+test worktrees::manager::tests::explicit_storage_recovery_retries_only_metadata_and_never_creates_a_directory ... ok
+test worktrees::checkout_boundary_tests::checkout_after_info_filter_mutation_uses_captured_attributes_without_executing_helper ... ok
+test worktrees::checkout_boundary_tests::captured_global_info_and_tree_attributes_preserve_precedence_and_path_escaping ... ok
+
+running 1 test
+test worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 0.01s
+
+completed:worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes
+
+test worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes ... ok
+test worktrees::manager::tests::cold_unknown_can_be_reviewed_without_claiming_outcome_and_keeps_material_after_new_intent ... ok
+test worktrees::checkout_boundary_tests::linked_source_uses_common_info_attributes_for_materialization_and_filter_guard ... ok
+test worktrees::manager::tests::storage_failure_after_work_has_ended_allows_only_explicit_risk_confirmed_exit ... ok
+test worktrees::manager::tests::storage_failure_while_owned_work_is_in_flight_cannot_be_acknowledged_or_confirmed_away ... ok
+test worktrees::manager::tests::same_id_with_changed_input_and_cross_operation_never_reuses_authority ... ok
+test worktrees::config_compatibility_tests::official_boolean_aliases_preserve_checkout_and_do_not_reject_an_ordinary_repository ... ok
+test worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work ... ok
+test worktrees::recycle_tests::storage_version_one_migrates_read_only_and_version_two_does_not_omit_required_action ... ok
+test worktrees::manager::tests::real_git_completion_followed_by_storage_failure_keeps_files_and_can_recover_metadata_only ... ok
+test worktrees::recycle_tests::unreadable_storage_prepare_has_queryable_exact_failure_without_directory_io ... ok
+test worktrees::tests::adopt_existing_and_cold_recheck_require_same_os_and_git_identity ... ok
+
+running 1 test
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.25s
+
+completed:worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move
+
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+running 1 test
+test worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.28s
+
+
+thread 'worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable' (23433211) panicked at src/worktrees/recycle_tests.rs:523:25:
+controlled retirement owner unwind before any Git move
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+completed:worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable
+
+test worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable ... ok
+test worktrees::tests::branch_movement_after_precheck_never_executes_unchecked_filter ... ok
+
+running 1 test
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.53s
+
+completed:worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error
+
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+test worktrees::tests::existing_target_nested_path_in_use_branch_and_changed_ref_do_not_write ... ok
+
+running 1 test
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.59s
+
+completed:worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start
+
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+running 1 test
+test worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.86s
+
+completed:worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path
+
+test worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path ... ok
+test worktrees::tests::info_attribute_change_after_precheck_never_executes_configured_filter ... ok
+test worktrees::tests::prepared_cancel_never_creates_or_restarts_and_unknown_id_never_starts ... ok
+
+running 1 test
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 4.13s
+
+completed:worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action
+
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+test worktrees::tests::registered_unused_filter_is_allowed_but_effective_info_attribute_is_rejected_without_execution ... ok
+test worktrees::tests::selected_old_commit_filter_is_not_replaced_by_current_index_attributes ... ok
+
+running 1 test
+test worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.34s
+
+completed:worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved
+
+test worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved ... ok
+
+running 1 test
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... RECYCLE_WIRE {"label":"draftChanged","value":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"failed","settled":true,"cancelRequested":false,"code":"draftChanged"}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 3.80s
+
+completed:worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation
+
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+test worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved ... ok
+test worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook ... ok
+
+running 1 test
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... RECYCLE_WIRE {"label":"archiveInspection","value":{"inspectionId":"3c244aba-dcd4-4653-b7bf-bb71870bd917","action":"archive","recordId":"12345678-1234-4123-8123-123456789abc","revision":0,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","branch":"refs/heads/retained-fixture","blockers":[],"impact":{"conversations":1,"unsent":false},"material":{"entries":6,"bytes":56,"sha256":"d8cc9cc8d897178e68b5d98b562fc0e806d01defa3dd8efda814e7f2880dde69"},"draftBaseline":{"unsentWork":null,"agentSetup":null}}}
+RECYCLE_WIRE {"label":"archivePrepared","value":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"prepared","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}
+RECYCLE_WIRE {"label":"preparedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"unknown"}],"materials":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"prepared","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}}
+RECYCLE_WIRE {"label":"archiveRunning","value":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"running","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}
+RECYCLE_WIRE {"label":"archiveReady","value":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}
+RECYCLE_WIRE {"label":"archivedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"}],"materials":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}}
+RECYCLE_WIRE {"label":"coldList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"unknown"}],"materials":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"unknown","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"unknown"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","code":"recheckRequired"}}}
+RECYCLE_WIRE {"label":"checkedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":2,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"}],"materials":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":2,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}}
+RECYCLE_WIRE {"label":"restoreReady","value":{"kind":"operation","action":"restore","maintenanceActive":false,"operationId":"32345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"location":{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}
+RECYCLE_WIRE {"label":"restoredList","value":{"locations":[{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"}],"archives":[],"materials":[],"operation":{"kind":"operation","action":"restore","maintenanceActive":false,"operationId":"32345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"location":{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo","branch":"refs/heads/retained-fixture","headOid":"00c80a3bdaeac78fd053da4c94e259a309af84ed","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"}}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 4.79s
+
+completed:worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history
+
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+WORKTREE_WIRE:{"inspection":{"inspectionId":"3d5b665f-c202-4bc8-8800-acf3b05fc174","root":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","kind":"main","head":{"oid":"049e27408206e9e606afd2c6363fd42bd37e610d","branch":"refs/heads/main"},"trees":[{"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/main","locked":false}],"blockers":[]},"refs":{"refs":[{"ref":"refs/heads/main","oid":"049e27408206e9e606afd2c6363fd42bd37e610d","inUse":true}],"nextCursor":null},"prepared":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"12345678-1234-4123-8123-123456789abc","state":"prepared","settled":false,"cancelRequested":false,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created"},"ready":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"12345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","location":{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/wire-created","headOid":"049e27408206e9e606afd2c6363fd42bd37e610d","ownership":"created","availability":"verified"}},"list":{"locations":[{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/wire-created","headOid":"049e27408206e9e606afd2c6363fd42bd37e610d","ownership":"created","availability":"verified"}],"archives":[],"materials":[],"operation":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"12345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","location":{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/wire-created","headOid":"049e27408206e9e606afd2c6363fd42bd37e610d","ownership":"created","availability":"verified"}}},"unknown":{"kind":"unknownOperation","operationId":"ffffffff-ffff-4fff-8fff-ffffffffffff"},"linkedInspection":{"inspectionId":"c38a380c-a191-4c20-a1ff-9fe80b77a4f3","root":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","kind":"linked","head":{"oid":"049e27408206e9e606afd2c6363fd42bd37e610d","branch":"refs/heads/wire-created"},"trees":[{"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/main","locked":false},{"locationId":"12345678-1234-4123-8123-123456789abc","path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","branch":"refs/heads/wire-created","locked":false}],"blockers":[]},"beforeAcknowledge":{"locations":[{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/wire-created","headOid":"049e27408206e9e606afd2c6363fd42bd37e610d","ownership":"created","availability":"unknown"}],"archives":[],"materials":[],"operation":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"42345678-1234-4123-8123-123456789abc","state":"unknown","settled":true,"cancelRequested":false,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-unresolved","code":"recheckRequired"}},"acknowledged":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"42345678-1234-4123-8123-123456789abc","state":"unknown","settled":true,"cancelRequested":false,"reviewed":true,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-unresolved","code":"recheckRequired"},"materialList":{"locations":[{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-created","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo","branch":"refs/heads/wire-created","headOid":"049e27408206e9e606afd2c6363fd42bd37e610d","ownership":"created","availability":"unknown"}],"archives":[],"materials":[{"operationId":"42345678-1234-4123-8123-123456789abc","path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-unresolved","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/repo"}],"operation":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"42345678-1234-4123-8123-123456789abc","state":"unknown","settled":true,"cancelRequested":false,"reviewed":true,"targetPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpBzuCRT/wire-unresolved","code":"recheckRequired"}},"failed":{"kind":"operation","action":"create","maintenanceActive":false,"operationId":"52345678-1234-4123-8123-123456789abc","state":"failed","settled":true,"cancelRequested":false,"code":"targetExists"}}
+test worktrees::wire_tests::actual_worktree_wire_and_linked_source_material_root ... ok
+
+test result: ok. 41 passed; 0 failed; 0 ignored; 0 measured; 1281 filtered out; finished in 9.03s
+

@@ -33,6 +33,56 @@ function text(value: unknown, limit = 4096): value is string {
   );
 }
 
+/** Presentation classification only. This never publishes task state or grants
+ * controls; those still require the separate backend-validated event below. */
+export function isKnownAsyncTaskUpdate(
+  thread: ThreadState,
+  value: unknown,
+  envelope: unknown,
+): boolean {
+  const declared = thread.asyncTasks;
+  if (
+    !declared?.supported ||
+    thread.connectionLost ||
+    thread.reconnecting ||
+    thread.openError ||
+    !text(thread.connectionId) ||
+    declared.connectionId !== thread.connectionId ||
+    declared.sessionId !== thread.nativeSessionId ||
+    !record(envelope) ||
+    envelope.sessionId !== thread.nativeSessionId ||
+    envelope.update !== value ||
+    !record(value)
+  )
+    return false;
+  // The official boundary bounds UTF-8 bytes. Reuse the shared shape/text
+  // guards, and keep overlong multibyte fields in the unknown presentation.
+  const wireText = (v: unknown, limit = 4096) =>
+    text(v, limit) && new TextEncoder().encode(v).byteLength <= limit;
+  if (
+    !wireText(value.asyncTaskId) ||
+    !(
+      value.toolCallId === undefined ||
+      value.toolCallId === null ||
+      wireText(value.toolCallId)
+    )
+  )
+    return false;
+  if (value.sessionUpdate === "async_task_spawned")
+    return (
+      wireText(value.name) &&
+      wireText(value.taskType, 128) &&
+      typeof value.canStop === "boolean" &&
+      (value.showInTranscript === undefined ||
+        typeof value.showInTranscript === "boolean")
+    );
+  return (
+    value.sessionUpdate === "async_task_state_update" &&
+    typeof value.state === "string" &&
+    ["completed", "failed", "stopped"].includes(value.state)
+  );
+}
+
 /** Only the backend's live owner-checked event grants controls; raw replay never does. */
 export function receiveAsyncTasks(
   thread: ThreadState,

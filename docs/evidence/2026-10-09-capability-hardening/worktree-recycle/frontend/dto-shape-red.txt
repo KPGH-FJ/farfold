@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recycle_types.test.ts (5 tests | 1 failed) 6ms
+   × rejects owned-looking archives made from existing/unknown materials or ambiguous paths 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_recycle_types.test.ts > rejects owned-looking archives made from existing/unknown materials or ambiguous paths
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/worktree_recycle_types.test.ts:62:45
+     60|     { ...archive, availability: { toString: () => "verified" } },
+     61|   ])
+     62|     expect(() => parseWorktreeArchive(bad)).toThrow();
+       |                                             ^
+     63| });
+     64| it("rejects sparse/unknown/bad baseline/unsafe count metadata without …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  14:16:46
+   Duration  110ms (transform 23ms, setup 0ms, import 30ms, tests 6ms, environment 0ms)
+

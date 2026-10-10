@@ -1,0 +1,22 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: method `original_location` is never used
+  --> src/worktrees/recycle_types.rs:32:19
+   |
+31 | impl Archive {
+   | ------------ method in this implementation
+32 |     pub(super) fn original_location(&self) -> Location {
+   |                   ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.31s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 3 tests
+test meta_store::worktree_maintenance::tests::baseline_mismatch_and_permanent_clear_seal_never_become_writable ... ok
+test meta_store::worktree_maintenance::tests::maintenance_seal_rejects_late_writes_and_keeps_dedicated_cas_available ... ok
+test meta_store::worktree_maintenance::tests::private_window_restores_seal_after_error_and_unwind_before_unlock ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1302 filtered out; finished in 0.01s
+

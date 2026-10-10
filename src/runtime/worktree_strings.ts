@@ -1,5 +1,42 @@
 export const WORKTREE_STRINGS = {
   title: "工作树",
+  reopen: "查看工作树操作",
+  archive: "归档并保留文件",
+  restore: "恢复原位置",
+  archived: "已归档的工作树",
+  checkArchive: "核对位置",
+  archiveUnconfirmed: "位置尚未确认，请先核对。核对不会移动文件。",
+  archivedNote: "此工作树已归档。恢复原位置并核查后才能使用。",
+  recycleBlocked: "仍有需要处理的内容或活动，请先查看原因。",
+  recycleReview: "确认影响",
+  recycleOriginal: "原位置",
+  recycleRetained: "保留位置",
+  recycleNote:
+    "归档会移动工作文件并保留未提交和被忽略的内容；对话和原工作位置记录不会改变。这不是独立备份。",
+  recycleResultNote: "归档与恢复不会更改草稿或自动发送。原工作位置记录保持。",
+  restoreNote: "只恢复到原位置，不覆盖已有文件夹，也不会更改草稿或自动发送。",
+  externalStopped: "我已停止其他程序使用这个工作树",
+  externalNote:
+    "Farfold 无法阻止其他程序继续修改文件；如果仍在使用，请先取消。",
+  recycleCancel: "取消此次确认",
+  recycleRetry: "重新检查影响",
+  recyclePreparing: "正在准备文件维护…",
+  recycleRunning: "正在处理工作文件…",
+  recycleCancelled: "此次文件维护已取消，请核查实际位置。",
+  recycleFailed: "未完成此次文件维护，请查看原因。",
+  recycleUnknown:
+    "实际位置尚未确认。原位置和保留位置均保留记录，请核查这次操作，不要重复移动或删除。",
+  recycleReviewNote:
+    "结果仍未确认。将保留原位置和保留位置的记录，不会删除、移动或重试。确认已查看后可继续其他操作，这不代表此前文件维护成功或已被撤销。",
+  archiveReady: "工作树已归档，文件保留在下方位置",
+  restoreReady: "已恢复原位置，尚未用于任何草稿",
+  recycleCancelRequest: "请求停止文件维护",
+  maintenanceHeld:
+    "工作文件维护期间，已暂停编辑和后续发送。核查实际结果后恢复编辑，不会自动续发。",
+  relatedConversations: (count: number) =>
+    `关联 ${count} 段对话；原工作位置记录保持。`,
+  materialSummary: (entries: number, bytes: number) =>
+    `已核查 ${entries} 项文件和目录、${bytes} 字节。`,
   location: "工作位置",
   ordinary: "选择已有文件夹",
   inspect: "选择仓库文件夹",
@@ -16,7 +53,8 @@ export const WORKTREE_STRINGS = {
   loading: "正在读取工作位置…",
   empty: "尚未加入工作树。也可以直接选择已有文件夹。",
   note: "工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。",
-  noSetup: "只创建文件，不运行项目脚本、不安装依赖、不复制未提交内容或秘密。",
+  noSetup:
+    "只创建已提交的文件，不运行项目脚本、不安装依赖，也不复制未提交或被忽略的内容。",
   delayed: "结果保留在此处。只有明确选择“使用此位置”才会更改当前草稿。",
   unavailable: "暂时无法核实工作树，请重新核查或选择已有文件夹。",
   unknown: "操作结果尚未确认。请核查这次操作，不要重复创建或删除已有材料。",
@@ -101,6 +139,20 @@ export const WORKTREE_STRINGS = {
     operationConflict: "这次操作的信息与原记录不同，请核查原操作后再继续。",
     recheckRequired: "使用前需要重新核查此位置。",
     alreadyKnown: "此位置已在清单中，请在已有工作树中选择。",
+    maintenanceBusy: "正在维护工作文件，请先核查这次操作。",
+    draftChanged: "未发送内容在检查后发生变化，请重新检查影响。",
+    unsentWork: "相关位置还有未发送内容，请先保留并处理。",
+    unknownDrafts: "未能核实未发送内容，请先恢复读取后再继续。",
+    notOwned: "此位置不属于由这里创建的工作树，不能通过这里归档。",
+    notLinked: "只能归档另行创建的工作树，不能移动仓库主目录。",
+    archived: "此工作树已归档，请从已归档清单恢复原位置。",
+    missingArchive: "没有找到保留的工作树，请核查原位置与保留位置。",
+    archiveParentChanged: "保留位置的父目录已变化，请重新检查。",
+    materialChanged: "工作文件在检查后发生变化，请重新检查。",
+    materialLimit: "工作文件超出当前核查范围，尚未移动。",
+    nestedRepository: "此目录中另有仓库，暂不能通过这里归档。",
+    specialFile: "此目录包含暂不能完整核查的文件，尚未移动。",
+    connectionUnconfirmed: "相关程序是否已结束尚未确认，请先处理其工作。",
   },
 } as const;
 export function worktreeErrorMessage(code: string): string {

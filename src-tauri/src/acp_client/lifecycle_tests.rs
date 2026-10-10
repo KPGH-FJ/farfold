@@ -65,6 +65,9 @@ mod account_scope_tests;
 #[path = "connection_isolation_tests.rs"]
 mod connection_isolation_tests;
 
+#[path = "directory_maintenance_tests.rs"]
+mod directory_maintenance_tests;
+
 struct Fixture {
     _dir: tempfile::TempDir,
     cwd: PathBuf,

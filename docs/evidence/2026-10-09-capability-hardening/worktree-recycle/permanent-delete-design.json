@@ -1,0 +1,245 @@
+{
+  "status": "read_only_proposed_contract_not_implementation_or_H15_completion",
+  "date": "2026-10-10",
+  "scope": "删除调查只读当前契约、源码、既有H15研究及官方Git文档；未执行Git命令、修改仓库、生成/删除夹具或操作App/Agent/账户。唯一删除设计文件为本JSON。并行归档恢复Rust仍由architecture实现，所列SHA仅阅读时点。",
+  "decision": "下一闭环是对已归档、重新核实的自有linked工作树，先制作并实际验证独立提交恢复材料，再由用户第二次明确确认删除工作文件。普通clean、ahead或无upstream对象均有可执行成功路径；脏/未跟踪/忽略材料、无法穷尽的私有提交根或活动未知对象明确阻挡。保留本地分支，不把从清单移除当删除。",
+  "currentFacts": [
+    "当前RecycleAction只有archive/restore；SavedArchive保存原created Location、root/gitDir/commonDir身份、原/保留父目录身份、双路径、material与index SHA，没有删除或提交恢复材料。",
+    "material_scan扫描有界：100000条目、总1GiB、单文件256MiB、64层；摘要包含inode/dev及内容，用来核同对象搬移。不能用此摘要比较新目录恢复结果，也不能把归档前后相等当clean。",
+    "verify_at要求另一位置不存在，精确Git登记/branch/HEAD/索引/材料相同。删除必须保留这些门禁再加clean及恢复证明，不让unknown/existing材料经过同名接入获取created权。",
+    "worktrees.begin在prepared后自动worktree_start，适合已一次明确确认的归档流程，不能直接接新的两阶段删除。管理面已在inert外，module持maintenance lease并按精确ID回执释放，可复用但不得由关闭面板释放。"
+  ],
+  "productInteraction": [
+    "已归档created行提供“删除工作文件…”；unknown/missing/changed行先“核对位置”，不得给可执行删除。原位置、保留位置、分支、关联历史影响清楚显示。恢复原位置与永久删除分别命名，取消仍保留原归档。",
+    "第一阶段“准备提交恢复副本”：读取影响，显示脏/未跟踪/忽略/锁/进程等具体阻挡；合格时明确授权生成本地恢复材料。该操作可以创建私有恢复文件，但绝不删除工作树。",
+    "生成并在独立空仓库实际恢复通过后，显示恢复副本位置/大小及“已验证本地恢复”；无upstream、ahead、远端未知用准确说明，不能显示已推送。摘要/完整OID/根范围放详情；恢复材料可能含已提交敏感内容，不承诺识别秘密。",
+    "第二阶段独立按钮“永久删除工作文件”：说明只删除当前保留位置的工作文件及对应Git工作树登记，分支、恢复副本、历史对话保留；确认外部使用已停止。此确认不越过任何硬阻挡，也不代表后台检查了所有同用户进程。",
+    "运行/未确认状态保持精确操作ID可达、查询与请求取消；晚到准备结果只可取消准备，关闭/重开面板、状态查询、重启不自动删除。取消派发后不说回滚或未开始。",
+    "完成后归档行转为有限的“提交恢复副本”记录，提供核验/显示位置及明确的恢复说明；不再提供搬回原目录。恢复到新目录必须另一次明确操作、目标不存在、核实际恢复且不自动Use/发送；若首片只提供手动Git恢复说明，须明示应用内恢复未实现，不把它算完整恢复交互。"
+  ],
+  "proposedApi": {
+    "classification": "以下均是待与下一阶段实现最终锁定的建议，不是当前已提供IPC。复用准确UUID、typed action与维护生命周期，不接收前端任意删除路径。",
+    "inspect": "worktree_remove_inspect({recordId,expectedRevision}) -> RemoveInspection{inspectionId,recordId,revision,originalPath,retainedPath,repositoryRoot,headOid,branch,blockers,impact,draftBaseline,material,commitRootsDigest,localTracking}；只有实际Archive和私有身份可产生票据。localTracking仅本地记录:noUpstream/ahead/localRecord/unknown，不承诺远端。",
+    "prepare": "worktree_remove_prepare({operationId,inspectionId,expectedDraftBaseline}) -> OperationReply(action=remove)；持久保存意图后取得当前维护许可、精确退役闲置连接、生成/验证恢复材料。phase区分exportingRecovery/verifyingRecovery/awaitingDelete；只有证明完整且持有maintenance时可prepared。此返回绝不触发UI自动start。",
+    "confirm": "worktree_start({operationId,expectedRecoveryId,expectedRecoverySha256}) 的remove分支只接受该prepared intent及第二次明确确认；create/archive旧参数行为不改。后端立刻重核完整票据、双路径、clean、根集合、分支、私有材料与恢复文件身份/hash、存储CAS。任何变动要求重新预览，不能偷偷采新值删除。",
+    "recoveryReceipt": "RecoveryReceipt{id,archiveId,archiveRevision,path,bytes,sha256,manifestSha256,rootsSha256,objectFormat,headOid,branch,verification:restoredInIndependentRepository}；完整root OID清单与内容manifest为该私有恢复目录的有界文件，仅摘要入meta_store；不是正文/事件账本。恢复副本与删除目标及其gitDir分离，禁止alternates依赖。",
+    "completion": "OperationReply继续准确ID/state/settled/cancelRequested/maintenanceActive；remove ready须有removed:{recordId,revision,originalPath,retainedPath,recoveryId}，不伪造location/archive verified。list增加有界recoveries记录，旧current intent覆盖后材料仍可找到。",
+    "recheck": "精确operationId或recordId+revision只读重核；预先持久dispatched记录＋目标/登记确切消失＋保留分支＋有效恢复材料＋CAS回读才可确认删除。仅notFound或退出0不充分；陌生同名目录绝不自动接入/删掉。",
+    "errors": "沿固定白名单增加dirtyTracked/untrackedMaterial/ignoredMaterial/unprovenPrivateCommits/recoveryLimit/recoveryInvalid/recoveryChanged等；未知码通用。失败保留材料，不能失败后force、rm-rf、prune、repair或自动重试。"
+  },
+  "deletionAdmission": [
+    "对象仅当前Archive记录的created linked；expectedRevision、原Location私有身份、保留目录与父目录no-follow、gitDir/commonDir、确切Git登记、branch和HEAD全部匹配。原路径出现另一个对象时首片拒绝，不接触该对象。",
+    "重用维护全局/metadata gate、原草稿基线CAS、队列暂停及独立UI lease；未发文本/队列/附件/意见、startup/load/prompt/approval/async tasks、文件读写/复制、已知或未知进程均挡删除。所有本应用相关空闲连接须确切退出；IPC取消/观察超时不等于子进程结束。",
+    "独立核tracked/index与HEAD、完整磁盘清单、untracked及ignored（含全局ignore、空目录）；不只默认git status。拒绝unmerged/intent-to-add、assume-unchanged或skip-worktree造成的不可证范围，或对其做同强度独立内容核验后才能支持。fsmonitor/外部diff/textconv关闭，不能运行clean/smudge脚本。",
+    "清洁证明应与独立恢复出的HEAD路径/类型/执行模式/内容manifest比较，不含inode/dev；可复用已核官方Git临时checkout的受控内置换行配置，但独立恢复仓库不可借源对象或配置。CRLF/受支持属性要正例；转换无法准确复原时针对该对象说明不支持而不按raw字节误称损坏。",
+    "用户锁、主仓库、submodule/嵌套仓库、特殊文件、symlink替换目标/父目录、浅克隆/缺对象/不可封闭对象依赖、未支持私有Git管理格式、进行中merge/rebase/bisect均阻挡。已提交普通symlink可作为link字节验证，不跟随目标；不把安全symlink与替换根路径混同。",
+    "先于remove持久化完整恢复材料及其回读；源Git命令只读，无fetch/push/远端账号/源临时refs。保留branch ref且不rewind/delete；删除前后核branch OID与恢复根，不通过保留分支替代独立恢复副本。"
+  ],
+  "recoveryPipeline": [
+    "在维护准入和双路径身份下，固定当前HEAD、当前树私有refs和私有HEAD/refs reflog所有old/new非零OID（不是只new tip）。限定已支持Git布局，准确定位该gitDir，不扫别的工作树或整个仓库历史；进行中操作拒绝，未知私有ref/reflog格式或无法穷尽根集合拒绝该对象。已过期且原本不可达的丢失日志不虚称恢复。",
+    "官方Git2.39源码将refs/worktree、refs/bisect、refs/rewritten归为当前工作树私有；后两类及进行中标记先阻挡，refs/worktree与已支持伪ref保留其提交根。不可把rev-list --reflog --single-worktree误当只含私有HEAD：仍须明确筛出范围，不打包全部共享refs或另一个工作树。原始reflog消息/用户身份不入公开证据或元数据库。",
+    "候选路线：将严格验证的commit OID逐行作为固定pack-objects --stdout --revs输入，导出其完整可达对象闭包到私有有界pack。禁止--thin/--filter/--local/--incremental/排除rev/缺对象忽略，源命令禁hooks、replace、自动维护、按需fetch；源ref和配置不写入。此命令路线本次仅查官方资料，必须下片以当前/usr/bin/git实跑确认。",
+    "第一份全新空bare（无alternates/promisor/源config、相同objectFormat、空template）index-pack导入；实际检查对象完整性及所有根。只在该临时bare创建恢复命名refs，再生成无prerequisite、无filter的完整bundle；不在用户repo写保护refs，不复制.git。",
+    "第二份独立空repo仅从最终bundle恢复，禁止读取源对象/临时pack；检查bundle header与全部命名根、实际unbundle/import、完整fsck（不能仅connectivity-only）、每个根OID/tree可达。实际checkout HEAD并对比内容manifest，同时验证私有reflog独有commit的树和预期文件；断开原对象访问仍须成功。",
+    "将bundle和manifest以独占创建方式写入单独0700恢复目录，文件0600；flush文件/父目录、回读完整SHA与no-follow身份，再持久保存RecoveryReceipt并回读CAS。存放位置不在将删除的worktree或其gitDir中；任何失败保留归档及可定位材料，不以磁盘空间不足降级。",
+    "对pack/bundle/解包大小、对象数、root数、历史深度、命令时间、stdout/stderr、内存/磁盘施加独立有界预算；不得把现4MiB诊断输出读取路径用于无限pack，也不得用max-pack-size假装限制总量。具体支持上限须实测后定，不从归档工作目录1GiB上限推断历史包大小。",
+    "成功核验后才呈现第二次删除确认；start前再次读取同一恢复文件及源根/索引/清洁清单。仅官方git worktree remove精确retainedPath，无force/unlock/branch-delete/prune/rm-rf。检查真正child与辅助进程回收后，核目标及登记消失、其他路径/branch/恢复材料保持，最后CAS保存完成。"
+  ],
+  "failureAndRecovery": [
+    "prepare前拒绝可以exact ID failed/settled；准备副本中取消只停止准备并保留原归档，明确可能留下已生成材料。prepared后关闭仅撤回删除许可并请求cancel；晚回执不能自动start。",
+    "remove已派发后取消、非零、超时、IPC丢失或最终CAS失败均不能声称取消成功/完整删除；保留双路径、删除派发事实、恢复副本及相关摘要，状态unknown并可精确重查。实际维护许可直到真正所有子进程reap与收口，不由前端unmount/settled推断。",
+    "重启不自动重放remove、不按路径猜完成；无法证明旧进程结束时不得因用户已查看未知而执行同对象的新删除。unknown acknowledgement只解说明流程，不授予处置权。",
+    "恢复副本核验或手动恢复说明不等于恢复原Git登记、文件扩展属性、全部refs/reflog、Agent历史或配置。永久删除后不能再伪称“移回原位置”；从bundle恢复是另一次明确创建，旧对话cwd不改。"
+  ],
+  "counterexamplesPlannedNotRun": [
+    {
+      "case": "clean-owned-no-upstream",
+      "expected": "普通自有已归档树、无远端正例：私有根闭包副本两次独立恢复成功，第二次确认后实际目录/登记消失，分支同OID，历史/草稿不变；不能仅全拒绝完成。"
+    },
+    {
+      "case": "ahead-and-stale-tracking",
+      "expected": "本地ahead>0及伪造已同步的旧tracking记录均不联网；准确提示远端未知，完整本地恢复证明后仍可明确删除，不宣称已推送。"
+    },
+    {
+      "case": "private-reflog-only-commit",
+      "expected": "临时自有树产生提交再reset/amend，使一独有commit只存HEAD reflog；bundle在完全不可访问源objects时仍恢复该commit及tree。只HEAD包须有效失败。"
+    },
+    {
+      "case": "private-ref-and-unknown-layout",
+      "expected": "refs/worktree自有ref独有commit成功保留；refs/bisect/rewritten进行中、未知伪ref或畸形reflog必须明确拒绝，不能跳过继续删除。"
+    },
+    {
+      "case": "dirty-staged-unstaged",
+      "expected": "分别staged、unstaged、删除文件、intent-to-add、unmerged：不派发remove，文件及index逐值保留；确认checkbox不能绕过。"
+    },
+    {
+      "case": "untracked-ignored",
+      "expected": "未跟踪文件/目录、ignored .env/全局ignore、空目录都列阻挡；Git默认clean不构成保护证据。"
+    },
+    {
+      "case": "stat-cache-and-conversions",
+      "expected": "assume-unchanged/skip-worktree、保mtime改字节、CRLF正例、受支持内置属性、禁止helper有哨兵；不得因缓存假clean，普通可复原CRLF不误报损坏。"
+    },
+    {
+      "case": "ownership-and-replacement",
+      "expected": "existing/unknown materials不能delete；原/保留/父目录同名替换、symlink、gitDir被prune-readd及分支漂移全部撤销票据，不碰替代对象。"
+    },
+    {
+      "case": "active-and-unknown-process",
+      "expected": "busy/idle未reap/async unknown/文件导出writer+IPC drop/晚spawn等挡remove；只有自己operation的maintenance false可释lease，旧回执不释新锁。"
+    },
+    {
+      "case": "draft-and-record-CAS",
+      "expected": "flush后draft发生变化、Archive revision更新、原位置出现新目录、已存旧意见/队列/附件指向两路径时拒绝，历史cwd和内容不改。"
+    },
+    {
+      "case": "bundle-not-self-contained",
+      "expected": "thin/incremental/prerequisite、alternates、坏blob、漏根、错误OID/format、只connectivity检查等不可得到可删证明；源对象不可访问时证明仍真。"
+    },
+    {
+      "case": "resource-and-storage",
+      "expected": "对象/字节/根数/深度/磁盘满/不可读/回读hash不一致/fsync或CAS失败全部不派发remove；源归档保留，partial副本可达且不冒充有效。"
+    },
+    {
+      "case": "cancel-and-crash-boundaries",
+      "expected": "各阶段barrier在intent存前后、pack中、prepared、remove派发前后、进程返回/最终CAS前后取消或重启；没有auto-start/replay/rollback，未知保留恢复路径。"
+    },
+    {
+      "case": "delete-while-closed-and-late-handler",
+      "expected": "准备后关窗、新管理owner、旧start回调、同ID异payload、同ID重复start：不删除新对象、不二次派发；真正明确确认的原操作结果仍可达。"
+    },
+    {
+      "case": "external-open-handle-race",
+      "expected": "自有受控进程在末次扫描后经已有fd改写/换目录，记录实际可观察拒绝/unknown及CLI竞态边界；绝不把0700、一次lsof、checkbox当全系统原子性证据。"
+    },
+    {
+      "case": "post-delete-independent-recovery",
+      "expected": "删除后在新独占目录仅用bundle恢复全部根/HEAD内容，原repo暂不可访问，其他worktree和branch不变；材料hash/位置与管理清单一致。"
+    }
+  ],
+  "constraintsNotToSilentlyRelax": [
+    "离线本地tracking记录不能证明远端当前保存提交。若把“保护未推送”解释成必须先确认远端，则无upstream/离线对象无法通过；已核完整本地提交副本＋明确二次删除是可行保护路线，不改称已推送。",
+    "只HEAD bundle不保护将随工作树私有管理目录消失的reflog/refs独有提交。root已明确要求一并保留；不能完整识别的具体Git布局/对象拒绝删除，普通可证明对象必须有成功路径。",
+    "GitCLI没有撤销同UID外部已打开fd的排他机制；0700/应用门禁不等于全系统文件隔离。若要求对恶意或不可确认外部并发绝对无损，当前公开机制不能满足，必须保留该未解决条件；不能用“已查看”或用户勾选伪造技术证明。",
+    "现归档摘要含inode，且bundle只含Git对象。恢复证明须独立内容清单和实际恢复；不声称复原文件xattr、任意本地配置、全部仓库历史或Agent资料。",
+    "恢复材料仍是本机副本，可能与源同一磁盘；不等于远程灾备，不保证释放净空间。永久删除与清单移除、归档搬回是三个不同动作。"
+  ],
+  "coordination": {
+    "root": "已同意两阶段明确删除、原分支不删、no-fetch/no源临时ref，并明确必须保私有HEAD reflog/refs独有提交。当前任务仅设计，尚未授权删除实现。",
+    "architecture": "已确认SavedArchive/material含inode且只适合同对象搬移；下一阶段需纯内容/模式/link manifest与独立bundle恢复。本JSON不抢当前phase1–3实现。",
+    "nextOwners": "下一阶段先backend封闭roots/export/recovery/remove与真实Git正反例；frontend单独prepare/confirm/管理材料及归属；independent核源对象不可访问的实际恢复和真实UI。当前安装/原归档浏览器证据不替代删除验收。"
+  },
+  "officialSources": [
+    {
+      "url": "https://git-scm.com/docs/git-worktree/2.39.0",
+      "supports": "linked remove、clean/lock限制、每工作树私有管理状态。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-bundle/2.38.0",
+      "supports": "命名ref与完整/有前置bundle的区别，不能裸OID冒充命名恢复根。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-status/2.39.0",
+      "supports": "ignored需显式选择，porcelain -z结构。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-ls-files/2.39.0",
+      "supports": "others/ignored/标准排除及空目录选项；默认状态不是全材料证明。"
+    },
+    {
+      "url": "https://git-scm.com/docs/gitrepository-layout/2.39.0",
+      "supports": "logs/HEAD与私有worktree管理目录、config.worktree；准确定位不复制.git。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/git/git/v2.39.5/refs.c",
+      "supports": "is_per_worktree_ref明确worktree/bisect/rewritten三个命名空间。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-rev-list/2.39.0",
+      "supports": "reflog根与single-worktree范围；不应未经筛选扩大成全仓备份。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/git/git/v2.39.5/Documentation/git-pack-objects.txt",
+      "supports": "固定OID经stdin --revs完整导出，thin/filter/exclusion不可充当完整闭包。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/git/git/v2.39.5/Documentation/git-index-pack.txt",
+      "supports": "空repo接收pack、strict和max-input-size；不用internal-only选项。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-fsck/2.39.0",
+      "supports": "完整对象验证与connectivity-only不读blob的差异。"
+    }
+  ],
+  "sourceRefsAtReadCheckpoint": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "386c7947e75a3d98d19dc2d86c5ff98c5ca6d9405007fe3ec44c095a2c467597"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "558c00788b5eae17765aed56491e6a803d567f80ba4e6c1dbaf2f0315eedc4e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/h15-followup-review.json",
+      "sha256": "a1eba28b869a680947d697dd4b2d238d3eed72f014fb31b8199138e468a61402"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/h15-ui-handoff.json",
+      "sha256": "8128b4dea09c71700435ea0abc840b99c51949af5f056f9c5e18c1472388e15b"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_types.rs",
+      "sha256": "c3fd75046287245b12e98c7cefa58668186f00e87d99dadf8c3a9a91a7dbc07c"
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "e6f9958ed812fa2fb4e3e6b59a999dadd6bae60db4d4e3353a067626c11a23b5"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle.rs",
+      "sha256": "71d23fa6c5a0a301cc4a204a6c3defa47310a02dcd3cfbb33ce3c7d0d71ff06e"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "240c8edc4a332af12b161fd8cb0489777ff2be101f7da4e34ec4890210713752"
+    },
+    {
+      "path": "src-tauri/src/worktrees/material_scan.rs",
+      "sha256": "a18a3f2c4cbba5fd2b332670281477cd5d0ea9e483348f555cdbf586b9918dcb"
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd"
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout.rs",
+      "sha256": "846d9ef41288a18c07f4c5a98a571667d8ca36777d3f04ba954d3e451ac8947d"
+    },
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "869dca0f5d4cf9123993ef4c4dfe150cc4fad6c58de3a0498ed4c85b8caf58e6"
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d"
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602"
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6"
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.tsx",
+      "sha256": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9"
+    }
+  ],
+  "notRun": "本调查没有删除、bundle、Git fixture或恢复命令实测；上文counterexamples全部为下片验收设计，不是通过报告。维护误报提示窄修另见frontend/maintenance-message/implementation.json，不混算删除实现。"
+}

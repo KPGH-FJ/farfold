@@ -1,0 +1,36 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this boolean expression can be simplified
+   --> src/worktrees/recycle_manager.rs:352:12
+    |
+352 |         if !i.maintenance.as_ref().is_some_and(|o| o.id == id) {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `i.maintenance.as_ref().is_none_or(|o| o.id != id)`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#nonminimal_bool
+    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/recycle_manager.rs:515:9
+    |
+515 | /         if saved_result.is_err() {
+516 | |             if let Some(o) = &mut i.doc.operation {
+517 | |                 o.status.state = "unknown".into();
+518 | |                 o.status.code = Some("storageUnknown".into());
+...   |
+523 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+515 ~         if saved_result.is_err()
+516 ~             && let Some(o) = &mut i.doc.operation {
+517 |                 o.status.state = "unknown".into();
+...
+521 |                 o.status.settled = true;
+522 ~             }
+    |
+
+error: could not compile `farfold` (lib) due to 2 previous errors

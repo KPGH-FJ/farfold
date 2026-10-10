@@ -1,5 +1,6 @@
 export const ASYNC_TASKS = {
   title: "后台任务",
+  update: "后台任务更新",
   stop: "停止任务",
   running: "仍在运行",
   requested: "正在请求停止…",

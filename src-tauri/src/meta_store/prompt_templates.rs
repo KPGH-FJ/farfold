@@ -299,6 +299,7 @@ mod tests {
             Connection::open_with_flags(&path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY).unwrap();
         let store = MetaStore {
             connection: Arc::new(Mutex::new(connection)),
+            maintenance: Arc::new(std::sync::atomic::AtomicU64::new(0)),
         };
         let TemplateWriteReceipt::Rejected { message: error } = store
             .save_prompt_templates(&first, &document("second"))

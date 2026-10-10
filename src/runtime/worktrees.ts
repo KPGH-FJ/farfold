@@ -1,5 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useSyncExternalStore } from "react";
+import { draftPersistence } from "./draft_storage";
+import { setupStorage } from "./setup_storage";
+import { threads } from "./sessions";
 import {
   WORKTREE_STRINGS as S,
   worktreeFailureMessage,
@@ -10,15 +13,21 @@ import {
   parseWorktreeLocation,
   parseWorktreeRefs,
   parseWorktreeReply,
+  parseWorktreeRecycleInspection,
   type WorktreeCreate,
   type WorktreeLocation,
   type WorktreeMaterial,
   type WorktreeReply,
+  type WorktreeArchive,
+  type WorktreeRecycleAction,
+  type WorktreeRecycleInspection,
 } from "./worktree_types";
 
 export type WorktreesSnapshot = Readonly<{
   locations: readonly WorktreeLocation[];
   materials: readonly WorktreeMaterial[];
+  archives: readonly WorktreeArchive[];
+  maintenanceLocked: boolean;
   ready: boolean;
   loading: boolean;
   working: boolean;
@@ -30,6 +39,8 @@ export type WorktreesSnapshot = Readonly<{
 let snapshot: WorktreesSnapshot = Object.freeze({
   locations: [],
   materials: [],
+  archives: [],
+  maintenanceLocked: false,
   ready: false,
   loading: false,
   working: false,
@@ -40,8 +51,81 @@ let snapshot: WorktreesSnapshot = Object.freeze({
 });
 const listeners = new Set<() => void>();
 let loading: Promise<void> | null = null;
-let intent: { id: string; allowStart: boolean; started: boolean } | null = null;
+let intent: {
+  id: string;
+  action: "create" | "adopt" | "archive" | "restore";
+  recycle?: WorktreeRecycleInspection;
+  allowStart: boolean;
+  started: boolean;
+} | null = null;
 let observation = 0;
+let maintenance: { id: string; release: () => void } | null = null;
+let poll: ReturnType<typeof setTimeout> | null = null;
+function validateIntent(reply: WorktreeReply, id: string) {
+  if (reply.kind !== "operation") return;
+  const expected = intent?.id === id ? intent : null;
+  const action =
+    expected?.action ??
+    (snapshot.operationId === id && snapshot.operation?.kind === "operation"
+      ? snapshot.operation.action
+      : null);
+  if (action && reply.action !== action) throw new Error(S.unknown);
+  const view = expected?.recycle;
+  if (!view) return;
+  if (
+    (reply.originalPath && reply.originalPath !== view.originalPath) ||
+    (reply.retainedPath && reply.retainedPath !== view.retainedPath)
+  )
+    throw new Error(S.unknown);
+  const result = reply.archive ?? reply.location;
+  if (
+    result &&
+    (result.id !== view.recordId ||
+      result.repositoryRoot !== view.repositoryRoot ||
+      result.headOid !== view.headOid ||
+      result.branch !== view.branch ||
+      result.ownership !== "created")
+  )
+    throw new Error(S.unknown);
+}
+function releaseMaintenance(id: string) {
+  if (maintenance?.id !== id) return;
+  const old = maintenance;
+  maintenance = null;
+  old.release();
+  if (!maintenance) publish({ maintenanceLocked: false });
+}
+function holdMaintenance(id: string) {
+  if (maintenance?.id === id) return;
+  if (maintenance) throw new Error(S.pending);
+  const owner = { id, release: () => {} };
+  maintenance = owner;
+  owner.release = draftPersistence.acquireInteractionLock();
+  publish({ maintenanceLocked: true });
+}
+function pollMaintenance() {
+  if (poll) clearTimeout(poll);
+  poll = null;
+  const op = snapshot.operation;
+  if (
+    op?.kind !== "operation" ||
+    !op.maintenanceActive ||
+    snapshot.uncertain ||
+    !["running", "cancelling"].includes(op.state)
+  )
+    return;
+  poll = setTimeout(() => {
+    poll = null;
+    if (snapshot.operationId !== op.operationId) return;
+    if (snapshot.working) {
+      pollMaintenance();
+      return;
+    }
+    void queryOperation("worktree_status", op.operationId).then(
+      pollMaintenance,
+    );
+  }, 750);
+}
 function publish(change: Partial<WorktreesSnapshot>) {
   snapshot = Object.freeze({ ...snapshot, ...change });
   for (const listener of listeners) listener();
@@ -83,6 +167,34 @@ function accept(reply: WorktreeReply, id: string, rechecked = false) {
       : {}),
     error: null,
   });
+  if (snapshot.operationId !== id || snapshot.operation !== reply) return;
+  if (reply.kind === "operation") {
+    if (reply.maintenanceActive) holdMaintenance(id);
+    else releaseMaintenance(id);
+    if (
+      reply.action === "archive" &&
+      reply.state === "ready" &&
+      reply.archive
+    ) {
+      const archive = reply.archive;
+      publish({
+        locations: Object.freeze(
+          snapshot.locations.filter((l) => l.id !== archive.id),
+        ),
+        archives: Object.freeze([
+          ...snapshot.archives.filter((a) => a.id !== archive.id),
+          archive,
+        ]),
+      });
+    }
+    if (reply.action === "restore" && reply.state === "ready" && location)
+      publish({
+        archives: Object.freeze(
+          snapshot.archives.filter((a) => a.id !== location.id),
+        ),
+      });
+  }
+  pollMaintenance();
 }
 async function observe(
   command: string,
@@ -118,6 +230,7 @@ async function observe(
       await invoke(command, { operationId: id }),
       id,
     );
+    validateIntent(reply, id);
     if (request === observation)
       accept(reply, id, command === "worktree_recheck");
     return reply;
@@ -140,6 +253,7 @@ async function reload() {
     publish({
       locations: result.locations,
       materials: result.materials,
+      archives: result.archives,
       ready: true,
     });
     if (!snapshot.operationId && result.operation) {
@@ -170,14 +284,17 @@ async function queryOperation(command: string, id: string) {
   return reply;
 }
 async function begin(
-  command: "worktree_prepare_create" | "worktree_adopt",
+  command:
+    "worktree_prepare_create" | "worktree_adopt" | "worktree_recycle_prepare",
   input: object,
   current: () => boolean,
+  recycle?: WorktreeRecycleInspection,
 ) {
   if (!current()) throw new Error(S.changed);
   const op = snapshot.operation;
   if (
     snapshot.working ||
+    maintenance !== null ||
     snapshot.loading ||
     !snapshot.ready ||
     (snapshot.operationId &&
@@ -187,9 +304,28 @@ async function begin(
         (op.state === "unknown" && !op.reviewed)))
   )
     throw new Error(S.pending);
-  const local = { id: crypto.randomUUID(), allowStart: true, started: false };
+  const action =
+    command === "worktree_adopt"
+      ? "adopt"
+      : command === "worktree_prepare_create"
+        ? "create"
+        : "action" in input &&
+            (input.action === "archive" || input.action === "restore")
+          ? input.action
+          : null;
+  if (!action) throw new Error(S.unavailable);
+  const local: NonNullable<typeof intent> = {
+    id: crypto.randomUUID(),
+    action,
+    ...(recycle ? { recycle } : {}),
+    allowStart: true,
+    started: false,
+  };
   intent = local;
   const request = ++observation;
+  const recycling = command === "worktree_recycle_prepare";
+  if (recycling) holdMaintenance(local.id);
+  let dispatched = false;
   publish({
     operationId: local.id,
     operation: null,
@@ -203,12 +339,22 @@ async function begin(
       publish({ working: false, uncertain: true, error: S.unknown });
   }, 10_000);
   try {
+    if (recycling) {
+      threads.pauseQueuesForExit();
+      await Promise.all([draftPersistence.flush(), setupStorage.flush()]);
+      if (!current() || intent !== local || !local.allowStart)
+        throw new Error(S.changed);
+    }
+    dispatched = true;
     const reply = parseWorktreeReply(
       await invoke(command, { ...input, operationId: local.id }),
       local.id,
     );
+    if (reply.kind === "operation" && reply.action !== local.action)
+      throw new Error(S.unknown);
+    validateIntent(reply, local.id);
     if (
-      command === "worktree_prepare_create" &&
+      command !== "worktree_adopt" &&
       reply.kind === "operation" &&
       reply.settled &&
       (reply.state === "failed" || reply.state === "cancelled")
@@ -218,7 +364,7 @@ async function begin(
       return;
     }
     if (
-      command === "worktree_prepare_create" &&
+      command !== "worktree_adopt" &&
       (reply.kind !== "operation" || reply.state !== "prepared")
     ) {
       // Preparing must never publish a fabricated successful checkout.
@@ -228,6 +374,11 @@ async function begin(
     }
     accept(reply, local.id);
     if (command === "worktree_adopt") return;
+    // A newer status may already have confirmed cancellation while prepare waited.
+    if (snapshot.operationId === local.id && snapshot.operation !== reply) {
+      local.allowStart = false;
+      return;
+    }
     if (intent !== local || !local.allowStart || !current()) {
       local.allowStart = false;
       await observe("worktree_cancel", local.id);
@@ -237,9 +388,18 @@ async function begin(
     // Clear prepare's timer before observing start; no automatic replay.
     clearTimeout(timer);
     await observe("worktree_start", local.id);
-  } catch {
+  } catch (reason) {
     local.allowStart = false;
-    if (intent === local) publish({ uncertain: true, error: S.unknown });
+    if (recycling && !dispatched) {
+      releaseMaintenance(local.id);
+      if (intent === local)
+        publish({
+          operationId: null,
+          operation: null,
+          uncertain: false,
+          error: worktreeFailureMessage(reason),
+        });
+    } else if (intent === local) publish({ uncertain: true, error: S.unknown });
   } finally {
     clearTimeout(timer);
     if (intent === local && observation === request)
@@ -283,6 +443,60 @@ export const worktrees = {
     begin("worktree_prepare_create", structuredClone(input), current),
   adopt: (inspectionId: string, treePath: string, current: () => boolean) =>
     begin("worktree_adopt", { inspectionId, treePath }, current),
+  async inspectRecycle(
+    action: WorktreeRecycleAction,
+    record: WorktreeLocation | WorktreeArchive,
+  ) {
+    const source =
+      action === "archive" ? snapshot.locations : snapshot.archives;
+    if (
+      record.ownership !== "created" ||
+      (action === "restore" && record.availability !== "verified") ||
+      !source.some((item) => item === record)
+    )
+      throw new Error(S.changed);
+    try {
+      const result = parseWorktreeRecycleInspection(
+        await invoke("worktree_recycle_inspect", {
+          action,
+          recordId: record.id,
+          expectedRevision: record.revision,
+        }),
+      );
+      if (
+        result.action !== action ||
+        result.recordId !== record.id ||
+        result.revision !== record.revision ||
+        result.repositoryRoot !== record.repositoryRoot ||
+        result.originalPath !==
+          ("path" in record ? record.path : record.originalPath) ||
+        ("retainedPath" in record &&
+          result.retainedPath !== record.retainedPath)
+      )
+        throw new Error(S.changed);
+      return result;
+    } catch (reason) {
+      throw new Error(worktreeFailureMessage(reason));
+    }
+  },
+  recycle: (inspection: WorktreeRecycleInspection, current: () => boolean) => {
+    if (
+      inspection.blockers.length ||
+      inspection.impact.unsent ||
+      draftPersistence.snapshot().interactionLocked
+    )
+      throw new Error(S.recycleBlocked);
+    return begin(
+      "worktree_recycle_prepare",
+      {
+        inspectionId: inspection.inspectionId,
+        action: inspection.action,
+        expectedDraftBaseline: inspection.draftBaseline,
+      },
+      current,
+      inspection,
+    );
+  },
   status: async () =>
     snapshot.operationId
       ? queryOperation("worktree_status", snapshot.operationId)
@@ -307,12 +521,65 @@ export const worktrees = {
       op.kind !== "operation" ||
       op.state !== "unknown" ||
       !op.settled ||
+      op.maintenanceActive ||
       op.reviewed
     )
       throw new Error(S.pending);
     await queryOperation("worktree_acknowledge", op.operationId);
   },
+  async checkArchive(archive: WorktreeArchive) {
+    if (snapshot.working || snapshot.loading) throw new Error(S.pending);
+    if (!snapshot.archives.includes(archive)) throw new Error(S.changed);
+    const request = ++observation;
+    const operationId = snapshot.operationId;
+    publish({ working: true, error: null });
+    try {
+      const result = parseWorktreeList(
+        await invoke("worktree_recycle_check", {
+          recordId: archive.id,
+          expectedRevision: archive.revision,
+        }),
+      );
+      if (
+        request !== observation ||
+        operationId !== snapshot.operationId ||
+        !snapshot.archives.includes(archive)
+      )
+        return;
+      const found =
+        result.archives.find((a) => a.id === archive.id) ??
+        result.locations.find((l) => l.id === archive.id);
+      if (
+        !found ||
+        found.ownership !== "created" ||
+        found.revision < archive.revision ||
+        found.repositoryRoot !== archive.repositoryRoot ||
+        ("path" in found
+          ? found.path !== archive.originalPath
+          : found.originalPath !== archive.originalPath ||
+            found.retainedPath !== archive.retainedPath)
+      )
+        throw new Error(S.changed);
+      publish({
+        locations: result.locations,
+        archives: result.archives,
+        materials: result.materials,
+        ready: true,
+      });
+      if (result.operation?.operationId === snapshot.operationId)
+        accept(result.operation, result.operation.operationId, true);
+    } catch (reason) {
+      if (request === observation && operationId === snapshot.operationId)
+        publish({ error: worktreeFailureMessage(reason) });
+      throw new Error(worktreeFailureMessage(reason));
+    } finally {
+      if (request === observation && operationId === snapshot.operationId)
+        publish({ working: false });
+    }
+  },
   async check(location: WorktreeLocation): Promise<WorktreeLocation> {
+    if (snapshot.archives.some((a) => a.id === location.id))
+      throw new Error(S.archivedNote);
     try {
       const result = parseWorktreeLocation(
         await invoke("worktree_check_location", { locationId: location.id }),
@@ -341,6 +608,8 @@ export const worktrees = {
     }
   },
   async forget(location: WorktreeLocation) {
+    if (snapshot.archives.some((a) => a.id === location.id))
+      throw new Error(S.archivedNote);
     if (snapshot.working) throw new Error(S.pending);
     publish({ working: true, error: null });
     try {

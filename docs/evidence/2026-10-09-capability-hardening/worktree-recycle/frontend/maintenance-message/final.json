@@ -1,0 +1,29 @@
+{
+  "status": "frozen_followup_complete_for_controlled_scope",
+  "sourceFix": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/maintenance-message/implementation.json",
+    "sha256": "6aa8c48b670362235a2799abfa2fa0a4958a72cde9965122d339106a40ec9c5d",
+    "historicalPendingFieldPreserved": true
+  },
+  "independentBrowser": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/receipt.json",
+    "sha256": "119782e996576569443deccc94d03ba5a2599cd9569527849ac24b0ce7efe1e9",
+    "executedBy": "verification",
+    "webkit": 8,
+    "chromium": 8,
+    "sourceStableWithinEachRun": true,
+    "thisReview": "亲读最终receipt；重算19项refs、2项source SHA以及3组JSON/raw语义一致。未重复浏览器，4张图由verification亲看。"
+  },
+  "finalSourceRefs": [
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6"
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd"
+    }
+  ],
+  "scope": "有效2红→6文件48绿、typecheck0、定向format0；独立真实组件两引擎各8项通过。仅维护提示与专项测试改变，原22源receipt/原27项browser不覆盖。",
+  "unverified": "没有正式安装或真实Agent复验；并行backend七项整合由root另行收口。"
+}

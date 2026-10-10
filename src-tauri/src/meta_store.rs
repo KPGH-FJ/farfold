@@ -17,6 +17,8 @@ pub(crate) mod prompt_templates;
 pub(crate) mod schema;
 mod startup_restore;
 mod storage_recovery;
+mod worktree_impact;
+pub(crate) mod worktree_maintenance;
 mod worktrees;
 use crate::storage_recovery::{io_receipt, sqlite_receipt};
 
@@ -71,6 +73,7 @@ pub struct SessionRow {
 #[derive(Clone)]
 pub struct MetaStore {
     connection: Arc<Mutex<Connection>>,
+    maintenance: Arc<std::sync::atomic::AtomicU64>,
 }
 
 impl MetaStore {
@@ -105,6 +108,7 @@ impl MetaStore {
             .map_err(sqlite_receipt)?;
         Ok(Self {
             connection: Arc::new(Mutex::new(connection)),
+            maintenance: Arc::new(std::sync::atomic::AtomicU64::new(0)),
         })
     }
 
@@ -141,9 +145,14 @@ impl MetaStore {
     }
 
     fn lock(&self) -> Result<MutexGuard<'_, Connection>, String> {
-        self.connection
+        let connection = self
+            .connection
             .lock()
-            .map_err(|_| "meta store lock poisoned".to_string())
+            .map_err(|_| "meta store lock poisoned".to_string())?;
+        if self.maintenance.load(std::sync::atomic::Ordering::SeqCst) == u64::MAX {
+            return Err(worktree_maintenance::BUSY.into());
+        }
+        Ok(connection)
     }
 
     // ------------------------------------------------------------------
@@ -635,6 +644,7 @@ impl MetaStore {
 
     pub fn set_setting(&self, key: &str, value: &serde_json::Value) -> Result<(), String> {
         let connection = self.lock()?;
+        self.ensure_worktree_write_available()?;
         connection
             .execute(
                 "INSERT INTO settings (key, value) VALUES (?1, ?2)

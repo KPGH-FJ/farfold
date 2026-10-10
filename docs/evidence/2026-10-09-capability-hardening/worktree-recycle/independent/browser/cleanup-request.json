@@ -1,0 +1,6 @@
+{
+  "ownedPid": 34314,
+  "exactCommand": "34314 node docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/serve.mjs",
+  "signal": "SIGTERM",
+  "scope": "Only owned Vite server, all runner-owned browsers closed in finally"
+}

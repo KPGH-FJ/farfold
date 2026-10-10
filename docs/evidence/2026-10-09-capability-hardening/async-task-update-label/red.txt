@@ -1,0 +1,84 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ThreadView.async-update.test.tsx (5 tests | 3 failed) 70ms
+   × labels a complete negotiated task event without changing raw data or task/turn/queue state: 'async_task_spawned' 5ms
+   × labels a complete negotiated task event without changing raw data or task/turn/queue state: 'async_task_state_update' 1ms
+   × rejects a cross-session declaration and keeps an earlier recognized label historical after context changes 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ThreadView.async-update.test.tsx > labels a complete negotiated task event without changing raw data or task/turn/queue state: 'async_task_spawned'
+AssertionError: expected { kind: 'raw', id: 'it-1', …(4) } to match object { kind: 'raw', …(1) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "kind": "raw",
+-   "label": "asyncTaskUpdate",
++   "label": undefined,
+  }
+
+ ❯ src/components/ThreadView.async-update.test.tsx:74:18
+     72|     apply(s, update);
+     73|     const item = s.items[0];
+     74|     expect(item).toMatchObject({ kind: "raw", label: "asyncTaskUpdate"…
+       |                  ^
+     75|     expect(item.kind === "raw" && item.update).toBe(update);
+     76|     expect(item.reportedDetails?.["/futureEnvelope"]).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/ThreadView.async-update.test.tsx > labels a complete negotiated task event without changing raw data or task/turn/queue state: 'async_task_state_update'
+AssertionError: expected { kind: 'raw', id: 'it-2', …(4) } to match object { kind: 'raw', …(1) }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "kind": "raw",
+-   "label": "asyncTaskUpdate",
++   "label": undefined,
+  }
+
+ ❯ src/components/ThreadView.async-update.test.tsx:74:18
+     72|     apply(s, update);
+     73|     const item = s.items[0];
+     74|     expect(item).toMatchObject({ kind: "raw", label: "asyncTaskUpdate"…
+       |                  ^
+     75|     expect(item.kind === "raw" && item.update).toBe(update);
+     76|     expect(item.reportedDetails?.["/futureEnvelope"]).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/ThreadView.async-update.test.tsx > rejects a cross-session declaration and keeps an earlier recognized label historical after context changes
+AssertionError: expected { kind: 'raw', id: 'it-20', …(4) } to match object { label: 'asyncTaskUpdate' }
+(14 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "label": "asyncTaskUpdate",
++   "label": undefined,
+  }
+
+ ❯ src/components/ThreadView.async-update.test.tsx:145:17
+    143|   ).toBe(false);
+    144|   apply(s, stopped, "new-session");
+    145|   expect(first).toMatchObject({ label: "asyncTaskUpdate" });
+       |                 ^
+    146|   expect(
+    147|     s.items.at(-1)?.kind === "raw" &&
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  14:43:28
+   Duration  1.78s (transform 457ms, setup 0ms, import 1.64s, tests 70ms, environment 0ms)
+

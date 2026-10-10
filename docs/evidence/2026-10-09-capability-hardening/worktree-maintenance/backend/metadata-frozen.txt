@@ -1,0 +1,29 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 10 tests
+
+thread 'meta_store::worktree_maintenance::tests::private_window_restores_seal_after_error_and_unwind_before_unlock' (23478184) panicked at src/meta_store/worktree_maintenance.rs:420:13:
+controlled
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test meta_store::worktree_maintenance::tests::query_only_release_rejection_is_not_reported_as_success ... ok
+test meta_store::worktree_maintenance::tests::baseline_mismatch_and_permanent_clear_seal_never_become_writable ... ok
+test meta_store::worktree_maintenance::tests::private_window_restores_seal_after_error_and_unwind_before_unlock ... ok
+test meta_store::worktree_maintenance::tests::actual_worktree_cas_sql_error_restores_query_only_before_returning ... ok
+test meta_store::worktree_impact::tests::unassignable_nonempty_input_and_malformed_saved_data_are_not_treated_as_empty ... ok
+test meta_store::worktree_impact::tests::known_unrelated_saved_inputs_do_not_block_directory_maintenance ... ok
+test meta_store::worktree_maintenance::tests::maintenance_seal_rejects_late_writes_and_keeps_dedicated_cas_available ... ok
+test meta_store::worktree_impact::tests::orphan_composer_cannot_borrow_the_current_new_draft_location ... ok
+test meta_store::worktree_impact::tests::related_alias_subdirectory_drafts_and_cross_conversation_files_block_without_changing_bytes ... ok
+
+running 1 test
+test meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1326 filtered out; finished in 2.87s
+
+completed:meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit
+
+test meta_store::worktree_maintenance::tests::completed_maintenance_with_failed_unseal_returns_unknown_and_allows_confirmed_exit ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1317 filtered out; finished in 2.88s
+

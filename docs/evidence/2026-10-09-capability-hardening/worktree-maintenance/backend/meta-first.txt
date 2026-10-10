@@ -1,0 +1,49 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0282]: type annotations needed for `[std::option::Option<_>; 2]`
+  --> src/meta_store/worktree_maintenance.rs:66:9
+   |
+66 |     let mut out = [None, None];
+   |         ^^^^^^^
+...
+76 |             .is_some_and(|s| s.len() > 32 * 1024 * 1024)
+   |                              - type must be known at this point
+   |
+help: consider giving `out` an explicit type, where the placeholders `_` are specified
+   |
+66 |     let mut out: [std::option::Option<_>; 2] = [None, None];
+   |                +++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `Array<u8, UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>>: LowerHex` is not satisfied
+  --> src/meta_store/worktree_maintenance.rs:86:38
+   |
+86 |             .map(|s| format!("{:x}", Sha256::digest(s.as_bytes())))
+   |                               ----   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `LowerHex` is not implemented for `Array<u8, UInt<UInt<UInt<UInt<UInt<..., ...>, ...>, ...>, ...>, ...>>`
+   |                               |
+   |                               required by this formatting parameter
+   |
+   = help: the following other types implement trait `LowerHex`:
+             &T
+             &mut T
+             OpenFlags
+             PrepFlags
+             Saturating<T>
+             Wrapping<T>
+             brotli::enc::input_pair::InputPair<'a>
+             bytes::bytes::Bytes
+           and 236 others
+   = note: the full name for the type has been written to '/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9.long-type-17120069702434908363.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: `?` operator has incompatible types
+  --> src/meta_store/worktree_maintenance.rs:97:25
+   |
+97 |         let raw = raws(&self.lock()?)?;
+   |                         ^^^^^^^^^^^^ expected `Connection`, found `MutexGuard<'_, Connection>`
+   |
+   = note: `?` operator cannot convert from `std::sync::MutexGuard<'_, rusqlite::Connection>` to `rusqlite::Connection`
+   = note: expected struct `rusqlite::Connection`
+              found struct `std::sync::MutexGuard<'_, rusqlite::Connection>`
+
+Some errors have detailed explanations: E0277, E0282, E0308.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `farfold` (lib test) due to 3 previous errors

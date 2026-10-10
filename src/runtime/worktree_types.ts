@@ -1,3 +1,8 @@
+import {
+  parseWorktreeArchive,
+  type WorktreeArchive,
+} from "./worktree_recycle_types";
+export * from "./worktree_recycle_types";
 /** Public, bounded DTOs. Inspection tickets are transient, never conversation identities. */
 export type WorktreeLocation = Readonly<{
   id: string;
@@ -43,6 +48,8 @@ export type WorktreeCreate = Readonly<{
 export type WorktreeOperation = Readonly<{
   kind: "operation";
   operationId: string;
+  action: "create" | "adopt" | "archive" | "restore";
+  maintenanceActive: boolean;
   state:
     | "prepared"
     | "running"
@@ -57,12 +64,16 @@ export type WorktreeOperation = Readonly<{
   code?: string;
   reviewed?: boolean;
   targetPath?: string;
+  originalPath?: string;
+  retainedPath?: string;
+  archive?: WorktreeArchive;
 }>;
 export type WorktreeReply =
   | WorktreeOperation
   | Readonly<{ kind: "unknownOperation"; operationId: string }>;
 export type WorktreeList = Readonly<{
   locations: readonly WorktreeLocation[];
+  archives: readonly WorktreeArchive[];
   materials: readonly WorktreeMaterial[];
   operation: WorktreeOperation | null;
 }>;
@@ -210,6 +221,11 @@ export function parseWorktreeReply(
     "code",
     "reviewed",
     "targetPath",
+    "action",
+    "maintenanceActive",
+    "originalPath",
+    "retainedPath",
+    "archive",
   ]);
   const operationId = text(v.operationId, 128);
   if (expectedId !== undefined && operationId !== expectedId)
@@ -219,6 +235,23 @@ export function parseWorktreeReply(
     return Object.freeze({ kind: "unknownOperation", operationId });
   }
   if (v.kind !== "operation") throw new Error("Invalid operation");
+  const action = oneOf(v.action, ["create", "adopt", "archive", "restore"]);
+  const maintenanceActive = bool(v.maintenanceActive);
+  const recycle = action === "archive" || action === "restore";
+  const archive =
+    v.archive === undefined ? undefined : parseWorktreeArchive(v.archive);
+  const originalPath =
+    v.originalPath === undefined ? undefined : text(v.originalPath);
+  const retainedPath =
+    v.retainedPath === undefined ? undefined : text(v.retainedPath);
+  if (
+    (!recycle &&
+      (maintenanceActive || archive || originalPath || retainedPath)) ||
+    Boolean(originalPath) !== Boolean(retainedPath) ||
+    (originalPath && originalPath === retainedPath) ||
+    (archive && action !== "archive")
+  )
+    throw new Error("Invalid maintenance result");
   const state = oneOf(v.state, [
     "prepared",
     "running",
@@ -228,6 +261,8 @@ export function parseWorktreeReply(
     "failed",
     "unknown",
   ]);
+  if (recycle && state === "prepared" && !maintenanceActive)
+    throw new Error("Prepared maintenance is not held");
   const settled = bool(v.settled);
   const reviewed = v.reviewed === undefined ? undefined : bool(v.reviewed);
   if (reviewed && (state !== "unknown" || !settled))
@@ -239,23 +274,50 @@ export function parseWorktreeReply(
     throw new Error("Invalid completion");
   const location =
     v.location === undefined ? undefined : parseWorktreeLocation(v.location);
-  if (state === "ready" && (!location || location.availability !== "verified"))
+  if (action === "archive" && location)
+    throw new Error("Archive is not usable");
+  if (
+    state === "ready" &&
+    (action === "archive"
+      ? !archive ||
+        archive.availability !== "verified" ||
+        location ||
+        archive.originalPath !== originalPath ||
+        archive.retainedPath !== retainedPath
+      : !location ||
+        location.availability !== "verified" ||
+        (action === "restore" &&
+          (!originalPath ||
+            !retainedPath ||
+            location.path !== originalPath ||
+            location.ownership !== "created")))
+  )
     throw new Error("Unverified result");
   return Object.freeze({
     kind: "operation",
     operationId,
+    action,
+    maintenanceActive,
     state,
     settled,
     cancelRequested: bool(v.cancelRequested),
     ...(location ? { location } : {}),
+    ...(archive ? { archive } : {}),
+    ...(originalPath ? { originalPath, retainedPath } : {}),
     ...(v.code === undefined ? {} : { code: text(v.code, 128) }),
     ...(reviewed === undefined ? {} : { reviewed }),
     ...(v.targetPath === undefined ? {} : { targetPath: text(v.targetPath) }),
   });
 }
 export function parseWorktreeList(value: unknown): WorktreeList {
-  const v = record(value, ["locations", "operation", "materials"]);
+  const v = record(value, ["locations", "operation", "materials", "archives"]);
   const locations = array(v.locations, 256, parseWorktreeLocation);
+  const archives = array(v.archives, 256, parseWorktreeArchive);
+  if (
+    new Set(archives.map((a) => a.id)).size !== archives.length ||
+    archives.some((a) => locations.some((l) => l.id === a.id))
+  )
+    throw new Error("Conflicting archive records");
   if (new Set(locations.map((item) => item.id)).size !== locations.length)
     throw new Error("Duplicate location");
   const operation =
@@ -270,5 +332,5 @@ export function parseWorktreeList(value: unknown): WorktreeList {
       repositoryRoot: text(m.repositoryRoot),
     });
   });
-  return Object.freeze({ locations, operation, materials });
+  return Object.freeze({ locations, archives, operation, materials });
 }

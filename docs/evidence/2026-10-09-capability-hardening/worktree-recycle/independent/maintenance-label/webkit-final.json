@@ -1,0 +1,115 @@
+{
+  "engine": "webkit",
+  "scope": "Production full App with prior controlled IPC fixture; narrow maintenance copy followup only. No native App/Git/Agent.",
+  "before": {
+    "src/runtime/draft_storage.ts": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+    "src/runtime/worktree_types.ts": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93",
+    "src/runtime/worktree_types.test.ts": "67e400bc576bb8409158d99e2d080a3e376d74d44c45f07d03a8513f35649bca",
+    "src/runtime/worktrees.ts": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d",
+    "src/runtime/worktrees.test.ts": "f7695387cd42afc62bdacbcbb36b60a7030aeb69beb9c5f9d61f071d38a09916",
+    "src/runtime/worktree_strings.ts": "87d7a67c11c3d90ab8b939be367681027877086766606679723dac2fd76ece80",
+    "src/components/WorktreeDialog.tsx": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6",
+    "src/components/WorktreeDialog.test.tsx": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd",
+    "src/components/WorktreeDialog.css": "1768efb20298749ff974c1b65544a605cb7993534daeb65dee6b71b0e330565b",
+    "src/components/WorkLocationPicker.tsx": "fadf9efa111d4a909f9a8d42665f2b4e5ceadd49254334df3a408d03fada9308",
+    "src/components/WorkLocationPicker.test.tsx": "e04f9dead94bbd268afef5554ec64d72f81d5548209e98367fa07829824461e0",
+    "src/components/DraftStartup.tsx": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+    "src/components/DraftStartup.test.tsx": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+    "src/runtime/draft_interaction_lock.test.ts": "a48478022e2e8ca2d9ff9133a89b84177865e263bb76f0c456f2961ad471eb12",
+    "src/runtime/worktree_management.ts": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+    "src/runtime/worktree_recycle_types.ts": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602",
+    "src/runtime/worktree_recycle_types.test.ts": "b14eaa82dbd7532305c57c628a6cb2e6169dff458ae31c21ba84ad01a2c04b80",
+    "src/runtime/worktree_recycle.test.ts": "e1431b1f31bfeaf2281165c83716cdcb7079fcd56dc2ca1f9e888af77e79a76c",
+    "src/components/WorktreeManagementHost.tsx": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+    "src/components/WorktreeManagementHost.test.tsx": "7f7d5a7245b8f40daa729d47f1b5e92d9718c85c7d9fe244bd57388e0c2ea979",
+    "src/components/WorktreeRecycleReview.tsx": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9",
+    "src/components/WorktreeRecycleReview.test.tsx": "eb608563fdeaa2fb6994a42e818c2becdf4dda4008978fb7c28ee07e1b14c88c",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/index.html": "9313522aaab210ee3139da0079826a9f84fb5adade385b365b4871b75b1d4ca5",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/fixture.tsx": "38ea4064b674b058214cf20d8eedfb3da9be5b1d9a6762cf7aa183536a0e50e4",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/serve.mjs": "acaae4f820b5d754091b9599fdeeedbc9f5db1bd1f0e5d725c7c4271f008429e",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/run.mjs": "55ece95eb1ad2b76b2e1e7eed2b2b5d75573a268de1cadc726e44a0646133a1f",
+    "src/App.tsx": "94d8d21819e4a1a6257f2e623db2eb717c98dc765834097f77d14d0856693907",
+    "src/components/ThreadView.tsx": "1608c8c43bd53bbd191d8a151f9b18ab6f52738ba554a3bb825a1a63211bfd86",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/components/CommandPalette.tsx": "b78444953d4a69105ce6ad1a978b15839e4227002efd53b4705d03ab87b0aac1",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b"
+  },
+  "checks": [
+    {
+      "name": "maintenance lease remains active",
+      "pass": true
+    },
+    {
+      "name": "lease alone no longer claims changed draft",
+      "pass": true
+    },
+    {
+      "name": "Use remains disabled while maintenance holds",
+      "pass": true
+    },
+    {
+      "name": "actual maintenance explanation and cancel remain reachable",
+      "pass": true
+    },
+    {
+      "name": "same current draft does not become stale after exact cancellation",
+      "pass": true
+    },
+    {
+      "name": "real draft owner retirement still shows changed hint after reopening stale request",
+      "pass": true
+    },
+    {
+      "name": "retired target cannot Use",
+      "pass": true
+    },
+    {
+      "name": "stale owner recovery dispatches no maintenance or Agent work",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "screenshots": [
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final-maintaining.png",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final-retired-target.png"
+  ],
+  "status": "passed",
+  "after": {
+    "src/runtime/draft_storage.ts": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+    "src/runtime/worktree_types.ts": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93",
+    "src/runtime/worktree_types.test.ts": "67e400bc576bb8409158d99e2d080a3e376d74d44c45f07d03a8513f35649bca",
+    "src/runtime/worktrees.ts": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d",
+    "src/runtime/worktrees.test.ts": "f7695387cd42afc62bdacbcbb36b60a7030aeb69beb9c5f9d61f071d38a09916",
+    "src/runtime/worktree_strings.ts": "87d7a67c11c3d90ab8b939be367681027877086766606679723dac2fd76ece80",
+    "src/components/WorktreeDialog.tsx": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6",
+    "src/components/WorktreeDialog.test.tsx": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd",
+    "src/components/WorktreeDialog.css": "1768efb20298749ff974c1b65544a605cb7993534daeb65dee6b71b0e330565b",
+    "src/components/WorkLocationPicker.tsx": "fadf9efa111d4a909f9a8d42665f2b4e5ceadd49254334df3a408d03fada9308",
+    "src/components/WorkLocationPicker.test.tsx": "e04f9dead94bbd268afef5554ec64d72f81d5548209e98367fa07829824461e0",
+    "src/components/DraftStartup.tsx": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+    "src/components/DraftStartup.test.tsx": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+    "src/runtime/draft_interaction_lock.test.ts": "a48478022e2e8ca2d9ff9133a89b84177865e263bb76f0c456f2961ad471eb12",
+    "src/runtime/worktree_management.ts": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+    "src/runtime/worktree_recycle_types.ts": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602",
+    "src/runtime/worktree_recycle_types.test.ts": "b14eaa82dbd7532305c57c628a6cb2e6169dff458ae31c21ba84ad01a2c04b80",
+    "src/runtime/worktree_recycle.test.ts": "e1431b1f31bfeaf2281165c83716cdcb7079fcd56dc2ca1f9e888af77e79a76c",
+    "src/components/WorktreeManagementHost.tsx": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+    "src/components/WorktreeManagementHost.test.tsx": "7f7d5a7245b8f40daa729d47f1b5e92d9718c85c7d9fe244bd57388e0c2ea979",
+    "src/components/WorktreeRecycleReview.tsx": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9",
+    "src/components/WorktreeRecycleReview.test.tsx": "eb608563fdeaa2fb6994a42e818c2becdf4dda4008978fb7c28ee07e1b14c88c",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/index.html": "9313522aaab210ee3139da0079826a9f84fb5adade385b365b4871b75b1d4ca5",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/fixture.tsx": "38ea4064b674b058214cf20d8eedfb3da9be5b1d9a6762cf7aa183536a0e50e4",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/serve.mjs": "acaae4f820b5d754091b9599fdeeedbc9f5db1bd1f0e5d725c7c4271f008429e",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/run.mjs": "55ece95eb1ad2b76b2e1e7eed2b2b5d75573a268de1cadc726e44a0646133a1f",
+    "src/App.tsx": "94d8d21819e4a1a6257f2e623db2eb717c98dc765834097f77d14d0856693907",
+    "src/components/ThreadView.tsx": "1608c8c43bd53bbd191d8a151f9b18ab6f52738ba554a3bb825a1a63211bfd86",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/components/CommandPalette.tsx": "b78444953d4a69105ce6ad1a978b15839e4227002efd53b4705d03ab87b0aac1",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b"
+  },
+  "changedInputs": [],
+  "sourceUnchanged": true
+}

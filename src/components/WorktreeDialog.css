@@ -68,3 +68,23 @@
   border: 1px solid var(--line);
   border-radius: 10px;
 }
+.worktree-reopen {
+  position: fixed;
+  z-index: 40;
+  right: 16px;
+  bottom: 16px;
+}
+.worktree-paths {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+.worktree-paths dd {
+  margin: 0 0 8px;
+}
+.worktree-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}

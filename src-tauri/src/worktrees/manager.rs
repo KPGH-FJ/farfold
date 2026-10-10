@@ -17,6 +17,10 @@ use std::{
     },
     time::{Duration, Instant},
 };
+#[path = "recycle_manager.rs"]
+mod recycle_manager;
+use recycle_manager::{MaintenanceOwner, RecycleTicket};
+
 struct Ticket {
     snapshot: Snapshot,
     refs: Vec<Ref>,
@@ -29,6 +33,8 @@ struct Inner {
     loaded: bool,
     poisoned: bool,
     tickets: HashMap<String, Ticket>,
+    recycle_tickets: HashMap<String, RecycleTicket>,
+    maintenance: Option<MaintenanceOwner>,
     seen: HashSet<String>,
     rejected: HashMap<String, Operation>,
     requests: HashMap<String, Request>,
@@ -46,6 +52,8 @@ pub struct Worktrees(Arc<Shared>);
 fn operation(id: &str, state: &str, code: Option<&str>) -> Operation {
     Operation {
         kind: "operation".into(),
+        action: "create".into(),
+        maintenance_active: false,
         operation_id: id.into(),
         state: state.into(),
         settled: !matches!(state, "prepared" | "running" | "cancelling"),
@@ -53,6 +61,9 @@ fn operation(id: &str, state: &str, code: Option<&str>) -> Operation {
         reviewed: false,
         target_path: None,
         location: None,
+        archive: None,
+        original_path: None,
+        retained_path: None,
         code: code.map(Into::into),
     }
 }
@@ -73,7 +84,12 @@ impl Inner {
         for v in &mut doc.locations {
             v.location.availability = "unknown".into();
         }
+        for v in &mut doc.archives {
+            v.archive.availability = "unknown".into();
+        }
         if let Some(op) = &mut doc.operation {
+            op.status.action = op.request.action().into();
+            op.status.maintenance_active = false;
             // Reload never restarts a process, nor infers its outcome from an existing path.
             if !matches!(op.status.state.as_str(), "failed" | "cancelled") {
                 op.status.state = "unknown".into();
@@ -82,6 +98,9 @@ impl Inner {
             }
             if let Some(l) = &mut op.status.location {
                 l.availability = "unknown".into();
+            }
+            if let Some(a) = &mut op.status.archive {
+                a.availability = "unknown".into();
             }
             self.seen.insert(op.status.operation_id.clone());
             self.requests
@@ -92,12 +111,17 @@ impl Inner {
             .extend(doc.locations.iter().map(|v| v.location.id.clone()));
         self.seen
             .extend(doc.materials.iter().map(|v| v.operation_id.clone()));
+        self.seen
+            .extend(doc.archives.iter().map(|v| v.archive.id.clone()));
         self.raw = raw;
         self.doc = doc;
         self.loaded = true;
         Ok(())
     }
     fn save(&mut self, store: &MetaStore, mut next: Document) -> Result<()> {
+        if let Some(op) = &mut next.operation {
+            op.status.action = op.request.action().into();
+        }
         if let Some(op) = &mut next.operation
             && let Some(intent) = &op.intent
         {
@@ -144,6 +168,9 @@ impl Inner {
             op.status.settled = true;
             op.status.code = Some("recheckRequired".into());
         }
+        if let Some(op) = &mut wanted.operation {
+            op.status.maintenance_active = self.maintenance.is_some();
+        }
         self.raw = actual;
         self.poisoned = false;
         self.save(store, wanted)?;
@@ -166,6 +193,8 @@ impl Inner {
     }
     fn idle(&self) -> Result<()> {
         if self.working.is_some()
+            || self.maintenance.is_some()
+            || !self.preparing.is_empty()
             || self.doc.operation.as_ref().is_some_and(|o| {
                 !o.status.settled || (o.status.state == "unknown" && !o.status.reviewed)
             })
@@ -273,6 +302,7 @@ impl Worktrees {
         i.load(store)?;
         Ok(Listing {
             locations: i.doc.locations.iter().map(|v| v.location.clone()).collect(),
+            archives: i.doc.archives.iter().map(|v| v.archive.clone()).collect(),
             materials: i.doc.materials.clone(),
             operation: i.doc.operation.as_ref().map(|o| o.status.clone()),
         })
@@ -336,11 +366,15 @@ impl Worktrees {
             completed: false,
             status: operation(id, "prepared", None),
             intent: Some(intent),
+            recycle: None,
         });
         i.save(store, next)?;
         Ok(i.reply(id))
     }
     pub fn start(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recycle(store, id)? {
+            return self.start_recycle(store, id);
+        }
         let own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let global = managed_update::activity().map_err(|_| error("busy"))?;
         let mut i = self.lock()?;
@@ -492,13 +526,22 @@ impl Worktrees {
     }
     pub fn status(&self, store: &MetaStore, id: &str) -> Result<Reply> {
         let mut i = self.lock()?;
+        if i.rejected.contains_key(id) {
+            return Ok(i.reply(id));
+        }
         if !i.loaded {
             i.load(store)?;
         }
         Ok(i.reply(id))
     }
     pub fn cancel(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recycle(store, id)? {
+            return self.cancel_recycle(store, id);
+        }
         let mut i = self.lock()?;
+        if i.rejected.contains_key(id) {
+            return Ok(i.reply(id));
+        }
         if !i.loaded {
             i.load(store)?;
         }
@@ -628,6 +671,7 @@ impl Worktrees {
             completed: true,
             status,
             intent: None,
+            recycle: None,
         });
         i.save(store, next)?;
         Ok(i.reply(id))
@@ -718,6 +762,9 @@ impl Worktrees {
         Ok(Forgotten { forgotten: true })
     }
     pub fn recheck(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recycle(store, id)? {
+            return self.recheck_recycle(store, id);
+        }
         let _own = self.0.admission.activity().map_err(|_| error("busy"))?;
         let _global = managed_update::activity().map_err(|_| error("busy"))?;
         {

@@ -1,6 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { WORKTREE_STRINGS as S } from "../runtime/worktree_strings";
-import { WorktreeDialog, type WorkLocationIntent } from "./WorktreeDialog";
+import {
+  worktreeManagement,
+  type WorkLocationIntent,
+} from "../runtime/worktree_management";
 
 /** Alongside the existing ordinary-folder action; no Agent or send calls. */
 export function WorkLocationPicker({
@@ -12,13 +15,9 @@ export function WorkLocationPicker({
   disabled: boolean;
   begin: () => WorkLocationIntent | null;
 }) {
-  const [target, setTarget] = useState<WorkLocationIntent | null>(null);
   const trigger = useRef<HTMLButtonElement>(null);
-  const latest = useRef({ disabled, begin });
-  latest.current = { disabled, begin };
-  useEffect(() => {
-    if (disabled) setTarget(null);
-  }, [disabled]);
+  const latest = useRef({ cwd, disabled, begin });
+  latest.current = { cwd, disabled, begin };
   return (
     <>
       <button
@@ -31,21 +30,16 @@ export function WorkLocationPicker({
         onClick={() => {
           if (latest.current.disabled) return;
           const intent = latest.current.begin();
-          if (intent) setTarget(intent);
+          if (intent)
+            worktreeManagement.open({
+              cwd: latest.current.cwd,
+              target: intent,
+              returnFocusRef: trigger,
+            });
         }}
       >
         {S.title}
       </button>
-      {target && !disabled && (
-        <WorktreeDialog
-          cwd={cwd}
-          target={target}
-          returnFocusRef={trigger}
-          onClose={() =>
-            setTarget((current) => (current === target ? null : current))
-          }
-        />
-      )}
     </>
   );
 }

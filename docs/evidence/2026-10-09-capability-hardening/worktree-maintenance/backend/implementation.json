@@ -1,0 +1,362 @@
+{
+  "recordedAt": "2026-10-10T07:12:34.311933+00:00",
+  "result": "scoped_backend_passed_pending_root_engineering_and_installed_validation",
+  "scope": "H15 steps 1–3: maintenance admission, explicit retention of created linked worktrees, explicit restore to the original path, and read-only unknown-result reconciliation.",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/source-checkpoint.json",
+    "sha256": "e08c39bcb9d4f95f503ca6967ab257e986f30ea5b8a92ef16f7aa8d705fcb3cb"
+  },
+  "implementation": [
+    "One existing worktree metadata document, version 2 with explicit migration of prior version 1; no operation/event ledger. Archive retains exact original/retained paths, created provenance, Git/common-directory identities, index hash and bounded material receipt.",
+    "Prepare acquires worktree and global maintenance admission, compares both saved-input raw hashes, sets a SQLite connection-local query-only seal and waits for exact related idle ACP connections to finish before returning prepared. Alias/subdirectory cwd is resolved; active or unresolved connection ownership blocks movement.",
+    "Only dedicated worktree CAS can temporarily write under the same SQLite mutex. Permanent clear_all read-only protection is never undone. SQL error/unwind restores the seal; final explicit release failure produces storageUnknown with ended directory work, retained paths and continued write rejection.",
+    "Blocking Git, file reads and text exports retain their actual admission after the UI/IPC waiter disappears. Git child ownership also reaps the child and waits for its process group during unwinding before maintenance admission is released.",
+    "Official same-filesystem git worktree move preserves dirty, staged, untracked and ignored files. Exact identities, root material and index are checked before/after. No force/remove/clean/stash/prune/repair, no automatic retry or rollback. Archive cannot be used as an active location or forgotten; explicit restore is required.",
+    "Original conversation cwd is unchanged. Both original and retained paths participate in unsent-work checks; missing draft owners never inherit the current new-draft directory. Known unrelated saved work remains allowed.",
+    "Cold records become unknown and inactive in this instance; recheck does not infer completion from a path alone and preserves unknown archive metadata after acknowledgment or a new current intent."
+  ],
+  "finalChecks": [
+    {
+      "name": "worktrees-final",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "worktrees::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/worktrees-final.txt",
+      "sha256": "194672b75c79b03b9c817921f926927caf8c6a2bd6558d154ac6bb610aafa530"
+    },
+    {
+      "name": "file-read-final",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "file_read_check::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/file-read-final.txt",
+      "sha256": "4ffcdf9e8ee1ce8874d0716a4081ad39bc7a6a3b01956005766664fba0dbd575"
+    },
+    {
+      "name": "clippy-final",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/clippy-final.txt",
+      "sha256": "f3dee3c968e60fecae555eb777a79bf0271c6fdc7cba7457cb8c6730e1bec0f2"
+    },
+    {
+      "name": "rustfmt-final",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/rustfmt-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "metadata-frozen",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "meta_store::worktree_",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/metadata-frozen.txt",
+      "sha256": "c82ca436ba76392b5ba52cee77cf90ee2b542cb177e557d5ffeefa260f163b2c"
+    },
+    {
+      "name": "retirement-frozen",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "directory_maintenance_",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/retirement-frozen.txt",
+      "sha256": "e145f28b57af397f6d3e7843692cd9f55967bef532c8f0794a9d6286051f1a42"
+    }
+  ],
+  "testCounts": {
+    "worktrees": 41,
+    "metadataMaintenanceAndImpact": 10,
+    "actualControlledPeerDirectoryRetirement": 2,
+    "fileReadChecks": 5,
+    "distinctScopedRustTests": 58,
+    "delegatedExportModuleTests": 7
+  },
+  "sourceStability": {
+    "targeted": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/final-targeted-execution.json",
+      "sha256": "cf5a1eca03ecded0c48e31460729450de571a47c26373e01b64e63f0ed786512"
+    },
+    "metadata": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/final-metadata-execution.json",
+      "sha256": "4b53fdebdb38b60711931fa0f96e4e6566cece559b5e40079410ca57992c80b7"
+    },
+    "all24BackendInputsUnchanged": true
+  },
+  "effectiveCounterexamples": [
+    {
+      "case": "Restore ignored unsent input at original historical cwd; forgotten preview threw instead of exact refusal; cancel-before-prepare returned wrong action",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-ownership-red.txt",
+        "sha256": "18f6277304be2983f32db09ab9bc8318e3799e37cb1b148283f697a44280e35b"
+      },
+      "failures": 3,
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-ownership-green.txt",
+        "sha256": "3b90d1180a999f6296b381442067eceee3e97d4f1a6951369e4ffdb03943a41c"
+      }
+    },
+    {
+      "case": "Retirement closure unwinding left a permanent prepared maintenance owner",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/prepare-unwind-red.txt",
+        "sha256": "bb935c6ff67ce27a5c8a7d910faf7fc249787b80a1d84a77d22874a27b58c113"
+      },
+      "failures": 1,
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-boundaries-green.txt",
+        "sha256": "ab5ce6228ff0d796d62220939f7cc4f0b039e5e18516a4447193466ff6b5cc59"
+      },
+      "boundary": "A controlled closure panic proves that closure ended, not that arbitrary external processes were reaped. Separate OwnedProcess and actual peer tests cover those owned process paths."
+    },
+    {
+      "case": "Unowned nonempty queue/feedback was treated as unaffected input",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/orphan-draft-red.txt",
+        "sha256": "6a1c57f10a57aed14a28459bd6cf5051791d8e2eae01f82bfd3812f21c56b2b7"
+      },
+      "failures": 1,
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/metadata-frozen.txt",
+        "sha256": "c82ca436ba76392b5ba52cee77cf90ee2b542cb177e557d5ffeefa260f163b2c"
+      }
+    },
+    {
+      "case": "Missing conversation draft owner borrowed the unrelated current new-draft location",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/orphan-choice-red.txt",
+        "sha256": "945ba5727e73b7ce26b060e2b5e01f1ee29c531e1c69331162c5faac7ed36a58"
+      },
+      "failures": 1,
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/metadata-frozen.txt",
+        "sha256": "c82ca436ba76392b5ba52cee77cf90ee2b542cb177e557d5ffeefa260f163b2c"
+      }
+    },
+    {
+      "case": "Actual SQLite authorizer refused query_only=false but release returned success",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/seal-release-red.txt",
+        "sha256": "53e5a8aa4a3d58a1bce2afc88b9dc775df881b3389ed61d1b375efbfdca68055"
+      },
+      "failures": 1,
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/metadata-frozen.txt",
+        "sha256": "c82ca436ba76392b5ba52cee77cf90ee2b542cb177e557d5ffeefa260f163b2c"
+      },
+      "integration": "Additional manager prepare/cancel test permits the final CAS and rejects only the final unseal; exact unknown/settled/inactive receipt, retained original file and explicitly confirmed exit are verified."
+    }
+  ],
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-wire.json",
+    "sha256": "2025aa05df0c8a3efa8771a2e321a246b2e1e51a1b07aa81df072bbd2bd23958"
+  },
+  "independentWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/receipt.json",
+    "sha256": "a9dfa4ab9cce97cd6f088bc55d3851f90545122d366e8d82dd01901db857044b"
+  },
+  "delegatedExportAdmission": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/export-admission/implementation.json",
+    "sha256": "a6507366bc80f7d6cb797a05249989cc945b84ecb6e70e95da700bb6731a14c6"
+  },
+  "historicalNonBehaviorFailures": [
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-first.txt",
+        "sha256": "b5e1ee84f4f1a7ef3337d94001a2220f229e05746ed9dbd7f0087ffcee008a45"
+      },
+      "classification": "Intermediate compile errors; not behavioral red evidence."
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-compile-first.txt",
+        "sha256": "42d2ab6fb3c6137bfcbb133d0af714a957594e19b79547724defc32cfacac5d5"
+      },
+      "classification": "Intermediate compile errors; not behavioral red evidence."
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/clippy-first.txt",
+        "sha256": "0dd402da4584609269e4fa413e0c2e8110a0683466d2008531283c887a410881"
+      },
+      "classification": "Two owned-source style lints; final standard clippy is green."
+    }
+  ],
+  "boundaries": [
+    "No formal app, real Agent, user repository, original user database, credentials or installed application was operated by this backend work. Git tests use disposable repositories; ACP tests use a controlled protocol peer.",
+    "macOS-specific Git implementation only. No Windows execution or filesystem proof is claimed.",
+    "Own-application admission and process ownership do not establish exclusive control over external editors, commands or filesystems. Pre/post evidence detects observed changes; it is not an OS-wide lock.",
+    "Retaining a directory is not an independent recoverable Git snapshot. Shared repository objects/refs remain dependencies. Permanent deletion and validated recovery material including private refs/reflogs remain future required work.",
+    "Material scan is bounded at 100000 entries / 1 GiB total / 256 MiB per regular file / depth 64. It rejects submodules, nested repositories and special files. Material digest includes inode identity, bytes, link target and mode; no independent xattr restoration or cross-filesystem reconstruction is claimed.",
+    "Cold settled/inactive means this instance owns no running maintenance worker; it does not prove an earlier crashed process stopped. Unknown records require explicit review/recheck and never restart automatically.",
+    "Final broad engineering, candidate, installation and installed H15 UI/Git verification are root-owned and remain pending."
+  ],
+  "rawEvidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/clippy-final.txt",
+      "sha256": "f3dee3c968e60fecae555eb777a79bf0271c6fdc7cba7457cb8c6730e1bec0f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/clippy-first.txt",
+      "sha256": "0dd402da4584609269e4fa413e0c2e8110a0683466d2008531283c887a410881"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/connection-retirement-final.txt",
+      "sha256": "e9aa015be784c8c20fe6398f33504bf5be026c5f020befd82c092eaf2b02b65d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/connection-retirement-first.txt",
+      "sha256": "00f9dadedf6a6f10b7860bb0fd1eb2be26254295dbfb29ed5385abb60d15b4d6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/file-read-final.txt",
+      "sha256": "4ffcdf9e8ee1ce8874d0716a4081ad39bc7a6a3b01956005766664fba0dbd575"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-final-orphan-choice.txt",
+      "sha256": "f61c5030a78bee5da31bf8c52fb244eb72028c083483c65c03ba7ad7a9cd19aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-final-owned-release.txt",
+      "sha256": "c5fc7c981a588136cfa13496ef6d6df5cb29e8d37e8dccd49bd4dfca823cb8f1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-final-with-cas.txt",
+      "sha256": "1b8de807417cc6df7302a59a3b5f8c0ef75105b20cb77c76dcb3c8073c97fdce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-final.txt",
+      "sha256": "c22da56135e8c0918244ea66a5a63e882ed5b76d4d43fec8f5cf67885c928d72"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-first.txt",
+      "sha256": "b5e1ee84f4f1a7ef3337d94001a2220f229e05746ed9dbd7f0087ffcee008a45"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/meta-green.txt",
+      "sha256": "2c40a3a2ad967306336b84e4d6dee2d09e32764de7e634d4d067133e967c7712"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/metadata-frozen.txt",
+      "sha256": "c82ca436ba76392b5ba52cee77cf90ee2b542cb177e557d5ffeefa260f163b2c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/orphan-choice-red.txt",
+      "sha256": "945ba5727e73b7ce26b060e2b5e01f1ee29c531e1c69331162c5faac7ed36a58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/orphan-draft-red.txt",
+      "sha256": "6a1c57f10a57aed14a28459bd6cf5051791d8e2eae01f82bfd3812f21c56b2b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/owned-format-write.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/prepare-unwind-red.txt",
+      "sha256": "bb935c6ff67ce27a5c8a7d910faf7fc249787b80a1d84a77d22874a27b58c113"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-boundaries-green.txt",
+      "sha256": "ab5ce6228ff0d796d62220939f7cc4f0b039e5e18516a4447193466ff6b5cc59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-compile-first.txt",
+      "sha256": "42d2ab6fb3c6137bfcbb133d0af714a957594e19b79547724defc32cfacac5d5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-compile-second.txt",
+      "sha256": "247b2f707ac667120ef5f33569c9fc457220b99bb450632aba62c6bf430bcd01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-first.txt",
+      "sha256": "850cf08464e7202d43374be3ae4a1a5361d94df40cc9432f974ab0e30dbffc89"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-ownership-green.txt",
+      "sha256": "3b90d1180a999f6296b381442067eceee3e97d4f1a6951369e4ffdb03943a41c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-ownership-red.txt",
+      "sha256": "18f6277304be2983f32db09ab9bc8318e3799e37cb1b148283f697a44280e35b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/retirement-frozen.txt",
+      "sha256": "e145f28b57af397f6d3e7843692cd9f55967bef532c8f0794a9d6286051f1a42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/rustfmt-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/seal-release-green.txt",
+      "sha256": "1927e9dc6c486ba83cc79495da1d57e1e2d119e3071e7428c6eb13d53d72215f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/seal-release-red.txt",
+      "sha256": "53e5a8aa4a3d58a1bce2afc88b9dc775df881b3389ed61d1b375efbfdca68055"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/special-material-final.txt",
+      "sha256": "0537e549126b8ed3bbce8b374eb51b0228b85d380dab9f982ca7c16beeecb380"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/worktrees-final.txt",
+      "sha256": "194672b75c79b03b9c817921f926927caf8c6a2bd6558d154ac6bb610aafa530"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/worktrees-related.txt",
+      "sha256": "0243ee79f67e16fff285131b05986a4f6a56d1e273ec751f84c2d8c8bbedb211"
+    }
+  ]
+}

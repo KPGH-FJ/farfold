@@ -38,6 +38,8 @@ let revision = 0;
 let savedRevision = 0;
 let snapshot: () => unknown = () => ({});
 let restore: (value: unknown) => void = () => {};
+let legacyInteractionLock = false;
+const interactionOwners = new Set<object>();
 function publish(change: Partial<Status>) {
   status = { ...status, ...change };
   listeners.forEach((fn) => fn());
@@ -60,7 +62,20 @@ export const draftPersistence = {
   },
   snapshot: () => status,
   lockInteraction(value: boolean) {
-    publish({ interactionLocked: value });
+    legacyInteractionLock = value;
+    publish({ interactionLocked: value || interactionOwners.size > 0 });
+  },
+  /** Independent maintenance cannot release a quit/storage lock or a newer owner. */
+  acquireInteractionLock(): () => void {
+    const owner = {};
+    interactionOwners.add(owner);
+    publish({ interactionLocked: true });
+    return () => {
+      if (!interactionOwners.delete(owner)) return;
+      publish({
+        interactionLocked: legacyInteractionLock || interactionOwners.size > 0,
+      });
+    };
   },
   subscribe(fn: () => void) {
     listeners.add(fn);

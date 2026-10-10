@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeDialog.test.tsx (21 tests | 2 failed) 33ms
+   × does not claim a draft changed solely because maintenance temporarily blocks its use 5ms
+   × reveals a genuinely retired draft after maintenance, while legacy locking is not mistaken for maintenance 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > does not claim a draft changed solely because maintenance temporarily blocks its use
+AssertionError: expected '<div class="worktree-dialog-body"><p>…' not to contain '当前草稿或工作位置已变化，请重新选择。'
+
+Expected: "当前草稿或工作位置已变化，请重新选择。"
+Received: "<div class="worktree-dialog-body"><p>工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。</p><p role="status">当前草稿或工作位置已变化，请重新选择。</p><div class="worktree-actions"><button type="button" class="btn btn-ghost" disabled="">选择已有文件夹</button><button type="button" class="btn btn-ghost" disabled="">选择仓库文件夹</button></div><section class="worktree-operation" aria-live="polite"><strong>正在处理工作文件…</strong><p>归档与恢复不会更改草稿或自动发送。原工作位置记录保持。</p><p role="status">工作文件维护期间，已暂停编辑和后续发送。核查实际结果后恢复编辑，不会自动续发。</p><div class="worktree-actions"><button type="button" class="btn btn-ghost">重新核查</button><button type="button" class="btn btn-ghost">请求停止文件维护</button></div></section><div class="worktree-actions"><h3>已有工作树</h3><button type="button" class="btn btn-ghost">刷新清单</button></div><ul class="worktree-list"><li><span><strong>feature</strong><span class="worktree-path">/repo/linked</span><small>由此处创建 · 使用前将重新核查</small></span><div class="worktree-actions"><button type="button" class="btn btn-primary" disabled="">使用此位置</button><button type="button" class="btn btn-ghost">重新核查</button><button type="button" class="btn btn-ghost">从清单移除</button><button type="button" class="btn btn-ghost" disabled="">归档并保留文件</button></div></li></ul></div>"
+
+ ❯ src/components/WorktreeDialog.test.tsx:230:20
+    228|   const html = renderToStaticMarkup(render());
+    229|   expect(html).toContain(S.maintenanceHeld);
+    230|   expect(html).not.toContain(S.changed);
+       |                    ^
+    231|   expect(button(S.use).props.disabled).toBe(true);
+    232|   click(S.use); // Even a retained handler must not bypass the existin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > reveals a genuinely retired draft after maintenance, while legacy locking is not mistaken for maintenance
+AssertionError: expected '<div class="worktree-dialog-body"><p>…' not to contain '当前草稿或工作位置已变化，请重新选择。'
+
+Expected: "当前草稿或工作位置已变化，请重新选择。"
+Received: "<div class="worktree-dialog-body"><p>工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。</p><p role="status">当前草稿或工作位置已变化，请重新选择。</p><div class="worktree-actions"><button type="button" class="btn btn-ghost" disabled="">选择已有文件夹</button><button type="button" class="btn btn-ghost" disabled="">选择仓库文件夹</button></div><div class="worktree-actions"><h3>已有工作树</h3><button type="button" class="btn btn-ghost">刷新清单</button></div><ul class="worktree-list"><li><span><strong>feature</strong><span class="worktree-path">/repo/linked</span><small>由此处创建 · 使用前将重新核查</small></span><div class="worktree-actions"><button type="button" class="btn btn-primary" disabled="">使用此位置</button><button type="button" class="btn btn-ghost">重新核查</button><button type="button" class="btn btn-ghost">从清单移除</button><button type="button" class="btn btn-ghost" disabled="">归档并保留文件</button></div></li></ul></div>"
+
+ ❯ src/components/WorktreeDialog.test.tsx:245:46
+    243|   h.state.maintenanceLocked = true;
+    244|   h.interactionLocked = true;
+    245|   expect(renderToStaticMarkup(render())).not.toContain(S.changed);
+       |                                              ^
+    246|   owned = false;
+    247|   h.state.maintenanceLocked = false;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  14:53:19
+   Duration  423ms (transform 105ms, setup 0ms, import 147ms, tests 33ms, environment 0ms)
+

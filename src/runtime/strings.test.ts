@@ -1,3 +1,4 @@
+import { ASYNC_TASKS } from "./async_task_strings";
 import { VISUAL_AREA_STRINGS } from "./visual_area_strings";
 import { WORKTREE_STRINGS } from "./worktree_strings";
 import { LOADED_SEARCH_STRINGS } from "./loaded_search_strings";
@@ -85,6 +86,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      ASYNC_TASKS,
       WORKTREE_STRINGS,
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,

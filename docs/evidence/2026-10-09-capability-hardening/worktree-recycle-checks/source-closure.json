@@ -1,0 +1,288 @@
+{
+  "checkedAtUtc": "2026-10-10T07:15:01.619736+00:00",
+  "sourceBase": "07fec378056bb47569a8d10ba02c7fb0a84dec51",
+  "priorInstalledCommit": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+  "fileCount": 54,
+  "files": {
+    "src-tauri/src/acp_client/directory_maintenance.rs": {
+      "sha256": "de185fec12a93d920ef492b078592ecfa64f000c283f9c963b4ad0973a6c6d20",
+      "lines": 47
+    },
+    "src-tauri/src/acp_client/directory_maintenance_tests.rs": {
+      "sha256": "619694579ca7151efdd9a0ebada1bf6de045c42f483dea98c5c26e718873bacb",
+      "lines": 64
+    },
+    "src-tauri/src/acp_client/lifecycle_tests.rs": {
+      "sha256": "885bdf35c208cafc307b53f4d561f6827a8d4dc6995e7fbf1d8e487c40e48cd5",
+      "lines": 1187
+    },
+    "src-tauri/src/acp_client/manager.rs": {
+      "sha256": "9d37c2c88fdf65b4f42dd999694caa600590b86bc9bb196cfa2ab7a9c98f091a",
+      "lines": 1206
+    },
+    "src-tauri/src/file_delivery_commands.rs": {
+      "sha256": "c84af9804734af39001474f2bde8b289018b3e10a409f1e9ea723e373956dfa8",
+      "lines": 506
+    },
+    "src-tauri/src/file_read_check.rs": {
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2",
+      "lines": 80
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "b7d74771e89da1ce1e44bce2d5991390c764e26a588c1798179748a99e7fabed",
+      "lines": 417
+    },
+    "src-tauri/src/meta_store.rs": {
+      "sha256": "cddcf37a91aed2c04e1b40f30763446d093957b1af86a53a5d95045b3e283b09",
+      "lines": 1315
+    },
+    "src-tauri/src/meta_store/archive.rs": {
+      "sha256": "e990e6b624ca91efacd09f2cf4f9fb880562699d4d3747907f264548265b2d4b",
+      "lines": 276
+    },
+    "src-tauri/src/meta_store/prompt_templates.rs": {
+      "sha256": "a89d0766252575e7cda23a84e0fa21fb063126fd1c0c0d07233ed49e7b2dd266",
+      "lines": 313
+    },
+    "src-tauri/src/meta_store/worktree_impact.rs": {
+      "sha256": "ccb81ec01bab05df2e5357f6eac1bcf9ffb670d4f98c5fb0870049d0f3bd5ae7",
+      "lines": 363
+    },
+    "src-tauri/src/meta_store/worktree_maintenance.rs": {
+      "sha256": "4819950ed193c359e80b84c0540d1f63f97ff47de952b4c0439f3ca164c2259c",
+      "lines": 449
+    },
+    "src-tauri/src/meta_store/worktrees.rs": {
+      "sha256": "0f9de60b85415eb8073ce7d6535ffc84f2aad52eeaccd5d29eb36ebb2bea5d25",
+      "lines": 48
+    },
+    "src-tauri/src/worktree_commands.rs": {
+      "sha256": "b267f7ed98c1868b3228ef185353fb8dd59502e4a16cb97832375b622c8add2e",
+      "lines": 211
+    },
+    "src-tauri/src/worktrees/git.rs": {
+      "sha256": "869dca0f5d4cf9123993ef4c4dfe150cc4fad6c58de3a0498ed4c85b8caf58e6",
+      "lines": 319
+    },
+    "src-tauri/src/worktrees/manager.rs": {
+      "sha256": "8e9c8f32af26c9f25ef77254c11e460596121724554d4033021ab61a444bcb3e",
+      "lines": 913
+    },
+    "src-tauri/src/worktrees/material_scan.rs": {
+      "sha256": "a18a3f2c4cbba5fd2b332670281477cd5d0ea9e483348f555cdbf586b9918dcb",
+      "lines": 301
+    },
+    "src-tauri/src/worktrees/mod.rs": {
+      "sha256": "40e1d20ac7ab3a26beb578d861aabf5bd6ede181d915835d519c9e67d186e34a",
+      "lines": 26
+    },
+    "src-tauri/src/worktrees/recycle.rs": {
+      "sha256": "71d23fa6c5a0a301cc4a204a6c3defa47310a02dcd3cfbb33ce3c7d0d71ff06e",
+      "lines": 213
+    },
+    "src-tauri/src/worktrees/recycle_manager.rs": {
+      "sha256": "b7c17ec4f0ffb159116076b76af72ad9127a4fe1cd1c5bcc930779412e1565a6",
+      "lines": 680
+    },
+    "src-tauri/src/worktrees/recycle_tests.rs": {
+      "sha256": "67afd7c0081bc18d7f656761d0f5d62d0d259ed66914f8b879432efd68691d8b",
+      "lines": 588
+    },
+    "src-tauri/src/worktrees/recycle_types.rs": {
+      "sha256": "c3fd75046287245b12e98c7cefa58668186f00e87d99dadf8c3a9a91a7dbc07c",
+      "lines": 72
+    },
+    "src-tauri/src/worktrees/storage.rs": {
+      "sha256": "e6f9958ed812fa2fb4e3e6b59a999dadd6bae60db4d4e3353a067626c11a23b5",
+      "lines": 327
+    },
+    "src-tauri/src/worktrees/types.rs": {
+      "sha256": "69c8fb4ba353c733af318120ce01962cac862232ca4eabf8f59a24aa048b4e5f",
+      "lines": 177
+    },
+    "src/components/CommandPalette.search.test.tsx": {
+      "sha256": "7d155c06f621d38912e579a562fcb8bcf6db06b0bf64de1a6205ad0d850566f7",
+      "lines": 234
+    },
+    "src/components/CommandPalette.tsx": {
+      "sha256": "b78444953d4a69105ce6ad1a978b15839e4227002efd53b4705d03ab87b0aac1",
+      "lines": 308
+    },
+    "src/components/DraftStartup.test.tsx": {
+      "sha256": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+      "lines": 439
+    },
+    "src/components/DraftStartup.tsx": {
+      "sha256": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+      "lines": 311
+    },
+    "src/components/ThreadView.async-update.test.tsx": {
+      "sha256": "7570e461706cf5ce6c45d9cbab7723c3d7657996957095e401fb10082d9f751f",
+      "lines": 151
+    },
+    "src/components/ThreadView.tsx": {
+      "sha256": "1608c8c43bd53bbd191d8a151f9b18ab6f52738ba554a3bb825a1a63211bfd86",
+      "lines": 1381
+    },
+    "src/components/WorkLocationPicker.test.tsx": {
+      "sha256": "e04f9dead94bbd268afef5554ec64d72f81d5548209e98367fa07829824461e0",
+      "lines": 81
+    },
+    "src/components/WorkLocationPicker.tsx": {
+      "sha256": "fadf9efa111d4a909f9a8d42665f2b4e5ceadd49254334df3a408d03fada9308",
+      "lines": 45
+    },
+    "src/components/WorktreeDialog.css": {
+      "sha256": "1768efb20298749ff974c1b65544a605cb7993534daeb65dee6b71b0e330565b",
+      "lines": 90
+    },
+    "src/components/WorktreeDialog.test.tsx": {
+      "sha256": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd",
+      "lines": 500
+    },
+    "src/components/WorktreeDialog.tsx": {
+      "sha256": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6",
+      "lines": 518
+    },
+    "src/components/WorktreeManagementHost.test.tsx": {
+      "sha256": "7f7d5a7245b8f40daa729d47f1b5e92d9718c85c7d9fe244bd57388e0c2ea979",
+      "lines": 43
+    },
+    "src/components/WorktreeManagementHost.tsx": {
+      "sha256": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+      "lines": 42
+    },
+    "src/components/WorktreeRecycleReview.test.tsx": {
+      "sha256": "eb608563fdeaa2fb6994a42e818c2becdf4dda4008978fb7c28ee07e1b14c88c",
+      "lines": 217
+    },
+    "src/components/WorktreeRecycleReview.tsx": {
+      "sha256": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9",
+      "lines": 212
+    },
+    "src/runtime/async_task_strings.ts": {
+      "sha256": "1ba553a4f86f84c56a63b8bbb70f0f856404a9301ef0feb8054e996a1ac60518",
+      "lines": 16
+    },
+    "src/runtime/async_tasks.ts": {
+      "sha256": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+      "lines": 174
+    },
+    "src/runtime/draft_interaction_lock.test.ts": {
+      "sha256": "a48478022e2e8ca2d9ff9133a89b84177865e263bb76f0c456f2961ad471eb12",
+      "lines": 43
+    },
+    "src/runtime/draft_storage.ts": {
+      "sha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+      "lines": 163
+    },
+    "src/runtime/session_projection.ts": {
+      "sha256": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+      "lines": 942
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "3a19fca1b0e128949d236711f4cbe30cf72ceca66fc750f1c993e868dd7d18c6",
+      "lines": 165
+    },
+    "src/runtime/worktree_management.ts": {
+      "sha256": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+      "lines": 37
+    },
+    "src/runtime/worktree_recycle.test.ts": {
+      "sha256": "e1431b1f31bfeaf2281165c83716cdcb7079fcd56dc2ca1f9e888af77e79a76c",
+      "lines": 402
+    },
+    "src/runtime/worktree_recycle_types.test.ts": {
+      "sha256": "b14eaa82dbd7532305c57c628a6cb2e6169dff458ae31c21ba84ad01a2c04b80",
+      "lines": 149
+    },
+    "src/runtime/worktree_recycle_types.ts": {
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602",
+      "lines": 153
+    },
+    "src/runtime/worktree_strings.ts": {
+      "sha256": "87d7a67c11c3d90ab8b939be367681027877086766606679723dac2fd76ece80",
+      "lines": 189
+    },
+    "src/runtime/worktree_types.test.ts": {
+      "sha256": "67e400bc576bb8409158d99e2d080a3e376d74d44c45f07d03a8513f35649bca",
+      "lines": 140
+    },
+    "src/runtime/worktree_types.ts": {
+      "sha256": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93",
+      "lines": 336
+    },
+    "src/runtime/worktrees.test.ts": {
+      "sha256": "f7695387cd42afc62bdacbcbb36b60a7030aeb69beb9c5f9d61f071d38a09916",
+      "lines": 490
+    },
+    "src/runtime/worktrees.ts": {
+      "sha256": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d",
+      "lines": 671
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/implementation.json",
+      "sha256": "20c1f6fdd289429081a84217d49aea7fbd10c0dd0c1668bed7e36ceb1f495d15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/source-checkpoint.json",
+      "sha256": "e08c39bcb9d4f95f503ca6967ab257e986f30ea5b8a92ef16f7aa8d705fcb3cb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/backend-independent.json",
+      "sha256": "e3db464e20ce48c87549e22c75ec8aecad4281132a542c5b2b6cb1d07366763f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/export-admission/implementation.json",
+      "sha256": "a6507366bc80f7d6cb797a05249989cc945b84ecb6e70e95da700bb6731a14c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/implementation.json",
+      "sha256": "202c1d8b126c2a3b18c40b24673aa68e83da4f00c307e6ec1772e90cc9317173"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/frontend-independent.json",
+      "sha256": "d2021658700941f586e0fb387fb3a3cd0041cf5daefe9bf0b44ba6dd56776d98"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/maintenance-message/final.json",
+      "sha256": "271f52d61b1fcfcc35cc84454c20bcf556bdf0a8f00c78b6dd3a2bb823ba6d05"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/receipt.json",
+      "sha256": "119782e996576569443deccc94d03ba5a2599cd9569527849ac24b0ce7efe1e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/receipt.json",
+      "sha256": "a9dfa4ab9cce97cd6f088bc55d3851f90545122d366e8d82dd01901db857044b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/search-scope-label/implementation.json",
+      "sha256": "6d5faabc7ae78a79c82700313e2393f831c728df6294935ac6e19c6ed0634b12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/async-task-update-label/implementation.json",
+      "sha256": "845e503ba3338cf74aec8372591f6d69de1ee41edaef80e76fe09e16d42809f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/async-task-update-label/root-independent.json",
+      "sha256": "19dcb598df2c6902ba96299d6759494936e4eb396858cc0424dc02d5aeb045a0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/helper-preflight-independent.json",
+      "sha256": "52a945ae4db8b16686d80212798f497847d7ff934ec5c74e973e52dd3ee61ba1"
+    }
+  ],
+  "closure": "All changed application inputs exactly equal the 24 backend, 22 frontend (with explicit two-file followup), 2 search-label and 6 async-update-label owned source files. Initial frontend receipt is historical; maintenance-message/final binds its exact two-file successor.",
+  "boundaries": [
+    "This source closure is not the seven-check result, candidate build or installed verification.",
+    "Permanent worktree deletion and independent recovery bundles remain unfinished.",
+    "All unverified original capability and 29 Agent standard conditions remain open."
+  ]
+}

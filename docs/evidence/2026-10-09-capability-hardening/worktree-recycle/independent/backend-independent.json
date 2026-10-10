@@ -1,0 +1,85 @@
+{
+  "status": "scoped_independent_review_passed_pending_full_engineering_and_native",
+  "role": "Non-author source/evidence review; no Cargo, Git repository mutation, original user database, formal App or Agent operated. Independent TS wire tests and controlled-browser evidence are separately bound.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/implementation.json",
+    "sha256": "20c1f6fdd289429081a84217d49aea7fbd10c0dd0c1668bed7e36ceb1f495d15"
+  },
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/source-checkpoint.json",
+    "sha256": "e08c39bcb9d4f95f503ca6967ab257e986f30ea5b8a92ef16f7aa8d705fcb3cb"
+  },
+  "integrity": {
+    "sourceFiles": 24,
+    "authorReferences": 35,
+    "allMatchedCurrent": true,
+    "filesAtMost1500Lines": true,
+    "finalExecutionsBeforeAfterMatchCurrent24Sources": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/final-targeted-execution.json",
+        "sha256": "cf5a1eca03ecded0c48e31460729450de571a47c26373e01b64e63f0ed786512"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/final-metadata-execution.json",
+        "sha256": "4b53fdebdb38b60711931fa0f96e4e6566cece559b5e40079410ca57992c80b7"
+      }
+    ]
+  },
+  "reviewedBoundaries": [
+    "Maintenance owns existing Worktrees/global admission and connection-local query_only; ordinary settings and other SQL writes stay blocked. Only private worktree CAS holds the same SQLite mutex while briefly writable; permanent pre-existing query_only is not undone.",
+    "Both saved-input raw digests are compared at prepare; affected history/aliases/subdirectories and unknown nonempty owners block. Historical cwd and draft text are never migrated.",
+    "Exact related idle ACP lives must actually finish; busy/unresolved lives reject. An IPC waiter disappearing does not release blocking worker admission. Separate process guard waits/reaps owned Git children and observes group disappearance.",
+    "Only created linked records may retain; exact original/retained/root/git/common identities, bounded material/index, no-clobber destination and registration are rechecked. Official move preserves files rather than deleting; unknown material cannot acquire created ownership.",
+    "Cold unknown/inactive only describes this instance, not previous process termination; explicit check/restore does not auto-retry. Archive metadata survives later current intents; adopted paths remain distinct."
+  ],
+  "resolvedFindings": [
+    {
+      "case": "Retirement unwind retained a permanent prepared owner",
+      "resolution": "catch_unwind finishes unknown while preserving archive material. Author valid red/green read; controlled closure termination is not credited as arbitrary process reap. OwnedProcess guard and controlled peer tests are separate proof."
+    },
+    {
+      "case": "Final query_only release failure could still publish success",
+      "resolution": "Explicit release checks readback; failure poisons writes and publishes unknown/storageUnknown with ended work, retained paths and explicit exit review. Actual SQLite authorizer red and manager cancel integration green were reviewed."
+    },
+    {
+      "case": "Orphan composer could borrow unrelated global new-draft directory",
+      "resolution": "Only key new uses global choice; saved-new requires its own savedChoice. Unknown session/queue-edit/resend cannot borrow that directory. Actual red reaches first orphan case; final green covers all four orphan keys and legitimate unrelated new/saved drafts."
+    },
+    {
+      "case": "Unowned nonempty queue/feedback omitted by impact scan",
+      "resolution": "Unknown owner now rejects as unknownDrafts; actual author red/green retained."
+    },
+    {
+      "case": "Text export writer was outside actual maintenance admission lifetime",
+      "resolution": "Peer permit moves into actual spawn_blocking writer. Independent code review confirms waiter-drop does not release it; peer effective red and seven module tests retained."
+    }
+  ],
+  "authorTestsReviewedNotRerun": {
+    "worktrees-final.txt": 41,
+    "metadata-frozen.txt": 10,
+    "retirement-frozen.txt": 2,
+    "file-read-final.txt": 5
+  },
+  "independentRealWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/receipt.json",
+    "sha256": "a9dfa4ab9cce97cd6f088bc55d3851f90545122d366e8d82dd01901db857044b"
+  },
+  "frontendFullMatrixHistorical": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/frontend-independent.json",
+    "sha256": "d2021658700941f586e0fb387fb3a3cd0041cf5daefe9bf0b44ba6dd56776d98"
+  },
+  "frontendLabelFollowup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/receipt.json",
+    "sha256": "119782e996576569443deccc94d03ba5a2599cd9569527849ac24b0ce7efe1e9"
+  },
+  "helperPreflight": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/helper-preflight-independent.json",
+    "sha256": "52a945ae4db8b16686d80212798f497847d7ff934ec5c74e973e52dd3ee61ba1"
+  },
+  "remaining": [
+    "Root full engineering, candidate verification, guarded installation and installed native archive/restore remain required.",
+    "This retention is not a self-contained recoverable Git backup: common objects/refs remain dependencies. Permanent deletion and independently verified recovery material remain required H15 work.",
+    "No Windows filesystem execution proof. External editors/processes are not controlled by application admission; user confirmation and pre/post evidence are bounded, not an OS-wide lock.",
+    "Actual process reaping is proven only for owned Git and controlled ACP peer paths. Cold inactive/settled does not establish previous process termination."
+  ]
+}

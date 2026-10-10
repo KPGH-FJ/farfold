@@ -1,0 +1,1 @@
+{"status":"failed","checks":15,"passed":15,"failure":"TimeoutError: locator.click: Timeout 7000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '工作树', exact: true }).getByRole('button', { name: '请求停止创建', exact: true })\u001b[22m\n","errors":[],"sourceUnchanged":true,"changedInputs":[]}

@@ -75,6 +75,46 @@ pub(super) fn execute(
 ) -> Result<Output> {
     execute_command(command(root, args)?, cancel, timeout)
 }
+// Unwinding must not orphan a Git child while its caller releases directory
+// admission. Normal completion disables this guard only after group quiescence.
+struct OwnedProcess {
+    child: std::process::Child,
+    group: i32,
+    finished: bool,
+}
+impl std::ops::Deref for OwnedProcess {
+    type Target = std::process::Child;
+    fn deref(&self) -> &Self::Target {
+        &self.child
+    }
+}
+impl std::ops::DerefMut for OwnedProcess {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.child
+    }
+}
+impl Drop for OwnedProcess {
+    fn drop(&mut self) {
+        if self.finished {
+            return;
+        }
+        #[cfg(unix)]
+        unsafe {
+            libc::kill(-self.group, libc::SIGKILL);
+        }
+        let _ = self.child.kill();
+        loop {
+            if self.child.wait().is_ok() {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        #[cfg(unix)]
+        while group_exists(self.group) {
+            thread::sleep(Duration::from_millis(10));
+        }
+    }
+}
 pub(super) fn execute_command(
     mut cmd: Command,
     cancel: &AtomicBool,
@@ -92,7 +132,12 @@ pub(super) fn execute_command(
     if cancel.load(Ordering::SeqCst) {
         return Err(error("cancelled"));
     }
-    let mut child = cmd.spawn().map_err(|_| error("gitUnavailable"))?;
+    let child = cmd.spawn().map_err(|_| error("gitUnavailable"))?;
+    let mut child = OwnedProcess {
+        group: child.id() as i32,
+        child,
+        finished: false,
+    };
     let started = Instant::now();
     let mut stopped = None;
     let group = child.id() as i32;
@@ -128,6 +173,7 @@ pub(super) fn execute_command(
                     thread::sleep(Duration::from_millis(10));
                 }
             }
+            child.finished = true;
             if let Some(code) = stopped {
                 return Err(error(code));
             }
@@ -242,4 +288,32 @@ mod tests {
             "tooLarge"
         );
     }
+}
+
+#[cfg(all(test, unix))]
+#[test]
+fn unwind_reaps_owned_process_before_directory_permit_can_drop() {
+    use std::os::unix::process::CommandExt;
+    let mut command = Command::new("/bin/sleep");
+    command.arg("30").process_group(0);
+    let child = command.spawn().unwrap();
+    let pid = child.id() as i32;
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(move || {
+        let _process = OwnedProcess {
+            child,
+            group: pid,
+            finished: false,
+        };
+        panic!("controlled process-owner unwind");
+    }));
+    assert!(result.is_err());
+    assert!(!group_exists(pid));
+    assert_eq!(
+        unsafe { libc::waitpid(pid, std::ptr::null_mut(), libc::WNOHANG) },
+        -1
+    );
+    assert_eq!(
+        std::io::Error::last_os_error().raw_os_error(),
+        Some(libc::ECHILD)
+    );
 }

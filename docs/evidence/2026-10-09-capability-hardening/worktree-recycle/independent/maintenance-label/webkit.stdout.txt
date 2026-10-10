@@ -1,0 +1,1 @@
+{"status":"failed","checks":5,"passed":5,"errors":[],"failure":"TimeoutError: locator.waitFor: Timeout 7000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '工作树', exact: true }).getByText('当前草稿或工作位置已变化，请重新选择。', { exact: true }) to be visible\u001b[22m\n","sourceUnchanged":true}

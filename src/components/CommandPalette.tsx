@@ -233,7 +233,7 @@ export function CommandPalette({
           ref={inputRef}
           className="conversation-search-input"
           role="combobox"
-          aria-label={STRINGS.palette.searchLabel}
+          aria-label={scope === "body" ? S.query : STRINGS.palette.searchLabel}
           aria-expanded="true"
           aria-controls={listId}
           aria-autocomplete="list"

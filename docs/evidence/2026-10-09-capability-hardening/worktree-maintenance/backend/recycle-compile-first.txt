@@ -1,0 +1,50 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0433]: cannot find module or crate `url` in this scope
+  --> src/meta_store/worktree_impact.rs:13:9
+   |
+13 |         url::Url::parse(value)
+   |         ^^^ use of unresolved module or unlinked crate `url`
+   |
+   = help: if you wanted to use a crate named `url`, use `cargo add url` to add it to your `Cargo.toml`
+
+warning: unused import: `ffi::OsStrExt`
+  --> src/worktrees/material_scan.rs:11:12
+   |
+11 |     unix::{ffi::OsStrExt, fs::MetadataExt},
+   |            ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0308]: `?` operator has incompatible types
+  --> src/worktrees/recycle.rs:25:45
+   |
+25 |     let before = crate::file_access::stamp(&file.metadata().map_err(|_| error("changed"))?);
+   |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `File`, found `Metadata`
+   |
+   = note: `?` operator cannot convert from `Metadata` to `std::fs::File`
+
+error[E0308]: `?` operator has incompatible types
+  --> src/worktrees/recycle.rs:32:49
+   |
+32 |         || before != crate::file_access::stamp(&file.metadata().map_err(|_| error("changed"))?)
+   |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `File`, found `Metadata`
+   |
+   = note: `?` operator cannot convert from `Metadata` to `std::fs::File`
+
+error[E0369]: binary operation `!=` cannot be applied to type `std::result::Result<file_access::Stamp, std::io::Error>`
+  --> src/worktrees/recycle.rs:32:19
+   |
+32 |         || before != crate::file_access::stamp(&file.metadata().map_err(|_| error("changed"))?)
+   |            ------ ^^ -------------------------------------------------------------------------- std::result::Result<file_access::Stamp, std::io::Error>
+   |            |
+   |            std::result::Result<file_access::Stamp, std::io::Error>
+   |
+note: `std::io::Error` does not implement `PartialEq`
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/std/src/io/error.rs:72:0
+   |
+   = note: `std::io::Error` is defined in another crate
+
+Some errors have detailed explanations: E0308, E0369, E0433.
+For more information about an error, try `rustc --explain E0308`.
+warning: `farfold` (lib test) generated 1 warning
+error: could not compile `farfold` (lib test) due to 4 previous errors; 1 warning emitted

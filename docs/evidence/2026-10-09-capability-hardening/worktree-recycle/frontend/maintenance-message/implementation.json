@@ -1,0 +1,58 @@
+{
+  "status": "source_fix_frozen_targeted_verification_passed_browser_followup_pending",
+  "scope": "仅修维护持锁期间误报草稿或工作位置变化；不改Use/current/apply/lease/DTO，不操作正式应用或Agent。",
+  "previousCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/implementation.json",
+    "sha256": "202c1d8b126c2a3b18c40b24673aa68e83da4f00c307e6ec1772e90cc9317173",
+    "unchangedSourceCount": 20,
+    "historicalBrowser": "原双引擎各27项保留其原22源checkpoint，不称修后复跑。"
+  },
+  "cause": "WorkLocationIntent.isCurrent同时包含owner与allowed门禁；维护lease使allowed=false不等于草稿或cwd变化。单一false无法区分这两个原因。",
+  "fix": "只在!maintenanceLocked时显示自动changed提示。持锁时用既有维护说明，不宣称原owner仍有效；所有动作门禁原样保留，解锁后重新读取current。",
+  "checks": {
+    "red": {
+      "command": "corepack pnpm exec vitest run src/components/WorktreeDialog.test.tsx",
+      "exitCode": 1,
+      "passed": 19,
+      "failed": 2,
+      "boundary": "两条均在维护期间不应出现S.changed断言失败；后续旧handler/解锁断言只由绿色运行证明。"
+    },
+    "green": {
+      "command": "corepack pnpm exec vitest run src/components/WorktreeDialog.test.tsx src/components/WorktreeManagementHost.test.tsx src/components/WorkLocationPicker.test.tsx src/components/WorktreeRecycleReview.test.tsx src/runtime/worktree_recycle.test.ts src/runtime/draft_interaction_lock.test.ts",
+      "exitCode": 0,
+      "files": 6,
+      "tests": 48
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0
+    }
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6",
+      "priorSha256": "9878a64e7bace9ae44a1aa252b827fef8e3068f6e63b9727f1680e4fd4ac4b80"
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd",
+      "priorSha256": "9cc1cd786d3631ab88bd79638f4f5e122ca7f71ea2113c0f45d765b010e91fdc"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/maintenance-message/red.txt",
+      "sha256": "7976967b4a555eece9575a47efa5dcef8faf85c2ffd78632a1b47b422a6a4909"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/maintenance-message/green.txt",
+      "sha256": "229151990127825786fe17beb575707897cdff63aff187bd5bdc10af541335ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/maintenance-message/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "unverified": "本回执写入时verification尚未完成修后两场景双引擎；未重跑无影响27项、不代表正式安装修复。"
+}

@@ -31,12 +31,18 @@ it("rejects missing fields, unknown schemas, sparse lists and duplicate IDs", ()
   ])
     expect(() => parseWorktreeLocation(value)).toThrow();
   expect(() =>
-    parseWorktreeList({ locations: Array(1), materials: [], operation: null }),
+    parseWorktreeList({
+      locations: Array(1),
+      materials: [],
+      archives: [],
+      operation: null,
+    }),
   ).toThrow();
   expect(() =>
     parseWorktreeList({
       locations: [loc, loc],
       materials: [],
+      archives: [],
       operation: null,
     }),
   ).toThrow();
@@ -44,6 +50,8 @@ it("rejects missing fields, unknown schemas, sparse lists and duplicate IDs", ()
 it("only accepts ready with verified metadata and exact operation ID", () => {
   const op = {
     kind: "operation",
+    action: "create",
+    maintenanceActive: false,
     operationId: "one",
     state: "ready",
     settled: true,
@@ -84,6 +92,8 @@ it("bounds refs and inspections while retaining unknown blocker codes as opaque 
 it("retains reviewed unknown target paths without fabricating verified locations", () => {
   const operation = {
     kind: "operation",
+    action: "create",
+    maintenanceActive: false,
     operationId: "lost",
     state: "unknown",
     settled: true,
@@ -94,10 +104,13 @@ it("retains reviewed unknown target paths without fabricating verified locations
   const materials = [
     { operationId: "lost", path: "/repo/possible", repositoryRoot: "/repo" },
   ];
-  expect(parseWorktreeList({ locations: [], operation, materials })).toEqual({
+  expect(
+    parseWorktreeList({ locations: [], archives: [], operation, materials }),
+  ).toEqual({
     locations: [],
     operation,
     materials,
+    archives: [],
   });
   expect(() => parseWorktreeReply({ ...operation, settled: false })).toThrow();
   expect(() =>

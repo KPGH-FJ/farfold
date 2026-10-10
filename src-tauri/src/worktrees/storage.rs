@@ -1,6 +1,7 @@
 //! One current intent and location metadata, never a Git/Agent event ledger.
 use super::{
     inspect::{Snapshot, Stamp},
+    recycle_types::*,
     types::*,
 };
 use crate::meta_store::MetaStore;
@@ -67,10 +68,39 @@ pub(super) struct Intent {
 #[serde(deny_unknown_fields)]
 pub(super) enum Request {
     Create(Create),
+    Recycle(RecycleInput),
     Adopt {
         inspection_id: String,
         tree_path: String,
     },
+}
+impl Request {
+    pub fn action(&self) -> &'static str {
+        match self {
+            Self::Create(_) => "create",
+            Self::Adopt { .. } => "adopt",
+            Self::Recycle(r) => r.action.name(),
+        }
+    }
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct SavedArchive {
+    pub archive: Archive,
+    pub original: SavedLocation,
+    pub parent: String,
+    pub parent_stamp: Stamp,
+    pub retained_parent: String,
+    pub retained_parent_stamp: Option<Stamp>,
+    pub material: MaterialSummary,
+    pub index_sha256: Option<String>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct RecycleIntent {
+    pub saved: SavedArchive,
+    pub action: RecycleAction,
+    pub dispatched: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -79,20 +109,25 @@ pub(super) struct SavedOperation {
     pub completed: bool,
     pub status: Operation,
     pub intent: Option<Intent>,
+    #[serde(default)]
+    pub recycle: Option<RecycleIntent>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Document {
     pub version: u32,
     pub locations: Vec<SavedLocation>,
+    #[serde(default)]
+    pub archives: Vec<SavedArchive>,
     pub materials: Vec<Material>,
     pub operation: Option<SavedOperation>,
 }
 impl Default for Document {
     fn default() -> Self {
         Self {
-            version: 1,
+            version: 2,
             locations: Vec::new(),
+            archives: Vec::new(),
             materials: Vec::new(),
             operation: None,
         }
@@ -104,11 +139,51 @@ fn path(s: &str) -> bool {
 fn identity(i: &Identity) -> bool {
     path(&i.root) && path(&i.repository_root) && path(&i.git_dir) && path(&i.common_dir)
 }
+impl SavedArchive {
+    pub fn valid(&self) -> bool {
+        let a = &self.archive;
+        let l = &self.original.location;
+        id(&a.id)
+            && a.id == l.id
+            && a.revision <= 9_007_199_254_740_991
+            && path(&a.original_path)
+            && path(&a.retained_path)
+            && a.original_path != a.retained_path
+            && path(&a.repository_root)
+            && oid(&a.head_oid)
+            && a.ownership == "created"
+            && matches!(
+                a.availability.as_str(),
+                "verified" | "missing" | "changed" | "unknown"
+            )
+            && l.ownership == "created"
+            && l.path == a.original_path
+            && l.repository_root == a.repository_root
+            && l.branch == a.branch
+            && l.head_oid == a.head_oid
+            && identity(&self.original.identity)
+            && self.original.identity.root == a.original_path
+            && path(&self.parent)
+            && path(&self.retained_parent)
+            && Path::new(&a.original_path).parent() == Some(Path::new(&self.parent))
+            && Path::new(&a.retained_path).parent() == Some(Path::new(&self.retained_parent))
+            && Path::new(&self.retained_parent).parent() == Some(Path::new(&self.parent))
+            && self.material.entries <= 100_000
+            && self.material.bytes <= 1024 * 1024 * 1024
+            && self.material.sha256.len() == 64
+            && oid(&self.material.sha256)
+            && self
+                .index_sha256
+                .as_ref()
+                .is_none_or(|s| s.len() == 64 && oid(s))
+    }
+}
 impl Document {
     pub fn valid(&self) -> bool {
         let mut ids = HashSet::new();
-        self.version == 1
+        self.version == 2
             && self.locations.len() <= 256
+            && self.archives.len() <= 256
             && self.materials.len() <= 256
             && self
                 .materials
@@ -133,10 +208,29 @@ impl Document {
                         s.starts_with("refs/heads/") && s.len() <= 4096 && !s.contains('\0')
                     })
             })
+            && self
+                .archives
+                .iter()
+                .all(|v| v.valid() && ids.insert(&v.archive.id))
             && self.operation.as_ref().is_none_or(|v| {
                 let s = &v.status;
                 id(&s.operation_id)
                     && s.kind == "operation"
+                    && s.action == v.request.action()
+                    && s.original_path.is_some() == s.retained_path.is_some()
+                    && match &v.request {
+                        Request::Recycle(r) => v.recycle.as_ref().is_some_and(|i| {
+                            i.action == r.action
+                                && s.original_path.as_ref() == Some(&i.saved.archive.original_path)
+                                && s.retained_path.as_ref() == Some(&i.saved.archive.retained_path)
+                        }),
+                        _ => {
+                            v.recycle.is_none()
+                                && !s.maintenance_active
+                                && s.archive.is_none()
+                                && s.original_path.is_none()
+                        }
+                    }
                     && matches!(
                         s.state.as_str(),
                         "prepared"
@@ -155,6 +249,9 @@ impl Document {
                             && oid(i.input.branch.oid())
                             && i.input.directory_name.len() <= 200
                     })
+                    && v.recycle
+                        .as_ref()
+                        .is_none_or(|r| r.saved.valid() && v.request.action() == r.action.name())
             })
     }
 }
@@ -162,13 +259,49 @@ pub(super) fn read(store: &MetaStore) -> Result<(Option<String>, Document)> {
     let raw = store
         .worktree_raw()
         .map_err(|_| error("storageUnavailable"))?;
-    let value = match &raw {
+    let mut value: Document = match &raw {
         None => Document::default(),
         Some(s) if s.len() <= 4 * 1024 * 1024 => {
             serde_json::from_str(s).map_err(|_| error("storageInvalid"))?
         }
         Some(_) => return Err(error("storageInvalid")),
     };
+    if value.version == 2 && raw.is_some() {
+        let raw: serde_json::Value =
+            serde_json::from_str(raw.as_ref().ok_or(error("storageInvalid"))?)
+                .map_err(|_| error("storageInvalid"))?;
+        if raw.get("archives").is_none()
+            || (raw["operation"].is_object()
+                && ["action", "maintenanceActive"]
+                    .iter()
+                    .any(|k| raw["operation"]["status"].get(k).is_none()))
+        {
+            return Err(error("storageInvalid"));
+        }
+    }
+    if value.version == 1 {
+        let old: serde_json::Value =
+            serde_json::from_str(raw.as_ref().ok_or(error("storageInvalid"))?)
+                .map_err(|_| error("storageInvalid"))?;
+        if old.get("archives").is_some()
+            || old["operation"].get("recycle").is_some()
+            || [
+                "action",
+                "maintenanceActive",
+                "archive",
+                "originalPath",
+                "retainedPath",
+            ]
+            .into_iter()
+            .any(|k| old["operation"]["status"].get(k).is_some())
+        {
+            return Err(error("storageInvalid"));
+        }
+        value.version = 2;
+        if let Some(op) = &mut value.operation {
+            op.status.action = op.request.action().into();
+        }
+    }
     if !value.valid() {
         return Err(error("storageInvalid"));
     }

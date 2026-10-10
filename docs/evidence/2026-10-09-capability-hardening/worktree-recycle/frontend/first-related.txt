@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (23 tests | 1 failed) 102ms
+   × only an explicitly acknowledged settled unknown allows another creation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktrees.test.ts > only an explicitly acknowledged settled unknown allows another creation
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/worktrees.test.ts:335:34
+    333|     reviewed: true,
+    334|   });
+    335|   expect(s.snapshot().materials).toHaveLength(1);
+       |                                  ^
+    336|   expect(s.snapshot().locations).toHaveLength(0);
+    337|   await s.create(input, () => true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 47 passed (48)
+   Start at  14:13:16
+   Duration  259ms (transform 385ms, setup 0ms, import 439ms, tests 188ms, environment 0ms)
+

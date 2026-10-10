@@ -154,3 +154,58 @@ pub async fn worktree_acknowledge(
     let (m, s) = context(&app, &webview)?;
     run(move || m.acknowledge(&s, &operation_id)).await
 }
+
+#[tauri::command]
+pub async fn worktree_recycle_inspect(
+    app: AppHandle,
+    webview: Webview,
+    action: worktrees::RecycleAction,
+    record_id: String,
+    expected_revision: u64,
+) -> worktrees::Result<worktrees::RecycleInspection> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || m.recycle_inspect(&s, action, &record_id, expected_revision)).await
+}
+#[tauri::command]
+pub async fn worktree_recycle_prepare(
+    app: AppHandle,
+    webview: Webview,
+    operation_id: String,
+    inspection_id: String,
+    action: worktrees::RecycleAction,
+    expected_draft_baseline: worktrees::DraftBaseline,
+) -> worktrees::Result<worktrees::Reply> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || {
+        m.prepare_recycle(
+            &s,
+            &operation_id,
+            worktrees::RecycleInput {
+                inspection_id,
+                action,
+                expected_draft_baseline,
+            },
+            |path| {
+                crate::acp_client::manager::runtime()
+                    .block_on(
+                        app.state::<crate::acp_client::manager::AcpManager>()
+                            .release_for_directory_maintenance(path),
+                    )
+                    .map_err(|_| worktrees::Failure {
+                        code: "connectionUnconfirmed",
+                    })
+            },
+        )
+    })
+    .await
+}
+#[tauri::command]
+pub async fn worktree_recycle_check(
+    app: AppHandle,
+    webview: Webview,
+    record_id: String,
+    expected_revision: u64,
+) -> worktrees::Result<worktrees::Listing> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || m.recycle_check(&s, &record_id, expected_revision)).await
+}

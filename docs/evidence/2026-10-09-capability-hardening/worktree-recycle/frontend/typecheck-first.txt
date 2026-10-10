@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/worktrees.ts(305,3): error TS2322: Type '{ id: `${string}-${string}-${string}-${string}-${string}`; action: string; allowStart: boolean; started: boolean; }' is not assignable to type '{ id: string; action: "archive" | "restore" | "create" | "adopt"; allowStart: boolean; started: boolean; }'.
+  Types of property 'action' are incompatible.
+    Type 'string' is not assignable to type '"archive" | "restore" | "create" | "adopt"'.
+ ELIFECYCLE  Command failed with exit code 1.

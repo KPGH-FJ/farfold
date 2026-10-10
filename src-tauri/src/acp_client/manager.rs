@@ -55,6 +55,8 @@ pub mod connection_retention;
 
 #[path = "connection_control.rs"]
 mod connection_control;
+#[path = "directory_maintenance.rs"]
+mod directory_maintenance;
 
 #[cfg(test)]
 #[path = "startup_cleanup_tests.rs"]

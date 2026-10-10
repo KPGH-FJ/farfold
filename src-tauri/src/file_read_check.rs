@@ -41,7 +41,12 @@ where
     let admission = ADMISSION
         .get_or_init(|| Arc::new(Semaphore::new(MAX_IN_FLIGHT)))
         .clone();
-    run_with(admission, CHECK_WAIT, operation).await
+    let global = crate::managed_update::activity().map_err(|_| CHECK_BUSY.to_owned())?;
+    run_with(admission, CHECK_WAIT, move || {
+        let _global = global;
+        operation()
+    })
+    .await
 }
 
 async fn run_with<T, F>(

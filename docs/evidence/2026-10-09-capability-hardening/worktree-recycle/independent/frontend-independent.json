@@ -1,0 +1,424 @@
+{
+  "stage": "H15 frontend independent source review and controlled full-App browser checkpoint",
+  "status": "passed_with_backend_and_installed_boundaries",
+  "atUtc": "2026-10-10T06:43:57.554837+00:00",
+  "ownerReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/frontend/implementation.json",
+    "sha256": "202c1d8b126c2a3b18c40b24673aa68e83da4f00c307e6ec1772e90cc9317173"
+  },
+  "ownedSourceRefs": [
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+      "lines": 163
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93",
+      "lines": 336
+    },
+    {
+      "path": "src/runtime/worktree_types.test.ts",
+      "sha256": "67e400bc576bb8409158d99e2d080a3e376d74d44c45f07d03a8513f35649bca",
+      "lines": 140
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d",
+      "lines": 671
+    },
+    {
+      "path": "src/runtime/worktrees.test.ts",
+      "sha256": "f7695387cd42afc62bdacbcbb36b60a7030aeb69beb9c5f9d61f071d38a09916",
+      "lines": 490
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "87d7a67c11c3d90ab8b939be367681027877086766606679723dac2fd76ece80",
+      "lines": 189
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "9878a64e7bace9ae44a1aa252b827fef8e3068f6e63b9727f1680e4fd4ac4b80",
+      "lines": 516
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "9cc1cd786d3631ab88bd79638f4f5e122ca7f71ea2113c0f45d765b010e91fdc",
+      "lines": 452
+    },
+    {
+      "path": "src/components/WorktreeDialog.css",
+      "sha256": "1768efb20298749ff974c1b65544a605cb7993534daeb65dee6b71b0e330565b",
+      "lines": 90
+    },
+    {
+      "path": "src/components/WorkLocationPicker.tsx",
+      "sha256": "fadf9efa111d4a909f9a8d42665f2b4e5ceadd49254334df3a408d03fada9308",
+      "lines": 45
+    },
+    {
+      "path": "src/components/WorkLocationPicker.test.tsx",
+      "sha256": "e04f9dead94bbd268afef5554ec64d72f81d5548209e98367fa07829824461e0",
+      "lines": 81
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+      "lines": 311
+    },
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "sha256": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+      "lines": 439
+    },
+    {
+      "path": "src/runtime/draft_interaction_lock.test.ts",
+      "sha256": "a48478022e2e8ca2d9ff9133a89b84177865e263bb76f0c456f2961ad471eb12",
+      "lines": 43
+    },
+    {
+      "path": "src/runtime/worktree_management.ts",
+      "sha256": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+      "lines": 37
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.test.ts",
+      "sha256": "b14eaa82dbd7532305c57c628a6cb2e6169dff458ae31c21ba84ad01a2c04b80",
+      "lines": 149
+    },
+    {
+      "path": "src/runtime/worktree_recycle.test.ts",
+      "sha256": "e1431b1f31bfeaf2281165c83716cdcb7079fcd56dc2ca1f9e888af77e79a76c",
+      "lines": 402
+    },
+    {
+      "path": "src/components/WorktreeManagementHost.tsx",
+      "sha256": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+      "lines": 42
+    },
+    {
+      "path": "src/components/WorktreeManagementHost.test.tsx",
+      "sha256": "7f7d5a7245b8f40daa729d47f1b5e92d9718c85c7d9fe244bd57388e0c2ea979",
+      "lines": 43
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.tsx",
+      "sha256": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9",
+      "lines": 212
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.test.tsx",
+      "sha256": "eb608563fdeaa2fb6994a42e818c2becdf4dda4008978fb7c28ee07e1b14c88c",
+      "lines": 217
+    }
+  ],
+  "browser": [
+    {
+      "engine": "webkit",
+      "passed": 27,
+      "total": 27,
+      "sourceCount": 35,
+      "inputBeforeAfterEqual": true,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.json",
+        "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.raw.txt",
+        "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+      }
+    },
+    {
+      "engine": "chromium",
+      "passed": 27,
+      "total": 27,
+      "sourceCount": 35,
+      "inputBeforeAfterEqual": true,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.json",
+        "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.raw.txt",
+        "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+      }
+    }
+  ],
+  "sourceReview": [
+    "Owned interaction leases compose with the legacy exit lock; releasing one does not clear another.",
+    "Management Host remains outside DraftStartup inert editing subtree and exact operation can be reopened without a draft target.",
+    "Both draft flushes precede prepare, which retains the original preview baseline; no silent acceptance of a changed baseline.",
+    "Thrown/rejected IPC is uncertain unless an exact operation proves maintenance inactive; timeout and late prepare do not dispatch a new start.",
+    "Created/adopted ownership differs; archives cannot be used or forgotten as active locations, and unknown archives require an explicit read-only check before restore.",
+    "History cwd and unsent text are not migrated by archive/restore; Use remains a separate explicit action."
+  ],
+  "effectiveResults": [
+    "54 actual browser assertions across WebKit and Chromium, real React StrictMode and production StorageStartup/DraftStartup/App.",
+    "Real browser 10-second prepare observation bound (10018ms WebKit,10021ms Chromium) tested; this is not an OS/process termination measurement.",
+    "900x620 keyboard restore confirmation reachable; root window scroll stayed zero; interaction-locked background and accessible recovery dialog observed."
+  ],
+  "failuresRetained": [
+    {
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.json",
+        "sha256": "c2c7a075ffbe8f3f64e1f8559f0a0289b547e5b4744f4e5723b3f653520905b9"
+      },
+      "classification": "driver selector mismatch",
+      "detail": "After reopen, controlled list recovered action=archive, so correct visible cancellation label is 请求停止文件维护. Old driver sought 请求停止创建. 15 checks had passed before selector timeout; corrected selector accepts the two documented exact labels. No product change.",
+      "driver": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/run-timeout-selector.mjs.txt",
+        "sha256": "5c798132e883d7653c01e7ee8acad4d83927cb48213c226b5cf997799cf822b6"
+      }
+    }
+  ],
+  "historicalCheckpoints": {
+    "firstRuns": "25/25 per engine before adding the real prepare timeout case. Preliminary helper source hashes are historical, not claimed equal to final helpers.",
+    "originalDriver": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/run-first.mjs.txt",
+      "sha256": "c38addde96e7c73c5ca4c5e75ec103bc1c90303299fa769219a043c01efc3287"
+    },
+    "noProductFailureManufactured": true
+  },
+  "visuallyInspected": [
+    "webkit-first-running.png",
+    "webkit-first-narrow-keyboard.png",
+    "webkit-final-repaired-restored.png",
+    "webkit-final-repaired-narrow-keyboard.png",
+    "chromium-final-repaired-running.png",
+    "chromium-final-repaired-narrow-keyboard.png"
+  ],
+  "pendingBackendContract": [
+    "Actual recycle_prepare known rejection must return/recover an exact failed inactive operation or another exact status proving inactivity; an untracked rejected ID with perpetual unknown status would leave a deliberate frontend safety lock. This remains an integration condition until real backend wire is checked."
+  ],
+  "limits": [
+    "IPC, SQLite settings and Git maintenance are controlled in-memory fixtures. No actual Git archive/restore, real database write, ACP connection retirement or native Tauri operation was exercised.",
+    "Owner 107 unit tests were read as evidence, not rerun by this independent reviewer.",
+    "H15 permanent deletion and independent backup remain future required scope; this checkpoint does not close H15.",
+    "Unrelated subsequent CommandPalette/task-heading source edits are outside the 22 frozen H15 source group. Full run dependency hashes are recorded at each actual run."
+  ],
+  "formatMappings": [
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first.json",
+        "sha256": "845b51547b217acc624a2b2c2cf8693fc1500428c5ff8d2d91cdd6232c39469e"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first.raw.txt",
+        "sha256": "845b51547b217acc624a2b2c2cf8693fc1500428c5ff8d2d91cdd6232c39469e"
+      },
+      "semanticEqual": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first.json",
+        "sha256": "b47c81cd218a205bf32bf66059eb162c345d3f46b90f050ece849321450565e9"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first.raw.txt",
+        "sha256": "b47c81cd218a205bf32bf66059eb162c345d3f46b90f050ece849321450565e9"
+      },
+      "semanticEqual": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.json",
+        "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.raw.txt",
+        "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+      },
+      "semanticEqual": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.json",
+        "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.raw.txt",
+        "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+      },
+      "semanticEqual": true
+    },
+    {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.json",
+        "sha256": "c2c7a075ffbe8f3f64e1f8559f0a0289b547e5b4744f4e5723b3f653520905b9"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.raw.txt",
+        "sha256": "c2c7a075ffbe8f3f64e1f8559f0a0289b547e5b4744f4e5723b3f653520905b9"
+      },
+      "semanticEqual": true
+    }
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/cleanup.json",
+    "sha256": "aa2b6d5a760d72f3b26207dfd324c2abb7bed21deeae459898bfaf73380ac7a6"
+  },
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired-blocked.png",
+      "sha256": "49d3ff35efc434b4fed9da96bb3b216de58b91513c3c7bc561b5d2e5347b93b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired-narrow-keyboard.png",
+      "sha256": "dc3ca938034e778d90b7d157f274d26c7d15e74458738640e1c3bb473c61c355"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired-restored.png",
+      "sha256": "8cec9fdd4cfc5bb0f22730cbb4f5a466dc3fff0aab5e58a3ae01a973b7a7364e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired-running.png",
+      "sha256": "1bbbb99036cb9be98b8e8fe48b2d95bfe40986f31f9a4a78c5d2b7d3f62533dd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.json",
+      "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.raw.txt",
+      "sha256": "1599afa08a9e7091a7fabe22fd7bc3f322879bec01461b3a1ebdfe42cfe19f36"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-final-repaired.stdout.txt",
+      "sha256": "4d5e1415fb190e3019de49f2405c02b2f8f62644f8cafb5a8c3512ba08c0a6c1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first-blocked.png",
+      "sha256": "49d3ff35efc434b4fed9da96bb3b216de58b91513c3c7bc561b5d2e5347b93b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first-narrow-keyboard.png",
+      "sha256": "dc3ca938034e778d90b7d157f274d26c7d15e74458738640e1c3bb473c61c355"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first-restored.png",
+      "sha256": "8cec9fdd4cfc5bb0f22730cbb4f5a466dc3fff0aab5e58a3ae01a973b7a7364e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first-running.png",
+      "sha256": "1bbbb99036cb9be98b8e8fe48b2d95bfe40986f31f9a4a78c5d2b7d3f62533dd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first.json",
+      "sha256": "b47c81cd218a205bf32bf66059eb162c345d3f46b90f050ece849321450565e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/chromium-first.raw.txt",
+      "sha256": "b47c81cd218a205bf32bf66059eb162c345d3f46b90f050ece849321450565e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/cleanup-request.json",
+      "sha256": "204049ecad9062650e01884d662f44e93a9618a58133444ae2a69d9ae7362151"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/fixture.tsx",
+      "sha256": "b895ec24b27b4e399506e6183a62ca4810d4b59b040ba801b1ced944eb311d5d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/index.html",
+      "sha256": "9313522aaab210ee3139da0079826a9f84fb5adade385b365b4871b75b1d4ca5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/run-first.mjs.txt",
+      "sha256": "c38addde96e7c73c5ca4c5e75ec103bc1c90303299fa769219a043c01efc3287"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/run-timeout-selector.mjs.txt",
+      "sha256": "5c798132e883d7653c01e7ee8acad4d83927cb48213c226b5cf997799cf822b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/run.mjs",
+      "sha256": "d800def1d798d0aa18b573db85df92d6ff166aad64e1f7a86f2d04085fe87497"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/serve.mjs",
+      "sha256": "acaae4f820b5d754091b9599fdeeedbc9f5db1bd1f0e5d725c7c4271f008429e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-failure.png",
+      "sha256": "e48fdaca9cf203d95d19e9751f90f142b909865b7bc88acebcc14fd62ca13f7b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired-blocked.png",
+      "sha256": "c14a81ee3f282dabd98f4872538852197abcbd0391aaa8ea8dc1238b9a262e28"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired-narrow-keyboard.png",
+      "sha256": "3d7398e26fdf715ac0e3e8196caa2e0627884324eab249cf9c452e8581fd031f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired-restored.png",
+      "sha256": "f46a5dc1424cffe7fdb1a11b70be5bc108ea01385a219e4362df358a5c65a555"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired-running.png",
+      "sha256": "a234367ab6812248cb0a4747ba04e899c6dba3ce2e8cd61102bfc09a418031a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.json",
+      "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.raw.txt",
+      "sha256": "9f81abaf9520b52d07e0061ebfe72b90add857536566eb683ba09145750190ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-repaired.stdout.txt",
+      "sha256": "4d5e1415fb190e3019de49f2405c02b2f8f62644f8cafb5a8c3512ba08c0a6c1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-restored.png",
+      "sha256": "f46a5dc1424cffe7fdb1a11b70be5bc108ea01385a219e4362df358a5c65a555"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final-running.png",
+      "sha256": "a234367ab6812248cb0a4747ba04e899c6dba3ce2e8cd61102bfc09a418031a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.json",
+      "sha256": "c2c7a075ffbe8f3f64e1f8559f0a0289b547e5b4744f4e5723b3f653520905b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.raw.txt",
+      "sha256": "c2c7a075ffbe8f3f64e1f8559f0a0289b547e5b4744f4e5723b3f653520905b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-final.stdout.txt",
+      "sha256": "aced2d9bcd1c3019ec099d4d464c137d0f470defe7c0bb34cc7ade715c630584"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first-blocked.png",
+      "sha256": "c14a81ee3f282dabd98f4872538852197abcbd0391aaa8ea8dc1238b9a262e28"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first-narrow-keyboard.png",
+      "sha256": "3d7398e26fdf715ac0e3e8196caa2e0627884324eab249cf9c452e8581fd031f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first-restored.png",
+      "sha256": "f46a5dc1424cffe7fdb1a11b70be5bc108ea01385a219e4362df358a5c65a555"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first-running.png",
+      "sha256": "a234367ab6812248cb0a4747ba04e899c6dba3ce2e8cd61102bfc09a418031a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first.json",
+      "sha256": "845b51547b217acc624a2b2c2cf8693fc1500428c5ff8d2d91cdd6232c39469e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/webkit-first.raw.txt",
+      "sha256": "845b51547b217acc624a2b2c2cf8693fc1500428c5ff8d2d91cdd6232c39469e"
+    }
+  ]
+}

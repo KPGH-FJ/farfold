@@ -1,0 +1,29 @@
+{
+  "checkedAtUtc": "2026-10-10T06:47:36.582519+00:00",
+  "kind": "independent-source-and-existing-test-evidence-review",
+  "sourceChangesReviewed": [
+    "CommandPalette scope label",
+    "session_projection raw-event label",
+    "ThreadView semantic label",
+    "async_tasks complete owner/context/shape classifier",
+    "central forbidden strings coverage"
+  ],
+  "conclusion": "No source blocker found in these two narrowly scoped presentation changes. Existing raw unknown payload and task-control ownership are preserved.",
+  "referencesVerified": 19,
+  "implementationRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/search-scope-label/implementation.json",
+      "sha256": "6d5faabc7ae78a79c82700313e2393f831c728df6294935ac6e19c6ed0634b12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/async-task-update-label/implementation.json",
+      "sha256": "845e503ba3338cf74aec8372591f6d69de1ee41edaef80e76fe09e16d42809f5"
+    }
+  ],
+  "checksReusedWithoutRerun": "Exact source hashes match author targeted checks: search12,task48,typecheck and scoped format. Root read source diff and actual tests; native fixes still require new candidate.",
+  "notProven": [
+    "No newly installed UI for these changes",
+    "No additional real task-stop or protocol acceptance",
+    "H15 backend integration is separate"
+  ]
+}

@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 7 tests
+
+thread 'meta_store::worktree_maintenance::tests::private_window_restores_seal_after_error_and_unwind_before_unlock' (23452422) panicked at src/meta_store/worktree_maintenance.rs:247:13:
+controlled
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test meta_store::worktree_maintenance::tests::baseline_mismatch_and_permanent_clear_seal_never_become_writable ... ok
+test meta_store::worktree_maintenance::tests::actual_worktree_cas_sql_error_restores_query_only_before_returning ... ok
+test meta_store::worktree_maintenance::tests::maintenance_seal_rejects_late_writes_and_keeps_dedicated_cas_available ... ok
+test meta_store::worktree_maintenance::tests::private_window_restores_seal_after_error_and_unwind_before_unlock ... ok
+test meta_store::worktree_impact::tests::known_unrelated_saved_inputs_do_not_block_directory_maintenance ... ok
+test meta_store::worktree_impact::tests::unassignable_nonempty_input_and_malformed_saved_data_are_not_treated_as_empty ... ok
+test meta_store::worktree_impact::tests::related_alias_subdirectory_drafts_and_cross_conversation_files_block_without_changing_bytes ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1317 filtered out; finished in 0.01s
+

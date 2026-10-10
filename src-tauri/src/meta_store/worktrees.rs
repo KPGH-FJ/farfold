@@ -15,30 +15,34 @@ impl MetaStore {
         expected: Option<&str>,
         next: &str,
     ) -> Result<bool, String> {
-        let mut c = self.lock()?;
-        let tx = c
-            .transaction_with_behavior(TransactionBehavior::Immediate)
-            .map_err(sqlite_receipt)?;
-        let raw: Option<String> = tx
-            .query_row("SELECT value FROM settings WHERE key=?1", [KEY], |r| {
-                r.get(0)
-            })
-            .optional()
-            .map_err(sqlite_receipt)?;
-        if raw.as_deref() != expected {
-            tx.rollback().map_err(sqlite_receipt)?;
-            return Ok(false);
-        }
-        tx.execute("INSERT INTO settings(key,value) VALUES (?1,?2) ON CONFLICT(key) DO UPDATE SET value=excluded.value",params![KEY,next]).map_err(sqlite_receipt)?;
-        tx.commit().map_err(sqlite_receipt)?;
-        let saved: String = c
-            .query_row("SELECT value FROM settings WHERE key=?1", [KEY], |r| {
-                r.get(0)
-            })
-            .map_err(sqlite_receipt)?;
-        if saved != next {
-            return Err("worktree storage readback differed".into());
-        }
-        Ok(true)
+        let c = self.lock()?;
+        let window = self.worktree_write_window(&c)?;
+        let result = (|| {
+            let tx = rusqlite::Transaction::new_unchecked(&c, TransactionBehavior::Immediate)
+                .map_err(sqlite_receipt)?;
+            let raw: Option<String> = tx
+                .query_row("SELECT value FROM settings WHERE key=?1", [KEY], |r| {
+                    r.get(0)
+                })
+                .optional()
+                .map_err(sqlite_receipt)?;
+            if raw.as_deref() != expected {
+                tx.rollback().map_err(sqlite_receipt)?;
+                return Ok(false);
+            }
+            tx.execute("INSERT INTO settings(key,value) VALUES (?1,?2) ON CONFLICT(key) DO UPDATE SET value=excluded.value",params![KEY,next]).map_err(sqlite_receipt)?;
+            tx.commit().map_err(sqlite_receipt)?;
+            let saved: String = c
+                .query_row("SELECT value FROM settings WHERE key=?1", [KEY], |r| {
+                    r.get(0)
+                })
+                .map_err(sqlite_receipt)?;
+            if saved != next {
+                return Err("worktree storage readback differed".into());
+            }
+            Ok(true)
+        })();
+        window.finish()?;
+        result
     }
 }

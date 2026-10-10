@@ -133,8 +133,26 @@ pub async fn file_delivery_export_text(
     destination: String,
 ) -> Result<DeliveryReceipt, String> {
     require_main(&webview)?;
-    tauri::async_runtime::spawn_blocking(move || {
+    run_text_export(crate::managed_update::activity, move || {
         file_delivery::export_text(&text, Path::new(&destination))
+    })
+    .await
+}
+
+async fn run_text_export<T, F>(
+    admit: impl FnOnce() -> Result<crate::managed_update::ActivityPermit, String>,
+    operation: F,
+) -> Result<T, String>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Result<T, DeliveryError> + Send + 'static,
+{
+    let activity = admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        // The blocking write outlives a dropped IPC waiter. Its real completion,
+        // including unwinding, owns the admission release.
+        let _activity = activity;
+        operation()
     })
     .await
     .map_err(|_| display_error(DeliveryError::Unavailable))?
@@ -380,5 +398,109 @@ mod tests {
         ] {
             assert!(!document_extension(Path::new(path)));
         }
+    }
+    #[tokio::test]
+    async fn export_admission_blocks_writes_during_exclusive_maintenance() {
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let exclusive = gate.update().unwrap();
+        let called = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let observed = called.clone();
+        let result = run_text_export(
+            || gate.activity(),
+            move || {
+                observed.store(true, std::sync::atomic::Ordering::SeqCst);
+                Ok(())
+            },
+        )
+        .await;
+        assert!(result.is_err());
+        assert!(!called.load(std::sync::atomic::Ordering::SeqCst));
+        drop(exclusive);
+    }
+
+    #[tokio::test]
+    async fn export_admission_remains_owned_by_blocking_writer_after_waiter_drop() {
+        use std::sync::{Arc, mpsc};
+        use std::time::Duration;
+        let gate = Arc::new(crate::managed_update::UpdateAdmission::default());
+        let worker_gate = gate.clone();
+        let temporary = tempfile::tempdir().unwrap();
+        let destination = temporary.path().join("export.txt");
+        let target = destination.clone();
+        let (entered, started) = tokio::sync::oneshot::channel();
+        let (release, released) = mpsc::channel();
+        let (finished, completion) = tokio::sync::oneshot::channel();
+        let waiter = tokio::spawn(async move {
+            run_text_export(
+                || worker_gate.activity(),
+                move || {
+                    let _ = entered.send(());
+                    released.recv_timeout(Duration::from_secs(5)).unwrap();
+                    let result = file_delivery::export_text("controlled export", &target);
+                    let _ = finished.send(result.is_ok());
+                    result
+                },
+            )
+            .await
+        });
+        tokio::time::timeout(Duration::from_secs(5), started)
+            .await
+            .unwrap()
+            .unwrap();
+        let held_before = gate.update().is_err();
+        waiter.abort();
+        assert!(waiter.await.unwrap_err().is_cancelled());
+        let held_after = gate.update().is_err();
+        release.send(()).unwrap();
+        assert!(
+            tokio::time::timeout(Duration::from_secs(5), completion)
+                .await
+                .unwrap()
+                .unwrap()
+        );
+        assert_eq!(
+            std::fs::read_to_string(destination).unwrap(),
+            "controlled export"
+        );
+        assert!(
+            held_before,
+            "actual export must hold admission while writing"
+        );
+        assert!(
+            held_after,
+            "dropping the IPC waiter cannot release an active writer"
+        );
+    }
+
+    #[tokio::test]
+    async fn export_admission_releases_on_success_error_and_worker_panic() {
+        let gate = crate::managed_update::UpdateAdmission::default();
+        assert_eq!(
+            run_text_export(|| gate.activity(), || Ok(42))
+                .await
+                .unwrap(),
+            42
+        );
+        assert!(gate.update().is_ok());
+        assert_eq!(
+            run_text_export(
+                || gate.activity(),
+                || Err::<(), _>(DeliveryError::AlreadyExists)
+            )
+            .await
+            .unwrap_err(),
+            display_error(DeliveryError::AlreadyExists)
+        );
+        assert!(gate.update().is_ok());
+        let failed = run_text_export(
+            || gate.activity(),
+            || -> Result<(), DeliveryError> { panic!("controlled worker failure") },
+        )
+        .await;
+        assert_eq!(
+            failed.unwrap_err(),
+            display_error(DeliveryError::Unavailable)
+        );
+        assert!(gate.update().is_ok());
     }
 }

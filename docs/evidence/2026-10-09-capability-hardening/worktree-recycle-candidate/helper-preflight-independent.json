@@ -1,0 +1,105 @@
+{
+  "status": "static_preflight_passed_not_candidate_or_install_verification",
+  "scope": "Read-only AST/diff review of four public and four private helpers; no helper executed, no build/test/install/UI action. Final current source checkpoint and exact new candidate SHA remain pending.",
+  "baselineCommit": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+  "changesReviewed": [
+    "Candidate baseline and engineering root changed to this slice.",
+    "Private install paths changed; backup/snapshot scripts byte-identical to reviewed prior helpers.",
+    "Normal-exit validation binds root-observed 8780 native receipt and independent closeout rather than stale ece08 fields.",
+    "Guarded installer and duplicate cleanup logic unchanged except precise directories."
+  ],
+  "sourceScope": "prepare/verify collectors unchanged from 8780; final engineering inventory equality is enforced at execution, not claimed now.",
+  "scripts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/prepare-candidate.py",
+      "sha256": "0d866eac2330e4c8eaaf0963f2dd5c8bdba6b1f8c4e6c6945d6530219f4002f3",
+      "priorPath": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/prepare-candidate.py",
+      "priorSha256": "2e8d1296b45d8e6c6d8bd0c4228d02e7ae98bdf604643275baf9d8060d5e90b0",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-candidate.py",
+      "sha256": "1e9ac75b34701c399b842c220ad01ca72950b2bb925b683e5f92b4a927d249d6",
+      "priorPath": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-candidate.py",
+      "priorSha256": "da40a7ead1bc6ed16ac1f36f09ce74f9712a21b5935269797a2dd81f01d86746",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-data-retention.py",
+      "sha256": "7f801c486567cd376261478bee93b7a8ee4b0e2546ca15e14e72308eafe80f95",
+      "priorPath": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-data-retention.py",
+      "priorSha256": "acbab48042b863b27727d20f700b89fc65a4719aed6a6e81c4af4ea2ac83a411",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-install-independent.py",
+      "sha256": "1bf4bbdfde26ef3ad3dddcd90376ce9b12ca5bc55cce5d94240d77988d6564ed",
+      "priorPath": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-install-independent.py",
+      "priorSha256": "14d34c7535f492eae437558e840b61d1ac4cae973092ea84106a0abd6dabc520",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/install_verified_candidate.py",
+      "sha256": "8d8c22f582a7e7d831f41574bc15b1381534f18223386c9e579153a89d576046",
+      "priorPath": "output/2026-10-10-worktree-task-install/install_verified_candidate.py",
+      "priorSha256": "fae35e6f1db3c5824154f589fb306a3e1e49c30dea7676d2104a57f2cb34e7aa",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/cleanup_duplicate.py",
+      "sha256": "a0185ab990906a4ba8186713eab3ead606e51d3e08a225253197c64b92159ceb",
+      "priorPath": "output/2026-10-10-worktree-task-install/cleanup_duplicate.py",
+      "priorSha256": "df3747fc0bb653e10c1261896454b47152e22644d019f80aa81d2fba669eea14",
+      "identical": false,
+      "astParse": "passed"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "priorPath": "output/2026-10-10-worktree-task-install/backup_metadata.py",
+      "priorSha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "identical": true,
+      "astParse": "passed"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "priorPath": "output/2026-10-10-worktree-task-install/install_data_snapshot.py",
+      "priorSha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "identical": true,
+      "astParse": "passed"
+    }
+  ],
+  "baselineEvidence": {
+    "normalExitRefsMatch": true,
+    "beforeRawCount": 217400,
+    "beforeRawSha256": "8e0513b7ed1c96f883c3c8047b8cc30d3ba30f333b0302ac1d915b73ed5a395d",
+    "backupSha256": "46337b87d2c2a18d5653386186d8128e1c122ed555961e633234411082a32d39",
+    "captureMainWalShmHashesMatch": true,
+    "sqliteOpened": false
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/normal-exit-observation.json",
+      "sha256": "20fddece7e759efafc2bf28701942bee3367ab55d53cc35a33cdf738f733c12b"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/metadata-backup-receipt.json",
+      "sha256": "0f705f7d546558e31f66484fed7d2d14c654a9907822777fc48607c16c0fe1a0"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-install/install-data-before-summary.json",
+      "sha256": "90592822b93cfe26c55d831ca2251f99da7736142feef9d7abf32a2367915337"
+    }
+  ],
+  "remaining": [
+    "Root completes source freeze and engineering checks, exact scoped commit and candidate build.",
+    "Independent verify-candidate with exact commit and actual engineering receipt before guarded install.",
+    "Fresh preinstall/after snapshots and ten-check install-independent; native acceptance stays separate."
+  ]
+}

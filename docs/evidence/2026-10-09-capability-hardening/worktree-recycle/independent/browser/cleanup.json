@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-10T06:43:57.554216+00:00",
+  "ownedPid": 34314,
+  "signal": "SIGTERM",
+  "toolSessionExit": 143,
+  "processAbsent": true,
+  "port1476HasNoListener": true,
+  "note": "Actual exec exit was 143; do not label this exit 0. No force signal. Runner finally closed its own browser."
+}

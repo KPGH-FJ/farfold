@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-10",
+  "status": "read_only_research; implementation_and_runtime_acceptance_not_performed",
+  "scope": {
+    "representatives": ["Codex", "Claude", "OpenCode", "Pi"],
+    "all29Validated": false,
+    "contract": "P32 remains incomplete. Read only through an official surface; no persistent body ledger, implicit resume, prompts, or second Agent loop. Existing loaded-body search remains a separate proven scope."
+  },
+  "recommendation": {
+    "priority": "First implement a narrowly declared official-message reader using the selected Claude ACP installation’s already present public SDK exports, after synthetic no-side-effect and completeness tests. It can search previously unloaded messages returned by that API; it cannot honestly claim full original history.",
+    "notCompletion": "API existence and source review are not product, installed-app, real-account, all-history or all-29 acceptance. Compressed-away messages, other branches, attachment entities and unsupported registrations remain explicit gaps.",
+    "nextConditional": "Codex thread/read has stronger explicit read semantics, but its integration needs a proven owned app-server route that neither starts a competing Agent controller nor alters storage on startup. Do not tunnel it through an unadvertised ACP extension."
+  },
+  "currentPaths": [
+    {
+      "path": "src/runtime/history_import.ts + acp_client/session_discovery.rs",
+      "finding": "The current import preview uses open_session_owned/session_load. Discovery also connects first. Neither is a no-start bulk-reader shortcut."
+    },
+    {
+      "path": "acp_client/session.rs + pump.rs",
+      "finding": "Loading may connect_selected, restore saved configuration and send setters. No prompt is insufficient proof of no side effects. Standard ACP list is metadata, not body search."
+    },
+    {
+      "path": "src/runtime/loaded_search.ts + loaded_search_worker.ts",
+      "finding": "Reuse cancellable visible-text extraction, temporary results and explicit coverage. Current limits are 1,048,576 characters per field, 16,777,216 total and 200 hits; the Worker wait limit is 10 seconds per field, not per query. Historical snapshots require their own source ownership, not a forged live Thread."
+    }
+  ],
+  "representatives": [
+    {
+      "agent": "Claude",
+      "packageEvidence": {
+        "adapter": "@agentclientprotocol/claude-agent-acp 0.81.2",
+        "dependency": "@anthropic-ai/claude-agent-sdk 0.3.280",
+        "exports": "Package root exports sdk.mjs and sdk.d.ts. Public getSessionInfo(sessionId,{dir}) and getSessionMessages(sessionId,{dir,limit,offset}); listSessions({dir,includeWorktrees:false,...}) is optional discovery, not required for a first slice over existing Farfold index IDs. Versions describe the installed evidence, not a new pin or compatibility gate."
+      },
+      "readPath": "Installed getSessionMessages local path NQt → yY → aa/sVe → iVe/_Y. Inspected getter uses filesystem reads and message-chain projection; it does not call query or spawn the Agent CLI. Do not enable alpha sessionStore or call resume/query.",
+      "coverageLimits": [
+        "Over 5 MiB, installed sVe normally reads only after the latest compact boundary. Small transcripts also pass through chain/visibility selection. Malformed lines may be skipped and missing/read failures may return empty results. Limit/offset is result pagination, not an input-memory bound.",
+        "Official Python get_session_messages also selects the current chain and does not traverse logicalParentUuid across compaction; it is not a full-history workaround. No Python package is proposed for installation.",
+        "dir constrains lookup but official lookup can consider linked worktrees. Revalidate returned session ID/cwd against the requested index scope; do not interpret directory alone as package ownership or authorization for all projects."
+      ],
+      "sideEffectStatus": "Getter call graph inspected only. Module-import initialization, telemetry/network, concurrent-file behavior and complete filesystem write absence have not been executed or proved; synthetic isolated probes must gate availability.",
+      "cancel": "No public AbortSignal in this installed getter signature. Use one dedicated, non-Agent reader helper per owned request; cancel its exact process and await reaping. Deadline/output-limit failure is unavailable or partial, never zero hits.",
+      "decision": "Prioritized implementable partial route, conditional on probe gates below."
+    },
+    {
+      "agent": "Codex",
+      "surface": "Official app-server thread/read({threadId,includeTurns:true}) is documented to read stored turns without resuming or subscribing. thread/list.searchTerm is title search; its default source filter is not all sources. useStateDbOnly avoids list scan/repair work.",
+      "integrationGap": "Current selected ACP adapter owns its app-server child transport; reviewed adapter surface did not expose this getter. Starting another server, even without a prompt, has not been proved write-free. Experimental turn/item pagination is not assumed available in the installed CLI.",
+      "cancel": "If a valid owned route is later available, retire only the read request/results, not the shared Agent process; verify supported cancellation/time/output bounds. Do not resume to obtain bodies.",
+      "decision": "Official getter exists; safe no-start integration remains unimplemented and untested."
+    },
+    {
+      "agent": "OpenCode",
+      "surface": "Official SDK createOpencodeClient can address an existing server; session.messages/message are read endpoints. createOpencode starts a server. SDK find.text searches project files, not conversation history.",
+      "sourceVersion": "Official v1.18.31 CLI export source calls Session.get/messages, but effect-cmd defaults to an instance with bootstrap; bootstrap initializes plugins/configuration and services. A CLI export invocation is therefore not a proven passive reader.",
+      "integrationGap": "Current ACP route has no verified separately addressable server endpoint. Never probe arbitrary localhost ports, reuse unrelated server credentials, or launch a new server automatically for search.",
+      "decision": "Conditional existing, explicitly owned server route only; current product has no accepted unloaded-reader path."
+    },
+    {
+      "agent": "Pi",
+      "packageEvidence": "Installed @earendil-works/pi-coding-agent 0.87.1; official v0.87.1 source was compared. No package was executed.",
+      "sideEffects": "SessionManager.open/setSessionFile can migrate and rewrite files. Exported-for-testing loadEntriesFromFile appends a trailing newline when absent. Default session-directory resolution can create directories. These must not be used as a read-only search getter.",
+      "coverageLimits": "SessionInfo.allMessagesText joins user/assistant text and loses exact message boundaries/IDs; a match may span messages. listAll can provide coarse discovery with cancellation but silently skips some failures. RPC get_messages is for the currently loaded session.",
+      "decision": "No accepted exact-message, no-write unloaded reader in the inspected surface. Do not replace it with a private JSONL/database parser or load another session."
+    }
+  ],
+  "proposedFirstSlice": {
+    "ownership": "Inside acp_client only: derive reader eligibility from the user-selected AgentRow command/args and its canonical official registry launch shape. Resolve the existing SDK from that exact adapter installation dependency graph and package export; never from project cwd, PATH guessing, a matching display name, or an arbitrary npm directory. The inspected installation is evidence, not proof that the user has selected it.",
+    "registrationGate": "Reuse the existing launch-provenance approach without binary hash/version pinning. Custom wrappers or unresolved package/Node ownership remain unsupported. Use the selected Node launch or existing managed Node associated with that install; no new Agent installation, private HOME, environment override, or user configuration write.",
+    "request": "A proposed common transient request carries an unrepeatable request owner, current selected program/service identity, explicit scope, indexed native IDs, cwd and query. The backend advertises read capability plus known omissions. Limit the first slice to already indexed exact IDs; separate wider discovery from body coverage.",
+    "result": "Per-session outcome: available official projection, unavailable, changed, unsupported, cancelled or budget-excluded; message ID/role/field boundaries and partial reason. Common UI says official-returned historical body and shows coverage/gaps. Empty SDK output alone never proves the complete history is empty.",
+    "lifetime": "No bodies in settings/index/logs. Retain bounded snapshots only for the current search and explicit result view. Query/scope/program changes terminate the private helper and invalidate old output; an active Agent connection and its native session are untouched.",
+    "resourceBoundary": "Bound candidate count, preflight SDK-reported local file size when available, message text and serialized stdout before accepting it; enforce an observed wall deadline and measured helper memory ceiling. SDK pagination still reads/projects substantial input and is not a resource cap. Choose numeric reader caps after synthetic measurement, retaining current UI search limits as output limits only.",
+    "jump": "Open an ephemeral read-only result snapshot, with exact official message identity and source scope, then revalidate if reread. A stale or unavailable result is explicit. Resuming the real conversation remains a separate user action; clicking a hit must not implicitly call session_load."
+  },
+  "requiredAcceptance": [
+    "Synthetic public SDK import/getter: no file creation, repair, migration, network, Agent child or model request; inspect canaries and exact child lifetime. Do not point this probe at user histories.",
+    "Known literal before and after compaction, including a transcript over 5 MiB; multiple branches, skipped/malformed lines, missing/unreadable files and an actual empty conversation. Show omissions rather than full-history no-hit.",
+    "Exact selected launch/dependency ownership; wrong cwd, linked-worktree fallback, duplicate native IDs across programs and changed program/service reject stale results. No module resolution through the project.",
+    "Mutation during read and changed metadata: no mixed-result claim. SDK stat metadata alone is not an atomic snapshot proof; flag concurrent/unconfirmed reads. No locks or writes to ongoing Agent work.",
+    "Cancellation before import/during read/while output streams, helper timeout, output overflow and peak-memory measurement; no surviving private helper and no cancellation of an existing Agent.",
+    "Long Markdown plus repeated/Unicode fields, exact message jumps, late results after query/scope changes and no match across joined message boundaries. Attachments cover only returned text, not files/media/OCR.",
+    "Common capability-driven UI with accurate partial counts, no brand-specific panels and no persistent transcript ledger. Prove synthetic reader first, then separately authorized installed-product evidence."
+  ],
+  "officialSources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/app-server",
+      "entry": "https://developers.openai.com/codex/app-server",
+      "checked": "2026-10-10",
+      "supports": "Codex read/list semantics and experimental pagination; official page read after OpenAI Docs skill."
+    },
+    {
+      "url": "https://code.claude.com/docs/en/agent-sdk/python",
+      "checked": "2026-10-10",
+      "supports": "Public history/session inspection API documentation; Python was not installed or invoked."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anthropics/claude-agent-sdk-typescript/main/CHANGELOG.md",
+      "checked": "2026-10-10",
+      "supports": "Public TS history helpers and subsequent completeness fixes; exact installed signatures/source separately hashed."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anthropics/claude-agent-sdk-python/main/src/claude_agent_sdk/_internal/sessions.py",
+      "checked": "2026-10-10",
+      "supports": "Read/parse/pagination and current-chain/compaction limits. Mutable main is a reviewed date checkpoint, not a dependency version."
+    },
+    {
+      "url": "https://opencode.ai/docs/sdk/",
+      "checked": "2026-10-10",
+      "supports": "Existing-client versus server-start distinction and session APIs."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anomalyco/opencode/v1.18.31/packages/opencode/src/cli/cmd/export.ts",
+      "checked": "2026-10-10",
+      "supports": "CLI export delegates to session get/messages."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anomalyco/opencode/v1.18.31/packages/opencode/src/cli/effect-cmd.ts",
+      "checked": "2026-10-10",
+      "supports": "Default instance/bootstrap lifecycle."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/anomalyco/opencode/v1.18.31/packages/opencode/src/project/bootstrap.ts",
+      "checked": "2026-10-10",
+      "supports": "Plugin/configuration initialization, so export is not assumed passive."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/badlogic/pi-mono/v0.87.1/packages/coding-agent/src/core/session-manager.ts",
+      "checked": "2026-10-10",
+      "supports": "Pi file repair/migration and discovery/getter limitations; installed JS separately checked."
+    }
+  ],
+  "retrievalLimit": "The Claude TypeScript documentation page exceeded the web reader response limit; this is a retrieval limitation, not evidence of an absent API. Exact public installed d.ts plus mjs and official changelog were used instead.",
+  "validation": {
+    "method": "Read-only current code, existing 29-agent evidence, installed software-package files and official documentation/source. No SDK import or getter execution; no user transcript/body/credential/DB inspection; no App, Agent, model request, configuration change, install or test/build. Only this new research JSON is written and formatted.",
+    "head": "07fec378056bb47569a8d10ba02c7fb0a84dec51",
+    "productionInputsChangedByThisResearch": false
+  },
+  "sourceRefs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "386c7947e75a3d98d19dc2d86c5ff98c5ca6d9405007fe3ec44c095a2c467597"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "1afa92db8124b4cf7faa2268214d79d18253ac8eae5ee038e62daa1c6f678fd8"
+    },
+    {
+      "path": "src/runtime/history_import.ts",
+      "sha256": "2778bc2ae9690d7a6b295367ea0ea5e57b61a6de001783187939487c241197f8"
+    },
+    {
+      "path": "src/runtime/loaded_search.ts",
+      "sha256": "919c8ddd05573b98c581774c88656993f8ebe7befa439d7a7799f957745c8061"
+    },
+    {
+      "path": "src/runtime/loaded_search_worker.ts",
+      "sha256": "4afe1e838ea2f44bfaab68efb834b80b58767d3b470a6307a3384e3722d749b1"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "sha256": "bbbd6ad135ccb0d1f47934ed458f73a4f08afc1f17962cbe48199b999ad65edb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "159189718fbdbbe63e8271bd3e5131a3afed7bbc33e6ea4a71c647fb52a20ecc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability.rs",
+      "sha256": "628253ee2d050016b5127202f5b2f0aeaf01e4738bbcb7ad04653f0632e1ab62"
+    },
+    {
+      "path": "src-tauri/src/agent_install.rs",
+      "sha256": "caa267f0a142e1825c1cf8d35a03c93213adfed36becbbcc682ba5566eb32ee3"
+    },
+    {
+      "path": "src-tauri/src/node_runtime.rs",
+      "sha256": "8a930e3eec1c1cf96664732e0f656fa60f1dc3847fa823f7d873848f21cce7c4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-next-review.json",
+      "sha256": "ba58074666672884a6216927b3804d7e3180289c4fe6d2ef657881760f4a6f88"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/official-capabilities.json",
+      "sha256": "46344745270078acea9a83838db116e1bb0375c699edb995d8eb7acacc5cd61b"
+    }
+  ],
+  "installedSoftwareRefs": [
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@agentclientprotocol/claude-agent-acp/package.json",
+      "sha256": "babacb99324687f02d54f0894c6ebdab1240fa057e4c325464f3390b93ea8a65"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/package.json",
+      "sha256": "1b088aefaa33134531f1840976e87cc1fce2383deff646a75e7a5bdd78cf18c8"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.d.ts",
+      "sha256": "b7ac9c0ed0db5c1792a5394e72c75d69d85f4ce9edc0279487ec55d32eabfa76"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:claude-acp/install-z0F8a2/node_modules/@anthropic-ai/claude-agent-sdk/sdk.mjs",
+      "sha256": "ef4c2c0fc286d8c7dab7771516cf95206f9f670e99e74dc62f245b7fc8224955"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-pi/dependency-pi-cli-GAsip5/node_modules/@earendil-works/pi-coding-agent/package.json",
+      "sha256": "627631b613ba4ca29eba8df793f5280fd20b19f01d73826e9ffda14c15def5dc"
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/companion-programs/agent-pi/dependency-pi-cli-GAsip5/node_modules/@earendil-works/pi-coding-agent/dist/core/session-manager.js",
+      "sha256": "d365ffb5a189915c3af93953daf751bff45fe46222b05c426f8d8b845946bebf"
+    }
+  ]
+}

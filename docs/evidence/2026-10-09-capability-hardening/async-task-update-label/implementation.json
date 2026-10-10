@@ -1,0 +1,102 @@
+{
+  "scope": "Recognized asynchronous-task raw update presentation only; no control or state transition changes.",
+  "nativeFailure": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/27-async-stopped-envelope.txt",
+      "sha256": "a4bafaceab648f117915c9d740c82c30ac503d845f3971426bdf92308ac865ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/27-async-stopped-envelope.png",
+      "sha256": "7ce526d6d591f369467c1ba3a071e2f6eecdbf55e542cf4b8e1b42d0a891ceab"
+    }
+  ],
+  "rootCause": "Rust forwards original update before the validated task activity event. The task card recognized it, while applyUpdate default pushRaw and ThreadView only mapped notification labels.",
+  "policy": [
+    "Reuse async_tasks record/text guards, with official UTF-8 byte limits for raw fields. Require current supported declaration, exact connection/session and original envelope.update object before assigning internal semantic label.",
+    "Spawn requires ID/name/type/canStop and valid optional tool/showInTranscript fields; state update requires ID and completed/failed/stopped. Future/invalid shapes retain unknown title.",
+    "Original raw update object, all unknown fields and envelope extras remain retained. Title never grants task ownership, stopping permission or terminal state. No Agent-name branch.",
+    "Recognized labels are historical presentation; after connection/session changes, new updates cannot borrow old declarations. No implicit reclassification or control replay."
+  ],
+  "sourceRefs": [
+    {
+      "path": "src/runtime/async_tasks.ts",
+      "sha256": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+      "lines": 174
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+      "lines": 942
+    },
+    {
+      "path": "src/runtime/async_task_strings.ts",
+      "sha256": "1ba553a4f86f84c56a63b8bbb70f0f856404a9301ef0feb8054e996a1ac60518",
+      "lines": 16
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "1608c8c43bd53bbd191d8a151f9b18ab6f52738ba554a3bb825a1a63211bfd86",
+      "lines": 1381
+    },
+    {
+      "path": "src/components/ThreadView.async-update.test.tsx",
+      "sha256": "7570e461706cf5ce6c45d9cbab7723c3d7657996957095e401fb10082d9f751f",
+      "lines": 151
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "3a19fca1b0e128949d236711f4cbe30cf72ceca66fc750f1c993e868dd7d18c6",
+      "lines": 165
+    }
+  ],
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/ThreadView.async-update.test.tsx",
+      "log": "red.txt",
+      "exitCode": 1,
+      "passed": 2,
+      "failed": 3,
+      "note": "Actual missing-label assertions fail for valid spawned/state and historical labeled item; later render assertions not reached on red."
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/ThreadView.async-update.test.tsx src/runtime/async_tasks.test.ts src/components/AsyncTasks.test.tsx src/components/ThreadView.compaction.test.tsx src/components/ThreadView.outcomes.test.tsx src/runtime/strings.test.ts",
+      "log": "green.txt",
+      "exitCode": 0,
+      "files": 6,
+      "passed": 48
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": "typecheck.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm exec prettier --check <6 files in sourceRefs>",
+      "log": "format.txt",
+      "exitCode": 0
+    }
+  ],
+  "evidence": [
+    {
+      "path": "format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "green.txt",
+      "sha256": "572f7128aa3947fe9ca200f1f6fd8edcbd6363feaad4e73477cc37b6c8d6d633"
+    },
+    {
+      "path": "red.txt",
+      "sha256": "f454debb210ea4f4e5a7ebd89c26fcfbe1f34226db549a6d5ac113b26c4e19a1"
+    },
+    {
+      "path": "typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ],
+  "protectedCheckpoints": {
+    "h15All22Unchanged": true,
+    "searchLabelBothUnchanged": true
+  },
+  "boundary": "Current code and controlled projection/SSR regression verified. Original native text inspected; screenshot retained by reference, not independently re-read by this owner. Installed corrected label not yet verified; no real Agent or app run."
+}

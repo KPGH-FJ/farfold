@@ -1,0 +1,150 @@
+{
+  "scope": "Independent actual React full App with controlled IPC; narrow maintenance message followup. No real Git, SQLite writes, Agent, or installed App operations.",
+  "status": "passed",
+  "priorFullMatrix": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/frontend-independent.json",
+    "sha256": "d2021658700941f586e0fb387fb3a3cd0041cf5daefe9bf0b44ba6dd56776d98",
+    "checksPerEngine": 27,
+    "remainsHistorical": true
+  },
+  "followup": {
+    "webkit": 8,
+    "chromium": 8,
+    "sourceStableWithinEachRun": true,
+    "errors": 0,
+    "blockedNetwork": 0,
+    "assertions": [
+      "Maintenance lease does not falsely claim draft changed; Use remains disabled and cancel remains reachable.",
+      "Same original target after exact cancellation stays current.",
+      "Actual sidebar navigation retires original draft owner; reopening that saved request through same production module instance still shows changed hint and disables Use."
+    ]
+  },
+  "driverFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.json",
+    "passedBeforeFailure": 5,
+    "classification": "Harness module instance mismatch",
+    "detail": "Extensionless dynamic import in page.evaluate opened a separate module instance; actual host had no request. Original driver/raw retained. Final fixture exposes a same-instance bridge; production unchanged."
+  },
+  "screenshotsViewed": [
+    "webkit-final-maintaining.png",
+    "webkit-final-retired-target.png",
+    "chromium-final-maintaining.png",
+    "chromium-final-retired-target.png"
+  ],
+  "sources": [
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "d6fc5f1383f92c0410e3084317a069d11227b567701c2cb2454f1694336d8eb6"
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "3f9fefa0467df77a234a074b46c09e006287dbb37ff25d07b4c2485afab695bd"
+    }
+  ],
+  "jsonFormatting": [
+    {
+      "json": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.json",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.raw.txt",
+      "semanticEqual": true
+    },
+    {
+      "json": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final.json",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final.raw.txt",
+      "semanticEqual": true
+    },
+    {
+      "json": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final.json",
+      "raw": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final.raw.txt",
+      "semanticEqual": true
+    }
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final-maintaining.png",
+      "sha256": "6443b230121c853278970d940ec12bb8e4afaf7fa3b18a1ced6d03f1e7b31eed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final-retired-target.png",
+      "sha256": "c91e9cb2f4247dfd368fad0a73b27c7af71140b68e0ff9b90ab69ba34c9eb72d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final.json",
+      "sha256": "a53f3b727290bc975d21e953649a64ce4efa4399135bee0fea72bf59453ca66d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final.raw.txt",
+      "sha256": "a53f3b727290bc975d21e953649a64ce4efa4399135bee0fea72bf59453ca66d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/chromium-final.stdout.txt",
+      "sha256": "73618e36b27d00cf2f47b102adbcb538a2549acf388ca15ff6ad1050ee6b28aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/fixture.tsx",
+      "sha256": "38ea4064b674b058214cf20d8eedfb3da9be5b1d9a6762cf7aa183536a0e50e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/index.html",
+      "sha256": "9313522aaab210ee3139da0079826a9f84fb5adade385b365b4871b75b1d4ca5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/run-first.mjs.txt",
+      "sha256": "6a0f63c14a86285f666fd4ca5ea47cc1aefbb56cb7c1aca7294d391a89040fd3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/run.mjs",
+      "sha256": "55ece95eb1ad2b76b2e1e7eed2b2b5d75573a268de1cadc726e44a0646133a1f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-failure.png",
+      "sha256": "2810dfdce527a5a3eb90786bccff2f87e69905097027bb56edcd3e6dc0e06624"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final-maintaining.png",
+      "sha256": "c8afa6252cabb4827bac0de5a99e9a6b73dbaf459c54ec69b65cdf34ed1e131c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final-retired-target.png",
+      "sha256": "cc8aca50ee7427623a95814fe02bdb539746da8a89bd413e293e8a85330cd536"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final.json",
+      "sha256": "41e00cf05efcd26d4b4f18f61ad6bac6d8e97dc4204b975c5d1706890e0e4110"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final.raw.txt",
+      "sha256": "41e00cf05efcd26d4b4f18f61ad6bac6d8e97dc4204b975c5d1706890e0e4110"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-final.stdout.txt",
+      "sha256": "73618e36b27d00cf2f47b102adbcb538a2549acf388ca15ff6ad1050ee6b28aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit-maintaining.png",
+      "sha256": "c8afa6252cabb4827bac0de5a99e9a6b73dbaf459c54ec69b65cdf34ed1e131c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.json",
+      "sha256": "a3f50442791a4449f69e9f3a795b2873b17f783a0b2699ad0fe3ce57173cd56c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.raw.txt",
+      "sha256": "a3f50442791a4449f69e9f3a795b2873b17f783a0b2699ad0fe3ce57173cd56c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/webkit.stdout.txt",
+      "sha256": "4f991f1701718bdddef41e437cf5db935e758574ce64494c1a5ef858d9f738b6"
+    }
+  ],
+  "cleanup": {
+    "pid": 51675,
+    "exactCommand": "node docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/browser/serve.mjs",
+    "requested": "SIGTERM after browser closed",
+    "completion": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/maintenance-label/cleanup.json",
+      "toolExit": 143,
+      "pidAbsent": true,
+      "listenerAbsent": true
+    }
+  }
+}

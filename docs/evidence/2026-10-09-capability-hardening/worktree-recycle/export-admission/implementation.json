@@ -1,0 +1,47 @@
+{
+  "scope": "Text export admission retained by actual blocking worker; one Rust source file only.",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "c84af9804734af39001474f2bde8b289018b3e10a409f1e9ea723e373956dfa8",
+      "lines": 506
+    }
+  ],
+  "implementation": "After main-webview caller authorization, production passes managed_update::activity into the shared private scheduling helper. Helper acquires before spawn and moves the permit into the blocking closure until actual return/unwind. Dropping async IPC waiter cannot release the writer. Export semantics/target checks are unchanged.",
+  "red": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery_commands::tests::export_admission -- --nocapture",
+    "exitCode": 101,
+    "passed": 1,
+    "failed": 2,
+    "log": "red.txt",
+    "baseline": "Original no-admission scheduling was equivalently extracted into run_text_export; the admission callback was not yet invoked. Controlled tests failed exclusive-operation rejection and admission held while actual export was blocked. The later post-waiter-drop assertion was not reached in the latter red, though its boolean was captured before release."
+  },
+  "green": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked file_delivery_commands::tests -- --nocapture",
+    "exitCode": 0,
+    "passed": 7,
+    "log": "green.txt",
+    "cases": [
+      "Maintenance exclusive lease rejects scheduling, work closure not called",
+      "Real temp-file export waits behind bounded test channel; dropping waiter leaves admission held; release completes exact content",
+      "Success, ordinary error, and controlled panic all release permit",
+      "Existing command-origin/platform/document-open restrictions"
+    ]
+  },
+  "format": {
+    "command": "rustfmt --edition 2024 --check src-tauri/src/file_delivery_commands.rs",
+    "exitCode": 0
+  },
+  "warnings": "Intermediate Cargo logs include peer H15 WIP dead-code/unused-import warnings. This receipt does not claim project-wide clippy, final integration, or final peer backend status.",
+  "evidence": [
+    {
+      "path": "green.txt",
+      "sha256": "aa5c7538f1994ceec0951ead272434582ca170dc00429b03f4d988688d27daae"
+    },
+    {
+      "path": "red.txt",
+      "sha256": "c3a0c933b745278bc621a16802458969361ee342139cd2ae37300c2315d7a47c"
+    }
+  ],
+  "boundary": "Test-only independent UpdateAdmission uses the real shared helper, channel barriers and temporary file export; production global gate injection is source-reviewed. No app UI, Agent, installation or user directory was accessed; no permanent fixtures or test environment switches."
+}

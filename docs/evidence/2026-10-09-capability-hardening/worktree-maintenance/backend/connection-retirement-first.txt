@@ -1,0 +1,10 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.06s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+test acp_client::lifecycle_tests::directory_maintenance_tests::directory_maintenance_does_not_force_active_or_unconfirmed_life ... ok
+test acp_client::lifecycle_tests::directory_maintenance_tests::directory_maintenance_retires_exact_idle_alias_descendant_and_reaps_before_return ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1313 filtered out; finished in 0.58s
+

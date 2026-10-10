@@ -63,6 +63,7 @@ vi.mock("../runtime/sessions", () => ({
 }));
 import { CommandPalette } from "./CommandPalette";
 import { STRINGS } from "../runtime/strings";
+import { LOADED_SEARCH_STRINGS as SEARCH } from "../runtime/loaded_search_strings";
 
 type Element = ReactElement<Record<string, unknown>>;
 const props = {
@@ -213,4 +214,21 @@ it("searches across Agents and folders independently of the currently open conve
       archived: true,
     }),
   );
+});
+
+it("announces the selected search scope and restores its metadata label when switched back", () => {
+  const input = () => render().find((node) => node.props.role === "combobox")!;
+  const changeScope = (value: string) => {
+    const select = render().find((node) => node.type === "select")!;
+    (select.props.onChange as (event: unknown) => void)({ target: { value } });
+  };
+  expect(input().props["aria-label"]).toBe(STRINGS.palette.searchLabel);
+  changeScope("body");
+  expect(input().props.placeholder).toBe(SEARCH.query);
+  expect(input().props["aria-label"]).toBe(SEARCH.query);
+  changeScope("metadata");
+  expect(input().props["aria-label"]).toBe(STRINGS.palette.searchLabel);
+  expect(input().props.placeholder).toBe(STRINGS.palette.placeholder);
+  expect(props.onSelect).not.toHaveBeenCalled();
+  expect(props.onClose).not.toHaveBeenCalled();
 });

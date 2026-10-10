@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkLocationPicker.test.tsx (3 tests | 1 failed) 8ms
+   × a retained picker callback does not combine a new draft with the previous cwd 3ms
+ ❯ src/runtime/worktree_recycle.test.ts (12 tests | 3 failed) 71ms
+   × does not start a recycle prepared receipt that lacks this instance's maintenance gate 4ms
+   × checks an unknown archive independently of a superseded intent, without moving or applying 1ms
+   × unknown archive check rejects a changed directory and preserves the original record 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkLocationPicker.test.tsx > a retained picker callback does not combine a new draft with the previous cwd
+AssertionError: expected '/old' to be '/new' // Object.is equality
+
+Expected: "/new"
+Received: "/old"
+
+ ❯ src/components/WorkLocationPicker.test.tsx:80:46
+     78|   render("/new");
+     79|   oldButton.props.onClick();
+     80|   expect(worktreeManagement.snapshot()?.cwd).toBe("/new");
+       |                                              ^
+     81| });
+     82|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/worktree_recycle.test.ts > does not start a recycle prepared receipt that lacks this instance's maintenance gate
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/worktree_recycle.test.ts:306:69
+    304|   });
+    305|   await w.recycle(preview, () => true);
+    306|   expect(h.invoke.mock.calls.some(([c]) => c === "worktree_start")).to…
+       |                                                                     ^
+    307|   expect(w.snapshot().uncertain).toBe(true);
+    308|   expect(d.snapshot().interactionLocked).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/worktree_recycle.test.ts > checks an unknown archive independently of a superseded intent, without moving or applying
+TypeError: w.checkArchive is not a function
+ ❯ src/runtime/worktree_recycle.test.ts:331:11
+    329|   const { worktrees: w } = await import("./worktrees");
+    330|   await w.load();
+    331|   await w.checkArchive(w.snapshot().archives[0]);
+       |           ^
+    332|   expect(w.snapshot().archives).toEqual([archive]);
+    333|   expect(w.snapshot().locations).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/worktree_recycle.test.ts > unknown archive check rejects a changed directory and preserves the original record
+TypeError: w.checkArchive is not a function
+ ❯ src/runtime/worktree_recycle.test.ts:359:18
+    357|   await w.load();
+    358|   const original = w.snapshot().archives[0];
+    359|   await expect(w.checkArchive(original)).rejects.toThrow();
+       |                  ^
+    360|   expect(w.snapshot().archives[0]).toBe(original);
+    361|   expect(w.snapshot().locations).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 11 passed (15)
+   Start at  14:27:47
+   Duration  205ms (transform 119ms, setup 0ms, import 114ms, tests 79ms, environment 0ms)
+

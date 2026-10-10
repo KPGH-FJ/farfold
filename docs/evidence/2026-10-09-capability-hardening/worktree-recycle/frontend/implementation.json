@@ -1,0 +1,284 @@
+{
+  "stage": "H15 retained archive and explicit original-path restore — frontend initial freeze",
+  "head": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+  "scope": {
+    "implemented": [
+      "Created linked records only; archive/restore inspect preview then explicit external-use acknowledgement; backend still decides authorization.",
+      "Independent management host outside edit/quit inert subtree; draft use remains exact original owner and never automatic.",
+      "Owned maintenance lease acquired before both draft flushes; original preview SHA baselines sent to prepare; exact operation status controls lease release, never inferred from settled.",
+      "Unknown prepare survives dialog departure; exact cancellation/status only; no retry/start replay.",
+      "Archive original/retained paths and provenance kept separate from usable locations; explicit read-only archive check can recover superseded-intent materials.",
+      "Existing ordinary folder/create/adopt/use/forget behavior retained; accurate committed-file wording."
+    ],
+    "notImplemented": [
+      "Permanent deletion or archive removal (remaining H15 work)",
+      "Protection against external programs writing during maintenance"
+    ],
+    "notProved": [
+      "Actual new Rust wire interoperability (backend implementation in progress)",
+      "Actual full App browser journey for this new UI",
+      "Installed H15 or real Agent execution"
+    ]
+  },
+  "sourceRefs": [
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+      "lines": 163
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93",
+      "lines": 336
+    },
+    {
+      "path": "src/runtime/worktree_types.test.ts",
+      "sha256": "67e400bc576bb8409158d99e2d080a3e376d74d44c45f07d03a8513f35649bca",
+      "lines": 140
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "1ba455b74a57f0b12e27609f47a9b3925fb1de4b386e73400b2eb267af90450d",
+      "lines": 671
+    },
+    {
+      "path": "src/runtime/worktrees.test.ts",
+      "sha256": "f7695387cd42afc62bdacbcbb36b60a7030aeb69beb9c5f9d61f071d38a09916",
+      "lines": 490
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "87d7a67c11c3d90ab8b939be367681027877086766606679723dac2fd76ece80",
+      "lines": 189
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "9878a64e7bace9ae44a1aa252b827fef8e3068f6e63b9727f1680e4fd4ac4b80",
+      "lines": 516
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "9cc1cd786d3631ab88bd79638f4f5e122ca7f71ea2113c0f45d765b010e91fdc",
+      "lines": 452
+    },
+    {
+      "path": "src/components/WorktreeDialog.css",
+      "sha256": "1768efb20298749ff974c1b65544a605cb7993534daeb65dee6b71b0e330565b",
+      "lines": 90
+    },
+    {
+      "path": "src/components/WorkLocationPicker.tsx",
+      "sha256": "fadf9efa111d4a909f9a8d42665f2b4e5ceadd49254334df3a408d03fada9308",
+      "lines": 45
+    },
+    {
+      "path": "src/components/WorkLocationPicker.test.tsx",
+      "sha256": "e04f9dead94bbd268afef5554ec64d72f81d5548209e98367fa07829824461e0",
+      "lines": 81
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+      "lines": 311
+    },
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "sha256": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+      "lines": 439
+    },
+    {
+      "path": "src/runtime/draft_interaction_lock.test.ts",
+      "sha256": "a48478022e2e8ca2d9ff9133a89b84177865e263bb76f0c456f2961ad471eb12",
+      "lines": 43
+    },
+    {
+      "path": "src/runtime/worktree_management.ts",
+      "sha256": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+      "lines": 37
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.test.ts",
+      "sha256": "b14eaa82dbd7532305c57c628a6cb2e6169dff458ae31c21ba84ad01a2c04b80",
+      "lines": 149
+    },
+    {
+      "path": "src/runtime/worktree_recycle.test.ts",
+      "sha256": "e1431b1f31bfeaf2281165c83716cdcb7079fcd56dc2ca1f9e888af77e79a76c",
+      "lines": 402
+    },
+    {
+      "path": "src/components/WorktreeManagementHost.tsx",
+      "sha256": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+      "lines": 42
+    },
+    {
+      "path": "src/components/WorktreeManagementHost.test.tsx",
+      "sha256": "7f7d5a7245b8f40daa729d47f1b5e92d9718c85c7d9fe244bd57388e0c2ea979",
+      "lines": 43
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.tsx",
+      "sha256": "1d24b2cae7787d80b57ff256ab29b26ca470b523eb16460c468243c5285290b9",
+      "lines": 212
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.test.tsx",
+      "sha256": "eb608563fdeaa2fb6994a42e818c2becdf4dda4008978fb7c28ee07e1b14c88c",
+      "lines": 217
+    }
+  ],
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/worktree_recycle_types.test.ts src/runtime/worktree_recycle.test.ts src/runtime/worktree_types.test.ts src/runtime/worktrees.test.ts src/runtime/draft_interaction_lock.test.ts src/components/WorktreeRecycleReview.test.tsx src/components/WorktreeDialog.test.tsx src/components/WorkLocationPicker.test.tsx src/components/WorktreeManagementHost.test.tsx src/components/EmptyState.work-location.test.tsx src/components/EmptyState.worktree-owner.test.tsx src/components/DraftStartup.test.tsx src/components/DraftStartup.restore.test.tsx src/runtime/strings.test.ts",
+      "log": "targeted-final.txt",
+      "exitCode": 0,
+      "files": 14,
+      "passed": 107
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "log": "typecheck-final.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "corepack pnpm exec prettier --check <22 owned source files in sourceRefs>",
+      "log": "format-final.txt",
+      "exitCode": 0
+    }
+  ],
+  "effectiveCounterexamples": [
+    {
+      "red": "dto-shape-red.txt",
+      "green": "review-green.txt",
+      "issue": "Availability object was string-coerced; now requires actual enum string."
+    },
+    {
+      "red": "review-first.txt",
+      "green": "review-green.txt",
+      "issue": "Recheck invalidates original inspection synchronously so a retained enabled confirmation cannot act on it."
+    },
+    {
+      "red": "late-prepared-red.txt",
+      "green": "late-prepared-green.txt",
+      "issue": "Newer confirmed cancellation prevents late prepare from dispatching start."
+    },
+    {
+      "red": "manager-owner-red.txt",
+      "green": "manager-owner-green.txt",
+      "issue": "A retained reopen callback cannot replace an already newer management request."
+    },
+    {
+      "red": "archive-check-and-owner-red.txt",
+      "green": "archive-check-and-owner-green.txt",
+      "issue": "4 failures: 2 missing new check API baseline; 1 retained picker mixes new draft/old cwd; 1 recycle prepared lacking active gate still starts. These last 2 are actual controlled counterexamples."
+    }
+  ],
+  "earlierCheckpoints": [
+    {
+      "log": "targeted-ui-stable.txt",
+      "files": 14,
+      "passed": 101,
+      "note": "Before archive-check/owner additions."
+    },
+    {
+      "log": "first-related.txt",
+      "note": "47 pass/1 legacy fixture missing required archives shape; test fixture corrected; not product failure."
+    },
+    {
+      "log": "typecheck-first.txt",
+      "note": "WIP action string narrowing issue, fixed before final checks."
+    }
+  ],
+  "testBoundary": "Vitest uses controlled IPC and hook harnesses plus real strict parsers/store. No installed app, user files, Agent, Cargo, or complete build/suite executed by this owner.",
+  "evidence": [
+    {
+      "path": "archive-check-and-owner-green.txt",
+      "sha256": "30009fe20bc5a6699ecce459f9025ae22b101bed5adfb2661258344f51d2ee2c"
+    },
+    {
+      "path": "archive-check-and-owner-red.txt",
+      "sha256": "8f477046621f47124f0f8b0fe965b3a197f24b9295894ab2567a4918a65a4f4e"
+    },
+    {
+      "path": "dto-shape-red.txt",
+      "sha256": "246adc1f241e609a8d291ffb7bdc833b8f2cf8fb3c95560fdf56698da1f7a999"
+    },
+    {
+      "path": "first-related.txt",
+      "sha256": "a78aded2f2b960f88ccc338bc5a3d799ba39af15c7c6c084da71ef93dae7f62e"
+    },
+    {
+      "path": "interaction-lease-green.txt",
+      "sha256": "0809a8303648498d9b911486cb25d7adbed5bf6686d0aa246743f44b86f27137"
+    },
+    {
+      "path": "interaction-lease-red.txt",
+      "sha256": "981ceea528c363eb9fdc639e50cd70835c161becfdea61b17ea2580ed82a039f"
+    },
+    {
+      "path": "late-prepared-green.txt",
+      "sha256": "82039927a49251ce9427bab09592fd438895e0d73830938ab3524546df73d129"
+    },
+    {
+      "path": "late-prepared-red.txt",
+      "sha256": "4c9ab1eaaf229c980614c569be3b3d564a465bcb7e3b288ba0a70f5258a10642"
+    },
+    {
+      "path": "manager-owner-green.txt",
+      "sha256": "40ccf9b0597931c344dcb8b9197ec81d081198334623f26fa49938438d84caab"
+    },
+    {
+      "path": "manager-owner-red.txt",
+      "sha256": "cfa00491da069c7e36d2c97af9343bf395fc04bddb869ef18871078b490c5428"
+    },
+    {
+      "path": "review-first.txt",
+      "sha256": "916305dc999cf5c3891a589559a49e5f5d02c5a07cb04654ee0ec90e7623b3af"
+    },
+    {
+      "path": "review-green.txt",
+      "sha256": "bae0cb92958f8b5f22b5999302781cec3b5006076c5e1fccc824c490cfe87361"
+    },
+    {
+      "path": "runtime-first.txt",
+      "sha256": "2d282a4afc40fc81abd76bc92e0319cf034b4105ea32aa850910bf9a5cbbbcf5"
+    },
+    {
+      "path": "targeted-final.txt",
+      "sha256": "dba0bf58f7993df523ef93a5acc01787ec96ff117207396cbcda16587d712904"
+    },
+    {
+      "path": "targeted-first.txt",
+      "sha256": "57bae5316b513fa21872e268832200fb6496da664019a3589a4582442a21418b"
+    },
+    {
+      "path": "targeted-ui-stable.txt",
+      "sha256": "30dad2dfd10460bf879f4b8c749da40d2bf13847d7a938e9f263776b7520b306"
+    },
+    {
+      "path": "typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "typecheck-first.txt",
+      "sha256": "891ed172270e04a83e0d297627da161cf63c141d9246594b4ad97ee37a09846a"
+    },
+    {
+      "path": "typecheck-second.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "typecheck-ui-stable.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ]
+}

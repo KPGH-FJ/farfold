@@ -1,0 +1,62 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.12s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+
+running 1 test
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.55s
+
+completed:worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move
+
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+running 1 test
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.70s
+
+completed:worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error
+
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+
+running 1 test
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.84s
+
+completed:worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start
+
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+running 1 test
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.08s
+
+completed:worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation
+
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+
+running 1 test
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.24s
+
+completed:worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action
+
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+
+running 1 test
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.95s
+
+completed:worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history
+
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1305 filtered out; finished in 3.97s
+

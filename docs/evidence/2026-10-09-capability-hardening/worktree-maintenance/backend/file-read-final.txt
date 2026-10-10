@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 5 tests
+test file_read_check::tests::fixed_read_check_classification_distinguishes_pending_busy_and_other_errors ... ok
+test file_read_check::tests::dropping_the_reply_also_keeps_the_real_worker_slot ... ok
+
+thread 'tokio-rt-worker' (23476223) panicked at src/file_read_check_tests.rs:152:13:
+controlled file-check failure
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test file_read_check::tests::production_checks_share_one_capacity_limit ... ok
+test file_read_check::tests::successful_and_failed_checks_preserve_results_and_release_slots ... ok
+test file_read_check::tests::hung_check_times_out_but_keeps_admission_until_the_os_work_finishes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1322 filtered out; finished in 0.04s
+

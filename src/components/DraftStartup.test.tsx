@@ -87,6 +87,7 @@ vi.mock("../runtime/conversation_read_state", () => ({
   },
 }));
 import { DraftStartup } from "./DraftStartup";
+import { WorktreeManagementHost } from "./WorktreeManagementHost";
 import { EXIT_IMPACT } from "../runtime/exit_impact";
 
 function render() {
@@ -135,6 +136,25 @@ beforeEach(async () => {
   await vi.waitFor(() =>
     expect(h.listeners.has("app:exit-deferred")).toBe(true),
   );
+});
+
+it("keeps the worktree manager outside the locked editable subtree during quit", () => {
+  h.copying = true;
+  h.listeners.get("app:save-before-exit")!({ payload: 93 });
+  const children = (render().props as { children: ReactNode[] }).children;
+  expect(
+    children.some(
+      (n) => isValidElement(n) && n.type === WorktreeManagementHost,
+    ),
+  ).toBe(true);
+  const editable = children.find(
+    (n) =>
+      isValidElement<{ inert?: boolean; children?: ReactNode }>(n) &&
+      n.props.children === "editable",
+  );
+  expect(
+    isValidElement<{ inert?: boolean }>(editable) && editable.props.inert,
+  ).toBe(true);
 });
 
 it("does not let confirmation or restart interrupt an unsettled file save", async () => {

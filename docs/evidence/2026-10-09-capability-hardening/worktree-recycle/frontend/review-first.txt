@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx (6 tests | 1 failed) 14ms
+   × rechecking requires a new acknowledgement and does not apply a new ticket via an old enabled button 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeRecycleReview.test.tsx > rechecking requires a new acknowledgement and does not apply a new ticket via an old enabled button
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "action": "archive",
+        "blockers": Array [],
+        "branch": null,
+        "draftBaseline": Object {
+          "agentSetup": null,
+          "unsentWork": null,
+        },
+        "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "impact": Object {
+          "conversations": 2,
+          "unsent": false,
+        },
+        "inspectionId": "inspect",
+        "material": Object {
+          "bytes": 15,
+          "entries": 2,
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        },
+        "originalPath": "/tree",
+        "recordId": "tree",
+        "repositoryRoot": "/repo",
+        "retainedPath": "/keep/tree",
+        "revision": 1,
+      },
+      [Function anonymous],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx:154:25
+    152|   render();
+    153|   old();
+    154|   expect(h.recycle).not.toHaveBeenCalled();
+       |                         ^
+    155|   await settle();
+    156|   expect(button(S.archive).props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 10 passed (11)
+   Start at  14:18:41
+   Duration  159ms (transform 64ms, setup 0ms, import 102ms, tests 18ms, environment 0ms)
+

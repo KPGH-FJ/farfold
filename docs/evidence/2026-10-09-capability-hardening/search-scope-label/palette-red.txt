@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/CommandPalette.search.test.tsx (8 tests | 1 failed) 10ms
+   × announces the selected search scope and restores its metadata label when switched back 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CommandPalette.search.test.tsx > announces the selected search scope and restores its metadata label when switched back
+AssertionError: expected '搜索所有对话' to be '搜索已加载正文…' // Object.is equality
+
+Expected: "搜索已加载正文…"
+Received: "搜索所有对话"
+
+ ❯ src/components/CommandPalette.search.test.tsx:228:39
+    226|   changeScope("body");
+    227|   expect(input().props.placeholder).toBe(SEARCH.query);
+    228|   expect(input().props["aria-label"]).toBe(SEARCH.query);
+       |                                       ^
+    229|   changeScope("metadata");
+    230|   expect(input().props["aria-label"]).toBe(STRINGS.palette.searchLabel…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  14:34:09
+   Duration  1.37s (transform 94ms, setup 0ms, import 1.29s, tests 10ms, environment 0ms)
+

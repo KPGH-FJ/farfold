@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.69s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'meta_store::worktree_impact::tests::orphan_composer_cannot_borrow_the_current_new_draft_location' (23465020) panicked at src/meta_store/worktree_impact.rs:337:22:
+called `Result::unwrap_err()` on an `Ok` value: (DraftBaseline { unsent_work: Some("909a9c95ac37278e8468f5ea47f515b3789cbf6e5cfd3c7e4bc58e4ea07dcaee"), agent_setup: None }, RecycleImpact { conversations: 0, unsent: false })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test meta_store::worktree_impact::tests::orphan_composer_cannot_borrow_the_current_new_draft_location ... FAILED
+
+failures:
+
+failures:
+    meta_store::worktree_impact::tests::orphan_composer_cannot_borrow_the_current_new_draft_location
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1326 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

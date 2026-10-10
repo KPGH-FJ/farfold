@@ -1,0 +1,52 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/draft_interaction_lock.test.ts (3 tests | 3 failed) 37ms
+   × releasing maintenance cannot release an overlapping exit lock 34ms
+   × a cancelled exit and a repeated old release cannot unlock newer maintenance 1ms
+   × observers see the lock before maintenance starts and only the last release unlocks 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/draft_interaction_lock.test.ts > releasing maintenance cannot release an overlapping exit lock
+TypeError: d.acquireInteractionLock is not a function
+ ❯ src/runtime/draft_interaction_lock.test.ts:8:21
+      6| it("releasing maintenance cannot release an overlapping exit lock", as…
+      7|   const { draftPersistence: d } = await import("./draft_storage");
+      8|   const release = d.acquireInteractionLock();
+       |                     ^
+      9|   d.lockInteraction(true);
+     10|   release();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/draft_interaction_lock.test.ts > a cancelled exit and a repeated old release cannot unlock newer maintenance
+TypeError: d.acquireInteractionLock is not a function
+ ❯ src/runtime/draft_interaction_lock.test.ts:19:17
+     17|   const { draftPersistence: d } = await import("./draft_storage");
+     18|   d.lockInteraction(true);
+     19|   const old = d.acquireInteractionLock();
+       |                 ^
+     20|   d.lockInteraction(false);
+     21|   expect(d.snapshot().interactionLocked).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/draft_interaction_lock.test.ts > observers see the lock before maintenance starts and only the last release unlocks
+TypeError: d.acquireInteractionLock is not a function
+ ❯ src/runtime/draft_interaction_lock.test.ts:34:15
+     32|   const seen: boolean[] = [];
+     33|   const off = d.subscribe(() => seen.push(Boolean(d.snapshot().interac…
+     34|   const a = d.acquireInteractionLock();
+       |               ^
+     35|   const b = d.acquireInteractionLock();
+     36|   a();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  14:05:20
+   Duration  125ms (transform 35ms, setup 0ms, import 18ms, tests 37ms, environment 0ms)
+

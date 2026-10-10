@@ -17,6 +17,7 @@ import {
 } from "../runtime/file_copy_jobs";
 import { FileCopyJobsStatus } from "./FileCopyJobsStatus";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { WorktreeManagementHost } from "./WorktreeManagementHost";
 import {
   setupStorage,
   useSetupStorage,
@@ -194,6 +195,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   if (status.ready && setup.ready && connected)
     return (
       <>
+        <WorktreeManagementHost />
         {exitReview !== null && (
           <WorkspaceDialog
             title={E.title}

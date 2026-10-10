@@ -1,0 +1,10 @@
+{
+  "ownedPid": 51675,
+  "execSession": 66780,
+  "requestedSignal": "SIGTERM",
+  "toolCompletionExit": 143,
+  "exactPidAbsent": true,
+  "port1476ListenerAbsent": true,
+  "browserClosedByRunnerFinally": true,
+  "formalAppOrAgentTouched": false
+}

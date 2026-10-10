@@ -1,6 +1,7 @@
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import { AsyncTasks } from "./AsyncTasks";
+import { ASYNC_TASKS } from "../runtime/async_task_strings";
 import { MessageResendDialog } from "./MessageResendDialog";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { ConnectionAccount } from "./ConnectionAccount";
@@ -1002,7 +1003,9 @@ export function ThreadView({
                         label={
                           first.label === "notification"
                             ? STRINGS.thread.rawNotification
-                            : undefined
+                            : first.label === "asyncTaskUpdate"
+                              ? ASYNC_TASKS.update
+                              : undefined
                         }
                       />
                       <ReportedDetails details={first.reportedDetails} />

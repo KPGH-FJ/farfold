@@ -1,0 +1,323 @@
+{
+  "sourceLog": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/worktrees-related.txt",
+  "sourceLogSha256": "0243ee79f67e16fff285131b05986a4f6a56d1e273ec751f84c2d8c8bbedb211",
+  "method": "Exact JSON emitted by actual temporary Git / MetaStore integration tests; no handwritten wire values.",
+  "receipts": [
+    {
+      "label": "draftChanged",
+      "value": {
+        "kind": "operation",
+        "action": "archive",
+        "maintenanceActive": false,
+        "operationId": "22345678-1234-4123-8123-123456789abc",
+        "state": "failed",
+        "settled": true,
+        "cancelRequested": false,
+        "code": "draftChanged"
+      }
+    },
+    {
+      "label": "archiveInspection",
+      "value": {
+        "inspectionId": "3c244aba-dcd4-4653-b7bf-bb71870bd917",
+        "action": "archive",
+        "recordId": "12345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+        "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+        "branch": "refs/heads/retained-fixture",
+        "blockers": [],
+        "impact": {
+          "conversations": 1,
+          "unsent": false
+        },
+        "material": {
+          "entries": 6,
+          "bytes": 56,
+          "sha256": "d8cc9cc8d897178e68b5d98b562fc0e806d01defa3dd8efda814e7f2880dde69"
+        },
+        "draftBaseline": {
+          "unsentWork": null,
+          "agentSetup": null
+        }
+      }
+    },
+    {
+      "label": "archivePrepared",
+      "value": {
+        "kind": "operation",
+        "action": "archive",
+        "maintenanceActive": true,
+        "operationId": "22345678-1234-4123-8123-123456789abc",
+        "state": "prepared",
+        "settled": false,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+      }
+    },
+    {
+      "label": "preparedList",
+      "value": {
+        "locations": [],
+        "archives": [
+          {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 0,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "unknown"
+          }
+        ],
+        "materials": [],
+        "operation": {
+          "kind": "operation",
+          "action": "archive",
+          "maintenanceActive": true,
+          "operationId": "22345678-1234-4123-8123-123456789abc",
+          "state": "prepared",
+          "settled": false,
+          "cancelRequested": false,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+        }
+      }
+    },
+    {
+      "label": "archiveRunning",
+      "value": {
+        "kind": "operation",
+        "action": "archive",
+        "maintenanceActive": true,
+        "operationId": "22345678-1234-4123-8123-123456789abc",
+        "state": "running",
+        "settled": false,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+      }
+    },
+    {
+      "label": "archiveReady",
+      "value": {
+        "kind": "operation",
+        "action": "archive",
+        "maintenanceActive": false,
+        "operationId": "22345678-1234-4123-8123-123456789abc",
+        "state": "ready",
+        "settled": true,
+        "cancelRequested": false,
+        "archive": {
+          "id": "12345678-1234-4123-8123-123456789abc",
+          "revision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+          "branch": "refs/heads/retained-fixture",
+          "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+          "ownership": "created",
+          "availability": "verified"
+        },
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+      }
+    },
+    {
+      "label": "archivedList",
+      "value": {
+        "locations": [],
+        "archives": [
+          {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 1,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          }
+        ],
+        "materials": [],
+        "operation": {
+          "kind": "operation",
+          "action": "archive",
+          "maintenanceActive": false,
+          "operationId": "22345678-1234-4123-8123-123456789abc",
+          "state": "ready",
+          "settled": true,
+          "cancelRequested": false,
+          "archive": {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 1,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          },
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+        }
+      }
+    },
+    {
+      "label": "coldList",
+      "value": {
+        "locations": [],
+        "archives": [
+          {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 1,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "unknown"
+          }
+        ],
+        "materials": [],
+        "operation": {
+          "kind": "operation",
+          "action": "archive",
+          "maintenanceActive": false,
+          "operationId": "22345678-1234-4123-8123-123456789abc",
+          "state": "unknown",
+          "settled": true,
+          "cancelRequested": false,
+          "archive": {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 1,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "unknown"
+          },
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+          "code": "recheckRequired"
+        }
+      }
+    },
+    {
+      "label": "checkedList",
+      "value": {
+        "locations": [],
+        "archives": [
+          {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 2,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          }
+        ],
+        "materials": [],
+        "operation": {
+          "kind": "operation",
+          "action": "archive",
+          "maintenanceActive": false,
+          "operationId": "22345678-1234-4123-8123-123456789abc",
+          "state": "ready",
+          "settled": true,
+          "cancelRequested": false,
+          "archive": {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 2,
+            "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          },
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+        }
+      }
+    },
+    {
+      "label": "restoreReady",
+      "value": {
+        "kind": "operation",
+        "action": "restore",
+        "maintenanceActive": false,
+        "operationId": "32345678-1234-4123-8123-123456789abc",
+        "state": "ready",
+        "settled": true,
+        "cancelRequested": false,
+        "location": {
+          "id": "12345678-1234-4123-8123-123456789abc",
+          "revision": 3,
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+          "branch": "refs/heads/retained-fixture",
+          "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+          "ownership": "created",
+          "availability": "verified"
+        },
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+      }
+    },
+    {
+      "label": "restoredList",
+      "value": {
+        "locations": [
+          {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 3,
+            "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          }
+        ],
+        "archives": [],
+        "materials": [],
+        "operation": {
+          "kind": "operation",
+          "action": "restore",
+          "maintenanceActive": false,
+          "operationId": "32345678-1234-4123-8123-123456789abc",
+          "state": "ready",
+          "settled": true,
+          "cancelRequested": false,
+          "location": {
+            "id": "12345678-1234-4123-8123-123456789abc",
+            "revision": 3,
+            "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+            "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/repo",
+            "branch": "refs/heads/retained-fixture",
+            "headOid": "00c80a3bdaeac78fd053da4c94e259a309af84ed",
+            "ownership": "created",
+            "availability": "verified"
+          },
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpJynGfv/.farfold-retained-3c244aba-dcd4-4653-b7bf-bb71870bd917/worktree"
+        }
+      }
+    }
+  ]
+}

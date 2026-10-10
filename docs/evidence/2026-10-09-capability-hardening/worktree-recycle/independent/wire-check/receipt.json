@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "scope": "Independent real Rust serialized DTO to production strict TypeScript parser; no IPC/native/Git rerun.",
+  "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/vitest.config.ts",
+  "exit": 0,
+  "tests": 16,
+  "actualRustReceipts": 11,
+  "sourceLogByteHashAndAllEmittedValuesMatch": true,
+  "negativeCases": [
+    "wrong exact ID",
+    "prepared maintenanceActive false",
+    "archive ownership existing",
+    "unknown extra result field"
+  ],
+  "limitations": [
+    "Author executed actual temporary Git/MetaStore producer; independent reviewer consumed its exact stdout, not reran Cargo.",
+    "This does not prove native installed archive/restore or all error codes."
+  ],
+  "refs": [
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "15bb3431ad5d061d0045f03c8d589f9322ede5af018b60e3700da3f01c94ea93"
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/recycle-wire.json",
+      "sha256": "2025aa05df0c8a3efa8771a2e321a246b2e1e51a1b07aa81df072bbd2bd23958"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-maintenance/backend/worktrees-related.txt",
+      "sha256": "0243ee79f67e16fff285131b05986a4f6a56d1e273ec751f84c2d8c8bbedb211"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/wire.test.ts",
+      "sha256": "4e63f053c1f0c2858a32f1b12d1abcb9c107b5f4f167348f54aa8d2956a4a454"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/vitest.config.ts",
+      "sha256": "0eeb0b17dd521cf7186ce00f2307e657594fd81f24cfd5375984d9ea897a7643"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle/independent/wire-check/result.txt",
+      "sha256": "639fa1aece06dbc7af70fd20d689e90c1d063d1ea5f8ee3b142862076251dc6d"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.28s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'meta_store::worktree_maintenance::tests::query_only_release_rejection_is_not_reported_as_success' (23456604) panicked at src/meta_store/worktree_maintenance.rs:232:9:
+assertion failed: permit.release().is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test meta_store::worktree_maintenance::tests::query_only_release_rejection_is_not_reported_as_success ... FAILED
+
+failures:
+
+failures:
+    meta_store::worktree_maintenance::tests::query_only_release_rejection_is_not_reported_as_success
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1324 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

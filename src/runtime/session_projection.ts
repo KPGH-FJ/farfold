@@ -1,6 +1,6 @@
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
-import { hasAsyncTasks } from "./async_tasks";
+import { hasAsyncTasks, isKnownAsyncTaskUpdate } from "./async_tasks";
 import { readElicitation } from "./elicitation";
 import { INQUIRY } from "./elicitation_strings";
 import {
@@ -615,7 +615,9 @@ export function applyUpdate(
   update: unknown,
   envelope?: unknown,
 ): void {
-  applyUpdateContent(s, update);
+  if (isKnownAsyncTaskUpdate(s, update, envelope))
+    pushRaw(s, update, "asyncTaskUpdate");
+  else applyUpdateContent(s, update);
   retainReportedDetails(s, update, envelope);
 }
 

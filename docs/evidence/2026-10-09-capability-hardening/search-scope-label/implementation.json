@@ -1,0 +1,65 @@
+{
+  "finding": "Installed 8780 global conversation search retains metadata accessible label after switching to loaded body scope.",
+  "nativeFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/18-body-search-label-ready.txt",
+    "sha256": "f166338fa881a01f82999ceec6e976427cc1481620ca0fbd9f79c849759b5760",
+    "observed": "AX line13: 搜索所有对话, Placeholder: 搜索已加载正文…",
+    "screenshot": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/18-body-search-label-ready.png",
+      "sha256": "abe0d3ffbd0e3821b495315ad41c2e51f1b5535d3a4831dffce24c252ddc481f",
+      "reviewedPixelsByThisOwner": false
+    }
+  },
+  "change": "One aria-label conditional, using existing LOADED_SEARCH_STRINGS.query in body scope and existing palette.searchLabel otherwise. No shared strings or search logic change.",
+  "sourceRefs": [
+    {
+      "path": "src/components/CommandPalette.tsx",
+      "sha256": "b78444953d4a69105ce6ad1a978b15839e4227002efd53b4705d03ab87b0aac1"
+    },
+    {
+      "path": "src/components/CommandPalette.search.test.tsx",
+      "sha256": "7d155c06f621d38912e579a562fcb8bcf6db06b0bf64de1a6205ad0d850566f7"
+    }
+  ],
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/CommandPalette.search.test.tsx",
+      "log": "palette-red.txt",
+      "exitCode": 1,
+      "passed": 7,
+      "failed": 1,
+      "note": "Effective red at mismatched accessible label; subsequent switch-back assertions not reached in red."
+    },
+    {
+      "command": "corepack pnpm exec vitest run src/components/CommandPalette.test.tsx src/components/CommandPalette.search.test.tsx",
+      "log": "palette-green.txt",
+      "exitCode": 0,
+      "passed": 12,
+      "files": 2
+    },
+    {
+      "command": "corepack pnpm exec prettier --check src/components/CommandPalette.tsx src/components/CommandPalette.search.test.tsx",
+      "log": "format.txt",
+      "exitCode": 0
+    }
+  ],
+  "evidence": [
+    {
+      "path": "format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "palette-green.txt",
+      "sha256": "6bbaf3b1998bdea980d3b381f823a5e46abaf47e012ae3def13addbc27b809d3"
+    },
+    {
+      "path": "palette-red.txt",
+      "sha256": "4aa36641dff311bc2e92ebe0e532c3337fe5d4fa8790c23dc7732b9e0bef7597"
+    }
+  ],
+  "h15FrozenSourceRefs": {
+    "count": 22,
+    "allUnchanged": true
+  },
+  "boundary": "Controlled real component/hook test. Original native failure preserved; corrected installed accessibility tree awaits next candidate, not rerun or claimed here."
+}

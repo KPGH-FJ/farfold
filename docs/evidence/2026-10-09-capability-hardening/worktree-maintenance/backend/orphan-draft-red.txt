@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.73s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'meta_store::worktree_impact::tests::unassignable_nonempty_input_and_malformed_saved_data_are_not_treated_as_empty' (23447823) panicked at src/meta_store/worktree_impact.rs:274:13:
+assertion failed: s.worktree_impact(&[d.path()]).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test meta_store::worktree_impact::tests::unassignable_nonempty_input_and_malformed_saved_data_are_not_treated_as_empty ... FAILED
+
+failures:
+
+failures:
+    meta_store::worktree_impact::tests::unassignable_nonempty_input_and_malformed_saved_data_are_not_treated_as_empty
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1321 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

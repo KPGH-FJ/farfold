@@ -6,8 +6,8 @@
 
 | 层级         | 已有证据                                                                    | 不能据此推出                                             |
 | ------------ | --------------------------------------------------------------------------- | -------------------------------------------------------- |
-| 产品源码     | 工作树创建及官方后台任务停止已分项安装验证；归档/恢复继续开发               | 所有已列能力已补齐                                       |
-| 工程检查     | 已安装片1,277输入；七项检查通过，前端4,180项、Rust1,293项/6忽略；新源码另验 | 所有 Agent、系统权限及安装环境通过                       |
+| 产品源码     | 归档/恢复、维护保护及两处提示修正已通过源码与独立复核；待安装               | 所有已列能力已补齐                                       |
+| 工程检查     | 新片1,296输入；七项检查通过，前端4,225项、Rust1,321项/6忽略；尚未安装       | 所有 Agent、系统权限及安装环境通过                       |
 | 正式安装     | 当前 `8780df9e` / 0.1.7 arm64；工作树与单次真实任务停止分项通过；已正常退出 | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
 | 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本        | 跨版本累计成功等于当前 29 家全部通过                     |
 | 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                   | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
@@ -85,7 +85,7 @@ P19 成果清单已提交安装 `394bb91a` / 0.1.7 arm64。[正式窗口与文�
 
 P21实机后两项修复已完成工程检查：按行输入Enter的WebKit焦点交接修复通过[独立键盘复核](evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/independent-review.json)；NEW-02大文件预览改为局部滚动，完整App双浏览器156项通过，见[原反例和修复](evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json)。[最终整合](evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/final-verification.json)七项具备成功证据，前端3,349项，1,116输入稳定；最终仅CSS变化，打包/全仓格式重跑，未变输入的检查明确复用。已提交安装 `e98e2a46`，[正式复验](evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/installed-keyboard-scroll.json)确认两种行号输入Enter、明确二次确认与长文件局部滚动；4条输入、2组意见、3组待发逐值不变，已正常退出。没有新Agent请求、权限变更或全产品达标结论。
 
-本轮真实停止已在 `394bb91a` 完成一次有界 Codex 实测，沿用 6 Astra / Ultra 与既有权限。[正式停止记录](evidence/2026-10-09-capability-hardening/real-stop/installed-stop.json)及[独立核查](evidence/2026-10-09-capability-hardening/real-stop/independent-preliminary.json)确认回复收到中断，但此前启动的单个命令仍运行至45秒并正常写出完成标记；Farfold先显示步骤未确认，随后接收同一命令迟到完成，未启动第二条命令。这不满足“所有外部工作已取消”，ARCH-28/29及29家停止覆盖保持未完成，也尚不能归因为接入层缺陷。正常退出后旧8条输入、8组意见、3组待发逐值不变；整对象严格相等失败仅因新增本次活动记录，原失败保留。下一步接续网页请求取消/超时保护和已加载跨对话搜索的整合与安装验证。
+本轮真实停止已在 `394bb91a` 完成一次有界 Codex 实测，沿用 6 Astra / Ultra 与既有权限。[正式停止记录](evidence/2026-10-09-capability-hardening/real-stop/installed-stop.json)及[独立核查](evidence/2026-10-09-capability-hardening/real-stop/independent-preliminary.json)确认回复收到中断，但此前启动的单个命令仍运行至45秒并正常写出完成标记；Farfold先显示步骤未确认，随后接收同一命令迟到完成，未启动第二条命令。这不满足“所有外部工作已取消”，ARCH-28/29及29家停止覆盖保持未完成，也尚不能归因为接入层缺陷。正常退出后旧8条输入、8组意见、3组待发逐值不变；整对象严格相等失败仅因新增本次活动记录，原失败保留。此后已接续网页请求取消/超时保护和已加载跨对话搜索的整合与安装验证，结果见后续阶段。
 
 此前网页请求生命周期与跨对话已加载正文搜索源码及独立验证阶段，正式应用为 `394bb91a`；后续安装结果见下文。[网页请求记录](evidence/2026-10-09-capability-hardening/browser-request-lifecycle/implementation.json)补齐每次请求独立取消、排队/执行期限及迟到回调一次回收；撤销单次请求不会误撤页面许可，实际网页脚本结束前仍保留忙碌状态。独立macOS受控回调58项、真实WKWebView脚本14项通过；Windows路径已改，但交叉检查在依赖编译器缺失处停止，不能声称Windows已验证。[搜索独立实测](evidence/2026-10-09-capability-hardening/loaded-history-search/independent/implementation.json)两浏览器各48项通过，修复长Markdown阻塞、Worker实体解码与多路更新饥饿；仅查已加载消息/回复/已收到的附件文字，支持准确跳转、失效提示和取消，无持久正文索引，不自动加载历史。P32未加载历史/附件实体、P27生产截图及其他原条件继续未完成。[整合检查](evidence/2026-10-09-capability-hardening/browser-search-checks/final-verification.json)对应1,234输入：前端345文件/4,098项，Rust1,242项/6忽略，类型和打包通过；完整格式结果以回执为准。一次Rust回归出现3项失败，隔离与后续正常全量复验通过，原失败保留，具体触发原因尚未定位，不能归因为已证实的并发干扰。
 
@@ -96,3 +96,5 @@ P21实机后两项修复已完成工程检查：按行输入Enter的WebKit焦点
 工作位置创建/已有位置接入、准确起点、新稿归属与未知材料保护，以及官方后台任务独立停止已完成本片源码和独立复核。[七项整合检查](evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json)对应1,277个稳定输入，前端354文件/4,180项、Rust1,293项/6忽略通过。首轮Rust源码守卫把安全的try_state误认成必需state，已精确修正并补无数据库退出及不可绕过活动工作的测试；生产路径未因该误报改动，原失败保留。后台任务需实际能力协商、当前连接和任务事件；停止回执不等于任务终态。NEW-05无障碍文案随本片修正。该源码阶段随后已提交安装8780df9e，实机分项结果见下段。工作树归档/恢复/删除及全部剩余条件继续保留。
 
 `8780df9e` / 0.1.7 arm64 已安装并完成[工作树与后台任务分项实机验证](evidence/2026-10-09-capability-hardening/worktree-task-candidate/installed-worktree-tasks.json)。新建分支、已有分支、接入和移除清单均核到实际 Git 结果；原索引、未提交、未跟踪和忽略文件保持，明确使用位置才切换草稿，冷启动后重新核查通过。一次真实 Codex 6 Astra / Ultra 请求中，明确点击后台任务的停止按钮，同一任务报告 stopped，进程在自然期限前退出，超过60秒仍无自然完成文件；此前停止回复未终止命令的失败仍有效，不推广到29家。恢复原空白TR新稿并正常退出后，原8条输入、8组意见、3组待发及124条旧会话完整记录相同，只新增本轮受控会话与活动记录。列表正文搜索的NEW-05已实机修复，全局搜索入口的范围名称仍需新版复验；已知任务事件仍显示“未识别的更新”，作为NEW-06继续修正。当前接续H15归档/恢复及维护保护；永久删除、其他边界与完整计划均未完成。 [独立收口](evidence/2026-10-09-capability-hardening/worktree-task-candidate/native-closeout-independent.json)核对77处引用、正式包及两份私有数据副本；这是证据复核，没有冒称第二次实机操作。
+
+工作树保留归档与原路径恢复已完成本片源码，七项工程检查通过：1,296输入稳定，前端360文件/4,225项，Rust1,321项/6忽略。归档保留完整目录，不改历史对话位置；材料或归属变化、未发内容、活动及未知进程阻挡操作。目录移动、取消、独立重查、写入隔离及实际连接退出均有定向证据；独立复核发现的孤立草稿借用全局位置、写入恢复失败误报成功等反例已修复，原红例保留。完整界面双引擎各27项及维护提示增量各8项通过；11份实际Rust输出经生产TS解析与负向校验共16项通过。全局搜索范围名称与合法后台任务事件标题已修正。当前正式应用仍为8780df9e，本片正在准备候选及正式窗口验证；永久删除与独立提交恢复副本仍未实现，H15及全部原条件不据此结项。 [工程回执](evidence/2026-10-09-capability-hardening/worktree-recycle-checks/run-01/verification.json)，[后端独立复核](evidence/2026-10-09-capability-hardening/worktree-recycle/independent/backend-independent.json)，[源码闭合](evidence/2026-10-09-capability-hardening/worktree-recycle-checks/source-closure.json)。

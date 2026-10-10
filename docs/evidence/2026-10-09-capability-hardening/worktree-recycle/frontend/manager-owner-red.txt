@@ -1,0 +1,42 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeManagementHost.test.tsx (2 tests | 1 failed) 6ms
+   × a recovery entry cannot replace a newer manager through an old click 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeManagementHost.test.tsx > a recovery entry cannot replace a newer manager through an old click
+AssertionError: expected { cwd: null, target: null, …(1) } to be { cwd: '/new', target: { …(2) }, …(1) } // Object.is equality
+
+- Expected
++ Received
+
+  {
+-   "cwd": "/new",
+-   "key": "bc1b05df-42f7-4554-b0f7-bbdbfbb93d71",
+-   "target": {
+-     "apply": [Function apply],
+-     "isCurrent": [Function isCurrent],
+-   },
++   "cwd": null,
++   "key": "9430bee9-e1e9-47fa-8b46-5548efd21c3a",
++   "target": null,
+  }
+
+ ❯ src/components/WorktreeManagementHost.test.tsx:27:41
+     25|   });
+     26|   (old.props.onClick as () => void)();
+     27|   expect(worktreeManagement.snapshot()).toBe(opened);
+       |                                         ^
+     28| });
+     29| it("closing and reopening an operation has an independent owner and no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  14:22:38
+   Duration  161ms (transform 67ms, setup 0ms, import 91ms, tests 6ms, environment 0ms)
+

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import type { WorktreeOperation } from "./worktree_types";
 const h = vi.hoisted(() => ({ invoke: vi.fn(), id: "" }));
+vi.mock("./sessions", () => ({ threads: { pauseQueuesForExit: vi.fn() } }));
 vi.mock("@tauri-apps/api/core", () => ({ invoke: h.invoke }));
 const location = {
   id: "tree",
@@ -23,6 +24,8 @@ const reply = (
   settled = ["ready", "cancelled", "failed"].includes(state),
 ) => ({
   kind: "operation",
+  action: "create",
+  maintenanceActive: false,
   operationId: h.id,
   state,
   settled,
@@ -47,7 +50,12 @@ beforeEach(() => {
     .mockImplementation(
       async (command: string, args?: { operationId?: string }) => {
         if (command === "worktree_list")
-          return { locations: [], materials: [], operation: null };
+          return {
+            locations: [],
+            materials: [],
+            archives: [],
+            operation: null,
+          };
         if (command === "worktree_prepare_create") {
           h.id = args!.operationId!;
           return reply("prepared");
@@ -251,6 +259,7 @@ it("cold prepared intents are only displayed, never started", async () => {
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    archives: [],
     operation: reply("prepared"),
   });
   const s = await store();
@@ -268,6 +277,7 @@ it("an unconfirmed forget retains the listing until a successful refresh", async
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    archives: [],
     operation: null,
   });
   const s = await store();
@@ -277,6 +287,7 @@ it("an unconfirmed forget retains the listing until a successful refresh", async
   h.invoke.mockResolvedValueOnce({
     locations: [],
     materials: [],
+    archives: [],
     operation: null,
   });
   await s.load();
@@ -301,6 +312,7 @@ it("only an explicitly acknowledged settled unknown allows another creation", as
     if (command === "worktree_list")
       return {
         locations: [],
+        archives: [],
         materials: [
           {
             operationId: h.id,
@@ -424,6 +436,7 @@ it("failed fresh location check reads back saved unavailability without applying
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    archives: [],
     operation: reply("ready"),
   });
   const s = await store();
@@ -431,7 +444,12 @@ it("failed fresh location check reads back saved unavailability without applying
   h.invoke.mockImplementation(async (command) => {
     if (command === "worktree_check_location") throw { code: "missing" };
     if (command === "worktree_list")
-      return { locations: [changed], materials: [], operation: reply("ready") };
+      return {
+        locations: [changed],
+        materials: [],
+        archives: [],
+        operation: reply("ready"),
+      };
     throw Error("unexpected");
   });
   await expect(s.check(location)).rejects.toThrow();
@@ -442,6 +460,7 @@ it("confirmed forgetting clears the associated result and old observations canno
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    archives: [],
     operation: reply("ready"),
   });
   const s = await store();

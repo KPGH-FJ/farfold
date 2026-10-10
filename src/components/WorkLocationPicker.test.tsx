@@ -22,10 +22,12 @@ vi.mock("react", async (original) => ({
   },
 }));
 import { WorkLocationPicker } from "./WorkLocationPicker";
-import { WorktreeDialog } from "./WorktreeDialog";
+import { worktreeManagement } from "../runtime/worktree_management";
 beforeEach(() => {
   h.cursor = 0;
   h.values = [];
+  const old = worktreeManagement.snapshot();
+  if (old) worktreeManagement.close(old);
 });
 it("an old dialog's close callback cannot close a newer location choice", () => {
   const begin = vi.fn(() => ({
@@ -42,13 +44,38 @@ it("an old dialog's close callback cannot close a newer location choice", () => 
   const open = () =>
     (render().find((n) => n.type === "button")!.props.onClick as () => void)();
   open();
-  const old = render().find((n) => n.type === WorktreeDialog)!;
-  (old.props.onClose as () => void)();
+  const old = worktreeManagement.snapshot()!;
+  worktreeManagement.close(old);
   open();
-  const next = render().find((n) => n.type === WorktreeDialog)!;
-  expect(next.props.target).not.toBe(old.props.target);
-  (old.props.onClose as () => void)();
-  expect(render().find((n) => n.type === WorktreeDialog)?.props.target).toBe(
-    next.props.target,
-  );
+  const next = worktreeManagement.snapshot()!;
+  expect(next.target).not.toBe(old.target);
+  worktreeManagement.close(old);
+  expect(worktreeManagement.snapshot()).toBe(next);
+});
+
+it("disabling or unmounting the draft picker does not discard management", () => {
+  const target = { isCurrent: () => true, apply: async () => true };
+  const opened = worktreeManagement.open({ cwd: "/repo", target });
+  h.cursor = 0;
+  WorkLocationPicker({ cwd: null, disabled: true, begin: () => null });
+  expect(worktreeManagement.snapshot()).toBe(opened);
+  worktreeManagement.close(opened);
+  const recovery = worktreeManagement.open({ cwd: null, target: null });
+  worktreeManagement.close(opened);
+  expect(worktreeManagement.snapshot()).toBe(recovery);
+});
+
+it("a retained picker callback does not combine a new draft with the previous cwd", () => {
+  const target = { isCurrent: () => true, apply: async () => true };
+  const render = (cwd: string) => {
+    h.cursor = 0;
+    return WorkLocationPicker({ cwd, disabled: false, begin: () => target });
+  };
+  const first = render("/old");
+  const oldButton = Children.toArray(first.props.children as ReactNode).find(
+    isValidElement,
+  ) as ReactElement<{ onClick: () => void }>;
+  render("/new");
+  oldButton.props.onClick();
+  expect(worktreeManagement.snapshot()?.cwd).toBe("/new");
 });

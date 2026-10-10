@@ -90,6 +90,10 @@ pub struct Create {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Operation {
     pub kind: String,
+    #[serde(default = "default_action")]
+    pub action: String,
+    #[serde(default)]
+    pub maintenance_active: bool,
     pub operation_id: String,
     pub state: String,
     pub settled: bool,
@@ -101,7 +105,16 @@ pub struct Operation {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<Location>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub archive: Option<super::recycle_types::Archive>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub original_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub retained_path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
+}
+fn default_action() -> String {
+    "create".into()
 }
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -131,6 +144,7 @@ pub struct Material {
 #[derive(Debug, Serialize)]
 pub struct Listing {
     pub locations: Vec<Location>,
+    pub archives: Vec<super::recycle_types::Archive>,
     pub materials: Vec<Material>,
     pub operation: Option<Operation>,
 }

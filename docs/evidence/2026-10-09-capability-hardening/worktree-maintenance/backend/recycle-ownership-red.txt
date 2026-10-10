@@ -1,0 +1,103 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.92s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+
+thread 'worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move' (23404183) panicked at src/worktrees/recycle_tests.rs:91:5:
+
+running 1 test
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... FAILED
+
+failures:
+
+failures:
+    worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.52s
+
+
+thread 'worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move' (23404196) panicked at src/worktrees/recycle_tests.rs:348:13:
+assertion `left == right` failed
+  left: "create"
+ right: "archive"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... FAILED
+
+thread 'worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error' (23404184) panicked at src/worktrees/recycle_tests.rs:91:5:
+
+running 1 test
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... FAILED
+
+failures:
+
+failures:
+    worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.69s
+
+
+thread 'worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error' (23404197) panicked at src/worktrees/recycle_tests.rs:324:35:
+known non-dispatch is an exact terminal receipt: Failure { code: "changed" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... FAILED
+
+running 1 test
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 2.90s
+
+completed:worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start
+
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+running 1 test
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.09s
+
+completed:worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation
+
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+
+thread 'worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action' (23404186) panicked at src/worktrees/recycle_tests.rs:91:5:
+
+running 1 test
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... FAILED
+
+failures:
+
+failures:
+    worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.19s
+
+
+thread 'worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action' (23404198) panicked at src/worktrees/recycle_tests.rs:293:13:
+restoring the original cwd must inspect its saved unsent work
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... FAILED
+
+running 1 test
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1310 filtered out; finished in 3.87s
+
+completed:worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history
+
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+
+failures:
+
+failures:
+    worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move
+    worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error
+    worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action
+
+test result: FAILED. 3 passed; 3 failed; 0 ignored; 0 measured; 1305 filtered out; finished in 3.88s
+
+error: test failed, to rerun pass `--lib`

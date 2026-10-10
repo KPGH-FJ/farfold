@@ -129,7 +129,7 @@ impl MetaStore {
     }
 }
 
-fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, String> {
+pub(super) fn has_unsent_work(saved: &Value, row: &SessionRow) -> Result<bool, String> {
     let unreadable = "未能读取未发送内容，请先恢复后再归档";
     if saved["version"] != 1 {
         return Err(unreadable.into());
