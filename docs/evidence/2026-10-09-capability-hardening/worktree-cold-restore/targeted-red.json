@@ -1,0 +1,47 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "cold_restore_recheck_tests",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "elapsedSeconds": 27.21,
+  "sourceRefsBefore": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2"
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "2099fc41e9cdd40e327caa0a8247eef834c60cd47ba04ee17930de4cd8bccd4b"
+    }
+  ],
+  "sourceRefsAfter": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2"
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "2099fc41e9cdd40e327caa0a8247eef834c60cd47ba04ee17930de4cd8bccd4b"
+    }
+  ],
+  "sourceUnchanged": true,
+  "log": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-red.txt",
+    "sha256": "e21988c48ac071b5b56f69e6815bb535eeecab81618bbbab722ff84e6b3d6c50"
+  }
+}

@@ -309,6 +309,7 @@ pub fn run() {
                 pty::pty_await,
                 pty::pty_close,
                 project_index::project_files,
+                project_index::project_files_cancel,
                 project_index::project_file_read,
                 file_delivery_commands::file_delivery_inspect,
                 file_delivery_commands::file_delivery_inspect_selected,

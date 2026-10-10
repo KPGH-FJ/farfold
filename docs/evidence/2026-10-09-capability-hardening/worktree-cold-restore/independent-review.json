@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "issue": "NEW-12",
+  "status": "independent-source-and-evidence-review-no-new-blocker",
+  "reviewedAtUtc": "2026-10-10T11:56:33.826927+00:00",
+  "reviewer": "architecture",
+  "method": "Read-only comparison of original implementation, prepared patch, final production diff, full verification/cold persistence code, authored tests and raw logs; SHA-256 and byte-length verification. No test reruns or App/Agent/user-data operations.",
+  "conclusions": [
+    {
+      "check": "exact-restored-owner",
+      "passed": true,
+      "detail": "New path requires the original dispatched restore, settled operation, recorded location and same saved location identity. The archive branch retains its original path and returns; this is not a new archive/restore action."
+    },
+    {
+      "check": "full-filesystem-verification",
+      "passed": true,
+      "detail": "Calls complete recycle::verify_at(saved,false): both parent identities, exact linked registration/HEAD/branch, other-path absence, material and index. Identity::matches alone excludes HEAD/branch, so the explicit comparisons remain necessary and present."
+    },
+    {
+      "check": "publication-cas",
+      "passed": true,
+      "detail": "Captured full SavedLocation includes current revision and availability; current status/request/completed/recycle intent must still match under manager lock. Verification-time changes reject publication. Allowed higher revision at initial capture is not normalized away in the final CAS."
+    },
+    {
+      "check": "durable-result",
+      "passed": true,
+      "detail": "Uses current revision+1, saves canonical location and exact operation together through existing metadata CAS, then returns. Verification failure remains unknown with actual fixed code and preserved identity/material; no move/delete/reset or historical cwd update."
+    },
+    {
+      "check": "effective-red-green",
+      "passed": true,
+      "detail": "Read original four failures: one normal cold-success no-op and three missing fresh diagnostic outcomes. These are one missing branch, not four separate defects or three unsafe approvals. Final six pass including two cold reloads, replacement/HEAD/material negatives and two controlled late-result interleavings."
+    },
+    {
+      "check": "related-verification",
+      "passed": true,
+      "detail": "Author logs show existing recycle 12/12, cargo fmt exit0 and required clippy exit0. Green and related execution receipts have the same three source hashes before and after, matching current bytes."
+    }
+  ],
+  "boundaries": [
+    "Author executed the temporary Git/in-memory MetaStore tests; reviewer inspected their evidence and did not independently rerun them.",
+    "Controlled callbacks prove two specified interleavings, not exhaustive OS scheduling races.",
+    "Strict material/index/HEAD checks may reject externally changed restored files; repair does not weaken this protection or overwrite those changes.",
+    "Installed native symptom belongs to root; repaired source still needs combined integration/candidate/installation and actual native recheck.",
+    "No new claims about other Agents, Windows, H17 acceptance or global H15 completeness."
+  ],
+  "authorEvidenceRefs": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f",
+      "bytes": 35425
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff",
+      "bytes": 30717
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6",
+      "bytes": 12528
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-red.txt",
+      "sha256": "e21988c48ac071b5b56f69e6815bb535eeecab81618bbbab722ff84e6b3d6c50",
+      "bytes": 6424
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-red.json",
+      "sha256": "fe2dc5e6adeae702f905d34904c62992f842f69a6334d8f00717bd8e4e9b5e35",
+      "bytes": 1444
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-green.txt",
+      "sha256": "d991187b8e6bb224020d2b9e5ad0d977fcd34fcea76902039fceff78a3449c41",
+      "bytes": 3687
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-green.json",
+      "sha256": "defb2fb407e26a747fe5584141430da730fec1da08c489ba8882d7dd5790ac4d",
+      "bytes": 1445
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/recycle-related.txt",
+      "sha256": "fad20a26981822076e3e79129adf35d091f3f7203c35b6e193d333d868c6fe11",
+      "bytes": 16481
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/clippy.txt",
+      "sha256": "0e4bc49633c2c2bbe7ee24409e06c01ed7816ca59ef0144d583fb3c794cb0b1a",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/related-checks.json",
+      "sha256": "7b59e1eb8cf7fb1886baf096fe0159c774470bd28d49825d96086b974fd8b1a8",
+      "bytes": 2423
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/regression-before-fix.rs.txt",
+      "sha256": "2099fc41e9cdd40e327caa0a8247eef834c60cd47ba04ee17930de4cd8bccd4b",
+      "bytes": 8548
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/implementation.patch",
+      "sha256": "f6d46dc1f8859307291d791978660982cbecff4f69d47103329fcf2fb5dcab5a",
+      "bytes": 18848
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/source-checkpoint.json",
+      "sha256": "d584a44d11ebd6125f23b66e18655558de8b20216db4931e41d0f287ec066aeb",
+      "bytes": 1157
+    }
+  ],
+  "additionalRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/implementation.json",
+      "sha256": "abe593171d1c3d5dac39041ec38d55fc3bc3e41aa153d4e5c2f2b9dcf08f0a93",
+      "bytes": 6727
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle.rs",
+      "sha256": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c",
+      "bytes": 7597
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+      "bytes": 15773
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd",
+      "bytes": 10467
+    }
+  ],
+  "allReferencedHashesMatch": true,
+  "verifiedReferenceCount": 18
+}

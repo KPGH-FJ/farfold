@@ -1,0 +1,114 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 12 tests
+test worktrees::recycle_tests::storage_version_one_migrates_read_only_and_version_two_does_not_omit_required_action ... ok
+
+running 1 test
+test worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 0.01s
+
+completed:worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes
+
+test worktrees::recycle_tests::abandoned_read_keeps_global_admission_until_actual_worker_finishes ... ok
+test worktrees::recycle_tests::unreadable_storage_prepare_has_queryable_exact_failure_without_directory_io ... ok
+
+running 1 test
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 2.68s
+
+completed:worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move
+
+test worktrees::recycle_tests::cancel_before_recycle_prepare_retires_exact_action_without_future_move ... ok
+
+running 1 test
+test worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 2.79s
+
+
+thread 'worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable' (24631597) panicked at src/worktrees/recycle_tests.rs:536:25:
+controlled retirement owner unwind before any Git move
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+completed:worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable
+
+test worktrees::recycle_tests::ended_prepare_unwind_has_an_exact_unknown_receipt_and_keeps_material_recheckable ... ok
+
+running 1 test
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 2.80s
+
+completed:worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error
+
+test worktrees::recycle_tests::forgotten_record_after_preview_returns_settled_failure_not_unqueryable_error ... ok
+
+running 1 test
+test worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 2.89s
+
+completed:worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved
+
+test worktrees::recycle_tests::unowned_nested_special_and_submodule_material_is_not_moved ... ok
+
+running 1 test
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 2.94s
+
+completed:worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start
+
+test worktrees::recycle_tests::maintenance_cancel_waits_for_retirement_and_never_moves_before_start ... ok
+
+running 1 test
+test worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 3.22s
+
+completed:worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path
+
+test worktrees::recycle_tests::retained_record_survives_unknown_ack_and_never_adopts_a_replacement_or_overwrites_restore_path ... ok
+
+running 1 test
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... RECYCLE_WIRE {"label":"draftChanged","value":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"failed","settled":true,"cancelRequested":false,"code":"draftChanged"}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 3.22s
+
+completed:worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation
+
+test worktrees::recycle_tests::stale_drafts_material_and_restore_destination_are_rejected_without_mutation ... ok
+
+running 1 test
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 3.41s
+
+completed:worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action
+
+test worktrees::recycle_tests::restore_checks_unsent_at_historical_original_cwd_and_prepare_rejections_keep_exact_action ... ok
+
+running 1 test
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... RECYCLE_WIRE {"label":"archiveInspection","value":{"inspectionId":"345e3f90-88d7-4d36-89c7-a3095247c4c3","action":"archive","recordId":"12345678-1234-4123-8123-123456789abc","revision":0,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","branch":"refs/heads/retained-fixture","blockers":[],"impact":{"conversations":1,"unsent":false},"material":{"entries":6,"bytes":56,"sha256":"1369204bfb1a56ecddee34be001d6d1a7b267070fbeb0ef5283ce2d18bbc8797"},"draftBaseline":{"unsentWork":null,"agentSetup":null}}}
+RECYCLE_WIRE {"label":"archivePrepared","value":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"prepared","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}
+RECYCLE_WIRE {"label":"preparedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"unknown"}],"materials":[],"recoveries":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"prepared","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}}
+RECYCLE_WIRE {"label":"archiveRunning","value":{"kind":"operation","action":"archive","maintenanceActive":true,"operationId":"22345678-1234-4123-8123-123456789abc","state":"running","settled":false,"cancelRequested":false,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}
+RECYCLE_WIRE {"label":"archiveReady","value":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}
+RECYCLE_WIRE {"label":"archivedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"}],"materials":[],"recoveries":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}}
+RECYCLE_WIRE {"label":"coldList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"unknown"}],"materials":[],"recoveries":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"unknown","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":1,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"unknown"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","code":"recheckRequired"}}}
+RECYCLE_WIRE {"label":"checkedList","value":{"locations":[],"archives":[{"id":"12345678-1234-4123-8123-123456789abc","revision":2,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"}],"materials":[],"recoveries":[],"operation":{"kind":"operation","action":"archive","maintenanceActive":false,"operationId":"22345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"archive":{"id":"12345678-1234-4123-8123-123456789abc","revision":2,"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}}
+RECYCLE_WIRE {"label":"restoreReady","value":{"kind":"operation","action":"restore","maintenanceActive":false,"operationId":"32345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"location":{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}
+RECYCLE_WIRE {"label":"restoredList","value":{"locations":[{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"}],"archives":[],"materials":[],"recoveries":[],"operation":{"kind":"operation","action":"restore","maintenanceActive":false,"operationId":"32345678-1234-4123-8123-123456789abc","state":"ready","settled":true,"cancelRequested":false,"location":{"id":"12345678-1234-4123-8123-123456789abc","revision":3,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/repo","branch":"refs/heads/retained-fixture","headOid":"537f69bff5dc8c21ba83478b19ace5039610b39b","ownership":"created","availability":"verified"},"originalPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/owned","retainedPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpcnHibJ/.farfold-retained-345e3f90-88d7-4d36-89c7-a3095247c4c3/worktree"}}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1383 filtered out; finished in 4.15s
+
+completed:worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history
+
+test worktrees::recycle_tests::retains_dirty_staged_ignored_symlink_and_restores_same_object_without_migrating_history ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1372 filtered out; finished in 4.17s
+

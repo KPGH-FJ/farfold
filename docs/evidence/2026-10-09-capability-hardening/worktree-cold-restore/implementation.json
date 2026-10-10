@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "issue": "NEW-12",
+  "status": "source-fixed-targeted-verified-not-installed",
+  "baseCommit": "83cdfa10c10e29eb183ca6b08446441ee9847a9e",
+  "rootCause": "Restore completion moves the saved entry from archives to locations. Cold loading correctly marks the operation unknown, but recheck_recycle only looked in archives and returned the old unknown result after successful restore.",
+  "change": "When the archive entry is absent, only an exact dispatched restore with a persisted canonical SavedLocation can enter the new verification branch. It reuses complete verify_at checks plus explicit current HEAD/branch comparison, then compares the complete captured location and operation under the manager lock and saves both together through the existing metadata CAS.",
+  "safety": [
+    "No move/delete/reset/new work is dispatched by recheck; historical conversation cwd remains unchanged",
+    "Failure publishes unknown and the actual fixed error code, retaining location identity and material",
+    "Newer canonical revision is usable at capture only if all substantive fields match. Any canonical/status/request/completed/recycle change during verification rejects the late result; a fresh explicit check uses current revision+1",
+    "No schema, DTO, ledger, frontend, Agent, permission or main-plan changes"
+  ],
+  "observedResults": {
+    "before": {
+      "tests": 4,
+      "passed": 0,
+      "failed": 4,
+      "scope": "One missing branch, not four independent defects: normal cold restore stays unknown; directory/HEAD/material failures return old recheckRequired rather than a fresh verification result"
+    },
+    "after": {
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "existingRecycleRegression": {
+      "tests": 12,
+      "passed": 12
+    },
+    "cargoFmtExitCode": 0,
+    "requiredClippyExitCode": 0,
+    "ownedSourcesStableDuringGreenChecks": true
+  },
+  "coverage": [
+    "Public manager create/archive/restore -> cold list/recheck -> ready, repeated through a second cold load; canonical/durable result, incremented revision, historical whole row and file bytes checked",
+    "Owned original directory replaced at same path: changed/unknown; displaced original and replacement remain untouched",
+    "HEAD changed in owned worktree: changed/unknown; no reset or material overwrite",
+    "File content changed after restore: materialChanged/unknown; changed bytes kept",
+    "Actual filesystem verification followed by actual check_location inside a controlled interleaving: late result cannot overwrite newer raw data; next fresh check succeeds with a higher revision",
+    "Actual filesystem verification followed by acknowledge inside a controlled interleaving: late result cannot clear reviewed unknown; exact newer raw data kept"
+  ],
+  "boundaries": [
+    "Actual tests used only their own temporary Git repositories and in-memory MetaStore. Two race cases are controlled interleavings, not an OS scheduling stress test",
+    "Author verification did not manipulate the formal App, start a real Agent, open user databases or run native UI",
+    "The installed 83cdf observation belongs to root. This source repair still needs integration and subsequent installed native recheck",
+    "Full verification intentionally refuses changed material/index/HEAD; no inference that arbitrary external activity stopped or that the old restore result proves current content unchanged"
+  ],
+  "preparationNote": "The initial output-only patch application check failed because the generated new-file diff omitted a new-file mode header. It was corrected before production application; that preparation error is not counted as a product red.",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/source-checkpoint.json",
+    "sha256": "d584a44d11ebd6125f23b66e18655558de8b20216db4931e41d0f287ec066aeb",
+    "bytes": 1157
+  },
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f",
+      "bytes": 35425
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff",
+      "bytes": 30717
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6",
+      "bytes": 12528
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-red.txt",
+      "sha256": "e21988c48ac071b5b56f69e6815bb535eeecab81618bbbab722ff84e6b3d6c50",
+      "bytes": 6424
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-red.json",
+      "sha256": "fe2dc5e6adeae702f905d34904c62992f842f69a6334d8f00717bd8e4e9b5e35",
+      "bytes": 1444
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-green.txt",
+      "sha256": "d991187b8e6bb224020d2b9e5ad0d977fcd34fcea76902039fceff78a3449c41",
+      "bytes": 3687
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/targeted-green.json",
+      "sha256": "defb2fb407e26a747fe5584141430da730fec1da08c489ba8882d7dd5790ac4d",
+      "bytes": 1445
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/recycle-related.txt",
+      "sha256": "fad20a26981822076e3e79129adf35d091f3f7203c35b6e193d333d868c6fe11",
+      "bytes": 16481
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/clippy.txt",
+      "sha256": "0e4bc49633c2c2bbe7ee24409e06c01ed7816ca59ef0144d583fb3c794cb0b1a",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/related-checks.json",
+      "sha256": "7b59e1eb8cf7fb1886baf096fe0159c774470bd28d49825d96086b974fd8b1a8",
+      "bytes": 2423
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/regression-before-fix.rs.txt",
+      "sha256": "2099fc41e9cdd40e327caa0a8247eef834c60cd47ba04ee17930de4cd8bccd4b",
+      "bytes": 8548
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/implementation.patch",
+      "sha256": "f6d46dc1f8859307291d791978660982cbecff4f69d47103329fcf2fb5dcab5a",
+      "bytes": 18848
+    }
+  ]
+}

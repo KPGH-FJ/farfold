@@ -1,0 +1,205 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "/src/App";
+import { DraftStartup } from "/src/components/DraftStartup";
+import { StorageStartup } from "/src/components/StorageRecovery";
+import { threads, freshThreadState } from "/src/runtime/sessions";
+import {
+  composerDrafts,
+  newConversationChoice,
+  draftPersistence,
+  fileFeedbackDrafts,
+} from "/src/runtime/drafts";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/history-import.css";
+import "/src/desktop-workbench.css";
+
+// Actual App, hooks, stores and IPC parsers. Only native boundaries are controlled.
+// This is a prepared harness, not a declaration that a browser has run.
+const w = window as any;
+const settings = new Map<string, unknown>();
+const scans = new Map<
+  string,
+  {
+    cwd: string;
+    resolve: (value: unknown) => void;
+    reject: (value: unknown) => void;
+    settled: boolean;
+    cancelRequested: boolean;
+  }
+>();
+let cancelFails = false;
+let resolveDialog: ((value: string[] | null) => void) | null = null;
+const agent = {
+  id: "fixture",
+  name: "Controlled Agent",
+  source: "custom",
+  command: "/controlled/never-executed",
+  args: [],
+  env: [],
+  version: null,
+  handshake: null,
+  createdAt: 1,
+  updatedAt: 1,
+};
+const rows = ["A", "B"].map((name) => ({
+  id: `fixture:/controlled/project-${name}:native-${name}`,
+  agentId: "fixture",
+  cwd: `/controlled/project-${name}`,
+  nativeSessionId: `native-${name}`,
+  title: `H11_THREAD_${name}`,
+  configOptions: null,
+  pinned: false,
+  archived: false,
+  createdAt: 1,
+  updatedAt: 1,
+}));
+settings.set("agentSetup.v1", {
+  version: 1,
+  completed: ["fixture"],
+  pending: {},
+  progress: {},
+  selections: { fixture: { service: null, config: {} } },
+});
+
+function scanReply(requestId: string, overrides: Record<string, unknown>) {
+  const files = (overrides.files ?? ["ordinary.txt"]) as string[];
+  return {
+    requestId,
+    files,
+    truncated: false,
+    partial: false,
+    cancelled: false,
+    limits: {
+      files: 2000,
+      depth: 10,
+      entries: 20000,
+      entriesPerDirectory: 4096,
+      directories: 2000,
+      pathBytes: 1048576,
+      timeMs: 5000,
+    },
+    counts: {
+      entries: files.length,
+      directories: 1,
+      skippedDirectories: 0,
+      unreadableDirectories: 0,
+      unreadableEntries: 0,
+      unsupportedNames: 0,
+    },
+    limitReasons: [],
+    excludedDirectoryNames: [".git", "node_modules"],
+    ...overrides,
+  };
+}
+
+w.testInvoke = async (cmd: string, args: any) => {
+  w.calls.push({ cmd, args: args ? { ...args, channel: undefined } : args });
+  if (cmd === "settings_get")
+    return args.key === "autoArchiveDays" ? 0 : (settings.get(args.key) ?? null);
+  if (cmd === "settings_set") {
+    settings.set(args.key, structuredClone(args.value));
+    return;
+  }
+  if (cmd === "storage_recovery_status")
+    return {
+      ready: true,
+      issue: null,
+      dataDirectory: "/controlled/data",
+      databaseReplacementAvailable: false,
+      databaseReplacement: null,
+    };
+  if (cmd === "app_initial_snapshot") return { agents: [agent], settings: {} };
+  if (cmd === "app_default_working_directory") return "/controlled/project-A";
+  if (cmd === "session_index_list") return rows;
+  if (["catalog_list", "catalog_scan", "credential_list", "desktop_notification_take_pending", "prompt_templates_list", "agent_status"].includes(cmd))
+    return [];
+  if (["app_drafts_ready", "host_performance_sample", "session_mark_read", "session_index_mark_read", "session_close", "session_dismiss", "plugin:event|unlisten"].includes(cmd))
+    return;
+  if (cmd === "host_performance_origin") return null;
+  if (cmd === "plugin:event|listen") return 1;
+  if (cmd === "agent_work_get")
+    return { cwd: args.cwd, enabled: {}, locationEnabled: true };
+  if (cmd === "desktop_notifications_get") return { enabled: false, sound: false };
+  if (cmd === "worktree_list")
+    return { locations: [], archives: [], recoveries: [], materials: [], operation: null };
+  if (cmd === "browser_share_status")
+    return { taskKey: args.taskKey, label: args.label, agentId: "fixture", phase: "unshared", revision: 0, reason: null, pendingRequest: null };
+  if (cmd === "session_open")
+    return { nativeSessionId: "controlled-empty-preparation", connectionId: "controlled-no-process", cwd: args.cwd, configOptions: [], configOptionsModern: true, resumed: false, warnings: [], permissionState: "ready" };
+  if (cmd === "project_files") {
+    if (typeof args.requestId !== "string" || scans.has(args.requestId))
+      throw Error("missing or reused request ID");
+    return new Promise((resolve, reject) => {
+      scans.set(args.requestId, { cwd: args.cwd, resolve, reject, settled: false, cancelRequested: false });
+    });
+  }
+  if (cmd === "project_files_cancel") {
+    const scan = scans.get(args.requestId);
+    if (!scan) throw Error("cancel for unknown request");
+    scan.cancelRequested = true;
+    if (cancelFails) throw { code: "unavailable" };
+    // Request acceptance deliberately does not settle the held scan.
+    return { requestId: args.requestId, cancelRequested: true };
+  }
+  if (cmd === "project_file_read") return "CONTROLLED_FILE_CONTENT";
+  if (cmd === "plugin:dialog|open")
+    return new Promise((resolve) => { resolveDialog = resolve; });
+  if (cmd === "draft_attachment_image") return null;
+  w.unexpected.push(cmd);
+  throw Error("Unexpected controlled IPC " + cmd);
+};
+
+await draftPersistence.load();
+newConversationChoice.cwd = "/controlled/project-A";
+newConversationChoice.agentId = "fixture";
+for (const row of rows) {
+  const thread = freshThreadState(row.id, row.agentId, row.cwd, row.nativeSessionId);
+  thread.identity = "established";
+  thread.title = row.title;
+  thread.items = [{ kind: "agent", id: `body-${row.nativeSessionId}`, text: `H11_BODY_${row.nativeSessionId}`, streaming: false, time: 0 }];
+  threads.getSnapshot().threads.set(row.id, thread);
+  const key = `session:${row.id}`;
+  composerDrafts.update(key, () => ({ text: `KEEP_${row.nativeSessionId}`, attachments: [{ id: "keep", kind: "file", name: "keep.txt", uri: "file:///controlled/keep.txt" }] }));
+  fileFeedbackDrafts.update(row.id, "/controlled/keep.txt", { text: "KEEP_OPINION", selection: null });
+}
+await draftPersistence.flush();
+w.fixture = {
+  current: () => ({
+    rows,
+    drafts: rows.map((r) => ({ key: `session:${r.id}`, draft: composerDrafts.read(`session:${r.id}`), feedback: fileFeedbackDrafts.entries(r.id) })),
+    scans: [...scans].map(([id, s]) => ({ id, cwd: s.cwd, settled: s.settled, cancelRequested: s.cancelRequested })),
+    calls: w.calls,
+    unexpected: w.unexpected,
+  }),
+  finish: (id: string, overrides: Record<string, unknown> = {}) => {
+    const scan = scans.get(id)!;
+    if (!scan || scan.settled) throw Error("unknown/already settled scan");
+    scan.settled = true;
+    scan.resolve(scanReply(id, overrides));
+  },
+  fail: (id: string, code: string) => {
+    const scan = scans.get(id)!;
+    if (!scan || scan.settled) throw Error("unknown/already settled scan");
+    scan.settled = true;
+    scan.reject({ code });
+  },
+  cancelFails: (value: boolean) => { cancelFails = value; },
+  choose: (paths: string[] | null) => {
+    if (!resolveDialog) throw Error("no pending chooser");
+    const finish = resolveDialog;
+    resolveDialog = null;
+    finish(paths);
+  },
+  clearDraft: (key: string) => composerDrafts.clear(key),
+};
+createRoot(document.getElementById("root")!).render(
+  <StrictMode><StorageStartup><DraftStartup><App /></DraftStartup></StorageStartup></StrictMode>,
+);

@@ -1,0 +1,31 @@
+{
+  "scope": "Narrow H11 frontend review follow-up",
+  "result": "no_new_blocker_in_reviewed_delta",
+  "priorReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/independent-frontend-review.json",
+    "sha256": "dfebb6061f5ee2b7618438f6aaf5fcf2af667e1d0febd6ccd20315f38d38c649",
+    "bytes": 4499
+  },
+  "source": {
+    "path": "src/runtime/project_files.ts",
+    "sha256": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+    "bytes": 4584
+  },
+  "sourceDifference": "Only readBusy display text changed to cover either OS read admission or bounded transient request-registry capacity, without inferring a different request is still running. Reversing this single text replacement reproduces the previously reviewed SHA exactly.",
+  "otherFourProductionSourcesMatchPrior": true,
+  "additionalTest": {
+    "path": "src/runtime/project_files.test.ts",
+    "sha256": "9eb5180614166e202b669647c36f8f4bd3b005f63dc97a41e91c49ded024d513",
+    "bytes": 2673
+  },
+  "actualRustWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json",
+    "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+    "bytes": 41651
+  },
+  "testReadOnlyReview": "The new test parses the actual complete and truncated Rust DTO without translation, checks 3/2000 file counts and fixed limits, and exercises unsafe paths, response bounds, wrong request, missing coverage and fixed error text. No test was run by this review.",
+  "boundaries": [
+    "Original cancellation review remains unchanged.",
+    "Actual Rust wire interop execution, full engineering, browser and installed UI remain separately attributed."
+  ]
+}

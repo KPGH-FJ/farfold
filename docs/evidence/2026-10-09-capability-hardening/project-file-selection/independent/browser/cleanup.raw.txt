@@ -1,0 +1,10 @@
+{
+  "pid": 78097,
+  "commandBefore": "78097 node output/2026-10-10-project-files-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "browserRunsClosedByFinally": true,
+  "formalAppTouched": false,
+  "toolExitCode": 143,
+  "after": "",
+  "portAfter": ""
+}

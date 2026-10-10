@@ -682,7 +682,129 @@ impl Worktrees {
         };
         if let Some((key, revision)) = archived {
             self.recycle_check(store, &key, revision)?;
+            return self.status(store, id);
         }
-        self.status(store, id)
+        self.recheck_restored_with(store, id, |saved| {
+            recycle::verify_at(saved, false, &AtomicBool::new(false))
+        })
+    }
+    pub(super) fn recheck_restored_with(
+        &self,
+        store: &MetaStore,
+        id: &str,
+        verify: impl FnOnce(&SavedArchive) -> Result<Snapshot>,
+    ) -> Result<Reply> {
+        let _own = self
+            .0
+            .admission
+            .activity()
+            .map_err(|_| error("maintenanceBusy"))?;
+        let _global = managed_update::activity().map_err(|_| error("maintenanceBusy"))?;
+        let mut i = self.lock()?;
+        i.recover(store)?;
+        if i.working.is_some() || i.maintenance.is_some() || !i.preparing.is_empty() {
+            return Ok(i.reply(id));
+        }
+        let Some(old) = i
+            .doc
+            .operation
+            .as_ref()
+            .filter(|o| o.status.operation_id == id && o.status.settled)
+            .cloned()
+        else {
+            return Ok(i.reply(id));
+        };
+        let Some(intent) = old
+            .recycle
+            .as_ref()
+            .filter(|r| r.action == RecycleAction::Restore && r.dispatched)
+        else {
+            return Ok(i.reply(id));
+        };
+        let Some(recorded) = old.status.location.as_ref() else {
+            return Ok(i.reply(id));
+        };
+        let current = i
+            .doc
+            .locations
+            .iter()
+            .find(|v| v.location.id == intent.saved.archive.id)
+            .cloned()
+            .ok_or(error("changed"))?;
+        // A saved restored location, not mere path existence, is required. Accept
+        // newer observations only when every identity and substantive field agrees.
+        let mut expected = intent.saved.original.clone();
+        expected.location.revision = current.location.revision;
+        expected.location.availability = current.location.availability.clone();
+        let mut observation = current.location.clone();
+        observation.revision = recorded.revision;
+        observation.availability = recorded.availability.clone();
+        if current != expected
+            || current.location.revision < recorded.revision
+            || observation != *recorded
+            || i.doc
+                .archives
+                .iter()
+                .any(|a| a.archive.id == current.location.id)
+        {
+            return Err(error("changed"));
+        }
+        drop(i);
+        // Reuse the complete restore verifier: both parent identities, exact Git
+        // registration/HEAD, absent retained path, index and retained material.
+        let checked = verify(&intent.saved).and_then(|snapshot| {
+            if current.identity.matches(&snapshot)
+                && snapshot.head.as_deref() == Some(current.location.head_oid.as_str())
+                && snapshot.branch == current.location.branch
+            {
+                Ok(())
+            } else {
+                Err(error("changed"))
+            }
+        });
+        let mut i = self.lock()?;
+        if i.working.is_some() || i.maintenance.is_some() || !i.preparing.is_empty() {
+            return Err(error("changed"));
+        }
+        let unchanged = i.doc.operation.as_ref().is_some_and(|o| {
+            o.status == old.status
+                && o.request == old.request
+                && o.completed == old.completed
+                && o.recycle.as_ref().is_some_and(|r| {
+                    r.saved == intent.saved
+                        && r.action == intent.action
+                        && r.dispatched == intent.dispatched
+                })
+        });
+        let index = i
+            .doc
+            .locations
+            .iter()
+            .position(|v| *v == current)
+            .filter(|_| unchanged)
+            .ok_or(error("changed"))?;
+        let mut next = i.doc.clone();
+        let location = &mut next.locations[index].location;
+        location.revision = next_revision(location.revision)?;
+        location.availability = if checked.is_ok() {
+            "verified"
+        } else {
+            "unknown"
+        }
+        .into();
+        let location = location.clone();
+        let o = next.operation.as_mut().ok_or(error("changed"))?;
+        o.status.state = if checked.is_ok() { "ready" } else { "unknown" }.into();
+        o.status.code = checked.as_ref().err().map(|e| e.code.into());
+        o.status.location = Some(location);
+        o.status.archive = None;
+        o.status.reviewed = false;
+        o.status.maintenance_active = false;
+        o.status.settled = true;
+        o.completed = checked.is_ok();
+        // Publish the current catalogue and exact operation together under the
+        // existing metadata CAS. Rechecking never dispatches a move or new work.
+        i.save(store, next)?;
+        Ok(i.reply(id))
     }
 }

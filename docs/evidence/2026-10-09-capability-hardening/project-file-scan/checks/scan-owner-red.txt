@@ -1,0 +1,70 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.project-files.test.tsx (30 tests | 3 failed | 27 skipped) 30ms
+   × does not let a captured cancel act on a replacement scan 14ms
+   × does not let a captured retry restart a newer completed scan 10ms
+   × retains cancellation of an exact request after its observation timeout without claiming it stopped 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > does not let a captured cancel act on a replacement scan
+AssertionError: expected [ …(2) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/components/Composer.project-files.test.tsx:828:86
+    826|   const before = vi.mocked(invoke).mock.calls.filter(([c]) => c === "p…
+    827|   oldCancel();
+    828|   expect(vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_f…
+       |                                                                                      ^
+    829|   expect(scanNotice().state?.phase).toBe("loading");
+    830| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > does not let a captured retry restart a newer completed scan
+AssertionError: expected [ [ 'project_files', …(1) ], …(2) ] to have a length of 2 but got 3
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/components/Composer.project-files.test.tsx:841:79
+    839|   oldRetry();
+    840|   await settle();
+    841|   expect(vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_f…
+       |                                                                               ^
+    842| });
+    843|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > retains cancellation of an exact request after its observation timeout without claiming it stopped
+AssertionError: expected 'error' to be 'pending' // Object.is equality
+
+Expected: "pending"
+Received: "error"
+
+ ❯ src/components/Composer.project-files.test.tsx:848:37
+    846|   typeMention();
+    847|   await settle();
+    848|   expect(scanNotice().state?.phase).toBe("pending");
+       |                                     ^
+    849|   expect(scanText()).toContain(PROJECT_FILES.pending);
+    850|   const call = vi.mocked(invoke).mock.calls.find(([c]) => c === "proje…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 27 skipped (30)
+   Start at  20:02:53
+   Duration  2.91s (transform 780ms, setup 0ms, import 2.74s, tests 30ms, environment 0ms)
+

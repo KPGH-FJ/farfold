@@ -1,0 +1,42 @@
+{
+  "capturedAtUtc": "2026-10-10T12:12:20.447834+00:00",
+  "scope": "H11 backend final source after targeted tests and standard fmt/clippy; not an installed-product proof",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "bytes": 18608,
+      "lines": 426
+    },
+    {
+      "path": "src-tauri/src/project_index.rs",
+      "sha256": "32125bd3815b0dae4499979e447a95d818bf3877d7f7eb9b0fc72de610f95936",
+      "bytes": 2926,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/project_index_scan.rs",
+      "sha256": "eae3d57679c7c6c2397162b80a617880de089cbe08f14603754a7748093e46ab",
+      "bytes": 10039,
+      "lines": 312
+    },
+    {
+      "path": "src-tauri/src/project_index_scan_tests.rs",
+      "sha256": "43f07b79a7bae24cbde2b473f9a9ef85d814168f9e972a01f26a82e692035bd3",
+      "bytes": 8975,
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/project_index_requests.rs",
+      "sha256": "d3c5b3e38d51c46c674bb0b9af1bc9f475480cfc26cae1b2a2ac2a398652ffcc",
+      "bytes": 8889,
+      "lines": 254
+    },
+    {
+      "path": "src-tauri/src/project_index_read.rs",
+      "sha256": "d0125fa2f7b2545bd5e0ff610dd85fc8770f87df5a2626b1e619077db724e8b9",
+      "bytes": 5264,
+      "lines": 133
+    }
+  ]
+}

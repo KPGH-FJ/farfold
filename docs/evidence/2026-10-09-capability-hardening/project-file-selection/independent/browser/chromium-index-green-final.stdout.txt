@@ -1,0 +1,1 @@
+{"passed":true,"checks":[{"name":"precondition third option is selected","pass":true},{"name":"new single result selected by Enter after new request","pass":true}]}

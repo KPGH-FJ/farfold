@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "scope": "H11 frontend independent source and author-evidence review",
+  "result": "no_new_blocker_in_reviewed_scope",
+  "method": {
+    "sourceReadOnly": true,
+    "testsRerun": false,
+    "browserRun": false,
+    "installedAppRun": false,
+    "agentRun": false,
+    "userDataAccess": false
+  },
+  "sources": [
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "eef1a96eee82528d1d8cb26e01e1344bd8d89481da06944054b846f08054c74e",
+      "bytes": 50119
+    },
+    {
+      "path": "src/components/useProjectFiles.ts",
+      "sha256": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+      "bytes": 3913
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.tsx",
+      "sha256": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+      "bytes": 2777
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.css",
+      "sha256": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+      "bytes": 396
+    },
+    {
+      "path": "src/runtime/project_files.ts",
+      "sha256": "3ac60a561998f41b325b705f58ce3bc58904457138183dfa3464c03babc0bfb5",
+      "bytes": 4584
+    }
+  ],
+  "test": {
+    "path": "src/components/Composer.project-files.test.tsx",
+    "sha256": "053db6a1732957b7c2e15342c976538b624a902a95d45c354fb9d3f47ab391fa",
+    "bytes": 30124
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/checks/scan-owner-red.txt",
+      "sha256": "5f352260637999e087cce345e4c1ff89f75407f552b424e3f30266e05144151f",
+      "bytes": 2692
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/checks/scan-owner-green.txt",
+      "sha256": "931d5fbda8a913c150344a1fc73baf8f82cfc5aa521ffb84aa2089fb2ae892f8",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/checks/frontend-focused.txt",
+      "sha256": "3069b1696146736c9b3c6d5cc834c2ea33cce50d423c567f1dafe2a8748f5e74",
+      "bytes": 212
+    }
+  ],
+  "findingsClosed": [
+    {
+      "finding": "A captured cancel or retry callback could use the replacement request.",
+      "originalEvidence": "scan-owner-red.txt: two actual failures (extra cancel IPC and extra scan IPC)",
+      "finalCode": "Handlers capture visibleRequest and require exact current Request ownership; request UUID must also match the displayed scan."
+    },
+    {
+      "finding": "An observation timeout was classified as a settled scan and lost its exact cancellation path.",
+      "originalEvidence": "scan-owner-red.txt: pending expected, error received",
+      "finalCode": "responded marks the IPC observation ending; readPending leaves settled false. The UI keeps an exact cancel action and describes cancellation as requested with completion unconfirmed."
+    }
+  ],
+  "additionalReview": [
+    "Cancellation delivery rejection resets cancelRequested only while the same live request remains unsettled; no automatic cancellation retry or scan restart is introduced.",
+    "A user-requested scan retry gets a new UUID and retires/cancels the previous request; OS completion is not inferred from cancellation acknowledgement.",
+    "Input remains editable during scanning. Errors remain distinct from an empty match list. Partial results, truncation, bounded matching and the system file picker remain visible paths.",
+    "File candidates remain names, not identity receipts: existing current file reads and dispatch-time attachment checks retain their authority.",
+    "Source inspection confirms textarea Tab can focus an enabled scan action; actual browser focus and scroll are outside this review."
+  ],
+  "authorChecksRead": [
+    {
+      "log": "scan-owner-red.txt",
+      "passed": 0,
+      "failed": 3,
+      "skipped": 27,
+      "classification": "valid regressions for two findings, not independent rerun"
+    },
+    {
+      "log": "scan-owner-green.txt",
+      "passed": 30,
+      "failed": 0
+    },
+    {
+      "log": "frontend-focused.txt",
+      "passed": 31,
+      "failed": 0,
+      "additionalCase": "explicit cancel retry after delivery rejection"
+    }
+  ],
+  "boundaries": [
+    "Source and controlled hook tests do not establish native OS cancellation, installed-app UI or real-Agent acceptance.",
+    "Backend bounded traversal and file-handle implementation are owned and verified separately.",
+    "No production, test, existing evidence or user data was modified by this review."
+  ]
+}

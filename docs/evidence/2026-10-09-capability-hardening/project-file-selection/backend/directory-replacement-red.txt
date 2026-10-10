@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.38s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'project_index::scan::tests::queued_directory_replaced_with_symlink_must_not_enumerate_external_names' (24657030) panicked at src/project_index_scan_tests.rs:24:5:
+queued directory changed into an external symlink but was opened
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test project_index::scan::tests::queued_directory_replaced_with_symlink_must_not_enumerate_external_names ... FAILED
+
+failures:
+
+failures:
+    project_index::scan::tests::queued_directory_replaced_with_symlink_must_not_enumerate_external_names
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1403 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

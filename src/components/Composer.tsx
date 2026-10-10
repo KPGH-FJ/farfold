@@ -1,3 +1,5 @@
+import { useProjectFiles } from "./useProjectFiles";
+import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
 import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { ComposerAttachments } from "./ComposerAttachments";
@@ -214,12 +216,8 @@ export function Composer({
     text: string;
   } | null>(null);
   const [pickIndex, setPickIndex] = useState(0);
-  const [files, setFiles] = useState<{
-    key: string;
-    cwd: string;
-    paths: string[];
-  } | null>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
+  const fileMenuRef = useRef<HTMLDivElement | null>(null);
   const busy = useRef(false);
   const liveKey = useRef(storageKey);
   liveKey.current = storageKey;
@@ -233,7 +231,6 @@ export function Composer({
     setUncertainError(null);
     setMentionAt(-1);
     setDismissedSuggestion(null);
-    setFiles(null);
     if (!composerDrafts.read(storageKey).sendPending) busy.current = false;
     setQueueEditOpen(
       Boolean(composerDrafts.read(queueEditorKey(thread?.key ?? "")).queueEdit),
@@ -364,16 +361,24 @@ export function Composer({
   const slashList = slashActions;
   const mentionQ = mentionAt >= 0 ? mentionQuery(text, mentionAt) : null;
   const mentionOpen =
-    !shortcutOpen && !suggestionsDismissed && mentionQ !== null;
+    !inputDisabled &&
+    !shortcutOpen &&
+    !suggestionsDismissed &&
+    mentionQ !== null;
   const browserSuggestionsReady = useBrowserSurfaceBarrier(
     active && (slashOpen || mentionOpen),
   );
   const cwd = workCwd;
-  const currentFiles =
-    files?.key === storageKey && files.cwd === cwd ? files : null;
-  const fileList = mentionOpen
-    ? filterFiles(currentFiles?.paths ?? [], mentionQ)
+  const fileScan = useProjectFiles(
+    storageKey,
+    cwd,
+    active && mentionOpen && !inputDisabled,
+  );
+  const currentFiles = fileScan.state;
+  const matchingFiles = mentionOpen
+    ? filterFiles(currentFiles?.paths ?? [], mentionQ, 51)
     : [];
+  const fileList = matchingFiles.slice(0, 50);
   const pickListLen = slashOpen ? slashActions.length : fileList.length;
   const filePickerMounted = useRef(true);
   const filePickerOwner = useRef({
@@ -401,24 +406,7 @@ export function Composer({
     };
   }, []);
 
-  // The selected folder is available before an Agent connection exists.
-  // Never display a prior folder's list while its replacement is loading.
-  useEffect(() => {
-    if (!active || !mentionOpen || !cwd) return;
-    let current = true;
-    invoke<{ files: string[] }>("project_files", { cwd })
-      .then((result) => {
-        if (current) setFiles({ key: storageKey, cwd, paths: result.files });
-      })
-      .catch(() => {
-        if (current) setFiles({ key: storageKey, cwd, paths: [] });
-      });
-    return () => {
-      current = false;
-    };
-  }, [mentionOpen, cwd, active, storageKey]);
-
-  useEffect(() => setPickIndex(0), [slashQ, mentionQ]);
+  useEffect(() => setPickIndex(0), [slashQ, mentionQ, currentFiles?.requestId]);
 
   // `@` file search asks for a working folder first when none is chosen.
   // Once per mention session; a cancelled choice simply does nothing.
@@ -710,6 +698,18 @@ export function Composer({
     // that key still reports 229 even though isComposing has already cleared.
     if (e.nativeEvent.isComposing || e.nativeEvent.keyCode === 229) return;
     if (slashOpen || mentionOpen) {
+      if (e.key === "Tab" && mentionOpen) {
+        if (!e.shiftKey) {
+          const button = fileMenuRef.current?.querySelector<HTMLButtonElement>(
+            "button:not(:disabled)",
+          );
+          if (button) {
+            e.preventDefault();
+            button.focus();
+          }
+        }
+        return;
+      }
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
         setPickIndex(
@@ -1197,25 +1197,45 @@ export function Composer({
         </div>
       )}
       {browserSuggestionsReady && mentionOpen && (
-        <div className="pick-menu" role="listbox">
-          {fileList.map((file, i) => (
-            <div
-              key={file}
-              role="option"
-              aria-selected={i === pickIndex}
-              className={`pm${i === pickIndex ? " on" : ""}`}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                pickFile(i);
-              }}
-            >
-              <span className="pm-name">{basename(file)}</span>
-              <span className="pm-desc">{file}</span>
-            </div>
-          ))}
-          {fileList.length === 0 && (
-            <div className="pm pm-dim">{STRINGS.composer.noFileMatch}</div>
-          )}
+        <div className="pick-menu" ref={fileMenuRef}>
+          <ProjectFileScanNotice
+            state={currentFiles}
+            cwd={cwd}
+            noMatch={fileList.length === 0}
+            matchesLimited={matchingFiles.length > 50}
+            onCancel={fileScan.cancel}
+            onRetry={fileScan.retry}
+            onChoose={() => {
+              const owner = filePickerOwner.current;
+              if (
+                filePickerMounted.current &&
+                owner.active &&
+                !owner.inputDisabled &&
+                owner.key === storageKey &&
+                owner.cwd === cwd &&
+                owner.text === text &&
+                owner.mentionAt === mentionAt
+              )
+                void pickFiles();
+            }}
+          />
+          <div role="listbox" aria-label={C.findProjectFile}>
+            {fileList.map((file, i) => (
+              <div
+                key={file}
+                role="option"
+                aria-selected={i === pickIndex}
+                className={`pm${i === pickIndex ? " on" : ""}`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  pickFile(i);
+                }}
+              >
+                <span className="pm-name">{basename(file)}</span>
+                <span className="pm-desc">{file}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
       {stopPending && (

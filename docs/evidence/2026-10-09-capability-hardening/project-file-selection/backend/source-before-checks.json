@@ -1,0 +1,41 @@
+{
+  "scope": "Six H11 backend files after 26 passing targeted tests; before format/clippy, not a pre-test checkpoint",
+  "files": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "bytes": 18608,
+      "lines": 426
+    },
+    {
+      "path": "src-tauri/src/project_index.rs",
+      "sha256": "32125bd3815b0dae4499979e447a95d818bf3877d7f7eb9b0fc72de610f95936",
+      "bytes": 2926,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/project_index_scan.rs",
+      "sha256": "9193f299c283132370f56025c3519f9eb05f5cc661cdf70e40dbb6a220fad9f1",
+      "bytes": 9842,
+      "lines": 305
+    },
+    {
+      "path": "src-tauri/src/project_index_scan_tests.rs",
+      "sha256": "b5f84c584f9f2d4719508934346f253b1910e6f8504c7126ff6600fdddafaf0a",
+      "bytes": 9010,
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/project_index_requests.rs",
+      "sha256": "d3c5b3e38d51c46c674bb0b9af1bc9f475480cfc26cae1b2a2ac2a398652ffcc",
+      "bytes": 8889,
+      "lines": 254
+    },
+    {
+      "path": "src-tauri/src/project_index_read.rs",
+      "sha256": "d0125fa2f7b2545bd5e0ff610dd85fc8770f87df5a2626b1e619077db724e8b9",
+      "bytes": 5264,
+      "lines": 133
+    }
+  ]
+}

@@ -1,148 +1,92 @@
-//! Project file listing for the composer's `@` mention picker.
-//!
-//! A bounded recursive walk — not an index: no watcher, no cache, no
-//! hidden state. Enough for a fuzzy picker over a few thousand paths.
-
-use std::path::{Path, PathBuf};
-
-use serde::Serialize;
-
+//! Bounded, cancellable candidate paths for the composer's `@` picker.
+//! No watcher, saved index, file identity ledger or Agent-side configuration.
 use crate::acp_client::manager::validate_cwd;
+use serde::Serialize;
+use std::path::Path;
+use tauri::Webview;
+#[path = "project_index_read.rs"]
+mod read;
+#[path = "project_index_requests.rs"]
+mod requests;
+#[path = "project_index_scan.rs"]
+mod scan;
+pub use scan::ProjectFiles;
 
-/// Hard caps so a huge tree cannot stall the picker or the renderer.
-const MAX_FILES: usize = 2000;
-const MAX_DEPTH: usize = 10;
-
-/// Directories never worth mentioning — build output, VCS internals,
-/// vendored deps.
-const SKIP_DIRS: &[&str] = &[
-    ".git",
-    "node_modules",
-    "target",
-    "dist",
-    ".next",
-    ".turbo",
-    ".cache",
-    "coverage",
-    "__pycache__",
-    ".venv",
-    "venv",
-];
-
-#[derive(Debug, Clone, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+pub struct Failure {
+    pub code: &'static str,
+}
+impl Failure {
+    fn new(code: &'static str) -> Self {
+        Self { code }
+    }
+}
+fn caller(webview: &Webview) -> Result<(), Failure> {
+    if crate::browser_workspace::caller_allowed(webview) {
+        Ok(())
+    } else {
+        Err(Failure::new("unavailable"))
+    }
+}
+async fn observe<T: Send + 'static>(
+    f: impl FnOnce() -> Result<T, Failure> + Send + 'static,
+) -> Result<T, Failure> {
+    crate::file_read_check::run(move || Ok(f()))
+        .await
+        .map_err(|message| {
+            Failure::new(match crate::file_read_check::classify_error(&message) {
+                crate::file_read_check::FailureKind::Pending => "readPending",
+                crate::file_read_check::FailureKind::Busy => "readBusy",
+                crate::file_read_check::FailureKind::Unavailable => "unavailable",
+            })
+        })?
+}
+#[tauri::command]
+pub async fn project_files(
+    webview: Webview,
+    cwd: String,
+    request_id: String,
+) -> Result<ProjectFiles, Failure> {
+    caller(&webview)?;
+    // Register synchronously, before waiting for worker admission. A cancelled
+    // request is never restarted during its observation/retention period.
+    let lease = requests::shared().begin(&request_id)?;
+    observe(move || {
+        let lease = lease;
+        if lease.flag.load(std::sync::atomic::Ordering::Acquire) {
+            return Err(Failure::new("cancelled"));
+        }
+        let root = validate_cwd(&cwd).map_err(|_| Failure::new("unreadable"))?;
+        scan::scan(&root, request_id, &lease.flag, scan::Limits::default())
+        // lease lives in this real worker, including after IPC wait expires.
+    })
+    .await
+}
+#[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct ProjectFiles {
-    /// Paths relative to the project root (forward slashes).
-    pub files: Vec<String>,
-    /// True when `MAX_FILES` cut the walk short.
-    pub truncated: bool,
+pub struct Cancellation {
+    request_id: String,
+    cancel_requested: bool,
 }
-
-fn collect(dir: &Path, root: &Path, depth: usize, out: &mut Vec<String>) -> bool {
-    if depth > MAX_DEPTH || out.len() >= MAX_FILES {
-        return false;
-    }
-    let Ok(entries) = std::fs::read_dir(dir) else {
-        return true;
-    };
-    let mut names: Vec<PathBuf> = entries.flatten().map(|e| e.path()).collect();
-    names.sort();
-    for path in names {
-        if out.len() >= MAX_FILES {
-            return false;
-        }
-        let Ok(meta) = path.symlink_metadata() else {
-            continue;
-        };
-        // Symlinks are listed as files but never followed — the picker only
-        // needs the path; the agent resolves it on its own side.
-        if meta.is_dir() && !meta.file_type().is_symlink() {
-            let name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
-            if SKIP_DIRS.contains(&name) {
-                continue;
-            }
-            if !collect(&path, root, depth + 1, out) {
-                return false;
-            }
-        } else if (meta.is_file() || meta.file_type().is_symlink())
-            && let Ok(rel) = path.strip_prefix(root)
-        {
-            out.push(rel.to_string_lossy().replace('\\', "/"));
-        }
-    }
-    true
-}
-
-/// List files under `cwd` for the `@` mention picker.
 #[tauri::command]
-pub async fn project_files(cwd: String) -> Result<ProjectFiles, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let root = validate_cwd(&cwd)?;
-        let mut files = Vec::new();
-        let completed = collect(&root, &root, 0, &mut files);
-        Ok(ProjectFiles {
-            truncated: !completed,
-            files,
-        })
+pub fn project_files_cancel(webview: Webview, request_id: String) -> Result<Cancellation, Failure> {
+    caller(&webview)?;
+    requests::shared().cancel(&request_id)?;
+    Ok(Cancellation {
+        request_id,
+        cancel_requested: true,
+    })
+}
+#[tauri::command]
+pub async fn project_file_read(
+    webview: Webview,
+    cwd: String,
+    path: String,
+) -> Result<String, Failure> {
+    caller(&webview)?;
+    observe(move || {
+        let root = validate_cwd(&cwd).map_err(|_| Failure::new("unreadable"))?;
+        read::read(&root, Path::new(&path))
     })
     .await
-    .map_err(|error| format!("project_files failed: {error}"))?
-}
-
-/// Read a project file for prompt embedding (`resource` content block).
-/// The path must resolve inside the project root; binary or oversized
-/// files are refused so a bad pick cannot blow up the prompt.
-#[tauri::command]
-pub async fn project_file_read(cwd: String, path: String) -> Result<String, String> {
-    tauri::async_runtime::spawn_blocking(move || {
-        let root = validate_cwd(&cwd)?;
-        let canonical = root
-            .join(&path)
-            .canonicalize()
-            .map_err(|_| format!("cannot read {path}"))?;
-        if !canonical.starts_with(&root) || !canonical.is_file() {
-            return Err(format!("not a file inside the project: {path}"));
-        }
-        const MAX: u64 = 256 * 1024;
-        if canonical.metadata().map_err(|_| "stat failed")?.len() > MAX {
-            return Err(format!("file too large to attach: {path}"));
-        }
-        std::fs::read_to_string(&canonical).map_err(|_| format!("cannot read {path} as text"))
-    })
-    .await
-    .map_err(|error| format!("project_file_read failed: {error}"))?
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn lists_files_and_skips_heavy_dirs() {
-        let dir = tempfile::tempdir().expect("tempdir");
-        let root = dir.path();
-        std::fs::create_dir_all(root.join("src")).unwrap();
-        std::fs::create_dir_all(root.join("node_modules/pkg")).unwrap();
-        std::fs::write(root.join("src/main.ts"), "x").unwrap();
-        std::fs::write(root.join("node_modules/pkg/index.js"), "x").unwrap();
-        std::fs::write(root.join("README.md"), "x").unwrap();
-        let mut files = Vec::new();
-        assert!(collect(root, root, 0, &mut files));
-        assert!(files.contains(&"README.md".to_string()));
-        assert!(files.contains(&"src/main.ts".to_string()));
-        assert!(!files.iter().any(|f| f.contains("node_modules")));
-    }
-
-    #[test]
-    fn reports_truncation() {
-        let dir = tempfile::tempdir().expect("tempdir");
-        let root = dir.path();
-        for i in 0..(MAX_FILES + 5) {
-            std::fs::write(root.join(format!("f{i:05}.txt")), "x").unwrap();
-        }
-        let mut files = Vec::new();
-        let completed = collect(root, root, 0, &mut files);
-        assert!(!completed);
-        assert_eq!(files.len(), MAX_FILES);
-    }
 }

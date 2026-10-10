@@ -1,0 +1,85 @@
+{
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "worktrees::recycle_tests",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 4.761,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/recycle-related.txt",
+        "sha256": "fad20a26981822076e3e79129adf35d091f3f7203c35b6e193d333d868c6fe11"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.023,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/rustfmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 5.798,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/clippy.txt",
+        "sha256": "0e4bc49633c2c2bbe7ee24409e06c01ed7816ca59ef0144d583fb3c794cb0b1a"
+      }
+    }
+  ],
+  "sourceRefsBefore": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff"
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6"
+    }
+  ],
+  "sourceRefsAfter": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff"
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6"
+    }
+  ],
+  "sourceUnchanged": true
+}

@@ -1,0 +1,349 @@
+{
+  "scope": "H11 actual React StrictMode full App / Composer / project-file hook / strict DTO parser / real in-memory draft stores, controlled IPC and chooser replies. No formal App, Agent, real disk scan, database, build or Cargo performed by this browser run.",
+  "status": "passed controlled browser coverage; not installed/native acceptance",
+  "runs": [
+    {
+      "name": "WebKit six groups before sole keyboard-index fix",
+      "assertions": 35,
+      "passed": 35,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third.raw.txt",
+        "sha256": "11dd2a73ed0426c78a60129ec0d7e60f1bdf36e5c3f596354128b86b50e14beb"
+      }
+    },
+    {
+      "name": "WebKit keyboard-index after fix",
+      "assertions": 2,
+      "passed": 2,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-green.raw.txt",
+        "sha256": "6974077da16c00837eda271c41e0be175f90aee13dc0eee6b052552c15eb88e3"
+      }
+    },
+    {
+      "name": "Chromium six groups final source",
+      "assertions": 35,
+      "passed": 35,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final.raw.txt",
+        "sha256": "35832b0f9a448a71ca0b349093d07a698c4527ab1d0e039dfa446fc1cea1f171"
+      }
+    },
+    {
+      "name": "Chromium keyboard-index final source",
+      "assertions": 2,
+      "passed": 2,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green-final.raw.txt",
+        "sha256": "904443f8be1f301d2fa42b9c6c5ef553db69ee60269538ba3dc4f59b10a0f3b4"
+      }
+    }
+  ],
+  "coverage": [
+    "Pending @ scan leaves input editable; ordinary textarea Tab reaches scan action, ShiftTab follows browser focus, explicit Enter adds exact current path without send.",
+    "Partial and truncated nonempty results retain scope; 60 controlled paths display 50 maximum and further typing selects the 60th without reread. At 900x620 menu scrolls locally and window/root stay at zero.",
+    "Exact request cancellation acknowledgement is not scan termination: cancelling state persists until result; cancellation failure can retry, readPending supports explicit cancellation and fresh-ID retry; unavailable/readBusy never display empty success.",
+    "Switching A to B isolates late scan results; current B attaches only B cwd; Escape does not allow late completion to reopen menu.",
+    "Unlisted chooser cancellation preserves original text; explicit URI selection preserves text/attachments/opinions and never sends; cleared original draft rejects late chooser data and does not add to B.",
+    "After selecting old third result, new request containing one result resets keyboard selection so Enter attaches that new file."
+  ],
+  "effectiveProductRed": {
+    "origin": "Root proposed stale pickIndex counterexample; verification executed actual WebKit red; root fixed Composer dependency.",
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-red.raw.txt",
+      "sha256": "d2cca8d8c45b309eed471bf6d94d607bc27ec6cf7ade9654db3e40f8149c8a34"
+    },
+    "preconditionPassed": 1,
+    "targetFailed": 1,
+    "oldComposerSha256": "eef1a96eee82528d1d8cb26e01e1344bd8d89481da06944054b846f08054c74e",
+    "newComposerSha256": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+    "exactDelta": "useEffect setPickIndex dependency changed from [slashQ, mentionQ] to [slashQ, mentionQ, currentFiles?.requestId]. Reconstructing previous bytes from final bytes yields exact pre-run hash.",
+    "beforeBytes": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/Composer.before-index-fix.tsx.txt",
+      "sha256": "eef1a96eee82528d1d8cb26e01e1344bd8d89481da06944054b846f08054c74e"
+    },
+    "validation": "Sole affected production input changed between WebKit 35 and both 2-assertion regressions. Other 4 H11 production hashes remain exact; Chromium 35 ran final production input. WebKit 35 not relabelled as final-source rerun."
+  },
+  "excludedDriverAndPlatformFailures": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-first.raw.txt",
+        "sha256": "8c936acb0cc7af6310a46de6e4d6b88f2030cdc3bcc54541e93eba52f5826b9d"
+      },
+      "reason": "0 assertions: exact sidebar accessible name omitted avatar C; fixed scoped product-recent selector. App rendered and unexpected IPC empty."
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-second.raw.txt",
+        "sha256": "28109f487c8050f6135dd5a92b6d8bbe90f20727b10eabc77d23aed098dca9cf"
+      },
+      "reason": "7 assertions passed then assumed ordinary Tab from button would focus next button. Pure DOM WebKit also skips button B to input C; Option+Tab works for both pure DOM and App. Ordinary textarea Tab is product-handled and passes. This is platform expectation correction, not product repair.",
+      "comparison": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/tab-probe.raw.txt",
+        "sha256": "613f5c1ac2af436f01dfe1b759add8abce1f3d44552bc7316828da846af09893"
+      }
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green.raw.txt",
+        "sha256": "feee4f37673adbafbd67983626661fd15eed88e1c422724b4554a0f0df80d381"
+      },
+      "reason": "Precondition passed; generic getByRole(option).waitFor hit three old elements before React committed resolved new response. No target assertion ran. Driver now awaits exact ONLY_NEW option before Enter; original script retained.",
+      "oldDriver": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run-index.before-wait-fix.mjs.txt",
+        "sha256": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+      }
+    }
+  ],
+  "boundaries": [
+    "Scan result, failures and OS chooser are controlled replies; Rust real scan/wire belongs to backend/root evidence, not this browser proof.",
+    "Full App may prepare one controlled empty draft at boot. Every journey asserts no additional session_open/resume/prompt relative to its captured start; no real executable exists in fixture.",
+    "Stale detached React handler direct invocation is covered by owner unit tests, not claimed from this reachable-DOM browser sequence.",
+    "No forceful termination of formal App or user process; only owned Vite PID78097 SIGTERM after browser finally.close. Tool reports server exit143, recorded as observed."
+  ],
+  "screenshotsActuallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-first-failure.png",
+      "sha256": "7c6f78569659a91aaa401c320a557fd86723fa8201e9da1995182d547ffd7b90"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-second-failure.png",
+      "sha256": "e44a3dd85c071e51957b5e1b8f41715a8aa8741f1282dba1d3dd2138105c65b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third-partial-narrow.png",
+      "sha256": "722870e286164847b3e4484dcac56053b54ea185406bf927b74f0a43fce95300"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third-chooser-preserved.png",
+      "sha256": "2c267e59ae2acea7e94ac5c4a6a64485b3645712c9ff0e53e4cfb075abd1e54e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-red.png",
+      "sha256": "53515cfb4ca6e99735ff3d0d65d90e8e9810456546dddba51c81844792daf36e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-green.png",
+      "sha256": "c70af88a56cf257947b74d422fa92fa82507a66ba1c1b7ec6d6e01d250163ced"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final-partial-narrow.png",
+      "sha256": "9f9e134386bba3ca40fca5ecb7259c2ae47228eac1c597b20393159fb42b44f0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green-final.png",
+      "sha256": "a8cc2ee352c51c7dea1c75632b6345f24fb403f8f9bc5c1ebfa4b9c3b8177faf"
+    }
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/cleanup.raw.txt",
+    "sha256": "9eccac1e3878282373a4a4c6f2e9303d32dd79773f5047c4fde966bbbc6cd765"
+  },
+  "executedHarnessSnapshots": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run.mjs.executed.txt",
+      "sha256": "8f3323681a14577ed7271fa1de1f63ff9f9374e2e52348a478548c976a21804f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run-index.mjs.executed.txt",
+      "sha256": "7d5db6c631e51506a07aa728e8ab9193af2ca9bcff0ba3a342162f3cc770ea17"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/tab-probe.mjs.executed.txt",
+      "sha256": "c37767b435e596bc295c0124a99d384384cb47b73009f90eabff4c2ce06b50a9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/serve.mjs.executed.txt",
+      "sha256": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/fixture.tsx.executed.txt",
+      "sha256": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/index.html.executed.txt",
+      "sha256": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332"
+    }
+  ],
+  "formatting": "Original JSON and executed helper bytes preserved as .txt. Owned output maintained copies formatted only after all browsers and server stopped; original run hashes refer to executed snapshots, not formatted helpers.",
+  "originalEvidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/Composer.before-index-fix.tsx.txt",
+      "sha256": "eef1a96eee82528d1d8cb26e01e1344bd8d89481da06944054b846f08054c74e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final-chooser-preserved.png",
+      "sha256": "759005f514d5eeed3e7777681e66c7af836d5b77199e54d70af7555458ddf941"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final-partial-narrow.png",
+      "sha256": "9f9e134386bba3ca40fca5ecb7259c2ae47228eac1c597b20393159fb42b44f0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final.raw.txt",
+      "sha256": "35832b0f9a448a71ca0b349093d07a698c4527ab1d0e039dfa446fc1cea1f171"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-final.stdout.txt",
+      "sha256": "02b08ef14967acad46b8f2e58de30f984d66dc65fde9695715d45a7edb91d073"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green-final.png",
+      "sha256": "a8cc2ee352c51c7dea1c75632b6345f24fb403f8f9bc5c1ebfa4b9c3b8177faf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green-final.raw.txt",
+      "sha256": "904443f8be1f301d2fa42b9c6c5ef553db69ee60269538ba3dc4f59b10a0f3b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green-final.stdout.txt",
+      "sha256": "eba504f6bbc29d14e83b7a03d36b7699d4d82832c76632abb47e5f25bf35e5de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green.raw.txt",
+      "sha256": "feee4f37673adbafbd67983626661fd15eed88e1c422724b4554a0f0df80d381"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/chromium-index-green.stdout.txt",
+      "sha256": "deb70122810b6e8f6592cc22cb928dda062158688700d314aac710e4c80a293b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/cleanup.raw.txt",
+      "sha256": "9eccac1e3878282373a4a4c6f2e9303d32dd79773f5047c4fde966bbbc6cd765"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/fixture.tsx.executed.txt",
+      "sha256": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/index.html.executed.txt",
+      "sha256": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run-index.before-wait-fix.mjs.txt",
+      "sha256": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run-index.mjs.executed.txt",
+      "sha256": "7d5db6c631e51506a07aa728e8ab9193af2ca9bcff0ba3a342162f3cc770ea17"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/run.mjs.executed.txt",
+      "sha256": "8f3323681a14577ed7271fa1de1f63ff9f9374e2e52348a478548c976a21804f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/serve.mjs.executed.txt",
+      "sha256": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/server.txt",
+      "sha256": "44b0980faadc793aa1614f409f638f89d86a8c9f132fa7ef726eac625675b08b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/tab-probe.mjs.executed.txt",
+      "sha256": "c37767b435e596bc295c0124a99d384384cb47b73009f90eabff4c2ce06b50a9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/tab-probe.raw.txt",
+      "sha256": "613f5c1ac2af436f01dfe1b759add8abce1f3d44552bc7316828da846af09893"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-first-failure.png",
+      "sha256": "7c6f78569659a91aaa401c320a557fd86723fa8201e9da1995182d547ffd7b90"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-first.raw.txt",
+      "sha256": "8c936acb0cc7af6310a46de6e4d6b88f2030cdc3bcc54541e93eba52f5826b9d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-first.stdout.txt",
+      "sha256": "f726d8aef42420af800c23cd260ddbc0a0b8279d4093daf6bbb1d501ad66f5de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-green.png",
+      "sha256": "c70af88a56cf257947b74d422fa92fa82507a66ba1c1b7ec6d6e01d250163ced"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-green.raw.txt",
+      "sha256": "6974077da16c00837eda271c41e0be175f90aee13dc0eee6b052552c15eb88e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-green.stdout.txt",
+      "sha256": "eba504f6bbc29d14e83b7a03d36b7699d4d82832c76632abb47e5f25bf35e5de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-red.png",
+      "sha256": "53515cfb4ca6e99735ff3d0d65d90e8e9810456546dddba51c81844792daf36e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-red.raw.txt",
+      "sha256": "d2cca8d8c45b309eed471bf6d94d607bc27ec6cf7ade9654db3e40f8149c8a34"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-index-red.stdout.txt",
+      "sha256": "af8b93239221a5d75f6063890a1ff31aa4c9b5d90b4af8823eab02c7759f936e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-second-failure.png",
+      "sha256": "e44a3dd85c071e51957b5e1b8f41715a8aa8741f1282dba1d3dd2138105c65b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-second.raw.txt",
+      "sha256": "28109f487c8050f6135dd5a92b6d8bbe90f20727b10eabc77d23aed098dca9cf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-second.stdout.txt",
+      "sha256": "6195d2a7a19dcc0b62bb4eb1f48513c1cdec8088c4002801e07befe91e712f84"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third-chooser-preserved.png",
+      "sha256": "2c267e59ae2acea7e94ac5c4a6a64485b3645712c9ff0e53e4cfb075abd1e54e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third-partial-narrow.png",
+      "sha256": "722870e286164847b3e4484dcac56053b54ea185406bf927b74f0a43fce95300"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third.raw.txt",
+      "sha256": "11dd2a73ed0426c78a60129ec0d7e60f1bdf36e5c3f596354128b86b50e14beb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/browser/webkit-third.stdout.txt",
+      "sha256": "55587736d6d67c1bafa21918eb75fc4c4d190072ae16fbc328d7b155e4fb2a8c"
+    }
+  ],
+  "maintainedHelperRefs": [
+    {
+      "path": "output/2026-10-10-project-files-browser/run.mjs",
+      "sha256": "8f3323681a14577ed7271fa1de1f63ff9f9374e2e52348a478548c976a21804f"
+    },
+    {
+      "path": "output/2026-10-10-project-files-browser/run-index.mjs",
+      "sha256": "7d5db6c631e51506a07aa728e8ab9193af2ca9bcff0ba3a342162f3cc770ea17"
+    },
+    {
+      "path": "output/2026-10-10-project-files-browser/tab-probe.mjs",
+      "sha256": "c37767b435e596bc295c0124a99d384384cb47b73009f90eabff4c2ce06b50a9"
+    },
+    {
+      "path": "output/2026-10-10-project-files-browser/serve.mjs",
+      "sha256": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a"
+    },
+    {
+      "path": "output/2026-10-10-project-files-browser/fixture.tsx",
+      "sha256": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88"
+    },
+    {
+      "path": "output/2026-10-10-project-files-browser/index.html",
+      "sha256": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332"
+    }
+  ],
+  "format": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/format.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/source-checkpoint.json",
+    "sha256": "41c2ad9807295266db1861c294091a3b2a2ea3db7f941ae5cbc19b31d314f883"
+  }
+}

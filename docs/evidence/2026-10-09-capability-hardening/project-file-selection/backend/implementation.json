@@ -1,0 +1,198 @@
+{
+  "scope": "H11 bounded project candidate listing, transient cooperative cancellation, and safe selected text read",
+  "state": "backend-source-frozen",
+  "sourceBaseHead": "6a3848e2500ee88209fd48c2c2c9619ac5a39557",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "bytes": 18608,
+      "lines": 426
+    },
+    {
+      "path": "src-tauri/src/project_index.rs",
+      "sha256": "32125bd3815b0dae4499979e447a95d818bf3877d7f7eb9b0fc72de610f95936",
+      "bytes": 2926,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/project_index_scan.rs",
+      "sha256": "eae3d57679c7c6c2397162b80a617880de089cbe08f14603754a7748093e46ab",
+      "bytes": 10039,
+      "lines": 312
+    },
+    {
+      "path": "src-tauri/src/project_index_scan_tests.rs",
+      "sha256": "43f07b79a7bae24cbde2b473f9a9ef85d814168f9e972a01f26a82e692035bd3",
+      "bytes": 8975,
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/project_index_requests.rs",
+      "sha256": "d3c5b3e38d51c46c674bb0b9af1bc9f475480cfc26cae1b2a2ac2a398652ffcc",
+      "bytes": 8889,
+      "lines": 254
+    },
+    {
+      "path": "src-tauri/src/project_index_read.rs",
+      "sha256": "d0125fa2f7b2545bd5e0ff610dd85fc8770f87df5a2626b1e619077db724e8b9",
+      "bytes": 5264,
+      "lines": 133
+    }
+  ],
+  "changes": [
+    "project_files requires fresh UUID requestId, main-window caller and fixed Failure.code; returns paths plus distinct truncated/partial/cancelled, counts, limits, reasons and exclusions.",
+    "read_dir is consumed incrementally; total/per-directory entry budgets precede next(), directory queue/depth, file count, UTF-8 path bytes and elapsed scan work are bounded. Only the bounded returned subset is sorted.",
+    "Names are never lossy-converted or backslashes rewritten. Unrepresentable/control/backslash names are omitted with partial coverage. Fixed excluded directory names are returned explicitly.",
+    "A root read failure rejects; subtree failures remain partial. Queued directory no-follow identity is rechecked before enumeration and before publishing its candidates; stable replacements are rejected.",
+    "Exact UUID cancellation flags are memory-only (64 entries, inactive retention 300s); live workers cannot be evicted. Reuse of an observed UUID and cancel-before-start are rejected within that observation period.",
+    "Existing file_read_check owns the actual two-worker admission and ActivityPermit through real blocking work. 15s observer timeout or dropped IPC never establishes OS termination.",
+    "project_file_read reuses file_access root/relative handles, 256KiB+1 bounded read, stamps and root/path identity recheck; rejects redirection, changed files, oversize and non-UTF8 bytes."
+  ],
+  "verification": {
+    "finalTargeted": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked project_index:: -- --nocapture",
+      "exitCode": 0,
+      "passed": 26,
+      "failed": 0,
+      "durationSeconds": 15.01,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/targeted-final-green.txt",
+        "sha256": "bd07781418d2e2e730f7ef2ce0a122b50038e242f0e09be4674833509e4990a8",
+        "bytes": 30168
+      }
+    },
+    "format": {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/format-final.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "clippy": {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/clippy-final.txt",
+        "sha256": "67d7d385bec44df6a6eaafa74dde4c256d31c074d57bedd7b6b47c9d0f8d49a9",
+        "bytes": 138
+      }
+    },
+    "actualWire": {
+      "json": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json",
+        "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+        "bytes": 41651
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.raw.txt",
+        "sha256": "6a1ca1dbc287bb85461f4fdb27b7889776c4038bd40858a92825b55947be07a7",
+        "bytes": 27152
+      },
+      "sourceLog": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/targeted-lifecycle-green.txt",
+        "sha256": "263b4fe32ecbc2acb70bb86dec392aa689d6680ca30074fd061b32d397406b45",
+        "bytes": 30168
+      },
+      "values": [
+        "complete: real temporary directory, 3 files",
+        "truncated: real temporary directory, 2005 files, only 2000 listed"
+      ],
+      "rawAndJsonSemanticallyEqual": true,
+      "productionLimits": {
+        "files": 2000,
+        "depth": 10,
+        "entries": 20000,
+        "entriesPerDirectory": 4096,
+        "directories": 2000,
+        "pathBytes": 1048576,
+        "timeMs": 5000
+      },
+      "independentTsParsingOwner": "root; not rerun by this author"
+    },
+    "lifecycle": "Actual blocking barrier tests prove observer abort and the real 15s readPending retain the running request; exact cancel reaches worker; Drop occurs only after barrier release. No shortened production timeout/test switch.",
+    "sourceCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/source-checkpoint-final.json",
+      "sha256": "129d20ccbc746ce1bc990a8ec9338c5f87c447e4f2a9d41ca969024d4e88bbf3",
+      "bytes": 1327
+    },
+    "earlierCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/source-before-checks.json",
+      "sha256": "665ad8c1224f20e779ef9efbf5ef5d741121a2bfd5d34f0d55e9cc3ad40748f9",
+      "bytes": 1267
+    },
+    "earlierCheckpointDelta": "Only scan enum internal names and associated test references changed for clippy; explicit serde names preserve wire contract. Earlier checkpoint is not described as final stable input."
+  },
+  "preservedFailures": [
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/listing-valid-red.txt",
+        "sha256": "5dd3bf7049b063fe8ae31c6c1d35a2d99321bb6026e1ff90162ee952706affca",
+        "bytes": 1340
+      },
+      "kind": "valid-product-red",
+      "count": 2,
+      "details": [
+        "Unreadable/missing root incorrectly reported successful empty listing.",
+        "A real Unix a\\b filename was rewritten to a/b, aliasing a different real file."
+      ],
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/project-index-red-source.rs.txt",
+        "sha256": "d01d2dde9726a55c5baa2ea19eda8866baca945e937b57640941d6973560a72e",
+        "bytes": 5779
+      }
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/directory-replacement-red.txt",
+        "sha256": "28717f55efd8de4b8c3c9a8fa2569b8d1607229609e44c9f6126de41eddbaf3f",
+        "bytes": 953
+      },
+      "kind": "valid-product-red",
+      "count": 1,
+      "details": "After extracting the queued directory helper with the old path-based open behavior, replacing that exact queued directory with an external symlink was still accepted. Same guard test passes after identity checks.",
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/directory-red-source.rs.txt",
+        "sha256": "4302fa469c55140d7d7d4716de0254a7494a6b02420b816d57f64d4c6392415f",
+        "bytes": 8462
+      }
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/listing-red.txt",
+        "sha256": "c34b5ac1cf2d38902798df0018b483dd4f663d82a84c76faaabebfbb7434a058",
+        "bytes": 1382
+      },
+      "kind": "mixed-initial-run",
+      "details": "Root empty-list bug is a valid red. The non-UTF8 filename case failed while creating its fixture on this filesystem (EILSEQ), before reaching product code; not counted as a second product red. Backslash case replaced that driver fixture in the preserved valid run."
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/targeted-first.txt",
+        "sha256": "ce34b19792afa3590a6cf39ab25291ef6aba924c31248dc324324d553ce784c3",
+        "bytes": 4636
+      },
+      "kind": "environment-failure",
+      "details": "ENOSPC during compilation, no test outcome; both compilers exited before root precisely cleaned regenerable build products."
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/clippy.txt",
+        "sha256": "ff55877a212562c84d28b41675641c7e7be8e1a841f1a509daa5914da2fe37b8",
+        "bytes": 744
+      },
+      "kind": "lint-failure",
+      "details": "enum_variant_names only; internal names shortened with explicit unchanged serde names, then final 26 tests and clippy passed."
+    }
+  ],
+  "limitsAndUnverified": [
+    "Not a complete project index: fixed exclusions, explicit traversal limits and concurrent filesystem changes remain visible coverage boundaries.",
+    "Directory enumeration remains pathname-based with before/after no-follow identity checks; not a handle-relative atomic tree snapshot or protection against every instantaneous swap-and-restore race. Selected bytes use strict owned handles, and sending retains the existing attachment recheck.",
+    "One OS metadata/read_dir/read call cannot be forcibly interrupted. 5s cooperative scan deadline and 15s response observation are not a wall-clock guarantee that OS work ended.",
+    "UUID retention is bounded, not a permanent replay ledger; frontend must always use a new UUID and retire old owners. Cancellation acknowledgement alone never means completed cancellation.",
+    "Actual tests here ran on this macOS account. The real chmod permission fixture requires unprivileged execution; Windows/reparse behavior is not established by this run.",
+    "No full Rust suite, full frontend suite, installed app, Agent, database or model/auth operation was run in this subtask. Root/verification own frontend, shared integration and installed verification."
+  ]
+}

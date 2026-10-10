@@ -1,0 +1,118 @@
+{
+  "checkedAtUtc": "2026-10-10T12:23:03.518648+00:00",
+  "priorInstalledCommit": "83cdfa10c10e29eb183ca6b08446441ee9847a9e",
+  "fileCount": 18,
+  "files": {
+    "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json": {
+      "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+      "lines": 2079
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "lines": 426
+    },
+    "src-tauri/src/project_index.rs": {
+      "sha256": "32125bd3815b0dae4499979e447a95d818bf3877d7f7eb9b0fc72de610f95936",
+      "lines": 92
+    },
+    "src-tauri/src/project_index_read.rs": {
+      "sha256": "d0125fa2f7b2545bd5e0ff610dd85fc8770f87df5a2626b1e619077db724e8b9",
+      "lines": 133
+    },
+    "src-tauri/src/project_index_requests.rs": {
+      "sha256": "d3c5b3e38d51c46c674bb0b9af1bc9f475480cfc26cae1b2a2ac2a398652ffcc",
+      "lines": 254
+    },
+    "src-tauri/src/project_index_scan.rs": {
+      "sha256": "eae3d57679c7c6c2397162b80a617880de089cbe08f14603754a7748093e46ab",
+      "lines": 312
+    },
+    "src-tauri/src/project_index_scan_tests.rs": {
+      "sha256": "43f07b79a7bae24cbde2b473f9a9ef85d814168f9e972a01f26a82e692035bd3",
+      "lines": 262
+    },
+    "src-tauri/src/worktrees/cold_restore_recheck_tests.rs": {
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6",
+      "lines": 274
+    },
+    "src-tauri/src/worktrees/manager.rs": {
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f",
+      "lines": 983
+    },
+    "src-tauri/src/worktrees/recycle_manager.rs": {
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff",
+      "lines": 810
+    },
+    "src/components/Composer.project-files.test.tsx": {
+      "sha256": "8a5d2620245b4cca0f6ffcafdd4ff2c96e5bd5be15e1397fc4201b623b901d86",
+      "lines": 928
+    },
+    "src/components/Composer.tsx": {
+      "sha256": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+      "lines": 1481
+    },
+    "src/components/ProjectFileScanNotice.css": {
+      "sha256": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+      "lines": 22
+    },
+    "src/components/ProjectFileScanNotice.tsx": {
+      "sha256": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+      "lines": 97
+    },
+    "src/components/useProjectFiles.ts": {
+      "sha256": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+      "lines": 140
+    },
+    "src/runtime/project_files.test-support.ts": {
+      "sha256": "683b1761059482824b3fd5ceeab31e0dca6c97c358197dfffc70c0b00fa11bf4",
+      "lines": 35
+    },
+    "src/runtime/project_files.test.ts": {
+      "sha256": "9eb5180614166e202b669647c36f8f4bd3b005f63dc97a41e91c49ded024d513",
+      "lines": 90
+    },
+    "src/runtime/project_files.ts": {
+      "sha256": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+      "lines": 140
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/implementation.json",
+      "sha256": "abe593171d1c3d5dac39041ec38d55fc3bc3e41aa153d4e5c2f2b9dcf08f0a93"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/independent-review.json",
+      "sha256": "815eb7d394671687cb57dcabe9fde750a69517807f8f5c8c04eadc8ff567bac8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/implementation.json",
+      "sha256": "38ae2c12ec570fbe99737a0aad60c430cf52febb84e9ecad57b81fecd0625c60"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/independent-review.json",
+      "sha256": "3e05f47eecb8e2bc7ff48a3645b3307d2ed8a3c4d51be1e0cdeac27995b0f2f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/implementation.json",
+      "sha256": "d91ea2e642bd94804c456d4fa801e55468e30b1418894db8bcf9dbe7b790aa8c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/implementation.json",
+      "sha256": "3e60c1cc54f091f1bc4b95666e93a36307933400a5e0e4b3783c6f3bc8bbbacd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/helper-preflight-independent.json",
+      "sha256": "b71041904d3dd6b1c7bc075af6bac2d8cf1c941fa6aa7a09b8940c104d1d8b2b"
+    }
+  ],
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/verification.json",
+    "sha256": "c5fcb168d3390ef80961402eab332c5fcb0fbd76397afcd34124ddc0abe46114"
+  },
+  "boundary": "NEW-12 and H11 source, controlled tests, independent review and browser checks cover this exact set. Installed scanning and cold restore repair remain pending. Original product conditions unchanged."
+}

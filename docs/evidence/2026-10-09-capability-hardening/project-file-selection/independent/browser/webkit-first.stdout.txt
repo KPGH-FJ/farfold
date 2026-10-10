@@ -1,0 +1,1 @@
+{"path":"output/2026-10-10-project-files-browser/webkit-first.json","passed":false,"checks":0,"failure":"TimeoutError: locator.click: Timeout 6500ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'H11_THREAD_A', exact: true })\u001b[22m\n","errors":[],"sourceStable":true}

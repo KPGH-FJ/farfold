@@ -1,0 +1,38 @@
+{
+  "engine": "chromium",
+  "label": "green",
+  "before": {
+    "src/components/Composer.tsx": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+    "src/components/useProjectFiles.ts": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+    "src/components/ProjectFileScanNotice.tsx": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/runtime/project_files.ts": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+    "output/2026-10-10-project-files-browser/fixture.tsx": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88",
+    "output/2026-10-10-project-files-browser/index.html": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332",
+    "output/2026-10-10-project-files-browser/serve.mjs": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a",
+    "output/2026-10-10-project-files-browser/run-index.mjs": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+  },
+  "checks": [
+    {
+      "name": "precondition third option is selected",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "scope": "Actual full App/React/Composer and strict scan parser; controlled IPC only. No formal App, native scan or Agent.",
+  "selectedBefore": "c.txt\nc.txt",
+  "failure": "Error: locator.waitFor: Error: strict mode violation: getByRole('option') resolved to 3 elements:\n    1) <div class=\"pm\" role=\"option\" aria-selected=\"false\">…</div> aka getByRole('option', { name: 'a.txt a.txt' })\n    2) <div class=\"pm\" role=\"option\" aria-selected=\"false\">…</div> aka getByRole('option', { name: 'b.txt b.txt' })\n    3) <div role=\"option\" class=\"pm on\" aria-selected=\"true\">…</div> aka getByRole('option', { name: 'c.txt c.txt' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('option') to be visible\u001b[22m\n",
+  "after": {
+    "src/components/Composer.tsx": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+    "src/components/useProjectFiles.ts": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+    "src/components/ProjectFileScanNotice.tsx": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/runtime/project_files.ts": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+    "output/2026-10-10-project-files-browser/fixture.tsx": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88",
+    "output/2026-10-10-project-files-browser/index.html": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332",
+    "output/2026-10-10-project-files-browser/serve.mjs": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a",
+    "output/2026-10-10-project-files-browser/run-index.mjs": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+  },
+  "stable": true,
+  "passed": false
+}

@@ -1,0 +1,4 @@
+{"pid":78097,"port":1482}
+8:06:33 PM [vite] (client) [optimizer] bundling dependencies...
+8:09:20 PM [vite] (client) hmr update /src/components/Composer.tsx, /src/components/ProjectFileScanNotice.tsx
+8:12:35 PM [vite] (client) hmr update /src/components/Composer.tsx

@@ -1,0 +1,268 @@
+//! One bounded name walk. Results are candidates, not file identity receipts.
+use super::Failure;
+use serde::Serialize;
+use std::{
+    path::Path,
+    sync::atomic::{AtomicBool, Ordering},
+    time::Instant,
+};
+
+pub(super) const EXCLUDED: &[&str] = &[
+    ".git",
+    "node_modules",
+    "target",
+    "dist",
+    ".next",
+    ".turbo",
+    ".cache",
+    "coverage",
+    "__pycache__",
+    ".venv",
+    "venv",
+];
+
+#[derive(Clone, Copy, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(super) struct Limits {
+    pub files: usize,
+    pub depth: usize,
+    pub entries: usize,
+    pub entries_per_directory: usize,
+    pub directories: usize,
+    pub path_bytes: usize,
+    pub time_ms: u64,
+}
+impl Default for Limits {
+    fn default() -> Self {
+        Self {
+            files: 2000,
+            depth: 10,
+            entries: 20_000,
+            entries_per_directory: 4096,
+            directories: 2000,
+            path_bytes: 1_048_576,
+            time_ms: 5000,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(super) enum LimitReason {
+    FileLimit,
+    DepthLimit,
+    EntryLimit,
+    DirectoryEntryLimit,
+    DirectoryLimit,
+    PathBytesLimit,
+    TimeLimit,
+}
+#[derive(Clone, Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(super) struct Counts {
+    pub entries: usize,
+    pub directories: usize,
+    pub skipped_directories: usize,
+    pub unreadable_directories: usize,
+    pub unreadable_entries: usize,
+    pub unsupported_names: usize,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectFiles {
+    pub request_id: String,
+    pub files: Vec<String>,
+    pub truncated: bool,
+    pub partial: bool,
+    pub cancelled: bool,
+    pub(super) limits: Limits,
+    pub(super) counts: Counts,
+    pub(super) limit_reasons: Vec<LimitReason>,
+    pub excluded_directory_names: &'static [&'static str],
+}
+impl ProjectFiles {
+    fn limit(&mut self, reason: LimitReason) {
+        self.truncated = true;
+        if !self.limit_reasons.contains(&reason) {
+            self.limit_reasons.push(reason);
+        }
+    }
+    fn stopped(&mut self, cancel: &AtomicBool, started: Instant) -> bool {
+        if cancel.load(Ordering::Acquire) {
+            self.cancelled = true;
+            return true;
+        }
+        if started.elapsed().as_millis() >= self.limits.time_ms as u128 {
+            self.limit(LimitReason::TimeLimit);
+            return true;
+        }
+        false
+    }
+}
+fn relative_name(path: &Path) -> Option<String> {
+    // Never lossy-convert an OS filename or turn a literal backslash into a
+    // separator. Either would attach a different, similarly named file.
+    let mut names = Vec::new();
+    for part in path.components() {
+        let std::path::Component::Normal(name) = part else {
+            return None;
+        };
+        let name = name.to_str()?;
+        if name.contains('\\') || name.chars().any(char::is_control) {
+            return None;
+        }
+        names.push(name);
+    }
+    Some(names.join("/"))
+}
+struct Directory {
+    path: std::path::PathBuf,
+    depth: usize,
+    identity: crate::file_access::Identity,
+}
+impl Directory {
+    fn capture(path: &Path, depth: usize) -> std::io::Result<Self> {
+        let file = crate::file_access::open_directory(path)?;
+        Ok(Self {
+            path: path.into(),
+            depth,
+            identity: crate::file_access::stamp(&file)?.identity,
+        })
+    }
+    fn open(&self) -> std::io::Result<std::fs::ReadDir> {
+        let _expected_identity = &self.identity;
+        std::fs::read_dir(&self.path)
+    }
+}
+pub(super) fn scan(
+    root: &Path,
+    request_id: String,
+    cancel: &AtomicBool,
+    limits: Limits,
+) -> Result<ProjectFiles, Failure> {
+    let started = Instant::now();
+    let mut result = ProjectFiles {
+        request_id,
+        files: Vec::new(),
+        truncated: false,
+        partial: false,
+        cancelled: false,
+        limits,
+        counts: Counts::default(),
+        limit_reasons: Vec::new(),
+        excluded_directory_names: EXCLUDED,
+    };
+    if result.stopped(cancel, started) {
+        return Ok(result);
+    }
+    let mut directories =
+        vec![Directory::capture(root, 0).map_err(|_| Failure::new("unreadable"))?];
+    let mut discovered_directories = 1;
+    let mut path_bytes = 0;
+    'walk: while let Some(dir) = directories.pop() {
+        let depth = dir.depth;
+        if result.stopped(cancel, started) {
+            break;
+        }
+        result.counts.directories += 1;
+        let entries = match dir.open() {
+            Ok(entries) => entries,
+            Err(_) if depth == 0 => return Err(Failure::new("unreadable")),
+            Err(_) => {
+                result.counts.unreadable_directories += 1;
+                continue;
+            }
+        };
+        let mut entries = entries;
+        let mut in_directory = 0;
+        loop {
+            if result.stopped(cancel, started) {
+                break 'walk;
+            }
+            // Limits are checked BEFORE next(), not after collecting/sorting
+            // a potentially enormous directory. Hitting an exact boundary is
+            // conservatively incomplete: no extra OS read is made to peek.
+            if result.counts.entries >= limits.entries {
+                result.limit(LimitReason::EntryLimit);
+                break 'walk;
+            }
+            if in_directory >= limits.entries_per_directory {
+                result.limit(LimitReason::DirectoryEntryLimit);
+                break;
+            }
+            let Some(entry) = entries.next() else {
+                break;
+            };
+            result.counts.entries += 1;
+            in_directory += 1;
+            if result.stopped(cancel, started) {
+                break 'walk;
+            }
+            let entry = match entry {
+                Ok(entry) => entry,
+                Err(_) => {
+                    result.counts.unreadable_entries += 1;
+                    continue;
+                }
+            };
+            let path = entry.path();
+            let Some(relative) = path.strip_prefix(root).ok().and_then(relative_name) else {
+                result.counts.unsupported_names += 1;
+                continue;
+            };
+            let metadata = match path.symlink_metadata() {
+                Ok(metadata) => metadata,
+                Err(_) => {
+                    result.counts.unreadable_entries += 1;
+                    continue;
+                }
+            };
+            if result.stopped(cancel, started) {
+                break 'walk;
+            }
+            if metadata.is_dir() {
+                let name = entry.file_name();
+                if name.to_str().is_some_and(|name| EXCLUDED.contains(&name)) {
+                    result.counts.skipped_directories += 1;
+                    continue;
+                }
+                if depth >= limits.depth {
+                    result.limit(LimitReason::DepthLimit);
+                    continue;
+                }
+                if discovered_directories >= limits.directories {
+                    result.limit(LimitReason::DirectoryLimit);
+                    continue;
+                }
+                discovered_directories += 1;
+                match Directory::capture(&path, depth + 1) {
+                    Ok(next) => directories.push(next),
+                    Err(_) => result.counts.unreadable_directories += 1,
+                }
+            } else if metadata.is_file() || metadata.file_type().is_symlink() {
+                if result.files.len() >= limits.files {
+                    result.limit(LimitReason::FileLimit);
+                    break 'walk;
+                }
+                if path_bytes + relative.len() > limits.path_bytes {
+                    result.limit(LimitReason::PathBytesLimit);
+                    break 'walk;
+                }
+                path_bytes += relative.len();
+                result.files.push(relative);
+            }
+        }
+    }
+    // A cancel arriving with the last OS result still retires the candidate.
+    result.cancelled |= cancel.load(Ordering::Acquire);
+    result.partial = result.counts.unreadable_directories
+        + result.counts.unreadable_entries
+        + result.counts.unsupported_names
+        > 0;
+    result.files.sort();
+    result.files.dedup();
+    Ok(result)
+}
+
+#[cfg(test)]
+#[path = "project_index_scan_tests.rs"]
+mod tests;

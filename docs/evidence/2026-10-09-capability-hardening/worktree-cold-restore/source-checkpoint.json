@@ -1,0 +1,34 @@
+{
+  "baseCommit": "83cdfa10c10e29eb183ca6b08446441ee9847a9e",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "53918b9c68c18fcef322049bd82814e1b9eae71d0977a6f265753b5f8109b82f",
+      "bytes": 35425
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "sha256": "eed6d350db00c8e74f2c590f8b029bef905ea9ef9ff628c353b17bfbe30a7dff",
+      "bytes": 30717
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "sha256": "29edefd4c2860c9332c3493d294621a1122f1dc4948175ccd1e5c86c0e71bdc6",
+      "bytes": 12528
+    }
+  ],
+  "changes": [
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "purpose": "Register dedicated regression tests only"
+    },
+    {
+      "path": "src-tauri/src/worktrees/recycle_manager.rs",
+      "purpose": "Recheck a persisted restored location when its archive entry was removed, with full verification and captured-record CAS"
+    },
+    {
+      "path": "src-tauri/src/worktrees/cold_restore_recheck_tests.rs",
+      "purpose": "Six real owned temp-Git/in-memory-MetaStore regression cases; no Agent/App"
+    }
+  ]
+}

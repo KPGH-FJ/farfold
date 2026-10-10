@@ -1,0 +1,1 @@
+{"path":"output/2026-10-10-project-files-browser/webkit-second.json","passed":false,"checks":8,"failure":"Error: Assertion: narrow keyboard reaches explicit chooser","errors":[],"sourceStable":true}

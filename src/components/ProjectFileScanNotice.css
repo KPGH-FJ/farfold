@@ -1,0 +1,22 @@
+.project-file-scan {
+  border-top: 1px solid var(--line);
+  padding: 9px 12px;
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.project-file-scan p {
+  margin: 0 0 5px;
+  overflow-wrap: anywhere;
+}
+.project-file-scan details {
+  margin: 6px 0;
+}
+.project-file-scan summary {
+  cursor: pointer;
+}
+.project-file-scan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}

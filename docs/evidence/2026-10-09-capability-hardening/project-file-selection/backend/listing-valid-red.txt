@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.30s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 4 tests
+
+thread 'project_index::tests::unreadable_root_is_not_a_successful_empty_listing' (24640734) panicked at src/project_index.rs:154:9:
+assertion failed: !collect(&root, &root, 0, &mut files)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test project_index::tests::unreadable_root_is_not_a_successful_empty_listing ... FAILED
+
+thread 'project_index::tests::backslash_names_do_not_alias_a_different_real_file' (24640731) panicked at src/project_index.rs:166:9:
+assertion `left == right` failed
+  left: ["a/b", "a/b"]
+ right: ["a/b"]
+test project_index::tests::backslash_names_do_not_alias_a_different_real_file ... FAILED
+test project_index::tests::lists_files_and_skips_heavy_dirs ... ok
+test project_index::tests::reports_truncation ... ok
+
+failures:
+
+failures:
+    project_index::tests::backslash_names_do_not_alias_a_different_real_file
+    project_index::tests::unreadable_root_is_not_a_successful_empty_listing
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 1382 filtered out; finished in 0.37s
+
+error: test failed, to rerun pass `--lib`

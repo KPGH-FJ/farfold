@@ -1,0 +1,121 @@
+{
+  "recordedAtUtc": "2026-10-10T12:19:51.222776+00:00",
+  "scope": "NEW-12 cold restored-location recheck and H11 bounded project-file selection",
+  "state": "source and engineering verified; current formal app remains83cdf, native follow-up pending",
+  "frontendChanges": [
+    "Scoped scan status and truthful truncation/partial/error/cancellation, visible bounds/exclusions and explicit system picker fallback.",
+    "Capture exact scan request for cancel/retry; observation timeout preserves cancellation while actual completion remains unknown.",
+    "Do not block text editing; Escape retires scan, retry uses fresh ID, Enter chooses candidate, keyboard index resets with new request.",
+    "Bounded response validation and actual Rust JSON interoperability; selected contents and later sends use current-file checks."
+  ],
+  "focusedTests": {
+    "frontend": 43,
+    "coldRestore": 6,
+    "existingRecycle": 12,
+    "scanBackend": 26
+  },
+  "fullChecks": {
+    "frontend": 4508,
+    "frontendFiles": 382,
+    "rust": 1402,
+    "rustIgnored": 6,
+    "allSevenCommandsPassed": true,
+    "inputsStable": 1375
+  },
+  "browserBoundary": "WebKit main35 on pre-index-fix source plus fixed index2; Chromium final main35 plus index2. Controlled IPC/OS picker only; no installed or actual scan claim.",
+  "failuresRetained": [
+    "Old cancel/retry handlers and readPending classification:3 effective unit failures, repaired.",
+    "Keyboard selection after fewer-results rescan: actual WebKit red, then both engines passed.",
+    "Initial full frontend log ended unsuccessfully during disk exhaustion and is incomplete; not used as evidence of a product failure or pass. Rust ENOSPC explicitly recorded; precise regenerable object cleanup restored space.",
+    "Driver selectors, async settling and WebKit default Tab policy are separately recorded."
+  ],
+  "sourceReferences": [
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+      "bytes": 50144
+    },
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "sha256": "8a5d2620245b4cca0f6ffcafdd4ff2c96e5bd5be15e1397fc4201b623b901d86",
+      "bytes": 31042
+    },
+    {
+      "path": "src/components/useProjectFiles.ts",
+      "sha256": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+      "bytes": 3913
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.tsx",
+      "sha256": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+      "bytes": 2777
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.css",
+      "sha256": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+      "bytes": 396
+    },
+    {
+      "path": "src/runtime/project_files.ts",
+      "sha256": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+      "bytes": 4584
+    },
+    {
+      "path": "src/runtime/project_files.test.ts",
+      "sha256": "9eb5180614166e202b669647c36f8f4bd3b005f63dc97a41e91c49ded024d513",
+      "bytes": 2673
+    },
+    {
+      "path": "src/runtime/project_files.test-support.ts",
+      "sha256": "683b1761059482824b3fd5ceeab31e0dca6c97c358197dfffc70c0b00fa11bf4",
+      "bytes": 786
+    }
+  ],
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/implementation.json",
+      "sha256": "abe593171d1c3d5dac39041ec38d55fc3bc3e41aa153d4e5c2f2b9dcf08f0a93",
+      "bytes": 6727
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-cold-restore/independent-review.json",
+      "sha256": "815eb7d394671687cb57dcabe9fde750a69517807f8f5c8c04eadc8ff567bac8",
+      "bytes": 7047
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/implementation.json",
+      "sha256": "38ae2c12ec570fbe99737a0aad60c430cf52febb84e9ecad57b81fecd0625c60",
+      "bytes": 10625
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/independent-review.json",
+      "sha256": "3e05f47eecb8e2bc7ff48a3645b3307d2ed8a3c4d51be1e0cdeac27995b0f2f9",
+      "bytes": 9865
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/independent/implementation.json",
+      "sha256": "d91ea2e642bd94804c456d4fa801e55468e30b1418894db8bcf9dbe7b790aa8c",
+      "bytes": 20409
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/independent-frontend-review.json",
+      "sha256": "dfebb6061f5ee2b7618438f6aaf5fcf2af667e1d0febd6ccd20315f38d38c649",
+      "bytes": 4499
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/independent-frontend-review-followup.json",
+      "sha256": "5c0531fb228b53e9d7da908685b52b0a665f37bf28c7b62418e89d54d4c658eb",
+      "bytes": 1726
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/verification.json",
+      "sha256": "c5fcb168d3390ef80961402eab332c5fcb0fbd76397afcd34124ddc0abe46114",
+      "bytes": 3663
+    }
+  ],
+  "remaining": [
+    "Native cold restore recheck after real restart.",
+    "Native large/small directory scan and explicit selection of omitted file; cancel timing separate from controlled and worker tests.",
+    "Windows,29-Agent matrix and full122 item completion remain open."
+  ]
+}

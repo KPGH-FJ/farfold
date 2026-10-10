@@ -1,0 +1,7 @@
+{
+  "before": "<button type=\"button\" class=\"btn btn-text\">重新扫描</button>",
+  "tab": "<textarea class=\"c-input\" aria-label=\"对话内容\" placeholder=\"发送消息…\" rows=\"1\" style=\"height: 48px;\">KEEP_native-A @</textarea>",
+  "altTab": "<button type=\"button\" class=\"btn btn-text\">选择未列出的文件…</button>",
+  "nativeTab": "<input id=\"c\">",
+  "nativeAltTab": "<button id=\"b\">B</button>"
+}

@@ -1,0 +1,1053 @@
+{
+  "engine": "webkit",
+  "label": "green",
+  "before": {
+    "src/components/Composer.tsx": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+    "src/components/useProjectFiles.ts": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+    "src/components/ProjectFileScanNotice.tsx": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/runtime/project_files.ts": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+    "output/2026-10-10-project-files-browser/fixture.tsx": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88",
+    "output/2026-10-10-project-files-browser/index.html": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332",
+    "output/2026-10-10-project-files-browser/serve.mjs": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a",
+    "output/2026-10-10-project-files-browser/run-index.mjs": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+  },
+  "checks": [
+    {
+      "name": "precondition third option is selected",
+      "pass": true
+    },
+    {
+      "name": "new single result selected by Enter after new request",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "scope": "Actual full App/React/Composer and strict scan parser; controlled IPC only. No formal App, native scan or Agent.",
+  "selectedBefore": "c.txt\nc.txt",
+  "state": {
+    "rows": [
+      {
+        "id": "fixture:/controlled/project-A:native-A",
+        "agentId": "fixture",
+        "cwd": "/controlled/project-A",
+        "nativeSessionId": "native-A",
+        "title": "H11_THREAD_A",
+        "configOptions": null,
+        "pinned": false,
+        "archived": false,
+        "createdAt": 1,
+        "updatedAt": 1
+      },
+      {
+        "id": "fixture:/controlled/project-B:native-B",
+        "agentId": "fixture",
+        "cwd": "/controlled/project-B",
+        "nativeSessionId": "native-B",
+        "title": "H11_THREAD_B",
+        "configOptions": null,
+        "pinned": false,
+        "archived": false,
+        "createdAt": 1,
+        "updatedAt": 1
+      }
+    ],
+    "drafts": [
+      {
+        "key": "session:fixture:/controlled/project-A:native-A",
+        "draft": {
+          "text": "KEEP_native-A ",
+          "attachments": [
+            {
+              "id": "keep",
+              "kind": "file",
+              "name": "keep.txt",
+              "uri": "file:///controlled/keep.txt"
+            },
+            {
+              "id": "69ffb55f-37af-4ea4-b056-ff3cf2625642",
+              "kind": "file",
+              "name": "ONLY_NEW.txt",
+              "uri": "file:///controlled/project-A/ONLY_NEW.txt",
+              "loading": false
+            }
+          ]
+        },
+        "feedback": {
+          "[\"/controlled/keep.txt\",null]": {
+            "text": "KEEP_OPINION",
+            "selection": null,
+            "path": "/controlled/keep.txt"
+          }
+        }
+      },
+      {
+        "key": "session:fixture:/controlled/project-B:native-B",
+        "draft": {
+          "text": "KEEP_native-B",
+          "attachments": [
+            {
+              "id": "keep",
+              "kind": "file",
+              "name": "keep.txt",
+              "uri": "file:///controlled/keep.txt"
+            }
+          ]
+        },
+        "feedback": {
+          "[\"/controlled/keep.txt\",null]": {
+            "text": "KEEP_OPINION",
+            "selection": null,
+            "path": "/controlled/keep.txt"
+          }
+        }
+      }
+    ],
+    "scans": [
+      {
+        "id": "adff3359-ef94-4b04-b392-d86aad3f2173",
+        "cwd": "/controlled/project-A",
+        "settled": true,
+        "cancelRequested": false
+      },
+      {
+        "id": "ee667782-2676-492f-8250-994ccea0ac53",
+        "cwd": "/controlled/project-A",
+        "settled": true,
+        "cancelRequested": false
+      }
+    ],
+    "calls": [
+      {
+        "cmd": "host_performance_origin",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "unsentWork.v1"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {
+              "session:fixture:/controlled/project-A:native-A": {
+                "text": "KEEP_native-A",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  }
+                ]
+              },
+              "session:fixture:/controlled/project-B:native-B": {
+                "text": "KEEP_native-B",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  }
+                ]
+              }
+            },
+            "choice": {
+              "agentId": "fixture",
+              "cwd": "/controlled/project-A",
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {
+              "fixture:/controlled/project-A:native-A": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              }
+            },
+            "queues": {},
+            "activity": {
+              "fixture:/controlled/project-A:native-A": {
+                "lastActivityAt": 1791634373902,
+                "ended": false
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "lastActivityAt": 1791634373902,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "agentSetup.v1"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-exit",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-restart",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 2
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:exit-deferred",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 3
+        }
+      },
+      {
+        "cmd": "app_drafts_ready",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationGroups.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationReadState.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "themeMode"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 4
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 5
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 6
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 7
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 8
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 9
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 10
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 11
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 12
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 13
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "catalog:updated",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent-work-changed",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "app-menu",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "desktop-notification:activate",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 14
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "catalog_scan",
+        "args": {}
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 15
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "promptTemplates.v1"
+        }
+      },
+      {
+        "cmd": "worktree_list",
+        "args": {}
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 16
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 17
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 18
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 19
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 20
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 21
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-enter",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-drop",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-over",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-leave",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-workspace:state",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 22
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "app-menu",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 23
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-sharing:changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 24
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 25
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 26
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-workspace:state",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 27
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 28
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "browser-sharing:changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 29
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 30
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "browser-workspace:state",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "browser-sharing:changed",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "browser_share_status",
+        "args": {
+          "taskKey": "fixture:/controlled/project-A:native-A",
+          "target": {
+            "agentId": "fixture",
+            "cwd": "/controlled/project-A",
+            "nativeSessionId": "native-A"
+          },
+          "label": ""
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 31
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 32
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 33
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 34
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 35
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 36
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-enter",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-drop",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-over",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-leave",
+          "eventId": 1
+        }
+      },
+      {
+        "cmd": "project_files",
+        "args": {
+          "cwd": "/controlled/project-A",
+          "requestId": "adff3359-ef94-4b04-b392-d86aad3f2173"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {
+              "session:fixture:/controlled/project-A:native-A": {
+                "text": "KEEP_native-A @",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  }
+                ]
+              },
+              "session:fixture:/controlled/project-B:native-B": {
+                "text": "KEEP_native-B",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  }
+                ]
+              }
+            },
+            "choice": {
+              "agentId": "fixture",
+              "cwd": "/controlled/project-A",
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {
+              "fixture:/controlled/project-A:native-A": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              }
+            },
+            "queues": {},
+            "activity": {
+              "fixture:/controlled/project-A:native-A": {
+                "lastActivityAt": 1791634374063,
+                "ended": false
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "lastActivityAt": 1791634373902,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "project_files",
+        "args": {
+          "cwd": "/controlled/project-A",
+          "requestId": "ee667782-2676-492f-8250-994ccea0ac53"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {
+              "session:fixture:/controlled/project-A:native-A": {
+                "text": "KEEP_native-A ",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  },
+                  {
+                    "id": "69ffb55f-37af-4ea4-b056-ff3cf2625642",
+                    "kind": "file",
+                    "name": "ONLY_NEW.txt",
+                    "uri": "file:///controlled/project-A/ONLY_NEW.txt"
+                  }
+                ]
+              },
+              "session:fixture:/controlled/project-B:native-B": {
+                "text": "KEEP_native-B",
+                "attachments": [
+                  {
+                    "id": "keep",
+                    "kind": "file",
+                    "name": "keep.txt",
+                    "uri": "file:///controlled/keep.txt"
+                  }
+                ]
+              }
+            },
+            "choice": {
+              "agentId": "fixture",
+              "cwd": "/controlled/project-A",
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {
+              "fixture:/controlled/project-A:native-A": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "[\"/controlled/keep.txt\",null]": {
+                  "text": "KEEP_OPINION",
+                  "selection": null,
+                  "path": "/controlled/keep.txt"
+                }
+              }
+            },
+            "queues": {},
+            "activity": {
+              "fixture:/controlled/project-A:native-A": {
+                "lastActivityAt": 1791634374158,
+                "ended": false
+              },
+              "fixture:/controlled/project-B:native-B": {
+                "lastActivityAt": 1791634373902,
+                "ended": false
+              }
+            }
+          }
+        }
+      }
+    ],
+    "unexpected": []
+  },
+  "screenshot": "output/2026-10-10-project-files-browser/webkit-index-green.png",
+  "body": "新对话\n⌘ N\n搜索对话\n⌘ K\n所有对话\n2\n收藏\n0\n探索 Agent\n最近\nC\nH11_THREAD_A\nC\nH11_THREAD_B\n我的 Agent\nC\nControlled Agent\n2\n分组\n设置\n属于你的 Agent，在一处相遇。\nH11_THREAD_A\n普通对话 · 未在运行\n内容\nC\nControlled Agent · 历史消息\n\nH11_BODY_native-A\n\n未发送的文件意见（1）\n2 个附件\nkeep.txt\n×\nONLY_NEW.txt\n×\nC\nControlled Agent\n未提供\n用量\nEnter 发送 · Shift Enter 换行",
+  "after": {
+    "src/components/Composer.tsx": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241",
+    "src/components/useProjectFiles.ts": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1",
+    "src/components/ProjectFileScanNotice.tsx": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/runtime/project_files.ts": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+    "output/2026-10-10-project-files-browser/fixture.tsx": "bac2dac59b3974c4779e6467823ca9900fd12a251a333a1b442d83968307ea88",
+    "output/2026-10-10-project-files-browser/index.html": "9781e572cb629be12b7f51a65893419457f5ddbf917132fca422bc2ced41f332",
+    "output/2026-10-10-project-files-browser/serve.mjs": "8f826b43bc5444b452d25be495bff5af0024c59329fafabd7eea4b67144c658a",
+    "output/2026-10-10-project-files-browser/run-index.mjs": "542fb2e2d1ba8304a20a997271e9bd4685cd1685191ae51cf9fa47c512d6401c"
+  },
+  "stable": true,
+  "passed": true
+}

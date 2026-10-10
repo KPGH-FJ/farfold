@@ -74,6 +74,9 @@ vi.mock("../runtime/prompt_templates", () => {
 
 import { invoke } from "@tauri-apps/api/core";
 import { Composer } from "./Composer";
+import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
+import { projectFilesFixture } from "../runtime/project_files.test-support";
+import { PROJECT_FILES } from "../runtime/project_files";
 import { ComposerAttachments } from "./ComposerAttachments";
 import { draftImagePreview } from "../runtime/draft_images";
 import { composerDrafts } from "../runtime/drafts";
@@ -121,6 +124,13 @@ async function settle() {
 function options() {
   return render().filter((node) => node.props.role === "option");
 }
+function scanNotice() {
+  return render().find((node) => node.type === ProjectFileScanNotice)!
+    .props as ComponentProps<typeof ProjectFileScanNotice>;
+}
+function scanText() {
+  return JSON.stringify(ProjectFileScanNotice(scanNotice()));
+}
 function pick(option: Element) {
   (option.props.onMouseDown as (event: unknown) => void)({
     preventDefault() {},
@@ -160,7 +170,9 @@ function noAgentRequests() {
       .mocked(invoke)
       .mock.calls.every(
         ([command]) =>
-          command === "project_files" || command === "project_file_read",
+          command === "project_files" ||
+          command === "project_files_cancel" ||
+          command === "project_file_read",
       ),
   ).toBe(true);
 }
@@ -172,7 +184,11 @@ beforeEach(() => {
   hooks.openDialog.mockReset().mockResolvedValue(null);
   vi.mocked(invoke)
     .mockReset()
-    .mockResolvedValue({ files: ["note.txt"] });
+    .mockImplementation((_command, args) =>
+      Promise.resolve(
+        projectFilesFixture((args as { requestId: string }).requestId),
+      ),
+    );
   vi.spyOn(threads, "open");
   vi.spyOn(threads, "send");
   vi.stubGlobal("requestAnimationFrame", (callback: () => void) => callback());
@@ -308,7 +324,10 @@ it("looks up and adds a file in an editable unconnected draft's selected folder 
   const workContext = props.workContext;
   typeMention();
   await settle();
-  expect(invoke).toHaveBeenCalledWith("project_files", { cwd: "/selected" });
+  expect(invoke).toHaveBeenCalledWith("project_files", {
+    cwd: "/selected",
+    requestId: expect.any(String),
+  });
   expect(options()).toHaveLength(1);
   pick(options()[0]!);
   expect(composerDrafts.read("project-new-a").text).toBe("Keep ");
@@ -373,7 +392,10 @@ it("prefers the established conversation folder to a different selected work con
   typeMention();
   await settle();
   pick(options()[0]!);
-  expect(invoke).toHaveBeenCalledWith("project_files", { cwd: "/original" });
+  expect(invoke).toHaveBeenCalledWith("project_files", {
+    cwd: "/original",
+    requestId: expect.any(String),
+  });
   expect(composerDrafts.read("project-new-a").attachments.at(-1)?.uri).toBe(
     "file:///original/note.txt",
   );
@@ -400,7 +422,14 @@ it("hides an old folder's list immediately and rejects its captured selection wh
   await settle();
   const stale = options()[0]!;
   const next = deferred<{ files: string[] }>();
-  vi.mocked(invoke).mockReturnValue(next.promise);
+  vi.mocked(invoke).mockImplementation((_command, args) =>
+    next.promise.then((value) =>
+      projectFilesFixture(
+        (args as { requestId: string }).requestId,
+        value.files,
+      ),
+    ),
+  );
   props.thread = { ...thread, cwd: "/second" };
   render();
   expect(options()).toHaveLength(0);
@@ -419,9 +448,14 @@ it("hides an old folder's list immediately and rejects its captured selection wh
 it("ignores a late old-folder response after the new folder's files are ready", async () => {
   const first = deferred<{ files: string[] }>();
   const second = deferred<{ files: string[] }>();
-  vi.mocked(invoke)
-    .mockReturnValueOnce(first.promise)
-    .mockReturnValueOnce(second.promise);
+  vi.mocked(invoke).mockImplementation((command, args) => {
+    if (command === "project_files_cancel")
+      return Promise.resolve({ cancelRequested: true });
+    const { cwd, requestId } = args as { cwd: string; requestId: string };
+    return (cwd === "/second" ? second : first).promise.then((value) =>
+      projectFilesFixture(requestId, value.files),
+    );
+  });
   typeMention();
   props.workContext = { agentId: "selected", cwd: "/second" };
   render();
@@ -487,10 +521,12 @@ it("rejects an old selection when the draft becomes read-only or its file query 
 
 it("completes an explicitly picked file read only in its original draft after another draft is shown", async () => {
   const read = deferred<string>();
-  vi.mocked(invoke).mockImplementation((command) =>
+  vi.mocked(invoke).mockImplementation((command, args) =>
     command === "project_file_read"
       ? read.promise
-      : Promise.resolve({ files: ["note.txt"] }),
+      : Promise.resolve(
+          projectFilesFixture((args as { requestId: string }).requestId),
+        ),
   );
   props.embedContext = true;
   typeMention();
@@ -519,10 +555,12 @@ it("completes an explicitly picked file read only in its original draft after an
 
 it("does not place a late file body into an attachment whose path has been replaced", async () => {
   const read = deferred<string>();
-  vi.mocked(invoke).mockImplementation((command) =>
+  vi.mocked(invoke).mockImplementation((command, args) =>
     command === "project_file_read"
       ? read.promise
-      : Promise.resolve({ files: ["note.txt"] }),
+      : Promise.resolve(
+          projectFilesFixture((args as { requestId: string }).requestId),
+        ),
   );
   props.embedContext = true;
   typeMention();
@@ -554,7 +592,13 @@ it.each([
   "encodes a picked project attachment in %s and retains existing unsent work",
   async (cwd, uri) => {
     props.workContext = { agentId: "selected", cwd };
-    vi.mocked(invoke).mockResolvedValue({ files: ["report#%.md"] });
+    vi.mocked(invoke).mockImplementation((_command, args) =>
+      Promise.resolve(
+        projectFilesFixture((args as { requestId: string }).requestId, [
+          "report#%.md",
+        ]),
+      ),
+    );
     typeMention();
     await settle();
     pick(options()[0]!);
@@ -582,7 +626,10 @@ it("asks for a working folder before an @ search and resumes when one arrives", 
   ).toHaveLength(0);
   props.workContext = { agentId: "selected", cwd: "/picked" };
   await settle();
-  expect(invoke).toHaveBeenCalledWith("project_files", { cwd: "/picked" });
+  expect(invoke).toHaveBeenCalledWith("project_files", {
+    cwd: "/picked",
+    requestId: expect.any(String),
+  });
   expect(requireFolder).toHaveBeenCalledTimes(1);
   noAgentRequests();
 });
@@ -624,4 +671,258 @@ it("drops a send request that arrives while sending is unavailable", async () =>
   render();
   await settle();
   expect(props.onSend).not.toHaveBeenCalled();
+});
+
+it("keeps input editable while scanning and distinguishes requested cancellation from the worker ending", async () => {
+  const scan = deferred<ReturnType<typeof projectFilesFixture>>();
+  let requestId = "";
+  vi.mocked(invoke).mockImplementation((command, args) => {
+    if (command === "project_files_cancel")
+      return Promise.resolve({ cancelRequested: true });
+    requestId = (args as { requestId: string }).requestId;
+    return scan.promise;
+  });
+  typeMention();
+  expect(scanNotice().state?.phase).toBe("loading");
+  expect(scanText()).toContain(PROJECT_FILES.loading);
+  expect(scanText()).not.toContain(PROJECT_FILES.noMatch);
+  typeMention("Still editable @note");
+  expect(composerDrafts.read("project-new-a").text).toBe(
+    "Still editable @note",
+  );
+  scanNotice().onCancel();
+  await settle();
+  expect(scanNotice().state?.phase).toBe("cancelling");
+  expect(invoke).toHaveBeenCalledWith("project_files_cancel", { requestId });
+  scanNotice().onRetry();
+  scanNotice().onCancel();
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files"),
+  ).toHaveLength(1);
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files_cancel"),
+  ).toHaveLength(1);
+  scan.resolve(projectFilesFixture(requestId, [], { cancelled: true }));
+  await settle();
+  expect(scanText()).toContain(PROJECT_FILES.cancelled);
+  noAgentRequests();
+});
+
+it("shows bounded partial results and lets the user refine a display-limited match list", async () => {
+  vi.mocked(invoke).mockImplementation((_command, args) =>
+    Promise.resolve(
+      projectFilesFixture(
+        (args as { requestId: string }).requestId,
+        Array.from({ length: 70 }, (_, i) => `src/file-${i}.txt`),
+        {
+          truncated: true,
+          partial: true,
+          limitReasons: ["depthLimit"],
+          counts: {
+            entries: 80,
+            directories: 12,
+            skippedDirectories: 2,
+            unreadableDirectories: 1,
+            unreadableEntries: 3,
+            unsupportedNames: 0,
+          },
+        },
+      ),
+    ),
+  );
+  typeMention();
+  await settle();
+  expect(options()).toHaveLength(50);
+  expect(scanText()).toContain(PROJECT_FILES.partial);
+  expect(scanText()).toContain(PROJECT_FILES.truncated);
+  expect(scanText()).toContain(PROJECT_FILES.matchesLimited);
+  expect(scanText()).toContain("node_modules");
+  typeMention("Keep @file-69");
+  expect(options()).toHaveLength(1);
+  pick(options()[0]!);
+  expect(composerDrafts.read("project-new-a").attachments.at(-1)?.name).toBe(
+    "file-69.txt",
+  );
+  noAgentRequests();
+});
+
+it("keeps failure separate from no matches, sanitizes it, and retries with a fresh request", async () => {
+  vi.mocked(invoke).mockRejectedValue({
+    code: "unreadable",
+    privateDetail: "DO_NOT_SHOW",
+  });
+  typeMention();
+  await settle();
+  expect(scanText()).toContain(PROJECT_FILES.failed);
+  expect(scanText()).not.toContain(PROJECT_FILES.noMatch);
+  expect(scanText()).not.toContain("DO_NOT_SHOW");
+  const first = vi
+    .mocked(invoke)
+    .mock.calls.find(([c]) => c === "project_files")![1];
+  vi.mocked(invoke).mockImplementation((_command, args) =>
+    Promise.resolve(
+      projectFilesFixture((args as { requestId: string }).requestId),
+    ),
+  );
+  scanNotice().onRetry();
+  await settle();
+  const last = vi
+    .mocked(invoke)
+    .mock.calls.filter(([c]) => c === "project_files")
+    .at(-1)![1];
+  expect(last).not.toEqual(first);
+  expect(options()).toHaveLength(1);
+  noAgentRequests();
+});
+
+it("rejects a reply belonging to another request instead of listing its paths", async () => {
+  vi.mocked(invoke).mockResolvedValue(
+    projectFilesFixture("wrong-request", ["foreign.txt"]),
+  );
+  typeMention();
+  await settle();
+  expect(options()).toHaveLength(0);
+  expect(scanText()).toContain(PROJECT_FILES.failed);
+  noAgentRequests();
+});
+
+it("offers the system picker even during a scan; cancellation preserves input and late selection stays with its original draft", async () => {
+  const pending = deferred<unknown>();
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "project_files" ? pending.promise : Promise.resolve(null),
+  );
+  typeMention();
+  const before = composerDrafts.read("project-new-a");
+  scanNotice().onChoose();
+  await settle();
+  expect(hooks.openDialog).toHaveBeenCalledOnce();
+  expect(composerDrafts.read("project-new-a")).toBe(before);
+  const picked = deferred<string[]>();
+  hooks.openDialog.mockReturnValue(picked.promise);
+  const stale = scanNotice().onChoose;
+  stale();
+  props.draftKey = "project-new-b";
+  props.workContext = { agentId: "other", cwd: "/other" };
+  render();
+  stale();
+  expect(hooks.openDialog).toHaveBeenCalledTimes(2);
+  picked.resolve(["/outside/not-listed.txt"]);
+  await settle();
+  expect(composerDrafts.read("project-new-a").attachments.at(-1)?.uri).toBe(
+    "file:///outside/not-listed.txt",
+  );
+  expect(composerDrafts.read("project-new-a").text).toBe("Keep @");
+  expect(composerDrafts.read("project-new-b").attachments).toHaveLength(0);
+  expect(threads.open).not.toHaveBeenCalled();
+  expect(props.onSend).not.toHaveBeenCalled();
+});
+
+it("does not let a captured cancel act on a replacement scan", async () => {
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "project_files"
+      ? new Promise(() => {})
+      : Promise.resolve({ cancelRequested: true }),
+  );
+  typeMention();
+  const oldCancel = scanNotice().onCancel;
+  props.workContext = { agentId: "other", cwd: "/other" };
+  render();
+  const before = vi
+    .mocked(invoke)
+    .mock.calls.filter(([c]) => c === "project_files_cancel").length;
+  oldCancel();
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files_cancel"),
+  ).toHaveLength(before);
+  expect(scanNotice().state?.phase).toBe("loading");
+});
+
+it("does not let a captured retry restart a newer completed scan", async () => {
+  typeMention();
+  await settle();
+  const oldRetry = scanNotice().onRetry;
+  oldRetry();
+  await settle();
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files"),
+  ).toHaveLength(2);
+  oldRetry();
+  await settle();
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files"),
+  ).toHaveLength(2);
+});
+
+it("retains cancellation of an exact request after its observation timeout without claiming it stopped", async () => {
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "project_files"
+      ? Promise.reject({ code: "readPending" })
+      : Promise.resolve({ cancelRequested: true }),
+  );
+  typeMention();
+  await settle();
+  expect(scanNotice().state?.phase).toBe("pending");
+  expect(scanText()).toContain(PROJECT_FILES.pending);
+  const call = vi
+    .mocked(invoke)
+    .mock.calls.find(([c]) => c === "project_files")![1] as {
+    requestId: string;
+  };
+  scanNotice().onCancel();
+  await settle();
+  expect(invoke).toHaveBeenCalledWith("project_files_cancel", {
+    requestId: call.requestId,
+  });
+  expect(scanNotice().state?.phase).toBe("pending");
+  expect(scanText()).not.toContain(PROJECT_FILES.cancelled);
+});
+
+it("allows an explicit cancel retry when delivery fails while the scan still waits", async () => {
+  vi.mocked(invoke).mockImplementation((command) =>
+    command === "project_files"
+      ? new Promise(() => {})
+      : Promise.reject({ code: "unavailable" }),
+  );
+  typeMention();
+  scanNotice().onCancel();
+  await settle();
+  expect(scanNotice().state?.cancelRequested).toBe(false);
+  expect(scanText()).toContain(PROJECT_FILES.cancelFailed);
+  scanNotice().onCancel();
+  await settle();
+  expect(
+    vi.mocked(invoke).mock.calls.filter(([c]) => c === "project_files_cancel"),
+  ).toHaveLength(2);
+  expect(scanText()).not.toContain(PROJECT_FILES.cancelled);
+});
+
+it("resets keyboard selection when a rescan returns fewer files", async () => {
+  let files = ["a.txt", "b.txt", "c.txt"];
+  vi.mocked(invoke).mockImplementation((_command, args) =>
+    Promise.resolve(
+      projectFilesFixture((args as { requestId: string }).requestId, files),
+    ),
+  );
+  typeMention();
+  await settle();
+  const press = (key: string) => {
+    const area = render().find((node) => node.type === "textarea")!;
+    (area.props.onKeyDown as (event: unknown) => void)({
+      key,
+      nativeEvent: { isComposing: false },
+      preventDefault() {},
+    });
+    render();
+  };
+  press("ArrowDown");
+  press("ArrowDown");
+  expect(options()[2]!.props["aria-selected"]).toBe(true);
+  files = ["only-new.txt"];
+  scanNotice().onRetry();
+  await settle();
+  press("Enter");
+  expect(composerDrafts.read("project-new-a").attachments.at(-1)?.name).toBe(
+    "only-new.txt",
+  );
+  noAgentRequests();
 });

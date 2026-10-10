@@ -6,7 +6,7 @@
 
 正式版为 `83cdfa10` / 0.1.7 arm64。[H17正式实测](worktree-preparation-candidate/installed-preparation.json)确认审阅准备请求、显式保存/发送、真实离线依赖安装/校验、预期退出23及同一后台任务停止。端口尝试实际为EPERM/退出24，原监听仍在；冲突、服务启动和端口恢复未实证。4次明确发送新增2个受控会话，Codex 6 Astra / Ultra和权限保持。原128条会话、8条输入、8组意见和3组待发保持，新增活动和清单差异逐项审核；最终恢复空白TR且正常退出。
 
-新增NEW-12：已完成恢复后冷启动，“重新核查”未检查已转入locations的条目；H15/H14/ARCH-47对应冷恢复路径重开，原暖态保护证据保留。H17[七项工程检查](worktree-preparation-checks/run-01/verification.json)为1,363输入稳定、前端4,487项、Rust1,372项/6忽略。继续修复NEW-12和H11等剩余条目；29家、Windows和完整市场目标仍未完成。
+新增NEW-12：已完成恢复后冷启动，“重新核查”未检查已转入locations的条目；H15/H14/ARCH-47对应冷恢复路径重开，原暖态保护证据保留。H17[七项工程检查](worktree-preparation-checks/run-01/verification.json)为1,363输入稳定、前端4,487项、Rust1,372项/6忽略。NEW-12源码修复与H11扫描、取消、范围提示和安全读取已完成，[本轮七项工程检查](project-file-scan-checks/run-01/verification.json)通过（1,375输入，前端4,508项、Rust1,402项/6忽略），正式更新与真实扫描/重启复验待完成。29家、Windows和完整市场目标仍未完成。
 
 以下保留原阶段成功与失败，历史“当前/待安装/待修复”描述均指当时阶段，不覆盖本节最新结论。
 

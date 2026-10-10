@@ -1,0 +1,182 @@
+{
+  "reviewedAtUtc": "2026-10-10T12:18:27.662977+00:00",
+  "scope": "Independent read-only final H11 backend source and author-evidence review; no Cargo, browser, App, Agent, database or helper execution.",
+  "result": "no-new-blocking-finding-with-explicit-boundaries",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/implementation.json",
+    "sha256": "38ae2c12ec570fbe99737a0aad60c430cf52febb84e9ecad57b81fecd0625c60",
+    "bytes": 10625
+  },
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/source-checkpoint-final.json",
+    "sha256": "129d20ccbc746ce1bc990a8ec9338c5f87c447e4f2a9d41ca969024d4e88bbf3",
+    "bytes": 1327
+  },
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "bytes": 18608,
+      "lines": 426
+    },
+    {
+      "path": "src-tauri/src/project_index.rs",
+      "sha256": "32125bd3815b0dae4499979e447a95d818bf3877d7f7eb9b0fc72de610f95936",
+      "bytes": 2926,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/project_index_scan.rs",
+      "sha256": "eae3d57679c7c6c2397162b80a617880de089cbe08f14603754a7748093e46ab",
+      "bytes": 10039,
+      "lines": 312
+    },
+    {
+      "path": "src-tauri/src/project_index_scan_tests.rs",
+      "sha256": "43f07b79a7bae24cbde2b473f9a9ef85d814168f9e972a01f26a82e692035bd3",
+      "bytes": 8975,
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/project_index_requests.rs",
+      "sha256": "d3c5b3e38d51c46c674bb0b9af1bc9f475480cfc26cae1b2a2ac2a398652ffcc",
+      "bytes": 8889,
+      "lines": 254
+    },
+    {
+      "path": "src-tauri/src/project_index_read.rs",
+      "sha256": "d0125fa2f7b2545bd5e0ff610dd85fc8770f87df5a2626b1e619077db724e8b9",
+      "bytes": 5264,
+      "lines": 133
+    }
+  ],
+  "dependencyRefs": [
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2",
+      "bytes": 2674
+    },
+    {
+      "path": "src-tauri/src/file_access.rs",
+      "sha256": "9ceea312f6062dc59dd574392dd5744883ed3f0fff0259968b0f3ef63190f9a4",
+      "bytes": 905
+    },
+    {
+      "path": "src-tauri/src/file_access/unix.rs",
+      "sha256": "f96c4f5c0c53217e1ad7141928060385b840469d4f5ee936feec94d8c0194422",
+      "bytes": 8131
+    },
+    {
+      "path": "src/runtime/project_files.ts",
+      "sha256": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86",
+      "bytes": 4584
+    }
+  ],
+  "checks": [
+    {
+      "name": "frozen-source-and-evidence",
+      "passed": true,
+      "detail": "All 21 path/hash references in the author receipt match current bytes, including six final source files. Final source checkpoint agrees. Final targeted stdout records 26 passed, 0 failed in 15.01s; clippy records finished. Zero fmt/clippy exit status is taken from the author receipt; these commands were not rerun."
+    },
+    {
+      "name": "directory-replacement",
+      "passed": true,
+      "detail": "Queued directories capture no-follow dev/inode identity, recheck before path enumeration and after closing its iterator, and discard that directory's candidates/new child queue on detected replacement; root is checked again. The preserved old-behavior seam has one real failed symlink-replacement assertion; the final identical guard test passes."
+    },
+    {
+      "name": "bounded-name-enumeration",
+      "passed": true,
+      "detail": "read_dir is consumed incrementally, with total and per-directory entry checks before next(); files, depth, discovered directories, returned UTF-8 path bytes and cooperative elapsed work are bounded. Only the bounded subset is sorted. Missing root rejects; subtree/name failures mark partial, fixed exclusions and limit reasons remain explicit. Literal backslash and unrepresentable names are never rewritten to a different path."
+    },
+    {
+      "name": "exact-cancel-and-real-worker-lifetime",
+      "passed": true,
+      "detail": "Exact UUID flags have bounded inactive retention; live registrations cannot be evicted. The whole Lease moves into the real blocking closure. Observer timeout/drop does not release that lease or the shared file-check/global activity permits. Actual dropped-observer and real 15-second readPending barrier tests keep the worker running, accept exact cancellation and release only after the worker barrier returns. A cancellation acknowledgement does not claim OS work stopped."
+    },
+    {
+      "name": "selected-byte-identity-and-errors",
+      "passed": true,
+      "detail": "Text reading walks root/relative no-follow handles, accepts regular files only, reads at most 256KiB+1, compares complete file stamps and reopens current root/path identities before returning strict UTF-8. Replacement, growth and symlink tests are in the final 26. All public backend failures carry fixed codes; scan UI uses fixed translations/fallback, and readBusy wording covers both request-registry capacity and file-check admission."
+    },
+    {
+      "name": "real-wire-provenance",
+      "passed": true,
+      "detail": "The two raw stdout lines occur verbatim in targeted-lifecycle-green.txt and parse to actual-wire.json exactly: three complete candidate paths and a truncated 2000-path subset of a 2005-file fixture. This review did not execute the frontend parser."
+    },
+    {
+      "name": "preserved-failure-classification",
+      "passed": true,
+      "detail": "Two valid original listing failures and the later directory replacement failure remain intact. Initial non-UTF8 fixture creation failure, ENOSPC before tests and enum lint failure are not counted as further product failures. Earlier checkpoint is not substituted for the final six-source checkpoint."
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/targeted-final-green.txt",
+      "sha256": "bd07781418d2e2e730f7ef2ce0a122b50038e242f0e09be4674833509e4990a8",
+      "bytes": 30168
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/targeted-lifecycle-green.txt",
+      "sha256": "263b4fe32ecbc2acb70bb86dec392aa689d6680ca30074fd061b32d397406b45",
+      "bytes": 30168
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/clippy-final.txt",
+      "sha256": "67d7d385bec44df6a6eaafa74dde4c256d31c074d57bedd7b6b47c9d0f8d49a9",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/directory-replacement-red.txt",
+      "sha256": "28717f55efd8de4b8c3c9a8fa2569b8d1607229609e44c9f6126de41eddbaf3f",
+      "bytes": 953
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/listing-valid-red.txt",
+      "sha256": "5dd3bf7049b063fe8ae31c6c1d35a2d99321bb6026e1ff90162ee952706affca",
+      "bytes": 1340
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json",
+      "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+      "bytes": 41651
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.raw.txt",
+      "sha256": "6a1ca1dbc287bb85461f4fdb27b7889776c4038bd40858a92825b55947be07a7",
+      "bytes": 27152
+    }
+  ],
+  "helperInputCrossCheck": {
+    "preparation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/helper-preparation.json",
+      "sha256": "f5d1cba5163ab58c25bd4e1a19d87dca1638891b62279a33801a0b42e756e6b5",
+      "bytes": 11393
+    },
+    "frontendFollowup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan/independent-frontend-review-followup.json",
+      "sha256": "5c0531fb228b53e9d7da908685b52b0a665f37bf28c7b62418e89d54d4c658eb",
+      "bytes": 1726
+    },
+    "allEightPreparedHelperHashesUnchanged": true,
+    "bothFrozenReceiptsAlreadyReferenceFinalWire": true,
+    "wire": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json",
+      "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+      "bytes": 41651
+    },
+    "note": "An earlier message suspected a final-wire drift; direct byte/hash comparison disproved it. No old receipt was rewritten and no input-drift addendum is needed. Candidate helpers remain prepared, not executed."
+  },
+  "boundaries": [
+    "Candidate names are not a complete or atomic project snapshot. Enumeration is path-based with before/after no-follow identity checks; this is not protection against every instantaneous swap-and-restore race. Selected byte reads have a separate strict handle check.",
+    "5-second cooperative scanning and 15-second response observation do not guarantee a blocking OS call has ended. Cancellation is cooperative; no automatic retry or global cancellation was added.",
+    "UUID records expire after a bounded inactive period; callers must use fresh IDs. They are not a durable replay ledger.",
+    "These author tests ran on macOS. Windows and installed-product behavior remain separately unverified by this receipt. Frontend controlled-browser findings and installed testing have separate owners/evidence.",
+    "This review performed no production edits and no repeated test, build, installation, App, Agent or live-data operation."
+  ],
+  "authorReferencedArtifactsChecked": 21
+}

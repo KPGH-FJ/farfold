@@ -26,6 +26,9 @@ use remove_manager::RemoveTicket;
 #[path = "preparation_manager.rs"]
 mod preparation_manager;
 use preparation_manager::PreparationTicket;
+#[cfg(test)]
+#[path = "cold_restore_recheck_tests.rs"]
+mod cold_restore_recheck_tests;
 #[path = "recover_manager.rs"]
 mod recover_manager;
 #[cfg(test)]

@@ -1,0 +1,26 @@
+{
+  "sourceRefs": [
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "2fdb377a18addf8d79811cfc7af008ed3f55712a6115763fb7feca0ffc991241"
+    },
+    {
+      "path": "src/components/useProjectFiles.ts",
+      "sha256": "345a380edb78ecd9a0a684b6a78ed574a9e1607240ea6aa08a2d5299cc5747c1"
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.tsx",
+      "sha256": "41a4f57aab11ebc20c8e321c2a84d546801ac0c78f41e0b7303a75a8f851757b"
+    },
+    {
+      "path": "src/components/ProjectFileScanNotice.css",
+      "sha256": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4"
+    },
+    {
+      "path": "src/runtime/project_files.ts",
+      "sha256": "183c110f3d947159a844da138f4b7c928786a1fbba6761217c27ec0665951c86"
+    }
+  ],
+  "fullAppSourceInventories": "Exact src/config/harness before/after hashes are in each main raw run; 5 changed production inputs above bind this slice. Test files are not browser behavior.",
+  "sourceStableWithinEveryRun": true
+}
