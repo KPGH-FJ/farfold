@@ -82,7 +82,7 @@ export const EXTENSION_INVENTORY_STRINGS = {
     platformUnsupported: "当前系统的清单读取尚未提供。",
     environmentUnavailable:
       "程序环境暂未准备好。请返回程序设置检查后，再明确重试。",
-    selectionChanged: "Agent 或程序选择已变化，请重新检查读取方式。",
+    selectionChanged: "读取方式已失效或发生变化，请重新检查读取方式。",
     cwdUnavailable: "此工作文件夹无法用于查询，请重新选择。",
     busy: "本次查询暂时无法开始，请稍后重试。",
     spawnFailed: "未能启动本次查询，请检查程序设置后重试。",

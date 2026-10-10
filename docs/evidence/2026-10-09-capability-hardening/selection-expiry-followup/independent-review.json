@@ -1,0 +1,106 @@
+{
+  "issue": "NEW-16",
+  "result": "noBlockingFindingInScopedCopyCorrection",
+  "createdAtUtc": "2026-10-10T17:23:34.573806+00:00",
+  "baseCommit": "4d3bd81e86cbd7a877055d321f89fb8de494fbf8",
+  "authorReceipt": {
+    "path": "output/2026-10-11-selection-expiry-followup/implementation.json",
+    "sha256": "38928a1d3918cc42db42c11a51ea6fb65c99074419abb9b983c05b7c3c067904"
+  },
+  "verification": {
+    "authorReferenceCount": 19,
+    "allReferenceHashesMatch": true,
+    "productionExactlyOneStringReplacement": true,
+    "unchangedBehaviorFilesMatchBase": 7,
+    "independentProjectTestsRun": false,
+    "cargoOrAppOrCliRun": false
+  },
+  "conclusions": [
+    "Backend launch.rs get removes expired 300-second receipts before lookup; missing, expired and wrong-agent tickets share selectionChanged. Actual exact selected-row changes also use this code. The new neutral wording covers these cases without assigning an unproven native cause.",
+    "Inventory capability/query errors use the shared string; management spreads the same error map into SkillChangeReview. No API, TTL, permission, controller or component behavior changed.",
+    "Existing rejected-ticket guard prevents retry with the rejected capability. Explicit capability-refresh click retires the original owner and changes revision; its effect only reloads capability. Query and confirmation still require their own explicit actions. No new automatic retry or authority renewal was added.",
+    "The new three tests feed failed DTOs through production controllers and strict parsers into actual component SSR. Two inventory kinds and management refusal render the neutral text; call counts rule out extra immediate reads/inspection/confirmation in that covered path. SSR does not run effects or test clicks."
+  ],
+  "evidenceRead": {
+    "red": "red-final-test.txt: 3/3 actual old-wording assertion failures; earlier uncalled invalidation-method typo retained and corrected before this red",
+    "green": "green.txt: 5 files / 40 passed, including the 3 new cases; author execution, not independently rerun",
+    "typecheck": "typecheck.txt: author exit 0",
+    "format": "format-check.txt: author exit 0"
+  },
+  "boundaries": [
+    "Native error branch was not uniquely identified as TTL; no installed-product recovery, 300-second timing or new full-browser claim is made.",
+    "This closes misleading copy only. Existing explicit capability refresh remains the recovery path; no change is claimed to ticket lifespan or automatic usability.",
+    "No production, test, four current status documents or author evidence modified by this review."
+  ],
+  "sourceRefs": [
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "7454698cfb0cd4d2db5c6727314074895e1f0ee57942cdd34253c4413a2c98c9",
+      "bytes": 5145
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+      "sha256": "a0eaeb1950bbb921e1af4e39228c3ed7bc1de56ddc7415edbc861a2485cc27e9",
+      "bytes": 3854
+    }
+  ],
+  "contextRefs": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "016305dbd46f7f308870c10765043ce55c56a19d90f6afd07b705422ced3e69b",
+      "bytes": 11196
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5",
+      "bytes": 7361
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "444c4375aa04bd86e819ded8aa80dd50fb28b5333c4c93c83cc7e207b1d1aa95",
+      "bytes": 11107
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476",
+      "bytes": 14331
+    },
+    {
+      "path": "src/runtime/skill_management_strings.ts",
+      "sha256": "a94f2f7c90c766ffeb1cfcb91afbae577cf7e3e5a722389bdf244a59fe0f44c0",
+      "bytes": 4651
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "211c2c9418096e9464e001546950c264a8b2bea2aacffd8cc99528f452967f96",
+      "bytes": 6734
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "d7a9103f466917e2d1eb7704d6370a5b788ac51a2ca6ab84ab23c889ac7be631",
+      "bytes": 10390
+    }
+  ],
+  "logRefs": [
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/red-final-test.txt",
+      "sha256": "91cf1d8f4464322d4a6441f91be5711463f02e5c539423378ba87a9363afb38a",
+      "bytes": 6217
+    },
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/green.txt",
+      "sha256": "d9c4b63546ba5b21f66a5bcee915c1835fb92373518cfc337ec3c3d40ae96fc5",
+      "bytes": 211
+    },
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "issue": "NEW-16",
+  "scope": "One shared error string; targeted controlled frontend verification only. Installed product recheck remains for root.",
+  "baseCommit": "4d3bd81e86cbd7a877055d321f89fb8de494fbf8",
+  "diagnosis": {
+    "publicCode": "selectionChanged",
+    "causes": "The backend code covers missing/expired/wrong-Agent selection tickets and actual selection drift. The native observation did not isolate the exact branch, so it cannot assert that the user changed a program or that expiry alone caused it.",
+    "before": "Agent 或程序选择已变化，请重新检查读取方式。",
+    "after": "读取方式已失效或发生变化，请重新检查读取方式。",
+    "entrances": [
+      "AgentExtensionInventory query error and capability error use EXTENSION_INVENTORY_STRINGS.errors",
+      "SkillChangeReview uses SKILL_MANAGEMENT_STRINGS.errors, which inherits the same selectionChanged value"
+    ]
+  },
+  "sourceRefs": [
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "7454698cfb0cd4d2db5c6727314074895e1f0ee57942cdd34253c4413a2c98c9",
+      "bytes": 5145
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+      "sha256": "a0eaeb1950bbb921e1af4e39228c3ed7bc1de56ddc7415edbc861a2485cc27e9",
+      "bytes": 3854
+    }
+  ],
+  "unchangedBehaviorRefs": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "016305dbd46f7f308870c10765043ce55c56a19d90f6afd07b705422ced3e69b",
+      "bytes": 11196
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5",
+      "bytes": 7361
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "444c4375aa04bd86e819ded8aa80dd50fb28b5333c4c93c83cc7e207b1d1aa95",
+      "bytes": 11107
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476",
+      "bytes": 14331
+    },
+    {
+      "path": "src/runtime/skill_management_strings.ts",
+      "sha256": "a94f2f7c90c766ffeb1cfcb91afbae577cf7e3e5a722389bdf244a59fe0f44c0",
+      "bytes": 4651
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "211c2c9418096e9464e001546950c264a8b2bea2aacffd8cc99528f452967f96",
+      "bytes": 6734
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "d7a9103f466917e2d1eb7704d6370a5b788ac51a2ca6ab84ab23c889ac7be631",
+      "bytes": 10390
+    }
+  ],
+  "changeProof": {
+    "productionExactSingleStringReplacement": true,
+    "unchangedRefsMatchBaseCommit": true,
+    "ttlOwnershipExplicitRefreshAndNoAutomaticRetryChanged": false
+  },
+  "validation": {
+    "red": {
+      "command": "corepack pnpm exec vitest run src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+      "exitCode": 1,
+      "filesFailed": 1,
+      "testsFailed": 3,
+      "log": {
+        "path": "output/2026-10-11-selection-expiry-followup/red-final-test.txt",
+        "sha256": "91cf1d8f4464322d4a6441f91be5711463f02e5c539423378ba87a9363afb38a",
+        "bytes": 6217
+      },
+      "executionTest": {
+        "path": "output/2026-10-11-selection-expiry-followup/selection-expiry.test.red-execution.txt",
+        "sha256": "ea321263dbd9c3c0982868ea7896429ff08da42c28bb3d397a7ec71aca7f20d2",
+        "bytes": 3841
+      },
+      "failure": "All three assertions expected neutral wording; actual production components rendered the old categorical claim."
+    },
+    "green": {
+      "command": "corepack pnpm exec vitest run src/components/AgentExtensionInventory.selection-expiry.test.tsx src/runtime/extension_inventory_controller.test.ts src/runtime/extension_inventory.skills.test.ts src/runtime/extension_inventory.management.test.ts src/runtime/skill_management_controller.test.ts",
+      "exitCode": 0,
+      "filesPassed": 5,
+      "testsPassed": 40,
+      "log": {
+        "path": "output/2026-10-11-selection-expiry-followup/green.txt",
+        "sha256": "d9c4b63546ba5b21f66a5bcee915c1835fb92373518cfc337ec3c3d40ae96fc5",
+        "bytes": 211
+      }
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-selection-expiry-followup/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    "format": {
+      "command": "corepack pnpm exec prettier --check src/runtime/extension_inventory_strings.ts src/components/AgentExtensionInventory.selection-expiry.test.tsx",
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-selection-expiry-followup/format-check.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    }
+  },
+  "testScope": {
+    "newCases": 3,
+    "coverage": [
+      "MCP and skills exact failed request DTO through production controller and actual React server rendering",
+      "Management inspection refusal through production controller and actual SkillChangeReview rendering",
+      "Neutral shared wording, explicit refresh button label, no extra read/inspect or confirm dispatch"
+    ],
+    "limits": [
+      "Server rendering does not run effects or browser interactions. This is not installed UI, a 300-second wait, or a real official program request.",
+      "Existing 37 controller/parser cases cover related ownership, rejected-ticket no-retry, late replies and write uncertainty; they do not establish new installed behavior."
+    ]
+  },
+  "driverCorrection": {
+    "originalRedPreserved": {
+      "path": "output/2026-10-11-selection-expiry-followup/red.txt",
+      "sha256": "bedfe03d44580bbcd7da7b37b32d76acc8d3d645c5045d2a734ba897bdb2f84a",
+      "bytes": 6217
+    },
+    "originalTestPreserved": {
+      "path": "output/2026-10-11-selection-expiry-followup/selection-expiry.test.before-callback-fix.txt",
+      "sha256": "b5dde3284a2b06ad5d7a8838d1d200f6461d3b54ac14e910a7fb165bfa2c2f60",
+      "bytes": 3855
+    },
+    "details": "The first draft had an uncalled invalidation callback method name. Corrected to the existing markStale method, reran all three against unchanged production to get red-final-test.txt, then changed the one production string. Prettier later changed only test formatting."
+  },
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/extension_inventory_strings.before.txt",
+      "sha256": "16f105bc7cdaf66d2e67681b0763b7390ba1cde070e8a8175403c28813884c61",
+      "bytes": 5139
+    },
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/source.patch",
+      "sha256": "4919f21a816af87c5afd5745d1e1488cc14b6639b83dd1f3e20d1aa76e40cb0d",
+      "bytes": 903
+    },
+    {
+      "path": "output/2026-10-11-selection-expiry-followup/format-write.txt",
+      "sha256": "4b6a4cfb54682614b464dc6500dbe2a51c769c4901160950af1feec6efcf9e23",
+      "bytes": 130
+    }
+  ],
+  "notPerformed": [
+    "Cargo",
+    "full frontend suite",
+    "build",
+    "browser",
+    "formal app",
+    "official CLI",
+    "Agent/model request",
+    "configuration write",
+    "database read",
+    "commit"
+  ]
+}
