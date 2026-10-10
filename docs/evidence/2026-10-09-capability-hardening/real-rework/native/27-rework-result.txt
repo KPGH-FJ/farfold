@@ -1,0 +1,170 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 121
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				14 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				15 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				16 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				17 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				18 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_LARGE_F71A3434_20261010。不要调用任何工具
+				20 按钮 FARFOLD_DOCX_AF66F006_20261010。不要调用任何工具，
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 25
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 9 新回复
+				41 按钮 设置
+				42 文本 属于你的 Agent，在一处相遇。
+				43 container
+					44 按钮 返回
+					45 标题 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受, Value: 1
+						46 文本 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+					47 text farfold-rework-m_ap16a1 · 未在运行
+					48 按钮 查找当前对话
+					49 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
+					50 按钮 浏览器
+					51 弹出式按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受的操作
+					52 text 你  ·  11:09
+					53 按钮 复制消息
+					54 弹出式按钮 消息操作
+					55 text FARFOLD_REWORK_A47A6652_20261010：这是一次范围受限的文件生成验证。
+只在当前工作文件夹 /private/tmp/farfold-rework-m_ap16a1 中创建 deliverable.md。不得读取、写入或修改其他文件，不访问网络，不启动额外 Agent。用 UTF-8 写入下面完整内容，保留空行和末尾换行：
+
+# FARFOLD_REWORK_A47A6652
+
+KEEP_BEFORE_A47A6652
+
+TARGET_A47A6652: draft
+
+KEEP_AFTER_A47A6652
+
+完成后只回复这个 Markdown 文件链接：[查看文件](/private/tmp/farfold-rework-m_ap16a1/deliverable.md)。 Codex  · 11:09
+					56 按钮 复制消息
+					57 弹出式按钮 消息操作
+					58 文本 我将仅在指定工作文件夹中写入 
+					59 文本 deliverable.md
+					60 文本 。
+					61 摘要 最近收到的扩展字段, Value: off
+						62 文本 最近收到的扩展字段
+					63 摘要 查看处理过程 1 步, Value: off
+						64 文本 查看处理过程
+						65 文本 1 步
+					66 text Codex  · 11:09
+					67 按钮 复制消息
+					68 弹出式按钮 消息操作
+					69 按钮 查看文件, Help: /private/tmp/farfold-rework-m_ap16a1/deliverable.md
+					70 摘要 最近收到的扩展字段, Value: off
+						71 文本 最近收到的扩展字段
+					72 text ✓  已完成 11:09
+					73 按钮 本轮产物 1 ▸
+					74 text 你  ·  11:12
+					75 按钮 复制消息
+					76 弹出式按钮 消息操作
+					77 text REWORK_A47A6652_PREFIX：只执行下方这一条版本意见，保持本次测试的其他限制。
+
+关于 "/private/tmp/farfold-rework-m_ap16a1/deliverable.md"（当时查看的内容，第 5 行，字节 49–72（从 0 起，末位不含），位置未重新核对）：
+文件 SHA-256：9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def
+REWORK_A47A6652_CHANGE：先核对本文件 SHA-256 与上述摘要完全一致；不一致就停止修改并说明。只将第 5 行 TARGET_A47A6652: draft 改为 TARGET_A47A6652: ready。其他所有字节、空行和末尾换行保持不变；不得读取或修改其他文件、不访问网络、不启动额外 Agent。完成后只回复同一文件链接。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。 Codex  · 11:12
+					78 按钮 复制消息
+					79 弹出式按钮 消息操作
+					80 文本 我会先核对该文件的 SHA-256；仅在完全匹配时修改指定行，并保留其他所有字节。
+					81 摘要 最近收到的扩展字段, Value: off
+						82 文本 最近收到的扩展字段
+					83 摘要 查看处理过程 1 步, Value: off
+						84 文本 查看处理过程
+						85 文本 1 步
+					86 text Codex  · 11:12
+					87 按钮 复制消息
+					88 弹出式按钮 消息操作
+					89 按钮 查看文件, Help: /private/tmp/farfold-rework-m_ap16a1/deliverable.md
+					90 摘要 最近收到的扩展字段, Value: off
+						91 文本 最近收到的扩展字段
+					92 text ✓  已完成 11:12
+					93 按钮 本轮产物 1 ▸
+					94 摘要 最近收到的扩展字段, Value: off
+						95 文本 最近收到的扩展字段
+					96 摘要 未发送的文件意见（1）, Value: off
+						97 文本 未发送的文件意见（1）
+					98 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
+						99 文本 发送消息…
+					100 弹出式按钮 添加文件或图片
+					101 弹出式按钮 模型与来源
+					102 文本 思考
+					103 弹出式按钮 思考深度: Ultra, Help: Ultra
+					104 弹出式按钮 对话权限
+					105 弹出式按钮 命令与模板
+					106 按钮 (disabled) 发送
+					107 弹出式按钮 对话用量
+					108 文本 Enter 发送 · Shift Enter 换行
+					109 container 对话内容面板
+						110 分离器 调整内容宽度, Value: 510
+						111 container 对话内容面板
+							112 开关按钮 文件与输出, Value: on
+							113 开关按钮 网页, Value: off
+						114 container 文件
+							115 文本 deliverable.md
+							116 按钮 返回文件与输出
+							117 按钮 放大内容
+							118 按钮 收起对话内容
+							119 摘要 文件位置, Value: off
+								120 文本 文件位置
+							121 按钮 重新读取
+							122 按钮 (expanded) 修改意见, Secondary Actions: Collapse
+							123 按钮 用默认应用打开
+							124 按钮 在文件夹中显示
+							125 按钮 完整文件另存为…
+							126 文本 文件已变化。当前内容和意见保持不变，重新读取可查看新内容。
+							127 开关按钮 排版, Value: on
+							128 开关按钮 原文, Value: off
+							129 标题 FARFOLD_REWORK_A47A6652, Value: 1
+								130 文本 FARFOLD_REWORK_A47A6652
+							131 文本 KEEP_BEFORE_A47A6652
+							132 文本 TARGET_A47A6652: draft
+							133 文本 KEEP_AFTER_A47A6652
+							134 文本 意见针对整个文件
+							135 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
+								136 文本 (settable) REWORK_A47A6652_RETAIN_V1：这条意见仅保存，不发送；应继续属于修改前的文件版本。
+							137 文本 意见对应当前查看的内容，加入输入框后由你发送。
+							138 按钮 加入对话
+	139 关闭按钮
+	140 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	141 最小化按钮
+	142 文本 Farfold
+143 menu bar
+	144 Farfold
+	145 文件
+	146 编辑
+	147 显示
+	148 窗口
+	149 帮助
+
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

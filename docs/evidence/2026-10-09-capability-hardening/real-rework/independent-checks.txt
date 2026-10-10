@@ -1,0 +1,6 @@
+publicReferences 57 allMatch True
+officialSession 01a123c8-3840-7c70-8bcc-543fb78c1baf actualRequests 2 contextInjectionMessages 1 sameModelEffortAndCwd True completedTools 2
+disk {'bytes': 93, 'onlyRequestedBytesChanged': True, 'line5ByteRange': [49, 72], 'sourceEqualsV2': True, 'exportEqualsV2': True}
+drafts {'composers': {'before': 8, 'after': 8, 'existingExactlyUnchanged': 7}, 'feedback': {'before': 6, 'after': 7, 'existingExactlyUnchanged': 6}, 'queues': {'before': 3, 'after': 3, 'existingExactlyUnchanged': 3}, 'choice': {'before': 5, 'after': 5, 'existingExactlyUnchanged': 5}} normalizations [{'group': 'composers', 'keySha256': 'bdca199252890f37784819febc089ed17fad39effb465ea051dbf1cbb5baaef3', 'onlyChange': 'absent sendPending -> false'}] oldCapturesUnchanged True retainedV1Unsent True
+formalApp {'candidateCommit': 'a47a6652453f44eb4ac4c89faea0ccd386f11ae0', 'fiveFilesMatch': True, 'archiveMatches': True, 'strictCodesignExitCode': 0, 'duplicateAbsent': True, 'formalProcesses': 0}
+reviewWritten /Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/real-rework/independent-review.json

@@ -1,0 +1,15 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 153-288, 309-317, 322-333
++			322 container 文件保存
++				323 标题 文件保存, Value: 2
++					324 文本 文件保存
++				325 按钮 关闭
++				326 container 文件保存状态
++					327 文本 保存完整原文件。离开此页面不会取消保存；取消请求不代表已停止。
++					328 container
++						329 text deliverable.md  ·  /private/tmp/farfold-rework-m_ap16a1/exports/deliverable-copy.md
++					330 文本 完整文件副本已保存。
++					331 文本 93 / 93 字节
++					332 按钮 关闭此记录
++				333 按钮 返回
+The focused UI element is 325 按钮 关闭

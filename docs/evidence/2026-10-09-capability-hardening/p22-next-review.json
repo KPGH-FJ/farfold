@@ -1,0 +1,149 @@
+{
+  "kind": "read-only-next-increment-research",
+  "observedAt": "2026-10-10T02:37:37.091460+00:00",
+  "scope": "P22 真实 Agent 返工和实际完整另存；不是新活动计划，也不是当前验收通过记录",
+  "method": "读取当前契约、唯一计划及反馈/发送/成果/核验/另存源码；没有执行测试、启动 Agent、调用模型、操作正式应用或用户数据库。源码快照不等于当前安装版本。",
+  "decision": "小型 Markdown 文件的同一真实对话返工可直接进入有界实证；本次未发现必须先补生产代码才能开展这一窄路径的阻断。整个 P22 仍未完成。",
+  "contract": [
+    {
+      "evidence": [
+        "PRODUCT.md:183",
+        "PRODUCT.md:184",
+        "PRODUCT.md:193",
+        "plans/agent-access.md:178"
+      ],
+      "detail": "文件写入、核实、意见发回原会话、Agent 修改、重核新版本及实际另存均须完成。事件或组件测试不等于落盘或真实旅程；不新增成果或事件账本。"
+    },
+    {
+      "evidence": ["PRODUCT.md:36", "PRODUCT.md:82"],
+      "detail": "保留用户已经选择的 Codex 6 Astra / Ultra、服务及权限；真实测试仅用当前获准条件，不换模型/账号、不扩大授权。"
+    }
+  ],
+  "currentChain": [
+    {
+      "evidence": [
+        "src/runtime/feedback_strings.ts:54",
+        "src/runtime/visual_feedback_strings.ts:11"
+      ],
+      "detail": "意见格式携带当时文件路径、SHA-256 和已支持的位置/区域；明确位置未重新核对及版本变化先核对。未附加整个正文，也不代 Agent 实现版本执行机制。"
+    },
+    {
+      "evidence": [
+        "src/runtime/drafts.ts:326",
+        "src/runtime/draft_storage.test.ts:185"
+      ],
+      "detail": "take 将同一版本意见移入 session:<原对话> 的既有草稿，保留其原文本/附件，删除该意见条目并只触发一份保存快照；相同条目第二次 take 失败。测试文件存在不等于本轮重测。"
+    },
+    {
+      "evidence": [
+        "src/components/Composer.tsx:577",
+        "src/runtime/sessions.ts:903"
+      ],
+      "detail": "用户明确发送前先保存草稿和待派发内容；只有原草稿对象未变才清除，已修改的新输入不被迟到结果抹去。队列按提交回执处理，accepted 不是修改成功。"
+    },
+    {
+      "evidence": [
+        "src/runtime/sessions.ts:1001",
+        "src/runtime/sessions.ts:1056",
+        "src/runtime/uncertain_prompt.ts:6"
+      ],
+      "detail": "未知提交保留原 blocks、暂停队列且不自动重发；已有显式保留为草稿入口。已接纳后实际失败/停止的原意见位于已发消息，不能笼统宣称仍自动保留为独立可编辑意见稿，也不能保证 Agent 端恰好执行一次。"
+    },
+    {
+      "evidence": [
+        "src/runtime/file_revision_monitor.ts:17",
+        "src/runtime/file_revision_monitor.ts:74",
+        "src/components/OpenedFileView.tsx:1119"
+      ],
+      "detail": "显示版本与意见版本分别管理；编辑保护可延后刷新，显示新内容须完整读取成功。Agent 完成时仍须核实际新文件，不能只等待回复结束或看到差异卡。"
+    },
+    {
+      "evidence": [
+        "src-tauri/src/file_delivery/stream.rs:54",
+        "src-tauri/src/file_delivery/copy_stream.rs:45",
+        "src-tauri/src/file_delivery/copy_stream.rs:83",
+        "src-tauri/src/file_delivery/copy_stream.rs:128"
+      ],
+      "detail": "完整另存全流重核原 VerifiedFile，发布前裁决取消，检查最终目标身份，回执含源版本/大小/SHA。仍需要对本次真实源文件和导出文件独立比较；文本快照导出不能替代完整另存。"
+    }
+  ],
+  "remainingSourceOrEvidenceGaps": [
+    {
+      "id": "P19-related",
+      "status": "source-partial",
+      "evidence": [
+        "src/runtime/artifact_view.ts:185",
+        "src/runtime/artifacts.ts:134",
+        "src/runtime/file_delivery.ts:85",
+        "src/components/thread-items.tsx:272",
+        "src/components/thread-items.tsx:303"
+      ],
+      "detail": "统一抽屉的 artifactFiles 只取 diff 卡；reportedFiles 可聚合 completed diff/resourceLink/location，但当前只被测试调用。locations/resource_link 仍在工具详情有可点文件入口。不能据此声称统一成果清单完成；该缺口不阻断用户明确选文件的 P22 窄路径。"
+    },
+    {
+      "id": "P22-real",
+      "status": "unverified",
+      "detail": "现有分项实机只做到意见加入输入框等局部路径；当前记录不证明意见经实际模型执行后生成正确文件并实际导出。"
+    },
+    {
+      "id": "P22-failure",
+      "status": "unverified",
+      "detail": "已接纳后 Agent 失败/取消、服务或连接未知、用户继续使用原稿的真实行为须另核。不能把本地选择器取消、组件模拟失败、发送回执当成这些路径的实证。"
+    },
+    {
+      "id": "P22-version",
+      "status": "boundary",
+      "detail": "Farfold 在意见中表达历史 SHA/坐标，但 Agent 是否先核版本再修改属于实际 Agent 行为；文件核验不构成 Agent 文件沙箱或自动回滚。"
+    }
+  ],
+  "minimalIncrement": {
+    "title": "同一 Codex 对话的一次受控 Markdown 选段返工与完整另存",
+    "productionChangeRequiredBeforeTest": false,
+    "scope": "一个自有临时工作目录、一份小型 UTF-8 Markdown、一个固定修改目标；两次有界真实请求（初次生成、原会话返工）。不含 Office/视觉区域理解、全部 Agent 或 Windows 完成声明。",
+    "setup": "根代理核 exact 已安装版本；确认无活动工作、无未决权限。选用同一已确认服务/模型/Ultra，不调整权限。创建专用受控对话而不复用用户已有草稿；将后续预置草稿标记明确作为本次测试内容。记录既有未发内容摘要并保留自有 v1 副本作对照。",
+    "steps": [
+      "1. 第一请求仅要求在选定测试目录生成一份固定三段 Markdown，含唯一目标标记、两个必须保持的旁证标记；禁止其他文件/网络操作。记录实际会话标识、配置、请求及回执，不记录秘密。",
+      "2. 请求实际结束后，核真实文件存在/完整内容和 SHA。通过实际工具位置/文件链接打开；若 Agent 未上报结构化文件位置，使用明确选文件入口，分别记录原因，不能伪造自动成果识别成功。",
+      "3. 在实际原文选择目标范围，输入固定替换意见。先关闭/返回验证意见保留，预置本次受控草稿前缀，再只点击一次加入输入框；确认前缀及附件仍在、路径/SHA/字节行范围正确、意见只出现一次、尚无第二请求。保留另一条独立未提交测试意见用于验证换版后仍属 v1。",
+      "4. 在原 native session 明确发送第二请求：按所附 SHA 核当前文件，若不匹配停止修改并报告；仅替换目标并保留旁证。待官方真实结束；若权限/认证/结果未知，停在该实际状态，不调整配置或自动重试。",
+      "5. 独立读取磁盘 v2：目标修改正确、旁证完整、新 SHA 与 v1 不同；确认实际新版本经重核后显示。编辑保护仍在时允许明确重读，不把此行为记录成自动刷新成功。保留的旧意见仍携带 v1 SHA/坐标，不静默改为 v2。",
+      "6. 在 v2 完整另存入口先取消保存对话框，核无新目标/无误报成功；再明确保存到新的专用路径。等待全局保存记录真正 completed，独立核目标大小/字节 SHA 与 v2 完全一致，回执 sourceVersion 对应 v2。不得以文本快照或差异片段替代。",
+      "7. 用同一受控文件的失效选择或已存在目标验证准确失败且原文件/意见不丢；实际请求若遭遇失败或取消仅按观测归因。最后核用户旧草稿/意见/待发仍保持，停止新增请求，保存范围明确的证据。"
+    ],
+    "passDefinition": "两次实际请求属于同一 Agent/native session/服务配置；第二次发送精确包含一次版本意见；磁盘 v2 满足修改约束；正式预览重核显示 v2；完整副本 SHA 与 v2 一致；旧用户未发内容不变，受控旧意见仍属 v1；取消或失败不伪报完成。",
+    "notClosedBySuccess": [
+      "P19统一成果清单",
+      "全部格式/Agent/平台",
+      "Agent已接纳后实际失败/取消（若未发生）",
+      "网络/服务未知结果下的真实恢复",
+      "Agent内部恰好一次执行",
+      "完整P22全项结项"
+    ]
+  },
+  "failureAttribution": [
+    "配置/认证/额度在发送前失败：记录官方返回与当前配置，归服务/认证或未定位；不得改模型使测试变绿。",
+    "Agent未修改、改错位置或忽略SHA：保存请求/实际工具报告/磁盘差异；优先归 Agent 执行或未定位，不能仅凭回复声称 Farfold 丢意见。",
+    "正确意见在送出 blocks 中缺失、重复、串对话：Farfold 发送链待查；unknown 不重复派发。",
+    "磁盘已正确更新但显示旧文件/旧意见被重新归属：Farfold 预览/版本意见链待查。",
+    "工具只返回普通文本或缺少结构化路径：区分官方 surface/adapter 缺失、Farfold 未承接与未定位；手选文件成功只证明手选路径。",
+    "导出回执与磁盘不符、取消误报、已存在目标被覆盖：Farfold 文件交付缺陷；OS权限/磁盘错误需保留实际分类，不猜测。"
+  ],
+  "sourceSnapshot": {
+    "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "plans/agent-access.md": "38684449cf6f9694ff9a62983422dbe71fd9d38a480b3f1134d53ddb4ab754d1",
+    "src/runtime/feedback_strings.ts": "a9ae75471bc166b09f73a7f115c8231e11c5eff222d81055634201764595b751",
+    "src/runtime/drafts.ts": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+    "src/components/Composer.tsx": "840e4cc70329eaa7adc04fe90a18a0067aae13e54873685511d8936623025075",
+    "src/runtime/sessions.ts": "341980835d24e924963d0acd1ed9aa19330c46e320a371697d8c696bf6c78432",
+    "src/runtime/uncertain_prompt.ts": "baa3b84263772c7dc503ce94ec92236f2af08ad5536796986117b6e53fdd194a",
+    "src/runtime/artifacts.ts": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+    "src/runtime/artifact_view.ts": "acd31b4c653b663e8273c8d1fc27d1abc6717855d1bb9ab2062b2de30d1dae66",
+    "src/runtime/file_delivery.ts": "fa1a3f9b66d64c806fd45baec1a0f25cb14e9f8f881f1275e57f1f6a49900c7f",
+    "src/components/thread-items.tsx": "abe60e7ef61e34c29dc3a3303d87382705369af1a30033003f77bcf5520bd0b0",
+    "src/components/FileDeliveryActions.tsx": "623684eab18ab6ceef5bb56b5a05824fc8d73daae86c211b2a80ddfeca0ee88f",
+    "src/components/OpenedFileView.tsx": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829",
+    "src/runtime/file_revision_monitor.ts": "f917385e2f39e26b2f5f52500d9b24a5255f037f965fdc0e314937c8b67cf451",
+    "src-tauri/src/file_delivery/stream.rs": "bbf7ff3573aa4ad1ba42cdb017c4f7deb383b0f6f6451ad79f74c6f565e78db7",
+    "src-tauri/src/file_delivery/copy_stream.rs": "f2d5ab5d312f86aec46257912e3412fab4d6c1cb24de8a7274bac4b269db8e0e"
+  }
+}

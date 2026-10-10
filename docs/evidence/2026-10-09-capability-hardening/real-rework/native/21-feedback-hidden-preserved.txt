@@ -1,0 +1,5 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					49 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					98 摘要 未发送的文件意见（1）, Value: off
++						99 文本 未发送的文件意见（1）
+The focused UI element is 69 按钮 查看文件, Help: /private/tmp/farfold-rework-m_ap16a1/deliverable.md

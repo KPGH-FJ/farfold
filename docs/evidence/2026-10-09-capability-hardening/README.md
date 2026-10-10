@@ -2,11 +2,13 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：区域意见已安装验证，继续成果清单与真实返工
+## 当前衔接：区域意见与有界真实返工已验证，继续成果清单与余项
 
-PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据一致。[正式窗口分项验证](visual-area-candidate/installed-visual-area.json)覆盖旋转PDF页的键盘区域、图片反向拖选/边界裁切、四位小数、明确确认、目标切换保留文字、无效输入、翻页/收起、换版旧意见及冷恢复。一次受限无工具链接回显沿用 Codex 6 Astra / Ultra 和既有服务权限；图片意见只加入原输入一次，保留前缀且未发送。正常退出后原7条输入中6条逐值相同、1条仅sendPending缺省规范为false；5组意见和3组待发逐值相同。新增仅本轮受控输入和PDF意见。NEW-04源码与受控恢复预览已通过，真实故障恢复入口仍未验，不破坏用户数据制造入口。当前继续P19清单和P22真实返工，全量计划未完成。
+PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据一致。[正式窗口分项验证](visual-area-candidate/installed-visual-area.json)覆盖旋转PDF页的键盘区域、图片反向拖选/边界裁切、四位小数、明确确认、目标切换保留文字、无效输入、翻页/收起、换版旧意见及冷恢复。一次受限无工具链接回显沿用 Codex 6 Astra / Ultra 和既有服务权限；图片意见只加入原输入一次，保留前缀且未发送。正常退出后原7条输入中6条逐值相同、1条仅sendPending缺省规范为false；5组意见和3组待发逐值相同。新增仅本轮受控输入和PDF意见。NEW-04源码与受控恢复预览已通过，真实故障恢复入口仍未验，不破坏用户数据制造入口。该区域阶段完成后继续P19清单和P22真实返工；最新结果见下文，全量计划未完成。
 
 本片[最终工程](visual-area-checks-complete/final-verification.json)1,201输入稳定，前端331文件/3,977项及类型、打包、全仓格式通过；本轮Rust1,230项/6忽略按精确输入复用。[独立完整界面](visual-area/independent/implementation.json)双引擎各147几何、30生命周期、16恢复预览通过，独立渲染各38单列。PDF测宽缺陷、父层重入反例及驱动错误均保留；[维护衔接记录](visual-area/checkpoint.json)记录本片状态。下文为此前阶段，不覆盖当前正式版本。
+
+P22 已在正式 `a47a6652` 上完成一条有界真实 Codex 返工：[正式窗口与磁盘证据](real-rework/installed-rework.json)核到沿用 6 Astra / Ultra、既有服务与权限，两次请求分别生成文件和按意见修改。实际工具先核旧 SHA，再只将目标行 draft 改为 ready；明确重读显示新内容，另一条未发意见仍属于旧版本，实际完整另存 93 字节与新文件逐字节相同。保存选择器取消未产生文件；受控移走后重读明确失败，恢复原文件后可重新打开。正常退出后旧8条输入中7条逐值相同、1条仅sendPending缺省规范为false；旧6组意见和3组待发逐值不变。[独立核对](real-rework/independent-review.json)另核官方两次请求、文件字节、私有数据副本及正式包链。此为macOS/Codex/小Markdown正常返工及选择器取消证明；运行中Agent/复制取消、失败返工、结果未知、其他格式和环境仍未完成。
 
 本片 XLSX 任意矩形与 DOCX 内层阅读位置修复已完成源码及受控检查，见[工程汇总](workbook-range-checks-final/final-verification.json)、[阅读位置修复](docx-reading-position-repair/implementation.json)、[表格完整界面](workbook-range/independent/implementation.json)、[解析兼容修复与独立Worker](workbook-range/content-types/implementation.json)。前端323文件/3,811项及类型、打包、全仓格式通过，1,171输入稳定；Rust按未变输入复用。完整App两浏览器各74断言、Worker各404、DOCX常规与窄窗共208断言分层记录。独立写出器原样本拒绝的实际失败及修复保留，原ZIP未改。正式安装及实机结果见首段；第二工作表实际可见，旧记录误称隐藏的[范围纠正](workbook-range/independent/hidden-sheet-scope-correction.json)单列，隐藏行列确有覆盖。PDF/图片区域、P22真实返工及全域其余条目继续开放。
 

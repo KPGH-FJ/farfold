@@ -1,0 +1,32 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~						155 按钮 (expanded) 技术详情, Secondary Actions: Collapse
++						158 container
++							159 text 执行 ·  python3 -I -S -c 'import hashlib from pathlib import Path p = Path("/private/tmp/farfold-rework-m_ap16a1/deliverable.md") data = p.read_bytes() expected = "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def" actual = hashlib.sha256(data).hexdigest() if actual != expected: raise SystemExit("SHA-256 不一致，未修改。实际摘要：" + actual) lines = data.splitlines(keepends=True) if len(lines) < 5 or lines[4] != b"TARGET_A47A6652: draft\n": raise SystemExit("第 5 行内容不匹配，未修改。") lines[4] = b"TARGET_A47A6652: ready\n
++						160 文本 命令
++						161 文本 python3 -I -S -c 'import hashlib
+from pathlib import Path
+p = Path("/private/tmp/farfold-rework-m_ap16a1/deliverable.md")
+data = p.read_bytes()
+expected = "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def"
+actual = hashlib.sha256(data).hexdigest()
+if actual != expected:
+    raise SystemExit("SHA-256 不一致，未修改。实际摘要：" + actual)
+lines = data.splitlines(keepends=True)
+if len(lines) < 5 or lines[4] != b"TARGET_A47A6652: draft\n":
+    raise SystemExit("第 5 行内容不匹配，未修改。")
+lines[4] = b"TARGET_A47A6652:
++						162 文本 执行目录
++						163 文本 /private/tmp/farfold-rework-m_ap16a1
++						164 摘要 完整输入, Value: off
++							165 文本 完整输入
++						166 文本 {
+  "type": "terminal",
+  "terminalId": "exec-ce3b1717-78fa-42ae-b1ca-cb24359834a3"
+}
++						167 文本 {
+  "formatted_output": "摘要匹配；指定行已修改；写入后字节核验通过。\n",
+  "exit_code": 0
+}
++						168 摘要 最近收到的扩展字段, Value: off
++							169 文本 最近收到的扩展字段
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

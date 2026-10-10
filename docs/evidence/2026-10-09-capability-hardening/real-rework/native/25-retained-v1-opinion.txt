@@ -1,0 +1,7 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 111, 125
++					128 摘要 未发送的文件意见（1）, Value: off
++						129 文本 未发送的文件意见（1）
++								130 文本 (settable) REWORK_A47A6652_RETAIN_V1：这条意见仅保存，不发送；应继续属于修改前的文件版本。
+~							127 按钮 加入对话
+The focused UI element is 124 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？

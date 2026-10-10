@@ -1,0 +1,41 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 166, 198, 201, 208, 216-223
+~				152 按钮 新对话 ⌘ N
+~					155 按钮 所有对话 121
++				201 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 进行中
+~				170 按钮 Codex 25
++					202 按钮 1 进行中
+~					191 标题 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受, Value: 1
+~						192 文本 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+~					193 text farfold-rework-m_ap16a1 · 进行中
+~					197 弹出式按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受的操作
+~					203 text 你  ·  11:09
+~					204 按钮 复制消息
+~					205 弹出式按钮 消息操作
+~					206 文本 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受限的文件生成验证。
+只在当前工作文件夹 /private/tmp/farfold-rework-m_ap16a1 中创建 deliverable.md。不得读取、写入或修改其他文件，不访问网络，不启动额外 Agent。用 UTF-8 写入下面完整内容，保留空行和末尾换行：
+
+# FARFOLD_REWORK_A47A6652
+
+KEEP_BEFORE_A47A6652
+
+TARGET_A47A6652: draft
+
+KEEP_AFTER_A47A6652
+
+完成后只回复这个 Markdown 文件链接：[查看文件](/private/tmp/farfold-rework-m_ap16a1/deliverable.md)。
++					199 摘要 最近收到的扩展字段, Value: off
++						200 文本 最近收到的扩展字段
+~					207 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）
++						208 文本 转向当前任务…（运行中发送将进入队列）
+~					209 弹出式按钮 添加文件或图片
+~					210 弹出式按钮 模型与来源
+~					211 文本 思考
+~					212 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
+~					213 弹出式按钮 (disabled) 对话权限
+~					214 弹出式按钮 命令与模板
+~					215 按钮 停止
++					216 按钮 (disabled) 加入待发
++					217 弹出式按钮 对话用量
++					218 文本 ⏎ 排队
+The focused UI element is 207 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）

@@ -1,0 +1,169 @@
+{
+  "checkedAtUtc": "2026-10-10T03:26:06.153538+00:00",
+  "result": "passed_with_explicit_boundaries",
+  "scope": "Independent closeout of the controlled a47 Codex two-request small-Markdown rework",
+  "installedSourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "publicReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/installed-rework.json",
+    "sha256": "3d742b3ceb9b3b2d1734541f04458be79b534e241b572e63fa067c12bae6b6f9"
+  },
+  "publicReferenceCount": 57,
+  "allPublicReferencesMatch": true,
+  "officialNativeRecord": {
+    "path": "/Users/tw/.codex/sessions/2026/10/10/rollout-2026-10-10T11-08-06-01a123c8-3840-7c70-8bcc-543fb78c1baf.jsonl",
+    "sha256": "b0f466163f0bec0d10b79e3e28a2a16cfe7fd5ca83ba5dc75aa3761a05535a10",
+    "lines": 39,
+    "sessionId": "01a123c8-3840-7c70-8bcc-543fb78c1baf",
+    "requestResponseItemLines": [9, 26],
+    "injectedContextMessageLine": 6,
+    "actualRequestCount": 2,
+    "rawRoleUserMessageCount": 3,
+    "contextMessageNotCountedAsThirdRequest": true,
+    "model": "gpt-6-astra",
+    "reasoningEffort": "ultra",
+    "approvalPolicy": "on-request",
+    "provider": "openai",
+    "cwd": "/private/tmp/farfold-rework-m_ap16a1",
+    "turnIds": [
+      "01a123c9-2a39-7063-ae1c-80d760f0b35b",
+      "01a123cb-dad4-7c22-acd0-d256fe0beef2"
+    ],
+    "completedTurns": 2,
+    "toolCalls": 2,
+    "toolExitCodes": [0, 0],
+    "changeOpinionOccurrencesInSecondRequest": 1,
+    "prefixOccurrencesInSecondRequest": 1,
+    "retainedOpinionOccurrencesInActualUserRequests": 0
+  },
+  "files": {
+    "v1Sha256": "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def",
+    "v2Sha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+    "bytesEach": 93,
+    "onlyRequestedReplacement": true,
+    "selectedV1Range": [49, 72],
+    "sourceAndExportEqualV2": true,
+    "source": "/private/tmp/farfold-rework-m_ap16a1/deliverable.md",
+    "export": "/private/tmp/farfold-rework-m_ap16a1/exports/deliverable-copy.md"
+  },
+  "data": {
+    "method": "Copied already-private standalone backup files to a new TemporaryDirectory; opened only those disposable SQLite copies; integrity_check ok; copies removed on exit. Original application database and original backup files were not opened by SQLite. Backup WALs were empty.",
+    "groups": {
+      "composers": {
+        "before": 8,
+        "after": 8,
+        "existingExactlyUnchanged": 7
+      },
+      "feedback": {
+        "before": 6,
+        "after": 7,
+        "existingExactlyUnchanged": 6
+      },
+      "queues": {
+        "before": 3,
+        "after": 3,
+        "existingExactlyUnchanged": 3
+      },
+      "choice": {
+        "before": 5,
+        "after": 5,
+        "existingExactlyUnchanged": 5
+      }
+    },
+    "normalizations": [
+      {
+        "group": "composers",
+        "keySha256": "bdca199252890f37784819febc089ed17fad39effb465ea051dbf1cbb5baaef3",
+        "onlyChange": "absent sendPending -> false"
+      }
+    ],
+    "noUnexpectedOldValueChange": true,
+    "retainedControlledOpinionStillV1AndUnsent": true,
+    "controlledComposerAbsentAfterExplicitSend": true,
+    "controlledSessionNewOnly": true,
+    "configService": {
+      "kind": "existing"
+    },
+    "capturesAndBackupsUnchanged": true,
+    "protectedHashes": {
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-before.sqlite3": "f0b13bd75f3e7a0c9eee27da56eaee98421ee265ab66f900a6d75756d5fff376",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-before.sqlite3-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-before.sqlite3-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-source/farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-source/farfold.sqlite3-wal": "a52f5089042c9d5add0e02099e8f0fd866b9605b51f6e93a5ae7904c16397bca",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-source/farfold.sqlite3-shm": "7523314fefc4039a0f4edc0a53a5c6bf7ed64614fe16988be3e268e9775b0c85",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-working/farfold.sqlite3": "368f8d71583ce0b1e701eaaa36b9784e85c6a2545c15f1d70bf0d3beb5102a4a",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-working/farfold.sqlite3-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/metadata-working/farfold.sqlite3-shm": "4ec5511dbc14033ff36c98456894c3639a2c7f01042335b9a3612024aa5d6d56",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-before.sqlite3": "3b0204cfae5121780e2cce30695ab17d2e905177248c15d748b5129ab34014d9",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-before.sqlite3-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-before.sqlite3-shm": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-source/farfold.sqlite3": "9942e14c7c2d2f6cb2bd823431789d913d28a45b70600ae40ae046b7e2a82d76",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-source/farfold.sqlite3-wal": "77bde2cda8fac1ec516803966735160c4db3c3f2f4bb44a870693a93be421529",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-source/farfold.sqlite3-shm": "101d22cfc6046c792518790feaf10813d9d49db4734b99096def8da30ccdac6c",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-working/farfold.sqlite3": "f9a066573cb113c5dadd5c465d05dd4a44ec63e891f9c8eb756dd48daf2338d2",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-working/farfold.sqlite3-wal": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-real-rework/after/metadata-working/farfold.sqlite3-shm": "9aff4be15ac1c91eb3a14bc2dbce4c8f81133f8b23cce7e26d59727cc09baf33"
+    }
+  },
+  "formalApp": {
+    "fiveFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/MacOS/farfold": "965d31beed9f6d488b955977705919a98eac581b07803ceea0b0e3695e1dacfa",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+    },
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-10-a47a6652/Farfold-0.1.7-a47a6652.zip",
+      "sha256": "2f9becb6769ebc7a67fa627e8f67aba580808fb0b6ae51fdaaac0957849d3d00"
+    },
+    "archiveBytes": 12865703,
+    "strictCodesignExitCode": 0,
+    "duplicateAbsent": true,
+    "formalProcessCount": 0
+  },
+  "chainReferences": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate.json",
+      "sha256": "53222552bb7589be1a6f59b9f93742fd2727281f1e8827b3f77dde410e8097a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-independent.json",
+      "sha256": "6836e14c595da734e74509ce687844b8da9e167d5ed083719990141a8e12aabd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/install-independent.json",
+      "sha256": "cbb635080edc96bf21a1cd5f9881eb7d43193305397d822cfd42f990486ec480"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "2ffa24db3c9364c4b199f0bc98a8146d64117cb1b12820d367b98bf3d5b4fab7"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/metadata-backup-receipt.json",
+      "sha256": "ed1a6f7112f1e3ea710aec17287d8bd08147c9fd022faf7b676801e094d806a8"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/after/metadata-backup-receipt.json",
+      "sha256": "e49a7918c4ce6206c73b598b49d9592344b3054cc20e77d9f65d0d2122fc07e7"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/post-rework-data-retention.json",
+      "sha256": "574823c4ba5f72ac5ed4533e81229bb2847ba0311323ed7e073016e72beae97d"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/post-rework-strict-comparison.json",
+      "sha256": "312758824061276fe2feeb4fbdd2757302416a679d864c46f94ac120d3ef3dd3"
+    }
+  ],
+  "boundaries": [
+    "Native UI actions and 47 numbered observations were executed by root, not this reviewer; reference hashes do not independently prove those visible interactions.",
+    "Official record, file bytes and private-copy SQL independently support the exact session/configuration, submitted text, completed tool actions, delivered bytes and retained-data claims.",
+    "Existing service is recorded in saved config and openai in this official session; no credentials or unrelated account/session files were inspected.",
+    "Optional sendPending absent-to-false is explicitly a normalization, not strict byte/value equality for every old composer.",
+    "No guarantee of exactly-once Agent execution beyond these two observed requests, no accepted-Agent cancellation/failure/unknown recovery, no broader format/Windows/29-Agent acceptance.",
+    "The installed app is exact a47; current authorized P19 source changes are not treated as installed behavior.",
+    "No application or real Agent was launched, stopped or controlled by this review."
+  ],
+  "rawCheckLog": "docs/evidence/2026-10-09-capability-hardening/real-rework/independent-checks.txt"
+}

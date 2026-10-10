@@ -1,0 +1,438 @@
+{
+  "kind": "installed-bounded-real-agent-rework",
+  "observedAtUtc": "2026-10-10T03:21:40.360729+00:00",
+  "formalSourceCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "nativeSessionId": "01a123c8-3840-7c70-8bcc-543fb78c1baf",
+  "cwd": "/private/tmp/farfold-rework-m_ap16a1",
+  "cases": [
+    {
+      "id": "same-configuration",
+      "status": "passed",
+      "observations": [
+        "07-workspace-ready",
+        "08-model-source",
+        "10-existing-permission"
+      ],
+      "result": "New controlled conversation in its owned directory, existing Codex 6 Astra / Ultra / service / Approve for me unchanged."
+    },
+    {
+      "id": "actual-generation",
+      "status": "passed",
+      "observations": [
+        "12-initial-prompt",
+        "13-initial-request-sent",
+        "14-initial-request-result",
+        "15-real-tool-artifact",
+        "16-real-file-preview"
+      ],
+      "result": "One completed execute tool writes the actual 93-byte file. Tool content is command output, not structured file report; explicit Agent reply file link opens verified disk preview."
+    },
+    {
+      "id": "version-opinion",
+      "status": "passed",
+      "observations": [
+        "17-original-text",
+        "18-line-selector",
+        "19-target-line-selected",
+        "20-target-confirmed",
+        "21-feedback-hidden-preserved",
+        "22-feedback-reopened",
+        "23-feedback-taken-once"
+      ],
+      "result": "Actual line5 UTF-8 range49:72, v1 SHA and opinion survive hide/reopen; joining once preserves composer prefix, not sent until explicit action."
+    },
+    {
+      "id": "same-conversation-rework",
+      "status": "passed",
+      "observations": [
+        "24-retained-opinion-entry",
+        "25-retained-v1-opinion",
+        "26-rework-request-sent",
+        "27-rework-result",
+        "28-real-rework-tool",
+        "29-tool-command-sha-check"
+      ],
+      "result": "Second real request carries CHANGE opinion exactly once. Actual tool checks v1 SHA and target then writes ready; independent disk comparison proves only requested bytes changed. Another v1 opinion remains unsent."
+    },
+    {
+      "id": "version-refresh",
+      "status": "passed",
+      "observations": ["30-v2-preview", "31-retained-v1-after-rework"],
+      "result": "Editing protection held old view and reported change; explicit reread shows ready and preserved keep markers. Retained opinion still carries v1 SHA, not retargeted to v2. This is not an automatic-refresh claim."
+    },
+    {
+      "id": "save-dialog-cancel",
+      "status": "passed",
+      "observations": ["32-save-dialog", "33-save-cancelled"],
+      "result": "Cancel before copy job; no new file or success state. Source unchanged and exports directory empty. This does not prove cancellation of running copy or Agent."
+    },
+    {
+      "id": "full-copy",
+      "status": "passed",
+      "observations": [
+        "34-save-again",
+        "35-export-folder",
+        "36-export-destination",
+        "37-export-result",
+        "38-export-completed",
+        "41-global-save-record"
+      ],
+      "result": "Actual full-copy job reaches completed93/93 and global save record. Destination bytes and SHA independently equal v2; not transcript/snapshot export."
+    },
+    {
+      "id": "unavailable-file",
+      "status": "passed",
+      "observations": ["39-missing-file-reread", "40-restored-file-preview"],
+      "result": "Move only owned source without changing bytes; explicit reread clears successful content and shows unverified path feedback while v1 opinion stays. Restore exact owned file and explicitly reopen succeeds. No failed-copy claim."
+    },
+    {
+      "id": "safe-finish",
+      "status": "passed",
+      "observations": [
+        "42-new-draft-for-folder-restore",
+        "43-folder-restore-ready",
+        "44-restore-go-to",
+        "45-original-folder",
+        "46-original-folder-restored",
+        "47-idle-before-quit"
+      ],
+      "result": "Restore default new-conversation folder to /Users/tw/Desktop/TR, confirm no running work then normal quit. Two real requests total; controlled old opinion remains and old user drafts protected."
+    }
+  ],
+  "diskChecks": {
+    "v1-disk-check": {
+      "path": "/private/tmp/farfold-rework-m_ap16a1/deliverable.md",
+      "bytes": 93,
+      "sha256": "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def",
+      "matchesExpected": true,
+      "onlyOwnedSourceAndEmptyExportDirectory": true
+    },
+    "v2-disk-check": {
+      "path": "/private/tmp/farfold-rework-m_ap16a1/deliverable.md",
+      "bytes": 93,
+      "sha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "v1Sha256": "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def",
+      "onlyTargetChanged": true,
+      "nativeOpinionByteRange": [49, 72],
+      "selectedV1Bytes": "TARGET_A47A6652: draft\n",
+      "onlyOwnedSourceAndEmptyExportDirectory": true
+    },
+    "cancel-save-disk-check": {
+      "files": ["deliverable.md"],
+      "sourceSha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "exportDirectoryEmpty": true
+    },
+    "export-disk-check": {
+      "source": "/private/tmp/farfold-rework-m_ap16a1/deliverable.md",
+      "destination": "/private/tmp/farfold-rework-m_ap16a1/exports/deliverable-copy.md",
+      "bytes": 93,
+      "sourceSha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "destinationSha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "byteIdenticalToV2": true
+    },
+    "controlled-source-restored": {
+      "sourceRestored": true,
+      "sourceSha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "exportSha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f",
+      "files": ["deliverable.md", "exports/deliverable-copy.md"]
+    }
+  },
+  "draftRetention": {
+    "originalDatabaseOpened": false,
+    "integrity": "ok",
+    "groups": {
+      "composers": {
+        "before": 8,
+        "after": 8,
+        "existingExactlyUnchanged": 7
+      },
+      "feedback": {
+        "before": 6,
+        "after": 7,
+        "existingExactlyUnchanged": 6
+      },
+      "queues": {
+        "before": 3,
+        "after": 3,
+        "existingExactlyUnchanged": 3
+      }
+    },
+    "unexpectedDifferences": [],
+    "normalizations": [
+      {
+        "group": "composers",
+        "keySha256": "bdca199252890f37784819febc089ed17fad39effb465ea051dbf1cbb5baaef3",
+        "onlyChange": "absent sendPending -> false; same inactive decoding"
+      }
+    ],
+    "strictComparisonReceipt": "post-rework-strict-comparison.json",
+    "newSessions": [
+      [
+        "codex:/private/tmp/farfold-rework-m_ap16a1:01a123c8-3840-7c70-8bcc-543fb78c1baf",
+        "codex",
+        "/private/tmp/farfold-rework-m_ap16a1",
+        "01a123c8-3840-7c70-8bcc-543fb78c1baf"
+      ]
+    ],
+    "retainedControlledOpinion": {
+      "text": "REWORK_A47A6652_RETAIN_V1：这条意见仅保存，不发送；应继续属于修改前的文件版本。",
+      "contentId": "disk:[\"/private/tmp/farfold-rework-m_ap16a1/deliverable.md\",\"130d3f395687fd37b784ec59e2968a3052060f12c4699cf578f806d061acbdd7\",\"9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def\"]",
+      "anchor": null
+    },
+    "controlledComposerConsumedAfterExplicitSend": true,
+    "copies": {
+      "metadata-before.sqlite3": "f0b13bd75f3e7a0c9eee27da56eaee98421ee265ab66f900a6d75756d5fff376",
+      "after/metadata-before.sqlite3": "3b0204cfae5121780e2cce30695ab17d2e905177248c15d748b5129ab34014d9"
+    }
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/01-new-chat-ready.txt",
+      "sha256": "79cd2e9a903d9cb3f922e4295f2ec9cd74996ee699ddffc912b4dadc3c5bc6f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/02-new-chat-current.png",
+      "sha256": "21139b0a90b736bd685d2d0962511b8c3ede1cacda7931dc878dbcc70bee1543"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/02-new-chat-current.txt",
+      "sha256": "c91494c6e759bb61d76096f35b9e5356c9fea79a72d956c5c98c43b6a9ed2fdb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/03-folder-selection.txt",
+      "sha256": "c69059a10d15652aa4b221076c774f2f7bae5d0ceafabc61a0436287084a9d26"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/04-go-to-folder.txt",
+      "sha256": "657cc73c4527ca44e6a5f8c3720092707d621690528757ed201590ae50613305"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/05-owned-folder.txt",
+      "sha256": "32cb0724c258428e7e4afa22e526371b9c1fb46d8efc5df479e1e7d5cc1b121d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/06-folder-applied.txt",
+      "sha256": "bb84231a2cc5553b7cc8613714e051c2c670370dc853382f315f0cb5290a49d1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/07-workspace-ready.txt",
+      "sha256": "47cddf60c752ab18cc77856227f62d393474f4948b6e8a2c9de22e847239b8eb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/08-model-source.txt",
+      "sha256": "ba3803a9806b86592edac344cac7fe7dd0032838322ee70f1fa672b57348168d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/09-model-closed.txt",
+      "sha256": "99edcf14cc365b4422d86c9c394d26214b660f352ee5b6c6db5a1e223bd2c34e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/10-existing-permission.txt",
+      "sha256": "563c8337a7c4a6aa7861812c0af9f064cfe3476a0ef3ca30a7147ba17f713f6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/11-permission-closed.txt",
+      "sha256": "119e819f4c7753927df21d4758ab5e86faf9bd6e478deb743bf253f00072f6c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/12-initial-prompt.txt",
+      "sha256": "27290e4d7f8d6dac84cc6c2d3a4ae4a3f5590d636426cf1b6ec86682f89d361e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/13-initial-request-sent.txt",
+      "sha256": "59a0ac9e53f7a8653efde17605ed56ef0f2b1623ca617aad867a9d556ee06c35"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/14-initial-request-result.png",
+      "sha256": "945e724114f86f1cfcb29a2b8252f7e40b5a0bca0806c590596a5d6ac8a99189"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/14-initial-request-result.txt",
+      "sha256": "915294c21742999dc268a7a072a59e7118c1ebc57926bcea9c79d173635ce9b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/15-real-tool-artifact.txt",
+      "sha256": "6e2900556def34518477ad9e2bfeb492be0955733e6e56df403e49d53ea3d5e1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/16-real-file-preview.txt",
+      "sha256": "57f41a45fb87f4fa1315f94a08b61a44a482a9b9b9163bd1ca3665570ff5fec5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/17-original-text.txt",
+      "sha256": "824f4a5c5a965f3d7affb46465feb8a8a3d7b4ca07aff428ae4d4ddb167b741f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/18-line-selector.txt",
+      "sha256": "7e4c8188e56bdf791b9ea881e8a3b7cb1d5f5dbab2dc56cfc202e97d420d6539"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/19-target-line-selected.txt",
+      "sha256": "f683d5f9ec733e20698d912b748815ee0331bb2de2f3a6090f867c99dbcbccb9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/20-target-confirmed.txt",
+      "sha256": "9a1ea161ba296a9a289b934b09754cedee0271f57da73a2d99a9368769783d5c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/21-feedback-hidden-preserved.txt",
+      "sha256": "c6bb55ecab05b5b8c87323c5c23522d9bf08449dc453b934b8dab4ca2fc9b248"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/22-feedback-reopened.txt",
+      "sha256": "cfae22a19cf41c26b9f42518e9b5c6d0d640a8ab167f6ab66d05312a0b19d2b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/23-feedback-taken-once.png",
+      "sha256": "add5de6510c9301a41f2854f14a4e6b8404dd1b1306ab6bc7612fc7a1dde1fb3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/23-feedback-taken-once.txt",
+      "sha256": "6d7036c4d562170f50a55ce3ed7c57381d4bed86653777161c20f12b335171db"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/24-retained-opinion-entry.txt",
+      "sha256": "c2b245e38c79d5e5ed23a2425b64041bb1510f1724323ccc14906ee881738a81"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/25-retained-v1-opinion.txt",
+      "sha256": "efee33d50f8a820f5d7ad1e8075138bb42f61162ce7b7cebbe29b9a896b4708e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/26-rework-request-sent.txt",
+      "sha256": "38f2ed9f328f9c4456633f16324d41f7293cfca3c89886a1e3874d23b37ac6bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/27-rework-result.png",
+      "sha256": "d22922923b3585e4bf9eada60185cffd85615ff27d340b8b0133e7e806c8d58e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/27-rework-result.txt",
+      "sha256": "7d41cd14ca8d496b550a7471d697abb3bee787aea3f07fe35cc103dd89a58a95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/28-real-rework-tool.txt",
+      "sha256": "9848751e81ac5d202639c0b0bb5d123252f0d30e60dcbaa1ebbb6e9e5ccb8453"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/29-tool-command-sha-check.txt",
+      "sha256": "e4397a9881daddd9f4f9ebc6c222364a2e70205fb2f5f506f23ca76ba26f63aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/30-v2-preview.txt",
+      "sha256": "1c33cb36329d8e7ddeb1cbc0b26d9e900b94743bf89cfa0c184969553f7851ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/31-retained-v1-after-rework.txt",
+      "sha256": "a87b34e4ff98b09737cda4a6c14cfaab8749223b959b712896621e96d42978f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/32-save-dialog.txt",
+      "sha256": "edd454281be7171003ceee057fb54e58032778d4bc0feb50a0d9b4d43825b66c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/33-save-cancelled.txt",
+      "sha256": "8776e83a01b947e0c361ab15ab9800edf2d5942251daf2a0e1dd297875302155"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/34-save-again.txt",
+      "sha256": "2947008621d19e614f15eaddfeb122d3f03aed20787a12fc799ecc84725b9152"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/35-export-folder.txt",
+      "sha256": "fcdfca5c9fa3b8fd2491501cca96a751da17cf6422a9848f7b30d734a6bba757"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/36-export-destination.txt",
+      "sha256": "f92aaa0afaea1fe488866dee012fd4b0ac44078571febfa9c6bda5edfd99512a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/37-export-result.txt",
+      "sha256": "afb21cef1985fcfa6a9fff1ca9ab9679067c2957f05deb73a6645999da514dee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/38-export-completed.txt",
+      "sha256": "7a88a0085da10ab2630f44bbff9b8461ea12a6f1ab1d389fa19653c3cb7bc7ec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/39-missing-file-reread.txt",
+      "sha256": "341ecdacc656bad8aaaa4b31303c8f41d8edd6f737fff236c29e247c075deea7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/40-restored-file-preview.txt",
+      "sha256": "b239c00daecd28fc701d9438f6801f4b9260e68b9bae4105d43b4c93ab3d8869"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/41-global-save-record.txt",
+      "sha256": "b70a47aa488fb2a06e30b065b3ef7625f7dcc5da057cb920255dfbba9ced2c27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/42-new-draft-for-folder-restore.txt",
+      "sha256": "b402eff55b45d127cc054610da0911ea48870d920c9200795b5ef074c6faebbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/43-folder-restore-ready.txt",
+      "sha256": "e13be92d5a82e1d8021e3b6d6c4937b9d8a3eed85595bb649034aad2cc17aa8c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/44-restore-go-to.txt",
+      "sha256": "5069c018b5ea634aadc736a4951586e39ad95a58fe151892d1ee79e1e635abd1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/45-original-folder.txt",
+      "sha256": "67c898c46698f029c5a3afd5c5081c7d1e04b753683bb722573bc31ba4097193"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/46-original-folder-restored.txt",
+      "sha256": "7d01c305a7cb616e3a1c9f4b9d7d6ec1d17e5662d5b192ced4782a315ecdf437"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/native/47-idle-before-quit.txt",
+      "sha256": "fe1334e0506759aa64998d54e26bf2e8dc756a9ae22abf5666a7021acffc7b41"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/generated-v1.raw.txt",
+      "sha256": "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/generated-v2.raw.txt",
+      "sha256": "caa26f92161f079555311b116b8b1392d38513e42d54d5bd628329b12bbf989f"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/post-rework-data-retention.json",
+      "sha256": "574823c4ba5f72ac5ed4533e81229bb2847ba0311323ed7e073016e72beae97d"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/post-rework-strict-comparison.json",
+      "sha256": "312758824061276fe2feeb4fbdd2757302416a679d864c46f94ac120d3ef3dd3"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/metadata-backup-receipt.json",
+      "sha256": "ed1a6f7112f1e3ea710aec17287d8bd08147c9fd022faf7b676801e094d806a8"
+    },
+    {
+      "path": "output/2026-10-10-real-rework/after/metadata-backup-receipt.json",
+      "sha256": "e49a7918c4ce6206c73b598b49d9592344b3054cc20e77d9f65d0d2122fc07e7"
+    }
+  ],
+  "driverDiagnostics": [
+    "Initial folder-picker attempt used an index retired during asynchronous new-conversation preparation and was rejected without action. Fresh full AX fixed driver targeting; not product failure.",
+    "First exact old-composer comparison failed on optional sendPending absent -> false only. Original strict-comparison receipt kept; equivalent decoding separately recorded, not claimed byte-identical."
+  ],
+  "finish": {
+    "normalQuit": true,
+    "formalProcessAbsent": true,
+    "sourceAndExportPreserved": true,
+    "defaultFolderRestored": true
+  },
+  "notProven": [
+    "Only this Codex/model/service/macOS/small Markdown path; no all-Agent, Office/visual rework, Windows, full P22 or market acceptance.",
+    "No Agent failure after acceptance, confirmed Agent cancellation, service/network unknown recovery, or guarantee of exactly-once Agent execution.",
+    "Save-dialog cancellation is distinct from running-copy cancellation; no failed export after dispatch occurred.",
+    "No attachment-preservation subcase in this journey; initial controlled composer contained text only.",
+    "Raw internal copy receipt sourceVersion was not captured through UI; observed completion and independent exact disk hash establish actual delivered bytes.",
+    "P19 list implementation is uninstalled work in progress; this journey used existing explicit file link, not new report aggregation."
+  ]
+}

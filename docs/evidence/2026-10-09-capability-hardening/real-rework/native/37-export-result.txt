@@ -1,0 +1,213 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 152-159
+~150 标准窗口 Farfold, Secondary Actions: Raise
+~	151 滚动区
++		152 HTML内容 Description: Farfold, URL: tauri://localhost
++			153 container
++				154 图像 Farfold
++				155 按钮 收起导航
++				156 按钮 新对话 ⌘ N
++				157 按钮 搜索对话 ⌘ K
++				158 container 所有对话
++					159 按钮 所有对话 121
++					160 按钮 收藏 0
++					161 按钮 探索 Agent
++				162 按钮 (expanded) 最近, Secondary Actions: Collapse
++				163 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
++				164 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				165 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				166 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				167 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				168 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				169 按钮 FARFOLD_LARGE_F71A3434_20261010。不要调用任何工具
++				170 按钮 FARFOLD_DOCX_AF66F006_20261010。不要调用任何工具，
++				171 按钮 查看全部
++				172 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				173 按钮 管理我的 Agent
++				174 按钮 Codex 25
++				175 按钮 OpenCode 26
++				176 按钮 Grok Build 1
++				177 按钮 Poolside 1
++				178 按钮 MiniMax Code 1
++				179 按钮 Qwen Code 1
++				180 按钮 全部 Agent（29）
++				181 按钮 (expanded) 分组, Secondary Actions: Collapse
++				182 按钮 新建分组
++				183 按钮 验收 0928 4
++				184 按钮 验收 0928的操作
++				185 按钮 原型验收 0930 2
++				186 按钮 原型验收 0930的操作
++				187 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				188 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				189 container 对话动态
++					190 按钮 9 新回复
++				191 按钮 文件保存（1）
++				192 按钮 设置
++				193 文本 属于你的 Agent，在一处相遇。
++				194 container
++					195 按钮 返回
++					196 标题 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受, Value: 1
++						197 文本 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
++					198 text farfold-rework-m_ap16a1 · 未在运行
++					199 按钮 查找当前对话
++					200 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					201 按钮 浏览器
++					202 弹出式按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受的操作
++					203 text 你  ·  11:09
++					204 按钮 复制消息
++					205 弹出式按钮 消息操作
++					206 text FARFOLD_REWORK_A47A6652_20261010：这是一次范围受限的文件生成验证。
+只在当前工作文件夹 /private/tmp/farfold-rework-m_ap16a1 中创建 deliverable.md。不得读取、写入或修改其他文件，不访问网络，不启动额外 Agent。用 UTF-8 写入下面完整内容，保留空行和末尾换行：
+
+# FARFOLD_REWORK_A47A6652
+
+KEEP_BEFORE_A47A6652
+
+TARGET_A47A6652: draft
+
+KEEP_AFTER_A47A6652
+
+完成后只回复这个 Markdown 文件链接：[查看文件](/private/tmp/farfold-rework-m_ap16a1/deliverable.md)。 Codex  · 11:09
++					207 按钮 复制消息
++					208 弹出式按钮 消息操作
++					209 文本 我将仅在指定工作文件夹中写入 
++					210 文本 deliverable.md
++					211 文本 。
++					212 摘要 最近收到的扩展字段, Value: off
++						213 文本 最近收到的扩展字段
++					214 摘要 查看处理过程 1 步, Value: off
++						215 文本 查看处理过程
++						216 文本 1 步
++					217 text Codex  · 11:09
++					218 按钮 复制消息
++					219 弹出式按钮 消息操作
++					220 按钮 查看文件, Help: /private/tmp/farfold-rework-m_ap16a1/deliverable.md
++					221 摘要 最近收到的扩展字段, Value: off
++						222 文本 最近收到的扩展字段
++					223 text ✓  已完成 11:09
++					224 按钮 本轮产物 1 ▸
++					225 text 你  ·  11:12
++					226 按钮 复制消息
++					227 弹出式按钮 消息操作
++					228 text REWORK_A47A6652_PREFIX：只执行下方这一条版本意见，保持本次测试的其他限制。
+
+关于 "/private/tmp/farfold-rework-m_ap16a1/deliverable.md"（当时查看的内容，第 5 行，字节 49–72（从 0 起，末位不含），位置未重新核对）：
+文件 SHA-256：9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def
+REWORK_A47A6652_CHANGE：先核对本文件 SHA-256 与上述摘要完全一致；不一致就停止修改并说明。只将第 5 行 TARGET_A47A6652: draft 改为 TARGET_A47A6652: ready。其他所有字节、空行和末尾换行保持不变；不得读取或修改其他文件、不访问网络、不启动额外 Agent。完成后只回复同一文件链接。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。 Codex  · 11:12
++					229 按钮 复制消息
++					230 弹出式按钮 消息操作
++					231 文本 我会先核对该文件的 SHA-256；仅在完全匹配时修改指定行，并保留其他所有字节。
++					232 摘要 最近收到的扩展字段, Value: off
++						233 文本 最近收到的扩展字段
++					234 container (expanded) Secondary Actions: Collapse
++						235 摘要 查看处理过程 1 步, Value: on
++							236 文本 查看处理过程
++							237 文本 1 步
++						238 text ✓ 运行了命令
++						239 按钮 (expanded) 技术详情, Secondary Actions: Collapse
++						240 按钮 查看内容
++						241 文本 <1s
++						242 container
++							243 text 执行 ·  python3 -I -S -c 'import hashlib from pathlib import Path p = Path("/private/tmp/farfold-rework-m_ap16a1/deliverable.md") data = p.read_bytes() expected = "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def" actual = hashlib.sha256(data).hexdigest() if actual != expected: raise SystemExit("SHA-256 不一致，未修改。实际摘要：" + actual) lines = data.splitlines(keepends=True) if len(lines) < 5 or lines[4] != b"TARGET_A47A6652: draft\n": raise SystemExit("第 5 行内容不匹配，未修改。") lines[4] = b"TARGET_A47A6652: ready\n
++						244 文本 命令
++						245 文本 python3 -I -S -c 'import hashlib
+from pathlib import Path
+p = Path("/private/tmp/farfold-rework-m_ap16a1/deliverable.md")
+data = p.read_bytes()
+expected = "9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def"
+actual = hashlib.sha256(data).hexdigest()
+if actual != expected:
+    raise SystemExit("SHA-256 不一致，未修改。实际摘要：" + actual)
+lines = data.splitlines(keepends=True)
+if len(lines) < 5 or lines[4] != b"TARGET_A47A6652: draft\n":
+    raise SystemExit("第 5 行内容不匹配，未修改。")
+lines[4] = b"TARGET_A47A6652:
++						246 文本 执行目录
++						247 文本 /private/tmp/farfold-rework-m_ap16a1
++						248 摘要 完整输入, Value: off
++							249 文本 完整输入
++						250 文本 {
+  "type": "terminal",
+  "terminalId": "exec-ce3b1717-78fa-42ae-b1ca-cb24359834a3"
+}
++						251 文本 {
+  "formatted_output": "摘要匹配；指定行已修改；写入后字节核验通过。\n",
+  "exit_code": 0
+}
++						252 摘要 最近收到的扩展字段, Value: off
++							253 文本 最近收到的扩展字段
++					254 text Codex  · 11:12
++					255 按钮 复制消息
++					256 弹出式按钮 消息操作
++					257 按钮 查看文件, Help: /private/tmp/farfold-rework-m_ap16a1/deliverable.md
++					258 摘要 最近收到的扩展字段, Value: off
++						259 文本 最近收到的扩展字段
++					260 text ✓  已完成 11:12
++					261 按钮 本轮产物 1 ▸
++					262 摘要 最近收到的扩展字段, Value: off
++						263 文本 最近收到的扩展字段
++					264 摘要 未发送的文件意见（1）, Value: off
++						265 文本 未发送的文件意见（1）
++					266 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						267 文本 发送消息…
++					268 弹出式按钮 添加文件或图片
++					269 弹出式按钮 模型与来源
++					270 文本 思考
++					271 弹出式按钮 思考深度: Ultra, Help: Ultra
++					272 弹出式按钮 对话权限
++					273 弹出式按钮 命令与模板
++					274 按钮 (disabled) 发送
++					275 弹出式按钮 对话用量
++					276 文本 Enter 发送 · Shift Enter 换行
++					277 container 对话内容面板
++						278 分离器 调整内容宽度, Value: 510
++						279 container 对话内容面板
++							280 开关按钮 文件与输出, Value: on
++							281 开关按钮 网页, Value: off
++						282 container 文件
++							283 文本 deliverable.md
++							284 按钮 返回文件与输出
++							285 按钮 放大内容
++							286 按钮 收起对话内容
++							287 摘要 文件位置, Value: off
++								288 文本 文件位置
++							289 按钮 重新读取
++							290 按钮 (collapsed) 修改意见, Secondary Actions: Expand
++							291 按钮 用默认应用打开
++							292 按钮 在文件夹中显示
++							293 按钮 完整文件另存为…
++							294 container 文件保存状态
++								295 文本 保存完整原文件。离开此页面不会取消保存；取消请求不代表已停止。
++								296 container
++									297 text deliverable.md  ·  /private/tmp/farfold-rework-m_ap16a1/exports/deliverable-copy.md
++								298 文本 正在保存完整文件…
++								299 文本 0 / 93 字节
++								300 按钮 核对保存结果
++								301 按钮 请求取消保存
++							302 开关按钮 排版, Value: on
++							303 开关按钮 原文, Value: off
++							304 标题 FARFOLD_REWORK_A47A6652, Value: 1
++								305 文本 FARFOLD_REWORK_A47A6652
++							306 文本 KEEP_BEFORE_A47A6652
++							307 文本 TARGET_A47A6652: ready
++							308 文本 KEEP_AFTER_A47A6652
++							309 container (expanded) Secondary Actions: Collapse
++								310 摘要 其他内容版本的意见, Value: on
++									311 文本 其他内容版本的意见
++								312 文本 意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。
++								313 container
++									314 text /private/tmp/farfold-rework-m_ap16a1/deliverable.md  ·  保留的意见 1
++								315 文本 关于 /private/tmp/farfold-rework-m_ap16a1/deliverable.md（当时查看的内容）：
+文件 SHA-256：9f318df10fdbe7b0fe10f4fe8f25bd90e985cd4c428283ca18a3f4690f412def
+REWORK_A47A6652_RETAIN_V1：这条意见仅保存，不发送；应继续属于修改前的文件版本。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++								316 按钮 加入输入框
++								317 按钮 复制意见
++	318 关闭按钮
++	319 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
++	320 最小化按钮
++	321 文本 Farfold
+The focused UI element is 152 HTML内容 Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,18 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 134-136, 140-142
+~									133 数字栏 (settable) 起始行, Value: 5
++										144 步进器 0
++											145 未知
++											146 未知
+~									139 数字栏 (settable) 结束行, Value: 5
++										147 步进器 0
++											148 未知
++											149 未知
++							150 文本 已选择第 5 行中的文字
+~							127 按钮 对此选段提意见
+Selected text: ```
+TARGET_A47A6652: draft
+
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

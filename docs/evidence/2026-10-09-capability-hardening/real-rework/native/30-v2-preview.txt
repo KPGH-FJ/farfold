@@ -1,0 +1,17 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 121-138
++							170 按钮 重新读取
++							171 按钮 (collapsed) 修改意见, Secondary Actions: Expand
++							172 按钮 用默认应用打开
++							173 按钮 在文件夹中显示
++							174 按钮 完整文件另存为…
++							175 开关按钮 排版, Value: on
++							176 开关按钮 原文, Value: off
++							177 标题 FARFOLD_REWORK_A47A6652, Value: 1
++								178 文本 FARFOLD_REWORK_A47A6652
++							179 文本 KEEP_BEFORE_A47A6652
++							180 文本 TARGET_A47A6652: ready
++							181 文本 KEEP_AFTER_A47A6652
++							182 摘要 其他内容版本的意见, Value: off
++								183 文本 其他内容版本的意见
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,65 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 324, 327-332
+~			322 container
+~				323 图像 Farfold
++				324 按钮 收起导航
+~				325 按钮 新对话 ⌘ N
+~				326 按钮 搜索对话 ⌘ K
++				327 container 所有对话
++					328 按钮 所有对话 121
++					329 按钮 收藏 0
++					330 按钮 探索 Agent
++				331 按钮 (expanded) 最近, Secondary Actions: Collapse
++				332 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+~				333 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				334 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				335 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				336 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				337 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				338 按钮 FARFOLD_LARGE_F71A3434_20261010。不要调用任何工具
++				339 按钮 FARFOLD_DOCX_AF66F006_20261010。不要调用任何工具，
++				340 按钮 查看全部
++				341 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				342 按钮 管理我的 Agent
++				343 按钮 Codex 25
++				344 按钮 OpenCode 26
++				345 按钮 Grok Build 1
++				346 按钮 Poolside 1
++				347 按钮 MiniMax Code 1
++				348 按钮 Qwen Code 1
++				349 按钮 全部 Agent（29）
++				350 按钮 (expanded) 分组, Secondary Actions: Collapse
++				351 按钮 新建分组
++				352 按钮 验收 0928 4
++				353 按钮 验收 0928的操作
++				354 按钮 原型验收 0930 2
++				355 按钮 原型验收 0930的操作
++				356 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				357 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				358 container 对话动态
++					359 按钮 9 新回复
++				360 按钮 文件保存（1）
++				361 按钮 设置
++				362 文本 属于你的 Agent，在一处相遇。
++				363 container
++					364 标题 新对话, Value: 1
++						365 文本 新对话
++					366 文本 从一个想法开始
++					367 标题 今天，想完成什么？, Value: 1
++						368 文本 今天，想完成什么？
++					369 text 先写下目标，再和合适的 Agent 一起推进。 正在创建会话…
++					370 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
++						371 文本 把想法放在这里…
++					372 弹出式按钮 添加文件或图片
++					373 弹出式按钮 选择 Agent
++					374 弹出式按钮 模型与来源
++					375 按钮 (disabled) 发送
++					376 text Enter 发送 · Shift Enter 换行 工作文件夹
++					377 按钮 更换工作文件夹, Help: /private/tmp/farfold-rework-m_ap16a1
++					378 按钮 移除文件夹
++					379 文本 仅作为工作位置，权限另行确认
++					380 按钮 计划一次旅行
++					381 按钮 把想法写清楚
++					382 按钮 一起读点东西
++					383 按钮 发现更多 Agent
+The focused UI element is 360 按钮 文件保存（1）

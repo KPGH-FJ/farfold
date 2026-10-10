@@ -1,0 +1,29 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 365-366, 368, 371, 374, 376
+~					364 按钮 返回
++					365 标题 新会话, Value: 1
++						366 文本 新会话
+~					367 text farfold-rework-m_ap16a1 · 未在运行
++					368 按钮 查找当前对话
+~					369 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+~					370 按钮 浏览器
++					371 弹出式按钮 新会话的操作
+~					372 文本 第一条消息即开始会话
+~					373 摘要 最近收到的扩展字段, Value: off
++						374 文本 最近收到的扩展字段
+~					375 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
++						376 文本 把想法放在这里…
+~					377 弹出式按钮 添加文件或图片
+~					378 弹出式按钮 选择 Agent
+~					379 弹出式按钮 模型与来源
+~					380 文本 思考
+~					381 弹出式按钮 思考深度: Ultra, Help: Ultra
+~					382 弹出式按钮 对话权限
+~					383 弹出式按钮 更多设置
++					384 弹出式按钮 命令与模板
++					385 按钮 (disabled) 发送
++					386 text Enter 发送 · Shift Enter 换行 工作文件夹
++					387 按钮 更换工作文件夹, Help: /private/tmp/farfold-rework-m_ap16a1
++					388 按钮 移除文件夹
++					389 文本 仅作为工作位置，权限另行确认
+The focused UI element is 360 按钮 文件保存（1）

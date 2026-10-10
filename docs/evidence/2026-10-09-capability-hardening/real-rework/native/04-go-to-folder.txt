@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 83-225
+~81 表单 ID: GoToWindow, Secondary Actions: Raise
+~	82 按钮 Description: 关闭, ID: CloseButton
++	83 文本栏 (settable) Value: /var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-large-file-xt3jnvyw, ID: PathTextField
++	84 滚动区
++		85 表格
++			86 row (selectable)
++				87 单元格
++					88 文本 前往：
++			89 row (selected)
++				90 单元格 (selected)
++					91 列表 (disabled) Description: 路径, ID: /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-large-file-xt3jnvyw
++						92 text Value: private var folders zy 7b1d9d0955bdjkj8ql938qcc0000gn T farfold-large-file-xt3jnvyw, Secondary Actions: 打开
+Selected text: ```
+/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-large-file-xt3jnvyw
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

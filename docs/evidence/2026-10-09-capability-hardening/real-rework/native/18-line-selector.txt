@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 121-126
+~							118 container (expanded) Secondary Actions: Collapse
+~								119 摘要 按行选择, Value: on
++								130 文本 可选第 1–7 行
++								131 container
++									132 文本 起始行
++									133 数字栏 (settable) 起始行, Value: 1
++										134 步进器 0
++											135 未知
++											136 未知
++								137 container
++									138 文本 结束行
++									139 数字栏 (settable) 结束行, Value: 1
++										140 步进器 0
++											141 未知
++											142 未知
++								143 按钮 选择这些行
+The focused UI element is 119 摘要 按行选择, Value: on
