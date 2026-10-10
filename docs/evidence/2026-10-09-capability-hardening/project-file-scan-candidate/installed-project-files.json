@@ -1,0 +1,346 @@
+{
+  "recordedAtUtc": "2026-10-10T12:44:41.043948+00:00",
+  "sourceCommit": "3632acb0ac8df3e1178bdf030908befd53c171af",
+  "installedApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "sourceInputs": 1375,
+  "sourceInputsUnchangedThroughNormalQuit": true,
+  "agent": "Codex",
+  "model": "6 Astra",
+  "reasoning": "Ultra",
+  "permission": "Approve for me; unchanged",
+  "promptDispatches": 0,
+  "newPersistedConversations": 0,
+  "observations": {
+    "H11": [
+      "Native small-folder scan listed three intended files; node_modules excluded and one skipped directory disclosed.",
+      "Chinese, spaces, # and % filename selected by narrowing and Enter; explicit fallback selected the excluded file.",
+      "Cancelling the OS file picker retained the query and existing attachment.",
+      "The 2200-file fixture reached the 2000-file scan limit; file-count reason and other budgets were visible.",
+      "The first 50 matches notice, narrowing, explicit rescan and selecting file-0199.txt worked in the installed window.",
+      "Three attachment URIs survived normal quit/restart; explicit retain rechecked readability and kept all three.",
+      "Only these three controlled attachments were removed afterward; empty draft and original TR folder restored."
+    ],
+    "NEW-12": [
+      "One existing controlled worktree was explicitly archived after association and external-use review, then restored.",
+      "After normal quit/restart the completed restore correctly required rechecking.",
+      "Explicit recheck reported restored at the original location, preserved the draft, and released maintenance controls.",
+      "No repeated restore, directory move or Agent prompt was dispatched during the cold recheck."
+    ]
+  },
+  "dataReview": {
+    "oldCompleteSessionRowsExact": 130,
+    "oldUnsentInputsExact": 8,
+    "oldFeedbackGroupsExact": 8,
+    "oldQueuedGroupsExact": 3,
+    "wholeUnsentObjectExact": true,
+    "otherSettingsExact": true,
+    "catalogueDelta": "Only the controlled location revision and its latest create-to-restore operation changed; independent values/material review is referenced.",
+    "sqliteMethod": "Only disposable second copies opened; original main/WAL/SHM captured while the formal app was closed."
+  },
+  "normalExit": true,
+  "forcedExit": false,
+  "activeFormalProcessesAtEnd": 0,
+  "duplicateBuildAppRemoved": true,
+  "evidenceCorrections": [
+    "Actual wire fixture has 2079 lines, not the earlier helper description of 2085; original SHA is unchanged.",
+    "Selected file-0199.txt has 16 bytes, not the intermediate handoff claim of 17; the original fixture SHA matches.",
+    "Capture 17 shows only the attachment review dialog despite its filename; capture 18 proves successful retention.",
+    "A candidate verifier invocation missing its third argument and a stale native AX index were driver errors; neither is product success or a product defect."
+  ],
+  "remaining": [
+    "Native scans finished too quickly to exercise cancellation; cancellation and delayed-worker tests remain engineering/controlled-browser evidence only.",
+    "This is macOS local-file and one worktree cold-restore proof, not every filesystem or concurrency failure path.",
+    "Attachment persistence stores URIs, not copies of local text; no content was sent to an Agent in this slice.",
+    "Historical H17 EPERM/exit24 does not establish port conflict, successful service startup or recovery.",
+    "P39/P40/P41, other open plan conditions, 29-Agent eight-standard coverage and Windows remain unfinished."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-10-project-files-native/01-started.ax.txt",
+      "sha256": "bd1f6e8056c2bdb608ce17059388bb73864593091a8c3c0af3cf5c66927baf94",
+      "bytes": 3366
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/02-small-scan.ax.txt",
+      "sha256": "c067999261cf694ecbfb432643e7e82ef6ce78f9c0315e05da2e8372a8c48bc3",
+      "bytes": 3837
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/03-small-scope.ax.txt",
+      "sha256": "26e58d53e634fcb044ec7f7641bbca7d5d0868295211af8a6bc961cb4a3ab635",
+      "bytes": 4326
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/04-unicode-file-selected.ax.txt",
+      "sha256": "58f77e003d94123c384091295f476f3b858bfd5d63c006ed5f31782747e5c1d1",
+      "bytes": 3701
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/05-picker-cancel-preserved.ax.txt",
+      "sha256": "d22fd187f43624955bb3aaab54f4b08261f71d0b70d3ff589619be98013bdcf7",
+      "bytes": 3873
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/06-explicit-file-selected.ax.txt",
+      "sha256": "5dd95ee46fbe6a794551f658ef30c3f7a21641de865344dab66e83ce150ccb7f",
+      "bytes": 3936
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/07-large-scan.ax.txt",
+      "sha256": "fb576a0e22aa4d71b1a8021ed869c8efcc93b1a16ab6b8d7446f34dacb716566",
+      "bytes": 4129
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/08-large-scope.ax.txt",
+      "sha256": "cde00362dc47ae98fed8d2a86d2cc79e6c55897704a206d6b2af24632bea4af5",
+      "bytes": 4650
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/09-large-file-selected.ax.txt",
+      "sha256": "de452dabe3e1d883a2a7a7f9d8c00c49bd4e2377b89bccaf511265c16102443a",
+      "bytes": 3831
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/10-archive-impact.ax.txt",
+      "sha256": "70580afdb150c697e4256674a2c05a2564e203cd06758b73261bd4f20eedcf68",
+      "bytes": 6858
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/11-archive-result.ax.txt",
+      "sha256": "cd304dd4229b745b27a004d25fe49ea5f1273d9f7101563377eaf52819bc3f06",
+      "bytes": 6170
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/12-warm-restored.ax.txt",
+      "sha256": "9ee7ca71e7bdebc20a9b2dc96939b58ffadf617862fd45cfd8c02b580b213d92",
+      "bytes": 6063
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/13-before-cold-exit.ax.txt",
+      "sha256": "2ed7894dd3ed5f6c662025ca5fb1006a707aa27bbecf01166c36c715909cc700",
+      "bytes": 3767
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/14-cold-draft-retained.ax.txt",
+      "sha256": "022bb77af077f6f6cd11f8fe368f6d96ca2431eab15e72d737b5f047ca41f813",
+      "bytes": 3896
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/15-cold-restore-unknown.ax.txt",
+      "sha256": "ba52f7c5c8a6d8e60d822b08a6c0b98969808f50a7c8ac9a916d0a66521159a8",
+      "bytes": 6203
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/16-cold-restore-rechecked.ax.txt",
+      "sha256": "9ee7ca71e7bdebc20a9b2dc96939b58ffadf617862fd45cfd8c02b580b213d92",
+      "bytes": 6063
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/17-cold-attachments-verified.ax.txt",
+      "sha256": "2fa2e2abd82a7b911e68de4abe12c59770d6519285968ad01e7067f5ce94ee48",
+      "bytes": 1157
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/18-cold-attachments-retained.ax.txt",
+      "sha256": "8c0fd810826f2c58deabb49c6b420f45addbffd5d9edf391db5177f248631003",
+      "bytes": 3741
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/19-final-idle-original-folder.ax.txt",
+      "sha256": "c1bcb76e0997fa079d141a41fcc47d7557675bb0e907d66a1f4cf11ea67cb7e3",
+      "bytes": 3450
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/01-started.png",
+      "sha256": "070095191745038f8a529ccbdecb9f6d09998cbf382542d0668d49188c7db195",
+      "bytes": 225166
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/02-small-scan.png",
+      "sha256": "7e4fa1854a2a8825c015b5b3b379c9fafe11a8be097eb0c6fc79ff13d7a949f0",
+      "bytes": 277931
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/03-small-scope.png",
+      "sha256": "1eb5df9e4cf79e1742d43eab8edaa52db5d5515b35dd9d7de27ce3fd36c1f0a7",
+      "bytes": 314735
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/04-unicode-file-selected.png",
+      "sha256": "f8617b9c1890b5d26cb7cf36fac9089556d809d51220b4ac1d4004474c6c05ed",
+      "bytes": 247553
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/05-picker-cancel-preserved.png",
+      "sha256": "84e266900e0d5dd4bf83eb4606922f23aecd05c0f6b0539ef53a3155ba4fbb5c",
+      "bytes": 257107
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/06-explicit-file-selected.png",
+      "sha256": "7a80936d93101f1284af5f1bbad380f393c691580ae7125a00515de2482cd974",
+      "bytes": 259831
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/07-large-scan.png",
+      "sha256": "3c26701608b3add42e450ae46300bac4bb853c9685c879fab472e787b566a21f",
+      "bytes": 305215
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/08-large-scope.png",
+      "sha256": "c12a917c92edee4569a2aa65887223f306e66235dbfc7a991a96a241f16a5471",
+      "bytes": 321385
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/09-large-file-selected.png",
+      "sha256": "733a831578936c2a436649e24a32f59abb58f35f13feb42ee8ca26304f7738d0",
+      "bytes": 253977
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/10-archive-impact.png",
+      "sha256": "b180a063826f98f803eb1290e359bd94258325ffad741793362048542d0153c4",
+      "bytes": 344579
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/11-archive-result.png",
+      "sha256": "6dfcd8d0f5971ee18c3e4061e1ccbab7ee6b2b405c9fde64a525f0ed803c666a",
+      "bytes": 332430
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/12-warm-restored.png",
+      "sha256": "fa5d4a4766cba37ddee909d8b2936e8f09f7a5624c562bb317db788948745daa",
+      "bytes": 369581
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/13-before-cold-exit.png",
+      "sha256": "5f7d97d0d429028c0c708566ccde8aad7ef14816cad977aa88228352d4269bf2",
+      "bytes": 241297
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/14-cold-draft-retained.png",
+      "sha256": "0aad24e9528cbc507b582a2e0bb1da6616acd3195b5e24a2c2f9260198c530c4",
+      "bytes": 257827
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/15-cold-restore-unknown.png",
+      "sha256": "2be14d389ef97e67c815692129e62bf1f6452d8bfc54c13f63e390e8a6d49199",
+      "bytes": 325522
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/16-cold-restore-rechecked.png",
+      "sha256": "5a0cae0089ec632a21d3834311dbae36612a6e379e6083f8ae29faf0e4001e74",
+      "bytes": 336145
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/17-cold-attachments-verified.png",
+      "sha256": "4b33caed9e7b3e7508cb83aa3fff22ce1ee69055ed2ddafcc98d2015e25baa7f",
+      "bytes": 207386
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/18-cold-attachments-retained.png",
+      "sha256": "8b904469f249876c0a0e8cf1b868066528d100e6e23ec0db4758f48c5939658e",
+      "bytes": 246006
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/19-final-idle-original-folder.png",
+      "sha256": "7411d8d45fd7c8917acb4e05ddd7a610c4588b662ae0f8f649ff0592824e1a5c",
+      "bytes": 226818
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/fixture-before.json",
+      "sha256": "39bc8afbb572f7d9ff4c5a48b79d278e259023e9da0b71f2972d215450b061f5",
+      "bytes": 210036
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/cold-restore-materials-before.json",
+      "sha256": "ec3cabc37222d5211bd9523f0899d5bda195f10e6b458de0f1315f9616174d5a",
+      "bytes": 12782
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/archive-external-use-observation.json",
+      "sha256": "a8ac00c38a9629fb1a990664d1536c6a7db51b2f113cc2daec84cff148f64f18",
+      "bytes": 435
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/capture-events.json",
+      "sha256": "aeafbffe2aae5dbdf6ee4b95ffe16cbce2ce9964e0a41635bcf5b4339c1d51e0",
+      "bytes": 1585
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/cold-normal-exit.json",
+      "sha256": "a4747b62c89b9cf4baf79c67408f102087f252e91306bd877c4a3ea8c6cda93a",
+      "bytes": 232
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-normal-exit.json",
+      "sha256": "b0fede1299465f89380693f4c0f091bb1c281db2507a58acd297c6ffe2041bb4",
+      "bytes": 310
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/cold-snapshot-independent.json",
+      "sha256": "9e984d59679449cb65f8d8f11188a79480509963a802ef34b5a7b5810e72d1da",
+      "bytes": 10189
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-data-comparison-independent.json",
+      "sha256": "ba3770709263984b0c94658e9543019724a0ab164a63d6c2ba58bfbc99c473f6",
+      "bytes": 10273
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-delta-values-independent.json",
+      "sha256": "7c89d07ea90751b18a566ffc89e8a8a02e2f7ea91a581bda162498785de9af12",
+      "bytes": 29223
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/materials-after.json",
+      "sha256": "e24f1f704b7f12fb75649930392842c5b00fbd16b03cb2b2b5264a5260151a0c",
+      "bytes": 229549
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/freeze-release.json",
+      "sha256": "f266ad7913349d50fd2295feaff85a2b6436082602c066b1809a20cc0566ffd6",
+      "bytes": 349
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/compare_final_snapshot.py",
+      "sha256": "747f95cca11a500851646141e12fe102ff4ec7a4634fad6121ab5aa499884bf0",
+      "bytes": 9832
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate.json",
+      "sha256": "dce1fcd7845a6c870992b5b88b34de1af97a3c36bd659e8efec12cf9acc3a1e6",
+      "bytes": 8188
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate-independent.json",
+      "sha256": "5c481ef408539ff5627c02af72c4c903350ccb1b67e0b7055585fa05f9bce5b0",
+      "bytes": 4502
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate-inputs.json",
+      "sha256": "762550109f8a08b36b184ce85ed2495815e664614c505d30a4b0a5eac2eff3b7",
+      "bytes": 158180
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/installed-data-retention.json",
+      "sha256": "7f6365dd0989b8101101422f6bb9a5b12e391c744cf2d5dbda2e94a834604517",
+      "bytes": 3234
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/install-independent.json",
+      "sha256": "5b13e1b68f89976eb2736ca60646d5609d73128bbb99bc133e0bb4cfea010e9a",
+      "bytes": 10011
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "5ba8ca63cb354915148f15804db7019b48ab48fc4c664c6719cbe2dfe01eeec7",
+      "bytes": 1210
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/helper-line-count-correction.json",
+      "sha256": "5ee5886e5ca4e7de9472c53b6ab3f79323576de892bcd3420f518ab636f052ff",
+      "bytes": 2420
+    }
+  ]
+}

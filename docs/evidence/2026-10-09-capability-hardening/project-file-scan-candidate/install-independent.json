@@ -1,0 +1,204 @@
+{
+  "checkedAtUtc": "2026-10-10T12:27:15.871954+00:00",
+  "sourceCommit": "3632acb0ac8df3e1178bdf030908befd53c171af",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate-independent.json",
+        "sha256": "5c481ef408539ff5627c02af72c4c903350ccb1b67e0b7055585fa05f9bce5b0",
+        "bytes": 4502
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": true,
+      "normalExitObservedBy": "Root; independent review verifies records/hashes, not a second native observation.",
+      "operation": {
+        "path": "output/2026-10-10-project-files-install/install-operation.json",
+        "sha256": "039b298b47afb813d0afa97fc7d21e693a0ac5df176a2914575b0128a3ea62ab",
+        "bytes": 2871
+      },
+      "phase": "installedVerifiedNotLaunched",
+      "copyStarted": true,
+      "dataRetentionComparisonPending": "Historical installer flag; completed aggregate and independent raw manifest checks below close this step."
+    },
+    "completePrivateManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "c8478c656dd1cfa75d1e47205a0c1d1eb6986a3daa42483422566743fab90210",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "c8478c656dd1cfa75d1e47205a0c1d1eb6986a3daa42483422566743fab90210",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "c8478c656dd1cfa75d1e47205a0c1d1eb6986a3daa42483422566743fab90210",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "counts": {
+        "appData": {
+          "directory": 21360,
+          "file": 195450,
+          "special": 0,
+          "symlink": 328
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "special": 0,
+          "symlink": 0
+        },
+        "webkit": {
+          "directory": 152,
+          "file": 100,
+          "special": 0,
+          "symlink": 0
+        }
+      },
+      "allThreeEqual": true,
+      "contentsPrinted": false
+    },
+    "metadataCopyProtection": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "9e400956e7dcce389e8d109e190437fd64d915c8df9d358f6f852544bacd00c6",
+      "rawRowsPrintedOrSaved": false
+    },
+    "formalCandidateExactFiles": {
+      "passed": true,
+      "exactFileCount": 5,
+      "hashes": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "9cdc0ba63a32577adfec68201b10c9bb8e79843fa282bb9f3817a4822f7ba08e",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/_CodeSignature/CodeResources": "0o644"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "path": "src-tauri/target/internal-candidate/2026-10-10-3632acb0/Farfold-0.1.7-3632acb0.zip",
+      "sha256": "6977973ce19d40bfea1a4af3f68929f1a5a15ddc220f82a4cd19ac89ea42077e",
+      "bytes": 13793841,
+      "crc": "passed",
+      "exactFiveContentsAndModes": true
+    },
+    "formalIdentitySignature": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc; no public signing/notarization claim"
+    },
+    "exactCandidateSource": {
+      "passed": true,
+      "commit": "3632acb0ac8df3e1178bdf030908befd53c171af",
+      "inputCount": 1375,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed",
+      "currentBytesAndGitBlobsMatch": true,
+      "engineeringVerification": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/verification.json",
+        "sha256": "c5fcb168d3390ef80961402eab332c5fcb0fbd76397afcd34124ddc0abe46114",
+        "inputs": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/inputs-before.json",
+        "inputsSha256": "762550109f8a08b36b184ce85ed2495815e664614c505d30a4b0a5eac2eff3b7",
+        "inputsAfter": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/inputs-after.json",
+        "inputsAfterSha256": "762550109f8a08b36b184ce85ed2495815e664614c505d30a4b0a5eac2eff3b7",
+        "sourceClosure": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-checks/source-closure.json",
+        "sourceClosureSha256": "073af8cf93a9e16a07ffd5bc9dde1db37f1504deefe7188367167295dd131089",
+        "inputCount": 1375
+      }
+    },
+    "formalProcessAbsent": {
+      "passed": true,
+      "exitCode": 1,
+      "matched": 0
+    },
+    "verificationInputsStable": {
+      "passed": true,
+      "publicAndPrivateReceiptHashesUnchanged": true,
+      "formalCandidateArchiveRechecked": true
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed browser-search ten-check verifier. This NEW-12/H11 invocation binds 83cdf normal-exit, exact independent native comparisons and the exact root-reviewed H17 journey deltas, current seven-command candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate.json": "dce1fcd7845a6c870992b5b88b34de1af97a3c36bd659e8efec12cf9acc3a1e6",
+    "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate-inputs.json": "762550109f8a08b36b184ce85ed2495815e664614c505d30a4b0a5eac2eff3b7",
+    "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/candidate-independent.json": "5c481ef408539ff5627c02af72c4c903350ccb1b67e0b7055585fa05f9bce5b0",
+    "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/installed-data-retention.json": "7f6365dd0989b8101101422f6bb9a5b12e391c744cf2d5dbda2e94a834604517",
+    "output/2026-10-10-project-files-install/install-operation.json": "039b298b47afb813d0afa97fc7d21e693a0ac5df176a2914575b0128a3ea62ab",
+    "output/2026-10-10-project-files-install/normal-exit-observation.json": "4c5164db7bd0ae0942cdf10656311484f12d05bf1ca4a4d0c4dbda2a4304c903",
+    "output/2026-10-10-project-files-install/metadata-backup-receipt.json": "85356e5dfa365238fb541824481ff349d24e9795f08509a5ed594ad74b456b41",
+    "output/2026-10-10-project-files-install/install-data-before-summary.json": "c7ebe9a6f2698efdd72162725d25877c9ddc95e870098e9676e6df054a2a466c",
+    "output/2026-10-10-project-files-install/install-data-preinstall-summary.json": "21ae4f9920d80dc24e3bdb214cf1665750b8d78c472658298aeca93198fa90b0",
+    "output/2026-10-10-project-files-install/install-data-after-summary.json": "21ae4f9920d80dc24e3bdb214cf1665750b8d78c472658298aeca93198fa90b0"
+  },
+  "reviewedHelpers": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/verify-install-independent.py",
+      "sha256": "c8f68625620492d8d294fecfc65a2f16dd2af027b245b98cd99f3adc6ff310ec",
+      "bytes": 26062
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/verify-candidate.py",
+      "sha256": "cf89cbc50ece200a4332b8dce6ee7d60daeef092293ed602056632e8a9ee4650",
+      "bytes": 20792
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/verify-data-retention.py",
+      "sha256": "0b4301eb882019b5be39353b698067a7d49d4af8d0776baa751cf53a264cb48d",
+      "bytes": 4044
+    },
+    {
+      "path": "output/2026-10-10-project-files-install/install_verified_candidate.py",
+      "sha256": "b435a3edb65b0696d5f069db99143431fed20145ace00e16a01823fb97b38657",
+      "bytes": 15635
+    },
+    {
+      "path": "output/2026-10-10-project-files-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-project-files-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    }
+  ],
+  "boundaries": [
+    "Disk/hash/ZIP/signature/manifests and disposable SQLite verification only; root observed Cmd-Q.",
+    "No original database opened with SQLite; no rows or credentials printed or saved.",
+    "No app launch, replacement, quit, or duplicate bundle deletion by this verifier.",
+    "Installed NEW-12 cold restored-location recheck and H11 project-file scan behavior, Windows execution and real-Agent acceptance remain untested in this receipt.",
+    "Snapshot equivalence includes captured WAL; no claim beyond captured stable-source checks and equal installation manifests."
+  ],
+  "nativeReadyAfterRootDuplicateCleanup": true,
+  "completedAtUtc": "2026-10-10T12:27:18.484191+00:00"
+}

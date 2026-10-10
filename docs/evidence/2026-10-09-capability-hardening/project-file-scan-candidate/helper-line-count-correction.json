@@ -1,0 +1,50 @@
+{
+  "checkedAtUtc": "2026-10-10T12:26:51.376269+00:00",
+  "scope": "Narrow narrative correction only; no helper, source, fixture, bundle or prior receipt modified.",
+  "priorReceipts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/helper-preparation.json",
+      "sha256": "f5d1cba5163ab58c25bd4e1a19d87dca1638891b62279a33801a0b42e756e6b5",
+      "bytes": 11393
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/helper-preflight-independent.json",
+      "sha256": "b71041904d3dd6b1c7bc075af6bac2d8cf1c941fa6aa7a09b8940c104d1d8b2b",
+      "bytes": 10743
+    }
+  ],
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json",
+    "sha256": "511206065b0b0447586b03db20443fe56d637bca72cf84cf4c35b87b6528a151",
+    "bytes": 41651,
+    "lines": 2079,
+    "lineCountingMethod": "len(read_text().splitlines())"
+  },
+  "correction": {
+    "priorNarrativeLines": 2085,
+    "actualLines": 2079,
+    "bytes": 41651,
+    "reason": "Earlier handoff summary line-count transcription was copied into helper preparation and independent preflight prose. The exact wire bytes and SHA256 were already correct.",
+    "affectedStatements": [
+      "helper-preparation.json:205",
+      "helper-preflight-independent.json:13"
+    ]
+  },
+  "validatorSourceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/prepare-candidate.py",
+      "sha256": "3c2eaf7d14dcf50903fee7a23a32fd498b10028b393e9a28b800389245cfb564",
+      "bytes": 15841,
+      "lineCountCheckLines": [149, 150]
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/verify-candidate.py",
+      "sha256": "cf89cbc50ece200a4332b8dce6ee7d60daeef092293ed602056632e8a9ee4650",
+      "bytes": 20792,
+      "lineCountCheckLines": [174, 175]
+    }
+  ],
+  "validatorImpact": "Both validators calculate current file line count dynamically and require equality with source-closure lines. Only this exact evidence JSON is exempt from the 1500-line product-source cap. Neither validator uses the erroneous narrative count.",
+  "historicalReceiptsPreserved": true,
+  "boundary": "Read-only byte/source review; no candidate verification, build, installation, application or database operation executed by this correction."
+}
