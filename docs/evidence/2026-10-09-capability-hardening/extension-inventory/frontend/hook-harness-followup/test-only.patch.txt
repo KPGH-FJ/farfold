@@ -1,0 +1,36 @@
+diff --git a/src/runtime/agents.install-options.test.ts b/src/runtime/agents.install-options.test.ts
+index fa681a8a..77568207 100644
+--- a/src/runtime/agents.install-options.test.ts
++++ b/src/runtime/agents.install-options.test.ts
+@@ -27,6 +27,7 @@ vi.mock("react", async (original) => ({
+     ];
+   },
+   useCallback: (callback: unknown) => callback,
++  useMemo: (read: () => unknown) => read(),
+   useEffect: () => {},
+   useRef: (current: unknown) => ({ current }),
+ }));
+diff --git a/src/runtime/agents.remove.test.ts b/src/runtime/agents.remove.test.ts
+index 3168ab7d..9cb7cdc9 100644
+--- a/src/runtime/agents.remove.test.ts
++++ b/src/runtime/agents.remove.test.ts
+@@ -30,6 +30,7 @@ vi.mock("react", async (original) => ({
+     ];
+   },
+   useCallback: (callback: unknown) => callback,
++  useMemo: (read: () => unknown) => read(),
+   useEffect: () => {},
+   useRef: (current: unknown) => ({ current }),
+ }));
+diff --git a/src/runtime/agents.startup-errors.test.ts b/src/runtime/agents.startup-errors.test.ts
+index f0957589..2ebabfd3 100644
+--- a/src/runtime/agents.startup-errors.test.ts
++++ b/src/runtime/agents.startup-errors.test.ts
+@@ -28,6 +28,7 @@ vi.mock("react", async (original) => ({
+     ];
+   },
+   useCallback: (callback: unknown) => callback,
++  useMemo: (read: () => unknown) => read(),
+   useEffect: () => {},
+   useRef: (current: unknown) => ({ current }),
+ }));

@@ -8,12 +8,18 @@
 
 NEW-12已在正式版复验：受控工作树归档、恢复、正常退出与重启后，明确“重新核查”可确认原位置并解除维护阻挡。原130条完整会话、8条输入、8组意见、3组待发及其他设置保持；本轮未发送消息、未新增会话，结束时恢复空白TR草稿并正常退出。材料与清单差异见回执。此前[H17实测](evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/installed-preparation.json)中的端口尝试仍为EPERM/退出24，不改称冲突、启动或恢复成功。
 
-[本轮七项工程检查](evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/verification.json)通过：1,375输入稳定、前端4,508项、Rust1,402项/6忽略。候选9/9及安装10/10独立核对通过，安装前/替换前/替换后三份217,400条数据快照相同。接续P39官方MCP配置查询和统一可见入口；技能、完整工具清单、管理动作、29家、Windows及全量市场目标仍未完成。下方各阶段记录保留当时结果，不覆盖本节最新状态。
+[此前七项工程检查](evidence/2026-10-09-capability-hardening/project-file-scan-checks/run-01/verification.json)通过：1,375输入稳定、前端4,508项、Rust1,402项/6忽略。候选9/9及安装10/10独立核对通过，安装前/替换前/替换后三份217,400条数据快照相同。该正式版本尚不包含下述P39增量。下方各阶段记录保留当时结果，不覆盖本节最新状态。
+
+P39首片已补共用“技能与工具”入口，按官方能力显示可查询范围；当前只支持已核官方Codex入口对用户明确选择目录的MCP配置只读查询。配置清单不等于当前对话实际可用工具；技能、工具详情及官方未报告的配置来源层仍明确不可获知，不读取私有配置补猜、不添加或修改配置，P39/P40/P41均未完成。见[后端实现与独立复核](evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json)及[共用界面受控证据](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json)。
+
+查询使用当前程序选择的短期票据，选择变化后旧票和迟到结果不能冒充新结果。取消或超时后，实际进程与输出尚未结束仍保留清理中状态并阻止新查询；旧结果标为过期。请求记录过期后，只有用户明确结束等待且取得准确回执才释放本次跟踪，结果仍未知，不宣称原命令已取消；[独立反例](evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-independent.json)由1项失败、5项通过复验为6项通过。
+
+P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮失败](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/verification.json)保留：前端28项失败、其余6项检查通过；3份旧React模拟未提供useMemo，[各补一行后28项定向通过](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。受控完整App的WebKit与Chromium各27项通过，目录选择和命令回执由测试控制。本轮待提交、候选核验及安装验证，正式界面和真实官方CLI查询未验，不外推29家、Windows或全量市场目标。
 
 | 层级         | 已有证据                                                             | 不能据此推出                                             |
 | ------------ | -------------------------------------------------------------------- | -------------------------------------------------------- |
-| 产品源码     | NEW-07–12分项实装通过；H11正式扫描/选择分项通过                      | 所有已列能力已补齐                                       |
-| 工程检查     | 本轮1,375输入稳定；七项实际执行，前端4,508项、Rust1,402项/6忽略      | 所有 Agent、系统权限及安装环境通过                       |
+| 产品源码     | NEW-07–12与H11分项实装；P39首片源码及受控界面已补                    | 完整技能/工具管理或所有已列能力已补齐                    |
+| 工程检查     | P39第二轮七项通过；1,396输入稳定，前端4,537项、Rust1,433项/6忽略     | 正式界面、官方CLI、所有Agent与系统环境均通过             |
 | 正式安装     | 当前 `3632acb0` / 0.1.7 arm64；文件选择/冷恢复分项通过；已正常退出   | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
 | 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本 | 跨版本累计成功等于当前 29 家全部通过                     |
 | 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码            | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |

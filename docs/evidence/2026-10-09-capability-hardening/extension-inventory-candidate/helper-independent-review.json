@@ -1,0 +1,154 @@
+{
+  "reviewedAtUtc": "2026-10-10T13:03:01.714271+00:00",
+  "result": "no_adaptation_blocker_found",
+  "scope": "AST/static review plus selected existing JSON/hash assertions only; no helper main/import execution, SQLite, candidate build, installation, App or Agent invocation.",
+  "helpersAstParsed": 8,
+  "sourceCollectors": {
+    "threeDirectScopesEqualAsSets": true,
+    "scopeDirectories": 13,
+    "explicitFiles": 40,
+    "installationVerifierDelegatesToCurrentReadOnlyCandidateCollector": true,
+    "extensionActualWireIncluded": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+      "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00",
+      "bytes": 1303
+    },
+    "engineeringInventory": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/inputs-before.json",
+      "sha256": "64b187827181448f99dc8eb4882751e38b5a0f718e00ea6de23b77cb6c02e2d7",
+      "bytes": 160754,
+      "inputCount": 1396,
+      "pathSetEqualsAllThreeCollectors": true,
+      "finalEngineeringSuccessNotAssumed": true
+    }
+  },
+  "priorInstalledBaseline": {
+    "commit": "3632acb0ac8df3e1178bdf030908befd53c171af",
+    "fiveNormalExitReferencesMatch": true,
+    "selectedPureJsonAssertionsPassed": true,
+    "method": "47 source statements selected from the prior-normal-exit/data-evidence block were AST checked for read-only JSON/hash/pure operations and evaluated against existing receipts. Neither verifier module nor main was imported or invoked.",
+    "completeOldSessionRows": 130,
+    "unsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "wholeUnsentExact": true,
+    "addedConversations": 0,
+    "promptDispatches": 0,
+    "expectedCatalogueDelta": "Only one controlled location revision 3→7 and latest operation create→restore; final maintenanceActive=false. Durable historical warm/cold flags are not current activity proof."
+  },
+  "beforeSnapshot": {
+    "entries": 217400,
+    "sha256": "1c6d32ac152eb2275a3a2ac9540d3e0241a3706c66482bebd9025d829e45559b",
+    "correctSummaryName": true,
+    "manifestBytesRehashed": true,
+    "individualEntriesNotReparsedHere": true,
+    "preinstallAndAfterNotYetClaimed": true
+  },
+  "gatesReviewed": [
+    "Preparation requires seven actual exit-0 commands and stable inventory/log hashes; source closure exact changed files and retained proofs must match 3632 baseline.",
+    "Exact requested commit and disk source bytes checked before/after build; formal baseline unchanged. Candidate verifier independently checks source, ZIP, signature and receipt stability.",
+    "Installer binds exact candidate receipts, five approved files, archive and current source; normal exit and preinstall manifest required, process absence checked immediately before copy.",
+    "Install verifier checks complete before/preinstall/after manifests and original captured main/WAL/SHM hashes; SQLite uses only second disposable copies.",
+    "Cleanup is separate and removes only the exact verified duplicate build bundle after install-independent passed."
+  ],
+  "adaptationNotes": [
+    "Backup and snapshot helper bytes are unchanged from the prior reviewed slice. Cleanup changes only evidence directory.",
+    "Initial local inventory checker incorrectly required equal TOP ordering; path sets are identical. Two AST-check allowlist omissions stopped before evaluating JSON checks. These were review-checker failures, not helper/product failures.",
+    "Root corrected stale NEW-12/H11 sourceScope prose to P39, retaining old/new hashes separately; no validation logic changed.",
+    "Root renamed before-summary.json after matching the completed raw manifest digest; no old filename remains."
+  ],
+  "remaining": [
+    "Await final seven-command engineering result and source closure, then exact commit/candidate build.",
+    "Run candidate nine checks only after preparation completion; run install ten checks only after root installation and all retention manifests complete.",
+    "Native official CLI inventory behavior, actual cancellation and wider P39/P40/P41/Windows acceptance are not established by this review."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/prepare-candidate.py",
+      "sha256": "11fcc4f27cb74abd0358ae2b6dca77bdb4a9268841573d75e3e3f7b15cd52597",
+      "bytes": 15922
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/verify-candidate.py",
+      "sha256": "b3cb868d2faf22ec35849bf6d4564670bffdf66c21a4c2f15d1e0a7977e07016",
+      "bytes": 20893
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/verify-data-retention.py",
+      "sha256": "f56af0b5c59298bd303ce1573706371ed68a5dc955a454b0b72fee18683cd183",
+      "bytes": 4035
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/verify-install-independent.py",
+      "sha256": "413571162b1f96dacaa59d8287cb70055a0ece339a0955ce1622f93c41501d71",
+      "bytes": 30494
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/install_verified_candidate.py",
+      "sha256": "3ff953554af14e448631a94f97c676484df77069eae5b228290570714599f3f6",
+      "bytes": 15745
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/cleanup_duplicate.py",
+      "sha256": "8649b13b468f6836719ee359e4bc8f86e93ee77d3964f4255d32bfee2c6daf8f",
+      "bytes": 2080
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/normal-exit-observation.json",
+      "sha256": "d6637c535fdf6b633266102b4ac031b1140da27e34ca48245019df405d9de903",
+      "bytes": 1372
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-install/install-data-before-summary.json",
+      "sha256": "f6ddb3eb86bd58071fe8c777468801c183e973bba2a622d638c96c395c75b054",
+      "bytes": 307
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-checks.py",
+      "sha256": "7e9b5ae692b36f1279aa1efdf40bd9d560a118fca3eb02dde6cc6570eb77f5dc",
+      "bytes": 5164
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-normal-exit.json",
+      "sha256": "b0fede1299465f89380693f4c0f091bb1c281db2507a58acd297c6ffe2041bb4",
+      "bytes": 310
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/project-file-scan-candidate/installed-project-files.json",
+      "sha256": "446c635791ef4ad5d0303af9ba901995f56bc1bcdf647f5fde931cfa779384ab",
+      "bytes": 15285
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-data-comparison-independent.json",
+      "sha256": "ba3770709263984b0c94658e9543019724a0ab164a63d6c2ba58bfbc99c473f6",
+      "bytes": 10273
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/final-delta-values-independent.json",
+      "sha256": "7c89d07ea90751b18a566ffc89e8a8a02e2f7ea91a581bda162498785de9af12",
+      "bytes": 29223
+    },
+    {
+      "path": "output/2026-10-10-project-files-native/freeze-release.json",
+      "sha256": "f266ad7913349d50fd2295feaff85a2b6436082602c066b1809a20cc0566ffd6",
+      "bytes": 349
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/helper-description-correction.json",
+      "sha256": "65bbf48f01df512a60050f30241dcb4fc97746482dd80995a63a8b48c5a884ef",
+      "bytes": 599
+    }
+  ]
+}

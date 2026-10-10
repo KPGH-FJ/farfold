@@ -1,0 +1,20 @@
+{
+  "scope": "Actual controlled Rust stdout serialization parsed by production TypeScript. No real Agent invocation.",
+  "stdout": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.txt",
+    "sha256": "f148a20b4c129440d056244c8148d639b74eac6d4aba0e4bb90d278bfd7e1c24"
+  },
+  "wire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+    "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00"
+  },
+  "uniqueMarker": true,
+  "jsonEqual": true,
+  "values": ["capabilities", "running", "ready", "earlyCancellation"],
+  "tests": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/targeted-final.txt",
+    "sha256": "7da8410ae8616dbd24883719b90ea2e569a597425780ae0f53a762fb1a63e8ca",
+    "fourActualWireTestsPassed": true
+  },
+  "boundary": "Capability sample is unavailable/null selectionId. Ready sample is own shell process output decoded by production Rust; not an available real Agent capability or real MCP connection."
+}

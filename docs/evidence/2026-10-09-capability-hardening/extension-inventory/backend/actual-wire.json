@@ -1,0 +1,52 @@
+{
+  "capabilities": {
+    "selectionId": null,
+    "mcpInventory": {
+      "availability": "unavailable",
+      "source": null,
+      "reason": "notReviewed"
+    },
+    "skillsInventory": "unavailable",
+    "toolInventory": "unavailable"
+  },
+  "running": {
+    "requestId": "00000000-0000-4000-8000-000000000001",
+    "agentId": "fixture",
+    "cwd": "/tmp",
+    "state": "running",
+    "settled": false
+  },
+  "ready": {
+    "requestId": "00000000-0000-4000-8000-000000000001",
+    "agentId": "fixture",
+    "cwd": "/tmp",
+    "state": "ready",
+    "settled": true,
+    "snapshot": {
+      "observedAtMs": 1791636615945,
+      "scope": "officialCliConfigurationForDirectory",
+      "source": "officialCli",
+      "complete": true,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "id": 0,
+          "name": "example",
+          "transport": "stdio",
+          "reportedEnabled": false,
+          "reportedAuth": "notLoggedIn",
+          "origin": "unreported",
+          "configurationLayer": "unreported",
+          "connection": "unverified",
+          "tools": "unreported"
+        }
+      ]
+    }
+  },
+  "earlyCancellation": {
+    "requestId": "00000000-0000-4000-8000-000000000002",
+    "agentId": "early",
+    "cancelRequested": true,
+    "operation": null
+  }
+}

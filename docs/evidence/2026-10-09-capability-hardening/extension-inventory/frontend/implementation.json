@@ -1,0 +1,290 @@
+{
+  "status": "frontend source and controlled integration verified; not installed/real Agent acceptance",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/source-checkpoint.json",
+    "sha256": "89cdfa0cb8a1d0965881189f2797fe80b61354201e497ec28525b7a98008f31b"
+  },
+  "sourceCount": 16,
+  "implementation": [
+    "Shared AgentDetails capability-driven MCP inventory; no Agent-name branch or private configuration writes.",
+    "Memory-only opaque selection owner follows exact launch/environment row; backend selectionId ticket is supplied for explicit inventory read only.",
+    "Exact request status/cancel, closed-owner retirement, old scoped snapshot marked stale, no automatic retry.",
+    "Unknown status followed by user-explicit exact cancellation-null can end UI tracking; no fabricated success/cancelled state and late result cannot publish.",
+    "Capability StrictMode transient mount is retired before querying, avoiding unused duplicate admission tickets."
+  ],
+  "targeted": {
+    "initial": {
+      "files": 6,
+      "passed": 30
+    },
+    "final": {
+      "files": 7,
+      "passed": 34,
+      "actualRustWireCases": 4
+    },
+    "independentExpiredTracking": {
+      "red": 1,
+      "redOtherPassed": 5,
+      "green": 6
+    },
+    "typecheck": {
+      "first": "failed only test mock call tuple typing; raw retained; corrected test types",
+      "second": 0,
+      "final": 0
+    },
+    "ownedFormatExit": 0
+  },
+  "browser": {
+    "initialWebKit": {
+      "passed": 22,
+      "source": "before expired tracking/UI completion followup; original source bytes retained"
+    },
+    "finalWebKit": {
+      "passed": 27,
+      "stableOwnedSources": 16
+    },
+    "finalChromium": {
+      "passed": 27,
+      "stableOwnedSources": 16
+    },
+    "actualComponents": [
+      "App",
+      "StorageStartup",
+      "DraftStartup",
+      "AgentHub",
+      "AgentDetails",
+      "AgentExtensionInventory",
+      "useAgents registry owner",
+      "production controller and strict IPC parsers"
+    ],
+    "controlledBoundary": "Native IPC, directory chooser, registered fixture Agents, catalogue events and deferred request results are mocked. No actual Agent/config/CLI/installed App/DB used. Unknown TTL status is simulated rather than waiting five minutes. Backend actual active/tombstone rules are separately tested by backend owner.",
+    "inputProof": "Per journey hashes cover own frontend source and four actual harness inputs, not an assertion that every imported repository file was independently snapshotted. Root whole-source engineering checks remain separate.",
+    "interaction": [
+      "explicit capability/choose/query stages",
+      "exact ticket and cwd",
+      "old scoped snapshot on failed reread",
+      "cancel ack is not terminal",
+      "close/reopen unresolved query",
+      "late reply refuses new-owner publication",
+      "unrelated Agent catalogue change does not retire current request",
+      "current Agent environment change retires owner",
+      "selectionChanged requires explicit capability refresh",
+      "pending cleanup blocks successor and retains status/cancel",
+      "malformed secret-shaped payload rejected",
+      "unknown status alone blocks; explicit absent cancellation retires tracking only",
+      "retired late read cannot replay or publish",
+      "late capability from closed A cannot authorize B",
+      "StrictMode initial capability only once",
+      "keyboard Enter chooser and cancel; modal focus restoration",
+      "720x600 actual dialog and local list scroll",
+      "unreviewed capability has no query action",
+      "draft/cwd exact; no Agent open/prompt"
+    ],
+    "visualInspection": [
+      "webkit-first-narrow.png",
+      "webkit-final-narrow.png",
+      "chromium-final-narrow.png"
+    ],
+    "noPageErrors": true,
+    "privateBrowsersClosed": true
+  },
+  "wireBoundary": "Four actual serialized Rust values equal the unique raw stdout marker. Capability is unavailable with null selectionId. Ready is real controlled shell output through production process/decoder/Request; no real official Agent capability or MCP server connection claim.",
+  "formatPreservation": "Browser raw .txt and executed harness .txt retain original bytes. Maintained .json has identical parsed value; readable harness copies were only Prettier formatted after execution. Historical first-run source/hash boundary is retained.",
+  "remaining": [
+    "installed UI and official CLI verification",
+    "Windows surface",
+    "skills and concrete tools inventory",
+    "MCP connection/tool/session effectiveness",
+    "management/add/configuration actions; P39/P40/P41 and full Agent scope remain incomplete"
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/cleanup.json",
+    "sha256": "78798b1e177f8c4e350d34c8304b21dc945a0e632f9ba73a0bff4f3e2b82c65c"
+  },
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/source-checkpoint.json",
+      "sha256": "89cdfa0cb8a1d0965881189f2797fe80b61354201e497ec28525b7a98008f31b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/wire-identity.json",
+      "sha256": "a81244a28402c9a02a066750aaf2ff95158a53e94a4bb19f208a505813810f1d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/targeted-first.txt",
+      "sha256": "bb2ad2578e37bedd7ff4a2456c81f9a051f67651bdfb8dcd9b51c85146b2a3aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/targeted-final.txt",
+      "sha256": "7da8410ae8616dbd24883719b90ea2e569a597425780ae0f53a762fb1a63e8ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/typecheck-first.txt",
+      "sha256": "3997cf1582637814328df16e1a4beb1335c07d27e99d6b9d4c33faf1d48a020d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/typecheck-second.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/expired-tracking-green.txt",
+      "sha256": "1feb9a90ec81e74a79e22c8348b6455c7338f1d006732c6ad5915f8962793f03"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/cleanup.json",
+      "sha256": "78798b1e177f8c4e350d34c8304b21dc945a0e632f9ba73a0bff4f3e2b82c65c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-red.txt",
+      "sha256": "253e235a3f02d7d0a63848cb7f1bffe8d04f2eeed9f1014e8a79c6dd6358a577"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts",
+      "sha256": "3bf3fe7f10728f350565a1ef487ed007e0576e54c2eef9f02cf66d73429dc118"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts",
+      "sha256": "d921466885d7793ff8936da676be203bb1208a8c0cc21a97b78e2de141038253"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+      "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.txt",
+      "sha256": "f148a20b4c129440d056244c8148d639b74eac6d4aba0e4bb90d278bfd7e1c24"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/chromium-final-narrow.png",
+      "sha256": "7194c068ead43bc79c8df5bc7e22ce19cbb83577f933a34a167edd9a2ade99f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/chromium-final.json",
+      "sha256": "6ce548043ae9f5d140126e7d1ce673ae02b241966091623e55c9f5ff4f9c6e34"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/chromium-final.raw.txt",
+      "sha256": "eb4cab6cd50823a10b2e22243041239c837db7e316f0e141a481acf8c86bb434"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/chromium-final.stdout.txt",
+      "sha256": "6032dce1c45705b9c66aa9011c1fab79588614caeacebea7da3d45df05ae04f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/fixture.tsx",
+      "sha256": "6d91c410bf988941a64d03b7e1b3e190eea7d5125cbae2662398574ed2f13aca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/fixture.tsx.before-expired-tracking.txt",
+      "sha256": "b35f89c13a41c4d325f1be3b07c1b4f7499a74a488904a92acd43eec7e0b66d5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/fixture.tsx.executed.txt",
+      "sha256": "d90f4ce95b86feb2364e2608544f8581f2253141dad549020a9c751d8358eddb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/index.html",
+      "sha256": "d612e2fd99ad3c63ba39ca52979749ac4b0134a80e2dcceabb1d4d13a414fff1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/index.html.executed.txt",
+      "sha256": "66636fc0f4fc48dfc37508ebcfb010b8eefe433ec71676a0cab3ce9a5462cf8a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/run.mjs",
+      "sha256": "79ba784db1b4e46454e06f54f4eb8597be384e90903e606908f7b8bcc1ebfb82"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/run.mjs.before-expired-tracking.txt",
+      "sha256": "342cc0c85046528830a5613f79192e5231c82a356b5af8a6f55b1bad03fba5cb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/run.mjs.executed.txt",
+      "sha256": "511be3d6b704b8ad04b89dd342a55e75f76e3bdb3e37f7d8e916d77e0116ffbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/serve.mjs",
+      "sha256": "6bf7ab45b0b5fd1b629f2e6bea88b2254dd16d14b9e034a94cd59061acd2d4e0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/serve.mjs.executed.txt",
+      "sha256": "6bf7ab45b0b5fd1b629f2e6bea88b2254dd16d14b9e034a94cd59061acd2d4e0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/server.txt",
+      "sha256": "954d8feedd78e3f048fb6b655e86f5221232b3ce6d035f35bf9578a66151b3fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-final-narrow.png",
+      "sha256": "7b92f2b9e50cba95eabfbde1e2bd4596187469bcc762890e1c03f23140e0806a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-final.json",
+      "sha256": "01c6f76ffeeeaad3c74724378911437cea6e445522470b5dc4485994b4463dcb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-final.raw.txt",
+      "sha256": "ef2ea8c65de92295021925923001e2963bd09ed2321bc57dad9f7fae1852d845"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-final.stdout.txt",
+      "sha256": "6032dce1c45705b9c66aa9011c1fab79588614caeacebea7da3d45df05ae04f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-first-narrow.png",
+      "sha256": "9b57fd711b2941822beeda42ac485471336a0164549b24e06ba372ea5f62511d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-first.json",
+      "sha256": "73034044b92620bf20ed77b252d11c502c272a7ba4d707401139f19d8ea9d890"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-first.raw.txt",
+      "sha256": "a9b347f14c63c3a3d7a86e5e74b1ac3f13c60e79b2389d416fd19c15cb58dd44"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/browser/webkit-first.stdout.txt",
+      "sha256": "5e730465cc3e5565f5b69e0d774cb4e987ba52ff2798b2f6cc908451e6d01611"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/extension_inventory_controller.ts.before-expired-tracking.txt",
+      "sha256": "37191ff91480134eb99a08b5723898af3bfd09f827f3b044f89f12f780c5a0d2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/AgentExtensionInventory.tsx.before-expired-tracking.txt",
+      "sha256": "107405bca1d974338e48a0d48072942a5c8a31db0399156af8781f29269814a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/extension_inventory_strings.ts.before-expired-tracking.txt",
+      "sha256": "1bd7c8eb240f507ec01da3cef7f5827ec0f99b8435d9c604828bd8e444e12c00"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-frontend-patch/ux-plan.json",
+      "sha256": "b8c315f7a8117fe5e30a9ec142b6a0802179c87a5706c215e564149af507ecbc"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-frontend-patch/manifest.json",
+      "sha256": "17e2fb219c19d7613fe27411267310cfa99d2dbeb24c6b5f8ec7f8f47f7254db"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-frontend-patch/source-before.json",
+      "sha256": "73c972be600d7c308ff503f76138e2730b9e5201f195236d0c6f07c9a2bc055f"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-frontend-patch/apply.diff",
+      "sha256": "d26e0c4955314d7c87b47c21f7d1a58840f527a2d0974c4e1dec2cf3a5d36ffc"
+    },
+    {
+      "path": "output/2026-10-10-extension-inventory-frontend-patch/applied.json",
+      "sha256": "85d731d5dc13d4ef18cdd640a49f89a43790fd700b51bcf30bc42be75717e58a"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.30s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 27 tests
+test acp_client::extension_inventory::tests::cancellation_is_not_settled_and_active_slots_survive_observer_abandonment ... ok
+test acp_client::extension_inventory::tests::cold_missing_status_does_not_mean_cancelled_or_empty ... ok
+test acp_client::extension_inventory::tests::complete_empty_requires_valid_full_array ... ok
+test acp_client::extension_inventory::tests::early_cancel_cannot_be_revived_and_cannot_cancel_other_agent ... ok
+test acp_client::extension_inventory::tests::macos::actual_owned_output_emits_only_sanitized_serialized_wire ... EXTENSION_INVENTORY_WIRE:{"running":{"requestId":"00000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","state":"running","settled":false},"ready":{"requestId":"00000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","state":"ready","settled":true,"snapshot":{"observedAtMs":1791636188509,"scope":"officialCliConfigurationForDirectory","source":"officialCli","complete":true,"sessionApplicability":"unverified","items":[{"id":0,"name":"example","transport":"stdio","reportedEnabled":false,"reportedAuth":"notLoggedIn","origin":"unreported","configurationLayer":"unreported","connection":"unverified","tools":"unreported"}]}},"earlyCancellation":{"requestId":"00000000-0000-4000-8000-000000000002","agentId":"early","cancelRequested":true,"operation":null}}
+ok
+test acp_client::extension_inventory::tests::macos::actual_query_deadline_requests_cleanup_without_an_empty_success ... ok
+test acp_client::extension_inventory::tests::macos::cancel_waits_for_exact_owned_group_and_inherited_pipe_completion ... ok
+test acp_client::extension_inventory::tests::macos::changed_row_while_waiting_for_configuration_is_not_a_new_query_selection ... ok
+test acp_client::extension_inventory::tests::macos::credential_placeholder_is_unavailable_without_keychain_lookup ... ok
+test acp_client::extension_inventory::tests::macos::dropped_ipc_observer_only_requests_cancel_and_does_not_finish_owner ... ok
+test acp_client::extension_inventory::tests::macos::dropped_observer_retains_real_worker_and_activity_until_group_cleanup ... ok
+test acp_client::extension_inventory::tests::macos::exact_public_entry_is_required_without_version_or_binary_hash_gate ... ok
+test acp_client::extension_inventory::tests::macos::exited_leader_does_not_drop_inherited_pipe_or_process_group ... ok
+test acp_client::extension_inventory::tests::macos::nonzero_stderr_never_becomes_a_public_error_message ... ok
+test acp_client::extension_inventory::tests::macos::official_relay_arguments_and_selected_environment_are_preserved ... ok
+test acp_client::extension_inventory::tests::macos::owned_process_returns_full_bytes_only_after_exit_and_eof ... ok
+test acp_client::extension_inventory::tests::macos::real_cleanup_retains_activity_after_observer_and_cancel_return ... ok
+test acp_client::extension_inventory::tests::macos::real_pipe_limits_fail_even_when_command_would_exit_successfully ... ok
+test acp_client::extension_inventory::tests::macos::replaced_cwd_is_not_published_as_current ... ok
+test acp_client::extension_inventory::tests::macos::selected_program_environment_and_replacement_row_are_not_interchangeable ... ok
+test acp_client::extension_inventory::tests::only_public_fields_leave_decoder ... ok
+test acp_client::extension_inventory::tests::published_known_fields_are_strict_and_duplicates_fail ... ok
+test acp_client::extension_inventory::tests::same_request_is_one_owner_and_different_payload_cannot_replace_it ... ok
+test acp_client::extension_inventory::tests::unknown_enums_stay_unknown_never_connected ... ok
+test acp_client::extension_inventory::tests::unsafe_name_is_an_unnamed_row_not_silently_removed ... ok
+test acp_client::extension_inventory::tests::urls_headers_helpers_and_hostnames_never_leave_http_transport ... ok
+test acp_client::extension_inventory::tests::whole_output_depth_and_row_budgets_reject_without_partial_success ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 1408 filtered out; finished in 16.19s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

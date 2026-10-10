@@ -1,0 +1,49 @@
+{
+  "stage": "effectiveRedBeforeSelectionReceipt",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "89215e29ab718df4194aaadf248fcc32a703dd094953f6071acd9261a4072e54"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "238a908ca83c1479d66f56b29c36cd95003cfd8ad92b37baea1f904fe457b861"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "6400969269976676e10be1eed47849580c97caf4849479025bc17a7334c9f502"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "94f3ebc2ab6699f8f96dfc8bc50ce7c3e9f1efe64de1c660fa8e19eb24372af0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "c62512621d97dd819ebfc3d8513a898eab7f8d9f5f7267207b02daf5938c4527"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "404fc2e0f4facb0fd523c2d578b50135f26d8cf6977339c8f4346a1ca24f0ce3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "2484561866a1333542b13334cb0f9b3e5e7e2e72d0a2e84b19d430646311da6b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "e9669345b1121a08fb7f00513b770cb551b1b000be065261298a90b8d284df5e"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    },
+    {
+      "path": "src-tauri/src/shell_env.rs",
+      "sha256": "e6dbd83477a6f895d302ad1b9a1852dd3a5efa2f95ba711a935b2b6591b94e85"
+    }
+  ]
+}

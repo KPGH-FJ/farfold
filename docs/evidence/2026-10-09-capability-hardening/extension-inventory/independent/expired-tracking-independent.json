@@ -1,0 +1,130 @@
+{
+  "reviewedAtUtc": "2026-10-10T12:57:57.143097+00:00",
+  "result": "passed_with_explicit_tracking_only_boundary",
+  "scope": "Independent controller counterexample and read-only review of the author fix. No repeated Cargo, official CLI, App, Agent or database access.",
+  "execution": {
+    "independentOriginal": {
+      "passed": 5,
+      "failed": 1,
+      "log": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-red.txt"
+    },
+    "authorRerunOfSameSixTests": {
+      "passed": 6,
+      "failed": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/expired-tracking-green.txt"
+    },
+    "afterRerunChanges": "Evidence test/config formatting only; retained exact tested bytes and AST kind/leaf-text equality proof. No repeated test execution during final review."
+  },
+  "covered": [
+    "Unknown status alone remains unresolved and cannot dispatch a successor.",
+    "Only explicit cancellation after unknownRequest and exact agentId/requestId/cancelRequested=true/null acknowledgement retires tracking.",
+    "The old inventory remains the same stale object; no cancelled terminal operation or automatic new read is fabricated.",
+    "A late read result after tracking retirement cannot publish success; a new query requires an explicit fresh begin.",
+    "Automatic close/retire cancellation cannot grant this recovery to a replacement owner.",
+    "Wrong Agent, wrong request and false cancelRequested acknowledgements remain blocked."
+  ],
+  "sourceReview": {
+    "noAdditionalBlockerFound": true,
+    "componentWordingWired": true,
+    "trackingReleasedText": "已结束这次查询的等待，结果仍未知。可明确重新查询。",
+    "backendPremises": "Current-instance active entries never evict. Exact absent cancellation inserts a request tombstone atomically. The original fixed 300-second selection ticket predates that new 300-second tombstone and cannot authorize a new dispatch after it expires. These premises do not establish a historical command outcome."
+  },
+  "retainedNonProductFailures": [
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-first-driver-output.txt",
+      "reason": "Test ready mock initially spread selectionId into a strict operation DTO. Corrected mock selects only agentId/cwd/requestId; original test and output retained."
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/format-equivalence.json",
+      "reason": "First formatting checker compared entire SourceFile.text, including whitespace. Corrected AST kinds and leaf texts compare equal; no production change."
+    }
+  ],
+  "limits": [
+    "Timers and IPC replies are controlled; no real five-minute wait or backend process was run by this counterexample.",
+    "The green rerun was performed by the UI author; independent review read its output and the final narrow source change.",
+    "Component wording is statically checked here; actual browser, installed product and official CLI evidence remain separate.",
+    "Full integration checks remain root-owned."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts",
+      "sha256": "3bf3fe7f10728f350565a1ef487ed007e0576e54c2eef9f02cf66d73429dc118",
+      "bytes": 4849
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts",
+      "sha256": "d921466885d7793ff8936da676be203bb1208a8c0cc21a97b78e2de141038253",
+      "bytes": 254
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts.tested.txt",
+      "sha256": "909d1c93149fa4c74b4d04b620bdeb38974bbae2f4304aabfd8d95c44e83d15c",
+      "bytes": 4611
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts.tested.txt",
+      "sha256": "d6201fe9c0711e508eea95d6027c70e3bf44bf61ab5b9f955b653be4faba3e1a",
+      "bytes": 227
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-red.txt",
+      "sha256": "253e235a3f02d7d0a63848cb7f1bffe8d04f2eeed9f1014e8a79c6dd6358a577",
+      "bytes": 1347
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-first-driver.txt",
+      "sha256": "00569787b3f429e4036669918b19fc3a5d387189c85461c97ce49e4e13103d77",
+      "bytes": 4571
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-first-driver-output.txt",
+      "sha256": "f612372c56badd81e84120522ecf95a08122cfd140784d9e8c9c3323d1ea9b11",
+      "bytes": 1397
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/format.txt",
+      "sha256": "0fcf3019fd7cfde859d237ce8c1ee4e8ad2a8f7b38b586eef22ac0f53ad0ad76",
+      "bytes": 207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/format-equivalence.json",
+      "sha256": "0a2aeaad483074c8431eef6c88f17583d28f4829b6cfdc3cdce140a910903a12",
+      "bytes": 1275
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/expired-tracking-green.txt",
+      "sha256": "1feb9a90ec81e74a79e22c8348b6455c7338f1d006732c6ad5915f8962793f03",
+      "bytes": 206
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "808b7f619b1734ae2252b466d45caa402a426e4e5bc493c64fb07ac5124fbadd",
+      "bytes": 8734
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "e76a56adacf6f8a907d3ec48d54f7cd38208e4b925db40f7c4af2aaefd2bf9f2",
+      "bytes": 8000
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "e2548e4d70236fa62f275d987b5f9b877682d215f5a64505bcdac677b8741d4f",
+      "bytes": 3752
+    },
+    {
+      "path": "src/runtime/extension_inventory.test-support.ts",
+      "sha256": "b0c86608d579635c5acec9362c699fea9531d6c87e52e2806f233ac0a1375ebc",
+      "bytes": 1182
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "31bf2f17bf28bead903b4ad65370765d8dddd72caa92d6215f3accc23b56f635",
+      "bytes": 9391
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json",
+      "sha256": "a68837783e5c8da45c97e6ebc5bcf0cd28838c6c093dbcc44ca7ed36dbc07980",
+      "bytes": 12579
+    }
+  ]
+}

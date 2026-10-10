@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "actual_owned_output_emits_only_sanitized_serialized_wire",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "durationSeconds": 14.701873064041138
+}

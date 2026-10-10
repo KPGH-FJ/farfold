@@ -1,0 +1,118 @@
+{
+  "status": "implementedTargetedRustVerifiedNotOfficialCli",
+  "commands": {
+    "agent_extension_capabilities": {
+      "input": {
+        "agentId": "string"
+      },
+      "output": "ExtensionCapabilities"
+    },
+    "agent_extension_inventory_read": {
+      "input": {
+        "agentId": "string",
+        "cwd": "absolute selected directory",
+        "requestId": "fresh UUID",
+        "selectionId": "opaque UUID from current available capability receipt"
+      },
+      "output": "InventoryOperation"
+    },
+    "agent_extension_inventory_status": {
+      "input": {
+        "agentId": "string",
+        "requestId": "exact UUID"
+      },
+      "output": "InventoryOperation; unknown ID => fixed Failure unknownRequest"
+    },
+    "agent_extension_inventory_cancel": {
+      "input": {
+        "agentId": "string",
+        "requestId": "exact UUID"
+      },
+      "output": {
+        "agentId": "same",
+        "requestId": "same",
+        "cancelRequested": true,
+        "operation": "InventoryOperation|null (early cancel, no result/exit assertion)"
+      }
+    }
+  },
+  "types": {
+    "ExtensionCapabilities": {
+      "mcpInventory": {
+        "availability": "available|unavailable",
+        "source": "officialCli|null",
+        "reason": "notReviewed|entryUnverified|platformUnsupported|environmentUnavailable|null"
+      },
+      "skillsInventory": "unavailable",
+      "toolInventory": "unavailable",
+      "selectionId": "UUID v4 when available; null when unavailable"
+    },
+    "InventoryOperation": {
+      "requestId": "same",
+      "agentId": "same",
+      "cwd": "same",
+      "state": "running|cancelling|pendingCleanup|ready|failed|cancelled",
+      "settled": "boolean",
+      "code": "optional fixed Code",
+      "snapshot": "only ready+settled: McpInventory"
+    },
+    "McpInventory": {
+      "observedAtMs": "safe nonnegative integer",
+      "scope": "officialCliConfigurationForDirectory",
+      "source": "officialCli",
+      "complete": true,
+      "sessionApplicability": "unverified",
+      "items": "McpInventoryItem[]"
+    },
+    "McpInventoryItem": {
+      "id": "request-local index",
+      "name": "safe simple string|null (redacted row retained)",
+      "transport": "stdio|streamableHttp|unknown",
+      "reportedEnabled": "boolean",
+      "reportedAuth": "oauth|bearerToken|notLoggedIn|unsupported|unknown",
+      "origin": "unreported",
+      "configurationLayer": "unreported",
+      "connection": "unverified",
+      "tools": "unreported"
+    },
+    "Failure": {
+      "code": "fixed Code; never OS/serde/CLI detail"
+    },
+    "Code": [
+      "notReviewed",
+      "entryUnverified",
+      "platformUnsupported",
+      "environmentUnavailable",
+      "selectionChanged",
+      "cwdUnavailable",
+      "busy",
+      "spawnFailed",
+      "queryFailed",
+      "invalidOutput",
+      "outputLimit",
+      "timedOut",
+      "cancelled",
+      "pendingCleanup",
+      "unknownRequest",
+      "invalidRequest",
+      "requestConflict",
+      "unavailable"
+    ]
+  },
+  "frontendContract": [
+    "Capability is refreshed, not permanently cached; environmentUnavailable may be temporary. Explicit ordinary program-list preparation then retry can initialize existing environment cache. Inventory itself never triggers that preparation.",
+    "A fresh nonreusable owner holds actual current Agent row/program/environment, cwd and active panel. A-B-A, close, source/program edit or refresh retires owner and requests exact cancel. UUID alone does not restore ownership.",
+    "Query is explicit, no auto-loop. State cancelling means requested, not exited. pendingCleanup retains exact status/cancel and blocks successor until actual settled result.",
+    "Only ready+settled snapshot is inventory; failed/cancelled/unknown is not an empty list. [] is valid only in full successful snapshot.",
+    "Standalone CLI config scope is not current session tools or readiness. Do not infer tools/skills from commands; preserve P39/P40/P41 gaps.",
+    "Official CLI may perform its own network/auth/cache work. Farfold does not scan config, inject its credentials or run an MCP server; no zero-side-effect claim."
+  ],
+  "selectionReceipt": {
+    "storage": "RAM only exact AgentRow, never serialized or hashed environment",
+    "capacity": 64,
+    "ttlSeconds": 300,
+    "sliding": false,
+    "expiry": "selectionChanged; explicitly refresh capability, never automatic query retry",
+    "duplicateRequest": "same requestId must have same agent/cwd/selectionId; existing request status/cancel does not recheck expired selection"
+  }
+}

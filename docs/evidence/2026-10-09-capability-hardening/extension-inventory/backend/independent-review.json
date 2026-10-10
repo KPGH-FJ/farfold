@@ -1,0 +1,254 @@
+{
+  "reviewedAtUtc": "2026-10-10T12:54:41.172030+00:00",
+  "result": "no_additional_backend_blocker_found",
+  "scope": "Read-only production and author evidence review. No repeated Cargo, official CLI, App, Agent, account or user database access.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/implementation.json",
+    "sha256": "b01ce72dbd5410ab5de3b85b5c3e141a23f469c80b61aa20e7f1f8191776b6f4",
+    "bytes": 11488
+  },
+  "verification": {
+    "currentSourceReferences": 11,
+    "allAuthorReferencesMatch": 30,
+    "wireValues": 4,
+    "wireEqualsRawJsonAndUniqueActualStdoutLine": true,
+    "authorEffectiveRed": 1,
+    "authorFinalTargetedPasses": 31,
+    "lastTestOnlyWirePasses": 1,
+    "ownedFmtPassReviewed": true
+  },
+  "findings": [
+    {
+      "area": "Official launch",
+      "conclusion": "Reviewed registry Codex canonical public Node package route only; fixed cli/mcp/list/--json suffix. Bare binary/custom/other Agent and Windows stay unavailable. Main caller/context gate; no ACP session/load/prompt, executable SHA/version pin, private HOME or env_clear."
+    },
+    {
+      "area": "Selected entry identity",
+      "conclusion": "Opaque RAM capability ticket captures exact AgentRow before read. New read binds selectionId into request payload and passes the original row through configuration wait; same_selection is checked before dispatch and after process. Same request cannot change Agent/cwd/selection. Fixed300s ticket TTL does not affect already-running status/cancel."
+    },
+    {
+      "area": "Environment",
+      "conclusion": "cached_command_env reads existing LOGIN_ENV only; no nested shell probe. Uninitialized cache returns environmentUnavailable. No Keychain resolution/service injection or change to normal Agent launch."
+    },
+    {
+      "area": "Process ownership",
+      "conclusion": "Detached/blocking owner retains global activity and exact configuration guard. Absolute10s deadline requests cleanup; TERM then KILL, child reap plus both stream completion and group absence precede normal finish. PendingCleanup stays unsettled, active entries never evict; observer drop does not release actual worker."
+    },
+    {
+      "area": "Public output",
+      "conclusion": "Whole JSON1MiB, stderr64KiB, depth32, rows512; strict known fields/duplicate checks and closed typed DTO. Unknown enums remain unknown, no private URL/headers/helper/args/environment/raw error is forwarded. Arbitrary user labels cannot be certified secret-free; that limitation remains explicit."
+    },
+    {
+      "area": "Architecture",
+      "conclusion": "Seven focused modules plus narrow shared cached accessor/registration, no durable job/history ledger or second Agent loop. Path rechecks are not atomic filesystem or immutable executable authentication."
+    }
+  ],
+  "closedFindings": [
+    {
+      "issue": "Replacement before detached first metadata capture could authorize B for A query",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-before-capture-red.txt",
+        "sha256": "9415472642cd8a49fb2fc37a37e0b7c171b39dd0410bc3c627bc91b663e9a6ba",
+        "bytes": 1068
+      },
+      "resolution": "Exact capability selection ticket issued before the read; valid author red then31 targeted green."
+    },
+    {
+      "issue": "Initial private proposal could start shell environment probe outside query owner",
+      "classification": "Static private-patch challenge, not a production experiment",
+      "resolution": "Pure cached accessor; absent cache is explicit unavailable."
+    }
+  ],
+  "frontendExpiryContract": {
+    "independentRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-red.txt",
+      "sha256": "253e235a3f02d7d0a63848cb7f1bffe8d04f2eeed9f1014e8a79c6dd6358a577",
+      "bytes": 1347
+    },
+    "authorRerunGreen": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/expired-tracking-green.txt",
+      "sha256": "1feb9a90ec81e74a79e22c8348b6455c7338f1d006732c6ad5915f8962793f03",
+      "bytes": 206
+    },
+    "semantics": "Status unknown alone remains unresolved. Only explicit user cancel after that observation and checked Agent/request/cancelRequested=true/null tombstone may retire waiting, with error unknownRequest and prior result stale; no fabricated terminal operation or automatic replay. Auto retire must not grant this exit; late read must not publish.",
+    "safetyPremises": "Active requests are never evicted; exact absent cancellation atomically fences the ID. Original fixed300s selection ticket predates cancellation and expires no later than its new300s tombstone. This concerns current-instance tracking, not historical command outcome."
+  },
+  "checkerCorrection": "actual-wire.raw.txt is stripped raw JSON; the unique prefixed serialization line is in actual-wire-command.txt. The initial check expected a prefix in the wrong file; corrected checks establish all three equal. Not a product failure.",
+  "remaining": [
+    "Author controlled process/MetaStore evidence is not official installed CLI query success.",
+    "Root full clippy/integration/build, peer browser and eventual installed/native acceptance remain separate.",
+    "P39 partial; skills/tools/configuration management, P40/P41, broader Agents and Windows remain open."
+  ],
+  "references": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "d301128be40a5c481856b8cb5452a367692988852c9fbf9c98d900a180a3ea65",
+      "bytes": 5881
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "265c7ae2a6d28d6a66d580b3ecc0cbbd3f53bb83cc3f3ba48d56435e2402f5b5",
+      "bytes": 7964
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "6400969269976676e10be1eed47849580c97caf4849479025bc17a7334c9f502",
+      "bytes": 3876
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "66653c42667b6c1b9ba52a13b808d88315a47751975cd69f886ee2be3720c59f",
+      "bytes": 6534
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "da3bfa3bfe3a0962bcdae5cd7a3ced92f52d28c9ebff65fa07dc7dbbea25ff7d",
+      "bytes": 6945
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "67032e64efa1b1493d23540123da3a5823f00f25ec9133b8f5058fac20671751",
+      "bytes": 27329
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "04ac74890f3fbf1f3b4e0140d1bdd33cf391749238b63859ca8cfacd8a5dc44a",
+      "bytes": 2775
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "e9669345b1121a08fb7f00513b770cb551b1b000be065261298a90b8d284df5e",
+      "bytes": 2485
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+      "bytes": 18934
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e",
+      "bytes": 8844
+    },
+    {
+      "path": "src-tauri/src/shell_env.rs",
+      "sha256": "e6dbd83477a6f895d302ad1b9a1852dd3a5efa2f95ba711a935b2b6591b94e85",
+      "bytes": 969
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.json",
+      "sha256": "ca762153ec2cc4a56c89fb090633a2042b09e645bed23a39eac5cf72b793b212",
+      "bytes": 262
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.txt",
+      "sha256": "f148a20b4c129440d056244c8148d639b74eac6d4aba0e4bb90d278bfd7e1c24",
+      "bytes": 1637
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+      "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00",
+      "bytes": 1303
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.raw.txt",
+      "sha256": "93d47126c7755ade7d03876526f6713bbca1d8040e5db836f2bd98dece71fb5f",
+      "bytes": 945
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/apply-inputs.json",
+      "sha256": "c1c5a4e708e2e079be95610b769e7b2000bd051f578cd1e182f2a1da1f9f3926",
+      "bytes": 4170
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/owned-rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/protocol.json",
+      "sha256": "bd5b0bc7ddc84dea6679bd4fbf2b2cbfd690c5abdcf99fabaad53d1653304cc1",
+      "bytes": 4562
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-before-capture-red-command.json",
+      "sha256": "d52d34743fad9036bbf16e2d6bbafa0591ebc148a7b4ea2c7f3b3f18517d37c6",
+      "bytes": 283
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-before-capture-red.txt",
+      "sha256": "9415472642cd8a49fb2fc37a37e0b7c171b39dd0410bc3c627bc91b663e9a6ba",
+      "bytes": 1068
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-fixed-command.json",
+      "sha256": "39ed317517f7f67fe2c33fb9b42a06943be34b3b3f49a09441ce5fbf1bf55cea",
+      "bytes": 268
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-fixed.txt",
+      "sha256": "b60318a609139f1380ff35f88904416f7aaf73d46526970e2789fae318c85c71",
+      "bytes": 4997
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-green-command.json",
+      "sha256": "8d256d7d7eb87415aece33a34cfde14fa85711a4c52781f7e80245456844ee59",
+      "bytes": 269
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-green.txt",
+      "sha256": "2d8ea7ded09087a3ce4ee85ffa5e4a61e083c8fa0762313d002954f2184906b7",
+      "bytes": 1076
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-red-source.json",
+      "sha256": "5d2d5c5ada4f873212aef8f64896ac5915292faa57efdf393e848b4527d18409",
+      "bytes": 1812
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/source-checkpoint.json",
+      "sha256": "969d1c2734c27c5c4586d8512da10563b43d65c475ad56b516316d22bbe204a7",
+      "bytes": 2134
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-first-command.json",
+      "sha256": "0d8d36a2d452ab6fc24264332cff582b5f163e812394833bb305d7aba528b5d0",
+      "bytes": 267
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-first.txt",
+      "sha256": "34f677627a93f2ad58fb02394e41bc792131ab4a45e14fb122d2dcaadc9874a3",
+      "bytes": 3430
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-lifecycle-wire-command.json",
+      "sha256": "f43e9bedf1c98e0c95f79494e32a49f039a8157756cb036cc70da0c841077b60",
+      "bytes": 268
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-lifecycle-wire.txt",
+      "sha256": "b385486372b1917287610c3ab0e52df9619e205fcabb605a282b856ec438b77f",
+      "bytes": 4464
+    },
+    {
+      "path": "src-tauri/src/acp_client/browser_capability.rs",
+      "sha256": "628253ee2d050016b5127202f5b2f0aeaf01e4738bbcb7ad04653f0632e1ab62",
+      "bytes": 4436
+    },
+    {
+      "path": "src-tauri/src/process_platform.rs",
+      "sha256": "ce007fb5a66c1998c736543343e37b8b9b44b0030f3f9365e9e822ed753468fb",
+      "bytes": 5573
+    },
+    {
+      "path": "src-tauri/src/install_job.rs",
+      "sha256": "073e7eaf8052493d7e8a1a85ef487770e84b6ebcacc2c2da68867fb04e018849",
+      "bytes": 20105
+    },
+    {
+      "path": "src-tauri/src/acp_client/operations.rs",
+      "sha256": "e46f9cc19da8f9c68afd72df34c9917f1d8c6136d144973f1f16297280acacff",
+      "bytes": 16297
+    }
+  ]
+}

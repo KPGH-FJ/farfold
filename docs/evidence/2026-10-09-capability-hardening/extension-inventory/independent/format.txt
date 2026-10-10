@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts 40ms
+docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts 1ms

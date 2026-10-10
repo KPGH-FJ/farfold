@@ -1,0 +1,10 @@
+{
+  "status": "preparationDescriptionCorrectedBeforeExecution",
+  "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-candidate/prepare-candidate.py",
+  "beforeSha256": "a3c8f1fa78136f9511784f973ba27c7cfb5e563467576816acca53c974356914",
+  "afterSha256": "11fcc4f27cb74abd0358ae2b6dca77bdb4a9268841573d75e3e3f7b15cd52597",
+  "oldDescription": "current NEW-12 cold-restore and H11 project-file-scan engineering inventory",
+  "newDescription": "current P39 extension-inventory engineering inventory",
+  "behaviorChanged": false,
+  "priorPreparation": "helper-preparation.json"
+}

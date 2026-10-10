@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "selection_changed_before_first_metadata_read_is_not_admitted_as_replacement",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 101,
+  "durationSeconds": 13.475712060928345
+}

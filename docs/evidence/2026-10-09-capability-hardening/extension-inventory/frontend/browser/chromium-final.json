@@ -1,0 +1,1828 @@
+{
+  "engine": "chromium",
+  "label": "final",
+  "before": {
+    "src/components/AgentDetails.inventory.test.tsx": "2111113bd8f7bb885ea1f6f2578de988a182f86d661710f8c5064d0270fa8a91",
+    "src/components/AgentDetails.tsx": "6d8bf6c10a43ad39f52da217ceb8025c26a8091c5da053ca6ed19cf34380f6cb",
+    "src/components/AgentExtensionInventory.css": "548762ab961bb397927a6179866f19c2c031df8bafc3acbc85bcdc4c5cd3f7a9",
+    "src/components/AgentExtensionInventory.tsx": "31bf2f17bf28bead903b4ad65370765d8dddd72caa92d6215f3accc23b56f635",
+    "src/runtime/agent_extension_owner.test.ts": "28e8fcad0fb8194cce30aad5609fe2611c0f69b6764f4c7b2771eed7c1ac8c16",
+    "src/runtime/agent_extension_owner.ts": "aa14a808a63147ec6e53d449f52e321c718630192889539b50c8fa171bc723c9",
+    "src/runtime/agents.ts": "7565c5b8ffe6b388ed7d169a4aae5c820c59dca4b479fe1c2eb40770918bc345",
+    "src/runtime/extension_inventory.test-support.ts": "b0c86608d579635c5acec9362c699fea9531d6c87e52e2806f233ac0a1375ebc",
+    "src/runtime/extension_inventory.ts": "4dd147f6907ed494d20f4ca327124ac65185b2583da82c306be7967f9afd70af",
+    "src/runtime/extension_inventory_controller.test.ts": "5b3676028db8ea498f0db89b509db261afb20a929b772b6ffe9b22ff7d5e3383",
+    "src/runtime/extension_inventory_controller.ts": "808b7f619b1734ae2252b466d45caa402a426e4e5bc493c64fb07ac5124fbadd",
+    "src/runtime/extension_inventory_strings.ts": "e2548e4d70236fa62f275d987b5f9b877682d215f5a64505bcdac677b8741d4f",
+    "src/runtime/extension_inventory_types.test.ts": "e52a5fec2cd68314bd70212e2bf86734b9036bdc0958403f3d78cb001f2fbff4",
+    "src/runtime/extension_inventory_types.ts": "e76a56adacf6f8a907d3ec48d54f7cd38208e4b925db40f7c4af2aaefd2bf9f2",
+    "src/runtime/strings.test.ts": "ea7986e4daf4ecef41049d16d2e6e440371a7cf6332cad32c564f9260b2132b3",
+    "src/runtime/extension_inventory.wire.test.ts": "cae1ec4a248fc3fbcd371384cc20f4efed9ae78ff55b688a208293560607e163",
+    "output/2026-10-10-extension-inventory-browser/fixture.tsx": "d90f4ce95b86feb2364e2608544f8581f2253141dad549020a9c751d8358eddb",
+    "output/2026-10-10-extension-inventory-browser/index.html": "66636fc0f4fc48dfc37508ebcfb010b8eefe433ec71676a0cab3ce9a5462cf8a",
+    "output/2026-10-10-extension-inventory-browser/serve.mjs": "6bf7ab45b0b5fd1b629f2e6bea88b2254dd16d14b9e034a94cd59061acd2d4e0",
+    "output/2026-10-10-extension-inventory-browser/run.mjs": "511be3d6b704b8ad04b89dd342a55e75f76e3bdb3e37f7d8e916d77e0116ffbd"
+  },
+  "checks": [
+    {
+      "name": "opening details only reads capability, no inventory query",
+      "pass": true
+    },
+    {
+      "name": "StrictMode initial details invoke capability once",
+      "pass": true
+    },
+    {
+      "name": "choosing cwd does not query or change original draft cwd",
+      "pass": true
+    },
+    {
+      "name": "explicit query sends real capability ticket and exact selected scope",
+      "pass": true
+    },
+    {
+      "name": "report separates config/auth from connection/tool/session claims",
+      "pass": true
+    },
+    {
+      "name": "scope and capability limits explicit",
+      "pass": true
+    },
+    {
+      "name": "failed reread retains old scoped snapshot as stale",
+      "pass": true
+    },
+    {
+      "name": "cancel null acknowledgement does not assert terminal or permit new query",
+      "pass": true
+    },
+    {
+      "name": "closing retains draft and requests exact original cancellation",
+      "pass": true
+    },
+    {
+      "name": "reopening exposes still-unsettled exact operation",
+      "pass": true
+    },
+    {
+      "name": "late closed-owner result settles slot without publishing result",
+      "pass": true
+    },
+    {
+      "name": "unrelated agent configuration refresh preserves current query",
+      "pass": true
+    },
+    {
+      "name": "actual selected program environment change retires old result",
+      "pass": true
+    },
+    {
+      "name": "rejected capability requires explicit refresh, no auto retry",
+      "pass": true
+    },
+    {
+      "name": "capability refresh alone never queries",
+      "pass": true
+    },
+    {
+      "name": "pending cleanup blocks successor but status/cancel remain reachable",
+      "pass": true
+    },
+    {
+      "name": "unknown secret-shaped response rejected without display",
+      "pass": true
+    },
+    {
+      "name": "unknown request status alone does not release pending query",
+      "pass": true
+    },
+    {
+      "name": "explicit exact absence cancel releases tracking without fabricated completion",
+      "pass": true
+    },
+    {
+      "name": "released late read cannot replace old snapshot or auto-query",
+      "pass": true
+    },
+    {
+      "name": "keyboard folder chooser cancellation preserves old scope/draft",
+      "pass": true
+    },
+    {
+      "name": "narrow dialog stays in viewport with local result scroll",
+      "pass": true,
+      "details": {
+        "windowY": 0,
+        "dialog": {
+          "x": 17,
+          "y": 12,
+          "right": 703,
+          "bottom": 588
+        },
+        "width": 720,
+        "height": 600,
+        "listScroll": 5032,
+        "listClient": 300
+      }
+    },
+    {
+      "name": "closing returns focus to original detail button",
+      "pass": true
+    },
+    {
+      "name": "late capability from closed A cannot authorize B",
+      "pass": true
+    },
+    {
+      "name": "unreviewed agent has no query control",
+      "pass": true
+    },
+    {
+      "name": "journey never opens/sends an Agent request and never writes CLI configuration",
+      "pass": true
+    },
+    {
+      "name": "original draft and cwd remain exact",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "scope": "Actual App/AgentHub/AgentDetails/React StrictMode/registry owner and strict IPC parser/controller. Native boundary is controlled, no CLI/App/real configuration.",
+  "final": {
+    "calls": [
+      {
+        "cmd": "host_performance_origin",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "unsentWork.v1"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {
+              "new": {
+                "text": "KEEP P39 DRAFT",
+                "attachments": []
+              }
+            },
+            "choice": {
+              "agentId": null,
+              "cwd": "/controlled/project-A",
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {}
+          }
+        }
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "storage_recovery_status",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "agentSetup.v1"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-exit",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 1
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:save-before-restart",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 2
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app:exit-deferred",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 3
+        }
+      },
+      {
+        "cmd": "app_drafts_ready",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationGroups.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationReadState.v1"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "themeMode"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 4
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 5
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 6
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 7
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 8
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "catalog:updated",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 9
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 10
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent-work-changed",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 11
+        }
+      },
+      {
+        "cmd": "app_default_working_directory",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "desktop-notification:activate",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 12
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 13
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "catalog:updated",
+          "eventId": 4
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 5
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent-work-changed",
+          "eventId": 6
+        }
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "app-menu",
+          "eventId": 8
+        }
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notification_take_pending",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "desktop-notification:activate",
+          "eventId": 7
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 14
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "catalog_scan",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-enter",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 15
+        }
+      },
+      {
+        "cmd": "agent_work_get",
+        "args": {
+          "cwd": "/controlled/project-A"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "promptTemplates.v1"
+        }
+      },
+      {
+        "cmd": "worktree_list",
+        "args": {}
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 16
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-over",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 17
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 18
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-drop",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 19
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 20
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "tauri://drag-leave",
+          "target": {
+            "kind": "Webview",
+            "label": "main"
+          },
+          "handler": 21
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-enter",
+          "eventId": 14
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-drop",
+          "eventId": 18
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-over",
+          "eventId": 16
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "tauri://drag-leave",
+          "eventId": 20
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "app-menu",
+          "eventId": 13
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "app-menu",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 22
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 23
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:dialog|open",
+        "args": {
+          "options": {
+            "directory": true,
+            "multiple": false
+          }
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-A",
+          "requestId": "99fa4089-01d2-4c18-acf7-ad21ca5f5d04",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-A",
+          "requestId": "6365e440-88ee-48a8-8925-b1a2ad10a816",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-A",
+          "requestId": "bf60184e-6bc6-4d4f-84f8-64e34937b901",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_cancel",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "bf60184e-6bc6-4d4f-84f8-64e34937b901"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 23
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_cancel",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "bf60184e-6bc6-4d4f-84f8-64e34937b901"
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 24
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:dialog|open",
+        "args": {
+          "options": {
+            "directory": true,
+            "multiple": false
+          }
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "45314279-6dd4-40ea-8e35-f8d1fd4ad1b4",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002"
+        }
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "98b67cd8-9814-427e-94f7-cd9b12d69d0c",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002"
+        }
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "app_initial_snapshot",
+        "args": {}
+      },
+      {
+        "cmd": "catalog_list",
+        "args": {}
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_cancel",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "98b67cd8-9814-427e-94f7-cd9b12d69d0c"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "9bf77153-e86b-43c0-a12b-41f998fd86c1",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000003"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "3e7bdd13-24ca-4a4d-99a6-214078ffde44",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_status",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "3e7bdd13-24ca-4a4d-99a6-214078ffde44"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "ef92c36b-20b3-4a70-8bc5-4a1fdfdb3842",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_status",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "ef92c36b-20b3-4a70-8bc5-4a1fdfdb3842"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "2a4b3882-d9a1-4e87-8702-4dccb6f29c70",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_status",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "2a4b3882-d9a1-4e87-8702-4dccb6f29c70"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_cancel",
+        "args": {
+          "agentId": "fixture-a",
+          "requestId": "2a4b3882-d9a1-4e87-8702-4dccb6f29c70"
+        }
+      },
+      {
+        "cmd": "agent_extension_inventory_read",
+        "args": {
+          "agentId": "fixture-a",
+          "cwd": "/controlled/project-B",
+          "requestId": "d07d3ea9-2e67-41ae-84b2-49ecb9da4512",
+          "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004"
+        }
+      },
+      {
+        "cmd": "plugin:dialog|open",
+        "args": {
+          "options": {
+            "directory": true,
+            "multiple": false
+          }
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 24
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 25
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-a"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 25
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 26
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "plugin:event|unlisten",
+        "args": {
+          "event": "agent:status",
+          "eventId": 26
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "plugin:event|listen",
+        "args": {
+          "event": "agent:status",
+          "target": {
+            "kind": "Any"
+          },
+          "handler": 27
+        }
+      },
+      {
+        "cmd": "service_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_extension_capabilities",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      },
+      {
+        "cmd": "agent_status",
+        "args": {
+          "agentId": "fixture-b"
+        }
+      }
+    ],
+    "unexpected": [],
+    "queries": [
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-A",
+        "requestId": "99fa4089-01d2-4c18-acf7-ad21ca5f5d04",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "99fa4089-01d2-4c18-acf7-ad21ca5f5d04",
+          "cwd": "/controlled/project-A",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "Ordinary 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 1,
+                "name": null,
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 2,
+                "name": "Ordinary 2",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-A",
+        "requestId": "6365e440-88ee-48a8-8925-b1a2ad10a816",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "6365e440-88ee-48a8-8925-b1a2ad10a816",
+          "cwd": "/controlled/project-A",
+          "state": "failed",
+          "settled": true,
+          "code": "queryFailed"
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-A",
+        "requestId": "bf60184e-6bc6-4d4f-84f8-64e34937b901",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "bf60184e-6bc6-4d4f-84f8-64e34937b901",
+          "cwd": "/controlled/project-A",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "RETIRED_RESULT 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "45314279-6dd4-40ea-8e35-f8d1fd4ad1b4",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "45314279-6dd4-40ea-8e35-f8d1fd4ad1b4",
+          "cwd": "/controlled/project-B",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "CURRENT_SCOPE 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "98b67cd8-9814-427e-94f7-cd9b12d69d0c",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "98b67cd8-9814-427e-94f7-cd9b12d69d0c",
+          "cwd": "/controlled/project-B",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "WRONG_SELECTION 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "3e7bdd13-24ca-4a4d-99a6-214078ffde44",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "3e7bdd13-24ca-4a4d-99a6-214078ffde44",
+          "cwd": "/controlled/project-B",
+          "state": "cancelled",
+          "settled": true,
+          "code": "cancelled"
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "ef92c36b-20b3-4a70-8bc5-4a1fdfdb3842",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "ef92c36b-20b3-4a70-8bc5-4a1fdfdb3842",
+          "cwd": "/controlled/project-B",
+          "state": "cancelled",
+          "settled": true,
+          "code": "cancelled"
+        }
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "2a4b3882-d9a1-4e87-8702-4dccb6f29c70",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "2a4b3882-d9a1-4e87-8702-4dccb6f29c70",
+          "cwd": "/controlled/project-B",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "EXPIRED_LATE 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        },
+        "absent": true
+      },
+      {
+        "agentId": "fixture-a",
+        "cwd": "/controlled/project-B",
+        "requestId": "d07d3ea9-2e67-41ae-84b2-49ecb9da4512",
+        "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000004",
+        "status": {
+          "agentId": "fixture-a",
+          "requestId": "d07d3ea9-2e67-41ae-84b2-49ecb9da4512",
+          "cwd": "/controlled/project-B",
+          "state": "ready",
+          "settled": true,
+          "snapshot": {
+            "observedAtMs": 1791605000000,
+            "source": "officialCli",
+            "scope": "officialCliConfigurationForDirectory",
+            "complete": true,
+            "sessionApplicability": "unverified",
+            "items": [
+              {
+                "id": 0,
+                "name": "NARROW 0",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 1,
+                "name": null,
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 2,
+                "name": "NARROW 2",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 3,
+                "name": "NARROW 3",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 4,
+                "name": "NARROW 4",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 5,
+                "name": "NARROW 5",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 6,
+                "name": "NARROW 6",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 7,
+                "name": "NARROW 7",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 8,
+                "name": "NARROW 8",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 9,
+                "name": "NARROW 9",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 10,
+                "name": "NARROW 10",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 11,
+                "name": "NARROW 11",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 12,
+                "name": "NARROW 12",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 13,
+                "name": "NARROW 13",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 14,
+                "name": "NARROW 14",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 15,
+                "name": "NARROW 15",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 16,
+                "name": "NARROW 16",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 17,
+                "name": "NARROW 17",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 18,
+                "name": "NARROW 18",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 19,
+                "name": "NARROW 19",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 20,
+                "name": "NARROW 20",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 21,
+                "name": "NARROW 21",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 22,
+                "name": "NARROW 22",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 23,
+                "name": "NARROW 23",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 24,
+                "name": "NARROW 24",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 25,
+                "name": "NARROW 25",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 26,
+                "name": "NARROW 26",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 27,
+                "name": "NARROW 27",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 28,
+                "name": "NARROW 28",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 29,
+                "name": "NARROW 29",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 30,
+                "name": "NARROW 30",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 31,
+                "name": "NARROW 31",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 32,
+                "name": "NARROW 32",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 33,
+                "name": "NARROW 33",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 34,
+                "name": "NARROW 34",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 35,
+                "name": "NARROW 35",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 36,
+                "name": "NARROW 36",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 37,
+                "name": "NARROW 37",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 38,
+                "name": "NARROW 38",
+                "transport": "stdio",
+                "reportedEnabled": true,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              },
+              {
+                "id": 39,
+                "name": "NARROW 39",
+                "transport": "stdio",
+                "reportedEnabled": false,
+                "reportedAuth": "notLoggedIn",
+                "origin": "unreported",
+                "configurationLayer": "unreported",
+                "connection": "unverified",
+                "tools": "unreported"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "draft": {
+      "text": "KEEP P39 DRAFT",
+      "attachments": []
+    },
+    "cwd": "/controlled/project-A",
+    "held": 0
+  },
+  "body": "\u65b0\u5bf9\u8bdd\n\u8349\u7a3f\n\u2318 N\n\u641c\u7d22\u5bf9\u8bdd\n\u2318 K\n\u6240\u6709\u5bf9\u8bdd\n0\n\u6536\u85cf\n0\n\u63a2\u7d22 Agent\n\u6211\u7684 Agent\nC\nControlled A\n0\nC\nControlled B\n0\n\u5206\u7ec4\n\u8bbe\u7f6e\n\u5c5e\u4e8e\u4f60\u7684 Agent\uff0c\u5728\u4e00\u5904\u76f8\u9047\u3002\n\u63a2\u7d22 Agent\n\u7ee7\u7eed\u8349\u7a3f\n\u8fd4\u56de\u5bf9\u8bdd\n\u63a2\u7d22 Agent\n\u627e\u5230\u9002\u5408\u8fd9\u9879\u5de5\u4f5c\u7684 Agent\n\n\u9009\u4e00\u4e2a Agent \u5f00\u59cb\u5de5\u4f5c\uff0c\u4e5f\u53ef\u4ee5\u5728\u8fd9\u91cc\u5b89\u88c5\u548c\u7ba1\u7406\u3002\n\n\u81ea\u5b9a\u4e49\u63a5\u5165\n\u63a2\u7d22 Agent\n\u6211\u7684 Agent\n2\n\u91cd\u65b0\u53d1\u73b0\n\u5168\u90e8\n\u7f16\u7a0b\n\u81ea\u52a8\u5316\n\u7814\u7a76\n\u8f7b\u91cf\n\n2 \u4e2a Agent\n\nC\nControlled A\n\u81ea\u5b9a\u4e49\n\u7531\u4f60\u6307\u5b9a\u7684\u7a0b\u5e8f\uff0c\u901a\u8fc7\u540c\u4e00\u5957\u754c\u9762\u68c0\u67e5\u548c\u4f7f\u7528\u3002\n\u672a\u5b8c\u6210\u8bbe\u7f6e\n\u7ee7\u7eed\u51c6\u5907\n\u7ba1\u7406\u8bbe\u7f6e\nC\nControlled B\n\u81ea\u5b9a\u4e49\n\u7531\u4f60\u6307\u5b9a\u7684\u7a0b\u5e8f\uff0c\u901a\u8fc7\u540c\u4e00\u5957\u754c\u9762\u68c0\u67e5\u548c\u4f7f\u7528\u3002\n\u672a\u5b8c\u6210\u8bbe\u7f6e\n\u7ee7\u7eed\u51c6\u5907\n\u7ba1\u7406\u8bbe\u7f6e\n\u627e\u4e0d\u5230\u60f3\u7528\u7684 Agent\uff1f\u53ef\u4ee5\u6dfb\u52a0\u81ea\u5b9a\u4e49\u63a5\u5165\u3002\nControlled B \u00b7 \u8be6\u60c5\nC\nControlled B\n\n\u81ea\u5b9a\u4e49\n\n\u672a\u5b8c\u6210\u8bbe\u7f6e\n\n\u7531\u4f60\u6307\u5b9a\u7684\u7a0b\u5e8f\uff0c\u901a\u8fc7\u540c\u4e00\u5957\u754c\u9762\u68c0\u67e5\u548c\u4f7f\u7528\u3002\n\n\u80fd\u529b\u4e0e\u4f9d\u636e\n\u80fd\u529b\t\u5f53\u524d\u4fe1\u606f\t\u4f9d\u636e\u4e0e\u8303\u56f4\n\u767b\u5f55\u65b9\u5f0f\t\u8fde\u63a5\u540e\u8bfb\u53d6\u6b64 Agent \u58f0\u660e\u7684\u767b\u5f55\u65b9\u5f0f\t\u5c1a\u672a\u8bfb\u53d6\n\u6d88\u606f\u5185\u5bb9\t\u6587\u5b57\u6d88\u606f\t\u5c1a\u672a\u8bfb\u53d6\n\u5df2\u6709\u5bf9\u8bdd\t\u5c1a\u672a\u8bfb\u53d6\u5df2\u6709\u5bf9\u8bdd\u80fd\u529b\t\u5c1a\u672a\u8bfb\u53d6\nAPI \u670d\u52a1\t\u6682\u4e0d\u80fd\u5728\u8fd9\u91cc\u9009\u62e9 API \u670d\u52a1\t\u5f53\u524d\u63a5\u5165\u652f\u6301\u8303\u56f4\n\u67e5\u770b\u80fd\u529b\u8bf4\u660e\n\u6280\u80fd\u4e0e\u5de5\u5177\n\n\u6280\u80fd\u6e05\u5355\u548c\u5177\u4f53\u5de5\u5177\u6e05\u5355\u5c1a\u672a\u63d0\u4f9b\u3002\n\nMCP \u914d\u7f6e\u6e05\u5355\n\n\u6b64 Agent \u7684\u5b98\u65b9\u6e05\u5355\u8bfb\u53d6\u65b9\u5f0f\u5c1a\u672a\u6838\u5b9e\u3002\n\n\u91cd\u65b0\u68c0\u67e5\u8bfb\u53d6\u65b9\u5f0f\n\u8303\u56f4\u4e0e\u672a\u9a8c\u8bc1\u4e8b\u9879\n\u5173\u95ed\n\u51c6\u5907\u4f7f\u7528",
+  "after": {
+    "src/components/AgentDetails.inventory.test.tsx": "2111113bd8f7bb885ea1f6f2578de988a182f86d661710f8c5064d0270fa8a91",
+    "src/components/AgentDetails.tsx": "6d8bf6c10a43ad39f52da217ceb8025c26a8091c5da053ca6ed19cf34380f6cb",
+    "src/components/AgentExtensionInventory.css": "548762ab961bb397927a6179866f19c2c031df8bafc3acbc85bcdc4c5cd3f7a9",
+    "src/components/AgentExtensionInventory.tsx": "31bf2f17bf28bead903b4ad65370765d8dddd72caa92d6215f3accc23b56f635",
+    "src/runtime/agent_extension_owner.test.ts": "28e8fcad0fb8194cce30aad5609fe2611c0f69b6764f4c7b2771eed7c1ac8c16",
+    "src/runtime/agent_extension_owner.ts": "aa14a808a63147ec6e53d449f52e321c718630192889539b50c8fa171bc723c9",
+    "src/runtime/agents.ts": "7565c5b8ffe6b388ed7d169a4aae5c820c59dca4b479fe1c2eb40770918bc345",
+    "src/runtime/extension_inventory.test-support.ts": "b0c86608d579635c5acec9362c699fea9531d6c87e52e2806f233ac0a1375ebc",
+    "src/runtime/extension_inventory.ts": "4dd147f6907ed494d20f4ca327124ac65185b2583da82c306be7967f9afd70af",
+    "src/runtime/extension_inventory_controller.test.ts": "5b3676028db8ea498f0db89b509db261afb20a929b772b6ffe9b22ff7d5e3383",
+    "src/runtime/extension_inventory_controller.ts": "808b7f619b1734ae2252b466d45caa402a426e4e5bc493c64fb07ac5124fbadd",
+    "src/runtime/extension_inventory_strings.ts": "e2548e4d70236fa62f275d987b5f9b877682d215f5a64505bcdac677b8741d4f",
+    "src/runtime/extension_inventory_types.test.ts": "e52a5fec2cd68314bd70212e2bf86734b9036bdc0958403f3d78cb001f2fbff4",
+    "src/runtime/extension_inventory_types.ts": "e76a56adacf6f8a907d3ec48d54f7cd38208e4b925db40f7c4af2aaefd2bf9f2",
+    "src/runtime/strings.test.ts": "ea7986e4daf4ecef41049d16d2e6e440371a7cf6332cad32c564f9260b2132b3",
+    "src/runtime/extension_inventory.wire.test.ts": "cae1ec4a248fc3fbcd371384cc20f4efed9ae78ff55b688a208293560607e163",
+    "output/2026-10-10-extension-inventory-browser/fixture.tsx": "d90f4ce95b86feb2364e2608544f8581f2253141dad549020a9c751d8358eddb",
+    "output/2026-10-10-extension-inventory-browser/index.html": "66636fc0f4fc48dfc37508ebcfb010b8eefe433ec71676a0cab3ce9a5462cf8a",
+    "output/2026-10-10-extension-inventory-browser/serve.mjs": "6bf7ab45b0b5fd1b629f2e6bea88b2254dd16d14b9e034a94cd59061acd2d4e0",
+    "output/2026-10-10-extension-inventory-browser/run.mjs": "511be3d6b704b8ad04b89dd342a55e75f76e3bdb3e37f7d8e916d77e0116ffbd"
+  },
+  "stable": true,
+  "passed": true
+}

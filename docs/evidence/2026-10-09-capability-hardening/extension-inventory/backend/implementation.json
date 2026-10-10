@@ -1,0 +1,228 @@
+{
+  "status": "implementedAuthorTargetedVerifiedPendingIntegrationAndOfficialQuery",
+  "timeUtc": "2026-10-10T12:52:03.490545+00:00",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "d301128be40a5c481856b8cb5452a367692988852c9fbf9c98d900a180a3ea65",
+      "lines": 166
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "265c7ae2a6d28d6a66d580b3ecc0cbbd3f53bb83cc3f3ba48d56435e2402f5b5",
+      "lines": 243
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "6400969269976676e10be1eed47849580c97caf4849479025bc17a7334c9f502",
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "66653c42667b6c1b9ba52a13b808d88315a47751975cd69f886ee2be3720c59f",
+      "lines": 205
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "da3bfa3bfe3a0962bcdae5cd7a3ced92f52d28c9ebff65fa07dc7dbbea25ff7d",
+      "lines": 202
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "67032e64efa1b1493d23540123da3a5823f00f25ec9133b8f5058fac20671751",
+      "lines": 705
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "04ac74890f3fbf1f3b4e0140d1bdd33cf391749238b63859ca8cfacd8a5dc44a",
+      "lines": 106
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "e9669345b1121a08fb7f00513b770cb551b1b000be065261298a90b8d284df5e",
+      "lines": 120
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+      "lines": 430
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e",
+      "lines": 249
+    },
+    {
+      "path": "src-tauri/src/shell_env.rs",
+      "sha256": "e6dbd83477a6f895d302ad1b9a1852dd3a5efa2f95ba711a935b2b6591b94e85",
+      "lines": 29
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.json",
+      "sha256": "ca762153ec2cc4a56c89fb090633a2042b09e645bed23a39eac5cf72b793b212"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.txt",
+      "sha256": "f148a20b4c129440d056244c8148d639b74eac6d4aba0e4bb90d278bfd7e1c24"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+      "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.raw.txt",
+      "sha256": "93d47126c7755ade7d03876526f6713bbca1d8040e5db836f2bd98dece71fb5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/apply-inputs.json",
+      "sha256": "c1c5a4e708e2e079be95610b769e7b2000bd051f578cd1e182f2a1da1f9f3926"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/owned-rustfmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/protocol.json",
+      "sha256": "bd5b0bc7ddc84dea6679bd4fbf2b2cbfd690c5abdcf99fabaad53d1653304cc1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-before-capture-red-command.json",
+      "sha256": "d52d34743fad9036bbf16e2d6bbafa0591ebc148a7b4ea2c7f3b3f18517d37c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-before-capture-red.txt",
+      "sha256": "9415472642cd8a49fb2fc37a37e0b7c171b39dd0410bc3c627bc91b663e9a6ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-fixed-command.json",
+      "sha256": "39ed317517f7f67fe2c33fb9b42a06943be34b3b3f49a09441ce5fbf1bf55cea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-fixed.txt",
+      "sha256": "b60318a609139f1380ff35f88904416f7aaf73d46526970e2789fae318c85c71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-green-command.json",
+      "sha256": "8d256d7d7eb87415aece33a34cfde14fa85711a4c52781f7e80245456844ee59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-green.txt",
+      "sha256": "2d8ea7ded09087a3ce4ee85ffa5e4a61e083c8fa0762313d002954f2184906b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-red-source.json",
+      "sha256": "5d2d5c5ada4f873212aef8f64896ac5915292faa57efdf393e848b4527d18409"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/source-checkpoint.json",
+      "sha256": "969d1c2734c27c5c4586d8512da10563b43d65c475ad56b516316d22bbe204a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-first-command.json",
+      "sha256": "0d8d36a2d452ab6fc24264332cff582b5f163e812394833bb305d7aba528b5d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-first.txt",
+      "sha256": "34f677627a93f2ad58fb02394e41bc792131ab4a45e14fb122d2dcaadc9874a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-lifecycle-wire-command.json",
+      "sha256": "f43e9bedf1c98e0c95f79494e32a49f039a8157756cb036cc70da0c841077b60"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-lifecycle-wire.txt",
+      "sha256": "b385486372b1917287610c3ab0e52df9619e205fcabb605a282b856ec438b77f"
+    }
+  ],
+  "changes": [
+    "Explicit capability-driven official one-shot MCP inventory, with no ACP session creation/load/prompt or Agent setting writes.",
+    "Available capability issues opaque UUID carrying exact AgentRow only in RAM (64 entries, fixed 300 seconds). New read supplies it and rechecks row before dispatch and publication.",
+    "Official registered Node relay only, fixed cli/mcp/list/--json arguments; cached login environment accessor never initializes a shell; no Farfold service or Keychain injection.",
+    "Bounded stdout/stderr, typed whitelist decoder, exact cancellation ownership, group/child/pipe cleanup and update/configuration permits held until real completion."
+  ],
+  "validation": {
+    "firstTargeted": {
+      "passed": 25,
+      "failed": 0,
+      "log": "targeted-first.txt"
+    },
+    "combinedLifecycle": {
+      "passed": 27,
+      "failed": 0,
+      "log": "targeted-lifecycle-wire.txt"
+    },
+    "effectiveRed": {
+      "passed": 0,
+      "failed": 1,
+      "log": "selection-before-capture-red.txt",
+      "finding": "Row replacement before detached first metadata read was accepted as the replacement selection, returning its environment failure rather than selectionChanged.",
+      "scope": "Controlled MetaStore and synthetic public package; rejected before any real Agent or model process.",
+      "greenAdaptation": "The same replacement scenario now presents a capability receipt issued before the replacement; execute_selected receives its exact original row and rejects the current changed record."
+    },
+    "intermediateCompileFailure": {
+      "log": "selection-receipt-green.txt",
+      "exitCode": 101,
+      "cause": "uuid was not a direct dependency; corrected to existing getrandom UUID generation without dependency changes."
+    },
+    "finalTargeted": {
+      "passed": 31,
+      "failed": 0,
+      "log": "selection-receipt-fixed.txt"
+    },
+    "lastTestOnlyWireChange": {
+      "passed": 1,
+      "failed": 0,
+      "log": "actual-wire-command.txt",
+      "scope": "Added actual unavailable capability serialization to existing wire test; production unchanged from final 31 test pass."
+    },
+    "ownedRustfmt": {
+      "exitCode": 0,
+      "log": "owned-rustfmt.txt"
+    },
+    "wire": {
+      "path": "actual-wire.json",
+      "values": 4,
+      "raw": "actual-wire.raw.txt",
+      "provenance": "Actual Rust serialization from controlled subprocess/parser/request; capability unavailable emitted by real admission logic. Not an official CLI response or positive UI acceptance."
+    },
+    "clippyAndFullSuite": "Not run here; root requested single integrated seven checks."
+  },
+  "lifecycleBoundaries": {
+    "queryDeadlineSeconds": 10,
+    "observerCleanupWaitSeconds": 7,
+    "termToKillSeconds": 2,
+    "activeGlobal": 2,
+    "activePerAgent": 1,
+    "transientRequestLimit": 64,
+    "inactiveRequestRetentionSeconds": 300,
+    "selectionLimit": 64,
+    "selectionTtlSeconds": 300,
+    "selectionSliding": false,
+    "activeRequestExpiry": "Active entries are never evicted by entries.retain; cancellation tests prove active successor exclusion. Fixed-time selection expiry tests are direct clock inputs, not a five-minute wall-clock run.",
+    "nullCancel": "Exact cancel atomically registers a tombstone when no retained request exists. It does not prove a historical process stopped; later same-ID begin is refused while retained. Old UI requests keep the older selection ticket (its 300-second expiry is no later than the subsequently created cancellation tombstone expiry).",
+    "drop": "Actual observer abort while a TERM-ignoring owned process ran retained activity and same-Agent exclusion until group cleanup; terminal result then cancelled.",
+    "timeout": "Deadline requests cleanup. pendingCleanup is not settled; no guarantee an individual OS/SQLite call is interruptible."
+  },
+  "securityBoundaries": [
+    "No raw stdout/stderr, environment, headers, args, URL, helper or free-form CLI errors enter DTO/logs/files. Tests use explicit synthetic markers and verify exclusion.",
+    "Sensitive input is held in bounded private memory; selected output buffers are cleared but this is not a claim that every allocation, compiler copy or allocator memory is securely erased.",
+    "Safe user-given names may still contain arbitrary text; no classifier can guarantee arbitrary labels never contain a secret. URL/path/header-shaped names are replaced by null, row retained.",
+    "Path identity checks are not an atomic filesystem snapshot or immutable executable authentication.",
+    "RAM selection receipts are not durable configuration epochs or a second session/history ledger."
+  ],
+  "notExecuted": [
+    "Installed Agent/official Codex CLI query",
+    "App/browser/UI/model/authentication",
+    "User database/configuration mutation",
+    "build/install/commit",
+    "Windows acceptance"
+  ],
+  "next": [
+    "Independent source review and common UI strict-wire integration.",
+    "Root integrated format/type/frontend/build/Rust checks.",
+    "Explicitly authorized official relay query via selected registered program and directory; official CLI may perform its own auth/network/cache work.",
+    "P39 remains partial; skills, tools, configuration management, broader Agents and P40/P41 remain open."
+  ]
+}

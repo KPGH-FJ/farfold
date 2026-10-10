@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/extension_inventory_controller.test.ts(195,36): error TS2493: Tuple type '[]' of length '0' has no element at index '0'.
+ ELIFECYCLE  Command failed with exit code 1.

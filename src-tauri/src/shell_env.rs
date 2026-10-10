@@ -2,7 +2,7 @@
 #[cfg(unix)]
 mod unix;
 #[cfg(unix)]
-pub use unix::{command_env, login_shell_env};
+pub use unix::{cached_command_env, command_env, login_shell_env};
 #[cfg(windows)]
 pub fn login_shell_env() -> std::collections::HashMap<String, String> {
     let mut env: std::collections::HashMap<_, _> = std::env::vars().collect();
@@ -20,4 +20,10 @@ pub fn login_shell_env() -> std::collections::HashMap<String, String> {
 #[cfg(windows)]
 pub fn command_env() -> std::collections::HashMap<String, String> {
     login_shell_env()
+}
+
+/// Read only the already available platform environment; never launch a probe.
+#[cfg(windows)]
+pub fn cached_command_env() -> Option<std::collections::HashMap<String, String>> {
+    Some(command_env())
 }

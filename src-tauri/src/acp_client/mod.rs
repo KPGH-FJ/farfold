@@ -22,6 +22,7 @@ pub(crate) mod browser_capability;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
 mod elicitation;
+pub mod extension_inventory;
 mod failures;
 pub(crate) mod first_release;
 pub(crate) mod handshake;

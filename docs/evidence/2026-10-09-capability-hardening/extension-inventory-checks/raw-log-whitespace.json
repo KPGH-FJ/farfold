@@ -1,0 +1,28 @@
+{
+  "rawCheckExit": 2,
+  "reason": "Unmodified command-output evidence retains trailing whitespace and terminal newlines; log bytes and SHA receipts are preserved. Source check passes.",
+  "sourceCheckExit": 0,
+  "rawLogFiles": [
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/build.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/rust.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/typecheck.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/build.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/frontend.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/rust.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/typecheck.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire-command.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/selection-receipt-fixed.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-first.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/targeted-lifecycle-wire.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/expired-tracking-green.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/green.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/red.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/typecheck.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/targeted-final.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/targeted-first.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/typecheck-final.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/typecheck-second.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-first-driver-output.txt",
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-red.txt"
+  ]
+}

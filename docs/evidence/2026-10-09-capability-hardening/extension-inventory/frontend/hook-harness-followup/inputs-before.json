@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/runtime/agents.install-options.test.ts",
+    "sha256": "67f9aee8eddbe214f72a37297697fb2a54d8c86052470e1f5b5d124146973a5c"
+  },
+  {
+    "path": "src/runtime/agents.remove.test.ts",
+    "sha256": "40551a30cc4c28c6c1dfdb9afaaee410ab2287c7bb8a19da19e0d31b38d41a9f"
+  },
+  {
+    "path": "src/runtime/agents.startup-errors.test.ts",
+    "sha256": "bfb5b2eb6b8db7ac735d2f170cb4319b3f9c9b19b299d440d768cf865bd2f8f0"
+  }
+]

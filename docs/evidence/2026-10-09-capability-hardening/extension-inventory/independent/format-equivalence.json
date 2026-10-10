@@ -1,0 +1,24 @@
+{
+  "result": "passed",
+  "firstComparisonFailure": {
+    "classification": "checker included SourceFile.text containing the entire whitespace-sensitive source",
+    "productFailure": false,
+    "correctedMethod": "Compare AST kinds and leaf texts, excluding positional/source container text"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts",
+      "testedSource": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts.tested.txt",
+      "beforeSha256": "909d1c93149fa4c74b4d04b620bdeb38974bbae2f4304aabfd8d95c44e83d15c",
+      "afterSha256": "3bf3fe7f10728f350565a1ef487ed007e0576e54c2eef9f02cf66d73429dc118",
+      "astAndTextLeavesEqual": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts",
+      "testedSource": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/vitest.config.ts.tested.txt",
+      "beforeSha256": "d6201fe9c0711e508eea95d6027c70e3bf44bf61ab5b9f955b653be4faba3e1a",
+      "afterSha256": "d921466885d7793ff8936da676be203bb1208a8c0cc21a97b78e2de141038253",
+      "astAndTextLeavesEqual": true
+    }
+  ]
+}

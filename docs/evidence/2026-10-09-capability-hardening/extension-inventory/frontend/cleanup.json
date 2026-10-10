@@ -1,0 +1,21 @@
+{
+  "ownedPid": 19468,
+  "ownedPort": 1490,
+  "method": "SIGTERM after exact PID and listening port ownership check; all private browsers closed by runner finally",
+  "execSessionExitCode": 143,
+  "checks": [
+    {
+      "command": ["ps", "-p", "19468", "-o", "pid=,command="],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": ["lsof", "-nP", "-iTCP:1490", "-sTCP:LISTEN"],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "formalAppOrAgentTouched": false
+}

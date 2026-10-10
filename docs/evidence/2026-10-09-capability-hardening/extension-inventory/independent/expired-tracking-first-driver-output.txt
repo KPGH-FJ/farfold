@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts (6 tests | 1 failed) 7ms
+   × explicit exact absent cancellation ends expired tracking without claiming cancellation or applying late success 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts > explicit exact absent cancellation ends expired tracking without claiming cancellation or applying late success
+AssertionError: expected undefined to be '/old/project' // Object.is equality
+
+- Expected:
+"/old/project"
+
++ Received:
+undefined
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking.test.ts:40:26
+     38|   await flush();
+     39|   const oldResult = h.client.get(h.owner.agentId).result;
+     40|   expect(oldResult?.cwd).toBe("/old/project");
+       |                          ^
+     41|   const request = await unknown(h);
+     42|   h.client.cancel(request.agentId, request.requestId); // Explicit use…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  20:48:50
+   Duration  105ms (transform 24ms, setup 0ms, import 33ms, tests 7ms, environment 0ms)
+

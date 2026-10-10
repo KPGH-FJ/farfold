@@ -1,0 +1,162 @@
+{
+  "checkedAtUtc": "2026-10-10T13:09:26.516768+00:00",
+  "priorInstalledCommit": "3632acb0ac8df3e1178bdf030908befd53c171af",
+  "fileCount": 31,
+  "files": {
+    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json": {
+      "sha256": "f9685dbffcbab131198de36cc375ec15ce29a135d084c277fa38ad63ee9f6f00",
+      "lines": 52
+    },
+    "src-tauri/src/acp_client/extension_inventory/launch.rs": {
+      "sha256": "d301128be40a5c481856b8cb5452a367692988852c9fbf9c98d900a180a3ea65",
+      "lines": 166
+    },
+    "src-tauri/src/acp_client/extension_inventory/mod.rs": {
+      "sha256": "265c7ae2a6d28d6a66d580b3ecc0cbbd3f53bb83cc3f3ba48d56435e2402f5b5",
+      "lines": 243
+    },
+    "src-tauri/src/acp_client/extension_inventory/output.rs": {
+      "sha256": "6400969269976676e10be1eed47849580c97caf4849479025bc17a7334c9f502",
+      "lines": 115
+    },
+    "src-tauri/src/acp_client/extension_inventory/process.rs": {
+      "sha256": "66653c42667b6c1b9ba52a13b808d88315a47751975cd69f886ee2be3720c59f",
+      "lines": 205
+    },
+    "src-tauri/src/acp_client/extension_inventory/requests.rs": {
+      "sha256": "da3bfa3bfe3a0962bcdae5cd7a3ced92f52d28c9ebff65fa07dc7dbbea25ff7d",
+      "lines": 202
+    },
+    "src-tauri/src/acp_client/extension_inventory/tests.rs": {
+      "sha256": "67032e64efa1b1493d23540123da3a5823f00f25ec9133b8f5058fac20671751",
+      "lines": 705
+    },
+    "src-tauri/src/acp_client/extension_inventory/types.rs": {
+      "sha256": "04ac74890f3fbf1f3b4e0140d1bdd33cf391749238b63859ca8cfacd8a5dc44a",
+      "lines": 106
+    },
+    "src-tauri/src/acp_client/mod.rs": {
+      "sha256": "e9669345b1121a08fb7f00513b770cb551b1b000be065261298a90b8d284df5e",
+      "lines": 120
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+      "lines": 430
+    },
+    "src-tauri/src/shell_env.rs": {
+      "sha256": "e6dbd83477a6f895d302ad1b9a1852dd3a5efa2f95ba711a935b2b6591b94e85",
+      "lines": 29
+    },
+    "src-tauri/src/shell_env/unix.rs": {
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e",
+      "lines": 249
+    },
+    "src/components/AgentDetails.inventory.test.tsx": {
+      "sha256": "2111113bd8f7bb885ea1f6f2578de988a182f86d661710f8c5064d0270fa8a91",
+      "lines": 48
+    },
+    "src/components/AgentDetails.tsx": {
+      "sha256": "6d8bf6c10a43ad39f52da217ceb8025c26a8091c5da053ca6ed19cf34380f6cb",
+      "lines": 262
+    },
+    "src/components/AgentExtensionInventory.css": {
+      "sha256": "548762ab961bb397927a6179866f19c2c031df8bafc3acbc85bcdc4c5cd3f7a9",
+      "lines": 56
+    },
+    "src/components/AgentExtensionInventory.tsx": {
+      "sha256": "31bf2f17bf28bead903b4ad65370765d8dddd72caa92d6215f3accc23b56f635",
+      "lines": 290
+    },
+    "src/runtime/agent_extension_owner.test.ts": {
+      "sha256": "28e8fcad0fb8194cce30aad5609fe2611c0f69b6764f4c7b2771eed7c1ac8c16",
+      "lines": 51
+    },
+    "src/runtime/agent_extension_owner.ts": {
+      "sha256": "aa14a808a63147ec6e53d449f52e321c718630192889539b50c8fa171bc723c9",
+      "lines": 44
+    },
+    "src/runtime/agents.install-options.test.ts": {
+      "sha256": "6abc0d4941e33a5ece13f2235c3288901e956852c461ee94b1bdb229ac7df7ae",
+      "lines": 154
+    },
+    "src/runtime/agents.remove.test.ts": {
+      "sha256": "39f1b7e8fc49015b3258ea2c11c4688ed64117fcc5ae26fc64596dc3dc224df4",
+      "lines": 120
+    },
+    "src/runtime/agents.startup-errors.test.ts": {
+      "sha256": "5030caaf26fe1d8416f5f5c78c378c2ddd5a171e52198245aa0ba60cbaf35e90",
+      "lines": 194
+    },
+    "src/runtime/agents.ts": {
+      "sha256": "7565c5b8ffe6b388ed7d169a4aae5c820c59dca4b479fe1c2eb40770918bc345",
+      "lines": 1071
+    },
+    "src/runtime/extension_inventory.test-support.ts": {
+      "sha256": "b0c86608d579635c5acec9362c699fea9531d6c87e52e2806f233ac0a1375ebc",
+      "lines": 46
+    },
+    "src/runtime/extension_inventory.ts": {
+      "sha256": "4dd147f6907ed494d20f4ca327124ac65185b2583da82c306be7967f9afd70af",
+      "lines": 20
+    },
+    "src/runtime/extension_inventory.wire.test.ts": {
+      "sha256": "cae1ec4a248fc3fbcd371384cc20f4efed9ae78ff55b688a208293560607e163",
+      "lines": 43
+    },
+    "src/runtime/extension_inventory_controller.test.ts": {
+      "sha256": "5b3676028db8ea498f0db89b509db261afb20a929b772b6ffe9b22ff7d5e3383",
+      "lines": 203
+    },
+    "src/runtime/extension_inventory_controller.ts": {
+      "sha256": "808b7f619b1734ae2252b466d45caa402a426e4e5bc493c64fb07ac5124fbadd",
+      "lines": 284
+    },
+    "src/runtime/extension_inventory_strings.ts": {
+      "sha256": "e2548e4d70236fa62f275d987b5f9b877682d215f5a64505bcdac677b8741d4f",
+      "lines": 69
+    },
+    "src/runtime/extension_inventory_types.test.ts": {
+      "sha256": "e52a5fec2cd68314bd70212e2bf86734b9036bdc0958403f3d78cb001f2fbff4",
+      "lines": 90
+    },
+    "src/runtime/extension_inventory_types.ts": {
+      "sha256": "e76a56adacf6f8a907d3ec48d54f7cd38208e4b925db40f7c4af2aaefd2bf9f2",
+      "lines": 303
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "ea7986e4daf4ecef41049d16d2e6e440371a7cf6332cad32c564f9260b2132b3",
+      "lines": 169
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/implementation.json",
+      "sha256": "b01ce72dbd5410ab5de3b85b5c3e141a23f469c80b61aa20e7f1f8191776b6f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json",
+      "sha256": "a68837783e5c8da45c97e6ebc5bcf0cd28838c6c093dbcc44ca7ed36dbc07980"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json",
+      "sha256": "8a1961e268d63c10e137b9364dd762e5f559cac7bf540c2a24d2c508c7128fad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json",
+      "sha256": "d3841e0d8212cdcb4adebe31ea1cb560c23a48edefd5c0a77c078aac6008b3dd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-independent.json",
+      "sha256": "28ea63421c1604f0363cdf7072c9762f782d47103c22ee82cf374a7bd8670802"
+    }
+  ],
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json",
+    "sha256": "2737cfde37476da8babc33fbb798681c8bed8235187d1f8a06f183702bd31cce"
+  },
+  "boundary": "P39 first slice common official configuration inventory; source, controlled tests and browser evidence only. Formal app and actual official CLI query pending. All original completion conditions remain."
+}

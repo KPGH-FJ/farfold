@@ -1,0 +1,81 @@
+{
+  "status": "confirmed legacy manual-hook harness gap repaired; no production behavior change",
+  "diagnosis": "All 28 tests invoke useAgents directly using a hand-written React hook mock. The mock forwarded the newly used useMemo to real React with no dispatcher; failure occurred before original action assertions. Production useMemo is unconditional within useAgents and actual App StrictMode browser evidence remains separately valid.",
+  "minimalFix": "Add useMemo: (read: () => unknown) => read() to each existing manual React mock. This executes the actual owner-map calculation without replacing it or altering test cases/assertions. These fixture tests do not prove memo caching, owner lifecycle, StrictMode or DOM behavior.",
+  "red": {
+    "files": 3,
+    "failed": 28,
+    "exitCode": 1,
+    "originalFullRunRetained": true
+  },
+  "green": {
+    "files": 3,
+    "passed": 28,
+    "exitCode": 0
+  },
+  "typecheckExit": 0,
+  "formatExit": 0,
+  "exactGuard": "Removing the one added mock line from each resulting test yields the original saved bytes exactly; all original scenarios and assertions unchanged.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/agents.install-options.test.ts",
+      "sha256": "6abc0d4941e33a5ece13f2235c3288901e956852c461ee94b1bdb229ac7df7ae"
+    },
+    {
+      "path": "src/runtime/agents.remove.test.ts",
+      "sha256": "39f1b7e8fc49015b3258ea2c11c4688ed64117fcc5ae26fc64596dc3dc224df4"
+    },
+    {
+      "path": "src/runtime/agents.startup-errors.test.ts",
+      "sha256": "5030caaf26fe1d8416f5f5c78c378c2ddd5a171e52198245aa0ba60cbaf35e90"
+    }
+  ],
+  "original16FrontendSourcesUnchanged": true,
+  "fullSuiteOrAppRerun": false,
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/agents.install-options.test.ts.before.txt",
+      "sha256": "67f9aee8eddbe214f72a37297697fb2a54d8c86052470e1f5b5d124146973a5c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/agents.remove.test.ts.before.txt",
+      "sha256": "40551a30cc4c28c6c1dfdb9afaaee410ab2287c7bb8a19da19e0d31b38d41a9f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/agents.startup-errors.test.ts.before.txt",
+      "sha256": "bfb5b2eb6b8db7ac735d2f170cb4319b3f9c9b19b299d440d768cf865bd2f8f0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/green.txt",
+      "sha256": "681d7e697e64057ebc9523ba1da963ca7debeb6cdb4551985ff5334a68c830e5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/inputs-before.json",
+      "sha256": "1e4a9192150d104bbb4c85b1ad6548ac80f69fa0f217f21d46c2316894da6ea4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/red.txt",
+      "sha256": "79bbd36623447b5cdfe67ded97abb05a99e842cae2eb242857350f1c6656e430"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/source-checkpoint.json",
+      "sha256": "8e04336e3adff16b735d0aa525d676eec0c18bc79859f0a24d57ed0908aa6b2c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/test-only.patch.txt",
+      "sha256": "4cb70c7bc82f74737b78743855adf9dc6f85ee6dd74bc9e7afdfc28ac72e26c7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/frontend.txt",
+      "sha256": "8525bb3e5f1477a4228145294f257291b08a25d61813791059147756f0aa020e"
+    }
+  ]
+}

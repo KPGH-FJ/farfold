@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json 14ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/extension-inventory/independent/format-equivalence.json 1ms (unchanged)

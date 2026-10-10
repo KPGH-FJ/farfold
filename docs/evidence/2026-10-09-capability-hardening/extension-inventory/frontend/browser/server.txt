@@ -1,0 +1,8 @@
+{"pid":19468,"port":1490}
+8:51:23 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:51:23 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:51:23 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:51:24 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:51:24 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:54:28 PM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx
+8:55:04 PM [vite] (client) page reload output/2026-10-10-extension-inventory-browser/fixture.tsx

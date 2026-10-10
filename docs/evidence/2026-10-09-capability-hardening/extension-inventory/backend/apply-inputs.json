@@ -1,0 +1,86 @@
+{
+  "stage": "beforeApply",
+  "time": "2026-10-10T12:41:08.706142+00:00",
+  "head": "3632acb0ac8df3e1178bdf030908befd53c171af",
+  "patchSha256": "8f474e911ae1b4fdd26342bf5d1b1ba12de65d7bf4cd3ef91301aa5abb2059a3",
+  "preparedPaths": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "baseSha256": null,
+      "sha256": "89215e29ab718df4194aaadf248fcc32a703dd094953f6071acd9261a4072e54",
+      "lines": 107
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "baseSha256": null,
+      "sha256": "238a908ca83c1479d66f56b29c36cd95003cfd8ad92b37baea1f904fe457b861",
+      "lines": 259
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/output.rs",
+      "baseSha256": null,
+      "sha256": "6400969269976676e10be1eed47849580c97caf4849479025bc17a7334c9f502",
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/process.rs",
+      "baseSha256": null,
+      "sha256": "94f3ebc2ab6699f8f96dfc8bc50ce7c3e9f1efe64de1c660fa8e19eb24372af0",
+      "lines": 204
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "baseSha256": null,
+      "sha256": "c62512621d97dd819ebfc3d8513a898eab7f8d9f5f7267207b02daf5938c4527",
+      "lines": 188
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "baseSha256": null,
+      "sha256": "7d57c6b326eb29eeba99ebbb3599110708bdefe1f8e16b57c1f9f946c385f231",
+      "lines": 495
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/extension_inventory/types.rs",
+      "baseSha256": null,
+      "sha256": "2484561866a1333542b13334cb0f9b3e5e7e2e72d0a2e84b19d430646311da6b",
+      "lines": 105
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/acp_client/mod.rs",
+      "baseSha256": "436b7cb8eeca335cd94e08caefefafd62f29ea2aa613bd9e1dd9631c9964c5ab",
+      "sha256": "e9669345b1121a08fb7f00513b770cb551b1b000be065261298a90b8d284df5e",
+      "lines": 120
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/lib.rs",
+      "baseSha256": "6336aa58d6c8f30493516eadbe02ca6ac3263235b04d33931ee6852416365e35",
+      "sha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+      "lines": 430
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/shell_env/unix.rs",
+      "baseSha256": "05d761dee1f5e2bbc9ad5c1a17f1c65ed534e002a3ee32a41d8e974e037122cf",
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e",
+      "lines": 249
+    },
+    {
+      "path": "src-tauri/src/shell_env.rs",
+      "preparedPath": "output/2026-10-10-extension-inventory-backend-patch/files/src-tauri/src/shell_env.rs",
+      "baseSha256": "d29ad3809f37d43e827ed403d6b2a000c231efe5e3aa2e517d1cba840d3e5ff4",
+      "sha256": "e6dbd83477a6f895d302ad1b9a1852dd3a5efa2f95ba711a935b2b6591b94e85",
+      "lines": 29
+    }
+  ],
+  "referencedBasesMatched": 13
+}

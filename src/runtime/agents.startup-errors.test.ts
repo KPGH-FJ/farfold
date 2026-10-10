@@ -28,6 +28,7 @@ vi.mock("react", async (original) => ({
     ];
   },
   useCallback: (callback: unknown) => callback,
+  useMemo: (read: () => unknown) => read(),
   useEffect: () => {},
   useRef: (current: unknown) => ({ current }),
 }));

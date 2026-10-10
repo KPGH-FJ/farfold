@@ -7,7 +7,8 @@
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AgentExtensionOwners } from "./agent_extension_owner";
 import { uiError } from "./ui_error";
 import { threads } from "./sessions";
 import { hasPendingRequests } from "./session_types";
@@ -660,6 +661,8 @@ export function agentIdentity(
 export type AgentBusy = "connect" | "install" | "remove";
 
 export interface AgentsState {
+  /** Opaque registered launch selection only; never contains public credentials. */
+  extensionOwners?: ReadonlyMap<string, object>;
   loading: boolean;
   loadError: string | null;
   cards: AgentCardModel[];
@@ -1030,12 +1033,23 @@ export function useAgents(): AgentsState {
     changeProgram(id, "agent_select_program", { path });
   const selectInstallation = (id: string, installationId: string) =>
     changeProgram(id, "agent_installation_select", { installationId });
+  const extensionTracker = useRef<AgentExtensionOwners | null>(null);
+  if (!extensionTracker.current)
+    extensionTracker.current = new AgentExtensionOwners();
+  const extensionOwners = useMemo(() => {
+    const registered = new Map(rows.map((row) => [row.id, row]));
+    for (const entry of entries) {
+      if (entry.registered) registered.set(entry.agentId, entry.registered);
+    }
+    return extensionTracker.current!.update([...registered.values()]);
+  }, [entries, rows]);
   const cards = mergeAgentCards(entries, rows, statuses);
   const connectedCards = cards.filter((card) => card.status === "connected");
 
   return {
     loading,
     loadError,
+    extensionOwners,
     cards,
     connectedCards,
     statuses,

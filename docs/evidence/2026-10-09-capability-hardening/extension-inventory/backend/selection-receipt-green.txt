@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0433]: cannot find module or crate `uuid` in this scope
+  --> src/acp_client/extension_inventory/launch.rs:84:18
+   |
+84 |         let id = uuid::Uuid::new_v4().to_string();
+   |                  ^^^^ use of unresolved module or unlinked crate `uuid`
+   |
+   = help: if you wanted to use a crate named `uuid`, use `cargo add uuid` to add it to your `Cargo.toml`
+
+error[E0433]: cannot find module or crate `uuid` in this scope
+   --> src/acp_client/extension_inventory/tests.rs:389:17
+    |
+389 |         assert!(uuid::Uuid::parse_str(&id).is_ok());
+    |                 ^^^^ use of unresolved module or unlinked crate `uuid`
+    |
+    = help: if you wanted to use a crate named `uuid`, use `cargo add uuid` to add it to your `Cargo.toml`
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `farfold` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `farfold` (lib test) due to 2 previous errors

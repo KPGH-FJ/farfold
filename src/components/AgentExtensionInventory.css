@@ -1,0 +1,56 @@
+.agent-extension-inventory {
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: grid;
+  gap: 10px;
+  overflow-wrap: anywhere;
+}
+.agent-extension-inventory h4,
+.agent-extension-inventory h5,
+.agent-extension-inventory p {
+  margin: 0;
+}
+.agent-extension-inventory h5 {
+  font-size: inherit;
+}
+.agent-extension-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.agent-extension-directory {
+  display: grid;
+  gap: 4px;
+  word-break: break-word;
+}
+.agent-extension-progress,
+.agent-extension-result {
+  display: grid;
+  gap: 8px;
+}
+.agent-extension-items {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow: auto;
+}
+.agent-extension-items li {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.agent-extension-inventory details p {
+  margin-top: 8px;
+}
+@media (max-width: 540px) {
+  .agent-extension-actions > button {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+}

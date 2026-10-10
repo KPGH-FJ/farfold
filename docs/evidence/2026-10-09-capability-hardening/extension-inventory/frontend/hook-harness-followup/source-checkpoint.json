@@ -1,0 +1,24 @@
+{
+  "sourceRefs": [
+    {
+      "path": "src/runtime/agents.install-options.test.ts",
+      "sha256": "6abc0d4941e33a5ece13f2235c3288901e956852c461ee94b1bdb229ac7df7ae"
+    },
+    {
+      "path": "src/runtime/agents.remove.test.ts",
+      "sha256": "39f1b7e8fc49015b3258ea2c11c4688ed64117fcc5ae26fc64596dc3dc224df4"
+    },
+    {
+      "path": "src/runtime/agents.startup-errors.test.ts",
+      "sha256": "5030caaf26fe1d8416f5f5c78c378c2ddd5a171e52198245aa0ba60cbaf35e90"
+    }
+  ],
+  "unchangedOriginalFrontend": {
+    "checkpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/extension-inventory/frontend/source-checkpoint.json",
+      "sha256": "89cdfa0cb8a1d0965881189f2797fe80b61354201e497ec28525b7a98008f31b"
+    },
+    "all16Match": true
+  },
+  "delta": "Three test-only mock lines. Production/config/fixture unchanged."
+}

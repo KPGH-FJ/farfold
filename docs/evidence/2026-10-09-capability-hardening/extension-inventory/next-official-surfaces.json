@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-10T13:05:25.989895+00:00",
+  "kind": "readOnlyOfficialSurfaceResearch",
+  "status": "designOnlyNotConnectedOrExecuted",
+  "scope": {
+    "items": ["P39", "P40", "P41"],
+    "agents": ["Gemini CLI", "OpenCode"],
+    "closedItems": [],
+    "constraints": [
+      "只读取官方网页、固定提交公开源码和已安装 Gemini 官方包公开源码；未读用户配置、凭据或技能正文。",
+      "未运行 CLI/Agent/认证/网络诊断；未安装依赖、修改源、配置或用户数据。",
+      "版本是证据适用范围，不建议 SHA 或固定版本准入；未知公开入口/输出形状不得靠 Agent 名称推定支持。"
+    ]
+  },
+  "versions": {
+    "gemini": {
+      "installedPackage": "@google/gemini-cli",
+      "installedVersion": "0.62.0",
+      "installedBin": "bundle/gemini.js",
+      "installedPackageExports": null,
+      "installedEvidence": [
+        {
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/package.json",
+          "sha256": "b6a087cf7fbfa394a5a010c2e9129545660a4cf40633ba396b2cb3885197671f"
+        },
+        {
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/bundle/gemini-J6X2T2ZI.js",
+          "sha256": "77299951df4c9e0c5a3b6b976ab584714f55dd0d4c51943899f8e6d42ae28489"
+        },
+        {
+          "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/registry:gemini/install-YWVoLz/node_modules/@google/gemini-cli/bundle/chunk-I47WLEEQ.js",
+          "sha256": "2bcd0c866796ed2bd06b4ed9270579c76ce8604cb2acb898903ccda130d17998"
+        }
+      ],
+      "installedCodeLines": {
+        "bundle/gemini-J6X2T2ZI.js": [6570, 6689],
+        "bundle/chunk-I47WLEEQ.js": [77032, 77063]
+      },
+      "officialStableTag": "v0.63.0",
+      "officialStableCommit": "573846625af9e93b3b968e0e0b86bb093a4c9b16",
+      "releaseUrl": "https://github.com/google-gemini/gemini-cli/releases/tag/v0.63.0",
+      "publishedAt": "2026-10-06T20:38:49Z",
+      "comparison": "已安装 0.62.0 与稳定 0.63.0 的所读 list 文本输出、enable 无 scope、disable 默认 workspace 行为相同；未运行任一版本。"
+    },
+    "openCode": {
+      "officialStableTag": "v1.18.35",
+      "officialStableCommit": "53d1eabb61e21162157817bf677da0a4ad3332e3",
+      "releaseUrl": "https://github.com/anomalyco/opencode/releases/tag/v1.18.35",
+      "publishedAt": "2026-10-06T20:18:39Z",
+      "installedVersion": "not inspected; no selected user row/config read",
+      "apiVersionWarning": "稳定源码同时含旧 /mcp 与新 location API。本文只规格化该稳定提交已核的 /mcp；不把 dev.opencode.ai/v2 的 /api/mcp/location envelope 混入旧响应。"
+    }
+  },
+  "geminiSkills": {
+    "officialProvided": [
+      {
+        "action": "list",
+        "argv": ["skills", "list", "--all"],
+        "output": "stdout 人类文本；每项 name + Enabled/Disabled + 可选 Built-in，另自由 description/location；无 JSON 参数。空结果也是文字。",
+        "scope": "所选 cwd 下官方发现后的有效同名赢家，非所有来源完整清单，非其他存活会话已生效状态。",
+        "refs": ["geminiList", "geminiDiscovery"]
+      },
+      {
+        "action": "disable",
+        "argv": ["skills", "disable", "<name>", "--scope", "user|workspace"],
+        "defaultScope": "workspace",
+        "effect": "只向指定可写层 skills.disabled 添加名称；可有另层既有禁用。",
+        "refs": ["geminiDisable", "geminiToggleScopes"]
+      },
+      {
+        "action": "enable",
+        "argv": ["skills", "enable", "<name>"],
+        "scope": "官方没有 --scope；依次从 workspace 和 user 所有可写禁用列表移除名称。不能做成单层对称启用按钮。",
+        "refs": ["geminiEnable", "geminiToggleScopes"]
+      },
+      {
+        "action": "install",
+        "argv": [
+          "skills",
+          "install",
+          "<git URL | local directory | .skill>",
+          "--scope",
+          "user|workspace"
+        ],
+        "optionalArgs": ["--path <subdirectory>", "--consent"],
+        "defaultScope": "user",
+        "effect": "Git clone/本地包解压→发现→官方同意→顺序复制；已有同名目录先移除再复制，可部分成功或覆盖；不是事务。",
+        "refs": ["geminiInstall", "geminiInstallEffects"]
+      },
+      {
+        "action": "uninstall",
+        "argv": ["skills", "uninstall", "<name>", "--scope", "user|workspace"],
+        "defaultScope": "user",
+        "effect": "官方按目标层移除；未安装路径只打印错误也可能正常退出，exit 0 单独不能证明实际变更。",
+        "refs": ["geminiUninstall"]
+      },
+      {
+        "action": "inSessionReload",
+        "command": "/skills reload (alias /skills refresh)",
+        "effect": "官方交互会话重新加载并更新技能/命令；该 TUI 命令实现不等于 ACP 结构化管理方法。",
+        "refs": ["geminiSessionSkills"]
+      }
+    ],
+    "discoveryAndTrust": "顺序为 builtin < active extension < user .gemini < user .agents < trusted workspace .gemini < trusted workspace .agents；同名后者遮蔽前者。未信任目录不加载 workspace 技能；管理权限和是否实际可触发不能从 Installed 推导。",
+    "sideEffects": "list 调用 loadCliConfig + config.initialize：存储/日志初始化、工具与扩展装载、已配置 MCP 启动、技能发现、记忆刷新等。不是纯元数据无副作用查询；本轮没有执行，未证明无模型请求或无后台子进程。",
+    "structuredGap": "CLI 未给机器清单/来源层/遮蔽项完整回执。不要解析自由 description/location 行授予安装或删除权限，也不直接导入 CLI 私有 helper 或自己扫描/改写 settings。core 源中存在类不等于受支持的完整管理 API。",
+    "minimalExecutableSlice": {
+      "entry": "接入层核实际已选注册 command/args/env 的公开包归属，派生该包声明的 gemini bin；不从项目/PATH 换程序。同一选中配置、cwd、不可复用请求 owner；不注入服务密钥。",
+      "actions": "可先做明确名称/来源/作用域的官方命令承接，enable 明示会影响两可写层；受控证据通过后能力填入同一面板。list 可作为有界官方报告，结构化清单缺口保留。",
+      "consent": "install 默认保留官方同意流程；仅完整显示来源/目标/覆盖风险并收到用户明确同意后才可映射官方 --consent，不能默认跳过；克隆可能先于同意发生。",
+      "completion": "非零/超时/取消/回执丢失显示结果未确认，保留可能已写状态；不自动重试、回滚或再卸载。成功需官方重读+同一实例 reload/实际使用分层验证。",
+      "cancel": "沿既有精确进程/group/pipe owner 发送取消并等实际收尾；取消请求或 UI 关闭不是无写入/已停证明。官方命令没有事务或独立 cancel/status receipt。"
+    }
+  },
+  "openCodeMcp": {
+    "officialStatus": {
+      "request": "GET /mcp?directory=<URL-encoded exact cwd> (optional workspace only when already bound by official workspace identity)",
+      "sdk": "client.mcp.status({directory, workspace?}, options)",
+      "response": "Record<string, {status: connected|disabled|needs_auth} | {status: failed|needs_client_registration,error:string}>",
+      "errors": "SDK 声明 400 BadRequest；还必须处理 HTTP 认证/网络/进程关闭/未知状态，不能把错误当空清单。",
+      "scope": "该 HTTP 进程内按 directory/可选 workspace 路由的实例状态；不是某一 session 独占状态，响应不回显 directory、进程或 session。",
+      "refs": [
+        "openCodeSdk",
+        "openCodeHttpRoutes",
+        "openCodeDirectory",
+        "openCodeDirectoryQuery"
+      ]
+    },
+    "currentAcpAttribution": {
+      "provided": "稳定 ACP 命令自身 Server.listen 后把实际 hostname/port 和 ServerAuth.headers 传给官方 SDK；其会话操作携带 params.cwd。",
+      "gap": "initialize 回执没有 listener 地址；默认 port=0 实际先尝试 4096 再随机。当前 Farfold launch 只启动注册入口并保连接，不持此 HTTP listener descriptor。不能扫4096、猜端口或新起 serve 冒充现有实例。",
+      "implementationDependency": "必须在 acp_client 从已授权启动链获得精确 endpoint+认证+进程/connection owner，并与请求 cwd 同绑；无法证明则 currentInstance inventory unavailable。显式 endpoint/官方参数方案须另做真实同实例归属和端口冲突反例，本文未实现/未验。",
+      "sharedEffect": "同进程同目录可能共享 MCP client；连接/断开可影响其全部会话，不能包装成只影响当前聊天。",
+      "refs": [
+        "openCodeAcp",
+        "openCodeInitialize",
+        "openCodeNetwork",
+        "openCodeListener",
+        "openCodeAuth"
+      ]
+    },
+    "readIsNotPassive": "mcp.status 取惰性 InstanceState；首次会对配置项 create/connect 并列工具，可启动 local MCP 或访问 remote/OAuth。后续状态读取亦不是纯配置来源证明。",
+    "cliAlternative": {
+      "argv": ["mcp", "list"],
+      "output": "人类文本含状态、原命令或 URL、错误；没有 JSON 参数。",
+      "scope": "该新 CLI 进程在 cwd 建立并结束独立实例，不能声称当前 ACP 状态。",
+      "decision": "不优先复用此 CLI 文本路线；若将来提供独立诊断，必须明确会建立新连接且严格白名单输出。",
+      "refs": ["openCodeCliList", "openCodeCliInstance", "openCodeMcpState"]
+    },
+    "diagnostic": {
+      "argv": ["mcp", "debug", "<name>"],
+      "scope": "远端 OAuth 诊断，不是当前 ACP 连接无副作用健康读。",
+      "effects": "会 POST initialize 并尝试 OAuth metadata/client transport；原输出包含 URL、token 首尾、client ID、认证头信息或响应片段；fetch 未显示总 deadline/abort。",
+      "decision": "不能把原 stdout/stderr 或 error 送往 UI/日志；不直接接通用诊断按钮。先用受归属保护的 status 固定枚举；更深诊断需明确网络/认证行为和有界实际收尾实证。",
+      "refs": ["openCodeCliDebug"]
+    },
+    "officialManagement": {
+      "provided": [
+        "POST /mcp {name,config} 动态添加",
+        "POST /mcp/:name/connect",
+        "POST /mcp/:name/disconnect",
+        "POST /mcp/:name/auth",
+        "POST /mcp/:name/auth/callback {code}",
+        "POST /mcp/:name/auth/authenticate",
+        "DELETE /mcp/:name/auth"
+      ],
+      "boundaries": [
+        "同样传 directory/workspace；动态 add 是内存连接配置，不等于已持久保存官方配置。",
+        "disconnect 是本实例断开，不等于写入持久 enabled=false。",
+        "auth 路线可能浏览器/凭据写入；本文未运行，不自行读取 token 或改配置。",
+        "HTTP 中止只退休本次观察，不证明 Agent 已撤销连接/配置/认证；不得为取消面板关闭整个 ACP 进程。"
+      ],
+      "refs": ["openCodeHttpRoutes", "openCodeMcpMutations"]
+    },
+    "minimumDto": "复用共用能力/selection/request owner；增加明确 source=officialInstance 与 scope=directoryInstance、observedAt、safeName、status enum；不把原 error/URL/command/header/env/tool schema 正文透出。未知状态为 unavailable，不降级 empty；read limit/deadline 是 Farfold 观察边界而非官方完成保证。"
+  },
+  "nextImplementationOrder": [
+    {
+      "priority": 1,
+      "scope": "Gemini P40 官方明确 disable(name,scope)/enable(name,all-writable-scopes) 动作；先做自有 workspace 实证",
+      "dependencies": [
+        "官方入口归属",
+        "同名遮蔽/大小写/trust/只读层",
+        "文本结果不冒充结构化完整清单",
+        "既有独立进程生命周期与部分写入重查"
+      ]
+    },
+    {
+      "priority": 2,
+      "scope": "Gemini 显式来源 install/uninstall；沿官方同意及作用域，不先自动化覆盖",
+      "dependencies": [
+        "准确来源与覆盖说明",
+        "多技能中途失败/取消保留材料",
+        "当前存活实例 reload/实际触发证明"
+      ]
+    },
+    {
+      "priority": 3,
+      "scope": "OpenCode 同实例 GET /mcp 通用状态",
+      "dependencies": [
+        "精确 listener/connection/cwd 归属取得",
+        "首次读取可能连接服务器的明确语义",
+        "不扫描端口/用户私有配置、不另起实例冒充"
+      ]
+    },
+    {
+      "priority": 4,
+      "scope": "OpenCode 显式 connect/disconnect/auth 及诊断",
+      "dependencies": [
+        "共目录会话影响",
+        "秘密白名单",
+        "HTTP断开和实际操作终态分开",
+        "未提供持久动作不得伪称完成"
+      ]
+    }
+  ],
+  "necessaryValidation": [
+    "Gemini user/workspace 同名遮蔽、alias、未信任目录、内置/extension、启用两层及禁用一层；保留用户原选择/权限。",
+    "恶意多行 name/description/location 与 ANSI、超量/超时；不能通过文本注入授权别的目标；no-skill 与解析失败分开。",
+    "安装覆盖/第二个技能失败/取消、uninstall absent exit0、重读和已有会话尚未reload均不得误报生效。",
+    "OpenCode 两进程相同cwd/同进程两cwd/重启或端口重用/目录改变/认证失败；旧回执不跨 owner，未归属端点不派发。",
+    "MCP 首读启动local/remote、disconnect共享影响、HTTP abort后Agent仍工作、超量敏感诊断输出；只使用受控fixture，真实CLI需独立授权与证据。"
+  ],
+  "completionBoundary": "仅两家公开接口研究。P39/P40/P41/ARCH-40、29家完整接入、Windows、安装版/真实账号/真实操作均未因此完成。",
+  "officialDocs": [
+    {
+      "url": "https://geminicli.com/docs/cli/using-agent-skills/",
+      "observed": "discovery, slash management, CLI install/uninstall; source code supplies actual asymmetry/side effects"
+    },
+    {
+      "url": "https://opencode.ai/docs/server/",
+      "observed": "GET /mcp and separate server scope; not proof of current ACP endpoint"
+    },
+    {
+      "url": "https://opencode.ai/docs/mcp-servers/",
+      "observed": "configuration/CLI/auth; stable code is decisive for exact response"
+    }
+  ],
+  "sourceRefs": {
+    "geminiList": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/commands/skills/list.ts#L13-L79",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/commands/skills/list.ts",
+      "sha256": "8b2e12a92e837419716494ae8a83db214fa767c56a6fbc365c9cb459a5b68d67",
+      "lines": [13, 79]
+    },
+    "geminiInitialize": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/core/src/config/config.ts#L1454-L1585",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/core/src/config/config.ts",
+      "sha256": "def687a35fad59afedd93485df0b92b45eb4d953cde89bfc917ca770207a73e5",
+      "lines": [1454, 1585]
+    },
+    "geminiInstall": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/commands/skills/install.ts#L16-L119",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/commands/skills/install.ts",
+      "sha256": "e1b68cc534c2410234f86b3fa73a78280229faddf1b8f2b08b5b2d46b643437a",
+      "lines": [16, 119]
+    },
+    "geminiInstallEffects": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/utils/skillUtils.ts#L93-L206",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/utils/skillUtils.ts",
+      "sha256": "cabe7c8f4a012b1805db9d1e654d36ceab5fb48a3e762a5af94eee4770e68361",
+      "lines": [93, 206]
+    },
+    "geminiUninstall": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/commands/skills/uninstall.ts#L17-L73",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/commands/skills/uninstall.ts",
+      "sha256": "fc00ee62f8e8f22cea31dbcdc0dfc1efee6fdf7700b9e98c0e6055cdd9089cf2",
+      "lines": [17, 73]
+    },
+    "geminiEnable": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/commands/skills/enable.ts#L14-L48",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/commands/skills/enable.ts",
+      "sha256": "c40af3167c049b248c09467d58797d0f294c0fc10a1e9ed56b0c8a13bbd4fa52",
+      "lines": [14, 48]
+    },
+    "geminiDisable": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/commands/skills/disable.ts#L15-L62",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/commands/skills/disable.ts",
+      "sha256": "6b0369a249d41029410bf067366078f9e4273a1448f3bbf31d034ecd81398a4a",
+      "lines": [15, 62]
+    },
+    "geminiToggleScopes": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/utils/featureToggleUtils.ts#L72-L129",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/utils/featureToggleUtils.ts",
+      "sha256": "dcdb6c6fa98959f642c75358698908403c2c7dc9f3a0ed0d8e9dee54ff99f351",
+      "lines": [72, 129]
+    },
+    "geminiDiscovery": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/core/src/skills/skillManager.ts#L52-L187",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/core/src/skills/skillManager.ts",
+      "sha256": "0e13ed68e7d76725d95342428c12e4a823c06e75a89654cbb4ee079b4297d613",
+      "lines": [52, 187]
+    },
+    "geminiSessionSkills": {
+      "url": "https://github.com/google-gemini/gemini-cli/blob/573846625af9e93b3b968e0e0b86bb093a4c9b16/packages/cli/src/ui/commands/skillsCommand.ts#L247-L418",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/gemini-cli/packages/cli/src/ui/commands/skillsCommand.ts",
+      "sha256": "13ecba29aeaac5d0436f62bcd93be06e80b455e407a2f961b97f2253c5b5d8ef",
+      "lines": [247, 418]
+    },
+    "openCodeAcp": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/cli/cmd/acp.ts#L9-L73",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/cli/cmd/acp.ts",
+      "sha256": "104d1dfe498154fca38c5971deec8330be4793cedf122e36c5a38589089e1b23",
+      "lines": [9, 73]
+    },
+    "openCodeInitialize": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/acp/service.ts#L94-L139",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/acp/service.ts",
+      "sha256": "238750d52e220080db7b7f4992432fbfc7fb7ec5a15a6175460f8f0832a2c8de",
+      "lines": [94, 139]
+    },
+    "openCodeNetwork": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/cli/network.ts#L6-L80",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/cli/network.ts",
+      "sha256": "5dd002beaee3285dd4a2d064c5b571b5e4f3300f349499dc194420d0c4266cc1",
+      "lines": [6, 80]
+    },
+    "openCodeListener": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/server.ts#L73-L131",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/server/server.ts",
+      "sha256": "ba4503a8da66a7e8cda86ea7ad7ea0e8e4172abcaa87abd8c35835ffa0a494f9",
+      "lines": [73, 131]
+    },
+    "openCodeSdk": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/sdk/js/src/v2/gen/sdk.gen.ts#L2394-L2523",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/sdk/js/src/v2/gen/sdk.gen.ts",
+      "sha256": "704370fa528777c75dd342f96dc02e440629735a370198d7b8dfb2fc2db6b236",
+      "lines": [2394, 2523]
+    },
+    "openCodeHttpRoutes": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/routes/instance/httpapi/groups/mcp.ts#L11-L156",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/server/routes/instance/httpapi/groups/mcp.ts",
+      "sha256": "06fb822ef79a07981a0342e03e418685efdab9e931a4fc7bded1c868a8d63eb7",
+      "lines": [11, 156]
+    },
+    "openCodeDirectory": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/routes/instance/httpapi/middleware/instance-context.ts#L1-L43",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/server/routes/instance/httpapi/middleware/instance-context.ts",
+      "sha256": "001a58d0b31d3ebeebe41f0640dea6b817b0ec592b7de495733f8670eb9a0b8f",
+      "lines": [1, 43]
+    },
+    "openCodeDirectoryQuery": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/routes/instance/httpapi/middleware/workspace-routing.ts#L22-L90",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/server/routes/instance/httpapi/middleware/workspace-routing.ts",
+      "sha256": "39c42becc5274c5c66edc09b61101bc9a0592add44cdf597c7472d91eb57100b",
+      "lines": [22, 90]
+    },
+    "openCodeMcpState": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/mcp/index.ts#L490-L612",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/mcp/index.ts",
+      "sha256": "82c459309dfd005d25daecfabc1007d807d4bee23f6078434974277938a1c026",
+      "lines": [490, 612]
+    },
+    "openCodeMcpMutations": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/mcp/index.ts#L629-L709",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/mcp/index.ts",
+      "sha256": "82c459309dfd005d25daecfabc1007d807d4bee23f6078434974277938a1c026",
+      "lines": [629, 709]
+    },
+    "openCodeCliList": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/cli/cmd/mcp.ts#L68-L167",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/cli/cmd/mcp.ts",
+      "sha256": "3943ce7532c616bf45b0fb1aa984239b9f77cce8df90ffc1f5264f5338a34fa0",
+      "lines": [68, 167]
+    },
+    "openCodeCliDebug": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/cli/cmd/mcp.ts#L659-L838",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/cli/cmd/mcp.ts",
+      "sha256": "3943ce7532c616bf45b0fb1aa984239b9f77cce8df90ffc1f5264f5338a34fa0",
+      "lines": [659, 838]
+    },
+    "openCodeCliInstance": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/cli/effect-cmd.ts#L69-L96",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/cli/effect-cmd.ts",
+      "sha256": "d56277c01f5b2a7d91a015b694bee155325b706a9e982f637db43049ade61e81",
+      "lines": [69, 96]
+    },
+    "openCodeAuth": {
+      "url": "https://github.com/anomalyco/opencode/blob/53d1eabb61e21162157817bf677da0a4ad3332e3/packages/opencode/src/server/auth.ts#L12-L48",
+      "snapshot": "output/2026-10-10-extension-official-surfaces/opencode/packages/opencode/src/server/auth.ts",
+      "sha256": "01c45e05eecac32628acc263be84a563386c39c78a33aa67d9a8114f86a57a41",
+      "lines": [12, 48]
+    }
+  },
+  "sourceIndex": {
+    "path": "output/2026-10-10-extension-official-surfaces/source-index.json",
+    "sha256": "8ac7e5b6897509e5a6703130379e6acf5515ad70c85340fa72dd140bb8c74795"
+  },
+  "priorReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/next-extension-scope-review.json",
+    "sha256": "2ab2a85f5e2e3e277de937a221d6de06219a9797a9bab6db365eeade6557674f"
+  },
+  "notRun": [
+    "CLI/help/version commands",
+    "Agent/model requests",
+    "official authentication",
+    "user configuration or credential reads",
+    "production modification",
+    "tests/browser/App/database/install"
+  ]
+}

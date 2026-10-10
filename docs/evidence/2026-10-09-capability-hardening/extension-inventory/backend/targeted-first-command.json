@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "acp_client::extension_inventory::tests",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "durationSeconds": 53.36400604248047
+}

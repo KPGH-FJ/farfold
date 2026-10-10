@@ -10,6 +10,7 @@ import { ACCESS_STRINGS as S } from "../runtime/access_strings";
 import { agentStatus, type AgentStatus } from "../runtime/agent_status";
 import { STRINGS } from "../runtime/strings";
 import { uiError } from "../runtime/ui_error";
+import { AgentExtensionInventory } from "./AgentExtensionInventory";
 import { AgentLogo } from "./AgentLogo";
 import { useModalDialog } from "./useModalDialog";
 import {
@@ -215,6 +216,15 @@ export function AgentDetails({
             <p className="auth-note">{D.capabilityHonesty}</p>
           </details>
         </section>
+        <AgentExtensionInventory
+          key={card.id}
+          agentId={card.id}
+          selection={agents.extensionOwners?.get(card.id) ?? null}
+          active={active}
+          blocked={
+            agents.loading || agents.scanning || !!agents.busy?.[card.id]
+          }
+        />
         {officialUrl && (
           <div className="agent-detail-links">
             <button

@@ -1,0 +1,440 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stderr | src/runtime/agents.remove.test.ts > returns the actual removal result and refreshes after preparation progress fails to save
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.remove.test.ts > keeps successful removal independent from a refresh failure and exposes the load error
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.remove.test.ts > forwards requested managed uninstalls and reports kept directories
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.remove.test.ts > retains preparation completion when the backend reports no removal
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/runtime/agents.remove.test.ts (4 tests | 4 failed) 77ms
+   × returns the actual removal result and refreshes after preparation progress fails to save 46ms
+   × keeps successful removal independent from a refresh failure and exposes the load error 1ms
+   × forwards requested managed uninstalls and reports kept directories 1ms
+   × retains preparation completion when the backend reports no removal 1ms
+stderr | src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connect displays AGENT_START_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_START_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > reconnect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install displays AGENT_START_FAILED and leaves the operation retryable
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > install keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > keeps a failed first installation separate from connection and only retries on explicit action
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.startup-errors.test.ts > connects a registered card directly while a conversation connection exists
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/runtime/agents.startup-errors.test.ts (20 tests | 20 failed) 35ms
+   × connect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 10ms
+   × connect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 1ms
+   × connect displays AGENT_CONNECTION_ENDED and leaves the operation retryable 1ms
+   × connect displays AGENT_START_FAILED and leaves the operation retryable 1ms
+   × connect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 1ms
+   × connect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 1ms
+   × reconnect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 1ms
+   × reconnect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 1ms
+   × reconnect displays AGENT_CONNECTION_ENDED and leaves the operation retryable 2ms
+   × reconnect displays AGENT_START_FAILED and leaves the operation retryable 3ms
+   × reconnect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 2ms
+   × reconnect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 1ms
+   × install displays AGENT_INITIALIZE_FAILED and leaves the operation retryable 2ms
+   × install displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable 1ms
+   × install displays AGENT_CONNECTION_ENDED and leaves the operation retryable 1ms
+   × install displays AGENT_START_FAILED and leaves the operation retryable 1ms
+   × install keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 2ms
+   × install keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback 2ms
+   × keeps a failed first installation separate from connection and only retries on explicit action 1ms
+   × connects a registered card directly while a conversation connection exists 0ms
+stderr | src/runtime/agents.install-options.test.ts > passes the same reviewed input to first install and explicit update
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.install-options.test.ts > keeps installation input across failure and retry without connecting a failed candidate
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.install-options.test.ts > does not apply an installation draft to a registered connection or historical selection
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/runtime/agents.install-options.test.ts > keeps the submitted model choice while cancellation settles and never retries automatically
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/runtime/agents.install-options.test.ts (4 tests | 4 failed) 8ms
+   × passes the same reviewed input to first install and explicit update 5ms
+   × keeps installation input across failure and retry without connecting a failed candidate 1ms
+   × does not apply an installation draft to a registered connection or historical selection 0ms
+   × keeps the submitted model choice while cancellation settles and never retries automatically 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 28 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > passes the same reviewed input to first install and explicit update
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.install-options.test.ts:51:10
+ ❯ src/runtime/agents.install-options.test.ts:63:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/28]⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > keeps installation input across failure and retry without connecting a failed candidate
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.install-options.test.ts:51:10
+ ❯ src/runtime/agents.install-options.test.ts:93:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/28]⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > does not apply an installation draft to a registered connection or historical selection
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.install-options.test.ts:51:10
+ ❯ src/runtime/agents.install-options.test.ts:111:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/28]⎯
+
+ FAIL  src/runtime/agents.install-options.test.ts > keeps the submitted model choice while cancellation settles and never retries automatically
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.install-options.test.ts:51:10
+ ❯ src/runtime/agents.install-options.test.ts:138:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/28]⎯
+
+ FAIL  src/runtime/agents.remove.test.ts > returns the actual removal result and refreshes after preparation progress fails to save
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.remove.test.ts:42:10
+ ❯ src/runtime/agents.remove.test.ts:73:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/28]⎯
+
+ FAIL  src/runtime/agents.remove.test.ts > keeps successful removal independent from a refresh failure and exposes the load error
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.remove.test.ts:42:10
+ ❯ src/runtime/agents.remove.test.ts:86:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/28]⎯
+
+ FAIL  src/runtime/agents.remove.test.ts > forwards requested managed uninstalls and reports kept directories
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.remove.test.ts:42:10
+ ❯ src/runtime/agents.remove.test.ts:93:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/28]⎯
+
+ FAIL  src/runtime/agents.remove.test.ts > retains preparation completion when the backend reports no removal
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.remove.test.ts:42:10
+ ❯ src/runtime/agents.remove.test.ts:113:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/28]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect displays AGENT_START_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect displays AGENT_START_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_FAILED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_INITIALIZE_TIMEOUT and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_CONNECTION_ENDED and leaves the operation retryable
+ FAIL  src/runtime/agents.startup-errors.test.ts > install displays AGENT_START_FAILED and leaves the operation retryable
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.startup-errors.test.ts:49:10
+ ❯ src/runtime/agents.startup-errors.test.ts:84:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/28]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+ FAIL  src/runtime/agents.startup-errors.test.ts > connect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+ FAIL  src/runtime/agents.startup-errors.test.ts > reconnect keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+ FAIL  src/runtime/agents.startup-errors.test.ts > install keeps untrusted AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+ FAIL  src/runtime/agents.startup-errors.test.ts > install keeps untrusted 检查结果：AGENT_INITIALIZE_FAILED: secret-canary behind its existing fallback
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.startup-errors.test.ts:49:10
+ ❯ src/runtime/agents.startup-errors.test.ts:119:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/28]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > keeps a failed first installation separate from connection and only retries on explicit action
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.startup-errors.test.ts:49:10
+ ❯ src/runtime/agents.startup-errors.test.ts:150:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/28]⎯
+
+ FAIL  src/runtime/agents.startup-errors.test.ts > connects a registered card directly while a conversation connection exists
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.useAgents src/runtime/agents.ts:1039:27
+    1037|   if (!extensionTracker.current)
+    1038|     extensionTracker.current = new AgentExtensionOwners();
+    1039|   const extensionOwners = useMemo(() => {
+       |                           ^
+    1040|     const registered = new Map(rows.map((row) => [row.id, row]));
+    1041|     for (const entry of entries) {
+ ❯ render src/runtime/agents.startup-errors.test.ts:49:10
+ ❯ src/runtime/agents.startup-errors.test.ts:183:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/28]⎯
+
+
+ Test Files  3 failed | 384 passed (387)
+      Tests  28 failed | 4509 passed (4537)
+   Start at  20:59:00
+   Duration  48.36s (transform 13.69s, setup 0ms, import 285.92s, tests 85.31s, environment 32ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

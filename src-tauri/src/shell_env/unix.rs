@@ -159,6 +159,19 @@ pub fn command_env() -> HashMap<String, String> {
     }
 }
 
+/// Read only an environment already prepared by the normal launch path.
+/// None means the query must ask for ordinary program preparation first.
+/// This accessor never initializes the cell or launches a shell.
+pub fn cached_command_env() -> Option<HashMap<String, String>> {
+    LOGIN_ENV.get().map(|env| {
+        if env.is_empty() {
+            std::env::vars().collect()
+        } else {
+            env.clone()
+        }
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
