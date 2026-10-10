@@ -41,12 +41,27 @@ pub enum Outcome {
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
-pub struct Target {
+pub struct SkillChangeTarget {
     pub inventory_request_id: String,
     pub item_id: usize,
     pub name: String,
     pub origin: String,
     pub display_path: String,
+}
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct McpChangeTarget {
+    pub kind: &'static str,
+    pub inventory_request_id: String,
+    pub item_id: usize,
+    pub name: String,
+    pub transport: &'static str,
+}
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum Target {
+    Skill(SkillChangeTarget),
+    Mcp(McpChangeTarget),
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -66,8 +81,12 @@ pub struct Review {
     pub write_scope: Scope,
     pub observed_at_ms: u64,
     pub valid_for_ms: u32,
-    pub rules_before: usize,
-    pub rules_after: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rules_before: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rules_after: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configured_enabled: Option<bool>,
     pub mutation: &'static str,
     pub preservation: &'static str,
     pub session_applicability: &'static str,
@@ -77,7 +96,12 @@ pub struct Review {
 pub struct Observation {
     pub observed_at_ms: u64,
     pub configuration: &'static str,
-    pub skill: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub skill: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mcp: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub configured_enabled: Option<Option<bool>>,
     pub reported_enabled: Option<bool>,
     pub session_applicability: &'static str,
 }

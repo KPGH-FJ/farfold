@@ -1,6 +1,7 @@
 //! Explicit one-shot official CLI inventory; no ACP session or configuration write.
 pub(in crate::acp_client) mod execution;
 pub(in crate::acp_client) mod launch;
+pub(in crate::acp_client) mod mcp_targets;
 pub(in crate::acp_client) mod output;
 pub(in crate::acp_client) mod process;
 pub(in crate::acp_client) mod requests;
@@ -144,9 +145,18 @@ fn query(
     let snapshot = match kind {
         Kind::Mcp => {
             let mut bytes = process::run(command, request)?;
-            let result = output::parse(&bytes);
+            let result = output::parse_private(&bytes);
             bytes.fill(0);
-            InventorySnapshot::Mcp(result?)
+            let (snapshot, entries) = result?;
+            *request
+                .mcp_targets
+                .lock()
+                .unwrap_or_else(|p| p.into_inner()) = Some(Arc::new(mcp_targets::TargetSet {
+                row: row.clone(),
+                directory: directory.clone(),
+                entries,
+            }));
+            InventorySnapshot::Mcp(snapshot)
         }
         Kind::Skills => {
             let (snapshot, entries) = process::run_skills_private(command, request)?;

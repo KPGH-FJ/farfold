@@ -1,0 +1,234 @@
+{
+  "scope": "Independent P41 source review and author-executed counterexample evidence; no Cargo rerun, official CLI, Agent, App, configuration or database access.",
+  "result": "No additional blocking defect found at the bound 19-source checkpoint. Ready for root integration checks; this is not installed or real MCP acceptance.",
+  "checks": {
+    "currentSourceHashesMatched": 19,
+    "ownTestsInAuthorRun": 2,
+    "associatedAuthorRunPassed": 35,
+    "associatedAuthorRunFailed": 0,
+    "wireOriginalFiveValuesMatchOriginalStdout": true,
+    "wireFinalNineValuesMatchUniqueFinalStdoutMarkers": true,
+    "independentTestExecution": false
+  },
+  "counterexamples": [
+    {
+      "owner": "verification",
+      "case": "Official list omits enabled_tools/disabled_tools while first get includes them",
+      "red": "The original production decoder returned TargetChanged for a valid first get. One effective failing assertion was preserved; initial compilation diagnostics are not counted as a behavioral failure.",
+      "fix": "Only fields actually observed in list constrain first get. Full get identity is then kept in the review.",
+      "green": "Own production decoder regression and later filter-drift guard passed in the associated run."
+    },
+    {
+      "owner": "verification",
+      "case": "MCP endpoints attempting to consume or retire a skills review",
+      "result": "Passed through the real shared registry with a temporary metadata store and controlled peer. Wrong-kind status/cancel/inspect/confirm do not retire or consume the original review; correct skills confirmation still admits once. The test never dispatches its admitted write."
+    },
+    {
+      "owner": "product_coverage",
+      "case": "Complete first-get filter identity changes only in the final get",
+      "red": "Original result was Verified instead of expected Unknown. Kept separately from the independent first-get failure.",
+      "fix": "observe_mcp compares complete target identity with the reviewed Report before publishing any observation.",
+      "green": "Actual controlled sequential get/RPC/get now returns acknowledged-but-Unknown/TargetChanged with one write and no fabricated observation."
+    }
+  ],
+  "sourceReview": [
+    "Source/map, original cwd and registry row are rechecked; user/profile scope comes from the complete active User layer. Inherited-only, duplicate contributing layers, malformed transport and policy refusal do not gain write authority.",
+    "One quoted keyPath segment modifies enabled only. Full selected-layer semantic JSON plus all other captured layers are compared, including private transport credentials, unknown fields and arrays. Public DTOs contain only safe name/transport/booleans and fixed codes; private values are not projected.",
+    "List-to-get subset acceptance is limited to original known fields; confirm retains complete Report equality and final observe now retains complete target equality. Configured preference and official get report remain separate facts.",
+    "Shared P40/P41 registry gates kind for duplicate requests/status/cancel/confirm/recheck. A wrongly addressed MCP operation cannot borrow skills authority. Final read-only recheck retains original dispatch/ack and reports Observed, not historical write success.",
+    "The synthetic post-get cancellation test holds the actual second owned child and shared activity/global worker lease. Cancellation is not settlement; unknown write state remains until real child cleanup. Recheck performs no additional write.",
+    "Narrow frontend inspection confirms Flight.port remains captured by original kind, original InventoryResult.request is used for management, and markStale only retires that exact request. No frontend test or browser suite was independently repeated."
+  ],
+  "limits": [
+    "35 tests include existing P40 coverage and author tests; they are not 35 independent P41 cases. The earlier 32-test run began compiling while the second independent test was added; no source-stability claim is attached to that run.",
+    "The 19 source hashes are verified at this review time. The author checkpoint is after the associated run; this review does not manufacture a missing pre-run hash checkpoint or substitute for root full engineering.",
+    "pendingCleanup wire was generated through the real Job method under a controlled killable peer, not proof of an unkillable OS process or an actual seven-second cleanup overrun.",
+    "Literal quote/backslash names were tested in the private key encoder; they do not gain public name eligibility. The HTTP preservation case uses synthetic configuration, not network/OAuth/transport activity.",
+    "Official expectedVersion is not a cross-process CAS. Preserved semantics do not promise byte-identical TOML/comments/layout. No connection, live disconnection, tool availability or current conversation applicability is established.",
+    "Only helper static review is complete for future native setup/cleanup. No actual fixture setup, cleanup or installed UI action was executed by this reviewer."
+  ],
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "230b7fdf1b82d3b8a5b78c45878b901b320ff87f986396c9705e622b281916f0",
+      "lines": 220
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf",
+      "lines": 174
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "04fdf61f791cbf60108df2a2e65a57085a1814f2ee097342b2cc098daecf7e8a",
+      "lines": 324
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87",
+      "lines": 140
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "4fbb156d8136aec4ee55e1d69b56dfd6290803484617b5998a4cf96ac3493db8",
+      "lines": 250
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "c825116fca240516977051ae8a919a8f81789e2be7b85713167b4e637f9d6958",
+      "lines": 167
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64",
+      "lines": 144
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp.rs",
+      "sha256": "adfbe0604a7343048cf3cf17301bb93d858da670354f198e5b5dd5cd594fd597",
+      "lines": 139
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_independent_tests.rs",
+      "sha256": "d65fe20255633b6438ee6af2822d7c10a90ec92344f1b07b38cef7af1a014dd8",
+      "lines": 112
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_peer.py",
+      "sha256": "313197a14ee31306a253cf77a221a461bebd7f5a1ed00264436e89a587522d76",
+      "lines": 79
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3",
+      "lines": 155
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+      "sha256": "7ce627957b0807b197251d2209dbde957787978e9ba8f6eccbc73541d278bec7",
+      "lines": 419
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "2abdac3b745c7b04314d6f72e68a5a8ac7afe14acf42e59cb20669f6aa2e7def",
+      "lines": 224
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "8e04c6d020a534ea6f4664f3ae02bb4e42e5cf0e36e025285771a5973e29a91c",
+      "lines": 211
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43",
+      "lines": 518
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "475c89404335d6cf228b7b565b4c08470a7fa507fe6350f29ba634b19c9ef386",
+      "lines": 442
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "f01507fd7d44062ad1c9c80ba53c1a6abd8a931ac282070161354180f8180d0a",
+      "lines": 487
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "32e66a3bf2acd3ea048d6deabe1ce16bafa7f6a6df0a0d8bcd536c5139cd7252",
+      "lines": 141
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "debc1438a75821b204d4f4b3361fd391486f491da8585bfdf93bf2a1db0aa499",
+      "lines": 441
+    }
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/source-checkpoint.json",
+      "sha256": "831dbad59cda5343f523886d8b65494499d2cdb48f9980a8ba85686ddcd2f6db",
+      "bytes": 3650
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-repair.json",
+      "sha256": "8ebcac95ffffceae36a07063d0f69e4fcf2ffc1438d494db9ea2822aa75b3761",
+      "bytes": 427
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-original-red.txt",
+      "sha256": "f3fb93ca114bf46ce9557493b2f37c14a975969260bf8a3061453f0578d825fd",
+      "bytes": 2650
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/postget-original-red.txt",
+      "sha256": "97139b1a3bbe77917af3b2b0bbcf51553ebffdb42d348793fb811d0d1b9bcec4",
+      "bytes": 910
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/targeted-first.txt",
+      "sha256": "7160776b68d66581bcad093056423a5b580a04b1d0d7905fdf5275ae49598a87",
+      "bytes": 23325
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/targeted-final-first.txt",
+      "sha256": "794ed8b284effad5615ece645b8c498c5b1cace6a31f4644099f6d81e60fa2f1",
+      "bytes": 26240
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.json",
+      "sha256": "3c84eea3b0d3e260f001bc0813b048262f5a6d7161fbd26270ddef8b0f7ede7f",
+      "bytes": 4786
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.raw.txt",
+      "sha256": "3936fb6c77518aafdd524343a3d16c7ea6ec8c533e30cfd36b30c84395164d51",
+      "bytes": 3661
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/final-wire.json",
+      "sha256": "f8022c6dece7a7f6ace9511ffb1903b7c693032025735ab120ffcc4bf24ea837",
+      "bytes": 7958
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/final-wire.raw.txt",
+      "sha256": "7806f93a8838a78edfa8458bf8573ec571a2327487ca799bf7280d2f96d513d8",
+      "bytes": 6226
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/format-targeted.txt",
+      "sha256": "21fefdddd9e88788ddbe4699e83f74a76d6d388dbf5015cc5ece40a0b27d0455",
+      "bytes": 12
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/mcp_targets.before-filter-fix.rs.txt",
+      "sha256": "e9e3a8ed71bb62de7f2bea09267ce6361e7f0d58bea7e82a0cc7ab321ef87480",
+      "bytes": 5143
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/rpc.before-postget-fix.rs.txt",
+      "sha256": "6f666088f311d137ff4c4dedfd3f9bc0d3ef0276224ece0f4e218dd88fa3f306",
+      "bytes": 16274
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.json",
+      "sha256": "2afa8b31dca34d7b7000ab8f5c085649a58df6a779556b45ffe13c5f12e2f8e2",
+      "bytes": 20126
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.ts",
+      "sha256": "49bcf3a6e3a677ad0bb415e4d9d912aeb6db052237e760219963278dd1fd7b1c",
+      "bytes": 3117
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-independent/contract-challenge.json",
+      "sha256": "8e8a727bc9bce77cc662757eecfb87b4bcd9e4113c631dfc7f48949b31c16a7e",
+      "bytes": 2444
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-independent/native-helper-independent.json",
+      "sha256": "fb43ef554b20c8285992ddb5b8f18378ee0c42bd7f165e9b10f5031e7a792142",
+      "bytes": 4858
+    }
+  ]
+}

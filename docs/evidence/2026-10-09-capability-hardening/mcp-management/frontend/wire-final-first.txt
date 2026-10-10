@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_management.wire.test.tsx (6 tests | 1 failed) 32ms
+   × drives the real shared controller and review through captured running/status/confirmation values 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_management.wire.test.tsx > drives the real shared controller and review through captured running/status/confirmation values
+Error: Calling the test function inside another test function is not allowed. Please put it inside "describe" or "suite" so it can be properly collected.
+ ❯ src/runtime/mcp_management.wire.test.tsx:123:7
+    121|   for (const [label, value] of Object.entries(finalWire) as [string, a…
+    122|     if (label !== "review")
+    123|       it(
+       |       ^
+    124|         "accepts final actual Rust serialization without changing fiel…
+    125|           label,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  01:48:39
+   Duration  253ms (transform 87ms, setup 0ms, import 131ms, tests 32ms, environment 0ms)
+

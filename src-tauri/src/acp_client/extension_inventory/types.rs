@@ -58,6 +58,7 @@ pub struct ExtensionCapabilities {
     pub mcp_inventory: InventoryCapability,
     pub skills_inventory: InventoryCapability,
     pub skill_enablement: InventoryCapability,
+    pub mcp_enablement: InventoryCapability,
     pub tool_inventory: &'static str,
 }
 
@@ -106,6 +107,7 @@ pub struct McpInventory {
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct McpInventoryItem {
+    pub enablement: SkillEnablement,
     pub id: usize,
     pub name: Option<String>,
     pub transport: &'static str,

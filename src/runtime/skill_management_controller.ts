@@ -2,28 +2,28 @@ import type {
   InventoryOwner,
   InventoryResult,
 } from "./extension_inventory_controller";
-import type { SkillInventoryItem } from "./extension_inventory_types";
 import {
   skillManagementPort,
   type SkillManagementPort,
 } from "./skill_management";
+import { mcpManagementPort } from "./mcp_management";
 import {
-  parseSkillChangeOperation,
-  parseSkillChangeCancellation,
   skillChangeFailure,
-  type SkillChangeRequest,
-  type SkillChangeOperation,
-  type SkillChangeReview,
   type SkillChangeCode,
 } from "./skill_management_types";
+import {
+  parseExtensionChangeOperation as parseSkillChangeOperation,
+  parseExtensionChangeCancellation as parseSkillChangeCancellation,
+  type ExtensionChangeRequest as SkillChangeRequest,
+  type ExtensionChangeOperation as SkillChangeOperation,
+  type ExtensionChangeReview as SkillChangeReview,
+  type ExtensionChangeTargetOwner as SkillChangeTargetOwner,
+  requestForTarget,
+  confirmedRequest,
+  isMcpRequest,
+} from "./extension_management_types";
+export type { ExtensionChangeTargetOwner as SkillChangeTargetOwner } from "./extension_management_types";
 
-export interface SkillChangeTargetOwner {
-  owner: InventoryOwner;
-  result: InventoryResult;
-  item: SkillInventoryItem;
-  current(): boolean;
-  changed(): void;
-}
 export interface SkillManagementView {
   request: SkillChangeRequest | null;
   operation: SkillChangeOperation | null;
@@ -49,6 +49,7 @@ const EMPTY: SkillManagementView = Object.freeze({
   error: null,
 });
 interface Flight {
+  port: SkillManagementPort;
   target: SkillChangeTargetOwner;
   view: SkillManagementView;
   retired: boolean;
@@ -65,7 +66,7 @@ interface Flight {
     "writeDispatched" | "writeAck"
   > | null;
 }
-/** One current operation per Agent; public results only, no persistent task ledger. */
+/** Shared skill/MCP operation per Agent; public results only, no persistent task ledger. */
 export class SkillManagementController {
   private entries = new Map<string, Flight>();
   private listeners = new Set<() => void>();
@@ -74,6 +75,7 @@ export class SkillManagementController {
     private waitMs = 10000,
     private uuid: () => string = () => crypto.randomUUID(),
     private now = () => Date.now(),
+    private mcpPort: SkillManagementPort = mcpManagementPort,
   ) {}
   subscribe = (fn: () => void) => {
     this.listeners.add(fn);
@@ -104,7 +106,7 @@ export class SkillManagementController {
     f.inspectionRevoked = true;
     void Promise.resolve()
       .then(() =>
-        this.port.cancel({
+        f.port.cancel({
           agentId: f.inspection.agentId,
           requestId: f.inspection.requestId,
         }),
@@ -228,25 +230,10 @@ export class SkillManagementController {
       });
   }
   inspect(target: SkillChangeTargetOwner): boolean {
-    const { result, item, owner } = target;
+    const { owner } = target;
     const previous = this.entries.get(owner.agentId);
-    if (
-      !owner.current() ||
-      !target.current() ||
-      result.owner !== owner ||
-      result.request.kind !== "skills" ||
-      result.request.agentId !== owner.agentId ||
-      result.stale ||
-      result.snapshot.source !== "officialAppServer" ||
-      !result.snapshot.complete ||
-      result.snapshot.items[item.id] !== item ||
-      !item.name ||
-      !["user", "repo"].includes(item.origin) ||
-      item.pluginReported ||
-      item.enablement.availability !== "reviewable" ||
-      previous?.view.unresolved
-    )
-      return false;
+    const request = requestForTarget(target, this.uuid());
+    if (!request || previous?.view.unresolved) return false;
     if (!previous && this.entries.size >= 64) {
       const old = [...this.entries].find(([, v]) => !v.view.unresolved);
       if (!old) return false;
@@ -257,21 +244,8 @@ export class SkillManagementController {
       previous.retired = true;
       this.revokeReview(previous);
     }
-    const request: SkillChangeRequest = Object.freeze({
-      agentId: owner.agentId,
-      requestId: this.uuid(),
-      action: "inspect",
-      cwd: result.request.cwd,
-      target: Object.freeze({
-        inventoryRequestId: result.request.requestId,
-        itemId: item.id,
-        name: item.name,
-        origin: item.origin as "user" | "repo",
-      }),
-      requestedEnabled: !item.reportedEnabled,
-      operationId: null,
-    });
     const f: Flight = {
+      port: isMcpRequest(request) ? this.mcpPort : this.port,
       target,
       view: { ...EMPTY, request, unresolved: true },
       retired: false,
@@ -305,7 +279,7 @@ export class SkillManagementController {
         return;
       }
       f.dispatched = true;
-      return this.port.inspect({
+      return f.port.inspect({
         agentId: request.agentId,
         requestId: request.requestId,
         inventoryRequestId: request.target.inventoryRequestId,
@@ -334,12 +308,9 @@ export class SkillManagementController {
     if (!this.canConfirm(owner, review)) return false;
     const old = this.entries.get(owner.agentId)!;
     old.consumed = true;
-    const request: SkillChangeRequest = Object.freeze({
-      ...old.inspection,
-      requestId: this.uuid(),
-      action: "setEnabled",
-      target: Object.freeze({ ...review.target }),
-    });
+    const request = Object.freeze(
+      confirmedRequest(old.inspection, review, this.uuid()),
+    );
     const f: Flight = {
       ...old,
       view: { ...EMPTY, request, unresolved: true, reviewRetired: true },
@@ -363,7 +334,7 @@ export class SkillManagementController {
           return;
         }
         f.dispatched = true;
-        return this.port.confirm({
+        return f.port.confirm({
           agentId: request.agentId,
           requestId: request.requestId,
           reviewId: review.reviewId,
@@ -386,7 +357,7 @@ export class SkillManagementController {
       return;
     this.publish(f, { checking: true });
     if (this.attached(f) && f.view.unresolved)
-      this.observe(f, () => this.port.status({ agentId, requestId }));
+      this.observe(f, () => f.port.status({ agentId, requestId }));
   }
   cancel(agentId: string, requestId: string, explicit = true) {
     const f = this.entries.get(agentId);
@@ -404,7 +375,7 @@ export class SkillManagementController {
     if (f.dispatched && f.view.unresolved)
       this.observe(
         f,
-        () => this.port.cancel({ agentId, requestId }),
+        () => f.port.cancel({ agentId, requestId }),
         true,
         releaseAbsent,
       );
@@ -465,7 +436,7 @@ export class SkillManagementController {
     this.publish(f, {});
     if (!this.attached(f) || f.view.cancelRequested) return false;
     this.observe(f, () =>
-      this.port.recheck({
+      f.port.recheck({
         agentId,
         requestId: request.requestId,
         operationId: request.operationId!,

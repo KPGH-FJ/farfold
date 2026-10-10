@@ -1,3 +1,15 @@
+import {
+  invalid,
+  record,
+  one,
+  integer,
+  text,
+  bool,
+  OPERATION_KEYS,
+  operationIdentity,
+  lifecycle,
+  cancelledOperation,
+} from "./extension_change_validation";
 // Public skill preference protocol. No raw configuration or path authority.
 import {
   validInventoryDirectory,
@@ -184,42 +196,6 @@ export const SKILL_CHANGE_CODES: readonly SkillChangeCode[] = [
   "configurationRejected",
   "writeUncertain",
 ];
-function invalid(): never {
-  throw { code: "invalidOutput" };
-}
-function record(raw: unknown, keys: string[]): Record<string, unknown> {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return invalid();
-  const v = raw as Record<string, unknown>;
-  if (
-    Object.keys(v).length !== keys.length ||
-    keys.some((k) => !Object.hasOwn(v, k))
-  )
-    return invalid();
-  return v;
-}
-function one<T extends string>(v: unknown, values: readonly T[]): T {
-  return typeof v === "string" && values.includes(v as T)
-    ? (v as T)
-    : invalid();
-}
-function integer(v: unknown, max = Number.MAX_SAFE_INTEGER): number {
-  return Number.isSafeInteger(v) && (v as number) >= 0 && (v as number) <= max
-    ? (v as number)
-    : invalid();
-}
-function text(v: unknown, max = 4096): string {
-  if (
-    typeof v !== "string" ||
-    !v ||
-    new TextEncoder().encode(v).length > max ||
-    /[\u0000-\u001f\u007f-\u009f]/.test(v)
-  )
-    return invalid();
-  return v;
-}
-function bool(v: unknown): boolean {
-  return typeof v === "boolean" ? v : invalid();
-}
 export function skillChangeFailure(raw: unknown): SkillChangeCode | null {
   try {
     return one(record(raw, ["code"]).code, SKILL_CHANGE_CODES);
@@ -351,151 +327,33 @@ export function parseSkillChangeOperation(
   raw: unknown,
   expected: SkillChangeRequest,
 ): SkillChangeOperation {
-  const v = record(raw, [
-    "agentId",
-    "requestId",
-    "action",
-    "cwd",
-    "target",
-    "requestedEnabled",
-    "operationId",
-    "state",
-    "phase",
-    "settled",
-    "writeDispatched",
-    "writeAck",
-    "outcome",
-    "code",
-    "review",
-    "observation",
-  ]);
-  if (
-    !validInventoryId(expected.requestId) ||
-    !validInventoryDirectory(expected.cwd) ||
-    v.agentId !== expected.agentId ||
-    v.requestId !== expected.requestId ||
-    v.action !== expected.action ||
-    v.cwd !== expected.cwd ||
-    v.requestedEnabled !== expected.requestedEnabled ||
-    v.operationId !== expected.operationId ||
-    (expected.action === "recheck"
-      ? !validInventoryId(v.operationId)
-      : v.operationId !== null)
-  )
-    return invalid();
-  const state = one(v.state, [
-    "running",
-    "cancelling",
-    "pendingCleanup",
-    "ready",
-    "failed",
-    "cancelled",
-  ]);
-  const phase = one(v.phase, [
-    "queued",
-    "starting",
-    "reading",
-    "writing",
-    "checking",
-    "cleaning",
-    "complete",
-  ]);
-  const settled = bool(v.settled),
-    dispatched = bool(v.writeDispatched);
-  const ack = one(v.writeAck, [
-    "none",
-    "ok",
-    "okOverridden",
-    "rejected",
-    "unknown",
-  ]);
-  const outcome =
-    v.outcome === null
-      ? null
-      : one(v.outcome, [
-          "notDispatched",
-          "rejected",
-          "verified",
-          "observed",
-          "mismatch",
-          "unknown",
-        ]);
-  const code = v.code === null ? null : one(v.code, SKILL_CHANGE_CODES);
+  const v = record(raw, OPERATION_KEYS);
+  operationIdentity(v, expected);
   const obs = v.observation === null ? null : observation(v.observation);
   if (
-    settled !== ["ready", "failed", "cancelled"].includes(state) ||
-    settled !== (phase === "complete") ||
-    (!settled && outcome !== null) ||
-    (!dispatched && ack !== "none") ||
-    (dispatched && (ack === "none" || state === "cancelled")) ||
-    ((state === "failed" || state === "cancelled") && !code)
+    (obs?.skill === "matchesRequested" &&
+      obs.reportedEnabled !== expected.requestedEnabled) ||
+    (obs?.skill === "differs" &&
+      obs.reportedEnabled === expected.requestedEnabled)
   )
-    return invalid();
-  if (
-    obs?.skill === "matchesRequested" &&
-    obs.reportedEnabled !== expected.requestedEnabled
-  )
-    return invalid();
-  if (
-    obs?.skill === "differs" &&
-    obs.reportedEnabled === expected.requestedEnabled
-  )
-    return invalid();
-  const parsedTarget = target(v.target, expected);
-  const rev = v.review === null ? null : review(v.review, expected);
-  if (rev && rev.target.displayPath !== parsedTarget.displayPath)
-    return invalid();
-  if (expected.action === "inspect") {
-    if (
-      dispatched ||
-      ack !== "none" ||
-      outcome !== null ||
-      obs !== null ||
-      (state === "ready") !== (rev !== null)
-    )
-      return invalid();
-  } else {
-    if (rev || (settled && outcome === null)) return invalid();
-    const matching =
-      obs?.configuration === "matchesIntended" &&
-      obs.skill === "matchesRequested";
-    if (
-      outcome === "verified" &&
-      (expected.action !== "setEnabled" ||
-        !dispatched ||
-        !["ok", "okOverridden"].includes(ack) ||
-        !matching ||
-        state !== "ready")
-    )
-      return invalid();
-    if (
-      outcome === "observed" &&
-      (expected.action !== "recheck" || !matching || state !== "ready")
-    )
-      return invalid();
-    if (outcome === "notDispatched" && dispatched) return invalid();
-    if (outcome === "rejected" && dispatched && ack !== "rejected")
-      return invalid();
-    if (
-      outcome === "mismatch" &&
-      !(
-        obs?.configuration === "changed" ||
-        obs?.skill === "differs" ||
-        obs?.skill === "missing"
-      )
-    )
-      return invalid();
-  }
+    invalid();
+  const parsedTarget = target(v.target, expected),
+    rev = v.review === null ? null : review(v.review, expected);
+  if (rev && rev.target.displayPath !== parsedTarget.displayPath) invalid();
   return {
     ...expected,
     target: parsedTarget,
-    state,
-    phase,
-    settled,
-    writeDispatched: dispatched,
-    writeAck: ack,
-    outcome,
-    code,
+    ...lifecycle(v, expected, {
+      hasObservation: !!obs,
+      hasReview: !!rev,
+      matching:
+        obs?.configuration === "matchesIntended" &&
+        obs.skill === "matchesRequested",
+      different:
+        obs?.configuration === "changed" ||
+        obs?.skill === "differs" ||
+        obs?.skill === "missing",
+    }),
     review: rev,
     observation: obs,
   };
@@ -504,19 +362,8 @@ export function parseSkillChangeCancellation(
   raw: unknown,
   expected: SkillChangeRequest,
 ): SkillChangeOperation | null {
-  const v = record(raw, [
-    "agentId",
-    "requestId",
-    "cancelRequested",
-    "operation",
-  ]);
-  if (
-    v.agentId !== expected.agentId ||
-    v.requestId !== expected.requestId ||
-    v.cancelRequested !== true
-  )
-    return invalid();
-  return v.operation === null
+  const operation = cancelledOperation(raw, expected);
+  return operation === null
     ? null
-    : parseSkillChangeOperation(v.operation, expected);
+    : parseSkillChangeOperation(operation, expected);
 }

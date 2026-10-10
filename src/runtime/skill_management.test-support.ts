@@ -1,3 +1,7 @@
+import {
+  isMcpRequest,
+  type ExtensionChangeRequest,
+} from "./extension_management_types";
 import { vi } from "vitest";
 import {
   ExtensionInventoryController,
@@ -25,9 +29,11 @@ export const item = {
   enablement: { availability: "reviewable" as const, reason: null },
 };
 export function operation(
-  r: SkillChangeRequest,
+  r: ExtensionChangeRequest,
   state: SkillChangeOperation["state"] = "running",
 ): SkillChangeOperation {
+  if (isMcpRequest(r))
+    throw new Error("This fixture only emits the skill protocol");
   const ready = state === "ready";
   return {
     ...r,
@@ -71,7 +77,7 @@ export function operation(
   };
 }
 export function written(
-  r: SkillChangeRequest,
+  r: ExtensionChangeRequest,
   ack: "ok" | "okOverridden" | "unknown" = "ok",
 ): SkillChangeOperation {
   return {

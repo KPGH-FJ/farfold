@@ -1,0 +1,241 @@
+{
+  "atUtc": "2026-10-10T17:49:53.723536+00:00",
+  "status": "explicitDesiredPreferenceFullAppPassed",
+  "scope": "Full production App with React StrictMode and shared preference controls, controlled IPC/chooser, actual browser engines. No official process, configuration operation, installed App or tool connection proved.",
+  "results": [
+    {
+      "engine": "webkit",
+      "passed": 23,
+      "pageErrors": [],
+      "recordedInputsStable": true,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-03.raw.txt",
+      "checks": [
+        {
+          "name": "opening and querying do not inspect or write",
+          "pass": true
+        },
+        {
+          "name": "MCP report does not restrict explicit target preference",
+          "pass": true
+        },
+        {
+          "name": "explicit enable request remains true despite prior enabled report",
+          "pass": true
+        },
+        {
+          "name": "fresh configuration refusal provides no confirmation or automatic write",
+          "pass": true
+        },
+        {
+          "name": "inspect refers only to exact inventory/item with no config or secret input",
+          "pass": true
+        },
+        {
+          "name": "review and heading Enter cannot dispatch confirmation",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes user preference, directory report, profile scope and unverified connections",
+          "pass": true
+        },
+        {
+          "name": "MCP review has no skill-specific explanation",
+          "pass": true
+        },
+        {
+          "name": "narrow actual dialog remains in viewport without horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "review withdrawal returns focus to the exact MCP status action",
+          "pass": true
+        },
+        {
+          "name": "reopening a withdrawn review cannot restore authority",
+          "pass": true
+        },
+        {
+          "name": "one explicit confirmation sends only one review identity",
+          "pass": true
+        },
+        {
+          "name": "uncertain write remains unknown and old configuration report is stale",
+          "pass": true
+        },
+        {
+          "name": "explicit recheck targets old operation under a fresh request without a second write",
+          "pass": true
+        },
+        {
+          "name": "matching recheck remains observation, not previous-write success",
+          "pass": true
+        },
+        {
+          "name": "kind A-B-A cannot confirm stale MCP review or reuse its inventory",
+          "pass": true
+        },
+        {
+          "name": "late A confirmation cannot enter B",
+          "pass": true
+        },
+        {
+          "name": "A result stays scoped to original directory without renewed confirm",
+          "pass": true
+        },
+        {
+          "name": "NEW-16 explains refusal without inventing a program selection change",
+          "pass": true
+        },
+        {
+          "name": "explicit capability refresh does not auto-query or reissue a write",
+          "pass": true
+        },
+        {
+          "name": "separate explicit query restores review access after capability refresh",
+          "pass": true
+        },
+        {
+          "name": "no unexpected IPC, skill writes, Agent prompt, or connection dispatched",
+          "pass": true
+        },
+        {
+          "name": "draft and new-conversation directory preserved",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "passed": 23,
+      "pageErrors": [],
+      "recordedInputsStable": true,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-02.raw.txt",
+      "checks": [
+        {
+          "name": "opening and querying do not inspect or write",
+          "pass": true
+        },
+        {
+          "name": "MCP report does not restrict explicit target preference",
+          "pass": true
+        },
+        {
+          "name": "explicit enable request remains true despite prior enabled report",
+          "pass": true
+        },
+        {
+          "name": "fresh configuration refusal provides no confirmation or automatic write",
+          "pass": true
+        },
+        {
+          "name": "inspect refers only to exact inventory/item with no config or secret input",
+          "pass": true
+        },
+        {
+          "name": "review and heading Enter cannot dispatch confirmation",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes user preference, directory report, profile scope and unverified connections",
+          "pass": true
+        },
+        {
+          "name": "MCP review has no skill-specific explanation",
+          "pass": true
+        },
+        {
+          "name": "narrow actual dialog remains in viewport without horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "review withdrawal returns focus to the exact MCP status action",
+          "pass": true
+        },
+        {
+          "name": "reopening a withdrawn review cannot restore authority",
+          "pass": true
+        },
+        {
+          "name": "one explicit confirmation sends only one review identity",
+          "pass": true
+        },
+        {
+          "name": "uncertain write remains unknown and old configuration report is stale",
+          "pass": true
+        },
+        {
+          "name": "explicit recheck targets old operation under a fresh request without a second write",
+          "pass": true
+        },
+        {
+          "name": "matching recheck remains observation, not previous-write success",
+          "pass": true
+        },
+        {
+          "name": "kind A-B-A cannot confirm stale MCP review or reuse its inventory",
+          "pass": true
+        },
+        {
+          "name": "late A confirmation cannot enter B",
+          "pass": true
+        },
+        {
+          "name": "A result stays scoped to original directory without renewed confirm",
+          "pass": true
+        },
+        {
+          "name": "NEW-16 explains refusal without inventing a program selection change",
+          "pass": true
+        },
+        {
+          "name": "explicit capability refresh does not auto-query or reissue a write",
+          "pass": true
+        },
+        {
+          "name": "separate explicit query restores review access after capability refresh",
+          "pass": true
+        },
+        {
+          "name": "no unexpected IPC, skill writes, Agent prompt, or connection dispatched",
+          "pass": true
+        },
+        {
+          "name": "draft and new-conversation directory preserved",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "changeFromPrior": "MCP rows offer explicit enable and disable review intents. Production still rejects fresh source/configuration inconsistencies before granting confirmation. Skills behavior remains governed by its existing path.",
+  "newCoverage": [
+    "Both review actions available independent of directory report",
+    "Choosing enable passes true even when previous directory report enabled",
+    "Fresh inspect configurationChanged failure grants neither confirmation nor automatic write"
+  ],
+  "previousReceipt": "receipt.json preserves the prior two-engine20-check evidence and first-driver-label failure; it is not relabeled as final source acceptance.",
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/explicit-intent-fixture.tsx.source.txt": "af1aad924814fb1d8666487d36c3737b13e5737ef3b8ea56680b3dcfaf72f9b6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/explicit-intent-run.mjs.source.txt": "122058d97620fe7232ed48632f6bfcfba4387b338a4f6aa94d75b820d27a5c70",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-03.raw.txt": "40957cc146cb18f8aa1d6787584ae09ea38a5f770eecf81f5b51a391a4fee833",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-03-review.png": "9af1a7847c67dab0834e70f727734b92dac55c0b077a209304d2a1e256a2c374",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-03-observed.png": "32abcec02c6daa2c957ecc9784ef2b639bd5126f1dc3895f7bb7b6b24677d71c",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-02.raw.txt": "0041d33b93f30d5ba51878d4c81112e6976093535c076ada58412507944a41eb",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-02-review.png": "136cf043643c5775a6e81350e5d42102c0ac876662995288c9f3dc9f1da70da7",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-02-observed.png": "a61fb19f717ce973e44e29fb84ceaf6da226d85ba587774f157d211347acf5c3",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/receipt.json": "feb0ae90111decd0df288b11fbd3702dc76fde0d3cc92192443e02bb95c03107"
+  }
+}

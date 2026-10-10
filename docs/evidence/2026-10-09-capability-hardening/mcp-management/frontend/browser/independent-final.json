@@ -1,0 +1,88 @@
+{
+  "status": "passed_with_explicit_scope",
+  "reviewer": "architecture",
+  "performed": "Read-only artifact/hash/source-coverage review; no test, browser, App, Agent or official configuration rerun.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/explicit-intent-receipt.json",
+      "sha256": "c793c7004dca320b677db4d99fb14644fa0bcbb02c7063cd8edefe128e0d6772"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/source-final.json",
+      "sha256": "f9269cc87c1afecf27ba56249f884f8a361d9784907c672841026ce7896f8093"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/implementation.json",
+      "sha256": "58012553468d353193d400fca61961cac155edad92d129a2e1de31c7933e39ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/related-final.txt",
+      "sha256": "291c790778e09988f3c4d72ab9405ebc041862c9b61172cd51680d775afd6c42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "browserReceiptReferencedArtifacts": 9,
+  "allBrowserArtifactHashesMatch": true,
+  "sourceFilesMatchCurrent": 21,
+  "engines": [
+    {
+      "engine": "webkit",
+      "checks": 23,
+      "passed": 23,
+      "pageErrors": [],
+      "recordedSourceEntries": 887,
+      "beforeAfterEqual": true,
+      "ownedFilesCovered": 21,
+      "ownedExactMatches": 20,
+      "finalSourceDifferences": [
+        {
+          "path": "src/runtime/mcp_management.wire.test.tsx",
+          "browserSha256": "9001860fec756394df787c5ae7da3c4eab5059f0af2b3629f00722dc1762f0d8",
+          "finalSha256": "fe691bee72b67f2075b49cafab2746efebfd42f83996a648d9cf65e3866c4c0c"
+        }
+      ],
+      "allCurrentSourceDifferences": [
+        "src/runtime/mcp_management.wire.test.tsx"
+      ]
+    },
+    {
+      "engine": "chromium",
+      "checks": 23,
+      "passed": 23,
+      "pageErrors": [],
+      "recordedSourceEntries": 887,
+      "beforeAfterEqual": true,
+      "ownedFilesCovered": 21,
+      "ownedExactMatches": 20,
+      "finalSourceDifferences": [
+        {
+          "path": "src/runtime/mcp_management.wire.test.tsx",
+          "browserSha256": "74aead30edf3699c30406b965344c6a8f4f4bc0671342f7f668cd0889b702051",
+          "finalSha256": "fe691bee72b67f2075b49cafab2746efebfd42f83996a648d9cf65e3866c4c0c"
+        }
+      ],
+      "allCurrentSourceDifferences": [
+        "src/runtime/mcp_management.wire.test.tsx"
+      ]
+    }
+  ],
+  "conclusions": [
+    "Both 23-check lists exactly match their original browser records; there are no recorded page errors, and all 887 recorded source entries were stable within each run.",
+    "The only current/final-checkpoint difference from either browser capture is the wire test. All production App code used in these browser runs matches final source.",
+    "The fixture imports the production App and mounts it with React StrictMode; only IPC/directory chooser behavior is controlled. The captured driver checks separate review/confirmation, explicit requested preference, fresh configuration refusal, owner retirement, unknown/readback and NEW-16 explicit refresh.",
+    "Final author evidence remains 17 files / 130 passing tests plus typecheck and scoped format success. The two browser runs were executed by root, not this reviewer."
+  ],
+  "limits": [
+    "No installed application, official CLI/config write, active MCP connection or tool availability is established by these browser records. Backend rejection of unsupported scope/configuration disagreement remains unchanged.",
+    "Screenshots were hash-verified here, not independently visually re-inspected. Root performed visual inspection.",
+    "The final-wire second controller chain has explicitly controlled prerequisite envelopes; its original operation replies remain intact. This addendum does not expand that evidence boundary."
+  ],
+  "findings": []
+}

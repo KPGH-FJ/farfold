@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>P41 actual App MCP preference review</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      let next = 1;
+      window.__TAURI_INTERNALS__ = {
+        invoke: (cmd, args) => window.testInvoke(cmd, args),
+        transformCallback: (fn) => { const id = next++; (window.callbacks ??= new Map()).set(id, fn); return id; },
+        unregisterCallback: () => {},
+        convertFileSrc: (path) => path,
+        metadata: {
+          currentWindow: { label: "main" },
+          currentWebview: { label: "main" },
+        },
+      };
+      window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+        unregisterListener: () => {},
+      };
+      window.calls = [];
+      window.unexpected = [];
+      window.testInvoke = async (cmd, args) => {
+        window.calls.push({ cmd, args });
+        if (cmd === "host_performance_origin") return null;
+        return null;
+      };
+    </script>
+    <script type="module" src="./fixture.tsx"></script>
+  </body>
+</html>

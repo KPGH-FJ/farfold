@@ -1,0 +1,143 @@
+{
+  "atUtc": "2026-10-10T17:28:11.464822+00:00",
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "243c3c984b4f46804952d90dd1ba118145a2d8b0f8b6adf32c8647ba37a26cd9",
+      "bytes": 3134,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/types.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_tests.rs",
+      "sha256": "83fabf6618dcf1b5486b0f47eb3cf386dd60b76eb4d3a145bdd5452e98132b7e",
+      "bytes": 17946,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/independent_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "1efac5d8815f8d7be6353f3794d59bd4f9a7ee3e5c1466f4dc982d08ba366850",
+      "bytes": 7491,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/plan.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "7188627f1cefd558b8e54861adf168dcfa276928693cff3aceb5468156fdae49",
+      "bytes": 7116,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/mod.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "62a8cd30d216cc8cf2eb718b7942091d219694177387562386fccfa49d52461c",
+      "bytes": 17876,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "f0bf0db7f425311bedf3f370a7bfb9e1aadc8537db7a94b34c83cb87a6bcb091",
+      "bytes": 15490,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/requests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "3784b58005c621a483b7c0aa9c2fc87a731d7819e2b4667982359bfc3f43b5e9",
+      "bytes": 12529,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/skill_management/rpc.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "ff69d0d61796e8cd65864c0b915748f846962c69b63f79a059068fbd924e70ad",
+      "bytes": 4369,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/types.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/targets.rs",
+      "sha256": "10ebd93de2deea94e1bb1a4d4d4bac25aca4d2f2bb9bfc22bf66a8c7b3760f24",
+      "bytes": 2587,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/targets.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution.rs",
+      "sha256": "c0f7c25f093856d42ca41e3cafa2b250e7c1f801b680bcf65a2e87b042d8b4af",
+      "bytes": 714,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/execution.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "d7a9103f466917e2d1eb7704d6370a5b788ac51a2ca6ab84ab23c889ac7be631",
+      "bytes": 10390,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/mod.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "2471f37d0077d67e2f8cdd8277dd735b9de743f61599b6363c19d0e67d6edd86",
+      "bytes": 8771,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/skills_output.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "ec72c7406cec880342a683c071110e9241e1760c906ff22a204e3f71c2a844c2",
+      "bytes": 3973,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/output.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "302710d64b223d3964b0b28b436ea5df2b3a67819c50d407e5d782afb8cc212b",
+      "bytes": 21425,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/skills_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests_tests.rs",
+      "sha256": "be587749d04d4efa33f88228a45e6c1065a5edb7db4282c5e07d0c6992a646ba",
+      "bytes": 499,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/requests_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "sha256": "8eeb00b2bbe4017f81c86dcc30e55d2e6c639f04eb0389739268be00fdc15517",
+      "bytes": 5161,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/skills_rpc.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c",
+      "bytes": 28236,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "aa64062a8cf38cdb2e52d40db67bf63aa7d0e748750fa61c40ba6cf8fba4f1be",
+      "bytes": 8264,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/requests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution_tests.rs",
+      "sha256": "956cde3ab25a10b862ad4ed629d7f7848305c47b7caff39ed0db8602031e5a48",
+      "bytes": 286,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/execution_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297",
+      "bytes": 10197,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc",
+      "bytes": 9796,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/process.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "211c2c9418096e9464e001546950c264a8b2bea2aacffd8cc99528f452967f96",
+      "bytes": 6734,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/acp_client/extension_inventory/launch.rs"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "1293c05e181cd7eb7fe42e47e707e422350b58b25da7ac338b9b41ee7daecb75",
+      "bytes": 19372,
+      "beforeCopy": "output/2026-10-11-mcp-management-contract/before-source/src-tauri/src/lib.rs"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/AgentExtensionInventory.selection-expiry.test.tsx(78,20): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management.test-support.ts(178,31): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(30,29): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(41,31): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(53,18): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(59,30): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(95,29): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(107,16): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(119,29): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(167,29): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(196,18): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(202,31): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(222,20): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(239,16): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(247,29): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+src/runtime/skill_management_controller.test.ts(314,30): error TS2345: Argument of type 'ExtensionChangeRequest' is not assignable to parameter of type 'SkillChangeRequest'.
+  Type 'McpChangeRequest' is not assignable to type 'SkillChangeRequest'.
+    Types of property 'target' are incompatible.
+      Type 'McpChangeTarget' is not assignable to type 'Omit<SkillChangeTarget, "displayPath"> & { displayPath?: string | undefined; }'.
+        Property 'origin' is missing in type 'McpChangeTarget' but required in type 'Omit<SkillChangeTarget, "displayPath">'.
+ ELIFECYCLE  Command failed with exit code 1.

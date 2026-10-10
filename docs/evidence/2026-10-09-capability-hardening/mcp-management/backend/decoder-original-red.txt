@@ -1,0 +1,56 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: type `skill_management::requests::Job` is more private than the item `run_selected`
+  --> src/acp_client/skill_management/mod.rs:32:1
+   |
+32 | / pub(super) fn run_selected(
+33 | |     store: &MetaStore,
+34 | |     job: &Job,
+35 | |     command: std::process::Command,
+36 | | ) -> Result<()> {
+   | |_______________^ function `run_selected` is reachable at visibility `pub(in crate::acp_client)`
+   |
+note: but type `skill_management::requests::Job` is only usable at visibility `pub(in crate::acp_client::skill_management)`
+  --> src/acp_client/skill_management/requests.rs:32:1
+   |
+32 | pub(super) struct Job {
+   | ^^^^^^^^^^^^^^^^^^^^^
+   = note: `#[warn(private_interfaces)]` on by default
+
+warning: type `skill_management::requests::Job` is more private than the item `skill_management::dispatch`
+   --> src/acp_client/skill_management/mod.rs:132:1
+    |
+132 | / pub(super) async fn dispatch(
+133 | |     app: &AppHandle,
+134 | |     store: MetaStore,
+135 | |     pair: (Arc<Job>, bool),
+136 | | ) -> Result<ChangeOperation> {
+    | |____________________________^ function `skill_management::dispatch` is reachable at visibility `pub(in crate::acp_client)`
+    |
+note: but type `skill_management::requests::Job` is only usable at visibility `pub(in crate::acp_client::skill_management)`
+   --> src/acp_client/skill_management/requests.rs:32:1
+    |
+ 32 | pub(super) struct Job {
+    | ^^^^^^^^^^^^^^^^^^^^^
+
+warning: `farfold` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 44.51s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+test acp_client::skill_management::mcp_independent_tests::official_list_omits_tool_filters_but_first_get_may_report_them ... FAILED
+
+failures:
+
+---- acp_client::skill_management::mcp_independent_tests::official_list_omits_tool_filters_but_first_get_may_report_them stdout ----
+
+thread 'acp_client::skill_management::mcp_independent_tests::official_list_omits_tool_filters_but_first_get_may_report_them' (25844494) panicked at src/acp_client/skill_management/mcp_independent_tests.rs:35:5:
+first get must accept fields the official list never reports: Some(TargetChanged)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    acp_client::skill_management::mcp_independent_tests::official_list_omits_tool_filters_but_first_get_may_report_them
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1508 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

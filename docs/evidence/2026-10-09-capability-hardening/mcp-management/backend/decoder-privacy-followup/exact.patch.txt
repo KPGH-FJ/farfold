@@ -1,0 +1,33 @@
+--- src-tauri/src/acp_client/extension_inventory/tests.rs (before)
++++ src-tauri/src/acp_client/extension_inventory/tests.rs (after)
+@@ -18,7 +18,29 @@
+     assert_eq!(value["items"][0]["reportedAuth"], "notLoggedIn");
+     assert_eq!(value["sessionApplicability"], "unverified");
+     assert!(!value.to_string().contains("PRIVATE"));
+-    assert_eq!(value["items"][0].as_object().unwrap().len(), 9);
++    let mut expected = json!({
++        "id": 0,
++        "name": "example",
++        "transport": "stdio",
++        "reportedEnabled": false,
++        "reportedAuth": "notLoggedIn",
++        "origin": "unreported",
++        "configurationLayer": "unreported",
++        "connection": "unverified",
++        "tools": "unreported",
++        "enablement": {"availability": "unavailable", "reason": "unsupportedTransport"}
++    });
++    assert_eq!(value["items"][0], expected);
++
++    let (snapshot, targets) =
++        output::parse_private(&serde_json::to_vec(&vec![row()]).unwrap()).unwrap();
++    assert_eq!(targets.len(), 1);
++    assert!(targets[0].identity.to_string().contains("PRIVATE_SECRET"));
++    let managed = serde_json::to_value(snapshot).unwrap();
++    expected["enablement"] = json!({"availability": "available", "reason": null});
++    assert_eq!(managed["items"][0], expected);
++    assert_eq!(managed["sessionApplicability"], "unverified");
++    assert!(!managed.to_string().contains("PRIVATE"));
+ }
+ #[test]
+ fn urls_headers_helpers_and_hostnames_never_leave_http_transport() {

@@ -1,0 +1,8 @@
+{
+  "beforeSha256": "e9e3a8ed71bb62de7f2bea09267ce6361e7f0d58bea7e82a0cc7ab321ef87480",
+  "cause": "official list omits tool filter fields, first get supplies them",
+  "fix": "original identity checks only actually reported fields; full first get enters reviewed baseline, later get filter drift remains rejected",
+  "red": "decoder-original-red.txt",
+  "testOwner": "verification",
+  "status": "fixed source, green pending"
+}

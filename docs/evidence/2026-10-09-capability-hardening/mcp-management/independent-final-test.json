@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only append to the frozen independent source review; no Cargo, test or browser execution.",
+  "result": "No additional blocking issue in the single added pure Plan test; all other 18 checked paths retain the reviewed bytes.",
+  "delta": {
+    "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+    "beforeSha256": "7ce627957b0807b197251d2209dbde957787978e9ba8f6eccbc73541d278bec7",
+    "afterSha256": "6820634a66ed5effe443603aaa790952fb38d1531f1a459637adee2d531db621",
+    "test": "mcp_initial_user_and_reported_enabled_mismatch_cannot_issue_a_plan",
+    "meaning": "All four configured false/true and requested false/true combinations retain the existing refusal when official reportedEnabled differs from configuredEnabled. This test does not relax the guard or provide a new write path.",
+    "executed": false
+  },
+  "countBoundary": "Earlier associated 35/35 is preserved as executed before this extra test. Root owns the later complete run; no 36/36 claim.",
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-management-independent/source-review.json",
+      "sha256": "0587839058e695f9f79e66b6eeba561140704b0a739fd1d6292be0c4a9f3f94d",
+      "bytes": 12359
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/source-checkpoint.json",
+      "sha256": "831dbad59cda5343f523886d8b65494499d2cdb48f9980a8ba85686ddcd2f6db",
+      "bytes": 3650
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/source-checkpoint-final.json",
+      "sha256": "28346eb5827a69b42806026398603208035caf090f4c87b5575a5c7c20207674",
+      "bytes": 3984
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/implementation.json",
+      "sha256": "e19a5c6801c2f469d6a16f4e3e4c12690528fc5814b259697809addd8f152748",
+      "bytes": 13874
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+      "sha256": "6820634a66ed5effe443603aaa790952fb38d1531f1a459637adee2d531db621",
+      "bytes": 17498
+    }
+  ]
+}

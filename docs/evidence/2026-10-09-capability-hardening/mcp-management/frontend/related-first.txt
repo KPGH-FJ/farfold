@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/extension_inventory_controller.test.ts (10 tests | 1 failed) 26ms
+   × same-agent A-B-A cannot reuse old owner or old action against a new ID 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/extension_inventory_controller.test.ts > same-agent A-B-A cannot reuse old owner or old action against a new ID
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "a",
+        "cwd": "/a",
+        "kind": "mcp",
+        "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/extension_inventory_controller.test.ts:96:29
+     94|   h.client.cancel("a", old.requestId);
+     95|   h.client.check("a", old.requestId);
+     96|   expect(h.port.cancel).not.toHaveBeenCalled();
+       |                             ^
+     97|   expect(h.port.status).not.toHaveBeenCalled();
+     98| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 15 passed (16)
+      Tests  1 failed | 111 passed (112)
+   Start at  01:38:52
+   Duration  800ms (transform 1.35s, setup 0ms, import 2.37s, tests 474ms, environment 4ms)
+

@@ -1,0 +1,160 @@
+{
+  "inventory": {
+    "requestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+    "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+    "kind": "mcp",
+    "state": "ready",
+    "settled": true,
+    "snapshot": {
+      "observedAtMs": 1791653803155,
+      "scope": "officialCliConfigurationForDirectory",
+      "source": "officialCli",
+      "complete": true,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "enablement": {
+            "availability": "available",
+            "reason": null
+          },
+          "id": 0,
+          "name": "fixture.one",
+          "transport": "stdio",
+          "reportedEnabled": true,
+          "reportedAuth": "unsupported",
+          "origin": "unreported",
+          "configurationLayer": "unreported",
+          "connection": "unverified",
+          "tools": "unreported"
+        }
+      ]
+    }
+  },
+  "inspectRunning": {
+    "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+    "requestId": "19636b79-5036-4218-925b-66a85d0a9154",
+    "action": "inspect",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+    "target": {
+      "kind": "mcp",
+      "inventoryRequestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+      "itemId": 0,
+      "name": "fixture.one",
+      "transport": "stdio"
+    },
+    "requestedEnabled": false,
+    "operationId": null,
+    "state": "running",
+    "phase": "queued",
+    "settled": false,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "code": null,
+    "review": null,
+    "observation": null
+  },
+  "inspectReady": {
+    "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+    "requestId": "19636b79-5036-4218-925b-66a85d0a9154",
+    "action": "inspect",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+    "target": {
+      "kind": "mcp",
+      "inventoryRequestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+      "itemId": 0,
+      "name": "fixture.one",
+      "transport": "stdio"
+    },
+    "requestedEnabled": false,
+    "operationId": null,
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "code": null,
+    "review": {
+      "reviewId": "e78933cc-f6f5-43e5-aede-9580716b3467",
+      "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+      "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+      "target": {
+        "kind": "mcp",
+        "inventoryRequestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+        "itemId": 0,
+        "name": "fixture.one",
+        "transport": "stdio"
+      },
+      "requestedEnabled": false,
+      "reportedEnabled": true,
+      "writeScope": {
+        "kind": "profile",
+        "configDisplayPath": "/synthetic/selected.config.toml"
+      },
+      "observedAtMs": 1791653803302,
+      "validForMs": 300000,
+      "configuredEnabled": true,
+      "mutation": "setMcpEnabledPreference",
+      "preservation": "otherConfigurationSemanticsPreserved",
+      "sessionApplicability": "unverified"
+    },
+    "observation": null
+  },
+  "confirmRunning": {
+    "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+    "requestId": "85a2c71a-6958-435f-b970-f57a3e9a464d",
+    "action": "setEnabled",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+    "target": {
+      "kind": "mcp",
+      "inventoryRequestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+      "itemId": 0,
+      "name": "fixture.one",
+      "transport": "stdio"
+    },
+    "requestedEnabled": false,
+    "operationId": null,
+    "state": "running",
+    "phase": "queued",
+    "settled": false,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "code": null,
+    "review": null,
+    "observation": null
+  },
+  "confirmReady": {
+    "agentId": "716fbb88-7480-40cd-944b-a745738dd98e",
+    "requestId": "85a2c71a-6958-435f-b970-f57a3e9a464d",
+    "action": "setEnabled",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp2lE9fc",
+    "target": {
+      "kind": "mcp",
+      "inventoryRequestId": "6a0dd9c5-a422-432f-b98a-30075bcfa36c",
+      "itemId": 0,
+      "name": "fixture.one",
+      "transport": "stdio"
+    },
+    "requestedEnabled": false,
+    "operationId": null,
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "writeDispatched": true,
+    "writeAck": "ok",
+    "outcome": "verified",
+    "code": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1791653803581,
+      "configuration": "matching",
+      "mcp": "matching",
+      "configuredEnabled": false,
+      "reportedEnabled": false,
+      "sessionApplicability": "unverified"
+    }
+  }
+}

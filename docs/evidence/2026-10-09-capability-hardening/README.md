@@ -2,9 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：技能启停已安装分项验证，修正读取许可提示
+## 当前衔接：MCP启停首片工程通过待安装，完整能力继续推进
 
-2026-10-11，P40启停首片已提交安装`4d3bd81e` / 0.1.7 arm64，见[正式分项验证](skill-management-candidate/installed-skill-management.json)及[独立收口](skill-management-candidate/native-independent.json)。专用项目技能关闭审阅后确认失效，停用与重新启用均核到配置和技能报告；另行只读核对不追认为此前写入成功，正常退出后经官方接口恢复全部配置层语义与测试技能状态。七项工程通过（1,439输入稳定，前端4,670项、Rust1,502项/6忽略）、候选9/9、安装10/10；三份217,400条快照相同，实测后131会话、168屏蔽、53项设置、未发8/8/3整个对象及工作树清单保持，仅Codex更新时间变化。原格式失败、辅助工具构造清理红例和未定位EPERM分别保留。NEW-16刷新拒绝提示不准确，显式重查后恢复；继续修正并正式复验，不据手动恢复关闭缺陷。P39完整工具、P40其余管理、P41和29家原条件保持未完成。
+P41现有MCP启用偏好首片已完成源码与受控验证：同一最高可写用户层的完整条目，经明确审阅和确认，使用官方接口修改准确enabled字段；配置报告与当前连接/工具可用性分别呈现。前端130项、实际Rust报文15项及双浏览器各23项通过；[第二轮七项](mcp-management-checks/run-02/verification.json)全过，1,461输入稳定，前端4,711项、Rust1,514项/6忽略。首轮旧字段数量断言失败已用完整公开字段和值断言修正，[修复及独立复核](mcp-management/backend/decoder-privacy-followup/independent.json)确认未改生产或降低隐私条件。正式应用尚未更新，新增、移除、连接、诊断及其他来源/Agent仍未完成。证据：[后端](mcp-management/backend/implementation.json)、[前端](mcp-management/frontend/implementation.json)、[独立复核](mcp-management/independent-review.json)、[最终双浏览器](mcp-management/frontend/browser/explicit-intent-receipt.json)。
+
+2026-10-11，P40启停首片已提交安装`4d3bd81e` / 0.1.7 arm64，见[正式分项验证](skill-management-candidate/installed-skill-management.json)及[独立收口](skill-management-candidate/native-independent.json)。专用项目技能关闭审阅后确认失效，停用与重新启用均核到配置和技能报告；另行只读核对不追认为此前写入成功，正常退出后经官方接口恢复全部配置层语义与测试技能状态。七项工程通过（1,439输入稳定，前端4,670项、Rust1,502项/6忽略）、候选9/9、安装10/10；三份217,400条快照相同，实测后131会话、168屏蔽、53项设置、未发8/8/3整个对象及工作树清单保持，仅Codex更新时间变化。原格式失败、辅助工具构造清理红例和未定位EPERM分别保留。NEW-16刷新拒绝提示不准确，显式重查后恢复；f381e63b已修共享提示，[40项关联测试与独立审查](selection-expiry-followup/independent-review.json)通过，正式复验待下一片，不据手动恢复关闭缺陷。P39完整工具、P40其余管理、P41和29家原条件保持未完成。
 
 此前提醒批正式版为 `6c37a012` / 0.1.7 arm64，[正式提醒分项验证](notification-media-candidate/installed-notification-media.json)确认默认偏好、后台正常完成的系统接受及后台关闭偏好后不提交；实际显示/声音/点击、P47撤回及P13媒体仍待正式实证。三次受控请求沿用既有Codex选择，三项偏好恢复关闭且已正常退出；旧130对话、168屏蔽、未发8/8/3及工作树清单保留，新增仅本轮对话及关联状态、Codex更新时间和显式关闭字段，其他50项设置原值不变。候选9/9、安装10/10及三份217,400条快照相同。
 

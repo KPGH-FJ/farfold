@@ -1,5 +1,7 @@
 //! A finite official exchange, never a general RPC/Agent execution interface.
 use super::{
+    domain::PreparedPlan,
+    mcp_plan,
     plan::{Config, Plan, exact_skill},
     requests::Job,
     types::*,
@@ -59,9 +61,12 @@ impl<'a> Exchange<'a> {
         )
     }
     fn skills(&mut self, id: u64) -> Result<()> {
+        if self.job.source.kind() == crate::acp_client::extension_inventory::Kind::Mcp {
+            return self.queue(json!({"id":id,"method":"config/read","params":{"includeLayers":true,"cwd":self.job.source.cwd()}}));
+        }
         self.queue(json!({"id":id,"method":"skills/list","params":{"cwds":[self.job.source.cwd()],"forceReload":true}}))
     }
-    fn plan(&self) -> Result<Arc<Plan>> {
+    fn plan(&self) -> Result<Arc<PreparedPlan>> {
         self.job
             .plan
             .lock()
@@ -149,10 +154,16 @@ impl<'a> Exchange<'a> {
                 self.skills(3)?;
                 self.step = Step::BeforeSkills;
             }
+            Step::BeforeSkills
+                if self.job.source.kind() == crate::acp_client::extension_inventory::Kind::Mcp =>
+            {
+                let before = self.before.take().ok_or(Code::InvalidOutput)?;
+                self.before_mcp(before, Config::parse(value)?)?;
+            }
             Step::BeforeSkills => {
                 let action = self.job.snapshot().action;
                 let target =
-                    match exact_skill(value, self.job.source.cwd(), &self.job.source.target) {
+                    match exact_skill(value, self.job.source.cwd(), self.job.source.skill()?) {
                         Ok(target) => Some(target),
                         Err(error)
                             if action == Action::Recheck && error.code == Code::TargetChanged =>
@@ -173,12 +184,16 @@ impl<'a> Exchange<'a> {
                             target.ok_or(Code::TargetChanged)?,
                             self.job.snapshot().requested_enabled,
                         )?);
-                        *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) = Some(plan);
+                        *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
+                            Some(Arc::new(PreparedPlan::Skill((*plan).clone())));
                         self.step = Step::Done;
                     }
                     Action::SetEnabled => {
                         let plan = self.plan()?;
-                        if !plan.unchanged(&before, &target.ok_or(Code::TargetChanged)?) {
+                        if !plan
+                            .skill()?
+                            .unchanged(&before, &target.ok_or(Code::TargetChanged)?)
+                        {
                             return Err(Code::ConfigurationChanged.into());
                         }
                         // Conservatively publish before even attempting a partial frame write.
@@ -200,7 +215,8 @@ impl<'a> Exchange<'a> {
             }
             Step::Write => {
                 let plan = self.plan()?;
-                if value.get("filePath").and_then(Value::as_str) != Some(plan.before.file.as_str())
+                if value.get("filePath").and_then(Value::as_str)
+                    != Some(plan.before().file.as_str())
                     || !value
                         .get("version")
                         .and_then(Value::as_str)
@@ -225,9 +241,20 @@ impl<'a> Exchange<'a> {
                 self.skills(6)?;
                 self.step = Step::AfterSkills;
             }
+            Step::AfterSkills
+                if self.job.source.kind() == crate::acp_client::extension_inventory::Kind::Mcp =>
+            {
+                let after = self.after.take().ok_or(Code::InvalidOutput)?;
+                *self
+                    .job
+                    .mcp_readback
+                    .lock()
+                    .unwrap_or_else(|p| p.into_inner()) = Some((after, Config::parse(value)?));
+                self.step = Step::Done;
+            }
             Step::AfterSkills => {
                 let target =
-                    match exact_skill(value, self.job.source.cwd(), &self.job.source.target) {
+                    match exact_skill(value, self.job.source.cwd(), self.job.source.skill()?) {
                         Ok(v) => Some(v.enabled),
                         Err(e) if e.code == Code::TargetChanged => None,
                         Err(e) => return Err(e),
@@ -243,8 +270,54 @@ impl<'a> Exchange<'a> {
         }
         Ok(())
     }
+    fn before_mcp(&mut self, before: Config, directory: Config) -> Result<()> {
+        let action = self.job.snapshot().action;
+        let report = self
+            .job
+            .mcp_report
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .clone()
+            .ok_or(Code::InvalidOutput)?;
+        self.job.within()?;
+        self.job
+            .source
+            .current(self.store, action == Action::Inspect)?;
+        match action {
+            Action::Inspect => {
+                let plan = mcp_plan::Plan::new(
+                    before,
+                    directory,
+                    report,
+                    self.job.snapshot().requested_enabled,
+                )?;
+                *self.job.plan.lock().unwrap_or_else(|p| p.into_inner()) =
+                    Some(Arc::new(PreparedPlan::Mcp(plan)));
+                self.step = Step::Done;
+            }
+            Action::SetEnabled => {
+                let plan = self.plan()?;
+                if !plan.mcp()?.unchanged(&before, &directory, &report) {
+                    return Err(Code::ConfigurationChanged.into());
+                }
+                self.job.update(|v| {
+                    v.write_dispatched = true;
+                    v.write_ack = Ack::Unknown;
+                    v.phase = Phase::Writing;
+                });
+                self.queue(json!({"id":4,"method":"config/value/write","params":plan.params()}))?;
+                self.step = Step::Write;
+            }
+            Action::Recheck => {
+                observe_mcp(self.job, &before, &directory, &report, false)?;
+                self.step = Step::Done;
+            }
+        }
+        Ok(())
+    }
     fn observe(&self, config: Config, enabled: Option<bool>, acknowledged: bool) -> Result<()> {
-        let plan = self.plan()?;
+        let owned = self.plan()?;
+        let plan = owned.skill()?;
         let matches = plan.config_matches(&config);
         let target_matches = enabled == Some(plan.enabled);
         let observation = Observation {
@@ -254,13 +327,15 @@ impl<'a> Exchange<'a> {
             } else {
                 "changed"
             },
-            skill: if enabled.is_none() {
+            mcp: None,
+            configured_enabled: None,
+            skill: Some(if enabled.is_none() {
                 "missing"
             } else if target_matches {
                 "matchesRequested"
             } else {
                 "differs"
-            },
+            }),
             reported_enabled: enabled,
             session_applicability: "unverified",
         };
@@ -331,4 +406,37 @@ impl Drop for Exchange<'_> {
     fn drop(&mut self) {
         self.pending.fill(0);
     }
+}
+
+pub(super) fn observe_mcp(
+    job: &Job,
+    after: &Config,
+    directory: &Config,
+    report: &crate::acp_client::extension_inventory::mcp_targets::Report,
+    acknowledged: bool,
+) -> Result<()> {
+    let owned = job
+        .plan
+        .lock()
+        .unwrap_or_else(|p| p.into_inner())
+        .clone()
+        .ok_or(Code::InvalidOutput)?;
+    let plan = owned.mcp()?;
+    // list omits fields such as tool filters; inspect adds the complete get
+    // identity. A later get must still describe that exact reviewed target.
+    if report.target != plan.report.target {
+        return Err(Code::TargetChanged.into());
+    }
+    let (observation, matching) = plan.observation(after, directory, report);
+    job.update(|v| v.observation = Some(observation));
+    job.observed_outcome(if matching {
+        if acknowledged {
+            Outcome::Verified
+        } else {
+            Outcome::Observed
+        }
+    } else {
+        Outcome::Mismatch
+    });
+    Ok(())
 }

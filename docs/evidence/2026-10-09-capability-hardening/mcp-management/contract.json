@@ -1,0 +1,265 @@
+{
+  "status": "implementationContract; no P41 implementation or real official call proved by this file",
+  "atUtc": "2026-10-10T17:25:49.871478+00:00",
+  "sourceCommit": "f381e63baf50952eeaa22bbf96a25d0127627053",
+  "officialCommit": "b412ff32c417f855c2b2d1581b77058eed87c84b",
+  "officialVersionEvidence": "retained rust-v0.156.1 public source; package provenance gate, not executable hash/version pin",
+  "selectedSlice": {
+    "name": "Existing highest-User MCP enabled preference",
+    "value": "停用不需要的已有 MCP 配置而保留命令、参数、凭据引用和其他设置；以后可明确重新启用。不是单纯清单或跳转。",
+    "completion": "官方一次 bool 写入＋完整配置语义保持＋原目录配置报告双回读；失败、未知、撤回和重新核对闭合。",
+    "stillOpen": [
+      "new MCP addition",
+      "connection and live disconnect",
+      "OAuth/credentials setup",
+      "runtime tools/resources/diagnostics",
+      "arbitrary transport edits/removal",
+      "other Agents and Windows",
+      "full P39/P40/P41 original acceptance"
+    ]
+  },
+  "alternatives": [
+    {
+      "candidate": "default-disabled addition",
+      "decision": "useful next slice, not this one",
+      "reason": "Official generic value/write can set a validated new table with enabled=false; mcp add instead sets true, overwrites by name and HTTP can start OAuth. Addition needs separate input validation, full layered name conflict proof and explicit command/URL authorization; this slice sends no new secrets/commands."
+    },
+    {
+      "candidate": "remove exact User entry",
+      "decision": "later",
+      "reason": "Official null clear can delete exact table but may reveal lower-layer or plugin entry of the same name; deletion is not disable. Requires explicit fallback presentation and re-read, never entire typed map replacement."
+    },
+    {
+      "candidate": "skill discovery/installation",
+      "decision": "not smaller than the selected preference action",
+      "reason": "Existing P40 inventory/enablement identity does not authorize a download/install target. Source trust, install scope, mutable content, cancellation and installed readback are additional obligations. No claim that official installation is impossible."
+    }
+  ],
+  "targetAuthority": {
+    "inventory": "Extend MCP decoder with a private same-response map keyed by original request UUID/item ID; retain actual registered row and directory handle plus exact raw name and bounded official transport identity. Public display label never reconstructs target. Name-hidden/unsupported transport rows have no management action.",
+    "retirement": "Reuse interested/ready private-map ownership, active non-eviction, cancel-ready revocation, prune retires held Arc, one-use 300s review. New list/type/selection/cwd/close retires UI authority; status never restores it. Skill and MCP requests cannot cross endpoints or consume each other reviews.",
+    "writeScope": "Require identifiable enabled highest-priority User layer from config/read(includeLayers=true,cwd=null), exact existing mcp_servers[name] table with a complete supported command or URL transport; preserve profile-v2 file/profile identity. Missing active User or inherited-only entry is unsupported, not authority to create an override.",
+    "conflicts": "Read the original cwd raw layers as well. First slice rejects any other non-disabled layer explicitly contributing the same named table, including base/profile split or project/admin overrides. This keeps one auditable full User entry; unrelated layers remain allowed and preserved. Official get can include plugins: it does not itself grant write authority. Config registrations outrank plugin registrations in the inspected official catalog; custom runtime contributions are not queried or claimed.",
+    "configuredEnabled": "Exact writable User entry enabled if boolean; absent defaults true per official schema. Null/non-bool refuses. This is separate from get.reported enabled after official policy/config resolution.",
+    "requirements": "Fresh get disabled_reason/unknown transport/schema or a mismatch that cannot be explained without guessing refuses inspection or marks later readback mismatch/unknown; raw requirement paths/text are not public. No bypass of official managed-policy refusal."
+  },
+  "fixedCommands": {
+    "officialGet": [
+      "original reviewed registered relay prefix",
+      "cli",
+      "mcp",
+      "get",
+      "--json",
+      "--",
+      "exact private name"
+    ],
+    "appServer": [
+      "original reviewed registered relay prefix",
+      "cli",
+      "app-server",
+      "--listen",
+      "stdio://"
+    ],
+    "parameters": "No frontend argv/env/name/path/keyPath/config body. New named camelCase IPCs and DTO in contract.ts. inspect enabled is the exact boolean field (same as P40).",
+    "inspect": "Within same execution/activity/configuration/AccountScope, run fixed get in original cwd, then finite app-server initialize/initialized; config/read cwd:null + config/read original cwd; form review from full layers plus fresh get; close stdin and fully finish each actual child before publishing ready.",
+    "confirm": "Fresh same fixed get and same two raw layer reads; exact review/source baseline match; ONE config/value/write {keyPath:mcp_servers.<properly quoted exact name>.enabled,value:bool,mergeStrategy:replace,filePath:activeUser.file,expectedVersion:activeUser.version}; fresh two raw layer reads; finish app-server then fresh fixed get under the same permits. No parallel detached subprocesses; review waits without permits/processes.",
+    "recheck": "New exact request only reads fresh two layer sets plus fixed get, retains original writeDispatched/writeAck, never repeats write. Successful matching recheck is observed, not retrospective attribution.",
+    "noDynamicMcp": "Do not call mcpServerStatus/list, initialize an MCP transport, thread/start/load/resume, tool call, resource read, OAuth/login, refresh/reload RPC or arbitrary HTTP/headers helper. mcp get uses configured_servers, not compute_auth_statuses or McpConnectionSet.",
+    "startup": "Normal official app-server/CLI can maintain its own caches/state and read own configuration; do not promise zero writes or an isolated account. No private HOME, no env_clear, no Keychain injection, no project startup config scan."
+  },
+  "preservation": {
+    "leafOnly": "Write one escaped key segment plus enabled. Never parse/serialize full MCP entries into a narrow typed config then replace them. Actual official implementation edits selected leaf; our comparisons use original complete raw layers[].config only in bounded RAM.",
+    "otherData": "Verify all other selected-layer keys including command/args/env/env_vars/cwd/headers/helpers/tools/allowlists/OAuth/future fields and arrays are semantically identical; other captured layer identities/configs/disabled states unchanged. Preserve ordering within arrays; no deduplication or repair. No TOML byte/comment/layout preservation promise.",
+    "escaping": "Encode exact name as a quoted single keyPath segment, escaping backslash and quote. CLI uses -- separator. Tests include a.b, a/b, sample:name, leading dash; UI unsafe labels remain explicitly unsupported rather than silently targeting a sanitized name.",
+    "missing": "Absent enabled may become explicit true/false, accurately disclosed. Missing or malformed ancestor tables refuse before write; generic merge could otherwise replace non-tables.",
+    "race": "expectedVersion is pre-persistence parsed-layer fingerprint, not a cross-process CAS/lock. External writes after its check may be overwritten or undetectable. Scope exclusion only covers known Farfold entry aliases; do not claim global account isolation. No automatic rollback/retry."
+  },
+  "outcomes": {
+    "verified": "Only acknowledged ok/okOverridden plus complete intended User/layer preservation plus exact post-get requested enabled. Means saved and reported configuration preference, never connected/disconnected/tools usable or current conversations updated.",
+    "mismatch": "Known complete readback differs; preserve actual requested/configured/reported values. Policy may keep reported disabled even if User enabled=true; do not flip UI optimistically.",
+    "unknown": "Partial send, lost ack, malformed error, missing/partial readback, postwrite internal/UserLayerNotFound, timeout or cancelled-after-write remain possibly changed. Keep exact tracking until real cleanup; no cancellation-as-rollback.",
+    "rejected": "Only strict structured audited prewrite configLayerReadonly/configRequirementReadonly/configVersionConflict/configValidationError. Preserve rejection fact through cleanup error; raw message/path never displayed.",
+    "cancel": "Before write may end cancelled only after actual child/group/pipes completion; after potential write result unknown/observed. Exact cancel of unconsumed review revokes authority, not another admitted confirm. Active entries never evict; explicit expired tracking retirement uses existing tombstone semantics."
+  },
+  "publicSurface": {
+    "capability": "Add mcpEnablement with same InventoryCapability availability/source/reason and existing opaque selectionId. Unknown official surface remains unavailable; no Agent-specific UI branch.",
+    "row": "MCP items gain enablement as in contract.ts: available candidate or fixed unsafeLabel/unsupportedTransport/ambiguousTarget/incompleteInventory. Actual writable scope is proven only on inspect.",
+    "review": "Show safe name/transport, original chosen directory, user or selected profile scope, existing and requested preference, and reported directory-config state separately. No command/args/env/header/URL/secret/version/raw error bodies. Config display locator follows P40 explicit admin allowlist, not clickable authority.",
+    "impact": "保存的是此 Agent 的用户设置，之后使用同一设置的其他对话也可能受影响；不会关闭已有连接，也不代表工具已经可用。",
+    "ui": "Native explicit review + second confirm; no auto write on toggle/list or checkbox; pending status/cancel/recheck same common UI patterns. A lost/expired review requires explicit inspect again, never automatic requery.",
+    "codes": "Reuse existing fixed Code; scope/malformed inherited entry=configurationUnsupported, drift=configurationChanged/targetChanged, policy=configurationReadOnly, output limits/query failures unchanged. No new code planned in this draft.",
+    "wirePath": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.json; future real Rust serialization, not this handwritten TS"
+  },
+  "implementation": {
+    "backendOwner": "product_coverage; src-tauri only, narrow necessary acp_client/lib registration",
+    "frontendOwner": "architecture; common capability/parser/controller/components/tests",
+    "independentOwner": "verification",
+    "reuse": "Keep exactly one P40-derived request/review finite RAM registry and lifecycle for skills+MCP; add private Source/Plan/Target/Review/Observation discriminated handling, serialize legacy skill variants exactly as before. Reuse process FixedExchange/Control, execution global two slots, AccountScope, configuration and activity guards. Extract small shared helpers only as used, not a generic caller-defined RPC or persistent operation framework.",
+    "maxConcurrency": "Two actual workers total across inventory/management; one live management per Agent; same source/alias guards through final child cleanup. Each logical MCP action may run sequential fixed CLI get and app-server, never parallel extra capacity.",
+    "limits": "Reuse P40 30s absolute action deadline + 7s observer cleanup window, stdout aggregate and frame/depth ceilings; each sequential process uses remaining same deadline. Review32/operation64/TTL300s unchanged; no silent truncation of preserved config.",
+    "P40Compatibility": "Keep old skill public serialized shapes and tests/real wire unchanged. Type-specific command checks prevent cross-kind UUID reuse/status/cancel/confirm authority."
+  },
+  "requiredCounterexamples": [
+    "Same display name, private exact name; ready source cancel/prune/review retained Arc cannot confirm; A-B-A/cwd replacement/late read.",
+    "Literal dot/slash/colon/leading-dash exact name addresses one table; no shell interpretation or frontend path/key injection.",
+    "Highest User selected profile-v2 exact file; inherited-only/project/admin duplicate/malformed ancestor refuses before dispatch.",
+    "Known complete stdio and HTTP entries with env/header/URL-query sentinels, nested unknown tables and arrays retain full semantics and never appear in public DTO/log.",
+    "Disabled false and absent/default true; no-op desired preference; two other MCP siblings unchanged; no new secret fields sent.",
+    "Policy keeps reported disabled; okOverridden is not own desired success; get error does not claim missing/empty; malformed exact output fails.",
+    "Version changes before write refuses; external change after write gives mismatch/unknown; acknowledge success without full preserved readback not verified.",
+    "Only strict four prewrite error codes rejected; UserLayerNotFound/internal/lost ack/cancel after write remain unknown; explicit recheck observed only.",
+    "Observer drop, held pipes, group cleanup, capacity shared inventory/P40/P41, review publication only with settled ready; no new server-status call.",
+    "Two simultaneous kinds cannot borrow same request/review; prior P40 actual wires/UI unchanged; full common review keyboard/owner/error journey.",
+    "Synthetic peer proves fixed argv/RPC and no dynamic MCP calls; later authorized installed fixture toggles only exact pre-existing controlled User entry, preserves complete others, restores by explicit official action and independently reads back. No present native claim."
+  ],
+  "verificationNow": {
+    "productionEdited": false,
+    "cargoRun": false,
+    "cliOrAgentStarted": false,
+    "realConfigRead": false,
+    "newOfficialGitBlobsVerified": 3,
+    "conclusion": "Static contract and source trace only. Root authorized implementation after this contract; no feature completion claimed."
+  },
+  "refs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "bytes": 35083,
+      "lines": "产品边界及官方能力纪律"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "010ae59c530fe0f69b285e7227926c16195f456d13a57d4b811eba399d424254",
+      "bytes": 112268,
+      "lines": "P39/P40/P41 原完成条件"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/cli/src/mcp_cmd.rs",
+      "sha256": "a5dd0a7a5e519daddd64e12fa876ece961db9fd8628e945bd49b8e407dc6a81f",
+      "bytes": 38038,
+      "lines": "278-442 add;470-510 remove/manager;630-718 list;894-952 get;1079-1090 names"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+      "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209",
+      "bytes": 33170,
+      "lines": "121-179 full layers;218-444 write;506-550 quoted key;581-647 leaf merge"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service_credential_edits.rs",
+      "sha256": "30862ce58b3dd7cb238dff862815d982387e84ad8bab485c6eb37dc30b5892a7",
+      "bytes": 11533,
+      "lines": "38-96 normal path merge"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/config.rs",
+      "sha256": "8187edb07de0259f5a96927ca69b749a7ba9049062bf2ef2eb1ff9c7d8696447",
+      "bytes": 41441,
+      "lines": "78-88 User file/profile"
+    },
+    {
+      "path": "output/2026-10-11-mcp-tool-inventory-design/official/codex-rs/core/src/mcp.rs",
+      "sha256": "880cdc73b693183b9791f4e0c1b6a804b1dba3edbf6bd9597a117387f9527211",
+      "bytes": 15953,
+      "lines": "373-395 configured vs effective"
+    },
+    {
+      "path": "output/2026-10-11-mcp-tool-inventory-design/official/codex-rs/app-server/src/config_manager.rs",
+      "sha256": "ec35b4c9ce10eb58d5a44baa58598006fbb63f0310d2fa5ca03f2d6bf8884bb2",
+      "bytes": 18614,
+      "lines": "78-79 active config path;396-420 loader"
+    },
+    {
+      "path": "output/2026-10-11-mcp-tool-inventory-design/design.json",
+      "sha256": "b2137d07dd6f184b2e2068868eac89fcb7a8d9f84927b07467ddce4b2835a303",
+      "bytes": 27164
+    },
+    {
+      "path": "output/2026-10-11-mcp-tool-inventory-design/cleanup-probe/receipt.json",
+      "sha256": "eac26b2c629e3ff858da40de70ad4d322231f6e35be7ecb4efcde12cab2a1047",
+      "bytes": 9123
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/official/mcp_types.rs",
+      "sha256": "1bca40f107d1b36b2c6d2bf8b5316b29f3226c8d2f15d00bef0f56f744c5f290",
+      "bytes": 22866,
+      "lines": "218-289 typed fields;343-573 raw validation/defaults"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/official/catalog.rs",
+      "sha256": "a3223084e675743f72d27d21ee9d3c6c370207566e813acc37dfed3cdef6be3f",
+      "bytes": 22380,
+      "lines": "117-134 precedence;369-510 requirements/name-veto;581-587 configured projection"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/official/mcp_edit.rs",
+      "sha256": "f39f3043c973418cbd8d66579c728945f34afee174689c3f1c0975d9317b5a72",
+      "bytes": 1589
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/downloads.json",
+      "sha256": "c4c143672a2892b6ebb0d27857bcde0b498b1cd2d9c877a11b1fdb6e2fd779b7",
+      "bytes": 1435
+    },
+    {
+      "path": "output/2026-10-10-skill-management-draft/final-contract.json",
+      "sha256": "97486da569c6353910bb2d74bcd920c13b34463aa146e611b4562dac082ead3c",
+      "bytes": 30675
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.ts",
+      "sha256": "49bcf3a6e3a677ad0bb415e4d9d912aeb6db052237e760219963278dd1fd7b1c",
+      "bytes": 3117
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "ec72c7406cec880342a683c071110e9241e1760c906ff22a204e3f71c2a844c2",
+      "bytes": 3973
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/targets.rs",
+      "sha256": "10ebd93de2deea94e1bb1a4d4d4bac25aca4d2f2bb9bfc22bf66a8c7b3760f24",
+      "bytes": 2587
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "aa64062a8cf38cdb2e52d40db67bf63aa7d0e748750fa61c40ba6cf8fba4f1be",
+      "bytes": 8264
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc",
+      "bytes": 9796
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution.rs",
+      "sha256": "c0f7c25f093856d42ca41e3cafa2b250e7c1f801b680bcf65a2e87b042d8b4af",
+      "bytes": 714
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "243c3c984b4f46804952d90dd1ba118145a2d8b0f8b6adf32c8647ba37a26cd9",
+      "bytes": 3134
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "1efac5d8815f8d7be6353f3794d59bd4f9a7ee3e5c1466f4dc982d08ba366850",
+      "bytes": 7491
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "f0bf0db7f425311bedf3f370a7bfb9e1aadc8537db7a94b34c83cb87a6bcb091",
+      "bytes": 15490
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "3784b58005c621a483b7c0aa9c2fc87a731d7819e2b4667982359bfc3f43b5e9",
+      "bytes": 12529
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "7188627f1cefd558b8e54861adf168dcfa276928693cff3aceb5468156fdae49",
+      "bytes": 7116
+    }
+  ]
+}

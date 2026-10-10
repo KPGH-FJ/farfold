@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_management_types.test.ts (8 tests | 2 failed) 19ms
+   × rejects an available eligibility claim for an undisclosed name or unsupported transport 5ms
+   × accepts the final ordinal of the bounded MCP inventory 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_management_types.test.ts > rejects an available eligibility claim for an undisclosed name or unsupported transport
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/mcp_management_types.test.ts:40:193
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/mcp_management_types.test.ts > accepts the final ordinal of the bounded MCP inventory
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  01:36:28
+   Duration  394ms (transform 158ms, setup 0ms, import 199ms, tests 19ms, environment 0ms)
+

@@ -1,0 +1,151 @@
+{
+  "scope": "P41 frontend checkpoint before actual Rust wire and root-owned browser verification",
+  "ownedFiles": [
+    {
+      "path": "src/components/AgentExtensionInventory.mcp-management.test.tsx",
+      "sha256": "93dcdc330cae7a4163591da5910d565fac588c7435ac61c2f09dd3b15613e7e9",
+      "bytes": 1916,
+      "lines": 60
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "357ee46c87f604862d2dd257b4366534c4d0e31700cf2315977b4e687667712e",
+      "bytes": 11404,
+      "lines": 342
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "a7f455e48cc364567bb93f97dd1cf68c8cfee6a6e309a19cd9ca70f5f2b3b66f",
+      "bytes": 4974,
+      "lines": 132
+    },
+    {
+      "path": "src/components/SkillChangeReview.mcp.test.tsx",
+      "sha256": "b8ef3051a041ddc7af455a12d5c9d01423f9b99daa0daed1ec118a3337d779fb",
+      "bytes": 3299,
+      "lines": 85
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "c6a5e7aa3b5c6099e7a722733a606cfd0e658d6b0d2bc5dbfd5e5f0d163d2459",
+      "bytes": 8472,
+      "lines": 264
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "9fe2b893487225e731bb74a08a962dd705aec5e6ff59ba5be02379971967d112",
+      "bytes": 5167,
+      "lines": 208
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.test.ts",
+      "sha256": "a389d9ebc1c970e27b08266e83272d6459bc7626644685631722c4fa9dd4c436",
+      "bytes": 7190,
+      "lines": 206
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "502755c0f286c2f093b5424711fb17957aaa13b6126ffe4ca49c9de50959692a",
+      "bytes": 11212,
+      "lines": 372
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "5397609039de8578847eeb84ebfd7e5709166bb6f223c3c3c697a7de8cbc5610",
+      "bytes": 14000,
+      "lines": 500
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "ce8be4f63593d8ea0be47e5ed2b8a44b4ae543b6f3a218dfbf22f26a71fa4101",
+      "bytes": 3941,
+      "lines": 140
+    },
+    {
+      "path": "src/runtime/mcp_management.ipc.test.ts",
+      "sha256": "2f13349686c05cc3ce50643d6504b23e8c8d52f074a7105b4d8cb0823b9d3cea",
+      "bytes": 992,
+      "lines": 28
+    },
+    {
+      "path": "src/runtime/mcp_management.test-support.ts",
+      "sha256": "3ba843f308a0da3856c6341408c23ec509e12cc3b3cf14fa6b4e8211f5166195",
+      "bytes": 5433,
+      "lines": 196
+    },
+    {
+      "path": "src/runtime/mcp_management.ts",
+      "sha256": "189f2c420858538e486e9eaeafec77bb3eabedf5007f2e17c132a4e46de4450b",
+      "bytes": 587,
+      "lines": 11
+    },
+    {
+      "path": "src/runtime/mcp_management_controller.test.ts",
+      "sha256": "813a274c02b08d84cfcdcb64020ac0d053352fe54ea40dadfc351a89093a8466",
+      "bytes": 5860,
+      "lines": 149
+    },
+    {
+      "path": "src/runtime/mcp_management_strings.ts",
+      "sha256": "51a1a69ce210c7059c230e601108a30715e678aa1d9be33f798eccd226dcc51a",
+      "bytes": 2286,
+      "lines": 42
+    },
+    {
+      "path": "src/runtime/mcp_management_types.test.ts",
+      "sha256": "a54e32f5a7df678d2342daf1417b019bdbc8f39fb3af1ffc1e7276207aa43e12",
+      "bytes": 6373,
+      "lines": 233
+    },
+    {
+      "path": "src/runtime/mcp_management_types.ts",
+      "sha256": "23324851b320da17d2b0c41bd103536148eb223406517b4d3ce217798ec87e26",
+      "bytes": 8161,
+      "lines": 289
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "d701502241c9dc9293886e07cb0e35182fb0373578fcff5c2a431b9f7450c992",
+      "bytes": 5350,
+      "lines": 187
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "7f7661d1b53ad36c1a93e13c4d81e5e9fb07fc0d9deebb51eacae41833a8bf3f",
+      "bytes": 13716,
+      "lines": 448
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "3811e897d37af5b735c1b25a5efa89bbc820b09576451f819007560964f61ccd",
+      "bytes": 10238,
+      "lines": 369
+    }
+  ],
+  "checks": {
+    "targeted": {
+      "files": 16,
+      "passed": 112,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/related-second.txt",
+        "sha256": "29ed6cb37fe40204c5677ee9d72bd3d392a5d2fa3d91ae6c470279890d54d2dd",
+        "bytes": 216,
+        "lines": 9
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/type-related.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78,
+        "lines": 4
+      }
+    }
+  },
+  "boundaries": [
+    "No actual MCP configuration, CLI, App, browser, or platform notification exercised by these frontend tests.",
+    "Shared P40 lifecycle and strict parser retained; historical inventory omission provides no new management authority.",
+    "Root runs the actual App with controlled IPC browser checks; new actual Rust wire tests pending."
+  ]
+}

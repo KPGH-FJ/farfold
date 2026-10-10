@@ -6,16 +6,16 @@ use serde_json::{Value, json};
 
 #[derive(Clone, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-struct Layer {
-    name: Value,
-    version: String,
-    config: Value,
-    disabled_reason: Option<String>,
+pub(super) struct Layer {
+    pub name: Value,
+    pub version: String,
+    pub config: Value,
+    pub disabled_reason: Option<String>,
 }
 #[derive(Clone, PartialEq)]
 pub(super) struct Config {
-    layers: Vec<Layer>,
-    active: usize,
+    pub layers: Vec<Layer>,
+    pub active: usize,
     pub file: String,
 }
 #[derive(Clone)]

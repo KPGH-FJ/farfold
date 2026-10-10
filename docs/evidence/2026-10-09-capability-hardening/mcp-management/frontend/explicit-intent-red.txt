@@ -1,0 +1,64 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentExtensionInventory.mcp-management.test.tsx (2 tests | 1 failed) 26ms
+   × offers an explicit review of an eligible MCP preference without implying a live connection 24ms
+ ❯ src/runtime/mcp_management_controller.test.ts (9 tests | 1 failed) 21ms
+   × sends the explicit requested MCP preference true rather than deriving it from the report 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentExtensionInventory.mcp-management.test.tsx > offers an explicit review of an eligible MCP preference without implying a live connection
+AssertionError: expected '<div class="agent-extension-result"><…' to contain '审阅启用偏好…'
+
+Expected: "审阅启用偏好…"
+Received: "<div class="agent-extension-result"><p class="agent-extension-directory">/controlled</p><p>查询时间：<time>1/1/1970, 8:00:00 AM</time></p><p>信息来源：官方程序的配置报告</p><p>保存的启用偏好不代表当前对话的连接或工具状态。不会自动断开、连接或重启对话。</p><ul class="agent-extension-items"><li><strong>local-tools</strong><span>本地程序</span><span>配置报告：已启用</span><span>认证报告：未提供</span><button type="button" class="btn btn-ghost">审阅停用偏好…</button></li></ul></div>"
+
+ ❯ src/components/AgentExtensionInventory.mcp-management.test.tsx:48:16
+     46|   );
+     47|   expect(html).toContain("审阅停用偏好…");
+     48|   expect(html).toContain("审阅启用偏好…");
+       |                ^
+     49|   expect(html).toContain("保存的启用偏好不代表当前对话的连接或工具状态");
+     50|   expect(inspect).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/mcp_management_controller.test.ts > sends the explicit requested MCP preference true rather than deriving it from the report
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining {"enabled": true} ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   ObjectContaining {
+-     "enabled": true,
++   {
++     "agentId": "mcp-fixture",
++     "enabled": false,
++     "inventoryRequestId": "177f0c73-8daa-49f4-b6e8-70e8e2e36329",
++     "itemId": 0,
++     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/mcp_management_controller.test.ts:15:26
+     13|   expect(h.controller.inspect({...h.target,requestedEnabled:enabled}))…
+     14|   await flush();
+     15|   expect(h.port.inspect).toHaveBeenCalledWith(expect.objectContaining(…
+       |                          ^
+     16|   const r=h.controller.get(h.owner.agentId).request!;
+     17|   expect(r.requestedEnabled).toBe(enabled);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 9 passed (11)
+   Start at  01:46:24
+   Duration  222ms (transform 131ms, setup 0ms, import 187ms, tests 48ms, environment 0ms)
+

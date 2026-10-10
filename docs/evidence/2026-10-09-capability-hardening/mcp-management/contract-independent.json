@@ -1,0 +1,47 @@
+{
+  "stage": "read-only contract challenge; implementation is being written",
+  "contractRefs": [
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.json",
+      "sha256": "2afa8b31dca34d7b7000ab8f5c085649a58df6a779556b45ffe13c5f12e2f8e2",
+      "bytes": 20126
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.ts",
+      "sha256": "49bcf3a6e3a677ad0bb415e4d9d912aeb6db052237e760219963278dd1fd7b1c",
+      "bytes": 3117
+    }
+  ],
+  "officialAndPriorEvidenceRefsVerified": 14,
+  "findings": [],
+  "acceptedBoundaries": [
+    "Explicit existing highest User entry only; other enabled layers contributing the same name are refused. This remains a P41 sub-slice, not adding/connecting/authenticating arbitrary servers.",
+    "One properly quoted exact private name segment plus enabled leaf. Frontend names and labels do not grant write authority.",
+    "Full raw layer semantic preservation and post-get report required; configured preference is not connection, usable tools, or existing-session applicability.",
+    "Write acknowledgement and observed matching state differ; cancellation after potential write is not rollback. Shared P40 lifecycle must retain exact type ownership."
+  ],
+  "selectedChallenges": [
+    {
+      "id": "literal-key-secret-projection",
+      "case": "literal a.b and nested a/b sibling coexist; only literal.enabled changes, private env/header sentinels remain preserved but absent from public DTO",
+      "status": "pending implementation and test ownership coordination"
+    },
+    {
+      "id": "cross-kind-review-ownership",
+      "case": "wrong-kind status/cancel/confirm for a live original UUID/review must neither consume nor retire its original skill/MCP operation",
+      "status": "pending implementation and test ownership coordination"
+    },
+    {
+      "id": "postwrite-final-get-failure",
+      "case": "after acknowledged write and completed app-server, failed or cancelled final fixed get must not yield verified, cancelled-as-no-write, or automatic repeat",
+      "status": "pending implementation and test ownership coordination"
+    }
+  ],
+  "noExecution": [
+    "No Cargo/tests/build",
+    "No official CLI/MCP/Agent or credentials",
+    "No configuration/source edits",
+    "No live data/App access"
+  ],
+  "next": "Read author stable modules, select a concrete uncovered case, request root Cargo slot before any bounded Rust reproduction."
+}

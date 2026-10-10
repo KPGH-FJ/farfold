@@ -1,7 +1,11 @@
 import type { InventoryResult } from "../runtime/extension_inventory_controller";
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
 import { SKILL_MANAGEMENT_STRINGS as M } from "../runtime/skill_management_strings";
-import type { SkillInventoryItem } from "../runtime/extension_inventory_types";
+import { MCP_MANAGEMENT_STRINGS as C } from "../runtime/mcp_management_strings";
+import type {
+  InventoryItem,
+  SkillInventoryItem,
+} from "../runtime/extension_inventory_types";
 
 /** Plain report metadata only; descriptions never become links or draft content. */
 export function AgentExtensionInventoryResult({
@@ -11,7 +15,13 @@ export function AgentExtensionInventoryResult({
 }: {
   result: InventoryResult;
   stale: boolean;
-  management?: { enabled: boolean; inspect(item: SkillInventoryItem): void };
+  management?: {
+    enabled: boolean;
+    inspect(
+      item: SkillInventoryItem | InventoryItem,
+      requestedEnabled?: boolean,
+    ): void;
+  };
 }) {
   const snapshot = result.snapshot;
   const observed = new Date(snapshot.observedAtMs);
@@ -38,6 +48,9 @@ export function AgentExtensionInventoryResult({
           {snapshot.errorCount}
         </p>
       )}
+      {snapshot.source === "officialCli" && management && (
+        <p>{C.applicability}</p>
+      )}
       {snapshot.items.length === 0 ? (
         snapshot.complete && (
           <p>{snapshot.source === "officialCli" ? S.empty : S.skillEmpty}</p>
@@ -53,6 +66,29 @@ export function AgentExtensionInventoryResult({
                   <span>
                     {S.auth}：{S.authentication[item.reportedAuth]}
                   </span>
+                  {management &&
+                  item.enablement?.availability === "available" ? (
+                    [true, false].map((enabled) => (
+                      <button
+                        key={String(enabled)}
+                        type="button"
+                        className="btn btn-ghost"
+                        disabled={stale || !management.enabled}
+                        onClick={() => {
+                          if (!stale && management.enabled)
+                            management.inspect(item, enabled);
+                        }}
+                      >
+                        {enabled ? C.reviewEnable : C.reviewDisable}
+                      </button>
+                    ))
+                  ) : management ? (
+                    <span>
+                      {item.enablement?.availability === "unavailable"
+                        ? C.reasons[item.enablement.reason]
+                        : C.legacy}
+                    </span>
+                  ) : null}
                 </li>
               ))
             : snapshot.items.map((item) => (

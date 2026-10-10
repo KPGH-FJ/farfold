@@ -1,0 +1,140 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-11-mcp-management-browser";
+const engine = process.argv[2] ?? "webkit", label = process.argv[3] ?? "first";
+const scan = p => fs.readdirSync(p, { withFileTypes: true }).flatMap(e => e.isDirectory() ? scan(p + "/" + e.name) : [p + "/" + e.name]);
+const inputs = [...scan("src"), ...["index.html", "fixture.tsx", "run.mjs", "serve.mjs"].map(n => base + "/" + n)];
+const hashes = () => Object.fromEntries(inputs.map(p => [p, createHash("sha256").update(fs.readFileSync(p)).digest("hex")]));
+const result = { engine, label, scope: "Actual full App + React StrictMode, shared extension inventory and preference management UI/controller. Controlled IPC only; no native app, Agent, credential or official configuration call.", before: hashes(), checks: [], errors: [] };
+const b = await (engine === "webkit" ? webkit : chromium).launch({ headless: true, executablePath: engine === "webkit" ? path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh") : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+const p = await b.newPage({ viewport: { width: 1100, height: 800 } });
+p.setDefaultTimeout(8000);
+p.on("pageerror", e => result.errors.push(String(e)));
+const check = (name, pass, detail) => { result.checks.push({ name, pass, ...(detail === undefined ? {} : { detail }) }); if (!pass) throw Error(name); };
+const state = () => p.evaluate(() => window.fixture.current());
+const count = async cmd => (await state()).calls.filter(c => c.cmd === cmd).length;
+const dialog = () => p.locator("dialog.agent-detail-dialog[open]");
+const section = () => dialog().getByRole("region", { name: "技能与工具", exact: true });
+const panel = () => dialog().getByRole("region", { name: "MCP 启用偏好", exact: true });
+const button = name => dialog().getByRole("button", { name, exact: true });
+const inspect = "agent_mcp_change_inspect", confirm = "agent_mcp_change_confirm", recheck = "agent_mcp_change_recheck";
+async function open(id = "A") { await p.getByRole("button", { name: `查看详情 · Controlled ${id}`, exact: true }).click(); await dialog().waitFor(); await button("选择工作文件夹").waitFor(); }
+async function close() { await button("关闭").first().click(); await dialog().waitFor({ state: "hidden" }); }
+async function choose(cwd = "/controlled/project-A") { await button("选择工作文件夹").click(); await p.evaluate(cwd => window.fixture.choose(cwd), cwd); }
+async function query() {
+  await section().getByLabel("清单类型", { exact: true }).selectOption("mcp");
+  const n = (await state()).queries.length;
+  await button(await button("重新查询配置").count() ? "重新查询配置" : "检查 MCP 配置").click();
+  await p.waitForFunction(n => window.fixture.current().queries.length === n + 1, n);
+  const q = (await state()).queries.at(-1);
+  await p.evaluate(id => window.fixture.finish(id, "fixture.mcp", 1), q.requestId);
+  await button("审阅停用偏好…").waitFor();
+  return q;
+}
+async function review() {
+  const n = await count(inspect);
+  await button("审阅停用偏好…").click();
+  await p.waitForFunction(n => window.fixture.current().calls.filter(c => c.cmd === "agent_mcp_change_inspect").length === n + 1, n);
+  const q = (await state()).operations.at(-1);
+  await p.evaluate(id => window.fixture.managed(id, "review"), q.requestId);
+  await button("确认停用偏好").waitFor();
+  return q;
+}
+async function doConfirm() {
+  const n = await count(confirm);
+  await button("确认停用偏好").click();
+  await p.waitForFunction(n => window.fixture.current().calls.filter(c => c.cmd === "agent_mcp_change_confirm").length === n + 1, n);
+  return (await state()).operations.at(-1);
+}
+try {
+  await p.route("**/*", r => r.request().url().startsWith("http://127.0.0.1:1507/") ? r.continue() : r.abort());
+  await p.goto("http://127.0.0.1:1507/" + base + "/index.html");
+  await p.getByRole("button", { name: "探索 Agent", exact: true }).first().click();
+  await open();
+  const baseline = await state();
+  await choose();
+  let q = await query();
+  check("opening and querying do not inspect or write", await count(inspect) === 0 && await count(confirm) === 0);
+  check("MCP report does not restrict explicit target preference", await button("审阅启用偏好…").isEnabled() && await button("审阅停用偏好…").isEnabled());
+  await button("审阅启用偏好…").click();
+  await p.waitForFunction(() => window.fixture.current().operations.length > 0);
+  const explicit = (await state()).operations.at(-1);
+  check("explicit enable request remains true despite prior enabled report", explicit.requestedEnabled === true && (await state()).calls.find(c => c.cmd === inspect).args.enabled === true && await count(confirm) === 0);
+  await p.evaluate(id => window.fixture.managed(id, "inspectChanged"), explicit.requestId);
+  await panel().getByText("配置已变化，请重新审阅。", { exact: true }).waitFor();
+  check("fresh configuration refusal provides no confirmation or automatic write", await button("确认启用偏好").count() === 0 && await button("确认停用偏好").count() === 0 && await count(confirm) === 0);
+  q = await query();
+  const first = await review();
+  check("inspect refers only to exact inventory/item with no config or secret input", first.target.inventoryRequestId === q.requestId && first.target.kind === "mcp" && Object.entries((await state()).calls.find(c => c.cmd === inspect).args).filter(([,v]) => v !== undefined).map(([k]) => k).sort().join(",") === "agentId,enabled,inventoryRequestId,itemId,requestId");
+  await p.keyboard.press("Enter");
+  check("review and heading Enter cannot dispatch confirmation", await count(confirm) === 0);
+  const reviewText = await panel().innerText();
+  check("review distinguishes user preference, directory report, profile scope and unverified connections", reviewText.includes("用户配置中的偏好") && reviewText.includes("此文件夹的配置报告") && reviewText.includes("所选用户配置方案") && reviewText.includes("不代表当前对话的连接或工具状态"));
+  check("MCP review has no skill-specific explanation", !reviewText.includes("技能"));
+  await p.setViewportSize({ width: 390, height: 720 });
+  await button("确认停用偏好").scrollIntoViewIfNeeded();
+  const metrics = await dialog().evaluate(d => { const r = d.getBoundingClientRect(); return { x: r.x, right: r.right, width: innerWidth, scroll: d.scrollWidth, client: d.clientWidth }; });
+  check("narrow actual dialog remains in viewport without horizontal overflow", metrics.x >= 0 && metrics.right <= metrics.width + 1 && metrics.scroll <= metrics.client + 1, metrics);
+  await p.screenshot({ path: `${base}/${engine}-${label}-review.png` });
+  await button("收起审阅").click();
+  await button("查看 MCP 修改状态").waitFor();
+  check("review withdrawal returns focus to the exact MCP status action", await button("查看 MCP 修改状态").evaluate(e => e === document.activeElement));
+  await button("查看 MCP 修改状态").click();
+  check("reopening a withdrawn review cannot restore authority", await button("确认停用偏好").count() === 0 && await count(confirm) === 0);
+  await p.setViewportSize({ width: 1100, height: 800 });
+  await query(); await review();
+  const c = await doConfirm();
+  await p.keyboard.press("Enter");
+  check("one explicit confirmation sends only one review identity", await count(confirm) === 1 && Object.entries((await state()).calls.find(c => c.cmd === confirm).args).filter(([,v]) => v !== undefined).map(([k]) => k).sort().join(",") === "agentId,requestId,reviewId");
+  await p.evaluate(id => window.fixture.managed(id, "unknown"), c.requestId);
+  await panel().getByText("本次修改结果仍未确认。可以检查结果；不会自动重试修改。", { exact: true }).waitFor();
+  check("uncertain write remains unknown and old configuration report is stale", (await section().innerText()).includes("此前结果，已过期") && await count(confirm) === 1);
+  await button("核对修改结果").click();
+  await p.waitForFunction(() => window.fixture.current().operations.at(-1).action === "recheck");
+  const rc = (await state()).operations.at(-1);
+  check("explicit recheck targets old operation under a fresh request without a second write", rc.operationId === c.requestId && rc.requestId !== c.requestId && await count(confirm) === 1 && await count(recheck) === 1);
+  await p.evaluate(id => window.fixture.managed(id, "success"), rc.requestId);
+  await panel().getByText("当前保存的偏好与配置报告符合所选状态；不能据此确认此前修改是否成功。", { exact: true }).waitFor();
+  check("matching recheck remains observation, not previous-write success", !(await panel().innerText()).includes("保存的偏好与此次配置报告均已核对为所选状态。"));
+  await p.screenshot({ path: `${base}/${engine}-${label}-observed.png` });
+  await query(); const second = await review();
+  await section().getByLabel("清单类型", { exact: true }).selectOption("skills");
+  await p.waitForFunction(id => window.fixture.current().calls.some(x => x.cmd === "agent_mcp_change_cancel" && x.args.requestId === id), second.requestId);
+  await section().getByLabel("清单类型", { exact: true }).selectOption("mcp");
+  check("kind A-B-A cannot confirm stale MCP review or reuse its inventory", await button("确认停用偏好").count() === 0 && await button("审阅停用偏好…").isDisabled());
+  await query(); await review(); const c2 = await doConfirm();
+  await close(); await open("B");
+  await p.evaluate(id => window.fixture.managed(id, "success"), c2.requestId);
+  check("late A confirmation cannot enter B", await panel().count() === 0);
+  await close(); await open();
+  check("A result stays scoped to original directory without renewed confirm", await button("确认停用偏好").count() === 0 && (await panel().innerText()).includes("/controlled/project-A"));
+  await choose();
+  await p.evaluate(() => window.fixture.refusal("selectionChanged"));
+  const queriesBefore = await count("agent_extension_inventory_read");
+  await button(await button("重新查询配置").count() ? "重新查询配置" : "检查 MCP 配置").click();
+  await section().getByText("读取方式已失效或发生变化，请重新检查读取方式。", { exact: true }).waitFor();
+  check("NEW-16 explains refusal without inventing a program selection change", !(await section().innerText()).includes("Agent 或程序选择已变化"));
+  await p.evaluate(() => window.fixture.refusal(null));
+  const capBefore = await count("agent_extension_capabilities");
+  await button("重新检查读取方式").click();
+  await p.waitForFunction(n => window.fixture.current().calls.filter(c => c.cmd === "agent_extension_capabilities").length > n, capBefore);
+  check("explicit capability refresh does not auto-query or reissue a write", await count("agent_extension_inventory_read") === queriesBefore + 1 && await count(confirm) === 2);
+  await query();
+  check("separate explicit query restores review access after capability refresh", await button("审阅停用偏好…").isEnabled());
+  await close();
+  const end = await state();
+  check("no unexpected IPC, skill writes, Agent prompt, or connection dispatched", end.unexpected.length === 0 && !end.calls.some(c => c.cmd.startsWith("agent_skill_change_") || ["session_open", "session_prompt", "agent_connect"].includes(c.cmd)));
+  check("draft and new-conversation directory preserved", end.draft.text === "KEEP P41 DRAFT" && end.cwd === baseline.cwd);
+  result.final = { calls: end.calls, operations: end.operations };
+} catch (e) {
+  result.failure = String(e); result.body = await p.locator("body").innerText().catch(() => null); result.state = await state().catch(() => null);
+  await p.screenshot({ path: `${base}/${engine}-${label}-failure.png` }).catch(() => {});
+} finally {
+  await b.close(); result.after = hashes(); result.stable = JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed = !result.failure && !result.errors.length && result.stable && result.checks.every(c => c.pass);
+  fs.writeFileSync(`${base}/${engine}-${label}.raw.txt`, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
+  console.log(JSON.stringify({ passed: result.passed, checks: result.checks.length, failure: result.failure, errors: result.errors, stable: result.stable }));
+  process.exitCode = result.passed ? 0 : 1;
+}

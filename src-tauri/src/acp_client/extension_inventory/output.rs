@@ -80,6 +80,10 @@ pub(in crate::acp_client) fn parse(bytes: &[u8]) -> Result<McpInventory> {
             return Err(Code::InvalidOutput.into());
         }
         items.push(McpInventoryItem {
+            enablement: SkillEnablement {
+                availability: "unavailable",
+                reason: Some("unsupportedTransport"),
+            },
             id,
             name: safe_name(&row.name),
             reported_enabled: row.enabled,
@@ -112,4 +116,25 @@ pub(in crate::acp_client) fn parse(bytes: &[u8]) -> Result<McpInventory> {
         session_applicability: "unverified",
         items,
     })
+}
+
+pub(in crate::acp_client) fn parse_private(
+    bytes: &[u8],
+) -> Result<(McpInventory, Vec<super::mcp_targets::McpTarget>)> {
+    let mut snapshot = parse(bytes)?;
+    let rows: Vec<serde_json::Value> =
+        serde_json::from_slice(bytes).map_err(|_| Code::InvalidOutput)?;
+    let mut targets = Vec::new();
+    for (item, row) in snapshot.items.iter_mut().zip(&rows) {
+        if let Some(target) = super::mcp_targets::target(row, item.id) {
+            item.enablement = SkillEnablement {
+                availability: "available",
+                reason: None,
+            };
+            targets.push(target);
+        } else if item.name.is_none() {
+            item.enablement.reason = Some("unsafeLabel");
+        }
+    }
+    Ok((snapshot, targets))
 }

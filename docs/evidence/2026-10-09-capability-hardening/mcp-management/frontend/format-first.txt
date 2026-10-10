@@ -1,0 +1,12 @@
+src/runtime/extension_change_validation.ts 50ms
+src/runtime/extension_management_types.ts 12ms
+src/runtime/mcp_management.ts 3ms
+src/runtime/mcp_management_strings.ts 7ms
+src/runtime/mcp_management_types.ts 16ms
+src/runtime/skill_management_types.ts 31ms
+src/runtime/skill_management_controller.ts 45ms
+src/runtime/extension_inventory_types.ts 27ms
+src/components/AgentExtensionInventory.tsx 34ms
+src/components/AgentExtensionInventoryResult.tsx 13ms
+src/components/SkillChangeReview.tsx 26ms
+src/components/AgentExtensionInventory.mcp-management.test.tsx 5ms

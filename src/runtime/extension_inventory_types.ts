@@ -1,3 +1,4 @@
+import { parseMcpEnablement, type McpEnablement } from "./mcp_management_types";
 import type { SkillEnablement } from "./skill_management_types";
 export const EXTENSION_CODES = [
   "notReviewed",
@@ -31,9 +32,11 @@ export interface ExtensionCapabilities {
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
   skillEnablement: InventoryCapability;
+  mcpEnablement?: InventoryCapability; // Missing legacy report never grants management.
   toolInventory: "unavailable";
 }
 export interface InventoryItem {
+  enablement?: McpEnablement; // Historical read-only wire may omit this.
   id: number;
   name: string | null;
   transport: "stdio" | "streamableHttp" | "unknown";
@@ -147,13 +150,17 @@ export function validInventoryId(value: unknown): value is string {
 export function parseExtensionCapabilities(
   value: unknown,
 ): ExtensionCapabilities {
-  const v = object(value, [
-    "selectionId",
-    "mcpInventory",
-    "skillsInventory",
-    "skillEnablement",
-    "toolInventory",
-  ]);
+  const v = object(
+    value,
+    [
+      "selectionId",
+      "mcpInventory",
+      "skillsInventory",
+      "skillEnablement",
+      "toolInventory",
+    ],
+    ["mcpEnablement"],
+  );
   const capability = (
     raw: unknown,
     source: "officialCli" | "officialAppServer",
@@ -188,6 +195,14 @@ export function parseExtensionCapabilities(
     skillsInventory.availability !== "available"
   )
     return invalid();
+  const mcpEnablement = Object.hasOwn(v, "mcpEnablement")
+    ? capability(v.mcpEnablement, "officialAppServer")
+    : undefined;
+  if (
+    mcpEnablement?.availability === "available" &&
+    mcpInventory.availability !== "available"
+  )
+    return invalid();
   const available =
     mcpInventory.availability === "available" ||
     skillsInventory.availability === "available";
@@ -201,6 +216,7 @@ export function parseExtensionCapabilities(
     mcpInventory,
     skillsInventory,
     skillEnablement,
+    ...(mcpEnablement ? { mcpEnablement } : {}),
     toolInventory: "unavailable",
   };
 }
@@ -341,17 +357,21 @@ function snapshot(value: unknown): McpInventory {
   )
     return invalid();
   const items = v.items.map((raw, index): InventoryItem => {
-    const i = object(raw, [
-      "id",
-      "name",
-      "transport",
-      "reportedEnabled",
-      "reportedAuth",
-      "origin",
-      "configurationLayer",
-      "connection",
-      "tools",
-    ]);
+    const i = object(
+      raw,
+      [
+        "id",
+        "name",
+        "transport",
+        "reportedEnabled",
+        "reportedAuth",
+        "origin",
+        "configurationLayer",
+        "connection",
+        "tools",
+      ],
+      ["enablement"],
+    );
     if (
       i.id !== index ||
       typeof i.reportedEnabled !== "boolean" ||
@@ -370,7 +390,16 @@ function snapshot(value: unknown): McpInventory {
         !/^[\p{Alphabetic}\p{Number} ._-]+$/u.test(i.name))
     )
       return invalid();
+    const enablement = Object.hasOwn(i, "enablement")
+      ? parseMcpEnablement(i.enablement)
+      : undefined;
+    if (
+      enablement?.availability === "available" &&
+      (i.name === null || i.transport === "unknown")
+    )
+      return invalid();
     return {
+      ...(enablement ? { enablement } : {}),
       id: index,
       name: i.name as string | null,
       transport: one(i.transport, ["stdio", "streamableHttp", "unknown"]),

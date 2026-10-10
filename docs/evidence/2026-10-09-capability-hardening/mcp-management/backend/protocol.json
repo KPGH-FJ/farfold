@@ -1,0 +1,43 @@
+{
+  "status": "implemented protocol clarification; not official CLI acceptance",
+  "originalContract": {
+    "path": "output/2026-10-11-mcp-management-contract/contract.json",
+    "sha256": "2afa8b31dca34d7b7000ab8f5c085649a58df6a779556b45ffe13c5f12e2f8e2"
+  },
+  "originalTypes": {
+    "path": "output/2026-10-11-mcp-management-contract/contract.ts",
+    "sha256": "49bcf3a6e3a677ad0bb415e4d9d912aeb6db052237e760219963278dd1fd7b1c"
+  },
+  "clarifications": {
+    "availableEnablement": {
+      "availability": "available",
+      "reason": null
+    },
+    "unavailableReason": [
+      "unsafeLabel",
+      "unsupportedTransport",
+      "ambiguousTarget",
+      "incompleteInventory"
+    ],
+    "mcpItemId": {
+      "minimum": 0,
+      "maximum": 511,
+      "meaning": "ordinal of same original inventory response, not permanent identifier"
+    },
+    "legacyWire": "Older immutable wires have no management capability; new Rust emits capability and row enablement.",
+    "readScope": "get is selected cwd effective configured report, not current session connection/tools; exact writable source is proved independently by global and cwd config/read.",
+    "readLimits": {
+      "absoluteActionDeadlineSeconds": 30,
+      "sequentialChildCountAtMost": 3,
+      "getStdoutBytesEach": 1048576,
+      "appServerStdoutBytes": 4194304,
+      "appServerFrameBytes": 1048576,
+      "stderrBytesEach": 65536,
+      "note": "Limits are per child except one action deadline; cleanup retains shared lease until actual child/group/pipes finish, not a guaranteed OS termination deadline."
+    },
+    "cancel": "Original exact request only; after write dispatch cancellation cannot establish no write or rollback.",
+    "profile": "Highest writable User layer file; quoted literal MCP name under mcp_servers, no profiles key rewrite.",
+    "configurationConcurrency": "Official expectedVersion is not a cross-process CAS; fresh prechecks and complete semantic readback are bounded observations, not attribution of all concurrent writes.",
+    "initialMismatch": "inspect refuses configuredEnabled != fresh get.reportedEnabled with configurationChanged, and non-null disabled_reason with configurationReadOnly; either explicit desired value still requires these guards."
+  }
+}

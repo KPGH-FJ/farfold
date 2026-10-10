@@ -1,0 +1,105 @@
+{
+  "status": "final source freeze; one pure mismatch test added after author 35-test run, execution deferred to root full checks",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "230b7fdf1b82d3b8a5b78c45878b901b320ff87f986396c9705e622b281916f0",
+      "lines": 220
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf",
+      "lines": 174
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "04fdf61f791cbf60108df2a2e65a57085a1814f2ee097342b2cc098daecf7e8a",
+      "lines": 324
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87",
+      "lines": 140
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "4fbb156d8136aec4ee55e1d69b56dfd6290803484617b5998a4cf96ac3493db8",
+      "lines": 250
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "c825116fca240516977051ae8a919a8f81789e2be7b85713167b4e637f9d6958",
+      "lines": 167
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64",
+      "lines": 144
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp.rs",
+      "sha256": "adfbe0604a7343048cf3cf17301bb93d858da670354f198e5b5dd5cd594fd597",
+      "lines": 139
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_independent_tests.rs",
+      "sha256": "d65fe20255633b6438ee6af2822d7c10a90ec92344f1b07b38cef7af1a014dd8",
+      "lines": 112
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_peer.py",
+      "sha256": "313197a14ee31306a253cf77a221a461bebd7f5a1ed00264436e89a587522d76",
+      "lines": 79
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3",
+      "lines": 155
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+      "sha256": "6820634a66ed5effe443603aaa790952fb38d1531f1a459637adee2d531db621",
+      "lines": 444
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "2abdac3b745c7b04314d6f72e68a5a8ac7afe14acf42e59cb20669f6aa2e7def",
+      "lines": 224
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "8e04c6d020a534ea6f4664f3ae02bb4e42e5cf0e36e025285771a5973e29a91c",
+      "lines": 211
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43",
+      "lines": 518
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "475c89404335d6cf228b7b565b4c08470a7fa507fe6350f29ba634b19c9ef386",
+      "lines": 442
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "f01507fd7d44062ad1c9c80ba53c1a6abd8a931ac282070161354180f8180d0a",
+      "lines": 487
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "32e66a3bf2acd3ea048d6deabe1ce16bafa7f6a6df0a0d8bcd536c5139cd7252",
+      "lines": 141
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "debc1438a75821b204d4f4b3361fd391486f491da8585bfdf93bf2a1db0aa499",
+      "lines": 441
+    }
+  ],
+  "previousCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/source-checkpoint.json",
+    "sha256": "831dbad59cda5343f523886d8b65494499d2cdb48f9980a8ba85686ddcd2f6db"
+  },
+  "addedUnexecutedTest": "mcp_initial_user_and_reported_enabled_mismatch_cannot_issue_a_plan"
+}

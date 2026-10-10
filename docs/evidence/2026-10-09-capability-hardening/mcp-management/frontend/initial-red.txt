@@ -1,0 +1,50 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AgentExtensionInventory.mcp-management.test.tsx (2 tests | 2 failed) 28ms
+   × offers an explicit review of an eligible MCP preference without implying a live connection 26ms
+   × does not allow an old MCP report to grant another review 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AgentExtensionInventory.mcp-management.test.tsx > offers an explicit review of an eligible MCP preference without implying a live connection
+AssertionError: expected '<div class="agent-extension-result"><…' to contain '审阅停用偏好…'
+
+Expected: "审阅停用偏好…"
+Received: "<div class="agent-extension-result"><p class="agent-extension-directory">/controlled</p><p>查询时间：<time>1/1/1970, 8:00:00 AM</time></p><p>信息来源：官方程序的配置报告</p><ul class="agent-extension-items"><li><strong>local-tools</strong><span>本地程序</span><span>配置报告：已启用</span><span>认证报告：未提供</span></li></ul></div>"
+
+ ❯ src/components/AgentExtensionInventory.mcp-management.test.tsx:28:16
+     26|   const inspect = vi.fn();
+     27|   const html = renderToStaticMarkup(<AgentExtensionInventoryResult res…
+     28|   expect(html).toContain("审阅停用偏好…");
+       |                ^
+     29|   expect(html).toContain("保存的启用偏好不代表当前对话的连接或工具状态");
+     30|   expect(inspect).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/AgentExtensionInventory.mcp-management.test.tsx > does not allow an old MCP report to grant another review
+AssertionError: expected '<div class="agent-extension-result"><…' to match /disabled=""[^>]*>审阅停用偏好…/
+
+- Expected:
+/disabled=""[^>]*>审阅停用偏好…/
+
++ Received:
+"<div class=\"agent-extension-result\"><p role=\"status\" class=\"auth-note\">此前结果，已过期；下方目录和时间仅说明此前查询范围。</p><p class=\"agent-extension-directory\">/controlled</p><p>查询时间：<time>1/1/1970, 8:00:00 AM</time></p><p>信息来源：官方程序的配置报告</p><ul class=\"agent-extension-items\"><li><strong>local-tools</strong><span>本地程序</span><span>配置报告：已启用</span><span>认证报告：未提供</span></li></ul></div>"
+
+ ❯ src/components/AgentExtensionInventory.mcp-management.test.tsx:34:16
+     32| it("does not allow an old MCP report to grant another review", () => {
+     33|   const html = renderToStaticMarkup(<AgentExtensionInventoryResult res…
+     34|   expect(html).toMatch(/disabled=""[^>]*>审阅停用偏好…/);
+       |                ^
+     35| });
+     36|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  01:26:52
+   Duration  183ms (transform 34ms, setup 0ms, import 61ms, tests 28ms, environment 0ms)
+

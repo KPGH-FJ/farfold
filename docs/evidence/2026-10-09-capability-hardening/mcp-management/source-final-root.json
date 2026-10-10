@@ -1,0 +1,172 @@
+{
+  "atUtc": "2026-10-10T18:01:54.319747+00:00",
+  "status": "frozenForRun02",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "230b7fdf1b82d3b8a5b78c45878b901b320ff87f986396c9705e622b281916f0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "04fdf61f791cbf60108df2a2e65a57085a1814f2ee097342b2cc098daecf7e8a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "4fbb156d8136aec4ee55e1d69b56dfd6290803484617b5998a4cf96ac3493db8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "c825116fca240516977051ae8a919a8f81789e2be7b85713167b4e637f9d6958"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp.rs",
+      "sha256": "adfbe0604a7343048cf3cf17301bb93d858da670354f198e5b5dd5cd594fd597"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_independent_tests.rs",
+      "sha256": "d65fe20255633b6438ee6af2822d7c10a90ec92344f1b07b38cef7af1a014dd8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_peer.py",
+      "sha256": "313197a14ee31306a253cf77a221a461bebd7f5a1ed00264436e89a587522d76"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_tests.rs",
+      "sha256": "6820634a66ed5effe443603aaa790952fb38d1531f1a459637adee2d531db621"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "2abdac3b745c7b04314d6f72e68a5a8ac7afe14acf42e59cb20669f6aa2e7def"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "8e04c6d020a534ea6f4664f3ae02bb4e42e5cf0e36e025285771a5973e29a91c"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "475c89404335d6cf228b7b565b4c08470a7fa507fe6350f29ba634b19c9ef386"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "f01507fd7d44062ad1c9c80ba53c1a6abd8a931ac282070161354180f8180d0a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "32e66a3bf2acd3ea048d6deabe1ce16bafa7f6a6df0a0d8bcd536c5139cd7252"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "debc1438a75821b204d4f4b3361fd391486f491da8585bfdf93bf2a1db0aa499"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.mcp-management.test.tsx",
+      "sha256": "649530c792b8c7ab506976f3f2d877deeacbc92e4e8eebba7a551591ffe0cdad"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "57ec18971d857d4c10b809b9335b994cafb4f75cb4c6008b9438b539c656b9ce"
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "5d6fcad645b1a1c54baafd570ce5830ae03b3d07c8a3bd42152b5e86e1963ef1"
+    },
+    {
+      "path": "src/components/SkillChangeReview.mcp.test.tsx",
+      "sha256": "88a67338537e5314e9529f1c36611391cf080093f9155fab163c9fd93dc75e10"
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "c6a5e7aa3b5c6099e7a722733a606cfd0e658d6b0d2bc5dbfd5e5f0d163d2459"
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "9fe2b893487225e731bb74a08a962dd705aec5e6ff59ba5be02379971967d112"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.test.ts",
+      "sha256": "a389d9ebc1c970e27b08266e83272d6459bc7626644685631722c4fa9dd4c436"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "502755c0f286c2f093b5424711fb17957aaa13b6126ffe4ca49c9de50959692a"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "5397609039de8578847eeb84ebfd7e5709166bb6f223c3c3c697a7de8cbc5610"
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "9b11364c6cbfb5586ba1199cbc12d1cf96a426e061ddf614618cdc028c346bc9"
+    },
+    {
+      "path": "src/runtime/mcp_management.ipc.test.ts",
+      "sha256": "2f13349686c05cc3ce50643d6504b23e8c8d52f074a7105b4d8cb0823b9d3cea"
+    },
+    {
+      "path": "src/runtime/mcp_management.test-support.ts",
+      "sha256": "e2b747db018d84dc6e0a48d32fe20609b976f5c989761a910e8ce408963c2219"
+    },
+    {
+      "path": "src/runtime/mcp_management.ts",
+      "sha256": "189f2c420858538e486e9eaeafec77bb3eabedf5007f2e17c132a4e46de4450b"
+    },
+    {
+      "path": "src/runtime/mcp_management.wire.test.tsx",
+      "sha256": "fe691bee72b67f2075b49cafab2746efebfd42f83996a648d9cf65e3866c4c0c"
+    },
+    {
+      "path": "src/runtime/mcp_management_controller.test.ts",
+      "sha256": "624179fd7c2d0168852f5ac33ae8e9a2dd952b761f24bb22b343e143c958aa62"
+    },
+    {
+      "path": "src/runtime/mcp_management_strings.ts",
+      "sha256": "51a1a69ce210c7059c230e601108a30715e678aa1d9be33f798eccd226dcc51a"
+    },
+    {
+      "path": "src/runtime/mcp_management_types.test.ts",
+      "sha256": "a54e32f5a7df678d2342daf1417b019bdbc8f39fb3af1ffc1e7276207aa43e12"
+    },
+    {
+      "path": "src/runtime/mcp_management_types.ts",
+      "sha256": "23324851b320da17d2b0c41bd103536148eb223406517b4d3ce217798ec87e26"
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "d701502241c9dc9293886e07cb0e35182fb0373578fcff5c2a431b9f7450c992"
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "7f7661d1b53ad36c1a93e13c4d81e5e9fb07fc0d9deebb51eacae41833a8bf3f"
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "3811e897d37af5b735c1b25a5efa89bbc820b09576451f819007560964f61ccd"
+    }
+  ],
+  "addedTestOnly": "Exact public fields and private canary assertions after run01 failure",
+  "productionChangedAfterRun01": false
+}

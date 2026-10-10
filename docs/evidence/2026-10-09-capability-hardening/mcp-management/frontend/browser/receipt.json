@@ -1,0 +1,227 @@
+{
+  "atUtc": "2026-10-10T17:43:31.215384+00:00",
+  "status": "controlledFullAppBrowserPassed",
+  "scope": "Actual full App and React StrictMode, shared production inventory/controller/parser/review UI; IPC and directory chooser controlled by the test harness. No installed native app, Agent, credential or official configuration call.",
+  "results": [
+    {
+      "engine": "webkit",
+      "checksPassed": 20,
+      "recordedInputsStable": true,
+      "pageErrors": [],
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-02.raw.txt",
+      "checks": [
+        {
+          "name": "opening and querying do not inspect or write",
+          "pass": true
+        },
+        {
+          "name": "inspect refers only to exact inventory/item with no config or secret input",
+          "pass": true
+        },
+        {
+          "name": "review and heading Enter cannot dispatch confirmation",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes user preference, directory report, profile scope and unverified connections",
+          "pass": true
+        },
+        {
+          "name": "MCP review has no skill-specific explanation",
+          "pass": true
+        },
+        {
+          "name": "narrow actual dialog remains in viewport without horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "review withdrawal returns focus to the exact MCP status action",
+          "pass": true
+        },
+        {
+          "name": "reopening a withdrawn review cannot restore authority",
+          "pass": true
+        },
+        {
+          "name": "one explicit confirmation sends only one review identity",
+          "pass": true
+        },
+        {
+          "name": "uncertain write remains unknown and old configuration report is stale",
+          "pass": true
+        },
+        {
+          "name": "explicit recheck targets old operation under a fresh request without a second write",
+          "pass": true
+        },
+        {
+          "name": "matching recheck remains observation, not previous-write success",
+          "pass": true
+        },
+        {
+          "name": "kind A-B-A cannot confirm stale MCP review or reuse its inventory",
+          "pass": true
+        },
+        {
+          "name": "late A confirmation cannot enter B",
+          "pass": true
+        },
+        {
+          "name": "A result stays scoped to original directory without renewed confirm",
+          "pass": true
+        },
+        {
+          "name": "NEW-16 explains refusal without inventing a program selection change",
+          "pass": true
+        },
+        {
+          "name": "explicit capability refresh does not auto-query or reissue a write",
+          "pass": true
+        },
+        {
+          "name": "separate explicit query restores review access after capability refresh",
+          "pass": true
+        },
+        {
+          "name": "no unexpected IPC, skill writes, Agent prompt, or connection dispatched",
+          "pass": true
+        },
+        {
+          "name": "draft and new-conversation directory preserved",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "checksPassed": 20,
+      "recordedInputsStable": true,
+      "pageErrors": [],
+      "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-01.raw.txt",
+      "checks": [
+        {
+          "name": "opening and querying do not inspect or write",
+          "pass": true
+        },
+        {
+          "name": "inspect refers only to exact inventory/item with no config or secret input",
+          "pass": true
+        },
+        {
+          "name": "review and heading Enter cannot dispatch confirmation",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes user preference, directory report, profile scope and unverified connections",
+          "pass": true
+        },
+        {
+          "name": "MCP review has no skill-specific explanation",
+          "pass": true
+        },
+        {
+          "name": "narrow actual dialog remains in viewport without horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "review withdrawal returns focus to the exact MCP status action",
+          "pass": true
+        },
+        {
+          "name": "reopening a withdrawn review cannot restore authority",
+          "pass": true
+        },
+        {
+          "name": "one explicit confirmation sends only one review identity",
+          "pass": true
+        },
+        {
+          "name": "uncertain write remains unknown and old configuration report is stale",
+          "pass": true
+        },
+        {
+          "name": "explicit recheck targets old operation under a fresh request without a second write",
+          "pass": true
+        },
+        {
+          "name": "matching recheck remains observation, not previous-write success",
+          "pass": true
+        },
+        {
+          "name": "kind A-B-A cannot confirm stale MCP review or reuse its inventory",
+          "pass": true
+        },
+        {
+          "name": "late A confirmation cannot enter B",
+          "pass": true
+        },
+        {
+          "name": "A result stays scoped to original directory without renewed confirm",
+          "pass": true
+        },
+        {
+          "name": "NEW-16 explains refusal without inventing a program selection change",
+          "pass": true
+        },
+        {
+          "name": "explicit capability refresh does not auto-query or reissue a write",
+          "pass": true
+        },
+        {
+          "name": "separate explicit query restores review access after capability refresh",
+          "pass": true
+        },
+        {
+          "name": "no unexpected IPC, skill writes, Agent prompt, or connection dispatched",
+          "pass": true
+        },
+        {
+          "name": "draft and new-conversation directory preserved",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "originalFailure": {
+    "raw": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-01.raw.txt",
+    "checksPassedBeforeFailure": 8,
+    "cause": "Test driver used a nonexistent refresh label. Visible UI and product string were 重新查询配置. Only driver changed; original executed script/log/image retained."
+  },
+  "visualInspection": "Root viewed the actual WebKit run01 narrow review screenshot; readable scope, preference and confirmation with no horizontal overflow. This is the same production rendering code as passing run02, not native installation acceptance.",
+  "pending": [
+    "Actual Rust wire frontend final acceptance is separate",
+    "Official installed MCP preference and NEW16 refusal/recovery verification",
+    "Connection, authentication, tools, allAgents and fullP41 remain incomplete"
+  ],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/index.html.source.txt": "2f73f5ec983da7774f134e7ad49462d62f6fbd6fe4c32262d194b3e90e16ea17",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/fixture.tsx.source.txt": "5158145a127939cb6f5ca9ad466bfd70f791ed081613bf0e276e6c00f43e83be",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/run.mjs.source.txt": "c4c68414e2dff2ba153e712b0a63854b606b8e3c61210db1b7ddca5dbe0d2e6e",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/serve.mjs.source.txt": "e52faeda1e4ca5feffcaa13bbd2f87ca7e6bb458778eb8551ab4bf881d7a5e86",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/run-01-executed.mjs.source.txt": "45e1a156ba8e137eb926f28130dd608d3cafb108ff59f96b5d7e712d439c9af1",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-01.raw.txt": "c67d817db0039ae1c155fef16a6a403a7adfc6e6820c8d88c98de8bd66aeba46",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-01-failure.png": "ec775cdb74dbc91d8d1bf30ef2041199f7f6ca2550b4f2d1fafe3d026c288ead",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-01-review.png": "9af1a7847c67dab0834e70f727734b92dac55c0b077a209304d2a1e256a2c374",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/run-01-driver-correction.json.source.txt": "98ba8eb1f39f49719b2dac212c67329aed796a46aade8eb3ff005e035517019a",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-02.raw.txt": "3051390f4de3383afc10187848b842d6ec4fc38d153495642c7dd2506c58e2ec",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-02-review.png": "9af1a7847c67dab0834e70f727734b92dac55c0b077a209304d2a1e256a2c374",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/webkit-run-02-observed.png": "426531c303eba14844e0484dc7139d0dac0250aafd0791b298473cc60c91814e",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-01.raw.txt": "1a4f6d87f39204f1272b12d023c2a6bb2e63401fc240a75b4d225d0c2de9aeb6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-01-review.png": "a049749c5214978f845b208dee5517402a5289151c67dc9cb69219e7c6e1af3c",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/chromium-run-01-observed.png": "76f5d6659fc4d54cbae18f432e56185dbf924815f93dd02549c40995a94e3ef0"
+  }
+}

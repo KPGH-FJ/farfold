@@ -22,6 +22,7 @@ import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory
 import "./AgentExtensionInventory.css";
 import { AgentExtensionInventoryResult } from "./AgentExtensionInventoryResult";
 import { SkillChangeReview } from "./SkillChangeReview";
+import { MCP_MANAGEMENT_STRINGS as M } from "../runtime/mcp_management_strings";
 import { skillManagement } from "../runtime/skill_management_controller";
 
 /** Inline in the existing AgentDetails dialog; no separate modal or Agent UI. */
@@ -143,7 +144,9 @@ export function AgentExtensionInventory({
   const request = view.request;
   const result = view.results[kind];
   const managementAvailable =
-    cap?.value?.skillEnablement.availability === "available";
+    kind === "mcp"
+      ? cap?.value?.mcpEnablement?.availability === "available"
+      : cap?.value?.skillEnablement.availability === "available";
   useEffect(() => {
     skillManagement.retireInspectionForResult(owner, result);
   }, [owner, result]);
@@ -292,10 +295,10 @@ export function AgentExtensionInventory({
           result={result}
           stale={!!stale}
           management={
-            kind === "skills" && managementAvailable
+            managementAvailable
               ? {
                   enabled: active && !blocked && !managementView.unresolved,
-                  inspect: (item) => {
+                  inspect: (item, requestedEnabled) => {
                     const current = () =>
                       owner.current() &&
                       liveCapability.current === capabilityKey &&
@@ -306,6 +309,7 @@ export function AgentExtensionInventory({
                         owner,
                         result,
                         item,
+                        requestedEnabled,
                         current,
                         changed: () => extensionInventory.markStale(result),
                       });
@@ -325,7 +329,9 @@ export function AgentExtensionInventory({
         <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
         <p>
           {kind === "mcp"
-            ? S.limits
+            ? managementAvailable
+              ? M.limits
+              : S.limits
             : managementAvailable
               ? S.skillManagementLimits
               : S.skillLimits}

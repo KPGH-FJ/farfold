@@ -1,7 +1,11 @@
 //! Bounded RAM ownership. A dropped observer does not settle a real worker.
-use super::{plan::Plan, types::*};
+use super::{
+    domain::{PreparedPlan as Plan, Source},
+    plan::Config,
+    types::*,
+};
 use crate::acp_client::{
-    extension_inventory::{process::Control, targets::Source},
+    extension_inventory::{Kind, mcp_targets::Report, process::Control},
     operations::Operation,
 };
 use std::{
@@ -32,6 +36,8 @@ pub(super) struct Job {
     pub deadline: Instant,
     pub changed: watch::Sender<ChangeOperation>,
     pub plan: Mutex<Option<Arc<Plan>>>,
+    pub mcp_report: Mutex<Option<Report>>,
+    pub mcp_readback: Mutex<Option<(Config, Config)>>,
     touched: Mutex<Instant>,
     final_outcome: Mutex<Option<Outcome>>,
     pending_review: Mutex<Option<Review>>,
@@ -144,7 +150,11 @@ struct ReviewEntry {
 }
 enum Entry {
     Job(Arc<Job>),
-    Tombstone { agent: String, at: Instant },
+    Tombstone {
+        agent: String,
+        kind: Kind,
+        at: Instant,
+    },
 }
 #[derive(Default)]
 struct RegistryState {
@@ -197,13 +207,23 @@ impl RegistryState {
         });
         self.reviews.retain(|_, v| v.issued.elapsed() < TTL);
     }
-    fn existing(&self, agent: &str, id: &str, input: &Input) -> Result<Option<Arc<Job>>> {
+    fn existing(
+        &self,
+        agent: &str,
+        id: &str,
+        input: &Input,
+        kind: Kind,
+    ) -> Result<Option<Arc<Job>>> {
         match self.entries.get(id) {
             None => Ok(None),
-            Some(Entry::Job(j)) if j.source.set.row.id == agent && &j.input == input => {
+            Some(Entry::Job(j))
+                if j.source.row().id == agent && j.source.kind() == kind && &j.input == input =>
+            {
                 Ok(Some(j.clone()))
             }
-            Some(Entry::Tombstone { agent: a, .. }) if a == agent => Err(Code::Cancelled.into()),
+            Some(Entry::Tombstone {
+                agent: a, kind: k, ..
+            }) if a == agent && *k == kind => Err(Code::Cancelled.into()),
             _ => Err(Code::RequestConflict.into()),
         }
     }
@@ -216,20 +236,20 @@ impl RegistryState {
         original: Option<&ChangeOperation>,
         enabled: bool,
     ) -> Result<Arc<Job>> {
-        let agent = source.set.row.id.as_str();
-        if self.entries.len()>=64 || self.entries.values().any(|v|matches!(v,Entry::Job(j) if j.source.set.row.id==agent && !j.snapshot().settled)) {return Err(Code::Busy.into());}
+        let agent = source.row().id.as_str();
+        if self.entries.len() >= 64
+            || self.entries.values().any(
+                |v| matches!(v,Entry::Job(j) if j.source.row().id==agent && !j.snapshot().settled),
+            )
+        {
+            return Err(Code::Busy.into());
+        }
         let action = match input {
             Input::Inspect { .. } => Action::Inspect,
             Input::Confirm { .. } => Action::SetEnabled,
             Input::Recheck { .. } => Action::Recheck,
         };
-        let target = Target {
-            inventory_request_id: source.inventory_id.clone(),
-            item_id: source.target.id,
-            name: source.target.name.clone(),
-            origin: source.target.origin.clone(),
-            display_path: super::plan::display_path(&source.target.path)?,
-        };
+        let target = source.public()?;
         let op = ChangeOperation {
             agent_id: agent.into(),
             request_id: id.into(),
@@ -255,6 +275,8 @@ impl RegistryState {
             deadline: Instant::now() + Duration::from_secs(30),
             changed: watch::channel(op).0,
             plan: Mutex::new(plan),
+            mcp_report: Mutex::new(None),
+            mcp_readback: Mutex::new(None),
             touched: Mutex::new(Instant::now()),
             final_outcome: Mutex::new(None),
             pending_review: Mutex::new(None),
@@ -272,6 +294,17 @@ impl Requests {
         item: usize,
         enabled: bool,
     ) -> Result<(Arc<Job>, bool)> {
+        self.begin_inspect_kind(agent, id, inventory, item, enabled, Kind::Skills)
+    }
+    pub fn begin_inspect_kind(
+        &self,
+        agent: &str,
+        id: &str,
+        inventory: &str,
+        item: usize,
+        enabled: bool,
+        kind: Kind,
+    ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
         let input = Input::Inspect {
             inventory: inventory.into(),
@@ -280,25 +313,45 @@ impl Requests {
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input)? {
+        if let Some(j) = s.existing(agent, id, &input, kind)? {
             return Ok((j, false));
         }
-        let source = crate::acp_client::extension_inventory::targets::get(agent, inventory, item)?;
+        let source = match kind {
+            Kind::Skills => Source::Skill(crate::acp_client::extension_inventory::targets::get(
+                agent, inventory, item,
+            )?),
+            Kind::Mcp => Source::Mcp(crate::acp_client::extension_inventory::mcp_targets::get(
+                agent, inventory, item,
+            )?),
+        };
         s.insert(id, input, source, None, None, enabled)
             .map(|j| (j, true))
     }
     pub fn begin_confirm(&self, agent: &str, id: &str, review: &str) -> Result<(Arc<Job>, bool)> {
+        self.begin_confirm_kind(agent, id, review, Kind::Skills)
+    }
+    pub fn begin_confirm_kind(
+        &self,
+        agent: &str,
+        id: &str,
+        review: &str,
+        kind: Kind,
+    ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
         let input = Input::Confirm {
             review: review.into(),
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input)? {
+        if let Some(j) = s.existing(agent, id, &input, kind)? {
             return Ok((j, false));
         }
         let r = s.reviews.get(review).ok_or(Code::ReviewExpired)?;
-        if r.source.set.row.id != agent || !r.source.available() || !r.inspection.interested() {
+        if r.source.row().id != agent
+            || r.source.kind() != kind
+            || !r.source.available()
+            || !r.inspection.interested()
+        {
             return Err(Code::TargetUnavailable.into());
         }
         if r.consumed {
@@ -319,20 +372,33 @@ impl Requests {
         id: &str,
         operation: &str,
     ) -> Result<(Arc<Job>, bool)> {
+        self.begin_recheck_kind(agent, id, operation, Kind::Skills)
+    }
+    pub fn begin_recheck_kind(
+        &self,
+        agent: &str,
+        id: &str,
+        operation: &str,
+        kind: Kind,
+    ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
         let input = Input::Recheck {
             operation: operation.into(),
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input)? {
+        if let Some(j) = s.existing(agent, id, &input, kind)? {
             return Ok((j, false));
         }
         let Some(Entry::Job(old)) = s.entries.get(operation) else {
             return Err(Code::UnknownRequest.into());
         };
         let op = old.snapshot();
-        if op.agent_id != agent || op.action != Action::SetEnabled || !op.settled {
+        if op.agent_id != agent
+            || old.source.kind() != kind
+            || op.action != Action::SetEnabled
+            || !op.settled
+        {
             return Err(Code::Busy.into());
         }
         let source = old.source.clone();
@@ -369,22 +435,7 @@ impl Requests {
         if s.reviews.contains_key(&id) {
             return Err(Code::Unavailable.into());
         }
-        let public = Review {
-            review_id: id.clone(),
-            agent_id: op.agent_id,
-            cwd: op.cwd,
-            target: op.target,
-            requested_enabled: plan.enabled,
-            reported_enabled: plan.target.enabled,
-            write_scope: plan.before.scope()?,
-            observed_at_ms: now_ms(),
-            valid_for_ms: 300000,
-            rules_before: plan.rules_before,
-            rules_after: plan.array.as_array().ok_or(Code::InvalidOutput)?.len(),
-            mutation: plan.mutation,
-            preservation: "officialJsonValues",
-            session_applicability: "unverified",
-        };
+        let public = plan.review(op, id.clone())?;
         s.reviews.insert(
             id,
             ReviewEntry {
@@ -402,20 +453,28 @@ impl Requests {
         Ok(public)
     }
     pub fn get(&self, agent: &str, id: &str) -> Result<Arc<Job>> {
+        self.get_kind(agent, id, Kind::Skills)
+    }
+    pub fn get_kind(&self, agent: &str, id: &str, kind: Kind) -> Result<Arc<Job>> {
         validate(agent, id)?;
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
         match s.entries.get(id) {
-            Some(Entry::Job(j)) if j.source.set.row.id == agent => Ok(j.clone()),
+            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.kind() == kind => {
+                Ok(j.clone())
+            }
             _ => Err(Code::UnknownRequest.into()),
         }
     }
     pub fn cancel(&self, agent: &str, id: &str) -> Result<Cancellation> {
+        self.cancel_kind(agent, id, Kind::Skills)
+    }
+    pub fn cancel_kind(&self, agent: &str, id: &str, kind: Kind) -> Result<Cancellation> {
         validate(agent, id)?;
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
         let op = match s.entries.get(id) {
-            Some(Entry::Job(j)) if j.source.set.row.id == agent => {
+            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.kind() == kind => {
                 j.operation.abandon();
                 j.pending_review
                     .lock()
@@ -430,7 +489,9 @@ impl Requests {
                 s.reviews.retain(|_, r| r.inspection.interested());
                 Some(op)
             }
-            Some(Entry::Tombstone { agent: a, .. }) if a == agent => None,
+            Some(Entry::Tombstone {
+                agent: a, kind: k, ..
+            }) if a == agent && *k == kind => None,
             Some(_) => return Err(Code::RequestConflict.into()),
             None => {
                 if s.entries.len() >= 64 {
@@ -440,6 +501,7 @@ impl Requests {
                     id.into(),
                     Entry::Tombstone {
                         agent: agent.into(),
+                        kind,
                         at: Instant::now(),
                     },
                 );

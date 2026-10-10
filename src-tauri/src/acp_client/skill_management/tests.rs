@@ -270,7 +270,7 @@ fn missing_target_recheck_is_an_observation_not_a_repeated_write() {
         .0;
     f.run(&check, "missing").unwrap();
     check.finish(None);
-    assert_eq!(check.snapshot().observation.unwrap().skill, "missing");
+    assert_eq!(check.snapshot().observation.unwrap().skill, Some("missing"));
     assert_eq!(check.snapshot().outcome, Some(Outcome::Mismatch));
 }
 #[test]

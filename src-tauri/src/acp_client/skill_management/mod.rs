@@ -1,4 +1,7 @@
 //! Explicit, reviewed single-skill preferences through a fixed official interface.
+mod domain;
+pub mod mcp;
+mod mcp_plan;
 mod plan;
 mod requests;
 mod rpc;
@@ -10,13 +13,16 @@ use tauri::{AppHandle, Manager, Webview};
 pub use types::*;
 
 fn query(store: &MetaStore, job: &Job) -> Result<()> {
+    if job.source.kind() == inventory::Kind::Mcp {
+        return mcp::query(store, job);
+    }
     job.within()?;
     job.source
         .current(store, job.snapshot().action == Action::Inspect)?;
-    inventory::launch::admission(&job.source.set.row)?;
+    inventory::launch::admission(job.source.row())?;
     let env = crate::shell_env::cached_command_env().ok_or(Code::EnvironmentUnavailable)?;
     let command = inventory::launch::command(
-        &job.source.set.row,
+        job.source.row(),
         job.source.cwd(),
         env,
         inventory::Kind::Skills,
@@ -60,7 +66,7 @@ async fn execute_with(
         }
     };
     let configuration = tokio::select! {
-        guard=crate::install_job::configuration_guard(&job.source.set.row.id)=>guard,
+        guard=crate::install_job::configuration_guard(&job.source.row().id)=>guard,
         _=job.operation.cancelled()=>{job.finish(Some(Code::Cancelled.into()));return;},
         _=tokio::time::sleep_until(tokio::time::Instant::from_std(job.deadline))=>{job.finish(Some(Code::TimedOut.into()));return;}
     };
@@ -132,7 +138,7 @@ async fn dispatch(
                 .try_state::<crate::acp_client::manager::AcpManager>()
                 .ok_or(Code::Unavailable)?;
             let scope =
-                inventory::skills_scope(&manager, &job.source.set.row)?.ok_or(Code::Unavailable)?;
+                inventory::skills_scope(&manager, job.source.row())?.ok_or(Code::Unavailable)?;
             Ok((activity, scope))
         })();
         match admission {
@@ -210,3 +216,9 @@ pub fn agent_skill_change_cancel(
 mod independent_tests;
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod mcp_independent_tests;
+
+#[cfg(test)]
+mod mcp_tests;

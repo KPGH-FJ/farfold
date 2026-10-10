@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { skillManagement } from "../runtime/skill_management_controller";
 import type { InventoryOwner } from "../runtime/extension_inventory_controller";
-import { SKILL_MANAGEMENT_STRINGS as S } from "../runtime/skill_management_strings";
+import { SKILL_MANAGEMENT_STRINGS as SKILLS } from "../runtime/skill_management_strings";
 import { EXTENSION_INVENTORY_STRINGS as I } from "../runtime/extension_inventory_strings";
+import { MCP_MANAGEMENT_STRINGS as MCP } from "../runtime/mcp_management_strings";
 import "./SkillChangeReview.css";
 
 export function SkillChangeReview({
@@ -59,9 +60,11 @@ export function SkillChangeReview({
           if (allowed()) setClosed(null);
         }}
       >
-        {S.reopen}
+        {("kind" in request.target ? MCP : SKILLS).reopen}
       </button>
     );
+  const isMcp = "kind" in request.target;
+  const S = isMcp ? MCP : SKILLS;
   const outcome = op?.outcome;
   const summary = view.trackingReleased
     ? S.trackingReleased
@@ -101,11 +104,13 @@ export function SkillChangeReview({
         </button>
       </div>
       <strong>{request.target.name}</strong>
-      <p>
-        {I.origin}：{I.origins[request.target.origin]}
-      </p>
+      {"origin" in request.target && (
+        <p>
+          {I.origin}：{I.origins[request.target.origin]}
+        </p>
+      )}
       <p className="skill-change-path">{request.cwd}</p>
-      {request.target.displayPath && (
+      {"displayPath" in request.target && request.target.displayPath && (
         <p className="skill-change-path">
           {S.target}：{request.target.displayPath}
         </p>
@@ -123,9 +128,17 @@ export function SkillChangeReview({
         )}
       {review && !view.reviewRetired && (
         <>
-          <p className="skill-change-path">
-            {S.target}：{review.target.displayPath}
-          </p>
+          {"displayPath" in review.target && (
+            <p className="skill-change-path">
+              {S.target}：{review.target.displayPath}
+            </p>
+          )}
+          {"configuredEnabled" in review && (
+            <p>
+              {MCP.configured}：
+              {review.configuredEnabled ? S.enabled : S.disabled}
+            </p>
+          )}
           <p>
             {S.reported}：{review.reportedEnabled ? S.enabled : S.disabled}
           </p>
@@ -142,9 +155,11 @@ export function SkillChangeReview({
             <p>
               {S.observedAt}：{new Date(review.observedAtMs).toLocaleString()}
             </p>
-            <p>
-              {S.rules}：{review.rulesBefore} → {review.rulesAfter}
-            </p>
+            {"rulesBefore" in review && (
+              <p>
+                {SKILLS.rules}：{review.rulesBefore} → {review.rulesAfter}
+              </p>
+            )}
             <p>{S.preservation}</p>
             <p>{S.external}</p>
             <p>{S.effects}</p>
@@ -168,18 +183,32 @@ export function SkillChangeReview({
         !op.observation && <p>{S.ackOnly}</p>}
       {op?.observation && (
         <>
+          {"configuredEnabled" in op.observation && (
+            <p>
+              {MCP.configured}：
+              {op.observation.configuredEnabled === null
+                ? S.unverified
+                : op.observation.configuredEnabled
+                  ? S.enabled
+                  : S.disabled}
+            </p>
+          )}
           <p>
             {S.configuration}：
-            {op.observation.configuration === "matchesIntended"
+            {["matchesIntended", "matching"].includes(
+              op.observation.configuration,
+            )
               ? S.configMatch
-              : op.observation.configuration === "changed"
+              : ["changed", "different"].includes(op.observation.configuration)
                 ? S.configChanged
                 : S.unverified}
           </p>
           <p>
             {S.reported}：
             {op.observation.reportedEnabled === null
-              ? op.observation.skill === "missing"
+              ? ("skill" in op.observation
+                  ? op.observation.skill
+                  : op.observation.mcp) === "missing"
                 ? S.missing
                 : S.unverified
               : op.observation.reportedEnabled

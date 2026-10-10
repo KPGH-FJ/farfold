@@ -1,0 +1,115 @@
+{
+  "checkedAtUtc": "2026-10-10T18:02:43.348217+00:00",
+  "status": "passedIndependentReadOnlyReview",
+  "finding": "No privacy safeguard downgrade or new blocker found. The obsolete nine-field count is replaced by exact ten-field values including the already approved enablement field; production is unchanged.",
+  "originalFailure": {
+    "run": "mcp-management-checks/run-01",
+    "rust": {
+      "passed": 1513,
+      "failed": 1,
+      "ignored": 6
+    },
+    "soleFailure": "only_public_fields_leave_decoder: actual item length 10 versus obsolete expected 9",
+    "otherSixChecksExitZero": true,
+    "allSevenLogHashesMatched": true,
+    "originalFailurePreserved": true
+  },
+  "independentChecks": {
+    "authorRefsMatched": 12,
+    "backendInputsCompared": 394,
+    "backendCurrentHashesMatched": true,
+    "run01InputsBeforeAfterEqual": true,
+    "run01InputCount": 1461,
+    "currentDeltaAgainstRun01": [
+      "src-tauri/src/acp_client/extension_inventory/tests.rs"
+    ],
+    "onlyReplacedObsoleteAssertionAndAddedStrongerChecks": true,
+    "allOtherTestBytesUnchanged": true,
+    "testNamesAndCountUnchanged": true,
+    "exactPatchBytesMatched": true,
+    "privacy": [
+      "Public legacy parser item must equal the complete ten-key object, not merely a length or a subset.",
+      "Actual parse_private output must equal the complete ten-key object with available/null enablement. The private target retains PRIVATE_SECRET while the entire serialized public snapshot rejects PRIVATE.",
+      "Original reportedEnabled, reportedAuth, sessionApplicability and whole-public-snapshot PRIVATE absence assertions remain. Adjacent HTTP URL/header/hostname/private-field tests are byte-identical.",
+      "enablement contains fixed availability/reason values only. Internal target identity is checked in the synthetic test but never appended to the public snapshot."
+    ]
+  },
+  "authorValidationReviewed": {
+    "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib extension_inventory::tests::",
+    "passed": 31,
+    "failed": 0,
+    "ignored": 0,
+    "filteredOut": 1489,
+    "formatCommand": "cargo fmt --manifest-path src-tauri/Cargo.toml",
+    "formatReportedExitCode": 0,
+    "reviewerReranCargoOrTests": false
+  },
+  "scope": "Read-only source, diff, original failure, targeted raw log and SHA checks. Wrote only this private receipt; no production changes, Cargo/test rerun, App, CLI, DB, installation or native validation. Current full integration remains for root; targeted green does not replace the retained failed run-01.",
+  "source": {
+    "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+    "beforeSha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c",
+    "afterSha256": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a"
+  },
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/receipt.json",
+      "sha256": "5e3f4a9bc14e60e3e9a00dcd2ef760ad9e854128bacf43f3e6ff6e4f19a9fb7a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/tests-before.rs.txt",
+      "sha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/source-before.json",
+      "sha256": "918344072078db925509bb5138cd10615cc00613da3127134f48a2c4a71297dc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/source-after.json",
+      "sha256": "163bb08107d1f25d64b4303bbfc3064642f1c76e6e48425d263bca718e6a3e2f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/exact.patch.txt",
+      "sha256": "131e332d8fcb08b3b3ce9ba6aecaca96a538497b7a95da9ec09a6429af79971e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/targeted-green.txt",
+      "sha256": "0898b5add297df5256e4e602e0e505df4b96eb146b7e2e2c5366a3a4b22c7715"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "c825116fca240516977051ae8a919a8f81789e2be7b85713167b4e637f9d6958"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/rust.txt",
+      "sha256": "09a28b9780a4f469553050bd501ca2786919cb01cb7ebae016bcc0482d9595b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/verification.json",
+      "sha256": "a530842b1ea37e4c79cbf1801ea009f1a2b36ae0bfa3cea9199c47a9c526941b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/inputs-before.json",
+      "sha256": "a49995ddb329c8c581d887bf446e38998250eeab499af5ff69cc6949d3c54fcf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/inputs-after.json",
+      "sha256": "a49995ddb329c8c581d887bf446e38998250eeab499af5ff69cc6949d3c54fcf"
+    }
+  ]
+}

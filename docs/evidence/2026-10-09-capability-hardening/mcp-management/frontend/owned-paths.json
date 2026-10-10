@@ -1,0 +1,23 @@
+[
+  "src/components/AgentExtensionInventory.mcp-management.test.tsx",
+  "src/components/AgentExtensionInventory.tsx",
+  "src/components/AgentExtensionInventoryResult.tsx",
+  "src/components/SkillChangeReview.mcp.test.tsx",
+  "src/components/SkillChangeReview.tsx",
+  "src/runtime/extension_change_validation.ts",
+  "src/runtime/extension_inventory_controller.test.ts",
+  "src/runtime/extension_inventory_controller.ts",
+  "src/runtime/extension_inventory_types.ts",
+  "src/runtime/extension_management_types.ts",
+  "src/runtime/mcp_management.ipc.test.ts",
+  "src/runtime/mcp_management.test-support.ts",
+  "src/runtime/mcp_management.ts",
+  "src/runtime/mcp_management.wire.test.tsx",
+  "src/runtime/mcp_management_controller.test.ts",
+  "src/runtime/mcp_management_strings.ts",
+  "src/runtime/mcp_management_types.test.ts",
+  "src/runtime/mcp_management_types.ts",
+  "src/runtime/skill_management.test-support.ts",
+  "src/runtime/skill_management_controller.ts",
+  "src/runtime/skill_management_types.ts"
+]

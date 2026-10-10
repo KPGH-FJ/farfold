@@ -21,6 +21,7 @@ pub(in crate::acp_client) struct Request {
     pub changed: watch::Sender<Option<InventoryOperation>>,
     touched: Mutex<Instant>,
     pub targets: Mutex<Option<Arc<super::targets::TargetSet>>>,
+    pub mcp_targets: Mutex<Option<Arc<super::mcp_targets::TargetSet>>>,
 }
 impl Request {
     pub fn snapshot(&self) -> Option<InventoryOperation> {
@@ -117,6 +118,10 @@ impl Requests {
                 // the registry key, before making room for a later tombstone.
                 r.operation.abandon();
                 r.targets.lock().unwrap_or_else(|p| p.into_inner()).take();
+                r.mcp_targets
+                    .lock()
+                    .unwrap_or_else(|p| p.into_inner())
+                    .take();
             }
             retained
         });
@@ -168,6 +173,7 @@ impl Requests {
             deadline: Instant::now() + Duration::from_secs(10),
             touched: Mutex::new(Instant::now()),
             targets: Mutex::new(None),
+            mcp_targets: Mutex::new(None),
             changed: watch::channel(Some(InventoryOperation {
                 request_id: id.into(),
                 agent_id: agent.into(),
@@ -212,6 +218,7 @@ impl Requests {
                 deadline: Instant::now(),
                 touched: Mutex::new(Instant::now()),
                 targets: Mutex::new(None),
+                mcp_targets: Mutex::new(None),
                 changed: watch::channel(None).0,
             });
             entries.insert(id.into(), request.clone());
@@ -220,6 +227,11 @@ impl Requests {
         request.operation.abandon();
         request
             .targets
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .take();
+        request
+            .mcp_targets
             .lock()
             .unwrap_or_else(|p| p.into_inner())
             .take();

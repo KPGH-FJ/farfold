@@ -1,0 +1,7 @@
+{
+  "failure": "Test driver searched for invented refresh button label. Actual visible button and product string are 重新查询配置. First eight interactions passed; no product fix in this step.",
+  "retainedDriverSha256": "45e1a156ba8e137eb926f28130dd608d3cafb108ff59f96b5d7e712d439c9af1",
+  "newDriverSha256": "c4c68414e2dff2ba153e712b0a63854b606b8e3c61210db1b7ddca5dbe0d2e6e",
+  "productSourceChangedByRoot": false,
+  "originalResult": "webkit-run-01.raw.txt"
+}

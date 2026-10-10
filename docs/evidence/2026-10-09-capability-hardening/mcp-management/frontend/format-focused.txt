@@ -1,0 +1,19 @@
+src/components/AgentExtensionInventory.tsx 68ms (unchanged)
+src/components/AgentExtensionInventoryResult.tsx 15ms (unchanged)
+src/components/SkillChangeReview.tsx 23ms (unchanged)
+src/runtime/extension_inventory_controller.ts 38ms
+src/runtime/extension_inventory_types.ts 21ms
+src/runtime/skill_management.test-support.ts 16ms
+src/runtime/skill_management_controller.ts 27ms (unchanged)
+src/runtime/skill_management_types.ts 17ms (unchanged)
+src/components/AgentExtensionInventory.mcp-management.test.tsx 4ms (unchanged)
+src/components/SkillChangeReview.mcp.test.tsx 7ms
+src/runtime/extension_change_validation.ts 9ms (unchanged)
+src/runtime/extension_management_types.ts 6ms (unchanged)
+src/runtime/mcp_management.ipc.test.ts 2ms
+src/runtime/mcp_management.test-support.ts 10ms
+src/runtime/mcp_management.ts 1ms (unchanged)
+src/runtime/mcp_management_controller.test.ts 8ms
+src/runtime/mcp_management_strings.ts 1ms (unchanged)
+src/runtime/mcp_management_types.test.ts 8ms
+src/runtime/mcp_management_types.ts 7ms

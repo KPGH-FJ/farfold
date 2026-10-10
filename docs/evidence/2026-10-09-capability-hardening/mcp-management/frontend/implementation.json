@@ -1,0 +1,164 @@
+{
+  "status": "implementedAndTargetedVerified",
+  "scope": "P41 existing MCP User enabled preference frontend, capability-driven in the existing shared skills/tools entry",
+  "source": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/source-final.json",
+    "sha256": "f9269cc87c1afecf27ba56249f884f8a361d9784907c672841026ce7896f8093",
+    "bytes": 5054
+  },
+  "implementation": [
+    "One common per-Agent operation controller and review component for skills and MCP; the admitted flight retains its exact domain port.",
+    "MCP row offers separate explicit enable/disable review actions. Confirmation remains a separate one-use review action. Skills keep their previous action selection.",
+    "Original inventory request, exact result/item, owner, cwd and kind authorize only their own review. Retiring a ready MCP report revokes its private management map while retaining stale public display.",
+    "Strict domain DTO parsers share finite lifecycle validation. Old inventory wires may omit new capability/eligibility but acquire no management authority.",
+    "Review separates saved User preference, directory configuration report and unverified current conversation applicability. Shared future settings impact, possible comment/format changes and external editing limitations are explicit."
+  ],
+  "boundary": [
+    "No installed App, official CLI, real Agent, credential, config write or browser was run by this frontend author.",
+    "Backend first-slice scope remains unchanged: configured preference / fresh directory report disagreement and unsupported write scopes are rejected; frontend offers no bypass.",
+    "P41 broader management and current conversation connection/tool availability are not claimed complete."
+  ],
+  "checks": {
+    "related": {
+      "files": 17,
+      "passed": 130,
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/related-final.txt",
+        "sha256": "291c790778e09988f3c4d72ab9405ebc041862c9b61172cd51680d775afd6c42",
+        "bytes": 216
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    "format": {
+      "files": 21,
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    },
+    "actualWire": {
+      "tests": 15,
+      "passed": 15,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/wire-final-green.txt",
+        "sha256": "577689d860df5e9d75946d0c2f79502a9f65a195345ad8399193cbad0301694b",
+        "bytes": 210
+      },
+      "inputs": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.json",
+          "sha256": "3c84eea3b0d3e260f001bc0813b048262f5a6d7161fbd26270ddef8b0f7ede7f",
+          "bytes": 4786
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/final-wire.json",
+          "sha256": "f8022c6dece7a7f6ace9511ffb1903b7c693032025735ab120ffcc4bf24ea837",
+          "bytes": 7958
+        }
+      ],
+      "exactOperationValues": 13,
+      "controllerSSRChains": 2,
+      "bounds": [
+        "First chain uses original captured inventory and all original inspect/confirm/status envelopes.",
+        "Second chain uses the original captured review and three original pendingCleanup/confirmUnknown/recheckObserved replies. Only its prerequisite inventory and inspection envelopes are controlled fixtures, explicitly marked in the test.",
+        "The final unknown sample retains writeAck=ok after post-get cancellation; it is not described as a lost acknowledgement.",
+        "The pendingCleanup sample calls the actual Rust Job publication method in a controlled test; its presence does not prove an operating-system child exceeded seven seconds."
+      ]
+    }
+  },
+  "effectiveRedEvidence": [
+    {
+      "finding": "MCP review entry and scope explanation absent in baseline UI",
+      "failed": 2,
+      "passed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/initial-red.txt",
+        "sha256": "ce1d11cd666201abb66b8297c598b3e6276697cbcfb7e127ee1ad5f67d2570e7",
+        "bytes": 2998
+      }
+    },
+    {
+      "finding": "Initial integration still limited result authority to skills",
+      "failed": 5,
+      "passed": 7,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/mcp-first.txt",
+        "sha256": "e3df9a65551bd9b3bcda1f55fbd852a785fe86e3955feedc870b455a48eda8de",
+        "bytes": 3823
+      }
+    },
+    {
+      "finding": "Contradictory eligibility accepted; final MCP ordinal rejected",
+      "failed": 2,
+      "passed": 6,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/eligibility-red.txt",
+        "sha256": "a6d726a9852c64fc448e62b237e7a262ddcbf13fad2c888c882a2265942339db",
+        "bytes": 1070
+      }
+    },
+    {
+      "finding": "Only report-inverse preference offered; explicit requested enable was ignored",
+      "failed": 2,
+      "passed": 9,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/explicit-intent-red.txt",
+        "sha256": "8fcbe69b9fd13c3819655c716885270e088487a81f57bf8ef54359b1557991d5",
+        "bytes": 3065
+      }
+    }
+  ],
+  "fixtureAndExpectedBehaviorAdjustments": [
+    {
+      "finding": "Old cancellation test expected zero calls; new ready MCP map revocation must target only the prior request. Test now asserts exactly that call and no effect from later obsolete actions.",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/related-first.txt",
+        "sha256": "ede8c52fec85e8cf6b1c7b64ff93853c7a185f8aeb2c93f4b8aa3b94bbf96ae2",
+        "bytes": 1319
+      }
+    },
+    {
+      "finding": "Type fixtures needed union request typing and the skill helper ready-state argument, not a boolean. No production type guard was relaxed.",
+      "logs": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/type-first.txt",
+          "sha256": "dc857d6cb299b2816fb4c6d47494a59a8495088fa5f28527e7424537bdf6874f",
+          "bytes": 9096
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/type-focused.txt",
+          "sha256": "5fe3cf4b3f6be9326c4e52f03d3dcd0a1a894c034cf044ddd361e9a74c739e05",
+          "bytes": 349
+        }
+      ]
+    },
+    {
+      "finding": "First final-wire test registration accidentally nested tests inside another test; moved registration to module scope only. This was not a product failure.",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/wire-final-first.txt",
+        "sha256": "71da3dc173d5002033e81664ad5434d59b02cd79ec45278c1de8ff64a3706aec",
+        "bytes": 1161
+      }
+    }
+  ],
+  "rootBrowser": {
+    "performedBy": "root",
+    "historicalBeforeTwoExplicitActions": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/receipt.json",
+      "sha256": "feb0ae90111decd0df288b11fbd3702dc76fde0d3cc92192443e02bb95c03107",
+      "bytes": 9919
+    },
+    "historicalChecksPerEngine": 20,
+    "finalExplicitIntentFollowup": "root owns final browser followup; this historical receipt does not prove later source bytes."
+  }
+}

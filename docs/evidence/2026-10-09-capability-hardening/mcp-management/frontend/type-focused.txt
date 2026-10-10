@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/mcp_management_types.test.ts(107,35): error TS2345: Argument of type 'true' is not assignable to parameter of type '"failed" | "cancelled" | "ready" | "cancelling" | "running" | "pendingCleanup" | undefined'.
+ ELIFECYCLE  Command failed with exit code 1.

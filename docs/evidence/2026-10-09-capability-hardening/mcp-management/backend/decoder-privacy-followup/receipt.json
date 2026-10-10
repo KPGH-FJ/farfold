@@ -1,0 +1,99 @@
+{
+  "checkedAtUtc": "2026-10-10T18:00:53.745544+00:00",
+  "status": "targetedPassed; frozen for root full run-02",
+  "rootCause": "Audited P41 public enablement field increased item shape from nine to ten fields. Full run-01 passed preceding secret canary checks and failed only outdated count equality. No production privacy failure inferred.",
+  "repair": "Only tests.rs changes: exact complete item JSON checks including fixed unavailable/unsupportedTransport, then actual parse_private available/null with private target secret retained and public PRIVATE absent. Original reportedEnabled/auth/sessionApplicability and PRIVATE assertions retained.",
+  "originalFailure": {
+    "run": "mcp-management-checks/run-01",
+    "sourceStable": true,
+    "rustPassed": 1513,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "message": "only_public_fields_leave_decoder left 10 right 9",
+    "otherSixChecksPassed": true,
+    "originalEvidenceUnchanged": true
+  },
+  "validation": [
+    {
+      "argv": ["cargo", "fmt", "--manifest-path", "src-tauri/Cargo.toml"],
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "extension_inventory::tests::"
+      ],
+      "exitCode": 0,
+      "passed": 31,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 1489
+    }
+  ],
+  "source": {
+    "before": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c",
+    "after": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a",
+    "changedBackendInputs": [
+      "src-tauri/src/acp_client/extension_inventory/tests.rs"
+    ],
+    "backendInputCount": 394,
+    "productionInputsUnchanged": true,
+    "testCountAdded": 0
+  },
+  "scope": "No official CLI, App, user config/database, install or full Cargo rerun. Synthetic package/process tests only; original author receipt and run-01 unchanged.",
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "bae682f8ec0c280aaf3746fda3ae506769d4d2ce347477760240dccaf0f8534a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/tests-before.rs.txt",
+      "sha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/source-before.json",
+      "sha256": "918344072078db925509bb5138cd10615cc00613da3127134f48a2c4a71297dc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/source-after.json",
+      "sha256": "163bb08107d1f25d64b4303bbfc3064642f1c76e6e48425d263bca718e6a3e2f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/exact.patch.txt",
+      "sha256": "131e332d8fcb08b3b3ce9ba6aecaca96a538497b7a95da9ec09a6429af79971e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/targeted-green.txt",
+      "sha256": "0898b5add297df5256e4e602e0e505df4b96eb146b7e2e2c5366a3a4b22c7715"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "c825116fca240516977051ae8a919a8f81789e2be7b85713167b4e637f9d6958"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/rust.txt",
+      "sha256": "09a28b9780a4f469553050bd501ca2786919cb01cb7ebae016bcc0482d9595b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-01/verification.json",
+      "sha256": "a530842b1ea37e4c79cbf1801ea009f1a2b36ae0bfa3cea9199c47a9c526941b"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.55s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::mcp_tests::mcp_postget_filter_drift_cannot_verify_the_reviewed_target' (25858856) panicked at src/acp_client/skill_management/mcp_tests.rs:267:5:
+assertion `left == right` failed
+  left: Some(Verified)
+ right: Some(Unknown)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::mcp_tests::mcp_postget_filter_drift_cannot_verify_the_reviewed_target ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::mcp_tests::mcp_postget_filter_drift_cannot_verify_the_reviewed_target
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1516 filtered out; finished in 0.43s
+
+error: test failed, to rerun pass `--lib`

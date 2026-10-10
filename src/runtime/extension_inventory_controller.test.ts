@@ -91,9 +91,12 @@ it("same-agent A-B-A cannot reuse old owner or old action against a new ID", asy
   await flush();
   const current = h.client.get("a").request!;
   expect(current.requestId).not.toBe(old.requestId);
+  // Replacing a ready report revokes only its old private management map.
+  expect(h.port.cancel).toHaveBeenCalledExactlyOnceWith(old);
   h.client.cancel("a", old.requestId);
   h.client.check("a", old.requestId);
-  expect(h.port.cancel).not.toHaveBeenCalled();
+  await flush();
+  expect(h.port.cancel).toHaveBeenCalledExactlyOnceWith(old);
   expect(h.port.status).not.toHaveBeenCalled();
 });
 it("timeout preserves the original promise and requires explicit exact status", async () => {

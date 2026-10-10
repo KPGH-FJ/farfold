@@ -78,6 +78,15 @@ pub(in crate::acp_client) fn capabilities(row: &AgentRow) -> Result<ExtensionCap
             source: reason.is_none().then_some("officialAppServer"),
             reason,
         },
+        mcp_enablement: InventoryCapability {
+            availability: if reason.is_none() {
+                "available"
+            } else {
+                "unavailable"
+            },
+            source: reason.is_none().then_some("officialAppServer"),
+            reason,
+        },
         tool_inventory: "unavailable",
     })
 }
@@ -189,4 +198,23 @@ pub(in crate::acp_client) fn command(
         .envs(environment)
         .envs(row.env.iter().cloned());
     Ok(command)
+}
+
+// Exact private target only. A name beginning with '-' cannot become a CLI option.
+pub(in crate::acp_client) fn mcp_get_command(
+    row: &AgentRow,
+    cwd: &str,
+    environment: HashMap<String, String>,
+    name: &str,
+) -> Result<Command> {
+    // Apply the same launch validation as the existing inventory before rebuilding its suffix.
+    let validated = command(row, cwd, environment.clone(), Kind::Mcp)?;
+    let mut value = Command::new(validated.get_program());
+    value
+        .args(&row.args)
+        .args(["cli", "mcp", "get", "--json", "--", name])
+        .current_dir(cwd)
+        .envs(environment)
+        .envs(row.env.iter().cloned());
+    Ok(value)
 }

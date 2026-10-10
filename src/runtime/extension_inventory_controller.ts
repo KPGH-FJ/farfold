@@ -330,12 +330,7 @@ export class ExtensionInventoryController {
     else this.revokeManagement(f);
   }
   private revokeManagement(f: Flight) {
-    if (
-      f.managementRevoked ||
-      f.view.request?.kind !== "skills" ||
-      !f.dispatched
-    )
-      return;
+    if (f.managementRevoked || !f.view.request || !f.dispatched) return;
     f.managementRevoked = true;
     const request = f.view.request;
     // Ready reads may retain a private management map. Revoke that exact map,
@@ -351,7 +346,8 @@ export class ExtensionInventoryController {
       this.owns(f) &&
       f.owner === owner &&
       result.owner === owner &&
-      f.view.results.skills === result &&
+      f.view.request === result.request &&
+      f.view.results[result.request.kind] === result &&
       !f.managementRevoked &&
       !result.stale &&
       !f.view.unresolved
@@ -359,11 +355,16 @@ export class ExtensionInventoryController {
   }
   markStale(result: InventoryResult): void {
     const f = this.entries.get(result.request.agentId);
-    if (!f || f.view.results.skills !== result) return;
+    if (
+      !f ||
+      f.view.request !== result.request ||
+      f.view.results[result.request.kind] !== result
+    )
+      return;
     this.revokeManagement(f);
     const stale = { ...result, stale: true };
     this.publish(f, {
-      results: { ...f.view.results, skills: stale },
+      results: { ...f.view.results, [result.request.kind]: stale },
       ...(f.view.result === result ? { result: stale, stale: true } : {}),
     });
   }
