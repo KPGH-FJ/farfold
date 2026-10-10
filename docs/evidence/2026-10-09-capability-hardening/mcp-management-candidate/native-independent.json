@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-10T18:34:27.554075+00:00",
+  "status": "passedWithinStatedScope",
+  "sourceCommit": "26a55a7b53acc872d0ec4e1cadcb555d2bca126b",
+  "productComplete": false,
+  "scope": "Read-only independent final review of installed P41 existing MCP enabled preference and NEW-16 shared expiry recovery evidence; no App, official CLI, configuration changes, SQLite or test rerun.",
+  "evidence": {
+    "privateFinalRef": "output/2026-10-11-mcp-management-native/native-final-independent.json",
+    "privateFinalSha256": "16ac9a6bd054d587ac8f9472a8698ce65a77e5252598a3b7ba6a491836820323",
+    "privateRefsVerified": 82,
+    "currentFrozenInputHashesMatched": 1461,
+    "formalCandidateFilesMatched": 5,
+    "rawPrivateArtifactsCopiedToPublic": false
+  },
+  "checks": [
+    {
+      "name": "exactHelperGateAdaptation",
+      "passed": true,
+      "detail": "Only candidate.json, candidate-inputs.json and install-independent.json added as exact public paths; no broad public directory. Database, logical-copy and main functions byte-identical. Original before-database verifier failure retained; originals still rejected before SQLite connect."
+    },
+    {
+      "name": "installedBoundedPreferenceJourney",
+      "passed": true,
+      "detail": "Six configured entries including one dedicated inert disabled stdio fixture; withdrawn review cannot confirm; fresh explicit enable, independent observed recheck and fresh explicit disable are supported by AX, captures and result text. Configuration report is not current connection/tool proof."
+    },
+    {
+      "name": "sharedExpiryExplanationAndRecovery",
+      "passed": true,
+      "detail": "Refusal capture is 473.996 seconds after first list capture, naturally beyond five minutes; no exact 300/305-second claim. Correct expired-or-changed wording. Explicit recheck preserves stale list/time and enables query; separate explicit query updates time and report. Original skill expiry not rerun; unique internal rejection branch not instrumented."
+    },
+    {
+      "name": "normalExitAndRestoration",
+      "passed": true,
+      "detail": "Original empty TR draft visible, accurate unfinished/unknown-work warning, visible Save and Quit then formal process absence. Official cleanup reports original full layer semantics restored, one write acknowledged, child reaped, pipes EOF and owned group gone; no TOML formatting/comment/version identity claim."
+    },
+    {
+      "name": "dataRetentionAndExactAcceptedDelta",
+      "passed": true,
+      "detail": "Reviewed existing disposable-copy comparison and exact timestamp addendum, without repeat SQLite: all 131 session rows, 168 dismissed rows, 53 settings raw values, complete unsent 8/8/3 object and worktree catalogue equal. Sole accepted delta is codex.updated_at 1791651774403 -> 1791655910815. No blanket timestamp exemption or unique write-site attribution."
+    },
+    {
+      "name": "publicRecordAndCurrentDocs",
+      "passed": true,
+      "detail": "Installed public record references all match. Four current documents distinguish implementation, controlled tests and this installed slice; retain failures and untested connection/tools/other-source/Agent/full P41 scope. NEW-16 explicitly remains shared MCP-path evidence, not a rerun of original skill expiry. Original 122-condition record gate is independently handled by the documentation reviewer."
+    }
+  ],
+  "visualScope": "Preliminary review inspected selected 01–08 images; continuation directly inspected 09–14. Exact lower review contents in earlier partially scrolled captures also use AX; stills do not establish every offscreen element simultaneously visible.",
+  "notEstablished": [
+    "Actual MCP connection, authentication, tools or current conversation adoption",
+    "Product UI add/remove/diagnostic/credential management, other sources/profile-v2/HTTP/Agents, Windows or all P41 requirements",
+    "Installed write cancellation or lost acknowledgement; controlled engineering remains separate",
+    "Zero official session/new calls or all external work stopped; zero UI prompt is a journey assertion consistent with retained data, not a database-only proof"
+  ],
+  "findings": [],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate.json": "490bf736e3cebca3370c5c57c534b4ec92d0ff5994720d898d98983d348115b6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs-after.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-independent.json": "7c09ed6baa4854529c6db636241bc020d260a90617bb4ddc5e507368729668cd",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/install-independent.json": "c3ed9e8158f822b775d32f516f58f434a9e9bb0e47f58d2116a78f309e25cf06",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/duplicate-bundle-cleanup.json": "534cc97d21b15f2f28eb12599c0d15a568319a965a2ac760ada787417ff617bf",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/verification.json": "f3d587b2f21e0300869da5968d1520379026540b8c96b80283563619ab72e026",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/independent.json": "30a9effd0fa2fa0d645db9a7e59229668c81899ee9b503f3e056eb29ad868777",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/explicit-intent-receipt.json": "c793c7004dca320b677db4d99fb14644fa0bcbb02c7063cd8edefe128e0d6772",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/installed-mcp-management.json": "bb41cee97c80a8346ac7139355dcaa156dfdabaeecd4357ddafe53095e1a50e7",
+    "output/2026-10-11-mcp-management-native/native-final-independent.json": "16ac9a6bd054d587ac8f9472a8698ce65a77e5252598a3b7ba6a491836820323",
+    "docs/status.md": "eda25b2c30f117ecca0265caca0a0774627c168a2c4478e13a193b08bd7566fd",
+    "docs/architecture.md": "b192a7daa6215c88aebb096bad27ac4c2ba1508856bd7d55f1473336031b449b",
+    "plans/agent-access.md": "6e47477866b81e29cc36f44f6d1764e9e0689f16804705bdd2099e3b93b2973b",
+    "docs/evidence/2026-10-09-capability-hardening/README.md": "31bde8b3eaaa366e7e0f2a826e5d4af9d66c86f231ccf0f597357c4bc71db4e1"
+  }
+}

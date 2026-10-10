@@ -1,0 +1,171 @@
+{
+  "checkedAtUtc": "2026-10-10T18:27:11.444795+00:00",
+  "sourceCommit": "26a55a7b53acc872d0ec4e1cadcb555d2bca126b",
+  "phase": "installedBoundedMcpPreferenceAndSharedExpiryRecoveryVerified",
+  "productComplete": false,
+  "environment": {
+    "platform": "macOS arm64",
+    "formalApp": "/Applications/Farfold.app",
+    "version": "0.1.7",
+    "agent": "Codex",
+    "officialEntry": "Existing registered entry and official app-server/CLI configuration surfaces",
+    "serviceModelReasoning": "Existing settings retained; empty TR draft restored with 6 Astra / Ultra; no UI prompt sent.",
+    "fixture": "Unique inert stdio /usr/bin/true entry, initially disabled, added and removed via official config API; no MCP connection/tool call attempted."
+  },
+  "engineering": {
+    "inputCount": 1461,
+    "stableThroughNormalQuit": true,
+    "sevenChecks": "passed",
+    "frontendTests": 4711,
+    "rustPassed": 1514,
+    "rustIgnored": 6,
+    "candidateChecks": 9,
+    "installationChecks": 10,
+    "installationSnapshotEntries": 217400,
+    "threeInstallationSnapshotsIdentical": true,
+    "browserControlledChecksEach": 23
+  },
+  "observations": [
+    {
+      "case": "officialConfigurationList",
+      "result": "passedWithinStatedScope",
+      "evidence": ["02-official-config-list"],
+      "observed": "Six entries including dedicated inert fixture disabled; existing registered official configuration query in explicitly selected folder."
+    },
+    {
+      "case": "reviewWithdrawal",
+      "result": "passedWithinStatedScope",
+      "evidence": ["03-enable-review", "04-withdrawn-review"],
+      "observed": "Review identified disabled saved and reported preference and user write scope. Closing then reopening showed invalid review and no confirm; a separate refreshed list and new review were needed."
+    },
+    {
+      "case": "enablePreference",
+      "result": "passedWithinStatedScope",
+      "evidence": ["05-enabled-verified"],
+      "observed": "One explicit confirmation; saved preference and official report enabled. Prior list stale and actions disabled."
+    },
+    {
+      "case": "readOnlyObservation",
+      "result": "passedWithinStatedScope",
+      "evidence": ["06-readonly-observed"],
+      "observed": "Separate recheck reported current values matching; explicitly did not retroactively prove previous write outcome."
+    },
+    {
+      "case": "disablePreference",
+      "result": "passedWithinStatedScope",
+      "evidence": [
+        "07-disable-review",
+        "08-disabled-verified",
+        "09-visible-result"
+      ],
+      "observed": "New explicit disable review and one confirmation; saved preference and report disabled. Result text reachable by scrolling; no horizontal overflow in observed window. Earlier screenshots alone do not prove all offscreen review content visible."
+    },
+    {
+      "case": "agedPermissionRefusal",
+      "result": "passedWithinStatedScope",
+      "evidence": ["10-aged-permission-refusal"],
+      "observed": "Natural age exceeded source 300 second permission lifetime without selection/program/cwd/type change or clock override. Correct expiry-or-change explanation visible. Exact internal rejection branch not instrumented."
+    },
+    {
+      "case": "explicitPermissionRefresh",
+      "result": "passedWithinStatedScope",
+      "evidence": ["11-rechecked-no-auto-query"],
+      "observed": "Explicit recheck enabled query but preserved stale list and old query time 02:14:27. No automatic query observed."
+    },
+    {
+      "case": "separateQueryRecovery",
+      "result": "passedWithinStatedScope",
+      "evidence": ["12-query-recovered"],
+      "observed": "Separate explicit query updated time to 02:21:16, returned six entries and fixture disabled, cleared error. This is installed shared MCP query path; no second aged skill query run."
+    }
+  ],
+  "closeout": {
+    "normalQuit": true,
+    "forceQuit": false,
+    "exitIncludedUnfinishedOrUnknownWorkWarning": true,
+    "formalProcessAbsentAfterQuit": true,
+    "formalFiveFilesUnchanged": true,
+    "originalWholeSessions": 131,
+    "newRetainedSessions": 0,
+    "dismissedSessions": 168,
+    "all53SettingsRawEqual": true,
+    "wholeUnsentObjectEqual": true,
+    "unsentGroups": [8, 8, 3],
+    "worktreeCatalogueWholeEqual": true,
+    "onlyMetadataDelta": "codex.updated_at 1791651774403 -> 1791655910815; explicitly accepted by root; all other Agent columns/rows exact.",
+    "configurationRestoration": "Full reported configuration layer semantics equal original baseline after one official cleanup write; child reaped, pipes EOF, owned group gone. Comments, formatting and opaque versions not claimed restored.",
+    "noPromptSentViaUI": true,
+    "officialSessionNewCalls": "not measured; startup prepared an empty conversation"
+  },
+  "new16": "Installed shared error explanation and explicit refresh/query sequence verified on MCP after natural age. Original skill-query failure and uncertain exact branch retained. Not blanket coverage of all expiry/ownership branches.",
+  "notVerified": [
+    "Current conversation adoption, actual MCP connection or tools",
+    "Adding/removing server through product UI, credentials, diagnostics, other configuration sources/profile-v2/HTTP/Agents",
+    "Actual write cancellation or lost acknowledgement in installed app; these remain controlled engineering coverage",
+    "P39/P40/P41 full completion, all 122 original requirements, 29x8 acceptance, Windows or market readiness"
+  ],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate.json": "490bf736e3cebca3370c5c57c534b4ec92d0ff5994720d898d98983d348115b6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs-after.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-independent.json": "7c09ed6baa4854529c6db636241bc020d260a90617bb4ddc5e507368729668cd",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/install-independent.json": "c3ed9e8158f822b775d32f516f58f434a9e9bb0e47f58d2116a78f309e25cf06",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/duplicate-bundle-cleanup.json": "534cc97d21b15f2f28eb12599c0d15a568319a965a2ac760ada787417ff617bf",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/verification.json": "f3d587b2f21e0300869da5968d1520379026540b8c96b80283563619ab72e026",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/decoder-privacy-followup/independent.json": "30a9effd0fa2fa0d645db9a7e59229668c81899ee9b503f3e056eb29ad868777",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management/frontend/browser/explicit-intent-receipt.json": "c793c7004dca320b677db4d99fb14644fa0bcbb02c7063cd8edefe128e0d6772",
+    "output/2026-10-11-mcp-management-native/root-data-acceptance.json": "1d4dc669b38b54aca66fe1b2152fa39db6354d7194c8d351c496a70f8863092a",
+    "output/2026-10-11-mcp-management-native-preparation/data-review/final-data-comparison-independent.json": "390a94507dae5f30d4236c13b8090a98e5d1be8b92143bb71a693d5ab5ebdcbf",
+    "output/2026-10-11-mcp-management-native-preparation/data-review/timestamp-delta-independent.json": "3ace7d600e1941a7aad810f4a05136f01de6faa05612e5392b60eff309923af1",
+    "output/2026-10-11-mcp-management-native-preparation/data-review/exit-ref-fix.json": "ea7f28e91e55baac6430f1fc0139621eb432d3bf90a23043616f22d1c786d4af",
+    "output/2026-10-11-mcp-management-native-preparation/baseline.json": "9b721ed9c3288a36c4aab6ae2553d0e82ac94698a21522cd765684deef8b0abd",
+    "output/2026-10-11-mcp-management-native-preparation/setup-result.json": "ef8cf863d03d589b207d089f7d835a77e48fdb993a9e80586f114698f3db90ee",
+    "output/2026-10-11-mcp-management-native-preparation/cleanup-result.json": "d41e860d28a0e0c4ea6e3ae9718f2288b74a3172e15b6ce7ccd1e191d95c07ba",
+    "output/2026-10-11-mcp-management-native/expiry-window.json": "bcc9a6afa14b0dc9b0551e34f84b5b10ef80891911b47e3865e49a55696767f5",
+    "output/2026-10-11-mcp-management-native/final-normal-exit.json": "f83f88508639d8826d6187a96f3d2d4a968bf4a580e622ca3f4f8e2beb692151",
+    "output/2026-10-11-mcp-management-native/15-quit-observation.json": "0db34400c278808a3c4e111cd592d9305f192d5d038685c5f392360193e9df0b",
+    "output/2026-10-11-mcp-management-native/01-start.ax.txt": "6256c55c0a48060913e092ba627fce1becfa5bf6fce97c8c3047e5edf5b160a8",
+    "output/2026-10-11-mcp-management-native/01-start.json": "4362b996b0c255cba389cbd83fa9a4dd869204e7b202f78cbc3a5957c7cb5ebe",
+    "output/2026-10-11-mcp-management-native/01-start.png": "7e9d3d87c3bd82a3d89a7c76be09e342ab1b5d2f9b988806a2dc1a05cb7dc839",
+    "output/2026-10-11-mcp-management-native/02-official-config-list.ax.txt": "79ae70c917c7416edc0f65fcf235ab6a961bbfe9c9e0416879c9344cbcd2f57b",
+    "output/2026-10-11-mcp-management-native/02-official-config-list.json": "1c1ab0b3d460de3c59b216abe38c9a3c8f8f78bc48121023c1520a389f2ddc6f",
+    "output/2026-10-11-mcp-management-native/02-official-config-list.png": "2760eb4fe55c73f232797f7a1003cb61c7eacfc76ab983ddd3e739d3e1b2ce7b",
+    "output/2026-10-11-mcp-management-native/03-enable-review.ax.txt": "4f40400be9bc9abfdb2c399277a8bab769a8118c7daf21c5046d84b8bd847ce6",
+    "output/2026-10-11-mcp-management-native/03-enable-review.json": "e5990d409ab98d7723b30ee32e3e31fc908827d39fc1b90f52bd4273a66b65ad",
+    "output/2026-10-11-mcp-management-native/03-enable-review.png": "b517836c3ba2c5afb72879aa6530b2980622dcef87e1fd55a4d9e9a687aaff95",
+    "output/2026-10-11-mcp-management-native/04-withdrawn-review.ax.txt": "fb38bf14268cc63743a3f9739e4ce6c75ea79f6f9b6f7f13722abf772e9e067b",
+    "output/2026-10-11-mcp-management-native/04-withdrawn-review.json": "ff8201e40d5d7168684d8db7b9c41194e8a00b26d5d4eef63e4b486b0c78ac4f",
+    "output/2026-10-11-mcp-management-native/04-withdrawn-review.png": "280bc2931bf9126376b87467a54211b1381711bb9d7d42ba56ad842f14dcb6da",
+    "output/2026-10-11-mcp-management-native/05-enabled-verified.ax.txt": "df988012c9c06d8dfc23163605f5b1629ed96c11b0978eabb7e26f2d958d4c31",
+    "output/2026-10-11-mcp-management-native/05-enabled-verified.json": "2f045d0a16a338280b33ca077fe2d11547c28efe22239f8550a077f7ff9598d7",
+    "output/2026-10-11-mcp-management-native/05-enabled-verified.png": "a27f4d53aef211e3a20c80bf8a68cac90b64a2291037a56e24dbf840d6243851",
+    "output/2026-10-11-mcp-management-native/06-readonly-observed.ax.txt": "88fa3f17bd11a167eef330f75e4802c4ad11ebb551c93b9ea8e9ae7f047d771f",
+    "output/2026-10-11-mcp-management-native/06-readonly-observed.json": "b433efea7ef4a406a4937641a0a9407d200bd95b382a638c0a9e5ce3f5fdd942",
+    "output/2026-10-11-mcp-management-native/06-readonly-observed.png": "8d47cbf9f009b759670877f917737e5bfb053b35398faaf3ddcc34681fa95180",
+    "output/2026-10-11-mcp-management-native/07-disable-review.ax.txt": "f9ee08bd252065ac1dfaa24726b7aad42aa021b87b5689e83f60adefd5be520a",
+    "output/2026-10-11-mcp-management-native/07-disable-review.json": "7d427ad358ae870855d9c4d57cd588f91628f9cdf0b07fe53972ca8c1bcbc11b",
+    "output/2026-10-11-mcp-management-native/07-disable-review.png": "15cd9b7c91d7cf75aa1a14374be6437d87766c2b23b407ff506b2222dff50e5d",
+    "output/2026-10-11-mcp-management-native/08-disabled-verified.ax.txt": "26621bc1f27396977dd90a5a7e1c357b8ec338533097b7f9f0c42cb8ed47f4bc",
+    "output/2026-10-11-mcp-management-native/08-disabled-verified.json": "4fc4b4b7761003952603e46fdf6c5325b82c36bc5cbd8c673dd8b9504d6d90b7",
+    "output/2026-10-11-mcp-management-native/08-disabled-verified.png": "9df077ea8030e06b93063c2c02b32d53467711baab6a74279135f7a73483e216",
+    "output/2026-10-11-mcp-management-native/09-visible-result.ax.txt": "26621bc1f27396977dd90a5a7e1c357b8ec338533097b7f9f0c42cb8ed47f4bc",
+    "output/2026-10-11-mcp-management-native/09-visible-result.json": "5e4cf058bfbe4cb1a12e5ff656833c8e46e39d938a5c412bd148d11f81219a49",
+    "output/2026-10-11-mcp-management-native/09-visible-result.png": "5d6cf2a3c28db138e04bb3d6eb37d552a82e14c0914feee94fbfc7e12fd5877d",
+    "output/2026-10-11-mcp-management-native/10-aged-permission-refusal.ax.txt": "39b6771dd9c2d9839e423717abd8b9d52ec90956204572f6b278bbc00a5a4195",
+    "output/2026-10-11-mcp-management-native/10-aged-permission-refusal.json": "385fa9ce9b98766a8954b6d58a309f042fb92e62ce038ee0a257778ba6f0dc13",
+    "output/2026-10-11-mcp-management-native/10-aged-permission-refusal.png": "5d20afb8bda23730979dc85881adcb66ded8ab9f878c8b0b75b1472efbbd520f",
+    "output/2026-10-11-mcp-management-native/11-rechecked-no-auto-query.ax.txt": "c0919e01d91576c8e8c56160c9d10828c779240cdf3189c077e4531dc1b8aa7f",
+    "output/2026-10-11-mcp-management-native/11-rechecked-no-auto-query.json": "5d6e3283be4e1be947b54bab870fe4e6cf7e591999e1788f815f383765cfc85c",
+    "output/2026-10-11-mcp-management-native/11-rechecked-no-auto-query.png": "0d0e9b12f18d0c22ac1b922666f240a602978400f4cfffd335668c9892ffce5e",
+    "output/2026-10-11-mcp-management-native/12-query-recovered.ax.txt": "b685fe50037b35cded0e623cbfb604cfa7b94dc39af6cff78234ba11c8437493",
+    "output/2026-10-11-mcp-management-native/12-query-recovered.json": "80964b145dfa538a953f587e5c75342f988782a29cca66a5b00c89007371d156",
+    "output/2026-10-11-mcp-management-native/12-query-recovered.png": "d8cdfe99dfcf41edca5bfd6886b2c46e1accb9da63aed4361d7a77c6607063cc",
+    "output/2026-10-11-mcp-management-native/13-restored-before-quit.ax.txt": "f1691cd67c148fbf0e01910fccc9c04454aad65f245890deee818816be8212a7",
+    "output/2026-10-11-mcp-management-native/13-restored-before-quit.json": "1b3f2bc0f08cbc824d8d0e999e9e0689a7a826d5bc8a8d822af025113d724ec5",
+    "output/2026-10-11-mcp-management-native/13-restored-before-quit.png": "bc3e2835f821e78534fdfc1a9143c6e1778a3e429c0ee0509dd2cc7184b59320",
+    "output/2026-10-11-mcp-management-native/14-normal-quit-confirmation.ax.txt": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf",
+    "output/2026-10-11-mcp-management-native/14-normal-quit-confirmation.json": "8111e6431ccfc79b6a3580e680c26b2fef6a182f0d66a1a4123b8347945b3c7b",
+    "output/2026-10-11-mcp-management-native/14-normal-quit-confirmation.png": "c948d2100b93b7ec527e1c1d56106639cc18e05026d159f20ceb34dd4e452a9c"
+  },
+  "boundary": "Formal installed UI and exact official configuration/report semantics only; controlled test results are separate. Private raw captures/backups are hash-referenced, not embedded."
+}

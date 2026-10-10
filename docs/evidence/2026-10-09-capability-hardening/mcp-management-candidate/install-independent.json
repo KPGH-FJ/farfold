@@ -1,0 +1,132 @@
+{
+  "sourceCommit": "26a55a7b53acc872d0ec4e1cadcb555d2bca126b",
+  "result": "passed",
+  "checks": {
+    "candidateChain": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "normalExitAndDataBaseline": {
+      "passed": true,
+      "baselineCommit": "4d3bd81e86cbd7a877055d321f89fb8de494fbf8",
+      "currentSessionBaseline": 131,
+      "priorUnsentGroups": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "rawSettingsPreserved": 53,
+      "reviewedDelta": "Only the exact Codex updated_at change recorded in the prior bounded journey.",
+      "boundary": "Immutable prior normal exit, data acceptance and independent evidence reviewed. Current installation data is compared separately. No new native action or full product acceptance is inferred."
+    },
+    "completeDataManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "entryCountEach": 217400,
+      "allRecordedContentTypesModesAndLinkTargetsEqual": true
+    },
+    "privateMetadataBackup": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "9057725df850ec07f11fc3c091715b7785b4a738ae4fa39958a539e8d3ea33bb",
+      "rawRowsPrintedOrSaved": false
+    },
+    "installedExactBundle": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "dbfcbdf2abc70a6fa9c1c8f1711e9cc054430e91659089558835863a60a44851",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "archiveSha256": "2c1f5294d9e13823f732c8f57cbaf264566215ad2a037719a92c358fe5cb3874",
+      "archiveBytes": 14093873
+    },
+    "identitySignature": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc only"
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1461
+    },
+    "formalProcessAbsent": {
+      "passed": true
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "failures": [],
+  "startedAt": "2026-10-10T18:11:05.286010+00:00",
+  "launched": false,
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate.json": "490bf736e3cebca3370c5c57c534b4ec92d0ff5994720d898d98983d348115b6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-independent.json": "7c09ed6baa4854529c6db636241bc020d260a90617bb4ddc5e507368729668cd",
+    "output/2026-10-11-mcp-management-install/install-operation.json": "444094dd809e1aae813a8c75f2fadb7e9ef46d647876a391d73ea0de39390c44",
+    "output/2026-10-11-mcp-management-install/normal-exit-observation.json": "48daef6a415e965ebc18891b1b929dc7caa952f450d6efdf6e7a052abbf1e5ce",
+    "output/2026-10-11-skill-management-native/final-normal-exit.json": "a4f961bf8cfde97dd6fa8e7469831134e593b76315a0cf1dc0b05284cce8eebf",
+    "output/2026-10-11-skill-management-native/freeze-release.json": "cb67d8fbc009ac05ae00d559b4027abc2d5344033f35348b639142a29a8f8d99",
+    "output/2026-10-11-skill-management-native/root-data-acceptance.json": "db3f33e5a042c3cd66d980e4a1c125ccd2c414a63caee6c4ac605fa49c6cea35",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/native-independent.json": "abf77920f365645bf834de2fe42291cdd438df69a839466406b18021d45bf527",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/installed-skill-management.json": "b8dcc142bfbd6c1c8842a540cd71f86935489768b40d5cdefb76133f4daa6d79",
+    "output/2026-10-11-mcp-management-install/install-data-before-summary.json": "ac5f2f48b04ba52e69fd3c25c1d91b47ee7dbb1544e1dfdb302f80767a54f76f",
+    "output/2026-10-11-mcp-management-install/install-data-before.jsonl": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+    "output/2026-10-11-mcp-management-install/install-data-preinstall-summary.json": "ac5f2f48b04ba52e69fd3c25c1d91b47ee7dbb1544e1dfdb302f80767a54f76f",
+    "output/2026-10-11-mcp-management-install/install-data-preinstall.jsonl": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+    "output/2026-10-11-mcp-management-install/install-data-after-summary.json": "ac5f2f48b04ba52e69fd3c25c1d91b47ee7dbb1544e1dfdb302f80767a54f76f",
+    "output/2026-10-11-mcp-management-install/install-data-after.jsonl": "21c388bfabd9dc719d05a6000b5f83f598798aa2a9cd885a17f101a1c08177bb",
+    "output/2026-10-11-mcp-management-install/metadata-backup-receipt.json": "65857404d32b09c56e62b3efc6fb9db94ebc904abff700ae7c1bb3ac3b293eb7",
+    "output/2026-10-11-mcp-management-install/metadata-before.sqlite3": "9057725df850ec07f11fc3c091715b7785b4a738ae4fa39958a539e8d3ea33bb",
+    "output/2026-10-11-mcp-management-install/metadata-source/farfold.sqlite3": "ec59ea5c0e5ecaa6f081460db31ca5d31263efa2179f21a6b81ad68af43bba47",
+    "output/2026-10-11-mcp-management-install/metadata-source/farfold.sqlite3-wal": "821310d7ca1fa89f2cf1ab86b644683f04a19d1a4e35b9c1009c294c6dac8dc1",
+    "output/2026-10-11-mcp-management-install/metadata-source/farfold.sqlite3-shm": "d278c71cc5befecc88edb18eaf406daf498687abad1e2aa2b261aaf1b405ccc7",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/verification.json": "f3d587b2f21e0300869da5968d1520379026540b8c96b80283563619ab72e026",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/frontend.txt": "59cb27693a720209959842d0dfc15841167b7afcf2a82a897600cc4952117680",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/build.txt": "f762c5d5e188ae50af6b1e0f86fa8e8f779df9f55bf740cedcc02d2de065edcb",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/clippy.txt": "e736d608af4933d92144949c87701ac8f4de67b152ddfb1a7507d4d66022e032",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/rust.txt": "ccca3c4a37f4bad5a93ececf64227f9b08b93f1ee0d74ab2e0b292d356405c18",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/inputs-before.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/inputs-after.json": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48"
+  },
+  "completedAt": "2026-10-10T18:11:09.519186+00:00"
+}

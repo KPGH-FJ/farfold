@@ -1,0 +1,104 @@
+{
+  "checkedAtUtc": "2026-10-10T18:35:37.135103+00:00",
+  "status": "passedReadOnlyRecordGate",
+  "sourceCommit": "26a55a7b53acc872d0ec4e1cadcb555d2bca126b",
+  "originalPlan": {
+    "original122IdTitleCompletionCellsExact": true,
+    "originalOrderExact": true,
+    "all16NewCompletionConditionsExact": true,
+    "onlyTableChanges": {
+      "P41": "status only",
+      "NEW-16": "discovery/progress description only"
+    },
+    "conditionProof": "output/2026-10-11-mcp-management-root/plan-conditions-gate.json"
+  },
+  "integrity": {
+    "PRODUCTMatchesHEADBytes": true,
+    "protectedExistingDirtyReadmesExact": 2,
+    "currentFrozenSourceInputsMatched": 1461,
+    "installedPublicRefsMatched": 61,
+    "nativeIndependentRefsMatched": 15,
+    "sevenRecordedCheckLogHashesMatched": true,
+    "testsOrChecksRerun": false
+  },
+  "documentationReview": {
+    "currentInstalledCommit": "26a55a7b",
+    "prior4d3bd81eRemainsHistoricalP40Evidence": true,
+    "noCurrentP41PendingInstallStatement": true,
+    "twoObservedStalePhrasesCorrectedByRoot": [
+      "docs/status.md engineering summary now1461/4711/1514",
+      "plans/agent-access.md historical notification paragraph now distinguishes P40 above from current P41 first paragraph"
+    ],
+    "scopePreserved": [
+      "P41 existing User-entry preference only; product add/remove/connection/tools/credential/other-source/Agent requirements remain incomplete.",
+      "NEW-16 installed shared MCP explanation and separate explicit refresh/query are observed after natural age beyond five minutes. Original skills expiry was not rerun; exact rejection branch remains uninstrumented.",
+      "No UI prompt is journey evidence, not proof of zero official session/new calls. Exit warning does not establish all external work stopped.",
+      "131 session rows/168 dismissed/53 settings/whole unsent8-8-3/catalogue unchanged; only exact Codex updated_at delta accepted, not blanket Agent/settings invariance.",
+      "Official cleanup establishes original configuration-layer semantics, not byte/format/comment/version restoration."
+    ]
+  },
+  "nativeIndependent": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/native-independent.json",
+    "sha256": "e0d4ff7f1d090cc9bc903b24897d53fc0421da56c4f409fba19995ead15d9d04",
+    "status": "passedWithinStatedScope",
+    "reviewedNotRerunByThisGate": true
+  },
+  "findings": [],
+  "boundary": "Only current documentation cells/wording, fixed evidence references, source hashes and existing log/receipt consistency checked. No engineering command, SQLite, App, official CLI, configuration or material experiment; no edits to source/current docs.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/installed-mcp-management.json",
+      "sha256": "bb41cee97c80a8346ac7139355dcaa156dfdabaeecd4357ddafe53095e1a50e7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/native-independent.json",
+      "sha256": "e0d4ff7f1d090cc9bc903b24897d53fc0421da56c4f409fba19995ead15d9d04"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-root/plan-conditions-gate.json",
+      "sha256": "b5d269bc14d2039edfc826d592c34f92df62caf713b7ab60bbd90c5b52d496d2"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-root/source-commit-independent.json",
+      "sha256": "d7a6b4c30edccf3cef1057cf7c9e9d707f8573fe040546079c660a5f84f0b81a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-checks/run-02/verification.json",
+      "sha256": "f3d587b2f21e0300869da5968d1520379026540b8c96b80283563619ab72e026"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management-candidate/candidate-inputs.json",
+      "sha256": "30ffe4f4f7a5ab16922deac9948b7dda7c3fde7a00f2689a367dfae5c37e2e48"
+    },
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "eda25b2c30f117ecca0265caca0a0774627c168a2c4478e13a193b08bd7566fd"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "6e47477866b81e29cc36f44f6d1764e9e0689f16804705bdd2099e3b93b2973b"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "b192a7daa6215c88aebb096bad27ac4c2ba1508856bd7d55f1473336031b449b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "31bde8b3eaaa366e7e0f2a826e5d4af9d66c86f231ccf0f597357c4bc71db4e1"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "bytes": 11543
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "bytes": 2341
+    }
+  ]
+}
